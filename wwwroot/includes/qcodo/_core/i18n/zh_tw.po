@@ -1,0 +1,109 @@
+# QCubed Distributed Language File
+# for Traditional Chinese (Taiwan), using BIG5 encoding
+# Contributed by Edward Chou
+
+
+# For QTextBoxBase controls
+MsgId "%s is required"
+MsgStr "%s �O���ݪ�"
+MsgId "Required"
+MsgStr "���ݪ�"
+
+
+# For QWriteBox controls
+MsgId ""
+"Tags &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; and &lt;http://...&gt; are allowed.  "
+"Use ** at the beginning of any line for a bulleted list."
+MsgStr ""
+"�i�ϥΥH�U�аO &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; �� &lt;http://...&gt;   "
+"�b��Ʀ歺��J ** �i��ܶ��زŸ�."
+
+
+# For QPaginatedControl controls
+MsgId "item"
+MsgStr "����"
+
+MsgId "items"
+MsgStr "����"
+
+
+# For QListBox and QCalendar controls
+MsgId "Reset"
+MsgStr "���]"
+
+
+# For QIntegerTextBox and QFloatTextBox controls
+MsgId "Invalid Integer"
+MsgStr "�����T�����"
+
+MsgId "Invalid Float"
+MsgStr "�����T���B�I��"
+
+MsgId "Value must be less than %s"
+MsgStr "�ȥ��ݤp�� %s"
+
+MsgId "Value must be greater than %s"
+MsgStr "�ȥ��ݤj�� %s"
+
+
+# For QDataGrid controls
+MsgId "<b>Results:</b>&nbsp;Viewing&nbsp;%s&nbsp;%s-%s&nbsp;of&nbsp;%s."
+MsgStr "<b>���G:</b>&nbsp;���&nbsp;%s&nbsp;%s-%s&nbsp;of&nbsp;%s."
+
+MsgId "<b>Results:</b> No %s found."
+MsgStr "<b>���G:</b> ���o�{ %s."
+
+MsgId "<b>Results:</b> 1 %s found."
+MsgId_Plural "<b>Results:</b> %s %s found."
+MsgStr[0] "<b>���G:</b> �o�{ 1 %s ."
+MsgStr[1] "<b>���G:</b> �o�{ %s %s ."
+
+
+# For QPaginator controls
+MsgId "Previous"
+MsgStr "�e�@��"
+
+MsgId "Next"
+MsgStr "��@��"
+
+
+# For the List FormDraft Include template
+MsgId "List All"
+MsgStr "��ܥ���"
+
+MsgId "Create a New"
+MsgStr "�s��"
+
+MsgId "Go to \"Form Drafts\""
+MsgStr "��� \"��Z\""
+
+
+# For the Edit FormBase class template
+MsgId "Create"
+MsgStr "�s��"
+
+MsgId "Edit"
+MsgStr "�s��"
+
+MsgId "Save"
+MsgStr "�x�s"
+
+MsgId "Cancel"
+MsgStr "���"
+
+MsgId "Delete"
+MsgStr "�R��"
+
+MsgId "Are you SURE you want to DELETE this %s?"
+MsgStr "�A�T�w�R���o�� %s?"
+
+
+# For the form_drafts/index.php page
+MsgId "List of Form Drafts"
+MsgStr "��Z�C��"
+
+MsgId "View List"
+MsgStr "��ɦC��"
+
+MsgId "Create New"
+MsgStr "�s��"
