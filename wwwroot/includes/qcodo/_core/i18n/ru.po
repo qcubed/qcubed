@@ -1,0 +1,112 @@
+# QCubed Distributed Language File
+# for Russian (default)
+# Contributed by "bermuda"
+
+
+# For QTextBoxBase controls
+MsgId "%s is required"
+MsgStr "%s ���������"
+
+MsgId "Required"
+MsgStr "���������"
+
+
+# For QWriteBox controls
+MsgId ""
+"Tags &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; and &lt;http://...&gt; are allowed.  "
+"Use ** at the beginning of any line for a bulleted list."
+MsgStr ""
+"��������� �������� &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; and &lt;http://...&gt;.  "
+"����������� ** � ������ ����� ��� ���� ����� ������� ������."
+
+
+# For QPaginatedControl controls
+MsgId "item"
+MsgStr "�������"
+
+MsgId "items"
+MsgStr "��������"
+
+
+# For QListBox and QCalendar controls
+MsgId "Reset"
+MsgStr "��������"
+
+
+# For QIntegerTextBox and QFloatTextBox controls
+MsgId "Invalid Integer"
+MsgStr "��������� �����"
+
+MsgId "Invalid Float"
+MsgStr "��������� ��������������"
+
+MsgId "Value must be less than %s"
+MsgStr "�������� ������ ���� ������ ��� %s"
+
+MsgId "Value must be greater than %s"
+MsgStr "�������� ������ ���� ������ ���  %s"
+
+
+# For QDataGrid controls
+MsgId "<b>Results:</b>&nbsp;Viewing&nbsp;%s&nbsp;%s-%s&nbsp;of&nbsp;%s."
+MsgStr "<b>����������:</b>&nbsp;��������&nbsp;%s&nbsp;%s-%s&nbsp;of&nbsp;%s."
+
+MsgId "<b>Results:</b> No %s found."
+MsgStr "<b>����������:</b> %s �� �������."
+
+MsgId "<b>Results:</b> 1 %s found."
+MsgStr "<b>����������:</b> ���� %s ������."
+
+MsgId_Plural "<b>Results:</b> %s %s found."
+MsgStr[0] "<b>Results:</b> ���� %s ������."
+MsgStr[1] "<b>Results:</b> %s %s �������."
+
+
+# For QPaginator controls
+MsgId "Previous"
+MsgStr "����������"
+
+MsgId "Next"
+MsgStr "���������"
+
+
+# For the List FormDraft Include template
+MsgId "List All"
+MsgStr "�������� ���"
+
+MsgId "Create a New"
+MsgStr "������� �����"
+
+MsgId "Go to \"Form Drafts\""
+MsgStr "������� � \"Form Drafts\""
+
+
+# For the Edit FormBase class template
+MsgId "Create"
+MsgStr "�������"
+
+MsgId "Edit"
+MsgStr "�������������"
+
+MsgId "Save"
+MsgStr "���������"
+
+MsgId "Cancel"
+MsgStr "������"
+
+MsgId "Delete"
+MsgStr "�������"
+
+MsgId "Are you SURE you want to DELETE this %s?"
+MsgStr "�� ������� � ���, ��� ������ ������� %s?"
+
+
+# For the form_drafts/index.php page
+MsgId "List of Form Drafts"
+MsgStr "������ Form Drafts"
+
+MsgId "View List"
+MsgStr "�������� ������"
+
+MsgId "Create New"
+MsgStr "������� �����"
