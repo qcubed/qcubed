@@ -8,7 +8,7 @@
 		var objControl; if (!(objControl = qcodo.getControl(mixControl))) return;
 		var objWrapper = objControl.wrapper;
 
-		qcodo.moveableControls.push (objWrapper);
+		qcodo.moveableControls.push (objControl);
 		objWrapper.moveable = true;
 		
 		// Control Handle and Mask
@@ -246,18 +246,18 @@
 						
 						// Update all handles to fix browser collapse issue
 						for (var strControlId in qcodo.moveableControls) {		
-							var objUpdateWrapper = qcodo.getControl(qcodo.moveableControls[strControlId]);
-							if (objUpdateWrapper) { 					
+							var objUpdateControl = qcodo.getControl(qcodo.moveableControls[strControlId]);
+							if (objUpdateControl) { 					
 								// Correct errors caused by other javascript libraries prototyping arrays
-								if (typeof objUpdateWrapper !== 'function') { 
-									var objDropControl = objUpdateWrapper.getDropTarget();
+								if (typeof objUpdateControl !== 'function' && objUpdateControl.wrapper.getDropTarget) { 
+									var objDropControl = objUpdateControl.wrapper.getDropTarget();
 									if (objDropControl) {
 										if (objDropControl.nodeName.toLowerCase() == 'form')
-											objUpdateWrapper.updateHandle(false, "move"); 
+											objUpdateControl.wrapper.updateHandle(false, "move"); 
 										else
-											objUpdateWrapper.updateHandle(true, "move"); 
+											objUpdateControl.wrapper.updateHandle(true, "move"); 
 									} else {
-										objUpdateWrapper.updateHandle(true, "move"); 
+										objUpdateControl.wrapper.updateHandle(true, "move"); 
 									}
 								}
 							}							
