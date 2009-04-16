@@ -51,7 +51,6 @@
 			array_push(Examples::$Categories[$intIndex], '/qcodo_query/subsql.php * Custom SQL Subqueries for QQuery');
 			array_push(Examples::$Categories[$intIndex], '/qcodo_query/intro.php * Performing Custom SQL Queries');
 			array_push(Examples::$Categories[$intIndex], '/qcodo_query/qcache.php * Caching Query Results with QueryArrayCached');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/migrating.php * From Beta 2: Migrating from "Manual Queries"');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
