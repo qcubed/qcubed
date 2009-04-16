@@ -76,7 +76,7 @@
 
 				case 'CalendarImageSource': 
 					try {
-						return ($this->strCalendarImageSource = QType::Cast($mixValue, QType::Integer));
+						return ($this->strCalendarImageSource = QType::Cast($mixValue, QType::String));
 					} catch (QCallerException $objExc) { $objExc->IncrementOffset(); throw $objExc; }
 
 				default:
