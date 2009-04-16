@@ -139,8 +139,7 @@
 						$strMonthListbox .= sprintf('<option value="%s"%s>%s</option>',
 							$intMonth,
 							$strSelected,
-//							date('M', mktime(0, 0, 0, $intMonth, 1, 2000)));
-							strftime("%b", mktime(0, 0, 0, $intMonth, 1, 2000)));
+							QApplication::Translate(strftime("%b", mktime(0, 0, 0, $intMonth, 1, 2000))));
 					}
 					$strMonthListbox .= '</select>';
 
