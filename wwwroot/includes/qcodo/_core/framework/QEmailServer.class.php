@@ -326,8 +326,11 @@
 				fwrite($objResource, $objMessage->Body);
 				fwrite($objResource, "\r\n\r\n");
 				fwrite($objResource, sprintf("--%s--\r\n", $strAltBoundary));
-			} else
+			} else {
+				fwrite($objResource, sprintf("Content-Type: text/plain; charset=\"%s\"\r\n", $strEncodingType));
+				fwrite($objResource, sprintf("Content-Transfer-Encoding: 7bit\r\n\r\n"));
 				fwrite($objResource, "\r\n" . $objMessage->Body);
+			}
 			
 			// Send: File Attachments
 			if($objMessage->HasFiles) {
