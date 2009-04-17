@@ -47,7 +47,13 @@
 			$this->objSpinner->Display = false;
 
 			$strFileControlCallback = $this->strFileUploadCallback;
-			$this->objParentControl->$strFileControlCallback($strFormId, $strControlId, $strParameter);
+			
+			if (isset($this->objParentControl)) {
+				$parent = $this->objParentControl;
+			} else {
+				$parent = $this->objForm;
+			}
+			$parent->$strFileControlCallback($strFormId, $strControlId, $strParameter);
 		}
 		
 		public function ShowError($strErrorMessage) {
