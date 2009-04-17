@@ -157,14 +157,22 @@
 		 */
 		public function GetWebUrl() {
 			// First of all, if ClickToView is NOT set, then we obvioulsy will not pass out the URL
-			if (!$this->blnClickToView)
+			if (!$this->blnClickToView) {
 				return null;
+			}
 
 			// Now, we need to see if the file, itself, is actually in the docroot somewhere so that
 			// it can be viewed, and if so, we need to return the web-based URL (relative to the docroot)
 			if ($this->strFile) {
-				if (substr($this->strFile, 0, strlen(__DOCROOT__)) == __DOCROOT__)
-					return __VIRTUAL_DIRECTORY__ . substr($this->strFile, strlen(__DOCROOT__));
+				$filePathSubstr = substr($this->strFile, 0, strlen(__DOCROOT__));
+                
+				// Convert backslashes to forward slashes (relevant for Windows only;
+				// see http://trac.qcu.be/projects/qcubed/ticket/176
+				$filePathSubstr = str_replace("\\", "/", $filePathSubstr);
+				$docrootNormalized = str_replace("\\", "/", __DOCROOT__);
+				if ($filePathSubstr == $docrootNormalized) {
+					return __VIRTUAL_DIRECTORY__ . substr(str_replace("\\", "/", $this->strFile), strlen(__DOCROOT__));
+				}
 			}
 
 			return null;
