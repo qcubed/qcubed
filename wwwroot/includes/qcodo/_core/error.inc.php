@@ -12,7 +12,7 @@
 	}
 
 	// Exception and Error Handling
-	function QcodoHandleException(Exception $__exc_objException, $blnExit = true) {
+	function QcodoHandleException(Exception $__exc_objException) {
 		if (class_exists('QApplicationBase'))
 			QApplicationBase::$ErrorFlag = true;
 
@@ -54,11 +54,10 @@
 
 		// Call to display the Error Page (as defined in configuration.inc.php)
 		require(__DOCROOT__ . ERROR_PAGE_PATH);
-		if($blnExit)
-			exit;
+		exit();
 	}
 
-	function QcodoHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, $blnExit = true) {
+	function QcodoHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, $__exc_errcontext) {
 		// If a command is called with "@", then we should return
 		if (error_reporting() == 0)
 			return;
@@ -144,7 +143,6 @@
 
 		// Call to display the Error Page (as defined in configuration.inc.php)
 		require(__DOCROOT__ . ERROR_PAGE_PATH);
-		if($blnExit)
-			exit;
+		exit();
 	}
 ?>
