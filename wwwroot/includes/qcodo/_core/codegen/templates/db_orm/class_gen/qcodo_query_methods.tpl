@@ -167,48 +167,25 @@
 			}
 		}
 
-/*		public static function QueryArrayCached($strConditions, $mixParameterArray = null) {
+		public static function QueryArrayCached(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null, $blnForceUpdate = false) {
 			// Get the Database Object for this Class
 			$objDatabase = <%= $objTable->ClassName %>::GetDatabase();
 
-			// Lookup the QCache for This Query Statement
-			$objCache = new QCache('query', '<%= $objTable->Name %>_' . serialize($strConditions));
-			if (!($strQuery = $objCache->GetData())) {
-				// Not Found -- Go ahead and Create/Build out a new QueryBuilder object with <%= $objTable->ClassName %>-specific fields
-				$objQueryBuilder = new QQueryBuilder($objDatabase);
-				<%= $objTable->ClassName %>::GetSelectFields($objQueryBuilder);
-				<%= $objTable->ClassName %>::GetFromFields($objQueryBuilder);
-
-				// Ensure the Passed-in Conditions is a string
-				try {
-					$strConditions = QType::Cast($strConditions, QType::String);
-				} catch (QCallerException $objExc) {
-					$objExc->IncrementOffset();
-					throw $objExc;
-				}
-
-				// Create the Conditions object, and apply it
-				$objConditions = eval('return ' . $strConditions . ';');
-
-				// Apply Any Conditions
-				if ($objConditions)
-					$objConditions->UpdateQueryBuilder($objQueryBuilder);
-
-				// Get the SQL Statement
-				$strQuery = $objQueryBuilder->GetStatement();
-
-				// Save the SQL Statement in the Cache
-				$objCache->SaveData($strQuery);
+			$strQuery = <%= $objTable->ClassName %>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
+			
+			$objCache = new QCache('qquery/<%= strtolower($objTable->ClassName) %>', $strQuery);
+			$cacheData = $objCache->GetData();
+			
+			if (!$cacheData || $blnForceUpdate) {
+				$objDbResult = $objQueryBuilder->Database->Query($strQuery);
+				$arrResult = <%= $objTable->ClassName %>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNodes, $objQueryBuilder->ColumnAliasArray);
+				$objCache->SaveData(serialize($arrResult));
+			} else {
+				$arrResult = unserialize($cacheData);
 			}
-
-			// Prepare the Statement with the Parameters
-			if ($mixParameterArray)
-				$strQuery = $objDatabase->PrepareStatement($strQuery, $mixParameterArray);
-
-			// Perform the Query and Instantiate the Array Result
-			$objDbResult = $objDatabase->Query($strQuery);
-			return <%= $objTable->ClassName %>::InstantiateDbResult($objDbResult);
-		}*/
+			
+			return $arrResult;
+		}
 
 		/**
 		 * Updates a QQueryBuilder with the SELECT fields for this <%= $objTable->ClassName %>
