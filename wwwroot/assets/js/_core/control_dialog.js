@@ -174,7 +174,7 @@
 		objWrapper.anyKeyCloses = blnAnyKeyCloses;
 
 		// Initial DbBg Setup
-		objDbBg.style.position = "absolute";
+		objDbBg.style.position = "fixed";
 		objDbBg.style.zIndex = 998;
 		objDbBg.style.top = "0px";
 		objDbBg.style.left = "0px";
