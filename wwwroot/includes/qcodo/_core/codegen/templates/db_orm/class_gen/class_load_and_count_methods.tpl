@@ -17,20 +17,18 @@
 		 * @param <%= $objColumn->VariableType %> $<%= $objColumn->VariableName %>
 	<% } %>
 <% } %>
+		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @return <%= $objTable->ClassName %>
 		 */
-		public static function Load(<%= $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray); %>) {
+		public static function Load(<%= $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray); %>, $objOptionalClauses = null) {
 			// Use QuerySingle to Perform the Query
 			return <%= $objTable->ClassName %>::QuerySingle(
-<% if (count($objTable->PrimaryKeyColumnArray) > 1) { %>
 				QQ::AndCondition(
-<% } %>
 <% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { %>
-				QQ::Equal(QQN::<%= $objTable->ClassName %>()-><%= $objColumn->PropertyName %>, $<%= $objColumn->VariableName %>),
+					QQ::Equal(QQN::<%= $objTable->ClassName %>()-><%= $objColumn->PropertyName %>, $<%= $objColumn->VariableName %>),
 <% } %><%--%>
-<% if (count($objTable->PrimaryKeyColumnArray) > 1) { %>
-				)
-<% } %>
+				),
+				$objOptionalClauses
 			);
 		}
 
