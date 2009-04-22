@@ -177,4 +177,9 @@
 		const QueryString = 2;
 		const PostData = 3;
 	}
+	
+	abstract class QFCKeditorTextMode {
+		const XHTML = 'XHTML';
+		const Plain = 'Plain';
+	}	
 ?>

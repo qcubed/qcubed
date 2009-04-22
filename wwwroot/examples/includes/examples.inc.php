@@ -140,13 +140,14 @@
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Other Advanced Controls';
 			Examples::$Categories[$intIndex]['description'] = 'A collection of examples for some of the more advanced/complex QControls';
+			array_push(Examples::$Categories[$intIndex], '/other_controls/fckeditor.php Rich Text Editing with QFCKEditor');
 			array_push(Examples::$Categories[$intIndex], '/image_label/intro.php Introduction to QImageLabel');
 			array_push(Examples::$Categories[$intIndex], '/other_controls/autocomplete.php * Auto-complete Textbox');
 			array_push(Examples::$Categories[$intIndex], '/treenav/treenav.php Introduction to QTreeNav');
 			array_push(Examples::$Categories[$intIndex], '/other_controls/image.php Introduction to QImageControl');
 			array_push(Examples::$Categories[$intIndex], '/other_controls/datetime.php Date and DateTime-based QControls');
 			array_push(Examples::$Categories[$intIndex], '/other_controls/file_asset.php Combining Controls: A Better Way to Upload Files');
-
+		
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'MetaControls, Meta DataGrids, and the Drafts';
