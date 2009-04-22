@@ -1,9 +1,19 @@
 <?php
-	// Utilized by the ListControl class which contains a private array of ListItems.
-	// * "Name" is what gets displayed
-	// * "Value" is any text that represents the value of the ListItem (e.g. maybe a DB Id)
-	// * "Selected" is a boolean of whether or not this item is selected or not
-
+	/**
+	 * QListItem.class.php contains the QListItem class
+	 * @package Controls
+	 */
+	/**
+	 * Utilized by the {@link QListControl} class which contains a private array of ListItems.
+	 * @package Controls
+	 * @property string $Name is what gets displayed
+	 * @property string $Value is any text that represents the value of the ListItem (e.g. maybe a DB Id)
+	 * @property boolean $Selected is a boolean of whether or not this item is selected or not 
+	 * 					 (do only! use during initialization, otherwise this should be set 
+	 * 					  by the {@link QListControl}!)
+	 * @property string $ItemGroup is the group (if any) in which the Item should be displayed 
+	 * @property QListItemStyle $ItemStyle is the QListItemStyle in which the Item should be rendered (set by 
+	 */
 	class QListItem extends QBaseClass {
 		///////////////////////////
 		// Private Member Variables
@@ -17,6 +27,17 @@
 		/////////////////////////
 		// Methods
 		/////////////////////////
+		/**
+		 * Creates a QListItem
+		 * @param string $strName is the displayed Name of the Item
+		 * @param string $strValue is any text that represents the value of the ListItem (e.g. maybe a DB Id)
+		 * @param boolean $blnSelected is a boolean of whether or not this item is selected or not (optional)
+		 * @param string $strItemGroup is the group (if any) in which the Item should be displayed
+		 * @param array $strOverrideParameters 
+		 *              allows you to override item styles.  It is either a string formatted as Property=Value 
+		 *              or an array of the format array(property => value)
+		 * @return QListItem
+		 */
 		public function __construct($strName, $strValue, $blnSelected = false, $strItemGroup = null, $strOverrideParameters = null) {
 			$this->strName = $strName;
 			$this->strValue = $strValue;
