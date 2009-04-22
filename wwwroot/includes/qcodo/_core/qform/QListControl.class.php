@@ -13,20 +13,19 @@
 	 * @property integer $ItemCount 
 	 * 						the current count of ListItems in the control.
 	 * @property integer $SelectedIndex 
-	 * 						is the index # of the control that is selected. 
+	 * 						is the index number of the control that is selected. 
 	 * 					 	"-1" means that nothing is selected. If multiple items 
-	 * 						are selected, it will return the lowest index # of all 
+	 * 						are selected, it will return the lowest index number of all 
 	 * 						ListItems that are currently selected. 
 	 * 
-	 * 						Like all Selected-Properties SETTING it will obviously select 
-	 * 						that specific ListItem, but it will also automatically 
-	 * 						UNSELECT ALL OTHER currently selected ListItems (if applicable).
+	 * 						Set functionality: selects that specific ListItem and will unselect all other 
+	 *            currently selected ListItems.
 	 * @property string $SelectedName 
 	 * 						simply returns ListControl::SelectedItem->Name, or null 
 	 * 						if nothing is selected.
 	 * @property-read QListItem $SelectedItem 
 	 * 						(readonly!) returns the ListItem object, itself, that is selected
-	 * 						(or the ListItem with the lowest index # of a ListItems that 
+	 * 						(or the ListItem with the lowest index number of a ListItems that 
 	 * 						are currently selected if multiple items are selected).  
 	 * 						It will return null if nothing is selected.
 	 * @property-read array $SelectedItems
@@ -60,7 +59,7 @@
 		 * Add one ListItem to the ListControl
 		 * 
 		 * Allows you to add a ListItem to the ListItem array within the ListControl. Items are appended to 
-		 * the array. This method exhibits polymorphism: you can either pass in a ListItem object, **OR** you 
+		 * the array. This method exhibits polymorphism: you can either pass in a ListItem object or you 
 		 * can pass in three strings.
 		 * 
 		 * <code>
@@ -74,11 +73,11 @@
 		 * </code>
 		 * 
 		 * @see QListItem::__construct()
-		 * @param mixed $mixListItemOrName QListItem or Name of the ListItem (string)
-		 * @param string $strValue Value of the ListItem (string, optional)
-		 * @param boolean $blnSelected Selected flag for the ListItem (bool, optional)
-		 * @param string $strItemGroup allows you to apply grouping (as in the <optgroup> tag
-		 * @param string $strOverrideParameters OverrideParameters for ListItemStyle (optional)
+		 * @param mixed $mixListItemOrName QListItem or Name of the ListItem
+		 * @param string $strValue Value of the ListItem
+		 * @param boolean $blnSelected set the html selected attribute for the ListItem
+		 * @param string $strItemGroup allows you to apply grouping (<optgroup> tag)
+		 * @param string $strOverrideParameters OverrideParameters for ListItemStyle
 		 */
 		public function AddItem($mixListItemOrName, $strValue = null, $blnSelected = null, $strItemGroup = null, $strOverrideParameters = null) {
 			$this->blnModified = true;
@@ -96,7 +95,7 @@
 		/**
 		 * Allows you to add a ListItem at a certain index
 		 * 
-		 * Unlike AddItem, this will insert the ListItem at whatever index is passed to the function.  Additonally,
+		 * Unlike AddItem, this will insert the ListItem at whatever index is passed to the function.  Additionally,
 		 * only a ListItem object can be passed (as opposed to an object or strings)
 		 * 
 		 * @param integer $intIndex index at which the item should be inserted
