@@ -31,8 +31,8 @@
 		public $txtSpent;
 
 		// Other ListBoxes (if applicable) via Unique ReverseReferences and ManyToMany References
-		public $lstParentProjectsAsRelated;
 		public $lstProjectsAsRelated;
+		public $lstParentProjectsAsRelated;
 		public $lstPeopleAsTeamMember;
 
 		// Other Controls
@@ -70,8 +70,8 @@
 			$this->calEndDate = $this->mctProject->calEndDate_Create();
 			$this->txtBudget = $this->mctProject->txtBudget_Create();
 			$this->txtSpent = $this->mctProject->txtSpent_Create();
-			$this->lstParentProjectsAsRelated = $this->mctProject->lstParentProjectsAsRelated_Create();
 			$this->lstProjectsAsRelated = $this->mctProject->lstProjectsAsRelated_Create();
+			$this->lstParentProjectsAsRelated = $this->mctProject->lstParentProjectsAsRelated_Create();
 			$this->lstPeopleAsTeamMember = $this->mctProject->lstPeopleAsTeamMember_Create();
 
 			// Create Buttons and Actions on this Form

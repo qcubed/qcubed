@@ -25,10 +25,10 @@
 	 * @property double $Budget the value for fltBudget 
 	 * @property double $Spent the value for fltSpent 
 	 * @property Person $ManagerPerson the value for the Person object referenced by intManagerPersonId 
-	 * @property-read Project $_ParentProjectAsRelated the value for the private _objParentProjectAsRelated (Read-Only) if set due to an expansion on the related_project_assn association table
-	 * @property-read Project[] $_ParentProjectAsRelatedArray the value for the private _objParentProjectAsRelatedArray (Read-Only) if set due to an ExpandAsArray on the related_project_assn association table
 	 * @property-read Project $_ProjectAsRelated the value for the private _objProjectAsRelated (Read-Only) if set due to an expansion on the related_project_assn association table
 	 * @property-read Project[] $_ProjectAsRelatedArray the value for the private _objProjectAsRelatedArray (Read-Only) if set due to an ExpandAsArray on the related_project_assn association table
+	 * @property-read Project $_ParentProjectAsRelated the value for the private _objParentProjectAsRelated (Read-Only) if set due to an expansion on the related_project_assn association table
+	 * @property-read Project[] $_ParentProjectAsRelatedArray the value for the private _objParentProjectAsRelatedArray (Read-Only) if set due to an ExpandAsArray on the related_project_assn association table
 	 * @property-read Person $_PersonAsTeamMember the value for the private _objPersonAsTeamMember (Read-Only) if set due to an expansion on the team_member_project_assn association table
 	 * @property-read Person[] $_PersonAsTeamMemberArray the value for the private _objPersonAsTeamMemberArray (Read-Only) if set due to an ExpandAsArray on the team_member_project_assn association table
 	 * @property-read Milestone $_Milestone the value for the private _objMilestone (Read-Only) if set due to an expansion on the milestone.project_id reverse relationship
@@ -115,22 +115,6 @@
 
 
 		/**
-		 * Private member variable that stores a reference to a single ParentProjectAsRelated object
-		 * (of type Project), if this Project object was restored with
-		 * an expansion on the related_project_assn association table.
-		 * @var Project _objParentProjectAsRelated;
-		 */
-		private $_objParentProjectAsRelated;
-
-		/**
-		 * Private member variable that stores a reference to an array of ParentProjectAsRelated objects
-		 * (of type Project[]), if this Project object was restored with
-		 * an ExpandAsArray on the related_project_assn association table.
-		 * @var Project[] _objParentProjectAsRelatedArray;
-		 */
-		private $_objParentProjectAsRelatedArray = array();
-
-		/**
 		 * Private member variable that stores a reference to a single ProjectAsRelated object
 		 * (of type Project), if this Project object was restored with
 		 * an expansion on the related_project_assn association table.
@@ -145,6 +129,22 @@
 		 * @var Project[] _objProjectAsRelatedArray;
 		 */
 		private $_objProjectAsRelatedArray = array();
+
+		/**
+		 * Private member variable that stores a reference to a single ParentProjectAsRelated object
+		 * (of type Project), if this Project object was restored with
+		 * an expansion on the related_project_assn association table.
+		 * @var Project _objParentProjectAsRelated;
+		 */
+		private $_objParentProjectAsRelated;
+
+		/**
+		 * Private member variable that stores a reference to an array of ParentProjectAsRelated objects
+		 * (of type Project[]), if this Project object was restored with
+		 * an ExpandAsArray on the related_project_assn association table.
+		 * @var Project[] _objParentProjectAsRelatedArray;
+		 */
+		private $_objParentProjectAsRelatedArray = array();
 
 		/**
 		 * Private member variable that stores a reference to a single PersonAsTeamMember object
@@ -520,23 +520,6 @@
 						if (!$strAliasPrefix)
 							$strAliasPrefix = 'project__';
 
-						// Expanding many-to-many references: ParentProjectAsRelated
-						$strAlias = $strAliasPrefix . 'parentprojectasrelated__project_id__id';
-						$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-						if ((array_key_exists($strAlias, $strExpandAsArrayNodes)) &&
-							(!is_null($objDbRow->GetColumn($strAliasName)))) {
-							if ($intPreviousChildItemCount = count($objPreviousItem->_objParentProjectAsRelatedArray)) {
-								$objPreviousChildItems = $objPreviousItem->_objParentProjectAsRelatedArray;
-								$objChildItem = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'parentprojectasrelated__project_id__', $strExpandAsArrayNodes, $objPreviousChildItems, $strColumnAliasArray);
-								if ($objChildItem) {
-									$objPreviousItem->_objParentProjectAsRelatedArray[] = $objChildItem;
-								}
-							} else {
-								$objPreviousItem->_objParentProjectAsRelatedArray[] = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'parentprojectasrelated__project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-							}
-							$blnExpandedViaArray = true;
-						}
-
 						// Expanding many-to-many references: ProjectAsRelated
 						$strAlias = $strAliasPrefix . 'projectasrelated__child_project_id__id';
 						$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
@@ -550,6 +533,23 @@
 								}
 							} else {
 								$objPreviousItem->_objProjectAsRelatedArray[] = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'projectasrelated__child_project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
+							}
+							$blnExpandedViaArray = true;
+						}
+
+						// Expanding many-to-many references: ParentProjectAsRelated
+						$strAlias = $strAliasPrefix . 'parentprojectasrelated__project_id__id';
+						$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
+						if ((array_key_exists($strAlias, $strExpandAsArrayNodes)) &&
+							(!is_null($objDbRow->GetColumn($strAliasName)))) {
+							if ($intPreviousChildItemCount = count($objPreviousItem->_objParentProjectAsRelatedArray)) {
+								$objPreviousChildItems = $objPreviousItem->_objParentProjectAsRelatedArray;
+								$objChildItem = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'parentprojectasrelated__project_id__', $strExpandAsArrayNodes, $objPreviousChildItems, $strColumnAliasArray);
+								if ($objChildItem) {
+									$objPreviousItem->_objParentProjectAsRelatedArray[] = $objChildItem;
+								}
+							} else {
+								$objPreviousItem->_objParentProjectAsRelatedArray[] = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'parentprojectasrelated__project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
 							}
 							$blnExpandedViaArray = true;
 						}
@@ -614,9 +614,9 @@
 			$strAliasName = array_key_exists($strAliasPrefix . 'description', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'description'] : $strAliasPrefix . 'description';
 			$objToReturn->strDescription = $objDbRow->GetColumn($strAliasName, 'Blob');
 			$strAliasName = array_key_exists($strAliasPrefix . 'start_date', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'start_date'] : $strAliasPrefix . 'start_date';
-			$objToReturn->dttStartDate = $objDbRow->GetColumn($strAliasName, 'Date');
+			$objToReturn->dttStartDate = $objDbRow->GetColumn($strAliasName, 'DateTime');
 			$strAliasName = array_key_exists($strAliasPrefix . 'end_date', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'end_date'] : $strAliasPrefix . 'end_date';
-			$objToReturn->dttEndDate = $objDbRow->GetColumn($strAliasName, 'Date');
+			$objToReturn->dttEndDate = $objDbRow->GetColumn($strAliasName, 'DateTime');
 			$strAliasName = array_key_exists($strAliasPrefix . 'budget', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'budget'] : $strAliasPrefix . 'budget';
 			$objToReturn->fltBudget = $objDbRow->GetColumn($strAliasName, 'Float');
 			$strAliasName = array_key_exists($strAliasPrefix . 'spent', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . 'spent'] : $strAliasPrefix . 'spent';
@@ -627,10 +627,10 @@
 					if ($objToReturn->Id != $objPreviousItem->Id) {
 						continue;
 					}
-					if (array_diff($objPreviousItem->_objParentProjectAsRelatedArray, $objToReturn->_objParentProjectAsRelatedArray) != null) {
+					if (array_diff($objPreviousItem->_objProjectAsRelatedArray, $objToReturn->_objProjectAsRelatedArray) != null) {
 						continue;
 					}
-					if (array_diff($objPreviousItem->_objProjectAsRelatedArray, $objToReturn->_objProjectAsRelatedArray) != null) {
+					if (array_diff($objPreviousItem->_objParentProjectAsRelatedArray, $objToReturn->_objParentProjectAsRelatedArray) != null) {
 						continue;
 					}
 					if (array_diff($objPreviousItem->_objPersonAsTeamMemberArray, $objToReturn->_objPersonAsTeamMemberArray) != null) {
@@ -665,16 +665,6 @@
 
 
 
-			// Check for ParentProjectAsRelated Virtual Binding
-			$strAlias = $strAliasPrefix . 'parentprojectasrelated__project_id__id';
-			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			if (!is_null($objDbRow->GetColumn($strAliasName))) {
-				if (($strExpandAsArrayNodes) && (array_key_exists($strAlias, $strExpandAsArrayNodes)))
-					$objToReturn->_objParentProjectAsRelatedArray[] = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'parentprojectasrelated__project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-				else
-					$objToReturn->_objParentProjectAsRelated = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'parentprojectasrelated__project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-			}
-
 			// Check for ProjectAsRelated Virtual Binding
 			$strAlias = $strAliasPrefix . 'projectasrelated__child_project_id__id';
 			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
@@ -683,6 +673,16 @@
 					$objToReturn->_objProjectAsRelatedArray[] = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'projectasrelated__child_project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
 				else
 					$objToReturn->_objProjectAsRelated = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'projectasrelated__child_project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
+			}
+
+			// Check for ParentProjectAsRelated Virtual Binding
+			$strAlias = $strAliasPrefix . 'parentprojectasrelated__project_id__id';
+			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			if (!is_null($objDbRow->GetColumn($strAliasName))) {
+				if (($strExpandAsArrayNodes) && (array_key_exists($strAlias, $strExpandAsArrayNodes)))
+					$objToReturn->_objParentProjectAsRelatedArray[] = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'parentprojectasrelated__project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
+				else
+					$objToReturn->_objParentProjectAsRelated = Project::InstantiateDbRow($objDbRow, $strAliasPrefix . 'parentprojectasrelated__project_id__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
 			}
 
 			// Check for PersonAsTeamMember Virtual Binding
@@ -835,37 +835,6 @@
 		// INDEX-BASED LOAD METHODS (Array via Many to Many)
 		////////////////////////////////////////////////////
 			/**
-		 * Load an array of Project objects for a given ParentProjectAsRelated
-		 * via the related_project_assn table
-		 * @param integer $intProjectId
-		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
-		 * @return Project[]
-		*/
-		public static function LoadArrayByParentProjectAsRelated($intProjectId, $objOptionalClauses = null) {
-			// Call Project::QueryArray to perform the LoadArrayByParentProjectAsRelated query
-			try {
-				return Project::QueryArray(
-					QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, $intProjectId),
-					$objOptionalClauses
-				);
-			} catch (QCallerException $objExc) {
-				$objExc->IncrementOffset();
-				throw $objExc;
-			}
-		}
-
-		/**
-		 * Count Projects for a given ParentProjectAsRelated
-		 * via the related_project_assn table
-		 * @param integer $intProjectId
-		 * @return int
-		*/
-		public static function CountByParentProjectAsRelated($intProjectId) {
-			return Project::QueryCount(
-				QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, $intProjectId)
-			);
-		}
-			/**
 		 * Load an array of Project objects for a given ProjectAsRelated
 		 * via the related_project_assn table
 		 * @param integer $intChildProjectId
@@ -894,6 +863,37 @@
 		public static function CountByProjectAsRelated($intChildProjectId) {
 			return Project::QueryCount(
 				QQ::Equal(QQN::Project()->ProjectAsRelated->ChildProjectId, $intChildProjectId)
+			);
+		}
+			/**
+		 * Load an array of Project objects for a given ParentProjectAsRelated
+		 * via the related_project_assn table
+		 * @param integer $intProjectId
+		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
+		 * @return Project[]
+		*/
+		public static function LoadArrayByParentProjectAsRelated($intProjectId, $objOptionalClauses = null) {
+			// Call Project::QueryArray to perform the LoadArrayByParentProjectAsRelated query
+			try {
+				return Project::QueryArray(
+					QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, $intProjectId),
+					$objOptionalClauses
+				);
+			} catch (QCallerException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+		}
+
+		/**
+		 * Count Projects for a given ParentProjectAsRelated
+		 * via the related_project_assn table
+		 * @param integer $intProjectId
+		 * @return int
+		*/
+		public static function CountByParentProjectAsRelated($intProjectId) {
+			return Project::QueryCount(
+				QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, $intProjectId)
 			);
 		}
 			/**
@@ -1185,22 +1185,6 @@
 				// (If restored via a "Many-to" expansion)
 				////////////////////////////
 
-				case '_ParentProjectAsRelated':
-					/**
-					 * Gets the value for the private _objParentProjectAsRelated (Read-Only)
-					 * if set due to an expansion on the related_project_assn association table
-					 * @return Project
-					 */
-					return $this->_objParentProjectAsRelated;
-
-				case '_ParentProjectAsRelatedArray':
-					/**
-					 * Gets the value for the private _objParentProjectAsRelatedArray (Read-Only)
-					 * if set due to an ExpandAsArray on the related_project_assn association table
-					 * @return Project[]
-					 */
-					return (array) $this->_objParentProjectAsRelatedArray;
-
 				case '_ProjectAsRelated':
 					/**
 					 * Gets the value for the private _objProjectAsRelated (Read-Only)
@@ -1216,6 +1200,22 @@
 					 * @return Project[]
 					 */
 					return (array) $this->_objProjectAsRelatedArray;
+
+				case '_ParentProjectAsRelated':
+					/**
+					 * Gets the value for the private _objParentProjectAsRelated (Read-Only)
+					 * if set due to an expansion on the related_project_assn association table
+					 * @return Project
+					 */
+					return $this->_objParentProjectAsRelated;
+
+				case '_ParentProjectAsRelatedArray':
+					/**
+					 * Gets the value for the private _objParentProjectAsRelatedArray (Read-Only)
+					 * if set due to an ExpandAsArray on the related_project_assn association table
+					 * @return Project[]
+					 */
+					return (array) $this->_objParentProjectAsRelatedArray;
 
 				case '_PersonAsTeamMember':
 					/**
@@ -1595,128 +1595,6 @@
 		}
 
 			
-		// Related Many-to-Many Objects' Methods for ParentProjectAsRelated
-		//-------------------------------------------------------------------
-
-		/**
-		 * Gets all many-to-many associated ParentProjectsAsRelated as an array of Project objects
-		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
-		 * @return Project[]
-		*/ 
-		public function GetParentProjectAsRelatedArray($objOptionalClauses = null) {
-			if ((is_null($this->intId)))
-				return array();
-
-			try {
-				return Project::LoadArrayByProjectAsRelated($this->intId, $objOptionalClauses);
-			} catch (QCallerException $objExc) {
-				$objExc->IncrementOffset();
-				throw $objExc;
-			}
-		}
-
-		/**
-		 * Counts all many-to-many associated ParentProjectsAsRelated
-		 * @return int
-		*/ 
-		public function CountParentProjectsAsRelated() {
-			if ((is_null($this->intId)))
-				return 0;
-
-			return Project::CountByProjectAsRelated($this->intId);
-		}
-
-		/**
-		 * Checks to see if an association exists with a specific ParentProjectAsRelated
-		 * @param Project $objProject
-		 * @return bool
-		*/
-		public function IsParentProjectAsRelatedAssociated(Project $objProject) {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call IsParentProjectAsRelatedAssociated on this unsaved Project.');
-			if ((is_null($objProject->Id)))
-				throw new QUndefinedPrimaryKeyException('Unable to call IsParentProjectAsRelatedAssociated on this Project with an unsaved Project.');
-
-			$intRowCount = Project::QueryCount(
-				QQ::AndCondition(
-					QQ::Equal(QQN::Project()->Id, $this->intId),
-					QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, $objProject->Id)
-				)
-			);
-
-			return ($intRowCount > 0);
-		}
-
-		/**
-		 * Associates a ParentProjectAsRelated
-		 * @param Project $objProject
-		 * @return void
-		*/ 
-		public function AssociateParentProjectAsRelated(Project $objProject) {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call AssociateParentProjectAsRelated on this unsaved Project.');
-			if ((is_null($objProject->Id)))
-				throw new QUndefinedPrimaryKeyException('Unable to call AssociateParentProjectAsRelated on this Project with an unsaved Project.');
-
-			// Get the Database Object for this Class
-			$objDatabase = Project::GetDatabase();
-
-			// Perform the SQL Query
-			$objDatabase->NonQuery('
-				INSERT INTO `related_project_assn` (
-					`child_project_id`,
-					`project_id`
-				) VALUES (
-					' . $objDatabase->SqlVariable($this->intId) . ',
-					' . $objDatabase->SqlVariable($objProject->Id) . '
-				)
-			');
-		}
-
-		/**
-		 * Unassociates a ParentProjectAsRelated
-		 * @param Project $objProject
-		 * @return void
-		*/ 
-		public function UnassociateParentProjectAsRelated(Project $objProject) {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateParentProjectAsRelated on this unsaved Project.');
-			if ((is_null($objProject->Id)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateParentProjectAsRelated on this Project with an unsaved Project.');
-
-			// Get the Database Object for this Class
-			$objDatabase = Project::GetDatabase();
-
-			// Perform the SQL Query
-			$objDatabase->NonQuery('
-				DELETE FROM
-					`related_project_assn`
-				WHERE
-					`child_project_id` = ' . $objDatabase->SqlVariable($this->intId) . ' AND
-					`project_id` = ' . $objDatabase->SqlVariable($objProject->Id) . '
-			');
-		}
-
-		/**
-		 * Unassociates all ParentProjectsAsRelated
-		 * @return void
-		*/ 
-		public function UnassociateAllParentProjectsAsRelated() {
-			if ((is_null($this->intId)))
-				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateAllParentProjectAsRelatedArray on this unsaved Project.');
-
-			// Get the Database Object for this Class
-			$objDatabase = Project::GetDatabase();
-
-			// Perform the SQL Query
-			$objDatabase->NonQuery('
-				DELETE FROM
-					`related_project_assn`
-				WHERE
-					`child_project_id` = ' . $objDatabase->SqlVariable($this->intId) . '
-			');
-		}
-			
 		// Related Many-to-Many Objects' Methods for ProjectAsRelated
 		//-------------------------------------------------------------------
 
@@ -1836,6 +1714,128 @@
 					`related_project_assn`
 				WHERE
 					`project_id` = ' . $objDatabase->SqlVariable($this->intId) . '
+			');
+		}
+			
+		// Related Many-to-Many Objects' Methods for ParentProjectAsRelated
+		//-------------------------------------------------------------------
+
+		/**
+		 * Gets all many-to-many associated ParentProjectsAsRelated as an array of Project objects
+		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
+		 * @return Project[]
+		*/ 
+		public function GetParentProjectAsRelatedArray($objOptionalClauses = null) {
+			if ((is_null($this->intId)))
+				return array();
+
+			try {
+				return Project::LoadArrayByProjectAsRelated($this->intId, $objOptionalClauses);
+			} catch (QCallerException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+		}
+
+		/**
+		 * Counts all many-to-many associated ParentProjectsAsRelated
+		 * @return int
+		*/ 
+		public function CountParentProjectsAsRelated() {
+			if ((is_null($this->intId)))
+				return 0;
+
+			return Project::CountByProjectAsRelated($this->intId);
+		}
+
+		/**
+		 * Checks to see if an association exists with a specific ParentProjectAsRelated
+		 * @param Project $objProject
+		 * @return bool
+		*/
+		public function IsParentProjectAsRelatedAssociated(Project $objProject) {
+			if ((is_null($this->intId)))
+				throw new QUndefinedPrimaryKeyException('Unable to call IsParentProjectAsRelatedAssociated on this unsaved Project.');
+			if ((is_null($objProject->Id)))
+				throw new QUndefinedPrimaryKeyException('Unable to call IsParentProjectAsRelatedAssociated on this Project with an unsaved Project.');
+
+			$intRowCount = Project::QueryCount(
+				QQ::AndCondition(
+					QQ::Equal(QQN::Project()->Id, $this->intId),
+					QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, $objProject->Id)
+				)
+			);
+
+			return ($intRowCount > 0);
+		}
+
+		/**
+		 * Associates a ParentProjectAsRelated
+		 * @param Project $objProject
+		 * @return void
+		*/ 
+		public function AssociateParentProjectAsRelated(Project $objProject) {
+			if ((is_null($this->intId)))
+				throw new QUndefinedPrimaryKeyException('Unable to call AssociateParentProjectAsRelated on this unsaved Project.');
+			if ((is_null($objProject->Id)))
+				throw new QUndefinedPrimaryKeyException('Unable to call AssociateParentProjectAsRelated on this Project with an unsaved Project.');
+
+			// Get the Database Object for this Class
+			$objDatabase = Project::GetDatabase();
+
+			// Perform the SQL Query
+			$objDatabase->NonQuery('
+				INSERT INTO `related_project_assn` (
+					`child_project_id`,
+					`project_id`
+				) VALUES (
+					' . $objDatabase->SqlVariable($this->intId) . ',
+					' . $objDatabase->SqlVariable($objProject->Id) . '
+				)
+			');
+		}
+
+		/**
+		 * Unassociates a ParentProjectAsRelated
+		 * @param Project $objProject
+		 * @return void
+		*/ 
+		public function UnassociateParentProjectAsRelated(Project $objProject) {
+			if ((is_null($this->intId)))
+				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateParentProjectAsRelated on this unsaved Project.');
+			if ((is_null($objProject->Id)))
+				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateParentProjectAsRelated on this Project with an unsaved Project.');
+
+			// Get the Database Object for this Class
+			$objDatabase = Project::GetDatabase();
+
+			// Perform the SQL Query
+			$objDatabase->NonQuery('
+				DELETE FROM
+					`related_project_assn`
+				WHERE
+					`child_project_id` = ' . $objDatabase->SqlVariable($this->intId) . ' AND
+					`project_id` = ' . $objDatabase->SqlVariable($objProject->Id) . '
+			');
+		}
+
+		/**
+		 * Unassociates all ParentProjectsAsRelated
+		 * @return void
+		*/ 
+		public function UnassociateAllParentProjectsAsRelated() {
+			if ((is_null($this->intId)))
+				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateAllParentProjectAsRelatedArray on this unsaved Project.');
+
+			// Get the Database Object for this Class
+			$objDatabase = Project::GetDatabase();
+
+			// Perform the SQL Query
+			$objDatabase->NonQuery('
+				DELETE FROM
+					`related_project_assn`
+				WHERE
+					`child_project_id` = ' . $objDatabase->SqlVariable($this->intId) . '
 			');
 		}
 			
@@ -2061,33 +2061,6 @@
 	// ADDITIONAL CLASSES for QCubed QUERY
 	/////////////////////////////////////
 
-	class QQNodeProjectParentProjectAsRelated extends QQAssociationNode {
-		protected $strType = 'association';
-		protected $strName = 'parentprojectasrelated';
-
-		protected $strTableName = 'related_project_assn';
-		protected $strPrimaryKey = 'child_project_id';
-		protected $strClassName = 'Project';
-
-		public function __get($strName) {
-			switch ($strName) {
-				case 'ProjectId':
-					return new QQNode('project_id', 'ProjectId', 'integer', $this);
-				case 'Project':
-					return new QQNodeProject('project_id', 'ProjectId', 'integer', $this);
-				case '_ChildTableNode':
-					return new QQNodeProject('project_id', 'ProjectId', 'integer', $this);
-				default:
-					try {
-						return parent::__get($strName);
-					} catch (QCallerException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-			}
-		}
-	}
-
 	class QQNodeProjectProjectAsRelated extends QQAssociationNode {
 		protected $strType = 'association';
 		protected $strName = 'projectasrelated';
@@ -2104,6 +2077,33 @@
 					return new QQNodeProject('child_project_id', 'ChildProjectId', 'integer', $this);
 				case '_ChildTableNode':
 					return new QQNodeProject('child_project_id', 'ChildProjectId', 'integer', $this);
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+	}
+
+	class QQNodeProjectParentProjectAsRelated extends QQAssociationNode {
+		protected $strType = 'association';
+		protected $strName = 'parentprojectasrelated';
+
+		protected $strTableName = 'related_project_assn';
+		protected $strPrimaryKey = 'child_project_id';
+		protected $strClassName = 'Project';
+
+		public function __get($strName) {
+			switch ($strName) {
+				case 'ProjectId':
+					return new QQNode('project_id', 'ProjectId', 'integer', $this);
+				case 'Project':
+					return new QQNodeProject('project_id', 'ProjectId', 'integer', $this);
+				case '_ChildTableNode':
+					return new QQNodeProject('project_id', 'ProjectId', 'integer', $this);
 				default:
 					try {
 						return parent::__get($strName);
@@ -2168,10 +2168,10 @@
 					return new QQNode('budget', 'Budget', 'double', $this);
 				case 'Spent':
 					return new QQNode('spent', 'Spent', 'double', $this);
-				case 'ParentProjectAsRelated':
-					return new QQNodeProjectParentProjectAsRelated($this);
 				case 'ProjectAsRelated':
 					return new QQNodeProjectProjectAsRelated($this);
+				case 'ParentProjectAsRelated':
+					return new QQNodeProjectParentProjectAsRelated($this);
 				case 'PersonAsTeamMember':
 					return new QQNodeProjectPersonAsTeamMember($this);
 				case 'Milestone':
@@ -2216,10 +2216,10 @@
 					return new QQNode('budget', 'Budget', 'double', $this);
 				case 'Spent':
 					return new QQNode('spent', 'Spent', 'double', $this);
-				case 'ParentProjectAsRelated':
-					return new QQNodeProjectParentProjectAsRelated($this);
 				case 'ProjectAsRelated':
 					return new QQNodeProjectProjectAsRelated($this);
+				case 'ParentProjectAsRelated':
+					return new QQNodeProjectParentProjectAsRelated($this);
 				case 'PersonAsTeamMember':
 					return new QQNodeProjectPersonAsTeamMember($this);
 				case 'Milestone':

@@ -23,9 +23,9 @@
 
 		<?php $_CONTROL->txtSpent->RenderWithName(); ?>
 
-		<?php $_CONTROL->lstParentProjectsAsRelated->RenderWithName(true, "Rows=7"); ?>
-
 		<?php $_CONTROL->lstProjectsAsRelated->RenderWithName(true, "Rows=7"); ?>
+
+		<?php $_CONTROL->lstParentProjectsAsRelated->RenderWithName(true, "Rows=7"); ?>
 
 		<?php $_CONTROL->lstPeopleAsTeamMember->RenderWithName(true, "Rows=7"); ?>
 

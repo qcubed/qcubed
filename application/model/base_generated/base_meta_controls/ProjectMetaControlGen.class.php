@@ -34,10 +34,10 @@
 	 * property-read QLabel $BudgetLabel
 	 * property QFloatTextBox $SpentControl
 	 * property-read QLabel $SpentLabel
-	 * property QListBox $ParentProjectAsRelatedControl
-	 * property-read QLabel $ParentProjectAsRelatedLabel
 	 * property QListBox $ProjectAsRelatedControl
 	 * property-read QLabel $ProjectAsRelatedLabel
+	 * property QListBox $ParentProjectAsRelatedControl
+	 * property-read QLabel $ParentProjectAsRelatedLabel
 	 * property QListBox $PersonAsTeamMemberControl
 	 * property-read QLabel $PersonAsTeamMemberLabel
 	 * property-read string $TitleVerb a verb indicating whether or not this is being edited or created
@@ -73,16 +73,16 @@
 		protected $lblSpent;
 
 		// QListBox Controls (if applicable) to edit Unique ReverseReferences and ManyToMany References
-		protected $lstParentProjectsAsRelated;
-		protected $strParentProjectAsRelatedGlue;
 		protected $lstProjectsAsRelated;
 		protected $strProjectAsRelatedGlue;
+		protected $lstParentProjectsAsRelated;
+		protected $strParentProjectAsRelatedGlue;
 		protected $lstPeopleAsTeamMember;
 		protected $strPersonAsTeamMemberGlue;
 
 		// QLabel Controls (if applicable) to view Unique ReverseReferences and ManyToMany References
-		protected $lblParentProjectsAsRelated;
 		protected $lblProjectsAsRelated;
+		protected $lblParentProjectsAsRelated;
 		protected $lblPeopleAsTeamMember;
 
 
@@ -312,7 +312,7 @@
 			$this->calStartDate = new QDateTimePicker($this->objParentObject, $strControlId);
 			$this->calStartDate->Name = QApplication::Translate('Start Date');
 			$this->calStartDate->DateTime = $this->objProject->StartDate;
-			$this->calStartDate->DateTimePickerType = QDateTimePickerType::Date;
+			$this->calStartDate->DateTimePickerType = QDateTimePickerType::DateTime;
 			return $this->calStartDate;
 		}
 
@@ -342,7 +342,7 @@
 			$this->calEndDate = new QDateTimePicker($this->objParentObject, $strControlId);
 			$this->calEndDate->Name = QApplication::Translate('End Date');
 			$this->calEndDate->DateTime = $this->objProject->EndDate;
-			$this->calEndDate->DateTimePickerType = QDateTimePickerType::Date;
+			$this->calEndDate->DateTimePickerType = QDateTimePickerType::DateTime;
 			return $this->calEndDate;
 		}
 
@@ -416,48 +416,6 @@
 		}
 
 		/**
-		 * Create and setup QListBox lstParentProjectsAsRelated
-		 * @param string $strControlId optional ControlId to use
-		 * @return QListBox
-		 */
-		public function lstParentProjectsAsRelated_Create($strControlId = null) {
-			$this->lstParentProjectsAsRelated = new QListBox($this->objParentObject, $strControlId);
-			$this->lstParentProjectsAsRelated->Name = QApplication::Translate('Parent Projects As Related');
-			$this->lstParentProjectsAsRelated->SelectionMode = QSelectionMode::Multiple;
-			$objAssociatedArray = $this->objProject->GetParentProjectAsRelatedArray();
-			$objProjectArray = Project::LoadAll();
-			if ($objProjectArray) foreach ($objProjectArray as $objProject) {
-				$objListItem = new QListItem($objProject->__toString(), $objProject->Id);
-				foreach ($objAssociatedArray as $objAssociated) {
-					if ($objAssociated->Id == $objProject->Id)
-						$objListItem->Selected = true;
-				}
-				$this->lstParentProjectsAsRelated->AddItem($objListItem);
-			}
-			return $this->lstParentProjectsAsRelated;
-		}
-
-		/**
-		 * Create and setup QLabel lblParentProjectsAsRelated
-		 * @param string $strControlId optional ControlId to use
-		 * @param string $strGlue glue to display in between each associated object
-		 * @return QLabel
-		 */
-		public function lblParentProjectsAsRelated_Create($strControlId = null, $strGlue = ', ') {
-			$this->lblParentProjectsAsRelated = new QLabel($this->objParentObject, $strControlId);
-			$this->lblParentProjectsAsRelated->Name = QApplication::Translate('Parent Projects As Related');
-			$this->strParentProjectAsRelatedGlue = $strGlue;
-			
-			$objAssociatedArray = $this->objProject->GetParentProjectAsRelatedArray();
-			$strItems = array();
-			foreach ($objAssociatedArray as $objAssociated)
-				$strItems[] = $objAssociated->__toString();
-			$this->lblParentProjectsAsRelated->Text = implode($this->strParentProjectAsRelatedGlue, $strItems);
-			return $this->lblParentProjectsAsRelated;
-		}
-
-
-		/**
 		 * Create and setup QListBox lstProjectsAsRelated
 		 * @param string $strControlId optional ControlId to use
 		 * @return QListBox
@@ -496,6 +454,48 @@
 				$strItems[] = $objAssociated->__toString();
 			$this->lblProjectsAsRelated->Text = implode($this->strProjectAsRelatedGlue, $strItems);
 			return $this->lblProjectsAsRelated;
+		}
+
+
+		/**
+		 * Create and setup QListBox lstParentProjectsAsRelated
+		 * @param string $strControlId optional ControlId to use
+		 * @return QListBox
+		 */
+		public function lstParentProjectsAsRelated_Create($strControlId = null) {
+			$this->lstParentProjectsAsRelated = new QListBox($this->objParentObject, $strControlId);
+			$this->lstParentProjectsAsRelated->Name = QApplication::Translate('Parent Projects As Related');
+			$this->lstParentProjectsAsRelated->SelectionMode = QSelectionMode::Multiple;
+			$objAssociatedArray = $this->objProject->GetParentProjectAsRelatedArray();
+			$objProjectArray = Project::LoadAll();
+			if ($objProjectArray) foreach ($objProjectArray as $objProject) {
+				$objListItem = new QListItem($objProject->__toString(), $objProject->Id);
+				foreach ($objAssociatedArray as $objAssociated) {
+					if ($objAssociated->Id == $objProject->Id)
+						$objListItem->Selected = true;
+				}
+				$this->lstParentProjectsAsRelated->AddItem($objListItem);
+			}
+			return $this->lstParentProjectsAsRelated;
+		}
+
+		/**
+		 * Create and setup QLabel lblParentProjectsAsRelated
+		 * @param string $strControlId optional ControlId to use
+		 * @param string $strGlue glue to display in between each associated object
+		 * @return QLabel
+		 */
+		public function lblParentProjectsAsRelated_Create($strControlId = null, $strGlue = ', ') {
+			$this->lblParentProjectsAsRelated = new QLabel($this->objParentObject, $strControlId);
+			$this->lblParentProjectsAsRelated->Name = QApplication::Translate('Parent Projects As Related');
+			$this->strParentProjectAsRelatedGlue = $strGlue;
+			
+			$objAssociatedArray = $this->objProject->GetParentProjectAsRelatedArray();
+			$strItems = array();
+			foreach ($objAssociatedArray as $objAssociated)
+				$strItems[] = $objAssociated->__toString();
+			$this->lblParentProjectsAsRelated->Text = implode($this->strParentProjectAsRelatedGlue, $strItems);
+			return $this->lblParentProjectsAsRelated;
 		}
 
 
@@ -588,27 +588,6 @@
 			if ($this->txtSpent) $this->txtSpent->Text = $this->objProject->Spent;
 			if ($this->lblSpent) $this->lblSpent->Text = $this->objProject->Spent;
 
-			if ($this->lstParentProjectsAsRelated) {
-				$this->lstParentProjectsAsRelated->RemoveAllItems();
-				$objAssociatedArray = $this->objProject->GetParentProjectAsRelatedArray();
-				$objProjectArray = Project::LoadAll();
-				if ($objProjectArray) foreach ($objProjectArray as $objProject) {
-					$objListItem = new QListItem($objProject->__toString(), $objProject->Id);
-					foreach ($objAssociatedArray as $objAssociated) {
-						if ($objAssociated->Id == $objProject->Id)
-							$objListItem->Selected = true;
-					}
-					$this->lstParentProjectsAsRelated->AddItem($objListItem);
-				}
-			}
-			if ($this->lblParentProjectsAsRelated) {
-				$objAssociatedArray = $this->objProject->GetParentProjectAsRelatedArray();
-				$strItems = array();
-				foreach ($objAssociatedArray as $objAssociated)
-					$strItems[] = $objAssociated->__toString();
-				$this->lblParentProjectsAsRelated->Text = implode($this->strParentProjectAsRelatedGlue, $strItems);
-			}
-
 			if ($this->lstProjectsAsRelated) {
 				$this->lstProjectsAsRelated->RemoveAllItems();
 				$objAssociatedArray = $this->objProject->GetProjectAsRelatedArray();
@@ -628,6 +607,27 @@
 				foreach ($objAssociatedArray as $objAssociated)
 					$strItems[] = $objAssociated->__toString();
 				$this->lblProjectsAsRelated->Text = implode($this->strProjectAsRelatedGlue, $strItems);
+			}
+
+			if ($this->lstParentProjectsAsRelated) {
+				$this->lstParentProjectsAsRelated->RemoveAllItems();
+				$objAssociatedArray = $this->objProject->GetParentProjectAsRelatedArray();
+				$objProjectArray = Project::LoadAll();
+				if ($objProjectArray) foreach ($objProjectArray as $objProject) {
+					$objListItem = new QListItem($objProject->__toString(), $objProject->Id);
+					foreach ($objAssociatedArray as $objAssociated) {
+						if ($objAssociated->Id == $objProject->Id)
+							$objListItem->Selected = true;
+					}
+					$this->lstParentProjectsAsRelated->AddItem($objListItem);
+				}
+			}
+			if ($this->lblParentProjectsAsRelated) {
+				$objAssociatedArray = $this->objProject->GetParentProjectAsRelatedArray();
+				$strItems = array();
+				foreach ($objAssociatedArray as $objAssociated)
+					$strItems[] = $objAssociated->__toString();
+				$this->lblParentProjectsAsRelated->Text = implode($this->strParentProjectAsRelatedGlue, $strItems);
 			}
 
 			if ($this->lstPeopleAsTeamMember) {
@@ -659,22 +659,22 @@
 		// PROTECTED UPDATE METHODS for ManyToManyReferences (if any)
 		///////////////////////////////////////////////
 
-		protected function lstParentProjectsAsRelated_Update() {
-			if ($this->lstParentProjectsAsRelated) {
-				$this->objProject->UnassociateAllParentProjectsAsRelated();
-				$objSelectedListItems = $this->lstParentProjectsAsRelated->SelectedItems;
-				if ($objSelectedListItems) foreach ($objSelectedListItems as $objListItem) {
-					$this->objProject->AssociateParentProjectAsRelated(Project::Load($objListItem->Value));
-				}
-			}
-		}
-
 		protected function lstProjectsAsRelated_Update() {
 			if ($this->lstProjectsAsRelated) {
 				$this->objProject->UnassociateAllProjectsAsRelated();
 				$objSelectedListItems = $this->lstProjectsAsRelated->SelectedItems;
 				if ($objSelectedListItems) foreach ($objSelectedListItems as $objListItem) {
 					$this->objProject->AssociateProjectAsRelated(Project::Load($objListItem->Value));
+				}
+			}
+		}
+
+		protected function lstParentProjectsAsRelated_Update() {
+			if ($this->lstParentProjectsAsRelated) {
+				$this->objProject->UnassociateAllParentProjectsAsRelated();
+				$objSelectedListItems = $this->lstParentProjectsAsRelated->SelectedItems;
+				if ($objSelectedListItems) foreach ($objSelectedListItems as $objListItem) {
+					$this->objProject->AssociateParentProjectAsRelated(Project::Load($objListItem->Value));
 				}
 			}
 		}
@@ -719,8 +719,8 @@
 				$this->objProject->Save();
 
 				// Finally, update any ManyToManyReferences (if any)
-				$this->lstParentProjectsAsRelated_Update();
 				$this->lstProjectsAsRelated_Update();
+				$this->lstParentProjectsAsRelated_Update();
 				$this->lstPeopleAsTeamMember_Update();
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
@@ -733,8 +733,8 @@
 		 * It will also unassociate itself from any ManyToManyReferences.
 		 */
 		public function DeleteProject() {
-			$this->objProject->UnassociateAllParentProjectsAsRelated();
 			$this->objProject->UnassociateAllProjectsAsRelated();
+			$this->objProject->UnassociateAllParentProjectsAsRelated();
 			$this->objProject->UnassociateAllPeopleAsTeamMember();
 			$this->objProject->Delete();
 		}		
@@ -814,18 +814,18 @@
 				case 'SpentLabel':
 					if (!$this->lblSpent) return $this->lblSpent_Create();
 					return $this->lblSpent;
-				case 'ParentProjectAsRelatedControl':
-					if (!$this->lstParentProjectsAsRelated) return $this->lstParentProjectsAsRelated_Create();
-					return $this->lstParentProjectsAsRelated;
-				case 'ParentProjectAsRelatedLabel':
-					if (!$this->lblParentProjectsAsRelated) return $this->lblParentProjectsAsRelated_Create();
-					return $this->lblParentProjectsAsRelated;
 				case 'ProjectAsRelatedControl':
 					if (!$this->lstProjectsAsRelated) return $this->lstProjectsAsRelated_Create();
 					return $this->lstProjectsAsRelated;
 				case 'ProjectAsRelatedLabel':
 					if (!$this->lblProjectsAsRelated) return $this->lblProjectsAsRelated_Create();
 					return $this->lblProjectsAsRelated;
+				case 'ParentProjectAsRelatedControl':
+					if (!$this->lstParentProjectsAsRelated) return $this->lstParentProjectsAsRelated_Create();
+					return $this->lstParentProjectsAsRelated;
+				case 'ParentProjectAsRelatedLabel':
+					if (!$this->lblParentProjectsAsRelated) return $this->lblParentProjectsAsRelated_Create();
+					return $this->lblParentProjectsAsRelated;
 				case 'PersonAsTeamMemberControl':
 					if (!$this->lstPeopleAsTeamMember) return $this->lstPeopleAsTeamMember_Create();
 					return $this->lstPeopleAsTeamMember;
@@ -872,10 +872,10 @@
 						return ($this->txtBudget = QType::Cast($mixValue, 'QControl'));
 					case 'SpentControl':
 						return ($this->txtSpent = QType::Cast($mixValue, 'QControl'));
-					case 'ParentProjectAsRelatedControl':
-						return ($this->lstParentProjectsAsRelated = QType::Cast($mixValue, 'QControl'));
 					case 'ProjectAsRelatedControl':
 						return ($this->lstProjectsAsRelated = QType::Cast($mixValue, 'QControl'));
+					case 'ParentProjectAsRelatedControl':
+						return ($this->lstParentProjectsAsRelated = QType::Cast($mixValue, 'QControl'));
 					case 'PersonAsTeamMemberControl':
 						return ($this->lstPeopleAsTeamMember = QType::Cast($mixValue, 'QControl'));
 					default:

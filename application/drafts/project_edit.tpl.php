@@ -35,9 +35,9 @@
 
 		<?php $this->txtSpent->RenderWithName(); ?>
 
-		<?php $this->lstParentProjectsAsRelated->RenderWithName(true, "Rows=7"); ?>
-
 		<?php $this->lstProjectsAsRelated->RenderWithName(true, "Rows=7"); ?>
+
+		<?php $this->lstParentProjectsAsRelated->RenderWithName(true, "Rows=7"); ?>
 
 		<?php $this->lstPeopleAsTeamMember->RenderWithName(true, "Rows=7"); ?>
 

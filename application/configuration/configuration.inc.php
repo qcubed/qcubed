@@ -58,16 +58,16 @@
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
              *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'g:/dev/Qcubed/framework/branches/1.1');
+			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs/qcubed');
 			define ('__VIRTUAL_DIRECTORY__', '');
 			define ('__SUBDIRECTORY__', '');
             
-            /*
-             * These definitions will hardly change, but you may change them based on your setup
-             */
-            define ('__APPLICATION__', __DOCROOT__ . __SUBDIRECTORY__ . '/application' );            
-            define ('__MODEL__', __APPLICATION__ . '/model' );
-            define ('__INCLUDES__', __APPLICATION__ . '/configuration');
+			/*
+			 * These definitions will hardly change, but you may change them based on your setup
+			 */
+			define ('__APPLICATION__', __DOCROOT__ . __SUBDIRECTORY__ . '/application' );            
+			define ('__MODEL__', __APPLICATION__ . '/model' );
+			define ('__INCLUDES__', __APPLICATION__ . '/configuration');
 
 			/*
 			 * If you are using Apache-based mod_rewrite to perform URL rewrites, please specify "apache" here.
@@ -118,9 +118,6 @@
 			 * Note that this is NOT required.  Feel free to use or ignore.)
 			 */
 
-			// Location of the QCubed-specific web-based development tools, like codegen.php
-			define ('__DEVTOOLS__', __SUBDIRECTORY__ . '/_devtools');
-
 			// Destination for generated form drafts and panel drafts
 			define ('__FORM_DRAFTS__', __SUBDIRECTORY__ . '/application/drafts');
 			define ('__PANEL_DRAFTS__', __SUBDIRECTORY__ . '/application/drafts/dashboard');
@@ -134,6 +131,8 @@
 			define ('__IMAGE_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/images');
 			define ('__PHP_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/php');
 
+			// Location of the QCubed-specific web-based development tools, like codegen.php
+			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
 
 			/* Database Connection SerialArrays
 			 *
@@ -165,7 +164,7 @@
 				'adapter' => 'MySqli5',
 				'server' => 'localhost',
 				'port' => null,
-				'database' => 'qcubed',
+				'database' => 'qcodo',
 				'username' => 'root',
 				'password' => '',
 				'profiling' => false)));
