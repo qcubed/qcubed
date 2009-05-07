@@ -1,4 +1,4 @@
-<template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __DATA_META_CONTROLS__ %>" TargetFileName="<%= $objTable->ClassName %>DataGrid.class.php"/>
+<template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __META_CONTROLS__ %>" TargetFileName="<%= $objTable->ClassName %>DataGrid.class.php"/>
 <?php
 	require(__DATAGEN_META_CONTROLS__ . '/<%= $objTable->ClassName %>DataGridGen.class.php');
 

@@ -64,11 +64,9 @@
             
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
-			 */
-			define ('__APPLICATION__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes' );
-			define ('__MODEL__', __APPLICATION__ . '/model' );
-			define ('__INCLUDES__', __APPLICATION__ . '/configuration');
-			define ('__CONFIGURATION__', __INCLUDES__);
+			 */			
+			define ('__INCLUDES__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes');
+            define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
 
 			/*
 			 * If you are using Apache-based mod_rewrite to perform URL rewrites, please specify "apache" here.
@@ -82,27 +80,25 @@
 			 * application.
 			 *
 			 * Note that all paths must start with a slash or 'x:\' (for windows users) and must have
-			 * no ending slashes.  (We take advantage of the __APPLICATION__ constant defined above, and the
-			 * __INCLUDES__ constant as well, to help simplify this section. But note that this is NOT
-			 * required.  These directories can also reside outside of the Document Root altogether.
-			 * So feel free to use or not use the __DOCROOT__ and __INCLUDES__ constants as you wish/need
-			 * in defining your other directory constants.)
+			 * no ending slashes.  (We take advantage of the __INCLUDES__ to help simplify this section.
+             * But note that this is NOT required.  These directories can also reside outside of the
+             * Document Root altogether.  So feel free to use or not use the __DOCROOT__ and __INCLUDES__
+             * constants as you wish/need in defining your other directory constants.)
 			 */
 
 			// The QCubed Directories
 			// Includes subdirectories for QCubed Customizations in CodeGen and QForms, i18n PO files, QCache storage, etc.
 			// Also includes the _core subdirectory for the QCubed Core
-			define ('__QCUBED__', __APPLICATION__ . '/qcubed');
+			define ('__QCUBED__', __INCLUDES__ . '/qcubed');
 
 			// The QCubed Core
-			define ('__QCUBED_CORE__', __APPLICATION__ . '/qcubed/_core');
+			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');
 
 			// Destination for Code Generated class files
-			define ('__DATA_CLASSES__', __MODEL__ . '/data_classes');
-			define ('__DATA_META_CONTROLS__', __MODEL__ . '/meta_controls');
-			define ('__DATAGEN_CLASSES__', __MODEL__ . '/base_generated/base_data_classes');
-			define ('__DATAGEN_META_CONTROLS__', __MODEL__ . '/base_generated/base_meta_controls');
-
+            define ('__MODEL__', __INCLUDES__ . '/model' );
+			define ('__MODEL_GEN__', __MODEL__ . '/generated' );
+			define ('__META_CONTROLS__', __INCLUDES__ . '/meta_controls' );
+			define ('__META_CONTROLS_GEN__', __META_CONTROLS__ . '/generated' );
 
 			/* Relative File Paths for Web Accessible Directories
 			 *
@@ -165,7 +161,7 @@
 				'adapter' => 'MySqli5',
 				'server' => 'localhost',
 				'port' => null,
-				'database' => 'qcodo',
+				'database' => 'qcubed',
 				'username' => 'root',
 				'password' => '',
 				'profiling' => false)));

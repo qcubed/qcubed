@@ -497,8 +497,8 @@
 </files>
 <directories>
 <directory token="__DATAGEN_CLASSES__" coreFlag="0" relativeFlag="0"/>
-<directory token="__DATA_META_CONTROLS__" coreFlag="0" relativeFlag="0"/>
-<directory token="__DATA_CLASSES__" coreFlag="0" relativeFlag="0"/>
+<directory token="__META_CONTROLS__" coreFlag="0" relativeFlag="0"/>
+<directory token="__MODEL__" coreFlag="0" relativeFlag="0"/>
 <directory token="__QCUBED_CORE__" coreFlag="1" relativeFlag="0"/>
 <directory token="__PANEL_DRAFTS__" coreFlag="0" relativeFlag="1"/>
 <directory token="__QCUBED__" coreFlag="0" relativeFlag="0"/>

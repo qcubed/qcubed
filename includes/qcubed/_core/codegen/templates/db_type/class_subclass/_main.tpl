@@ -1,4 +1,4 @@
-<template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __DATA_CLASSES__ %>" TargetFileName="<%= $objTypeTable->ClassName %>.class.php"/>
+<template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __MODEL__ %>" TargetFileName="<%= $objTypeTable->ClassName %>.class.php"/>
 <?php
 	require(__DATAGEN_CLASSES__ . '/<%= $objTypeTable->ClassName %>Gen.class.php');
 

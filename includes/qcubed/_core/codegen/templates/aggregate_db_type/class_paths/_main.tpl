@@ -2,8 +2,8 @@
 <?php 
 <% foreach ($objTableArray as $objTable) { %>
 	// ClassPaths for the <%= $objTable->ClassName %> type class
-	<% if (__DATA_CLASSES__) { %>
-		QApplicationBase::$ClassFile['<%= strtolower($objTable->ClassName) %>'] = __DATA_CLASSES__ . '/<%= $objTable->ClassName %>.class.php';
+	<% if (__MODEL__) { %>
+		QApplicationBase::$ClassFile['<%= strtolower($objTable->ClassName) %>'] = __MODEL__ . '/<%= $objTable->ClassName %>.class.php';
 	<% } %>
 <% } %>
 ?>

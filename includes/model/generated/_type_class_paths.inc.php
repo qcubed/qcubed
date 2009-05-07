@@ -1,4 +1,4 @@
 <?php 
 	// ClassPaths for the ProjectStatusType type class
-		QApplicationBase::$ClassFile['projectstatustype'] = __DATA_CLASSES__ . '/ProjectStatusType.class.php';
+		QApplicationBase::$ClassFile['projectstatustype'] = __MODEL__ . '/ProjectStatusType.class.php';
 ?>
