@@ -60,9 +60,9 @@
 	// Define Classes to be Preloaded on QApplication::Initialize()
 	QApplicationBase::$PreloadedClassFile['_enumerations'] = __QCUBED_CORE__ . '/base_controls/_enumerations.inc.php';
 	QApplicationBase::$PreloadedClassFile['qcontrolbase'] = __QCUBED_CORE__ . '/base_controls/QControlBase.class.php';
-	QApplicationBase::$PreloadedClassFile['qcontrol'] = __QCUBED__ . '/custom/controls/QControl.class.php';
+	QApplicationBase::$PreloadedClassFile['qcontrol'] = __QCUBED__ . '/controls/QControl.class.php';
 	QApplicationBase::$PreloadedClassFile['qformbase'] = __QCUBED_CORE__ . '/base_controls/QFormBase.class.php';
-	QApplicationBase::$PreloadedClassFile['qform'] = __QCUBED__ . '/custom/controls/QForm.class.php';
+	QApplicationBase::$PreloadedClassFile['qform'] = __QCUBED__ . '/controls/QForm.class.php';
 	QApplicationBase::$PreloadedClassFile['_actions'] = __QCUBED_CORE__ . '/base_controls/_actions.inc.php';
 	QApplicationBase::$PreloadedClassFile['_effect_actions'] = __QCUBED_CORE__ . '/base_controls/_effect_actions.inc.php';
 	QApplicationBase::$PreloadedClassFile['_events'] = __QCUBED_CORE__ . '/base_controls/_events.inc.php';
@@ -125,12 +125,12 @@
 		
 	QApplicationBase::$ClassFile['qimagebase'] = __QCUBED_CORE__ . '/base_controls/QImageBase.class.php';
 	QApplicationBase::$ClassFile['qimagelabelbase'] = __QCUBED_CORE__ . '/base_controls/QImageLabelBase.class.php';
-	QApplicationBase::$ClassFile['qimagelabel'] = __QCUBED__ . '/custom/controls/QImageLabel.class.php';
+	QApplicationBase::$ClassFile['qimagelabel'] = __QCUBED__ . '/controls/QImageLabel.class.php';
 	QApplicationBase::$ClassFile['qimagecontrolbase'] = __QCUBED_CORE__ . '/base_controls/QImageControlBase.class.php';
-	QApplicationBase::$ClassFile['qimagecontrol'] = __QCUBED__ . '/custom/controls/QImageControl.class.php';
+	QApplicationBase::$ClassFile['qimagecontrol'] = __QCUBED__ . '/controls/QImageControl.class.php';
 	QApplicationBase::$ClassFile['qimagerollover'] = __QCUBED_CORE__ . '/base_controls/QImageRollover.class.php';
 
-	QApplicationBase::$ClassFile['qfileasset'] = __QCUBED__ . '/custom/controls/QFileAsset.class.php';
+	QApplicationBase::$ClassFile['qfileasset'] = __QCUBED__ . '/controls/QFileAsset.class.php';
 	QApplicationBase::$ClassFile['qfileassetbase'] = __QCUBED_CORE__ . '/base_controls/QFileAssetBase.class.php';
 	QApplicationBase::$ClassFile['qfileassetdialog'] = __QCUBED_CORE__ . '/base_controls/QFileAssetDialog.class.php';
 
@@ -138,14 +138,14 @@
 
 	QApplicationBase::$ClassFile['qactioncontrol'] = __QCUBED_CORE__ . '/base_controls/QActionControl.class.php';
 	QApplicationBase::$ClassFile['qbuttonbase'] = __QCUBED_CORE__ . '/base_controls/QButtonBase.class.php';
-	QApplicationBase::$ClassFile['qbutton'] = __QCUBED__ . '/custom/controls/QButton.class.php';
+	QApplicationBase::$ClassFile['qbutton'] = __QCUBED__ . '/controls/QButton.class.php';
 	QApplicationBase::$ClassFile['qimagebutton'] = __QCUBED_CORE__ . '/base_controls/QImageButton.class.php';
 	QApplicationBase::$ClassFile['qlinkbutton'] = __QCUBED_CORE__ . '/base_controls/QLinkButton.class.php';
 
 	QApplicationBase::$ClassFile['qlistcontrol'] = __QCUBED_CORE__ . '/base_controls/QListControl.class.php';
 	QApplicationBase::$ClassFile['qlistitem'] = __QCUBED_CORE__ . '/base_controls/QListItem.class.php';
 	QApplicationBase::$ClassFile['qlistboxbase'] = __QCUBED_CORE__ . '/base_controls/QListBoxBase.class.php';
-	QApplicationBase::$ClassFile['qlistbox'] = __QCUBED__ . '/custom/controls/QListBox.class.php';
+	QApplicationBase::$ClassFile['qlistbox'] = __QCUBED__ . '/controls/QListBox.class.php';
 	QApplicationBase::$ClassFile['qlistitemstyle'] = __QCUBED_CORE__ . '/base_controls/QListItemStyle.class.php';
 	QApplicationBase::$ClassFile['qcheckboxlist'] = __QCUBED_CORE__ . '/base_controls/QCheckBoxList.class.php';
 	QApplicationBase::$ClassFile['qradiobuttonlist'] = __QCUBED_CORE__ . '/base_controls/QRadioButtonList.class.php';
@@ -153,7 +153,7 @@
 	QApplicationBase::$ClassFile['qtreenavitem'] = __QCUBED_CORE__ . '/base_controls/QTreeNavItem.class.php';
 
 	QApplicationBase::$ClassFile['qtextboxbase'] = __QCUBED_CORE__ . '/base_controls/QTextBoxBase.class.php';
-	QApplicationBase::$ClassFile['qtextbox'] = __QCUBED__ . '/custom/controls/QTextBox.class.php';
+	QApplicationBase::$ClassFile['qtextbox'] = __QCUBED__ . '/controls/QTextBox.class.php';
 	QApplicationBase::$ClassFile['qfloattextbox'] = __QCUBED_CORE__ . '/base_controls/QFloatTextBox.class.php';
 	QApplicationBase::$ClassFile['qintegertextbox'] = __QCUBED_CORE__ . '/base_controls/QIntegerTextBox.class.php';
 	QApplicationBase::$ClassFile['qwritebox'] = __QCUBED_CORE__ . '/base_controls/QWriteBox.class.php';
@@ -162,12 +162,12 @@
 
 	QApplicationBase::$ClassFile['qpaginatedcontrol'] = __QCUBED_CORE__ . '/base_controls/QPaginatedControl.class.php';
 	QApplicationBase::$ClassFile['qpaginatorbase'] = __QCUBED_CORE__ . '/base_controls/QPaginatorBase.class.php';
-	QApplicationBase::$ClassFile['qpaginator'] = __QCUBED__ . '/custom/controls/QPaginator.class.php';
+	QApplicationBase::$ClassFile['qpaginator'] = __QCUBED__ . '/controls/QPaginator.class.php';
 
 	QApplicationBase::$ClassFile['qdatagridbase'] = __QCUBED_CORE__ . '/base_controls/QDataGridBase.class.php';
 	QApplicationBase::$ClassFile['qdatagridcolumn'] = __QCUBED_CORE__ . '/base_controls/QDataGridColumn.class.php';
 	QApplicationBase::$ClassFile['qdatagridrowstyle'] = __QCUBED_CORE__ . '/base_controls/QDataGridRowStyle.class.php';
-	QApplicationBase::$ClassFile['qdatagrid'] = __QCUBED__ . '/custom/controls/QDataGrid.class.php';
+	QApplicationBase::$ClassFile['qdatagrid'] = __QCUBED__ . '/controls/QDataGrid.class.php';
 
 	QApplicationBase::$ClassFile['qdatarepeater'] = __QCUBED_CORE__ . '/base_controls/QDataRepeater.class.php';
 
