@@ -65,7 +65,7 @@
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
 			 */
-			define ('__APPLICATION__', __DOCROOT__ . __SUBDIRECTORY__ . '/application' );            
+			define ('__APPLICATION__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes' );
 			define ('__MODEL__', __APPLICATION__ . '/model' );
 			define ('__INCLUDES__', __APPLICATION__ . '/configuration');
 			define ('__CONFIGURATION__', __INCLUDES__);

@@ -1,5 +1,5 @@
 <?php
-	require('../application/configuration/prepend.inc.php');
+	require('../includes/configuration/prepend.inc.php');
 	require('includes/header_main.inc.php');
 ?>
 <div style="text-align: center; width: 100%;">

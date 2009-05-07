@@ -1,6 +1,6 @@
 <?php
 	// Include prepend.inc to load QCubed
-	require('application/configuration/prepend.inc.php');	
+	require('includes/configuration/prepend.inc.php');	
 ?>
 <html>
 	<head>
