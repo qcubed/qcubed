@@ -15,8 +15,6 @@
 			$this->lblMessage = new QLabel($this);
 			$this->lblMessage->Text = 'Click the button to change my message.';
 			
-			var_dump(spl_autoload_functions());
-
 			$this->btnButton = new QButton($this);
 			$this->btnButton->Text = 'Click Me';
 			$this->btnButton->AddAction(new QClickEvent(), new QServerAction('btnButton_Click'));
