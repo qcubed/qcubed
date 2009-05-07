@@ -13,7 +13,7 @@
 	/////////////////////////////////////////////////////
 	// Run CodeGen, using the ./codegen_settings.xml file
 	/////////////////////////////////////////////////////
-	QCodeGen::Run(dirname(__FILE__) . '/codegen_settings.xml');
+	QCodeGen::Run(__CONFIGURATION__ . '/codegen_settings.xml');
 
 	function DisplayMonospacedText($strText) {
 		$strText = QApplication::HtmlEntities($strText);

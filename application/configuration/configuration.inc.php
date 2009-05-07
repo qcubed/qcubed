@@ -68,6 +68,7 @@
 			define ('__APPLICATION__', __DOCROOT__ . __SUBDIRECTORY__ . '/application' );            
 			define ('__MODEL__', __APPLICATION__ . '/model' );
 			define ('__INCLUDES__', __APPLICATION__ . '/configuration');
+			define ('__CONFIGURATION__', __INCLUDES__);
 
 			/*
 			 * If you are using Apache-based mod_rewrite to perform URL rewrites, please specify "apache" here.
