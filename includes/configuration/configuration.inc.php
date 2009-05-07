@@ -56,17 +56,17 @@
 			 *		__DOCROOT__ is defined as 'c:/users/my_user/public_html'
 			 *		__VIRTUAL_DIRECTORY__ is defined as '/~my_user'
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
-             *      /var/www/qcubed/wwwroot
+			 *      /var/www/qcubed/wwwroot
 			 */
 			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs/qcubed');
 			define ('__VIRTUAL_DIRECTORY__', '');
 			define ('__SUBDIRECTORY__', '');
-            
+			
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
 			 */			
 			define ('__INCLUDES__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes');
-            define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
+			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
 			define ('__PLUGINS__', __INCLUDES__ . '/plugins');
 
 			/*
@@ -82,9 +82,9 @@
 			 *
 			 * Note that all paths must start with a slash or 'x:\' (for windows users) and must have
 			 * no ending slashes.  (We take advantage of the __INCLUDES__ to help simplify this section.
-             * But note that this is NOT required.  These directories can also reside outside of the
-             * Document Root altogether.  So feel free to use or not use the __DOCROOT__ and __INCLUDES__
-             * constants as you wish/need in defining your other directory constants.)
+			 * But note that this is NOT required.  These directories can also reside outside of the
+			 * Document Root altogether.  So feel free to use or not use the __DOCROOT__ and __INCLUDES__
+			 * constants as you wish/need in defining your other directory constants.)
 			 */
 
 			// The QCubed Directories
@@ -96,7 +96,7 @@
 			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');
 
 			// Destination for Code Generated class files
-            define ('__MODEL__', __INCLUDES__ . '/model' );
+			define ('__MODEL__', __INCLUDES__ . '/model' );
 			define ('__MODEL_GEN__', __MODEL__ . '/generated' );
 			define ('__META_CONTROLS__', __INCLUDES__ . '/meta_controls' );
 			define ('__META_CONTROLS_GEN__', __META_CONTROLS__ . '/generated' );

@@ -21,8 +21,8 @@ abstract class QJQAction extends QAction {
 	}
 
 	private function setJavaScripts($objControl) {
-		$objControl->AddJavascript(__JQUERY_BASE__);
-		$objControl->AddJavascript(__JQUERY_EFFECTS__ . '/effects.core.js');
+		$objControl->AddJavascriptFile(__JQUERY_BASE__);
+		$objControl->AddJavascriptFile(__JQUERY_EFFECTS__ . '/effects.core.js');
 		
 		switch($this->strMethod) {
 			case 'blind' :
@@ -37,13 +37,13 @@ abstract class QJQAction extends QAction {
 			case 'slide' :                                    
 			case 'transfer' :
 			case 'pulsate' :
-				$objControl->AddJavascript(__JQUERY_EFFECTS__ . '/effects.' . $this->strMethod . '.js');
+				$objControl->AddJavascriptFile(__JQUERY_EFFECTS__ . '/effects.' . $this->strMethod . '.js');
 				break;
 
 			// The following two effects have a dependency on the scale effect
 			case 'puff':
 			case 'size':
-				$objControl->AddJavascript(__JQUERY_EFFECTS__ . '/effects.scale.js');
+				$objControl->AddJavascriptFile(__JQUERY_EFFECTS__ . '/effects.scale.js');
 				break;
 		}
 	}

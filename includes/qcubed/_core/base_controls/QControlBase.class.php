@@ -414,13 +414,32 @@
 				throw new QCallerException(sprintf("Custom Style does not exist in Control '%s': %s", $this->strControlId, $strName));
 		}
 		
-		public function AddJavascript($strJavaScript) {
+		public function AddJavascriptFile($strJsFileName) {
 			if($this->strJavaScripts) {
-				$this->strJavaScripts .= ','.$strJavaScript;
+				$this->strJavaScripts .= ','.$strJsFileName;
 			} else {
-				$this->strJavaScripts = $strJavaScript;
+				$this->strJavaScripts = $strJsFileName;
 			}
 		}
+		
+		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
+			// Relative path based on the path of the core JS files
+			$this->AddJavascriptFile("../../plugins/" . $strPluginName . "/js/" . $strJsFileName);
+		}
+		
+		public function AddCssFile($strCssFileName) {
+			if($this->strStyleSheets) {
+				$this->strStyleSheets .= ','.$strCssFileName;
+			} else {
+				$this->strStyleSheets = $strCssFileName;
+			}
+		}
+
+		public function AddPluginCssFile($strPluginName, $strCssFileName) {
+			// Relative path based on the path of the core JS files
+			$this->AddCssFile("../../plugins/" . $strPluginName . "/css/" . $strCssFileName);
+		}
+
 
 		/**
 		 * This will add a CssClass name to the CssClass property (if it does not yet exist),

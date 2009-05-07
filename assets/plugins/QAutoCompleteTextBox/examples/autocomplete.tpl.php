@@ -1,4 +1,4 @@
-<?php require('../includes/header.inc.php'); ?>
+<?php require(__DOCROOT__ . __EXAMPLES__ . '/includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
@@ -36,4 +36,4 @@
 	Server side (QAjaxAutoCompleteTextBox): <?php $this->txtServerSide->Render(); ?>
 		
 	<?php $this->RenderEnd(); ?>
-<?php require('../includes/footer.inc.php'); ?>
+<?php require(__DOCROOT__ . __EXAMPLES__ . '/includes/footer.inc.php'); ?>

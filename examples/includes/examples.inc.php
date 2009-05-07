@@ -2,6 +2,7 @@
 	class Examples {
 		public static $Categories = array();
 		public static $AdditionalCode = array();
+		public static $PluginExamples = array();
 
 		public static function Init() {
 			$intIndex = -1;
@@ -142,7 +143,7 @@
 			Examples::$Categories[$intIndex]['description'] = 'A collection of examples for some of the more advanced/complex QControls';
 			array_push(Examples::$Categories[$intIndex], '/other_controls/fckeditor.php Rich Text Editing with QFCKEditor');
 			array_push(Examples::$Categories[$intIndex], '/image_label/intro.php Introduction to QImageLabel');
-			array_push(Examples::$Categories[$intIndex], '/other_controls/autocomplete.php * Auto-complete Textbox');
+//			array_push(Examples::$Categories[$intIndex], '/other_controls/autocomplete.php * Auto-complete Textbox');
 			array_push(Examples::$Categories[$intIndex], '/treenav/treenav.php Introduction to QTreeNav');
 			array_push(Examples::$Categories[$intIndex], '/other_controls/image.php Introduction to QImageControl');
 			array_push(Examples::$Categories[$intIndex], '/other_controls/datetime.php Date and DateTime-based QControls');
@@ -191,21 +192,40 @@
 			Examples::$Categories[$intIndex]['description'] = 'How debug QCubed applications';
 			array_push(Examples::$Categories[$intIndex], '/other/qfirebug.php Introduction to Debugging with QFirebug');
 			
+			$intIndex++;
+			Examples::$Categories[$intIndex] = array();
+			Examples::$Categories[$intIndex]['name'] = 'Plugins';
+			Examples::$Categories[$intIndex]['description'] = 'Extensions to QCubed functionality created by the community';
+			foreach (Examples::$PluginExamples as $example) {
+				array_push(Examples::$Categories[$intIndex], $example);
+			}
+		}
+		
+		public static function AddPluginExampleFile($strPluginName, $strExampleFileName) {
+			array_push(Examples::$PluginExamples, '/../assets/plugins/' . $strPluginName . "/examples/" . $strExampleFileName);
 		}
 
 		public static function GetCategoryId() {
+			$numCategories = count(Examples::$Categories);
+			$categories = Examples::$Categories;
 			for ($intCategoryIndex = 0; $intCategoryIndex <= count(Examples::$Categories); $intCategoryIndex++) {
 				$objExampleCategory = Examples::$Categories[$intCategoryIndex];
 				
-				for ($intExampleIndex = 0; $intExampleIndex <= count($objExampleCategory); $intExampleIndex++) {
+				for ($intExampleIndex = 0; $intExampleIndex < count($objExampleCategory); $intExampleIndex++) {
 					if (array_key_exists($intExampleIndex, $objExampleCategory)) {
 						$strExample = $objExampleCategory[$intExampleIndex];
 						$intPosition = strpos($strExample, ' ');
 						$strScriptPath = substr($strExample, 0, $intPosition);
 						$strName = substr($strExample, $intPosition + 1);
+						
+						$scriptName = QApplicationBase::$ScriptName;
+						
+						$count = substr_count($strScriptPath, QApplicationBase::$ScriptName);
 
-						if (strtolower(substr(QApplicationBase::$ScriptName, strlen(QApplicationBase::$ScriptName) - strlen($strScriptPath))) == strtolower($strScriptPath))
+						if (substr_count($strScriptPath, QApplicationBase::$ScriptName) > 0 || // for built-in examples
+							substr_count(QApplicationBase::$ScriptName, $strScriptPath) > 0) { // for plugins
 							return $intCategoryIndex;
+						}
 					}
 				}
 			}
@@ -373,9 +393,11 @@
 							$intPosition = strpos($strExample, ' ');
 							$strScriptName = substr($strExample, 0, $intPosition);
 							$strDescription = substr($strExample, $intPosition + 1);
+							$qapp = QApplication::$ScriptName;
 
 							if (!$blnFound) {
-								if (strpos(QApplication::$ScriptName, $strScriptName) !== false) {
+								if (strpos(QApplication::$ScriptName, $strScriptName) !== false || // for core examples
+									strpos($strScriptName, QApplication::$ScriptName) !== false) { // for plugins examples
 									$blnFound = true;
 								} else {
 									$strPrevious = sprintf('<b><a href="%s%s" class="headingLink">&lt;&lt; %s</a></b>',
@@ -418,6 +440,8 @@
 			return $strToReturn;				
 		}
 	}
+	
+	require_once(__CONFIGURATION__ . "/plugin_examples.php");
 
 	Examples::Init();
 ?>

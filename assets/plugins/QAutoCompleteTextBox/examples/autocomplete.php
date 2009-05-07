@@ -1,5 +1,5 @@
 <?php
-	require('../../includes/configuration/prepend.inc.php');
+	require('../../../../includes/configuration/prepend.inc.php');
 
 	class SampleForm extends QForm {
 		protected $txtServerSide;
@@ -14,7 +14,7 @@
 			foreach ($arrPersons as $person) {
 				$arrAutoCompleteItems[] = $person->FirstName . " " . $person->LastName;
 			}
-						
+			
 			$this->txtClientSide = new QJavaScriptAutoCompleteTextBox($this, $arrAutoCompleteItems);
 		}
 		

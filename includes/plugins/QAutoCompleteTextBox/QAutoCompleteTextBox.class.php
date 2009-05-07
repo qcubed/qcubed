@@ -30,42 +30,26 @@
 		protected $blnMatchCase		= false;
 		protected $intMinChars		= 0;
 
-		// APPEARANCE
- 		protected $strCssScripts = 'jquery.autocomplete.css';
-
 		// TextBox CSS Class
 		protected $strCssClass = 'textbox';
 
-		// Include Once
-		private static $blnIncludedCss = false;
-		
 		//////////
 		// Methods
 		//////////
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			
-			$this->AddJavascript('jquery.ui-1.5.3/jquery-1.2.6.js');
-			$this->AddJavascript("jquery_autocomplete/jquery.autocomplete.js");
-			$this->AddJavascript("jquery_autocomplete/jquery.bgiframe.js");
+			$this->AddJavascriptFile("jquery.ui-1.5.3/jquery-1.2.6.js");
+
+			$this->AddPluginJavascriptFile("QAutoCompleteTextBox", "jquery.autocomplete.js");
+			$this->AddPluginJavascriptFile("QAutoCompleteTextBox", "jquery.bgiframe.js");
+			
+			$this->AddPluginCssFile("QAutoCompleteTextBox", "jquery.autocomplete.css");
 						
 			$this->strLabelForRequired = QApplication::Translate('%s is required');
 			$this->strLabelForRequiredUnnamed = QApplication::Translate('Required');
 		}
 		
-		/**
-		 *	CSS Setup
-		 */
-	    public function GetEndHtml() {
-			if( !$this->blnVisible || !$this->blnEnabled || self::$blnIncludedCss ) {
-				return '';
-			}
-			self::$blnIncludedCss = true;
-
-			return "<link rel='stylesheet' type='text/css' media='all' href='" .
-					__CSS_ASSETS__ . "/" . $this->strCssScripts . "' />";
-	    }
-
 		public abstract function GetScript();
 
 		public function GetEndScript() {
