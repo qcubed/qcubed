@@ -67,6 +67,7 @@
 			 */			
 			define ('__INCLUDES__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes');
             define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
+			define ('__PLUGINS__', __INCLUDES__ . '/plugins');
 
 			/*
 			 * If you are using Apache-based mod_rewrite to perform URL rewrites, please specify "apache" here.

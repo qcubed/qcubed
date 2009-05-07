@@ -31,7 +31,8 @@
 	 */
 
 	// Versioning Information
-	define('QCUBED_VERSION', '1.1 (QCubed 1.1)');
+	define('QCUBED_VERSION_NUMBER_ONLY', '1.1');
+	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 
 	// Preload Required Framework Classes
 	require(__QCUBED_CORE__ . '/framework/QBaseClass.class.php');
@@ -41,7 +42,7 @@
 
 	// Setup the Error Handler
 	require(__QCUBED_CORE__ . '/error.inc.php');
-
+	
 	// Start Output Buffering	
 	function __ob_callback($strBuffer) {
 		return QApplication::OutputPage($strBuffer);
@@ -157,8 +158,6 @@
 	QApplicationBase::$ClassFile['qfloattextbox'] = __QCUBED_CORE__ . '/base_controls/QFloatTextBox.class.php';
 	QApplicationBase::$ClassFile['qintegertextbox'] = __QCUBED_CORE__ . '/base_controls/QIntegerTextBox.class.php';
 	QApplicationBase::$ClassFile['qwritebox'] = __QCUBED_CORE__ . '/base_controls/QWriteBox.class.php';
-	QApplicationBase::$ClassFile['qajaxautocompletetextbox'] = __QCUBED_CORE__ . '/base_controls/QAutoCompleteTextBox.class.php';
-	QApplicationBase::$ClassFile['qjavascriptautocompletetextbox'] = __QCUBED_CORE__ . '/base_controls/QAutoCompleteTextBox.class.php';
 
 	QApplicationBase::$ClassFile['qpaginatedcontrol'] = __QCUBED_CORE__ . '/base_controls/QPaginatedControl.class.php';
 	QApplicationBase::$ClassFile['qpaginatorbase'] = __QCUBED_CORE__ . '/base_controls/QPaginatorBase.class.php';
@@ -179,7 +178,10 @@
 		@include(__MODEL_GEN__ . '/_class_paths.inc.php');
 		@include(__MODEL_GEN__ . '/_type_class_paths.inc.php');
 	}
-
+	
+	// Includes for Plugin files
+	require(__CONFIGURATION__ . '/plugin_includes.php');
+	
 	// Special Print Functions / Shortcuts
 	// NOTE: These are simply meant to be shortcuts to actual QCubed functional
 	// calls to make your templates a little easier to read.  By no means do you have to
