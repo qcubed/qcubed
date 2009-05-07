@@ -3,14 +3,14 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=<?php _p(QApplication::$EncodingType); ?>" />
-		<title>Qcubed Development Framework - Examples</title>
+		<title>QCubed Development Framework - Examples</title>
 		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/includes/examples.css'); ?>"></link>
 	</head>
 	<body> 
 
 	<table border="0" cellspacing="0" width="100%">
 		<tr>
-			<td class="headingLeft"><span class="headingLeftSmall">Qcubed Examples - <?php _p(QCUBED_VERSION); ?><br/></span>
+			<td class="headingLeft"><span class="headingLeftSmall">QCubed Examples - <?php _p(QCUBED_VERSION); ?><br/></span>
 				<?php _p(Examples::PageName(), false); ?><br/>
 			<span class="headingLeftSmall"></span>
 			</td>

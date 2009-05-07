@@ -153,9 +153,9 @@
 			Examples::$Categories[$intIndex]['name'] = 'MetaControls, Meta DataGrids, and the Drafts';
 			Examples::$Categories[$intIndex]['description'] = 'Combining the Code Generator with the QForm Library';
 			array_push(Examples::$Categories[$intIndex], '/other/formgen.php QForm and CodeGen, a Winning Combination to RAD');
-			array_push(Examples::$Categories[$intIndex], '/other/metacontrols.php Introduction to MetaControls');
-			array_push(Examples::$Categories[$intIndex], '/other/meta_datagrids.php Introduction to Meta DataGrids');
-			array_push(Examples::$Categories[$intIndex], '/other/form_drafts.php Introduction to the Drafts');
+			array_push(Examples::$Categories[$intIndex], '/other/metacontrols.php * Introduction to MetaControls');
+			array_push(Examples::$Categories[$intIndex], '/other/meta_datagrids.php * Introduction to Meta DataGrids');
+			array_push(Examples::$Categories[$intIndex], '/other/form_drafts.php * Introduction to the Drafts');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
