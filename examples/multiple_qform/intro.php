@@ -1,5 +1,5 @@
 <?php
-	require('../../application/configuration/prepend.inc.php');
+	require('../../includes/configuration/prepend.inc.php');
 
 	// We need to bring in the custom QPanels we've created
 	require('PersonEditPanel.class.php');

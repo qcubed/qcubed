@@ -1,5 +1,5 @@
 <?php
-	require('../../application/configuration/prepend.inc.php');
+	require('../../includes/configuration/prepend.inc.php');
 	
 	// Because we want to use the EXAMPLE QDataGrid subclass that we have customized
 	// for this example, let's explicitly include that specific library here.

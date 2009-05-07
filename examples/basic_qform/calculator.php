@@ -1,5 +1,5 @@
 <?php
-	require('../../application/configuration/prepend.inc.php');
+	require('../../includes/configuration/prepend.inc.php');
 	
 	class CalculatorForm extends QForm {
 		// Our Calculator needs 2 Textboxes (one for each operand)

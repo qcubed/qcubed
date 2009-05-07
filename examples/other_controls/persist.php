@@ -1,4 +1,4 @@
-<?php require('../../application/configuration/prepend.inc.php');
+<?php require('../../includes/configuration/prepend.inc.php');
 
 class PersistentExampleForm extends QForm {
 	// We will persist this control in the $_SESSION

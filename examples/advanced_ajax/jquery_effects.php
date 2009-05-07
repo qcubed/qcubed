@@ -1,5 +1,5 @@
 <?php
-require('../../application/configuration/prepend.inc.php');
+require('../../includes/configuration/prepend.inc.php');
 
 class ExampleForm extends QForm {
 	protected $txtTextbox;

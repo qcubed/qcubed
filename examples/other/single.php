@@ -1,5 +1,5 @@
 <?php
-	require('../../application/configuration/prepend.inc.php');
+	require('../../includes/configuration/prepend.inc.php');
 
 	if (!isset($this)) {
 		// Define the Qform with all our Qcontrols

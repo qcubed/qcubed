@@ -1,4 +1,4 @@
-<?php require('../../application/configuration/prepend.inc.php'); ?>
+<?php require('../../incldes/configuration/prepend.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
