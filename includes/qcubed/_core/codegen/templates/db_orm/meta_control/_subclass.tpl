@@ -1,6 +1,6 @@
 <template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __META_CONTROLS__ %>" TargetFileName="<%= $objTable->ClassName %>MetaControl.class.php"/>
 <?php
-	require(__DATAGEN_META_CONTROLS__ . '/<%= $objTable->ClassName %>MetaControlGen.class.php');
+	require(__META_CONTROLS_GEN__ . '/<%= $objTable->ClassName %>MetaControlGen.class.php');
 
 	/**
 	 * This is a MetaControl customizable subclass, providing a QForm or QPanel access to event handlers

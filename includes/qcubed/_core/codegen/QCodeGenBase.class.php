@@ -29,7 +29,7 @@
 //		const SubTemplatesPath = '/codegen/subtemplates/';
 
 		// Relative Paths (from __QCUBED__) to the CUSTOM Template and Subtemplate Directories
-		const TemplatesPathCustom = '/custom/codegen/templates/';
+		const TemplatesPathCustom = '/codegen/templates/';
 //		const SubTemplatesPathCustom = '/codegen/subtemplates/';
 
 		// DebugMode -- for Template Developers

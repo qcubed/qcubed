@@ -1,4 +1,4 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __DATAGEN_META_CONTROLS__ %>" TargetFileName="<%= $objTable->ClassName %>DataGridGen.class.php"/>
+<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __META_CONTROLS_GEN__ %>" TargetFileName="<%= $objTable->ClassName %>DataGridGen.class.php"/>
 <?php
 	/**
 	 * This is the "Meta" DataGrid class for the List functionality

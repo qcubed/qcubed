@@ -1,6 +1,6 @@
 <template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __META_CONTROLS__ %>" TargetFileName="<%= $objTable->ClassName %>DataGrid.class.php"/>
 <?php
-	require(__DATAGEN_META_CONTROLS__ . '/<%= $objTable->ClassName %>DataGridGen.class.php');
+	require(__META_CONTROLS_GEN__ . '/<%= $objTable->ClassName %>DataGridGen.class.php');
 
 	/**
 	 * This is the "Meta" DataGrid customizable subclass for the List functionality

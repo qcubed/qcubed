@@ -21,7 +21,7 @@
 	// Note: Typically, this code would be in the includes/data_objects/Project.class.php
 	// but the Project.class.php code has been pulled out and put here for demonstration
 	// purposes.
-	require(__DATAGEN_CLASSES__ . '/ProjectGen.class.php');
+	require(__MODEL_GEN__ . '/ProjectGen.class.php');
 	class Project extends ProjectGen {
 		const TaxPercentage = .0825;
 

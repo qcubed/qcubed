@@ -87,9 +87,9 @@
 	QApplicationBase::$ClassFile['qcryptography'] = __QCUBED_CORE__ . '/framework/QCryptography.class.php';
 	QApplicationBase::$ClassFile['qsoapservice'] = __QCUBED_CORE__ . '/framework/QSoapService.class.php';
 	QApplicationBase::$ClassFile['qi18n'] = __QCUBED_CORE__ . '/framework/QI18n.class.php';
-	QApplicationBase::$ClassFile['qqn'] = __DATAGEN_CLASSES__ . '/QQN.class.php';
+	QApplicationBase::$ClassFile['qqn'] = __MODEL_GEN__ . '/QQN.class.php';
 	QApplicationBase::$ClassFile['qqueryexpansion'] = __QCUBED_CORE__ . '/framework/QQueryExpansion.class.php';
-	QApplicationBase::$ClassFile['qconvertnotation'] = __QCUBED__ . '/custom/codegen/QConvertNotation.class.php';
+	QApplicationBase::$ClassFile['qconvertnotation'] = __QCUBED__ . '/codegen/QConvertNotation.class.php';
 	QApplicationBase::$ClassFile['qlexer'] = __QCUBED_CORE__ . '/framework/QLexer.class.php';
 	QApplicationBase::$ClassFile['qregex'] = __QCUBED_CORE__ . '/framework/QRegex.class.php';
 	QApplicationBase::$ClassFile['qobjectdiff'] = __QCUBED_CORE__ . '/framework/QObjectDiff.class.php';
@@ -175,9 +175,9 @@
 	QApplicationBase::$ClassFile['qcontrolgrouping'] = __QCUBED_CORE__ . '/base_controls/QControlGrouping.class.php';
 	QApplicationBase::$ClassFile['qdropzonegrouping'] = __QCUBED_CORE__ . '/base_controls/QDropZoneGrouping.class.php';
 
-	if (__DATAGEN_CLASSES__) {
-		@include(__DATAGEN_CLASSES__ . '/_class_paths.inc.php');
-		@include(__DATAGEN_CLASSES__ . '/_type_class_paths.inc.php');
+	if (__MODEL_GEN__) {
+		@include(__MODEL_GEN__ . '/_class_paths.inc.php');
+		@include(__MODEL_GEN__ . '/_type_class_paths.inc.php');
 	}
 
 	// Special Print Functions / Shortcuts

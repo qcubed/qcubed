@@ -1,6 +1,6 @@
 <template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __MODEL__ %>" TargetFileName="<%= $objTable->ClassName %>.class.php"/>
 <?php
-	require(__DATAGEN_CLASSES__ . '/<%= $objTable->ClassName %>Gen.class.php');
+	require(__MODEL_GEN__ . '/<%= $objTable->ClassName %>Gen.class.php');
 
 	/**
 	 * The <%= $objTable->ClassName %> class defined here contains any

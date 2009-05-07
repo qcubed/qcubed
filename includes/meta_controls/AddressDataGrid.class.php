@@ -1,5 +1,5 @@
 <?php
-	require(__DATAGEN_META_CONTROLS__ . '/AddressDataGridGen.class.php');
+	require(__META_CONTROLS_GEN__ . '/AddressDataGridGen.class.php');
 
 	/**
 	 * This is the "Meta" DataGrid customizable subclass for the List functionality

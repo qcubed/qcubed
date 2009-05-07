@@ -4,7 +4,7 @@
 	// require('prepend.inc.php');				/* if you DO have "includes/" in your include_path */
 
 	// Load in the QCodeGen Class
-	require(__QCUBED__ . '/custom/codegen/QCodeGen.class.php');
+	require(__QCUBED__ . '/codegen/QCodeGen.class.php');
 
 	// Security check for ALLOW_REMOTE_ADMIN
 	// To allow access REGARDLESS of ALLOW_REMOTE_ADMIN, simply remove the line below

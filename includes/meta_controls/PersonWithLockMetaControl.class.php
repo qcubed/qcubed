@@ -1,5 +1,5 @@
 <?php
-	require(__DATAGEN_META_CONTROLS__ . '/PersonWithLockMetaControlGen.class.php');
+	require(__META_CONTROLS_GEN__ . '/PersonWithLockMetaControlGen.class.php');
 
 	/**
 	 * This is a MetaControl customizable subclass, providing a QForm or QPanel access to event handlers

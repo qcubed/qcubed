@@ -1,4 +1,4 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __DATAGEN_CLASSES__ %>" TargetFileName="<%= $objTypeTable->ClassName %>Gen.class.php"/>
+<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __MODEL_GEN__ %>" TargetFileName="<%= $objTypeTable->ClassName %>Gen.class.php"/>
 <?php
 	/**
 	 * The <%= $objTypeTable->ClassName %> class defined here contains

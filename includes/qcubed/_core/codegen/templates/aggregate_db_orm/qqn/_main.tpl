@@ -1,4 +1,4 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __DATAGEN_CLASSES__ %>" TargetFileName="QQN.class.php"/>
+<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __MODEL_GEN__ %>" TargetFileName="QQN.class.php"/>
 <?php
 	class QQN {
 <% foreach ($objTableArray as $objTable) { %>

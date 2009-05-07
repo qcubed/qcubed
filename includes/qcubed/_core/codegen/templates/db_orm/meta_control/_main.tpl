@@ -1,4 +1,4 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __DATAGEN_META_CONTROLS__ %>" TargetFileName="<%= $objTable->ClassName %>MetaControlGen.class.php"/>
+<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<%= __META_CONTROLS_GEN__ %>" TargetFileName="<%= $objTable->ClassName %>MetaControlGen.class.php"/>
 <?php
 	/**
 	 * This is a MetaControl class, providing a QForm or QPanel access to event handlers

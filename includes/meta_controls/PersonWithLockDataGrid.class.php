@@ -1,5 +1,5 @@
 <?php
-	require(__DATAGEN_META_CONTROLS__ . '/PersonWithLockDataGridGen.class.php');
+	require(__META_CONTROLS_GEN__ . '/PersonWithLockDataGridGen.class.php');
 
 	/**
 	 * This is the "Meta" DataGrid customizable subclass for the List functionality

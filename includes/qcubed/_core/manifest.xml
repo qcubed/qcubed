@@ -496,7 +496,7 @@
 <file directoryToken="__DEVTOOLS_CLI__" path="qcodo_downloader.inc.php" md5="8a378d641380747009d26259190c2704"/>
 </files>
 <directories>
-<directory token="__DATAGEN_CLASSES__" coreFlag="0" relativeFlag="0"/>
+<directory token="__MODEL_GEN__" coreFlag="0" relativeFlag="0"/>
 <directory token="__META_CONTROLS__" coreFlag="0" relativeFlag="0"/>
 <directory token="__MODEL__" coreFlag="0" relativeFlag="0"/>
 <directory token="__QCUBED_CORE__" coreFlag="1" relativeFlag="0"/>

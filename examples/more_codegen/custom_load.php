@@ -22,7 +22,7 @@
 	// Note: Typically, this code would be in includes/data_objects/Project.class.php
 	// but the Project.class.php code has been pulled out and put here for demonstration
 	// purposes.
-	require(__DATAGEN_CLASSES__ . '/ProjectGen.class.php');
+	require(__MODEL_GEN__ . '/ProjectGen.class.php');
 	class Project extends ProjectGen {
 		// Create our Custom Load Method
 		// Note that this custom load method is based on the sample LoadArrayBySample that is generated
