@@ -120,8 +120,8 @@
 			 */
 
 			// Destination for generated form drafts and panel drafts
-			define ('__FORM_DRAFTS__', __SUBDIRECTORY__ . '/application/drafts');
-			define ('__PANEL_DRAFTS__', __SUBDIRECTORY__ . '/application/drafts/dashboard');
+			define ('__FORM_DRAFTS__', __SUBDIRECTORY__ . '/drafts');
+			define ('__PANEL_DRAFTS__', __SUBDIRECTORY__ . '/drafts/panels');
 
 			// Location of the Examples site
 			define ('__EXAMPLES__', __SUBDIRECTORY__ . '/examples');
