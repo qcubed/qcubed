@@ -187,7 +187,7 @@
 			objDbBg.style.cursor = "pointer";
 			objDbBg.onclick = objWrapper.hideDialogBox;
 		} else {
-			objDbBg.style.cursor = "url(" + qc.imageAssets + "/_core/move_nodrop.cur), auto";
+			objDbBg.style.cursor = "url(" + qc.imageAssets + "/move_nodrop.cur), auto";
 			objDbBg.onclick = null;
 		};
 

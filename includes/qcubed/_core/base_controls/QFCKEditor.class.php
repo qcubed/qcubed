@@ -29,8 +29,8 @@
  *	@property boolean FullPage Do you want to edit a fullpage-html (with headers and bodytags)
  *	@property boolean Debug	debug the FCKeditor?
  *	@property boolean AllowQueryStringDebug
- *	@property string SkinPath The path of the skins you want to use. Default skins are under assets\js\_core\fckeditor\editor\skins
- *	@property string PluginsPath Path to the plugins; Default plugins are in C:\xampp\xampp\htdocs\qcubed\wwwroot\assets\js\_core\fckeditor\editor\plugins
+ *	@property string SkinPath The path of the skins you want to use. Default skins are under assets\_core\js\fckeditor\editor\skins
+ *	@property string PluginsPath Path to the plugins; Default plugins are in C:\xampp\xampp\htdocs\qcubed\wwwroot\assets\_core\js\fckeditor\editor\plugins
  *	@property boolean AutoDetectLanguage
  *	@property string DefaultLanguage
  *	@property string ContentLangDirection

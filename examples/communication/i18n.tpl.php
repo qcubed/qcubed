@@ -33,7 +33,7 @@
 		<?php _t('
 		Note that generated Form Drafts and the QControls are all I18n aware -- they will translate themselves
 		based on the selected language (as long as the appropriate language file exists).  Qcubed-specific
-		langauge files are part of Qcubed core, and exist in <b>/includes/qcodo/_core/i18n</b>.  <b>Please Note:</b>
+		langauge files are part of Qcubed core, and exist in <b>/includes/qcubed/_core/i18n</b>.  <b>Please Note:</b>
 		we are desparately in need of more language files.  If you are able to contribute, please take
 		the current en.po file and translate it to any currently unsupported language and feel free to
 		submit it.  Also note that the Spanish translation (es.po) language files (both in the example

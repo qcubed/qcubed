@@ -438,9 +438,9 @@
 
 				var blnValidDropZone = this.validateDropZone();
 				if (blnValidDropZone)
-					this.handle.style.cursor = "url(" + qc.imageAssets + "/_core/move_drop.cur), auto";
+					this.handle.style.cursor = "url(" + qc.imageAssets + "/move_drop.cur), auto";
 				else
-					this.handle.style.cursor = "url(" + qc.imageAssets + "/_core/move_nodrop.cur), auto";
+					this.handle.style.cursor = "url(" + qc.imageAssets + "/move_nodrop.cur), auto";
 
 				// Update Everything that's Moving (e.g. all controls in qcodo.moveControls)
 				for (var strKey in this.moveControls) {
@@ -460,9 +460,9 @@
 					objWrapper.setMaskOffset(intDeltaX, intDeltaY);
 
 					if (blnValidDropZone) {
-						objMask.style.cursor = "url(" + qc.imageAssets + "/_core/move_drop.cur), auto";
+						objMask.style.cursor = "url(" + qc.imageAssets + "/move_drop.cur), auto";
 					} else {
-						objMask.style.cursor = "url(" + qc.imageAssets + "/_core/move_nodrop.cur), auto";
+						objMask.style.cursor = "url(" + qc.imageAssets + "/move_nodrop.cur), auto";
 					};
 				};
 			};
