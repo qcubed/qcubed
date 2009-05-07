@@ -63,7 +63,7 @@
 			if (isset($__exc_strRenderedPage)) {
 				$_SESSION['RenderedPageForError'] = $__exc_strRenderedPage; ?>
 				<b>Rendered Page:</b>&nbsp;&nbsp;
-				<a href="<?php _p(__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) ;?>/_core/error_already_rendered_page.php" target="_blank">
+				<a href="<?php _p(__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) ;?>/error_already_rendered_page.php" target="_blank">
 					Click here</a> to view contents able to be rendered</a>
 				<br /><br />
 <?php

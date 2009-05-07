@@ -271,7 +271,7 @@
 		 */
 		public function OutputProfiling() {
 			if ($this->blnEnableProfiling) {
-				printf('<form method="post" id="frmDbProfile%s" action="%s/_core/profile.php"><div>',
+				printf('<form method="post" id="frmDbProfile%s" action="%s/profile.php"><div>',
 					$this->intDatabaseIndex, __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__);
 				printf('<input type="hidden" name="strProfileData" value="%s" />',
 					base64_encode(serialize($this->strProfileArray)));

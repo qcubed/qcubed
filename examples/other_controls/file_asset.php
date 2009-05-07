@@ -50,5 +50,5 @@
 	}
 
 	// And now run our defined form
-	ExampleForm::Run('ExampleForm');
+	ExampleForm::Run('ExampleForm', 'file_asset.tpl.php');
 ?>
