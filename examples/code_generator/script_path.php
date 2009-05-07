@@ -1,5 +1,5 @@
 <?php require('../../includes/configuration/prepend.inc.php'); ?>
-<?php require('../application/configuration/header.inc.php'); ?>
+<?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
 		<div class="instruction_title">Using a Relationships Script</div>
@@ -35,4 +35,4 @@
 		database as the InnoDB version of our <b>Examples Site Database</b>.
 	</div>
 
-<?php require('../application/configuration/footer.inc.php'); ?>
+<?php require('../includes/footer.inc.php'); ?>
