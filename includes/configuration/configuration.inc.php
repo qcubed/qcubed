@@ -120,9 +120,6 @@
 			define ('__FORM_DRAFTS__', __SUBDIRECTORY__ . '/drafts');
 			define ('__PANEL_DRAFTS__', __SUBDIRECTORY__ . '/drafts/panels');
 
-			// Location of the Examples site
-			define ('__EXAMPLES__', __SUBDIRECTORY__ . '/examples');
-
 			// Location of QCubed-specific Web Assets (JavaScripts, CSS, Images, and PHP Pages/Popups)
 			define ('__JS_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/js');
 			define ('__CSS_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/css');
@@ -132,6 +129,9 @@
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
 
+			// Location of the Examples site
+			define ('__EXAMPLES__', __PHP_ASSETS__ . '/examples');
+			
 			/* Database Connection SerialArrays
 			 *
 			 * Note that all Database Connections are defined as constant serialized arrays.  QCubed supports
