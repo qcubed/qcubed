@@ -53,7 +53,7 @@
 			}
 
 			// Setup Callback and Template
-			$this->strTemplate = '<%= $objTable->ClassName %>EditPanel.tpl.php';
+			$this->strTemplate = __DOCROOT__ . __PANEL_DRAFTS__ . '/<%= $objTable->ClassName %>EditPanel.tpl.php';
 			$this->strClosePanelMethod = $strClosePanelMethod;
 
 			// Construct the <%= $objTable->ClassName %>MetaControl

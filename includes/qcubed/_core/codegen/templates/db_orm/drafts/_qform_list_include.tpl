@@ -7,7 +7,7 @@
 	// code re-generations do not overwrite your changes.
 
 	$strPageTitle = QApplication::Translate('<%= $objTable->ClassNamePlural %>') . ' - ' . QApplication::Translate('List All');
-	require(__INCLUDES__ . '/header.inc.php');
+	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
 
 	<?php $this->RenderBegin() ?>
@@ -26,4 +26,4 @@
 
 	<?php $this->RenderEnd() ?>
 	
-<?php require(__INCLUDES__ . '/footer.inc.php'); ?>
+<?php require(__CONFIGURATION__ . '/footer.inc.php'); ?>

@@ -44,7 +44,7 @@
 			$this->strCloseEditPanelMethod = $strCloseEditPanelMethod;
 
 			// Setup the Template
-			$this->Template = '<%= $objTable->ClassName %>ListPanel.tpl.php';
+			$this->Template = __DOCROOT__ . __PANEL_DRAFTS__ . '/<%= $objTable->ClassName %>ListPanel.tpl.php';
 
 			// Instantiate the Meta DataGrid
 			$this->dtg<%= $objTable->ClassNamePlural %> = new <%= $objTable->ClassName %>DataGrid($this);
