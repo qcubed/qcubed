@@ -125,6 +125,11 @@
 			define ('__CSS_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/css');
 			define ('__IMAGE_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/images');
 			define ('__PHP_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/php');
+			
+			// jQuery folder location
+			define ('__JQUERY_DIRECTORY__',  'jquery.ui-1.5.3');
+			define ('__JQUERY_EFFECTS__', __JQUERY_DIRECTORY__.'/ui');
+			define ('__JQUERY_BASE__', __JQUERY_DIRECTORY__.'/jquery-1.2.6.js');
 
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
