@@ -24,7 +24,7 @@
 		}
 				
 		public function callbackAjax($strFormId, $strControlId, $strParameter) {
-			$parent = isset($this->objParentObject) ? $this->objParentObject : $this->objForm;
+			$parent = isset($this->objParentControl) ? $this->objParentControl : $this->objForm;
 			
 			try {
 				$arrToSerialize = $parent->{$this->strCallback}($strParameter);
