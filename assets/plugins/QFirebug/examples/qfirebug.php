@@ -1,5 +1,5 @@
 <?php
-	require('../../../../../includes/configuration/prepend.inc.php');
+	require('../../../../includes/configuration/prepend.inc.php');
 
 	// Define the Qform with all our Qcontrols
 	class ExamplesForm extends QForm {

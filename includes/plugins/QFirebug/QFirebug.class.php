@@ -1,5 +1,5 @@
 <?php
-	require(__QCUBED_CORE__ . '/framework/QFirebug/' .  'fb.php');
+	require(__PLUGINS__ . '/QFirebug/' . 'fb.php');
 
 	abstract class QFirebug extends FB {
 		public static function OutputDatabaseProfile(QDatabaseBase $objDb = null){

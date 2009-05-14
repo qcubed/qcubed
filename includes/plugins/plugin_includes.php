@@ -8,4 +8,6 @@
 	QApplicationBase::$ClassFile['qautocompletetextboxbase'] = __PLUGINS__ . '/QAutoCompleteTextBox/QAutoCompleteTextBoxBase.class.php';
 	QApplicationBase::$ClassFile['qajaxautocompletetextbox'] = __PLUGINS__ . '/QAutoCompleteTextBox/QAjaxAutoCompleteTextBox.class.php';
 	QApplicationBase::$ClassFile['qjavascriptautocompletetextbox'] = __PLUGINS__ . '/QAutoCompleteTextBox/QJavaScriptAutoCompleteTextBox.class.php';
+		
+	QApplicationBase::$ClassFile['qfirebug'] = __PLUGINS__ . '/QFirebug/QFirebug.class.php';
 ?>

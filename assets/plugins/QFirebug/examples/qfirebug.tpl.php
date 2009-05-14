@@ -1,4 +1,4 @@
-<?php require('../includes/header.inc.php'); ?>
+<?php require(__DOCROOT__ . __EXAMPLES__ . '/includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
@@ -17,7 +17,7 @@
         are trying to debug advanced AJAX applications, such as QCubed apps. That's why
         we've included a better mechanism for debugging through Firebug:<br />
         
-		<img src="../images/qfirebug.png" alt="&quot;QFirebug Debugging Output&quot;" style="border-width: 1px; border-style: solid;" /><br/>
+		<img src="qfirebug.png" alt="&quot;QFirebug Debugging Output&quot;" style="border-width: 1px; border-style: solid;" /><br/>
         
         Here's how to make it work: install the following prerequisites in the order specified below:
         <ul>
@@ -44,4 +44,4 @@
 
 
 	<?php $this->RenderEnd(); ?>
-<?php require('../includes/footer.inc.php'); ?>
+<?php require(__DOCROOT__ . __EXAMPLES__ . '/includes/footer.inc.php'); ?>

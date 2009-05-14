@@ -188,12 +188,6 @@
 			
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
-			Examples::$Categories[$intIndex]['name'] = 'Debugging';
-			Examples::$Categories[$intIndex]['description'] = 'How debug QCubed applications';
-			array_push(Examples::$Categories[$intIndex], '/other/qfirebug.php Introduction to Debugging with QFirebug');
-			
-			$intIndex++;
-			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Plugins';
 			Examples::$Categories[$intIndex]['description'] = 'Extensions to QCubed functionality created by the community';
 			foreach (Examples::$PluginExamples as $example) {

@@ -94,8 +94,6 @@
 	QApplicationBase::$ClassFile['qlexer'] = __QCUBED_CORE__ . '/framework/QLexer.class.php';
 	QApplicationBase::$ClassFile['qregex'] = __QCUBED_CORE__ . '/framework/QRegex.class.php';
 	QApplicationBase::$ClassFile['qobjectdiff'] = __QCUBED_CORE__ . '/framework/QObjectDiff.class.php';
-	
-	QApplicationBase::$ClassFile['qfirebug'] = __QCUBED_CORE__ . '/framework/QFirebug/QFirebug.class.php';
 
 	QApplicationBase::$ClassFile['qcache'] = __QCUBED_CORE__ . '/framework/QCache.class.php';
 	QApplicationBase::$ClassFile['qdatetimespan'] = __QCUBED_CORE__ . '/framework/QDateTimeSpan.class.php';
