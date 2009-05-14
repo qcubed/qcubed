@@ -67,7 +67,6 @@
 			 */			
 			define ('__INCLUDES__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes');
 			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
-			define ('__PLUGINS__', __INCLUDES__ . '/plugins');
 
 			/*
 			 * If you are using Apache-based mod_rewrite to perform URL rewrites, please specify "apache" here.
@@ -91,6 +90,7 @@
 			// Includes subdirectories for QCubed Customizations in CodeGen and QForms, i18n PO files, QCache storage, etc.
 			// Also includes the _core subdirectory for the QCubed Core
 			define ('__QCUBED__', __INCLUDES__ . '/qcubed');
+			define ('__PLUGINS__', __QCUBED__ . '/plugins');
 
 			// The QCubed Core
 			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');
