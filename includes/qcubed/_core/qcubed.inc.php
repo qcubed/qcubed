@@ -167,6 +167,8 @@
 	QApplicationBase::$ClassFile['qwaiticon'] = __QCUBED_CORE__ . '/base_controls/QWaitIcon.class.php';
 	QApplicationBase::$ClassFile['qcontrolgrouping'] = __QCUBED_CORE__ . '/base_controls/QControlGrouping.class.php';
 	QApplicationBase::$ClassFile['qdropzonegrouping'] = __QCUBED_CORE__ . '/base_controls/QDropZoneGrouping.class.php';
+	
+	QApplicationBase::$ClassFile['qsamplecontrol'] = __QCUBED__ . '/controls/QSampleControl.class.php';
 
 	if (__MODEL_GEN__) {
 		@include(__MODEL_GEN__ . '/_class_paths.inc.php');
