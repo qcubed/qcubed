@@ -33,6 +33,6 @@
 		For more information, please go to the QCubed website at: <a href="http://www.qcu.be/">http://www.qcu.be/</a>
 		<br /><br /><br />
 
-		<?php QApplication::VarDump(); ?>
+		<?php if (!QApplication::IsRemoteAdminSession()) QApplication::VarDump(); ?>
 	</body>
 </html>

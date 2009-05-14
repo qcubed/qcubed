@@ -603,26 +603,34 @@
 		 * @param integer $intLine line number of the check call
 		 */
 		public static function CheckRemoteAdmin() {
-			// Allow Remote?
-			if (ALLOW_REMOTE_ADMIN === true)
+			if (!QApplication::IsRemoteAdminSession()) {
 				return;
-
-			// Are we localhost?
-			if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')
-				return;
-
-			// Are we the correct IP?
-			if (is_string(ALLOW_REMOTE_ADMIN))
-				foreach (explode(',', ALLOW_REMOTE_ADMIN) as $strIpAddress)
-					if ($_SERVER['REMOTE_ADDR'] == trim($strIpAddress) ||
-						(array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && ($_SERVER['HTTP_X_FORWARDED_FOR'] == trim($strIpAddress))))
-						return;
+			}
 
 			// If we're here -- then we're not allowed to access.  Present the Error/Issue.
 			header($_SERVER['SERVER_PROTOCOL'] . ' 401 Access Denied');
 			header('Status: 401 Access Denied', true);
 
 			throw new QRemoteAdminDeniedException();
+		}
+		
+		public static function IsRemoteAdminSession() {
+			// Allow Remote?
+			if (ALLOW_REMOTE_ADMIN === true)
+				return false;
+
+			// Are we localhost?
+			if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')
+				return false;
+
+			// Are we the correct IP?
+			if (is_string(ALLOW_REMOTE_ADMIN))
+				foreach (explode(',', ALLOW_REMOTE_ADMIN) as $strIpAddress)
+					if ($_SERVER['REMOTE_ADDR'] == trim($strIpAddress) ||
+						(array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && ($_SERVER['HTTP_X_FORWARDED_FOR'] == trim($strIpAddress))))
+						return false;
+					
+			return true;
 		}
 
 		/**
