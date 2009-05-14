@@ -17,11 +17,11 @@ class QTextBoxPromptDialog extends QPromptDialog {
 	// default value of the label - use SetLabel to override
 	protected $strLabel = "Enter a value:";
 	
-	// Feel free to override this template with your own
-	protected $strTemplate = "QTextBoxPromptDialog.tpl.php";
-	
 	public function __construct($objParentObject, $formCallbackMethodOnContinue, $strControlId = null) {
 		parent::__construct($objParentObject, $formCallbackMethodOnContinue, $strControlId);
+		
+		// Feel free to override this template with your own
+		$this->strTemplate = __PLUGINS__ . "/DialogBoxes/QTextBoxPromptDialog.tpl.php";
 				
 		$this->txtTextbox = new QTextBox($this);
 		

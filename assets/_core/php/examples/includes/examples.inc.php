@@ -132,7 +132,6 @@
 			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/drop_zone.php Move Handle: Defining Drop Zones');
 			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/resize.php Resizing Block Controls');
 			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/dialog_box.php Modal "Dialog Boxes"');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/more_dialog_boxes.php Pre-built Dialog Boxes: Confirmations and Prompts');
 			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/jquery_effects.php JQuery Effects');
 			
 			Examples::$AdditionalCode['/advanced_ajax/dialog_box.php'] = array('CalculatorWidget.class.php','CalculatorWidget.tpl.php');

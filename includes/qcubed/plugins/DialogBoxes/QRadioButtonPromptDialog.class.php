@@ -16,12 +16,12 @@ class QRadioButtonPromptDialog extends QPromptDialog {
 	// default value of the label - use SetLabel to override
 	protected $strLabel = "Pick an option:";
 	
-	// Feel free to override this template with your own
-	protected $strTemplate = "QRadioButtonPromptDialog.tpl.php";
-
 	public function __construct($objParentObject, $formFirstActionCallback, $strControlId = null) {
 		parent::__construct($objParentObject, $formFirstActionCallback, $strControlId);
-
+		
+		// Feel free to override this template with your own
+		$this->strTemplate = __PLUGINS__ . "/DialogBoxes/QRadioButtonPromptDialog.tpl.php";
+		
 		$this->radOptions = new QRadioButtonList($this);
 	}
 

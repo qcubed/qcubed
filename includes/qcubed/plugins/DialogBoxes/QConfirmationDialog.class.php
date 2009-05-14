@@ -5,12 +5,12 @@ class QConfirmationDialog extends QPromptDialog {
 	protected $strIntroLabel = "Are you sure?";
 	
 	protected $strFirstActionLabel = "Proceed";
-	
-	// Feel free to override this template with your own
-	public $strTemplate = "QConfirmationDialog.tpl.php";
 
 	public function __construct($objParentObject, $formFirstActionCallback, $strControlId = null) {
 		parent::__construct($objParentObject, $formFirstActionCallback, $strControlId);
+		
+		// Feel free to override this template with your own
+		$this->strTemplate = __PLUGINS__ . "/DialogBoxes/QConfirmationDialog.tpl.php";
 	}
 
 	public function first_action_click() {

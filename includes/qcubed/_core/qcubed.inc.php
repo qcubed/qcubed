@@ -117,10 +117,6 @@
 	QApplicationBase::$ClassFile['qpanel'] = __QCUBED_CORE__ . '/base_controls/QPanel.class.php';
 	QApplicationBase::$ClassFile['qcontrolproxy'] = __QCUBED_CORE__ . '/base_controls/QControlProxy.class.php';
 	QApplicationBase::$ClassFile['qdialogbox'] = __QCUBED_CORE__ . '/base_controls/QDialogBox.class.php';
-	QApplicationBase::$ClassFile['qpromptdialog'] = __QCUBED_CORE__ . '/base_controls/QPromptDialog.class.php';
-	QApplicationBase::$ClassFile['qtextboxpromptdialog'] = __QCUBED_CORE__ . '/base_controls/QTextBoxPromptDialog.class.php';
-	QApplicationBase::$ClassFile['qradiobuttonpromptdialog'] = __QCUBED_CORE__ . '/base_controls/QRadioButtonPromptDialog.class.php';
-	QApplicationBase::$ClassFile['qconfirmationdialog'] = __QCUBED_CORE__ . '/base_controls/QConfirmationDialog.class.php';
 		
 	QApplicationBase::$ClassFile['qimagebase'] = __QCUBED_CORE__ . '/base_controls/QImageBase.class.php';
 	QApplicationBase::$ClassFile['qimagelabelbase'] = __QCUBED_CORE__ . '/base_controls/QImageLabelBase.class.php';
