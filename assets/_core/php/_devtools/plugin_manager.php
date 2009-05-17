@@ -9,8 +9,6 @@
 		private $objPluginArray;
 
 		protected function Form_Run() {
-			// Security check for ALLOW_REMOTE_ADMIN
-			// To allow access REGARDLESS of ALLOW_REMOTE_ADMIN, simply remove the line below
 			QApplication::CheckRemoteAdmin();
 		}
 
@@ -23,20 +21,24 @@
 			
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Title',
                     '<a href="plugin_edit.php?strName=<?= $_ITEM->strName ?>"><?= $_ITEM->strName ?></a>', 'HtmlEntities=false'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Controls',
-                    '<?= count($_ITEM->objControlsArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Misc Includes',
-                    '<?= count($_ITEM->objMiscIncludesArray) ?>'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: Controls',
+                    '<?= count($_ITEM->objControlFilesArray) ?>'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: Misc Includes',
+                    '<?= count($_ITEM->objMiscIncludeFilesArray) ?>'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: Images',
+                    '<?= count($_ITEM->objImageFilesArray) ?>'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: CSS',
+                    '<?= count($_ITEM->objCssFilesArray) ?>'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: JS',
+                    '<?= count($_ITEM->objJavascriptFilesArray) ?>'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: Examples',
+                    '<?= count($_ITEM->objExampleFilesArray) ?>'));			
 
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Images',
-                    '<?= count($_ITEM->objImagesArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('CSS',
-                    '<?= count($_ITEM->objCssArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('JS',
-                    '<?= count($_ITEM->objJavascriptArray) ?>'));
-
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Example Files',
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Included Classes',
+                    '<?= count($_ITEM->objIncludesArray) ?>'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Examples',
                     '<?= count($_ITEM->objExamplesArray) ?>'));
+
 
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Description',
                     '<?= $_ITEM->strDescription ?>'));

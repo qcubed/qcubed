@@ -20,66 +20,82 @@ class QPluginConfigFile { // Singleton
 			$row = new QPluginConfigFileItem();
 			$row->strName = (string)$plugin->name;
 			$row->strDescription = (string)$plugin->description;
+			$row->strVersion = (string)$plugin->version;
+			$row->strPlatformVersion = (string)$plugin->platform_version;
+			$row->strAuthorName = (string)$plugin->author['name'];
+			$row->strAuthorEmail = (string)$plugin->author['email'];
 			
-			if (isset($plugin->controls)) {
-				foreach ($plugin->controls->file as $item) {
-					$component = new stdclass();
-					$component->file = $item['filename'];
-					$component->class = $item['class'];
-					
-					$row->objControlsArray []= $component;
-				}
-			}
-
-			if (isset($plugin->misc_includes)) {
-				foreach ($plugin->misc_includes->file as $item) {
-					$component = new stdclass();
-					$component->file = $item['filename'];
-
-					$row->objMiscIncludesArray []= $component;
-				}
-			}
-			
-			if (isset($plugin->images)) {
-				foreach ($plugin->images->file as $pluginControl) {
-					$component = new stdclass();
-					$component->file = $item['filename'];
-										
-					$row->objImagesArray []= $component;
-				}
-			}
-
-			if (isset($plugin->css)) {
-				foreach ($plugin->css->file as $pluginControl) {
-					$component = new stdclass();
-					$component->file = $item['filename'];
-
-					$row->objCssArray []= $component;
-				}
-			}
-
-			if (isset($plugin->javascript)) {
-				foreach ($plugin->javascript->file as $pluginControl) {
-					$component = new stdclass();
-					$component->file = $item['filename'];
-
-					$row->objJavascriptArray []= $component;
-				}
-			}
-
-			if (isset($plugin->examples)) {
-				foreach ($plugin->examples->file as $item) {
-					$component = new stdclass();
-					$component->file = $item['filename'];
-
-					$row->objExamplesArray []= $component;
-				}
-			}
+			$this->parseFiles($plugin, $row);
+			$this->parseIncludes($plugin, $row);
+			$this->parseExamples($plugin, $row);
 			
 			$arrResult[] = $row;
 		}
 		
 		return $arrResult;
+	}
+	
+	// helper to parse the /plugin/includes section of the config file
+	private function parseIncludes(&$plugin, &$row) {
+		foreach ($plugin->includes->include_files as $item) {
+			$component = new stdclass();
+			$component->filename = $item['filename'];
+			$component->classname = $item['classname'];
+			
+			$row->objIncludesArray [] = $component;
+		}
+	}
+	
+	// helper to parse the /plugin/examples section of the config file
+	private function parseExamples(&$plugin, &$row) {
+		foreach ($plugin->examples->example as $item) {
+			$component = new stdclass();
+			$component->filename = $item['filename'];
+			$component->description = $item['description'];
+			
+			$row->objExamplesArray [] = $component;
+		}
+	}
+
+	// helper to parse the /plugin/files section of the config file
+	private function parseFiles(&$plugin, &$row) {
+		if (!isset($plugin->files)) {
+			throw new Exception("Plugin that has no registered files: " . $row->strName);
+		}
+
+		foreach ($plugin->files->file as $item) {
+			$component = new stdclass();
+			$component->filename = $item['filename'];
+			
+			if (!isset($item['type'])) {
+				throw new Exception('Mandatory attribute "type" not set on one of the files of plugin ' . $row->strName);
+			}
+
+			switch ($item['type']) {
+				case 'control':
+					$row->objControlFilesArray []= $component;
+					break;
+				case 'misc_include':
+					$row->objMiscIncludeFilesArray []= $component;
+					break;
+				case 'css':
+					$row->objCssFilesArray []= $component;
+					break;
+				case 'js':
+					$row->objJavascriptFilesArray []= $component;
+					break;
+				case 'image':
+					$row->objImageFilesArray []= $component;
+					break;
+				case 'example':
+					$row->objExampleFilesArray []= $component;
+					break;
+				default:
+					throw new Exception("Invalid plugin component type: " . $item['type']);
+			}
+			
+			$row->objAllFilesArray [] = $component;
+		}
 	}
 }
 
@@ -87,11 +103,21 @@ class QPluginConfigFile { // Singleton
 class QPluginConfigFileItem {
 	public $strName = "";
 	public $strDescription = "";
-	public $objControlsArray = array();
-	public $objMiscIncludesArray = array();
-	public $objImagesArray = array();
-	public $objCssArray = array();
-	public $objJavascriptArray = array();
+	public $strVersion = "";
+	public $strPlatformVersion = "";
+	public $strAuthorName = "";
+	public $strAuthorEmail = "";
+	
+	public $objControlFilesArray = array();
+	public $objMiscIncludeFilesArray = array();
+	public $objImageFilesArray = array();
+	public $objCssFilesArray = array();
+	public $objJavascriptFilesArray = array();
+	public $objExampleFilesArray = array();
+	
+	public $objAllFilesArray = array();
+	
+	public $objIncludesArray = array();
 	public $objExamplesArray = array();
 }
 
