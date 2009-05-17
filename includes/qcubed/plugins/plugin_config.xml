@@ -1,0 +1,70 @@
+<plugins>
+	<plugin>
+		<name>DialogBoxes</name>
+		<description>A collection of server-side "modal" dialog boxes:
+			QConfirmationDialog, QTextBoxPromptDialog, QRadioButtonPromptDialog.
+		</description>
+		<controls>
+			<file class="QPromptDialog" filename="QPromptDialog.class.php" />
+			<file class="QTextBoxPromptDialog" filename="QTextBoxPromptDialog.class.php" />
+			<file class="QRadioButtonPromptDialog" filename="QRadioButtonPromptDialog.class.php" />
+			<file class="QConfirmationDialog" filename="QConfirmationDialog.class.php" />
+		</controls>
+		<misc_includes>
+			<file filename="QConfirmationDialog.tpl.php" />
+			<file filename="QRadioButtonPromptDialog.tpl.php" />
+			<file filename="QTextBoxPromptDialog.tpl.php" />
+		</misc_includes>
+		<examples>
+			<file filename="more_dialog_boxes.php" />
+			<file filename="more_dialog_boxes.tpl.php" />
+		</examples>
+	</plugin>
+
+	<plugin>
+		<name>QAutoCompleteTextBox</name>
+		<description>Two implementations of auto-complete functionality: matching the user
+			input against a pre-defined list, showing them the matches: server-side (Ajax)
+			and client-side.
+		</description>
+
+		<controls>
+			<file class="QAutoCompleteTextBoxBase" filename="QAutoCompleteTextBoxBase.class.php" />
+			<file class="QAjaxAutoCompleteTextBox" filename="QAjaxAutoCompleteTextBox.class.php" />
+			<file class="QJavaScriptAutoCompleteTextBox" filename="QJavaScriptAutoCompleteTextBox.class.php" />
+		</controls>
+		<images>
+			<file filename="indicator.gif" />
+		</images>
+		<css>
+			<file filename="jquery.autocomplete.css" />
+		</css>
+		<javascript>
+			<file filename="_readme.txt" />
+			<file filename="jquery.autocomplete.js" />
+			<file filename="jquery.bgiframe.js" />
+		</javascript>
+		<examples>
+			<file filename="autocomplete.php" />
+			<file filename="autocomplete.tpl.php" />
+		</examples>
+	</plugin>
+
+	<plugin>
+		<name>QFirebug</name>
+		<description>Plugin that eases debugging of QCubed applications through
+			integration with Firebug, an excellent Firefox extension for
+			Javascript debugging. 
+		</description>
+		<misc_includes>
+			<file class="QFirebug" filename="QFirebug.class.php" />
+			<file filename="FirePHP.class.php" />
+			<file filename="fb.php" />
+		</misc_includes>
+		<examples>
+			<file filename="qfirebug.php" />
+			<file filename="qfirebug.tpl.php" />
+			<file filename="qfirebug.png" />
+		</examples>
+	</plugin>
+</plugins>
