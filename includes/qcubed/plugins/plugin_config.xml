@@ -1,37 +1,5 @@
 <plugins>
 	<plugin>
-		<name>DialogBoxes</name>
-		<description>A collection of server-side "modal" dialog boxes:
-			QConfirmationDialog, QTextBoxPromptDialog, QRadioButtonPromptDialog.
-		</description>
-		<version>0.1</version>
-		<platform_version>1.1</platform_version>
-		<author name="Alex Weinstein, a.k.a. alex94040" email="alex94040 [at] yahoo [dot] com" />
-		<files>
-			<file type="control" filename="QPromptDialog.class.php" />
-			<file type="control" filename="QTextBoxPromptDialog.class.php" />
-			<file type="control" filename="QRadioButtonPromptDialog.class.php" />
-			<file type="control" filename="QConfirmationDialog.class.php" />
-
-			<file type="misc_include" filename="QConfirmationDialog.tpl.php" />
-			<file type="misc_include" filename="QRadioButtonPromptDialog.tpl.php" />
-			<file type="misc_include" filename="QTextBoxPromptDialog.tpl.php" />
-
-			<file type="example" filename="more_dialog_boxes.php" />
-			<file type="example" filename="more_dialog_boxes.tpl.php" />
-		</files>
-		<includes>
-			<include_files classname="QPromptDialog" filename="QPromptDialog.class.php" />
-			<include_files classname="QTextBoxPromptDialog" filename="QTextBoxPromptDialog.class.php" />
-			<include_files classname="QRadioButtonPromptDialog" filename="QRadioButtonPromptDialog.class.php" />
-			<include_files classname="QConfirmationDialog" filename="QConfirmationDialog.class.php" />
-		</includes>
-		<examples>
-			<example filename="more_dialog_boxes.php" description="Pre-built Dialog Boxes: Confirmations and Prompts" />
-		</examples>
-	</plugin>
-
-	<plugin>
 		<name>QAutoCompleteTextBox</name>
 		<description>Two implementations of auto-complete functionality: matching the user
 			input against a pre-defined list, showing them the matches: server-side (Ajax)
