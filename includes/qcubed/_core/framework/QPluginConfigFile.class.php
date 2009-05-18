@@ -17,7 +17,7 @@ class QPluginConfigFile { // Singleton
 	private function parseConfig() {
 		$arrResult = array();
 		foreach ($this->objPluginArray as $plugin) {
-			$row = new QPluginConfigFileItem();
+			$row = new QPlugin();
 			$row->strName = (string)$plugin->name;
 			$row->strDescription = (string)$plugin->description;
 			$row->strVersion = (string)$plugin->version;
@@ -38,9 +38,9 @@ class QPluginConfigFile { // Singleton
 	// helper to parse the /plugin/includes section of the config file
 	private function parseIncludes(&$plugin, &$row) {
 		foreach ($plugin->includes->include_files as $item) {
-			$component = new stdclass();
-			$component->filename = $item['filename'];
-			$component->classname = $item['classname'];
+			$component = new QPluginInclude();
+			$component->strFilename = $item['filename'];
+			$component->strClassname = $item['classname'];
 			
 			$row->objIncludesArray [] = $component;
 		}
@@ -49,9 +49,9 @@ class QPluginConfigFile { // Singleton
 	// helper to parse the /plugin/examples section of the config file
 	private function parseExamples(&$plugin, &$row) {
 		foreach ($plugin->examples->example as $item) {
-			$component = new stdclass();
-			$component->filename = $item['filename'];
-			$component->description = $item['description'];
+			$component = new QPluginExample();
+			$component->strFilename = $item['filename'];
+			$component->strDescription = $item['description'];
 			
 			$row->objExamplesArray [] = $component;
 		}
@@ -64,8 +64,8 @@ class QPluginConfigFile { // Singleton
 		}
 
 		foreach ($plugin->files->file as $item) {
-			$component = new stdclass();
-			$component->filename = $item['filename'];
+			$component = new QPluginFile();
+			$component->strFilename = $item['filename'];
 			
 			if (!isset($item['type'])) {
 				throw new Exception('Mandatory attribute "type" not set on one of the files of plugin ' . $row->strName);
@@ -100,7 +100,7 @@ class QPluginConfigFile { // Singleton
 }
 
 
-class QPluginConfigFileItem {
+class QPlugin{
 	public $strName = "";
 	public $strDescription = "";
 	public $strVersion = "";
@@ -115,10 +115,26 @@ class QPluginConfigFileItem {
 	public $objJavascriptFilesArray = array();
 	public $objExampleFilesArray = array();
 	
-	public $objAllFilesArray = array();
+	public $objAllFilesArray = array(); // array of QPluginFile objects
 	
-	public $objIncludesArray = array();
-	public $objExamplesArray = array();
+	public $objIncludesArray = array(); // array of QPluginInclude objects
+	public $objExamplesArray = array(); // array of QPluginExample objects
+}
+
+abstract class QPluginComponent {}
+
+class QPluginFile extends QPluginComponent {
+	public $strFilename;
+}
+
+class QPluginExample extends QPluginComponent {
+	public $strFilename;
+	public $strDescription;
+}
+
+class QPluginInclude extends QPluginComponent {
+	public $strFilename;
+	public $strClassname;
 }
 
 ?>
