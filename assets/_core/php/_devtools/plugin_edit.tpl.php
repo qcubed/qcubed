@@ -1,17 +1,23 @@
 <?php
 	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
-
 	<?php $this->RenderBegin() ?>
 
-	<h1><?php _t('Plugin Editing Form')?></h1>
+	<h1><?php $this->lblName->Render();?> Plugin</h1>
+	<p><?php $this->lblDescription->Render(); ?></p>
+	
+	<p>Version <?php $this->lblPluginVersion->Render(); ?>,
+		works with QCubed <?php $this->lblPlatformVersion->Render(); ?></p>
+	
+	<p>Author: <?php $this->lblAuthorName->Render(); ?>,
+		<?php $this->lblAuthorEmail->Render(); ?></p>
 
-	<div id="formControls">
-		<p>This is a placeholder; this page will show the details<br>
-		of a given control (like a list of its components),<br>
-		and will allow the user to uninstall it if they so choose. </p>
+	<div id="formActions">
+		<?php $this->btnInstall->Render() ?>
+		<?php $this->btnCancelInstallation->Render() ?>
+		<?php $this->objDefaultWaitIcon->Render() ?>
 	</div>
-
-	<?php $this->RenderEnd() ?>	
+	
+	<?php $this->RenderEnd() ?>
 
 <?php require(__CONFIGURATION__ .'/footer.inc.php'); ?>

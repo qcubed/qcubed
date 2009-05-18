@@ -1,100 +1,123 @@
 <?php
 
 class QPluginConfigFile { // Singleton
-	private $objPluginArray;
-	private static $objInstance = null; 
+	private $mixPluginSet; // a single QPlugin object or an array of QPlugin objects
+	private static $objInstance = null;
 	
-	public static function parse() {
-		self::$objInstance = new QPluginConfigFile();
+	public static function parseInstalledPlugins() {
+		self::$objInstance = new QPluginConfigFile(__PLUGINS__ . '/plugin_config.xml');
 		
 		return self::$objInstance->parseConfig();
 	}
 	
-	private function __construct() {
-		$this->objPluginArray = simplexml_load_file(__PLUGINS__ . '/plugin_config.xml');
+	public static function parseNewPlugin($strPluginName) {
+		self::$objInstance = new QPluginConfigFile(__INCLUDES__ . '/tmp/plugin.tmp/' . $strPluginName . '/plugin.xml');
+		$tempArray = self::$objInstance->parseConfig();
+		return $tempArray[0];
+	}
+	
+	private function __construct($strPath) {
+		if (!file_exists($strPath)) {
+			throw new Exception("Plugin config file does not exist: " . $strPath);
+		}
+		$this->mixPluginSet = simplexml_load_file($strPath);
 	}
 	
 	private function parseConfig() {
 		$arrResult = array();
-		foreach ($this->objPluginArray as $plugin) {
-			$row = new QPlugin();
-			$row->strName = (string)$plugin->name;
-			$row->strDescription = (string)$plugin->description;
-			$row->strVersion = (string)$plugin->version;
-			$row->strPlatformVersion = (string)$plugin->platform_version;
-			$row->strAuthorName = (string)$plugin->author['name'];
-			$row->strAuthorEmail = (string)$plugin->author['email'];
-			
-			$this->parseFiles($plugin, $row);
-			$this->parseIncludes($plugin, $row);
-			$this->parseExamples($plugin, $row);
-			
-			$arrResult[] = $row;
+ 		if (!isset($this->mixPluginSet->name)) {
+			// If we are parsing a config file with multiple plugin items...
+			foreach ($this->mixPluginSet as $xmlItem) {
+				$arrResult[] = $this->parsePluginXmlSubsection($xmlItem);
+			}
+		} else {
+			// If we are parsing a config file with just one plugin (no root "plugins" element)
+			$arrResult[] = $this->parsePluginXmlSubsection($this->mixPluginSet);
 		}
 		
 		return $arrResult;
 	}
 	
+	private function parsePluginXmlSubsection($xmlPlugin) {
+		$objPlugin = new QPlugin();
+		$objPlugin->strName 			= (string)$xmlPlugin->name;
+		$objPlugin->strDescription 		= (string)$xmlPlugin->description;
+		$objPlugin->strVersion 			= (string)$xmlPlugin->version;
+		$objPlugin->strPlatformVersion 	= (string)$xmlPlugin->platform_version;
+		$objPlugin->strAuthorName 		= (string)$xmlPlugin->author['name'];
+		$objPlugin->strAuthorEmail 		= (string)$xmlPlugin->author['email'];
+		
+		if (strlen($objPlugin->strName) == 0) {
+			throw new Exception("Mandatory plugin parameter Name was not defined");
+		}
+		
+		$this->parseFiles($xmlPlugin, $objPlugin);
+		$this->parseIncludes($xmlPlugin, $objPlugin);
+		$this->parseExamples($xmlPlugin, $objPlugin);
+		
+		return $objPlugin;
+	}
+	
 	// helper to parse the /plugin/includes section of the config file
-	private function parseIncludes(&$plugin, &$row) {
-		foreach ($plugin->includes->include_files as $item) {
+	private function parseIncludes(&$xmlPlugin, &$objPlugin) {
+		foreach ($xmlPlugin->includes->include_files as $item) {
 			$component = new QPluginInclude();
-			$component->strFilename = $item['filename'];
-			$component->strClassname = $item['classname'];
+			$component->strFilename 	= (string)$item['filename'];
+			$component->strClassname 	= (string)$item['classname'];
 			
-			$row->objIncludesArray [] = $component;
+			$objPlugin->objIncludesArray [] = $component;
 		}
 	}
 	
 	// helper to parse the /plugin/examples section of the config file
-	private function parseExamples(&$plugin, &$row) {
-		foreach ($plugin->examples->example as $item) {
+	private function parseExamples(&$xmlPlugin, &$objPlugin) {
+		foreach ($xmlPlugin->examples->example as $item) {
 			$component = new QPluginExample();
-			$component->strFilename = $item['filename'];
-			$component->strDescription = $item['description'];
+			$component->strFilename 	= (string)$item['filename'];
+			$component->strDescription 	= (string)$item['description'];
 			
-			$row->objExamplesArray [] = $component;
+			$objPlugin->objExamplesArray [] = $component;
 		}
 	}
 
 	// helper to parse the /plugin/files section of the config file
-	private function parseFiles(&$plugin, &$row) {
-		if (!isset($plugin->files)) {
-			throw new Exception("Plugin that has no registered files: " . $row->strName);
+	private function parseFiles(&$xmlPlugin, &$objPlugin) {
+		if (!isset($xmlPlugin->files)) {
+			throw new Exception("Plugin that has no registered files: " . $objPlugin->strName);
 		}
 
-		foreach ($plugin->files->file as $item) {
+		foreach ($xmlPlugin->files->file as $item) {
 			$component = new QPluginFile();
-			$component->strFilename = $item['filename'];
+			$component->strFilename = (string)$item['filename'];
 			
 			if (!isset($item['type'])) {
-				throw new Exception('Mandatory attribute "type" not set on one of the files of plugin ' . $row->strName);
+				throw new Exception('Mandatory attribute "type" not set on one of the files of plugin ' . $objPlugin->strName);
 			}
 
 			switch ($item['type']) {
 				case 'control':
-					$row->objControlFilesArray []= $component;
+					$objPlugin->objControlFilesArray []= $component;
 					break;
 				case 'misc_include':
-					$row->objMiscIncludeFilesArray []= $component;
+					$objPlugin->objMiscIncludeFilesArray []= $component;
 					break;
 				case 'css':
-					$row->objCssFilesArray []= $component;
+					$objPlugin->objCssFilesArray []= $component;
 					break;
 				case 'js':
-					$row->objJavascriptFilesArray []= $component;
+					$objPlugin->objJavascriptFilesArray []= $component;
 					break;
 				case 'image':
-					$row->objImageFilesArray []= $component;
+					$objPlugin->objImageFilesArray []= $component;
 					break;
 				case 'example':
-					$row->objExampleFilesArray []= $component;
+					$objPlugin->objExampleFilesArray []= $component;
 					break;
 				default:
 					throw new Exception("Invalid plugin component type: " . $item['type']);
 			}
 			
-			$row->objAllFilesArray [] = $component;
+			$objPlugin->objAllFilesArray [] = $component;
 		}
 	}
 }
