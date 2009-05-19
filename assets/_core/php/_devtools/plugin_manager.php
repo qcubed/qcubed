@@ -78,87 +78,15 @@
         public function dlgUpload_done($strFormId, $strControlId, $strParameter) {
             $this->dlgUpload->HideDialogBox();
             
-            $fileAsset = $this->dlgUpload->flcFileAsset;
-            
-            if (substr($fileAsset->FileName, -3) != "zip") {
-                QApplication::DisplayAlert("Invalid uploaded plugin file type: " . $fileAsset->Type);
-				return;
-            }
+            $pluginFolder = QPluginInstaller::processUploadedPluginArchive($this->dlgUpload->flcFileAsset);
 			
-			$entropy = substr(md5(uniqid()), 0, 6);                        
-            self::extractZip($fileAsset->File, __INCLUDES__ . '/tmp/plugin.tmp/' . $entropy . '/');
-			QApplication::Redirect('plugin_edit.php?strType=new&strName=' . $entropy);
-        }
-				
-        /**
-         * Extract a ZIP compressed file to a given path
-         *
-         * @param       string  $archive        Path to ZIP archive to extract
-         * @param       string  $destination    Path to extract archive into
-         * @return      boolean True if successful
-         */
-        private static function extractZip($archive, $destination) {
-			if ($zip = zip_open($archive)) {
-				if ($zip) {
-					// Create the destination folder
-					if (!mkdir($destination)) {
-						QApplication::DisplayAlert("Unable to create extraction destination folder");
-						return false;
-					}
-
-					// Read files in the archive
-					$createdFolders = array();
-					while ($file = zip_read($zip)) {
-						if (zip_entry_open($zip, $file, "r")) {							
-							if (substr(zip_entry_name($file), strlen(zip_entry_name($file)) - 1) != "/") {
-								
-//								echo zip_entry_name($file) . "<br>";
-								
-								$folderStack = split("/", zip_entry_name($file));
-								if (sizeof($folderStack) > 1) {
-									for ($i = 0; $i < sizeof($folderStack) - 1; $i++) {
-										$item = $folderStack[$i];
-										
-										if (!in_array($item, $createdFolders)) {
-//											echo "- " . $destination . $item . "<br>";
-											$createdFolders[] = $item;
-											mkdir($destination . $item);
-										}
-									}
-								}
-
-								
-								$buffer = zip_entry_read($file, zip_entry_filesize($file));
-								
-								
-
-								if (!$handle = fopen($destination . zip_entry_name($file), 'w')) {
-									QApplication::DisplayAlert("Cannot open file " . destination . zip_entry_name($file));
-									return false;
-								}
-							   
-								// Write $somecontent to our opened file.
-								if (fwrite($handle, $buffer) === false) {
-									QApplication::DisplayAlert("Unable to write extracted file");
-									return false;
-								}
-								
-								zip_entry_close($file);
-							}
-						} else {
-							QApplication::DisplayAlert("Unable to read zip entry");
-							return false;
-						}
-					}
-					zip_close($zip);
-				}
-			} else {
-				QApplication::DisplayAlert("Unable to open uploaded archive");
-				return false;
+			if ($pluginFolder == null) {
+				QApplication::DisplayAlert(QPluginInstaller::getLastError());
+				return;
 			}
-			return true;
-        }
-		
+			
+			QApplication::Redirect('plugin_edit.php?strType=new&strName=' . $pluginFolder);
+        }		
 	}	
 
 	PluginManagerForm::Run('PluginManagerForm');

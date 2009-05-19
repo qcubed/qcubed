@@ -18,6 +18,7 @@
 		
 		protected $btnInstall;
 		protected $btnCancelInstallation;
+		protected $btnUninstall;
 		
 		const TYPE_INSTALLING_NEW = "new";
 		const TYPE_VIEWING_ALREADY_INSTALLED = "installed";
@@ -29,7 +30,8 @@
 		protected function Form_Create() {
 			$strPluginName = QApplication::QueryString('strName');
 			$this->strPluginType = QApplication::QueryString('strType');
-			if (!isset($strPluginName) || !isset($this->strPluginType)) {
+			if (!isset($strPluginName) || !isset($this->strPluginType) ||
+				strlen($strPluginName) == 0 || strlen($this->strPluginType) == 0) {
 				throw new Exception("Mandatory parameter was not set");
 			}
 			
@@ -60,6 +62,7 @@
 			
 			$this->btnInstall_Create();
 			$this->btnCancelInstallation_Create();
+			$this->btnUninstall_Create();
 			
 			$this->objDefaultWaitIcon = new QWaitIcon($this);
 		}
@@ -75,9 +78,24 @@
 		}
 		
 		public function btnInstall_Click() {
-			QApplication::DisplayAlert("Temporary placeholder; clicking this button will actually install the plugin");
+			QPluginInstaller::installFromExpanded(QApplication::QueryString('strName'));
 		}
 		
+		private function btnUninstall_Create() {
+			$this->btnUninstall = new QButton($this);
+			$this->btnUninstall->Text = "Uninstall (delete) this Plugin";
+			$this->btnUninstall->AddAction(new QClickEvent(), new QAjaxAction('btnUninstall_click'));
+			
+			if ($this->strPluginType != self::TYPE_VIEWING_ALREADY_INSTALLED) {
+				$this->btnUninstall->Visible = false;
+			}
+		}
+		
+		public function btnUninstall_Click() {
+			QPluginInstaller::uninstallExisting(QApplication::QueryString('strName'));
+		}
+
+
 		private function btnCancelInstallation_Create() {
 			$this->btnCancelInstallation = new QButton($this);
 			$this->btnCancelInstallation->Text = "Cancel Installation";
@@ -89,29 +107,10 @@
 		}
 		
 		public function btnCancelInstallation_click() {
-			self::deleteFolderRecursive(__INCLUDES__ . '/tmp/plugin.tmp/' . QApplication::QueryString('strName'));
+			QPluginInstaller::cancelInstallation(QApplication::QueryString('strName'));
 			QApplication::Redirect('plugin_manager.php');
 		}
-		
-		private static function deleteFolderRecursive($strPath) {
-			if (!is_dir($strPath)) {
-				unlink($strPath);
-				return;
-			}
-
-			$d = dir($strPath); 
-			while($entry = $d->read()) { 
-				if ($entry!= "." && $entry != "..") { 
-					if (is_dir($strPath)) {
-						self::deleteFolderRecursive($strPath . "/" . $entry);
-					} 
-				} 
-			} 
-
-			$d->close(); 
-			rmdir($strPath);
-		}
-		
+				
 		public function lblName_Create() {
 			$this->lblName = new QLabel($this);
 			$this->lblName->Text = $this->objPlugin->strName;

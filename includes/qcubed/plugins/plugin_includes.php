@@ -10,10 +10,4 @@
 	QApplicationBase::$ClassFile['qjavascriptautocompletetextbox'] = __PLUGINS__ . '/QAutoCompleteTextBox/QJavaScriptAutoCompleteTextBox.class.php';
 		
 	QApplicationBase::$ClassFile['qfirebug'] = __PLUGINS__ . '/QFirebug/QFirebug.class.php';
-	
-	QApplicationBase::$ClassFile['qpromptdialog'] = __PLUGINS__ . '/DialogBoxes/QPromptDialog.class.php';
-	QApplicationBase::$ClassFile['qtextboxpromptdialog'] = __PLUGINS__ . '/DialogBoxes/QTextBoxPromptDialog.class.php';
-	QApplicationBase::$ClassFile['qradiobuttonpromptdialog'] = __PLUGINS__ . '/DialogBoxes/QRadioButtonPromptDialog.class.php';
-	QApplicationBase::$ClassFile['qconfirmationdialog'] = __PLUGINS__ . '/DialogBoxes/QConfirmationDialog.class.php';
-
 ?>

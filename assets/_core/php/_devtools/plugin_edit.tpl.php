@@ -15,6 +15,7 @@
 	<div id="formActions">
 		<?php $this->btnInstall->Render() ?>
 		<?php $this->btnCancelInstallation->Render() ?>
+		<?php $this->btnUninstall->Render() ?>
 		<?php $this->objDefaultWaitIcon->Render() ?>
 	</div>
 	
