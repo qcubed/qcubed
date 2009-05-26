@@ -18,7 +18,7 @@
 		<?php $this->btnUninstall->Render() ?>
 		<?php $this->objDefaultWaitIcon->Render() ?>
 	</div>
-	
+	<?php $this->dlgStatus->Render() ?>
 	<?php $this->RenderEnd() ?>
 
 <?php require(__CONFIGURATION__ .'/footer.inc.php'); ?>

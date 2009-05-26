@@ -3,6 +3,23 @@
 class QPluginInstaller {
 	private static $strLastError = "";
 	const PLUGIN_EXTRACTION_DIR = "/tmp/plugin.tmp/";
+	/**
+	 * @var string Name of the file that each plugin should have - that file defines plugin settings.
+	 */
+	const PLUGIN_CONFIG_FILE = "plugin.xml"; 
+	
+	// these three have to be functions - PHP doesn't allow for static vars with concatenation :(
+	public static function getMasterConfigFilePath() { 
+		return __PLUGINS__ . '/plugin_config.xml';
+	}
+	
+	public static function getMasterIncludeFilePath() {
+		return __PLUGINS__ . '/plugin_includes.php';
+	}
+	
+	public static function getMasterExamplesFilePath() {
+		return __PLUGINS__ . '/plugin_examples.php';
+	}
 	
 	public static function getLastError() {
 		return self::$strLastError;
@@ -24,16 +41,202 @@ class QPluginInstaller {
 	}
 	
 	public static function installFromExpanded($strExtractedFolderName) {
-		QApplication::DisplayAlert("To be implemented");
+		$objPlugin = QPluginConfigParser::parseNewPlugin($strExtractedFolderName);
+		
+		$strStatus = "Installing plugin " . $objPlugin->strName . "\r\n\r\n";
+		if (self::isPluginInstalled($objPlugin->strName)) {
+			self::$strLastError = "Plugin with the same name is already installed - aborting";
+			$strStatus .= self::$strLastError;
+		} else {		
+			$strStatus .= self::appendPluginConfigToMasterConfig($strExtractedFolderName);
+			$strStatus .= self::deployFilesForNewPlugin($objPlugin, $strExtractedFolderName);
+			$strStatus .= self::appendClassFileReferences($objPlugin, $strExtractedFolderName);
+			$strStatus .= self::appendExampleFileReferences($objPlugin, $strExtractedFolderName);
+		
+			// When installation is done, clean up
+			$strStatus .= self::cleanupExtractedFiles($strExtractedFolderName);
+			
+			$strStatus .= "\r\nInstallation completed successfully.";
+		}
+						
+		echo nl2br($strStatus);
+		return $strStatus;
 	}
 	
-	public static function cancelInstallation($strExtractedFolderName) {
+	public static function isPluginInstalled($strPluginName) {
+		$installedPlugins = QPluginConfigParser::parseInstalledPlugins();
+		$found = false;
+		foreach ($installedPlugins as $plugin) {
+			if (strcmp($plugin->strName, $strPluginName) == 0) {
+				$found = true;
+				break;
+			}
+		}
+		
+		return $found;
+	}
+	
+	private static function appendPluginConfigToMasterConfig($strExtractedFolderName) {
+		$strStatus = "";
+		
+		$configToAppendPath = QPluginConfigParser::getPathForExpandedPlugin($strExtractedFolderName);
+		$file = fopen($configToAppendPath, "r");
+		if (!$file) {
+			self::$strLastError = "Missing plugin config file: " . $configFilePath;
+			return $strStatus . self::$strLastError;
+		}
+		
+		// Get the full contents of the configuration file that we need to append
+		$configToAppend = "";
+		while(!feof($file)) {
+			$configToAppend .= fread($file,8000);
+		}		
+		fclose($file);
+		
+		$strStatus .= "Plugin config read\r\n";				
+		
+		$search = "</plugins>";
+		$replace = "\r\n" . $configToAppend . "\r\n\r\n</plugins>";
+		self::replaceFileSection(self::getMasterConfigFilePath(), $search, $replace);
+		$strStatus .= "Plugin config appended to master config XML file successfully\r\n";
+		
+		return $strStatus;
+	}
+	
+	private static function replaceFileSection($strFilePath, $strSearch, $strReplace) {
+		// open the file and read its full contents 
+		$fileHandle = fopen($strFilePath, "r");
+		$contents = "";
+		while(!feof($fileHandle)) {
+			$contents .= fread($fileHandle, 8000);
+		}		
+		fclose($fileHandle);
+		
+		$contents = str_replace($strSearch, $strReplace, $contents);
+
+		// Write back the file
+		$fileHandle = fopen($strFilePath, "w");
+		if (fwrite($fileHandle, $contents, strlen($contents)) == false) {
+			self::$strLastError = "Unable to write file: " . $strFilePath;
+			return $strStatus . self::$strLastError;
+		}
+		fclose($fileHandle);
+	}
+	
+	private static function deployFilesForNewPlugin($objPlugin, $strExtractedFolderName) {
+		$strStatus = "\r\nDeploying files\r\n";
+				
+		$createdFolders = array();
+		$sourceRoot = __INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName . "/"; 
+		$nonWebDestinationRoot = __PLUGINS__ . '/' . $objPlugin->strName . "/";
+		$webDestinationRoot = __DOCROOT__ . __PLUGIN_ASSETS__ . '/' . $objPlugin->strName . "/";
+		
+		foreach ($objPlugin->objControlFilesArray as $file) {
+			$strStatus .= "Control file " . $file->strFilename . "\r\n";
+			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $nonWebDestinationRoot . $file->strFilename);
+		}
+		foreach ($objPlugin->objMiscIncludeFilesArray as $file) {
+			$strStatus .= "Misc include file " . $file->strFilename . "\r\n";
+			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $nonWebDestinationRoot . $file->strFilename);
+		}
+		foreach ($objPlugin->objImageFilesArray as $file) {
+			$strStatus .= "Image file " . $file->strFilename . "\r\n";
+			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $webDestinationRoot . $file->strFilename);
+		}		
+		foreach ($objPlugin->objCssFilesArray as $file) {
+			$strStatus .= "CSS file " . $file->strFilename . "\r\n";
+			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $webDestinationRoot . $file->strFilename);
+		}		
+		foreach ($objPlugin->objJavascriptFilesArray as $file) {
+			$strStatus .= "JS file " . $file->strFilename . "\r\n";
+			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $webDestinationRoot . $file->strFilename);			
+		}		
+		foreach ($objPlugin->objExampleFilesArray as $file) {
+			$strStatus .= "Example file " . $file->strFilename . "\r\n";
+			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $webDestinationRoot . $file->strFilename);
+		}				
+		
+		return $strStatus;
+	}
+	
+	/**
+	 * Copies the file to the destination folder for the plugin,
+	 * creating all relevant directories in the process, if necessary.
+	 */
+	private static function writeFileHelper($strSourcePath, $strDestinationPath) {
+		$result = "";
+		
+		// Creating folder hierarchy if necessary
+		$arrFolderSteps = split("/", $strDestinationPath);
+		$cumulativePath = "";
+		for ($i = 0; $i < sizeof($arrFolderSteps) - 1; $i++) {
+			$step = $arrFolderSteps[$i];
+			$cumulativePath .= $step . "/";
+			if (!is_dir($cumulativePath)) {
+				mkdir ($cumulativePath);
+				$result .= "Created deployment destination directory " . $cumulativePath . "\r\n";
+			}
+		}
+		
+		copy($strSourcePath, $strDestinationPath);
+		$result .= "Deployed file to " . $strDestinationPath . "\r\n";
+		
+		return $result;
+	}
+	
+	private static function appendClassFileReferences($objPlugin, $strExtractedFolderName) {
+		$strStatus = "\r\nConfiguring class file references\r\n";
+
+		$strSectionToAppend = self::getBeginMarker($objPlugin->strName);
+		foreach ($objPlugin->objIncludesArray as $file) {
+			$strStatus .= "Include reference to class " . $file->strClassname . " in file " . $file->strFilename . "\r\n";
+			$strSectionToAppend .= "QApplicationBase::\$ClassFile['" . strtolower($file->strClassname) .
+					   "'] = __PLUGINS__ . '/" . $objPlugin->strName . "/" . $file->strFilename . "';\r\n";
+		}
+		$strSectionToAppend .= self::getEndMarker($objPlugin->strName);
+		
+		$search = "?>";
+		$replace = $strSectionToAppend . "\r\n?>";
+		self::replaceFileSection(self::getMasterIncludeFilePath(), $search, $replace);
+
+		return $strStatus;
+	}
+	
+	private static function appendExampleFileReferences($objPlugin, $strExtractedFolderName) {
+		$strStatus = "\r\nConfiguring example file references\r\n";
+
+		$strSectionToAppend = self::getBeginMarker($objPlugin->strName);
+		foreach ($objPlugin->objExamplesArray as $file) {
+			$strStatus .= "Include reference to example '" . $file->strDescription . "' in file " . $file->strFilename . "\r\n";
+			$strSectionToAppend .= "Examples::AddPluginExampleFile('" . $objPlugin->strName . "', '" .
+				$file->strFilename . " " . $file->strDescription . "');\r\n";
+		}
+		$strSectionToAppend .= self::getEndMarker($objPlugin->strName);
+		
+		$search = "?>";
+		$replace = $strSectionToAppend . "\r\n?>";
+		self::replaceFileSection(self::getMasterExamplesFilePath(), $search, $replace);
+
+		return $strStatus;
+	}
+
+
+	private static function getBeginMarker($strId) {
+		return "\r\n//// BEGIN " . $strId . "\r\n";
+	}
+	
+	private static function getEndMarker ($strId) {
+		return "//// END " . $strId . "\r\n";
+	}
+	
+	public static function cleanupExtractedFiles($strExtractedFolderName) {
 		self::deleteFolderRecursive(__INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName);
+		return "\r\nCleaned up installation files.\r\n";
 	}
 	
 	public static function uninstallExisting($strPluginName) {
 		QApplication::DisplayAlert("Uninstaller: To be implemented");
-	}
+	}	
 	
 	/**
 	 * Extract a ZIP compressed file to a given path
@@ -72,7 +275,7 @@ class QPluginInstaller {
 								}
 							}
 							
-							$buffer = zip_entry_read($file, zip_entry_filesize($file));
+							$strSectionToAppend = zip_entry_read($file, zip_entry_filesize($file));
 
 							if (!$handle = fopen($destination . zip_entry_name($file), 'w')) {
 								self::$strLastError = "Cannot open file " . destination . zip_entry_name($file);
@@ -80,7 +283,7 @@ class QPluginInstaller {
 							}
 						   
 							// Write $somecontent to our opened file.
-							if (fwrite($handle, $buffer) === false) {
+							if (fwrite($handle, $strSectionToAppend) === false) {
 								self::$strLastError = "Unable to write extracted file";
 								return false;
 							}
@@ -119,6 +322,5 @@ class QPluginInstaller {
 		$d->close(); 
 		rmdir($strPath);
 	}
-	
 }
 ?>

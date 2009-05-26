@@ -125,6 +125,7 @@
 			define ('__CSS_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/css');
 			define ('__IMAGE_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/images');
 			define ('__PHP_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/php');
+			define ('__PLUGIN_ASSETS__', __SUBDIRECTORY__ . '/assets/plugins');
 			
 			// jQuery folder location
 			define ('__JQUERY_DIRECTORY__',  'jquery.ui-1.5.3');

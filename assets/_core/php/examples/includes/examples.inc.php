@@ -195,7 +195,7 @@
 		}
 		
 		public static function AddPluginExampleFile($strPluginName, $strExampleFileName) {
-			array_push(Examples::$PluginExamples, '/../../../../assets/plugins/' . $strPluginName . "/examples/" . $strExampleFileName);
+			array_push(Examples::$PluginExamples, '/../../../../assets/plugins/' . $strPluginName . "/" . $strExampleFileName);
 		}
 
 		public static function GetCategoryId() {

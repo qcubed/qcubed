@@ -1,19 +1,22 @@
 <?php
 
-class QPluginConfigFile { // Singleton
+class QPluginConfigParser {
 	private $mixPluginSet; // a single QPlugin object or an array of QPlugin objects
-	private static $objInstance = null;
-	
+			
 	public static function parseInstalledPlugins() {
-		self::$objInstance = new QPluginConfigFile(__PLUGINS__ . '/plugin_config.xml');
-		
-		return self::$objInstance->parseConfig();
+		$obj = new QPluginConfigParser(QPluginInstaller::getMasterConfigFilePath());		
+		return $obj->parseConfig();
 	}
 	
 	public static function parseNewPlugin($strPluginName) {
-		self::$objInstance = new QPluginConfigFile(__INCLUDES__ . '/tmp/plugin.tmp/' . $strPluginName . '/plugin.xml');
-		$tempArray = self::$objInstance->parseConfig();
+		$obj = new QPluginConfigParser(self::getPathForExpandedPlugin($strPluginName));
+		$tempArray = $obj->parseConfig();
 		return $tempArray[0];
+	}
+	
+	public static function getPathForExpandedPlugin($strPluginName) {
+		return __INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR .
+				$strPluginName . '/' . QPluginInstaller::PLUGIN_CONFIG_FILE;
 	}
 	
 	private function __construct($strPath) {
@@ -123,7 +126,7 @@ class QPluginConfigFile { // Singleton
 }
 
 
-class QPlugin{
+class QPlugin {
 	public $strName = "";
 	public $strDescription = "";
 	public $strVersion = "";

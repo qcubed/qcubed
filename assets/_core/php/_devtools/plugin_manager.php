@@ -63,7 +63,7 @@
 		}
 		
 		public function dtgPlugins_Bind() {			
-			$this->dtgPlugins->DataSource = QPluginConfigFile::parseInstalledPlugins();
+			$this->dtgPlugins->DataSource = QPluginConfigParser::parseInstalledPlugins();
 		}
 		
         private function dlgUpload_Create() {
