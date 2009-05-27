@@ -111,7 +111,11 @@ class PluginEditForm extends QForm {
 	}
 	
 	public function btnUninstall_Click() {
-		QPluginInstaller::uninstallExisting(QApplication::QueryString('strName'));
+		$status = QPluginUninstaller::uninstallExisting(QApplication::QueryString('strName'));
+
+		$linkToProceed = "<br><a href='plugin_manager.php'><h2>Click here to continue</h2></a><br>";
+		$this->dlgStatus->Text = nl2br($status) . $linkToProceed;
+		$this->dlgStatus->ShowDialogBox();
 	}
 
 

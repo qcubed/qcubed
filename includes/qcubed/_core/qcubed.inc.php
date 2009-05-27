@@ -94,9 +94,11 @@
 	QApplicationBase::$ClassFile['qlexer'] = __QCUBED_CORE__ . '/framework/QLexer.class.php';
 	QApplicationBase::$ClassFile['qregex'] = __QCUBED_CORE__ . '/framework/QRegex.class.php';
 	QApplicationBase::$ClassFile['qobjectdiff'] = __QCUBED_CORE__ . '/framework/QObjectDiff.class.php';
-	
+
 	QApplicationBase::$ClassFile['qpluginconfigparser'] = __QCUBED_CORE__ . '/framework/QPluginConfigParser.class.php';
+	QApplicationBase::$ClassFile['qplugininstallerbase'] = __QCUBED_CORE__ . '/framework/QPluginInstallerBase.class.php';
 	QApplicationBase::$ClassFile['qplugininstaller'] = __QCUBED_CORE__ . '/framework/QPluginInstaller.class.php';
+	QApplicationBase::$ClassFile['qpluginuninstaller'] = __QCUBED_CORE__ . '/framework/QPluginUninstaller.class.php';
 
 	QApplicationBase::$ClassFile['qcache'] = __QCUBED_CORE__ . '/framework/QCache.class.php';
 	QApplicationBase::$ClassFile['qdatetimespan'] = __QCUBED_CORE__ . '/framework/QDateTimeSpan.class.php';

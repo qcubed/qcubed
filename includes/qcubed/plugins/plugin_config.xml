@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <plugins>
 	<plugin>
 		<name>QAutoCompleteTextBox</name>
@@ -7,30 +8,30 @@
 		</description>
 		<version>0.1</version>
 		<platform_version>1.1</platform_version>
-		<author name="Alex Weinstein, a.k.a. alex94040" email="alex94040 [at] yahoo [dot] com" />
+		<author name="Alex Weinstein, a.k.a. alex94040" email="alex94040 [at] yahoo [dot] com"/>
 		<files>
-			<file type="control" class="QAutoCompleteTextBoxBase" filename="QAutoCompleteTextBoxBase.class.php" />
-			<file type="control" class="QAjaxAutoCompleteTextBox" filename="QAjaxAutoCompleteTextBox.class.php" />
-			<file type="control" class="QJavaScriptAutoCompleteTextBox" filename="QJavaScriptAutoCompleteTextBox.class.php" />
+			<file type="control" class="QAutoCompleteTextBoxBase" filename="QAutoCompleteTextBoxBase.class.php"/>
+			<file type="control" class="QAjaxAutoCompleteTextBox" filename="QAjaxAutoCompleteTextBox.class.php"/>
+			<file type="control" class="QJavaScriptAutoCompleteTextBox" filename="QJavaScriptAutoCompleteTextBox.class.php"/>
 
-			<file type="image" filename="indicator.gif" />
+			<file type="image" filename="indicator.gif"/>
 
-			<file type="css" filename="jquery.autocomplete.css" />
+			<file type="css" filename="jquery.autocomplete.css"/>
 
-			<file type="js" filename="_readme.txt" />
-			<file type="js" filename="jquery.autocomplete.js" />
-			<file type="js" filename="jquery.bgiframe.js" />
+			<file type="js" filename="_readme.txt"/>
+			<file type="js" filename="jquery.autocomplete.js"/>
+			<file type="js" filename="jquery.bgiframe.js"/>
 
-			<file type="example" filename="autocomplete.php" />
-			<file type="example" filename="autocomplete.tpl.php" />
+			<file type="example" filename="autocomplete.php"/>
+			<file type="example" filename="autocomplete.tpl.php"/>
 		</files>
 		<includes>
-			<include_files classname="QAutoCompleteTextBoxBase" filename="QAutoCompleteTextBoxBase.class.php" />
-			<include_files classname="QAjaxAutoCompleteTextBox" filename="QAjaxAutoCompleteTextBox.class.php" />
-			<include_files classname="QJavaScriptAutoCompleteTextBox" filename="QJavaScriptAutoCompleteTextBox.class.php" />
+			<include_files classname="QAutoCompleteTextBoxBase" filename="QAutoCompleteTextBoxBase.class.php"/>
+			<include_files classname="QAjaxAutoCompleteTextBox" filename="QAjaxAutoCompleteTextBox.class.php"/>
+			<include_files classname="QJavaScriptAutoCompleteTextBox" filename="QJavaScriptAutoCompleteTextBox.class.php"/>
 		</includes>
 		<examples>
-			<example filename="autocomplete.php" description="* Auto-complete Textbox Example" />
+			<example filename="autocomplete.php" description="* Auto-complete Textbox Example"/>
 		</examples>
 	</plugin>
 
@@ -42,21 +43,22 @@
 		</description>
 		<version>0.1</version>
 		<platform_version>1.1</platform_version>
-		<author name="Eduardo Garcia aka enzo" email="enzo [at] anexusit [dot] com" />
+		<author name="Eduardo Garcia aka enzo" email="enzo [at] anexusit [dot] com"/>
 		<files>
-			<file type="misc_include" filename="QFirebug.class.php" />
-			<file type="misc_include" filename="FirePHP.class.php" />
-			<file type="misc_include" filename="fb.php" />
+			<file type="misc_include" filename="QFirebug.class.php"/>
+			<file type="misc_include" filename="FirePHP.class.php"/>
+			<file type="misc_include" filename="fb.php"/>
 
-			<file type="example" filename="qfirebug.php" />
-			<file type="example" filename="qfirebug.tpl.php" />
-			<file type="example" filename="qfirebug.png" />
+			<file type="example" filename="qfirebug.php"/>
+			<file type="example" filename="qfirebug.tpl.php"/>
+			<file type="example" filename="qfirebug.png"/>
 		</files>
 		<includes>
-			<include_files classname="QFirebug" filename="QFirebug.class.php" />
+			<include_files classname="QFirebug" filename="QFirebug.class.php"/>
 		</includes>
 		<examples>
-			<example filename="qfirebug.php" description="Introduction to Debugging with QFirebug" />
+			<example filename="qfirebug.php" description="Introduction to Debugging with QFirebug"/>
 		</examples>
 	</plugin>
+
 </plugins>

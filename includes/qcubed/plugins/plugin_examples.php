@@ -8,4 +8,5 @@
 	Examples::AddPluginExampleFile("QAutoCompleteTextBox", "autocomplete.php * Auto-complete Textbox Example");
 	
 	Examples::AddPluginExampleFile("QFirebug", "qfirebug.php Introduction to Debugging with QFirebug");
+
 ?>
