@@ -147,5 +147,5 @@
 		}
 	}
 
-	QCache::$CachePath = __QCUBED__ . '/cache';
+	QCache::$CachePath = __INCLUDES__ . '/tmp/cache';
 ?>
