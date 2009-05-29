@@ -39,7 +39,7 @@ abstract class QPluginUninstaller extends QPluginInstallerBase {
 		$includesPath = __PLUGINS__ . '/' . $strPluginName;
 		if (file_exists($includesPath)) {
 			$deletedItems = self::deleteFolderRecursive($includesPath);
-			$strResult .= "= Deleted " . $deletedItems . " files from the plugin includes directory\r\n";
+			$strResult .= "- Deleted " . $deletedItems . " files from the plugin includes directory\r\n";
 		} else {
 			$strResult .= "- Nothing was deleted from the plugin includes directory\r\n";
 		}
