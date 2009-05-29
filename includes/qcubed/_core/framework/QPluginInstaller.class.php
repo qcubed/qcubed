@@ -7,33 +7,51 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 			return null;
 		}
 		
-		$entropy = substr(md5(uniqid()), 0, 6);                        
-		$extractionResult = self::extractZip($fileAsset->File, __INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $entropy . '/');
+		$entropy = substr(md5(uniqid()), 0, 6);
+		$expandedDir = __INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $entropy . '/';
+		$extractionResult = self::extractZip($fileAsset->File, $expandedDir);
 		if (!$extractionResult) {
 			return null;
 		}
 		
+		// Check to see if plugin config is defined as a PHP file,
+		// not XML file - and if so, run the PHP file to generate an XML config
+		// file. 
+		if (file_exists($expandedDir . self::PLUGIN_CONFIG_GENERATION_FILE)) {
+			// we'll need this constant to know where to save the XML config file
+			define ("__TEMP_PLUGIN_EXPANSION_DIR__", $expandedDir);
+			// execute the configuration file from the plugin - it will create a plugin
+			// config file in the XML format which we will process
+			include($expandedDir . self::PLUGIN_CONFIG_GENERATION_FILE);
+		}
+		
 		return $entropy;
+	}
+	
+	private static function getExpandedPath($strExtractedFolderName) {
+		return __INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName . '/';
 	}	
 
 	public static function installFromExpanded($strExtractedFolderName) {
-		$objPlugin = QPluginConfigParser::parseNewPlugin($strExtractedFolderName);
-		
+		$expandedDir = self::getExpandedPath($strExtractedFolderName);
+		$objPlugin = QPluginConfigParser::parseNewPlugin($expandedDir . self::PLUGIN_CONFIG_FILE);
+
 		$strStatus = "Installing plugin " . $objPlugin->strName . "\r\n\r\n";
+
 		if (self::isPluginInstalled($objPlugin->strName)) {
-			self::$strLastError = "Plugin with the same name is already installed - aborting";
-			$strStatus .= self::$strLastError;
-		} else {		
-			$strStatus .= self::appendPluginConfigToMasterConfig($strExtractedFolderName);
-			$strStatus .= self::deployFilesForNewPlugin($objPlugin, $strExtractedFolderName);
-			$strStatus .= self::appendClassFileReferences($objPlugin, $strExtractedFolderName);
-			$strStatus .= self::appendExampleFileReferences($objPlugin, $strExtractedFolderName);
-		
-			// When installation is done, clean up
-			$strStatus .= self::cleanupExtractedFiles($strExtractedFolderName);
-			
-			$strStatus .= "\r\nInstallation completed successfully.";
+			$strStatus .= "Plugin with the same name is already installed - aborting";
+			return $strStatus;
 		}
+
+		$strStatus .= self::appendPluginConfigToMasterConfig($strExtractedFolderName);
+		$strStatus .= self::deployFilesForNewPlugin($objPlugin, $strExtractedFolderName);
+		$strStatus .= self::appendClassFileReferences($objPlugin, $strExtractedFolderName);
+		$strStatus .= self::appendExampleFileReferences($objPlugin, $strExtractedFolderName);
+	
+		// When installation is done, clean up
+		$strStatus .= self::cleanupExtractedFiles($strExtractedFolderName);
+		
+		$strStatus .= "\r\nInstallation completed successfully.";
 						
 		echo nl2br($strStatus);
 		return $strStatus;
@@ -42,35 +60,23 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 	private static function deployFilesForNewPlugin($objPlugin, $strExtractedFolderName) {
 		$strStatus = "\r\nDeploying files\r\n";
 				
-		$createdFolders = array();
-		$sourceRoot = __INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName . "/"; 
+		$sourceRoot = self::getExpandedPath($strExtractedFolderName);
 		$nonWebDestinationRoot = __PLUGINS__ . '/' . $objPlugin->strName . "/";
 		$webDestinationRoot = __DOCROOT__ . __PLUGIN_ASSETS__ . '/' . $objPlugin->strName . "/";
 		
-		foreach ($objPlugin->objControlFilesArray as $file) {
-			$strStatus .= "Control file " . $file->strFilename . "\r\n";
-			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $nonWebDestinationRoot . $file->strFilename);
+		foreach ($objPlugin->objAllFilesArray as $file) {
+			$strStatus .= get_class($file) . " " . $file->strFilename . " deployed\r\n";
+			if ($file instanceof QPluginNonWebAccessibleFile) {
+				$destinationDir = $nonWebDestinationRoot;
+			} elseif ($file instanceof QPluginWebAccessibleFile) {
+				$destinationDir = $webDestinationRoot;
+			} else {
+				$strStatus .= "Invalid component type: " . var_export($file, true);
+				continue;
+			}
+			
+			self::writeFileHelper($sourceRoot . $file->strFilename,  $destinationDir . $file->strFilename);
 		}
-		foreach ($objPlugin->objMiscIncludeFilesArray as $file) {
-			$strStatus .= "Misc include file " . $file->strFilename . "\r\n";
-			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $nonWebDestinationRoot . $file->strFilename);
-		}
-		foreach ($objPlugin->objImageFilesArray as $file) {
-			$strStatus .= "Image file " . $file->strFilename . "\r\n";
-			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $webDestinationRoot . $file->strFilename);
-		}		
-		foreach ($objPlugin->objCssFilesArray as $file) {
-			$strStatus .= "CSS file " . $file->strFilename . "\r\n";
-			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $webDestinationRoot . $file->strFilename);
-		}		
-		foreach ($objPlugin->objJavascriptFilesArray as $file) {
-			$strStatus .= "JS file " . $file->strFilename . "\r\n";
-			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $webDestinationRoot . $file->strFilename);			
-		}		
-		foreach ($objPlugin->objExampleFilesArray as $file) {
-			$strStatus .= "Example file " . $file->strFilename . "\r\n";
-			$strStatus .= self::writeFileHelper($sourceRoot . $file->strFilename, $webDestinationRoot . $file->strFilename);
-		}				
 		
 		return $strStatus;
 	}	
@@ -114,7 +120,7 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 	private static function appendPluginConfigToMasterConfig($strExtractedFolderName) {
 		$strStatus = "";
 		
-		$configToAppendPath = QPluginConfigParser::getPathForExpandedPlugin($strExtractedFolderName);
+		$configToAppendPath = self::getExpandedPath($strExtractedFolderName) . self::PLUGIN_CONFIG_FILE;
 		// Get the full contents of the configuration file that we need to append
 		$configToAppend = self::readFile($configToAppendPath);
 		

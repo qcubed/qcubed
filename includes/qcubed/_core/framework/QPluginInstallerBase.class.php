@@ -5,9 +5,14 @@ abstract class QPluginInstallerBase {
 	
 	const PLUGIN_EXTRACTION_DIR = "/tmp/plugin.tmp/";
 	/**
-	 * @var string Name of the file that each plugin should have - that file defines plugin settings.
+	 * @var string Name of the the file defines plugin settings in XML format.
 	 */
-	const PLUGIN_CONFIG_FILE = "plugin.xml"; 
+	const PLUGIN_CONFIG_FILE = "plugin.xml";
+
+	/**
+	 * @var string Name of the the file defines plugin settings in PHP format.
+	 */	
+	const PLUGIN_CONFIG_GENERATION_FILE = "install.php";
 	
 	// these three have to be functions - PHP doesn't allow for static vars with concatenation :(
 	public static function getMasterConfigFilePath() { 
@@ -184,7 +189,7 @@ abstract class QPluginInstallerBase {
 		return $result;
 	}
 	
-	protected static function writeFile($strFilePath, $strContents) {
+	public static function writeFile($strFilePath, $strContents) {
 		// Write back the file
 		$fileHandle = fopen($strFilePath, "w");
 		if (fwrite($fileHandle, $strContents, strlen($strContents)) == false) {

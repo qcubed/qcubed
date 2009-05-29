@@ -26,22 +26,22 @@ abstract class QPluginUninstaller extends QPluginInstallerBase {
 	}
 	
 	private static function deleteFiles($strPluginName) {		
-		$strResult = "Deleting plugin files\r\n";
+		$strResult = "\r\nDeleting plugin files:\r\n";
 
 		$assetsPath = __DOCROOT__ . __PLUGIN_ASSETS__ . '/' . $strPluginName;
 		if (file_exists($assetsPath)) {
 			$deletedItems = self::deleteFolderRecursive($assetsPath);
-			$strResult .= "Deleted " . $deletedItems . " files from the plugin assets directory\r\n";
+			$strResult .= "- Deleted " . $deletedItems . " files from the plugin assets directory\r\n";
 		} else {
-			$strResult .= "Nothing was deleted from the plugin assets directory\r\n";
+			$strResult .= "- Nothing was deleted from the plugin assets directory\r\n";
 		}
 		
 		$includesPath = __PLUGINS__ . '/' . $strPluginName;
 		if (file_exists($includesPath)) {
 			$deletedItems = self::deleteFolderRecursive($includesPath);
-			$strResult .= "Deleted " . $deletedItems . " files from the plugin includes directory\r\n";
+			$strResult .= "= Deleted " . $deletedItems . " files from the plugin includes directory\r\n";
 		} else {
-			$strResult .= "Nothing was deleted from the plugin includes directory\r\n";
+			$strResult .= "- Nothing was deleted from the plugin includes directory\r\n";
 		}
 		
 		return $strResult;

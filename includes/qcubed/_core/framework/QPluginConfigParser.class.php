@@ -8,17 +8,12 @@ class QPluginConfigParser {
 		return $obj->parseConfig();
 	}
 	
-	public static function parseNewPlugin($strPluginName) {
-		$obj = new QPluginConfigParser(self::getPathForExpandedPlugin($strPluginName));
+	public static function parseNewPlugin($strExpandedPath) {
+		$obj = new QPluginConfigParser($strExpandedPath);
 		$tempArray = $obj->parseConfig();
 		return $tempArray[0];
 	}
-	
-	public static function getPathForExpandedPlugin($strPluginName) {
-		return __INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR .
-				$strPluginName . '/' . QPluginInstaller::PLUGIN_CONFIG_FILE;
-	}
-	
+		
 	private function __construct($strPath) {
 		if (!file_exists($strPath)) {
 			throw new Exception("Plugin config file does not exist: " . $strPath);
@@ -64,7 +59,7 @@ class QPluginConfigParser {
 	// helper to parse the /plugin/includes section of the config file
 	private function parseIncludes(&$xmlPlugin, &$objPlugin) {
 		foreach ($xmlPlugin->includes->include_files as $item) {
-			$component = new QPluginInclude();
+			$component = new QPluginIncludedClass();
 			$component->strFilename 	= (string)$item['filename'];
 			$component->strClassname 	= (string)$item['classname'];
 			
@@ -90,77 +85,38 @@ class QPluginConfigParser {
 		}
 
 		foreach ($xmlPlugin->files->file as $item) {
-			$component = new QPluginFile();
-			$component->strFilename = (string)$item['filename'];
-			
 			if (!isset($item['type'])) {
 				throw new Exception('Mandatory attribute "type" not set on one of the files of plugin ' . $objPlugin->strName);
 			}
 
 			switch ($item['type']) {
 				case 'control':
-					$objPlugin->objControlFilesArray []= $component;
+					$component = new QPluginControlFile();
 					break;
 				case 'misc_include':
-					$objPlugin->objMiscIncludeFilesArray []= $component;
+					$component = new QPluginMiscIncludedFile();
 					break;
 				case 'css':
-					$objPlugin->objCssFilesArray []= $component;
+					$component = new QPluginCssFile();
 					break;
 				case 'js':
+					$component = new QPluginJsFile();
 					$objPlugin->objJavascriptFilesArray []= $component;
 					break;
 				case 'image':
-					$objPlugin->objImageFilesArray []= $component;
+					$component = new QPluginImageFile();
 					break;
 				case 'example':
-					$objPlugin->objExampleFilesArray []= $component;
+					$component = new QPluginExampleFile();
 					break;
 				default:
 					throw new Exception("Invalid plugin component type: " . $item['type']);
 			}
 			
+			$component->strFilename = (string)$item['filename'];
 			$objPlugin->objAllFilesArray [] = $component;
 		}
 	}
-}
-
-
-class QPlugin {
-	public $strName = "";
-	public $strDescription = "";
-	public $strVersion = "";
-	public $strPlatformVersion = "";
-	public $strAuthorName = "";
-	public $strAuthorEmail = "";
-	
-	public $objControlFilesArray = array();
-	public $objMiscIncludeFilesArray = array();
-	public $objImageFilesArray = array();
-	public $objCssFilesArray = array();
-	public $objJavascriptFilesArray = array();
-	public $objExampleFilesArray = array();
-	
-	public $objAllFilesArray = array(); // array of QPluginFile objects
-	
-	public $objIncludesArray = array(); // array of QPluginInclude objects
-	public $objExamplesArray = array(); // array of QPluginExample objects
-}
-
-abstract class QPluginComponent {}
-
-class QPluginFile extends QPluginComponent {
-	public $strFilename;
-}
-
-class QPluginExample extends QPluginComponent {
-	public $strFilename;
-	public $strDescription;
-}
-
-class QPluginInclude extends QPluginComponent {
-	public $strFilename;
-	public $strClassname;
 }
 
 ?>

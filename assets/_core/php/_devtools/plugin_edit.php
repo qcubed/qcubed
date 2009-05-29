@@ -45,7 +45,9 @@ class PluginEditForm extends QForm {
 				}
 			}
 		} else if ($this->strPluginType == self::TYPE_INSTALLING_NEW) {
-			$this->objPlugin = QPluginConfigParser::parseNewPlugin($strPluginName);
+			$configFile = __INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR .
+							$strPluginName . '/' . QPluginInstaller::PLUGIN_CONFIG_FILE;
+			$this->objPlugin = QPluginConfigParser::parseNewPlugin($configFile);
 		} else {
 			throw new Exception("Invalid value of the type URL parameter: " . $this->strPluginType);
 		}

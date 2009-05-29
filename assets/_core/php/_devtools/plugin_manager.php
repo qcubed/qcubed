@@ -39,20 +39,9 @@
 			
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Title',
                     '<a href="plugin_edit.php?strType=installed&strName=<?= $_ITEM->strName ?>"><?= $_ITEM->strName ?></a>', 'HtmlEntities=false'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: Controls',
-                    '<?= count($_ITEM->objControlFilesArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: Misc Includes',
-                    '<?= count($_ITEM->objMiscIncludeFilesArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: Images',
-                    '<?= count($_ITEM->objImageFilesArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: CSS',
-                    '<?= count($_ITEM->objCssFilesArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: JS',
-                    '<?= count($_ITEM->objJavascriptFilesArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files: Examples',
-                    '<?= count($_ITEM->objExampleFilesArray) ?>'));			
-
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Included Classes',
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files',
+                    '<?= count($_ITEM->objAllFilesArray) ?>'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Includes',
                     '<?= count($_ITEM->objIncludesArray) ?>'));
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Examples',
                     '<?= count($_ITEM->objExamplesArray) ?>'));
