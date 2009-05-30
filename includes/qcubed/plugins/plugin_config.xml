@@ -1,31 +1,4 @@
 <?xml version="1.0"?>
 <plugins>
 	
-
-	<plugin>
-		<name>QFirebug</name>
-		<description>Plugin that eases debugging of QCubed applications through
-			integration with Firebug, an excellent Firefox extension for
-			Javascript debugging. 
-		</description>
-		<version>0.1</version>
-		<platform_version>1.1</platform_version>
-		<author name="Eduardo Garcia aka enzo" email="enzo [at] anexusit [dot] com"/>
-		<files>
-			<file type="misc_include" filename="QFirebug.class.php"/>
-			<file type="misc_include" filename="FirePHP.class.php"/>
-			<file type="misc_include" filename="fb.php"/>
-
-			<file type="example" filename="qfirebug.php"/>
-			<file type="example" filename="qfirebug.tpl.php"/>
-			<file type="example" filename="qfirebug.png"/>
-		</files>
-		<includes>
-			<include_files classname="QFirebug" filename="QFirebug.class.php"/>
-		</includes>
-		<examples>
-			<example filename="qfirebug.php" description="Introduction to Debugging with QFirebug"/>
-		</examples>
-	</plugin>
-
 </plugins>

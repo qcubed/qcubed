@@ -5,6 +5,5 @@
  * QCubed framework. Please do not modify.
  */
 
-	Examples::AddPluginExampleFile("QFirebug", "qfirebug.php Introduction to Debugging with QFirebug");
 
 ?>
