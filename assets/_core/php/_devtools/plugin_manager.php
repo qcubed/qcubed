@@ -38,36 +38,51 @@
 			$this->dtgPlugins->AlternateRowStyle->CssClass = 'alternate';
 			
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Title',
-                    '<a href="plugin_edit.php?strType=installed&strName=<?= $_ITEM->strName ?>"><?= $_ITEM->strName ?></a>', 'HtmlEntities=false'));
+					'<a href="plugin_edit.php?strType=installed&strName=<?= $_ITEM->strName ?>"><?= $_ITEM->strName ?></a>', 'HtmlEntities=false'));
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files',
-                    '<?= count($_ITEM->objAllFilesArray) ?>'));
+					'<?= count($_ITEM->objAllFilesArray) ?>'));
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Includes',
-                    '<?= count($_ITEM->objIncludesArray) ?>'));
+					'<?= count($_ITEM->objIncludesArray) ?>'));
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Examples',
-                    '<?= count($_ITEM->objExamplesArray) ?>'));
+					'<?= count($_ITEM->objExamplesArray) ?>'));
 
 
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Description',
-                    '<?= $_ITEM->strDescription ?>'));			
+				'<?= $_FORM->RenderDescription($_ITEM) ?>', 'HtmlEntities=false'));	
 		}
 		
 		public function dtgPlugins_Bind() {			
 			$this->dtgPlugins->DataSource = QPluginConfigParser::parseInstalledPlugins();
 		}
 		
-        private function dlgUpload_Create() {
-            $this->dlgUpload = new QFileAssetDialog($this, 'dlgUpload_done');
-            $this->dlgUpload->lblMessage->Text = "Please upload a plugin .zip file";
-            $this->dlgUpload->btnUpload->Text = "Upload";
-            $this->dlgUpload->btnCancel->Text = "Cancel";
-            $this->dlgUpload->SetCustomStyle("background-color", "rgb(238, 255, 221)");
-            $this->dlgUpload->SetCustomStyle("padding", "10px");
+		public function RenderDescription($objItem) {
+			$exampleSnippet = "";
+			
+			if (sizeof($objItem->objExamplesArray) > 0) {
+				$exampleSnippet .= "<br>";
+				foreach ($objItem->objExamplesArray as $example) {
+					$exampleSnippet .= "Example: <a href='" .
+						__PLUGIN_ASSETS__ . '/' . $objItem->strName . '/' .
+						$example->strFilename . "'>" . $example->strDescription . "</a><br>";
+				}
+			}
+			
+			return $objItem->strDescription . $exampleSnippet;
 		}
 		
-        public function dlgUpload_done($strFormId, $strControlId, $strParameter) {
-            $this->dlgUpload->HideDialogBox();
-            
-            $pluginFolder = QPluginInstaller::processUploadedPluginArchive($this->dlgUpload->flcFileAsset);
+		private function dlgUpload_Create() {
+			$this->dlgUpload = new QFileAssetDialog($this, 'dlgUpload_done');
+			$this->dlgUpload->lblMessage->Text = "Please upload a plugin .zip file";
+			$this->dlgUpload->btnUpload->Text = "Upload";
+			$this->dlgUpload->btnCancel->Text = "Cancel";
+			$this->dlgUpload->SetCustomStyle("background-color", "rgb(238, 255, 221)");
+			$this->dlgUpload->SetCustomStyle("padding", "10px");
+		}
+		
+		public function dlgUpload_done($strFormId, $strControlId, $strParameter) {
+			$this->dlgUpload->HideDialogBox();
+			
+			$pluginFolder = QPluginInstaller::processUploadedPluginArchive($this->dlgUpload->flcFileAsset);
 			
 			if ($pluginFolder == null) {
 				QApplication::DisplayAlert(QPluginInstaller::getLastError());
@@ -75,7 +90,7 @@
 			}
 			
 			QApplication::Redirect('plugin_edit.php?strType=new&strName=' . $pluginFolder);
-        }		
+		}		
 	}	
 
 	PluginManagerForm::Run('PluginManagerForm');

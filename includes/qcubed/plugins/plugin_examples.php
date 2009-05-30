@@ -5,5 +5,4 @@
  * QCubed framework. Please do not modify.
  */
 
-
 ?>
