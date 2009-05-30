@@ -91,6 +91,9 @@
 	QApplicationBase::$ClassFile['qqn'] = __MODEL_GEN__ . '/QQN.class.php';
 	QApplicationBase::$ClassFile['qqueryexpansion'] = __QCUBED_CORE__ . '/framework/QQueryExpansion.class.php';
 	QApplicationBase::$ClassFile['qconvertnotation'] = __QCUBED__ . '/codegen/QConvertNotation.class.php';
+	QApplicationBase::$ClassFile['qfolder'] = __QCUBED_CORE__ . '/framework/QFolder.class.php';
+	QApplicationBase::$ClassFile['qfile'] = __QCUBED_CORE__ . '/framework/QFile.class.php';
+	QApplicationBase::$ClassFile['qarchive'] = __QCUBED_CORE__ . '/framework/QArchive.class.php';
 	QApplicationBase::$ClassFile['qlexer'] = __QCUBED_CORE__ . '/framework/QLexer.class.php';
 	QApplicationBase::$ClassFile['qregex'] = __QCUBED_CORE__ . '/framework/QRegex.class.php';
 	QApplicationBase::$ClassFile['qobjectdiff'] = __QCUBED_CORE__ . '/framework/QObjectDiff.class.php';

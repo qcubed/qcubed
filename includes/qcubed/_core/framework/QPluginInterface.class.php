@@ -87,7 +87,7 @@ class QPlugin {
 		
 		$pluginConfigXml = $this->toXml();		
 		$savePath = __TEMP_PLUGIN_EXPANSION_DIR__ . QPluginInstaller::PLUGIN_CONFIG_FILE;
-		QPluginInstaller::writeFile($savePath, $pluginConfigXml);
+		QFile::writeFile($savePath, $pluginConfigXml);
 	}
 	
 	public function toXml() {

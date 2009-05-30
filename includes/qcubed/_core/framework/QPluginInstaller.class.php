@@ -9,7 +9,7 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 		
 		$entropy = substr(md5(uniqid()), 0, 6);
 		$expandedDir = __INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $entropy . '/';
-		$extractionResult = self::extractZip($fileAsset->File, $expandedDir);
+		$extractionResult = QArchive::extractZip($fileAsset->File, $expandedDir);
 		if (!$extractionResult) {
 			return null;
 		}
@@ -122,7 +122,7 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 		
 		$configToAppendPath = self::getExpandedPath($strExtractedFolderName) . self::PLUGIN_CONFIG_FILE;
 		// Get the full contents of the configuration file that we need to append
-		$configToAppend = self::readFile($configToAppendPath);
+		$configToAppend = QFile::readFile($configToAppendPath);
 		
 		$strStatus .= "Plugin config read\r\n";				
 		

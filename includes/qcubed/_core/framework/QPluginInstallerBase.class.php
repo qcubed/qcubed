@@ -45,11 +45,11 @@ abstract class QPluginInstallerBase {
 	}
 		
 	protected static function replaceFileSection($strFilePath, $strSearch, $strReplace) {
-		$contents = self::readFile($strFilePath);
+		$contents = QFile::readFile($strFilePath);
 		
 		$contents = str_replace($strSearch, $strReplace, $contents);
 		
-		self::writeFile($strFilePath, self::stripExtraNewlines($contents));
+		QFile::writeFile($strFilePath, self::stripExtraNewlines($contents));
 	}
 		
 	/**
@@ -86,118 +86,10 @@ abstract class QPluginInstallerBase {
 	}
 	
 	public static function cleanupExtractedFiles($strExtractedFolderName) {
-		self::deleteFolderRecursive(__INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName);
+		QFolder::DeleteFolder(__INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName);
 		return "\r\nCleaned up installation files.\r\n";
 	}
 		
-	/**
-	 * Extract a ZIP compressed file to a given path
-	 *
-	 * @param       string  $archive        Path to ZIP archive to extract
-	 * @param       string  $destination    Path to extract archive into
-	 * @return      boolean True if successful
-	 */
-	protected static function extractZip($archive, $destination) {
-		if ($zip = zip_open($archive)) {
-			if ($zip) {
-				// Create the destination folder
-				if (!mkdir($destination)) {
-					self::$strLastError = "Unable to create extraction destination folder";
-					return false;
-				}
-
-				// Read files in the archive
-				$createdFolders = array();
-				while ($file = zip_read($zip)) {
-					if (zip_entry_open($zip, $file, "r")) {							
-						if (substr(zip_entry_name($file), strlen(zip_entry_name($file)) - 1) != "/") {
-							
-//							echo zip_entry_name($file) . "<br>";
-							
-							$folderStack = split("/", zip_entry_name($file));
-							if (sizeof($folderStack) > 1) {
-								for ($i = 0; $i < sizeof($folderStack) - 1; $i++) {
-									$item = $folderStack[$i];
-									
-									if (!in_array($item, $createdFolders)) {
-//										echo "- " . $destination . $item . "<br>";
-										$createdFolders[] = $item;
-										mkdir($destination . $item);
-									}
-								}
-							}
-							
-							$strSectionToAppend = zip_entry_read($file, zip_entry_filesize($file));
-
-							if (!$handle = fopen($destination . zip_entry_name($file), 'w')) {
-								self::$strLastError = "Cannot open file " . destination . zip_entry_name($file);
-								return false;
-							}
-						   
-							// Write $somecontent to our opened file.
-							if (fwrite($handle, $strSectionToAppend) === false) {
-								self::$strLastError = "Unable to write extracted file";
-								return false;
-							}
-							
-							zip_entry_close($file);
-						}
-					} else {
-						self::$strLastError = "Unable to read zip entry";
-						return false;
-					}
-				}
-				zip_close($zip);
-			}
-		} else {
-			self::$strLastError = "Unable to open uploaded archive";
-			return false;
-		}
-		return true;
-	}
-	
-	protected static function deleteFolderRecursive($strPath) {
-		if (!is_dir($strPath)) {
-			unlink($strPath);
-			return 1;
-		}
-
-		$d = dir($strPath);
-		$count = 0;
-		while($entry = $d->read()) { 
-			if ($entry!= "." && $entry != "..") { 
-				if (is_dir($strPath)) {
-					$count += self::deleteFolderRecursive($strPath . "/" . $entry);
-				} 
-			} 
-		} 
-
-		$d->close(); 
-		rmdir($strPath);
-		
-		return $count;
-	}
-	
-	protected static function readFile($strFilePath) {
-		$result = "";
-		$handle = fopen($strFilePath, "r");
-		while(!feof($handle)) {
-			$result .= fread($handle, 8000);
-		}		
-		fclose($handle);
-		
-		return $result;
-	}
-	
-	public static function writeFile($strFilePath, $strContents) {
-		// Write back the file
-		$fileHandle = fopen($strFilePath, "w");
-		if (fwrite($fileHandle, $strContents, strlen($strContents)) == false) {
-			self::$strLastError = "Unable to write file: " . $strFilePath;
-			return self::$strLastError;
-		}
-		fclose($fileHandle);
-	}
 	
 	protected static function stripExtraNewlines($strInput) {
 		return ereg_replace("([\r\n]|\r\n){3,}", "\r\n\r\n", $strInput);

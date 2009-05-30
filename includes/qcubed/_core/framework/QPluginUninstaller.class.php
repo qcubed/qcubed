@@ -30,7 +30,7 @@ abstract class QPluginUninstaller extends QPluginInstallerBase {
 
 		$assetsPath = __DOCROOT__ . __PLUGIN_ASSETS__ . '/' . $strPluginName;
 		if (file_exists($assetsPath)) {
-			$deletedItems = self::deleteFolderRecursive($assetsPath);
+			$deletedItems = QFolder::DeleteFolder($assetsPath);
 			$strResult .= "- Deleted " . $deletedItems . " files from the plugin assets directory\r\n";
 		} else {
 			$strResult .= "- Nothing was deleted from the plugin assets directory\r\n";
@@ -38,7 +38,7 @@ abstract class QPluginUninstaller extends QPluginInstallerBase {
 		
 		$includesPath = __PLUGINS__ . '/' . $strPluginName;
 		if (file_exists($includesPath)) {
-			$deletedItems = self::deleteFolderRecursive($includesPath);
+			$deletedItems = QFolder::DeleteFolder($includesPath);
 			$strResult .= "- Deleted " . $deletedItems . " files from the plugin includes directory\r\n";
 		} else {
 			$strResult .= "- Nothing was deleted from the plugin includes directory\r\n";
@@ -48,7 +48,7 @@ abstract class QPluginUninstaller extends QPluginInstallerBase {
 	}
 	
 	private static function deleteFromMasterConfig($strPluginName) {
-		$oldContents = self::readFile(self::getMasterConfigFilePath());
+		$oldContents = QFile::readFile(self::getMasterConfigFilePath());
 		
 		$doc = new SimpleXMLElement($oldContents);
 		$found = false;
@@ -63,13 +63,13 @@ abstract class QPluginUninstaller extends QPluginInstallerBase {
 		$newContents = $doc->asXml();
 		
 		$newContents = self::stripExtraNewlines($newContents);
-		self::writeFile(self::getMasterConfigFilePath(), $newContents);
+		QFile::writeFile(self::getMasterConfigFilePath(), $newContents);
 		
 		return $found;
 	}
 	
 	private static function removeMarkedSectionHelper($strPluginName, $strFileName) {
-		$oldContents = self::readFile($strFileName);
+		$oldContents = QFile::readFile($strFileName);
 		
 		$search = str_replace("\r\n", "", self::getBeginMarker($strPluginName) . ".*" . self::getEndMarker($strPluginName));
 		
@@ -77,7 +77,7 @@ abstract class QPluginUninstaller extends QPluginInstallerBase {
 		$newContents = preg_replace('|' . $search . '|s', '', $oldContents, -1, $intReplacementCount);
 		$newContents = self::stripExtraNewlines($newContents);
 		
-		self::writeFile($strFileName, $newContents);
+		QFile::writeFile($strFileName, $newContents);
 		
 		return $intReplacementCount;
 	}
