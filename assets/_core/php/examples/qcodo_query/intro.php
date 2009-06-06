@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">SQL Queries in Qcodo</div>
+		<div class="instruction_title">SQL Queries in QCubed</div>
 		Although the QCubed can generate the SQL query code for most of your application, you will undoubtedly
 		need to write your own custom queries, to either perform more refined Load methods, execute searches,
 		generate reports, etc.<br/><br/>
@@ -52,7 +52,8 @@
 	$strQuery = 
 		"SELECT
 			project.name AS project_name,
-			CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name,
+			manager.first_name AS manager_first,
+			manager.last_name AS manager_last,
 			(
 				SELECT
 					COUNT(*)
@@ -69,11 +70,6 @@
 		ORDER BY
 			project.name";
 
-	// NOTE: If you are using SQL Server, you will want to change the above
-	//			CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name,
-	// ... to ...
-	//			(manager.first_name + ' ' + manager.last_name) AS manager_name,
-
 	// Call on QApplication to get to the instantiated/active Database Adapter that you want to query
 	// Be sure to specify the database index (as you defined in configuration.inc.php)
 	// For purposes of this example, we're assuming that the "Examples" database connection string is defined
@@ -86,8 +82,8 @@
 	// Iterate through the Database Result using ->FetchRow() or ->FetchArray(), as you would if
 	// you used the a database connector, directly.
 	while ($mixRow = $objDbResult->FetchArray()) {
-		_p(sprintf('%s, managed by %s (with %s team members)',
-			$mixRow['project_name'], $mixRow['manager_name'], $mixRow['team_member_count']));
+		_p(sprintf('%s, managed by %s %s (with %s team members)',
+			$mixRow['project_name'], $mixRow['manager_first'], $mixRow['manager_last'], $mixRow['team_member_count']));
 		_p('<br/>', false);
 	}
 ?>
