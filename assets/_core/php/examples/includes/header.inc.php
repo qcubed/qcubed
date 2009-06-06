@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/includes/examples.css'); ?>"></link>
 		<script type="text/javascript">
 			function ViewSource(intCategoryId, intExampleId) {
-				var objWindow = window.open("../view_source.php/" + intCategoryId + "/" + intExampleId, "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
+				var objWindow = window.open("<?= __SUBDIRECTORY__ . __EXAMPLES__ ?>/view_source.php/" + intCategoryId + "/" + intExampleId, "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
 				objWindow.focus();
 			}
 		</script>

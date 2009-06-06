@@ -11,180 +11,179 @@
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Basic CodeGen';
 			Examples::$Categories[$intIndex]['description'] = 'An introduction to the QCubed Code Generator';
-			array_push(Examples::$Categories[$intIndex], '/code_generator/about.php (About Sections 1 - 3)');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/intro.php About the Database');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/objects.php * Object Relational Model');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/indexes.php * Loading Objects');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/save_delete.php * Saving and Deleting');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/relationships.php * Relationships (Foreign Keys)');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/reverse_relationships.php * Reverse Relationships (One-to-One and One-to-Many)');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/relationships_many.php * Many-to-Many Relationships');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/script_path.php Defining Relationships without Foreign Keys');
-			array_push(Examples::$Categories[$intIndex], '/code_generator/primary_keys.php Explanation of QCubed Primary Key Requirement');
-			Examples::$AdditionalCode['/code_generator/intro.php'] = array('mysql_innodb.sql','sql_server.sql');
-			Examples::$AdditionalCode['/code_generator/script_path.php'] = array('mysql_myisam.sql', 'relationships.txt');
+ 			self::AddCoreExampleFile($intIndex, '/code_generator/about.php (About Sections 1 - 3)');
+			self::AddCoreExampleFile($intIndex, '/code_generator/intro.php About the Database');
+			self::AddCoreExampleFile($intIndex, '/code_generator/objects.php * Object Relational Model');
+			self::AddCoreExampleFile($intIndex, '/code_generator/indexes.php * Loading Objects');
+			self::AddCoreExampleFile($intIndex, '/code_generator/save_delete.php * Saving and Deleting');
+			self::AddCoreExampleFile($intIndex, '/code_generator/relationships.php * Relationships (Foreign Keys)');
+			self::AddCoreExampleFile($intIndex, '/code_generator/reverse_relationships.php * Reverse Relationships (One-to-One and One-to-Many)');
+			self::AddCoreExampleFile($intIndex, '/code_generator/relationships_many.php * Many-to-Many Relationships');
+			self::AddCoreExampleFile($intIndex, '/code_generator/script_path.php Defining Relationships without Foreign Keys');
+			self::AddCoreExampleFile($intIndex, '/code_generator/primary_keys.php Explanation of QCubed Primary Key Requirement');
+			Examples::$AdditionalCode[__EXAMPLES__ . '/code_generator/intro.php'] = array('mysql_innodb.sql','sql_server.sql');
+			Examples::$AdditionalCode[__EXAMPLES__ . '/code_generator/script_path.php'] = array('mysql_myisam.sql', 'relationships.txt');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'More About the Object Relational Model';
 			Examples::$Categories[$intIndex]['description'] = 'Looking more in depth at the functionality of the generated ORM';
-			array_push(Examples::$Categories[$intIndex], '/more_codegen/sort_limit.php * Sorting and Limiting Array Results');
-			array_push(Examples::$Categories[$intIndex], '/more_codegen/late_bind.php * Late Binding of Related Objects');
-			array_push(Examples::$Categories[$intIndex], '/more_codegen/early_bind.php * Early Binding of Related Objects');
-			array_push(Examples::$Categories[$intIndex], '/more_codegen/virtual_attributes.php * Virtual Attributes');
-			array_push(Examples::$Categories[$intIndex], '/more_codegen/type_tables.php * Type Tables');
-			array_push(Examples::$Categories[$intIndex], '/more_codegen/custom.php * Customized Business Logic');
-			array_push(Examples::$Categories[$intIndex], '/more_codegen/custom_load.php * Customized Load Methods');
-			array_push(Examples::$Categories[$intIndex], '/more_codegen/optimistic_locking.php * Optimistic Locking');
+			self::AddCoreExampleFile($intIndex, '/more_codegen/sort_limit.php * Sorting and Limiting Array Results');
+			self::AddCoreExampleFile($intIndex, '/more_codegen/late_bind.php * Late Binding of Related Objects');
+			self::AddCoreExampleFile($intIndex, '/more_codegen/early_bind.php * Early Binding of Related Objects');
+			self::AddCoreExampleFile($intIndex, '/more_codegen/virtual_attributes.php * Virtual Attributes');
+			self::AddCoreExampleFile($intIndex, '/more_codegen/type_tables.php * Type Tables');
+			self::AddCoreExampleFile($intIndex, '/more_codegen/custom.php * Customized Business Logic');
+			self::AddCoreExampleFile($intIndex, '/more_codegen/custom_load.php * Customized Load Methods');
+			self::AddCoreExampleFile($intIndex, '/more_codegen/optimistic_locking.php * Optimistic Locking');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Querying in QCubed';
-			Examples::$Categories[$intIndex]['description'] = 'Ad Hoc Queries, Custom Load Methods, and <b>QCubed Query</b>';
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/qq.php * QCubed Query: Object Oriented Database Querying');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/qqnode.php * QCubed Query: The QQ Node Classes');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/qqcondition.php * QCubed Query: The QQ Condition Classes');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/qqclause.php * QCubed Query: The QQ Clause Classes');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/conditional_expand.php * QCubed Query: Conditional Joins');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/association.php * QCubed Query: Handling Association Tables');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/reverse.php * QCubed Query: Handling Reverse Relationships');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/expandasarray.php * ExpandAsArray: Multiple related tables in one swift query');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/subsql.php * Custom SQL Subqueries for QQuery');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/intro.php * Performing Custom SQL Queries');
-			array_push(Examples::$Categories[$intIndex], '/qcodo_query/qcache.php * Caching Query Results with QueryArrayCached');
+			Examples::$Categories[$intIndex]['description'] = 'Ad Hoc Queries, Custom Load Methods, and QCubed Query';
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/qq.php * QCubed Query: Object Oriented Database Querying');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/qqnode.php * QCubed Query: The QQ Node Classes');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/qqcondition.php * QCubed Query: The QQ Condition Classes');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/qqclause.php * QCubed Query: The QQ Clause Classes');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/conditional_expand.php * QCubed Query: Conditional Joins');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/association.php * QCubed Query: Handling Association Tables');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/reverse.php * QCubed Query: Handling Reverse Relationships');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/expandasarray.php * ExpandAsArray: Multiple related tables in one swift query');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/subsql.php * Custom SQL Subqueries for QQuery');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/intro.php * Performing Custom SQL Queries');
+			self::AddCoreExampleFile($intIndex, '/qcodo_query/qcache.php * Caching Query Results with QueryArrayCached');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Basic QForms';
 			Examples::$Categories[$intIndex]['description'] = 'An introduction to QForms and QControls';
-			array_push(Examples::$Categories[$intIndex], '/basic_qform/about.php (About Sections 4 - 10)');
-			array_push(Examples::$Categories[$intIndex], '/basic_qform/intro.php Hello World Example');
-			array_push(Examples::$Categories[$intIndex], '/basic_qform/state.php QForms: Stateful, Event-Driven Objects');
-			array_push(Examples::$Categories[$intIndex], '/basic_qform/process_flow.php Understanding Process Flow');
-			array_push(Examples::$Categories[$intIndex], '/basic_qform/calculator.php Calculator Example');
-			array_push(Examples::$Categories[$intIndex], '/basic_qform/calculator_2.php Calculator Example with Validation');
-			array_push(Examples::$Categories[$intIndex], '/basic_qform/calculator_3.php Calculator Example with &quot;Design&quot;');
-			array_push(Examples::$Categories[$intIndex], '/basic_qform/listbox.php * Introduction to QListControl');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/about.php (About Sections 4 - 10)');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/intro.php Hello World Example');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/state.php QForms: Stateful, Event-Driven Objects');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/process_flow.php Understanding Process Flow');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/calculator.php Calculator Example');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/calculator_2.php Calculator Example with Validation');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/calculator_3.php Calculator Example with &quot;Design&quot;');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/listbox.php * Introduction to QListControl');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Basic AJAX in QForms';
 			Examples::$Categories[$intIndex]['description'] = 'A look at how to AJAX-enable your QForms';
-			array_push(Examples::$Categories[$intIndex], '/basic_ajax/intro.php Hello World Example using AJAX');
-			array_push(Examples::$Categories[$intIndex], '/basic_ajax/calculator_2.php Calculator Example using AJAX');
-			array_push(Examples::$Categories[$intIndex], '/basic_ajax/wait_icon.php Adding a Wait Icon');
+			self::AddCoreExampleFile($intIndex, '/basic_ajax/intro.php Hello World Example using AJAX');
+			self::AddCoreExampleFile($intIndex, '/basic_ajax/calculator_2.php Calculator Example using AJAX');
+			self::AddCoreExampleFile($intIndex, '/basic_ajax/wait_icon.php Adding a Wait Icon');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'More About Events and Actions';
 			Examples::$Categories[$intIndex]['description'] = 'Looking more in depth at the capabilities of the QEvent and QAction libraries';
-			array_push(Examples::$Categories[$intIndex], '/events_actions/editable_listbox.php Editable ListBox');
-			array_push(Examples::$Categories[$intIndex], '/events_actions/editable_listbox_2.php Conditional Events');
-			array_push(Examples::$Categories[$intIndex], '/events_actions/delayed.php Trigger-Delayed Events');
-			array_push(Examples::$Categories[$intIndex], '/events_actions/javascript_alerts.php Javascript Actions, Alerts and Confirmations');
-			array_push(Examples::$Categories[$intIndex], '/events_actions/other_actions.php Other Client-Side QActions');
+			self::AddCoreExampleFile($intIndex, '/events_actions/editable_listbox.php Editable ListBox');
+			self::AddCoreExampleFile($intIndex, '/events_actions/editable_listbox_2.php Conditional Events');
+			self::AddCoreExampleFile($intIndex, '/events_actions/delayed.php Trigger-Delayed Events');
+			self::AddCoreExampleFile($intIndex, '/events_actions/javascript_alerts.php Javascript Actions, Alerts and Confirmations');
+			self::AddCoreExampleFile($intIndex, '/events_actions/other_actions.php Other Client-Side QActions');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Paginated Controls';
 			Examples::$Categories[$intIndex]['description'] = 'The QDataGrid and QDataRepeater controls';
-			array_push(Examples::$Categories[$intIndex], '/datagrid/intro.php * Basic QDataGrid');
-			array_push(Examples::$Categories[$intIndex], '/datagrid/variables.php * The QDataGrid Variables');
-			array_push(Examples::$Categories[$intIndex], '/datagrid/rowactions.php * Making entire QDataGrid rows clickable');
-			array_push(Examples::$Categories[$intIndex], '/datagrid/sorting.php * QDataGrid Sorting');
-			array_push(Examples::$Categories[$intIndex], '/datagrid/pagination.php * QDataGrid Pagination');
-			array_push(Examples::$Categories[$intIndex], '/datagrid/ajax.php * Enabling AJAX on the QDataGrid');
-			array_push(Examples::$Categories[$intIndex], '/datarepeater/ajax.php * Simple QDataRepeater using AJAX-triggered Pagination');
-			array_push(Examples::$Categories[$intIndex], '/datagrid/extend.php * Creating Your Own Custom QDataGrid Subclass');
-			Examples::$AdditionalCode['/datarepeater/ajax.php'] = array('dtr_persons.tpl.php');
-			Examples::$AdditionalCode['/datagrid/extend.php'] = array('QDataGrid.class.php');
+			self::AddCoreExampleFile($intIndex, '/datagrid/intro.php * Basic QDataGrid');
+			self::AddCoreExampleFile($intIndex, '/datagrid/variables.php * The QDataGrid Variables');
+			self::AddCoreExampleFile($intIndex, '/datagrid/rowactions.php * Making entire QDataGrid rows clickable');
+			self::AddCoreExampleFile($intIndex, '/datagrid/sorting.php * QDataGrid Sorting');
+			self::AddCoreExampleFile($intIndex, '/datagrid/pagination.php * QDataGrid Pagination');
+			self::AddCoreExampleFile($intIndex, '/datagrid/ajax.php * Enabling AJAX on the QDataGrid');
+			self::AddCoreExampleFile($intIndex, '/datarepeater/ajax.php * Simple QDataRepeater using AJAX-triggered Pagination');
+			self::AddCoreExampleFile($intIndex, '/datagrid/extend.php * Creating Your Own Custom QDataGrid Subclass');
+			Examples::$AdditionalCode[__EXAMPLES__  . '/datarepeater/ajax.php'] = array('dtr_persons.tpl.php');
+			Examples::$AdditionalCode[__EXAMPLES__  . '/datagrid/extend.php'] = array('QDataGrid.class.php');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Advanced Controls Manipulation';
 			Examples::$Categories[$intIndex]['description'] = 'Dynamically creating controls, Implementing custom controls';
-			array_push(Examples::$Categories[$intIndex], '/dynamic/select.php * Creating Checkboxes in a Datagrid');
-			array_push(Examples::$Categories[$intIndex], '/dynamic/inline_editing.php * Datagrid with Inline Editing');
-			array_push(Examples::$Categories[$intIndex], '/dynamic/qpanel.php Introduction to QBlockControls');
-			array_push(Examples::$Categories[$intIndex], '/dynamic/qpanel_2.php Dynamically Changing a Control\'s Parent');
-			array_push(Examples::$Categories[$intIndex], '/other_controls/persist.php Persistent Controls: Performance for Reusable Components');
-			array_push(Examples::$Categories[$intIndex], '/other_controls/sample.php Creating Your Own Control');
-			array_push(Examples::$Categories[$intIndex], '/composite/intro.php Creating a Composite Control');
-			array_push(Examples::$Categories[$intIndex], '/multiple_qform/intro.php "Multiple QForms" Functionality via Custom QPanels');
-			array_push(Examples::$Categories[$intIndex], '/dynamic/control_proxy.php Using QControlProxies to have Non-QControls Trigger Events');
-			Examples::$AdditionalCode['/dynamic/qpanel.php'] = array('pnl_panel.tpl.php');
-			Examples::$AdditionalCode['/other_controls/sample.php'] = array('___QSampleControl.class.php');
-			Examples::$AdditionalCode['/composite/intro.php'] = array('SampleComposite.class.php');
-			Examples::$AdditionalCode['/multiple_qform/intro.php'] = array(
+			self::AddCoreExampleFile($intIndex, '/dynamic/select.php * Creating Checkboxes in a Datagrid');
+			self::AddCoreExampleFile($intIndex, '/dynamic/inline_editing.php * Datagrid with Inline Editing');
+			self::AddCoreExampleFile($intIndex, '/dynamic/qpanel.php Introduction to QBlockControls');
+			self::AddCoreExampleFile($intIndex, '/dynamic/qpanel_2.php Dynamically Changing a Control\'s Parent');
+			self::AddCoreExampleFile($intIndex, '/other_controls/persist.php Persistent Controls: Performance for Reusable Components');
+			self::AddCoreExampleFile($intIndex, '/other_controls/sample.php Creating Your Own Control');
+			self::AddCoreExampleFile($intIndex, '/composite/intro.php Creating a Composite Control');
+			self::AddCoreExampleFile($intIndex, '/multiple_qform/intro.php "Multiple QForms" Functionality via Custom QPanels');
+			self::AddCoreExampleFile($intIndex, '/dynamic/control_proxy.php Using QControlProxies to have Non-QControls Trigger Events');
+			self::AddCoreReferencedFile('/dynamic/qpanel.php', 'pnl_panel.tpl.php');
+			self::AddCoreReferencedFile('/other_controls/sample.php', '___QSampleControl.class.php');
+			self::AddCoreReferencedFile('/composite/intro.php', 'SampleComposite.class.php');
+			self::AddCoreReferencedFile('/multiple_qform/intro.php', array(
 				'ProjectViewPanel.class.php', 'ProjectViewPanel.tpl.php',
 				'ProjectEditPanel.class.php', 'ProjectEditPanel.tpl.php',
-				'PersonEditPanel.class.php', 'PersonEditPanel.tpl.php');
+				'PersonEditPanel.class.php', 'PersonEditPanel.tpl.php'));
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Advanced AJAX';
 			Examples::$Categories[$intIndex]['description'] = 'Advanced AJAX functionality like drag and drop, selection and cinematic effects';
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/renamer.php Renameable Labels');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/renamer_2.php Porting Code to the Client Side');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/move.php Moveable Controls (a.k.a. Drag and Drop)');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/scrolling.php Automatic Scrolling');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/move_target.php Move Handle: Specifying Which Controls to Move');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/drop_zone.php Move Handle: Defining Drop Zones');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/resize.php Resizing Block Controls');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/dialog_box.php Modal "Dialog Boxes"');
-			array_push(Examples::$Categories[$intIndex], '/advanced_ajax/jquery_effects.php JQuery Effects');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/renamer.php Renameable Labels');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/renamer_2.php Porting Code to the Client Side');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/move.php Moveable Controls (a.k.a. Drag and Drop)');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/scrolling.php Automatic Scrolling');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/move_target.php Move Handle: Specifying Which Controls to Move');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/drop_zone.php Move Handle: Defining Drop Zones');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/resize.php Resizing Block Controls');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/dialog_box.php Modal "Dialog Boxes"');
+			self::AddCoreExampleFile($intIndex, '/advanced_ajax/jquery_effects.php JQuery Effects');
 			
-			Examples::$AdditionalCode['/advanced_ajax/dialog_box.php'] = array('CalculatorWidget.class.php','CalculatorWidget.tpl.php');
+			Examples::$AdditionalCode[__EXAMPLES__ . '/advanced_ajax/dialog_box.php'] = array('CalculatorWidget.class.php','CalculatorWidget.tpl.php');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Other Advanced Controls';
 			Examples::$Categories[$intIndex]['description'] = 'A collection of examples for some of the more advanced/complex QControls';
-			array_push(Examples::$Categories[$intIndex], '/other_controls/fckeditor.php Rich Text Editing with QFCKEditor');
-			array_push(Examples::$Categories[$intIndex], '/image_label/intro.php Introduction to QImageLabel');
-//			array_push(Examples::$Categories[$intIndex], '/other_controls/autocomplete.php * Auto-complete Textbox');
-			array_push(Examples::$Categories[$intIndex], '/treenav/treenav.php Introduction to QTreeNav');
-			array_push(Examples::$Categories[$intIndex], '/other_controls/image.php Introduction to QImageControl');
-			array_push(Examples::$Categories[$intIndex], '/other_controls/datetime.php Date and DateTime-based QControls');
-			array_push(Examples::$Categories[$intIndex], '/other_controls/file_asset.php Combining Controls: A Better Way to Upload Files');
+			self::AddCoreExampleFile($intIndex, '/other_controls/fckeditor.php Rich Text Editing with QFCKEditor');
+			self::AddCoreExampleFile($intIndex, '/image_label/intro.php Introduction to QImageLabel');
+			self::AddCoreExampleFile($intIndex, '/treenav/treenav.php Introduction to QTreeNav');
+			self::AddCoreExampleFile($intIndex, '/other_controls/image.php Introduction to QImageControl');
+			self::AddCoreExampleFile($intIndex, '/other_controls/datetime.php Date and DateTime-based QControls');
+			self::AddCoreExampleFile($intIndex, '/other_controls/file_asset.php Combining Controls: A Better Way to Upload Files');
 		
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'MetaControls, Meta DataGrids, and the Drafts';
 			Examples::$Categories[$intIndex]['description'] = 'Combining the Code Generator with the QForm Library';
-			array_push(Examples::$Categories[$intIndex], '/other/formgen.php QForm and CodeGen, a Winning Combination to RAD');
-			array_push(Examples::$Categories[$intIndex], '/other/metacontrols.php * Introduction to MetaControls');
-			array_push(Examples::$Categories[$intIndex], '/other/meta_datagrids.php * Introduction to Meta DataGrids');
-			array_push(Examples::$Categories[$intIndex], '/other/form_drafts.php * Introduction to the Drafts');
+			self::AddCoreExampleFile($intIndex, '/other/formgen.php QForm and CodeGen, a Winning Combination to RAD');
+			self::AddCoreExampleFile($intIndex, '/other/metacontrols.php * Introduction to MetaControls');
+			self::AddCoreExampleFile($intIndex, '/other/meta_datagrids.php * Introduction to Meta DataGrids');
+			self::AddCoreExampleFile($intIndex, '/other/form_drafts.php * Introduction to the Drafts');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Beyond HTML';
 			Examples::$Categories[$intIndex]['description'] = 'Other libraries in QCubed, including support for Email and RSS';
-			array_push(Examples::$Categories[$intIndex], '/communication/email.php Introduction to QEmailServer');
-			array_push(Examples::$Categories[$intIndex], '/communication/rss.php * Introduction to QRssFeed');
-			array_push(Examples::$Categories[$intIndex], '/other/parsing.php Introduction to parsing with QLexer and QRegex');
-			array_push(Examples::$Categories[$intIndex], '/communication/crypto.php Introduction to QCryptography');
-			array_push(Examples::$Categories[$intIndex], '/communication/i18n.php Introduction to QI18n (Internationalization)');
-			array_push(Examples::$Categories[$intIndex], '/communication/soap.php * Introduction to QSoapService');
-			Examples::$AdditionalCode['/communication/rss.php'] = array('rss_feed.php');
-			Examples::$AdditionalCode['/communication/i18n.php'] = array('en.po', 'es.po');
-			Examples::$AdditionalCode['/communication/soap.php'] = array('example_service.php');
-			Examples::$AdditionalCode['/other/parsing.php'] = array('bb_parser.php');
+			self::AddCoreExampleFile($intIndex, '/communication/email.php Introduction to QEmailServer');
+			self::AddCoreExampleFile($intIndex, '/communication/rss.php * Introduction to QRssFeed');
+			self::AddCoreExampleFile($intIndex, '/other/parsing.php Introduction to parsing with QLexer and QRegex');
+			self::AddCoreExampleFile($intIndex, '/communication/crypto.php Introduction to QCryptography');
+			self::AddCoreExampleFile($intIndex, '/communication/i18n.php Introduction to QI18n (Internationalization)');
+			self::AddCoreExampleFile($intIndex, '/communication/soap.php * Introduction to QSoapService');
+			self::AddCoreReferencedFile('/communication/rss.php', 'rss_feed.php');
+			self::AddCoreReferencedFile('/communication/i18n.php', array('en.po', 'es.po'));
+			self::AddCoreReferencedFile('/communication/soap.php', 'example_service.php');
+			self::AddCoreReferencedFile('/other/parsing.php', 'bb_parser.php');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Other Tidbits';
 			Examples::$Categories[$intIndex]['description'] = 'Other random examples, samples and tutorials';
-			array_push(Examples::$Categories[$intIndex], '/other/optimistic_locking.php * Optimistic Locking and QForms');
-			array_push(Examples::$Categories[$intIndex], '/other/diff.php * QObjectDiff: What fields changed in my form?');
-			array_push(Examples::$Categories[$intIndex], '/other/attribute_overriding.php Attribute Overriding');
-			array_push(Examples::$Categories[$intIndex], '/other/alternate_template.php Specifying a Template Filepath');
-			array_push(Examples::$Categories[$intIndex], '/other/single.php Single File QForms');
-			array_push(Examples::$Categories[$intIndex], '/other/form_state.php Working with FormState Handlers');
-			array_push(Examples::$Categories[$intIndex], '/other/print.php PHP Print Command Shortcuts');
-			Examples::$AdditionalCode['/other/alternate_template.php'] = array('some_template_file.tpl.php');
-			
+			self::AddCoreExampleFile($intIndex, '/other/optimistic_locking.php * Optimistic Locking and QForms');
+			self::AddCoreExampleFile($intIndex, '/other/diff.php * QObjectDiff: What fields changed in my form?');
+			self::AddCoreExampleFile($intIndex, '/other/attribute_overriding.php Attribute Overriding');
+			self::AddCoreExampleFile($intIndex, '/other/alternate_template.php Specifying a Template Filepath');
+			self::AddCoreExampleFile($intIndex, '/other/single.php Single File QForms');
+			self::AddCoreExampleFile($intIndex, '/other/form_state.php Working with FormState Handlers');
+			self::AddCoreExampleFile($intIndex, '/other/print.php PHP Print Command Shortcuts');
+			self::AddCoreReferencedFile('/other/alternate_template.php', 'some_template_file.tpl.php');
+
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Plugins';
@@ -195,13 +194,24 @@
 		}
 		
 		public static function AddPluginExampleFile($strPluginName, $strExampleFileName) {
-			array_push(Examples::$PluginExamples, '/../../../../assets/plugins/' . $strPluginName . "/" . $strExampleFileName);
+			array_push(Examples::$PluginExamples, __PLUGIN_ASSETS__ . '/' . $strPluginName . "/" . $strExampleFileName);
+		}
+		
+		private static function AddCoreExampleFile($intIndex, $strExampleFileName) {
+			array_push(Examples::$Categories[$intIndex], __EXAMPLES__ . $strExampleFileName);
+		}
+		
+		private static function AddCoreReferencedFile($strExampleFileName, $mixReferencedFile) {
+			if (!is_array($mixReferencedFile)) {
+				$mixReferencedFile = array($mixReferencedFile);
+			}
+			Examples::$AdditionalCode[__EXAMPLES__ . $strExampleFileName] = $mixReferencedFile;
 		}
 
 		public static function GetCategoryId() {
 			$numCategories = count(Examples::$Categories);
 			$categories = Examples::$Categories;
-			for ($intCategoryIndex = 0; $intCategoryIndex <= count(Examples::$Categories); $intCategoryIndex++) {
+			for ($intCategoryIndex = 0; $intCategoryIndex < count(Examples::$Categories); $intCategoryIndex++) {
 				$objExampleCategory = Examples::$Categories[$intCategoryIndex];
 				
 				for ($intExampleIndex = 0; $intExampleIndex < count($objExampleCategory); $intExampleIndex++) {
@@ -234,11 +244,15 @@
 					if (array_key_exists($intExampleIndex, $objExampleCategory)) {
 						$strExample = $objExampleCategory[$intExampleIndex];
 						$intPosition = strpos($strExample, ' ');
-						$strScriptPath = substr($strExample, 0, $intPosition);
+						$strScriptPath = strtolower(substr($strExample, 0, $intPosition));
 						$strName = substr($strExample, $intPosition + 1);
+						
+						$scriptName = QApplicationBase::$ScriptName;
+						$portionOfScriptName = strtolower(substr($scriptName, strlen(QApplicationBase::$ScriptName) - strlen($strScriptPath)));
 
-						if (strtolower(substr(QApplicationBase::$ScriptName, strlen(QApplicationBase::$ScriptName) - strlen($strScriptPath))) == strtolower($strScriptPath))
-							return $intExampleIndex;
+						if ($portionOfScriptName == $strScriptPath) {
+							return $intExampleIndex;					
+						}
 					}
 				}
 			}
@@ -393,12 +407,12 @@
 									strpos($strScriptName, QApplication::$ScriptName) !== false) { // for plugins examples
 									$blnFound = true;
 								} else {
-									$strPrevious = sprintf('<b><a href="%s%s" class="headingLink">&lt;&lt; %s</a></b>',
-										__VIRTUAL_DIRECTORY__ . __EXAMPLES__, $strScriptName, $strDescription);
+									$strPrevious = sprintf('<b><a href="%s" class="headingLink">&lt;&lt; %s</a></b>',
+										$strScriptName, $strDescription);
 								}
 							} else if (!$strNext) {
-								$strNext = sprintf('<b><a href="%s%s" class="headingLink">%s &gt;&gt;</a></b>',
-									__VIRTUAL_DIRECTORY__ . __EXAMPLES__, $strScriptName, $strDescription);
+								$strNext = sprintf('<b><a href="%s" class="headingLink">%s &gt;&gt;</a></b>',
+									$strScriptName, $strDescription);
 							}
 						}
 					}

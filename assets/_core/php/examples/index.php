@@ -116,7 +116,7 @@
 				foreach ($objExampleCategory as $strKey => $strValue) {
 					if (is_numeric($strKey)) {
 						$intPosition = strpos($strValue, ' ');
-						printf('<li><a href="%s%s" class="bodyLink">%s</a></li>', __VIRTUAL_DIRECTORY__ . __EXAMPLES__, substr($strValue, 0, $intPosition), substr($strValue, $intPosition + 1));
+						printf('<li><a href="%s" class="bodyLink">%s</a></li>', substr($strValue, 0, $intPosition), substr($strValue, $intPosition + 1));
 					}
 				}
 				

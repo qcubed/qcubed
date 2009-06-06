@@ -41,13 +41,14 @@
 		$strFilename = $strScript;
 	} else if (substr($strScript, 0, 3) == '___') {
 		$strFilename = __QCUBED__ . '/controls/' . str_replace('___', '', str_replace('/', '', $strScript));
-	} else {
+	} else {		
 		$strFilename = substr($strReference, 1);
-		$strFilename = substr($strFilename, 0, strrpos($strReference, '/')) . '/' . $strScript;
+		$strFilename = __DOCROOT__ . '/' . substr($strFilename, 0, strrpos($strReference, '/')) . '/' . $strScript;
 	}
 
-	if (!file_exists($strFilename))
-		QApplication::CloseWindow();
+	if (!file_exists($strFilename)) {
+		throw new Exception("Example file does not exist: " . $strFilename);
+	}
 ?>
 	<h3>Source Listing for: <?php _p(str_replace('___', '', $strScript)); ?></h3>
 	

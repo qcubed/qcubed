@@ -16,10 +16,12 @@
 		filepath of the template file you wish to use, overriding the default "script_name.tpl.php".
 	</div>
 
-	<?php // We will override the ForeColor, FontBold and the FontSize.  Note how we can optionally
-		  // add quotes around our value. ?>
-	<p><?php $this->lblMessage->Render(); ?></p>
-	<p><?php $this->btnButton->Render(); ?></p>
+	<?php
+	// We will override some visual attributes of the controls here -
+	// the ForeColor, FontBold and the FontSize.
+	?>
+	<p><?php $this->lblMessage->Render('ForeColor=red', 'FontBold=true'); ?></p>
+	<p><?php $this->btnButton->Render('FontSize=20'); ?></p>
 
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>
