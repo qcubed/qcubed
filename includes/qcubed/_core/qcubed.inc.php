@@ -98,6 +98,8 @@
 	QApplicationBase::$ClassFile['qregex'] = __QCUBED_CORE__ . '/framework/QRegex.class.php';
 	QApplicationBase::$ClassFile['qobjectdiff'] = __QCUBED_CORE__ . '/framework/QObjectDiff.class.php';
 
+	QApplicationBase::$ClassFile['qinstallationvalidator'] = __QCUBED_CORE__ . '/framework/QInstallationValidator.class.php';
+	
 	QApplicationBase::$ClassFile['qplugin'] = __QCUBED_CORE__ . '/framework/QPluginInterface.class.php';
 	QApplicationBase::$ClassFile['qpluginconfigparser'] = __QCUBED_CORE__ . '/framework/QPluginConfigParser.class.php';
 	QApplicationBase::$ClassFile['qplugininstallerbase'] = __QCUBED_CORE__ . '/framework/QPluginInstallerBase.class.php';

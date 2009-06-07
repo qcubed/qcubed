@@ -14,13 +14,22 @@ if (sizeof($arrInstallationMessages) == 0) {
 		", a vibrant community is there to help you all the time. There's also a " .
 		"<a target='_blank' href='http://qcu.be/chat'>chat room</a> where you can get help right away. </p>";
 		
-	echo "<p>Here's what you need to do:</p><ol>";
-	
-	foreach ($arrInstallationMessages as $strMessage) {
-		echo "<li>" . $strMessage . "</li>";
-	}
-	
+	echo "<p>Here's what you need to do:</p><ol>";	
+	foreach ($arrInstallationMessages as $objResult) {
+		echo "<li>" . $objResult->strMessage . "</li>";
+	}	
 	echo "</ol>";
+	
+	// On non-windows only
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		echo "<p>Here are commands that can fix several of these issues:</p>";
+		echo "<pre style='background-color: #CCC'>";
+		foreach ($arrInstallationMessages as $objResult) {
+			echo $objResult->strCommandToFix . "<br>";
+		}
+		echo "</pre>";
+	}
+
 	echo "<input type='button' value=\"I'm done, continue\" /><br/><br/>" .
 		"<a href='start_page.php'>Ignore these warnings and continue</a> (not recommended)";
 }
@@ -70,7 +79,7 @@ function ValidateInstall() {
 	// initialize the full QCubed framework. 
 	require('../../../../includes/configuration/prepend.inc.php');
 	
-	$qappValidationResults = QApplication::ValidateInstallation();
+	$qappValidationResults = QInstallationValidator::Validate();
 	$result = array_merge($result, $qappValidationResults);
 	
 	return $result;

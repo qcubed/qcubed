@@ -742,9 +742,9 @@
 		 */
 		public static function VarDump() {
 			_p('<div style="background-color: #cccccc; padding: 5px;"><b>QCubed Settings</b><ul>', false);
-			$arrValidationErrors = self::ValidateInstallation();
-			foreach ($arrValidationErrors as $strError) {
-				printf('<li><font color="red"><b>WARNING:</b> %s</font></li>', $strError);
+			$arrValidationErrors = QInstallationValidator::Validate();
+			foreach ($arrValidationErrors as $objResult) {
+				printf('<li><font color="red"><b>WARNING:</b> %s</font></li>', $objResult->strMessage);
 			}
 
 			printf('<li>QCUBED_VERSION = "%s"</li>', QCUBED_VERSION);
@@ -777,111 +777,9 @@
 					
 			}
 			_p('</ul></div>', false);
-		}
-		
-		/**
-		 * Returns an array of strings.
-		 *
-		 * Each element is a string that represents an error that has been
-		 * found for this installation. If no errors were found, the array
-		 * is empty.
-		 */
-		public static function ValidateInstallation() {
-			$result = array();
-			
-			if (ini_get('magic_quotes_gpc') || ini_get('magic_quotes_runtime')) {
-				$result[] = "magic_quotes_gpc and magic_quotes_runtime " .
-					"need to be disabled\r\n";
-			}
-			
-			// Checks to make sure that everything about plugins is allright
-			if (!QFile::isWritable(QPluginInstaller::getMasterConfigFilePath())) {
-				$result[] = "Plugin master configuration file (" .
-					QPluginInstaller::getMasterConfigFilePath() . ") needs to be writable";
-			}
-
-			if (!QFile::isWritable(QPluginInstaller::getMasterExamplesFilePath())) {
-				$result[] = "Plugin example configuration file (" .
-					QPluginInstaller::getMasterExamplesFilePath() . ") needs to be writable";
-			}
-
-			if (!QFile::isWritable(QPluginInstaller::getMasterIncludeFilePath())) {
-				$result[] = "Plugin includes configuration file (" .
-					QPluginInstaller::getMasterIncludeFilePath() . ") needs to be writable";
-			}
-						
-			if (!QFolder::isWritable(__PLUGINS__)) {
-				$result[] = "Plugin includes installation directory (" . __PLUGINS__ . ") needs to be writable";
-			}
-
-			if (!QFolder::isWritable(__DOCROOT__ . __SUBDIRECTORY__ . __PLUGIN_ASSETS__)) {
-				$result[] = "Plugin assets installation directory (" .
-					__DOCROOT__ . __SUBDIRECTORY__ . __PLUGIN_ASSETS__ . ") needs to be writable";
-			}
-			
-			if (!QFolder::isWritable(__CACHE__)) {
-				$result[] = "Cache directory (" . __CACHE__ . ") needs to be writable";
-			}
-			
-			if (!function_exists('zip_open')) {
-				$result[] = "ZIP extension is not enabled on this installation of PHP. " .
-					"This extension is required to be able to install plugins. " .
-					"Recompile your installation of PHP with --enable-zip parameter.";
-			}
-			
-			// Checks to make sure that all codegen-related folders are good to go
-			if (!QFolder::isWritable(__DOCROOT__ . __FORM_DRAFTS__)) {
-				$result[] = "Form drafts directory (" . __DOCROOT__ . __SUBDIRECTORY__ . __FORM_DRAFTS__ . ") " .
-					"needs to be writable for the code generator to work";
-			}
-
-			if (!QFolder::isWritable(__DOCROOT__ . __PANEL_DRAFTS__)) {
-				$result[] = "Panel drafts directory (" . __DOCROOT__ . __SUBDIRECTORY__ . __PANEL_DRAFTS__ . ") " .
-					"needs to be writable for the code generator to work";
-			}		
-			
-			if (!QFolder::isWritable(__MODEL__)) {
-				$result[] = "Model destination directory (" . __MODEL__ . ") " .
-					"needs to be writable for the code generator to work";
-			}
-
-			if (!QFolder::isWritable(__MODEL_GEN__)) {
-				$result[] = "Generated model destination directory (" . __MODEL_GEN__ . ") " .
-					"needs to be writable for the code generator to work";
-			}
-
-			if (!QFolder::isWritable(__META_CONTROLS__)) {
-				$result[] = "MetaControls destination directory (" . __META_CONTROLS__ . ") " .
-					"needs to be writable for the code generator to work";
-			}
-			
-			if (!QFolder::isWritable(__META_CONTROLS_GEN__)) {
-				$result[] = "Generated MetaControls directory (" . __META_CONTROLS_GEN__ . ") " .
-					"needs to be writable for the code generator to work";
-			}
-			
-			// Database connection string checks
-			for ($i = 1; $i < 1 + sizeof(QApplication::$Database); $i++) {
-				$db = QApplication::$Database[$i];
-				set_error_handler("__database_check_error");
-				try {
-					$db->Connect();
-				} catch (Exception $e){
-					$result[] = "Fix database configuration settings in " .
-						__CONFIGURATION__ . "/configuration.inc.php for adapter #"
-						. $i . ": " . $e->getMessage();
-				}
-				restore_error_handler();
-			}
-			
-			return $result;
-		}
+		}		
 	}
 	
-	function __database_check_error($errno, $errstr, $errfile, $errline, $errcontext) {
-		throw new Exception(strip_tags($errstr));
-	}
-
 	class QRequestMode {
 		const Standard = 'Standard';
 		const Ajax = 'Ajax';
