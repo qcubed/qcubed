@@ -31,25 +31,36 @@ if (sizeof($arrInstallationMessages) == 0) {
  */
 function ValidateInstall() {
 	$result = array();
-	
-	if (!file_exists(__DOCROOT__ . __SUBDIRECTORY__ . $_SERVER['PHP_SELF'])) {
-		$errorMessage = "Set __DOCROOT__ and __SUBDIRECTORY__ constants in /includes/configuration/configuration.inc.php. Most likely values: ";
-				
-		$root = substr($_SERVER['SCRIPT_FILENAME'], 0, 0 - strlen($_SERVER['PHP_SELF']));
-		$part1 = substr($_SERVER['PHP_SELF'], 1, strpos($_SERVER['PHP_SELF'], "/", 1) - 1);
-		$part2 = substr($root, strrpos($root, "/") + 1);
-		
-		// Attempt to calculate what the constants should be, based on the current
-		// absolute script path (SCRIPT_FILENAME) and the web server root-relative
-		// path (PHP_SELF)
-		if ($part1 != $part2) {
-			$errorMessage .= '__DOCROOT__ = "' . $root . '", __SUBDIRECTORY__ = ""';
-		} else {
-			$errorMessage .= '__DOCROOT__ = "' . substr($root, 0, 0 - strlen($part2) - 1) .
-				'", __SUBDIRECTORY__ = "/' . $part2 . '"';
-		}
-		$result[] = $errorMessage;
+	$docrootOnlyPath = __DOCROOT__ . $_SERVER['PHP_SELF'];
+	$docrootWithSubdirPath = __DOCROOT__ . __SUBDIRECTORY__ . __DEVTOOLS__ . substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/"));	
 
+	$root = substr($_SERVER['SCRIPT_FILENAME'], 0, 0 - strlen($_SERVER['PHP_SELF']));
+	$part1 = substr($_SERVER['PHP_SELF'], 1, strpos($_SERVER['PHP_SELF'], "/", 1) - 1);
+	$part2 = substr($root, strrpos($root, "/") + 1);
+	
+/*
+	// Debugging stuff - there until this code stabilizes across multiple platforms. 
+	
+	print("DOCROOT = " . __DOCROOT__ . "<br>");
+	print("SUBDIR = " . __SUBDIRECTORY__ . "<br>");
+	print("DEVTOOLS = " . __DEVTOOLS__ . "<br>"); 
+		
+	print("PHP_SELF = " . $_SERVER['PHP_SELF'] . "<br>");
+	print("SCRIPT_FILENAME = " . $_SERVER['SCRIPT_FILENAME'] . "<br>");
+
+	print("root = " . $root . "<br>");
+	print("part1 = " . $part1 . "<br>");
+	print("part2 = " . $part2 . "<br>");
+*/	
+	
+	if (!file_exists($docrootOnlyPath)) {
+		$result[] = 'Set the __DOCROOT__ constant in /includes/configuration/configuration.inc.php. Most likely value: "' . $root . '"';
+		return $result;
+	}
+
+	if (!file_exists($docrootWithSubdirPath)) {
+		$result[] = 'Set the __SUBDIRECTORY__ constant in /includes/configuration/configuration.inc.php. Most likely value: "' . $part1 . '"';
+				
 		// At this point, we cannot proceed with any more checks - basic config
 		// is not set up. Just exit.
 		return $result;
