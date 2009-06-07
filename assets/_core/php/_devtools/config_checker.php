@@ -21,7 +21,7 @@ if (sizeof($arrInstallationMessages) == 0) {
 	echo "</ol>";
 	
 	// On non-windows only
-	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+	if (!strtoupper(substr(PHP_OS, 0, 3) == 'WIN')) {
 		echo "<p>Here are commands that can fix several of these issues:</p>";
 		echo "<pre style='background-color: #CCC'>";
 		foreach ($arrInstallationMessages as $objResult) {
