@@ -22,6 +22,6 @@
 
 	To view one of the generated <b>Form Drafts</b>, please click here to
 	view the <b><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__); ?>/person_list.php"
-		class="bodyLink">Person List</a></b> page.
+		class="bodyLink">Person List</a></b> page (available only if you are running examples locally).
 
 <?php require('../includes/footer.inc.php'); ?>
