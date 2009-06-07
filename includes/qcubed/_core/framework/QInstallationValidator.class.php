@@ -76,7 +76,8 @@ abstract class QInstallationValidator {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "ZIP extension is not enabled on this installation of PHP. " .
 				"This extension is required to be able to install plugins. " .
-				"Recompile your installation of PHP with --enable-zip parameter.";
+				"To make it work on Linux/MacOS, recompile your installation of PHP with --enable-zip parameter. " .
+				"For Apache on Windows, enable extension=php_zip.dll in php.ini.";
 			$result[] = $obj;
 		}
 		
