@@ -1,12 +1,16 @@
 <?php
 
 class QPlugin {
-	public $strName 			= null;
-	public $strDescription 		= null;
-	public $strVersion 			= null;
-	public $strPlatformVersion 	= null;
-	public $strAuthorName 		= null;
-	public $strAuthorEmail 		= null;
+	/**
+	 * Properties of the plugin that can and should be set
+	 * when instantiating a new plugin.
+	 */
+	public $strName = null;
+	public $strDescription = null;
+	public $strVersion = null;
+	public $strPlatformVersion = null;
+	public $strAuthorName = null;
+	public $strAuthorEmail = null;
 		
 	public $objAllFilesArray = array(); // array of QPluginFile objects
 	public $objIncludesArray = array(); // array of QPluginIncludedClass objects

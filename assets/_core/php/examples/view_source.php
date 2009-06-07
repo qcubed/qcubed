@@ -39,8 +39,10 @@
 		$strFilename = 'includes/' . $strScript;
 	else if (($strScript == 'mysql_innodb.sql') || ($strScript == 'sql_server.sql')) {
 		$strFilename = $strScript;
-	} else if (substr($strScript, 0, 3) == '___') {
-		$strFilename = __QCUBED__ . '/controls/' . str_replace('___', '', str_replace('/', '', $strScript));
+	} else if (substr($strScript, 0, 16) == '__CORE_CONTROL__') {
+		$strFilename = __QCUBED__ . '/controls/' . str_replace('__CORE_CONTROL__', '', str_replace('/', '', $strScript));
+	} else if (substr($strScript, 0, 18) == '__CORE_FRAMEWORK__') {
+		$strFilename = __QCUBED_CORE__ . '/framework/' . str_replace('__CORE_FRAMEWORK__', '', str_replace('/', '', $strScript));
 	} else {		
 		$strFilename = substr($strReference, 1);
 		$strFilename = __DOCROOT__ . '/' . substr($strFilename, 0, strrpos($strReference, '/')) . '/' . $strScript;
@@ -50,7 +52,7 @@
 		throw new Exception("Example file does not exist: " . $strFilename);
 	}
 ?>
-	<h3>Source Listing for: <?php _p(str_replace('___', '', $strScript)); ?></h3>
+	<h3>Source Listing for: <?php _p(preg_replace('/__.*__/', '', $strScript)); ?></h3>
 	
 	<div class="code" style="padding: 10px;" nowrap="nowrap">
 		<?php highlight_file($strFilename); ?>

@@ -113,7 +113,7 @@
 			self::AddCoreExampleFile($intIndex, '/multiple_qform/intro.php "Multiple QForms" Functionality via Custom QPanels');
 			self::AddCoreExampleFile($intIndex, '/dynamic/control_proxy.php Using QControlProxies to have Non-QControls Trigger Events');
 			self::AddCoreReferencedFile('/dynamic/qpanel.php', 'pnl_panel.tpl.php');
-			self::AddCoreReferencedFile('/other_controls/sample.php', '___QSampleControl.class.php');
+			self::AddCoreReferencedFile('/other_controls/sample.php', '__CORE_CONTROL__QSampleControl.class.php');
 			self::AddCoreReferencedFile('/composite/intro.php', 'SampleComposite.class.php');
 			self::AddCoreReferencedFile('/multiple_qform/intro.php', array(
 				'ProjectViewPanel.class.php', 'ProjectViewPanel.tpl.php',
@@ -188,6 +188,11 @@
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Plugins';
 			Examples::$Categories[$intIndex]['description'] = 'Extensions to QCubed functionality created by the community';
+			self::AddCoreExampleFile($intIndex, '/plugins/about.php Plugin Ecosystem: Introduction');
+			self::AddCoreExampleFile($intIndex, '/plugins/components.php Writing your own plugins, Part 1: components of a plugin');
+			self::AddCoreExampleFile($intIndex, '/plugins/packaging.php Writing your own plugins, Part 2: packaging a plugin');
+			self::AddCoreReferencedFile('/plugins/components.php', '__CORE_FRAMEWORK__QPluginInterface.class.php');
+
 			foreach (Examples::$PluginExamples as $example) {
 				array_push(Examples::$Categories[$intIndex], $example);
 			}
@@ -316,17 +321,19 @@
 			if ($strCurrentScript == 'header.inc.php') {
 				$strToReturn = '<span class="headingLeftGray">header.inc.php</span>';
 				$blnIsScript = true;
-			} else
+			} else {
 				$strToReturn = sprintf('<a href="%s/../header.inc.php" class="headingLink">header.inc.php</a>', QApplication::$RequestUri);
+			}
 
 			$strToReturn .= ' &nbsp; | &nbsp; ';
 
 			if ($strCurrentScript == 'footer.inc.php') {
 				$strToReturn .= '<span class="headingLeftGray">footer.inc.php</span>';
 				$blnIsScript = true;
-			} else
+			} else {
 				$strToReturn .= sprintf('<a href="%s/../footer.inc.php" class="headingLink">footer.inc.php</a>', QApplication::$RequestUri);
-
+			}
+			
 			$strToReturn .= ' &nbsp; | &nbsp; ';
 
 			if ($strCurrentScript == 'examples.css') {
@@ -355,9 +362,10 @@
 				if ($strCurrentScript == $strScriptname) {
 					$strToReturn .= sprintf('<span class="headingLeftGray">%s</span>', $strScriptname);
 					$blnIsScript = true;
-				} else
+				} else {
 					$strToReturn .= sprintf('<a href="%s/../%s" class="headingLink">%s</a>', QApplication::$RequestUri, $strScriptname, $strScriptname);
-
+				}
+				
 				$intCount++;
 			}
 
@@ -370,10 +378,11 @@
 		
 					$strScriptname = $strCode;
 					if ($strCurrentScript == $strScriptname) {
-						$strToReturn .= sprintf('<span class="headingLeftGray">%s</span>', str_replace('___', '', $strScriptname));
+						$strToReturn .= sprintf('<span class="headingLeftGray">%s</span>', preg_replace('/__.*__/', '', $strScriptname));
 						$blnIsScript = true;
-					} else
-						$strToReturn .= sprintf('<a href="%s/../%s" class="headingLink">%s</a>', QApplication::$RequestUri, $strScriptname, str_replace('___', '', $strScriptname));
+					} else {
+						$strToReturn .= sprintf('<a href="%s/../%s" class="headingLink">%s</a>', QApplication::$RequestUri, $strScriptname, preg_replace('/__.*__/', '', $strScriptname));
+					}
 
 					$intCount++;
 				}

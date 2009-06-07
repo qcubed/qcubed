@@ -105,6 +105,7 @@ class PluginEditForm extends QForm {
 	private function btnUninstall_Create() {
 		$this->btnUninstall = new QButton($this);
 		$this->btnUninstall->Text = "Uninstall (delete) this Plugin";
+		$this->btnUninstall->AddAction(new QClickEvent(), new QConfirmAction('Are you SURE you want to uninstall this plugin?'));
 		$this->btnUninstall->AddAction(new QClickEvent(), new QAjaxAction('btnUninstall_click'));
 		
 		if ($this->strPluginType != self::TYPE_VIEWING_ALREADY_INSTALLED) {

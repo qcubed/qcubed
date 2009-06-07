@@ -3,6 +3,8 @@
 abstract class QPluginInstallerBase {
 	private static $strLastError = "";
 	
+	const ONLINE_PLUGIN_REPOSITORY = "http://trac.qcu.be/projects/qcubed/wiki/plugins";
+	
 	const PLUGIN_EXTRACTION_DIR = "/tmp/plugin.tmp/";
 	/**
 	 * @var string Name of the the file defines plugin settings in XML format.

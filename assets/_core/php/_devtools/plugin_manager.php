@@ -72,7 +72,10 @@
 		
 		private function dlgUpload_Create() {
 			$this->dlgUpload = new QFileAssetDialog($this, 'dlgUpload_done');
-			$this->dlgUpload->lblMessage->Text = "Please upload a plugin .zip file";
+			$this->dlgUpload->lblMessage->Text = "Please upload a plugin .zip file. <br /><br />" . 
+				"You can get the latest plugins from the " .
+				"<a target='_blank' href='" . QPluginInstaller::ONLINE_PLUGIN_REPOSITORY .
+				"'>online repository</a>.";
 			$this->dlgUpload->btnUpload->Text = "Upload";
 			$this->dlgUpload->btnCancel->Text = "Cancel";
 			$this->dlgUpload->SetCustomStyle("background-color", "rgb(238, 255, 221)");
