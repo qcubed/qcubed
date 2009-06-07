@@ -67,7 +67,7 @@ function ValidateInstall() {
 	print("part2 = " . $part2 . "<br>");
 */	
 	
-	if (file_exists($docrootOnlyPath)) {
+	if (!file_exists($docrootOnlyPath)) {
 		$obj = new stdClass();
 		$obj->strMessage = 'Set the __DOCROOT__ constant in ' .
 			$root . '/includes/configuration/configuration.inc.php. ' .
