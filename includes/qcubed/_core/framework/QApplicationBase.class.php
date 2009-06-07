@@ -796,35 +796,35 @@
 			
 			if (!QFile::isWritable(QPluginInstaller::getMasterConfigFilePath())) {
 				$result[] = "Plugin master configuration file (" .
-					QPluginInstaller::getMasterConfigFilePath() . ") is not writable";
+					QPluginInstaller::getMasterConfigFilePath() . ") needs to be writable";
 			}
 
 			if (!QFile::isWritable(QPluginInstaller::getMasterExamplesFilePath())) {
 				$result[] = "Plugin example configuration file (" .
-					QPluginInstaller::getMasterExamplesFilePath() . ") is not writable";
+					QPluginInstaller::getMasterExamplesFilePath() . ") needs to be writable";
 			}
 
 			if (!QFile::isWritable(QPluginInstaller::getMasterIncludeFilePath())) {
 				$result[] = "Plugin includes configuration file (" .
-					QPluginInstaller::getMasterIncludeFilePath() . ") is not writable";
+					QPluginInstaller::getMasterIncludeFilePath() . ") needs to be writable";
 			}
 
 			if (!QFile::isWritable(QPluginInstaller::getMasterIncludeFilePath())) {
 				$result[] = "Plugin includes configuration file (" .
-					QPluginInstaller::getMasterIncludeFilePath() . ") is not writable";
+					QPluginInstaller::getMasterIncludeFilePath() . ") needs to be writable";
 			}
 			
 			if (!QFolder::isWritable(__CACHE__ . "/")) {
-				$result[] = "Cache directory (" . __CACHE__ . ") is not writable";
+				$result[] = "Cache directory (" . __CACHE__ . ") needs to be writable";
 			}
 			
 			if (!QFolder::isWritable(__PLUGINS__)) {
-				$result[] = "Plugin includes installation directory (" . __PLUGINS__ . ") is not writable";
+				$result[] = "Plugin includes installation directory (" . __PLUGINS__ . ") needs to be writable";
 			}
 
 			if (!QFolder::isWritable(__DOCROOT__ . __SUBDIRECTORY__ . __PLUGIN_ASSETS__)) {
 				$result[] = "Plugin assets installation directory (" .
-					__DOCROOT__ . __SUBDIRECTORY__ . __PLUGIN_ASSETS__ . ") is not writable";
+					__DOCROOT__ . __SUBDIRECTORY__ . __PLUGIN_ASSETS__ . ") needs to be writable";
 			}
 			
 			if (!function_exists('zip_open')) {
