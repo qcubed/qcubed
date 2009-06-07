@@ -20,14 +20,18 @@ if (sizeof($arrInstallationMessages) == 0) {
 	}	
 	echo "</ol>";
 	
-	// On non-windows only
-	if (!strtoupper(substr(PHP_OS, 0, 3) == 'WIN')) {
-		echo "<p>Here are commands that can fix several of these issues:</p>";
-		echo "<pre style='background-color: #CCC'>";
-		foreach ($arrInstallationMessages as $objResult) {
-			echo $objResult->strCommandToFix . "<br>";
+	// Output commands that can help fix these issues
+	$commands = "";
+	foreach ($arrInstallationMessages as $objResult) {
+		if (strlen($objResult->strCommandToFix) > 0) {
+			$commands .= $objResult->strCommandToFix . "<br />";
 		}
-		echo "</pre>";
+	}
+	
+	// On non-windows only, and only if there's at least 1 command to show
+	if (!strtoupper(substr(PHP_OS, 0, 3) == 'WIN') && strlen($commands) > 0) {
+		echo "<p>Here are commands that can fix several of these issues:</p>";
+		echo "<pre style='background-color: #CCC'>" . $commands . "</pre>";
 	}
 
 	echo "<input type='button' value=\"I'm done, continue\" onClick='window.location.reload()' /><br/><br/>" .
@@ -63,9 +67,11 @@ function ValidateInstall() {
 	print("part2 = " . $part2 . "<br>");
 */	
 	
-	if (!file_exists($docrootOnlyPath)) {
+	if (file_exists($docrootOnlyPath)) {
 		$obj = new stdClass();
-		$obj->strMessage = 'Set the __DOCROOT__ constant in /includes/configuration/configuration.inc.php. Most likely value: "' . $root . '"';
+		$obj->strMessage = 'Set the __DOCROOT__ constant in ' .
+			$root . '/includes/configuration/configuration.inc.php. ' .
+			'Most likely value: "' . $root . '"';
 		$result[] = $obj;
 
 		// At this point, we cannot proceed with any more checks - basic config
@@ -75,7 +81,9 @@ function ValidateInstall() {
 
 	if (!file_exists($docrootWithSubdirPath)) {
 		$obj = new stdClass();
-		$obj->strMessage = 'Set the __SUBDIRECTORY__ constant in /includes/configuration/configuration.inc.php. Most likely value: "/' . $part1 . '"';
+		$obj->strMessage = 'Set the __SUBDIRECTORY__ constant in ' .
+			$root . '/includes/configuration/configuration.inc.php. ' .
+			'Most likely value: "/' . $part1 . '"';
 		$result[] = $obj;
 				
 		// At this point, we cannot proceed with any more checks - basic config
