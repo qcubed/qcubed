@@ -32,7 +32,7 @@ if (sizeof($arrInstallationMessages) == 0) {
 function ValidateInstall() {
 	$result = array();
 	$docrootOnlyPath = __DOCROOT__ . $_SERVER['PHP_SELF'];
-	$docrootWithSubdirPath = __DOCROOT__ . __SUBDIRECTORY__ . __DEVTOOLS__ . substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/"));	
+	$docrootWithSubdirPath = __DOCROOT__ . __DEVTOOLS__ . substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/"));	
 
 	$root = substr($_SERVER['SCRIPT_FILENAME'], 0, 0 - strlen($_SERVER['PHP_SELF']));
 	$part1 = substr($_SERVER['PHP_SELF'], 1, strpos($_SERVER['PHP_SELF'], "/", 1) - 1);
@@ -59,7 +59,7 @@ function ValidateInstall() {
 	}
 
 	if (!file_exists($docrootWithSubdirPath)) {
-		$result[] = 'Set the __SUBDIRECTORY__ constant in /includes/configuration/configuration.inc.php. Most likely value: "' . $part1 . '"';
+		$result[] = 'Set the __SUBDIRECTORY__ constant in /includes/configuration/configuration.inc.php. Most likely value: "/' . $part1 . '"';
 				
 		// At this point, we cannot proceed with any more checks - basic config
 		// is not set up. Just exit.
