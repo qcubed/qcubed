@@ -794,6 +794,7 @@
 					"need to be disabled\r\n";
 			}
 			
+			// Checks to make sure that everything about plugins is allright
 			if (!QFile::isWritable(QPluginInstaller::getMasterConfigFilePath())) {
 				$result[] = "Plugin master configuration file (" .
 					QPluginInstaller::getMasterConfigFilePath() . ") needs to be writable";
@@ -808,16 +809,7 @@
 				$result[] = "Plugin includes configuration file (" .
 					QPluginInstaller::getMasterIncludeFilePath() . ") needs to be writable";
 			}
-
-			if (!QFile::isWritable(QPluginInstaller::getMasterIncludeFilePath())) {
-				$result[] = "Plugin includes configuration file (" .
-					QPluginInstaller::getMasterIncludeFilePath() . ") needs to be writable";
-			}
-			
-			if (!QFolder::isWritable(__CACHE__ . "/")) {
-				$result[] = "Cache directory (" . __CACHE__ . ") needs to be writable";
-			}
-			
+						
 			if (!QFolder::isWritable(__PLUGINS__)) {
 				$result[] = "Plugin includes installation directory (" . __PLUGINS__ . ") needs to be writable";
 			}
@@ -827,14 +819,47 @@
 					__DOCROOT__ . __SUBDIRECTORY__ . __PLUGIN_ASSETS__ . ") needs to be writable";
 			}
 			
+			if (!QFolder::isWritable(__CACHE__)) {
+				$result[] = "Cache directory (" . __CACHE__ . ") needs to be writable";
+			}
+			
 			if (!function_exists('zip_open')) {
 				$result[] = "ZIP extension is not enabled on this installation of PHP. " .
 					"This extension is required to be able to install plugins. " .
 					"Recompile your installation of PHP with --enable-zip parameter.";
 			}
 			
-			// TODO: add checks for codegen folders
-									
+			// Checks to make sure that all codegen-related folders are good to go
+			if (!QFolder::isWritable(__DOCROOT__ . __SUBDIRECTORY__ . __FORM_DRAFTS__)) {
+				$result[] = "Form drafts directory (" . __DOCROOT__ . __SUBDIRECTORY__ . __FORM_DRAFTS__ . ") " .
+					"needs to be writable for the code generator to work";
+			}
+
+			if (!QFolder::isWritable(__DOCROOT__ . __SUBDIRECTORY__ . __PANEL_DRAFTS__)) {
+				$result[] = "Panel drafts directory (" . __DOCROOT__ . __SUBDIRECTORY__ . __PANEL_DRAFTS__ . ") " .
+					"needs to be writable for the code generator to work";
+			}		
+			
+			if (!QFolder::isWritable(__MODEL__)) {
+				$result[] = "Model destination directory (" . __MODEL__ . ") " .
+					"needs to be writable for the code generator to work";
+			}
+
+			if (!QFolder::isWritable(__MODEL_GEN__)) {
+				$result[] = "Generated model destination directory (" . __MODEL_GEN__ . ") " .
+					"needs to be writable for the code generator to work";
+			}
+
+			if (!QFolder::isWritable(__META_CONTROLS__)) {
+				$result[] = "MetaControls destination directory (" . __MODEL_GEN__ . ") " .
+					"needs to be writable for the code generator to work";
+			}
+			
+			if (!QFolder::isWritable(__META_CONTROLS_GEN__)) {
+				$result[] = "Generated MetaControls directory (" . __MODEL_GEN__ . ") " .
+					"needs to be writable for the code generator to work";
+			}			
+			
 			return $result;
 		}
 	}
