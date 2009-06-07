@@ -101,7 +101,7 @@ abstract class QInstallationValidator {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "Model destination directory (" . __MODEL__ . ") " .
 				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __MODEL__;
+			$obj->strCommandToFix = "chmod 777 " . __MODEL__;
 			$result[] = $obj;
 		}
 
@@ -109,7 +109,7 @@ abstract class QInstallationValidator {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "Generated model destination directory (" . __MODEL_GEN__ . ") " .
 				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __MODEL_GEN__;
+			$obj->strCommandToFix = "chmod 777 " . __MODEL_GEN__;
 			$result[] = $obj;
 		}
 
@@ -117,7 +117,7 @@ abstract class QInstallationValidator {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "MetaControls destination directory (" . __META_CONTROLS__ . ") " .
 				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __META_CONTROLS__;
+			$obj->strCommandToFix = "chmod 777 " . __META_CONTROLS__;
 			$result[] = $obj;
 		}
 		
@@ -125,7 +125,7 @@ abstract class QInstallationValidator {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "Generated MetaControls directory (" . __META_CONTROLS_GEN__ . ") " .
 				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __META_CONTROLS_GEN__;
+			$obj->strCommandToFix = "chmod 777 " . __META_CONTROLS_GEN__;
 			$result[] = $obj;
 		}
 		
