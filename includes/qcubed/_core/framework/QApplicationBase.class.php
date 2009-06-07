@@ -764,9 +764,17 @@
 			printf('<li>QApplication::$ServerAddress = "%s"</li>', QApplication::$ServerAddress);
 
 			if (QApplication::$Database) foreach (QApplication::$Database as $intKey => $objObject) {
-				printf('<li>QApplication::$Database[%s] = %s</li>', 
-					$intKey,
-					var_export(unserialize(constant('DB_CONNECTION_' . $intKey)), true));
+				printf('<li>QApplication::$Database[%s] settings:</li>', $intKey);
+				_p("<ul>", false);				
+				foreach (unserialize(constant('DB_CONNECTION_' . $intKey)) as $key => $value) {
+					if ($key == "password") {
+						$value = "hidden for security purposes";
+					}
+					
+					_p("<li>" . $key. " = " . var_export($value, true). "</li>", false);
+				}
+				_p("</ul>", false);
+					
 			}
 			_p('</ul></div>', false);
 		}

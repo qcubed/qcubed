@@ -41,7 +41,7 @@
 
 		<?php _t('
 		Finally, due to the heavy processing of PO parsing, the results of the PO parsing are cached
-		using QCache, and cached files are stored in <b>' . __INCLUDES__ . '/tmp/cache/i18n</b>.'); ?>
+		using QCache, and cached files are stored in <b>' . __CACHE__ . '/i18n</b>.'); ?>
 	</div>
 
 	<h2><?php _t('Internationalization Example'); ?></h2>
