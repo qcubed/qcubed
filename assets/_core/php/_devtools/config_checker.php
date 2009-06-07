@@ -73,8 +73,6 @@ function ValidateInstall() {
 	$qappValidationResults = QApplication::ValidateInstallation();
 	$result = array_merge($result, $qappValidationResults);
 	
-	// TODO: add database connection string checks
-	
 	return $result;
 }
 ?>

@@ -858,10 +858,28 @@
 			if (!QFolder::isWritable(__META_CONTROLS_GEN__)) {
 				$result[] = "Generated MetaControls directory (" . __MODEL_GEN__ . ") " .
 					"needs to be writable for the code generator to work";
-			}			
+			}
+			
+			// Database connection string checks
+			for ($i = 1; $i < 1 + sizeof(QApplication::$Database); $i++) {
+				$db = QApplication::$Database[$i];
+				set_error_handler("__database_check_error");
+				try {
+					$db->Connect();
+				} catch (Exception $e){
+					$result[] = "Fix database configuration settings in " .
+						__CONFIGURATION__ . "/configuration.inc.php for adapter #"
+						. $i . ": " . $e->getMessage();
+				}
+				restore_error_handler();
+			}
 			
 			return $result;
 		}
+	}
+	
+	function __database_check_error($errno, $errstr, $errfile, $errline, $errcontext) {
+		throw new Exception(strip_tags($errstr));
 	}
 
 	class QRequestMode {
