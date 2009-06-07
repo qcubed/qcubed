@@ -19,7 +19,7 @@
 			 * Of course, you can also feel free to remove QApplication::CheckRemoteAdmin() call on any of these pages,
 			 * which will completely ignore ALLOW_REMOTE_ADMIN altogether.
 			 */
-			define('ALLOW_REMOTE_ADMIN', false);
+			define('ALLOW_REMOTE_ADMIN', true);
 
 
 
@@ -58,9 +58,9 @@
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs/qcubed');
+			define ('__DOCROOT__', '/opt/lampp/htdocs');
 			define ('__VIRTUAL_DIRECTORY__', '');
-			define ('__SUBDIRECTORY__', '');
+			define ('__SUBDIRECTORY__', '/qcubed');
 			
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
@@ -171,8 +171,8 @@
 				'server' => 'localhost',
 				'port' => null,
 				'database' => 'qcubed',
-				'username' => 'root',
-				'password' => '',
+				'username' => 'qcubed',
+				'password' => 'qcubed',
 				'profiling' => false)));
 
 			// Additional Database Connection Strings can be defined here (e.g. for connection #2, #3, #4, #5, etc.)
