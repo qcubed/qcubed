@@ -139,9 +139,11 @@ abstract class QInstallationValidator {
 			try {
 				$db->Connect();
 			} catch (Exception $e) {
-				$result[] = "Fix database configuration settings in " .
+				$obj = new QInstallationValidationResult();
+				$obj->strMessage = "Fix database configuration settings in " .
 					__CONFIGURATION__ . "/configuration.inc.php for adapter #"
 					. $i . ": " . $e->getMessage();
+				$result[] = $obj;
 			}
 			restore_error_handler();
 		}

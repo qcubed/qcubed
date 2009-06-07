@@ -17,7 +17,7 @@ if (sizeof($arrInstallationMessages) == 0) {
 	echo "<p>Here's what you need to do:</p><ol>";	
 	foreach ($arrInstallationMessages as $objResult) {
 		echo "<li>" . $objResult->strMessage . "</li>";
-	}	
+	}
 	echo "</ol>";
 	
 	// Output commands that can help fix these issues
@@ -70,7 +70,7 @@ function ValidateInstall() {
 	if (!file_exists($docrootOnlyPath)) {
 		$obj = new stdClass();
 		$obj->strMessage = 'Set the __DOCROOT__ constant in ' .
-			$root . '/includes/configuration/configuration.inc.php. ' .
+			'/includes/configuration/configuration.inc.php. ' .
 			'Most likely value: "' . $root . '"';
 		$result[] = $obj;
 
@@ -82,7 +82,7 @@ function ValidateInstall() {
 	if (!file_exists($docrootWithSubdirPath)) {
 		$obj = new stdClass();
 		$obj->strMessage = 'Set the __SUBDIRECTORY__ constant in ' .
-			$root . '/includes/configuration/configuration.inc.php. ' .
+			'/includes/configuration/configuration.inc.php. ' .
 			'Most likely value: "/' . $part1 . '"';
 		$result[] = $obj;
 				
