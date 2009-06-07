@@ -18,6 +18,40 @@ class QFile {
 			throw new Exception("Unable to write file: ");
 		}
 		fclose($fileHandle);
+	}
+	
+	/**
+	 * Will work despite of Windows ACLs bug
+	 *
+	 * NOTE: use a trailing slash for folders!!!
+	 *
+	 * See http://bugs.php.net/bug.php?id=27609 AND http://bugs.php.net/bug.php?id=30931
+	 * Source: <http://www.php.net/is_writable#73596>
+	 *
+	 */
+	public static function isWritable($path) {
+		// recursively return a temporary file path
+		if($path{strlen($path) - 1} == '/') {
+			return self::isWritable($path.uniqid(mt_rand()).'.tmp');
+		} elseif(is_dir($path)) {
+			return self::isWritable($path.'/'.uniqid(mt_rand()).'.tmp');
+		}
+		
+		// check file for read/write capabilities
+		$rm = file_exists($path);
+		$handle = @fopen($path, 'a');
+		
+		if($handle === false) {
+			return false;
+		}
+		
+		fclose($handle);
+		
+		if(!$rm){
+			unlink($path);
+		}
+		
+		return true;
 	}	
 }
 

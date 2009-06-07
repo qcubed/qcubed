@@ -742,8 +742,10 @@
 		 */
 		public static function VarDump() {
 			_p('<div style="background-color: #cccccc; padding: 5px;"><b>QCubed Settings</b><ul>', false);
-			if (ini_get('magic_quotes_gpc') || ini_get('magic_quotes_runtime'))
-				printf('<li><font color="red"><b>WARNING:</b> magic_quotes_gpc and magic_quotes_runtime need to be disabled</font>');
+			$arrValidationErrors = self::ValidateInstallation();
+			foreach ($arrValidationErrors as $strError) {
+				printf('<li><font color="red"><b>WARNING:</b> %s</font></li>', $strError);
+			}
 
 			printf('<li>QCUBED_VERSION = "%s"</li>', QCUBED_VERSION);
 			printf('<li>__SUBDIRECTORY__ = "%s"</li>', __SUBDIRECTORY__);
@@ -767,6 +769,65 @@
 					var_export(unserialize(constant('DB_CONNECTION_' . $intKey)), true));
 			}
 			_p('</ul></div>', false);
+		}
+		
+		/**
+		 * Returns an array of strings.
+		 *
+		 * Each element is a string that represents an error that has been
+		 * found for this installation. If no errors were found, the array
+		 * is empty.
+		 */
+		public static function ValidateInstallation() {
+			$result = array();
+			
+			if (ini_get('magic_quotes_gpc') || ini_get('magic_quotes_runtime')) {
+				$result[] = "magic_quotes_gpc and magic_quotes_runtime " .
+					"need to be disabled\r\n";
+			}
+			
+			if (!QFile::isWritable(QPluginInstaller::getMasterConfigFilePath())) {
+				$result[] = "Plugin master configuration file (" .
+					QPluginInstaller::getMasterConfigFilePath() . ") is not writable";
+			}
+
+			if (!QFile::isWritable(QPluginInstaller::getMasterExamplesFilePath())) {
+				$result[] = "Plugin example configuration file (" .
+					QPluginInstaller::getMasterExamplesFilePath() . ") is not writable";
+			}
+
+			if (!QFile::isWritable(QPluginInstaller::getMasterIncludeFilePath())) {
+				$result[] = "Plugin includes configuration file (" .
+					QPluginInstaller::getMasterIncludeFilePath() . ") is not writable";
+			}
+
+			if (!QFile::isWritable(QPluginInstaller::getMasterIncludeFilePath())) {
+				$result[] = "Plugin includes configuration file (" .
+					QPluginInstaller::getMasterIncludeFilePath() . ") is not writable";
+			}
+			
+			if (!QFolder::isWritable(__CACHE__ . "/")) {
+				$result[] = "Cache directory (" . __CACHE__ . ") is not writable";
+			}
+			
+			if (!QFolder::isWritable(__PLUGINS__)) {
+				$result[] = "Plugin includes installation directory (" . __PLUGINS__ . ") is not writable";
+			}
+
+			if (!QFolder::isWritable(__DOCROOT__ . __SUBDIRECTORY__ . __PLUGIN_ASSETS__)) {
+				$result[] = "Plugin assets installation directory (" .
+					__DOCROOT__ . __SUBDIRECTORY__ . __PLUGIN_ASSETS__ . ") is not writable";
+			}
+			
+			if (!function_exists('zip_open')) {
+				$result[] = "ZIP extension is not enabled on this installation of PHP. " .
+					"This extension is required to be able to install plugins. " .
+					"Recompile your installation of PHP with --enable-zip parameter.";
+			}
+			
+			// TODO: add checks for codegen folders
+									
+			return $result;
 		}
 	}
 

@@ -38,33 +38,13 @@ class QFolder {
 		return $blnReturn;
 	}
 	
-	/**
-	 * Allows for deletion of non-empty directories - takes care of
-	 * recursion appropriately.
-	 *
-	 * @return int number of deleted files
-	 */
-	public static function DeleteFolder($strPath) {
-		if (!is_dir($strPath)) {
-			unlink($strPath);
-			return 1;
+	public static function isWritable($strPath) {
+		if ($strPath[strlen($strPath) - 1] != "/") {
+			$strPath .= "/";
 		}
-
-		$d = dir($strPath);
-		$count = 0;
-		while($entry = $d->read()) { 
-			if ($entry!= "." && $entry != "..") { 
-				if (is_dir($strPath)) {
-					$count += QFolder::DeleteFolder($strPath . "/" . $entry);
-				} 
-			} 
-		} 
-
-		$d->close(); 
-		rmdir($strPath);
 		
-		return $count;
-	}	
+		return QFile::isWritable($strPath);
+	}
 }
 
 ?>

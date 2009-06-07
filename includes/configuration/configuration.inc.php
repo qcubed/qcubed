@@ -91,6 +91,8 @@
 			// Also includes the _core subdirectory for the QCubed Core
 			define ('__QCUBED__', __INCLUDES__ . '/qcubed');
 			define ('__PLUGINS__', __QCUBED__ . '/plugins');
+			
+			define ('__CACHE__', __INCLUDES__ . '/tmp/cache');
 
 			// The QCubed Core
 			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');

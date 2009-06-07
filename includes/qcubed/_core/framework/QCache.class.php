@@ -1,6 +1,6 @@
 <?php
 	class QCache extends QBaseClass {
-		public static $CachePath;
+		public static $CachePath = __CACHE__;
 
 		protected $strNamespace;
 		protected $strKey;
@@ -146,6 +146,4 @@
 			return sprintf('%s/%s', QCache::$CachePath, $this->strNamespace);
 		}
 	}
-
-	QCache::$CachePath = __INCLUDES__ . '/tmp/cache';
 ?>

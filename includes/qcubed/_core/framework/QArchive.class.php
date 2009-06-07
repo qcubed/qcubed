@@ -10,6 +10,9 @@ class QArchive {
 	 * @return      boolean True if successful
 	 */
 	public static function extractZip($archive, $destination) {
+		if (!function_exists('zip_open')) {
+			throw new Exception("ZIP extension is not enabled on this installation of PHP. Recompile your installation of PHP with --enable-zip parameter.");
+		}
 		if ($zip = zip_open($archive)) {
 			if ($zip) {
 				// Create the destination folder
