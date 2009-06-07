@@ -35,8 +35,9 @@ if (sizeof($arrInstallationMessages) == 0) {
 }
 
 /**
- * Returns an array of installation instructions, or if all instructions /
- * installation requirements were already satisfied, returns an empty array.
+ * Returns an array of QInstallationValidationResult objects, or if all
+ * instructions / installation requirements were already satisfied, returns
+ * an empty array.
  */
 function ValidateInstall() {
 	$result = array();
@@ -63,12 +64,19 @@ function ValidateInstall() {
 */	
 	
 	if (!file_exists($docrootOnlyPath)) {
-		$result[] = 'Set the __DOCROOT__ constant in /includes/configuration/configuration.inc.php. Most likely value: "' . $root . '"';
+		$obj = new stdClass();
+		$obj->strMessage = 'Set the __DOCROOT__ constant in /includes/configuration/configuration.inc.php. Most likely value: "' . $root . '"';
+		$result[] = $obj;
+
+		// At this point, we cannot proceed with any more checks - basic config
+		// is not set up. Just exit.
 		return $result;
 	}
 
 	if (!file_exists($docrootWithSubdirPath)) {
-		$result[] = 'Set the __SUBDIRECTORY__ constant in /includes/configuration/configuration.inc.php. Most likely value: "/' . $part1 . '"';
+		$obj = new stdClass();
+		$obj->strMessage = 'Set the __SUBDIRECTORY__ constant in /includes/configuration/configuration.inc.php. Most likely value: "/' . $part1 . '"';
+		$result[] = $obj;
 				
 		// At this point, we cannot proceed with any more checks - basic config
 		// is not set up. Just exit.
