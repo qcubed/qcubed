@@ -30,7 +30,7 @@ if (sizeof($arrInstallationMessages) == 0) {
 		echo "</pre>";
 	}
 
-	echo "<input type='button' value=\"I'm done, continue\" /><br/><br/>" .
+	echo "<input type='button' value=\"I'm done, continue\" onClick='window.location.reload()' /><br/><br/>" .
 		"<a href='start_page.php'>Ignore these warnings and continue</a> (not recommended)";
 }
 
