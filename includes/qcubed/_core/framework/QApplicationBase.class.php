@@ -830,12 +830,12 @@
 			}
 			
 			// Checks to make sure that all codegen-related folders are good to go
-			if (!QFolder::isWritable(__DOCROOT__ . __SUBDIRECTORY__ . __FORM_DRAFTS__)) {
+			if (!QFolder::isWritable(__DOCROOT__ . __FORM_DRAFTS__)) {
 				$result[] = "Form drafts directory (" . __DOCROOT__ . __SUBDIRECTORY__ . __FORM_DRAFTS__ . ") " .
 					"needs to be writable for the code generator to work";
 			}
 
-			if (!QFolder::isWritable(__DOCROOT__ . __SUBDIRECTORY__ . __PANEL_DRAFTS__)) {
+			if (!QFolder::isWritable(__DOCROOT__ . __PANEL_DRAFTS__)) {
 				$result[] = "Panel drafts directory (" . __DOCROOT__ . __SUBDIRECTORY__ . __PANEL_DRAFTS__ . ") " .
 					"needs to be writable for the code generator to work";
 			}		
@@ -851,12 +851,12 @@
 			}
 
 			if (!QFolder::isWritable(__META_CONTROLS__)) {
-				$result[] = "MetaControls destination directory (" . __MODEL_GEN__ . ") " .
+				$result[] = "MetaControls destination directory (" . __META_CONTROLS__ . ") " .
 					"needs to be writable for the code generator to work";
 			}
 			
 			if (!QFolder::isWritable(__META_CONTROLS_GEN__)) {
-				$result[] = "Generated MetaControls directory (" . __MODEL_GEN__ . ") " .
+				$result[] = "Generated MetaControls directory (" . __META_CONTROLS_GEN__ . ") " .
 					"needs to be writable for the code generator to work";
 			}
 			
