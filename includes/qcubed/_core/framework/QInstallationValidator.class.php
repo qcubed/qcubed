@@ -16,6 +16,14 @@ abstract class QInstallationValidator {
 			$result[] = $obj;
 		}
 		
+		if (!QFolder::isWritable(__INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Plugin temporary extraction directory (" .
+				__INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR;
+			$result[] = $obj;
+		}
+		
 		// Checks to make sure that everything about plugins is allright
 		if (!QFile::isWritable(QPluginInstaller::getMasterConfigFilePath())) {
 			$obj = new QInstallationValidationResult();
@@ -53,7 +61,7 @@ abstract class QInstallationValidator {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "Plugin assets installation directory (" .
 				__DOCROOT__ . __PLUGIN_ASSETS__ . ") needs to be writable";
-			$obj->strCommandToFix = "chmod 777 " . __PLUGIN_ASSETS__;
+			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __PLUGIN_ASSETS__;
 			$result[] = $obj;
 		}
 		
