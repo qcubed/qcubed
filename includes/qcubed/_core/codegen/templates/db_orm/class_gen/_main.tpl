@@ -18,7 +18,7 @@
 	 * @subpackage GeneratedDataObjects
 <%@ property_comments('objTable'); %>
 	 */
-	class <%= $objTable->ClassName %>Gen extends QBaseClass {
+	class <%= $objTable->ClassName %>Gen extends QBaseClass implements IteratorAggregate {
 
 		<%@ protected_member_variables('objTable'); %>
 
@@ -83,7 +83,7 @@
 
 		<%@ soap_methods('objTable'); %>
 
-
+		<%@ json_methods('objTable'); %>
 
 <% if ($this->blnManualQuerySupport) { %>
 		<%@ manual_query_methods('objTable'); %>
