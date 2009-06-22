@@ -13,11 +13,14 @@ class QArchive {
 		if (!function_exists('zip_open')) {
 			throw new Exception("ZIP extension is not enabled on this installation of PHP. Recompile your installation of PHP with --enable-zip parameter.");
 		}
+		
+		echo "Extracting archive to " . $destination. "<br>";
+		
 		if ($zip = zip_open($archive)) {
 			if ($zip) {
 				// Create the destination folder
 				if (!mkdir($destination)) {
-					self::$strLastError = "Unable to create extraction destination folder";
+					self::$strLastError = "Unable to create extraction destination folder " . $destination;
 					return false;
 				}
 
@@ -32,10 +35,11 @@ class QArchive {
 							$folderStack = split("/", zip_entry_name($file));
 							if (sizeof($folderStack) > 1) {
 								for ($i = 0; $i < sizeof($folderStack) - 1; $i++) {
-									$item = $folderStack[$i];
+									$arraySubsection = array_slice($folderStack, 0, $i + 1);
+									$item = implode("/", $arraySubsection);
 									
 									if (!in_array($item, $createdFolders)) {
-//										echo "- " . $destination . $item . "<br>";
+//										echo "- Creating folder: " . $destination . $item . "<br>";
 										$createdFolders[] = $item;
 										mkdir($destination . $item);
 									}

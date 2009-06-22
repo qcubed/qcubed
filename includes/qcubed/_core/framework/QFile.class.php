@@ -14,8 +14,12 @@ class QFile {
 	
 	public static function writeFile($strFilePath, $strContents) {
 		$fileHandle = fopen($strFilePath, "w");
-		if (fwrite($fileHandle, $strContents, strlen($strContents)) == false) {
-			throw new Exception("Unable to write file: ");
+		if (!$fileHandle) {
+			throw new Exception("Cannot open file for writing: " . $strFilePath);
+		}
+		
+		if (fwrite($fileHandle, $strContents, strlen($strContents)) === false) {
+			throw new Exception("Unable to write file: " . $strFilePath);
 		}
 		fclose($fileHandle);
 	}
