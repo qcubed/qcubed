@@ -117,8 +117,6 @@
 	QApplicationBase::$ClassFile['qcalendarpopup'] = __QCUBED_CORE__ . '/base_controls/QCalendarPopup.class.php';
 	QApplicationBase::$ClassFile['qdatetimepicker'] = __QCUBED_CORE__ . '/base_controls/QDateTimePicker.class.php';
 	QApplicationBase::$ClassFile['qdatetimetextbox'] = __QCUBED_CORE__ . '/base_controls/QDateTimeTextBox.class.php';
-	
-	QApplicationBase::$ClassFile['qfckeditor'] = __QCUBED_CORE__ . '/base_controls/QFCKEditor.class.php';
 
 	QApplicationBase::$ClassFile['qcheckbox'] = __QCUBED_CORE__ . '/base_controls/QCheckBox.class.php';
 	QApplicationBase::$ClassFile['qfilecontrol'] = __QCUBED_CORE__ . '/base_controls/QFileControl.class.php';

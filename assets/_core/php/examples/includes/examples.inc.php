@@ -140,7 +140,6 @@
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Other Advanced Controls';
 			Examples::$Categories[$intIndex]['description'] = 'A collection of examples for some of the more advanced/complex QControls';
-			self::AddCoreExampleFile($intIndex, '/other_controls/fckeditor.php Rich Text Editing with QFCKEditor');
 			self::AddCoreExampleFile($intIndex, '/image_label/intro.php Introduction to QImageLabel');
 			self::AddCoreExampleFile($intIndex, '/treenav/treenav.php Introduction to QTreeNav');
 			self::AddCoreExampleFile($intIndex, '/other_controls/image.php Introduction to QImageControl');
