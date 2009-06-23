@@ -1,16 +1,18 @@
 <?php
 
 abstract class QPluginInstaller extends QPluginInstallerBase {
-	public static function processUploadedPluginArchive(QFileControl $fileAsset) {
-		if (substr($fileAsset->FileName, -3) != "zip") {
-			self::$strLastError = "Invalid uploaded plugin file type: " . $fileAsset->Type;
-			return null;
-		}
+	protected static $strLastError;
 		
+	public static function getLastError() {
+		return self::$strLastError;
+	}
+	
+	public static function installPluginFromZip($strFileName) {
 		$entropy = substr(md5(uniqid()), 0, 6);
 		$expandedDir = __INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $entropy . '/';
-		$extractionResult = QArchive::extractZip($fileAsset->File, $expandedDir);
+		$extractionResult = QArchive::extractZip($strFileName, $expandedDir);
 		if (!$extractionResult) {
+			self::$strLastError = "Could not extract the plugin zip archive";
 			return null;
 		}
 		
@@ -19,13 +21,14 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 		// file. 
 		if (file_exists($expandedDir . self::PLUGIN_CONFIG_GENERATION_FILE)) {
 			// we'll need this constant to know where to save the XML config file
-			define ("__TEMP_PLUGIN_EXPANSION_DIR__", $expandedDir);
+			global $__PLUGIN_FILES_DIR__;
+			$__PLUGIN_FILES_DIR__= $expandedDir;
 			// execute the configuration file from the plugin - it will create a plugin
 			// config file in the XML format which we will process
 			include($expandedDir . self::PLUGIN_CONFIG_GENERATION_FILE);
 		}
 		
-		return $entropy;
+		return $entropy;		
 	}
 	
 	private static function getExpandedPath($strExtractedFolderName) {
@@ -50,10 +53,9 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 	
 		// When installation is done, clean up
 		$strStatus .= self::cleanupExtractedFiles($strExtractedFolderName);
-		
+
 		$strStatus .= "\r\nInstallation completed successfully.";
-						
-		echo nl2br($strStatus);
+
 		return $strStatus;
 	}
 	
@@ -86,7 +88,7 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 
 		$strSectionToAppend = self::getBeginMarker($objPlugin->strName);
 		foreach ($objPlugin->objIncludesArray as $file) {
-			$strStatus .= "Include reference to class " . $file->strClassname . " in file " . $file->strFilename . "\r\n";
+			$strStatus .= "Included reference to class " . $file->strClassname . " in file " . $file->strFilename . "\r\n";
 			$strSectionToAppend .= "QApplicationBase::\$ClassFile['" . strtolower($file->strClassname) .
 					   "'] = __PLUGINS__ . '/" . $objPlugin->strName . "/" . $file->strFilename . "';\r\n";
 		}
@@ -104,7 +106,7 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 
 		$strSectionToAppend = self::getBeginMarker($objPlugin->strName);
 		foreach ($objPlugin->objExamplesArray as $file) {
-			$strStatus .= "Include reference to example '" . $file->strDescription . "' in file " . $file->strFilename . "\r\n";
+			$strStatus .= "Included reference to example '" . $file->strDescription . "' in file " . $file->strFilename . "\r\n";
 			$strSectionToAppend .= "Examples::AddPluginExampleFile('" . $objPlugin->strName . "', '" .
 				$file->strFilename . " " . $file->strDescription . "');\r\n";
 		}

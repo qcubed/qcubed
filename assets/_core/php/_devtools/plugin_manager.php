@@ -85,7 +85,13 @@
 		public function dlgUpload_done($strFormId, $strControlId, $strParameter) {
 			$this->dlgUpload->HideDialogBox();
 			
-			$pluginFolder = QPluginInstaller::processUploadedPluginArchive($this->dlgUpload->flcFileAsset);
+			$originalFileName = $this->dlgUpload->flcFileAsset->FileName;
+			if (strtolower(substr($originalFileName, -3)) != "zip") {
+				QApplication::DisplayAlert("Invalid uploaded plugin file - only ZIP allowed: " . $originalFileName);
+				return;
+			}
+
+			$pluginFolder = QPluginInstaller::installPluginFromZip($this->dlgUpload->flcFileAsset->File);
 			
 			if ($pluginFolder == null) {
 				QApplication::DisplayAlert(QPluginInstaller::getLastError());

@@ -14,7 +14,7 @@ class QArchive {
 			throw new Exception("ZIP extension is not enabled on this installation of PHP. Recompile your installation of PHP with --enable-zip parameter.");
 		}
 		
-		echo "Extracting archive to " . $destination. "<br>";
+//		echo "Extracting archive " . $archive . " to " . $destination. "<br>";
 		
 		if ($zip = zip_open($archive)) {
 			if ($zip) {

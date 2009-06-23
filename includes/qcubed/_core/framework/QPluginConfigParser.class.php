@@ -37,7 +37,7 @@ class QPluginConfigParser {
 	}
 	
 	private function parsePluginXmlSubsection($xmlPlugin) {
-		$objPlugin = new QPlugin();
+		$objPlugin = new QPlugin(false);
 		$objPlugin->strName 			= (string)$xmlPlugin->name;
 		$objPlugin->strDescription 		= (string)$xmlPlugin->description;
 		$objPlugin->strVersion 			= (string)$xmlPlugin->version;

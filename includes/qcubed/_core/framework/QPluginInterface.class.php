@@ -16,7 +16,16 @@ class QPlugin {
 	public $objIncludesArray = array(); // array of QPluginIncludedClass objects
 	public $objExamplesArray = array(); // array of QPluginExample objects
 	
-	private $validationError = null;
+	private $strValidationError = null;
+	
+	public $strTemporaryExpandedPath = null;
+	
+	public function __construct($blnInstalling = true) {
+		if ($blnInstalling) {
+			global $__PLUGIN_FILES_DIR__;
+			$this->strTemporaryExpandedPath = $__PLUGIN_FILES_DIR__;
+		}
+	}
 	
 	public function addComponents($arrComponents) {
 		if (is_array($arrComponents) && sizeof($arrComponents) > 0) {
@@ -25,12 +34,25 @@ class QPlugin {
 					throw new Exception("The following item is not a QPluginComponent: " . var_export($item, true));
 				}
 				
+				// Make the component aware of its hosting QPlugin
+				$item->registerPlugin($this);
+				
 				if (!$item->validate()) {
-					throw new Exception("The following plugin component does not validate: " . var_export($item, true));
+					throw new Exception("The following plugin component does not validate: " . $item->__toString() . ". Error: " . $item->strValidationError);
 				}
 				
 				if ($item instanceof QPluginFile) {
-					$this->addFile($item);
+					$fullPath = $this->strTemporaryExpandedPath . $item->strFilename;
+					if (is_dir($fullPath)) {
+						$folderContents = QFolder::listFilesInFolder($fullPath);
+						foreach ($folderContents as $file) {
+							$itemClass = get_class($item);
+							$newComponent = new $itemClass($item->strFilename . "/" . $file);
+							$this->addFile($newComponent);
+						}
+					} else {
+						$this->addFile($item);
+					}
 				} else if ($item instanceof QPluginIncludedClass) {
 					$this->addIncludedClass($item);
 				} else if ($item instanceof QPluginExample) {
@@ -90,7 +112,7 @@ class QPlugin {
 		}
 		
 		$pluginConfigXml = $this->toXml();		
-		$savePath = __TEMP_PLUGIN_EXPANSION_DIR__ . QPluginInstaller::PLUGIN_CONFIG_FILE;
+		$savePath = $this->strTemporaryExpandedPath . QPluginInstaller::PLUGIN_CONFIG_FILE;
 		QFile::writeFile($savePath, $pluginConfigXml);
 	}
 	
@@ -141,6 +163,14 @@ abstract class QPluginComponent {
 	 * Returns true or false depending on if the class information is valid.
 	 */
 	public abstract function validate();
+	
+	public $strValidationError;
+	
+	protected $objPlugin;
+	
+	public function registerPlugin(QPlugin $objPlugin) {
+		$this->objPlugin = $objPlugin;
+	}
 }
 
 abstract class QPluginFile extends QPluginComponent {
@@ -152,10 +182,19 @@ abstract class QPluginFile extends QPluginComponent {
 	
 	public function validate() {
 		if ($this->strFilename == null) {
+			$this->strValidationError = "Filename is not set";
 			return false;
 		}
 		
+		if (!file_exists($this->objPlugin->strTemporaryExpandedPath . $this->strFilename)) {
+			$this->strValidationError = "File does not exist";
+			return false;				
+		}
 		return true;
+	}
+	
+	public function __toString() {
+		return "QPluginFile " . $this->strFilename;
 	}
 	
 	/**
@@ -203,10 +242,15 @@ class QPluginExample extends QPluginComponent {
 
 	public function validate() {
 		if ($this->strFilename == null || $this->strDescription == null) {
+			$this->strValidationError = "Filename or Description are not set";
 			return false;
 		}
 		
 		return true;
+	}
+	
+	public function __toString() {
+		return "QPluginExample " . $this->strFilename;
 	}
 }
 
@@ -221,10 +265,15 @@ class QPluginIncludedClass extends QPluginComponent {
 
 	public function validate() {
 		if ($this->strFilename == null || $this->strClassname == null) {
+			$this->strValidationError = "Filename or Classname are not set";
 			return false;
 		}
 		
 		return true;
+	}
+	
+	public function __toString() {
+		return "QPluginIncludedClass " . $this->strClassname;
 	}
 }
 
