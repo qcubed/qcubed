@@ -11,7 +11,7 @@
 		itself.<br/><br/>
 
 		So what you do is you specify the <b>QQ OrderBy Clause</b> that you would want run
-		for each column.  Then you pass the this clause to your class's <b>LoadAll</b> or <b>LoadArrayArrayByXXX</b> 
+		for each column.  Then you pass the this clause to your class's <b>LoadAll</b> or <b>LoadArrayByXXX</b> 
 		method as one of the optional <b>QQ Clause</b> parameters.  Note that all Qcubed code generated <b>LoadAll</b> and <b>LoadArrayByXXX</b>
 		methods take in an optional <b>$objOptionalClauses</b> parameter which conveniently uses the clause returned by the <b>QDataGrid</b>'s
 		<b>OrderByClause</b> method.<br/><br/>
