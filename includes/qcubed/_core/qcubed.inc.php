@@ -96,7 +96,6 @@
 	QApplicationBase::$ClassFile['qarchive'] = __QCUBED_CORE__ . '/framework/QArchive.class.php';
 	QApplicationBase::$ClassFile['qlexer'] = __QCUBED_CORE__ . '/framework/QLexer.class.php';
 	QApplicationBase::$ClassFile['qregex'] = __QCUBED_CORE__ . '/framework/QRegex.class.php';
-	QApplicationBase::$ClassFile['qobjectdiff'] = __QCUBED_CORE__ . '/framework/QObjectDiff.class.php';
 
 	QApplicationBase::$ClassFile['qinstallationvalidator'] = __QCUBED_CORE__ . '/framework/QInstallationValidator.class.php';
 	
