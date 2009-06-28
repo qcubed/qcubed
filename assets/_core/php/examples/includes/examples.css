@@ -20,7 +20,7 @@
 
 	.instructions { background-color: #ffeedd; padding: 20px; width: 800px; margin-left: 20px; margin-bottom: 20px; line-height: 20px; height: 300px; overflow: auto;}
 	.instructions_main { background-color: #ffeedd; padding: 20px; width: 800px; margin-left: 20px; margin-bottom: 20px; line-height: 20px; }
-	.instruction_title { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 22px; font-weight: bold; color: #774422; margin-bottom: 20px;}
+	.instruction_title { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 22px; font-weight: bold; color: #774422; margin-bottom: 20px; margin-top: 0;}
 
 	.warning { color: #aa0000; }
 	
