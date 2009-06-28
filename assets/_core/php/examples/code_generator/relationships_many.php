@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Using Association Tables</div>
+		<h1 class="instruction_title">Using Association Tables</h1>
 		Qcubed also supports handling many-to-many relationships.  Typically, many-to-many relationships are
 		mapped in the database using an <b>Association Table</b> (sometimes also called a <b>Mapping</b>
 		or a <b>Join Table</b>).  It is basically a two-column table where both
@@ -13,7 +13,7 @@
 		table to be used/analyzed as an <b>Association Table</b>, associating two objects together in a many-to-many
 		relationship.
 
-		With the <b>Association Table</b> in place, Qcubed will generate five methods each for the two classes
+		With the <b>Association Table</b> in place, QCubed will generate five methods each for the two classes
 		involved in this many-to-many relationship.  In our example, we created a <b>team_member_project_assn</b>
 		table to represent a many-to-many relationship between <b>Person</b> and <b>Project</b>.<br/><br/>
 

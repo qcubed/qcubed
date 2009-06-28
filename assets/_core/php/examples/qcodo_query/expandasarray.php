@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">ExpandAsArray: Multiple Related Tables in One Swift Query</div>		
+		<h1 class="instruction_title">ExpandAsArray: Multiple Related Tables in One Swift Query</h1>
 		You've certainly had to deal with some sort of hierarchical data in your
 		database. Let's say you have a set of <b>Persons</b>; each person can be
 		a manager for a <b>Project</b>. Each <b>Project</b> has one or more milestones.

@@ -2,15 +2,15 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Generated MetaControl Objects</div>
+		<h1 class="instruction_title">Generated MetaControl Objects</h1>
 		As you build out more and more database-driven <b>QForms</b> and <b>QPanels</b>, you'll notice
 		that you still may spend quite a bit of wasted time coding the same type of Control
-		definition, setup and data binding procedures over and over again.  This becomes
+		definition, setup and data binding procedures over and over again. This becomes
 		especially tedious when you are talking about modifying objects with a large
 		number of fields.<br/><br/>
 		
-		Utilizing QControls and the code generator, Qcubed can generate <b>MetaControl</b> classes for each
-		of your ORM classes.  <b>MetaControls</b> are essentially classes which contains functionality
+		Utilizing QControls and the code generator, QCubed can generate <b>MetaControl</b> classes for each
+		of your ORM classes. <b>MetaControls</b> are essentially classes which contains functionality
 		to simplify the <b>QControl</b> creation/definition, setup and data binding process for you.<br/><br/>
 		
 		Essentially, for each field in a class, you can have the <b>MetaControl</b> return for you a data bound

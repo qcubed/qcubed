@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Understanding the QForm Process Flow</div>
+		<h1 class="instruction_title">Understanding the QForm Process Flow</h1>
 
 		First of all, don't adjust your screen. =)<br/><br/>
 

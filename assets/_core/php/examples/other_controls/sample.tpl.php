@@ -6,14 +6,14 @@
 	</style>
 
 	<div class="instructions">
-		<div class="instruction_title">Creating Your Own Control</div>
+		<h1 class="instruction_title">Creating Your Own Control</h1>
 
 		Many developers may want to create their own, custom QControl to perform a very specific interaction.
 		Alternatively, developers may wish to utilize exernal JavaScript libraries like Dojo, Yahoo! YUI, etc.
 		to create their own set of QControls with a polished "Web 2.0" shine.
 		<br/><br/>
 
-		Whatever the case may be, Qcubed makes it easy to implement custom controls, complete with javascript
+		Whatever the case may be, QCubed makes it easy to implement custom controls, complete with javascript
 		input and output hooks, within the QControl architecture.
 		<br/><br/>
 

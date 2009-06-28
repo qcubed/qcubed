@@ -2,8 +2,8 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">QCubed Query Clauses</div>
-		All <b>QCubed Query</b> method calls take in an optional set of <b>QQ Clauses</b>.  <b>QQ Clauses</b> allow you
+		<h1 class="instruction_title">QCubed Query Clauses</h1>
+		All <b>QCubed Query</b> method calls take in an optional set of <b>QQ Clauses</b>. <b>QQ Clauses</b> allow you
 		alter the result set by performing the equivalents of most of your major SQL clauses, including JOIN, ORDER BY,
 		GROUP BY and DISTINCT.<br/><br/>
 

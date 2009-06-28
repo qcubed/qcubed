@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Parsing using QLexer and QRegex</div>
+		<h1 class="instruction_title">Parsing using QLexer and QRegex</h1>
 		If you ever need to parse user input, or configuration files, <b>QLexer</b> is a
 		QCubed component that may save you some time. QLexer allows you to create
 		a simple parser using regular expressions.<br /><br />

@@ -16,7 +16,7 @@
 			// Note that for the HTML, you can specify the PHP interpreter to kick in to interpret objects, methods,
 			// call functions, etc.  Simply use "<?= =>" tags to specify what needs to be interpreted.  Note that
 			// the use of the <?= short tag is *NOT* a function of PHP short tag support, but more a standard
-			// delimeter that Qcubed happens to use to specify when PHP interpretation should begin and end.
+			// delimeter that QCubed happens to use to specify when PHP interpretation should begin and end.
 			
 			// Note that you can use Attribute Overriding here define styles for specific columns (e.g. the last name
 			// is always in bold)

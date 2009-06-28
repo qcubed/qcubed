@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Saving and Deleting Objects</div>
+		<h1 class="instruction_title">Saving and Deleting Objects</h1>
 		The C, U and D in CRUD is handled by the code generated <b>Save</b> and <b>Delete</b> methods in
 		every object.<br/><br/>
 		

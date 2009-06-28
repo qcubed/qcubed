@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Print Command Shortcuts</div>
+		<h1 class="instruction_title">Print Command Shortcuts</h1>
 
 		Developers will tend to use the following PHP <b>Print</b> methods fairly often
 		in the template include files:
@@ -15,7 +15,7 @@
 		<li>print(QApplication::LocalizeCurrency($fltSomething)) (not yet implemented)</li>
 		</ul>
 
-		Because of this, Qcubed has defined several global PHP functions which act as shortcuts
+		Because of this, QCubed has defined several global PHP functions which act as shortcuts
 		to these specific commands:
 		<ul>
 		<li>_p($strSomeString, $blnHtmlEntities = true) - will print the passed in string.  By default, it will also perform <b>QApplication::HtmlEntities</b> first.  You can override this by setting $blnHtmlEntities = false.</li>
@@ -25,7 +25,7 @@
 		<li>_c($fltSomething)</li>
 		</ul>
 
-		Please note: these are simply meant to be shortcuts to actual Qcubed functional
+		Please note: these are simply meant to be shortcuts to actual QCubed functional
 		calls to make your templates a little easier to read.  By no means do you have to
 		use them.  Your templates can just as easily make the fully-named method/function calls.
 	</div>

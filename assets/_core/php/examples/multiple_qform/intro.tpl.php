@@ -7,12 +7,12 @@
 	<?php $this->RenderBegin(); ?>
 	
 	<div class="instructions">
-		<div class="instruction_title">Handling "Multiple QForms" on the Same Page</div>
+		<h1 class="instruction_title">Handling "Multiple QForms" on the Same Page</h1>
 		Qcubed only allows each front-end "web page" to only have a maximum of one <b>QForm</b> class per page.  Because of
-		the many issues of managing and maintaining formstate across multiple <b>QForms</b>, Qcubed simply does not allow
+		the many issues of managing and maintaining formstate across multiple <b>QForms</b>, QCubed simply does not allow
 		for the ability to have multiple <b>QForms</b> per page.<br/><br/>
 		
-		However, as the development of a Qcubed application matures, developers may find themselves wishing for this ability:
+		However, as the development of a QCubed application matures, developers may find themselves wishing for this ability:
 		<ul><li>As <b>QForms</b> are initially developed for simple, single-step tasks (e.g. "Post a Comment", "Edit a Project's Name", etc.),
 		developers may want to be able to combine these simpler QForms together onto a single, larger, more cohesive QForm,
 		utilizing AJAX to provide for a more "Single-Page Web Application" type of architecture.</li>

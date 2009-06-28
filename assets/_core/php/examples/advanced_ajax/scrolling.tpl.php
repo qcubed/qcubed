@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Automatic Scrolling</div>
+		<h1 class="instruction_title">Automatic Scrolling</h1>
 
 		This is just a simple example to show how moveable controls and handles
 		will also automatically perform scrolling tasks on the browser window as

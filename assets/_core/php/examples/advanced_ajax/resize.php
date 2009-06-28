@@ -24,7 +24,7 @@
 			$this->pnlLeftTop->Left = 0;
 			$this->pnlLeftTop->Width = 195;
 			$this->pnlLeftTop->Height = 95;
-			$this->pnlLeftTop->Text = 'The Qcubed Development Framework is an open-source PHP 5 framework that focuses ' .
+			$this->pnlLeftTop->Text = 'The QCubed Development Framework is an open-source PHP 5 framework that focuses ' .
 				'on freeing developers from unnecessary tedious, mundane coding.<br/><br/>The result is that developers ' .
 				'can do what they do best: focus on implementing functionality and usability, improving performance and ' .
 				'ensuring security.';
@@ -55,7 +55,7 @@
 				'the application. These changes would inherently ripple out through to the rest of the code base. But ' .
 				'instead of these changes being a burden to the development team, Code Generation can be implemented ' .
 				'to make those changes occur with little to no interruption.<br/><br/>By analyzing the internal ' .
-				'structure of your data model, Qcubed can generate not only the object code (the Object Relational ' .
+				'structure of your data model, QCubed can generate not only the object code (the Object Relational ' .
 				'Model), but also basic HTML pages to create, restore, update and delete those objects. This gives ' .
 				'developers a great starting point to begin prototyping, even before a single line of code has been ' .
 				'manually written. It allows the developer to focus more on writing business logic, implementing ' .

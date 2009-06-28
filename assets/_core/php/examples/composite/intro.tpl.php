@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 	
 	<div class="instructions">
-		<div class="instruction_title">Creating a Control of Controls</div>
+		<h1 class="instruction_title">Creating a Control of Controls</h1>
 
 		Often times you will want to be able to combine a bunch of small controls into a larger control,
 		also known as creating a <b>Composite Control</b>.  In addition to this composite control

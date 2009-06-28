@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Your Tables as PHP Objects</div>
+		<h1 class="instruction_title">Your Tables as PHP Objects</h1>
 		The Code Generator will more or less create a PHP object for each table in your database.
 		For our three main tables (<b>login</b>, <b>person</b> and <b>project</b>), the Code Generator
 		created the following PHP classes:

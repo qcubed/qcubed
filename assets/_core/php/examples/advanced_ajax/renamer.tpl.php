@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 	
 	<div class="instructions">
-		<div class="instruction_title">Making Renameable Labels</div>
+		<h1 class="instruction_title">Making Renameable Labels</h1>
 		
 		With the use of <b>QLabel</b> and <b>QTextBox</b> controls that can show, hide and change
 		<b>CssClass</b> names depending on what action we must execute, we use
@@ -10,8 +10,8 @@
 		a list of "renameable labels", where the interaction is similar to how files
 		and folders can be selected and then renamed in the Finder or in Windows Explorer.<br/><br/>
 		
-		To rename any of the labels below, click on it to highlight it.  And then click it again to
-		rename it.  If you click elsewhere or hit return, the change will be saved.  If you hit
+		To rename any of the labels below, click on it to highlight it. And then click it again to
+		rename it. If you click elsewhere or hit return, the change will be saved. If you hit
 		escape, the change will be cancelled.
 	</div>
 

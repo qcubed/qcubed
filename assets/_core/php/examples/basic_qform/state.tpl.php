@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Understanding State</div>
+		<h1 class="instruction_title">Understanding State</h1>
 		Note that when you clicked on the button, the form actually posted back to itself.  However,
 		the state of the form was remembered from one webpage view to the next.  This is known as
 		<b>FormState</b>.<br/><br/>

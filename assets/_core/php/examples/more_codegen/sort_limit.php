@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Manipulating LoadAll and LoadArrayBy Results</div>
+		<h1 class="instruction_title">Manipulating LoadAll and LoadArrayBy Results</h1>
 		(Note: for more information about "QQ::"-related classes (a.k.a. <b>Qcubed Query</b>), please refer to section 3 of the
 		Examples Site.)<br/><br/>
 
@@ -15,7 +15,7 @@
 		using <b>QQ::OrderBy()</b> and <b>QQ::LimitInfo()</b> to manipulate how the results come out of the database.<br/><br/>
 		
 		<b>OrderBy</b> and <b>LimitInfo</b> are actually really straightforward to use.  Order By takes
-		in any number of Qcubed Query Node columns, followed by an optional boolean (to specify ascending/decending),
+		in any number of QCubed Query Node columns, followed by an optional boolean (to specify ascending/decending),
 		which will be used in a SQL ORDER BY clause in the SELECT statement.  So you can simply say
 		<b>QQ::OrderBy(QQN::Person()->LastName)</b> to sort all the Person objects by last name.<br/><br/>
 

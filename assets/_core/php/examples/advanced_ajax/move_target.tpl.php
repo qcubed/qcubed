@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Specifying Which Controls to Move</div>
+		<h1 class="instruction_title">Specifying Which Controls to Move</h1>
 		Hopefully this example shows why not all <b>QControl</b> objects can be move handles.<br/><br/>
 		
 		Below, we have rendered a <b>QLabel</b> and a <b>QTextBox</b>.  We want the textbox to be moveable,

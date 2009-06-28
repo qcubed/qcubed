@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">About Sections 4 - 10</div>
+		<h1 class="instruction_title">About Sections 4 - 10</h1>
 		Sections 4 through 10 focus on the <b>QForm</b> and the <b>QControl</b> libraries.  In order
 		to focus on just the view and controller layer functionality that QForms offers, the concepts of
 		code generated objects and components are only discussed minimally.<br/><br/>

@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">AJAX Calculator</div>
+		<h1 class="instruction_title">AJAX Calculator</h1>
 
 		To show the ease of AJAX in a slightly more complex QForm, we take our <b>Calculator Example
 		with Validation</b> from before... and we only change <i>one word</i>.<br/><br/>

@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Extending QPanels to Create Modal "Dialog Boxes"</div>
+		<h1 class="instruction_title">Extending QPanels to Create Modal "Dialog Boxes"</h1>
 		In general UI programming, there are two kinds of dialog boxes: modal and non-modal.  Modal dialog boxes are
 		the most common. When a program displays a modal dialog box, the user cannot switch between the dialog box
 		and the program's main UI.  The user must explicitly close the dialog box, usually by clicking either "Ok" or "Cancel".

@@ -7,7 +7,7 @@
 	<?php $this->RenderBegin(); ?>
 	
 	<div class="instructions">
-		<div class="instruction_title">The QListControl Family of Controls</div>
+		<h1 class="instruction_title">The QListControl Family of Controls</h1>
 		<b>QListControl</b> controls handle simple lists of objects which can be selected.  In its most
 		basic form, we are basically talking about HTML listboxes (e.g. &lt;select&gt;) with name/value
 		pairs (e.g. &lt;option&gt;).<br/><br/>
@@ -15,7 +15,7 @@
 		Of course, listboxes can be single- and multiple-select.  But note that sometimes,
 		you may want to display this list as a list of labeled checkboxes (which basically acts
 		like a multiple-select listbox) or a list of labeled radio buttons (which acts like a
-		single-select listbox).  Qcubed includes the <b>QListBox</b>, <b>QCheckboxList</b> and
+		single-select listbox).  QCubed includes the <b>QListBox</b>, <b>QCheckboxList</b> and
 		<b>QRadioButtonList</b> controls which all inherit from QListControl to allow you to
 		present the data and functionality that you need to in the most user-friendly way possible.<br/><br/>
 

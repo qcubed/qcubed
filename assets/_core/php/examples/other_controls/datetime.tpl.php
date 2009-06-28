@@ -6,7 +6,7 @@
 	</style>
 
 	<div class="instructions">
-		<div class="instruction_title">What time is it?</div>
+		<h1 class="instruction_title">What time is it?</h1>
 
 		Qcubed includes several different QControls that assist with user input of dates and datetimes.
 		<br/><br/>

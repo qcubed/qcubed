@@ -33,7 +33,7 @@
 		// Note that we explicitly specify the PHP variable __FILE__ (e.g. THIS script)
 		// as the template file to use, and that we call "return;" to ensure that the rest
 		// of this script doesn't process on its initial run.  Instead, it will be processed
-		// a second time by Qcubed as the QForm is being rendered.
+		// a second time by QCubed as the QForm is being rendered.
 		ExampleSingleForm::Run('ExampleSingleForm', __FILE__);
 		return;
 	}
@@ -45,7 +45,7 @@
 		<?php $this->RenderBegin(); ?>
 
 		<div class="instructions">
-			<div class="instruction_title">Hello World, Revisited... Again... Again</div>
+			<h1 class="instruction_title">Hello World, Revisited... Again... Again</h1>
 			We use the AJAX-enabled "Hello World" example to explain how you can make single file <b>QForm</b> pages.
 			Note that this approach is <i>not always recommended</i> -- keeping the display logic (.php) file separate
 			from the presentation HTML template (.tpl.php) file helps to enforce the good design and separation of display

@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Conditional Joins with QQ::Expand()</div>
+		<h1 class="instruction_title">Conditional Joins with QQ::Expand()</h1>
 	
 		Sometimes, you find yourself in a situation when you want to issue a 
 		query for ALL items in a given table, and only some information in

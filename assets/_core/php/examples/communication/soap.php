@@ -2,9 +2,9 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">SOAP Web Services</div>
+		<h1 class="instruction_title">SOAP Web Services</h1>
 
-		The Qcubed <b>QSoapService</b> class allows you to very easily add SOAP-enabled
+		The QCubed <b>QSoapService</b> class allows you to very easily add SOAP-enabled
 		PHP methods to your application.<br/><br/>
 		
 		It utilizes the <b>SoapServer</b> class in PHP 5.1 or greater

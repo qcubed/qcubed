@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">The Examples Site Database</div>
+		<h1 class="instruction_title">The Examples Site Database</h1>
 		
 		Before learning about the Code Generator, it might be good to first get acquainted with the
 		data model which the Code Generator will be generating from.<br/><br/>

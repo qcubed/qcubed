@@ -6,7 +6,7 @@
 	<div style="text-align: left; margin: 0px auto 0px auto; width: 830px;">
 
 		<div class="instructions_main" style="width: 770px;">
-			<div class="instruction_title">QCubed Examples Site</div>
+			<h1 class="instruction_title">QCubed Examples Site</h1>
 			
 			This is a collection of many small examples that demonstrate the functionality
 			in QCubed.  Later examples tend to build upon functionality or concepts that are

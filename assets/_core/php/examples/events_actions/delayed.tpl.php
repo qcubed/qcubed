@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Triggering Events after a Delay</div>
+		<h1 class="instruction_title">Triggering Events after a Delay</h1>
 		Sometimes, you may want events to trigger their assigned actions after a delay.  A good example
 		of this here is the <b>QKeyPressEvent</b> we added below.  As the user enters in data into the textbox,
 		we make an AJAX call to update the label.  However, in order to make the system a bit more usable

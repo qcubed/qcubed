@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Simple QDataRepeater using AJAX-triggered Pagination</div>		
+		<h1 class="instruction_title">Simple QDataRepeater using AJAX-triggered Pagination</h1>
 		The main difference between a <b>QDataGrid</b> and a <b>QDataRepeater</b> is that while a
 		<b>QDataGrid</b> is in a table
 		and has a lot structure to help define how that table should be rendered, a <b>QDataRepeater</b>

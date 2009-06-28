@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Implementing Custom Business Logic</div>
+		<h1 class="instruction_title">Implementing Custom Business Logic</h1>
 		Almost no application can be purely code generated.  As you develop your application, you will likely
 		have to implement your own custom business rules and functionality.<br/><br/>
 		

@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Emailing via SMTP</div>
+		<h1 class="instruction_title">Emailing via SMTP</h1>
 
 		The <b>QEmailServer</b> class can be used to send email messages via any accessible
 		SMTP server.  Obviously, many PHP developers will be familiar with the PHP <b>mail()</b>
@@ -16,7 +16,7 @@
 
 		The <b>QEmailMessage</b> object contains the relavent email addresses (e.g. From,
 		To, Cc and Bcc), as well as the subject and body.  Note that the body can be in
-		either plain text, HTML or both.  Qcubed will automatically handle the multipart
+		either plain text, HTML or both.  QCubed will automatically handle the multipart
 		message encoding for you.<br/><br/>
 		
 		Finally, note that for development environments that do not have ready access
@@ -41,7 +41,7 @@
 	QEmailServer::$SmtpServer = 'mx.acme.com';
 
 	// Create a new message
-	// Note that you can list multiple addresses and that Qcubed supports Bcc and Cc
+	// Note that you can list multiple addresses and that QCubed supports Bcc and Cc
 	$objMessage = new QEmailMessage();
 	$objMessage->From = 'ACME Reporting Service <reporting@acme.com>';
 	$objMessage->To = 'John Doe <jdoe@acme.com>, Jane Doe <jdoe2@acme.com>';

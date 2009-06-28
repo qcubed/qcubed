@@ -2,9 +2,9 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Integrating Optimistic Locking into QForms</div>
+		<h1 class="instruction_title">Integrating Optimistic Locking into QForms</h1>
 		
-		In Section 2, we showed how by using the TIMESTAMP column types, Qcubed will generate
+		In Section 2, we showed how by using the TIMESTAMP column types, QCubed will generate
 		code to handle <b>Optimistic Locking</b>.  In this example, we take this a step further
 		to illustrate a more functional approach to utilizing <b>Optimistic Locking</b> in your
 		web based application.<br/><br/>

@@ -2,15 +2,15 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Analyzing Reverse Relationships</div>
+		<h1 class="instruction_title">Analyzing Reverse Relationships</h1>
 		Although it's a bit hard to undrestand at first, one of the unique and more powerful features of Qcubed
 		is its ability to generate code to handle reverse relationships as well.
 		Given our previous example with the <b>Project</b> and <b>ManagerPerson</b>, we showed how
-		Qcubed generated code in the <b>Project</b> class to handle the relationship.  But Qcubed will also geneate
+		Qcubed generated code in the <b>Project</b> class to handle the relationship.  But QCubed will also geneate
 		code in the <b>Person</b> class to handle the reverse aspects of this relationship.<br/><br/>
 
 		In this case, <b>Person</b> is on the "to Many" side of a "One to Many" relationship with <b>Project</b>.
-		So Qcubed will generate the following methods in <b>Person</b> to deal with this reverse
+		So QCubed will generate the following methods in <b>Person</b> to deal with this reverse
 		relationship:
 		<ul>
 		<li>GetProjectsAsManagerArray</li>
@@ -22,7 +22,7 @@
 		<li>DeleteAllProjectsAsManager</li>
 		</ul>
 
-		And in fact, Qcubed will generate the same seven methods for any "One to Many" reverse relationship
+		And in fact, QCubed will generate the same seven methods for any "One to Many" reverse relationship
 		(get, count all, associate, unassociate, and unassociate all, delete associated, and delete all associated).
 		Note that the "AsManager" token in all these methods are there because we named the column in the
 		<b>project</b> table <b>manager_person_id</b>.  If we simply named it as <b>person_id</b>,
@@ -44,9 +44,9 @@
 		Qcubed will generate a different set of code if it knows the reverse relationship to be a "Zero
 		to One" or "One to One" type of relationship.  This occurs in the relationship between
 		our <b>login</b> and <b>person</b> tables.  Note that <b>login</b>.<b>person_id</b> is a unique
-		column.  Therefore, Qcubed recognizes this as a "Zero- or One-to-One" relationship.  So for the
-		reverse relationship, Qcubed will not generate the five methods (listed above) in the <b>Person</b>
-		table for the <b>Login</b> relationship.  Instead, Qcubed generates a <b>Login</b> property in
+		column.  Therefore, QCubed recognizes this as a "Zero- or One-to-One" relationship.  So for the
+		reverse relationship, QCubed will not generate the five methods (listed above) in the <b>Person</b>
+		table for the <b>Login</b> relationship.  Instead, QCubed generates a <b>Login</b> property in
 		<b>Person</b> object which can be set, modified, etc. just like the <b>Person</b> property in
 		the <b>Login</b> object.
 
@@ -54,7 +54,7 @@
 
 		Qcubed also has full support for self-referential tables (e.g. a <b>category</b> table that
 		contains a <b>parent_category_id</b> column which would foreign key back to itself).
-		In this case, the Qcubed will generated the following seven methods to assist with the reverse
+		In this case, the QCubed will generated the following seven methods to assist with the reverse
 		relationship for this self-reference:
 		<ul>
 		<li>GetChildCategoryArray</li>

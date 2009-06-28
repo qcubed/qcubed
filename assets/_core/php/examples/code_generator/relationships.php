@@ -2,8 +2,8 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Qcubed and Foreign Key Relationships</div>
-		In addition to your basic CRUD functionality, Qcubed will also analyze the Foreign Key relationships
+		<h1 class="instruction_title">QCubed and Foreign Key Relationships</h1>
+		In addition to your basic CRUD functionality, QCubed will also analyze the Foreign Key relationships
 		in your database to generate relationships between your objects.<br/><br/>
 		
 		Whenever you table has a column which is a Foreign Key to another table, the dependent class

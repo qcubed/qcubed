@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Using a Relationships Script</div>
+		<h1 class="instruction_title">Using a Relationships Script</h1>
 		Our <b>Examples Site Database</b> uses the InnoDB storage engine in MySQL, which has
 		full support for Foreign Keys to help define relationships between tables.<br/><br/>
 

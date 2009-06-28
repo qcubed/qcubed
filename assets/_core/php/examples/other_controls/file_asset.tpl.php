@@ -6,7 +6,7 @@
 	</style>
 
 	<div class="instructions">
-		<div class="instruction_title">The QFileAsset Control</div>
+		<h1 class="instruction_title">The QFileAsset Control</h1>
 
 		The <strong>QFileAsset</strong> control is a great example of a complex control that combines many simpler controls to provide
 		a single, cohesive control that is very simple/straightfoward in terms of end-user usability.

@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">The Four-Function Calculator: Our First Simple Application</div>
+		<h1 class="instruction_title">The Four-Function Calculator: Our First Simple Application</h1>
 		We can combine this understanding of statefulness and events to make our first simple
 		Qforms application.<br/><br/>
 

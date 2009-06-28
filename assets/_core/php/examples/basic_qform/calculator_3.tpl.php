@@ -2,12 +2,12 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Custom Renderers and Control Properties</div>
+		<h1 class="instruction_title">Custom Renderers and Control Properties</h1>
 		
 		In our final Calculator example, we show how you can use custom renderers to affect layout,
 		as well as use control properties to change the appearance of your QControls.<br/><br/>
 		
-		The Qcubed distribution includes a sample custom renderer, <b>RenderWithName</b>, which is
+		The QCubed distribution includes a sample custom renderer, <b>RenderWithName</b>, which is
 		defined in your QControl custom class (which is at /includes/qform/QControl.inc).
 		We'll use this <b>RenderWithName</b> for our calculator's textboxes and listbox.  We've also
 		made sure to assign <b>Name</b> properties to these QControls.<br/><br/>

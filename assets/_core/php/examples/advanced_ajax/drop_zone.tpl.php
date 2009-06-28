@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Defining Drop Zones</div>
+		<h1 class="instruction_title">Defining Drop Zones</h1>
 		Move Handles also have definable "drop zones", which are basically <b>QPanel</b> or <b>QLabel</b>
 		controls that are setup to receive a move handle's set of moveable controls.<br/><br/>
 		

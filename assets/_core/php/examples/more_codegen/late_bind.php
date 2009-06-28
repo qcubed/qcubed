@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Late Binding: The Default Load Method</div>
+		<h1 class="instruction_title">Late Binding: The Default Load Method</h1>
 		By default, any object with related objects (e.g. in our <b>Examples Site Database</b>, an example
 		of this is how the <b>Project</b> object has a related <b>ManagerPerson</b> object) will perform
 		"late binding" on that related object.<br/><br/>
@@ -18,7 +18,7 @@
 
 		The advantages of "late binding" is that the data going between the database and the application
 		is as minimal as possible.  You only get the minimal amount data that you need, when you need it,
-		and nothing else.  And fortunately, because the Qcubed generated code does the binding for you
+		and nothing else.  And fortunately, because the QCubed generated code does the binding for you
 		behind the scenes, there is nothing that you would need to manually code to check, enforce or
 		execute this binding functionality.<br/><br/>
 
@@ -29,7 +29,7 @@
 		each object to get its related object).<br/><br/>
 
 		In this example, we <b>LoadAll</b> all the <b>Project</b> objects, and view each object's
-		<b>ManagerPerson</b>.  Using the built in Qcubed Database Profiler, you can see that
+		<b>ManagerPerson</b>.  Using the built in QCubed Database Profiler, you can see that
 		five database calls are made: One call to get all the projects (four rows in all), and then four calls
 		to <b>Person::Load</b> (one for each of those projects).
 	</div>

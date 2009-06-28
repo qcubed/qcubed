@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Making a Control Moveable</div>
+		<h1 class="instruction_title">Making a Control Moveable</h1>
 		Here we demonstrate the moveable controls capability of Qcubed, also known as 
 		"Drag and Drop".<br/><br/>
 

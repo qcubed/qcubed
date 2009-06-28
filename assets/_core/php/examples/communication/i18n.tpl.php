@@ -7,7 +7,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title"><?php _t('Internationalization and Translation') ?></div>
+		<h1 class="instruction_title"><?php _t('Internationalization and Translation') ?></h1>
 		<?php _t('
 		QQubed offers internationalization support via <b>QApplication::Translate()</b> (which internally
 		will use the <b>QI18n</b> class). Language and country
@@ -25,14 +25,14 @@
 		<?php _t('
 		To translate any piece of text, simply use <b>QApplication::Translate(xxx)</b>. Or as a shortcut,
 		if you want to do a PHP <b>print()</b> of any translated text in your template, you can use
-		the Qcubed printing shortcut <b>_t(xxx)</b> -- this does the equivalent of
+		the QCubed printing shortcut <b>_t(xxx)</b> -- this does the equivalent of
 		<b>print(QApplication::Translate(xxx))</b>.'); ?>
 		<br/><br/>
 
 		<?php _t('
 		Note that generated Form Drafts and the QControls are all I18n aware -- they will translate themselves
 		based on the selected language (as long as the appropriate language file exists).  QCubed-specific
-		langauge files are part of Qcubed core, and exist in <b>' . __QCUBED_CORE__ . '/i18n</b>.
+		langauge files are part of QCubed core, and exist in <b>' . __QCUBED_CORE__ . '/i18n</b>.
 		we are desparately in need of more language files. If you are able to contribute, please take
 		the current en.po file and translate it to any currently unsupported language and feel free to
 		submit it.  Also note that the Spanish translation (es.po) language files (both in the example

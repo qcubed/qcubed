@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">About Sections 1 - 3</div>
+		<h1 class="instruction_title">About Sections 1 - 3</h1>
 		Sections 1 through 3 are dedicated to just the <b>Code Generator</b>.  In order
 		to focus on just the code generated functionality, no <b>QForm</b> or <b>QControl</b>
 		components are included in these examples.<br/><br/>

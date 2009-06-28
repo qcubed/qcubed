@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Enabling AJAX-based Sorting and Pagination</div>
+		<h1 class="instruction_title">Enabling AJAX-based Sorting and Pagination</h1>
 		In this example, we modify our sortable and paginated <b>QDataGrid</b> to now
 		perform AJAX-based sorting and pagination.<br/><br/>
 		

@@ -8,7 +8,7 @@
 		protected $txtMessage2;
 
 		protected function Form_Create() {
-			// First, we'll scan the Qcubed Fonts directory for all the available
+			// First, we'll scan the QCubed Fonts directory for all the available
 			// PFB (Adobe Type 1) font files, and create a listbox of them.
 			$this->lstFont = new QListBox($this);
 			$objFontDirectory = opendir(__QCUBED_CORE__ . '/fonts');

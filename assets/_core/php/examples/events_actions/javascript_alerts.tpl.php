@@ -2,8 +2,8 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Triggering Arbitrary JavaScript, Alerts and Confirms</div>
-		Qcubed includes several commonly used Javascript-based actions:
+		<h1 class="instruction_title">Triggering Arbitrary JavaScript, Alerts and Confirms</h1>
+		QCubed includes several commonly used Javascript-based actions:
 		<ul>
 			<li><b>QAlertAction</b> - to display a javascript "alert" type of dialog box</li>
 			<li><b>QConfirmAction</b> - to display a javascript "confirm" type of dialog box, and execute following optional actions if the user hits "Ok"</li>

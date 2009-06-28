@@ -1,7 +1,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 <div class="instructions">
-	<div class="instruction_title">Persistent Controls: Performance for Reusable Components</div>
+	<h1 class="instruction_title">Persistent Controls: Performance for Reusable Components</h1>
 	
 	What do you do if you have an element that's shared between multiple pages
 	that's computationally intensive to produce? For example, what would you do

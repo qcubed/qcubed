@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Primary Keys in Your Tables</div>
+		<h1 class="instruction_title">Primary Keys in Your Tables</h1>
 
 		In order for any ORM architecture to work, there must be at least some kind of Primary Key defined
 		on any table for which you want an object generated.  But what is unique about Qcodo's ORM is that it does
@@ -16,9 +16,9 @@
 		depending on which database platform you are using).<br/><br/>
 
 		Qcubed also offers <i>some</i> support for tables that have multiple-column Primary Keys defined on it.
-		For tables that have multi-column Primary Keys, Qcubed will fully generate the object
+		For tables that have multi-column Primary Keys, QCubed will fully generate the object
 		itself.  But note that you will <i>not</i> be able to use this generated object as a related object for
-		another table (in other words, Qcubed does not support multi-column <i>Foreign</i> Keys).  However,
+		another table (in other words, QCubed does not support multi-column <i>Foreign</i> Keys).  However,
 		with all the generated <b>Load</b> methods in these objects, it is still possible to fully develop
 		an application with tables that use multi-column Foreign Keys.  Basically, whenever you want to access
 		a related object via a multi-column Foreign Key, you can simply call that object's <b>Load</b> method

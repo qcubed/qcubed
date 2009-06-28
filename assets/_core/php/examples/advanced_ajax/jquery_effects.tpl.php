@@ -6,7 +6,7 @@
 	</style>
 
 	<div class="instructions">
-		<div class="instruction_title">jQuery effects</div>
+		<h1 class="instruction_title">jQuery Effects</h1>
 
 		QCubed comes with built in support of jQuery effects.
 		<a href="http://jquery.com">jQuery</a> is one of the most popular 
@@ -16,7 +16,7 @@
         
 		To see this in action: in the example below, use the buttons to apply
 		effects on the <b>QLabel</b> control. To make it happen, use the
-		following QJQ (abbreviation for Qcubed jQuery) actions in your code: <br /><br />
+		following QJQ (abbreviation for QCubed jQuery) actions in your code: <br /><br />
 		
 		To control visibility: 
 		<ul>

@@ -6,7 +6,7 @@
 	</style>
 
 	<div class="instructions">
-		<div class="instruction_title">QImageControl</div>
+		<h1 class="instruction_title">QImageControl</h1>
 
 		This example shows off the <b>QImageControl</b> control.  It <b>REQUIRES</b> that GD be installed.  Moreover, for <strong>QImageControl</strong> support
 		with JPEG, PNG and/or GIF images, it requires that GD be installed <em>with</em> those respective graphic file format libraries.
@@ -26,7 +26,7 @@
 		type (e.g. JPEG, PNG or GIF).
 		<br/><br/>
 
-		Finally, note that any of <strong>Width</strong>, <strong>Height</strong> and <strong>ImageType</strong> can all be left blank, which would cause Qcubed to
+		Finally, note that any of <strong>Width</strong>, <strong>Height</strong> and <strong>ImageType</strong> can all be left blank, which would cause QCubed to
 		make the best educated guesses as to what to set them to at render time.
 		<br/><br/>
 		

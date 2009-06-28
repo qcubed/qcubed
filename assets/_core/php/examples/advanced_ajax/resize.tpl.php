@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Resizing Block Controls</div>
+		<h1 class="instruction_title">Resizing Block Controls</h1>
 		This example shows how you can setup multiple positioned panels to create a user
 		interface with resizable panels.  Only <b>QBlockControls</b> are capable of being resized.  And moreover, <b>QBlockControls</b>
 		are the only controls that are capable of being "resize handles".<br/><br/>

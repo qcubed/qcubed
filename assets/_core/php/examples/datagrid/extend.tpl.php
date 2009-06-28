@@ -2,11 +2,11 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Customizing the QDataGrid subclass</div>
+		<h1 class="instruction_title">Customizing the QDataGrid subclass</h1>
 		
 		All QDataGrids, by default, can be customized by altering the <b>QDataGrid</b>
 		custom subclass in <b>/includes/qform/QDataGrid.inc</b>.  This class extends from
-		the <b>QDataGridBase</b> class which is in the Qcubed core.<br/><br/>
+		the <b>QDataGridBase</b> class which is in the QCubed core.<br/><br/>
 		
 		In the subclass, you can feel free to override rendering methods, including
 		<b>GetPaginatorRowHtml</b>, <b>GetHeaderRowHtml</b>, <b>GetDataGridRowHtml</b> and

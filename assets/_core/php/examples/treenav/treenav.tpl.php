@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Tree Navigation Control</div>
+		<h1 class="instruction_title">Tree Navigation Control</h1>
 
 		This example shows off the <b>QTreeNav</b> control.<br/><br/>
 

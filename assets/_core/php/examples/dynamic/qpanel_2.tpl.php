@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Moving Controls Between Panels</div>
+		<h1 class="instruction_title">Moving Controls Between Panels</h1>
 		With the concept of a <b>QLabel</b> or <b>QPanel</b> being able to have an arbitrary
 		number of child controls, we use this example to show how you can dynamically
 		change a control's parent, to essentially "move" a control from one panel to the next.<br/><br/>

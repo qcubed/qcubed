@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Learning about Validation</div>
+		<h1 class="instruction_title">Learning about Validation</h1>
 		
 		In this example, we extend our calculator application to include Validation.<br/><br/>
 		

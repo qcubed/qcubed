@@ -2,9 +2,9 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Optimistic Locking and TIMESTAMP Columns</div>
-		If you are generating any table that has a TIMESTAMP column, then Qcubed will automatically
-		generate the functionality to perform <b>Optimistic Locking</b> for that object.  In this example,
+		<h1 class="instruction_title">Optimistic Locking and TIMESTAMP Columns</h1>
+		If you are generating any table that has a TIMESTAMP column, then QCubed will automatically
+		generate the functionality to perform <b>Optimistic Locking</b> for that object. In this example,
 		the <b>person_with_lock</b> table is defined with a TIMESTAMP column so that we can demonstrate
 		<b>Optimistic Locking</b>.<br/><br/>
 		
@@ -12,7 +12,7 @@
 		works best for database-driven web-based applications.  In short, everyone is always
 		allowed to read any row/object.  However, on save, you are only allowed to save if your
 		object is considered "fresh".  Once your object is "stale", then you locked out from being
-		able to save that stale object.  (Note that this is sometimes also called a
+		able to save that stale object. (Note that this is sometimes also called a
 		"mid-air collision".)<br/><br/>
 		
 		Programatically, this is done via TIMESTAMP columns.  Remember that TIMESTAMP columns are updated

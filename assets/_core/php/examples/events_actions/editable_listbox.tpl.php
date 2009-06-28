@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Combining Multiple Actions on Events</div>
+		<h1 class="instruction_title">Combining Multiple Actions on Events</h1>
 		We can combine mulitple actions together for events, and we can also use the same set of
 		actions for on multiple events or controls.<br/><br/>
 		

@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Spinners!</div>
+		<h1 class="instruction_title">Spinners!</h1>
 		
 		In this Hello World example, we add a <b>QWaitIcon</b>, sometimes also known as "Spinners",
 		which will be displayed during the entire AJAX call.<br/><br/>

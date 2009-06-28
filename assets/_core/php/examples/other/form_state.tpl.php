@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Customizing How FormState is Saved</div>
+		<h1 class="instruction_title">Customizing How FormState is Saved</h1>
 		
 		By default, the <b>QForm</b> engine will store the state of the actual <b>QForm</b> objects as a rather
 		long <b>Base64</b> encoded string.  While this is a very simple, straightforward and very maintenance-free

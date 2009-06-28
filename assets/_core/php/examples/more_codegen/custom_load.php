@@ -2,12 +2,12 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Implementing a Customized LoadBy or LoadArrayBy</div>
+		<h1 class="instruction_title">Implementing a Customized LoadBy or LoadArrayBy</h1>
 		(Note: for more information about creating custom queries, please refer to Section 3 of the Examples Site.)<br/><br/>
 
 		With the <b>InstantiateDbResult</b> method that is code generated for you in each
 		generated class, it is very simple to create your own custom <b>LoadBy</b> or <b>LoadArrayBy</b>
-		method using your own custom SQL.  Simply specify a custom Load query by using <b>Qcubed Query</b> (or by writing your
+		method using your own custom SQL. Simply specify a custom Load query by using <b>QCubed Query</b> (or by writing your
 		own SQL statement and passing the results into <b>InstantiateDbResult</b>).  The code generated logic will take care
 		of the rest, transforming your DB result into an array of that object.<br/><br/>
 
@@ -26,7 +26,7 @@
 	class Project extends ProjectGen {
 		// Create our Custom Load Method
 		// Note that this custom load method is based on the sample LoadArrayBySample that is generated
-		// in the Project custom subclass.  Because it utilizes the Qcubed Query mechanism,
+		// in the Project custom subclass.  Because it utilizes the QCubed Query mechanism,
 		// we can easily take full advantage of any QQ Clauses by taking it in as an optional parameter.
 		public static function LoadArrayByBudgetMinimum($fltBudgetMinimum, $objOptionalClauses = null) {
 			return Project::QueryArray(

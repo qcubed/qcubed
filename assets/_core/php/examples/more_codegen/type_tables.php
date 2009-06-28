@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Using Type Tables</div>
+		<h1 class="instruction_title">Using Type Tables</h1>
 		<b>Type Tables</b> are essentially built-in enumerated types for QCubed.  So 
 		while only some database vendors (e.g. MySQL) offer support for	a formal ENUM column type, 
 		QCubed provides support for the enumerated column types for <i>all</i>

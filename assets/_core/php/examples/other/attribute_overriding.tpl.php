@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Overriding QControl Attributes</div>
+		<h1 class="instruction_title">Overriding QControl Attributes</h1>
 		All <b>QControl</b> classes have any number attributes which can be defined.  These are
 		either general attributes attributable to all controls (e.g. control name, font, color, width, etc.),
 		or they can also be specific attributes for specific controls (e.g. maxlength for textboxes,

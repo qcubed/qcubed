@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 	
 	<div class="instructions">
-		<div class="instruction_title">More "J" and Less "A" in AJAX</div>
+		<h1 class="instruction_title">More "J" and Less "A" in AJAX</h1>
 
 		Because our Renameable Labels make full use of <b>QAjaxActions</b>, any clicking (including
 		just selecting a label) involves an asynchronous server hit.<br/><br/>

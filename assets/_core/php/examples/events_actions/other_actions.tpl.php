@@ -2,9 +2,9 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Other Client-Side Action Types</div>
+		<h1 class="instruction_title">Other Client-Side Action Types</h1>
 		Below is a sampling of just <i>some</i> of the other <b>QAction</b> types that are available to you
-		as part of the core Qcubed distribution.
+		as part of the core QCubed distribution.
 		<br/><br/>
 		
 		Notice that all of these <b>QActions</b> simply render out javascript to perform the action,
@@ -12,7 +12,7 @@
 		<br/><br/>
 		
 		View the code for the details, and for more information or for a listing of <i>all</i> the <b>QActions</b> and <b>QEvents</b>, please
-		see the <b>Documentation</b> section of the Qcubed website.
+		see the <b>Documentation</b> section of the QCubed website.
 	</div>
 
 	<style type="text/css">

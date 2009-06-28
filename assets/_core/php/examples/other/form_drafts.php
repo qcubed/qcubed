@@ -2,9 +2,9 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Integrating QForms and the Code Generator</div>
+		<h1 class="instruction_title">Integrating QForms and the Code Generator</h1>
 
-		When you code generate your objects, Qcubed will actually provide a starting
+		When you code generate your objects, QCubed will actually provide a starting
 		point for this integration in the generated <b>Drafts</b>.  These generated
 		scripts are definitely <i>drafts</i> or starting points from which you can create
 		more elaborate, useful and functional <b>QForms</b> or <b>QPanels</b> for your application.<br/><br/>

@@ -2,8 +2,8 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">Early Binding: Using Object Expansion</div>
-		(Note: for more information about "QQ::"-related classes (a.k.a. <b>Qcubed Query</b>), please refer to section 3 of the
+		<h1 class="instruction_title">Early Binding: Using Object Expansion</h1>
+		(Note: for more information about "QQ::"-related classes (a.k.a. <b>QCubed Query</b>), please refer to section 3 of the
 		Examples Site.)<br/><br/>
 
 		When you need to perform LoadAll or LoadArray calls, and would like to include related objects

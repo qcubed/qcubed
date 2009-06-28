@@ -2,7 +2,7 @@
 	<?php $this->RenderBegin(); ?>
 
 	<div class="instructions">
-		<div class="instruction_title">An Introduction to the QDataGrid Class</div>
+		<h1 class="instruction_title">An Introduction to the QDataGrid Class</h1>
 		The <b>QDataGrid</b> control is used to present a collection of objects or data in a grid-based
 		(e.g. &lt;table&gt;) format.  All <b>QDataGrid</b> objects take in a <b>DataSource</b>, which can be an array
 		of anything (or in our example, an array of Person objects).<br/><br/>
@@ -14,8 +14,8 @@
 		function calls and/or variables which can be used to output item-specific data.<br/><br/>
 		
 		Calls to PHP can be made by using &lt;?= and ?&gt; tags (see this example's code for more
-		information).  Note that these PHP short tags are being used by Qcubed <i>internally</i> as delimiters
-		on when the PHP engine should be used.  <b>QDataGrid</b> (and Qcubed in general, for that matter) offers
+		information).  Note that these PHP short tags are being used by QCubed <i>internally</i> as delimiters
+		on when the PHP engine should be used.  <b>QDataGrid</b> (and QCubed in general, for that matter) offers
 		full support of PHP installations with <b>php_short_tags</b> set to off.<br/><br/>
 		
 		Finally, the <b>QDataGrid</b>'s style is fully customizable, at both the column level and the row level.
