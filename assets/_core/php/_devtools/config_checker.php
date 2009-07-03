@@ -71,7 +71,7 @@ function ValidateInstall() {
 	if (!file_exists($docrootOnlyPath)) {
 		$obj = new stdClass();
 		$obj->strMessage = 'Set the __DOCROOT__ constant in ' .
-			'/includes/configuration/configuration.inc.php. ' .
+			'includes/configuration/configuration.inc.php. ' .
 			'Most likely value: "' . $root . '"';
 		$result[] = $obj;
 
@@ -83,8 +83,20 @@ function ValidateInstall() {
 	if (!file_exists($docrootWithSubdirPath)) {
 		$obj = new stdClass();
 		$obj->strMessage = 'Set the __SUBDIRECTORY__ constant in ' .
-			'/includes/configuration/configuration.inc.php. ' .
+			'includes/configuration/configuration.inc.php. ' .
 			'Most likely value: "/' . $part1 . '"';
+		$result[] = $obj;
+				
+		// At this point, we cannot proceed with any more checks - basic config
+		// is not set up. Just exit.
+		return $result;
+	}
+	
+	if (!file_exists(__INCLUDES__)) {
+		// Did the user move the __INCLUDES__ directory out of the docroot? 
+		$obj = new stdClass();
+		$obj->strMessage = 'Set the __INCLUDES__ constant in ' .
+			'includes/configuration/configuration.inc.php. ';
 		$result[] = $obj;
 				
 		// At this point, we cannot proceed with any more checks - basic config

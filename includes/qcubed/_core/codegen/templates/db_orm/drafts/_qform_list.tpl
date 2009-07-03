@@ -1,7 +1,7 @@
 <template OverwriteFlag="true" DocrootFlag="true" DirectorySuffix="" TargetDirectory="<%= __FORM_DRAFTS__ %>" TargetFileName="<%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_list.php"/>
 <?php
 	// Load the QCubed Development Framework
-	require('../includes/configuration/prepend.inc.php');
+	require('../qcubed.inc.php');
 
 	/**
 	 * This is a quick-and-dirty draft QForm object to do the List All functionality
