@@ -353,7 +353,7 @@
 			// Current Number of Code Links
 			$intCount = 4;
 
-			if (file_exists(substr(str_replace('.php', '.tpl.php', $strReference), 1))) {
+			if (file_exists(__DOCROOT__ . str_replace('.php', '.tpl.php', $strReference))) {
 				$strToReturn .= ' &nbsp; | &nbsp; ';
 
 				$strScriptname = substr(str_replace('.php', '.tpl.php', $strReference), strrpos(str_replace('.php', '.tpl.php', $strReference), '/') + 1);
