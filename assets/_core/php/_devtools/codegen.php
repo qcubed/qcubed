@@ -1,7 +1,5 @@
 <?php
-	// Include prepend.inc to load Qcubed
-	require('../../../../includes/configuration/prepend.inc.php');		/* if you DO NOT have "includes/" in your include_path */
-	// require('prepend.inc.php');				/* if you DO have "includes/" in your include_path */
+	require_once(dirname(__FILE__).'/../../../../qcubed.inc.php');
 
 	// Load in the QCodeGen Class
 	require(__QCUBED__ . '/codegen/QCodeGen.class.php');

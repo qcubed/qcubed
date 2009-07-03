@@ -1,4 +1,4 @@
-<?php require('../../../../../includes/configuration/prepend.inc.php');
+<?php require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
 
 	// Setup the Feed, itself
 	$objRss = new QRssFeed('Examples Site Projects', 'http://examples.qcodo.com/', 'An Example RSS feed of the Qcodo Examples Site Projects');

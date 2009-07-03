@@ -8,11 +8,14 @@ $testsToRun = array(
 );
 
 
-require_once('../../../includes/configuration/configuration.inc.php');
+$__CONFIG_ONLY__ = true;
+require(dirname(__FILE__).'/../../../qcubed.inc.php');
 
 require_once(__QCUBED_CORE__ . '/tests/simpletest/unit_tester.php');
 require_once(__QCUBED_CORE__ . '/tests/simpletest/reporter.php');
-require_once('../../../includes/configuration/prepend.inc.php');
+
+$__CONFIG_ONLY__ = false;
+require(dirname(__FILE__).'/../../../qcubed.inc.php');
 
 // not using QCubed error handler for unit tests - using the SimpleTest one instead
 restore_error_handler();

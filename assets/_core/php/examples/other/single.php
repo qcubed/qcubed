@@ -1,5 +1,5 @@
 <?php
-	require('../../../../../includes/configuration/prepend.inc.php');
+	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
 
 	if (!isset($this)) {
 		// Define the Qform with all our Qcontrols

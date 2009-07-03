@@ -1,4 +1,4 @@
-<?php require('../../../../../includes/configuration/prepend.inc.php');
+<?php require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
 
 class PersistentExampleForm extends QForm {
 	// We will persist this control in the $_SESSION

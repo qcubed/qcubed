@@ -1,5 +1,5 @@
 <?php
-	require('../../../../includes/configuration/prepend.inc.php');
+	require_once(dirname(__FILE__).'/../../../../qcubed.inc.php');
 	require('includes/header_main.inc.php');
 ?>
 <div style="text-align: center; width: 100%;">

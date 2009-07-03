@@ -1,6 +1,5 @@
 <?php
-	// Include prepend.inc to load Qcubed
-	require('../../../../includes/configuration/prepend.inc.php');
+	require_once(dirname(__FILE__).'/../../../../qcubed.inc.php');
 
 	// Security check for ALLOW_REMOTE_ADMIN
 	// To allow access REGARDLESS of ALLOW_REMOTE_ADMIN, simply remove the line below
@@ -37,7 +36,7 @@
 ?>
 
 	<div id="titleBar">
-		<h2>Qcubed Development Framework <?php _p(QCUBED_VERSION) ?></h2>
+		<h2>QCubed Development Framework <?php _p(QCUBED_VERSION) ?></h2>
 		<h1><?php _t('List of Form Drafts') ?></h1>
 	</div>
 

@@ -1,5 +1,5 @@
 <?php
-	require('../../../../../includes/configuration/prepend.inc.php');
+	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
 
 	// First of all, let's override the way QForm stores state information.
 	// We will use the session-based FormState Handler, instead of the standard/default

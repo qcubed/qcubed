@@ -1,5 +1,5 @@
 <?php
-	require('../../../../../includes/configuration/prepend.inc.php');
+	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
 
 	// NOTE: IF YOU ARE RUNNING THIS EXAMPLE FROM YOUR OWN DEVELOPMENT ENVIRONMENT
 	// you **MUST** remember to copy the custom es.po file from this directory and

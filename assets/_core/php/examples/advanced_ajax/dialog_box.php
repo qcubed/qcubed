@@ -1,5 +1,5 @@
 <?php
-	require('../../../../../includes/configuration/prepend.inc.php');
+	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
 	require('CalculatorWidget.class.php');
 
 	// Define the Qform with all our Qcontrols

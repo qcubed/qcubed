@@ -1,5 +1,5 @@
 <?php
-	require('../../../../../includes/configuration/prepend.inc.php');
+	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
 
 	// We need to bring in the custom QPanels we've created
 	require('PersonEditPanel.class.php');
