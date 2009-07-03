@@ -1,4 +1,4 @@
 <?php
-	require('../../../includes/prepend.inc.php');
+	require('../../../includes/configuration/prepend.inc.php');
 	QImageLabel::Run();
 ?>

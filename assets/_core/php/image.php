@@ -1,5 +1,5 @@
 <?php
-require('../../../includes/prepend.inc.php');
+require('../../../includes/configuration/prepend.inc.php');
 
 session_cache_limiter('must-revalidate'); 
 header("Pragma: hack"); // IE chokes on "no cache", so set to something, anything, else.
