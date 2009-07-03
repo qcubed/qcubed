@@ -148,7 +148,7 @@ class QPlugin {
 		$result = <<<END
 <plugin>
 	<name>{$this->strName}</name>
-	<description>{$this->strDescription}</description>
+	<description><![CDATA[{$this->strDescription} ]]></description>
 	<version>{$this->strVersion}</version>
 	<platform_version>{$this->strPlatformVersion}</platform_version>
 	<author name="{$this->strAuthorName}" email="{$this->strAuthorEmail}"/>
