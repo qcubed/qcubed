@@ -31,7 +31,7 @@
 ?>
 <html>
 	<head>
-		<title>Qcubed Development Framework - Code Generator</title>
+		<title>QCubed Development Framework - Code Generator</title>
 		<style>
 			body { font-family: 'Arial' 'Helvetica' 'sans-serif'; font-size: 14px; margin: 0px; background-color: white;}
 			a:link, a:visited { text-decoration: none; }
@@ -70,7 +70,7 @@
 
 		<table border="0" cellspacing="0" width="100%">
 			<tr>
-				<td nowrap="nowrap" class="headingLeft"><span class="headingLeftSmall">Qcubed Development Framework <?php _p(QCUBED_VERSION); ?><br /></span>Code Generator</div></td>
+				<td nowrap="nowrap" class="headingLeft"><span class="headingLeftSmall">QCubed Development Framework <?php _p(QCUBED_VERSION); ?><br /></span>Code Generator</div></td>
 				<td nowrap="nowrap" class="headingRight">
 					<b>PHP Version:</b> <?php _p(PHP_VERSION); ?>;&nbsp;&nbsp;<b>Zend Engine Version:</b> <?php _p(zend_version()); ?>;&nbsp;&nbsp;<b>Qcubed Version:</b> <?php _p(QCUBED_VERSION); ?><br />
 					<?php if (array_key_exists('OS', $_SERVER)) printf('<b>Operating System:</b> %s;&nbsp;&nbsp;', $_SERVER['OS']); ?><b>Application:</b> <?php _p($_SERVER['SERVER_SOFTWARE']); ?>;&nbsp;&nbsp;<b>Server Name:</b> <?php _p($_SERVER['SERVER_NAME']); ?><br />

@@ -32,8 +32,8 @@
 		only work when <b>GroupBy</b> is specified.  These methods take in an attribute name, which
 		can then be restored using <b>GetVirtualAttribute()</b> on the object.<br/><br/>
 
-		<b>Expand</b> and <b>ExapndAsArray</b> deals with Object Expansion / Early Binding.  More on this
-		can be seen in the "Early Binding of Related Objects" example.<br/><br/>
+		<b>Expand</b> and <b>ExapandAsArray</b> deals with Object Expansion / Early Binding.  More on this
+		can be seen in the <a href="../more_codegen/early_bind.php">Early Binding of Related Objects example</a>.<br/><br/>
 		
 		<b>LimitInfo</b> will limit the result set.  The first integer is the maximum number of rows
 		you wish to limit the query to.  The <i>optional</i> second integer is the offset (if any).<br/><br/>

@@ -35,8 +35,8 @@
 		focus on optimizing this smaller subset of heavily-used functionality.
 		<br/><br/>
 		
-		For information about Expanding through Association Tables, please refer to the "Handling Association Tables"
-		example in Section 3.
+		For information about Expanding through Association Tables, please refer to the
+		<a href="../qcodo_query/association.php">Handling Association Tables example</a>.
 	</div>
 
 
