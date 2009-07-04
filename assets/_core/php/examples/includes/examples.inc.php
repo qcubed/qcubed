@@ -180,6 +180,7 @@
 			self::AddCoreExampleFile($intIndex, '/other/single.php Single File QForms');
 			self::AddCoreExampleFile($intIndex, '/other/form_state.php Working with FormState Handlers');
 			self::AddCoreExampleFile($intIndex, '/other/print.php PHP Print Command Shortcuts');
+			self::AddCoreExampleFile($intIndex, '/other/includes_outside.php Includes outside of the __DOCROOT__ for Security and Shared Installs');
 			self::AddCoreReferencedFile('/other/alternate_template.php', 'some_template_file.tpl.php');
 
 			$intIndex++;
