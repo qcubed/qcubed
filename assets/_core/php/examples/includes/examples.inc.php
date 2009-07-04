@@ -90,6 +90,7 @@
 			Examples::$Categories[$intIndex]['description'] = 'The QDataGrid and QDataRepeater controls';
 			self::AddCoreExampleFile($intIndex, '/datagrid/intro.php * Basic QDataGrid');
 			self::AddCoreExampleFile($intIndex, '/datagrid/variables.php * The QDataGrid Variables');
+			self::AddCoreExampleFile($intIndex, '/datagrid/links_images.php * Adding Controls to QDataGrids');
 			self::AddCoreExampleFile($intIndex, '/datagrid/rowactions.php * Making entire QDataGrid rows clickable');
 			self::AddCoreExampleFile($intIndex, '/datagrid/sorting.php * QDataGrid Sorting');
 			self::AddCoreExampleFile($intIndex, '/datagrid/pagination.php * QDataGrid Pagination');
