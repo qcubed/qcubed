@@ -184,15 +184,22 @@
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
-			Examples::$Categories[$intIndex]['name'] = 'Plugins';
-			Examples::$Categories[$intIndex]['description'] = 'Extensions to QCubed functionality created by the community';
+			Examples::$Categories[$intIndex]['name'] = 'Plugin System';
+			Examples::$Categories[$intIndex]['description'] = 'Infrastructure that lets the community extend QCubed';
 			self::AddCoreExampleFile($intIndex, '/plugins/about.php Plugin Ecosystem: Introduction');
 			self::AddCoreExampleFile($intIndex, '/plugins/components.php Writing your own plugins, Part 1: components of a plugin');
 			self::AddCoreExampleFile($intIndex, '/plugins/packaging.php Writing your own plugins, Part 2: packaging a plugin');
+			self::AddCoreExampleFile($intIndex, '/plugins/unattended.php Automatic Installation of Plugins');
 			self::AddCoreReferencedFile('/plugins/components.php', '__CORE_FRAMEWORK__QPluginInterface.class.php');
 
-			foreach (Examples::$PluginExamples as $example) {
-				array_push(Examples::$Categories[$intIndex], $example);
+			if (sizeof(Examples::$PluginExamples) > 0) {			
+				$intIndex++;
+				Examples::$Categories[$intIndex] = array();
+				Examples::$Categories[$intIndex]['name'] = 'Examples for Plugins';
+				Examples::$Categories[$intIndex]['description'] = 'Examples and Documentation for Community-Written Plugins';
+				foreach (Examples::$PluginExamples as $example) {
+					array_push(Examples::$Categories[$intIndex], $example);
+				}
 			}
 		}
 		
