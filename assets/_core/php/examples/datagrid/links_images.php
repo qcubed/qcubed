@@ -25,8 +25,14 @@
 			if (!$objControl = $this->GetControl($objControlId)) {
 				$objControl = new QImageControl($this, $objControlId);
 				
-				// Beautiful images are courtesy of Yellow Icon at http://yellowicon.com/downloads/page/4
-				$objControl->ImagePath = "../images/emoticons/" . $intPersonId . ".png";
+				$imagePath = "../images/emoticons/" . $intPersonId . ".png";
+				
+				if (file_exists($imagePath)) {
+					// Beautiful images are courtesy of Yellow Icon at http://yellowicon.com/downloads/page/4
+					$objControl->ImagePath = $imagePath;
+				} else {
+					$objControl->ImagePath = "../images/emoticons/1.png"; // fail-over case: default image
+				}
 			}
 
 			// We pass the parameter of "false" to make sure the control doesn't render
