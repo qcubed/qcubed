@@ -24,7 +24,7 @@ if (sizeof($arrInstallationMessages) == 0) {
 	// Output commands that can help fix these issues
 	$commands = "";
 	foreach ($arrInstallationMessages as $objResult) {
-		if (strlen($objResult->strCommandToFix) > 0) {
+		if (isset($objResult->strCommandToFix) && strlen($objResult->strCommandToFix) > 0) {
 			$commands .= $objResult->strCommandToFix . "<br />";
 		}
 	}
