@@ -1,4 +1,5 @@
 <?php
+if (!defined('SERVER_INSTANCE')) {
 	// The Server Instance constant is used to help ease web applications with multiple environments.
 	// Feel free to use, change or ignore.
 	define('SERVER_INSTANCE', 'dev');
@@ -61,7 +62,7 @@
 			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs/qcubed');
 			define ('__VIRTUAL_DIRECTORY__', '');
 			define ('__SUBDIRECTORY__', '');
-			
+
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
 			 */			
@@ -91,7 +92,7 @@
 			// Also includes the _core subdirectory for the QCubed Core
 			define ('__QCUBED__', __INCLUDES__ . '/qcubed');
 			define ('__PLUGINS__', __QCUBED__ . '/plugins');
-			
+
 			define ('__CACHE__', __INCLUDES__ . '/tmp/cache');
 
 			// The QCubed Core
@@ -128,7 +129,7 @@
 			define ('__IMAGE_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/images');
 			define ('__PHP_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/php');
 			define ('__PLUGIN_ASSETS__', __SUBDIRECTORY__ . '/assets/plugins');
-			
+
 			// jQuery folder location
 			define ('__JQUERY_DIRECTORY__',  'jquery.ui-1.5.3');
 			define ('__JQUERY_EFFECTS__', __JQUERY_DIRECTORY__.'/ui');
@@ -139,7 +140,7 @@
 
 			// Location of the Examples site
 			define ('__EXAMPLES__', __PHP_ASSETS__ . '/examples');
-			
+
 			/* Database Connection SerialArrays
 			 *
 			 * Note that all Database Connections are defined as constant serialized arrays.  QCubed supports
@@ -202,4 +203,5 @@
 
 			break;
 	}
+}
 ?>
