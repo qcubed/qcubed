@@ -10,9 +10,9 @@
 		protected $intPageNumber = 1;
 		protected $intTotalItemCount = 0;
 		protected $blnUseAjax = false;
-		
 		protected $objPaginatedControl;
-		
+		protected $objWaitIcon = 'default';
+
 		// SETUP
 		protected $blnIsBlockElement = false;
 
@@ -26,10 +26,15 @@
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
-
+			
+			$this->Setup();
+		}
+	
+		protected function Setup()
+		{
 			// Setup Pagination Events
 			if ($this->blnUseAjax)
-				$this->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Page_Click'));
+				$this->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Page_Click', $this->objWaitIcon));
 			else
 				$this->AddAction(new QClickEvent(), new QServerControlAction($this, 'Page_Click'));
 
@@ -66,10 +71,10 @@
 				case "PageCount":
 					return floor($this->intTotalItemCount / $this->intItemsPerPage) +
 						((($this->intTotalItemCount % $this->intItemsPerPage) != 0) ? 1 : 0);
-
+				case 'WaitIcon':
+					return $this->objWaitIcon;
 				case "PaginatedControl":
 					return $this->objPaginatedControl;
-
 				default:			
 					try {
 						return parent::__get($strName);
@@ -117,6 +122,7 @@
 						return ($this->intPageNumber = 1);
 					}
 					break;
+
 				case "TotalItemCount":
 					try {
 						if ($mixValue > 0)
@@ -139,14 +145,21 @@
 
 					// Because we are switching to/from Ajax, we need to reset the events
 					$this->RemoveAllActions('onclick');
-					if ($this->blnUseAjax)
-						$this->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Page_Click'));
-					else
-						$this->AddAction(new QClickEvent(), new QServerControlAction($this, 'Page_Click'));
-
-					$this->AddAction(new QClickEvent(), new QTerminateAction());
+					$this->Setup();
 
 					return $blnToReturn;
+
+				case 'WaitIcon':
+					try {
+						$mixToReturn = $this->objWaitIcon = $mixValue;
+						//ensure we update our ajax action to use it
+						$this->RemoveAllActions('onclick');
+						$this->Setup();
+						return $mixToReturn;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				default:
 					try {
