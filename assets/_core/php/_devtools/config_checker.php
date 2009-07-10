@@ -106,8 +106,7 @@ function ValidateInstall() {
 	
 	// Now that we know that the basic config is correct, we can actually
 	// initialize the full QCubed framework. 
-	$__CONFIG_ONLY__ = false;
-	require('../qcubed.inc.php');
+	require(__CONFIGURATION__. '/prepend.inc.php');
 	
 	$qappValidationResults = QInstallationValidator::Validate();
 	$result = array_merge($result, $qappValidationResults);
