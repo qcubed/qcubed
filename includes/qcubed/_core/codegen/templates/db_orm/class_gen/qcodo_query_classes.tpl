@@ -3,6 +3,13 @@
 	/////////////////////////////////////
 
 <% foreach ($objTable->ManyToManyReferenceArray as $objReference) { %>
+    /**
+     * @uses QQAssociationNode
+     *
+     * @property-read QQNode $<%= $objReference->OppositePropertyName %>
+     * @property-read QQNode<%=$objReference->VariableType %> $<%= $objReference->VariableType %>
+     * @property-read QQNode<%=$objReference->VariableType %> $_ChildTableNode
+     **/
 	class QQNode<%= $objTable->ClassName %><%= $objReference->ObjectDescription %> extends QQAssociationNode {
 		protected $strType = 'association';
 		protected $strName = '<%= strtolower($objReference->ObjectDescription); %>';
@@ -31,6 +38,26 @@
 	}
 
 <% } %>
+    /**
+     * @uses QQNode
+     *
+<% foreach ($objTable->ColumnArray as $objColumn) { %>
+     * @property-read QQNode $<%= $objColumn->PropertyName %>
+<% if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { %>
+     * @property-read QQNode<%= $objColumn->Reference->VariableType; %> $<%= $objColumn->Reference->PropertyName %>
+<% } %>
+<% } %>
+     *
+<% foreach ($objTable->ManyToManyReferenceArray as $objReference) { %>
+     * @property-read QQNode<%= $objTable->ClassName %><%= $objReference->ObjectDescription %> $<%= $objReference->ObjectDescription %>
+<% } %>
+     *
+<% foreach ($objTable->ReverseReferenceArray as $objReference) { %>
+     * @property-read QQReverseReferenceNode<%= $objReference->VariableType %> $<%= $objReference->ObjectDescription %>
+<% } %>
+<% $objPkColumn = $objTable->PrimaryKeyColumnArray[0]; %>
+     * @property-read QQNode<% if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) return $objPkColumn->Reference->VariableType; %> $_PrimaryKeyNode
+     **/
 	class QQNode<%= $objTable->ClassName %> extends QQNode {
 		protected $strTableName = '<%= $objTable->Name %>';
 		protected $strPrimaryKey = '<%= $objTable->PrimaryKeyColumnArray[0]->Name %>';
@@ -65,6 +92,24 @@
 		}
 	}
 
+    /**
+<% foreach ($objTable->ColumnArray as $objColumn) { %>
+     * @property-read QQNode $<%= $objColumn->PropertyName %>
+<% if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { %>
+     * @property-read QQNode<%= $objColumn->Reference->VariableType; %> $<%= $objColumn->Reference->PropertyName %>
+<% } %>
+<% } %>
+     *
+<% foreach ($objTable->ManyToManyReferenceArray as $objReference) { %>
+     * @property-read QQNode<%= $objTable->ClassName %><%= $objReference->ObjectDescription %> $<%= $objReference->ObjectDescription %>
+<% } %>
+     *
+<% foreach ($objTable->ReverseReferenceArray as $objReference) { %>
+     * @property-read QQReverseReferenceNode<%= $objReference->VariableType %> $<%= $objReference->ObjectDescription %>
+<% } %>
+<% $objPkColumn = $objTable->PrimaryKeyColumnArray[0]; %>
+     * @property-read QQNode<% if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) return $objPkColumn->Reference->VariableType; %> $_PrimaryKeyNode
+     **/
 	class QQReverseReferenceNode<%= $objTable->ClassName %> extends QQReverseReferenceNode {
 		protected $strTableName = '<%= $objTable->Name %>';
 		protected $strPrimaryKey = '<%= $objTable->PrimaryKeyColumnArray[0]->Name %>';
