@@ -10,7 +10,15 @@
 	};
 
 	qcodo.getWrapper = function(mixControl) {
-		var objControl; if (!(objControl = qcodo.getControl(mixControl))) return;
+		var objControl;
+		if (!(objControl = qcodo.getControl(mixControl))) 
+		{
+            //maybe it doesn't have a child control, just the wrapper
+			if (typeof(mixControl) == 'string')
+		    	return this.getControl(mixControl + "_ctl");
+		    	
+		    return;
+		}
 
 		if (objControl)
 			return this.getControl(objControl.id + "_ctl");			
@@ -46,11 +54,16 @@
 	};
 
 	qcodo.registerControl = function(mixControl) {
-		var objControl; if (!(objControl = qcodo.getControl(mixControl))) return;
+		var objControl; 
+		objControl = qcodo.getControl(mixControl);
 
 		// Link the Wrapper and the Control together
-		var objWrapper = this.getWrapper(objControl);
-		objControl.wrapper = objWrapper;
+		var objWrapper = this.getWrapper(mixControl);
+		if(!objWrapper) return;
+
+	    if(objControl !== null)
+    		objControl.wrapper = objWrapper;
+    	
 		objWrapper.control = objControl;
 
 		// Add the wrapper to the global qcodo wrappers array
@@ -62,6 +75,25 @@
 
 		// Updating Style-related Things
 		objWrapper.updateStyle = function(strStyleName, strNewValue) {
+		    if(this.control === null)
+		    {
+			    switch (strStyleName) {
+				    case "display":
+					    if (strNewValue) {
+						    objWrapper.style.display = "inline";
+					    } else {
+						    objWrapper.style.display = "none";
+					    };
+					    break;
+				    default:
+					    if (qcodo.javascriptWrapperStyleToQcodo[strStyleName]) {
+						    this.style[strStyleName] = strNewValue;
+					    };
+					    break;
+			    };
+    		    return;
+		    }
+		
 			var objControl = this.control;
 			
 			switch (strStyleName) {
