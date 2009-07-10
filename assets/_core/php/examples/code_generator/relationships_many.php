@@ -1,4 +1,4 @@
-<?php require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php'); ?>
+<?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">

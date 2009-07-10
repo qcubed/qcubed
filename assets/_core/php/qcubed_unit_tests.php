@@ -9,7 +9,7 @@ $testsToRun = array(
 
 
 $__CONFIG_ONLY__ = true;
-require(dirname(__FILE__).'/../../../qcubed.inc.php');
+require('./qcubed.inc.php');
 
 require_once(__QCUBED_CORE__ . '/tests/simpletest/unit_tester.php');
 require_once(__QCUBED_CORE__ . '/tests/simpletest/reporter.php');

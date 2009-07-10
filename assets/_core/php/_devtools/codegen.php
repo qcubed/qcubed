@@ -1,5 +1,5 @@
 <?php
-	require_once(dirname(__FILE__).'/../../../../qcubed.inc.php');
+	require_once('../qcubed.inc.php');
 
 	// Load in the QCodeGen Class
 	require(__QCUBED__ . '/codegen/QCodeGen.class.php');

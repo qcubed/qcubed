@@ -1,5 +1,5 @@
 <?php
-	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
+	require_once('../qcubed.inc.php');
 
 	// Define the Qform with all our Qcontrols
 	class ExamplesForm extends QForm {

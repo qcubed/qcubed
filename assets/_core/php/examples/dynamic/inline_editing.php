@@ -1,5 +1,5 @@
 <?php
-	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
+	require_once('../qcubed.inc.php');
 	
 	class ExampleForm extends QForm {
 		// Declare the DataGrid, and the buttons and textboxes for inline editing

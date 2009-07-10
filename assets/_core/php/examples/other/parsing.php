@@ -1,5 +1,5 @@
 <?php
-	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
+	require_once('../qcubed.inc.php');
 	require('bb_parser.php');
 
 	// Define the Qform with all our Qcontrols

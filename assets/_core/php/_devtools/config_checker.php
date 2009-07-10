@@ -1,6 +1,6 @@
 <?php
 $__CONFIG_ONLY__ = true;
-require(dirname(__FILE__).'/../../../../qcubed.inc.php');
+require('../qcubed.inc.php');
 
 $arrInstallationMessages = ValidateInstall();
 if (sizeof($arrInstallationMessages) == 0) {
@@ -107,7 +107,7 @@ function ValidateInstall() {
 	// Now that we know that the basic config is correct, we can actually
 	// initialize the full QCubed framework. 
 	$__CONFIG_ONLY__ = false;
-	require(dirname(__FILE__).'/../../../../qcubed.inc.php');
+	require('../qcubed.inc.php');
 	
 	$qappValidationResults = QInstallationValidator::Validate();
 	$result = array_merge($result, $qappValidationResults);

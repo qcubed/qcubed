@@ -1,5 +1,5 @@
 <?php
-	require_once(dirname(__FILE__).'/../../../../../qcubed.inc.php');
+	require_once('../qcubed.inc.php');
 	
 	class CalculatorForm extends QForm {
 		// Our Calculator needs 2 Textboxes (one for each operand)
