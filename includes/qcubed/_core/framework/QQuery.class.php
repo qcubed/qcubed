@@ -222,7 +222,7 @@
 				$strToReturn = $this->GetDataGridHtmlHelper($strNodeLabelArray, 0);
 			}
 
-			if($this->strType == 'Time') 
+			if($this->strType == QDatabaseFieldType::Time)
 				return sprintf('(%s) ? %s->__toString(QDateTime::$DefaultTimeFormat) : null', $strToReturn, $strToReturn);
 		
 			if (class_exists($this->strClassName))
