@@ -50,6 +50,12 @@
 		public static $DefaultFormat = QDateTime::FormatDisplayDate;
 
 		/**
+		 * The "Default" Display Format for Times
+		 * @var string $DefaultTimeFormat
+		 */
+		public static $DefaultTimeFormat = QDateTime::FormatDisplayTime;
+
+		/**
 		 * Pass this to __construct in order to set DateTime to current date/time.
 		 * e.g. $dttDate = new QDateTime(QDateTime::Now);
 		 */

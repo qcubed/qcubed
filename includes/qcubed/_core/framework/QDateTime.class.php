@@ -26,8 +26,18 @@
 
 		const FormatSoap = 'YYYY-MM-DDThhhh:mm:ss';
 
+		/**
+		 * The "Default" Display Format
+		 * @var string $DefaultFormat
+		 */
 		public static $DefaultFormat = QDateTime::FormatDisplayDate;
 		
+		/**
+		 * The "Default" Display Format for Times
+		 * @var string $DefaultTimeFormat
+		 */
+		public static $DefaultTimeFormat = QDateTime::FormatDisplayTime;
+	
 		/**
 		 * Returns a new QDateTime object that's set to "Now"
 		 * Set blnTimeValue to true (default) for a DateTime, and set blnTimeValue to false for just a Date

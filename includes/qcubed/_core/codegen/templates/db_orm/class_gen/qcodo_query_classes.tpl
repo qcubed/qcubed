@@ -39,7 +39,7 @@
 			switch ($strName) {
 <% foreach ($objTable->ColumnArray as $objColumn) { %>
 				case '<%= $objColumn->PropertyName %>':
-					return new QQNode('<%= $objColumn->Name %>', '<%= $objColumn->PropertyName %>', '<%= $objColumn->VariableType %>', $this);
+					return new QQNode('<%= $objColumn->Name %>', '<%= $objColumn->PropertyName %>', '<%= $objColumn->DbType %>', $this);
 	<% if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { %>
 				case '<%= $objColumn->Reference->PropertyName %>':
 					return new QQNode<%= $objColumn->Reference->VariableType; %>('<%= $objColumn->Name %>', '<%= $objColumn->Reference->PropertyName %>', '<%= $objColumn->VariableType %>', $this);
