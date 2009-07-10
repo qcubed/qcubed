@@ -12,6 +12,7 @@
 		protected $objChildItemArray = array();
 		protected $objTreeNav;
 		protected $strParentItemId;
+		protected $blnHasChildren = false;
 
 		/////////////////////////
 		// Methods
@@ -58,6 +59,7 @@
 				case "ItemId": return $this->strItemId;
 				case "TreeNav": return $this->objTreeNav;
 				case "ParentItemId": return $this->strParentItemId;
+				case "HasChildren": return $this->blnHasChildren;
 
 				default:
 					try {
@@ -106,7 +108,15 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
+				case "HasChildren":
+					try {
+						$this->blnHasChildren = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			
 				default:
 					try {
 						parent::__set($strName, $mixValue);

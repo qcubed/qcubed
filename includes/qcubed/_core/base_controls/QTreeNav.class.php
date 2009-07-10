@@ -7,6 +7,9 @@
 		protected $strItemHoverCssStyle = 'treenav_item treenav_item_hover';
 		protected $strItemSelectedHoverCssStyle = 'treenav_item treenav_item_hover treenav_item_selected';
 
+		protected $strLabelForRequired;
+		protected $strLabelForRequiredUnnamed;
+
 		protected $intIndentWidth = 15;
 		protected $intItemHeight = 15;
 		protected $intItemWidth = 0;
@@ -15,10 +18,25 @@
 		protected $objItemArray = array();
 		protected $intNextItemId = 1;
 		protected $objSelectedTreeNavItem = null;
+		protected $strLoader = null;
+		protected $objLoaderParent = null;
 
 		protected $blnIsBlockElement = true;
 		protected $blnExpandOnSelect = true;
 		protected $blnAllowHover = false;
+
+		public function __construct($objParentObject, $strControlId = null) {
+			parent::__construct($objParentObject, $strControlId);
+
+			$this->strLabelForRequired = QApplication::Translate('%s is required');
+			$this->strLabelForRequiredUnnamed = QApplication::Translate('Required');
+		}
+
+		public function SetLoader($strFuncName, $objParent)
+		{
+			$this->strLoader = $strFuncName;
+			$this->objLoaderParent = $objParent;
+		}
 
 		protected function GetItemHtml($objItem) {
 			$strItemId = $this->strControlId . '_' . $objItem->ItemId;
@@ -30,11 +48,22 @@
 			$strImageHtml = '';
 			$strLabelHtml = '';
 
-			if ($intChildCount) {
+			if ($intChildCount || $objItem->HasChildren) {
 				// This Item has Children -- Must show either Collapsed or Expanded icon
 				if ($objItem->Expanded) {
 					$strImageHtml = sprintf('<span style="margin-right: 2px;"><img id="%s_image" src="%s/treenav_expanded.png" width="11" height="11" alt="" style="position: relative; top: 2px; cursor: pointer;" onclick="treenavToggleImage(\'%s\')"/></span>',
 						$strItemId, __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__, $strItemId);
+
+					if($intChildCount == 0 && null !== $this->strLoader && null !== $this->objLoaderParent)
+					{
+						//this is a dynamic item, call the loader
+						$strLoader = $this->strLoader;
+						$this->objLoaderParent->$strLoader($objItem);
+						
+						//now it should have children. Be sure to use them.
+						$objChildren = $objItem->ChildItemArray;
+						$intChildCount = count($objChildren);
+					}
 
 					for ($intIndex = 0; $intIndex < $intChildCount; $intIndex++) {
 						$objChildItem = $objChildren[$intIndex];
@@ -129,6 +158,15 @@
 			return $strToReturn;
 		}
 
+		public function Clear()
+		{
+			$this->objChildItemArray = array();
+			$this->objItemArray = array();
+			$this->intNextItemId = 1;
+			$this->objSelectedTreeNavItem = null;
+			$this->blnModified = true;
+		}
+
 		public function ParsePostData() {
 			if (array_key_exists('Qform__FormControl', $_POST) && ($_POST['Qform__FormControl'] == $this->strControlId)) {
 				if ($_POST['Qform__FormEvent'] == 'QChangeEvent') {
@@ -152,7 +190,21 @@
 			}
 		}
 
-		public function Validate() {return true;}
+		public function Validate() {
+			$this->strValidationError = "";
+
+			// Check for Required
+			if ($this->blnRequired && $this->SelectedItem === null)
+			{
+				if ($this->strName)
+					$this->strValidationError = sprintf($this->strLabelForRequired, $this->strName);
+				else
+					$this->strValidationError = $this->strLabelForRequiredUnnamed;
+				return false;
+			}
+
+			return true;
+		}
 
 		public function GetControlHtml() {
 			$strAttributes = $this->GetAttributes();

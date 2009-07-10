@@ -53,7 +53,7 @@
 	.main_info {font: 12px arial, helvetica, sans-serif; font-style: italic; padding: 10px 100px 10px 100px; background-color: #ddeeff;}
 
 	.selectedStyle {background-color: #ffaacc;}
-	.treenav {background-color: #eeeeee; width: 300px; height: 400px; overflow: auto; position: absolute; top: 430px; left: 70px; padding: 10px;}
+	.treenav {background-color: #eeeeee; width: 300px; height: 400px; overflow: auto; top: 430px; left: 70px; padding: 10px;}
 
 	.codeDisplay {background-color: #eeddff; width: 400px; height: 400px; overflow: auto; position: absolute; top: 430px; left: 400px; padding: 10px;}
 

@@ -59,7 +59,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs/qcubed');
+			define ('__DOCROOT__', '/home/mhostetler/src/sites/qcubed/htdocs');
 			define ('__VIRTUAL_DIRECTORY__', '');
 			define ('__SUBDIRECTORY__', '');
 
