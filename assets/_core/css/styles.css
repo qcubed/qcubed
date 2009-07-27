@@ -272,7 +272,8 @@ div.renderWithName { padding: 4px 0 4px 0; overflow: auto; height: 100%; }
 			#viewSource a, #closeWindow a { font-size:16px; font-weight:bold; color:#FFF;}
 		#willOpen { height:12px; line-height:12px; font-size:10px; font-style:italic;}
 	.headerSmall { font-size: 10px;}
-	a.headerLink { color: #ffffff;}
+	a.headerLink:link, a.headerLink:visited { color: #FFF;}
+	a.headerLink:active, a.headerLink:hover { color: #CCC; text-decoration:underline;}
 
 #content { padding: 10px; clear:both; float:none; width:960px; margin:0px auto 50px auto;text-align:left;}
 	a.bodyLink { color: #780000; }
