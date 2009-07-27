@@ -326,37 +326,37 @@
 			$blnIsScript = false;
 
 			if ($strCurrentScript == 'header.inc.php') {
-				$strToReturn = '<span class="headingLeftGray">header.inc.php</span>';
+				$strToReturn = '<span class="headerGray">header.inc.php</span>';
 				$blnIsScript = true;
 			} else {
-				$strToReturn = sprintf('<a href="%s/../header.inc.php" class="headingLink">header.inc.php</a>', QApplication::$RequestUri);
+				$strToReturn = sprintf('<a href="%s/../header.inc.php" class="headerLink">header.inc.php</a>', QApplication::$RequestUri);
 			}
 
 			$strToReturn .= ' &nbsp; | &nbsp; ';
 
 			if ($strCurrentScript == 'footer.inc.php') {
-				$strToReturn .= '<span class="headingLeftGray">footer.inc.php</span>';
+				$strToReturn .= '<span class="headerGray">footer.inc.php</span>';
 				$blnIsScript = true;
 			} else {
-				$strToReturn .= sprintf('<a href="%s/../footer.inc.php" class="headingLink">footer.inc.php</a>', QApplication::$RequestUri);
+				$strToReturn .= sprintf('<a href="%s/../footer.inc.php" class="headerLink">footer.inc.php</a>', QApplication::$RequestUri);
 			}
 			
 			$strToReturn .= ' &nbsp; | &nbsp; ';
 
 			if ($strCurrentScript == 'examples.css') {
-				$strToReturn .= '<span class="headingLeftGray">examples.css</span>';
+				$strToReturn .= '<span class="headerGray">examples.css</span>';
 				$blnIsScript = true;
 			} else
-				$strToReturn .= sprintf('<a href="%s/../examples.css" class="headingLink">examples.css</a>', QApplication::$RequestUri);
+				$strToReturn .= sprintf('<a href="%s/../examples.css" class="headerLink">examples.css</a>', QApplication::$RequestUri);
 
 			$strToReturn .= ' &nbsp; | &nbsp; ';
 
 			$strScriptname = substr($strReference, strrpos($strReference, '/') + 1);
 			if ($strCurrentScript == $strScriptname) {
-				$strToReturn .= sprintf('<span class="headingLeftGray">%s</span>', $strScriptname);
+				$strToReturn .= sprintf('<span class="headerGray">%s</span>', $strScriptname);
 				$blnIsScript = true;
 			} else
-				$strToReturn .= sprintf('<a href="%s/../%s" class="headingLink">%s</a>', QApplication::$RequestUri, $strScriptname, $strScriptname);
+				$strToReturn .= sprintf('<a href="%s/../%s" class="headerLink">%s</a>', QApplication::$RequestUri, $strScriptname, $strScriptname);
 
 
 			// Current Number of Code Links
@@ -367,10 +367,10 @@
 
 				$strScriptname = substr(str_replace('.php', '.tpl.php', $strReference), strrpos(str_replace('.php', '.tpl.php', $strReference), '/') + 1);
 				if ($strCurrentScript == $strScriptname) {
-					$strToReturn .= sprintf('<span class="headingLeftGray">%s</span>', $strScriptname);
+					$strToReturn .= sprintf('<span class="headerGray">%s</span>', $strScriptname);
 					$blnIsScript = true;
 				} else {
-					$strToReturn .= sprintf('<a href="%s/../%s" class="headingLink">%s</a>', QApplication::$RequestUri, $strScriptname, $strScriptname);
+					$strToReturn .= sprintf('<a href="%s/../%s" class="headerLink">%s</a>', QApplication::$RequestUri, $strScriptname, $strScriptname);
 				}
 				
 				$intCount++;
@@ -385,10 +385,10 @@
 		
 					$strScriptname = $strCode;
 					if ($strCurrentScript == $strScriptname) {
-						$strToReturn .= sprintf('<span class="headingLeftGray">%s</span>', preg_replace('/__.*__/', '', $strScriptname));
+						$strToReturn .= sprintf('<span class="headerGray">%s</span>', preg_replace('/__.*__/', '', $strScriptname));
 						$blnIsScript = true;
 					} else {
-						$strToReturn .= sprintf('<a href="%s/../%s" class="headingLink">%s</a>', QApplication::$RequestUri, $strScriptname, preg_replace('/__.*__/', '', $strScriptname));
+						$strToReturn .= sprintf('<a href="%s/../%s" class="headerLink">%s</a>', QApplication::$RequestUri, $strScriptname, preg_replace('/__.*__/', '', $strScriptname));
 					}
 
 					$intCount++;
@@ -423,11 +423,11 @@
 									strpos($strScriptName, QApplication::$ScriptName) !== false) { // for plugins examples
 									$blnFound = true;
 								} else {
-									$strPrevious = sprintf('<b><a href="%s" class="headingLink">&lt;&lt; %s</a></b>',
+									$strPrevious = sprintf('<strong><a href="%s" class="headerLink">&lt;&lt; %s</a></strong>',
 										$strScriptName, $strDescription);
 								}
 							} else if (!$strNext) {
-								$strNext = sprintf('<b><a href="%s" class="headingLink">%s &gt;&gt;</a></b>',
+								$strNext = sprintf('<strong><a href="%s" class="headerLink">%s &gt;&gt;</a></strong>',
 									$strScriptName, $strDescription);
 							}
 						}
@@ -440,7 +440,7 @@
 			if ($strPrevious)
 				$strToReturn = $strPrevious;
 			else
-				$strToReturn = '<span class="headingLeftGray">&lt;&lt; Previous</span>';
+				$strToReturn = '<span class="headerGray">&lt;&lt; Previous</span>';
 
 			$intCategoryId = Examples::GetCategoryId();
 			if ($intCategoryId < 3)
