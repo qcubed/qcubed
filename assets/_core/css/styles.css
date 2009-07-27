@@ -85,7 +85,6 @@ pre, kbd, code, samp, tt, var {
 
 pre {
 	white-space: pre-wrap;       /* css-3 */
-	word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
 del {
@@ -364,7 +363,7 @@ a.main_navselected { color: #ffffff; font-weight: bold; text-transform: uppercas
 .treenav {background-color: #FFF; width: 300px; height: 400px; overflow: auto; position: absolute; top: 430px; left: 70px; padding: 10px;}
 
 
-.data_repeater_example {background-color:#eeffdd;padding:10px;width:200px;border-width:1px solid #111;float:left;margin:5px;}
+.data_repeater_example {background-color:#eeffdd;padding:10px;width:200px;border:1px solid #111;float:left;margin:5px;}
 .tc {width: 200px; height: 100px; border: 1px solid #780000; color: #111; font: 20px arial; font-weight: bold; text-align: center; vertical-align: middle;}
 
 .panelDefault {width:400px;height:400px;background-color:#efefef;border-width:1px;border-style:solid;float:left;overflow:auto;}
