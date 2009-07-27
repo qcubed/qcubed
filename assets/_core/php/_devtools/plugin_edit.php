@@ -97,7 +97,7 @@ class PluginEditForm extends QForm {
 	public function btnInstall_Click() {
 		$status = QPluginInstaller::installFromExpanded(QApplication::QueryString('strName'));
 		
-		$linkToProceed = "<br><a href='plugin_manager.php'><h2>Click here to continue</h2></a><br>";
+		$linkToProceed = "<h2><a href='plugin_manager.php'>Click here to continue</a></h2>";
 		$this->dlgStatus->Text = nl2br($status) . $linkToProceed;
 		$this->dlgStatus->ShowDialogBox();
 	}
@@ -116,7 +116,7 @@ class PluginEditForm extends QForm {
 	public function btnUninstall_Click() {
 		$status = QPluginUninstaller::uninstallExisting(QApplication::QueryString('strName'));
 
-		$linkToProceed = "<br><a href='plugin_manager.php'><h2>Click here to continue</h2></a><br>";
+		$linkToProceed = "<h2><a href='plugin_manager.php'>Click here to continue</h2></a>";
 		$this->dlgStatus->Text = nl2br($status) . $linkToProceed;
 		$this->dlgStatus->ShowDialogBox();
 	}

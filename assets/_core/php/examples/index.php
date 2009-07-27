@@ -1,26 +1,22 @@
 <?php
-	require_once(dirname(__FILE__).'/../../../../qcubed.inc.php');
-	require('includes/header_main.inc.php');
+	require_once(dirname(__FILE__).'/../../../../qcubed.inc.php');	$mainPage = true;
+	require('includes/header.inc.php');
 ?>
-<div style="text-align: center; width: 100%;">
-	<div style="text-align: left; margin: 0px auto 0px auto; width: 830px;">
-
-		<div class="instructions_main" style="width: 770px;">
-			<h1 class="instruction_title">QCubed Examples Site</h1>
+		<div class="instructions">
+			<div class="instruction_title">QCubed Examples Site</div>
 			
-			This is a collection of many small examples that demonstrate the functionality
+			<p>This is a collection of many small examples that demonstrate the functionality
 			in QCubed.  Later examples tend to build upon functionality or concepts that are
 			discussed in prior ones, which allows the Examples site to be viewed as a quasi-tutorial.
-			However, you should still feel free to check out any of the examples as you wish.<br/><br/>
+			However, you should still feel free to check out any of the examples as you wish.</p>
 			
-			The Examples are broken into three main parts: the <b>Code Generator</b>, the <b>QForm and QControl Library</b>, and
-			<b>Other QCubed Functionality</b>.<br/><br/>
+			<p>The Examples are broken into three main parts: the <strong>Code Generator</strong>, the <strong>QForm and QControl Library</strong>, and
+			<strong>Other QCubed Functionality</strong>.</p>
 
-			<span style="font-size: 10px;">* Some of the examples (marked with a "*") use the <b>Examples Site Database</b>.
+			<p class="bodySmall">* Some of the examples (marked with a "*") use the <strong>Examples Site Database</strong>.
 			This database (which consists of six tables and some preloaded sample data) is included in the Examples Site directories.  See 
 			<a href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__); ?>/code_generator/intro.php" class="bodyLink" style="font-weight: bold;">Basic CodeGen &gt; About the Database</a>
-			for more information.
-		</span>
+			for more information.</p>
 		</div>
 		
 		<script type="text/javascript">
@@ -56,9 +52,7 @@
 				}
 			}
 		</script>
-		
-		<div style="margin-left: 20px">
-		
+
 		<div class="main_navigator">
 		<a id="link1" href="javascript:DisplayPart('1')" class="main_navselected">The Code Generator</a>
 		 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
@@ -75,12 +69,13 @@
 ?>
 					<div id="part1">
 					<div class="main_info">
-					<b>The Code Generator</b> is at the heart of the Model in the MVC (Model, View, Controller) architecture.
-					It uses the data model you have defined to create all your data objects, relationships and CRUD
-					functionality.<br/><br/>
-					
-					Sections 1 - 3 look specifically at the <b>Code Generator</b>, the <b>Object Relational Model</b> it creates, and the
-					<b>QCubed Query</b> library which powers it.</div>
+						<p><strong>The Code Generator</strong> is at the heart of the Model in the MVC (Model, View, Controller) architecture.
+						It uses the data model you have defined to create all your data objects, relationships and CRUD
+						functionality.</p>
+						
+						<p>Sections 1 - 3 look specifically at the <strong>Code Generator</strong>, the <strong>Object Relational Model</strong> it creates, and the
+						<strong>QCubed Query</strong> library which powers it.</p>
+					</div>
 					<blockquote>
 <?php
 				}
@@ -90,11 +85,12 @@
 					</blockquote></div>
 					<div id="part2" style="display: none;">
 					<div class="main_info">
-					QForms is a <b>stateful, event-driven architecture for web-based forms</b>, providing the display and
-					presentation functionality for Qcodo.  Basically, it is your "V" and "C" of the MVC architecture.<br/><br/>
-		
-					Sections 4 - 10 are examples on how to use the <b>QForm</b> and <b>QControl</b> libraries
-					within the QCubed Development Framework.</div>
+						<p>QForms is a <strong>stateful, event-driven architecture for web-based forms</strong>, providing the display and
+						presentation functionality for QCubed.  Basically, it is your "V" and "C" of the MVC architecture.</p>
+			
+						<p>Sections 4 - 10 are examples on how to use the <strong>QForm</strong> and <strong>QControl</strong> libraries
+						within the QCubed Development Framework.</p>
+					</div>
 					<blockquote>
 <?php
 				}
@@ -104,14 +100,14 @@
 					</blockquote></div>
 					<div id="part3" style="display: none;">
 					<div class="main_info">
-					Beyond the <b>Code Generator</b> and the <b>Qform Library</b>, QCubed also many other modules and features
-					that is useful for web application developers.</div>
-
+						<p>Beyond the <strong>Code Generator</strong> and the <strong>Qform Library</strong>, QCubed also many other modules and features
+						that is useful for web application developers.</p>
+					</div>
 					<blockquote>
 <?php
 				}
 
-				printf('<p>%s. <b>%s</b> - %s</p><ul>', ($intIndex + 1), $objExampleCategory['name'], $objExampleCategory['description']);
+				printf('<p>%s. <b>%s</b> - %s</p><ul class="exampleList">', ($intIndex + 1), $objExampleCategory['name'], $objExampleCategory['description']);
 				
 				foreach ($objExampleCategory as $strKey => $strValue) {
 					if (is_numeric($strKey)) {
@@ -123,20 +119,7 @@
 				_p('</ul>', false);
 			}
 ?>
-		</blockquote></div></div>
-		
-		<br/>
-		<div style="text-align: center;">
-			For more information, please go to the QCubed website at <b><a href="http://www.qcu.be/" class="bodyLink">http://www.qcu.be/</a></b>
-			<br/><br/>
-			If you have questions, comments or issues, you can discuss them in the forums at the <b><a href="http://qcu.be/forum" class="bodyLink">Examples Site Forum</a></b>
-		</div>
-		<br /><br /><br />
-
-
-
-	</div>
-</div>
+		</blockquote></div>
 
 <?php
 	if (QApplication::PathInfo(0))

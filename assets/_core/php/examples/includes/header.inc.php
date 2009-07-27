@@ -1,11 +1,10 @@
 <?php require(__DOCROOT__ . __EXAMPLES__ . '/includes/examples.inc.php'); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=<?php _p(QApplication::$EncodingType); ?>" />
-		<title><?php _p(Examples::PageName(), false); ?> - QCubed Example</title>
+		<title><?php _p(Examples::PageName(), false); ?> - QCubed PHP 5 Development Framework - Examples</title>
 		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/styles.css'); ?>"></link>
-		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/includes/examples.css'); ?>"></link>
 		<script type="text/javascript">
 			function ViewSource(intCategoryId, intExampleId, strFilename) {
 				var fileNameSection = "";
@@ -17,25 +16,27 @@
 			}
 		</script>
 	</head>
-	<body> 
-
-	<table border="0" cellspacing="0" width="100%">
-		<tr>
-			<td class="headingLeft"><span class="headingLeftSmall">
-				<?php _p((Examples::GetCategoryId() + 1) . '. ' . Examples::$Categories[Examples::GetCategoryId()]['name'], false); ?><br/>
-			</span>
-				<?php _p(Examples::PageName(), false); ?><br/>
-			<span class="headingLeftSmall">
-				<?php _p(Examples::PageLinks(), false); ?>
-			</span>
-			</td>
-			<td class="headingRight"><br/>
-				<b><a href="javascript:ViewSource(<?php _p(Examples::GetCategoryId() . ',' . Examples::GetExampleId()); ?>);" class="headingLink">View Source</a></b>
-<!--				<a href="#" onclick="window.open('http://localhost/validator/htdocs/check?uri=<?php _p(urlencode('http://qcodo/' . QApplication::$RequestUri)); ?>'); return false;" style="color: #ffffff;">Validate</a>-->
-				<br/>
-				<span class="headingLeftSmall">will open in a new window</span>
-			</td>
-		</tr>
-	</table>
-	
-	<div class="page">
+	<body>
+		<div id="page">
+			<div id="header">
+				<div id="headerLeft">
+					<?php if(isset($mainPage)) { ?>
+					<div id="codeVersion"><span class="headerSmall">QCubed Examples - <?php _p(QCUBED_VERSION); ?></span></div>
+					<?php } ?>
+					<?php if(!isset($mainPage)) { ?>
+					<div id="categoryName"><span class="headerSmall"><?php _p((Examples::GetCategoryId() + 1) . '. ' . Examples::$Categories[Examples::GetCategoryId()]['name'], false); ?></span></div>
+					<?php } ?>
+					<div id="pageName"><?php _p(Examples::PageName(), false); ?></div>
+					<?php if(!isset($mainPage)) { ?>
+					<div id="pageLinks"><span class="headerSmall"><?php _p(Examples::PageLinks(), false); ?></span></div>
+					<?php } ?>
+				</div>
+				<div id="headerRight">
+					<?php if(!isset($mainPage)) { ?>
+						<div id="viewSource"><a href="javascript:ViewSource(<?php _p(Examples::GetCategoryId() . ',' . Examples::GetExampleId()); ?>);">View Source</a></div>
+		<!--				<a href="#" onclick="window.open('http://localhost/validator/htdocs/check?uri=<?php _p(urlencode('http://qcodo/' . QApplication::$RequestUri)); ?>'); return false;" style="color: #ffffff;">Validate</a>-->
+						<div id="willOpen"><span class="headerSmall">will open in a new window</span></div>
+					<?php } ?>
+				</div>
+			</div>
+			<div id="content">

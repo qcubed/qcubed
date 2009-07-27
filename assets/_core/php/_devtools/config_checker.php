@@ -15,11 +15,11 @@ if (sizeof($arrInstallationMessages) == 0) {
 		", a vibrant community is there to help you all the time. There's also a " .
 		"<a target='_blank' href='http://qcu.be/chat'>chat room</a> where you can get help right away. </p>";
 		
-	echo "<p>Here's what you need to do:</p><ol>";	
+	echo "<p>Here's what you need to do:</p>\n<ol>";	
 	foreach ($arrInstallationMessages as $objResult) {
-		echo "<li>" . $objResult->strMessage . "</li>";
+		echo "<li>" . $objResult->strMessage . "</li>\n";
 	}
-	echo "</ol>";
+	echo "</ol>\n";
 	
 	// Output commands that can help fix these issues
 	$commands = "";
@@ -35,7 +35,7 @@ if (sizeof($arrInstallationMessages) == 0) {
 		echo "<pre style='background-color: #CCC'>" . $commands . "</pre>";
 	}
 
-	echo "<input type='button' value=\"I'm done, continue\" onClick='window.location.reload()' /><br/><br/>" .
+	echo "<input type='button' value=\"I'm done, continue\" onclick='window.location.reload()' /><br/><br/>" .
 		"<a href='start_page.php'>Ignore these warnings and continue</a> (not recommended)";
 }
 
@@ -71,7 +71,7 @@ function ValidateInstall() {
 	if (!file_exists($docrootOnlyPath)) {
 		$obj = new stdClass();
 		$obj->strMessage = 'Set the __DOCROOT__ constant in ' .
-			'includes/configuration/configuration.inc.php. ' .
+			'/includes/configuration/configuration.inc.php. ' .
 			'Most likely value: "' . $root . '"';
 		$result[] = $obj;
 
@@ -83,7 +83,7 @@ function ValidateInstall() {
 	if (!file_exists($docrootWithSubdirPath)) {
 		$obj = new stdClass();
 		$obj->strMessage = 'Set the __SUBDIRECTORY__ constant in ' .
-			'includes/configuration/configuration.inc.php. ' .
+			'/includes/configuration/configuration.inc.php. ' .
 			'Most likely value: "/' . $part1 . '"';
 		$result[] = $obj;
 				

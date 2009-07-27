@@ -59,7 +59,7 @@
 			$exampleSnippet = "";
 			
 			if (sizeof($objItem->objExamplesArray) > 0) {
-				$exampleSnippet .= "<br>";
+				$exampleSnippet .= "<br />";
 				foreach ($objItem->objExamplesArray as $example) {
 					$exampleSnippet .= "Example: <a href='" .
 						__PLUGIN_ASSETS__ . '/' . $objItem->strName . '/' .
@@ -72,10 +72,10 @@
 		
 		private function dlgUpload_Create() {
 			$this->dlgUpload = new QFileAssetDialog($this, 'dlgUpload_done');
-			$this->dlgUpload->lblMessage->Text = "Please upload a plugin .zip file. <br /><br />" . 
-				"You can get the latest plugins from the " .
+			$this->dlgUpload->lblMessage->Text = "<p>Please upload a plugin .zip file.</p>" . 
+				"<p>You can get the latest plugins from the " .
 				"<a target='_blank' href='" . QPluginInstaller::ONLINE_PLUGIN_REPOSITORY .
-				"'>online repository</a>.";
+				"'>online repository</a>.</p>";
 			$this->dlgUpload->btnUpload->Text = "Upload";
 			$this->dlgUpload->btnCancel->Text = "Cancel";
 			$this->dlgUpload->SetCustomStyle("background-color", "rgb(238, 255, 221)");
@@ -84,14 +84,14 @@
 		
 		public function dlgUpload_done($strFormId, $strControlId, $strParameter) {
 			$this->dlgUpload->HideDialogBox();
-			
+
 			$originalFileName = $this->dlgUpload->flcFileAsset->FileName;
 			if (strtolower(substr($originalFileName, -3)) != "zip") {
 				QApplication::DisplayAlert("Invalid uploaded plugin file - only ZIP allowed: " . $originalFileName);
 				return;
 			}
-
-			$pluginFolder = QPluginInstaller::installPluginFromZip($this->dlgUpload->flcFileAsset->File);
+			
+			$pluginFolder = QPluginInstaller::processUploadedPluginArchive($this->dlgUpload->flcFileAsset);
 			
 			if ($pluginFolder == null) {
 				QApplication::DisplayAlert(QPluginInstaller::getLastError());

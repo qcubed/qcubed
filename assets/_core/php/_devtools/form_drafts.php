@@ -34,12 +34,6 @@
 	$strPageTitle = 'List of Form Drafts';
 	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
-
-	<div id="titleBar">
-		<h2>QCubed Development Framework <?php _p(QCUBED_VERSION) ?></h2>
-		<h1><?php _t('List of Form Drafts') ?></h1>
-	</div>
-
 	<div id="draftList">
 <?php
 		foreach ($strObjectArray as $strObject=>$blnValue) {
@@ -48,7 +42,7 @@
 				__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__, $strObject, QApplication::Translate('Create New'));
 		}
 ?>
-		<p>&nbsp;</p>
+		<hr />
 		<h1>Panel Drafts &ldquo;AJAX Dashboard&rdquo;</h1>
 		<p class="create"><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __PANEL_DRAFTS__) ?>">Go to Dashboard</a></p>
 	</div>

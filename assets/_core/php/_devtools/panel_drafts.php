@@ -24,13 +24,13 @@
 	class Dashboard extends QForm {
 		protected $lstClassNames;
 
-		protected $pnlTitle;
+		protected $lblTitle;
 		protected $pnlList;
 		protected $pnlEdit;
 
 		protected function Form_Create() {
-			$this->pnlTitle = new QPanel($this);
-			$this->pnlTitle->Text = 'AJAX Dashboard';
+			$this->lblTitle = new QLabel($this);
+			$this->lblTitle->Text = 'AJAX Dashboard';
 
 			$this->pnlList = new QPanel($this, 'pnlList');
 			$this->pnlList->AutoRenderChildren = true;
@@ -87,9 +87,9 @@
 			if ($strClassName = $this->lstClassNames->SelectedValue) {
 				// We've selected a Class Name
 				$objNewPanel = new $strClassName($this->pnlList, 'SetEditPane', 'CloseEditPane');
-				$this->pnlTitle->Text = $this->lstClassNames->SelectedName;
+				$this->lblTitle->Text = $this->lstClassNames->SelectedName;
 			} else {
-				$this->pnlTitle->Text = 'AJAX Dashboard';
+				$this->lblTitle->Text = 'AJAX Dashboard';
 			}
 		}
 

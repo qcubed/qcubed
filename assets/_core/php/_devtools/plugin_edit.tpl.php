@@ -1,4 +1,5 @@
 <?php
+	$strPageTitle = "Plugin Editor";
 	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
 	<?php $this->RenderBegin() ?>
@@ -9,7 +10,7 @@
 	<p>Version <?php $this->lblPluginVersion->Render(); ?>,
 		works with QCubed <?php $this->lblPlatformVersion->Render(); ?></p>
 	
-	<p>Author: <?php $this->lblAuthorName->Render(); ?>
+	<p>Author: <?php $this->lblAuthorName->Render(); ?>,
 		<?php $this->lblAuthorEmail->Render(); ?></p>
 
 	<div id="formActions">

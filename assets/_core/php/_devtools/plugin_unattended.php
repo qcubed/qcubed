@@ -5,7 +5,7 @@ require_once('../qcubed.inc.php');
 QApplication::CheckRemoteAdmin();
 
 echo "<h2>Unattended Plugin Installer</h2>";
-echo "<p><i>" . QDateTime::NowToString(QDateTime::FormatDisplayDateTime) . "</i></p>";
+echo "<p><em>" . QDateTime::NowToString(QDateTime::FormatDisplayDateTime) . "</em></p>";
 
 $directory = __INCLUDES__ . '/tmp/plugin.install';
 $arrFiles = QFolder::listFilesInFolder($directory, false, "/\.zip$/i");
@@ -23,10 +23,9 @@ if (sizeof($arrFiles) > 0) {
 			}
 			echo nl2br($strLog);
 		} catch (Exception $e) {
-			echo "Error installing the plugin: " . $e->getMessage();
+			echo '<div class="error">Error installing the plugin: ' . $e->getMessage() . '</div>';
 		}
 		
-		echo "<br>";
 	}
 } else {
 	echo "<p>No plugin zip files found in the unattended install directory: " . $directory . "</p>";

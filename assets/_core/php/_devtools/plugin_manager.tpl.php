@@ -1,4 +1,5 @@
 <?php
+	$strPageTitle = "Plugin Manager";
 	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
 

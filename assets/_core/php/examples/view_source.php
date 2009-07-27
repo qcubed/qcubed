@@ -11,28 +11,25 @@
 	if (!$strScript)
 		QApplication::Redirect(QApplication::$RequestUri . substr($strReference, strrpos($strReference, '/')));
 ?>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
-		<title>QCubed Development Framework - View Source</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=<?php _p(QApplication::$EncodingType); ?>" />
+		<title>QCubed PHP 5 Development Framework - View Source</title>
+		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/styles.css'); ?>"></link>
 		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/includes/examples.css'); ?>"></link>
 	</head>
-	<body> 
-
-	<table border="0" cellspacing="0" width="100%">
-		<tr>
-			<td nowrap="nowrap" class="headingLeft">
-				<?php _p(Examples::PageName($strReference)); ?> - View Source<br/>
-			<span class="headingLeftSmall">
-				<?php _p(Examples::CodeLinks($strReference, $strScript), false); ?>
-			</span>
-			</td>
-			<td nowrap="nowrap" class="headingRight"><br/>
-				<b><a href="javascript:window.close()" class="headingLink">Close Window</a></b>
-			</td>
-		</tr>
-	</table>
-
-	<div class="page">
+	<body>
+		<div id="page">
+			<div id="header">
+				<div id="headerLeft">
+					<div id="pageName"><?php _p(Examples::PageName($strReference)); ?> - View Source</div>
+					<div id="pageLinks"><span class="headerSmall"><?php _p(Examples::CodeLinks($strReference, $strScript), false); ?></span></div>
+				</div>
+				<div id="headerRight">
+					<div id="closeWindow"><a href="javascript:window.close()">Close Window</a></div>
+				</div>
+			<div>
+			<div id="content">
 <?php
 	// Filename Cleanup
 	if (($strScript == 'header.inc.php') || ($strScript == 'footer.inc.php') || ($strScript == 'examples.css'))
@@ -52,11 +49,12 @@
 		throw new Exception("Example file does not exist: " . $strFilename);
 	}
 ?>
-	<h3>Source Listing for: <?php _p(preg_replace('/__.*__/', '', $strScript)); ?></h3>
-	
-	<div class="code" style="padding: 10px;" nowrap="nowrap">
-		<?php highlight_file($strFilename); ?>
-	</div>
-
+				<h3>Source Listing for: <?php _p(preg_replace('/__.*__/', '', $strScript)); ?></h3>
+		
+				<div class="code" style="padding: 10px;" nowrap="nowrap">
+					<?php highlight_file($strFilename); ?>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

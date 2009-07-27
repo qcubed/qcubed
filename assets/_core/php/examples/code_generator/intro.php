@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions">
-		<h1 class="instruction_title">The Examples Site Database</h1>
+		<div class="instruction_title">The Examples Site Database</div>
 		
 		Before learning about the Code Generator, it might be good to first get acquainted with the
 		data model which the Code Generator will be generating from.<br/><br/>
@@ -33,6 +33,6 @@
 		specifically used by the example for <b>Optimistic Locking</b>.
 	</div>
 
-	<img src="../images/data_model.png" alt="&quot;Examples Site Database&quot; data model" style="border-width: 1px; border-style: solid;" />
+	<img src="../images/data_model.png" alt="&quot;Examples Site Database&quot; data model" style="display:block; border-width: 0px; margin:auto; text-align:center;" />
 	
 <?php require('../includes/footer.inc.php'); ?>
