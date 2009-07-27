@@ -266,7 +266,7 @@ div.renderWithName { padding: 4px 0 4px 0; overflow: auto; height: 100%; }
 		#pageName { height:24px; font-size:14px; line-height:24px; font-weight:bold; }
 		#categoryName, #codeVersion { height:12px; line-height:12px; font-size:10px; } 
 		#pageLinks { height:12px; line-height:12px; font-size:10px; }
-		.headerLeftGray {font-style:italic;}
+		.headerGray {font-style:italic;}
 	#headerRight { width: 49%; text-align: right; float:right; padding-right:1%;}
 		#viewSource, #closeWindow { height:36px; line-height:36px; font-size:16px;}
 			#viewSource a, #closeWindow a { font-size:16px; font-weight:bold; color:#FFF;}
