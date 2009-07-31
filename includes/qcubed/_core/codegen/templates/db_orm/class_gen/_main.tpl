@@ -32,7 +32,7 @@
 
 
 
-		<%@ qcodo_query_methods('objTable'); %>
+		<%@ qcubed_query_methods('objTable'); %>
 
 
 
@@ -92,5 +92,5 @@
 
 
 
-	<%@ qcodo_query_classes('objTable'); %>
+	<%@ qcubed_query_classes('objTable'); %>
 ?>

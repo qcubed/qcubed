@@ -36,7 +36,7 @@
 		<br/><br/>
 		
 		For information about Expanding through Association Tables, please refer to the
-		<a href="../qcodo_query/association.php">Handling Association Tables example</a>.
+		<a href="../qcubed_query/association.php">Handling Association Tables example</a>.
 	</div>
 
 

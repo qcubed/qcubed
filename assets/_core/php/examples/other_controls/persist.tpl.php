@@ -27,7 +27,7 @@
 		<li>If you want to create a reusable component that will work
 		across user sessions (and will reuse the data from the session of one user to
 		the session of another), Persistent Controls won't help. Use the <b>QCache</b>
-		instead - take a look at QueryArrayCached (<a href="../qcodo_query/qcache.php">example</a>).</li>
+		instead - take a look at QueryArrayCached (<a href="../qcubed_query/qcache.php">example</a>).</li>
 		<li>Be mindful of the memory footprint of storing the <i>entire control</i>
 		in the $_SESSION. In the example below, the footprint of the tiny dropdown
 		with four values is 4KBytes. Persistent Controls can easily turn into a

@@ -51,7 +51,7 @@
 			'listbox.js',
 			'logger.js',
 			'post.js',
-			'qcodo.js',
+			'qcubed.js',
 			'treenav.js'); */
 
 		/**
