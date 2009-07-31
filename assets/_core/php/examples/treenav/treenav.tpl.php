@@ -4,20 +4,20 @@
 	<div class="instructions">
 		<h1 class="instruction_title">Tree Navigation Control</h1>
 
-		This example shows off the <b>QTreeNav</b> control.<br/><br/>
+		<p>This example shows off the <strong>QTreeNav</strong> control.</p>
 
-		The control uses it's own internal tree data structure, combined with javascript/DOM caching and
+		<p>The control uses it's own internal tree data structure, combined with javascript/DOM caching and
 		recursion to store and render the items/nodes within the tree navigation. The internal structure can
-		be built before the control is rendered, or on demand as branches are expanded.<br/><br/>
+		be built before the control is rendered, or on demand as branches are expanded.</p>
 		
-		Note that the <i>first</i> time you expand a node, the tree navigation item will make a <b>postajax</b>
+		<p>Note that the <em>first</em> time you expand a node, the tree navigation item will make a <strong>postajax</strong>
 		call to retrieve the child nodes for that node.  However, on subsequent expand/collapse events
-		for that node, it's purely client-side (no <b>postajax</b> call is made).<br/><br/>
+		for that node, it's purely client-side (no <strong>postajax</strong> call is made).</p>
 		
-		Below are two treenavs built using the two methods of building internal data. 
-		Please be sure to view the <b>tnvExample_AddItems</b> and <b>tnvExampleDynamic_AddItems</b>calls in 
-		the <b>treenav.php</b> code to see how we recurse through the includes/ filesystem directory to 
-		recursively add the treenav nodes/items to the tree nav control in either situation.<br/><br/>
+		<p>Below are two treenavs built using the two methods of building internal data. 
+		Please be sure to view the <strong>tnvExample_AddItems</strong> and <strong>tnvExampleDynamic_AddItems</strong>calls in 
+		the <strong>treenav.php</strong> code to see how we recurse through the includes/ filesystem directory to 
+		recursively add the treenav nodes/items to the tree nav control in either situation.</p>
 	</div>
 
 	<?php $this->tnvExample->Render(); ?>
