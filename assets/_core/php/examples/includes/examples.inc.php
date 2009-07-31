@@ -146,6 +146,7 @@
 			self::AddCoreExampleFile($intIndex, '/other_controls/image.php Introduction to QImageControl');
 			self::AddCoreExampleFile($intIndex, '/other_controls/datetime.php Date and DateTime-based QControls');
 			self::AddCoreExampleFile($intIndex, '/other_controls/file_asset.php Combining Controls: A Better Way to Upload Files');
+			self::AddCoreExampleFile($intIndex, '/other_controls/image_file_asset.php Upload Control Just for Images');
 		
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();

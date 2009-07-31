@@ -135,6 +135,7 @@
 	QApplicationBase::$ClassFile['qimagerollover'] = __QCUBED_CORE__ . '/base_controls/QImageRollover.class.php';
 
 	QApplicationBase::$ClassFile['qfileasset'] = __QCUBED__ . '/controls/QFileAsset.class.php';
+	QApplicationBase::$ClassFile['qimagefileasset'] = __QCUBED__ . '/controls/QImageFileAsset.class.php';
 	QApplicationBase::$ClassFile['qfileassetbase'] = __QCUBED_CORE__ . '/base_controls/QFileAssetBase.class.php';
 	QApplicationBase::$ClassFile['qfileassetdialog'] = __QCUBED_CORE__ . '/base_controls/QFileAssetDialog.class.php';
 
