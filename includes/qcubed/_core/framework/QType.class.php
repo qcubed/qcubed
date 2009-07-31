@@ -105,12 +105,12 @@
 			throw new QInvalidCastException(sprintf('Unable to cast %s object to %s', $objReflection->getName(), $strType));
 		}
 
-		private static function CastValueTo($mixItem, $strType) {
-			$strItemType = gettype($mixItem);
+		private static function CastValueTo($mixItem, $strNewType) {
+			$strOriginalType = gettype($mixItem);
 
-			switch (QType::TypeFromDoc($strType)) {
+			switch (QType::TypeFromDoc($strNewType)) {
 				case QType::Boolean:
-					if ($strItemType == QType::Boolean)
+					if ($strOriginalType == QType::Boolean)
 						return $mixItem;
 					if (is_null($mixItem))
 						return false;
@@ -118,41 +118,83 @@
 						return false;
 					if (strtolower($mixItem) == 'false')
 						return false;
-					settype($mixItem, $strType);
+					settype($mixItem, $strNewType);
 					return $mixItem;
 
 				case QType::Integer:
+					if($strOriginalType == QType::Boolean)
+						throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType, $mixItem));
 					if (strlen($mixItem) == 0)
 						return null;
-					if(($mixItem !== true) && ((((string)(int) $mixItem) === ((string) $mixItem))
-								|| preg_match('/^-?\d+$/',$mixItem) === 1))
+					if ($strOriginalType == QType::Integer)
 						return $mixItem;
-					else
-						throw new QInvalidCastException(sprintf('Invalid integer: %s', $mixItem));
+					
+					// Check to make sure the value hasn't changed significantly
+					$intItem = $mixItem;
+					settype($intItem, $strNewType);
+					$mixTest = $intItem;
+					settype($mixTest, $strOriginalType);
+					
+					// If the value hasn't changed, it's safe to return the casted value
+					if ((string)$mixTest === (string)$mixItem)
+						return $intItem;
+					
+					// if casting changed the value, but we have a valid integer, return with a string cast
+					if (preg_match('/^-?\d+$/',$mixItem) === 1)
+						return (string)$mixItem;
+					
+					// any other scenarios is an invalid cast
+					throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType, $mixItem));
 				case QType::Float:
+					if($strOriginalType == QType::Boolean)
+						throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType, $mixItem));
 					if (strlen($mixItem) == 0)
 						return null;
+					if ($strOriginalType == QType::Float)
+						return $mixItem;
+
 					if (!is_numeric($mixItem)) 
 						throw new QInvalidCastException(sprintf('Invalid float: %s', $mixItem)); 
+					
+					// Check to make sure the value hasn't changed significantly
+					$fltItem = $mixItem;
+					settype($fltItem, $strNewType);
+					$mixTest = $fltItem;
+					settype($mixTest, $strOriginalType);
+					
+					//account for any scientific notation that results
+					//find out what notation is currently being used
+					$i = strpos($mixItem, '.');
+					$precision = ($i === false) ? 0 : strlen($mixItem) - $i - 1;
+					//and represent the casted value the same way
+					$strTest = sprintf('%.' . $precision . 'f', $fltItem);
+
+					// If the value hasn't change, it's safe to return the casted value
+					if ((string)$strTest === (string)$mixItem)
+						return $fltItem;
+					
+					// the changed value could be the result of loosing precision. Return the original value with no cast
 					return $mixItem;
 			
 				case QType::String:
-					$mixOriginal = $mixItem;
-					settype($mixItem, $strType);
-
+					if ($strOriginalType == QType::String)
+						return $mixItem;
+					
 					// Check to make sure the value hasn't changed significantly
-					$mixTest = $mixItem;
-					settype($mixTest, gettype($mixOriginal));
-
+					$strItem = $mixItem;
+					settype($strItem, $strNewType);
+					$mixTest = $strItem;
+					settype($mixTest, $strOriginalType);
+					
 					// Has it?
-					if ($mixTest != $mixOriginal)
+					if ($mixTest != $mixItem)
 						// Yes -- therefore this is an invalid cast
-						throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strItemType, $strType, $mixOriginal));
-
-					return $mixItem;
+						throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType, $mixOriginal));
+					
+					return $strItem;
 
 				default:
-					throw new QInvalidCastException(sprintf('Unable to cast %s value to unknown type %s', $strItemType, $strType));
+					throw new QInvalidCastException(sprintf('Unable to cast %s value to unknown type %s', $strOriginalType, $strNewType));
 			}
 		}
 		

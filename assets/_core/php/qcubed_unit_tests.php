@@ -4,7 +4,8 @@
 
 $testsToRun = array(
 	"BasicOrmTests",
-	"ExpandAsArrayTests"
+	"ExpandAsArrayTests",
+  "QTypeTests"
 );
 
 
