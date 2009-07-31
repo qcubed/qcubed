@@ -5,6 +5,8 @@
 <% foreach ($objTable->ColumnArray as $objColumn) { %>
 		/**
 		 * Protected member variable that maps to the database <% if ($objColumn->PrimaryKey) return 'PK '; %><% if ($objColumn->Identity) return 'Identity '; %>column <%= $objTable->Name %>.<%= $objColumn->Name %>
+		 <% if ($objColumn->Comment) { %>		 * <%= $objColumn->Comment %>
+		 <% } %>
 		 * @var <%= $objColumn->VariableType %> <%= $objColumn->VariableName %>
 		 */
 		protected $<%= $objColumn->VariableName %>;

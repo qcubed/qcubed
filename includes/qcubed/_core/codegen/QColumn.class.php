@@ -101,6 +101,12 @@
 		 * @var Reference Reference
 		 */
 		protected $objReference;
+		
+		/**
+		 * The string value of the comment field in the database.
+		 * @var string Comment
+		 */
+		protected $strComment;
 
 
 
@@ -148,6 +154,8 @@
 					return $this->blnTimestamp;
 				case 'Reference':
 					return $this->objReference;
+				case 'Comment':
+					return $this->strComment;
 				default:
 					try {
 						return parent::__get($strName);
@@ -206,6 +214,8 @@
 						return $this->blnTimestamp = QType::Cast($mixValue, QType::Boolean);
 					case 'Reference':
 						return $this->objReference = QType::Cast($mixValue, 'QReference');
+					case 'Comment':
+						return $this->strComment = QType::Cast($mixValue, QType::String);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

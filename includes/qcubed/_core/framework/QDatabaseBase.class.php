@@ -301,6 +301,7 @@
 		protected $strOriginalTable;
 		protected $strDefault;
 		protected $intMaxLength;
+		protected $strComment;
 
 		// Bool
 		protected $blnIdentity;
@@ -337,6 +338,8 @@
 					return $this->blnTimestamp;
 				case "Type":
 					return $this->strType;
+				case "Comment":
+					return $this->strComment;
 				default:
 					try {
 						return parent::__get($strName);

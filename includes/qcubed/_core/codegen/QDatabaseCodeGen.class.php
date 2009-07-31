@@ -1012,6 +1012,7 @@
 
 			$objColumn->VariableName = $this->VariableNameFromColumn($objColumn);
 			$objColumn->PropertyName = $this->PropertyNameFromColumn($objColumn);
+			$objColumn->Comment = $objField->Comment;
 
 			return $objColumn;
 		}

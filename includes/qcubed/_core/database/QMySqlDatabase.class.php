@@ -156,40 +156,42 @@
 			$this->strOriginalTable = $mixFieldData->table;
 			$this->strDefault = $mixFieldData->def;
 			$this->intMaxLength = null;
+			$this->strComment = null;
 
 			// Calculate MaxLength of this column (e.g. if it's a varchar, calculate length of varchar
 			// Also, see if it's auto increment
 			if ($this->strOriginalTable) {
-        try {
-          $objDescriptionResult = $objDb->Query(sprintf("DESCRIBE `%s`", $this->strOriginalTable));
-          while (($objRow = $objDescriptionResult->FetchArray())) {
-            if ($objRow["Field"] == $this->strOriginalName) {
-              if ($objRow["Extra"] == 'auto_increment')
-                $this->blnIdentity = true;
-              else
-                $this->blnIdentity = false;
-
-              $strLengthArray = explode("(", $objRow["Type"]);
-              if ((count($strLengthArray) > 1) &&
-                (strtolower($strLengthArray[0]) != 'enum') &&
-                (strtolower($strLengthArray[0]) != 'set')) {
-                $strLengthArray = explode(")", $strLengthArray[1]);
-                $this->intMaxLength = $strLengthArray[0];
-    
-                // If the length is something like (7,2), then let's pull out just the "7"
-                $intCommaPosition = strpos($this->intMaxLength, ',');
-                if ($intCommaPosition !== false)
-                  $this->intMaxLength = substr($this->intMaxLength, 0, $intCommaPosition);
-    
-                if (!is_numeric($this->intMaxLength))
-                  throw new Exception("Not a valid Column Length: " . $objRow["Type"]);			
-              }
-            }
-          }
-        }
-        catch(Exception $e) {
-          // Do Nothing
-        }
+		        try {
+		          $objDescriptionResult = $objDb->Query(sprintf("SHOW FULL FIELDS FROM `%s`", $this->strOriginalTable));
+		          while (($objRow = $objDescriptionResult->FetchArray())) {
+		            if ($objRow["Field"] == $this->strOriginalName) {
+		              if ($objRow["Extra"] == 'auto_increment')
+		                $this->blnIdentity = true;
+		              else
+		                $this->blnIdentity = false;
+					
+		              $this->strComment = $objRow["Comment"];
+		              $strLengthArray = explode("(", $objRow["Type"]);
+		              if ((count($strLengthArray) > 1) &&
+		                (strtolower($strLengthArray[0]) != 'enum') &&
+		                (strtolower($strLengthArray[0]) != 'set')) {
+		                $strLengthArray = explode(")", $strLengthArray[1]);
+		                $this->intMaxLength = $strLengthArray[0];
+		    
+		                // If the length is something like (7,2), then let's pull out just the "7"
+		                $intCommaPosition = strpos($this->intMaxLength, ',');
+		                if ($intCommaPosition !== false)
+		                  $this->intMaxLength = substr($this->intMaxLength, 0, $intCommaPosition);
+		    
+		                if (!is_numeric($this->intMaxLength))
+		                  throw new Exception("Not a valid Column Length: " . $objRow["Type"]);			
+		              }
+		            }
+		          }
+		        }
+		        catch(Exception $e) {
+		          // Do Nothing
+		        }
 			}
 
 			$this->blnNotNull = QType::Cast($mixFieldData->not_null, QType::Boolean);

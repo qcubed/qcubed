@@ -537,16 +537,18 @@
 			$this->strOriginalTable = $mixFieldData->orgtable;
 			$this->strDefault = $mixFieldData->def;
 			$this->intMaxLength = null;
+			$this->strComment = null;
 
 			// Set strOriginalName to Name if it isn't set
 			if (!$this->strOriginalName)
 				$this->strOriginalName = $this->strName;
 			
-			// Calculate MaxLength of this column (e.g. if it's a varchar, calculate length of varchar
-			// NOTE: $mixFieldData->max_length in the MySQL spec is **DIFFERENT**
-			$objDescriptionResult = $objDb->Query(sprintf("DESCRIBE `%s`", $this->strOriginalTable));
+			$objDescriptionResult = $objDb->Query(sprintf("SHOW FULL FIELDS FROM `%s`", $this->strOriginalTable));
 			while (($objRow = $objDescriptionResult->FetchArray())) {
 				if ($objRow["Field"] == $this->strOriginalName) {
+
+					// Calculate MaxLength of this column (e.g. if it's a varchar, calculate length of varchar
+					// NOTE: $mixFieldData->max_length in the MySQL spec is **DIFFERENT**
 					$strLengthArray = explode("(", $objRow["Type"]);
 					if ((count($strLengthArray) > 1) &&
 						(strtolower($strLengthArray[0]) != 'enum') &&
@@ -556,12 +558,17 @@
 
 						// If the length is something like (7,2), then let's pull out just the "7"
 						$intCommaPosition = strpos($this->intMaxLength, ',');
-						if ($intCommaPosition !== false)
+						if ($intCommaPosition !== false) {
 							$this->intMaxLength = substr($this->intMaxLength, 0, $intCommaPosition);
+						}
 
-						if (!is_numeric($this->intMaxLength))
+						if (!is_numeric($this->intMaxLength)) {
 							throw new Exception("Not a valid Column Length: " . $objRow["Type"]);
+						}
 					}
+					
+					// Get the field comment
+					$this->strComment = $objRow["Comment"];
 				}
 			}
 
@@ -569,7 +576,7 @@
 			$this->blnNotNull = ($mixFieldData->flags & MYSQLI_NOT_NULL_FLAG) ? true : false;
 			$this->blnPrimaryKey = ($mixFieldData->flags & MYSQLI_PRI_KEY_FLAG) ? true : false;
 			$this->blnUnique = ($mixFieldData->flags & MYSQLI_UNIQUE_KEY_FLAG) ? true : false;
-
+			
 			$this->SetFieldType($mixFieldData->type);
 		}
 
