@@ -111,6 +111,8 @@
 		protected $strValidationError = null;
 		protected $blnVisible = true;
 
+    protected $strPreferredRenderMethod = 'Render';
+
 		// LAYOUT
 		protected $strHeight = null;
 		protected $strWidth = null;
@@ -878,8 +880,10 @@
 			$strToReturn = "";
 
 			foreach ($this->GetChildControls() as $objControl)
-				if (!$objControl->Rendered)
-					$strToReturn .= $objControl->Render($blnDisplayOutput);
+				if (!$objControl->Rendered) {
+          $renderMethod = $objControl->strPreferredRenderMethod;
+					$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
+        }
 
 			if ($blnDisplayOutput) {
 				print($strToReturn);
@@ -1010,6 +1014,8 @@
 				case "ToolTip": return $this->strToolTip;
 				case "ValidationError": return $this->strValidationError;
 				case "Visible": return $this->blnVisible;
+
+        case "PreferredRenderMethod": return $this->strPreferredRenderMethod;
 			
 				// LAYOUT
 				case "Height": return $this->strHeight;
@@ -1264,6 +1270,14 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+        case "PreferredRenderMethod": 
+          try { 
+            $this->strPreferredRenderMethod = QType::Cast($mixValue, QType::String); 
+            break; 
+          } catch (QInvalidCastException $objExc) { 
+            $objExc->IncrementOffset(); 
+            throw $objExc; 
+          } 
 			
 				// LAYOUT
 				case "Height":
