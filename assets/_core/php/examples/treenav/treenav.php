@@ -8,8 +8,7 @@
 		protected $tnvExampleDynamic;
 		protected $pnlCode;
 
-		// Define all the QContrtol objects for our Calculator
-		// Make our textboxes IntegerTextboxes and make them required
+		// Define all the QControl objects for our Tree Navigation
 		protected function Form_Create() {
 			$this->tnvExample = new QTreeNav($this);
 			$this->tnvExample->CssClass = 'treenav';

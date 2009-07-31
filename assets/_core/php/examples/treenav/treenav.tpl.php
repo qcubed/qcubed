@@ -21,12 +21,13 @@
 	</div>
 
 	<?php $this->tnvExample->Render(); ?>
-  <hr />
+	<br clear="all" style="clear:both;" />
+  	<hr />
 	<?php $this->tnvExampleDynamic->Render(); ?>
 
 	<?php $this->pnlCode->Render(); ?>
-
+	<br clear="all" style="clear:both;" />
 	<p><?php $this->objDefaultWaitIcon->Render('Position=Absolute','Top=430px','Left=40px'); ?></p>
-
+	
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>
