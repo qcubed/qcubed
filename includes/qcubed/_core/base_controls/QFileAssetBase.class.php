@@ -10,6 +10,7 @@
 		protected $intFileAssetType;
 		protected $strFile;
 		protected $strFileName;
+		protected $strRandomFileName;
 		protected $blnClickToView;
 
 		protected $strIconFilePathArray = array();
@@ -93,7 +94,8 @@
 				$strExtension = strtolower($strExtension);
 
 				// Save the File in a slightly more permanent temporary location
-				$strTempFilePath = $this->strTemporaryUploadPath . '/' . basename($this->dlgFileAsset->flcFileAsset->File) . rand(1000, 9999) . '.' . $strExtension;
+				$this->strRandomFileName = basename($this->dlgFileAsset->flcFileAsset->File) . rand(1000, 9999) . '.' . $strExtension;
+				$strTempFilePath = $this->strTemporaryUploadPath . '/' . $this->strRandomFileName;
 				copy($this->dlgFileAsset->flcFileAsset->File, $strTempFilePath);
 				$this->File = $strTempFilePath;
 
@@ -129,6 +131,7 @@
 			switch ($strName) {
 				case 'File': return $this->strFile;
 				case 'FileName': return $this->strFileName;
+				case 'RandomFileName': return $this->strRandomFileName;
 				case 'UnacceptableMessage': return $this->strUnacceptableMessage;
 				case 'FileAssetType': return $this->intFileAssetType;
 				case 'TemporaryUploadPath': return $this->strTemporaryUploadPath;
@@ -138,6 +141,7 @@
 				case 'UploadText': return $this->dlgFileAsset->btnUpload->Text;
 				case 'CancelText': return $this->dlgFileAsset->btnCancel->Text;
 				case 'DialogBoxHtml': return $this->dlgFileAsset->lblMessage->Text;
+				
 
 				default:
 					try {
