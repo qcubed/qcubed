@@ -4,26 +4,25 @@
 	<div class="instructions">
 		<h1 class="instruction_title">Creating a Control of Controls</h1>
 
-		Often times you will want to be able to combine a bunch of small controls into a larger control,
-		also known as creating a <b>Composite Control</b>.  In addition to this composite control
+		<p>Often times you will want to be able to combine a bunch of small controls into a larger control,
+		also known as creating a <strong>Composite Control</strong>.  In addition to this composite control
 		containing many smaller controls, the composite control would be able to define
-		its own layout, as well as handling its own server- or ajax-based actions.<br/><br/>
+		its own layout, as well as handling its own server- or ajax-based actions.</p>
 
-		With a modularized set of smaller controls, layout, and events/actions, an architecture
-		utilizing <b>Composite Controls</b> can see a lot of modularity and reuse for commonly
-		used, more-complex interactions throughout your entire web application.<br/><br/>
+		<p>With a modularized set of smaller controls, layout, and events/actions, an architecture
+		utilizing <strong>Composite Controls</strong> can see a lot of modularity and reuse for commonly
+		used, more-complex interactions throughout your entire web application.</p>
 
-		In this example, we will create a sample <b>SampleComposite</b> control, which (for lack
-		of a better example) will contain a <b>QLabel</b> and two <b>QButtons</b>.  The control itself
-		will contain an integer value, and the label will report what the integer value is.  The two buttons
-		will be triggered by <b>QClickEvents</b> to increment or decrement that value.<br/><br/>
+		<p>With a modularized set of smaller controls, layout, and events/actions, an architecture
+		utilizing <strong>Composite Controls</strong> can see a lot of modularity and reuse for commonly
+		used, more-complex interactions throughout your entire web application.</p>
 		
-		Now, notice how even though we seem to have a lot of small controls on the page (e.g. 7 buttons, each
+		<p>Now, notice how even though we seem to have a lot of small controls on the page (e.g. 7 buttons, each
 		with their own event handlers!), the actual form is quite simple, because we are using the
-		<b>SampleComposite</b> control over and over again.
+		<strong>SampleComposite</strong> control over and over again.</p>
 
-		Be sure and view the source of <b>SampleComposite.inc</b>, which of course will contain the code
-		for the composite control which is doing the bulk of the work in this example.
+		<p>Be sure and view the source of <strong>SampleComposite.inc</strong>, which of course will contain the code
+		for the composite control which is doing the bulk of the work in this example.</p>
 	</div>
 
 	<table border="0">
@@ -36,10 +35,8 @@
 		</tr>
 	</table>
 
-	<p>
-		<?php $this->btnButton->Render(); ?><br/><br/>
-		<?php $this->lblMessage->Render(); ?>
-	</p>
+	<p><?php $this->btnButton->Render(); ?></p>
+	<p><?php $this->lblMessage->Render(); ?></p>
 
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

@@ -50,7 +50,7 @@
 		protected function btnButton_Click($strFormId, $strControlId, $strParameter) {
 			$intTotal = $this->objCounter1->Value + $this->objCounter2->Value + $this->objCounter3->Value;
 
-			$this->lblMessage->Text = '<b>THE TOTAL</b>: ' . $intTotal;
+			$this->lblMessage->Text = '<strong>THE TOTAL</strong>: ' . $intTotal;
 		}
 	}
 

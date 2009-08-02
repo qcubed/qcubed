@@ -99,7 +99,7 @@
 			$strDecrement = $this->btnDecrement->Render(false);
 
 			// Let's render it out
-			return sprintf('<div id="%s" %s%s>%s<br/>%s%s</div>',
+			return sprintf('<div id="%s" %s%s><p>%s</p><div>%s%s</div></div>',
 				$this->strControlId,
 				$strStyle,
 				$strAttributes,
