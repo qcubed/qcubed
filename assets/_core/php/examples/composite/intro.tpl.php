@@ -21,7 +21,7 @@
 		with their own event handlers!), the actual form is quite simple, because we are using the
 		<strong>SampleComposite</strong> control over and over again.</p>
 
-		<p>Be sure and view the source of <strong>SampleComposite.inc</strong>, which of course will contain the code
+		<p>Be sure and view the source of <strong>SampleComposite.class.php</strong>, which of course will contain the code
 		for the composite control which is doing the bulk of the work in this example.</p>
 	</div>
 
