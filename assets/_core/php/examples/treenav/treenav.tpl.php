@@ -6,7 +6,7 @@
 
 		<p>This example shows off the <strong>QTreeNav</strong> control.</p>
 
-		<p>The control uses it's own internal tree data structure, combined with javascript/DOM caching and
+		<p>The control uses it's own internal tree data structure, combined with Javascript/DOM caching and
 		recursion to store and render the items/nodes within the tree navigation. The internal structure can
 		be built before the control is rendered, or on demand as branches are expanded.</p>
 		
@@ -21,13 +21,13 @@
 	</div>
 
 	<?php $this->tnvExample->Render(); ?>
-	<br clear="all" style="clear:both;" />
+	<br style="clear:both;" />
   	<hr />
 	<?php $this->tnvExampleDynamic->Render(); ?>
-
+	<p><?php $this->objDefaultWaitIcon->Render(); ?></p>
 	<?php $this->pnlCode->Render(); ?>
-	<br clear="all" style="clear:both;" />
-	<p><?php $this->objDefaultWaitIcon->Render('Position=Absolute','Top=430px','Left=40px'); ?></p>
+	<br style="clear:both;" />
+	
 	
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>
