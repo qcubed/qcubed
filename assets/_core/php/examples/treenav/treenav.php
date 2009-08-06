@@ -87,7 +87,7 @@
 			$tree = $this->GetControl($strControlId);
 			$objItem = $tree->SelectedItem;
 			if (is_dir($tree->SelectedValue))
-				$this->pnlCode->Text = 'Current directory is <b>' . $tree->SelectedItem->Name . '</b>.  ' .
+				$this->pnlCode->Text = 'Current directory is <strong>' . $tree->SelectedItem->Name . '</strong>.  ' .
 					'Please select a file on the left';
 			else {
 				$strCode = highlight_file($tree->SelectedValue, true);

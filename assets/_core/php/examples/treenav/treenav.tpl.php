@@ -27,7 +27,6 @@
 	<p><?php $this->objDefaultWaitIcon->Render(); ?></p>
 	<?php $this->pnlCode->Render(); ?>
 	<br style="clear:both;" />
-	
-	
+
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>
