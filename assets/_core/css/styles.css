@@ -320,7 +320,7 @@ p.create { }
 	p.create a:hover { text-decoration: underline; }
 
 .code { background-color: #F6F6F6; padding:10px; font: 11px 'Lucida Console', 'Courier New', 'Courier', monospaced; overflow: auto; width: 98%; max-height: 560px;}
-.codeDisplay {background-color: #F6F6F6; width: 400px; height: 400px; overflow: auto; position: absolute; top: 430px; left: 400px; padding: 10px;}
+.codeDisplay {background-color: #F6F6F6; width: 400px; height: 400px; overflow: auto; margin: 10px; padding: 10px;}
 
 .instructions { background-color: #F6F6F6; padding: 20px; margin:20px auto; line-height: 20px; max-height: 300px; width:90%; overflow: auto; text-align:left;border:1px solid #111;}
 .instruction_title { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 22px; font-weight: bold; color: #780000; margin-bottom: 20px;}
