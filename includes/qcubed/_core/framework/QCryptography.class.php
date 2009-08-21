@@ -11,33 +11,6 @@
 		protected $strIv;
 
 		/**
-		 * Default Cipher for any new QCryptography instances that get constructed
-		 * @var string Cipher
-		 */
-		public static $Cipher = MCRYPT_TRIPLEDES;
-
-		/**
-		 * Default Mode for any new QCryptography instances that get constructed
-		 * @var string Mode
-		 */
-		public static $Mode = MCRYPT_MODE_ECB;
-
-		/**
-		 * The Random Number Generator the library uses to generate the IV:
-		 *  - MCRYPT_DEV_RANDOM = /dev/random (only on *nix systems)
-		 *  - MCRYPT_DEV_URANDOM = /dev/urandom (only on *nix systems)
-		 *  - MCRYPT_RAND = the internal PHP srand() mechanism
-		 * (on Windows, you *must* use MCRYPT_RAND, b/c /dev/random and /dev/urandom doesn't exist)
-		 * 
-		 * TODO: there appears to be some /dev/random locking issues on the QCubed development
-		 * environment (using Fedora Core 3 with PHP 5.0.4 and LibMcrypt 2.5.7).  Because of this,
-		 * we are using MCRYPT_RAND be default.  Feel free to change to to /dev/*random at your own risk.
-		 * 
-		 * @var string RandomSource
-		 */
-		public static $RandomSource = MCRYPT_RAND;
-
-		/**
 		 * Default Base64 mode for any new QCryptography instances that get constructed.
 		 * 
 		 * This is similar to MIME-based Base64 encoding/decoding, but is safe to use
@@ -55,44 +28,68 @@
 		 */
 		public static $Key = "qc0Do!d3F@lT.k3Y";
 
-		public function __construct($strKey = null, $blnBase64 = null, $strCipher = null, $strMode = null) {
+		/**
+		 * The Random Number Generator the library uses to generate the IV:
+		 *  - MCRYPT_DEV_RANDOM = /dev/random (only on *nix systems)
+		 *  - MCRYPT_DEV_URANDOM = /dev/urandom (only on *nix systems)
+		 *  - MCRYPT_RAND = the internal PHP srand() mechanism
+		 * (on Windows, you *must* use MCRYPT_RAND, b/c /dev/random and /dev/urandom doesn't exist)
+		 * 
+		 * TODO: there appears to be some /dev/random locking issues on the QCubed development
+		 * environment (using Fedora Core 3 with PHP 5.0.4 and LibMcrypt 2.5.7).  Because of this,
+		 * we are using MCRYPT_RAND be default.  Feel free to change to to /dev/*random at your own risk.
+		 */
+		public function __construct($strKey = null, $blnBase64 = null, $strCipher = null, $strMode = null, $strRandomSource = null) {
+			if (!function_exists('mcrypt_module_open')) {
+				throw new QCryptographyException("PHP cryptography components (libmcrypt module) are not installed");
+			}
+			
 			// Get the Key
-			if (is_null($strKey))
+			if (is_null($strKey)) {
 				$strKey = self::$Key;
+			}
 
 			// Get the Base64 Flag
 			try {
-				if (is_null($blnBase64))
+				if (is_null($blnBase64)) {
 					$this->blnBase64 = QType::Cast(self::$Base64, QType::Boolean);
-				else
+				} else {
 					$this->blnBase64 = QType::Cast($blnBase64, QType::Boolean);
+				}
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
 
 			// Get the Cipher
-			if (is_null($strCipher))
-				$strCipher = self::$Cipher;
+			if (is_null($strCipher)) {
+				$strCipher = MCRYPT_TRIPLEDES;
+			}
 
 			// Get the Mode
-			if (is_null($strMode))
-				$strMode = self::$Mode;
+			if (is_null($strMode)) {
+				$strMode = MCRYPT_MODE_ECB;
+			}
+
+			if (is_null($strRandomSource)) {
+				$strRandomSource = MCRYPT_RAND;
+			}
 
 			$this->objMcryptModule = mcrypt_module_open($strCipher, null, $strMode, null);
-			if (!$this->objMcryptModule)
+			if (!$this->objMcryptModule) {
 				throw new QCryptographyException('Unable to open LibMcrypt Module');
+			}
 
 			// Determine IV Size
 			$intIvSize = mcrypt_enc_get_iv_size($this->objMcryptModule);
 
 			// Create the IV
-			if (self::$RandomSource != MCRYPT_RAND) {
+			if ($strRandomSource != MCRYPT_RAND) {
 				// Ignore All Warnings
 				set_error_handler('QcodoHandleError', 0);
 				$intCurrentLevel = error_reporting();
 				error_reporting(0);
-				$strIv = mcrypt_create_iv($intIvSize, self::$RandomSource);
+				$strIv = mcrypt_create_iv($intIvSize, $strRandomSource);
 				error_reporting($intCurrentLevel);
 				restore_error_handler();
 

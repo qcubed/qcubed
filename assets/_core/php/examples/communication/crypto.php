@@ -41,16 +41,18 @@
 	// By default, let's leave Base64 encoding turned off
 	QCryptography::$Base64 = false;
 
-	$objCrypto = new QCryptography();
-	$strEncrypted = $objCrypto->Encrypt($strOriginal);
-	$strDecrypted = $objCrypto->Decrypt($strEncrypted);
-
-	printf('Original Data: <b>%s</b><br/>', $strOriginal);
-	printf('Encrypted Data: <b>%s</b><br/>', $strEncrypted);
-	printf('Decrypted Data: <b>%s</b><br/><br/><br/>', $strDecrypted);
+	try {
+		$objCrypto = new QCryptography();
+		$strEncrypted = $objCrypto->Encrypt($strOriginal);
+		$strDecrypted = $objCrypto->Decrypt($strEncrypted);
+	
+		printf('Original Data: <b>%s</b><br/>', $strOriginal);
+		printf('Encrypted Data: <b>%s</b><br/>', $strEncrypted);
+		printf('Decrypted Data: <b>%s</b><br/><br/><br/>', $strDecrypted);
+	} catch (QCryptographyException $e) {
+		echo "Cannot run the sample code because libmcrypt PHP module is not installed<br/><br/>";
+	}
 ?>
-
-
 
 	<h3>TripleDES, Electronic Codebook Encryption (with Base64 encoding)</h3>
 <?php
@@ -62,14 +64,18 @@
 	// Note: while the resulting encrypted data is safe for any text-based stream, including
 	// use as GET/POST data, inside the URL, etc., the resulting encrypted data stream will
 	// be 33% larger.
-	$objCrypto = new QCryptography(null, true);
-	$strEncrypted = $objCrypto->Encrypt($strOriginal);
-	$strDecrypted = $objCrypto->Decrypt($strEncrypted);
-
-	printf('Original Data: <b>%s</b><br/>', $strOriginal);
-	printf('Encrypted Data: <b>%s</b><br/>', $strEncrypted);
-	printf('Decrypted Data: <b>%s</b><br/><br/><br/>', $strDecrypted);
+	try {
+		$objCrypto = new QCryptography(null, true);
+		$strEncrypted = $objCrypto->Encrypt($strOriginal);
+		$strDecrypted = $objCrypto->Decrypt($strEncrypted);
 	
+		printf('Original Data: <b>%s</b><br/>', $strOriginal);
+		printf('Encrypted Data: <b>%s</b><br/>', $strEncrypted);
+		printf('Decrypted Data: <b>%s</b><br/><br/><br/>', $strDecrypted);
+	} catch (QCryptographyException $e) {
+		echo "Cannot run the sample code because libmcrypt PHP module is not installed<br/><br/>";
+	}
+
 ?>
 
 <?php require('../includes/footer.inc.php'); ?>
