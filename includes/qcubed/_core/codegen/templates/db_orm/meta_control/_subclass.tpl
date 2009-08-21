@@ -20,5 +20,6 @@
 	 * @subpackage MetaControls
 	 */
 	class <%= $objTable->ClassName %>MetaControl extends <%= $objTable->ClassName %>MetaControlGen {
+		<%@ example_initialization('objTable'); %>
 	}
 ?>

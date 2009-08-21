@@ -26,7 +26,7 @@
 
 		<%@ protected_member_objects('objTable'); %>
 
-
+		<%@ class_initialize('objTable'); %>
 
 		<%@ class_load_and_count_methods('objTable'); %>
 

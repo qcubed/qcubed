@@ -34,5 +34,9 @@
 
 
 		<%@ example_properties('objTable'); %>
+
+
+
+		<%@ example_initialization('objTable'); %>
 	}
 ?>
