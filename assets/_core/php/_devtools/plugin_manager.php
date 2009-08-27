@@ -91,7 +91,7 @@
 				return;
 			}
 			
-			$pluginFolder = QPluginInstaller::processUploadedPluginArchive($this->dlgUpload->flcFileAsset);
+			$pluginFolder = QPluginInstaller::installPluginFromZip($this->dlgUpload->flcFileAsset->File);
 			
 			if ($pluginFolder == null) {
 				QApplication::DisplayAlert(QPluginInstaller::getLastError());
