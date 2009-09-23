@@ -628,7 +628,7 @@
 				}*/
 
 			} else
-				throw new CallerException('ParentObject must be either a QForm or QControl object');
+				throw new QCallerException('ParentObject must be either a QForm or QControl object');
 		}
 
 		public function EvaluateTemplate($strTemplate) {
