@@ -52,7 +52,7 @@
 
 			// Create an Edit Column
 			$strEditPageUrl = __VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__ . '/<%= strtolower($objTable->Name) %>_edit.php';
-			$this->dtg<%= $objTable->ClassNamePlural %>->MetaAddEditLinkColumn($strEditPageUrl, 'Edit', 'Edit');
+			$this->dtg<%= $objTable->ClassNamePlural %>->MetaAddEditLinkColumn($strEditPageUrl, QApplication::Translate('Edit'), QApplication::Translate('Edit'));
 
 			// Create the Other Columns (note that you can use strings for <%= $objTable->Name %>'s properties, or you
 			// can traverse down QQN::<%= $objTable->Name %>() to display fields that are down the hierarchy)
