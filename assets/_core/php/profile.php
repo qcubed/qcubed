@@ -11,7 +11,7 @@
 ?>
 <html>
 	<head>
-		<title>Qcubed Development Framework - Database Profiling Tool</title>
+		<title>QCubed Development Framework - Database Profiling Tool</title>
 		<style>
 			body { font-family: 'Arial' 'Helvetica' 'sans-serif'; font-size: 14px; }
 			a:link, a:visited { text-decoration: none; }
@@ -81,7 +81,7 @@
 
 		<table border="0" cellspacing="0" width="100%">
 			<tr>
-				<td nowrap="nowrap" class="headingLeft"><span class="headingLeftSmall">Qcubed Development Framework <?= QCUBED_VERSION ?><br /></span>Database Profiling Tool</div></td>
+				<td nowrap="nowrap" class="headingLeft"><span class="headingLeftSmall">QCubed Development Framework <?= QCUBED_VERSION ?><br /></span>Database Profiling Tool</div></td>
 				<td nowrap="nowrap" class="headingRight">
 					<b>Database Index:</b> <?php _p($intDatabaseIndex); ?>;&nbsp;&nbsp;<b>Database Type:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Adapter); ?><br />
 					<b>Database Server:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Server); ?>;&nbsp;&nbsp;<b>Database Name:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Database); ?><br />

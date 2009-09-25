@@ -1,6 +1,6 @@
 <?php
 	/* This includes library file is used by the qcodo_updater.cli and qcodo_updater.phpexe scripts
-	 * to perform the Qcubed Update Utility functionality.
+	 * to perform the QCubed Update Utility functionality.
 	 */
 
 	exit("The QCubed updater has been disabled for this release of QCubed. Expect the new, much friendlier incarnation of the tool in the future releases!");
@@ -24,7 +24,7 @@
 
 		if ($strArgument == '--quiet') {
 			if ($intIndex == $_SERVER['argc'] - 1)
-				QUpdateUtility::Error('No Qcubed Version was specified');
+				QUpdateUtility::Error('No QCubed Version was specified');
 			$blnQuietMode = true;
 		} else if (substr($strArgument, 0, strlen('--interaction')) == '--interaction') {
 			$strArgument = substr($strArgument, strlen('--interaction='));
@@ -47,7 +47,7 @@
 			}
 
 			if ($intIndex == $_SERVER['argc'] - 1)
-				QUpdateUtility::Error('No Qcubed Version was specified');
+				QUpdateUtility::Error('No QCubed Version was specified');
 		} else if ($strArgument == '--help') {
 			QUpdateUtility::PrintUpdaterInstructions(true);
 		} else {
@@ -58,7 +58,7 @@
 	}
 
 	if ($strInteractionType != QUpdateUtility::ReportOnly)
-		printf("Qcubed Update Utility - Performing '%s' Update...\r\n", $strInteractionType);
+		printf("QCubed Update Utility - Performing '%s' Update...\r\n", $strInteractionType);
 
 	$strVersion = $_SERVER['argv'][$_SERVER['argc'] - 1];
 	$objUpdateUtility = new QUpdateUtility($strVersion);

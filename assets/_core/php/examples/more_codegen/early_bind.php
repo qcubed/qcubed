@@ -7,7 +7,7 @@
 		Examples Site.)<br/><br/>
 
 		When you need to perform LoadAll or LoadArray calls, and would like to include related objects
-		in order to limit round tripping, you can use Qcubed's <b>Object Expansion</b> functionality to 
+		in order to limit round tripping, you can use QCubed's <b>Object Expansion</b> functionality to 
 		specify which Foreign Key columns that you want to expand immediately.<br/><br/>
 
 		The <b>Object Expansion</b> function, which is generated into each object in the ORM,
@@ -26,7 +26,7 @@
 
 		But more importantly, because the way we access the objects is the exact same, this
 		kind of round trip optimization can be done <i>after</i> the page is functional and complete.  This
-		follows the general philosophy of Qcubed, which is to first focus on making your application
+		follows the general philosophy of QCubed, which is to first focus on making your application
 		functional, then focus on making your application more optimized.  The value of doing this is
 		because often engineers can get bogged down on making an application as optimized as possible,
 		and in doing so they can unnecessarily overengineer some pieces of functionality.

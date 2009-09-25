@@ -21,7 +21,7 @@
 		So whenever you <b>Load</b> an object, you also get the latest TIMESTAMP information.  On
 		<b>Save</b>, the TIMESTAMP in your object will be checked against the TIMESTAMP in the database.
 		If they match, then the framework knows your data is still fresh, and it will allow the <b>Save</b>.
-		If they do not match, then it is safe to say that the data in the object is now stale, and Qcubed
+		If they do not match, then it is safe to say that the data in the object is now stale, and QCubed
 		will throw an <b>Optimistic Locking Exception</b>.<br/><br/>
 		
 		Note that the <b>Optimistic Locking</b> constraint can be overridden at any time by simply

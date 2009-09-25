@@ -16,7 +16,7 @@
 		private member variables in the form that you don't intend to have modified.</li>
 		</ul>
 		
-		Qcubed resolves this by offering the ability to store/handle the formstate in various ways.  You can store
+		QCubed resolves this by offering the ability to store/handle the formstate in various ways.  You can store
 		the formstate data in PHP Sessions or you can store the formstate data directly on the
 		filesystem.  For both methods, you end up only passing a small key back to the user.  Moreover, the formstate,
 		itself, or the key can even be encrypted, using the

@@ -11,7 +11,7 @@
 		A generated/meta datagrid is simply a <b>QDataGrid</b> with a bunch of <b>Meta___()</b> methods to
 		allow you to easily define and add columns for a given data class.<br/><br/>
 		
-		Using simple string properties or more complex (and more powerful) <b>Qcubed Query Nodes</b>, you can
+		Using simple string properties or more complex (and more powerful) <b>QCubed Query Nodes</b>, you can
 		add any column (even columns from linked tables) to the datagrid, and the meta-functionality
 		will automatically take care of things like the column's <b>Title</b>, <b>Html</b>, and <b>Sorting</b> properties.<br/><br/>
 

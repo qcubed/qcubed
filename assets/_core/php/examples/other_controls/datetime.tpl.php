@@ -8,7 +8,7 @@
 	<div class="instructions">
 		<h1 class="instruction_title">What time is it?</h1>
 
-		Qcubed includes several different QControls that assist with user input of dates and datetimes.
+		QCubed includes several different QControls that assist with user input of dates and datetimes.
 		<br/><br/>
 
 		<strong>Note that beginning with Qcodo 0.3.39</strong>, the original <strong>QCalendar</strong> class

@@ -31,18 +31,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=<?php _p(QApplication::$EncodingType); ?>" />
-		<title>Qcubed Development Framework - Code Generator</title>
+		<title>QCubed Development Framework - Code Generator</title>
 		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/styles.css'); ?>"></link>
 	</head>
 	<body>
 		<div id="page">
 			<div id="header">
 				<div id="headerLeft">
-					<div id="codeVersion"><span class="headerSmall">Qcubed Development Framework <?php _p(QCUBED_VERSION); ?></span></div>
+					<div id="codeVersion"><span class="headerSmall">QCubed Development Framework <?php _p(QCUBED_VERSION); ?></span></div>
 					<div id="pageName">Code Generator</div>
 				</div>
 				<div id="headerRight">
-					<div class="headerLine"><span class="headerSmall"><strong>PHP Version:</strong> <?php _p(PHP_VERSION); ?>;&nbsp;&nbsp;<strong>Zend Engine Version:</strong> <?php _p(zend_version()); ?>;&nbsp;&nbsp;<strong>Qcubed Version:</strong> <?php _p(QCUBED_VERSION); ?></span></div>
+					<div class="headerLine"><span class="headerSmall"><strong>PHP Version:</strong> <?php _p(PHP_VERSION); ?>;&nbsp;&nbsp;<strong>Zend Engine Version:</strong> <?php _p(zend_version()); ?>;&nbsp;&nbsp;<strong>QCubed Version:</strong> <?php _p(QCUBED_VERSION); ?></span></div>
 
 					<div class="headerLine"><span class="headerSmall"><?php if (array_key_exists('OS', $_SERVER)) printf('<strong>Operating System:</strong> %s;&nbsp;&nbsp;', $_SERVER['OS']); ?><strong>Application:</strong> <?php _p($_SERVER['SERVER_SOFTWARE']); ?>;&nbsp;&nbsp;<strong>Server Name:</strong> <?php _p($_SERVER['SERVER_NAME']); ?></span></div>
 

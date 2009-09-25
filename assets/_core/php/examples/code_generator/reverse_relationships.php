@@ -3,10 +3,10 @@
 
 	<div class="instructions">
 		<h1 class="instruction_title">Analyzing Reverse Relationships</h1>
-		Although it's a bit hard to undrestand at first, one of the unique and more powerful features of Qcubed
+		Although it's a bit hard to undrestand at first, one of the unique and more powerful features of QCubed
 		is its ability to generate code to handle reverse relationships as well.
 		Given our previous example with the <b>Project</b> and <b>ManagerPerson</b>, we showed how
-		Qcubed generated code in the <b>Project</b> class to handle the relationship.  But QCubed will also geneate
+		QCubed generated code in the <b>Project</b> class to handle the relationship.  But QCubed will also geneate
 		code in the <b>Person</b> class to handle the reverse aspects of this relationship.<br/><br/>
 
 		In this case, <b>Person</b> is on the "to Many" side of a "One to Many" relationship with <b>Project</b>.
@@ -33,7 +33,7 @@
 		method in the <b>Project</b> object.  Of course, this was generated because <b>manager_person_id</b> is already
 		an index (as well as a Foreign Key) in the <b>project</b> table.<br/><br/>
 		
-		Qcubed's Reverse Relationships functionality
+		QCubed's Reverse Relationships functionality
 		is dependent on the data model having indexes defined on all columns that are foreign keys.  For many
 		database platforms (e.g. MySQL) this should not be a problem b/c the index is created implicitly by the engine.
 		But for some (e.g. SQL Server) platforms, make sure that you have indexes defined on your Foreign Key columns,
@@ -41,7 +41,7 @@
 
 		<h3>Unique Reverse Relationships (e.g. "One to One" Relationships)</h3>
 
-		Qcubed will generate a different set of code if it knows the reverse relationship to be a "Zero
+		QCubed will generate a different set of code if it knows the reverse relationship to be a "Zero
 		to One" or "One to One" type of relationship.  This occurs in the relationship between
 		our <b>login</b> and <b>person</b> tables.  Note that <b>login</b>.<b>person_id</b> is a unique
 		column.  Therefore, QCubed recognizes this as a "Zero- or One-to-One" relationship.  So for the
@@ -52,7 +52,7 @@
 
 		<h3>Self-Referential Tables</h3>
 
-		Qcubed also has full support for self-referential tables (e.g. a <b>category</b> table that
+		QCubed also has full support for self-referential tables (e.g. a <b>category</b> table that
 		contains a <b>parent_category_id</b> column which would foreign key back to itself).
 		In this case, the QCubed will generated the following seven methods to assist with the reverse
 		relationship for this self-reference:

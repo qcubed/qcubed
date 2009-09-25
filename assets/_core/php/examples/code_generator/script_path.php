@@ -14,7 +14,7 @@
 		The code generator supports this by allowing you to define a <b>Relationships Script</b> to
 		a relationships script file.  This is just a plain textfile that you write to
 		define any "foreign keys" you have in your database (without explicitly defining
-		a real foreign key).  This file can be formatted in one of two ways.  The standard "Qcubed"
+		a real foreign key).  This file can be formatted in one of two ways.  The standard "QCubed"
 		format is basically:
 		<blockquote><p>table1.column1 => table2.column2</p></blockquote>
 		where <b>table1.column1</b> is meant to be a Foreign Key to <b>table2.column2</b>.  The other

@@ -3,12 +3,12 @@
 
 	<div class="instructions">
 		<h1 class="instruction_title">Using Association Tables</h1>
-		Qcubed also supports handling many-to-many relationships.  Typically, many-to-many relationships are
+		QCubed also supports handling many-to-many relationships.  Typically, many-to-many relationships are
 		mapped in the database using an <b>Association Table</b> (sometimes also called a <b>Mapping</b>
 		or a <b>Join Table</b>).  It is basically a two-column table where both
 		columns are Foreign Keys to two different tables.<br/><br/>
 
-		Qcubed allows you to define a set suffix for all <b>Association Tables</b> (the default is "_assn").
+		QCubed allows you to define a set suffix for all <b>Association Tables</b> (the default is "_assn").
 		Whenever the code generator sees any table that ends in "_assn", it will mark it as a special
 		table to be used/analyzed as an <b>Association Table</b>, associating two objects together in a many-to-many
 		relationship.
@@ -17,7 +17,7 @@
 		involved in this many-to-many relationship.  In our example, we created a <b>team_member_project_assn</b>
 		table to represent a many-to-many relationship between <b>Person</b> and <b>Project</b>.<br/><br/>
 
-		Qcubed will generate the following five methods in <b>Person</b> to deal with this many-to-many
+		QCubed will generate the following five methods in <b>Person</b> to deal with this many-to-many
 		relationship:
 		<ul>
 		<li>GetProjectAsTeamMemberArray</li>
@@ -27,7 +27,7 @@
 		<li>UnassociateAllProjectsAsTeamMember</li>
 		</ul>
 
-		Qcubed will also generate the following five methods in <b>Project</b> to deal with this many-to-many
+		QCubed will also generate the following five methods in <b>Project</b> to deal with this many-to-many
 		relationship:
 		<ul>
 		<li>GetPersonAsTeamMemberArray</li>

@@ -3,11 +3,11 @@
 
 	<div class="instructions">
 		<h1 class="instruction_title">Manipulating LoadAll and LoadArrayBy Results</h1>
-		(Note: for more information about "QQ::"-related classes (a.k.a. <b>Qcubed Query</b>), please refer to section 3 of the
+		(Note: for more information about "QQ::"-related classes (a.k.a. <b>QCubed Query</b>), please refer to section 3 of the
 		Examples Site.)<br/><br/>
 
 		All Code Genereated <b>LoadAll</b> and <b>LoadArrayByXXX</b> methods take in an optional
-		<b>Qcubed Query Clauses</b> parameter, where you can specify an unlimited number of <b>QQClause</b>
+		<b>QCubed Query Clauses</b> parameter, where you can specify an unlimited number of <b>QQClause</b>
 		objects, including (but not limited) functionality that handles <b>ORDER BY</b>, <b>LIMIT</b>
 		and <b>Object Expansion</b>.  We will
 		discuss <b>Object Expansion</b> in the examples that deal with <b>Late Binding</b>

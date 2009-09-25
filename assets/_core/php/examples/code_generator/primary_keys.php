@@ -15,7 +15,7 @@
 		incremented" columns are known as auto_incremement, identity, or using a sequence,
 		depending on which database platform you are using).<br/><br/>
 
-		Qcubed also offers <i>some</i> support for tables that have multiple-column Primary Keys defined on it.
+		QCubed also offers <i>some</i> support for tables that have multiple-column Primary Keys defined on it.
 		For tables that have multi-column Primary Keys, QCubed will fully generate the object
 		itself.  But note that you will <i>not</i> be able to use this generated object as a related object for
 		another table (in other words, QCubed does not support multi-column <i>Foreign</i> Keys).  However,

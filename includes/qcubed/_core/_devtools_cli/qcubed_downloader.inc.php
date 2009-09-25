@@ -1,6 +1,6 @@
 <?php
 	/* This includes library file is used by the qcubed_downloader.cli and qcubed_downloader.phpexe scripts
-	 * to perform the Qcubed Update Utility's File Downloading functionality.
+	 * to perform the QCubed Update Utility's File Downloading functionality.
 	 */
 
 	// Call the CLI prepend.inc.php

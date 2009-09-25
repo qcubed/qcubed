@@ -18,7 +18,7 @@
 		the <b>intro.tpl.php</b> file.  Note that there are <b>RenderBegin()</b> and <b>RenderEnd()</b>
 		methods which are required to be called within the template in order to output the
 		appropriate &lt;form&gt; tags, and also outputs any additional HTML and JavaScript
-		that makes the <b>QForm</b> work.  (Qcubed will in fact throw an exception
+		that makes the <b>QForm</b> work. (QCubed will in fact throw an exception
 		if either <b>RenderBegin</b> and <b>RenderEnd</b> are not called.)<br/><br/>
 		
 		Click on the "View Source" link in the upper righthand corner to view the

@@ -4,7 +4,7 @@
 	<div class="instructions">
 		<h1 class="instruction_title">Creating a QDataGrid with Inline Editing</h1>
 		Using the techniques for dynamically creating controls and utilizing the AJAX
-		features in Qcubed, we update our <b>Person</b> datagrid to include functionality for
+		features in QCubed, we update our <b>Person</b> datagrid to include functionality for
 		inline editing.<br/><br/>
 
 		We must first add a <b>$intEditPersonId</b> in the QForm to keep track of which

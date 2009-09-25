@@ -49,7 +49,7 @@
 			$this->pnlRight->Left = 208;
 			$this->pnlRight->Width = 392;
 			$this->pnlRight->Height = 292;
-			$this->pnlRight->Text = 'Qcubed was designed for truly rapid application development which focuses on quick ' .
+			$this->pnlRight->Text = 'QCubed was designed for truly rapid application development which focuses on quick ' .
 				'prototypes and rapid iterations. The intersection where design meets code always starts with the data ' .
 				'model, and the expectation is that the data model will change, grow and adapt throughout the life of ' .
 				'the application. These changes would inherently ripple out through to the rest of the code base. But ' .

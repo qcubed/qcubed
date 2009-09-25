@@ -16,7 +16,7 @@
 		application with such seemingly haphazard integration of PHP and HTML.  But note that
 		this is done here for purposes of demonstrating the <b>Object Relational Model</b> <i>only</i>.<br/><br/>
 
-		For more information on how to better architect the control and view layers of a Qcubed-based
+		For more information on how to better architect the control and view layers of a QCubed-based
 		application, we recommend you check out sections 4 - 10 of the examples.
 	</div>
 

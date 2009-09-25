@@ -14,7 +14,7 @@
 		<div id="page">
 			<div id="header">
 				<div id="headerLeft">
-					<div id="codeVersion"><span class="headerSmall">Qcubed Development Framework <?php _p(QCUBED_VERSION) ?></span></div>
+					<div id="codeVersion"><span class="headerSmall">QCubed Development Framework <?php _p(QCUBED_VERSION) ?></span></div>
 					<div id="pageName"><?php if (isset($strPageTitle)) { _p($strPageTitle); } ?></div>
 				</div>
 				<div id="headerRight">
