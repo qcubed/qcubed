@@ -366,12 +366,7 @@
 				if ($blnOverwriteFlag || (!file_exists($strFilePath))) {
 					$intBytesSaved = file_put_contents($strFilePath, $strTemplate);
 
-					// CHMOD to full read/write permissions (applicable only to nonwindows)
-					// Need to ignore error handling for this call just in case
-					QApplication::SetErrorHandler(null);
-					chmod($strFilePath, 0666);
-					QApplication::RestoreErrorHandler();
-
+					$this->setGeneratedFilePermissions($strFilePath);
 					return ($intBytesSaved == strlen($strTemplate));
 				} else
 					// Becuase we are not supposed to overwrite, we should return "true" by default
@@ -387,8 +382,16 @@
 				// Running GenerateFile() specifically asking it not to save -- so return the evaluated template instead
 				return $strTemplate;
 		}
-
-
+		
+		protected function setGeneratedFilePermissions($strFilePath) {
+			// CHMOD to full read/write permissions (applicable only to nonwindows)
+			// Need to ignore error handling for this call just in case
+			if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') { 
+				QApplication::SetErrorHandler(null); 
+				chmod($strFilePath, 0666); 
+				QApplication::RestoreErrorHandler();
+			}			
+		}
 
 		protected function EvaluateSubTemplate($strSubTemplateFilename, $strModuleName, $mixArgumentArray) {
 			if (QCodeGen::DebugMode) _p("Evaluating $strSubTemplateFilename<br/>", false);
