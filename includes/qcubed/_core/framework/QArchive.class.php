@@ -32,7 +32,7 @@ class QArchive {
 							
 //							echo zip_entry_name($file) . "<br>";
 							
-							$folderStack = split("/", zip_entry_name($file));
+							$folderStack = explode("/", zip_entry_name($file));
 							if (sizeof($folderStack) > 1) {
 								for ($i = 0; $i < sizeof($folderStack) - 1; $i++) {
 									$arraySubsection = array_slice($folderStack, 0, $i + 1);

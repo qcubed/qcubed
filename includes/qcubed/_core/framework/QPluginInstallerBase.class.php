@@ -62,7 +62,7 @@ abstract class QPluginInstallerBase {
 		$result = "";
 		
 		// Creating folder hierarchy if necessary
-		$arrFolderSteps = split("/", $strDestinationPath);
+		$arrFolderSteps = explode("/", $strDestinationPath);
 		$cumulativePath = "";
 		for ($i = 0; $i < sizeof($arrFolderSteps) - 1; $i++) {
 			$step = $arrFolderSteps[$i];
