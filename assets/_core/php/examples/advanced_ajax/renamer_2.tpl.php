@@ -15,7 +15,7 @@
 
 		But as your application matures, you may want to have some fully server-side AJAX functionality
 		be converted into more performance-efficient client-side-only JavaScript functionality.
-		This example shows how you can easily change an existing <b>QForm</b> that uses all Qcubed-based AJAX
+		This example shows how you can easily change an existing <b>QForm</b> that uses all QCubed-based AJAX
 		interactions into a more blended server- and client-side javascript/AJAX form.  Because the API for
 		<b>QServerActions</b>, <b>QJavaScriptActions</b> and <b>QAjaxActions</b> are all the same, the
 		process for rewriting specific nuggets of functionality in this manner is straightforward,

@@ -6,7 +6,7 @@
 		Move Handles also have definable "drop zones", which are basically <b>QPanel</b> or <b>QLabel</b>
 		controls that are setup to receive a move handle's set of moveable controls.<br/><br/>
 		
-		Qcubed will calculate and reject the operation of any control trying to be moved into
+		QCubed will calculate and reject the operation of any control trying to be moved into
 		an area that is not defined as a valid drop zone.  By default, when any move handle is configured,
 		it's parent is pre-defined as a valid drop zone.
 		For all our previous examples, the move handle's parent was the form, which meant that the moveable

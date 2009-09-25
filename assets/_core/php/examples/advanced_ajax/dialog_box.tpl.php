@@ -15,7 +15,7 @@
 		a very clean or usable approach.
 		<br/><br/>
 		
-		In <b>Qcubed</b>, a standard extension to the <b>QPanel</b> control is the <b>QDialogBox</b>, which gives you
+		In <b>QCubed</b>, a standard extension to the <b>QPanel</b> control is the <b>QDialogBox</b>, which gives you
 		modal-like qualities in a control that can look and act like a stand-alone modal dialog box.
 		<br/><br/>
 

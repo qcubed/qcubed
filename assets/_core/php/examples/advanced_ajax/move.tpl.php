@@ -3,7 +3,7 @@
 
 	<div class="instructions">
 		<h1 class="instruction_title">Making a Control Moveable</h1>
-		Here we demonstrate the moveable controls capability of Qcubed, also known as 
+		Here we demonstrate the moveable controls capability of QCubed, also known as 
 		"Drag and Drop".<br/><br/>
 
 		All <b>QControls</b> are capable of being moved.  However, only <b>QLabel</b> and <b>QPanel</b>
