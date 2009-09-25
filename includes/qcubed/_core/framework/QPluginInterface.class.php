@@ -12,12 +12,12 @@ class QPlugin {
 	public $strAuthorName = null;
 	public $strAuthorEmail = null;
 		
+	// private state - do not modify
 	public $objAllFilesArray = array(); // array of QPluginFile objects
 	public $objIncludesArray = array(); // array of QPluginIncludedClass objects
 	public $objExamplesArray = array(); // array of QPluginExample objects
-	
-	private $strValidationError = null;
-	
+
+	private $strValidationError = null;	
 	public $strTemporaryExpandedPath = null;
 	
 	public function __construct($blnInstalling = true) {
@@ -124,7 +124,7 @@ class QPlugin {
 		if (sizeof($this->objAllFilesArray) > 0) {
 			$filesSection .= "\t<files>\r\n";
 			foreach ($this->objAllFilesArray as $item) {
-				$filesSection .= "\t\t<file type=\"" . $item->getType() . '" filename="' . $item->strFilename . "\" />\r\n";
+				$filesSection .= "\t\t<file type=\"" . QPlugin::escapeAttribute($item->getType()) . '" filename="' . QPlugin::escapeAttribute($item->strFilename) . "\" />\r\n";
 			}
 			$filesSection .= "\t</files>\r\n";
 		}
@@ -132,7 +132,7 @@ class QPlugin {
 		if (sizeof($this->objIncludesArray) > 0) {
 			$includesSection .= "\t<includes>\r\n";
 			foreach ($this->objIncludesArray as $item) {
-				$includesSection .= "\t\t<include_files classname=\"" . $item->strClassname . '" filename="' . $item->strFilename . "\" />\r\n";
+				$includesSection .= "\t\t<include_files classname=\"" . QPlugin::escapeAttribute($item->strClassname) . '" filename="' . QPlugin::escapeAttribute($item->strFilename) . "\" />\r\n";
 			}
 			$includesSection .= "\t</includes>\r\n";
 		}
@@ -140,21 +140,43 @@ class QPlugin {
 		if (sizeof($this->objExamplesArray) > 0) {
 			$examplesSection .= "\t<examples>\r\n";
 			foreach ($this->objExamplesArray as $item) {
-				$examplesSection .= "\t\t<example filename=\"" . $item->strFilename . '" description="' . $item->strDescription . "\" />\r\n";
+				$examplesSection .= "\t\t<example filename=\"" . QPlugin::escapeAttribute($item->strFilename) . '" description="' . QPlugin::escapeAttribute($item->strDescription) . "\" />\r\n";
 			}
 			$examplesSection .= "\t</examples>\r\n";
 		}
 		
+		$strName = QPlugin::escapeCData($this->strName);
+		$strDescription = QPlugin::escapeCData($this->strDescription);
+		$strVersion = $this->strVersion;
+		$strPlatformVersion = $this->strPlatformVersion;
+		$strAuthorName = QPlugin::escapeAttribute($this->strAuthorName);
+		$strAuthorEmail = QPlugin::escapeAttribute($this->strAuthorEmail);
+
 		$result = <<<END
 <plugin>
-	<name>{$this->strName}</name>
-	<description><![CDATA[{$this->strDescription} ]]></description>
-	<version>{$this->strVersion}</version>
-	<platform_version>{$this->strPlatformVersion}</platform_version>
-	<author name="{$this->strAuthorName}" email="{$this->strAuthorEmail}"/>
+	<name>{$strName}</name>
+	<description>{$strDescription}</description>
+	<version>{$strVersion}</version>
+	<platform_version>{$strPlatformVersion}</platform_version>
+	<author name="{$strAuthorName}" email="{$strAuthorEmail}"/>
 {$filesSection}{$includesSection}{$examplesSection}</plugin>
 END;
 	return $result;
+	}
+	
+	private static function escapeAttribute($strAttributeValue)	{
+		$strAttributeValue = str_replace("&", "&amp;", $strAttributeValue); 
+		$strAttributeValue = str_replace("<", "&lt;", $strAttributeValue); 
+		$strAttributeValue = str_replace(">", "&gt;", $strAttributeValue); 
+		$strAttributeValue = str_replace("\"", "&quot;", $strAttributeValue);
+		$strAttributeValue = str_replace("'", "&apos;", $strAttributeValue);
+		return $strAttributeValue;
+	}
+	
+	private static function escapeCData($value)	{
+		//CData can't have ]]> in it
+		$value = str_replace("]]>", "]]&gt;", $value); 
+		return '<![CDATA['.$value.']]>';
 	}
 }
 
