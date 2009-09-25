@@ -44,7 +44,7 @@ class BBCodeParser {
 	private function renderLink($objTokens) {
 		$objToken = array_shift($objTokens);
 
-		$parts = split("]", $objToken["raw"]);
+		$parts = explode("]", $objToken["raw"]);
 		$url = $parts[0];
 		$label = $parts[1];
 		return sprintf("<a href='%s'>%s</a>",$url, $label);
