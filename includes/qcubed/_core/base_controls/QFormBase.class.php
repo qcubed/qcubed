@@ -937,7 +937,7 @@
 				$strFormAttributes .= ' class="' . $this->strCssClass . '"';
 
 			// Setup Rendered HTML
-			$strToReturn .= sprintf('<form method="post" id="%s" action="%s"%s>', $this->strFormId, QApplication::$RequestUri, $strFormAttributes);
+			$strToReturn .= sprintf('<form method="post" id="%s" action="%s"%s>', $this->strFormId, htmlentities(QApplication::$RequestUri), $strFormAttributes);
 			$strToReturn .= "\r\n";
 
 			// Include javascripts that need to be included
