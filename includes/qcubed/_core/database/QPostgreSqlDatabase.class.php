@@ -591,7 +591,7 @@
 			// UNIQUE
 			$objResult = $objDb->Query(sprintf('
 				SELECT 
-					kcu.column_name 
+					kcu.column_name, (SELECT COUNT(*) FROM information_schema.key_column_usage kcu2 WHERE kcu2.constraint_name=kcu.constraint_name ) as unique_fields 
 				FROM 
 					information_schema.table_constraints tc, 
 					information_schema.key_column_usage kcu 
@@ -607,10 +607,12 @@
 					kcu.table_schema = tc.table_schema 
 				AND 
 					kcu.constraint_name = tc.constraint_name
+				GROUP BY 
+					kcu.constraint_name, kcu.column_name
 			', $objDb->SqlVariable($this->strTable)));
 			while ($objRow = $objResult->GetNextRow()) {
-				if ($objRow->GetColumn('column_name') == $this->strName)
-				$this->blnUnique = true;
+				if ($objRow->GetColumn('column_name') == $this->strName && $objRow->GetColumn('unique_fields') == '1' )
+					$this->blnUnique = true;
 			}
 			if (!$this->blnUnique)
 			$this->blnUnique = false;	
