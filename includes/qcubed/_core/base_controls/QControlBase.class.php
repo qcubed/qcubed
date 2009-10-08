@@ -1,82 +1,116 @@
 <?php
-	// TODO: Update the SERIOUSLY OUT OF DATE documentation for Forms and Controls!!!
-	// ALL CONTROLS eventually inheret from this abstract Control class
-	// All controls must implement the following four abstract functions:
-	//	string Render()
-	//	string GetJavaScriptAction()
-	//	void ParsePostData()
-	//	bool Validate()
-
-	// Please see comments below, by each method, for more information about those methods
-	
-	// Control has many properties.  Please note that not every control will utilize every single one of these properties.
-	//
-	// Appearance properties dictate how the control should appear (e.g. font, color, borders, etc.)
-	//
-	// Behavior properties:
-	// * "AccessKey" allows you to specify what Alt-Letter combination will automatically focus that control on the form
-	// * "CausesValidation" flag says whether or not the form should run through its validation routine if this control
-	//   has a ServerAction defined and is acted upon
-	// * "Enabled" specifies whether or not this is enabled (it will grey out the control and make it inoperable if set to true)
-	// * "Required" specifies whether or not this is required (will cause a validation error if the form is trying to
-	//   be validated and this control is left blank)
-	// * "TabIndex" specifies the index/tab order on a form
-	// * "ToolTip" specifies the text to be displayed when the mouse is hovering over the control
-	// * "ValidationError" (readonly) is the string that contains the validation error (if applicable) or will be blank if
-	//   (1) the form did not undergo its validation routine or (2) this control had no error
-	// * "Visible" specifies whether or not the control should be rendered.  If "Visible" is false, calling Form::RenderControl
-	//   on this object will end up displaying nothing.  (Keep in mind that the control's "Render" method doesn't display
-	//   anything, it simply returns the HTML as a string which can then be printf'd... therefore, the control's render method
-	//   will still return the string of the html of the control even if Visible is set to false.
-	//
-	// Keep in mind that Controls that are not Enabled or not Visible will not go through the form's Validation routine.
-	//
-	// Layout properties:
-	// * "Height" is the height of the control.  Left as a string so that you can specify as "15" or things like "15px"
-	//	 "15em", "15pt", etc.
-	// * "Width" is the width of the control.
-	//
-	// The following Layout properties are used if the control is rendered "With Name" (e.g. Control::RenderWithName)
-	// See RenderWithName() for more information
-	// * "HtmlBefore" is HTML that is shown before the control, itself
-	// * "HtmlAfter" is HTML that is shown after the control, itself
-	// * "Instructions" is instructions that is shown next to the control's name label
-	// * "Warning" is warning text (looks like an error, but it can be user defined) that will be shown next to the control's
-	//   name label
-	//
-	// Misc Properties:
-	// * "Id" (readonly) is the Id of the control.  So $txtMyTextbox = new TextBox("txtMyTextbox") specifies that this Textbox
-	//   control's Id is "txtMyTextbox".  Please note that the Id in quotes MUST be the same as the object's variable name.
-	// * "FormId" (readonly) is the string of the form's id.
-	// * "Name" will display as the Control's name label when called by Control::RenderWithName
-	// * "Rendered" controlled by the Form to specify whether or not a specific control has been rendered on the page
-	//   This is to ensure that no single control is rendered twice on the same form.  (Bad bad bad things would happen
-	//   if the exact same control is rendered twice on the same form)
-	// * "ServerAction" is either TRUE *OR* the php function name that will be called if this control is "acted" upon.
-	//   To figure out how to 'act' upon a control, refer to the control's GetJavaScriptAction, which specifies whether
-	//   a control's action is 'onclick', 'onchange', etc.  If ServerAction is TRUE, it simply means that acting on that control
-	//   will casue the Form to PostBack.  If ServerAction is a specific php function name, that function will be called
-	//   during the postback process.  (See comments for "Form::RenderBegin()" at the top of Form.inc for more information)
-	//   Three parameters are always passed in to the php function that will be called:
-	//     - string strFormId (FormId of hte form in question)
-	//     - string strContorlId (ControLId of the control being acted upon)
-	//     - string strParameterId (optional, user-specified parameters that contain additional information)
-	//   Please note that within any php function, you do not immediately have access to the global variables, including
-	//   the controls and the forms, themselves.  For that reason, eval(Form::EventHandler) should always be called at the
-	//   top of every PHP Function which is a ServerAction in order to give you access to those global variables.
-	// * "ClientAction" is any client javascript that will be executed if this control is "acted" upon.
-	//
-	// If both a ClientAction **AND** ServerAction is defined on a control, the control will first execute the ClientAction.
-	// At any time if javascript in the clientaction does a "return false", the serveraction will NOT be executed.  This
-	// is useful for things like:
-	//		$btnDelete = new Button("btnDelete");
-	//		$frmForm = $frmForm->AddControl($btnDelete);
-	//		$btnDelete->ServerAction = "PerformDelete";
-	//		$btnDelete->ClientAction = "return confirm('Are you SURE you want to DELETE this item?')";
-	// This will cause the javascript pop up to first allow the user to confirm that s/he wants to delete.  If "Ok" is pressed,
-	// the form is posted-back, validation routine executed (if CausesValidation is true), and ServerAction will then kickoff.
-	// If "Cancel" is pressed, nothing will happen (the form will NOT post-back, no other actions will be executed).
-
+	/**
+	 * QControlBase is the base class of all QControls and shares their common properties
+	 * 
+	 * Please note that not every control will utilize every single one of these properties.
+	 * Keep in mind that Controls that are not Enabled or not Visible will not go through the form's
+	 * Validation routine.
+	 * All Controls must implement the following abstract functions:
+	 * <ul>
+	 * 		<li>{@link QControlBase::GetControlHtml()}</li>
+	 * 		<li>{@link QControlBase::ParsePostData()}</li>
+	 * 		<li>{@link QControlBase::Validate()}</li>
+	 * </ul>
+	 * 
+	 * @package Controls
+	 * 
+	 * @property string $AccessKey 
+	 * 			allows you to specify what Alt-Letter combination will automatically focus that
+	 * 			control on the form
+	 * @property boolean $ActionsMustTerminate
+	 * @property string $ActionParameter
+	 * 			This property allows you to pass your own parameters to the handlers for actions applied to this
+	 * 			control.
+	 * @property string $BackColor 
+	 * 			sets the CSS background-color of the control
+	 * @property string $BorderColor 
+	 * 			sets the CSS border-color of the control
+	 * @property string $BorderWidth 
+	 * 			sets the CSS border-width of the control
+	 * @property string $BorderStyle 
+	 * 			is used to set CSS border-style by {@link QBorderStyle}
+	 * @property mixed $CausesValidation 
+	 * 			flag says whether or not the form should run through its validation routine if this
+	 * 			control has an action defined and is acted upon
+	 * @property-read string $ControlId 
+	 * 			returns the id of this control
+	 * @property string $CssClass 
+	 * 			sets or returns the CSS class for this control
+	 * @property string $Cursor is used to set CSS cursor property by {@link QCursor}
+	 * @property boolean $Display 
+	 * 			shows or hides the control using the CSS display property.  In either case, the control is still 
+	 * 			rendered on the page.  See the Visible property if you wish to not render a control.
+	 * @property string $DisplayStyle 
+	 * 			is used to set CSS display property by {@link QDisplayStyle}
+	 * @property boolean $Enabled
+	 * 		specifies whether or not this is enabled (it will grey out the control and make it
+	 * 		inoperable if set to true)
+	 * @property boolean $FontBold 
+	 * 			sets the font bold or normal
+	 * @property boolean $FontItalic 
+	 * 			sets the Font italic or normal
+	 * @property string $FontNames 
+	 * 			sets the name of used fonts
+	 * @property boolean $FontOverline 
+	 * @property string $FontSize 
+	 * 			sets the font-size of the control
+	 * @property boolean $FontStrikeout  
+	 * @property boolean $FontUnderline 
+	 * 			sets the font underlined
+	 * @property string $ForeColor 
+	 * 			sets the forecolor of the control (like fontcolor)
+	 * @property-read QForm $Form 
+	* 			returns the parent form object
+	* 			@property-read string $FormAttributes
+	 * @property string $Height
+	 * @property string $HtmlAfter
+	 * 			HTML that is shown after the control {@link QControl::RenderWithName}
+	 * @property string $HtmlBefore
+	 * 			HTML that is shown before the control {@link QControl::RenderWithName}
+	 * @property string $Instructions
+	 * 			instructions that is shown next to the control's name label 
+	 * 			{@link QControl::RenderWithName}
+	 * @property-read string $JavaScripts
+	 * @property string $Left CSS left property
+	 * @property-read boolean $Modified 
+	 * 			indicates if the control has been changed. Used to tell Qcubed to rerender the control or not (Ajax calls).
+	 * @property boolean $Moveable
+	 * @property string $Name 
+	 * 			sets the Name of the Control (see {@link QControl::RenderWithName})
+	 * @property-read boolean $OnPage
+	 * 			is true if the control is connected to the form
+	 * @property integer $Opacity 
+	 * 			sets the opacity of the control (0-100)
+	 * @property string $Overflow is used to set CSS overflow property by {@link QOverflow}
+	 * @property-read QForm|QControl $ParentControl 
+	 * 			returns the parent control
+	 * @property string $Position is used to set CSS position property by {@link QPosition}
+	 * @property-read boolean $Rendered
+	 * @property-read boolean $Rendering
+	 * @property-read string $RenderMethod
+	 * 			carries the name of the function, which were initially used for rendering
+	 * @property boolean $Required
+	 * 			specifies whether or not this is required (will cause a validation error if the form
+	 * 			is trying to be validated and this control is left blank)
+	 * @property-read string $StyleSheets
+	 * @property integer $TabIndex
+	 * 			specifies the index/tab order on a form
+	 * @property string $ToolTip
+	 * 			specifies the text to be displayed when the mouse is hovering over the control
+	 * @property string $Top
+	 * @property-read string $ValidationError 
+	 * 			is the string that contains the validation error (if applicable) or will be blank if
+	 * 			(1) the form did not undergo its validation routine or (2) this control had no error
+	 * @property boolean $Visible
+	 * 			specifies whether or not the control should be rendered in the page.  This is in contrast to
+	 * 			Display, which will just hide the control via CSS styling.
+	 * @property string $Warning
+	 * 			is warning text (looks like an error, but it can be user defined) that will be 
+	 * 			shown next to the control's name label {@link QControl::RenderWithName}
+	 * @property string $Width
+	 * @property-read boolean $WrapperModified
+	 * 
+	 */
 	abstract class QControlBase extends QBaseClass {
 		///////////////////////////
 		// Private Member Variables
@@ -110,9 +144,8 @@
 		protected $strToolTip = null;
 		protected $strValidationError = null;
 		protected $blnVisible = true;
-
-    protected $strPreferredRenderMethod = 'Render';
-
+		protected $strPreferedRenderMethod = 'Render';
+	
 		// LAYOUT
 		protected $strHeight = null;
 		protected $strWidth = null;
@@ -156,6 +189,18 @@
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Creates a QControlBase object
+		 * 
+		 * This constructor will generally not be used to create a QControlBase object.  Instead it is used by the 
+		 * classes which extend the class.  Only the parent object parameter is required.  If the option strControlId
+		 * parameter is not used, QCubed will generate the id.
+		 * 
+		 * @param QControl|QForm $objParentObject
+		 * @param string $strControlId 
+		 * 		optional id of this Control. In html, this will be set as the value of the id attribute. The id can only 
+		 *    contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			if ($objParentObject instanceof QForm)
 				$this->objForm = $objParentObject;
@@ -234,13 +279,24 @@
 			$objControl->PersistPrepare();
 			$_SESSION[$this->objForm->FormId . '_' . $this->strControlId] = serialize($objControl);
 		}
-
+		
+		/**
+		 * Adds a control as a child of this control.
+		 * 
+		 * @param QControl $objControl the control to add
+		 */
 		public function AddChildControl(QControl $objControl) {
 			$this->blnModified = true;
 			$this->objChildControlArray[$objControl->ControlId] = $objControl;
 			$objControl->objParentControl = $this;
 		}
 
+		/**
+		 * Returns all child controls as an array
+		 * 
+		 * @param boolean $blnUseNumericIndexes  
+		 * @return array an array of QControls
+		 */
 		public function GetChildControls($blnUseNumericIndexes = true) {
 			if ($blnUseNumericIndexes) {
 				$objToReturn = array();
@@ -251,6 +307,11 @@
 				return $this->objChildControlArray;
 		}
 
+		/**
+		 * Returns the child control with the given id
+		 * @param string $strControlId
+		 * @return QControl
+		 */
 		public function GetChildControl($strControlId) {
 			if (array_key_exists($strControlId, $this->objChildControlArray))
 				return $this->objChildControlArray[$strControlId];
@@ -258,12 +319,21 @@
 				return null;
 		}
 
+		/**
+		 * Removes all child controls
+		 * @param boolean $blnRemoveFromForm
+		 */
 		public function RemoveChildControls($blnRemoveFromForm) {
 			foreach ($this->objChildControlArray as $objChildControl) {
 				$this->RemoveChildControl($objChildControl->ControlId, $blnRemoveFromForm);
 			}
 		}
 
+		/**
+		 * Removes the child control with the given id
+		 * @param string $strControlId
+		 * @param boolean $blnRemoveFromForm should the control be removed from the form, too?
+		 */
 		public function RemoveChildControl($strControlId, $blnRemoveFromForm) {
 			$this->blnModified = true;
 			if (array_key_exists($strControlId, $this->objChildControlArray)) {
@@ -276,6 +346,11 @@
 			}
 		}
 
+		/**
+		 * Adds an action to the control
+		 * @param QEvent $objEvent
+		 * @param QAction $objAction
+		 */
 		public function AddAction($objEvent, $objAction) {
 			if (!($objEvent instanceof QEvent)) {
 				throw new QCallerException('First parameter of AddAction is expecting an object of type QEvent');
@@ -299,6 +374,11 @@
 			array_push($this->objActionArray[$strEventName], $objAction);
 		}
 
+		/**
+		 * Adds an array of actions to the control
+		 * @param QEvent $objEvent
+		 * @param array $objActionArray
+		 */
 		public function AddActionArray($objEvent, $objActionArray) {
 			if (!($objEvent instanceof QEvent)) {
 				throw new QCallerException('First parameter of AddAction is expecting on object of type QEvent');
@@ -312,7 +392,9 @@
 
 		/**
 		 * Removes all events for a given event name.
-		 * Be sure and use a QFooEvent::EventName constant here.
+		 * 
+		 * Be sure and use a QFooEvent::EventName constant here 
+		 * (QClickEvent::EventName, for example).
 		 *
 		 * @param string $strEventName
 		 */
@@ -323,6 +405,15 @@
 			$this->objActionArray[$strEventName] = array();
 		}
 
+		/**
+		 * Returns all actions that are connected with specific events
+		 * @param string $strEventType 
+		 *  the type of the event. Be sure and use a
+		 *  QFooEvent::EventName here. (QClickEvent::EventName, for example)
+		 * @param $strActionType if given only actions of this type will be 
+		 *  returned
+		 * @return array
+		 */
 		public function GetAllActions($strEventType, $strActionType = null) {
 			$objArrayToReturn = array();
 			if ($this->objActionArray) foreach ($this->objActionArray as $objActionArray) {
@@ -353,15 +444,28 @@
 			}*/
 		}
 
-		// Custom Attributes are other html name-value pairs that can be rendered within the control.
-		// For example, on a textbox, you can render any number of additional name-value pairs, to assign
-		// additional javascript actions, additional formatting, etc.
-		//		$txtTextbox = new Textbox("txtTextbox");
-		//		$txtTextbox->SetCustomAttribute("onfocus", "alert('You are about to edit this field')");
-		//		$txtTextbox->SetCustomAttribute("nowrap", "nowrap");
-		//		$txtTextbox->SetCustomAttribute("blah", "foo");
-		// Will render:
-		//		<input type="text" ...... onfocus="alert('You are about to edit this field')" nowrap="nowrap" blah="foo" />
+		/**
+		 * Sets one custom attribute
+		 * 
+		 * Custom Attributes refers to the html name-value pairs that can be rendered within the control that are not
+		 * covered by an explicit method. For example, on a textbox, you can render any number of additional name-value 
+		 * pairs, to assign additional javascript actions, additional formatting, etc.
+		 * <code>
+		 * <?php
+		 * $txtTextbox = new Textbox("txtTextbox");
+		 * $txtTextbox->SetCustomAttribute("onfocus", "alert('You are about to edit this field');");
+		 * $txtTextbox->SetCustomAttribute("nowrap", "nowrap");
+		 * $txtTextbox->SetCustomAttribute("blah", "foo");
+		 * ?>
+		 * </code>
+		 * Will render:
+		 * <code>
+		 *   <input type="text" ...... onfocus="alert('You are about to edit this field');" nowrap="nowrap" blah="foo" />
+		 * </code>
+		 * 
+		 * @param string $strName
+		 * @param string $strValue
+		 */
 		public function SetCustomAttribute($strName, $strValue) {
 			$this->blnModified = true;
 			if (!is_null($strValue))
@@ -372,6 +476,11 @@
 			}
 		}
 		
+		/**
+		 * Returns the value of a custom attribute
+		 * @param string $strName
+		 * @return string
+		 */
 		public function GetCustomAttribute($strName) {
 			if ((is_array($this->strCustomAttributeArray)) && (array_key_exists($strName, $this->strCustomAttributeArray)))
 				return $this->strCustomAttributeArray[$strName];
@@ -379,6 +488,10 @@
 				throw new QCallerException(sprintf("Custom Attribute does not exist in Control '%s': %s", $this->strControlId, $strName));
 		}
 
+		/**
+		 * Removes the given custom attribute
+		 * @param string $strName
+		 */
 		public function RemoveCustomAttribute($strName) {
 			$this->blnModified = true;
 			if ((is_array($this->strCustomAttributeArray)) && (array_key_exists($strName, $this->strCustomAttributeArray))) {
@@ -388,8 +501,25 @@
 				throw new QCallerException(sprintf("Custom Attribute does not exist in Control '%s': %s", $this->strControlId, $strName));
 		}
 
-
-
+		/**
+		 * Adds a custom style property/value to the html style attribute
+		 * 
+		 * Sets a custom css property. For example:
+		 * <code>
+		 * <?php
+		 * $txtTextbox = new Textbox("txtTextbox");
+		 * $txtTextbox->SetCustomStyle("white-space", "nowrap");
+		 * $txtTextbox->SetCustomStyle("margin", "10px");
+		 * ?>
+		 * </code>
+		 * Will render:
+		 * <code>
+		 * 		<input type="text" ...... style="white-space:nowrap;margin:10px" />
+		 * </code>
+		 * 
+		 * @param string $strName
+		 * @param string $strValue
+		 */
 		public function SetCustomStyle($strName, $strValue) {
 			$this->blnModified = true;
 			if (!is_null($strValue))
@@ -400,6 +530,11 @@
 			}
 		}
 		
+		/**
+		 * Returns the value of the given custom style
+		 * @param string $strName
+		 * @return string
+		 */
 		public function GetCustomStyle($strName) {
 			if ((is_array($this->strCustomStyleArray)) && (array_key_exists($strName, $this->strCustomStyleArray)))
 				return $this->strCustomStyleArray[$strName];
@@ -407,6 +542,10 @@
 				throw new QCallerException(sprintf("Custom Style does not exist in Control '%s': %s", $this->strControlId, $strName));
 		}
 
+		/**
+		 * Deletes the given custom style
+		 * @param string $strName
+		 */
 		public function RemoveCustomStyle($strName) {
 			$this->blnModified = true;
 			if ((is_array($this->strCustomStyleArray)) && (array_key_exists($strName, $this->strCustomStyleArray))) {
@@ -415,7 +554,7 @@
 			} else
 				throw new QCallerException(sprintf("Custom Style does not exist in Control '%s': %s", $this->strControlId, $strName));
 		}
-		
+
 		public function AddJavascriptFile($strJsFileName) {
 			if($this->strJavaScripts) {
 				$this->strJavaScripts .= ','.$strJsFileName;
@@ -441,8 +580,7 @@
 			// Relative path based on the path of the core JS files
 			$this->AddCssFile("../../plugins/" . $strPluginName . "/css/" . $strCssFileName);
 		}
-
-
+		
 		/**
 		 * This will add a CssClass name to the CssClass property (if it does not yet exist),
 		 * updating the CssClass property accordingly.
@@ -481,22 +619,38 @@
 			$this->CssClass = trim($strNewCssClass);
 		}
 
-		// This abstract method must be implemented by all controls.
-		//
-		// When utilizing formgen, the programmer should never access form variables directly (e.g. via the $_FORM array).
-		// It can be assumed that at *ANY* given time, a control's values/properties will be "up to date" with whatever the
-		// webuser has entered in.
-		// 
-		// When a Form is Created via Form::Create(string), the form will go through to check and see if it is a first-run
-		// of a form, or if it is a post-back.  If it is a postback, it will go through its own private array of controls
-		// and call ParsePostData on EVERY control it has.  Each control is responsible for "knowing" how to parse the 
-		// $_POST data to update its own values/properties based on what was returned to via the postback.
+		/**
+		 * ParsePostData parses the value of this control from FormState
+		 * 
+		 * This abstract method must be implemented by all controls.
+		 * 
+		 * When utilizing formgen, the programmer should never access form variables directly (e.g. 
+		 * via the $_FORM array). It can be assumed that at *ANY* given time, a control's 
+		 * values/properties will be "up to date" with whatever the webuser has entered in.
+		 * 
+		 * When a Form is Created via Form::Create(string), the form will go through to check and 
+		 * see if it is a first-run of a form, or if it is a post-back.  If it is a postback, it 
+		 * will go through its own private array of controls and call ParsePostData on EVERY control
+		 * it has.  Each control is responsible for "knowing" how to parse the $_POST data to update
+		 * its own values/properties based on what was returned to via the postback.
+		 */
 		abstract public function ParsePostData();
 
-		// This is utilized by Render methods to display various name-value HTML attributes for the control
-		// Control's implementation contains the very-basic set of HTML attributes... it is expected
-		// that most subclasses will extend this method's functionality to add Control-specific HTML attributes
-		// (e.g. textbox will likely add the maxlength html attribute, etc.)
+		
+		/**
+		 * Returns all attributes in the correct HTML format
+		 * 
+		 * This is utilized by Render methods to display various name-value HTML attributes for the
+		 * control.
+		 * 
+		 * ControlBase's implementation contains the very-basic set of HTML attributes... it is expected
+		 * that most subclasses will extend this method's functionality to add Control-specific HTML
+		 * attributes (e.g. textbox will likely add the maxlength html attribute, etc.)
+		 * 
+		 * @param boolean $blnIncludeCustom 
+		 * @param boolean $blnIncludeAction 
+		 * @return string
+		 */
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
 			$strToReturn = "";
 
@@ -520,6 +674,14 @@
 			return $strToReturn;
 		}
 		
+		/**
+		 * Returns the custom attributes HTML formatted
+		 * 
+		 * All attributes will be returned as concatened the string of the form
+		 * key1="value1" key2="value2"
+		 * 
+		 * @return string
+		 */
 		public function GetCustomAttributes() {
 			$strToReturn = '';
 			if ($this->strCustomAttributeArray)
@@ -530,6 +692,11 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns all action attributes
+		 * 
+		 * @return string
+		 */
 		public function GetActionAttributes() {
 			$strToReturn = '';
 			foreach ($this->objActionArray as $strEventName => $objActions)
@@ -537,12 +704,30 @@
 			return $strToReturn;
 		}
 
+		
 		public function GetJavaScriptForEvent($strEventName) {
 			return QAction::RenderActions($this, $strEventName, $this->objActionArray[$strEventName]);
 		}
 
-		// Similar to GetAttributes, but specifically for CSS name/value pairs that will render within
-		// a control's HTML "style" attribute
+		/**
+		 * Returns all style-attributes
+		 * 
+		 * Similar to GetAttributes, but specifically for CSS name/value pairs that will render 
+		 * within a control's HTML "style" attribute
+		 * 
+		 * <code>
+		 * <?php
+		 * $txtTextbox = new Textbox("txtTextbox");
+		 * $txtTextbox->SetCustomStyle("white-space", "nowrap");
+		 * $txtTextbox->SetCustomStyle("margin", "10px");
+		 * $txtTextBox->Height = 20;
+		 * $txtTextBox->GetStyleAttributes();
+		 * ?>
+		 * will return:
+		 * white-space:nowrap;margin:10px;height:20px;
+		 * 
+		 * @return string
+		 */
 		public function GetStyleAttributes() {
 			$strToReturn = "";
 
@@ -628,20 +813,30 @@
 			return $strToReturn;
 		}
 
-
-		// The Render, RenderWithName, and RenderWithError functions should call
-		// this renderhelper FIRST in order to check for and perform attribute overrides (if any)
-		// 
-		// All render methods should take in an optional first boolean parameter
-		// blnDisplayOutput (default to true), and then any number of attribute overrides.
-		
-		// Any "Render" method (e.g. Render, RenderWithName, RenderWithError) should
-		// call the RenderHelper FIRST in order to:
-		// * Check for and perform attribute overrides
-		// * Check to see if this control is "Visible".  If it is Visible=false, then
-		//   the renderhelper will cause the method to immedaitely return
-		// Proper usage within the first line of the REnder() method is:
-		// 		if ($this->RenderHelper(func_get_args())) return;
+		/**
+		 * RenderHelper should be called from all "Render" functions FIRST in order to check for and
+		 * perform attribute overides (if any).
+		 * 
+		 * All render methods should take in an optional first boolean parameter blnDisplayOutput
+		 * (default to true), and then any number of attribute overrides.
+		 * 
+		 * Any "Render" method (e.g. Render, RenderWithName, RenderWithError) should call the 
+		 * RenderHelper FIRST in order to:
+		 * <ul>
+		 * <li>Check for and perform attribute overrides</li>
+		 * <li>Check to see if this control is "Visible".  If it is Visible=false, then
+		 * 	the renderhelper will cause the method to immedaitely return</li>
+		 * </ul>
+		 * 
+		 * Proper usage within the first line of any Render() method is:
+		 * 	<code>$this->RenderHelper(func_get_args(), __FUNCTION__);</code>
+		 * See {@link QControl::RenderWithName()} as example.
+		 *   
+		 * @param $mixParameterArray the parameters given to the render call
+		 * @param $strRenderMethod the method which has been used to render the 
+		 * 	control. This is important for ajax rerendering
+		 * @see QControlBase::RenderOutput()
+		 */
 		protected function RenderHelper($mixParameterArray, $strRenderMethod) {
 			// Make sure the form is already "RenderBegun"
 			if ((!$this->objForm) || ($this->objForm->FormStatus != QForm::FormStatusRenderBegun)) {
@@ -702,14 +897,40 @@
 
 		protected function GetNonWrappedHtml() {}
 
+		/**
+		 * Sets focus to this control
+		 */
 		public function Focus() {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus();', $this->strControlId));
 		}
+		
+		/**
+		 * Same as "Focus": Sets focus to this control
+		 */
+		public function SetFocus() {
+			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus()', $this->strControlId));
+		}
 
+		/**
+		 * Let this control blink
+		 * 
+		 * @param string $strFromColor start color
+		 * @param string $strToColor blink color
+		 */
 		public function Blink($strFromColor = '#ffff66', $strToColor = '#ffffff') {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").blink("%s", "%s");', $this->strControlId, $strFromColor, $strToColor));
 		}
-
+		
+		/**
+		 * Returns all Javscript that needs to be executed after rendering of this control
+		 * 
+		 * For any JavaScript calls that need to be made whenever this control is rendered or 
+		 * re-rendered return here your custom javascript code.
+		 * 
+		 * Remember to call $strToReturn = parent::GetEndScript if you want to have basic moveable support.
+		 * 
+		 * @return string
+		 */
 		public function GetEndScript() {
 			if ($this->blnMoveable)
 //				return sprintf('qcodo.registerControlMoveable("%s"); ', $this->strControlId);
@@ -718,6 +939,15 @@
 				return null;
 		}
 
+		/**
+		 * For any HTML code that needs to be rendered at the END of the QForm when this control is 
+		 * INITIALLY rendered.
+		 * 
+		 * This function is never used throughout the whole framework. So it probably should be
+		 * deprecated. Only Call to this function is in QFormBase Line 1171.
+		 * @deprecated
+		 * @return unknown_type
+		 */
 		public function GetEndHtml() {}
 /*		public function GetEndHtml() {
 			if ($this->blnMoveable)
@@ -727,7 +957,10 @@
 		}*/
 
 		/**
-		 * If not yet rendered during this server/ajax event, will force the control to redraw/refresh
+		 * Refreshes the control
+		 * 
+		 * If not yet rendered during this ajax event, will set the Modified variable to true.  This will
+		 * have the effect of forcing a refresh of this control when it is supposed to be rendered.
 		 * Otherwise, this will do nothing
 		 */
 		public function Refresh() {
@@ -735,6 +968,20 @@
 				$this->blnModified = true;
 		}
 
+		/**
+		 * RenderOutput should be the last call in your custom RenderMethod.
+		 * 
+		 * RenderOutput wraps your content with valid divs and control-identifiers, echos your code
+		 * to the content buffer or simply returns it. See {@link QControlBase::RenderHelper()}.
+		 * 
+		 * @param string $strOutput
+		 * 			Your html-code which should be given out
+		 * @param boolean $blnDisplayOutput
+		 * 			should it be given out, or just be returned?
+		 * @param boolean $blnForceAsBlockElement
+		 * 			should it be given out as a block element, regardless of its configured tag?
+		 * @return string
+		 */
 		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false) {
 			// First, let's mark this control as being rendered and is ON the Page
 			$this->blnRendering = false;
@@ -838,16 +1085,25 @@
 				return $strOutput;
 		}
 
-		// This is usually a one-word containing the HTML attribute name that defines how a specific
-		// control should be "acted" upon.  This typically would be something like "onclick" or "onchange".
-//		abstract public function GetJavaScriptAction();
-
-		// This method will render the control, itself, and will return the rendered HTML as a string
+		/**
+		 * This method will render the control, itself, and will return the rendered HTML as a string
+		 * 
+		 * As an abstract method, any class extending QControlBase must implement it.  This ensures that 
+		 * each control has its own specific html.
+		 * @return string
+		 */
 		abstract protected function GetControlHtml();
 
-		// This method will perform attribute overriding (if any),
-		// And it will either display the rendered HTML (if blnDisplayOutput is true, which
-		// it is by default), or it will return the rendered HTML as a string.
+		/**
+		 * This render method is the most basic render-method available.
+		 * 
+		 * It will perform attribute overiding (if any) and will either display the rendered 
+		 * HTML (if blnDisplayOutput is true, which it is by default), or it will return the 
+		 * rendered HTML as a string.
+		 * 
+		 * @param boolean $blnDisplayOutput render the control or return as string
+		 * @return string
+		 */
 		public function Render($blnDisplayOutput = true) {
 			// Call RenderHelper
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
@@ -863,6 +1119,11 @@
 			return $this->RenderOutput($strOutput, $blnDisplayOutput);
 		}
 
+		/**
+		 * RenderAjax will be called during an Ajax-Rerendering of the controls do to it being modified
+		 * @param boolean $blnDisplayOutput render the control or return as string
+		 * @return string
+		 */
 		public function RenderAjax($blnDisplayOutput = true) {
 			// Only render if this control has been modified at all
 			if ($this->blnModified) {
@@ -876,14 +1137,20 @@
 			}
 		}
 
+		/**
+		 * Renders all Children
+		 * @param boolean $blnDisplayOutput display output (echo out) or just return as string
+		 * @return string
+		 */
 		protected function RenderChildren($blnDisplayOutput = true) {
 			$strToReturn = "";
 
-			foreach ($this->GetChildControls() as $objControl)
+			foreach ($this->GetChildControls() as $objControl) {
 				if (!$objControl->Rendered) {
-          $renderMethod = $objControl->strPreferredRenderMethod;
+					$renderMethod = $objControl->strPreferedRenderMethod;
 					$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
-        }
+				}
+			}
 
 			if ($blnDisplayOutput) {
 				print($strToReturn);
@@ -892,10 +1159,13 @@
 				return $strToReturn;
 		}
 
-		public function SetFocus() {
-			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus()', $this->strControlId));
-		}
-
+		/**
+		 * This render method will render the control with additional output of 
+		 * any validation errors, that might occur
+		 * 
+		 * @param boolean $blnDisplayOutput display output (echo out) or just return as string
+		 * @return string
+		 */
 		public function RenderWithError($blnDisplayOutput = true) {
 			// Call RenderHelper
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
@@ -917,12 +1187,19 @@
 		}
 
 
-		// This method defines how a control should validate itself based on the value/properties it has
-		// It should also include the handling of ensuring the "Required" requirements are obeyed if this control's
-		// "Required" flag is set to true.
-		//
-		// For Controls that can't realistically be "validated" (e.g. labels, datagrids, etc.), those controls should simply
-		// have Validate() return true.
+		// 
+		/**
+		 * Validate checks if this controls carray a valid value
+		 * 
+		 * This abstract method defines how a control should validate itself based on the value/
+		 * properties it has. It should also include the handling of ensuring the "Required" 
+		 * requirements are obeyed if this control's "Required" flag is set to true.
+		 * 
+		 * For Controls that can't realistically be "validated" (e.g. labels, datagrids, etc.), 
+		 * those controls should simply have Validate() return true.
+		 * 
+		 * @return boolean
+		 */
 		abstract public function Validate();
 		
 
@@ -1014,9 +1291,8 @@
 				case "ToolTip": return $this->strToolTip;
 				case "ValidationError": return $this->strValidationError;
 				case "Visible": return $this->blnVisible;
+				case "PreferedRenderMethod": return $this->strPreferedRenderMethod;
 
-        case "PreferredRenderMethod": return $this->strPreferredRenderMethod;
-			
 				// LAYOUT
 				case "Height": return $this->strHeight;
 				case "Width": return $this->strWidth;
@@ -1061,7 +1337,7 @@
 					}
 			}
 		}
-		
+
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
@@ -1270,15 +1546,15 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-        case "PreferredRenderMethod": 
-          try { 
-            $this->strPreferredRenderMethod = QType::Cast($mixValue, QType::String); 
-            break; 
-          } catch (QInvalidCastException $objExc) { 
-            $objExc->IncrementOffset(); 
-            throw $objExc; 
-          } 
-			
+				case "PreferedRenderMethod":
+					try {
+						$this->strPreferedRenderMethod = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				// LAYOUT
 				case "Height":
 					try {
