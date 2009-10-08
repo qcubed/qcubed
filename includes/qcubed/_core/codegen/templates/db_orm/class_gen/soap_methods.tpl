@@ -73,7 +73,7 @@
 <% foreach ($objTable->ColumnArray as $objColumn) { %>
 	<% if ($objColumn->VariableType == QType::DateTime) { %>
 			if ($objObject-><%= $objColumn->VariableName %>)
-				$objObject-><%= $objColumn->VariableName %> = $objObject-><%= $objColumn->VariableName %>->__toString(QDateTime::FormatSoap);
+				$objObject-><%= $objColumn->VariableName %> = $objObject-><%= $objColumn->VariableName %>->qFormat(QDateTime::FormatSoap);
 	<% } %><% if ($objColumn->Reference && (!$objColumn->Reference->IsType)) { %>
 			if ($objObject-><%= $objColumn->Reference->VariableName %>)
 				$objObject-><%= $objColumn->Reference->VariableName %> = <%= $objColumn->Reference->VariableType %>::GetSoapObjectFromObject($objObject-><%= $objColumn->Reference->VariableName %>, false);

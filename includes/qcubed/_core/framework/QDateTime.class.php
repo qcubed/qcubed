@@ -1,4 +1,5 @@
 <?php
+
 	// These Aid with the PHP 5.2 DateTime error handling
 	class QDateTimeNullException extends QCallerException {}
 	function QDateTimeErrorHandler() {}
@@ -13,7 +14,7 @@
 	 * 
 	 * For legacy PHP users (PHP < 5.2.0), please refer to QDateTime.legacy
 	 */
-	class QDateTime extends DateTime {
+	class QDateTimeBase extends DateTime {
 		const Now = 'now';
 		const FormatIso = 'YYYY-MM-DD hhhh:mm:ss';
 		const FormatIsoCompressed = 'YYYYMMDDhhhhmmss';
@@ -59,7 +60,7 @@
 
 		public static function NowToString($strFormat = null) {
 			$dttNow = new QDateTime(QDateTime::Now);
-			return $dttNow->__toString($strFormat);
+			return $dttNow->qFormat($strFormat);
 		}
 		public function IsDateNull() {
 			return $this->blnDateNull;
@@ -80,7 +81,7 @@
 
 			$strArrayToReturn = array();
 			foreach ($dttArray as $dttItem)
-				array_push($strArrayToReturn, $dttItem->__toString(QDateTime::FormatSoap));
+				array_push($strArrayToReturn, $dttItem->qFormat(QDateTime::FormatSoap));
 			return $strArrayToReturn;
 		}
 
@@ -232,7 +233,7 @@
 		 * @param string $strFormat the format of the date
 		 * @return string the formatted date as a string
 		 */
-		public function __toString($strFormat = null) {
+		public function qFormat($strFormat = null) {
 			$this->ReinforceNullProperties();
 			if (is_null($strFormat))
 				$strFormat = QDateTime::$DefaultFormat;
@@ -698,6 +699,12 @@
 		}
 	}
 
+if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+	require_once("QDateTime52.class.php");
+} else {
+	class QDateTime extends QDateTimeBase {}
+}
+
 /*
 	This is a reference to the documentation for hte PHP DateTime classes (as of PHP 5.2)
 
@@ -774,7 +781,7 @@
 		print ('<br/>');
 		print ('Date Null: ' . (($dtt->IsDateNull()) ? 'Yes' : 'No'));
 		print ('<br/>');
-		print ('Date: ' . $dtt->__toString(QDateTime::FormatDisplayDateTimeFull));
+		print ('Date: ' . $dtt->qFormat(QDateTime::FormatDisplayDateTimeFull));
 		print ('<br/>');
 		print ('Month: ' . $dtt->Month . '<br/>');
 		print ('Day: ' . $dtt->Day . '<br/>');

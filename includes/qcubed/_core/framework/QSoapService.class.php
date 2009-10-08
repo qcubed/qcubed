@@ -139,7 +139,7 @@
 				if ($this->blnArray)
 					return sprintf('QDateTime::GetSoapDateTimeArray(%s)', $strArgumentName);
 				else
-					return sprintf('%s->__toString(QDateTime::FormatSoap)', $strArgumentName);
+					return sprintf('%s->qFormat(QDateTime::FormatSoap)', $strArgumentName);
 
 			// It's a simple Variable
 			} else

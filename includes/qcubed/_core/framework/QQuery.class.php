@@ -223,7 +223,7 @@
 			}
 
 			if($this->strType == QDatabaseFieldType::Time)
-				return sprintf('(%s) ? %s->__toString(QDateTime::$DefaultTimeFormat) : null', $strToReturn, $strToReturn);
+				return sprintf('(%s) ? %s->qFormat(QDateTime::$DefaultTimeFormat) : null', $strToReturn, $strToReturn);
 
 			if ($this->strType == QDatabaseFieldType::Bit)
 				return sprintf('(null === %s)? "" : ((%s)? "%s" : "%s")', $strToReturn, $strToReturn, QApplication::Translate('True'), QApplication::Translate('False'));
