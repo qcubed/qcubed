@@ -109,11 +109,11 @@
 						continue;
 					}
 	<% } %>
-	<% foreach ($objTable->ReverseReferenceArray as $objReference) { %>
+	<% foreach ($objTable->ReverseReferenceArray as $objReference) { %><% if (!$objReference->Unique) { %>
 					if (array_diff($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array, $objToReturn->_obj<%= $objReference->ObjectDescription %>Array) != null) {
 						continue;
 					}
-	<% } %>
+	<% } %><% } %>
 <% } %>
 
 					// complete match - all primary key columns are the same
