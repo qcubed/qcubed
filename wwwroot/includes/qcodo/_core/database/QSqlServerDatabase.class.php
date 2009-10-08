@@ -91,7 +91,7 @@
 
 			// Check for DATE Value
 			if ($mixData instanceof QDateTime)
-				return $strToReturn . sprintf("'%s'", $mixData->__toString(QDateTime::FormatIso));
+				return $strToReturn . sprintf("'%s'", $mixData->qFormat(QDateTime::FormatIso));
 
 			// Assume it's some kind of string value
 			return $strToReturn . sprintf("'%s'", str_replace("'", "''", $mixData));

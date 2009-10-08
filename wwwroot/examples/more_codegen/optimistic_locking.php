@@ -52,7 +52,7 @@
 	// level constraints instead of systematic ones, this delay is inherit with the web
 	// application paradigm.  The following delay is just to simulate that paradigm.
 	$dttNow = new QDateTime(QDateTime::Now);
-	while ($objPerson1->SysTimestamp == $dttNow->__toString(QDateTime::FormatIso))
+	while ($objPerson1->SysTimestamp == $dttNow->qFormat(QDateTime::FormatIso))
 		$dttNow = new QDateTime(QDateTime::Now);
 
 	// Make Changes to the Object so that the Save Will Update Something

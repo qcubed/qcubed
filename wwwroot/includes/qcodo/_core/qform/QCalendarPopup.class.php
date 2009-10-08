@@ -96,7 +96,7 @@
 
 			if ($this->intTimestamp) {
 				$intTimestamp = $this->intTimestamp;
-				$strDate = $this->DateTime->__toString(QDateTime::FormatDisplayDate);
+				$strDate = $this->DateTime->qFormat(QDateTime::FormatDisplayDate);
 			} else {
 				$intTimestamp = "";
 				$strDate = "";

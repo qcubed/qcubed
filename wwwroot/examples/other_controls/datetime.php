@@ -83,11 +83,11 @@
 			if ($dttDateTime) {
 				$this->lblResult->Text = 'QDateTime object:<br/>';
 				if (!$dttDateTime->IsDateNull())
-					$this->lblResult->Text .= 'Date: <strong>' . $dttDateTime->__toString('DDD MMM D YYYY') . '</strong><br/>';
+					$this->lblResult->Text .= 'Date: <strong>' . $dttDateTime->qFormat('DDD MMM D YYYY') . '</strong><br/>';
 				else
 					$this->lblResult->Text .= 'Date: <strong>Null</strong><br/>';
 				if (!$dttDateTime->IsTimeNull())
-					$this->lblResult->Text .= 'Time: <strong>' . $dttDateTime->__toString('h:mm:ss z') . '</strong>';
+					$this->lblResult->Text .= 'Time: <strong>' . $dttDateTime->qFormat('h:mm:ss z') . '</strong>';
 				else
 					$this->lblResult->Text .= 'Time: <strong>Null</strong>';
 			} else {

@@ -50,9 +50,9 @@
 			if ($this->strWebMaster)
 				$strToReturn .= sprintf("	<webMaster>%s</webMaster>\r\n", $this->strWebMaster);
 			if ($this->dttPubDate)
-				$strToReturn .= sprintf("	<pubDate>%s</pubDate>\r\n", $this->dttPubDate->__toString(QDateTime::FormatRfc822));
+				$strToReturn .= sprintf("	<pubDate>%s</pubDate>\r\n", $this->dttPubDate->qFormat(QDateTime::FormatRfc822));
 			if ($this->dttLastBuildDate)
-				$strToReturn .= sprintf("	<lastBuildDate>%s</lastBuildDate>\r\n", $this->dttLastBuildDate->__toString(QDateTime::FormatRfc822));
+				$strToReturn .= sprintf("	<lastBuildDate>%s</lastBuildDate>\r\n", $this->dttLastBuildDate->qFormat(QDateTime::FormatRfc822));
 			if ($this->strGenerator)
 				$strToReturn .= sprintf("	<generator>%s</generator>\r\n", $this->strGenerator);
 			if ($this->strDocs)
@@ -224,7 +224,7 @@
 			if ($this->strGuid)
 				$strToReturn .= sprintf("		<guid isPermaLink=\"%s\">%s</guid>\r\n", ($this->blnGuidPermaLink) ? 'true' : 'false', $this->strGuid);
 			if ($this->dttPubDate)
-				$strToReturn .= sprintf("		<pubDate>%s</pubDate>\r\n", $this->dttPubDate->__toString(QDateTime::FormatRfc822));
+				$strToReturn .= sprintf("		<pubDate>%s</pubDate>\r\n", $this->dttPubDate->qFormat(QDateTime::FormatRfc822));
 
 			$strToReturn .= "	</item>\r\n";
 
