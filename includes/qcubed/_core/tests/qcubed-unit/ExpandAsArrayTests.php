@@ -3,11 +3,7 @@
 class ExpandAsArrayTests extends QUnitTestCaseBase {    
 	public function testMultiLevel() {
 		$arrPeople = Person::LoadAll(
-			QQ::Clause(
-				QQ::ExpandAsArray(QQN::Person()->Address),
-				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager),
-				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone)
-			)
+			self::getTestClauses()
 		);
 		
 		$targetPerson = null;
@@ -17,7 +13,28 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 			}
 		}
 		
-		$this->assertEqual(sizeof($arrPeople), 12);		
+		$this->assertEqual(sizeof($arrPeople), 12);
+		$this->helperVerifyKarenWolfe($targetPerson);
+	}
+	
+	public function testQuerySingle() {
+		$targetPerson = Person::QuerySingle(
+			QQ::Equal(QQN::Person()->Id, 7),
+			self::getTestClauses()
+		);
+		
+		$this->helperVerifyKarenWolfe($targetPerson);
+	}
+	
+	private static function getTestClauses() {
+		return QQ::Clause(
+				QQ::ExpandAsArray(QQN::Person()->Address),
+				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager),
+				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone)
+		);
+	}
+	
+	private function helperVerifyKarenWolfe(Person $targetPerson) {
 		$this->assertNotEqual($targetPerson, null, "Karen Wolfe found");
 		
 		$targetProject = null;
@@ -37,7 +54,7 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		}
 		
 		$this->assertEqual(sizeof($targetProject->_MilestoneArray), 4, "4 milestones found");
-		$this->assertNotEqual($targetMilestone, null, "Milestone H found");		
+		$this->assertNotEqual($targetMilestone, null, "Milestone H found");				
 	}
 }
 ?>
