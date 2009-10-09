@@ -155,8 +155,9 @@
 					// To deal with "Tues" and date skipping bug in PHP 5.2
 					parent::__construct(date('Y-m-d H:i:s', parent::format('U')));
 
-					// We MUST assume that Date isn't null
-					$this->blnDateNull = false;
+					// if $mixValue represent only time string, blnDateNull must be set to true 
+					$objDateTime = (object)date_parse($mixValue); 
+					$this->blnDateNull = ($objDateTime->year && $objDateTime->month && $objDateTime->day)? false : true; 
 
 					// Update Time Null Value if Time was Specified
 					if (strpos($mixValue, ':') !== false)
