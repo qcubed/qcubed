@@ -9,10 +9,10 @@ abstract class QInstallationValidator {
 	public static function Validate() {
 		$result = array();
 		
-		if( !ini_get('safe_mode') ){
-    		$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Safe Mode is deprecated in PHP 5.3.0 and is removed in PHP 6.0.0.  " . 
-			                   "need to be disabled\r\n";
+		if(ini_get('safe_mode') ){
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Safe Mode is deprecated in PHP 5.3+ and is removed in PHP 6.0+." . 
+				"Please disable this setting in php.ini";
 			$result[] = $obj;
 		}
 		

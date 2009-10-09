@@ -94,7 +94,8 @@ abstract class QPluginInstallerBase {
 		
 	
 	protected static function stripExtraNewlines($strInput) {
-		return ereg_replace("([\r\n]|\r\n){3,}", "\r\n\r\n", $strInput);
+		$strInput = str_replace("\r\n", "\n", $strInput);
+		return preg_replace("/\n\n+/", "\n\n", $strInput);
 	}
 }
 
