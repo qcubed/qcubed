@@ -1,4 +1,4 @@
-///////////////////////////////
+		///////////////////////////////
 		// QCUBED QUERY-RELATED METHODS
 		///////////////////////////////
 
@@ -87,22 +87,31 @@
 			
 			// Do we have to expand anything?
 			if ($objQueryBuilder->ExpandAsArrayNodes) {
-				$objToReturn = array();
+				$objLastRowItem = null;
 				while ($objDbRow = $objDbResult->GetNextRow()) {
-					$objItem = <%= $objTable->ClassName %>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, $objToReturn, $objQueryBuilder->ColumnAliasArray);
-					if ($objItem)
-						$objToReturn[] = $objItem;					
-				}			
-				// Since we only want the object to return, lets return the object and not the array.
-				return $objToReturn[0];
+					//Get the object version of the row
+					$objItem = <%= $objTable->ClassName %>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, array($objLastRowItem), $objQueryBuilder->ColumnAliasArray);
+					if(null === $objLastRowItem && $objItem)
+					{
+						//$objItem is the first object we've received, remember it for expanding
+						$objLastRowItem = $objItem;
+					}
+					//InstantiateDbRow returns false if it's just an expand
+					elseif($objItem !== false) {
+						//We already had a first object, and this isn't an expand
+						//So $objItem must be a second item. We only care about the first.
+						return $objLastRowItem;
+					}
+				}
+				//We're done parsing rows, return the resulting expanded object (or null, if nothing was instantiated)
+				return $objLastRowItem;
 			} else {
 				// No expands just return the first row
-				$objToReturn = null;
-				while ($objDbRow = $objDbResult->GetNextRow())
-					$objToReturn = <%= $objTable->ClassName %>::InstantiateDbRow($objDbRow, null, null, null, $objQueryBuilder->ColumnAliasArray);
+				$objDbRow = $objDbResult->GetNextRow();
+				if(null === $objDbRow)
+					return null;
+				return <%= $objTable->ClassName %>::InstantiateDbRow($objDbRow, null, null, null, $objQueryBuilder->ColumnAliasArray);
 			}
-			
-			return $objToReturn;
 		}
 
 		/**
