@@ -101,5 +101,12 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			"Karen Wolfe")
 		, "List managed persons is correct");
 	}
+	
+	public function testQuerySingleEmpty() {
+		$targetPerson = Person::QuerySingle(
+			QQ::Equal(QQN::Person()->Id, 1241243));
+		
+		$this->assertEqual($targetPerson, null, "QuerySingle should return null for a not-found record");		
+	}
 }
 ?>
