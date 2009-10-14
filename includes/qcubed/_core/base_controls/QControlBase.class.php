@@ -1186,10 +1186,20 @@
 			return $this->RenderOutput($strOutput, $blnDisplayOutput);
 		}
 
-
-		// 
+		
 		/**
-		 * Validate checks if this controls carray a valid value
+		 * Helper method to render the control using some other class/method. 
+		 *
+		 * Useful for plugins that want to override the render behavior for the controls
+		 * without modifying the control code. 
+		 */
+		public function RenderExtensionRenderer($classname, $methodname, $args=array()){
+			$RenderExtensionInstance = new $classname;
+			return $RenderExtensionInstance->{$methodname}($args);
+		}
+
+		/** 
+		 * Checks if this controls contains a valid value.
 		 * 
 		 * This abstract method defines how a control should validate itself based on the value/
 		 * properties it has. It should also include the handling of ensuring the "Required" 
