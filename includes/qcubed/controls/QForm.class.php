@@ -22,7 +22,7 @@
 		 *
 		 * @var string FormStateHandler the classname of the FormState handler to use
 		 */
-		public static $FormStateHandler = 'QFormStateHandler';
+		public static $FormStateHandler = __FORM_STATE_HANDLER__;
 
 		/**
 		 * These are the list of core QForm JavaScript files, or JavaScript files needed by

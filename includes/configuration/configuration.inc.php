@@ -184,8 +184,17 @@ if (!defined('SERVER_INSTANCE')) {
 
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
-			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
+			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone'))) 
 				date_default_timezone_set('America/Los_Angeles');
+				
+			
+			// Determines which class is used to serialize the form in-between Ajax callbacks.
+			// By default, QFormStateHandler will be used (which simply outputs the entire serialized
+			// form data stream to the form), but file- and session- based, or any custom db-
+			// based FormState handling can be used as well.
+			define('__FORM_STATE_HANDLER__', 'QFormStateHandler');			
+			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
+			define('__FILE_FORM_STATE_HANDLER_PATH__', __DOCROOT__ . '/tmp');
 
 
 			// Define the Filepath for the error page (path MUST be relative from the DOCROOT)

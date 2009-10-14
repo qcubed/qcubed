@@ -20,7 +20,7 @@
 		 *
 		 * @var string StatePath
 		 */
-		public static $StatePath = '/tmp';
+		public static $StatePath = __FILE_FORM_STATE_HANDLER_PATH__;
 
 		/**
 		 * The filename prefix to be used by all FormState files
