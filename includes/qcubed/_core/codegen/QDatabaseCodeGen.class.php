@@ -18,8 +18,8 @@
 		protected $intDatabaseIndex;
 
 		// Table Suffixes
-		protected $strTypeTableSuffix;
-		protected $intTypeTableSuffixLength;
+		protected $strTypeTableSuffixArray;
+		protected $intTypeTableSuffixLengthArray;
 		protected $strAssociationTableSuffix;
 		protected $intAssociationTableSuffixLength;
 
@@ -122,7 +122,7 @@
 			$strToReturn = sprintf('		<database index="%s">%s', $this->intDatabaseIndex, $strCrLf);
 			$strToReturn .= sprintf('			<className prefix="%s" suffix="%s"/>%s', $this->strClassPrefix, $this->strClassSuffix, $strCrLf);
 			$strToReturn .= sprintf('			<associatedObjectName prefix="%s" suffix="%s"/>%s', $this->strAssociatedObjectPrefix, $this->strAssociatedObjectSuffix, $strCrLf);
-			$strToReturn .= sprintf('			<typeTableIdentifier suffix="%s"/>%s', $this->strTypeTableSuffix, $strCrLf);
+			$strToReturn .= sprintf('			<typeTableIdentifier suffix="%s"/>%s', implode(',', $this->strTypeTableSuffixArray), $strCrLf);
 			$strToReturn .= sprintf('			<associationTableIdentifier suffix="%s"/>%s', $this->strAssociationTableSuffix, $strCrLf);
 			$strToReturn .= sprintf('			<stripFromTableName prefix="%s"/>%s', $this->strStripTablePrefix, $strCrLf);
 			$strToReturn .= sprintf('			<excludeTables pattern="%s" list="%s"/>%s', $this->strExcludePattern, implode(',', $this->strExcludeListArray), $strCrLf);
@@ -232,8 +232,12 @@
 			$this->strAssociatedObjectSuffix = QCodeGen::LookupSetting($objSettingsXml, 'associatedObjectName', 'suffix');
 
 			// Table Type Identifiers
-			$this->strTypeTableSuffix = QCodeGen::LookupSetting($objSettingsXml, 'typeTableIdentifier', 'suffix');
-			$this->intTypeTableSuffixLength = strlen($this->strTypeTableSuffix);
+			$strTypeTableSuffixList = QCodeGen::LookupSetting($objSettingsXml, 'typeTableIdentifier', 'suffix');
+			$strTypeTableSuffixArray = explode(',', $strTypeTableSuffixList);
+			foreach ($strTypeTableSuffixArray as $strTypeTableSuffix) {
+				$this->strTypeTableSuffixArray[] = trim($strTypeTableSuffix);
+				$this->intTypeTableSuffixLengthArray[] = strlen(trim($strTypeTableSuffix));
+			}
 			$this->strAssociationTableSuffix = QCodeGen::LookupSetting($objSettingsXml, 'associationTableIdentifier', 'suffix');
 			$this->intAssociationTableSuffixLength = strlen($this->strAssociationTableSuffix);
 
@@ -412,26 +416,36 @@
 
 				// Perform different tasks based on whether it's an Association table,
 				// a Type table, or just a regular table
-				if (($this->intTypeTableSuffixLength) &&
-					(strlen($strTableName) > $this->intTypeTableSuffixLength) &&
-					(substr($strTableName, strlen($strTableName) - $this->intTypeTableSuffixLength) == $this->strTypeTableSuffix)) {
-					// Create a TYPE Table and add it to the array
-					$objTypeTable = new QTypeTable($strTableName);
-					$this->objTypeTableArray[strtolower($strTableName)] = $objTypeTable;
-//					_p("TYPE Table: $strTableName<br />", false);
+				$blnIsTypeTable = false;
+				foreach ($this->intTypeTableSuffixLengthArray as $intIndex => $intTypeTableSuffixLength) {
+					if (($intTypeTableSuffixLength) &&
+						(strlen($strTableName) > $intTypeTableSuffixLength) &&
+						(substr($strTableName, strlen($strTableName) - $intTypeTableSuffixLength) == $this->strTypeTableSuffixArray[$intIndex])) {
+						// Let's mark, that we have type table
+						$blnIsTypeTable = true;
+						// Create a TYPE Table and add it to the array
+						$objTypeTable = new QTypeTable($strTableName);
+						$this->objTypeTableArray[strtolower($strTableName)] = $objTypeTable;
+						// If we found type table, there is no point of iterating for other type table suffixes
+						break;
+//						_p("TYPE Table: $strTableName<br />", false);
+					}
+				}
+				if (!$blnIsTypeTable) {
+					// If current table wasn't type table, let's look for other table types
+					if (($this->intAssociationTableSuffixLength) &&
+						(strlen($strTableName) > $this->intAssociationTableSuffixLength) &&
+						(substr($strTableName, strlen($strTableName) - $this->intAssociationTableSuffixLength) == $this->strAssociationTableSuffix)) {
+						// Add this ASSOCIATION Table Name to the array
+						$this->strAssociationTableNameArray[strtolower($strTableName)] = $strTableName;
+//						_p("ASSN Table: $strTableName<br />", false);
 
-				} else if (($this->intAssociationTableSuffixLength) &&
-					(strlen($strTableName) > $this->intAssociationTableSuffixLength) &&
-					(substr($strTableName, strlen($strTableName) - $this->intAssociationTableSuffixLength) == $this->strAssociationTableSuffix)) {
-					// Add this ASSOCIATION Table Name to the array
-					$this->strAssociationTableNameArray[strtolower($strTableName)] = $strTableName;
-//					_p("ASSN Table: $strTableName<br />", false);
-
-				} else {
-					// Create a Regular Table and add it to the array
-					$objTable = new QTable($strTableName);
-					$this->objTableArray[strtolower($strTableName)] = $objTable;
-//					_p("Table: $strTableName<br />", false);
+					} else {
+						// Create a Regular Table and add it to the array
+						$objTable = new QTable($strTableName);
+						$this->objTableArray[strtolower($strTableName)] = $objTable;
+//						_p("Table: $strTableName<br />", false);
+					}
 				}
 			}
 

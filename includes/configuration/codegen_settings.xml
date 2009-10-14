@@ -6,7 +6,7 @@
 	this one to use.  Feel free to copy, modify, etc.
 -->
 	<!-- General CodeGen Settings -->
-	<name application="My Application"/>
+	<name application="My QCubed Application"/>
 	<templateEscape begin="&lt;%" end="%&gt;"/>
 
 	<!-- Define Data Sources (e.g. Databases, Services, etc.) -->
@@ -17,7 +17,10 @@
 			<associatedObjectName prefix="" suffix=""/>
 
 			<!-- Table Type Identifiers - Used to Classify Tables in your Data Model -->
+
+			<!-- If you want to use multiple type table identifiers, separate them by commas -->
 			<typeTableIdentifier suffix="_type"/>
+
 			<associationTableIdentifier suffix="_assn"/>
 
 			<!-- Other -->
