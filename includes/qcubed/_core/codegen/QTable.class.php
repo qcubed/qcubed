@@ -71,11 +71,6 @@
 		}
 
 
-
-		////////////////////
-		// Public Overriders
-		////////////////////
-
 		/**
 		 * return the QColumn object related to that column name
 		 * @return QColumn
@@ -89,7 +84,7 @@
 			}
 			return null;
 		}
-		/**
+
 		/**
 		 * Search within the table's columns for the given column
 		 * @return boolean
@@ -97,7 +92,7 @@
 		public function HasColumn($strColumnName){
 			return ($this->GetColumnByName($strColumnName) !== null);
 		}
-		 * Override method to perform a property "Get"
+
 		/**
 		 * Return the property name for a given column name (false if it doesn't exists)
 		 * @return string
@@ -110,6 +105,13 @@
 				return null;
 		}
 
+
+		////////////////////
+		// Public Overriders
+		////////////////////
+
+		/**
+		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
 		 *
 		 * @param string strName Name of the property to get
