@@ -77,7 +77,39 @@
 		////////////////////
 
 		/**
+		 * return the QColumn object related to that column name
+		 * @return QColumn
+		 */
+		public function GetColumnByName($strColumnName) {
+			if ($this->objColumnArray) {
+				foreach ($this->objColumnArray as $objColumn){ 
+					if ($objColumn->Name == $strColumnName) 
+						return $objColumn;
+				}
+			}
+			return null;
+		}
+		/**
+		/**
+		 * Search within the table's columns for the given column
+		 * @return boolean
+		 */
+		public function HasColumn($strColumnName){
+			return ($this->GetColumnByName($strColumnName) !== null);
+		}
 		 * Override method to perform a property "Get"
+		/**
+		 * Return the property name for a given column name (false if it doesn't exists)
+		 * @return string
+		 */
+		public function LookupColumnPropertyName($strColumnName){
+			$objColumn = $this->GetColumnByName($strColumnName);
+			if ($objColumn)
+				return $objColumn->PropertyName;
+			else
+				return null;
+		}
+
 		 * This will get the value of $strName
 		 *
 		 * @param string strName Name of the property to get
