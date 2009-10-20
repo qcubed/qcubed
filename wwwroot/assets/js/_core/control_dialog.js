@@ -89,7 +89,7 @@
 			var intWidth = objWrapper.offsetWidth;
 			var intHeight = objWrapper.offsetHeight;
 			var intTop = Math.round((Math.min(qcodo.client.height, qcodo.page.height) - intHeight) / 2) + qcodo.scroll.y;
-			var intLeft = Math.round(Math.min((qcodo.client.width, qcodo.page.width) - intWidth) / 2) + qcodo.scroll.x;
+			var intLeft = Math.round((Math.min(qcodo.client.width, qcodo.page.width) - intWidth) / 2) + qcodo.scroll.x;
 			objWrapper.setAbsolutePosition(intLeft, intTop);
 
 			return true;
@@ -133,8 +133,8 @@
 			// Wrapper Re-Setup
 			var intWidth = objWrapper.offsetWidth;
 			var intHeight = objWrapper.offsetHeight;
-			var intTop = Math.round((Math.max(qcodo.client.height, qcodo.page.height) - intHeight) / 2) + qcodo.scroll.y;
-			var intLeft = Math.round(Math.max((qcodo.client.width, qcodo.page.width) - intWidth) / 2) + qcodo.scroll.x;
+			var intTop = Math.round((Math.min(qcodo.client.height, qcodo.page.height) - intHeight) / 2) + qcodo.scroll.y;
+			var intLeft = Math.round((Math.min(qcodo.client.width, qcodo.page.width) - intWidth) / 2) + qcodo.scroll.x;
 			objWrapper.setAbsolutePosition(intLeft, intTop);
 
 			// Set Window OnResize Handling
