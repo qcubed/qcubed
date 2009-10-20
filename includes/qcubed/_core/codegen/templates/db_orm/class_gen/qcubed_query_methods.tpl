@@ -90,7 +90,7 @@
 				$objLastRowItem = null;
 				while ($objDbRow = $objDbResult->GetNextRow()) {
 					//Get the object version of the row
-					$objItem = <%= $objTable->ClassName %>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, array($objLastRowItem), $objQueryBuilder->ColumnAliasArray);
+					$objItem = <%= $objTable->ClassName %>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, $objLastRowItem, $objQueryBuilder->ColumnAliasArray);
 					if(null === $objLastRowItem && $objItem)
 					{
 						//$objItem is the first object we've received, remember it for expanding
