@@ -87,24 +87,18 @@
 			
 			// Do we have to expand anything?
 			if ($objQueryBuilder->ExpandAsArrayNodes) {
-				$objLastRowItem = null;
+				$objToReturn = array();
 				while ($objDbRow = $objDbResult->GetNextRow()) {
-					//Get the object version of the row
-					$objItem = <%= $objTable->ClassName %>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, $objLastRowItem, $objQueryBuilder->ColumnAliasArray);
-					if(null === $objLastRowItem && $objItem)
-					{
-						//$objItem is the first object we've received, remember it for expanding
-						$objLastRowItem = $objItem;
-					}
-					//InstantiateDbRow returns false if it's just an expand
-					elseif($objItem !== false) {
-						//We already had a first object, and this isn't an expand
-						//So $objItem must be a second item. We only care about the first.
-						return $objLastRowItem;
-					}
+					$objItem = <%= $objTable->ClassName %>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, $objToReturn, $objQueryBuilder->ColumnAliasArray);
+					if ($objItem)
+						$objToReturn[] = $objItem;					
 				}
-				//We're done parsing rows, return the resulting expanded object (or null, if nothing was instantiated)
-				return $objLastRowItem;
+				if (count($objToReturn)) {
+					// Since we only want the object to return, lets return the object and not the array.
+					return $objToReturn[0];
+				} else {
+					return null;
+				}
 			} else {
 				// No expands just return the first row
 				$objDbRow = $objDbResult->GetNextRow();
