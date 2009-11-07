@@ -27,9 +27,14 @@
 					<div id="categoryName"><span class="headerSmall"><?php _p((Examples::GetCategoryId() + 1) . '. ' . Examples::$Categories[Examples::GetCategoryId()]['name'], false); ?></span></div>
 					<?php } ?>
 					<div id="pageName"><?php _p(Examples::PageName(), false); ?></div>
+					
+					<div id="pageLinks"><span class="headerSmall">
 					<?php if(!isset($mainPage)) { ?>
-					<div id="pageLinks"><span class="headerSmall"><?php _p(Examples::PageLinks(), false); ?></span></div>
+						<?php _p(Examples::PageLinks(), false); ?>
+					<?php } else { ?>
+							<strong><a class="headerLink" href="http://qcu.be">QCubed website</a></strong>
 					<?php } ?>
+					</span></div>
 				</div>
 				<div id="headerRight">
 					<?php if(!isset($mainPage)) { ?>
