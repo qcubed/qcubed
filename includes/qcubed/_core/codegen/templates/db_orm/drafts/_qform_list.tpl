@@ -1,7 +1,9 @@
-<template OverwriteFlag="true" DocrootFlag="true" DirectorySuffix="" TargetDirectory="<%= __FORM_DRAFTS__ %>" TargetFileName="<%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_list.php"/>
+<template OverwriteFlag="false" DocrootFlag="true" DirectorySuffix="" TargetDirectory="<%= __FORM_DRAFTS__ %>" TargetFileName="<%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_list.php"/>
 <?php
 	// Load the QCubed Development Framework
 	require('../qcubed.inc.php');
+
+	require(__FORMBASE_CLASSES__ . '/<%= $objTable->ClassName %>ListFormBase.class.php');
 
 	/**
 	 * This is a quick-and-dirty draft QForm object to do the List All functionality
@@ -19,57 +21,13 @@
 	 * @package <%= QCodeGen::$ApplicationName; %>
 	 * @subpackage Drafts
 	 */
-	class <%= $objTable->ClassName %>ListForm extends QForm {
-		// Local instance of the Meta DataGrid to list <%= $objTable->ClassNamePlural %>
-		protected $dtg<%= $objTable->ClassNamePlural %>;
+	class <%= $objTable->ClassName %>ListForm extends <%= $objTable->ClassName %>ListFormBase {
+		// Override Form Event Handlers as Needed
+//		protected function Form_Run() {}
 
-		// Create QForm Event Handlers as Needed
-
-//		protected function Form_Exit() {}
 //		protected function Form_Load() {}
-//		protected function Form_PreRender() {}
-//		protected function Form_Validate() {}
 
-		protected function Form_Run() {
-			// Security check for ALLOW_REMOTE_ADMIN
-			// To allow access REGARDLESS of ALLOW_REMOTE_ADMIN, simply remove the line below
-			QApplication::CheckRemoteAdmin();
-		}
-
-		protected function Form_Create() {
-			// Instantiate the Meta DataGrid
-			$this->dtg<%= $objTable->ClassNamePlural %> = new <%= $objTable->ClassName %>DataGrid($this);
-
-			// Style the DataGrid (if desired)
-			$this->dtg<%= $objTable->ClassNamePlural %>->CssClass = 'datagrid';
-			$this->dtg<%= $objTable->ClassNamePlural %>->AlternateRowStyle->CssClass = 'alternate';
-
-			// Add Pagination (if desired)
-			$this->dtg<%= $objTable->ClassNamePlural %>->Paginator = new QPaginator($this->dtg<%= $objTable->ClassNamePlural %>);
-			$this->dtg<%= $objTable->ClassNamePlural %>->ItemsPerPage = 20;
-
-			// Use the MetaDataGrid functionality to add Columns for this datagrid
-
-			// Create an Edit Column
-			$strEditPageUrl = __VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__ . '/<%= strtolower($objTable->Name) %>_edit.php';
-			$this->dtg<%= $objTable->ClassNamePlural %>->MetaAddEditLinkColumn($strEditPageUrl, QApplication::Translate('Edit'), QApplication::Translate('Edit'));
-
-			// Create the Other Columns (note that you can use strings for <%= $objTable->Name %>'s properties, or you
-			// can traverse down QQN::<%= $objTable->Name %>() to display fields that are down the hierarchy)
-<% foreach ($objTable->ColumnArray as $objColumn) { %>
-<% if (!$objColumn->Reference) { %>
-			$this->dtg<%= $objTable->ClassNamePlural %>->MetaAddColumn('<%= $objColumn->PropertyName %>');
-<% } %>
-<% if ($objColumn->Reference && $objColumn->Reference->IsType) { %>
-			$this->dtg<%= $objTable->ClassNamePlural %>->MetaAddTypeColumn('<%= $objColumn->PropertyName %>', '<%= $objColumn->Reference->VariableType %>');
-<% } %>
-<% if ($objColumn->Reference && !$objColumn->Reference->IsType) { %>
-			$this->dtg<%= $objTable->ClassNamePlural %>->MetaAddColumn(QQN::<%= $objTable->ClassName %>()-><%= $objColumn->Reference->PropertyName %>);
-<% } %>
-<% } %><% foreach ($objTable->ReverseReferenceArray as $objReverseReference) { %><% if ($objReverseReference->Unique) { %>
-			$this->dtg<%= $objTable->ClassNamePlural %>->MetaAddColumn(QQN::<%= $objTable->ClassName; %>()-><%= $objReverseReference->ObjectDescription %>);
-<% } %><% } %>
-		}
+//		protected function Form_Create() {}
 	}
 
 	// Go ahead and run this form object to generate the page and event handlers, implicitly using
