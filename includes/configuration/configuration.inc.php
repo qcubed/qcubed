@@ -154,10 +154,13 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		MySqli (MySQL v4.x, using the new mysqli extension)
 			 *		MySqli5 (MySQL v5.x, using the new mysqli extension)
 			 *		SqlServer (Microsoft SQL Server)
+			 *		SqlServer2005 (Microsoft SQL Server 2005/2008 using new sqlsrv extension, Windows only)
 			 *		PostgreSql (PostgreSQL)
 			 * "server" (Required) is the db server's name or IP address, e.g. localhost, 10.1.1.5, etc.
 			 * "port" is the port number - default is the server-specified default
 			 * "database", "username", "password" should be self explanatory
+			 * "dateformat" is an optional value for the desired db date format, the default value is
+			 *		'YYYY-MM-DD hhhh:mm:ss' if not defined or null
 			 * "profiling" is true or false, defining whether or not you want to enable DB profiling - default is false
 			 *		NOTE: Profiling should only be enabled when you are actively wanting to profile a
 			 *		specific PHP script or scripts.  Because of SIGNIFICANT performance degradation,
