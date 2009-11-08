@@ -227,15 +227,20 @@
 		protected $objAlternateRowStyle = null;
 		protected $strBorderCollapse = QBorderCollapse::NotSet;
 		protected $objHeaderRowStyle = null;
+		protected $objFilterRowStyle = null;
 		protected $objOverrideRowStyleArray = null;
 		protected $objHeaderLinkStyle = null;
 		protected $objRowStyle = null;
+		protected $objWaitIcon = 'default';
 
 		// LAYOUT
 		protected $intCellPadding = -1;
 		protected $intCellSpacing = -1;
 		protected $strGridLines = QGridLines::None;
 		protected $blnShowHeader = true;
+		protected $blnShowFilter = false;
+		protected $blnShowFilterButton = true;
+		protected $blnShowFilterResetButton = true;
 		protected $blnShowFooter = false;
 
 		// MISC
@@ -244,6 +249,7 @@
 		protected $intRowCount = 0;
 		protected $intCurrentRowIndex;
 		protected $intSortColumnIndex = -1;
+		protected $intCurrentColumnId = 1;
 		protected $intSortDirection = 0;
 		
 		protected $strLabelForNoneFound;
@@ -256,6 +262,9 @@
 		protected $objRowActionArray = array();
 
 		protected $objOwner = null;
+
+		protected $btnFilter;
+		protected $btnFilterReset;
 
 		public function AddRowAction($objEvent, $objAction) {
 			array_push($this->objRowEventArray, $objEvent);
@@ -273,6 +282,7 @@
 			$this->objAlternateRowStyle = new QDataGridRowStyle();
 			$this->objHeaderRowStyle = new QDataGridRowStyle();
 			$this->objHeaderLinkStyle = new QDataGridRowStyle();
+			$this->objFilterRowStyle = new QDataGridRowStyle();
 
 			// Labels
 			$this->strLabelForNoneFound = QApplication::Translate('<b>Results:</b> No %s found.');
@@ -289,13 +299,16 @@
 				$this->AddAction(new QClickEvent(), new QServerControlAction($this, 'Sort_Click'));
 
 			$this->AddAction(new QClickEvent(), new QTerminateAction());
+
+			$this->objWaitIcon_Create();
+			$this->btnFilter_Create();
+			$this->btnFilterReset_Create();
 		}
 
 		// Used to add a DataGridColumn to this DataGrid
 		public function AddColumn(QDataGridColumn $objColumn) {
 			$this->blnModified = true;
-			array_push($this->objColumnArray, $objColumn);
-//			$this->objColumnArray[count($this->objColumnArray)] = $objColumn;
+			$this->objColumnArray[] = $objColumn;
 		}
 		
 		public function AddColumnAt($intColumnIndex, QDataGridColumn $objColumn) {
@@ -681,7 +694,15 @@
 
 			// Header Row (if applicable)
 			if ($this->blnShowHeader)
-				$strToReturn .= "<thead>\r\n" . $this->GetHeaderRowHtml() . "</thead>\r\n";
+			{
+				$strToReturn .= "<thead>\r\n" . $this->GetHeaderRowHtml();
+
+				// Filter Row (if applicable)
+				if ($this->blnShowFilter)
+					$strToReturn .= $this->GetFilterRowHtml();
+
+				$strToReturn .=  "</thead>\r\n";
+			}
 
 			// Footer Row (if applicable)
 			if ($this->blnShowFooter)
@@ -713,6 +734,427 @@
 			$this->RemoveAllColumns();
 		}
 
+		/******
+		* Create the row used for datagrid filtering
+		* @return string $strToReturn of html table row
+		*/
+		protected function GetFilterRowHtml() {
+			$objFilterStyle = $this->objRowStyle->ApplyOverride($this->objFilterRowStyle);
+			$strToReturn = sprintf('  <tr %s>'."\r\n", $objFilterStyle->GetAttributes());
+			$intColumnIndex = 0;
+			if($this->objColumnArray !== null)
+			{
+				for ($intIndex = 0; $intIndex < count($this->objColumnArray); $intIndex++)
+				{
+					$objColumn = $this->objColumnArray[$intIndex];
+
+					$colContent = '&nbsp;';
+
+					if ($objColumn->Filter !== null || 
+						$objColumn->FilterByCommand !== null || 
+						$objColumn->FilterType != QFilterType::None)
+					{
+						// This Column is Filterable
+						$ctlFilter = $this->GetFilterControl($objColumn);
+
+						if(null !== $ctlFilter)
+							//display the control
+							$colContent = $ctlFilter->Render(false);
+					}
+
+					//show the filter and reset buttons in the last column (if set to)
+					if($intIndex == count($this->objColumnArray) -1)
+					{
+						if ($this->ShowFilterResetButton)
+							$colContent .= $this->btnFilterReset->Render(false);
+						if ($this->ShowFilterResetButton && $this->ShowFilterButton)
+							$colContent .= '&nbsp;';
+						if ($this->ShowFilterButton)
+							$colContent .= $this->btnFilter->Render(false);
+						$colContent .= $this->objWaitIcon->Render(false);
+					}
+
+					$strToReturn .= sprintf('    <th %s>%s</th>'."\r\n",
+							$this->objFilterRowStyle->GetAttributes(),
+							$colContent);
+				}
+			}
+			$strToReturn .= '  </tr>'."\r\n";
+			return $strToReturn;
+		}
+
+		protected function GetColumnFilterControlId($objColumn) {
+			if ($objColumn->FilterColId === null)
+				$objColumn->FilterColId = $this->intCurrentColumnId++;
+			return 'ctl'.$this->ControlId.'flt'.$objColumn->FilterColId;
+		}
+
+		protected function GetFilterControl($objColumn)
+		{
+			$strControlId = $this->GetColumnFilterControlId($objColumn);
+			//find/build the control
+			if(($ctlFilter = $this->GetChildControl($strControlId)) === null)
+				//create the control this first time
+				$ctlFilter = $this->CreateFilterControl($strControlId, $objColumn);
+			return $ctlFilter;
+		}
+
+		/******
+		* CreateControls used in the filter row and set their fiter values if available. 
+		* @param string $strControlId id based on the column that the control is contained
+		* @param QDataGridColumn $objColumn the QDataGridColumn that contains the filter data. 
+		* @return QControl $control the input control used for filtering
+		*/
+		//this, btnReset_Click and GetControlValue are the functions to override/change if you want to add new types
+
+		protected function CreateFilterControl($strControlId, $objColumn)
+		{
+			#region Find the value
+			//show the current filter in the control
+			$value = null;
+			//for manual queries
+			if (isset($objColumn->FilterByCommand['value']))
+				$value = $objColumn->FilterByCommand['value'];
+			//for lists
+			elseif (null !==$objColumn->Filter && $objColumn->FilterType == QFilterType::ListFilter)
+				$value = array_search($objColumn->Filter,$objColumn->FilterList);
+			//or for text
+			elseif(null !== $objColumn->FilterList && count($objColumn->FilterList) > 0 && $objColumn->FilterType == QFilterType::TextFilter)
+			{
+				$value = $objColumn->FilterList[0]->mixOperand;
+				if(null !== $value)
+				{
+					//Strip prefix and postfix
+					if(null !== $objColumn->FilterPrefix)
+					{
+						$prefixLength = strlen($objColumn->FilterPrefix);
+						if(substr($value, 0, $prefixLength) == $objColumn->FilterPrefix)
+							$value = substr($value, $prefixLength);
+					}
+					if(null !== $objColumn->FilterPostfix)
+					{
+						$postfixLength = strlen($objColumn->FilterPostfix);
+						if(substr($value, strlen($value) - $postfixLength) == $objColumn->FilterPostfix)
+							$value = substr($value, 0, strlen($value) - $postfixLength);
+					}
+				}
+			}
+			#endregion
+
+			#region Create the control
+			//create the appropriate kind of control
+			$actionName = 'btnFilter_Click';
+			$ctlFilter = null;
+			switch($objColumn->FilterType)
+			{
+				default:
+				case QFilterType::TextFilter:
+					$ctlFilter = $this->filterTextBox_Create($strControlId, $objColumn->Name, $objColumn->FilterBoxSize, $value);
+					break;
+				case QFilterType::ListFilter:
+					$ctlFilter = $this->filterListBox_Create($strControlId, $objColumn->Name, $objColumn->FilterList, $value);
+					break;
+			}
+			#endregion
+
+			if(null !== $ctlFilter)
+			{
+				//make sure hitting enter applies the filter
+				if ($this->blnUseAjax)
+					$ctlFilter->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, $actionName, $this->objWaitIcon));
+				else
+					$ctlFilter->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, $actionName));
+
+				$ctlFilter->AddAction(new QEnterKeyEvent(), new QTerminateAction());
+			}
+
+			return $ctlFilter;
+		}
+
+		/******
+		* Get the control's filter input for filtering
+		* @param string $type id based on the column that the control is contained
+		* @param obj $control the filter control to get the filter input 
+		* @return string The input used for filtering
+		*/
+		//this, btnReset_Click and CreateControl are the functions to override/change if you want to add new types
+		protected function GetFilterControlValue($strFilterType, $ctlControl) {
+			//depending on the control, the members used to store the value are different
+			$strValue = null;
+			switch($strFilterType) {
+				default:
+				case QFilterType::TextFilter:
+					$strValue = $ctlControl->Text;
+					if($strValue == '')
+						$strValue = null;
+					break;
+				case QFilterType::ListFilter:
+					$strValue = $ctlControl->SelectedValue;
+					break;
+			}
+			return $strValue;
+		}
+
+		/**
+		 * This function creates a textbox suitable for the filter bar
+		* @param string $strControlId id based on the column that the control is contained
+		* @param string $strControlName The name to give the textbox
+		* @param int $columns The Columns setting to use for the textbox
+		* @param string $strValue The text to fill the textbox with
+		* @return QTextBox the resulting textbox
+		**/
+		protected function filterTextBox_Create($strControlId, $strControlName, $columns, $strValue) {
+			$ctlFilterTextBox = new QTextBox($this, $strControlId);
+			$ctlFilterTextBox->Name = $strControlName;
+			$ctlFilterTextBox->Text = QType::Cast($strValue, QType::String);
+			$ctlFilterTextBox->FontSize = $this->RowStyle->FontSize;
+			$ctlFilterTextBox->Columns = $columns;
+
+			return $ctlFilterTextBox;
+		}
+
+		/**
+		* This function creates a listbox suitable for the filter bar
+		* @param string $strControlId id based on the column that the control is contained
+		* @param string $strControlName The name to give the textbox
+		* @param string[] $arrListValues A name=>value array of items to add to the list
+		* @param string $strSelectedValue The value to start selected
+		* @return QListBox the resulting listbox
+		**/
+		protected function filterListBox_Create($strControlId, $strControlName, $arrListValues, $strSelectedValue)
+		{
+			$ctlFilterListbox = new QListBox($this, $strControlId);
+			$ctlFilterListbox->Name = $strControlName;
+			$ctlFilterListbox->AddItem('-'.QApplication::Translate('Any').'-');
+			$ctlFilterListbox->FontSize = $this->RowStyle->FontSize;
+			$ctlFilterListbox->Width = 'auto';
+
+			//Now fill up the advanced list
+			foreach (array_keys($arrListValues) as $strFilterName) {
+				$ctlFilterListbox->AddItem($strFilterName,$strFilterName);
+			}
+			$ctlFilterListbox->SelectedName = $strSelectedValue;
+			return $ctlFilterListbox;
+		}
+
+
+		/**
+		 * Creates the reset button for the filter row
+		 *
+		 * @return void 
+		 *
+		 */
+		protected function btnFilterReset_Create() {
+			$this->btnFilterReset = new QButton($this);
+			$this->btnFilterReset->Text = QApplication::Translate('Reset');;
+
+			if ($this->blnUseAjax)
+				$this->btnFilterReset->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilterReset_Click', $this->objWaitIcon));
+			else
+				$this->btnFilterReset->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilterReset_Click'));
+			$this->btnFilterReset->AddAction(new QClickEvent(), new QTerminateAction());
+		}
+
+
+		/**
+		 * Creates the Filter button for the filter row
+		 *
+		 * @return void 
+		 *
+		 */
+		protected function btnFilter_Create()
+		{
+			$this->btnFilter = new QButton($this);
+			$this->btnFilter->Name = QApplication::Translate('Filter');
+			$this->btnFilter->Text = QApplication::Translate('Filter');
+
+			if ($this->blnUseAjax)
+				$this->btnFilter->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilter_Click', $this->objWaitIcon));
+			else
+				$this->btnFilter->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilter_Click'));
+
+			$this->btnFilter->AddAction(new QClickEvent(), new QTerminateAction());
+
+			$this->btnFilter->CausesValidation = false;
+		}
+
+
+		/**
+		 * Creates the objWaitIcon for this datagrid, since we don't want to use the default form one
+		 *
+		 * @return void 
+		 *
+		 */
+		protected function objWaitIcon_Create()
+		{
+			$this->objWaitIcon = new QWaitIcon($this);
+		}
+
+		/******
+		* For each column, get its input filter value and set the columns filter with it.
+		* @param string $strFormId
+		* @param string $strControlId
+		* @param string $strParameter
+		*/
+			public function btnFilter_Click($strFormId, $strControlId, $strParameter) 
+		{
+			//set the filter commands
+			foreach($this->objColumnArray as $objColumn)
+			{
+				if ($objColumn->FilterByCommand !== null || $objColumn->FilterType != QFilterType::None)
+				{
+					//a filter is defined for this column
+					$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
+					if($ctlFilter !== null)
+					{
+						//we've found the control that has it's value
+						$strValue = $this->GetFilterControlValue($objColumn->FilterType, $ctlFilter);
+
+						//deal with any manual filters
+						if ($objColumn->FilterByCommand !== null)
+						{
+							//update the column's filterByCommand with the user-entered value
+							$filter = $objColumn->FilterByCommand;
+
+							if($strValue !== null && $objColumn->FilterType !== "Reset")
+								$filter['value'] = $strValue;
+							else if(isset($filter['value']))
+								unset($filter['value']);
+
+							$objColumn->FilterByCommand = $filter;
+						}
+						//Handle the other methods differently
+						elseif($strValue !== null)
+						{
+							switch($objColumn->FilterType) {
+								case QFilterType::ListFilter:
+									$objColumn->FilterActivate($strValue);
+									break;
+								default:
+								case QFilterType::TextFilter;
+									$objColumn->FilterActivate();
+									$objColumn->FilterSetOperand($strValue);
+									break;
+							}
+						}
+						else
+							$objColumn->ClearFilter();
+					}
+				}
+			}
+			//reset to page 1
+			if ($this->objPaginator)
+				$this->PageNumber = 1;
+
+			$this->DataBind();
+
+			$this->MarkAsModified();
+		}
+
+		/******
+		* Clear all  filter column control input values.
+		* @param $strFormId = null, $strControlId = null, $strParameter = null
+		*/
+		public function ClearFilters()
+		{
+			foreach($this->objColumnArray as $objColumn)
+			{
+				if($objColumn->FilterByCommand !== null || $objColumn->FilterType != QFilterType::None)
+				{
+					//both modes clear in the same way
+					$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
+					if ($ctlFilter !== null)
+					{
+						switch($objColumn->FilterType)
+						{
+							default:
+							case QFilterType::TextFilter:
+								$ctlFilter->Text = '';
+								break;
+							case QFilterType::ListFilter:
+								$ctlFilter->SelectedIndex = 0;
+								break;
+						}
+						$objColumn->ClearFilter();
+					}
+				}
+			}
+
+			//reset to page 1
+			if ($this->objPaginator)
+				$this->PageNumber = 1;
+			$this->MarkAsModified();
+		}
+
+		/******
+		* Click handler for the reset button
+		* @param $strFormId = null, $strControlId = null, $strParameter = null
+		*/
+		//this, GetControlValue and CreateControl are the functions to override/change if you want to add new types
+		public function btnFilterReset_Click($strFormId, $strControlId, $strParameter) 
+		{
+			$this->ClearFilters();
+		}
+
+		/******
+		* Set Filter values (used to restore a previously saved state)
+		* @param array $filters array of filters indexed by column name
+		* contain either a string or a filter object
+			*/
+		public function SetFilters($filters)
+		{
+			foreach($this->objColumnArray as $col)
+			{
+				if(isset($filters[$col->Name]))
+				{
+					if(isset($col->FilterByCommand['operator']))
+					{
+						//if filterbycommand is used
+						$filterCommand = $col->FilterByCommand;
+						$filterCommand['value'] = $filters[$col->Name];
+						$col->FilterByCommand = $filterCommand;
+					}
+					//AddListItem with filters dont enter this check until filter button clicked
+					elseif($col->Filter !== null) {
+						if($col->Filter instanceof QQConditionComparison)
+						{
+							$col->Filter = $filters[$col->Name];
+						}
+					}
+					elseif ($col->FilterType == QFilterType::ListFilter){
+						$col->Filter = $filters[$col->Name];
+					}
+				}
+			}
+		}
+		/******
+		* Get Filter values from each column (used to save a state)
+		* @return array $filters array of filters indexed by column name
+		*/
+		public function GetFilters()
+		{
+			$filters = array();
+			foreach($this->objColumnArray as $col)
+			{
+				if(isset($col->FilterByCommand['value']))
+				{
+					//manual filter
+					$filterCommand = $col->FilterByCommand;
+					$filters[$col->Name] = $filterCommand['value'];
+				}
+				elseif($col->Filter !== null) 
+				{
+					if($col->Filter instanceof QQConditionComparison)
+					{
+						$filters[$col->Name] = $col->Filter;
+					}
+					else
+						throw new exception(QApplication::Translate("Unknown Filter type"));
+				}
+			}
+			return $filters;
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -722,6 +1164,7 @@
 				case "AlternateRowStyle": return $this->objAlternateRowStyle;
 				case "BorderCollapse": return $this->strBorderCollapse;
 				case "HeaderRowStyle": return $this->objHeaderRowStyle;
+				case "FilterRowStyle": return $this->objFilterRowStyle;
 				case "HeaderLinkStyle": return $this->objHeaderLinkStyle;
 				case "RowStyle": return $this->objRowStyle;
 
@@ -731,6 +1174,9 @@
 				case "GridLines": return $this->strGridLines;
 				case "ShowHeader": return $this->blnShowHeader;
 				case "ShowFooter": return $this->blnShowFooter;
+				case "ShowFilter": return $this->blnShowFilter;
+				case "ShowFilterButton": return $this->blnShowFilterButton;
+				case 'ShowFilterResetButton': return $this->blnShowFilterResetButton;
 
 				// MISC
 				case "OrderByClause":
@@ -769,6 +1215,54 @@
 				case 'LabelForPaginated': return $this->strLabelForPaginated;
 				case 'Owner' : return $this->objOwner;
 
+				case "FilterInfo":
+					$filterArray = array();
+					foreach($this->objColumnArray as $col)
+					{
+						if(isset($col->FilterByCommand['value']))
+						{
+							//manual filter
+							$filterCommand = $col->FilterByCommand;
+							$filterCommand['clause_operator'] = 'AND';
+							//apply the pre and postfix
+							$filterCommand['value'] = $filterCommand['prefix'] . $filterCommand['value'] . $filterCommand['postfix'];
+							$filterArray[] = $filterCommand;
+						}
+					}
+					return $filterArray;
+				case "Conditions":
+					//Calculate the conditions to apply to the entire grid based on the column's filters
+					$dtgConditions = QQ::All();
+					foreach($this->objColumnArray as $objColumn)
+					{
+							$colCondition = null;
+							//if there's a normal filter type, return the QQConditions related to it
+							if ($objColumn->FilterType != QFilterType::None) {
+								$colCondition = null;
+								if ($objColumn->Filter !== null)
+									$colCondition = $objColumn->Filter;
+							}
+
+							/*FilterConstant allows us to specify a custom QQuery that applies in addition to any 
+							user-specified filters. EG: If the user enters a Cost to filter on, also filter on 
+							object actually being sold*/
+							if(null !== $colCondition && null !== $objColumn->FilterConstant)
+								$colCondition = QQ::AndCondition($colCondition, $objColumn->FilterConstant);
+
+							//now after all the above checks if the column has a condition to be specified
+							//we add it to overall conditions. but if the column conditions are null we leave
+							//overall conditions as is
+							if($colCondition !== null) {
+								//if there are no overall conditions yet change them to reflect the column condition
+								if($dtgConditions == QQ::All())
+									$dtgConditions = $colCondition;
+								else
+									//combine the overall conditions with the column conditions
+									$dtgConditions = QQ::AndCondition($dtgConditions, $colCondition);
+							}
+					}
+
+					return $dtgConditions;
 				default:
 					try {
 						return parent::__get($strName);
@@ -818,6 +1312,14 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+				case "FilterRowStyle":
+					try {
+						$this->objFilterRowStyle = QType::Cast($mixValue, "QDataGridRowStyle");
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 				case "RowStyle":
 					try {
 						$this->objRowStyle = QType::Cast($mixValue, "QDataGridRowStyle");
@@ -826,8 +1328,35 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					
+
 				// BEHAVIOR
+				case "Paginator":
+					//do whatever needs done
+					try {
+						$blnToReturn = parent::__set($strName, $mixValue);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+					//Now make sure it knows about our spinner
+					$this->objPaginator->WaitIcon = $this->objWaitIcon;
+					return $blnToReturn;
+					break;
+
+				case "PaginatorAlternate":
+					//do whatever needs done
+					try {
+						$blnToReturn = parent::__set($strName, $mixValue);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+					//Now make sure it knows about our spinner
+					$this->objPaginatorAlternate->WaitIcon = $this->objWaitIcon;
+					return $blnToReturn;
+					break;
 				case "UseAjax":
 					try {
 						$blnToReturn = parent::__set($strName, $mixValue);
@@ -839,11 +1368,44 @@
 					// Because we are switching to/from Ajax, we need to reset the events
 					$this->RemoveAllActions('onclick');
 					if ($this->blnUseAjax)
-						$this->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Sort_Click'));
+						$this->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Sort_Click', $this->objWaitIcon));
 					else
 						$this->AddAction(new QClickEvent(), new QServerControlAction($this, 'Sort_Click'));
 
 					$this->AddAction(new QClickEvent(), new QTerminateAction());
+
+					$actionName = 'btnFilter_Click';
+					foreach($this->objColumnArray as $objColumn) 
+					{
+						if ($objColumn->FilterByCommand !== null || $objColumn->FilterType != QFilterType::None)
+						{
+							$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
+							if ($ctlFilter !== null) 
+							{
+								$ctlFilter->RemoveAllActions('onkeydown');
+								if ($this->blnUseAjax)
+									$ctlFilter->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, $actionName, $this->objWaitIcon));
+								else
+									$ctlFilter->AddAction(new QEnterKeyEvent(), new QServerControlAction($this, $actionName));
+
+								$ctlFilter->AddAction(new QEnterKeyEvent(), new QTerminateAction());
+							}
+						}
+					}
+
+					$this->btnFilter->RemoveAllActions('onclick');
+					if ($this->blnUseAjax)
+						$this->btnFilter->AddAction(new QClickEvent(), new QAjaxControlAction($this, $actionName, $this->objWaitIcon));
+					else
+						$this->btnFilter->AddAction(new QClickEvent(), new QServerControlAction($this, $actionName));
+					$this->btnFilter->AddAction(new QClickEvent(), new QTerminateAction());
+
+					$this->btnFilterReset->RemoveAllActions('onclick');
+					if ($this->blnUseAjax)
+						$this->btnFilterReset->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilterReset_Click', $this->objWaitIcon));
+					else
+						$this->btnFilterReset->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilterReset_Click'));
+					$this->btnFilterReset->AddAction(new QClickEvent(), new QTerminateAction());
 					return $blnToReturn;
 
 				// LAYOUT
@@ -888,7 +1450,30 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
+				case "ShowFilter":
+					try {
+						$this->blnShowFilter = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case "ShowFilterButton":
+					try {
+						$this->blnShowFilterButton = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case 'ShowFilterResetButton':
+					try {
+						$this->blnShowFilterResetButton = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 				// MISC
 				case "SortColumnIndex":
 					try {

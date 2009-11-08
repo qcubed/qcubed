@@ -94,6 +94,8 @@
 			self::AddCoreExampleFile($intIndex, '/datagrid/rowactions.php * Making entire QDataGrid rows clickable');
 			self::AddCoreExampleFile($intIndex, '/datagrid/sorting.php * QDataGrid Sorting');
 			self::AddCoreExampleFile($intIndex, '/datagrid/pagination.php * QDataGrid Pagination');
+			self::AddCoreExampleFile($intIndex, '/datagrid/filtering.php * QDataGrid Filtering');
+			self::AddCoreExampleFile($intIndex, '/datagrid/advanced_filtering.php * Advanced QDataGrid Filtering');
 			self::AddCoreExampleFile($intIndex, '/datagrid/ajax.php * Enabling AJAX on the QDataGrid');
 			self::AddCoreExampleFile($intIndex, '/datarepeater/ajax.php * Simple QDataRepeater using AJAX-triggered Pagination');
 			self::AddCoreExampleFile($intIndex, '/datagrid/extend.php * Creating Your Own Custom QDataGrid Subclass');

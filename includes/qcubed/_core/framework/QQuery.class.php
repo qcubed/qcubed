@@ -240,6 +240,45 @@
 			else
 				return $this;
 		}
+		public function SetFilteredDataGridColumnFilter(QDataGridColumn $col)
+		{
+			switch($this->strType)
+			{
+				case QDatabaseFieldType::Bit:
+					//List of true / false / any
+					$col->FilterType = QFilterType::ListFilter;
+					$col->FilterAddListItem("True", QQ::Equal($this, true));
+					$col->FilterAddListItem("False", QQ::Equal($this, false));
+					$col->FilterAddListItem("Set", QQ::IsNotNull($this));
+					$col->FilterAddListItem("Unset", QQ::IsNull($this));
+					break;
+				case QDatabaseFieldType::Blob:
+				case QDatabaseFieldType::Char:
+				case QDatabaseFieldType::Time:
+				case QDatabaseFieldType::VarChar:
+				case QDatabaseFieldType::Date:
+				case QDatabaseFieldType::DateTime:
+					//LIKE
+					$col->FilterType = QFilterType::TextFilter;
+					$col->FilterPrefix = '%';
+					$col->FilterPostfix = '%';
+					$col->Filter = QQ::Like($this, null);
+					break;
+				case QDatabaseFieldType::Float:
+				case QDatabaseFieldType::Integer:
+					//EQUAL
+					$col->FilterType = QFilterType::TextFilter;
+					$col->Filter = QQ::Equal($this, null);
+					break;
+				case QType::Object:
+				case QType::Resource:
+				default:
+					//this node points to a class, there's no way to know what to filter on
+					$col->FilterType = QFilterType::None;
+					$col->ClearFilter();
+					break;
+			}
+		}
 	}
 
 	class QQReverseReferenceNode extends QQNode {

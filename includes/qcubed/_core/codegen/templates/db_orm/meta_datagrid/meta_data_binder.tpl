@@ -8,7 +8,7 @@
 		public function MetaDataBinder() {
 			// Remember!  We need to first set the TotalItemCount, which will affect the calcuation of LimitClause below
 			if ($this->Paginator) {
-				$this->TotalItemCount = <%= $objTable->ClassName %>::CountAll();
+				$this->TotalItemCount = <%= $objTable->ClassName %>::QueryCount($this->Conditions);
 			}
 
 			// Setup the $objClauses Array
@@ -24,5 +24,5 @@
 				array_push($objClauses, $objClause);
 
 			// Set the DataSource to be a Query result from <%= $objTable->ClassName %>, given the clauses above
-			$this->DataSource = <%= $objTable->ClassName %>::LoadAll($objClauses);
+			$this->DataSource = <%= $objTable->ClassName %>::QueryArray($this->Conditions, $objClauses);
 		}

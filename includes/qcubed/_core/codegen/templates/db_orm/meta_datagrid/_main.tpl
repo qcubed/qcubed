@@ -18,6 +18,8 @@
 	 * 
 	 */
 	class <%= $objTable->ClassName %>DataGridGen extends QDataGrid {
+		protected $blnShowFilter = true;
+		
 		<%@ constructor('objTable'); %>
 
 

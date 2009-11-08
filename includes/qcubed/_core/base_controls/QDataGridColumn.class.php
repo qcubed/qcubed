@@ -9,6 +9,13 @@
 	// "Html" is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to
 	// deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
 
+	abstract class QFilterType {
+		const None = '';
+		const TextFilter = 'Text';
+		const ListFilter = 'List';
+	}
+
+
 	class QDataGridColumn extends QBaseClass {
 		// APPEARANCE
 		protected $strBackColor = null;
@@ -32,6 +39,22 @@
 		// BEHAVIOR
 		protected $objOrderByClause = null;
 		protected $objReverseOrderByClause = null;
+
+		protected $FilterBoxSize = '10';
+		protected $strFilterType = QFilterType::None;
+		protected $intFilterColId = null;
+		protected $arrFilterList = array();
+
+		//The filter this column has applied
+		protected $objFilter = null;
+		//a Filter that gets applied in addition to $Filter when the user filters on this column
+		protected $objFilterConstant = null;
+
+		protected $strFilterPrefix = '';
+		protected $strFilterPostfix = '';
+
+		//manual filter commands
+		protected $arrFilterByCommand = null; 
 
 		// MISC
 		protected $strName;
@@ -144,6 +167,81 @@
 			return $strToReturn;
 		}
 
+		//creates a list for a column's filter
+		//2 ways of calling the fuction: specify only one paramter and it should be an advanced list item
+		//the other way is to call it using 2 parameters with first one being a name and other a value
+		public function FilterAddListItem($arg1=null, $arg2=null) {
+			if($this->arrFilterList === null) {
+				$this->arrFilterList = array();
+			}
+			if($arg1 !== null && $arg2 instanceof QQCondition) {
+				//they passed in a name, condition pair
+				$this->arrFilterList[$arg1] = $arg2;
+				$this->strFilterType = QFilterType::ListFilter;
+			} elseif ($arg1 !== null) {
+				//else we are trying to make a simple list but make sure the name is supplied
+				$this->arrFilterList[$arg1] = $arg2;
+				$this->strFilterType = QFilterType::ListFilter;
+			} else {
+				//else fail the function and let the user know about correct use of parameters
+				throw new Exception("Please specify a name and QQCondition pair OR a name and value pair as parameters.");
+			}
+		}
+
+		public function FilterActivate($strIndex = 0) {
+			if ($this->strFilterType == QFilterType::TextFilter && count($this->arrFilterList) > 1) {
+				throw new Exception('Trying to activate a Filter when multiple filters are stored (potential ListFilter).');
+				return;
+			}
+
+			//really, this shouldn't happen
+			if(null === $strIndex) {
+				return $this->ClearFilter();
+			}
+
+			$this->objFilter = $this->arrFilterList[$strIndex];
+			return true;
+		}
+
+		public function FilterSetOperand($mixOperand) {
+			try {
+				if(null === $this->objFilter) {
+					return;
+				} elseif($this->objFilter instanceof QQConditionComparison) {
+					if ($mixOperand instanceof QQNamedValue) {
+						$this->objFilter->mixOperand = $mixOperand;
+					} else if ($mixOperand instanceof QQAssociationNode) {
+						throw new QInvalidCastException('Comparison operand cannot be an Association-based QQNode', 3);
+					} else if ($mixOperand instanceof QQCondition) {
+						throw new QInvalidCastException('Comparison operand cannot be a QQCondition', 3);
+					} else if ($mixOperand instanceof QQClause) {
+						throw new QInvalidCastException('Comparison operand cannot be a QQClause', 3);
+					} else if ($mixOperand instanceof QQNode) {
+						if (!$mixOperand->_ParentNode)
+							throw new QInvalidCastException('Unable to cast "' . $mixOperand->_Name . '" table to Column-based QQNode', 3);
+						$this->objFilter->mixOperand = $mixOperand;
+					} else {
+						//must be a string, apply the pre and postfix (This also handles custom filters)
+						$mixOperand = $this->strFilterPrefix . $mixOperand . $this->strFilterPostfix;
+						$this->objFilter->mixOperand = $mixOperand;
+					}
+				} else {
+					throw new Exception('Trying to set Operand on a filter that does not take operands');
+				}
+			} catch (QInvalidCastException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+		}
+
+		public function ClearFilter() 
+		{
+			$this->objFilter = null;
+			if($this->arrFilterByCommand !== null)
+				$this->arrFilterByCommand['value'] = null;
+		}
+
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -171,6 +269,18 @@
 				// BEHAVIOR
 				case "OrderByClause": return $this->objOrderByClause;
 				case "ReverseOrderByClause": return $this->objReverseOrderByClause;
+
+				case "FilterByCommand": return $this->arrFilterByCommand;
+				case "FilterBoxSize": return $this->FilterBoxSize;
+				case "FilterType": return $this->strFilterType;
+				case "FilterList": return $this->arrFilterList;
+				case "FilterColId": return $this->intFilterColId;
+
+				case "FilterPrefix": return $this->strFilterPrefix;
+				case "FilterPostfix": return $this->strFilterPostfix;
+
+				case "FilterConstant": return $this->objFilterConstant;
+				case "Filter": return $this->objFilter;
 
 				// MANUAL QUERY BEHAVIORS
 				case "SortByCommand": return $this->objOrderByClause;
@@ -352,9 +462,132 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					
-					
+				case "FilterConstant":
+					try {
+						$this->objFilterConstant = $mixValue;
+						break;
+					} catch(QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+
+				case "FilterPrefix":
+					try {
+						$this->strFilterPrefix = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case "FilterPostfix":
+					try {
+						$this->strFilterPostfix = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "FilterType":
+					try {
+						$this->strFilterType= QType::Cast($mixValue, QType::String);
+						if($this->strFilterType == QFilterType::None)
+						{
+							$this->Filter = null;
+							$this->FilterByCommand = null;
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "FilterColId":
+					try {
+						$this->intFilterColId = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "FilterByCommand": //for custom filters
+					try {
+						if(null === $mixValue)
+						{
+							$this->arrFilterByCommand = null;
+							break;
+						}
+
+						$arr = QType::Cast($mixValue, QType::ArrayType);
+						//ensure pre and postfix exist
+						if(!isset($arr['prefix']))
+							$arr['prefix'] = '';
+						if(!isset($arr['postfix']))
+							$arr['postfix'] = '';
+						$this->arrFilterByCommand = $arr;
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "Filter":
+					try {
+						if(null === $mixValue)
+							$this->arrFilterList = null;
+						else
+							$this->arrFilterList = array($mixValue);
+						break;
+					} catch(QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+
+
+				case "FilterBoxSize":
+					try {
+						$this->FilterBoxSize = QType::Cast($mixValue, QType::Integer);
+						$this->FilterType = 'Text';
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "FilterList":
+					try {
+						$this->arrFilterList = QType::Cast($mixValue, QType::ArrayType);
+						$this->strFilterType = QFilterType::ListFilter;
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				// MANUAL QUERY BEHAVIOR
+				case "FilterByCommand":
+					try {
+						if(null === $mixValue) {
+							$this->arrFilterByCommand = null;
+							break;
+						}
+
+						$arr = QType::Cast($mixValue, QType::ArrayType);
+						//ensure pre and postfix exist
+						if(!isset($arr['prefix']))
+							$arr['prefix'] = '';
+						if(!isset($arr['postfix']))
+							$arr['postfix'] = '';
+						$this->arrFilterByCommand = $arr;
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				case "SortByCommand":
 					try {
 						$this->objOrderByClause = QType::Cast($mixValue, QType::String);

@@ -71,6 +71,8 @@
 				);
 			}
 
+			$objNode->SetFilteredDataGridColumnFilter($objNewColumn);
+
 			$objOverrideArray = func_get_args();
 			if (count($objOverrideArray) > 1)
 				try {
