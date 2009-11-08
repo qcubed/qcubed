@@ -19,6 +19,11 @@
 		either plain text, HTML or both.  QCubed will automatically handle the multipart
 		message encoding for you.<br/><br/>
 		
+		You can easily add attachments to your message - using <b>QEmailAttachment</b> and
+		its child classes, for example, <b>QEmailStringAttachment</b>. In the example below, 
+		we create a new <b>QEmailStringAttachment</b> object and then call <b>Attach()</b> on
+		the <b>QEmailMessage</b> object - that's all it takes.<br/><br/>
+		
 		Finally, note that for development environments that do not have ready access
 		to an SMTP server, the <b>QEmailServer</b> can be set to <b>TestMode</b>,
 		where communication between the application and the SMTP server will be written
@@ -62,11 +67,14 @@
 
 	// Add random/custom email headers
 	$objMessage->SetHeader('x-application', 'ACME Reporting Service v1.2a');
-
+	
+	// Add a text file attachment (you can also send non-text attachments with QEmailAttachment)
+	$strAttachmentContents = "This is the text file's contents";
+	$objAttachment = new QEmailStringAttachment($strAttachmentContents, QMimeType::PlainText, "attachment.txt");
+	$objMessage->AddAttachment($objAttachment);
+	
 	// Send the Message (Commented out for obvious reasons)
 //	QEmailServer::Send($objMessage);
-
-
 
 	// Note that you can also shortcut the Send command to one line for simple messages (similar to PHP's mail())
 	$strBody = "Dear John and Jane Doe,\r\n\r\n";

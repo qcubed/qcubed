@@ -430,6 +430,23 @@
 			}
 		}
 	}
+	
+	class QEmailStringAttachment extends QEmailAttachment {
+		public function __construct($strContent, $strSpecifiedMimeType, $strSpecifiedFileName) {
+			// Set the File MIME Type -- if Explicitly Set, use it
+			if ($strSpecifiedMimeType) {
+				$this->strMimeType = $strSpecifiedMimeType;
+			}
+			
+			// Set the File Name -- if explicitly set, use it
+			if ($strSpecifiedFileName) {
+				$this->strFileName = $strSpecifiedFileName;
+			}
+			
+			// Read file into a Base64 Encoded Data Stream
+			$this->strEncodedFileData = chunk_split(base64_encode($strContent));
+		}
+	}
 
 	class QEmailMessage extends QBaseClass {
 		protected $strFrom;
