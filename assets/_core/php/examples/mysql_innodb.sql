@@ -2,6 +2,9 @@
 #  Tables                                                                   #
 #========================================================================== #
 
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS person;
 CREATE TABLE person (
     id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
@@ -10,6 +13,7 @@ CREATE TABLE person (
     KEY IDX_person_1(last_name)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS login;
 CREATE TABLE login (
     id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     person_id INTEGER UNSIGNED NOT NULL,
@@ -21,6 +25,7 @@ CREATE TABLE login (
     UNIQUE KEY IDX_login_2(username)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS project;
 CREATE TABLE project (
     id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     project_status_type_id INTEGER UNSIGNED NOT NULL,
@@ -36,6 +41,7 @@ CREATE TABLE project (
     KEY IDX_project_2(manager_person_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS team_member_project_assn;
 CREATE TABLE team_member_project_assn (
     person_id INTEGER UNSIGNED NOT NULL,
     project_id INTEGER UNSIGNED NOT NULL,
@@ -43,6 +49,7 @@ CREATE TABLE team_member_project_assn (
     KEY IDX_teammemberprojectassn_2(project_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS project_status_type;
 CREATE TABLE project_status_type (
     id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
@@ -52,6 +59,7 @@ CREATE TABLE project_status_type (
     UNIQUE KEY IDX_projectstatustype_1(name)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS person_with_lock;
 CREATE TABLE person_with_lock (
     id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
@@ -60,6 +68,7 @@ CREATE TABLE person_with_lock (
     CONSTRAINT PK_person_with_lock PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS related_project_assn;
 CREATE TABLE related_project_assn (
   project_id INTEGER UNSIGNED NOT NULL,
   child_project_id INTEGER UNSIGNED NOT NULL,
@@ -67,6 +76,7 @@ CREATE TABLE related_project_assn (
     KEY IDX_relatedprojectassn_2(child_project_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS milestone;
 CREATE TABLE milestone (
   id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   project_id INTEGER UNSIGNED NOT NULL,
@@ -75,6 +85,7 @@ CREATE TABLE milestone (
     KEY IDX_milestoneproj_1(project_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS address;
 CREATE TABLE address (
     id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     person_id INTEGER UNSIGNED,
@@ -204,3 +215,5 @@ INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone G');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone H');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone I');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone J');
+
+SET FOREIGN_KEY_CHECKS = 1;
