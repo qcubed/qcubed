@@ -10,11 +10,16 @@
 		<h1 class="instruction_title"><?php _t('Internationalization and Translation') ?></h1>
 		<?php _t('
 		QQubed offers internationalization support via <b>QApplication::Translate()</b> (which internally
-		will use the <b>QI18n</b> class). Language and country
-		settings can be setup in <b>prepend.inc.php</b>.  By default, QCubed will check the session to determine
+		will use the <b>QI18n</b> class). Default language and country
+		settings can be setup in <b>prepend.inc.php</b>.  Out of the box, QCubed will check the session to determine
 		which language and country is currently being used, but it is really up to the developer to
 		determine how you want the language and country codes get discovered (e.g., via the URL, via
 		GET arguments, etc.)'); ?>
+		<br/><br/>
+		<?php _t('If at any point, you wish to translate to a different language than the one set by the session,
+		you can use the <b>QI18n::Load()</b> function to create a unique I18n object, and call <b>TranslateToken()</b>
+		on it.'); ?>
+
 		<br/><br/>
 
 		<?php _t('Language files are in the GNU PO format (see'); ?>
@@ -54,9 +59,16 @@
 		<?php $this->btnEn->Render('Text="' . QApplication::Translate('Switch to') . ' en"'); ?>
 		<?php $this->btnEs->Render('Text="' . QApplication::Translate('Switch to') . ' es"'); ?>
 		<br/><br/>
-		
+
 		<?php _t('To view the People form draft translated into the selected language, go to'); ?>
 		<a href="<?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__); ?>/person_list.php" class="bodyLink"><?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__); ?>/person_list.php</a>
+		
+		<br/><br/>
+		<?php _t('We used the <b>QI18n::Load</b> approach to ensure the following is always Spanish:'); ?><br/>
+		<?php
+			$i18n = QI18n::Load('es');
+			echo $i18n->TranslateToken('Internationalization Example');
+		?>
 	</div>
 
 	<?php $this->RenderEnd(); ?>

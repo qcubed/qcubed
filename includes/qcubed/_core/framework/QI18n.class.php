@@ -48,6 +48,56 @@
 			}
 		}
 
+		public static function Load($langCode=null, $countryCode=null) {
+			$LanguageObject = null;
+			if ($langCode) {
+				if ($countryCode) {
+					$strCode = sprintf('%s_%s', $langCode, $countryCode);
+					$strLanguageFiles = array(
+							__QCUBED_CORE__ . '/i18n/' . $langCode . '.po',
+							__QCUBED_CORE__ . '/i18n/' . $strCode . '.po',
+							__QCUBED__ . '/i18n/' . $langCode . '.po',
+							__QCUBED__ . '/i18n/' . $strCode . '.po',
+							);
+				} else {
+					$strCode = $langCode;
+					$strLanguageFiles = array(
+							__QCUBED_CORE__ . '/i18n/' . $langCode . '.po',
+							__QCUBED__ . '/i18n/' . $langCode . '.po',
+							);
+				}
+				
+				// Setup the LanguageFileObject cache mechanism
+				$objCache = new QCache('i18n', $strCode, 'i18n', $strLanguageFiles);
+				
+				// If cached data exists and is valid, use it
+				$strData = $objCache->GetData();
+				if ($strData)
+					$LanguageObject = unserialize($strData);
+				
+				// Otherwise, reload all langauge files and update the cache
+				else {
+					$objLanguage = new QI18n();
+					
+					foreach ($strLanguageFiles as $strLanguageFile)
+						if (file_exists($strLanguageFile)) {
+							try {
+								//print($strLanguageFile.'<BR>');
+								$objLanguage->ParsePoData(file_get_contents($strLanguageFile));
+							} catch (QPoParserException $objExc) {
+								$objExc->setMessage('Invalid Language File: ' . $strLanguageFile . ': ' . $objExc->getMessage());
+								$objExc->IncrementOffset();
+								throw $objExc;
+							}
+						}
+					$LanguageObject = $objLanguage;
+					
+					$objCache->SaveData(serialize($objLanguage));
+				}
+			}
+			return $LanguageObject;
+		}
+	
 		const PoParseStateNone = 0;
 		const PoParseStateMessageIdStart = 1;
 		const PoParseStateMessageId = 2;
@@ -204,8 +254,8 @@
 							if ($intCount && ($strMatches[0][0] == $strPoLine)) {
 								for ($intIndex = 0; $intIndex < count($strMessageId); $intIndex++)
 									if (strlen(trim($strMessageId[$intIndex]))) {
-                    if (!strlen(trim($strMessageString[$intIndex]))) {
-										  $this->SetTranslation($strMessageId[$intIndex], "");
+										if(!strlen(trim($strMessageString[$intIndex]))) {
+											$this->SetTranslation($strMessageId[$intIndex], "");
 										}
 										$this->SetTranslation($strMessageId[$intIndex], $strMessageString[$intIndex]);
 									}
@@ -252,7 +302,7 @@
 
 			for ($intIndex = 0; $intIndex < count($strMessageId); $intIndex++)
 				if (strlen(trim($strMessageId[$intIndex]))) {
-  				if (!strlen(trim($strMessageString[$intIndex]))) {
+  					if (!strlen(trim($strMessageString[$intIndex]))) {
 						$this->SetTranslation($strMessageId[$intIndex], "");
 					}
 					$this->SetTranslation($strMessageId[$intIndex], $strMessageString[$intIndex]);
@@ -270,7 +320,7 @@
 			if (array_key_exists($strCleanToken, $this->strTranslationArray))
 				return $this->strTranslationArray[$strCleanToken];
 			else
-				return $strToken;				
+				return $strToken;
 		}
 
 		public function VarDump() {
