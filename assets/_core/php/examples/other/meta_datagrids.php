@@ -11,6 +11,9 @@
 			// Define the DataGrid -- note that the Meta DataGrid is a DataGrid, itself --
 			// so let's just use it as a datagrid
 			$this->dtgProjects = new ProjectDataGrid($this);
+			
+			// Only show projects whose status is "open"
+			$this->dtgProjects->AdditionalConditions = QQ::Equal(QQN::Project()->ProjectStatusTypeId, ProjectStatusType::Open);
 
 			// DataBinding is already configured -- so we do not need to worry about it
 

@@ -14,10 +14,15 @@
 	 * code generation.
 	 * 
 	 * @package <%= QCodeGen::$ApplicationName; %>
+	 * @property QQCondition $AdditionalConditions Any conditions to use during binding
+	 * @property QQClause $AdditionalClauses Any clauses to use during binding
 	 * @subpackage MetaControls
 	 * 
 	 */
 	class <%= $objTable->ClassName %>DataGridGen extends QDataGrid {
+		protected $conAdditionalConditions;
+		protected $clsAdditionalClauses;
+		
 		protected $blnShowFilter = true;
 		
 		<%@ constructor('objTable'); %>
@@ -36,5 +41,61 @@
 
 
 		<%@ resolve_content_item('objTable'); %>
+
+		/**
+		 * This will get the value of $strName
+		 *
+		 * @param string $strName Name of the property to get
+		 * @return mixed
+		 */
+		public function __get($strName) {
+			switch ($strName) {
+				case 'AdditionalConditions':
+					return $this->conAdditionalConditions;
+				case 'AdditionalClauses':
+					return $this->clsAdditionalClauses;
+				default:
+				try {
+					return parent::__get($strName);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+		}
+
+		/**
+		 * This will set the property $strName to be $mixValue
+		 *
+		 * @param string $strName Name of the property to set
+		 * @param string $mixValue New value of the property
+		 * @return mixed
+		 */
+		public function __set($strName, $mixValue) {
+			switch ($strName) {
+				case 'AdditionalConditions':
+				try {
+					return ($this->conAdditionalConditions = QType::Cast($mixValue, 'QQCondition'));
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+				case 'AdditionalClauses':
+				try {
+					return ($this->clsAdditionalClauses = QType::Cast($mixValue, 'QQClause'));
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+				default:
+				try {
+					parent::__set($strName, $mixValue);
+					break;
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+		}
 	}
 ?>

@@ -16,7 +16,10 @@
 		will automatically take care of things like the column's <b>Title</b>, <b>Html</b>, and <b>Sorting</b> properties.<br/><br/>
 
 		It even comes with its own <b>MetaDataBinder()</b>, and the datagrid is already set up to use that
-		as its databinder (but of course, even this is override-able). <br/><br/>
+		as its databinder (but of course, even this is override-able). It's also very easy to specify
+		a condition on the meta datagrid - you don't even need to define your own data bind function! Simply set
+		the <b>AdditionalConditions</b> property to an appropriate QQuery condition, and you're good to go. In
+		this example, we'll only show projects whose status is "open". <br/><br/>
 
 		But again, similar to <b>MetaControls</b>, note that the datagrid is just a regular <b>QDataGrid</b> object,
 		and the columns are just regular <b>QDataGridColumn</b> objects, which means that you can modify 

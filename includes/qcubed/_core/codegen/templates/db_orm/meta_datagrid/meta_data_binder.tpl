@@ -6,13 +6,20 @@
 		 * It will also perform any sorting (if applicable).
 		 */
 		public function MetaDataBinder() {
+			$objConditions = $this->Conditions;
+			if(null !== $this->conAdditionalConditions)
+				$objConditions = $this->conAdditionalConditions;
+
+			// Setup the $objClauses Array
+			$objClauses = array();
+
+			if(null !== $this->clsAdditionalClauses)
+				$objClauses = array_merge($objClauses, $this->clsAdditionalClauses);
+
 			// Remember!  We need to first set the TotalItemCount, which will affect the calcuation of LimitClause below
 			if ($this->Paginator) {
 				$this->TotalItemCount = <%= $objTable->ClassName %>::QueryCount($this->Conditions);
 			}
-
-			// Setup the $objClauses Array
-			$objClauses = array();
 
 			// If a column is selected to be sorted, and if that column has a OrderByClause set on it, then let's add
 			// the OrderByClause to the $objClauses array
@@ -24,5 +31,5 @@
 				array_push($objClauses, $objClause);
 
 			// Set the DataSource to be a Query result from <%= $objTable->ClassName %>, given the clauses above
-			$this->DataSource = <%= $objTable->ClassName %>::QueryArray($this->Conditions, $objClauses);
+			$this->DataSource = <%= $objTable->ClassName %>::QueryArray($objConditions, $objClauses);
 		}
