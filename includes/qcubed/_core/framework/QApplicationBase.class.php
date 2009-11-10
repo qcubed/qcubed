@@ -377,7 +377,7 @@
 					// Expected Keys to be Set
 					$strExpectedKeys = array(
 						'adapter', 'server', 'port', 'database',
-						'username', 'password', 'profiling'
+						'username', 'password', 'profiling', 'dateformat'
 					);
 
 					// Lookup the Serialized Array from the DB_CONFIG constants and unserialize it

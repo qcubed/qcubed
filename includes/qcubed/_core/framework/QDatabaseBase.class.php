@@ -74,6 +74,8 @@
 				case 'Username':
 				case 'Password':
 					return $this->objConfigArray[strtolower($strName)];
+				case 'DateFormat':
+					return (is_null($this->objConfigArray[strtolower($strName)])) ? (QDateTime::FormatIso) : ($this->objConfigArray[strtolower($strName)]);
 
 				default:
 					try {
