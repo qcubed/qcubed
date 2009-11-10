@@ -374,7 +374,10 @@
 				}
 				// fix for the not so magic __toString behaviour in PHP < 5.2.0
 				if (is_object($strEvaledToken)){
-					$strEvaledToken = $strEvaledToken->__toString();
+					if($strEvaledToken instanceof QDateTime)
+						$strEvaledToken = $strEvaledToken->qFormat();
+					else
+						$strEvaledToken = $strEvaledToken->__toString();
 				}					
 
 				$strHtml = sprintf("%s%s%s",
