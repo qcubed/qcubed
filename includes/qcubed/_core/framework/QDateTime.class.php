@@ -703,7 +703,11 @@
 if (version_compare(PHP_VERSION, '5.3.0', '<')) {
 	require_once("QDateTime52.class.php");
 } else {
-	class QDateTime extends QDateTimeBase {}
+	class QDateTime extends QDateTimeBase {
+		public function __toString() {
+			return parent::qFormat();
+		}
+	}
 }
 
 /*
