@@ -20,7 +20,7 @@
 			// Now, with a paginator defined, we can set up some additional properties on
 			// the datagrid.  For purposes of this example, let's make the datagrid show
 			// only 5 items per page.
-			$this->dtgPersons->ItemsPerPage = 20;
+			$this->dtgPersons->ItemsPerPage = 5;
 
 			// Define Columns
 			$this->dtgPersons->AddColumn(new QDataGridColumn('Person ID', '<?= $_ITEM->Id ?>', 'Width=100',
