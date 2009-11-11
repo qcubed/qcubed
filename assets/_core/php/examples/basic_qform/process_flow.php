@@ -8,6 +8,8 @@
 		protected $btnButton;
 
 		protected function Form_Run() {
+			_p('<br><br><br><br><br>', false); // Compensating for the examples header
+			
 			_p('<b>Form_Run</b> called<br/>', false);
 		}
 
