@@ -22,7 +22,7 @@
 		// Invalid Type names -- these are reserved words which cannot be Type names in any user type table
 		// Invalid Table names -- these are reserved words which cannot be used as any table name
 		//please refer to : http://php.net/manual/en/reserved.php
-        const PhpReservedWords = 'new, null, break, return, switch, self, case, const, clone, continue, declare, default, echo, else, elseif, empty, exit, eval, if, try, throw, catch, public, private, protected, function, extends, foreach, for, while, do, var, class, static, abstract, isset, unset, implements, interface, instanceof, include, include_once, require, require_once, abstract, and, or, xor, array, list, false, true, global, parent, print, exception, namespace, goto, final, endif, endswitch, enddeclare, endwhile, use, as, endfor, endforeach, this';
+		const PhpReservedWords = 'new, null, break, return, switch, self, case, const, clone, continue, declare, default, echo, else, elseif, empty, exit, eval, if, try, throw, catch, public, private, protected, function, extends, foreach, for, while, do, var, class, static, abstract, isset, unset, implements, interface, instanceof, include, include_once, require, require_once, abstract, and, or, xor, array, list, false, true, global, parent, print, exception, namespace, goto, final, endif, endswitch, enddeclare, endwhile, use, as, endfor, endforeach, this';
 
 		// Relative Paths (from __QCUBED_CORE__) to the CORE Template and Subtemplate Directories
 		const TemplatesPath = '/codegen/templates/';
@@ -256,7 +256,7 @@
 
 			// Go through standard templates first
 			$objDirectory = opendir($strTemplatePath);
-			while ($strModuleName = readdir($objDirectory))
+			while ($strModuleName = readdir($objDirectory)) {
 				if (($strModuleName != '.') && ($strModuleName != '..') &&
 					($strModuleName != 'SVN') && ($strModuleName != 'CVS') &&
 					is_dir($strTemplatePath . '/' . $strModuleName)) {
@@ -265,23 +265,31 @@
 					$objModuleDirectory = opendir($strTemplatePath . '/' . $strModuleName);
 					while ($strFilename = readdir($objModuleDirectory))
 						if ((QString::FirstCharacter($strFilename) == '_') &&
-							(substr($strFilename, strlen($strFilename) - 4) == '.tpl'))
+							(
+								(substr($strFilename, strlen($strFilename) - 4) == '.tpl') ||
+								(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
+							)
 							$strTemplateArray[$strModuleName][$strFilename] = false;
+				}
 			}
 
 			// Go through and create or override with any custom templates
 			if (is_dir($strTemplatePathCustom)) {
 				$objDirectory = opendir($strTemplatePathCustom);
-				while ($strModuleName = readdir($objDirectory))
+				while ($strModuleName = readdir($objDirectory)) {
 					if (($strModuleName != '.') && ($strModuleName != '..') &&
 						($strModuleName != 'SVN') && ($strModuleName != 'CVS') &&
 						is_dir($strTemplatePathCustom . '/' . $strModuleName)) {
 						$objModuleDirectory = opendir($strTemplatePathCustom . '/' . $strModuleName);
 						while ($strFilename = readdir($objModuleDirectory))
 							if ((QString::FirstCharacter($strFilename) == '_') &&
-								(substr($strFilename, strlen($strFilename) - 4) == '.tpl'))
+								(
+									(substr($strFilename, strlen($strFilename) - 4) == '.tpl') ||
+									(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
+								)
 								$strTemplateArray[$strModuleName][$strFilename] = true;
 					}
+				}
 			}
 
 			// Finally, iterate through all the TempalteFiles and call GenerateFile to Evaluate/Generate/Save them
@@ -321,8 +329,12 @@
 			$strTemplate = file_get_contents($strTemplateFilePath);
 
 			// Evaluate the Template
-			$strTemplate = $this->EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray);
-
+			if (substr($strFilename, strlen($strFilename) - 8) == '.tpl.php')  {
+				$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $mixArgumentArray); 
+			} else {
+				$strTemplate = $this->EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray); 			
+			}
+			
 			// Parse out the first line (which contains path and overwriting information)
 			$intPosition = strpos($strTemplate, "\n");
 			if ($intPosition === false)
@@ -392,9 +404,44 @@
 				QApplication::RestoreErrorHandler();
 			}			
 		}
+		
+		protected function EvaluatePHP($strFilename, $mixArgumentArray)  { 
+			// Get all the arguments and set them locally 
+			if ($mixArgumentArray) foreach ($mixArgumentArray as $strName=>$mixValue) { 
+				$$strName = $mixValue; 
+			} 
+			
+			// Of course, we also need to locally allow "objCodeGen" 
+			$objCodeGen = $this; 
+			
+			// Get Database Escape Identifiers 
+			$strEscapeIdentifierBegin = QApplication::$Database[$this->intDatabaseIndex]->EscapeIdentifierBegin; 
+			$strEscapeIdentifierEnd = QApplication::$Database[$this->intDatabaseIndex]->EscapeIdentifierEnd; 
+			
+			// Store the Output Buffer locally 
+			$strAlreadyRendered = ob_get_contents(); 
+			
+			ob_clean();
+			ob_start(); 
+			include($strFilename); 
+			$strTemplate = ob_get_contents(); 
+			ob_end_clean(); 
+			
+			// Restore the output buffer and return evaluated template 
+			print($strAlreadyRendered); 
+			
+			// Remove all \r from the template (for Win/*nix compatibility) 
+			$strTemplate = str_replace("\r", '', $strTemplate); 
+			return $strTemplate; 
+		} 
 
 		protected function EvaluateSubTemplate($strSubTemplateFilename, $strModuleName, $mixArgumentArray) {
 			if (QCodeGen::DebugMode) _p("Evaluating $strSubTemplateFilename<br/>", false);
+
+			// Try the Custom SubTemplate Path (PHP template version) 
+			$strFilename = sprintf('%s%s%s/%s.php', __QCUBED__, QCodeGen::TemplatesPathCustom, $strModuleName, $strSubTemplateFilename); 
+			if (file_exists($strFilename)) 
+				return $this->EvaluatePHP($strFilename, $mixArgumentArray);
 
 			// Try the Custom SubTemplate Path
 			$strFilename = sprintf('%s%s%s/%s', __QCUBED__, QCodeGen::TemplatesPathCustom, $strModuleName, $strSubTemplateFilename);
@@ -405,6 +452,11 @@
 			$strFilename = sprintf('%s%s%s/%s', __QCUBED_CORE__, QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename);
 			if (file_exists($strFilename))
 				return $this->EvaluateTemplate(file_get_contents($strFilename), $strModuleName, $mixArgumentArray);
+
+			// Try the Standard SubTemplate Path (PHP template version) 
+			$strFilename = sprintf('%s%s%s/%s.php', __QCUBED_CORE__, QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename); 
+			if (file_exists($strFilename)) 
+				return $this->EvaluatePHP($strFilename, $mixArgumentArray); 
 
 			// SubTemplate Does Not Exist
 			throw new QCallerException('CodeGen SubTemplate Does Not Exist within the "' . $strModuleName . '" module: ' . $strSubTemplateFilename);

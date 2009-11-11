@@ -112,5 +112,7 @@
 			$strMethod = $this->strClosePanelMethod;
 			$this->objForm->$strMethod($blnChangesMade);
 		}
+	
+		<%@ qpanel_validate_unique('objTable'); %>
 	}
 ?>

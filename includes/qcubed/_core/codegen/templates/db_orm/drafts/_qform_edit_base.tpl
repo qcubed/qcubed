@@ -97,6 +97,7 @@
 
 			// Custom Validation Rules
 			// TODO: Be sure to set $blnToReturn to false if any custom validation fails!
+			<%@ qform_validate_unique('objTable') %>
 
 			$blnFocused = false;
 			foreach ($this->GetErrorControls() as $objControl) {
