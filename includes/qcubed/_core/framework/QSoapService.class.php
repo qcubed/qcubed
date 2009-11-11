@@ -270,7 +270,8 @@
 					$strType);
 		}
 
-		public static function Run($strClassName, $strNamespace = null) {			
+		public static function Run($strClassName, $strNamespace = null) {
+			ob_clean();
 			QApplication::$EncodingType = 'UTF-8';
 			
 			$objWsdlCache = new QCache('soap', QApplication::$ScriptName, 'wsdl', QApplication::$ScriptFilename);
