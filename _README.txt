@@ -36,7 +36,7 @@ For more information, you can also refer the QCubed Documentation online at
 // STEP TWO - UPDATE configuration.inc.php
 //////////////////////////////////////////
 
-	Inside of wwwroot/includes you'll find the configuration.inc.php file.  You'll need
+	Inside of wwwroot/configuration/includes you'll find the configuration.inc.php file.  You'll need
 	to open it to specify the actual location of your __DOCROOT__.
 
 	IMPORTANT NOTE FOR WINDOWS USERS:
@@ -81,13 +81,13 @@ For more information, you can also refer the QCubed Documentation online at
 		require('includes/prepend.inc.php');
 	on the very first line.
 
-	NOTE that the "includes/prepend.inc.php" may be different -- it depends on the relative
+	NOTE that the "includes/configuration/prepend.inc.php" may be different -- it depends on the relative
 	path to the includes/prepend.inc.php file.  So if you have a docroot structure like:
 		docroot/
 		docroot/pages/foo/blah.php
-		docroot/includes/prepend.inc.php
+		docroot/includes/configuration/prepend.inc.php
 	then in blah.php, the require line will be:
-		require('../../includes/prepend.inc.php');
+		require('../../includes/configuration/prepend.inc.php');
 
 	Note that if you move your .php script to another directory level, you may need to update
 	the relative path to prepend.inc
@@ -151,11 +151,11 @@ For more information, you can also refer the QCubed Documentation online at
 
 	If you wish to do this, then the PREFERRED way of doing this is simply edit your
 	PHP.INI file, and set the include path to:
-		.;c:\path\to\DOCROOT\includes (for windows)
+		.;c:\path\to\DOCROOT\includes\configuration (for windows)
 			or
-		.:/path/to/DOCROOT/includes (for unix)
+		.:/path/to/DOCROOT/includes/configuration (for unix)
 	(If you put QCubed into a subdirectory, then you want to make sure to specify it
-	in include_path by specifying /path/to/DOCROOT/subdir/includes)
+	in include_path by specifying /path/to/DOCROOT/subdir/includes/configuration)
 	
 	NOTE: the "current directory" marker must be present (e.g. the ".;" or the ".:" at
 	the beginning of the path)
