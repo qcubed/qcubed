@@ -353,7 +353,7 @@
 			return parent::format($strFormat);
 		}
 
-		public function setTime($intHour, $intMinute, $intSecond) {
+		public function setTime($intHour, $intMinute = null, $intSecond = null) {
 			// If HOUR or MINUTE is NULL...
 			if (is_null($intHour) || is_null($intMinute)) {
 				parent::setTime($intHour, $intMinute, $intSecond);
@@ -495,7 +495,10 @@
 			return new QDateTimeSpan($intDifference);
 		}
 
-		public function Add(QDateTimeSpan $dtsSpan){
+		public function Add($dtsSpan){
+			if (!$dtsSpan instanceof QDateTimeSpan) {
+				throw new QCallerException("Can only add QDateTimeSpan objects");
+			}
 			// Get this DateTime timestamp
 			$intTimestamp = $this->Timestamp;
 
