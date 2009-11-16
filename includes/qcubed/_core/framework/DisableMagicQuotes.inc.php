@@ -9,7 +9,9 @@ And modified to perfection */
 
 //Make sure when reading file data,
 //PHP doesn't "magically" mangle backslashes!
-set_magic_quotes_runtime(FALSE);
+if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+	set_magic_quotes_runtime(FALSE);
+}
 
 if (get_magic_quotes_gpc()) {
 	/*
