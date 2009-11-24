@@ -88,7 +88,7 @@
 		 * custom error handling script(s).
 		 */
 		if (array_key_exists('SERVER_PROTOCOL', $_SERVER)) {
-			set_error_handler('QcodoHandleError');
+			set_error_handler('QcodoHandleError', error_reporting());
 			set_exception_handler('QcodoHandleException');
 		}
 
