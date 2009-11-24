@@ -189,7 +189,7 @@
 					// Has it?
 					if ($mixTest != $mixItem)
 						// Yes -- therefore this is an invalid cast
-						throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType, $mixOriginal));
+						throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType, $mixItem));
 					
 					return $strItem;
 
