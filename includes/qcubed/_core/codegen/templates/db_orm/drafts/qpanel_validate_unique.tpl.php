@@ -14,6 +14,6 @@ if ($blnHasUnique) {
 <?php 
 	require 'validate_unique.tpl.php';
 ?>
-			return $blnToReturn;
+	return $blnToReturn;
 		}
 <?php } ?>
