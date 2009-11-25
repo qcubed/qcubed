@@ -18,7 +18,7 @@
 		javascript function on the page itself, so that the button has some javascript to perform.<br/><br/>
 		
 		If you are interested in more advanced and flexible types of confirmation or prompts, take a look at the 
-		<a href="../advanced_ajax/more_dialog_boxes.php">example on pre-built QDialogBox subclasses</a>.<br/><br/>
+		<a href="../../../../plugins/DialogBoxes/example/more_dialog_boxes.php">plugin that offers pre-built QDialogBox subclasses</a>.<br/><br/>
 	</div>
 
 	<script type="text/javascript">
