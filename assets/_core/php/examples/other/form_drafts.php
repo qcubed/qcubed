@@ -15,9 +15,9 @@
 		power and functionality over <b>scaffolding</b>.<br/><br/>
 
 		It is difficult to show this in a one-page example, so if you would like to
-		see this in action, we recommend that you check out <b>Demo Part II</b>
-		in the <b><a href="http://www.qcodo.com/demos/" class="bodyLink">Qcodo Demos and
-		Examples</a></b>.
+		see this in action, we recommend that you check out
+		the introductory <b><a href="http://qcu.be/files/screencasts/qcubed_ui_intro/qcubed_ui_intro.html" class="bodyLink">Screencast 
+		on Code Generation</a></b>.
 	</div>
 
 	To view one of the generated <b>Form Drafts</b>, please click here to
