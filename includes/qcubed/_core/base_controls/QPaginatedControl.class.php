@@ -48,12 +48,18 @@
 		public function DataBind() {
 			// Run the DataBinder (if applicable)
 			if (($this->objDataSource === null) && ($this->strDataBindMethod) && (!$this->blnRendered))
+			{
 				try {
 					$this->objForm->CallDataBinder($this->strDataBindMethod, $this, $this->objDataBindControl);
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
+				
+				if ($this->objPaginator && $this->PageNumber > $this->PageCount) {
+					$this->PageNumber = max($this->PageCount,1);
+				}
+			}
 		}
 
 		/////////////////////////

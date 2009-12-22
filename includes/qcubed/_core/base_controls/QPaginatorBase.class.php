@@ -114,9 +114,6 @@
 						throw $objExc;
 					}
 					if ($intNewPageNum > 1) {
-						if ($intNewPageNum > $this->PageCount) {
-							$intNewPageNum = max($this->PageCount,1);
-						}
 						return ($this->intPageNumber = $intNewPageNum);
 					} else {
 						return ($this->intPageNumber = 1);
