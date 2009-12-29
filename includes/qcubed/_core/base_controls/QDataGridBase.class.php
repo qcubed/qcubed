@@ -1118,10 +1118,12 @@
 						$col->FilterByCommand = $filterCommand;
 					}
 					//AddListItem with filters dont enter this check until filter button clicked
-					elseif($col->Filter !== null) {
-						if($col->Filter instanceof QQConditionComparison)
+					elseif($col->FilterType == QFilterType::TextFilter && 
+						$col->FilterList !== null && count($col->FilterList) == 1) {
+						if($col->FilterList[0] instanceof QQConditionComparison)
 						{
 							$col->Filter = $filters[$col->Name];
+							$col->FilterActivate();
 						}
 					}
 					elseif ($col->FilterType == QFilterType::ListFilter){
