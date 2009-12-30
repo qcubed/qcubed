@@ -53,17 +53,9 @@
 
 		public function SaveData($strData) {
 			if (!is_dir($this->GetCacheDirectory())) {
-				// Recursively create the folder structure based
-				// on the namespace folder separators 
-				$pieces = explode("/", $this->strNamespace);
-				$curPath = QCache::$CachePath; 
-				foreach ($pieces as $piece) {
-					$curPath = $curPath . "/" . $piece;
-					if (!is_dir($curPath)) {
-						mkdir($curPath);
-					}
-				}
+				mkdir($this->GetCacheDirectory(),0777,true);
 			}
+
 			file_put_contents($this->GetFilePath(), $strData);
 
 			if (count($this->strCheckFilesArray)) {
