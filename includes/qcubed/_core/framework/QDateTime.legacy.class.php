@@ -411,6 +411,10 @@
 
 			return $strToReturn;
 		}
+		
+		public function qFormat($strFormat = null) {
+			return $this->__toString($strFormat);
+		}
 
 		/**
 		 * This makes a call to the PHP date() function, where you
