@@ -2,10 +2,8 @@
 
 /* This file is the file to point the browser to to launch unit tests */
 
-$testsToRun = array(
-	"BasicOrmTests",
-	"ExpandAsArrayTests",
-	"QTypeTests"
+$filesToSkip = array(
+	"QUnitTestCaseBase.php"
 );
 
 
@@ -23,8 +21,13 @@ restore_error_handler();
 
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
 
-foreach ($testsToRun as $className) {
-	require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/' . $className . ".php");
+$arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');
+$arrTests = array();
+foreach ($arrFiles as $filename) {
+	require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/' . $filename);
+	if (!in_array($filename, $filesToSkip)) {
+		$arrTests[] = str_replace(".php", "", $filename);
+	}
 }
 
 
@@ -57,7 +60,7 @@ class QHtmlReporter extends HtmlReporter {
 }
 
 $suite = new TestSuite('QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - SimpleTest ' . SimpleTest::getVersion());
-foreach ($testsToRun as $className) {
+foreach ($arrTests as $className) {
 	$suite->add(new $className);
 }
 $suite->run(new QHtmlReporter());
