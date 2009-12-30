@@ -14,7 +14,7 @@
 	 * 
 	 * For legacy PHP users (PHP < 5.2.0), please refer to QDateTime.legacy
 	 */
-	class QDateTimeBase extends DateTime {
+	class QDateTime extends DateTime {
 		const Now = 'now';
 		const FormatIso = 'YYYY-MM-DD hhhh:mm:ss';
 		const FormatIsoCompressed = 'YYYYMMDDhhhhmmss';
@@ -193,6 +193,28 @@
 		}
 		public function __wakeup() {
 			parent::__construct($this->strSerializedData);
+		}
+
+		/**
+		 * @deprecated since PHP 5.3
+		 * DEPRECATED - DO NOT USE. For PHP 5.3 compatability, this method should not be called with parameters.
+		 * In previous versions of QCubed and QCodo, the way to format a date was to call 
+		 * __toString(), passing the format as a parameter. PHP 5.3 no longer supports this construct. 
+		 * To format a date, call $myDateTimeObject->qFormat($strParameters).
+		 *
+		 * For compatibility with old apps, this method is preserved - and passing parameters to it is
+		 * allowed, through a horrible hack. Please DO NOT use in applications that were written past the
+		 * release of PHP 5.3.
+		 */
+		public function __toString() {
+			$strArgumentArray = func_get_args();
+			
+			if (count($strArgumentArray) >= 1) {
+				$strFormat = $strArgumentArray[0];
+			} else {
+				$strFormat = null;
+			}
+			return $this->qFormat($strFormat);
 		}
 
 		/**
@@ -702,16 +724,6 @@
 			}
 		}
 	}
-
-if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-	require_once("QDateTime52.class.php");
-} else {
-	class QDateTime extends QDateTimeBase {
-		public function __toString() {
-			return parent::qFormat();
-		}
-	}
-}
 
 /*
 	This is a reference to the documentation for hte PHP DateTime classes (as of PHP 5.2)
