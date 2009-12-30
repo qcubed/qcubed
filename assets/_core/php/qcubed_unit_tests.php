@@ -5,7 +5,7 @@
 $testsToRun = array(
 	"BasicOrmTests",
 	"ExpandAsArrayTests",
-  "QTypeTests"
+	"QTypeTests"
 );
 
 
@@ -30,7 +30,7 @@ foreach ($testsToRun as $className) {
 
 class QHtmlReporter extends HtmlReporter {
 	function paintMethodStart($test_name) {
-        $tempBreadcrumb = $this->getTestList();
+		$tempBreadcrumb = $this->getTestList();
 		array_shift($tempBreadcrumb);
 		$breadcrumb = implode("-&gt;", $tempBreadcrumb);
 
@@ -56,9 +56,9 @@ class QHtmlReporter extends HtmlReporter {
 	}
 }
 
-$suite = &new TestSuite('QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests');
+$suite = new TestSuite('QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - SimpleTest ' . SimpleTest::getVersion());
 foreach ($testsToRun as $className) {
-	$suite->addTestCase(new $className);
+	$suite->add(new $className);
 }
 $suite->run(new QHtmlReporter());
 ?>

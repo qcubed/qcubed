@@ -1,5 +1,5 @@
 <?php
-// $Id: url_test.php 1598 2007-12-24 10:44:09Z pp11 $
+// $Id: url_test.php 1780 2008-04-21 18:57:46Z edwardzyang $
 require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../url.php');
 
@@ -163,15 +163,17 @@ class TestOfUrl extends UnitTestCase {
     }
     
     function testPathNormalisation() {
+        $url = new SimpleUrl();
         $this->assertEqual(
-                SimpleUrl::normalisePath('https://host.com/I/am/here/../there/somewhere.php'),
+                $url->normalisePath('https://host.com/I/am/here/../there/somewhere.php'),
                 'https://host.com/I/am/there/somewhere.php');
     }
 
     // regression test for #1535407
     function testPathNormalisationWithSinglePeriod() {
+        $url = new SimpleUrl();
         $this->assertEqual(
-            SimpleUrl::normalisePath('https://host.com/I/am/here/./../there/somewhere.php'),
+            $url->normalisePath('https://host.com/I/am/here/./../there/somewhere.php'),
             'https://host.com/I/am/there/somewhere.php');
     }
     
@@ -264,6 +266,7 @@ class TestOfUrl extends UnitTestCase {
         $this->assertPreserved('http://host#stuff');
         $this->assertPreserved('http://me:secret@www.here.com/a/b/c/here.html?a=A?7,6');
         $this->assertPreserved('http://www.here.com/?a=A__b=B');
+        $this->assertPreserved('http://www.example.com:8080/');
     }
     
     function assertUrl($raw, $parts, $params = false, $coords = false) {
@@ -440,4 +443,54 @@ class TestOfFrameUrl extends UnitTestCase {
         $this->assertIdentical($url->getTarget(), 'A frame');
     }
 }
+
+/**
+ * @note Based off of http://www.mozilla.org/quality/networking/testing/filetests.html
+ */
+class TestOfFileUrl extends UnitTestCase {
+    
+    function testMinimalUrl() {
+        $url = new SimpleUrl('file:///');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/');
+    }
+    
+    function testUnixUrl() {
+        $url = new SimpleUrl('file:///fileInRoot');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/fileInRoot');
+    }
+    
+    function testDOSVolumeUrl() {
+        $url = new SimpleUrl('file:///C:/config.sys');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/C:/config.sys');
+    }
+    
+    function testDOSVolumePromotion() {
+        $url = new SimpleUrl('file://C:/config.sys');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/C:/config.sys');
+    }
+    
+    function testDOSBackslashes() {
+        $url = new SimpleUrl('file:///C:\config.sys');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/C:/config.sys');
+    }
+    
+    function testDOSDirnameAfterFile() {
+        $url = new SimpleUrl('file://C:\config.sys');
+        $this->assertEqual($url->getScheme(), 'file');
+        $this->assertIdentical($url->getHost(), false);
+        $this->assertEqual($url->getPath(), '/C:/config.sys');
+    }
+    
+}
+
 ?>
