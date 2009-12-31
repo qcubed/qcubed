@@ -1,4 +1,18 @@
 <?php
+	/**
+	 * This file contains the QDateTimeTextBox class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property QDateTime $Maximum
+	 * @property QDateTime $Minimum
+	 * @property-read QDateTime $DateTime
+	 * @property string $LabelForInvalid
+	 */
 	class QDateTimeTextBox extends QTextBox {
 		///////////////////////////
 		// Private Member Variables

@@ -1,4 +1,10 @@
 <?php
+	/**
+	 * This file contains the QDropZoneGrouping class.
+	 *
+	 * @package Controls
+	 */
+
 	class QDropZoneGrouping extends QControlGrouping {
 		protected $blnAllowSelf;
 		protected $blnAllowSelfParent;

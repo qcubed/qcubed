@@ -1,8 +1,21 @@
 <?php
-	// This class will render an HTML ImageButton <input type="image">.
-	// * "AlternateText" is rendered as the HTML "alt" tag.
-	// * "ImageUrl" is the url of the image to be used.
+	/**
+	 * This file contains the QImageButton class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class will render an HTML ImageButton <input type="image">.
+	 *
+	 * @package Controls
+	 *
+	 * @property string $AlternateText is rendered as the HTML "alt" tag
+	 * @property string $ImageUrl is the url of the image to be used
+	 * @property boolean $PrimaryButton
+	 * @property-read integer $ClickX
+	 * @property-read integer $ClickY
+	 */
 	class QImageButton extends QActionControl {
 		///////////////////////////
 		// Private Member Variables

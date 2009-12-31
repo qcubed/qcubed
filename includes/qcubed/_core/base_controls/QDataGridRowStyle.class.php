@@ -1,9 +1,34 @@
 <?php
-	// This defines a the stle for a row <tr> for a DataGrid
-	// All the appearance properties should be self-explanatory.
+	/**
+	 * This file contains the QDataGridRowStyle class.
+	 *
+	 * @package Controls
+	 */
 
-	// For more information about DataGrid appearance, please see DataGrid.inc
-	
+	/**
+	 * This defines a the stle for a row <tr> for a DataGrid
+	 * All the appearance properties should be self-explanatory.
+	 *
+	 * @package Controls
+	 *
+	 * @property string $BackColor sets the CSS background-color of the control
+	 * @property string $BorderColor sets the CSS border-color of the control
+	 * @property string $BorderStyle is used to set CSS border-style by {@link QBorderStyle}
+	 * @property string $BorderWidth sets the CSS border-width of the control
+	 * @property string $CssClass sets or returns the CSS class for this control
+	 * @property boolean $FontBold sets the font bold or normal
+	 * @property boolean $FontItalic sets the Font italic or normal
+	 * @property string $FontNames sets the name of used fonts
+	 * @property boolean $FontOverline
+	 * @property string $FontSize sets the font-size of the control
+	 * @property boolean $FontStrikeout
+	 * @property boolean $FontUnderline sets the font underlined
+	 * @property string $ForeColor sets the forecolor of the control (like fontcolor)
+	 * @property string $Height
+	 * @property string $HorizontalAlign
+	 * @property string $VerticalAlign
+	 * @property boolean $Wrap
+	 */
 	class QDataGridRowStyle extends QBaseClass {
 		protected $strBackColor = null;
 		protected $strBorderColor = null;

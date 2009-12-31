@@ -1,6 +1,27 @@
 <?php
-	// This class will render an Image Control of any image file in the system
+	/**
+	 * This file contains the QImageControlBase class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class will render an Image Control of any image file in the system
+	 *
+	 * @package Controls
+	 *
+	 * @property boolean $ScaleCanvasDown
+	 * @property boolean $ScaleImageUp
+	 * @property string $ImageType
+	 * @property integer $Quality
+	 * @property string $CacheFolder
+	 * @property string $CacheFilename
+	 * @property string $ImagePath
+	 * @property string $AlternateText
+	 * @property-write string $BackColor
+	 * @property-write string $Width
+	 * @property-write string $Height
+	 */
 	abstract class QImageControlBase extends QControl {
 		///////////////////////////
 		// Private Member Variables

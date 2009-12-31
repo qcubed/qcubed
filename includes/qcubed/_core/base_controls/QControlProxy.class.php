@@ -1,4 +1,13 @@
 <?php
+	/**
+	 * This file contains the QControlProxy class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 */
 	class QControlProxy extends QControl {
 		public function GetControlHtml() {
 			throw new QCallerException('QControlProxies cannot be rendered.  Use RenderAsEvents() within an HTML tag.');

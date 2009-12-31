@@ -1,9 +1,23 @@
 <?php
-	// This class is meant to be a date-picker.  It will essentially render an uneditable HTML textbox
-	// as well as a calendar icon.  The idea is that if you click on the icon or the textbox,
-	// it will pop up a calendar in a new small window.
-	// * "Date" is a Date object for the specified date.
+	/**
+	 * This file contains the QDateTimePicker class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class is meant to be a date-picker.  It will essentially render an uneditable HTML textbox
+	 * as well as a calendar icon.  The idea is that if you click on the icon or the textbox,
+	 * it will pop up a calendar in a new small window.
+	 *
+	 * @package Controls
+	 *
+	 * @property mixed $DateTime
+	 * @property string $DateTimePickerType
+	 * @property string $DateTimePickerFormat
+	 * @property integer $MinimumYear
+	 * @property integer $MaximumYear
+	 */
 	class QDateTimePicker extends QControl {
 		///////////////////////////
 		// Private Member Variables

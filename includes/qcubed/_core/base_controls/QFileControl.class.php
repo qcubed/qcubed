@@ -1,10 +1,20 @@
 <?php
-	// This class will render an HTML File input.
-	// * "FileName" is the name of the file that the user uploads
-	// * "Type" is the MIME type of the file
-	// * "Size" is the size in bytes of the file
-	// * "File" is the temporary full file path on the server where the file physically resides
+	/**
+	 * This file contains the QFileControl class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class will render an HTML File input.
+	 *
+	 * @package Controls
+	 *
+	 * @property-read string $FileName is the name of the file that the user uploads
+	 * @property-read string $Type is the MIME type of the file
+	 * @property-read integer $Size is the size in bytes of the file
+	 * @property-read string $File is the temporary full file path on the server where the file physically resides
+	 */
 	class QFileControl extends QControl {
 		///////////////////////////
 		// Private Member Variables

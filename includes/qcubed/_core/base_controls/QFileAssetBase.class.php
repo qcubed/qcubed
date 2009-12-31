@@ -1,4 +1,25 @@
 <?php
+	/**
+	 * This file contains the QFileAssetBase class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property string $File
+	 * @property string $FileName
+	 * @property-read string $RandomFileName
+	 * @property string $UnacceptableMessage
+	 * @property integer $FileAssetType
+	 * @property string $TemporaryUploadPath
+	 * @property boolean $ClickToView
+	 * @property string $DialogBoxCssClass
+	 * @property string $UploadText
+	 * @property string $CancelText
+	 * @property string $DialogBoxHtml
+	 */
 	class QFileAssetBase extends QPanel {
 		public $imgFileIcon;
 		public $btnDelete;

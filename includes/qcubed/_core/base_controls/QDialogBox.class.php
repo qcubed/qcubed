@@ -1,4 +1,18 @@
 <?php
+	/**
+	 * This file contains the QDialogBox class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property string $MatteColor
+	 * @property string $MatteOpacity
+	 * @property string $MatteClickable
+	 * @property string $AnyKeyCloses
+	 */
 	class QDialogBox extends QPanel {
 		protected $strPosition = QPosition::Absolute;
 		protected $strJavaScripts = 'control_dialog.js';

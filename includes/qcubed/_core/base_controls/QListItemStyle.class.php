@@ -20,11 +20,36 @@
 	 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 	 */
 
-	// This defines the style for an Item for a ListBox
-	// All the appearance properties should be self-explanatory.
+	/**
+	 * This file contains the QListItemStyle class.
+	 *
+	 * @package Controls
+	 */
 
-	// For more information about ListItem appearance, please see QListItem.class.php
-	
+	/**
+	 * This defines the style for an Item for a ListBox
+	 * All the appearance properties should be self-explanatory.
+	 *
+	 * For more information about ListItem appearance, please see QListItem.class.php
+	 *
+	 * @package Controls
+	 *
+	 * @property string $BackColor
+	 * @property string $BorderColor
+	 * @property string $BorderStyle
+	 * @property string $BorderWidth
+	 * @property string $CssClass
+	 * @property boolean $FontBold
+	 * @property boolean $FontItalic
+	 * @property string $FontNames
+	 * @property boolean $FontOverline
+	 * @property string $FontSize
+	 * @property boolean $FontStrikeout
+	 * @property boolean $FontUnderline
+	 * @property string $ForeColor
+	 * @property string $Height
+	 * @property string $Width
+	 */
 	class QListItemStyle extends QBaseClass {
 		
 		protected $strBackColor = null;

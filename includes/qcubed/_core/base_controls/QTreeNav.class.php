@@ -1,4 +1,26 @@
 <?php
+	/**
+	 * This file contains the QTreeNav class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property mixed $SelectedItem
+	 * @property-read mixed $SelectedValue
+	 * @property-read mixed $ChildItemArray
+	 * @property mixed $ItemArray
+	 * @property string $ItemCssStyle
+	 * @property string $ItemSelectedCssStyle
+	 * @property string $ItemHoverCssStyle
+	 * @property integer $IndentWidth
+	 * @property integer $ItemHeight
+	 * @property integer $ItemWidth
+	 * @property boolean $ExpandOnSelect
+	 * @property-write mixed $ItemExpanded
+	 */
 	class QTreeNav extends QControl {
 		protected $strJavaScripts = 'treenav.js';
 

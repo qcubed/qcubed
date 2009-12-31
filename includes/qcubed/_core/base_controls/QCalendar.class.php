@@ -1,4 +1,17 @@
 <?php
+	/**
+	 * This file contains the QCalendar class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * This class will render an HTML Button.
+	 *
+	 * @package Controls
+	 *
+	 * @property string $CalendarImageSource
+	 */
 	class QCalendar extends QControl {
 		protected $dtxLinkedControl;
 		protected $strCalendarImageSource;

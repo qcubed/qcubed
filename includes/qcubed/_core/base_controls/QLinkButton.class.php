@@ -1,11 +1,22 @@
 <?php
-	// This class will render an HTML link <a href>, but will act like a Button or ImageButton.
-	// (it is a subclass of actioncontrol)
-	// Therefore, you cannot define a "URL/HREF" destination for this LinkButton.  It simply links
-	// to "#".  And then if a ClientAction is defined, it will execute that when clicked.  If a ServerAction
-	// is defined, it will execute PostBack and execute that when clicked.
-	// * "Text" is the text of the Link
+	/**
+	 * This file contains the QLinkButton class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class will render an HTML link <a href>, but will act like a Button or ImageButton.
+	 * (it is a subclass of actioncontrol)
+	 * Therefore, you cannot define a "URL/HREF" destination for this LinkButton.  It simply links
+	 * to "#".  And then if a ClientAction is defined, it will execute that when clicked.  If a ServerAction
+	 * is defined, it will execute PostBack and execute that when clicked.
+	 *
+	 * @package Controls
+	 *
+	 * @property string $Text is the text of the Link
+	 * @property string $HtmlEntities
+	 */
 	class QLinkButton extends QActionControl {
 		///////////////////////////
 		// Private Member Variables

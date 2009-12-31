@@ -1,13 +1,9 @@
 <?php
-	// This defines a specific column <td> for a DataGrid
-	// All the appearance properties should be self-explanatory.
-	
-	// The SortByCommand and ReverseSortByCommand are both optional -- and are explained in more
-	// depth in DataGrid.inc
-	
-	// "Name" is the name of the column, as displayed in the DataGrid's header row for that column
-	// "Html" is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to
-	// deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
+	/**
+	 * This file contains the QDataGridColumn and QFilterType class.
+	 *
+	 * @package Controls
+	 */
 
 	abstract class QFilterType {
 		const None = '';
@@ -15,7 +11,49 @@
 		const ListFilter = 'List';
 	}
 
-
+	/**
+	 * This defines a specific column <td> for a DataGrid
+	 * All the appearance properties should be self-explanatory.
+	 *
+	 * The SortByCommand and ReverseSortByCommand are both optional -- and are explained in more
+	 * depth in DataGrid.inc
+	 *
+	 * @package Controls
+	 *
+	 * @property string $BackColor
+	 * @property string $BorderColor
+	 * @property string $BorderStyle
+	 * @property string $BorderWidth
+	 * @property string $CssClass
+	 * @property boolean $FontBold
+	 * @property boolean $FontItalic
+	 * @property string $FontNames
+	 * @property boolean $FontOverline
+	 * @property string $FontSize
+	 * @property boolean $FontStrikeout
+	 * @property boolean $FontUnderline
+	 * @property string $ForeColor
+	 * @property string $HorizontalAlign
+	 * @property string $VerticalAlign
+	 * @property string $Width
+	 * @property boolean $Wrap
+	 * @property mixed $OrderByClause
+	 * @property mixed $ReverseOrderByClause
+	 * @property mixed $FilterByCommand
+	 * @property integer $FilterBoxSize
+	 * @property string $FilterType
+	 * @property mixed $FilterList
+	 * @property integer $FilterColId
+	 * @property string $FilterPrefix
+	 * @property string $FilterPostfix
+	 * @property mixed $FilterConstant
+	 * @property mixed $Filter
+	 * @property mixed $SortByCommand
+	 * @property mixed $ReverseSortByCommand
+	 * @property string $Html is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
+	 * @property string $Name is the name of the column, as displayed in the DataGrid's header row for that column
+	 * @property boolean $HtmlEntities
+	 */
 	class QDataGridColumn extends QBaseClass {
 		// APPEARANCE
 		protected $strBackColor = null;

@@ -1,4 +1,18 @@
 <?php
+	/**
+	 * This file contains the QDataRepeater class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property string $Template
+	 * @property-read integer $CurrentItemIndex
+	 * @property string $TagName
+	 *
+	 */
 	class QDataRepeater extends QPaginatedControl {
 		///////////////////////////
 		// Private Member Variables

@@ -1,4 +1,23 @@
 <?php
+	/**
+	 * This file contains the QTreeNavItem class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property string $Name
+	 * @property string $Value
+	 * @property boolean $Selected
+	 * @property boolean $Expanded
+	 * @property mixed $ChildItemArray
+	 * @property string $ItemId
+	 * @property mixed $TreeNav
+	 * @property string $ParentItemId
+	 * @property boolean $HasChildren
+	 */
 	class QTreeNavItem extends QBaseClass {
 		///////////////////////////
 		// Private Member Variables

@@ -1,4 +1,20 @@
 <?php
+	/**
+	 * This file contains the QFormBase class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property-read string $FormId
+	 * @property-read string $CallType
+	 * @property-read string $DefaultWaitIcon
+	 * @property-read integer $FormStatus
+	 * @property string $HtmlIncludeFilePath
+	 * @property string $CssClass
+	 */
 	abstract class QFormBase extends QBaseClass {
 		///////////////////////////
 		// Protected Member Variables

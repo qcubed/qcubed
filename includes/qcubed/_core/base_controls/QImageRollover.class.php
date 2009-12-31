@@ -1,4 +1,18 @@
 <?php
+	/**
+	 * This file contains the QImageRollover class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property mixed $ImageStandard
+	 * @property mixed $ImageHover
+	 * @property string $AltText
+	 * @property string $LinkUrl
+	 */
 	class QImageRollover extends QControl {
 		///////////////////////////
 		// Private Member Variables

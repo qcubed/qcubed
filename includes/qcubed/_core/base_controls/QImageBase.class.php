@@ -1,4 +1,19 @@
 <?php
+	/**
+	 * This file contains the QImageBase class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property string $CacheFolder
+	 * @property string $CacheFilename
+	 * @property string $AlternateText
+	 * @property string $ImageType
+	 * @property integer $JpegQuality
+	 */
 	abstract class QImageBase extends QControl {
 		///////////////////////////
 		// Private Member Variables

@@ -1,4 +1,19 @@
 <?php
+	/**
+	 * This file contains the QWaitIcon class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property string $Text
+	 * @property string $TagName
+	 * @property string $Padding
+	 * @property string $HorizontalAlign
+	 * @property string $VerticalAlign
+	 */
 	class QWaitIcon extends QControl {
 		///////////////////////////
 		// Private Member Variables

@@ -1,5 +1,21 @@
 <?php
-	// Paginator Class
+	/**
+	 * This file contains the QPaginatorBase class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 * 
+	 * @property integer $ItemsPerPage is how many items you want to display per page when Pagination is enabled
+	 * @property integer $PageNumber is the current page number you are viewing
+	 * @property integer $TotalItemCount is the total number of items in the ENTIRE recordset -- only used when Pagination is enabled
+	 * @property boolean $UseAjax
+	 * @property-read integer $PageCount
+	 * @property mixed $WaitIcon
+	 * @property-read mixed $PaginatedControl
+	 */
 	abstract class QPaginatorBase extends QControl {
 		///////////////////////////
 		// Private Member Variables

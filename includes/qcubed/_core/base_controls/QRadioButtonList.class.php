@@ -1,25 +1,45 @@
 <?php
-	// This class will render a List of HTML Radio Buttons (inhereting from ListControl).
-	// By definition, radio button lists are single-select ListControls.
+	// 
+	// 
 	// * "TextAlign" specifies if each ListItem's Name should be displayed to the left or to the right of the radio button.
 	// * "CellPadding" specified the HTML Table's CellPadding
 	// * "CellSpacing" specified the HTML Table's CellSpacing
 	// * "RepeatColumn" specifies how many columns should be rendered in the HTML Table
 	// * "RepeatDirection" specifies which direction should the list go first...
 
-	// So assuming you have a list of 10 items, and you have RepeatColumn set to 3:
-	//	RepeatDirection::Horizontal would render as:
-	//	1	2	3
-	//	4	5	6
-	//	7	8	9
-	//	10
-	//
-	//	RepeatDirection::Vertical would render as:
-	//	1	5	8
-	//	2	6	9
-	//	3	7	10
-	//	4
+	/**
+	 * This file contains the QRadioButtonList class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class will render a List of HTML Radio Buttons (inhereting from ListControl).
+	 * By definition, radio button lists are single-select ListControls.
+	 *
+	 * So assuming you have a list of 10 items, and you have RepeatColumn set to 3:
+	 *
+	 *	RepeatDirection::Horizontal would render as:
+	 *	1	2	3
+	 *	4	5	6
+	 *	7	8	9
+	 *	10
+	 *
+	 *	RepeatDirection::Vertical would render as:
+	 *	1	5	8
+	 *	2	6	9
+	 *	3	7	10
+	 *	4
+	 *
+	 * @package Controls
+	 *
+	 * @property string $TextAlign
+	 * @property boolean $HtmlEntities
+	 * @property integer $CellPadding
+	 * @property integer $CellSpacing
+	 * @property integer $RepeatColumns
+	 * @property string $RepeatDirection
+	 */
 	class QRadioButtonList extends QListControl {
 		///////////////////////////
 		// Private Member Variables

@@ -1,4 +1,27 @@
 <?php
+	/**
+	 * This file contains the QPaginatedControl and QDataBindException class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property string $Noun
+	 * @property string $NounPlural
+	 * @property QPaginatorBase $Paginator
+	 * @property QPaginatorBase $PaginatorAlternate
+	 * @property boolean $UseAjax
+	 * @property integer $ItemsPerPage is how many items you want to display per page when Pagination is enabled
+	 * @property integer $TotalItemCount is the total number of items in the ENTIRE recordset -- only used when Pagination is enabled
+	 * @property mixed $DataSource is an array of anything.  THIS MUST BE SET EVERY TIME (DataSource does NOT persist from postback to postback
+	 * @property-read mixed $LimitClause
+	 * @property-read mixed $LimitInfo is what should be passed in to the LIMIT clause of the sql query that retrieves the array of items from the database
+	 * @property-read integer $ItemCount
+	 * @property integer $PageNumber is the current page number you are viewing
+	 * @property-read integer $PageCount
+	 */
 	abstract class QPaginatedControl extends QControl {
 		// APPEARANCE
 		protected $strNoun;
@@ -260,6 +283,11 @@
 		}
 	}
 
+	/**
+	 * @property-read integer $Offset
+	 * @property-read mixed $BackTrace
+	 * @property-read string $Query
+	 */
 	class QDataBindException extends Exception {
 		private $intOffset;
 		private $strTraceArray;

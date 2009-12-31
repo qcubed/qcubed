@@ -1,22 +1,34 @@
 <?php
-	// This class will render an HTML Textbox -- which can either be <input type="text">,
-	// <input type="password"> or <textarea> depending on the TextMode (see below).
-	// * "Columns" is the "cols" html attribute (applicable for MultiLine textboxes)
-	// * "Text" is the contents of the textbox, itself
-	// * "MaxLength" is the "maxlength" html attribute (applicable for SingleLine textboxes)
-	// * "MinLength" is the minimum requred length to pass validation
-	// * "ReadOnly" is the "readonly" html attribute (making a textbox "ReadOnly" is very similar to setting
-	//   the textbox to Enabled=false.  There are only subtle display-differences, I believe, between the two.
-	// * "Rows" is the "rows" html attribute (applicable for MultiLine textboxes)
-	// * "TextMode" can be "SingleLine", "MultiLine", and "Password".
-	// * "Wrap" is the "wrap" html attribute (applicable for MultiLine textboxes)
-	//
-	// * "CrossScripting" can be Allow, HtmlEntities, or Deny.  Deny is the default.
-	//   Prevents cross scripting hacks.  HtmlEntities causes framework to automatically call php
-	//   function htmlentities on the input data.  Allow allows everything to come through without altering
-	//   at all.  USE "ALLOW" judiciously: using ALLOW on text entries, and then outputting that data
-	//   WILL allow hackers to perform cross scripting hacks.
+	/**
+	 * This file contains the QTextBoxBase and QCrossScriptingException class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class will render an HTML Textbox -- which can either be <input type="text">,
+	 * <input type="password"> or <textarea> depending on the TextMode (see below).
+	 *
+	 * @package Controls
+	 *
+	 * @property integer $Columns is the "cols" html attribute (applicable for MultiLine textboxes)
+	 * @property string $Format
+	 * @property string $Text is the contents of the textbox, itself
+	 * @property string $LabelForRequired
+	 * @property string $LabelForRequiredUnnamed
+	 * @property string $LabelForTooShort
+	 * @property string $LabelForTooShortUnnamed
+	 * @property string $LabelForTooLong
+	 * @property string $LabelForTooLongUnnamed
+	 * @property string $CrossScripting can be Allow, HtmlEntities, or Deny.  Deny is the default. Prevents cross scripting hacks.  HtmlEntities causes framework to automatically call php function htmlentities on the input data.  Allow allows everything to come through without altering at all.  USE "ALLOW" judiciously: using ALLOW on text entries, and then outputting that data WILL allow hackers to perform cross scripting hacks.
+	 * @property integer $MaxLength is the "maxlength" html attribute (applicable for SingleLine textboxes)
+	 * @property integer $MinLength is the minimum requred length to pass validation
+	 * @property boolean $ReadOnly is the "readonly" html attribute (making a textbox "ReadOnly" is very similar to setting the textbox to Enabled=false.  There are only subtle display-differences, I believe, between the two.
+	 * @property integer $Rows is the "rows" html attribute (applicable for MultiLine textboxes)
+	 * @property string $TextMode can be "SingleLine", "MultiLine", and "Password".
+	 * @property boolean $ValidateTrimmed
+	 * @property boolean $Wrap is the "wrap" html attribute (applicable for MultiLine textboxes)
+	 */
 	abstract class QTextBoxBase extends QControl {
 		///////////////////////////
 		// Private Member Variables

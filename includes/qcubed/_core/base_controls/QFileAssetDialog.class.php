@@ -1,4 +1,10 @@
 <?php
+	/**
+	 * This file contains the QFileAssetDialog class.
+	 *
+	 * @package Controls
+	 */
+
 	class QFileAssetDialog extends QDialogBox {
 		public $lblMessage;
 		public $flcFileAsset;

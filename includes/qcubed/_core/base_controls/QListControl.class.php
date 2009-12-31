@@ -4,39 +4,21 @@
 	 * 
 	 * @package Controls
 	 */
+
 	/**
 	 * Abstract object which is extended by anything which involves lists of selectable items.
 	 * 
 	 * This object is the foundation for the ListBox, CheckBoxList, RadioButtonList 
 	 * and TreeNav. 
 	 * 
-	 * @property integer $ItemCount 
-	 * 						the current count of ListItems in the control.
-	 * @property integer $SelectedIndex 
-	 * 						is the index number of the control that is selected. 
-	 * 					 	"-1" means that nothing is selected. If multiple items 
-	 * 						are selected, it will return the lowest index number of all 
-	 * 						ListItems that are currently selected. 
-	 * 
-	 * 						Set functionality: selects that specific ListItem and will unselect all other 
-	 *            currently selected ListItems.
-	 * @property string $SelectedName 
-	 * 						simply returns ListControl::SelectedItem->Name, or null 
-	 * 						if nothing is selected.
-	 * @property-read QListItem $SelectedItem 
-	 * 						(readonly!) returns the ListItem object, itself, that is selected
-	 * 						(or the ListItem with the lowest index number of a ListItems that 
-	 * 						are currently selected if multiple items are selected).  
-	 * 						It will return null if nothing is selected.
-	 * @property-read array $SelectedItems
-	 * 						returns an array of selected ListItems (if any).
-	 * @property mixed $SelectedValue
-	 * 						simply returns ListControl::SelectedItem->Value, or null
-	 * 						if nothing is selected.
-	 * @property array $SelectedNames 
-	 * 						returns an array of all selected names
-	 * @property array $SelectedValues 
-	 * 						returns an array of all selected values
+	 * @property integer $ItemCount the current count of ListItems in the control.
+	 * @property integer $SelectedIndex is the index number of the control that is selected. "-1" means that nothing is selected. If multiple items are selected, it will return the lowest index number of all ListItems that are currently selected. Set functionality: selects that specific ListItem and will unselect all other currently selected ListItems.
+	 * @property string $SelectedName simply returns ListControl::SelectedItem->Name, or null if nothing is selected.
+	 * @property-read QListItem $SelectedItem (readonly!) returns the ListItem object, itself, that is selected (or the ListItem with the lowest index number of a ListItems that are currently selected if multiple items are selected). It will return null if nothing is selected.
+	 * @property-read array $SelectedItems returns an array of selected ListItems (if any).
+	 * @property mixed $SelectedValue simply returns ListControl::SelectedItem->Value, or null if nothing is selected.
+	 * @property array $SelectedNames returns an array of all selected names
+	 * @property array $SelectedValues returns an array of all selected values
 	 * @package Controls
 	 */
 	abstract class QListControl extends QControl {

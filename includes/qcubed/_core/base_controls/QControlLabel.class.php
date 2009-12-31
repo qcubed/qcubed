@@ -1,4 +1,17 @@
 <?php
+	/**
+	 * This file contains the QControlLabel class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property string $Text
+	 * @property string $ForControlId
+	 * @property-write mixed $ForControl
+	 */
 	class QControlLabel extends QControl {
 		///////////////////////////
 		// Private Member Variables

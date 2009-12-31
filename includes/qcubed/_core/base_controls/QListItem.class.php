@@ -3,14 +3,13 @@
 	 * QListItem.class.php contains the QListItem class
 	 * @package Controls
 	 */
+	 
 	/**
 	 * Utilized by the {@link QListControl} class which contains a private array of ListItems.
 	 * @package Controls
 	 * @property string $Name is what gets displayed
 	 * @property string $Value is any text that represents the value of the ListItem (e.g. maybe a DB Id)
-	 * @property boolean $Selected is a boolean of whether or not this item is selected or not 
-	 * 					 (do only! use during initialization, otherwise this should be set 
-	 * 					  by the {@link QListControl}!)
+	 * @property boolean $Selected is a boolean of whether or not this item is selected or not (do only! use during initialization, otherwise this should be set by the {@link QListControl}!)
 	 * @property string $ItemGroup is the group (if any) in which the Item should be displayed 
 	 * @property QListItemStyle $ItemStyle is the QListItemStyle in which the Item should be rendered (set by 
 	 */

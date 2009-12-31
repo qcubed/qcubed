@@ -1,7 +1,38 @@
 <?php
-	// This class will render an Image/Bitmapped version of any Text string
-	// * "Text" is the Text that you want rendered as an image
+	/**
+	 * This file contains the QImageLabelBase class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class will render an Image/Bitmapped version of any Text string
+	 *
+	 * @package Controls
+	 *
+	 * @property string $Text is the Text that you want rendered as an image
+	 * @property integer $XCoordinate
+	 * @property integer $YCoordinate
+	 * @property boolean $BackgroundTransparent
+	 * @property string $ImageType
+	 * @property integer $Quality
+	 * @property boolean $SmoothFont
+	 * @property string $HorizontalAlign
+	 * @property string $VerticalAlign
+	 * @property integer $PaddingWidth
+	 * @property integer $PaddingHeight
+	 * @property integer $Space
+	 * @property integer $Tightness
+	 * @property integer $Angle
+	 * @property string $CacheFolder
+	 * @property-read string $CachedImageFilePath
+	 * @property-write string $ForeColor
+	 * @property-write string $BackColor
+	 * @property-write integer $FontSize
+	 * @property-write integer $Width
+	 * @property-write integer $Height
+	 * @property-write string $FontNames
+	 */
 	abstract class QImageLabelBase extends QControl {
 		///////////////////////////
 		// Private Member Variables

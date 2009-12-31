@@ -14,99 +14,55 @@
 	 * 
 	 * @package Controls
 	 * 
-	 * @property string $AccessKey 
-	 * 			allows you to specify what Alt-Letter combination will automatically focus that
-	 * 			control on the form
+	 * @property string $AccessKey allows you to specify what Alt-Letter combination will automatically focus that control on the form
 	 * @property boolean $ActionsMustTerminate
-	 * @property string $ActionParameter
-	 * 			This property allows you to pass your own parameters to the handlers for actions applied to this
-	 * 			control.
-	 * @property string $BackColor 
-	 * 			sets the CSS background-color of the control
-	 * @property string $BorderColor 
-	 * 			sets the CSS border-color of the control
-	 * @property string $BorderWidth 
-	 * 			sets the CSS border-width of the control
-	 * @property string $BorderStyle 
-	 * 			is used to set CSS border-style by {@link QBorderStyle}
-	 * @property mixed $CausesValidation 
-	 * 			flag says whether or not the form should run through its validation routine if this
-	 * 			control has an action defined and is acted upon
-	 * @property-read string $ControlId 
-	 * 			returns the id of this control
-	 * @property string $CssClass 
-	 * 			sets or returns the CSS class for this control
+	 * @property string $ActionParameter This property allows you to pass your own parameters to the handlers for actions applied to this control.
+	 * @property string $BackColor sets the CSS background-color of the control
+	 * @property string $BorderColor sets the CSS border-color of the control
+	 * @property string $BorderWidth sets the CSS border-width of the control
+	 * @property string $BorderStyle is used to set CSS border-style by {@link QBorderStyle}
+	 * @property mixed $CausesValidation flag says whether or not the form should run through its validation routine if this control has an action defined and is acted upon
+	 * @property-read string $ControlId returns the id of this control
+	 * @property string $CssClass sets or returns the CSS class for this control
 	 * @property string $Cursor is used to set CSS cursor property by {@link QCursor}
-	 * @property boolean $Display 
-	 * 			shows or hides the control using the CSS display property.  In either case, the control is still 
-	 * 			rendered on the page.  See the Visible property if you wish to not render a control.
-	 * @property string $DisplayStyle 
-	 * 			is used to set CSS display property by {@link QDisplayStyle}
-	 * @property boolean $Enabled
-	 * 		specifies whether or not this is enabled (it will grey out the control and make it
-	 * 		inoperable if set to true)
-	 * @property boolean $FontBold 
-	 * 			sets the font bold or normal
-	 * @property boolean $FontItalic 
-	 * 			sets the Font italic or normal
-	 * @property string $FontNames 
-	 * 			sets the name of used fonts
+	 * @property boolean $Display shows or hides the control using the CSS display property.  In either case, the control is still rendered on the page. See the Visible property if you wish to not render a control.
+	 * @property string $DisplayStyle is used to set CSS display property by {@link QDisplayStyle}
+	 * @property boolean $Enabled specifies whether or not this is enabled (it will grey out the control and make it inoperable if set to true)
+	 * @property boolean $FontBold sets the font bold or normal
+	 * @property boolean $FontItalic sets the Font italic or normal
+	 * @property string $FontNames sets the name of used fonts
 	 * @property boolean $FontOverline 
-	 * @property string $FontSize 
-	 * 			sets the font-size of the control
+	 * @property string $FontSize sets the font-size of the control
 	 * @property boolean $FontStrikeout  
-	 * @property boolean $FontUnderline 
-	 * 			sets the font underlined
-	 * @property string $ForeColor 
-	 * 			sets the forecolor of the control (like fontcolor)
-	 * @property-read QForm $Form 
-	* 			returns the parent form object
-	* 			@property-read string $FormAttributes
+	 * @property boolean $FontUnderline sets the font underlined
+	 * @property string $ForeColor sets the forecolor of the control (like fontcolor)
+	 * @property-read QForm $Form returns the parent form object
+	 * @property-read string $FormAttributes
 	 * @property string $Height
-	 * @property string $HtmlAfter
-	 * 			HTML that is shown after the control {@link QControl::RenderWithName}
-	 * @property string $HtmlBefore
-	 * 			HTML that is shown before the control {@link QControl::RenderWithName}
-	 * @property string $Instructions
-	 * 			instructions that is shown next to the control's name label 
-	 * 			{@link QControl::RenderWithName}
+	 * @property string $HtmlAfter HTML that is shown after the control {@link QControl::RenderWithName}
+	 * @property string $HtmlBefore HTML that is shown before the control {@link QControl::RenderWithName}
+	 * @property string $Instructions instructions that is shown next to the control's name label {@link QControl::RenderWithName}
 	 * @property-read string $JavaScripts
 	 * @property string $Left CSS left property
-	 * @property-read boolean $Modified 
-	 * 			indicates if the control has been changed. Used to tell Qcubed to rerender the control or not (Ajax calls).
+	 * @property-read boolean $Modified indicates if the control has been changed. Used to tell Qcubed to rerender the control or not (Ajax calls).
 	 * @property boolean $Moveable
-	 * @property string $Name 
-	 * 			sets the Name of the Control (see {@link QControl::RenderWithName})
-	 * @property-read boolean $OnPage
-	 * 			is true if the control is connected to the form
-	 * @property integer $Opacity 
-	 * 			sets the opacity of the control (0-100)
+	 * @property string $Name sets the Name of the Control (see {@link QControl::RenderWithName})
+	 * @property-read boolean $OnPage is true if the control is connected to the form
+	 * @property integer $Opacity sets the opacity of the control (0-100)
 	 * @property string $Overflow is used to set CSS overflow property by {@link QOverflow}
-	 * @property-read QForm|QControl $ParentControl 
-	 * 			returns the parent control
+	 * @property-read QForm|QControl $ParentControl returns the parent control
 	 * @property string $Position is used to set CSS position property by {@link QPosition}
 	 * @property-read boolean $Rendered
 	 * @property-read boolean $Rendering
-	 * @property-read string $RenderMethod
-	 * 			carries the name of the function, which were initially used for rendering
-	 * @property boolean $Required
-	 * 			specifies whether or not this is required (will cause a validation error if the form
-	 * 			is trying to be validated and this control is left blank)
+	 * @property-read string $RenderMethod carries the name of the function, which were initially used for rendering
+	 * @property boolean $Required specifies whether or not this is required (will cause a validation error if the form is trying to be validated and this control is left blank)
 	 * @property-read string $StyleSheets
-	 * @property integer $TabIndex
-	 * 			specifies the index/tab order on a form
-	 * @property string $ToolTip
-	 * 			specifies the text to be displayed when the mouse is hovering over the control
+	 * @property integer $TabIndex specifies the index/tab order on a form
+	 * @property string $ToolTip specifies the text to be displayed when the mouse is hovering over the control
 	 * @property string $Top
-	 * @property-read string $ValidationError 
-	 * 			is the string that contains the validation error (if applicable) or will be blank if
-	 * 			(1) the form did not undergo its validation routine or (2) this control had no error
-	 * @property boolean $Visible
-	 * 			specifies whether or not the control should be rendered in the page.  This is in contrast to
-	 * 			Display, which will just hide the control via CSS styling.
-	 * @property string $Warning
-	 * 			is warning text (looks like an error, but it can be user defined) that will be 
-	 * 			shown next to the control's name label {@link QControl::RenderWithName}
+	 * @property-read string $ValidationError is the string that contains the validation error (if applicable) or will be blank if (1) the form did not undergo its validation routine or (2) this control had no error
+	 * @property boolean $Visible specifies whether or not the control should be rendered in the page.  This is in contrast to Display, which will just hide the control via CSS styling.
+	 * @property string $Warning is warning text (looks like an error, but it can be user defined) that will be shown next to the control's name label {@link QControl::RenderWithName}
 	 * @property string $Width
 	 * @property-read boolean $WrapperModified
 	 * 

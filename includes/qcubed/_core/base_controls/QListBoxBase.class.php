@@ -13,8 +13,7 @@
 	 * @property string $LabelForRequired 
 	 * @property string $LabelForRequiredUnnamed
 	 * @property string $ItemStyle {@link QListItemStyle} 
-	 * @property string $SelectionMode {@link QSelectionMode}
-	 * 		specifies if this is a "Single" or "Multiple" select control. 
+	 * @property string $SelectionMode {@link QSelectionMode} specifies if this is a "Single" or "Multiple" select control.
 	 * @see QListItemStyle
 	 * @see QSelectionMode
 	 * @package Controls

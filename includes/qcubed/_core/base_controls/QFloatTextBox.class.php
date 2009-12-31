@@ -1,9 +1,22 @@
 <?php
-	// A subclass of TextBox with its validate method overridden -- Validate will also ensure
-	// that the Text is a valid integer and (if applicable) is in the range of Minimum <= x <= Maximum
-	// * "Maximum" (optional) is the maximum value the integer can be
-	// * "Minimum" (optional) is the minimum value the integer can be
+	/**
+	 * This file contains the QFloatTextBox class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * A subclass of TextBox with its validate method overridden -- Validate will also ensure
+	 * that the Text is a valid integer and (if applicable) is in the range of Minimum <= x <= Maximum
+	 *
+	 * @package Controls
+	 *
+	 * @property float $Maximum (optional) is the maximum value the integer can be
+	 * @property float $Minimum (optional) is the minimum value the integer can be
+	 * @property string $LabelForInvalid
+	 * @property string $LabelForGreater
+	 * @property string $LabelForLess
+	 */
 	class QFloatTextBox extends QTextBox {
 		///////////////////////////
 		// Private Member Variables

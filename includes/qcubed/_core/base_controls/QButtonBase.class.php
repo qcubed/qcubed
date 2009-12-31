@@ -1,9 +1,19 @@
 <?php
-	// This class will render an HTML Button.
-	// * "Text" is used to display the button's text.
-	// * "PrimaryButton" is a boolean to specify whether or not the button is
-	//   'primary' (e.g. makes this button a "Submit" form element rather than a "Button" form element)
+	/**
+	 * This file contains the QButtonBase class.
+	 *
+	 * @package Controls
+	 */
 
+	/**
+	 * This class will render an HTML Button.
+	 *
+	 * @package Controls
+	 *
+	 * @property string $Text is used to display the button's text
+	 * @property boolean $PrimaryButton is a boolean to specify whether or not the button is 'primary' (e.g. makes this button a "Submit" form element rather than a "Button" form element)
+	 * @property boolean $HtmlEntities
+	 */
 	abstract class QButtonBase extends QActionControl {
 		///////////////////////////
 		// Private Member Variables
@@ -32,17 +42,18 @@
 			else
 				$strCommand = "button";
 
-			$strToReturn = sprintf('<input type="%s" name="%s" id="%s" value="%s" %s%s />',
+			$strToReturn = sprintf('<button type="%s" name="%s" id="%s" %s%s > %s </button> ',
 				$strCommand,
 				$this->strControlId,
 				$this->strControlId,
+				$this->GetAttributes(),
+ 				$strStyle,                    
 				($this->blnHtmlEntities) ?
 					QApplication::HtmlEntities($this->strText) :
-					$this->strText,
-				$this->GetAttributes(),
-				$strStyle);
-
+					$this->strText);
+  
 			return $strToReturn;
+
 		}
 
 

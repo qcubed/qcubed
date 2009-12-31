@@ -1,4 +1,16 @@
 <?php
+	/**
+	 * This file contains the QWriteBox class.
+	 *
+	 * @package Controls
+	 */
+
+	/**
+	 * @package Controls
+	 *
+	 * @property-read string $DisplayHtml
+	 * @property string $CodeCssClass
+	 */
 	class QWriteBox extends QTextBox {
 		protected $strTextMode = QTextMode::MultiLine;
 		protected $strCrossScripting = QCrossScripting::Allow;
