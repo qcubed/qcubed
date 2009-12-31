@@ -87,7 +87,7 @@ class QFolder {
 	 */
 	private static function getFilesInFolderHelper ($strPath) {
 		// Remove trailing slash if it's there
-		if ($strPath[sizeof($strPath) - 1] == "/") {
+		if ($strPath[strlen($strPath) - 1] == "/") {
 				$strPath = substr($strPath, 0, -1);
 		}
 		$result = array();
