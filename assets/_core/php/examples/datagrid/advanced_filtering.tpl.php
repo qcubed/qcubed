@@ -6,6 +6,11 @@
 		This example will walk us through more advanced methods and types of filtering that can be done
 		on your <b>QDataGrid</b>. Make sure you've got a good handle on the <a href="filtering.php">first 
 		example</a> before you dive into these shark-infested waters.<br/><br/>
+		
+		<h1>Changing MetaColumn Filters</h1>
+		It's worth noting that since MetaColumns will automatically set filters for you, you may have to
+		clear them first before applying new ones of your own configuration. To do so, just call the column's
+		FilterClear() function before setting up your new filter.
 
 		<h2>Dropdown Lists</h2>
 		In <b>Example A's QDataGrid</b>, we've added a column filter that's a list. This is easily accomplished
