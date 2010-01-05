@@ -12,7 +12,7 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 		$expandedDir = __INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $entropy . '/';
 		$extractionResult = QArchive::extractZip($strFileName, $expandedDir);
 		if (!$extractionResult) {
-			self::$strLastError = "Could not extract the plugin zip archive";
+			self::$strLastError = QArchive::getLastError();
 			return null;
 		}
 		
