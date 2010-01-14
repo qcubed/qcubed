@@ -4,10 +4,4 @@
  * QCubed framework. Please do not modify.
  */
 
-//// BEGIN QAutoCompleteTextBox
-QApplicationBase::$ClassFile['qautocompletetextboxbase'] = __PLUGINS__ . '/QAutoCompleteTextBox/includes/QAutoCompleteTextBoxBase.class.php';
-QApplicationBase::$ClassFile['qajaxautocompletetextbox'] = __PLUGINS__ . '/QAutoCompleteTextBox/includes/QAjaxAutoCompleteTextBox.class.php';
-QApplicationBase::$ClassFile['qjavascriptautocompletetextbox'] = __PLUGINS__ . '/QAutoCompleteTextBox/includes/QJavaScriptAutoCompleteTextBox.class.php';
-//// END QAutoCompleteTextBox
-
 ?>

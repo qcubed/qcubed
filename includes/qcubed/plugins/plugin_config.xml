@@ -2,31 +2,4 @@
 <plugins>
 	
 
-<plugin>
-	<name><![CDATA[QAutoCompleteTextBox]]></name>
-	<description><![CDATA[Two implementations of auto-complete functionality: matching the user input against a pre-defined list, showing them the matches: server-side (Ajax)and client-side.]]></description>
-	<version>0.1</version>
-	<platform_version>1.1</platform_version>
-	<author name="Alex Weinstein, a.k.a. alex94040" email="alex94040 [at] yahoo [dot] com"/>
-	<files>
-		<file type="control" filename="includes/QAutoCompleteTextBoxBase.class.php" />
-		<file type="control" filename="includes/QAjaxAutoCompleteTextBox.class.php" />
-		<file type="control" filename="includes/QJavaScriptAutoCompleteTextBox.class.php" />
-		<file type="image" filename="images/indicator.gif" />
-		<file type="js" filename="js/jquery.autocomplete.js" />
-		<file type="js" filename="js/jquery.bgiframe.js" />
-		<file type="css" filename="css/jquery.autocomplete.css" />
-		<file type="example" filename="example/autocomplete.php" />
-		<file type="example" filename="example/autocomplete.tpl.php" />
-	</files>
-	<includes>
-		<include_files classname="QAutoCompleteTextBoxBase" filename="includes/QAutoCompleteTextBoxBase.class.php" />
-		<include_files classname="QAjaxAutoCompleteTextBox" filename="includes/QAjaxAutoCompleteTextBox.class.php" />
-		<include_files classname="QJavaScriptAutoCompleteTextBox" filename="includes/QJavaScriptAutoCompleteTextBox.class.php" />
-	</includes>
-	<examples>
-		<example filename="example/autocomplete.php" description="* Auto-complete Textbox Example" />
-	</examples>
-</plugin>
-
 </plugins>
