@@ -1,4 +1,15 @@
 <?php
+/**
+ * This file contains all basic action classes: QAction, QServerAction, QAjaxAction, etc. 
+ *
+ * @package Actions
+ */
+
+	/**
+	 * Base class for all other Actions. 
+	 * 
+	 * @package Actions
+	 */
 	abstract class QAction extends QBaseClass {
 		abstract public function RenderScript(QControl $objControl);
 
@@ -70,6 +81,11 @@
 		}
 	}
 
+	/**
+	 * Server actions are handled through a full-page postback. 
+	 * 
+	 * @package Actions
+	 */
 	class QServerAction extends QAction {
 		protected $strMethodName;
 		protected $mixCausesValidationOverride;
@@ -101,6 +117,12 @@
 		}
 	}
 
+	/**
+	 * Ajax actions are handled through an asynchronous HTTP request (=AJAX). 
+	 * No full-page refresh happens when such an action is executing. 
+	 * 
+	 * @package Actions
+	 */
 	class QAjaxAction extends QAction {
 		protected $strMethodName;
 		protected $objWaitIconControl;
@@ -144,18 +166,36 @@
 		}
 	}
 
+	/**
+	 * Server control action is identical to server action, except
+	 * the handler for it is defined NOT on the form host, but on a control. 
+	 * 
+	 * @package Actions
+	 */
 	class QServerControlAction extends QServerAction {
 		public function __construct(QControl $objControl, $strMethodName, $mixCausesValidationOverride = null) {
 			parent::__construct($objControl->ControlId . ':' . $strMethodName, $mixCausesValidationOverride);
 		}
 	}
 
+	/**
+	 * Ajax control action is identical to Ajax action, except
+	 * the handler for it is defined NOT on the form host, but on a control. 
+	 * 
+	 * @package Actions
+	 */
 	class QAjaxControlAction extends QAjaxAction {
 		public function __construct(QControl $objControl, $strMethodName, $objWaitIconControl = 'default', $mixCausesValidationOverride = null) {
 			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride);
 		}
 	}
 
+	/**
+	 * Client-side action - no postbacks of any kind are performed. 
+	 * All handling activity happens in Javascript. 
+	 * 
+	 * @package Actions
+	 */
 	class QJavaScriptAction extends QAction {
 		protected $strJavaScript;
 
@@ -184,6 +224,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QConfirmAction extends QAction {
 		protected $strMessage;
 
@@ -212,6 +256,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QAlertAction extends QAction {
 		protected $strMessage;
 
@@ -240,12 +288,20 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QResetTimerAction extends QAction {
 		public function RenderScript(QControl $objControl) {
 			return sprintf("qcodo.clearTimeout('%s');", $objControl->ControlId);
 		}
 	}
 	
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QTerminateAction extends QAction {
 		public function RenderScript(QControl $objControl) {
 			if (QApplication::IsBrowser(QBrowserType::InternetExplorer_6_0))
@@ -256,6 +312,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QToggleDisplayAction extends QAction {
 		protected $strControlId = null;
 		protected $blnDisplay = null;
@@ -283,6 +343,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QToggleEnableAction extends QAction {
 		protected $strControlId = null;
 		protected $blnEnabled = null;
@@ -309,6 +373,10 @@
 		}
 	}
 	
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QRegisterClickPositionAction extends QAction {
 		protected $strControlId = null;
 
@@ -317,6 +385,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QShowDialogBox extends QAction {
 		protected $strControlId = null;
 
@@ -332,6 +404,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QHideDialogBox extends QAction {
 		protected $strControlId = null;
 
@@ -347,6 +423,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QFocusControlAction extends QAction {
 		protected $strControlId = null;
 
@@ -362,6 +442,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QBlurControlAction extends QAction {
 		protected $strControlId = null;
 
@@ -377,6 +461,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QSelectControlAction extends QAction {
 		protected $strControlId = null;
 
@@ -392,6 +480,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QCssClassAction extends QAction {
 		protected $strTemporaryCssClass = null;
 		protected $blnOverride = false;
@@ -419,6 +511,11 @@
 		}
 	}
 
+
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QShowCalendarAction extends QAction {
 		protected $strControlId = null;
 
@@ -433,6 +530,10 @@
 		}
 	}
 
+	/**
+	 * 
+	 * @package Actions
+	 */
 	class QHideCalendarAction extends QAction {
 		protected $strControlId = null;
 
