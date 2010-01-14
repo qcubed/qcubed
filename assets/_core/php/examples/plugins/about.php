@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
+	<div class="instructions" style="max-height: none">
 		<h1 class="instruction_title">Introduction to the Plugin Ecosystem</h1>
 		QCubed was built on a principle that the core distribution should be
 		lightweight and extensible. A part of that vision is an easy-to-use

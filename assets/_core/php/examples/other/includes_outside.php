@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
+	<div class="instructions" style="max-height: none">
 		<h1 class="instruction_title">Moving your /includes outside of the __DOCROOT__</h1>
 
 		There is a school of security thought that suggests that files that aren't meant to 

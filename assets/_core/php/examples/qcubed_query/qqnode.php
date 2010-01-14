@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
+	<div class="instructions" style="max-height: none">
 		<h1 class="instruction_title">QCubed Query Nodes</h1>
 		<b>QQ Nodes</b> are any object table or association table (type tables are excluded), as well as any
 		column within those tables.  <b>QQ Node</b> classes for your entire data model is generated for you

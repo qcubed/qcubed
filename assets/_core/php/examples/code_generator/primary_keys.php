@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
+	<div class="instructions" style="max-height: none">
 		<h1 class="instruction_title">Primary Keys in Your Tables</h1>
 
 		In order for any ORM architecture to work, there must be at least some kind of Primary Key defined

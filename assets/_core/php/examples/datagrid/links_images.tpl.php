@@ -18,16 +18,27 @@
 		
 		<b>Full Name</b>: Notice how the QDataGridColumn definition contains
 			this very interesting statement:<br/><br/>
-			$this->dtgPersons->AddColumn(new QDataGridColumn('Full Name', '&lt;?= $_FORM->renderFullName($_ITEM) ?&gt;', 'HtmlEntities=false'));<br/><br/>
-			Here's what it means:
+					<div style="padding-left: 50px;">
+						<code>
+							$this->dtgPersons->AddColumn(new QDataGridColumn(<br>
+									&nbsp;&nbsp;&nbsp;'Full Name',<br>
+									&nbsp;&nbsp;&nbsp;'&lt;?= $_FORM->renderFullName($_ITEM) ?&gt;',<br>
+									&nbsp;&nbsp;&nbsp;'HtmlEntities=false'));
+						</code>
+					</div>
+					<br>
+			Here's what it means - let's look at parameters passed to the QDataGridColumn 
+			constructor. 
 			<ul>
+				<li>The title of the column should be <i>Full Name</i>.</li>
 				<li>Whenever we want to render this column, call the renderFullName
 					method of the QForm ($_FORM) that hosts the QDataGrid.
-					Which QForm is that? This one!</li>
-				<li>When calling that method, pass in the object that's being
+					Which QForm? This one!</li>
+				<li>When calling that renderFullName method, pass in the object that's being
 					rendered in the CURRENT row ($_ITEM). That object is, obviously,
-					a Person object. That method is supposed to return a string;
-					the string will be rendered in our column.</li>
+					a Person object. That method, in turn, is supposed to accept a Person object 
+					and return a string; the string will be rendered in our column. Take a look 
+					at the implementation of that method by clicking View Source!</li>
 				<li><i>HtmlEntities=false</i> means that the result that the method returns
 					can contain HTML, and that the method itself will take care of
 					escaping it properly (and thus protecting it against cross-site
