@@ -45,22 +45,35 @@
 		 *
 		 * @param mixed $mixData
 		 * @param boolean $blnIncludeEquality whether or not to include an equality operator
+		 * @param boolean $blnReverseEquality whether the included equality operator should be a "NOT EQUAL", e.g. "!="
 		 * @return string the properly formatted SQL variable
 		 */
-		public function SqlVariable($mixData, $blnIncludeEquality = false) {
+		public function SqlVariable($mixData, $blnIncludeEquality = false, $blnReverseEquality = false) {
 			// Are we SqlVariabling a BOOLEAN value?
 			if (is_bool($mixData)) {
 				// Yes
 				if ($blnIncludeEquality) {
 					// We must include the inequality
 
-					// Check against NULL, True then False
-					if (is_null($mixData))
-						return 'IS NULL';
-					else if ($mixData)
-						return '!= 0';
-					else
-						return '= 0';
+					if ($blnReverseEquality) {
+						// Do a "Reverse Equality"
+
+						// Check against NULL, True then False
+						if (is_null($mixData))
+							return 'IS NOT NULL';
+						else if ($mixData)
+							return '= 0';
+						else
+							return '!= 0';
+					} else {
+						// Check against NULL, True then False
+						if (is_null($mixData))
+							return 'IS NULL';
+						else if ($mixData)
+							return '!= 0';
+						else
+							return '= 0';
+					}
 				} else {
 					// Check against NULL, True then False
 					if (is_null($mixData))
@@ -74,10 +87,17 @@
 
 			// Check for Equality Inclusion
 			if ($blnIncludeEquality) {
-				if (is_null($mixData))
-					$strToReturn = 'IS ';
-				else
-					$strToReturn = '= ';
+				if ($blnReverseEquality) {
+					if (is_null($mixData))
+						$strToReturn = 'IS NOT ';
+					else
+						$strToReturn = '!= ';
+				} else {
+					if (is_null($mixData))
+						$strToReturn = 'IS ';
+					else
+						$strToReturn = '= ';
+				}
 			} else
 				$strToReturn = '';
 
