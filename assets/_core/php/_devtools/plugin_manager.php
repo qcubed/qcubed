@@ -31,7 +31,7 @@
 		}
 		
 		private function dtgPlugins_Create() {
-			$this->dtgPlugins = new QDataGrid($this);
+			$this->dtgPlugins = new QDataGrid($this, 'dtgPlugins');
 			$this->dtgPlugins->SetDataBinder('dtgPlugins_Bind');
 
 			$this->dtgPlugins->CssClass = 'datagrid';
@@ -39,6 +39,8 @@
 			
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Title',
 					'<a href="plugin_edit.php?strType=installed&strName=<?= $_ITEM->strName ?>"><?= $_ITEM->strName ?></a>', 'HtmlEntities=false'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Version',
+					'<?= $_ITEM->strVersion ?>'));
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files',
 					'<?= count($_ITEM->objAllFilesArray) ?>'));
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Includes',

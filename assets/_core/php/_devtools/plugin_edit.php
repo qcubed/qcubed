@@ -169,19 +169,22 @@ class PluginEditForm extends QForm {
 	
 	public function lblAuthorEmail_Create() {
 		$this->lblAuthorEmail = new QLabel($this);
-		$email = $this->objPlugin->strAuthorEmail;
-		
-		// Light processing of the field to make it friendlier
-		$email = str_replace(" ", "", $email);
-		$braceOpen = "[\<\[{\(]";
-		$braceClosed = "[\]}\)\>]";
-		
-		$email = preg_replace("/" . $braceOpen . "at" . $braceClosed . "/", "@", $email);
-		$email = preg_replace("/" . $braceOpen . "dot" . $braceClosed . "/", ".", $email);
-		
-		$this->lblAuthorEmail->Text = "<a href='mailto:{$email}'>{$email}</a>";
 		$this->lblAuthorEmail->Name = QApplication::Translate('Author\'s email');
 		$this->lblAuthorEmail->HtmlEntities = false;
+
+		if (strlen($this->objPlugin->strAuthorEmail) > 0) {		
+			$email = $this->objPlugin->strAuthorEmail;
+			
+			// Light processing of the field to make it friendlier
+			$email = str_replace(" ", "", $email);
+			$braceOpen = "[\<\[{\(]";
+			$braceClosed = "[\]}\)\>]";
+			
+			$email = preg_replace("/" . $braceOpen . "at" . $braceClosed . "/", "@", $email);
+			$email = preg_replace("/" . $braceOpen . "dot" . $braceClosed . "/", ".", $email);
+			
+			$this->lblAuthorEmail->Text = "<a href='mailto:{$email}'>{$email}</a>";
+		}
 	}
 	
 	public function redirectToListPage() {

@@ -19,8 +19,11 @@ html>body, html>body #page {
 	height: auto;
 }
 
-a:link, a:visited { text-decoration: none; color:#780000;}
-a:hover { text-decoration: underline; color:#111;}
+
+a:link {color:#780000;}
+a:visited {color: #780078;}
+a:link, a:visited { text-decoration:none; border-bottom: 1px dotted #780000;}
+a:hover { text-decoration:none; border-bottom: 1px solid #000;}
 pre { font-family: 'Lucida Console', 'Courier New', 'Courier', 'FreeMono', monospaced; font-size: 11px; line-height: 13px; }
 
 h1, h2, h3, h4, h5, h6, p, pre, blockquote, cite, label, dl, ul, ol, fieldset, address {
@@ -195,9 +198,8 @@ table.datagrid { border: 1px solid #111; width:100%; overflow:auto; }
 		table.datagrid th a { color: #FFF; text-decoration: none; }
 		table.datagrid th a:hover { color: #FFF; text-decoration: underline;}
 	table.datagrid td { padding: 5px; }
-		table.datagrid td a { color: #111; }
-		table.datagrid td a:hover { color: #000; text-decoration: underline; }
 	table.datagrid tfoot { border-top: 1px solid #111;} 
+
 
 /* QPaginator */
 span.paginator { margin: 0; padding: 0; }
@@ -316,8 +318,7 @@ div#dashboard { clear:both; }
 	a.footerLink { background-color:#780000; color: #FFF; border-bottom: 1px dotted #FFF;}
 
 p.create { }
-	p.create a { text-decoration: none; color: #780000; font-weight: bold; }
-	p.create a:hover { text-decoration: underline; }
+	p.create a { font-weight: bold; }
 
 .code { background-color: #F6F6F6; padding:10px; font: 11px 'Lucida Console', 'Courier New', 'Courier', monospaced; overflow: auto; width: 98%; max-height: 560px;}
 .codeDisplay {background-color: #F6F6F6; width: 400px; height: 400px; overflow: auto; margin: 10px; padding: 10px;}
@@ -337,6 +338,7 @@ a.main_navselected { color: #ffffff; font-weight: bold; text-transform: uppercas
 .textbox { width: 250px; font: 12px Verdana, Arial, Helvetica, sans-serif; text-align:left;}
 .listbox { width: 250px; font: 12px Verdana, Arial, Helvetica, sans-serif; text-align:left;}
 .button { font: 10px Verdana, Arial, Helvetica, sans-serif; border:1px solid #111; background-color:#780000; color:#FFF; padding:3px;}
+#formActions .button { background-color:#FFF; color:#780000; }
 
 .paginator_inactive_step { font-weight: bold; color: #aaaaaa; }
 .paginator_active_step { font-weight: bold; color: #000000; text-decoration: none; }
