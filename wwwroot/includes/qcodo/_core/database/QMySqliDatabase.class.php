@@ -542,25 +542,28 @@
 			if (!$this->strOriginalName)
 				$this->strOriginalName = $this->strName;
 			
-			// Calculate MaxLength of this column (e.g. if it's a varchar, calculate length of varchar
-			// NOTE: $mixFieldData->max_length in the MySQL spec is **DIFFERENT**
-			$objDescriptionResult = $objDb->Query(sprintf("DESCRIBE `%s`", $this->strOriginalTable));
-			while (($objRow = $objDescriptionResult->FetchArray())) {
-				if ($objRow["Field"] == $this->strOriginalName) {
-					$strLengthArray = explode("(", $objRow["Type"]);
-					if ((count($strLengthArray) > 1) &&
-						(strtolower($strLengthArray[0]) != 'enum') &&
-						(strtolower($strLengthArray[0]) != 'set')) {
-						$strLengthArray = explode(")", $strLengthArray[1]);
-						$this->intMaxLength = $strLengthArray[0];
+			if($this->strOriginalTable)
+			{
+				// Calculate MaxLength of this column (e.g. if it's a varchar, calculate length of varchar
+				// NOTE: $mixFieldData->max_length in the MySQL spec is **DIFFERENT**
+				$objDescriptionResult = $objDb->Query(sprintf("DESCRIBE `%s`", $this->strOriginalTable));
+				while (($objRow = $objDescriptionResult->FetchArray())) {
+					if ($objRow["Field"] == $this->strOriginalName) {
+						$strLengthArray = explode("(", $objRow["Type"]);
+						if ((count($strLengthArray) > 1) &&
+							(strtolower($strLengthArray[0]) != 'enum') &&
+							(strtolower($strLengthArray[0]) != 'set')) {
+							$strLengthArray = explode(")", $strLengthArray[1]);
+							$this->intMaxLength = $strLengthArray[0];
 
-						// If the length is something like (7,2), then let's pull out just the "7"
-						$intCommaPosition = strpos($this->intMaxLength, ',');
-						if ($intCommaPosition !== false)
-							$this->intMaxLength = substr($this->intMaxLength, 0, $intCommaPosition);
+							// If the length is something like (7,2), then let's pull out just the "7"
+							$intCommaPosition = strpos($this->intMaxLength, ',');
+							if ($intCommaPosition !== false)
+								$this->intMaxLength = substr($this->intMaxLength, 0, $intCommaPosition);
 
-						if (!is_numeric($this->intMaxLength))
-							throw new Exception("Not a valid Column Length: " . $objRow["Type"]);
+							if (!is_numeric($this->intMaxLength))
+								throw new Exception("Not a valid Column Length: " . $objRow["Type"]);
+						}
 					}
 				}
 			}
