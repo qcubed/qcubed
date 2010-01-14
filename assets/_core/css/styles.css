@@ -128,6 +128,8 @@ ol ol { list-style-type: upper-alpha; }
 ol ol ol { list-style-type: lower-roman; }
 ol ol ol ol { list-style-type: decimal; }
 
+li { margin-bottom: 2px;}
+
 /* Miscellaneous oddities and fixes */
 
 a img {
@@ -277,7 +279,6 @@ div.renderWithName { padding: 4px 0 4px 0; overflow: auto; height: 100%; }
 	a.headerLink:active, a.headerLink:hover { color: #F6F6F6; text-decoration:underline;}
 
 #content { padding: 10px; clear:both; float:none; width:960px; margin:0px auto 50px auto;text-align:left;}
-	a.bodyLink { color: #780000; }
 
 div#draftList { }
 	div#draftList h1 { margin: 0; font: 20px 'Georgia', 'Times New Roman', 'Times'; font-weight: bold; }
@@ -332,6 +333,9 @@ a.main_navselected { color: #ffffff; font-weight: bold; text-transform: uppercas
 .main_info {font: 12px Verdana, Arial, Helvetica, sans-serif; padding: 5px 20px; width:90%; background-color: #E6E6E6; margin:auto; border:1px solid #111;}
 #part1 blockquote, #part2 blockquote, #part3 blockquote { width:90%; padding:5px 20px;margin:10px auto;}
 #part1 blockquote ul, #part2 blockquote ul, #part3 blockquote ul { width:90%; padding:2px 20px;margin:5px auto;}
+
+.exampleList a:link,  .exampleList a:visited { border-bottom:none; }
+.exampleList a:hover { text-decoration: underline; }
 
 .warning { color: #aa0000; }
 
