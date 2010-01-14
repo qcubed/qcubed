@@ -375,8 +375,9 @@
 				    , typ.scale AS scale
 				    , obj.name AS table_name
 				FROM    sys.columns col
-				JOIN    sys.objects obj ON obj.object_id = col.OBJECT_ID
+				JOIN    sys.objects obj ON obj.object_id = col.object_id 
 				JOIN    sys.types typ ON typ.system_type_id = col.system_type_id
+				LEFT JOIN sys.extended_properties ex ON ex.major_id = col.object_id AND ex.minor_id = col.column_id AND ex.name = 'MS_Description' AND ex.class = 1 
 				WHERE   obj.name = %s
 				ORDER BY col.column_id ASC
 			", $strTableName);
@@ -670,6 +671,7 @@
 				$this->blnNotNull = ($objDatabaseRow->GetColumn('is_nullable')) ? false : true;
 				$this->blnIdentity = ($objDatabaseRow->GetColumn('is_identity')) ? true : false;
 				$this->strType = $objDatabaseRow->GetColumn('data_type');
+				$this->strComment = $objDatabaseRow->GetColumn('comment'); 
 
 				$intScale = $objDatabaseRow->GetColumn('scale', QDatabaseFieldType::Integer);
 
