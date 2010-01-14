@@ -69,7 +69,7 @@
 					return new QQNode('<%= $objColumn->Name %>', '<%= $objColumn->PropertyName %>', '<%= $objColumn->DbType %>', $this);
 	<% if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { %>
 				case '<%= $objColumn->Reference->PropertyName %>':
-					return new QQNode<%= $objColumn->Reference->VariableType; %>('<%= $objColumn->Name %>', '<%= $objColumn->Reference->PropertyName %>', '<%= $objColumn->VariableType %>', $this);
+					return new QQNode<%= $objColumn->Reference->VariableType; %>('<%= $objColumn->Name %>', '<%= $objColumn->Reference->PropertyName %>', '<%= $objColumn->DbType %>', $this);
 	<% } %>
 <% } %>
 <% foreach ($objTable->ManyToManyReferenceArray as $objReference) { %>
@@ -80,7 +80,7 @@
 					return new QQReverseReferenceNode<%= $objReference->VariableType %>($this, '<%= strtolower($objReference->ObjectDescription); %>', 'reverse_reference', '<%= $objReference->Column %>'<%= ($objReference->Unique) ? ", '" . $objReference->ObjectDescription . "'" : null; %>);
 <% } %><% $objPkColumn = $objTable->PrimaryKeyColumnArray[0]; %>
 				case '_PrimaryKeyNode':
-					return new QQNode<% if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) return $objPkColumn->Reference->VariableType; %>('<%= $objPkColumn->Name %>', '<%= $objPkColumn->PropertyName %>', '<%= $objPkColumn->VariableType %>', $this);
+					return new QQNode<% if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) return $objPkColumn->Reference->VariableType; %>('<%= $objPkColumn->Name %>', '<%= $objPkColumn->PropertyName %>', '<%= $objPkColumn->DbType %>', $this);
 				default:
 					try {
 						return parent::__get($strName);
