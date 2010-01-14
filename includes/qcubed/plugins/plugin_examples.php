@@ -4,4 +4,8 @@
  * QCubed framework. Please do not modify.
  */
 
+//// BEGIN QAutoCompleteTextBox
+Examples::AddPluginExampleFile('QAutoCompleteTextBox', 'example/autocomplete.php * Auto-complete Textbox Example');
+//// END QAutoCompleteTextBox
+
 ?>

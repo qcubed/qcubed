@@ -58,23 +58,27 @@ class QPluginConfigParser {
 	
 	// helper to parse the /plugin/includes section of the config file
 	private function parseIncludes(&$xmlPlugin, &$objPlugin) {
-		foreach ($xmlPlugin->includes->include_files as $item) {
-			$component = new QPluginIncludedClass();
-			$component->strFilename 	= (string)$item['filename'];
-			$component->strClassname 	= (string)$item['classname'];
-			
-			$objPlugin->objIncludesArray [] = $component;
+		if (!is_null($xmlPlugin->includes->include_files)) {
+			foreach ($xmlPlugin->includes->include_files as $item) {
+				$component = new QPluginIncludedClass();
+				$component->strFilename 	= (string)$item['filename'];
+				$component->strClassname 	= (string)$item['classname'];
+
+				$objPlugin->objIncludesArray [] = $component;
+			}
 		}
 	}
 	
 	// helper to parse the /plugin/examples section of the config file
 	private function parseExamples(&$xmlPlugin, &$objPlugin) {
-		foreach ($xmlPlugin->examples->example as $item) {
-			$component = new QPluginExample();
-			$component->strFilename 	= (string)$item['filename'];
-			$component->strDescription 	= (string)$item['description'];
-			
-			$objPlugin->objExamplesArray [] = $component;
+		if (!is_null($xmlPlugin->examples->example)) {
+			foreach ($xmlPlugin->examples->example as $item) {
+				$component = new QPluginExample();
+				$component->strFilename 	= (string)$item['filename'];
+				$component->strDescription 	= (string)$item['description'];
+
+				$objPlugin->objExamplesArray [] = $component;
+			}
 		}
 	}
 
