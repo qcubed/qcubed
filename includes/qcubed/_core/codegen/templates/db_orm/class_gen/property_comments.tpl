@@ -1,5 +1,5 @@
 <% foreach ($objTable->ColumnArray as $objColumn) { %>
-	 * @property<% if ($objColumn->Identity || $objColumn->Timestamp) return '-read'; %> <%= $objColumn->VariableType %> $<%= $objColumn->PropertyName %> the value for <%= $objColumn->VariableName %> <% if ($objColumn->Identity) return '(Read-Only PK)'; else if ($objColumn->PrimaryKey) return '(PK)'; else if ($objColumn->Timestamp) return '(Read-Only Timestamp)'; else if ($objColumn->Unique) return '(Unique)'; else if ($objColumn->NotNull) return '(Not Null)'; %>
+	 * @property<% if ($objColumn->Identity || $objColumn->Timestamp) return '-read'; %> <%= $objColumn->VariableType %> $<%= $objColumn->PropertyName %> <% if ($objColumn->Comment) return $objColumn->Comment; else return 'the value for '.$objColumn->VariableName; %> <% if ($objColumn->Identity) return '(Read-Only PK)'; else if ($objColumn->PrimaryKey) return '(PK)'; else if ($objColumn->Timestamp) return '(Read-Only Timestamp)'; else if ($objColumn->Unique) return '(Unique)'; else if ($objColumn->NotNull) return '(Not Null)'; %>
 <% } %>
 <% foreach ($objTable->ColumnArray as $objColumn) { %>
 	<% if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { %>
