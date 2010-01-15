@@ -169,7 +169,7 @@
 					//and represent the casted value the same way
 					$strTest = sprintf('%.' . $precision . 'f', $fltItem);
 
-					// If the value hasn't change, it's safe to return the casted value
+					// If the value hasn't changed, it's safe to return the casted value
 					if ((string)$strTest === (string)$mixItem)
 						return $fltItem;
 					
@@ -187,8 +187,22 @@
 					settype($mixTest, $strOriginalType);
 					
 					// Has it?
-					if ($mixTest != $mixItem)
-						// Yes -- therefore this is an invalid cast
+					$blnSame = true; 
+					if ($strOriginalType == QType::Float) { 
+						// type conversion from float to string affects precision and can throw off the comparison 
+						// so we need to use a comparison check using an epsilon value instead 
+						$epsilon = 1.0e-14; 
+						$diff = abs($mixItem - $mixTest); 
+						if ($diff > $epsilon) { 
+							$blnSame = false; 
+						} 
+					} 
+					else { 
+						if ($mixTest != $mixItem) 
+						$blnSame = false; 
+					} 
+					if (!$blnSame) 
+						//This is an invalid cast
 						throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType, $mixItem));
 					
 					return $strItem;
