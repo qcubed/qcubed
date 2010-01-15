@@ -12,8 +12,9 @@
 	 * * DatabaseIndex
 	 * * DatabaseForeignKey
 	 * * DatabaseFieldType (which is an abstract class that solely contains constants)
+	 *
+	 * @package DatabaseAdapters
 	 */
-
 	abstract class QDatabaseBase extends QBaseClass {
 		// Must be updated for all Adapters
 		const Adapter = 'Generic Database Adapter (Abstract)';
@@ -367,12 +368,20 @@
 		abstract public function Close();
 	}
 	
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	abstract class QDatabaseRowBase extends QBaseClass {
 		abstract public function GetColumn($strColumnName, $strColumnType = null);
 		abstract public function ColumnExists($strColumnName);
 		abstract public function GetColumnNameArray();
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	abstract class QDatabaseExceptionBase extends QCallerException {
 		protected $intErrorNumber;
 		protected $strQuery;
@@ -389,6 +398,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QDatabaseForeignKey extends QBaseClass {
 		protected $strKeyName;
 		protected $strColumnNameArray;
@@ -423,6 +436,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QDatabaseIndex extends QBaseClass {
 		protected $strKeyName;
 		protected $blnPrimaryKey;
@@ -457,6 +474,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	abstract class QDatabaseFieldType {
 		const Blob = "Blob";
 		const VarChar = "VarChar";

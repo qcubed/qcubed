@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * 
+ * @package Tests
+ */
 class BasicOrmTests extends QUnitTestCaseBase {    
 	public function testSaveAndDelete() {
 		$objPerson1 = new Person();

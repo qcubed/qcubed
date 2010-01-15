@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * 
+ * @package Tests
+ */
 class ExpandAsArrayTests extends QUnitTestCaseBase {    
 	public function testMultiLevel() {
 		$arrPeople = Person::LoadAll(

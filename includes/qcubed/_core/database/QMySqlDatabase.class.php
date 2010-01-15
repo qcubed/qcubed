@@ -3,6 +3,10 @@
 	if (!class_exists('QMySqliDatabase'))
 		require(__QCUBED_CORE__ . '/database/QMySqliDatabase.class.php');
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqlDatabase extends QMySqliDatabase {
 		const Adapter = 'MySql Legacy Database Adapter for MySQL 4';
 
@@ -148,6 +152,10 @@
 		}
 	}
 	
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqlDatabaseField extends QMySqliDatabaseField {
 		public function __construct($mixFieldData, $objDb = null) {
 			$this->strName = $mixFieldData->name;

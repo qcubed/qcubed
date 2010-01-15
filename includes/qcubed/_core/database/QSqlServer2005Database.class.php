@@ -10,7 +10,7 @@
          * - PHP 5.2.4 or later
          * - SQL Server Driver for PHP 1.1
 	 *
-	 * @package Database
+	 * @package DatabaseAdapters
 	 */
 
 	/**
@@ -50,7 +50,7 @@
 	 * @copyright	Copyright (C) 2009 Andreas Krohn
 	 * @author	Andreas Krohn <akrohn.pronet@googlemail.com>, based on code by Mike Ho
 	 * @license	http://www.opensource.org/licenses/mit-license.php
-	 * @package	Database
+	 * @package	DatabaseAdapters
 	 */
 	class QSqlServer2005Database extends QDatabaseBase {
 		const Adapter = 'Microsoft SQL Server 2005/2008 Database Adapter';
@@ -525,6 +525,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QSqlServer2005DatabaseException extends QDatabaseExceptionBase {
 		public function __construct($strMessage, $intNumber, $strQuery) {
 			parent::__construct(sprintf("SQL Server Error: %s", $strMessage), 2);
@@ -533,6 +537,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QSqlServer2005DatabaseResult extends QDatabaseResultBase {
 		protected $objSqlSrvResult;
 		protected $objDb;
@@ -602,6 +610,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */	
 	class QSqlServer2005DatabaseRow extends QDatabaseRowBase {
 		protected $strColumnArray;
 
@@ -650,6 +662,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QSqlServer2005DatabaseField extends QDatabaseFieldBase {
 		public function __construct($mixFieldData, $objDb = null) {
 			$objDatabaseRow = null;

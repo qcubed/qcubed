@@ -1,4 +1,8 @@
 <?php
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqliDatabase extends QDatabaseBase {
 		const Adapter = 'MySql Improved Database Adapter for MySQL 4';
 
@@ -405,6 +409,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqliDatabaseException extends QDatabaseExceptionBase {
 		public function __construct($strMessage, $intNumber, $strQuery) {
 			parent::__construct(sprintf("MySqli Error: %s", $strMessage), 2);
@@ -413,6 +421,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqliDatabaseResult extends QDatabaseResultBase {
 		protected $objMySqliResult;
 		protected $objDb;
@@ -475,6 +487,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqliDatabaseRow extends QDatabaseRowBase {
 		protected $strColumnArray;
 
@@ -529,6 +545,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqliDatabaseField extends QDatabaseFieldBase {
 		public function __construct($mixFieldData, $objDb = null) {
 			$this->strName = $mixFieldData->name;

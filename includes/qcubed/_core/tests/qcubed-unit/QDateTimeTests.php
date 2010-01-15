@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 
+ * @package Tests
+ */
 class QDateTimeTests extends QUnitTestCaseBase {    
 	public function testNull() {
 		$obj1 = QDateTime::Now();

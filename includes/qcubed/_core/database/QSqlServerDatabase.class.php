@@ -2,9 +2,8 @@
 	/**
 	 * Database Adapter for Microsoft SQL Server
 	 * Utilizes the Microsoft SQL Server extension php_mssql.dll (win) or the freetds extension (*nix)
-	 */
-
-	/* NOTES:
+	 * 
+	 * NOTES:
 	 *
 	 * LimitInfo and Query utilizes an interal SQL tag QCODO_OFFSET<#>, where # represents
 	 * the number of rows to offset for "Limit"-based queries.  The QCODO_OFFSET is added
@@ -27,8 +26,8 @@
 	 *		client charset = UTF-8
 	 * For consistancy, you will also want to update QApplication::$EncodingType to be UTF-8
 	 * as well.
+	 * @package DatabaseAdapters
 	 */
-
 	class QSqlServerDatabase extends QDatabaseBase {
 		const Adapter = 'Microsoft SQL Server Database Adapter';
 
@@ -471,6 +470,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QSqlServerDatabaseException extends QDatabaseExceptionBase {
 		public function __construct($strMessage, $intNumber, $strQuery) {
 			parent::__construct(sprintf("MS SQL Server Error: %s", $strMessage), 2);
@@ -479,6 +482,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QSqlServerDatabaseResult extends QDatabaseResultBase {
 		protected $objMsSqlResult;
 		protected $objDb;
@@ -537,6 +544,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QSqlServerDatabaseRow extends QDatabaseRowBase {
 		protected $strColumnArray;
 
@@ -585,6 +596,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QSqlServerDatabaseField extends QDatabaseFieldBase {
 		public function __construct($mixFieldData, $objDb = null) {
 			$objDatabaseRow = null;

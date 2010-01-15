@@ -9,6 +9,10 @@
 	if (!defined('MYSQLI_TYPE_BIT'))
 		define('MYSQLI_TYPE_BIT', 16);
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqli5Database extends QMySqliDatabase {
 		const Adapter = 'MySql Improved Database Adapter for MySQL 5';
 
@@ -83,6 +87,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */	
 	class QMySqli5DatabaseResult extends QMySqliDatabaseResult {
 		public function FetchFields() {
 			$objArrayToReturn = array();
@@ -97,6 +105,10 @@
 		}
 	}
 
+	/**
+	 *
+	 * @package DatabaseAdapters
+	 */
 	class QMySqli5DatabaseField extends QMySqliDatabaseField {
 		protected function SetFieldType($intMySqlFieldType) {
 			switch ($intMySqlFieldType) {

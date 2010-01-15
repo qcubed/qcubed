@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 
+ * @package Tests
+ */
 class QTypeTests extends QUnitTestCaseBase {    
 	public function testCasting() {
 		$cases = array( 
