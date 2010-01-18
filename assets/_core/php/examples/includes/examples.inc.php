@@ -169,6 +169,7 @@
 			self::AddCoreExampleFile($intIndex, '/communication/crypto.php Introduction to QCryptography');
 			self::AddCoreExampleFile($intIndex, '/communication/i18n.php Introduction to QI18n (Internationalization)');
 			self::AddCoreExampleFile($intIndex, '/communication/soap.php * Introduction to QSoapService');
+			self::AddCoreExampleFile($intIndex, '/other/timer.php * Measuring Performance using QTimer');
 			self::AddCoreReferencedFile('/communication/rss.php', 'rss_feed.php');
 			self::AddCoreReferencedFile('/communication/i18n.php', array('en.po', 'es.po'));
 			self::AddCoreReferencedFile('/communication/soap.php', 'example_service.php');
