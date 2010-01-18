@@ -1,4 +1,16 @@
 <?php
+/**
+ * Classes in this file represent various "events" for QCubed. 
+ * Programmer can "hook" into these events and write custom handlers.
+ * Event-driven programming is explained in detail here: http://en.wikipedia.org/wiki/Event-driven_programming
+ *
+ * @package Events
+ */
+
+	/**
+	 * Base class of all events. It's obviously abstract.
+	 *
+	 */
 	abstract class QEvent extends QBaseClass {
 		protected $strJavaScriptEvent;
 		protected $strCondition = null;
@@ -39,11 +51,18 @@
 		}
 	}
 
+	/**
+	 * Blur event: keyboard focus moving away from the control.
+	 */
 	class QBlurEvent extends QEvent {
 		const EventName = 'onblur';
 		protected $strJavaScriptEvent = 'onblur';
 	}
 
+	/**
+	 * Be careful with change events for listboxes - 
+	 * they don't fire when the user picks a value on many browsers!
+	 */
 	class QChangeEvent extends QEvent {
 		const EventName = 'onchange';
 		protected $strJavaScriptEvent = 'onchange';
@@ -64,6 +83,9 @@
 		protected $strJavaScriptEvent = 'ondragdrop';
 	}
 
+	/**
+	 * Focus event: keyboard focus entering the control.
+	 */
 	class QFocusEvent extends QEvent {
 		const EventName = 'onfocus';
 		protected $strJavaScriptEvent = 'onfocus';

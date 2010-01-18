@@ -1,5 +1,19 @@
 <?php
+/**
+ * @package PluginManager
+ * @author Alex Weinstein <alex94040@yahoo.com>
+ */
 
+/**
+ * This class should be used by plugin writers to create their own
+ * plugin descriptors in the install.php scripts of every plugin. 
+ * Details on creating an install script are here: http://examples.qcu.be/assets/_core/php/examples/plugins/components.php
+ *
+ * Whenever you use the install.php script, the plugin manager will run the script, 
+ * and then internally generate an XML descriptor of the plugin before actually
+ * installing it. Note that this XML descriptor can be used directly, in place of
+ * the install.php configuration script, in order to install the plugin. 
+ */
 class QPlugin {
 	/**
 	 * Properties of the plugin that can and should be set

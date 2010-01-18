@@ -1,5 +1,13 @@
 <?php
+/**
+ * @package PluginManager
+ * @author Alex Weinstein <alex94040@yahoo.com>
+ */
 
+/**
+ * This class performs the actual installation of the plugin onto a QCubed instance.
+ * It takes care of extracting the zip file, deploying all config files. 
+ */
 abstract class QPluginInstaller extends QPluginInstallerBase {
 	protected static $strLastError;
 		

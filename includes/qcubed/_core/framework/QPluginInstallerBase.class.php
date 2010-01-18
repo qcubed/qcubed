@@ -1,5 +1,14 @@
 <?php
+/**
+ * @package PluginManager
+ * @author Alex Weinstein <alex94040@yahoo.com>
+ */
 
+/**
+ * This class has shared settings and constants that are used by both the 
+ * plugin installer and uninstaller child classes. 
+ * It also has a very useful function for the outside world: isPluginInstalled(). 
+ */
 abstract class QPluginInstallerBase {
 	private static $strLastError = "";
 	
@@ -33,6 +42,9 @@ abstract class QPluginInstallerBase {
 		return self::$strLastError;
 	}
 			
+	/**
+	 * Given a plugin name, returns true if a plugin with this name is installed on the system. 
+	 */
 	public static function isPluginInstalled($strPluginName) {
 		$installedPlugins = QPluginConfigParser::parseInstalledPlugins();
 		$found = false;

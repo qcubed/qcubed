@@ -1,5 +1,15 @@
 <?php
-
+/**
+ * @package PluginManager
+ * @author Alex Weinstein <alex94040@yahoo.com>
+ */
+ 
+/**
+ * This class takes care of uninstalling existing plugins - removal of
+ * files, as well as modding any configuration files that were touched
+ * by the plugin. Remember - don't ever uninstall the plugin by hand. 
+ * Always use this class / UI encapsulation of this class. 
+ */
 abstract class QPluginUninstaller extends QPluginInstallerBase {
 	public static function uninstallExisting($strPluginName) {
 		$blnMasterConfigUpdated 	= self::deleteFromMasterConfig($strPluginName);
