@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Controls
+	 */
 	class QPaginator extends QPaginatorBase {
 		// APPEARANCE
 		protected $intIndexCount = 10;

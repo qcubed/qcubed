@@ -1,4 +1,7 @@
 <?php
+	/**
+ 	 * @package Controls
+ 	 */
 	class QTextBox extends QTextBoxBase {
 		///////////////////////////
 		// TextBox Preferences

@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Controls
+	 */
 	class QFileAsset extends QFileAssetBase {
 		protected $strTemporaryUploadPath = '/tmp';
 		

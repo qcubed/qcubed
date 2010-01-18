@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Controls
+	 */
 	class QPanel extends QBlockControl {
 		///////////////////////////
 		// Private Member Variables

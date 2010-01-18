@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Controls
+	 */
 	abstract class QFontFamily {
 		// Sans-Serif Fonts
 		const Arial = 'Arial, Helvetica, sans-serif';

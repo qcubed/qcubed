@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Controls
+	 */
 	class QButton extends QButtonBase {
 		///////////////////////////
 		// Button Preferences

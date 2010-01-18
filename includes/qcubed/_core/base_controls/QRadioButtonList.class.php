@@ -1,12 +1,4 @@
 <?php
-	// 
-	// 
-	// * "TextAlign" specifies if each ListItem's Name should be displayed to the left or to the right of the radio button.
-	// * "CellPadding" specified the HTML Table's CellPadding
-	// * "CellSpacing" specified the HTML Table's CellSpacing
-	// * "RepeatColumn" specifies how many columns should be rendered in the HTML Table
-	// * "RepeatDirection" specifies which direction should the list go first...
-
 	/**
 	 * This file contains the QRadioButtonList class.
 	 *
@@ -33,12 +25,12 @@
 	 *
 	 * @package Controls
 	 *
-	 * @property string $TextAlign
+	 * @property string $TextAlign specifies if each ListItem's Name should be displayed to the left or to the right of the radio button.
 	 * @property boolean $HtmlEntities
-	 * @property integer $CellPadding
-	 * @property integer $CellSpacing
-	 * @property integer $RepeatColumns
-	 * @property string $RepeatDirection
+	 * @property integer $CellPadding specified the HTML Table's CellPadding
+	 * @property integer $CellSpacing specified the HTML Table's CellSpacing
+	 * @property integer $RepeatColumns specifies how many columns should be rendered in the HTML Table
+	 * @property string $RepeatDirection specifies which direction should the list go first: horizontal or vertical
 	 */
 	class QRadioButtonList extends QListControl {
 		///////////////////////////

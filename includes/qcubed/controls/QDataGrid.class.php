@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Controls
+	 */
 	class QDataGrid extends QDataGridBase  {
 		protected $intCellSpacing = 0;
 		protected $intCellPadding = 0;

@@ -11,6 +11,8 @@
 	 *  - Validate()
 	 *  - GetEndScript()
 	 *  - GetEndHtml()
+	 * 
+	 * @package Controls
 	 */
 	class QSampleControl extends QControl {
 		protected $intExample;

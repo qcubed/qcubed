@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Controls
+	 */
 	class QImageLabel extends QImageLabelBase {
 		// If you wish to set a cache for the generated images so that they
 		// are not dynamically recreated every time, specify a default CacheFolder here.

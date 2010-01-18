@@ -1,4 +1,8 @@
 <?php
+
+	/**
+	 * @package Controls
+	 */
 	abstract class QForm extends QFormBase {
 		///////////////////////////
 		// Form Preferences

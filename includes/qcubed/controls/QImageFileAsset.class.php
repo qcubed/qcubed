@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @package Controls
+ */
 class QImageFileAsset extends QFileAsset {
 	
 	protected $intMinWidth;

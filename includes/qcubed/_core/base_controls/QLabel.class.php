@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Controls
+	 */
 	class QLabel extends QBlockControl {
 		///////////////////////////
 		// Private Member Variables
