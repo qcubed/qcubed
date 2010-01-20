@@ -1,6 +1,7 @@
 <?php
 	/**
 	 * Used by the QCubed Code Generator to describe a database Table
+	 * @package Codegen
 	 */
 	class QTable extends QBaseClass {
 

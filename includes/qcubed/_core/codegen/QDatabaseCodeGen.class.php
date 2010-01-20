@@ -7,6 +7,9 @@
 	require(__QCUBED_CORE__ . '/codegen/QTable.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QTypeTable.class.php');
 
+	/**
+	 * @package Codegen
+	 */
 	class QDatabaseCodeGen extends QCodeGen {
 		// Objects
 		protected $objTableArray;

@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * @package Codegen
+	 */
 	class QRestServiceCodeGen extends QCodeGen {
 		// REST Service-specific Attributes
 		protected $strServiceUrl;

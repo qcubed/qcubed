@@ -9,6 +9,7 @@
 	 * for both the Object-Relational Model (e.g. Data Objects) as well as
 	 * the draft Forms, which make up simple HTML/PHP scripts to perform
 	 * basic CRUD functionality on each object.
+	 * @package Codegen
 	 */
 	abstract class QCodeGenBase extends QBaseClass {
 		// Class Name Suffix/Prefix

@@ -2,6 +2,7 @@
 	/**
 	 * Used by the QCubed Code Generator to describe a column reference
 	 * (aka a Foreign Key)
+	 * @package Codegen
 	 */
 	class QReference extends QBaseClass {
 

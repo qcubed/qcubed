@@ -1,8 +1,9 @@
 <?php
 	/**
 	 * Used by the QCubed Code Generator to describe a database Type Table
-	 * "Type" tables must be defined with only two columns, the first one being an integer-based primary key,
+	 * "Type" tables must be defined with at least two columns, the first one being an integer-based primary key,
 	 * and the second one being the name of the type.
+	 * @package Codegen
 	 */
 	class QTypeTable extends QBaseClass {
 
@@ -30,7 +31,7 @@
 		protected $strNameArray;
 
         /**
-         * Column names for extra properties (beyond the 2 basic ones), if any.
+         * Column names for extra properties (beyond the 2 basic columns), if any.
          */
         protected $strExtraFieldNamesArray;
 

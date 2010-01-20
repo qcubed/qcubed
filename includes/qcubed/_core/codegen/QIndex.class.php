@@ -1,6 +1,7 @@
 <?php
 	/**
 	 * Used by the QCubed Code Generator to describe a table Index
+	 * @package Codegen
 	 */
 	class QIndex extends QBaseClass {
 

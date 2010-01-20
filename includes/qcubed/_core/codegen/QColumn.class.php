@@ -1,6 +1,7 @@
 <?php
 	/**
 	 * Used by the QCubed Code Generator to describe a table's column
+	 * @package Codegen
 	 */
 	class QColumn extends QBaseClass {
 
