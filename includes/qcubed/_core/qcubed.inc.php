@@ -31,7 +31,7 @@
 	 */
 
 	// Versioning Information
-	define('QCUBED_VERSION_NUMBER_ONLY', '1.1');
+	define('QCUBED_VERSION_NUMBER_ONLY', '1.1.1');
 	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 
 	// Preload Required Framework Classes
@@ -96,7 +96,6 @@
 	QApplicationBase::$ClassFile['qarchive'] = __QCUBED_CORE__ . '/framework/QArchive.class.php';
 	QApplicationBase::$ClassFile['qlexer'] = __QCUBED_CORE__ . '/framework/QLexer.class.php';
 	QApplicationBase::$ClassFile['qregex'] = __QCUBED_CORE__ . '/framework/QRegex.class.php';
-	QApplicationBase::$ClassFile['qtimer'] = __QCUBED_CORE__ . '/framework/QTimer.class.php';
 
 	QApplicationBase::$ClassFile['qinstallationvalidator'] = __QCUBED_CORE__ . '/framework/QInstallationValidator.class.php';
 	
