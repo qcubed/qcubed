@@ -22,30 +22,7 @@ abstract class QJQAction extends QAction {
 
 	private function setJavaScripts($objControl) {
 		$objControl->AddJavascriptFile(__JQUERY_BASE__);
-		$objControl->AddJavascriptFile(__JQUERY_EFFECTS__ . '/effects.core.js');
-		
-		switch($this->strMethod) {
-			case 'blind' :
-			case 'bounce' :
-			case 'clip' :
-			case 'drop' :            
-			case 'explode' :
-			case 'fold' :
-			case 'highlight' :                
-			case 'scale':            
-			case 'shake' :    
-			case 'slide' :                                    
-			case 'transfer' :
-			case 'pulsate' :
-				$objControl->AddJavascriptFile(__JQUERY_EFFECTS__ . '/effects.' . $this->strMethod . '.js');
-				break;
-
-			// The following two effects have a dependency on the scale effect
-			case 'puff':
-			case 'size':
-				$objControl->AddJavascriptFile(__JQUERY_EFFECTS__ . '/effects.scale.js');
-				break;
-		}
+		$objControl->AddJavascriptFile(__JQUERY_EFFECTS__);
 	}
 }
 
