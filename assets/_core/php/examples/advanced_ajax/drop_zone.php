@@ -44,6 +44,9 @@
 			$this->pnlPanel->RemoveAllDropZones();
 			$this->pnlPanel->AddDropZone($this->pnlDropZone1);
 			$this->pnlPanel->AddDropZone($this->pnlDropZone2);
+			
+			$this->pnlDropZone1->AddAction(new QDragDropEvent(), new QAlertAction("dropped on zone 1"));
+			$this->pnlDropZone2->AddAction(new QDragDropEvent(), new QAlertAction("dropped on zone 2"));
 		}
 	}
 

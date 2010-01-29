@@ -148,98 +148,48 @@
 
 			var strUri = objForm.action;
 
-			var objRequest;
-			if (window.XMLHttpRequest) {
-				objRequest = new XMLHttpRequest();
-			} else if (typeof ActiveXObject != "undefined") {
-				objRequest = new ActiveXObject("Microsoft.XMLHTTP");
-			};
-
-			if (objRequest) {
-				objRequest.open("POST", strUri, true);
-				objRequest.setRequestHeader("Method", "POST " + strUri + " HTTP/1.1");
-				objRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-				objRequest.onreadystatechange = function() {
-					if (objRequest.readyState == 4) {
-						if (!qcodo.beforeUnloadFlag) {
-							try {
-								var objXmlDoc = objRequest.responseXML;
-//								qcodo.logMessage(objRequest.responseText, true);
-//								alert('AJAX Response Received');
-
-								if (!objXmlDoc) {
-									alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
-									var objErrorWindow = window.open('about:blank', 'qcodo_error','menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
-									objErrorWindow.focus();
-									objErrorWindow.document.write(objRequest.responseText);
-									return;
+			$j.ajax({
+				   type: "POST",
+				   url: strUri,
+				   data: strPostData,	   
+				   success: function(xml){
+							$j(xml).find('control').each(function() {
+								var strControlId = '#' + $j(this).attr("id");
+								var strControlHtml = $j(this).text();				
+								
+								if (strControlId == "#Qform__FormState") {
+									$j(strControlId).val(strControlHtml);
 								} else {
-									var intLength = 0;
-	
-									// Go through Controls
-									var objXmlControls = objXmlDoc.getElementsByTagName('control');
-									intLength = objXmlControls.length;
-	
-									for (var intIndex = 0; intIndex < intLength; intIndex++) {
-										var strControlId = objXmlControls[intIndex].attributes.getNamedItem('id').nodeValue;
-	
-										var strControlHtml = "";
-										if (objXmlControls[intIndex].textContent)
-											strControlHtml = objXmlControls[intIndex].textContent;
-										else if (objXmlControls[intIndex].firstChild)
-											strControlHtml = objXmlControls[intIndex].firstChild.nodeValue;
-	
-										// Perform Callback Responsibility
-										if (strControlId == "Qform__FormState") {
-											var objFormState = document.getElementById(strControlId);
-											objFormState.value = strControlHtml;							
-										} else {
-											var objSpan = document.getElementById(strControlId + "_ctl");
-											if (objSpan)
-												objSpan.innerHTML = strControlHtml;
-										};
-									};
-	
-									// Go through Commands
-									var objXmlCommands = objXmlDoc.getElementsByTagName('command');
-									intLength = objXmlCommands.length;
-	
-									for (var intIndex = 0; intIndex < intLength; intIndex++) {
-										if (objXmlCommands[intIndex] && objXmlCommands[intIndex].firstChild) {
-											var strCommand = "";
-											intChildLength = objXmlCommands[intIndex].childNodes.length;
-											for (var intChildIndex = 0; intChildIndex < intChildLength; intChildIndex++)
-												strCommand += objXmlCommands[intIndex].childNodes[intChildIndex].nodeValue;
-											eval(strCommand);
-										};
-									};
-								};
-							} catch (objExc) {
-								alert(objExc.message + "\r\non line number " + objExc.lineNumber + "\r\nin file " + objExc.fileName);
-								alert("An error occurred during AJAX Response handling.\r\n\r\nThe error response will appear in a new popup.");
-								var objErrorWindow = window.open('about:blank', 'qcodo_error','menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
-								objErrorWindow.focus();
-								objErrorWindow.document.write(objRequest.responseText);
-								return;
-							};
-						};
-
-						// Perform the Dequeue
-						qcodo.ajaxQueue.shift();
-
-						// Hid the WaitIcon (if applicable)
-						if (qcodo.objAjaxWaitIcon)
-							qcodo.objAjaxWaitIcon.style.display = 'none';
-
-						// If there are still AjaxEvents in the queue, go ahead and process/dequeue them
-						if (qcodo.ajaxQueue.length > 0)
-							qcodo.dequeueAjaxQueue();
-					};
-				};
-
-				objRequest.send(strPostData);
-			};
+									$j(strControlId + "_ctl").html(strControlHtml);
+								}
+							});			
+							var strCommand = '';
+							$j(xml).find('command').each(function() {						
+								strCommand += $j(this).text();										
+							});				
+							eval(strCommand);					
+							
+							// Perform the Dequeue
+							qcodo.ajaxQueue.shift();
+							
+							// Hid the WaitIcon (if applicable)
+							if (qcodo.objAjaxWaitIcon)
+								qcodo.objAjaxWaitIcon.style.display = 'none';
+							
+							// If there are still AjaxEvents in the queue, go ahead and process/dequeue them
+							if (qcodo.ajaxQueue.length > 0)
+								qcodo.dequeueAjaxQueue();	   
+							
+				   }, 
+				   error: function(XMLHttpRequest, textStatus, errorThrown){
+						alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
+						var objErrorWindow = window.open('about:blank', 'qcodo_error','menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
+						objErrorWindow.focus();
+						objErrorWindow.document.write(XMLHttpRequest.responseText);
+						return;
+				   }
+				   
+			});
 		};
 	};
 

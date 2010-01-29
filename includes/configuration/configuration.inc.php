@@ -20,7 +20,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 * Of course, you can also feel free to remove QApplication::CheckRemoteAdmin() call on any of these pages,
 			 * which will completely ignore ALLOW_REMOTE_ADMIN altogether.
 			 */
-			define('ALLOW_REMOTE_ADMIN', false);
+			define('ALLOW_REMOTE_ADMIN', true);
 
 
 
@@ -59,9 +59,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs/qcubed');
+			define ('__DOCROOT__', 'C:/xampplite/htdocs');
 			define ('__VIRTUAL_DIRECTORY__', '');
-			define ('__SUBDIRECTORY__', '');
+			define ('__SUBDIRECTORY__', '/2.0');
 
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
@@ -132,8 +132,9 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__PLUGIN_ASSETS__', __SUBDIRECTORY__ . '/assets/plugins');
 
 			// jQuery folder location
-			define ('__JQUERY_BASE__', '/jquery/jquery-1.4.min.js');
-			define ('__JQUERY_EFFECTS__',   '/jquery/jquery-ui-1.7.2.custom.min.js');
+			define ('__JQUERY_BASE__', __JS_ASSETS__ . 'jquery/jquery-1.4.1.js');
+			define ('__JQUERY_EFFECTS__',   __JS_ASSETS__ . 'jquery/jquery-ui-1.7.2.custom.min');
+			define ('__JQUERY_CSS__', __JS_ASSETS__ . '/jquery/css/start/jquery-ui-1.8rc1.custom.css');
 			
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
@@ -195,7 +196,9 @@ if (!defined('SERVER_INSTANCE')) {
 			// By default, QFormStateHandler will be used (which simply outputs the entire serialized
 			// form data stream to the form), but file- and session- based, or any custom db-
 			// based FormState handling can be used as well.
-			define('__FORM_STATE_HANDLER__', 'QFormStateHandler');			
+			define('__FORM_STATE_HANDLER__', 'QSessionFormStateHandler');			
+			define ('__FILE_FORM_STATE_HANDLER_PATH__', 'c:\\xampplite\\tmp');
+			
 			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
 			define('__FILE_FORM_STATE_HANDLER_PATH__', __DOCROOT__ . '/tmp');
 

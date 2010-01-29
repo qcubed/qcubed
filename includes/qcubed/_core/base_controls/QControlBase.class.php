@@ -608,6 +608,7 @@
 		 * @return string
 		 */
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
+			$blnIncludeAction = false;
 			$strToReturn = "";
 
 			if (!$this->blnEnabled)
@@ -888,11 +889,13 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
+			
+			$strToReturn = $this->GetActionAttributes();
+
 			if ($this->blnMoveable)
-//				return sprintf('qcodo.registerControlMoveable("%s"); ', $this->strControlId);
-				return sprintf('qc.regCM("%s"); ', $this->strControlId);
+				return sprintf('$j("#%s").draggable(); %s', $this->strControlId, $strToReturn);
 			else
-				return null;
+				return $strToReturn;
 		}
 
 		/**

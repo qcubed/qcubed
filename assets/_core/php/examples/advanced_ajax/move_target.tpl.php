@@ -17,8 +17,7 @@
 		still click "into" the textbox to enter in data.
 	</div>
 
-	<p><?php $this->lblHandle->Render('BackColor=#ddffdd', 'Width=250', 'Padding=4', 'DisplayStyle=block'); ?></p>
-	<p><?php $this->txtTextbox->Render('Width=250'); ?></p>
+	<p><?php $this->pnlParent->Render('BackColor=#ddffdd', 'Width=250', 'Height=200', 'Padding=4', 'DisplayStyle=block'); ?></p>
 
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

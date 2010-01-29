@@ -94,7 +94,14 @@
 			$this->objLowerResizeControlsArray = array();
 		}
 
-		public function AddControlToMove($objTargetControl = null) {
+		public function AddControlToMove() {
+			/* TODO: we might want to rename this function, it does not reflect what it used to do */
+			
+			// buggy: drop event not properly supported: $this->strJavaScripts = 'jquery/jquery-ui-1.8rc1.custom.min.js';
+			$this->strJavaScripts = 'jquery/jquery-ui-1.7.2.custom.min.js';
+			$this->blnMoveable = true;
+			return;
+/*			
 			$this->strJavaScripts = 'control_handle.js,control_move.js';
 			if (!$objTargetControl) {
 				$this->blnMoveable = true;
@@ -114,6 +121,7 @@
 					$this->AddDropZone($objTargetControl->Form);
 			} else
 				throw new QCallerException('TargetControl that this will move must be a QControl object');
+*/
 		}
 
 		public function RemoveControlToMove(QControl $objTargetControl) {
@@ -127,7 +135,12 @@
 		}
 
 		public function AddDropZone($objParentObject) {
-			$this->strJavaScripts = 'control_handle.js,control_move.js';
+			$this->strJavaScripts = 'jquery/jquery-ui-1.7.2.custom.min.js';
+			$this->objDropsControlsArray[$objParentObject->ControlId] = true;
+			$objParentObject->DropTarget = true;
+			$objParentObject->objIsDropZoneFor[$this->ControlId] = true;
+			
+/*			
 			if ($objParentObject instanceof QForm) {
 				$this->objDropsControlsArray[$objParentObject->FormId] = true;
 			} else if ($objParentObject instanceof QBlockControl) {
@@ -138,6 +151,7 @@
 				$this->objDropsGroupingsArray[$objParentObject->GroupingId] = true;
 			} else
 				throw new QCallerException('ParentObject must be either a QForm or QBlockControl object');
+*/
 		}
 
 		public function RemoveDropZone($objParentObject) {
@@ -151,6 +165,8 @@
 		}
 
 		public function RemoveAllDropZones() {
+			QApplication::ExecuteJavascript(sprintf('$j("#%s").draggable("option", "revert", "invalid");',$this->strControlId));
+			
 			foreach ($this->objDropsControlsArray as $strControlId => $blnValue) {
 				if ($blnValue) {
 					$objControl = $this->objForm->GetControl($strControlId);
@@ -164,39 +180,38 @@
 		public function GetEndScript() {
 			$strToReturn = parent::GetEndScript();
 
+/*			
 			// MOVE TARGETS
 			if (count($this->objMovesControlsArray)) {
-//				$strToReturn .= sprintf('qcodo.registerControlMoveHandle("%s"); ', $this->strControlId);
 				$strToReturn .= sprintf('qc.regCMH("%s"); ', $this->strControlId);
 
 				foreach ($this->objMovesControlsArray as $objControl) {
-//					$strToReturn .= sprintf('qcodo.getWrapper("%s").registerMoveTarget("%s"); ', $this->strControlId, $objControl->ControlId);
 					$strToReturn .= sprintf('qc.getW("%s").regMT("%s"); ', $this->strControlId, $objControl->ControlId);
 				}
 			}
-
+*/
+			
 			// DROP ZONES
 			foreach ($this->objDropsControlsArray as $strKey => $blnIsDropZone) {
 				if ($blnIsDropZone)
-//					$strToReturn .= sprintf('qcodo.getWrapper("%s").registerDropZone("%s"); ', $this->strControlId, $strKey);
-					$strToReturn .= sprintf('qc.getW("%s").regDZ("%s"); ', $this->strControlId, $strKey);
+					$strToReturn .= sprintf('$j("#%s").droppable(); ', $strKey);
 			}
 
 			foreach ($this->objIsDropZoneFor as $strKey => $blnIsDropZone) {
 				if ($blnIsDropZone) {
 					$objControl = $this->objForm->GetControl($strKey);
-					if ($objControl && ($objControl->strRenderMethod))
-//						$strToReturn .= sprintf('qcodo.registerControlMoveHandle("%s"); qcodo.getWrapper("%s").registerDropZone("%s"); ', $strKey, $strKey, $this->strControlId);
-						$strToReturn .= sprintf('qc.regCMH("%s"); qc.getW("%s").regDZ("%s"); ', $strKey, $strKey, $this->strControlId);
+					if ($objControl && ($objControl->strRenderMethod)) {
+						$strToReturn .= sprintf('$j("#%s").droppable("option", "accept", "#%s");', $this->strControlId, $strKey);
+					}
 				}
 			}
-			
+/*			TODO !!!
 			foreach ($this->objDropsGroupingsArray as $strKey => $blnIsDropZone) {
 				if ($blnIsDropZone) {
 					$strToReturn .= sprintf('qc.getW("%s").regDZG("%s");', $this->strControlId, $strKey);
 				}
 			}
-
+*/
 			// ResizeHandle
 			// regCRH is a shortcut for registerControlResizeHandle
 			// setUC = setUpperControl

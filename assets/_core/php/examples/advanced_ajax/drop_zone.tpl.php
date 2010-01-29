@@ -25,9 +25,9 @@
 		panels.
 	</div>
 
-	<?php $this->pnlPanel->Render('BackColor=#eeccff', 'Width=130', 'Height=50', 'Padding=10', 'BorderWidth=1'); ?>
 	<?php $this->pnlDropZone1->Render('BackColor=#cccccc', 'Width=250', 'Height=150', 'Padding=10', 'BorderWidth=1'); ?>
 	<?php $this->pnlDropZone2->Render('BackColor=#ccffee', 'Width=250', 'Height=150', 'Padding=10', 'BorderWidth=1'); ?>
+	<?php $this->pnlPanel->Render('BackColor=#eeccff', 'Width=130', 'Height=50', 'Padding=10', 'BorderWidth=1'); ?>
 
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

@@ -55,8 +55,8 @@
 	 * Blur event: keyboard focus moving away from the control.
 	 */
 	class QBlurEvent extends QEvent {
-		const EventName = 'onblur';
-		protected $strJavaScriptEvent = 'onblur';
+		const EventName = 'blur';
+		protected $strJavaScriptEvent = 'blur';
 	}
 
 	/**
@@ -64,71 +64,93 @@
 	 * they don't fire when the user picks a value on many browsers!
 	 */
 	class QChangeEvent extends QEvent {
-		const EventName = 'onchange';
-		protected $strJavaScriptEvent = 'onchange';
+		const EventName = 'change';
+		protected $strJavaScriptEvent = 'change';
 	}
 
 	class QClickEvent extends QEvent {
-		const EventName = 'onclick';
-		protected $strJavaScriptEvent = 'onclick';
+		const EventName = 'click';
+		protected $strJavaScriptEvent = 'click';
 	}
 
 	class QDoubleClickEvent extends QEvent {
-		const EventName = 'ondblclick';
-		protected $strJavaScriptEvent = 'ondblclick';
+		const EventName = 'dblclick';
+		protected $strJavaScriptEvent = 'dblclick';
 	}
 
 	class QDragDropEvent extends QEvent {
-		const EventName = 'ondragdrop';
-		protected $strJavaScriptEvent = 'ondragdrop';
+		const EventName = 'drop';
+		protected $strJavaScriptEvent = 'drop';
 	}
 
 	/**
 	 * Focus event: keyboard focus entering the control.
 	 */
 	class QFocusEvent extends QEvent {
-		const EventName = 'onfocus';
-		protected $strJavaScriptEvent = 'onfocus';
+		const EventName = 'focus';
+		protected $strJavaScriptEvent = 'focus';
 	}
-
+	
+	/* added for V2 / jQuery support */
+	class QFocusInEvent extends QEvent {
+		const EventName = 'focusin';
+		protected $strJavaScriptEvent = 'focusin';
+	}
+	
+	/* added for V2 / jQuery support */
+	class QFocusOutEvent extends QEvent {
+		const EventName = 'focusout';
+		protected $strJavaScriptEvent = 'focusout';
+	}	
+	
 	class QKeyDownEvent extends QEvent {
-		const EventName = 'onkeydown';
-		protected $strJavaScriptEvent = 'onkeydown';
+		const EventName = 'keydown';
+		protected $strJavaScriptEvent = 'keydown';
 	}
 
 	class QKeyPressEvent extends QEvent {
-		const EventName = 'onkeypress';
-		protected $strJavaScriptEvent = 'onkeypress';
+		const EventName = 'keypress';
+		protected $strJavaScriptEvent = 'keypress';
 	}
 
 	class QKeyUpEvent extends QEvent {
-		const EventName = 'onkeyup';
-		protected $strJavaScriptEvent = 'onkeyup';
+		const EventName = 'keyup';
+		protected $strJavaScriptEvent = 'keyup';
 	}
 
 	class QMouseDownEvent extends QEvent {
-		const EventName = 'onmousedown';
-		protected $strJavaScriptEvent = 'onmousedown';
+		const EventName = 'mousedown';
+		protected $strJavaScriptEvent = 'mousedown';
 	}
+	
+	class QMouseEnterEvent extends QEvent {
+		const EventName = 'mouseenter';
+		protected $strJavaScriptEvent = 'mouseenter';
+	}	
+
+	class QMouseLeaveEvent extends QEvent {
+		const EventName = 'mouseleave';
+		protected $strJavaScriptEvent = 'mouseleave';
+	}	
 
 	class QMouseMoveEvent extends QEvent {
-		const EventName = 'onmousemove';
-		protected $strJavaScriptEvent = 'onmousemove';
+		const EventName = 'mousemove';
+		protected $strJavaScriptEvent = 'mousemove';
 	}
 
 	class QMouseOutEvent extends QEvent {
-		const EventName = 'onmouseout';
-		protected $strJavaScriptEvent = 'onmouseout';
+		const EventName = 'mouseout';
+		protected $strJavaScriptEvent = 'mouseout';
 	}
 
 	class QMouseOverEvent extends QEvent {
-		const EventName = 'onmouseover';
-		protected $strJavaScriptEvent = 'onmouseover';
+		const EventName = 'mouseover';
+		protected $strJavaScriptEvent = 'mouseover';
 	}
 
 	class QMouseUpEvent extends QEvent {
-		const EventName = 'onmouseup';
-		protected $strJavaScriptEvent = 'onmouseup';
+		const EventName = 'mouseup';
+		protected $strJavaScriptEvent = 'mouseup';
 	}
 
 	class QMoveEvent extends QEvent {
@@ -142,36 +164,23 @@
 	}
 
 	class QSelectEvent extends QEvent {
-		const EventName = 'onselect';
-		protected $strJavaScriptEvent = 'onselect';
+		const EventName = 'select';
+		protected $strJavaScriptEvent = 'select';
 	}
 
-	// Key-Specific Events (EnterKey, EscapeKey, UpArrowKey, DownArrowKey, etc.)
-	if (QApplication::IsBrowser(QBrowserType::Macintosh)) {
-		class QEnterKeyEvent extends QKeyPressEvent {
-			protected $strCondition = 'event.keyCode == 13';
-		}
-		class QEscapeKeyEvent extends QKeyPressEvent {
-			protected $strCondition = 'event.keyCode == 27';
-		}
-		class QUpArrowKeyEvent extends QKeyPressEvent {
-			protected $strCondition = 'event.keyCode == 38';
-		}
-		class QDownArrowKeyEvent extends QKeyPressEvent {
-			protected $strCondition = 'event.keyCode == 40';
-		}
-	} else {
-		class QEnterKeyEvent extends QKeyDownEvent {
-			protected $strCondition = 'event.keyCode == 13';
-		}
-		class QEscapeKeyEvent extends QKeyDownEvent {
-			protected $strCondition = 'event.keyCode == 27';
-		}
-		class QUpArrowKeyEvent extends QKeyDownEvent {
-			protected $strCondition = 'event.keyCode == 38';
-		}
-		class QDownArrowKeyEvent extends QKeyDownEvent {
-			protected $strCondition = 'event.keyCode == 40';
-		}
+	class QEnterKeyEvent extends QKeyDownEvent {
+		protected $strCondition = 'event.keyCode == 13';
+	}
+	
+	class QEscapeKeyEvent extends QKeyDownEvent {
+		protected $strCondition = 'event.keyCode == 27';
+	}
+	
+	class QUpArrowKeyEvent extends QKeyDownEvent {
+		protected $strCondition = 'event.keyCode == 38';
+	}
+	
+	class QDownArrowKeyEvent extends QKeyDownEvent {
+		protected $strCondition = 'event.keyCode == 40';
 	}
 ?>

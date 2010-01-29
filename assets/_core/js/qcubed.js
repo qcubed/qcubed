@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////////
 // The Qcodo Object is used for everything in Qcodo
 ///////////////////////////////////////////////////
-
 	var qcodo = {
 		initialize: function() {
 
@@ -148,45 +147,19 @@
 		////////////////////////////////
 		// Browser-related functionality
 		////////////////////////////////
-
+					
 			this.loadJavaScriptFile = function(strScript, objCallback) {
 				strScript = qc.jsAssets + "/" + strScript;
-				var objNewScriptInclude = document.createElement("script");
-				objNewScriptInclude.setAttribute("type", "text/javascript");
-				objNewScriptInclude.setAttribute("src", strScript);
-				document.getElementById(document.getElementById("Qform__FormId").value).appendChild(objNewScriptInclude);
-
-				// IE does things differently...
-				if (qc.isBrowser(qcodo.IE)) {
-					objNewScriptInclude.callOnLoad = objCallback;
-					objNewScriptInclude.onreadystatechange = function() {
-						if ((this.readyState == "complete") || (this.readyState == "loaded"))
-							if (this.callOnLoad)
-								this.callOnLoad();
-					};
-
-				// ... than everyone else
-				} else {
-					objNewScriptInclude.onload = objCallback;
-				};
+				$.getScript(strScript, objCallback);
 			};
 
 			this.loadStyleSheetFile = function(strStyleSheetFile, strMediaType) {
 				strStyleSheetFile = qc.cssAssets + "/" + strStyleSheetFile;
+				
+				$j('head').append('<link rel="stylesheet" href="' + strStyleSheetFile + '" type="text/css" />');	
 
-				// IE does things differently...
-				if (qc.isBrowser(qcodo.IE)) {
-					var objNewScriptInclude = document.createStyleSheet(strStyleSheetFile);
-
-				// ...than everyone else
-				} else {
-					var objNewScriptInclude = document.createElement("style");
-					objNewScriptInclude.setAttribute("type", "text/css");
-					objNewScriptInclude.setAttribute("media", strMediaType);
-					objNewScriptInclude.innerHTML = '@import "' + strStyleSheetFile + '";';
-					document.body.appendChild(objNewScriptInclude);
-				};
 			};
+
 
 
 
@@ -367,6 +340,10 @@
 ////////////////////////////////
 // Qcodo Shortcut and Initialize
 ////////////////////////////////
-
+	// Make sure we set $j.noConflict() to $j
+	var $j = jQuery.noConflict();
+	
 	var qc = qcodo;
 	qc.initialize();
+	
+	
