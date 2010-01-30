@@ -20,8 +20,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 * Of course, you can also feel free to remove QApplication::CheckRemoteAdmin() call on any of these pages,
 			 * which will completely ignore ALLOW_REMOTE_ADMIN altogether.
 			 */
-			define('ALLOW_REMOTE_ADMIN', true);
-
+			define('ALLOW_REMOTE_ADMIN', false);
 
 
 			/* Constants for Document Root (and Virtual Directories / Subfoldering)
@@ -196,8 +195,7 @@ if (!defined('SERVER_INSTANCE')) {
 			// By default, QFormStateHandler will be used (which simply outputs the entire serialized
 			// form data stream to the form), but file- and session- based, or any custom db-
 			// based FormState handling can be used as well.
-			define('__FORM_STATE_HANDLER__', 'QSessionFormStateHandler');			
-			define ('__FILE_FORM_STATE_HANDLER_PATH__', 'c:\\xampplite\\tmp');
+			define('__FORM_STATE_HANDLER__', 'QSessionFormStateHandler');
 			
 			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
 			define('__FILE_FORM_STATE_HANDLER_PATH__', __DOCROOT__ . '/tmp');
