@@ -58,13 +58,13 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'C:/xampplite/htdocs');
+			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs');
 			define ('__VIRTUAL_DIRECTORY__', '');
-			define ('__SUBDIRECTORY__', '/2.0');
+			define ('__SUBDIRECTORY__', '/qcubed2');
 
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
-			 */			
+			 */
 			define ('__INCLUDES__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes');
 			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
 
@@ -130,11 +130,11 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__PHP_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/php');
 			define ('__PLUGIN_ASSETS__', __SUBDIRECTORY__ . '/assets/plugins');
 
-			// jQuery folder location
-			define ('__JQUERY_BASE__', __JS_ASSETS__ . 'jquery/jquery-1.4.1.js');
-			define ('__JQUERY_EFFECTS__',   __JS_ASSETS__ . 'jquery/jquery-ui-1.7.2.custom.min');
-			define ('__JQUERY_CSS__', __JS_ASSETS__ . '/jquery/css/start/jquery-ui-1.8rc1.custom.css');
-			
+			// jQuery folder location, relative to __JS_ASSETS__
+			define ('__JQUERY_BASE__',  'jquery/jquery-1.4.1.js');
+			define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui-1.7.2.custom.min.js');
+			define ('__JQUERY_CSS__', '/jquery/css/start/jquery-ui-1.8rc1.custom.css');
+				
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
 
@@ -180,23 +180,23 @@ if (!defined('SERVER_INSTANCE')) {
 				'profiling' => false)));
 
 			// Additional Database Connection Strings can be defined here (e.g. for connection #2, #3, #4, #5, etc.)
-//			define('DB_CONNECTION_2', serialize(array('adapter'=>'SqlServer', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-//			define('DB_CONNECTION_3', serialize(array('adapter'=>'MySqli', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-//			define('DB_CONNECTION_4', serialize(array('adapter'=>'MySql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-//			define('DB_CONNECTION_5', serialize(array('adapter'=>'PostgreSql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
+			//			define('DB_CONNECTION_2', serialize(array('adapter'=>'SqlServer', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
+			//			define('DB_CONNECTION_3', serialize(array('adapter'=>'MySqli', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
+			//			define('DB_CONNECTION_4', serialize(array('adapter'=>'MySql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
+			//			define('DB_CONNECTION_5', serialize(array('adapter'=>'PostgreSql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
 
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
-			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone'))) 
-				date_default_timezone_set('America/Los_Angeles');
+			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
+			date_default_timezone_set('America/Los_Angeles');
+
 				
-			
 			// Determines which class is used to serialize the form in-between Ajax callbacks.
 			// By default, QFormStateHandler will be used (which simply outputs the entire serialized
 			// form data stream to the form), but file- and session- based, or any custom db-
 			// based FormState handling can be used as well.
 			define('__FORM_STATE_HANDLER__', 'QSessionFormStateHandler');
-			
+				
 			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
 			define('__FILE_FORM_STATE_HANDLER_PATH__', __DOCROOT__ . '/tmp');
 
@@ -208,11 +208,11 @@ if (!defined('SERVER_INSTANCE')) {
 			define('ERROR_LOG_PATH', __INCLUDES__ . '/error_log');
 
 			// To Log ALL errors that have occurred, set flag to true
-//			define('ERROR_LOG_FLAG', true);
+			//			define('ERROR_LOG_FLAG', true);
 
 			// To enable the display of "Friendly" error pages and messages, define them here (path MUST be relative from the DOCROOT)
-//			define('ERROR_FRIENDLY_PAGE_PATH', __PHP_ASSETS__ . '/friendly_error_page.php');
-//			define('ERROR_FRIENDLY_AJAX_MESSAGE', 'Oops!  An error has occurred.\r\n\r\nThe error was logged, and we will take a look into this right away.');
+			//			define('ERROR_FRIENDLY_PAGE_PATH', __PHP_ASSETS__ . '/friendly_error_page.php');
+			//			define('ERROR_FRIENDLY_AJAX_MESSAGE', 'Oops!  An error has occurred.\r\n\r\nThe error was logged, and we will take a look into this right away.');
 
 			break;
 	}

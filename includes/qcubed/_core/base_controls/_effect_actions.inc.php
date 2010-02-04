@@ -20,8 +20,8 @@ abstract class QJQAction extends QAction {
 		$this->setJavaScripts($objControl);
 	}
 
-	private function setJavaScripts($objControl) {
-		$objControl->AddJavascriptFile('jquery/jquery-ui-1.7.2.custom.min.js');
+	private function setJavaScripts(QControlBase $objControl) {
+		$objControl->AddJavascriptFile(__JQUERY_EFFECTS__);
 	}
 }
 

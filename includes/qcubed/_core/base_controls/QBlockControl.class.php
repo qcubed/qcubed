@@ -97,8 +97,8 @@
 		public function AddControlToMove() {
 			/* TODO: we might want to rename this function, it does not reflect what it used to do */
 			
-			// buggy: drop event not properly supported: $this->strJavaScripts = 'jquery/jquery-ui-1.8rc1.custom.min.js';
-			$this->strJavaScripts = 'jquery/jquery-ui-1.7.2.custom.min.js';
+			// buggy: drop event not properly supported in jquery-ui-1.8rc1.custom.min.js;
+			$this->strJavaScripts = __JQUERY_EFFECTS__;
 			$this->blnMoveable = true;
 			return;
 /*			
@@ -135,7 +135,7 @@
 		}
 
 		public function AddDropZone($objParentObject) {
-			$this->strJavaScripts = 'jquery/jquery-ui-1.7.2.custom.min.js';
+			$this->strJavaScripts = __JQUERY_EFFECTS__;
 			$this->objDropsControlsArray[$objParentObject->ControlId] = true;
 			$objParentObject->DropTarget = true;
 			$objParentObject->objIsDropZoneFor[$this->ControlId] = true;
