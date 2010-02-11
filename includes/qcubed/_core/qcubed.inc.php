@@ -170,6 +170,7 @@
 
 	QApplicationBase::$ClassFile['qdatagridbase'] = __QCUBED_CORE__ . '/base_controls/QDataGridBase.class.php';
 	QApplicationBase::$ClassFile['qdatagridcolumn'] = __QCUBED_CORE__ . '/base_controls/QDataGridColumn.class.php';
+	QApplicationBase::$ClassFile['qcheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QCheckBoxColumn.class.php'; 
 	QApplicationBase::$ClassFile['qdatagridrowstyle'] = __QCUBED_CORE__ . '/base_controls/QDataGridRowStyle.class.php';
 	QApplicationBase::$ClassFile['qdatagrid'] = __QCUBED__ . '/controls/QDataGrid.class.php';
 
