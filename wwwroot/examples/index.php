@@ -9,7 +9,7 @@
 			<div class="instruction_title">QCubed Examples Site</div>
 			
 			This is a collection of many small examples that demonstrate the functionality
-			in Qcodo.  Later examples tend to build upon functionality or concepts that are
+			in QCubed.  Later examples tend to build upon functionality or concepts that are
 			discussed in prior ones, which allows the Examples site to be viewed as a quasi-tutorial.
 			However, you should still feel free to check out any of the examples as you wish.<br/><br/>
 			

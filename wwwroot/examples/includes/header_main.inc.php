@@ -10,7 +10,7 @@
 
 	<table border="0" cellspacing="0" width="100%">
 		<tr>
-			<td class="headingLeft"><span class="headingLeftSmall">Qcubed Examples - <?php _p(QCODO_VERSION); ?><br/></span>
+			<td class="headingLeft"><span class="headingLeftSmall">QCubed Examples - <?php _p(QCODO_VERSION); ?><br/></span>
 				<?php _p(Examples::PageName(), false); ?><br/>
 			<span class="headingLeftSmall"></span>
 			</td>
