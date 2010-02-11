@@ -165,10 +165,9 @@
 						if (!qcodo.beforeUnloadFlag) {
 							try {
 								var objXmlDoc = objRequest.responseXML;
-//								qcodo.logMessage(objRequest.responseText, true);
-//								alert('AJAX Response Received');
 
-								if (!objXmlDoc) {
+								//At the very least, a sucessful ajax post will return a new formstate
+								if (!objXmlDoc || objXmlDoc.getElementsByTagName('control').length == 0) {
 									alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
 									var objErrorWindow = window.open('about:blank', 'qcodo_error','menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
 									objErrorWindow.focus();
