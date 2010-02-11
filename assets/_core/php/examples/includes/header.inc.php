@@ -11,7 +11,7 @@
 				if (arguments.length == 3) {
 					fileNameSection = "/" + strFilename;
 				}
-				var objWindow = window.open("<?= __EXAMPLES__ ?>/view_source.php/" + intCategoryId + "/" + intExampleId + fileNameSection, "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
+				var objWindow = window.open("<? echo __EXAMPLES__ ?>/view_source.php/" + intCategoryId + "/" + intExampleId + fileNameSection, "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
 				objWindow.focus();
 			}
 		</script>
