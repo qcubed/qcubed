@@ -16,7 +16,7 @@ abstract class QInstallationValidator {
 			$result[] = $obj;
 		}
 		
-		if (ini_get('magic_quotes_gpc') || ini_get('magic_quotes_runtime')) {
+		if (get_magic_quotes_gpc() || get_magic_quotes_runtime()) {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "magic_quotes_gpc and magic_quotes_runtime " .
 				"need to be disabled\r\n";
