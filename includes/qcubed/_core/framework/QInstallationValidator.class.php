@@ -139,6 +139,8 @@ abstract class QInstallationValidator {
 		
 		// Database connection string checks
 		for ($i = 1; $i < 1 + sizeof(QApplication::$Database); $i++) {
+			if (!isset(QApplication::$Database[$i]))
+				continue;
 			$db = QApplication::$Database[$i];
 			// database connection problems are PHP Errors, not exceptions
 			// using an intermediate error handler to make them into
