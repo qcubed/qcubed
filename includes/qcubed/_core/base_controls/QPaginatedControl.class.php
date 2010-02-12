@@ -103,6 +103,11 @@
 						return $this->objPaginator->ItemsPerPage;
 					else
 						return null;
+				case "ItemsOffset":
+					if ($this->objPaginator)
+						return ($this->objPaginator->PageNumber - 1) * $this->objPaginator->ItemsPerPage;
+					else
+						return null;
 				case "TotalItemCount":
 					if ($this->objPaginator)
 						return $this->objPaginator->TotalItemCount;
@@ -114,7 +119,7 @@
 				case "LimitClause":
 					if ($this->objPaginator) {
 //						if ($this->objPaginator->TotalItemCount > 0) {
-							$intOffset = ($this->objPaginator->PageNumber - 1) * $this->objPaginator->ItemsPerPage;
+							$intOffset = $this->ItemsOffset;
 							return QQ::LimitInfo($this->objPaginator->ItemsPerPage, $intOffset);
 //						}
 					}
@@ -122,7 +127,7 @@
 				case "LimitInfo":
 					if ($this->objPaginator) {
 //						if ($this->objPaginator->TotalItemCount > 0) {
-							$intOffset = ($this->objPaginator->PageNumber - 1) * $this->objPaginator->ItemsPerPage;
+							$intOffset = $this->ItemsOffset;
 							return $intOffset . ',' . $this->objPaginator->ItemsPerPage;
 //						}
 					}
