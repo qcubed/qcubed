@@ -8,7 +8,7 @@
 
 		public function RenderAsEvents($strActionParameter = null, $blnDisplayOutput = true, $strTargetControlId = null, $blnRenderControlId = true) {
 			if ($strTargetControlId)
-				$this->strTargetControlId = $strFormId;
+				$this->strTargetControlId = $strTargetControlId;
 			else
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 				
