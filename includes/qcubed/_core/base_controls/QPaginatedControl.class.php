@@ -34,6 +34,7 @@
 
 		// MISC
 		protected $objDataSource;
+		protected $prxDatagridSorting;
 
 		// SETUP
 		protected $blnIsBlockElement = true;
@@ -47,6 +48,8 @@
 
 			$this->strNoun = QApplication::Translate('item');
 			$this->strNounPlural = QApplication::Translate('items');
+			
+			$this->prxDatagridSorting = new QControlProxy($this);
 		}
 
 		// This overriding function ensures that DataSource is set to null

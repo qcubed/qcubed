@@ -305,11 +305,11 @@
 
 			// Setup Sorting Events
 			if ($this->blnUseAjax)
-				$this->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Sort_Click'));
+				$this->prxDatagridSorting->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Sort_Click'));
 			else
-				$this->AddAction(new QClickEvent(), new QServerControlAction($this, 'Sort_Click'));
+				$this->prxDatagridSorting->AddAction(new QClickEvent(), new QServerControlAction($this, 'Sort_Click'));
 
-			$this->AddAction(new QClickEvent(), new QTerminateAction());
+			$this->prxDatagridSorting->AddAction(new QClickEvent(), new QTerminateAction());
 
 			$this->objWaitIcon_Create();
 			$this->btnFilter_Create();
@@ -617,10 +617,11 @@
 
 					$this->strActionParameter = $intColumnIndex;
 
-					$strToReturn .= sprintf("    <th %s><a href=\"%s\" %s%s>%s</a></th>\r\n",
+					$strToReturn .= sprintf("    <th %s><a id=\"%s\" href=\"%s\" %s%s>%s</a></th>\r\n",
 						$this->objHeaderRowStyle->GetAttributes(),
+						$this->ControlId . "_col_" . $this->strActionParameter,
                         			QApplication::$RequestUri,
-						$this->GetActionAttributes(),
+						$this->prxDatagridSorting->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_col_" . $this->strActionParameter, false),
 						$this->objHeaderLinkStyle->GetAttributes(),
 						$strName);
 				} else
@@ -682,6 +683,7 @@
 				// parse the action parameter
 				$objRow->ActionParameter = QDataGridBase::ParseHtml($this->strRowActionParameterHtml, $this, null, $objObject);
 				$strToReturn = $objRow->GetHtml($strColumnsHtml);
+				QApplication::ExecuteJavaScript($objRow->GetActionAttributes());
 			} else {
 				// If there are no events, don't create any row controls'
 				// Finish up
@@ -1382,13 +1384,13 @@
 					}
 
 					// Because we are switching to/from Ajax, we need to reset the events
-					$this->RemoveAllActions('onclick');
+					$this->prxDatagridSorting->RemoveAllActions(QClickEvent::EventName);
 					if ($this->blnUseAjax)
-						$this->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Sort_Click', $this->objWaitIcon));
+						$this->prxDatagridSorting->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Sort_Click', $this->objWaitIcon));
 					else
-						$this->AddAction(new QClickEvent(), new QServerControlAction($this, 'Sort_Click'));
+						$this->prxDatagridSorting->AddAction(new QClickEvent(), new QServerControlAction($this, 'Sort_Click'));
 
-					$this->AddAction(new QClickEvent(), new QTerminateAction());
+					$this->prxDatagridSorting->AddAction(new QClickEvent(), new QTerminateAction());
 
 					$actionName = 'btnFilter_Click';
 					foreach($this->objColumnArray as $objColumn) 
@@ -1398,7 +1400,7 @@
 							$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
 							if ($ctlFilter !== null) 
 							{
-								$ctlFilter->RemoveAllActions('onkeydown');
+								$ctlFilter->RemoveAllActions(QKeyDownEvent::EventName);
 								if ($this->blnUseAjax)
 									$ctlFilter->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, $actionName, $this->objWaitIcon));
 								else
@@ -1409,14 +1411,14 @@
 						}
 					}
 
-					$this->btnFilter->RemoveAllActions('onclick');
+					$this->btnFilter->RemoveAllActions(QClickEvent::EventName);
 					if ($this->blnUseAjax)
 						$this->btnFilter->AddAction(new QClickEvent(), new QAjaxControlAction($this, $actionName, $this->objWaitIcon));
 					else
 						$this->btnFilter->AddAction(new QClickEvent(), new QServerControlAction($this, $actionName));
 					$this->btnFilter->AddAction(new QClickEvent(), new QTerminateAction());
 
-					$this->btnFilterReset->RemoveAllActions('onclick');
+					$this->btnFilterReset->RemoveAllActions(QClickEvent::EventName);
 					if ($this->blnUseAjax)
 						$this->btnFilterReset->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilterReset_Click', $this->objWaitIcon));
 					else
