@@ -14,13 +14,15 @@
 	 * @property string $AnyKeyCloses
 	 */
 	class QDialogBox extends QPanel {
+		protected $strTitle = "";		
 		protected $strPosition = QPosition::Absolute;
-		protected $strJavaScripts = 'control_dialog.js';
+		protected $strJavaScripts = __JQUERY_EFFECTS__;
+		protected $strStyleSheets = __JQUERY_CSS__;
 
 		// APPEARANCE
 		protected $strMatteColor = '#000000';
 		protected $intMatteOpacity = 50;
-		protected $strCssClass = 'dialogbox';
+		/* protected $strCssClass = 'dialogbox';  this is now handled through jQuery UI */
 
 		// BEHAVIOR
 		protected $blnMatteClickable = true;
@@ -33,29 +35,30 @@
 
 		public function GetEndScript() {
 			$strToReturn = parent::GetEndScript();
-			if ($this->blnVisible) {
-				$strToReturn .= sprintf('qc.regDB("%s", "%s", %s, %s, %s); ',
-					$this->strControlId, $this->strMatteColor, $this->intMatteOpacity,
-					($this->blnMatteClickable) ? 'true' : 'false',
-					($this->blnMatteClickable && $this->blnAnyKeyCloses) ? 'true' : 'false'
-				);
-			}
 			return $strToReturn;
 		}
 
 		public function ShowDialogBox() {
+			$this->SetCustomAttribute("title", $this->strTitle);		// not sure if this is the right place to do it, we could probably do it in the set()	
 			if (!$this->blnVisible)
 				$this->Visible = true;
 			if (!$this->blnDisplay)
 				$this->Display = true;
-			QApplication::ExecuteJavaScript("qc.getWrapper('" . $this->strControlId . "').showDialogBox()");
+
+			$strOptions = "";
+			if ($this->strCssClass != "")
+				$strOptions .= sprintf(', dialogClass: "%s"', $this->strCssClass);
+				
+			$strOptions = sprintf(', modal: true', $this->strCssClass);
+				
+			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog({autoOpen: false %s })', $this->strControlId, $strOptions));
+			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog("open")', $this->strControlId));
+			
 			$this->blnWrapperModified = false;
 		}
 
 		public function HideDialogBox() {
-			if ($this->blnDisplay)
-				$this->Display = false;
-			QApplication::ExecuteJavaScript("qc.getWrapper('" . $this->strControlId . "').hideDialogBox()");
+			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog("close")', $this->strControlId));
 			$this->blnWrapperModified = false;
 		}
 
@@ -65,6 +68,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
+				case "Title": return $this->strTitle;
 				case "MatteColor": return $this->strMatteColor;
 				case "MatteOpacity": return $this->intMatteOpacity;
 
@@ -86,6 +90,15 @@
 			$this->blnModified = true;
 
 			switch ($strName) {
+				case "Title":
+					try {
+						$this->strTitle = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
 				case "MatteColor":
 					try {
 						$this->strMatteColor = QType::Cast($mixValue, QType::String);

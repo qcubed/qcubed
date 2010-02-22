@@ -160,6 +160,7 @@
 								if (strControlId == "#Qform__FormState") {
 									$j(strControlId).val(strControlHtml);
 								} else {
+									$j(strControlId).remove();
 									$j(strControlId + "_ctl").html(strControlHtml);
 								}
 							});			

@@ -30,7 +30,6 @@
 	</div>
 	
 	<style type="text/css">
-		.calculator_widget { width: 220px; height: 300px; background-color: #999999; padding: 10px; border-width: 1px; border-color: black; border-style: solid; }
 		.calculator_display { text-align: right; padding: 4px; width: 208px; border-width: 1px; border-style: solid; border-color: black; background-color: white; font: 24px verdana, arial, helvetica; }
 		.calculator_button { width: 50px; height: 45px; font: 20px verdana, arial, helvetica; font-weight: bold; border-width: 1px; background-color: #eeffdd; }
 		.calculator_top_button { width: 78px; height: 45px; font: 10px verdana, arial, helvetica; color: white; border-width: 1px; background-color: #336644; }

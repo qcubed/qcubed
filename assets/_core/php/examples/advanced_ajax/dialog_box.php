@@ -17,20 +17,11 @@
 		protected function Form_Create() {
 			// Define the Simple Message Dialog Box
 			$this->dlgSimpleMessage = new QDialogBox($this);
+			$this->dlgSimpleMessage->Title = "Hello World!";
 			$this->dlgSimpleMessage->Text = '<i>Hello, world!</i><br/><br/>This is a standard, no-frills dialog box.<br/><br/>Notice how the contents of the dialog '.
 				'box can scroll, and notice how everything else in the application is grayed out.<br/><br/>Because we set <b>MatteClickable</b> to <b>true</b> ' .
 				'(by default), you can click anywhere outside of this dialog box to "close" it.<br/><br/>Additional text here is just to help show the scrolling ' .
 				'capability built-in to the panel/dialog box via the "Overflow" property of the control.';
-
-			// Let's setup some basic appearance options
-			// This could and should normally be done in a separate CSS class using the CssClass property
-			$this->dlgSimpleMessage->Width = '500px';
-			$this->dlgSimpleMessage->Height = '300px';
-			$this->dlgSimpleMessage->Overflow = QOverflow::Auto;
-			$this->dlgSimpleMessage->Padding = '10px';
-			$this->dlgSimpleMessage->FontSize = '24px';
-			$this->dlgSimpleMessage->FontNames = QFontFamily::Georgia;
-			$this->dlgSimpleMessage->BackColor = '#eeffdd';
 
 			// Make sure this Dislog Box is "hidden"
 			// Like any other QPanel or QControl, this can be toggled using the "Display" or the "Visible" property
@@ -51,6 +42,7 @@
 
 			// Define the CalculatorWidget example. passing in the Method Callback for whenever the Calculator is Closed
 			$this->dlgCalculatorWidget = new CalculatorWidget('btnCalculator_Close', $this);
+			$this->dlgCalculatorWidget->Title = "Calculator Widget";
 			$this->dlgCalculatorWidget->Visible = false;
 
 			// Setup the Value Textbox and Button for this example

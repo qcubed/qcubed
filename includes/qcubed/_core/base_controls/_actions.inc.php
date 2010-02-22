@@ -47,11 +47,19 @@
 			}
 
 			if (strlen($strToReturn))
-				return sprintf('$j("#%s").bind("%s", function(){
-							%s
-							});
-							', $objControl->ControlId, $strEventName,  substr($strToReturn, 1));
+				if ($objControl instanceof QControlProxy)
+					return sprintf('$j("#%s").bind("%s", function(){
+								%s
+								});
+								', $objControl->TargetControlId, $strEventName,  substr($strToReturn, 1));
+				else
+					return sprintf('$j("#%s").bind("%s", function(){
+								%s
+								});
+								', $objControl->ControlId, $strEventName,  substr($strToReturn, 1));
+				
 				//return sprintf('%s="%s" ', $strEventName, substr($strToReturn, 1));
+				
 			else
 				return null;
 		}
