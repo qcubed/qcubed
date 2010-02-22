@@ -150,7 +150,7 @@
 					
 			this.loadJavaScriptFile = function(strScript, objCallback) {
 				strScript = qc.jsAssets + "/" + strScript;
-				$.getScript(strScript, objCallback);
+				$j.getScript(strScript, objCallback);
 			};
 
 			this.loadStyleSheetFile = function(strStyleSheetFile, strMediaType) {
