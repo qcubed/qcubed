@@ -2,6 +2,7 @@
 	/**
 	 * This is a standard, sample QForm which you can use as a starting
 	 * point to build any QForm page that you wish.
+	 *
 	 */
 
 	// Include prepend.inc to load Qcodo
