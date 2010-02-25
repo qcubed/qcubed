@@ -15,14 +15,14 @@
 			$this->strActionParameter = $strActionParameter;
 			$strToReturn = $this->GetActionAttributes();
 			
+			QApplication::ExecuteJavaScript($strToReturn);
+			
 			if ($blnRenderControlId && $blnDisplayOutput)
 				echo sprintf("id='%s'", $this->strTargetControlId);
-
-			// Output or Display
-			if ($blnDisplayOutput)
-				QApplication::ExecuteJavaScript($strToReturn);
+			else if($blnRenderControlId)
+				return sprintf("id='%s'", $this->strTargetControlId);
 			else
-				return $strToReturn;
+				return "";				
 		}
 
 		public function RenderAsHref($strActionParameter = null, $blnDisplayOutput = true, $strTargetControlId = null, $blnRenderControlId = true) {
