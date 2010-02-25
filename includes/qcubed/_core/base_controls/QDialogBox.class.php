@@ -58,6 +58,7 @@
 		}
 
 		public function HideDialogBox() {
+			$this->blnDisplay = false;
 			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog("close")', $this->strControlId));
 			$this->blnWrapperModified = false;
 		}

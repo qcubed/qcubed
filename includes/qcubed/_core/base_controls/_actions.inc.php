@@ -411,8 +411,8 @@
 			$this->strControlId = $objControl->ControlId;
 		}
 
-		public function RenderScript(QControl $objControl) {
-			return sprintf("qc.getW('%s').showDialogBox();", $this->strControlId);
+		public function RenderScript(QControl $objControl) {				
+			return (sprintf('$j("#%s").dialog({ modal: true }); if (!$j("#%s").dialog("isOpen")) $j("#%s").dialog("open");qcodo.recordControlModification("%s", "Display", "1");', $this->strControlId, $this->strControlId,$this->strControlId,$this->strControlId));			
 		}
 	}
 
@@ -431,7 +431,7 @@
 		}
 
 		public function RenderScript(QControl $objControl) {
-			return sprintf("qc.getW('%s').hideDialogBox();", $this->strControlId);
+			return (sprintf('$j("#%s").dialog("close");', $this->strControlId));			
 		}
 	}
 
