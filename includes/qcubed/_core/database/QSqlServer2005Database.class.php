@@ -41,13 +41,16 @@
 	 * LIMITATIONS:
 	 * - GROUP BY
 	 * Using GROUP BY clause is broken because:
-	 * a) Current QQuery implementation is MySQL specific. Transact-sql wants every column
+	 * a) Current QQuery implementation is MySQL specific. Standard SQL wants every column
 	 * in the SELECT statement, that is not an aggregate statement, in the GROUP BY clause
 	 * and this behaviour is currently not supported. This limitation is valid too for the
 	 * MSSQL based adapter.
 	 *
+	 * - Datatypes currently not fully supported
+	 * sql_variant, varbinary(max), geometry, geography, hierarchyid, uniqueidentifier
 	 *
-	 * @copyright	Copyright (C) 2009 Andreas Krohn
+	 *
+	 * @copyright	Copyright (C) 2009,2010 Andreas Krohn
 	 * @author	Andreas Krohn <akrohn.pronet@googlemail.com>, based on code by Mike Ho
 	 * @license	http://www.opensource.org/licenses/mit-license.php
 	 * @package	DatabaseAdapters
@@ -232,6 +235,10 @@
 					$strServer .= ':' . $strPort;
 			}
 
+			// define the characterset for the sqlsrv driver
+			// special handling for utf-8 data
+			$strCharacterset = (QApplication::$EncodingType == 'UTF-8') ? 'UTF-8' : 'SQLSRV_ENC_CHAR';
+
 			// Connect to the Database Server
 
 			// Disable warnings as errors behavior
@@ -239,9 +246,10 @@
 
 			// Set connection parameters
 			$strConnectionInfoArray = array(
-				'UID'=>$strUsername,
-				'PWD'=>$strPassword,
-				'Database'=>$strName
+				'UID'=>$strUsername
+				, 'PWD'=>$strPassword
+				, 'Database'=>$strName
+				, 'CharacterSet'=>$strCharacterset
 			);
 
 			// Connect using SQL Server Authentication
@@ -374,9 +382,10 @@
 				    , typ.name AS data_type
 				    , typ.scale AS scale
 				    , obj.name AS table_name
-				FROM    sys.columns col
-				JOIN    sys.objects obj ON obj.object_id = col.object_id 
-				JOIN    sys.types typ ON typ.system_type_id = col.system_type_id
+				    , CAST(ex.value AS VARCHAR(8000)) AS comment
+				FROM sys.columns col
+				JOIN sys.objects obj ON obj.object_id = col.object_id 
+				JOIN sys.types typ ON typ.system_type_id = col.system_type_id AND typ.user_type_id = col.user_type_id
 				LEFT JOIN sys.extended_properties ex ON ex.major_id = col.object_id AND ex.minor_id = col.column_id AND ex.name = 'MS_Description' AND ex.class = 1 
 				WHERE   obj.name = %s
 				ORDER BY col.column_id ASC
@@ -408,8 +417,7 @@
 		 * Begin transaction
 		 */
 		public function TransactionBegin() {
-			if (sqlsrv_begin_transaction($this->objSqlSrvConn) === false)
-			{
+			if (sqlsrv_begin_transaction($this->objSqlSrvConn) === false) {
 				// Determine the errorinformation
 				$this->GetErrorInformation($strErrorinformation, $strErrorCode);
 				throw new QSqlServer2005DatabaseException($strErrorinformation, $strErrorCode, $strNonQuery);
@@ -420,8 +428,7 @@
 		 * Commit transaction
 		 */
 		public function TransactionCommit() {
-			if (sqlsrv_commit($this->objSqlSrvConn) === false)
-			{
+			if (sqlsrv_commit($this->objSqlSrvConn) === false) {
 				// Determine the errorinformation
 				$this->GetErrorInformation($strErrorinformation, $strErrorCode);
 				throw new QSqlServer2005DatabaseException($strErrorinformation, $strErrorCode, $strNonQuery);
@@ -432,8 +439,7 @@
 		 * Rollback transaction
 		 */
 		public function TransactionRollback() {
-			if (sqlsrv_rollback($this->objSqlSrvConn) === false)
-			{
+			if (sqlsrv_rollback($this->objSqlSrvConn) === false) {
 				// Determine the errorinformation
 				$this->GetErrorInformation($strErrorinformation, $strErrorCode);
 				throw new QSqlServer2005DatabaseException($strErrorinformation, $strErrorCode, $strNonQuery);
@@ -552,8 +558,7 @@
 
 		public function FetchArray() {
 			$strColumnArray = sqlsrv_fetch_array($this->objSqlSrvResult);
-			if ($strColumnArray === false)
-			{
+			if ($strColumnArray === false) {
 				// Determine the errorinformation
 				$this->GetErrorInformation($strErrorinformation, $strErrorCode);
 				throw new QSqlServer2005DatabaseException($strErrorinformation, $strErrorCode, $strNonQuery);
@@ -674,7 +679,6 @@
 			} catch (QInvalidCastException $objExc) {
 			}
 
-
 			if ($objDatabaseRow) {
 				// Passed in field data is a row from select * from sys.columns for this table
 				$intTableId = $objDatabaseRow->GetColumn('object_id');
@@ -752,19 +756,26 @@
 					case 'nvarchar':
 					case 'sysname':
 					case 'uniqueidentifier':
-					case 'sql_variant':
-						$this->strType = QDatabaseFieldType::VarChar;
+						// varchar(max) and nvarchar(max) are recognized by intMaxLength = -1 and will be a blob-type
+						if ($this->intMaxLength > -1) {
+							$this->strType = QDatabaseFieldType::VarChar;
+						}
+						else {
+							$this->strType = QDatabaseFieldType::Blob;
+							$this->intMaxLength = null;
+						}
 						break;
 					case 'text':
 					case 'ntext':
 					case 'binary':
 					case 'image':
 					case 'varbinary':
-					case 'varbinary(max)':
 					case 'xml':
 					case 'udt':
-					case 'nvarchar(max)':
-					case 'varchar(max)':
+					case 'geometry':
+					case 'geography':
+					case 'hierarchyid':
+					case 'sql_variant':
 						$this->strType = QDatabaseFieldType::Blob;
 						$this->intMaxLength = null;
 						break;
@@ -785,7 +796,7 @@
 						$this->blnTimestamp = true;
 						break;
 					default:
-						throw new QSqlServer2005DatabaseException('Unsupported Field Type: ' . $strTypeName, 0, null);
+						throw new QSqlServer2005DatabaseException('Unsupported DataType: ' . $this->strType, 0, null);
 				}
 			} else {
 				// Passed in fielddata is a sqlsrv_fetch_field field result
