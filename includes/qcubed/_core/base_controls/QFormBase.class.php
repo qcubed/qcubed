@@ -1112,6 +1112,7 @@
 
 			// Setup End Script
 			$strEndScript = '';
+			$strEvents = '';
 
 			// First, call regC on all Controls
 			$strControlIdToRegister = array();
@@ -1124,9 +1125,9 @@
 			// Next, run any GetEndScrips on Controls and Groupings
 			foreach ($this->GetAllControls() as $objControl)
 				if ($objControl->Rendered)
-					$strEndScript .= $objControl->GetEndScript();
+					$strEvents .= $objControl->GetEndScript();
 			foreach ($this->objGroupingArray as $objGrouping)
-				$strEndScript .= $objGrouping->Render();
+				$strEvents .= $objGrouping->Render();
 
 			// Run End Script Compressor
 			$strEndScriptArray = explode('; ', $strEndScript);
@@ -1195,7 +1196,7 @@
 			$strEndScript = sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) . $strEndScript;
 
 			// Create Final EndScript Script
-			$strEndScript = sprintf('<script type="text/javascript">qc.registerForm(); %s</script>', $strEndScript);
+			$strEndScript = sprintf('<script type="text/javascript">qc.registerForm(); %s; $j(document).ready(function() { %s }); </script>', $strEndScript, $strEvents);
 
 			// Persist Controls (if applicable)
 			foreach ($this->objPersistentControlArray as $objControl)
