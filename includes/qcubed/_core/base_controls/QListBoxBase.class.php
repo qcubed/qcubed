@@ -32,9 +32,6 @@
 		// BEHAVIOR
 		protected $strSelectionMode = QSelectionMode::Single;
 
-		// SETTINGS
-		protected $strJavaScripts = 'listbox.js';
-
 		//////////
 		// Methods
 		//////////
