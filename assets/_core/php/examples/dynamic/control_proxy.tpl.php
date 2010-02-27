@@ -22,10 +22,10 @@
 	</div>
 
 		<h3>These A HREF links can take advantage of <i>all</i> Events defined on our proxy control by using RenderAsEvents...</h3>
-		<a href="#" <?php $this->pxyExample->RenderAsEvents('Baz'); ?>">Baz</a> | 
-		<a href="#" <?php $this->pxyExample->RenderAsEvents('Foo'); ?>">Foo</a> | 
-		<a href="#" <?php $this->pxyExample->RenderAsEvents('Blah'); ?>">Blah</a> | 
-		<a href="#" <?php $this->pxyExample->RenderAsEvents('Test'); ?>">Test</a>
+		<a href="#" <?php $this->pxyExample->RenderAsEvents('Baz'); ?>>Baz</a> | 
+		<a href="#" <?php $this->pxyExample->RenderAsEvents('Foo'); ?>>Foo</a> | 
+		<a href="#" <?php $this->pxyExample->RenderAsEvents('Blah'); ?>>Blah</a> | 
+		<a href="#" <?php $this->pxyExample->RenderAsEvents('Test'); ?>>Test</a>
 		<br/><br/>
 
 		<h3>Same goes for any other HTML element, like buttons...</h3>
