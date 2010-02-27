@@ -145,6 +145,7 @@
 			Examples::$Categories[$intIndex]['name'] = 'Other Advanced Controls';
 			Examples::$Categories[$intIndex]['description'] = 'A collection of examples for some of the more advanced/complex QControls';
 			self::AddCoreExampleFile($intIndex, '/image_label/intro.php Introduction to QImageLabel');
+			self::AddCoreExampleFile($intIndex, '/image_rollover/intro.php Image rollovers using QImageRollover');
 			self::AddCoreExampleFile($intIndex, '/treenav/treenav.php Introduction to QTreeNav');
 			self::AddCoreExampleFile($intIndex, '/other_controls/image.php Introduction to QImageControl');
 			self::AddCoreExampleFile($intIndex, '/other_controls/datetime.php Date and DateTime-based QControls');

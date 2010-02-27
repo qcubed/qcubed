@@ -25,8 +25,6 @@
 		protected $strCustomLinkStyleArray = array();
 		protected $strAltText;
 
-		protected $strJavaScripts = 'control_rollover.js';
-
 		//////////
 		// Methods
 		//////////
@@ -100,12 +98,14 @@
 
 		public function GetEndScript() {
 			$strToReturn = parent::GetEndScript();
+			$strControlId = ($this->strLinkUrl) ? $this->strControlId . '_img' : $this->strControlId;
 			if ($this->blnVisible && $this->mixImageHover) {
-				$strToReturn .= sprintf('qc.regIR("%s", "%s", "%s", %s); ',
-					$this->strControlId,
-					($this->mixImageStandard instanceof QImageBase) ? $this->mixImageStandard->RenderAsImgSrc(false) : $this->mixImageStandard,
+				$strToReturn .= sprintf('$j("#%s").hover(function(){$j("#%s").attr("src", "%s"); }, function(){$j("#%s").attr("src", "%s"); });', $strControlId, 
+					$strControlId,
 					($this->mixImageHover instanceof QImageBase) ? $this->mixImageHover->RenderAsImgSrc(false) : $this->mixImageHover,
-					($this->strLinkUrl) ? 'true' : 'false');
+					$strControlId,					
+					($this->mixImageStandard instanceof QImageBase) ? $this->mixImageStandard->RenderAsImgSrc(false) : $this->mixImageStandard
+				);
 			}
 			return $strToReturn;
 		}
