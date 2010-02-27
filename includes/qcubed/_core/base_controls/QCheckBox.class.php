@@ -92,7 +92,7 @@
 			if (strlen($this->strText)) {
 				$this->blnIsBlockElement = true;
 				if ($this->strTextAlign == QTextAlign::Left) {
-					$strToReturn = sprintf('<table cellspacing="0" cellpadding="0" border="0"><tr><td %s%s%s%s%s><label for="%s">%s</label><input type="checkbox" id="%s" name="%s" %s%s%s%s%s /></td></tr></table>',
+					$strToReturn = sprintf('<table cellspacing="0" cellpadding="0" border="0"><tr><td %s%s%s%s%s><label for="%s">%s</label><input type="checkbox" id="%s" name="%s" %s%s%s%s /></td></tr></table>',
 						$strCssClass,
 						$strToolTip,
 						$strStyle,
@@ -104,17 +104,15 @@
 						$this->strControlId,
 						$strDisabled,
 						$strChecked,
-						$strActions,
 						$strAccessKey,
 						$strTabIndex
 					);				
 				} else {
-					$strToReturn = sprintf('<table cellspacing="0" cellpadding="0" border="0"><tr><td><input type="checkbox" id="%s" name="%s" %s%s%s%s%s /></td><td %s%s%s%s%s><label for="%s">%s</label></td></tr></table>',
+					$strToReturn = sprintf('<table cellspacing="0" cellpadding="0" border="0"><tr><td><input type="checkbox" id="%s" name="%s" %s%s%s%s /></td><td %s%s%s%s%s><label for="%s">%s</label></td></tr></table>',
 						$this->strControlId,
 						$this->strControlId,
 						$strDisabled,
 						$strChecked,
-						$strActions,
 						$strAccessKey,
 						$strTabIndex,
 						$strCssClass,
@@ -128,13 +126,12 @@
 				}
 			} else {
 				$this->blnIsBlockElement = false;
-				$strToReturn = sprintf('<input type="checkbox" id="%s" name="%s" %s%s%s%s%s%s%s%s%s />',
+				$strToReturn = sprintf('<input type="checkbox" id="%s" name="%s" %s%s%s%s%s%s%s%s />',
 					$this->strControlId,
 					$this->strControlId,
 					$strCssClass,
 					$strDisabled,
 					$strChecked,
-					$strActions,
 					$strAccessKey,
 					$strToolTip,
 					$strTabIndex,

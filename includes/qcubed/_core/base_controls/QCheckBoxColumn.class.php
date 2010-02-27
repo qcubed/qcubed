@@ -101,7 +101,7 @@ class QCheckBoxColumn extends QDataGridColumn
 			//so we'll just have to include all the code in the onclick itself
 			//hopefully this won't result in much duplication, since there shouldn't be too many
 			//of these on a single form
-			$strJavascript = "var datagrid = document.getElementById('{$this->objDataGrid->ControlId}');var selectAll = document.getElementById('{$this->chkSelectAll->ControlId}');var childInputs = datagrid.getElementsByTagName('input');for(var i = 0; i < childInputs.length; i++){var subid = childInputs[i].id.substring($strControlIdStartLen, 0);if(subid == '$strControlIdStart')childInputs[i].checked = selectAll.checked;}";
+			$strJavascript = "var datagrid = document.getElementById('{$this->objDataGrid->ControlId}');var selectAll = document.getElementById('{$this->chkSelectAll->ControlId}');var childInputs = datagrid.getElementsByTagName('input');for(var i = 0;i < childInputs.length; i++){var subid = childInputs[i].id.substring($strControlIdStartLen, 0);if(subid == '$strControlIdStart')childInputs[i].checked = selectAll.checked;}";
 			
 			$this->chkSelectAll->AddAction(new QClickEvent(), new QJavaScriptAction($strJavascript));
 		}
