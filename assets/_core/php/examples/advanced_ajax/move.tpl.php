@@ -24,7 +24,7 @@
 		that you can click on the panel and move it around.
 	</div>
 
-	<?php $this->pnlPanel->Render('BackColor=#eeccff', 'Width=130', 'Height=50', 'Padding=10', 'BorderWidth=1'); ?>
+	<?php $this->pnlPanel->Render('Cursor=move', 'BackColor=#eeccff', 'Width=130', 'Height=50', 'Padding=10', 'BorderWidth=1'); ?>
 
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>
