@@ -3,7 +3,23 @@
 ////////////////////////////////////////////
 
 	qcodo.postBack = function(strForm, strControl, strEvent, strParameter) {
-		var objForm = document.getElementById(strForm);
+		
+		/* this will check if any of the Input controls have been rendered outside the form
+		 * due to jQuery manipulation (e.g. dialog box). if so, it will clone the object and 
+		 * add it to the form before submitting it 
+		 */
+		$j(':input').each(function (i) {
+			if ($j('#' + strForm + ' :input[name="' + this.name + '"]').val() == undefined) {
+				var real = $j("#" + this.name); 
+				var cloned = real.clone(true); 
+				real.hide(); 
+				cloned.insertAfter(real);    
+				real.appendTo("#" + strForm);
+			}
+		});		
+		
+		var objForm = document.getElementById(strForm);	 
+		
 		objForm.Qform__FormControl.value = strControl;
 		objForm.Qform__FormEvent.value = strEvent;
 		objForm.Qform__FormParameter.value = strParameter;
