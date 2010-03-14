@@ -1196,7 +1196,7 @@
 			$strEndScript = sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) . $strEndScript;
 
 			// Create Final EndScript Script
-			$strEndScript = sprintf('<script type="text/javascript">qc.registerForm(); %s; $j(document).ready(function() { %s }); </script>', $strEndScript, $strEvents);
+			$strEndScript = sprintf('<script type="text/javascript">qc.registerForm(); $j(document).ready(function() { %s; %s; });</script>', $strEvents, $strEndScript);
 
 			// Persist Controls (if applicable)
 			foreach ($this->objPersistentControlArray as $objControl)
