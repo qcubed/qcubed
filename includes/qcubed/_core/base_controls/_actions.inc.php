@@ -53,7 +53,7 @@
 								});
 								', $objControl->TargetControlId, $strEventName,  substr($strToReturn, 1));
 				else
-					return sprintf('$j("#%s").bind("%s", function(){
+					return sprintf('$j("#%s").bind("%s", function(event){
 								%s
 								});
 								', $objControl->ControlId, $strEventName,  substr($strToReturn, 1));
