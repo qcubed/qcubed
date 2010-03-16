@@ -67,10 +67,6 @@
 			}
 		}
 
-		public function GetJavaScriptAction() {
-			return "onclick";
-		}
-
 		protected function GetControlHtml() {
 			if ((!$this->objItemsArray) || (count($this->objItemsArray) == 0))
 				return "";

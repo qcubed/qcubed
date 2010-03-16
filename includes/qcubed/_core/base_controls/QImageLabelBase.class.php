@@ -104,7 +104,6 @@
 		}
 
 		public function ParsePostData() {}
-		public function GetJavaScriptAction() {}
 
 		protected function GetControlHtml() {
 			if (!$this->strFontNames)

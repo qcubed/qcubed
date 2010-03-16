@@ -27,7 +27,6 @@
 		// Methods
 		//////////
 		public function ParsePostData() {}
-		public function GetJavaScriptAction() {}
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)

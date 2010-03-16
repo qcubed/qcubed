@@ -79,10 +79,6 @@
 			}
 		}
 
-		public function GetJavaScriptAction() {
-			return "onchange";
-		}
-
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
 			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
 

@@ -27,7 +27,6 @@
 		//////////
 		// Methods
 		//////////
-		public function GetJavaScriptAction() {}
 		public function ParsePostData() {}
 
 		protected function GetControlHtml() {

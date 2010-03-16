@@ -43,10 +43,6 @@
 			}
 		}
 
-		public function GetJavaScriptAction() {
-			return "onchange";
-		}
-
 		protected function GetControlHtml() {
 			// Reset Internal Values
 			$this->strFileName = null;

@@ -46,10 +46,6 @@
 			}
 		}
 
-		public function GetJavaScriptAction() {
-			return "onclick";
-		}
-
 		protected function GetControlHtml() {
 			if (!$this->blnEnabled)
 				$strDisabled = 'disabled="disabled" ';

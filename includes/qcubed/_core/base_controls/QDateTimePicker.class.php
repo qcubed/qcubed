@@ -111,10 +111,6 @@
 			}
 		}
 
-		public function GetJavaScriptAction() {
-			return "onchange";
-		}
-
 		protected function GetControlHtml() {
 			// Ignore Class
 			$strCssClass = $this->strCssClass;

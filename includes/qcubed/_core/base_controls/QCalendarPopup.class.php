@@ -96,10 +96,6 @@
 			$this->intTimestamp = $dttNewDateTime->Timestamp;
 		}
 
-		public function GetJavaScriptAction() {
-			return "onchange";
-		}
-
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)

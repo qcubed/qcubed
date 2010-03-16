@@ -506,10 +506,6 @@
 			return $strToReturn;
 		}
 		
-		public function GetJavaScriptAction() {
-			return "onclick";
-		}
-
 		public function GetStyleAttributes() {
 			$strToReturn = parent::GetStyleAttributes();
 

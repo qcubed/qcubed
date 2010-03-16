@@ -59,7 +59,6 @@
 
 		public function ParsePostData() {}
 		public function Validate() {return true;}
-		public function GetJavaScriptAction() {return 'onclick';}
 
 		public function Page_Click($strFormId, $strControlId, $strParameter) {
 			$this->objPaginatedControl->PageNumber = QType::Cast($strParameter, QType::Integer);			
