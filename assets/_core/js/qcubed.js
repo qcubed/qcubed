@@ -295,43 +295,6 @@
 			};
 			window.onbeforeunload= this.handleBeforeUnload;
 
-
-
-		////////////////////////////////////
-		// Color Handling Functionality
-		////////////////////////////////////
-
-			this.colorRgbValues = function(strColor) {
-				strColor = strColor.replace("#", "");
-
-				try {
-					if (strColor.length == 3)
-						return new Array(
-							eval("0x" + strColor.substring(0, 1)),
-							eval("0x" + strColor.substring(1, 2)),
-							eval("0x" + strColor.substring(2, 3))
-						);
-					else if (strColor.length == 6)
-						return new Array(
-							eval("0x" + strColor.substring(0, 2)),
-							eval("0x" + strColor.substring(2, 4)),
-							eval("0x" + strColor.substring(4, 6))
-						);
-				} catch (Exception) {};
-
-				return new Array(0, 0, 0);
-			};
-
-			this.hexFromInt = function(intNumber) {
-				intNumber = (intNumber > 255) ? 255 : ((intNumber < 0) ? 0 : intNumber);
-				intFirst = Math.floor(intNumber / 16);
-				intSecond = intNumber % 16;
-				return intFirst.toString(16) + intSecond.toString(16);
-			};
-
-			this.colorRgbString = function(intRgbArray) {
-				return "#" + qcodo.hexFromInt(intRgbArray[0]) + qcodo.hexFromInt(intRgbArray[1]) + qcodo.hexFromInt(intRgbArray[2]);
-			};
 		}
 	};
 

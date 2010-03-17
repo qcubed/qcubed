@@ -213,48 +213,6 @@
 			this.updateStyle("top", intNewY + "px");
 		};
 
-		objWrapper.setDropZoneMaskAbsolutePosition = function(intNewX, intNewY, blnBindToParent) {
-/*
-			var objControl = this.offsetParent;
-
-			while (objControl) {
-				intNewX -= objControl.offsetLeft;
-				intNewY -= objControl.offsetTop;
-				objControl = objControl.offsetParent;
-			}
-
-			if (blnBindToParent) {
-				if (this.parentNode.nodeName.toLowerCase() != 'form') {
-					// intNewX and intNewY must be within the parent's control
-					intNewX = Math.max(intNewX, 0);
-					intNewY = Math.max(intNewY, 0);
-
-					intNewX = Math.min(intNewX, this.offsetParent.offsetWidth - this.offsetWidth);
-					intNewY = Math.min(intNewY, this.offsetParent.offsetHeight - this.offsetHeight);
-				}
-			}
-			
-			qc.logObject(intNewX + " x " + intNewY);
-*/
-			this.dropZoneMask.style.left = intNewX + "px";
-			this.dropZoneMask.style.top = intNewY + "px";
-		};
-
-		objWrapper.setMaskOffset = function(intDeltaX, intDeltaY) {
-			var objAbsolutePosition = this.getAbsolutePosition();
-			this.mask.style.left = (objAbsolutePosition.x + intDeltaX) + "px";
-			this.mask.style.top = (objAbsolutePosition.y + intDeltaY) + "px";
-		};
-
-		objWrapper.containsPoint = function(intX, intY) {
-			var objAbsolutePosition = this.getAbsolutePosition();
-			if ((intX >= objAbsolutePosition.x) && (intX <= objAbsolutePosition.x + this.control.offsetWidth) &&
-				(intY >= objAbsolutePosition.y) && (intY <= objAbsolutePosition.y + this.control.offsetHeight))
-				return true;
-			else
-				return false;
-		};
-
 		// Toggle Display / Enabled
 		objWrapper.toggleDisplay = function(strShowOrHide) {
 			// Toggles the display/hiding of the entire control (including any design/wrapper HTML)
@@ -298,66 +256,18 @@
 
 		// Focus
 		objWrapper.focus = function() {
-			if (this.control.focus) {
-				if (qcodo.isBrowser(qcodo.IE) && (typeof (this.control.focus) == "object"))
-					this.control.focus();
-				else if (typeof (this.control.focus) == "function")
-					this.control.focus();
-			};
+			$j('#' + this.control.id).focus();
 		};
 		
 		// Select All (will only work for textboxes only)
 		objWrapper.select = function() {
-			if (this.control.select)
-				this.control.select();
+			$j('#' + this.control.id).select();
 		};
 
 		// Blink
-		objWrapper.blink = function(strFromColor, strToColor) {
-			objWrapper.defaultBackgroundColor = objWrapper.control.style.backgroundColor;
-
-			objWrapper.blinkStart = qcodo.colorRgbValues(strFromColor);
-			objWrapper.blinkEnd = qcodo.colorRgbValues(strToColor);
-			objWrapper.blinkStep = new Array(
-				Math.round((objWrapper.blinkEnd[0] - objWrapper.blinkStart[0]) / 12.5),
-				Math.round((objWrapper.blinkEnd[1] - objWrapper.blinkStart[1]) / 12.5),
-				Math.round((objWrapper.blinkEnd[2] - objWrapper.blinkStart[2]) / 12.5)
-			);
-			objWrapper.blinkDown = new Array(
-				(objWrapper.blinkStep[0] < 0) ? true : false,
-				(objWrapper.blinkStep[1] < 0) ? true : false,
-				(objWrapper.blinkStep[2] < 0) ? true : false
-			);
-
-			objWrapper.blinkCurrent = objWrapper.blinkStart;
-			this.control.style.backgroundColor = qcodo.colorRgbString(objWrapper.blinkCurrent);
-			qcodo.setTimeout(objWrapper.id, "qc.getC('" + objWrapper.id + "').blinkHelper()", 20);
-		};
-
-		objWrapper.blinkHelper = function() {
-			objWrapper.blinkCurrent[0] += objWrapper.blinkStep[0];
-			objWrapper.blinkCurrent[1] += objWrapper.blinkStep[1];
-			objWrapper.blinkCurrent[2] += objWrapper.blinkStep[2];
-			if (((objWrapper.blinkDown[0]) && (objWrapper.blinkCurrent[0] < objWrapper.blinkEnd[0])) ||
-				((!objWrapper.blinkDown[0]) && (objWrapper.blinkCurrent[0] > objWrapper.blinkEnd[0])))
-				objWrapper.blinkCurrent[0] = objWrapper.blinkEnd[0];
-			if (((objWrapper.blinkDown[1]) && (objWrapper.blinkCurrent[1] < objWrapper.blinkEnd[1])) ||
-				((!objWrapper.blinkDown[1]) && (objWrapper.blinkCurrent[1] > objWrapper.blinkEnd[1])))
-				objWrapper.blinkCurrent[1] = objWrapper.blinkEnd[1];
-			if (((objWrapper.blinkDown[2]) && (objWrapper.blinkCurrent[2] < objWrapper.blinkEnd[2])) ||
-				((!objWrapper.blinkDown[2]) && (objWrapper.blinkCurrent[2] > objWrapper.blinkEnd[2])))
-				objWrapper.blinkCurrent[2] = objWrapper.blinkEnd[2];
-
-			this.control.style.backgroundColor = qcodo.colorRgbString(objWrapper.blinkCurrent);
-
-			if ((objWrapper.blinkCurrent[0] == objWrapper.blinkEnd[0]) &&
-				(objWrapper.blinkCurrent[1] == objWrapper.blinkEnd[1]) &&
-				(objWrapper.blinkCurrent[2] == objWrapper.blinkEnd[2])) {
-				// Done with Blink!
-				this.control.style.backgroundColor = objWrapper.defaultBackgroundColor;
-			} else {
-				qcodo.setTimeout(objWrapper.id, "qc.getC('" + objWrapper.id + "').blinkHelper()", 20);
-			};
+		objWrapper.blink = function(strFromColor, strToColor) {		
+			$j('#' + this.control.id).css('background-color', '' + strFromColor);
+			$j('#' + this.control.id).animate({ backgroundColor: '' + strToColor }, 500)
 		};
 	};
 
