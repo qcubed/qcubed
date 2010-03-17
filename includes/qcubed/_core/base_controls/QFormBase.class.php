@@ -904,7 +904,7 @@
 			$this->strIncludedStyleSheetFileArray = array();
 
 			// Figure out initial list of JavaScriptIncludes
-			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', qcubed.js, logger.js, event.js, post.js, control.js');
+			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', qcubed.js, event.js, post.js, control.js');
 			if (!$strJavaScriptArray)
 				$strJavaScriptArray = array();
 
