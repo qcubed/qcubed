@@ -7,8 +7,8 @@
 		as part of the core QCubed distribution.
 		<br/><br/>
 		
-		Notice that all of these <b>QActions</b> simply render out javascript to perform the action,
-		so the interaction the user experience is completely done on the client-side (e.g. no server/ajax calls here).
+		Notice that all of these <b>QActions</b> simply render out JavaScript to perform the action,
+		so the interaction the user experience is completely done on the client-side (e.g. no server/Ajax calls here).
 		<br/><br/>
 		
 		View the code for the details, and for more information or for a listing of <i>all</i> the <b>QActions</b> and <b>QEvents</b>, please
@@ -50,6 +50,10 @@
 
 	<br/><br/>
 	<?php $this->pnlHover->Render(); ?>
+	<br /><br />
+	Override a single CSS property using <b>QCssAction</b>: <br />
+	<?php $this->btnCssAction->Render(); ?>
+	
 
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

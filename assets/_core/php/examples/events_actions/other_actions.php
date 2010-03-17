@@ -13,6 +13,8 @@
 		protected $txtEnable;
 		
 		protected $pnlHover;
+		
+		protected $btnCssAction;
 
 		protected function Form_Create() {
 			// Define the Textboxes
@@ -46,7 +48,7 @@
 			// QCssClassAction example
 			$this->pnlHover = new QPanel($this);
 			$this->pnlHover->HtmlEntities = false;
-			$this->pnlHover->Text = 'Example of <b>QCssClassAction</b><br/><br/>(Uses QMouseOver and QMouseOut to Temporarily Override the Panel\'s CSS Style)';
+			$this->pnlHover->Text = 'Change the CSS class of a control using <b>QCssClassAction</b>:<br /><br />(Uses QMouseOver and QMouseOut to Temporarily Override the Panel\'s CSS Style)';
 
 			// Set a Default Style
 			$this->pnlHover->CssClass = 'panelHover';
@@ -55,6 +57,10 @@
 			// Setting the TemporaryCssClass to "null" will "reset" the style back to the default
 			$this->pnlHover->AddAction(new QMouseOverEvent(), new QCssClassAction('panelHighlight', true));
 			$this->pnlHover->AddAction(new QMouseOutEvent(), new QCssClassAction());
+			
+			$this->btnCssAction = new QButton($this);
+			$this->btnCssAction->Text = "click me to change my background color!";
+			$this->btnCssAction->AddAction(new QClickEvent(), new QCssAction("background", "green"));
 		}
 	}
 

@@ -522,7 +522,30 @@
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 * @package Actions
+	 */
+	class QCssAction extends QAction {
+		protected $strCssProperty = null;
+		protected $strCssValue = null;
+		protected $strControlId = null;
+		
+		public function __construct($strCssProperty, $strCssValue, $objControl = null) {
+			$this->strCssProperty = $strCssProperty;
+			$this->strCssValue = $strCssValue;
+			if ($objControl)
+				$this->strControlId = $objControl->ControlId;
+		}
 
+		public function RenderScript(QControl $objControl) {
+			if ($this->strControlId == null)
+				$this->strControlId = $objControl->ControlId;
+			// Specified a Temporary Css Class to use?
+			return sprintf('$j("#%s").css("%s", "%s"); ', $this->strControlId, $this->strCssProperty, $this->strCssValue);
+		}
+	}	
 
 	/**
 	 * 
