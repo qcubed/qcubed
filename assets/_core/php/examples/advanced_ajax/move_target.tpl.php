@@ -16,8 +16,8 @@
 		Note how you will move both controls when you drag the label around, and also note how you can
 		still click "into" the textbox to enter in data.
 	</div>
-
-	<p><?php $this->pnlParent->Render('Cursor=move', 'BackColor=#ddffdd', 'Width=250', 'Height=200', 'Padding=4', 'DisplayStyle=block'); ?></p>
+	<p><?php $this->lblHandle->Render('Cursor=move', 'BackColor=#ddffdd', 'Width=250', 'Padding=4', 'DisplayStyle=block'); ?></p>
+	<p><?php $this->txtTextbox->Render('Width=250'); ?></p>
 
 	<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>
