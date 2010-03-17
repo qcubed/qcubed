@@ -20,7 +20,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 * Of course, you can also feel free to remove QApplication::CheckRemoteAdmin() call on any of these pages,
 			 * which will completely ignore ALLOW_REMOTE_ADMIN altogether.
 			 */
-			define('ALLOW_REMOTE_ADMIN', true);
+			define('ALLOW_REMOTE_ADMIN', false);
 
 
 			/* Constants for Document Root (and Virtual Directories / Subfoldering)
@@ -58,9 +58,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'C:/xampplite/htdocs');
+			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs');
 			define ('__VIRTUAL_DIRECTORY__', '');
-			define ('__SUBDIRECTORY__', '/2.0');
+			define ('__SUBDIRECTORY__', '/qcubed2');
 
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
