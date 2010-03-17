@@ -22,9 +22,7 @@
 		to parse a wide number of date and datetime formats.
 		<br/><br/>
 		
-		And finally, <b>QCalendar</b> and <b>QCalendarPopup</b> are visual calendar controls to assist with date picking.  As the naming
-		suggestions, <b>QCalendarPopup</b> will popup a calendar in a new window, while <b>QCalendar</b> is a DHTML-based calendar widget
-		which <strong>requires</strong> a "linked" QDateTimeTextbox control.
+		And finally, <b>QCalendar</b> is a jQuery-based visual calendar picker control.
 	</div>
 
 	<div style="background-color: #cde; padding: 8px; height: 40px; width: 400px; border: 1px solid #68a; margin-bottom: 12px;">
@@ -37,15 +35,10 @@
 		<?php $this->btnDateTimeTextBox->Render(); ?>
 	</div>
 	<div style="float: left; margin-left: 45px;">
-		<strong>QCalendar</strong> (DHTML)<br/>
-		<?php $this->dtxCalendar->Render(); ?>
-		<?php $this->calCalendar->Render(); ?><br/>
-		<?php $this->btnCalendar->Render(); ?>
-	</div>
-	<div style="float: left; margin-left: 45px;">
-		<strong>QCalendarPopup</strong> (in a new window)<br/>
-		<?php $this->calCalendarPopup->Render(); ?><br/>
-		<?php $this->btnCalendarPopup->Render(); ?>
+		<strong>QCalendar</strong><br/>
+		<?php // $this->dtxCalendar->Render(); ?>
+		<?php $this->calQJQCalendar->Render(); ?><br/>
+		<?php $this->btnQJQCalendar->Render(); ?>
 	</div>
 	<br clear="all"/>
 	<br clear="all"/>

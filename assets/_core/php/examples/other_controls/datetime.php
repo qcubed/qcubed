@@ -5,6 +5,9 @@
 		protected $dtxDateTimeTextBox;
 		protected $btnDateTimeTextBox;
 
+		protected $calQJQCalendar;
+		protected $btnQJQCalendar;
+		
 		protected $calCalendar;
 		protected $dtxCalendar;
 		protected $btnCalendar;
@@ -21,19 +24,10 @@
 		protected $lblResult;
 
 		protected function Form_Create() {
-			// Create Sample Date and DateTime Controls
-			$this->calCalendarPopup = new QCalendarPopup($this);
-
+			
+			$this->calQJQCalendar = new QCalendar($this);
+			
 			$this->dtxDateTimeTextBox = new QDateTimeTextBox($this);
-
-			// Note that QCalendar REQUIRES a "linked" QDateTimeTextBox
-			$this->dtxCalendar = new QDateTimeTextBox($this, 'foo');
-			$this->calCalendar = new QCalendar($this, $this->dtxCalendar);
-
-			// To make things easier, let's make sure the $dtxCalendar is disabled, and clicking
-			// on it makes the calendar appear.
-			$this->dtxCalendar->AddAction(new QFocusEvent(), new QBlurControlAction($this->dtxCalendar));
-			$this->dtxCalendar->AddAction(new QClickEvent(), new QShowCalendarAction($this->calCalendar));
 
 			// QDateTimePicker can have different "Types"
 			$this->dtpDatePicker = new QDateTimePicker($this);
@@ -47,10 +41,14 @@
 			$this->lblResult->Text = 'Results...';
 
 			// Various Buttons
+			$this->btnQJQCalendar = new QButton($this);
+			$this->btnQJQCalendar->Text = 'Update';
+			$this->btnQJQCalendar->AddAction(new QClickEvent(), new QAjaxAction('btnUpdate_Click'));
+			$this->btnQJQCalendar->ActionParameter = $this->calQJQCalendar->ControlId;
+			
 			$this->btnCalendar = new QButton($this);
 			$this->btnCalendar->Text = 'Update';
 			$this->btnCalendar->AddAction(new QClickEvent(), new QAjaxAction('btnUpdate_Click'));
-
 			// NOTE -- to get the Value of the Calendar, we MUST look it up from the linked dtxCalendar
 			$this->btnCalendar->ActionParameter = $this->dtxCalendar->ControlId;
 

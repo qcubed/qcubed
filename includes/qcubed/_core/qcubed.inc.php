@@ -114,7 +114,6 @@
 	QApplicationBase::$ClassFile['qfontfamily'] = __QCUBED_CORE__ . '/base_controls/QFontFamily.class.php';
 
 	QApplicationBase::$ClassFile['qcalendar'] = __QCUBED_CORE__ . '/base_controls/QCalendar.class.php';
-	QApplicationBase::$ClassFile['qcalendarpopup'] = __QCUBED_CORE__ . '/base_controls/QCalendarPopup.class.php';
 	QApplicationBase::$ClassFile['qdatetimepicker'] = __QCUBED_CORE__ . '/base_controls/QDateTimePicker.class.php';
 	QApplicationBase::$ClassFile['qdatetimetextbox'] = __QCUBED_CORE__ . '/base_controls/QDateTimeTextBox.class.php';
 
