@@ -904,7 +904,7 @@
 			$this->strIncludedStyleSheetFileArray = array();
 
 			// Figure out initial list of JavaScriptIncludes
-			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', qcubed.js, event.js, post.js, control.js');
+			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', qcubed.js, event.js, control.js');
 			if (!$strJavaScriptArray)
 				$strJavaScriptArray = array();
 
@@ -1196,7 +1196,7 @@
 			$strEndScript = sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) . $strEndScript;
 
 			// Create Final EndScript Script
-			$strEndScript = sprintf('<script type="text/javascript">qc.registerForm(); $j(document).ready(function() { %s; %s; });</script>', $strEvents, $strEndScript);
+			$strEndScript = sprintf('<script type="text/javascript">$j(document).ready(function() { %s; %s; });</script>', $strEvents, $strEndScript);
 
 			// Persist Controls (if applicable)
 			foreach ($this->objPersistentControlArray as $objControl)
@@ -1213,14 +1213,12 @@
 			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId);
 			$strToReturn .= "\r\n</div>\r\n";
 
-			// The Following "Hidden Form Variables" are no longer explicitly rendered in HTML, but are now
-			// added to the DOM by the QCubed JavaScript Library method qc.initialize():
-			// * Qform__FormControl
-			// * Qform__FormEvent
-			// * Qform__FormParameter
-			// * Qform__FormCallType
-			// * Qform__FormUpdates
-			// * Qform__FormCheckableControls
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormControl" id="Qform__FormControl" value="" />');
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormEvent" id="Qform__FormEvent" value="" />');
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormParameter" id="Qform__FormParameter" value="" />');
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCallType" id="Qform__FormCallType" value="" />');
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormUpdates" id="Qform__FormUpdates" value="" />');
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCheckableControls" id="Qform__FormCheckableControls" value="" />');
 
 			foreach ($this->GetAllControls() as $objControl)
 				if ($objControl->Rendered)

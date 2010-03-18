@@ -2,18 +2,18 @@
 // Timers-related functionality
 ///////////////////////////////
 
-	qcodo._objTimers = new Object();
+	qcubed._objTimers = new Object();
 
-	qcodo.clearTimeout = function(strTimerId) {
-		if (qcodo._objTimers[strTimerId]) {
-			clearTimeout(qcodo._objTimers[strTimerId]);
-			qcodo._objTimers[strTimerId] = null;
+	qcubed.clearTimeout = function(strTimerId) {
+		if (qcubed._objTimers[strTimerId]) {
+			clearTimeout(qcubed._objTimers[strTimerId]);
+			qcubed._objTimers[strTimerId] = null;
 		};
 	};
 
-	qcodo.setTimeout = function(strTimerId, strAction, intDelay) {
-		qcodo.clearTimeout(strTimerId);
-		qcodo._objTimers[strTimerId] = setTimeout(strAction, intDelay);
+	qcubed.setTimeout = function(strTimerId, strAction, intDelay) {
+		qcubed.clearTimeout(strTimerId);
+		qcubed._objTimers[strTimerId] = setTimeout(strAction, intDelay);
 	};
 
 
@@ -22,49 +22,49 @@
 // Event Object-related functionality
 /////////////////////////////////////
 
-	qcodo.handleEvent = function(objEvent) {
+	qcubed.handleEvent = function(objEvent) {
 		objEvent = (objEvent) ? objEvent : ((typeof(event) == "object") ? event : null);
 
 		if (objEvent) {
 			if (typeof(objEvent.clientX) != "undefined") {
-				if (qcodo.isBrowser(qcodo.SAFARI)) {
-					qcodo.mouse.x = objEvent.clientX - window.document.body.scrollLeft;
-					qcodo.mouse.y = objEvent.clientY - window.document.body.scrollTop;
-					qcodo.client.x = objEvent.clientX - window.document.body.scrollLeft;
-					qcodo.client.y = objEvent.clientY - window.document.body.scrollTop;
+				if (qcubed.isBrowser(qcubed.SAFARI)) {
+					qcubed.mouse.x = objEvent.clientX - window.document.body.scrollLeft;
+					qcubed.mouse.y = objEvent.clientY - window.document.body.scrollTop;
+					qcubed.client.x = objEvent.clientX - window.document.body.scrollLeft;
+					qcubed.client.y = objEvent.clientY - window.document.body.scrollTop;
 				} else {
-					qcodo.mouse.x = objEvent.clientX;
-					qcodo.mouse.y = objEvent.clientY;
-					qcodo.client.x = objEvent.clientX;
-					qcodo.client.y = objEvent.clientY;
+					qcubed.mouse.x = objEvent.clientX;
+					qcubed.mouse.y = objEvent.clientY;
+					qcubed.client.x = objEvent.clientX;
+					qcubed.client.y = objEvent.clientY;
 				};
 			};
 
-			if (qcodo.isBrowser(qcodo.IE)) {
-				qcodo.mouse.left = ((objEvent.button & 1) ? true : false);
-				qcodo.mouse.right = ((objEvent.button & 2) ? true : false);
-				qcodo.mouse.middle = ((objEvent.button & 4) ? true : false);
-			} else if (qcodo.isBrowser(qcodo.SAFARI)) {
-				qcodo.mouse.left = ((objEvent.button && !objEvent.ctrlKey) ? true : false);
-				qcodo.mouse.right = ((objEvent.button && objEvent.ctrlKey) ? true : false);
-				qcodo.mouse.middle = false;
+			if (qcubed.isBrowser(qcubed.IE)) {
+				qcubed.mouse.left = ((objEvent.button & 1) ? true : false);
+				qcubed.mouse.right = ((objEvent.button & 2) ? true : false);
+				qcubed.mouse.middle = ((objEvent.button & 4) ? true : false);
+			} else if (qcubed.isBrowser(qcubed.SAFARI)) {
+				qcubed.mouse.left = ((objEvent.button && !objEvent.ctrlKey) ? true : false);
+				qcubed.mouse.right = ((objEvent.button && objEvent.ctrlKey) ? true : false);
+				qcubed.mouse.middle = false;
 			} else {
-				qcodo.mouse.left = (objEvent.button == 0);
-				qcodo.mouse.right = (objEvent.button == 2);
-				qcodo.mouse.middle = (objEvent.button == 1);
+				qcubed.mouse.left = (objEvent.button == 0);
+				qcubed.mouse.right = (objEvent.button == 2);
+				qcubed.mouse.middle = (objEvent.button == 1);
 			};
 
-			qcodo.key.alt = (objEvent.altKey) ? true : false;
-			qcodo.key.control = (objEvent.ctrlKey) ? true : false;
-			qcodo.key.shift = (objEvent.shiftKey) ? true : false;
-			qcodo.key.code = (objEvent.keyCode) ? (objEvent.keyCode) : 0;
+			qcubed.key.alt = (objEvent.altKey) ? true : false;
+			qcubed.key.control = (objEvent.ctrlKey) ? true : false;
+			qcubed.key.shift = (objEvent.shiftKey) ? true : false;
+			qcubed.key.code = (objEvent.keyCode) ? (objEvent.keyCode) : 0;
 			
 			if (objEvent.originalTarget)
-				qcodo.target = objEvent.originalTarget;
+				qcubed.target = objEvent.originalTarget;
 			else if (objEvent.srcElement)
-				qcodo.target = objEvent.srcElement;
+				qcubed.target = objEvent.srcElement;
 			else
-				qcodo.target = null;
+				qcubed.target = null;
 		};
 			
 		var readScroll = {scrollLeft:0,scrollTop:0};
@@ -99,27 +99,27 @@
 		
 			
 			
-		qcodo.client.width = readSize[readWidth] || 0;
-		qcodo.client.height = readSize[readHeight] || 0;
+		qcubed.client.width = readSize[readWidth] || 0;
+		qcubed.client.height = readSize[readHeight] || 0;
 
-		qcodo.page.width = Math.max(window.document.body.scrollWidth, qcodo.client.width);
-		qcodo.page.height = Math.max(window.document.body.scrollHeight, qcodo.client.height);
+		qcubed.page.width = Math.max(window.document.body.scrollWidth, qcubed.client.width);
+		qcubed.page.height = Math.max(window.document.body.scrollHeight, qcubed.client.height);
 		
-		qcodo.scroll.x = readScroll[readScrollX] || 0;
-		qcodo.scroll.y = readScroll[readScrollY] || 0;
+		qcubed.scroll.x = readScroll[readScrollX] || 0;
+		qcubed.scroll.y = readScroll[readScrollY] || 0;
 
 		// These Values are "By Definition"
-		qcodo.page.x = qcodo.mouse.x + qcodo.scroll.x;
-		qcodo.page.y = qcodo.mouse.y + qcodo.scroll.y;
+		qcubed.page.x = qcubed.mouse.x + qcubed.scroll.x;
+		qcubed.page.y = qcubed.mouse.y + qcubed.scroll.y;
 
-		qcodo.scroll.width = qcodo.page.width - qcodo.client.width;
-		qcodo.scroll.height = qcodo.page.height - qcodo.client.height;
+		qcubed.scroll.width = qcubed.page.width - qcubed.client.width;
+		qcubed.scroll.height = qcubed.page.height - qcubed.client.height;
 
 		return objEvent;
 	};
 
-	qcodo.terminateEvent = function(objEvent) {
-		objEvent = qcodo.handleEvent(objEvent);
+	qcubed.terminateEvent = function(objEvent) {
+		objEvent = qcubed.handleEvent(objEvent);
 
 		if (objEvent) {
 			// Stop Propogation
@@ -140,14 +140,14 @@
 // Event Stats-Releated Objects
 ///////////////////////////////
 
-	qcodo.key = {
+	qcubed.key = {
 		control: false,
 		alt: false,
 		shift: false,
 		code: null
 	};
 
-	qcodo.mouse = {
+	qcubed.mouse = {
 		x: 0,
 		y: 0,
 		left: false,
@@ -155,16 +155,16 @@
 		right: false
 	};
 
-	qcodo.client = {
+	qcubed.client = {
 		x: null,
 		y: null,
 		width: null,
 		height: null
-//		width: (qcodo.isBrowser(qcodo.IE)) ? window.document.body.clientWidth : window.innerWidth,
-//		height: (qcodo.isBrowser(qcodo.IE)) ? window.document.body.clientHeight : window.innerHeight
+//		width: (qcubed.isBrowser(qcubed.IE)) ? window.document.body.clientWidth : window.innerWidth,
+//		height: (qcubed.isBrowser(qcubed.IE)) ? window.document.body.clientHeight : window.innerHeight
 	};
 
-	qcodo.page = {
+	qcubed.page = {
 		x: null,
 		y: null,
 		width: null,
@@ -173,13 +173,13 @@
 //		height: window.document.body.scrollHeight
 	};
 
-	qcodo.scroll = {
+	qcubed.scroll = {
 		x: window.scrollX || (window.document.body) ? window.document.body.scrollLeft : null,
 		y: window.scrollY || (window.document.body) ? window.document.body.scrollTop : null,
 //		x: null,
 //		y: null,
-		width: (window.document.body) ? (window.document.body.scrollWidth - qcodo.client.width) : null,
-		height: (window.document.body) ? (window.document.body.scrollHeight - qcodo.client.height) : null
+		width: (window.document.body) ? (window.document.body.scrollWidth - qcubed.client.width) : null,
+		height: (window.document.body) ? (window.document.body.scrollHeight - qcubed.client.height) : null
 //		width: null,
 //		height: null
 	};

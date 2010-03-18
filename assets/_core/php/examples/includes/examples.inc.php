@@ -134,7 +134,6 @@
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/scrolling.php Automatic Scrolling');
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/move_target.php Move Handle: Specifying Which Controls to Move');
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/drop_zone.php Move Handle: Defining Drop Zones');
-			self::AddCoreExampleFile($intIndex, '/advanced_ajax/resize.php Resizing Block Controls');
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/dialog_box.php Modal "Dialog Boxes"');
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/jquery_effects.php JQuery Effects');
 			

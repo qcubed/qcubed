@@ -23,7 +23,7 @@
 					throw new Exception('Invalid Action Event in this entry in the ActionArray');
 
 				if ($objAction->objEvent->Delay > 0) {
-					$strCode = sprintf(" qcodo.setTimeout('%s', '%s', %s);",
+					$strCode = sprintf(" qcubed.setTimeout('%s', '%s', %s);",
 						$objControl->ControlId,
 						addslashes($objAction->RenderScript($objControl)),
 						$objAction->objEvent->Delay);
@@ -306,7 +306,7 @@
 	 */
 	class QResetTimerAction extends QAction {
 		public function RenderScript(QControl $objControl) {
-			return sprintf("qcodo.clearTimeout('%s');", $objControl->ControlId);
+			return sprintf("qcubed.clearTimeout('%s');", $objControl->ControlId);
 		}
 	}
 	
@@ -317,7 +317,7 @@
 	class QTerminateAction extends QAction {
 		public function RenderScript(QControl $objControl) {
 			if (QApplication::IsBrowser(QBrowserType::InternetExplorer_6_0))
-				return sprintf('qcodo.terminateEvent(event);', $objControl->ControlId);
+				return sprintf('qcubed.terminateEvent(event);', $objControl->ControlId);
 			else
 				return sprintf('return false;', $objControl->ControlId);
 //			return 'return qc.terminatesEvent(event);';
@@ -412,7 +412,7 @@
 		}
 
 		public function RenderScript(QControl $objControl) {				
-			return (sprintf('$j("#%s").dialog({ modal: true }); if (!$j("#%s").dialog("isOpen")) $j("#%s").dialog("open");qcodo.recordControlModification("%s", "Display", "1");', $this->strControlId, $this->strControlId,$this->strControlId,$this->strControlId));			
+			return (sprintf('$j("#%s").dialog({ modal: true }); if (!$j("#%s").dialog("isOpen")) $j("#%s").dialog("open");qcubed.recordControlModification("%s", "Display", "1");', $this->strControlId, $this->strControlId,$this->strControlId,$this->strControlId));			
 		}
 	}
 

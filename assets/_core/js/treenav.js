@@ -11,14 +11,14 @@ function treenavToggleImage(strControlId) {
 		objImage.src = strPathNotExpanded;
 
 	strActualControlId = strControlId.substr(0, strControlId.indexOf('_'));
-	qcodo.recordControlModification(strActualControlId, 'ItemExpanded',  strControlId + ((blnShow) ? ' 1' : ' 0'));
+	qcubed.recordControlModification(strActualControlId, 'ItemExpanded',  strControlId + ((blnShow) ? ' 1' : ' 0'));
 };
 
 function treenavToggleDisplay(mixControl, strShowOrHide, strDisplayStyle) {
 	// Toggles the display/hiding of the entire control (including any design/wrapper HTML)
 	// If ShowOrHide is blank, then we toggle
 	// Otherwise, we'll execute a "show" or a "hide"
-	var objControl; if (!(objControl = qcodo.getControl(mixControl))) return;
+	var objControl; if (!(objControl = qcubed.getControl(mixControl))) return;
 
 	if (strShowOrHide) {
 		if (strShowOrHide == "show") {

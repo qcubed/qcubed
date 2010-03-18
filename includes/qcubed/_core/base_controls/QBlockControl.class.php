@@ -55,45 +55,6 @@
 		protected $objDropsGroupingsArray = array();
 		protected $objIsDropZoneFor = array();
 
-		// Resize Handles
-		protected $objUpperResizeControlsArray = array();
-		protected $objLowerResizeControlsArray = array();
-		protected $strResizeHandleDirection = null;
-		protected $intResizeHandleMinimum;
-		protected $intResizeHandleMaximum;
-
-		public function AddUpperControlToResize(QBlockControl $objTargetControl) {
-			$this->strJavaScripts = 'control_handle.js,control_resize.js';
-			if ($objTargetControl->strControlId == $this->strControlId)
-				throw new QCallerException('A Resize Handle cannot be made to resize itself');
-			$this->objUpperResizeControlsArray[$objTargetControl->strControlId] = $objTargetControl;
-		}
-
-		public function RemoveUpperControlToResize(QBlockControl $objTargetControl) {
-			$this->objUpperResizeControlsArray[$objTargetControl->ControlId] = null;
-			unset($this->objUpperResizeControlsArray[$objTargetControl->ControlId]);
-		}
-
-		public function RemoveAllUpperControlsToResize() {
-			$this->objUpperResizeControlsArray = array();
-		}
-
-		public function AddLowerControlToResize(QBlockControl $objTargetControl) {
-			$this->strJavaScripts = 'control_handle.js,control_resize.js';
-			if ($objTargetControl->strControlId == $this->strControlId)
-				throw new QCallerException('A Resize Handle cannot be made to resize itself');
-			$this->objLowerResizeControlsArray[$objTargetControl->strControlId] = $objTargetControl;
-		}
-
-		public function RemoveLowerControlToResize(QBlockControl $objTargetControl) {
-			$this->objLowerResizeControlsArray[$objTargetControl->ControlId] = null;
-			unset($this->objLowerResizeControlsArray[$objTargetControl->ControlId]);
-		}
-
-		public function RemoveAllLowerControlsToResize() {
-			$this->objLowerResizeControlsArray = array();
-		}
-
 		public function AddControlToMove($objTargetControl = null) {		
 			$this->strJavaScripts = __JQUERY_EFFECTS__;
 			
@@ -104,27 +65,6 @@
 			
 			$this->blnMoveable = true;
 			return;
-/*			
-			$this->strJavaScripts = 'control_handle.js,control_move.js';
-			if (!$objTargetControl) {
-				$this->blnMoveable = true;
-				$this->objMovesControlsArray[$this->strControlId] = $this;
-
-				if (($this->objParentControl) && ($this->objParentControl instanceof QBlockControl))
-					$this->AddDropZone($this->objParentControl);
-				else
-					$this->AddDropZone($this->objForm);
-			} else if ($objTargetControl instanceof QControl) { 
-				$objTargetControl->Moveable = true;
-				$this->objMovesControlsArray[$objTargetControl->ControlId] = $objTargetControl;
-
-				if (($objTargetControl->ParentControl) && ($objTargetControl->ParentControl instanceof QBlockControl))
-					$this->AddDropZone($objTargetControl->ParentControl);
-				else
-					$this->AddDropZone($objTargetControl->Form);
-			} else
-				throw new QCallerException('TargetControl that this will move must be a QControl object');
-*/
 		}
 
 		public function RemoveControlToMove(QControl $objTargetControl) {
@@ -141,20 +81,7 @@
 			$this->strJavaScripts = __JQUERY_EFFECTS__;
 			$this->objDropsControlsArray[$objParentObject->ControlId] = true;
 			$objParentObject->DropTarget = true;
-			$objParentObject->objIsDropZoneFor[$this->ControlId] = true;
-			
-/*			
-			if ($objParentObject instanceof QForm) {
-				$this->objDropsControlsArray[$objParentObject->FormId] = true;
-			} else if ($objParentObject instanceof QBlockControl) {
-				$this->objDropsControlsArray[$objParentObject->ControlId] = true;
-				$objParentObject->DropTarget = true;
-				$objParentObject->objIsDropZoneFor[$this->ControlId] = true;
-			} else if ($objParentObject instanceof QDropZoneGrouping) {
-				$this->objDropsGroupingsArray[$objParentObject->GroupingId] = true;
-			} else
-				throw new QCallerException('ParentObject must be either a QForm or QBlockControl object');
-*/
+			$objParentObject->objIsDropZoneFor[$this->ControlId] = true;			
 		}
 
 		public function RemoveDropZone($objParentObject) {
@@ -182,17 +109,6 @@
 		
 		public function GetEndScript() {
 			$strToReturn = parent::GetEndScript();
-
-/*			
-			// MOVE TARGETS
-			if (count($this->objMovesControlsArray)) {
-				$strToReturn .= sprintf('qc.regCMH("%s"); ', $this->strControlId);
-
-				foreach ($this->objMovesControlsArray as $objControl) {
-					$strToReturn .= sprintf('qc.getW("%s").regMT("%s"); ', $this->strControlId, $objControl->ControlId);
-				}
-			}
-*/
 			
 			// DROP ZONES
 			foreach ($this->objDropsControlsArray as $strKey => $blnIsDropZone) {
@@ -208,48 +124,10 @@
 					}
 				}
 			}
-/*			TODO !!!
-			foreach ($this->objDropsGroupingsArray as $strKey => $blnIsDropZone) {
-				if ($blnIsDropZone) {
-					$strToReturn .= sprintf('qc.getW("%s").regDZG("%s");', $this->strControlId, $strKey);
-				}
-			}
-*/
-			// ResizeHandle
-			// regCRH is a shortcut for registerControlResizeHandle
-			// setUC = setUpperControl
-			// setLC = setLowerControl
-			if (($this->strResizeHandleDirection == QResizeHandleDirection::Vertical) ||
-				($this->strResizeHandleDirection == QResizeHandleDirection::Horizontal)) {
-				if ($this->strResizeHandleDirection == QResizeHandleDirection::Vertical)
-					$strToReturn .= sprintf('qc.regCRH("%s", true);', $this->strControlId);
-				else
-					$strToReturn .= sprintf('qc.regCRH("%s", false);', $this->strControlId);
-
-				foreach ($this->objUpperResizeControlsArray as $objBlockControl)
-					$strToReturn .= sprintf('qc.getW("%s").setUC("%s");', $this->strControlId, $objBlockControl->strControlId);
-				foreach ($this->objLowerResizeControlsArray as $objBlockControl)
-					$strToReturn .= sprintf('qc.getW("%s").setLC("%s");', $this->strControlId, $objBlockControl->strControlId);
-				if (!is_null($this->intResizeHandleMinimum))
-					$strToReturn .= sprintf('qc.getW("%s").setReMi("%s");', $this->strControlId, $this->intResizeHandleMinimum);
-				else
-					$strToReturn .= sprintf('qc.getW("%s").setReMi(null);', $this->strControlId);
-				if (!is_null($this->intResizeHandleMaximum))
-					$strToReturn .= sprintf('qc.getW("%s").setReMa("%s");', $this->strControlId, $this->intResizeHandleMaximum);
-				else
-					$strToReturn .= sprintf('qc.getW("%s").setReMa(null);', $this->strControlId);
-			}
 
 			return $strToReturn;
 		}
 
-/*		public function GetEndHtml() {
-			$strToReturn = parent::GetEndHtml();
-			if ($this->blnDropTarget)
-				$strToReturn .= sprintf('<span id="%s_ctldzmask"></span>', $this->strControlId);
-			return $strToReturn;
-		}
-*/
 		public function GetStyleAttributes() {
 			$strStyle = parent::GetStyleAttributes();
 			
@@ -329,10 +207,6 @@
 
 				case "HorizontalAlign": return $this->strHorizontalAlign;
 				case "VerticalAlign": return $this->strVerticalAlign;
-
-				case "ResizeHandleMinimum": return $this->intResizeHandleMinimum;
-				case "ResizeHandleMaximum": return $this->intResizeHandleMaximum;
-				case "ResizeHandleDirection": return $this->strResizeHandleDirection;
 
 				default:
 					try {
@@ -442,33 +316,6 @@
 				case "VerticalAlign":
 					try {
 						$this->strVerticalAlign = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case "ResizeHandleDirection":
-					try {
-						$this->strResizeHandleDirection = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case "ResizeHandleMinimum":
-					try {
-						$this->intResizeHandleMinimum = QType::Cast($mixValue, QType::Integer);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case "ResizeHandleMaximum":
-					try {
-						$this->intResizeHandleMaximum = QType::Cast($mixValue, QType::Integer);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

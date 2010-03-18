@@ -46,11 +46,11 @@
 			// text in it, before performing the actions.  We can call out 'txtItem' in our
 			// javascript call because we explicitly set $this->txtItem's ControlId to 'txtItem'
 			// when we constructed it (see line 23)
-			$this->btnAdd->AddActionArray(new QClickEvent(0, "qcodo.getControl('txtItem').value != ''"), $objSubmitListItemActions);
+			$this->btnAdd->AddActionArray(new QClickEvent(0, "qcubed.getControl('txtItem').value != ''"), $objSubmitListItemActions);
 
 			// Let's add this set of actions to the Textbox, as a EnterKeyEvent
 			// Note: we are adding the same conditional
-			$this->txtItem->AddActionArray(new QEnterKeyEvent(0, "qcodo.getControl('txtItem').value != ''"), $objSubmitListItemActions);
+			$this->txtItem->AddActionArray(new QEnterKeyEvent(0, "qcubed.getControl('txtItem').value != ''"), $objSubmitListItemActions);
 
 			// Because the enter key will also call form.submit() on some browsers, which we
 			// absolutely DON'T want to have happen, let's be sure to terminate any additional

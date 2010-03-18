@@ -35,10 +35,10 @@
 				// Is the Label being clicked already selected?
 				if (intSelectedIndex == intIndex) {
 					// It's already selected -- go ahead and replace it with the textbox
-					qcodo.getWrapper(strControlId).toggleDisplay('hide');
-					qcodo.getWrapper('textbox' + intIndex).toggleDisplay('show');
+					qc.getW(strControlId).toggleDisplay('hide');
+					qc.getW('textbox' + intIndex).toggleDisplay('show');
 
-					var objTextbox = qcodo.getControl('textbox' + intIndex);
+					var objTextbox = qcubed.getControl('textbox' + intIndex);
 					objTextbox.value = objControl.innerHTML;
 					objTextbox.focus();
 					objTextbox.select();

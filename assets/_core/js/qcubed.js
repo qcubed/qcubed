@@ -1,146 +1,254 @@
-///////////////////////////////////////////////////
-// The Qcodo Object is used for everything in Qcodo
-///////////////////////////////////////////////////
-	var qcodo = {
-		initialize: function() {
+var $j = jQuery.noConflict();
 
-		////////////////////////////////
-		// Browser-related functionality
-		////////////////////////////////
+$j.fn.extend({
+	wait: function(time, type) {
+		time = time || 1000;
+		type = type || "fx";
+		return this.queue(type, function() {
+			var self = this;
+			setTimeout(function() {
+				$j(self).dequeue();
+			}, time);
+		});
+	}
+});
 
-			this.isBrowser = function(intBrowserType) {
-				return (intBrowserType & qcodo._intBrowserType);
+/*
+ * Queued Ajax requests.
+ * A new Ajax request won't be started until the previous queued 
+ * request has finished.
+ */
+$j.ajaxQueue = function(o){		
+	 $j.ajax( o );
+};
+
+
+/*
+ * Synced Ajax requests.
+ * The Ajax request will happen as soon as you call this method, but
+ * the callbacks (success/error/complete) won't fire until all previous
+ * synced requests have been completed.
+ */
+$j.ajaxSync = function(o){
+	var fn = $j.ajaxSync.fn, data = $j.ajaxSync.data, pos = fn.length;
+
+	fn[ pos ] = {
+		error: o.error,
+		success: o.success,
+		complete: o.complete,
+		done: false
+	};
+
+	data[ pos ] = {
+		error: [],
+		success: [],
+		complete: []
+	};
+
+	o.error = function(){ data[ pos ].error = arguments; };
+	o.success = function(){ data[ pos ].success = arguments; };
+	o.complete = function(){
+		data[ pos ].complete = arguments;
+		fn[ pos ].done = true;
+
+		if ( pos == 0 || !fn[ pos-1 ] )
+			for ( var i = pos; i < fn.length && fn[i].done; i++ ) {
+				if ( fn[i].error ) fn[i].error.apply( $j, data[i].error );
+				if ( fn[i].success ) fn[i].success.apply( $j, data[i].success );
+				if ( fn[i].complete ) fn[i].complete.apply( $j, data[i].complete );
+
+				fn[i] = null;
+				data[i] = null;
+			}
+	};
+
+	return $j.ajax(o);
+};
+
+$j.ajaxSync.fn = [];
+$j.ajaxSync.data = [];
+
+///////////////////////////////////////////////////
+// The QCubed Object is used for everything in Qcodo
+///////////////////////////////////////////////////
+	var qcubed = {
+			
+		recordControlModification: function (strControlId, strProperty, strNewValue) {
+			if (!qcubed.controlModifications[strControlId])
+				qcubed.controlModifications[strControlId] = new Object;
+			qcubed.controlModifications[strControlId][strProperty] = strNewValue;	
+		},
+		
+		postBack: function(strForm, strControl, strEvent, strParameter) {
+			
+			$j(':input').each(function (i) {
+				if ($j('#' + strForm + ' :input[name="' + this.name + '"]').val() == undefined) {
+					var real = $j("#" + this.name); 
+					var cloned = real.clone(true); 
+					real.hide(); 
+					cloned.insertAfter(real);    
+					real.appendTo("#" + strForm);
+				}
+			});		
+			
+			var strForm = $j("#Qform__FormId").attr("value");
+			var objForm = $j('#' + strForm);
+
+			$j('#Qform__FormControl').attr("value", strControl);
+			$j('#Qform__FormEvent').attr("value", strEvent);
+			$j('#Qform__FormParameter').attr("value", strParameter);
+			$j('#Qform__FormCallType').attr("value", "Server");
+			$j('#Qform__FormUpdates').attr("value", this.formUpdates());
+			$j('#Qform__FormCheckableControls').attr("value", this.formCheckableControls(strForm, "Server"));
+
+			// have $j trigger the submit event (so it can catch all submit events)
+			objForm.trigger("submit");
+		},
+
+		formUpdates: function() {
+			var strToReturn = "";
+			for (var strControlId in qcubed.controlModifications)
+				for (var strProperty in qcubed.controlModifications[strControlId])
+					strToReturn += strControlId + " " + strProperty + " " + qcubed.controlModifications[strControlId][strProperty] + "\n";
+			qcubed.controlModifications = new Object;
+			return strToReturn;
+		},
+		
+		formCheckableControls: function(strForm, strCallType) {
+
+			// Select the QCubed Form
+			var objFormElements = $j('#' + strForm + ' input,select,textarea');			
+			var strToReturn = "";
+
+			objFormElements.each(function(i) {
+				if ((($j(this).attr("type") == "checkbox") ||
+					 ($j(this).attr("type") == "radio")) &&
+					((strCallType == "Ajax") ||
+					(!$j(this).attr("disabled")))) {
+					
+					var strControlId = $j(this).attr("id");
+
+					// CheckBoxList
+					if (strControlId.indexOf('[') >= 0) {
+						if (strControlId.indexOf('[0]') >= 0)
+							strToReturn += " " + strControlId.substring(0, strControlId.length - 3);
+					// RadioButtonList
+					} else if (strControlId.indexOf('_') >= 0) {
+						if (strControlId.indexOf('_0') >= 0)
+							strToReturn += " " + strControlId.substring(0, strControlId.length - 2);
+
+					// Standard Radio or Checkbox
+					} else {
+						strToReturn += " " + strControlId;
+					}
+				}
+			});			
+
+			if (strToReturn.length > 0)
+				return strToReturn.substring(1);
+			else
+				return "";
+		},
+	
+		postAjax: function(strForm, strControl, strEvent, strParameter, strWaitIconControlId) {
+			
+			var strForm = strForm;
+			var strControl = strControl;
+			var strEvent = strEvent;
+			var strParameter = strParameter;
+			var strWaitIconControlId = strWaitIconControlId;
+
+			var objForm = $j('#' + strForm);
+			var strFormAction = objForm.attr("action");				
+			var objFormElements = $j('#' + strForm + ' input,select,textarea');			
+			
+			$j('#Qform__FormControl').attr("value", strControl);
+			$j('#Qform__FormEvent').attr("value", strEvent);
+			$j('#Qform__FormParameter').attr("value", strParameter);
+			$j('#Qform__FormCallType').attr("value", "Ajax");
+			$j('#Qform__FormUpdates').attr("value", this.formUpdates());
+			$j('#Qform__FormCheckableControls').attr("value", this.formCheckableControls(strForm, "Ajax"));
+		
+			var strPostData = '';
+			
+			objFormElements.each(function () {			
+				var strType = $j(this).attr("type");
+				var strControlId = $j(this).attr("id");
+				switch (strType) {				
+					case "checkbox":
+					case "radio":
+						if ($j(this).checked) {
+							var strTestName = $j(this).attr("name") + "_";
+							if (strControlId.substring(0, strTestName.length) == strTestName)
+								strPostData += "&" + $j(this).attr("name") + "=" + strControlId.substring(strTestName.length);
+							else
+								strPostData += "&" + strControlId + "=" + $j(this).val();
+						};
+						break;
+
+					case "select-multiple":
+						var blnOneSelected = false;
+						this.children(':selected').each (function (i) {
+							strPostData += "&" + $j(this).attr("name") + "=";
+							strPostData += $j(this).val();
+						});
+						break;
+
+					default:
+						strPostData += "&" + strControlId + "=";
+					
+						// For Internationalization -- we must escape the element's value properly
+						var strPostValue = $j(this).val();
+						if (strPostValue) {
+							strPostValue = strPostValue.replace(/\%/g, "%25");
+							strPostValue = strPostValue.replace(/&/g, escape('&'));
+							strPostValue = strPostValue.replace(/\+/g, "%2B");							
+						}
+						strPostData += strPostValue;
+						break;				
+				}
+			});
+
+			if (strWaitIconControlId) {
+				this.objAjaxWaitIcon = this.getWrapper(strWaitIconControlId);
+				if (this.objAjaxWaitIcon)
+					this.objAjaxWaitIcon.style.display = 'inline';
 			};
-
-			this.IE = 1;
-			this.IE_6_0 = 2;
-			this.IE_7_0 = 4;
-			this.IE_8_0 = 8;
-
-			this.FIREFOX = 16;
-			this.FIREFOX_1_0 = 32;
-			this.FIREFOX_1_5 = 64;
-			this.FIREFOX_2_0 = 128;
-			this.FIREFOX_3_0 = 256;
-
-			this.SAFARI = 512;
-			this.SAFARI_2_0 = 1024;
-			this.SAFARI_3_0 = 2048;
-			this.SAFARI_4_0 = 4096;
-
-			this.OPERA = 8192;
-			this.OPERA_7 = 16384;
-			this.OPERA_8 = 32768;
-			this.OPERA_9 = 65536;
-
-			this.KONQUEROR = 131072;
-			this.KONQUEROR_3 = 262144;
-			this.KONQUEROR_4 = 524288;
-
-			this.CHROME = 1048576;
-			this.CHROME_0 = 2097152;
-			this.CHROME_1 = 4194304;
-
-			this.WINDOWS = 8388608;
-			this.LINUX = 16777216;
-			this.MACINTOSH = 33554432;
-
-			this.UNSUPPORTED = 67108864;
-
-			var strUserAgent = navigator.userAgent.toLowerCase();
-			this._intBrowserType = 0;
-
-			// INTERNET EXPLORER (supporting versions 6.0 and 7.0 and eventually 8.0)
-			if (strUserAgent.indexOf("msie") >= 0) {
-				this._intBrowserType = this._intBrowserType | this.IE;
-
-				if (strUserAgent.indexOf("msie 6.0") >= 0)
-					this._intBrowserType = this._intBrowserType | this.IE_6_0;
-				else if (strUserAgent.indexOf("msie 7.0") >= 0)
-					this._intBrowserType = this._intBrowserType | this.IE_7_0;
-				else if (strUserAgent.indexOf("msie 8.0") >= 0)
-					this._intBrowserType = this._intBrowserType | this.IE_8_0;
-				else
-					this._intBrowserType = this._intBrowserType | this.UNSUPPORTED;
-
-			// FIREFOX (supporting versions 1.0, 1.5, 2.0 and eventually 3.0)
-			} else if ((strUserAgent.indexOf("firefox") >= 0) || (strUserAgent.indexOf("iceweasel") >= 0)) {
-				this._intBrowserType = this._intBrowserType | this.FIREFOX;
-				strUserAgent = strUserAgent.replace('iceweasel/', 'firefox/');
-
-				if (strUserAgent.indexOf("firefox/1.0") >= 0)
-					this._intBrowserType = this._intBrowserType | this.FIREFOX_1_0;
-				else if (strUserAgent.indexOf("firefox/1.5") >= 0)
-					this._intBrowserType = this._intBrowserType | this.FIREFOX_1_5;
-				else if (strUserAgent.indexOf("firefox/2.0") >= 0)
-					this._intBrowserType = this._intBrowserType | this.FIREFOX_2_0;
-				else if (strUserAgent.indexOf("firefox/3.0") >= 0)
-					this._intBrowserType = this._intBrowserType | this.FIREFOX_3_0;
-				else
-					this._intBrowserType = this._intBrowserType | this.UNSUPPORTED;
-
-			// SAFARI (supporting version 2.0 and eventually 3.0 and 4.0)
-			} else if (strUserAgent.indexOf("safari") >= 0) {
-				this._intBrowserType = this._intBrowserType | this.SAFARI;
-				
-				if (strUserAgent.indexOf("version/4") >= 0)
-					this._intBrowserType = this._intBrowserType | this.SAFARI_4_0;
-				else if (strUserAgent.indexOf("version/3") >= 0 || strUserAgent.indexOf("safari/52") >= 0)
-					this._intBrowserType = this._intBrowserType | this.SAFARI_3_0;
-				else if (strUserAgent.indexOf("version/2") >= 0 || strUserAgent.indexOf("safari/41") >= 0)
-					this._intBrowserType = this._intBrowserType | this.SAFARI_2_0;
-				else
-					this._intBrowserType = this._intBrowserType | this.UNSUPPORTED;
-
-			// KONQUEROR (eventually supporting versions 3 and 4)
-			} else if (strUserAgent.indexOf("konqueror") >= 0) {
-				this._intBrowserType = this._intBrowserType | this.KONQUEROR;
-
-				if (strUserAgent.indexOf("konqueror/3") >= 0)
-					this._intBrowserType = this._intBrowserType | this.KONQUEROR_3;
-				else if (strUserAgent.indexOf("konqueror/4") >= 0)
-					this._intBrowserType = this._intBrowserType | this.KONQUEROR_4;
-				else
-					this._intBrowserType = this._intBrowserType | this.UNSUPPORTED;
-			}
-
-			// OPERA (eventually supporting versions 7, 8 and 9)
-			if (strUserAgent.indexOf("opera") >= 0) {
-				this._intBrowserType = this._intBrowserType | this.OPERA;
-
-				if (strUserAgent.indexOf("opera/7") >= 0 || strUserAgent.indexOf("opera 7") >= 0)
-					this._intBrowserType = this._intBrowserType | this.OPERA_7;
-				else if (strUserAgent.indexOf("opera/8") >= 0 || strUserAgent.indexOf("opera 8") >= 0)
-					this._intBrowserType = this._intBrowserType | this.OPERA_8;
-				else if (strUserAgent.indexOf("opera/9") >= 0 || strUserAgent.indexOf("opera 9") >= 0)
-					this._intBrowserType = this._intBrowserType | this.OPERA_9;
-				else
-					this._intBrowserType = this._intBrowserType | this.UNSUPPORTED;
-			}
-
-			// CHROME (eventually supporting versions 0 and 1)
-			if (strUserAgent.indexOf("chrome") >= 0) {
-				this._intBrowserType = this._intBrowserType | this.CHROME;
-
-				if (strUserAgent.indexOf("chrome/0") >= 0)
-					this._intBrowserType = this._intBrowserType | this.CHROME_0;
-				else if (strUserAgent.indexOf("chrome/1") >= 0)
-					this._intBrowserType = this._intBrowserType | this.CHROME_1;
-				else
-					this._intBrowserType = this._intBrowserType | this.UNSUPPORTED;
-			}
-
-			// COMPLETELY UNSUPPORTED
-			if (this._intBrowserType == 0)
-				this._intBrowserType = this._intBrowserType | this.UNSUPPORTED;
-
-			// OS (supporting Windows, Linux and Mac)
-			if (strUserAgent.indexOf("windows") >= 0)
-				this._intBrowserType = this._intBrowserType | this.WINDOWS;
-			else if (strUserAgent.indexOf("linux") >= 0)
-				this._intBrowserType = this._intBrowserType | this.LINUX;
-			else if (strUserAgent.indexOf("macintosh") >= 0 || navigator.userAgent.toLowerCase().indexOf("mac os") >= 0)
-				this._intBrowserType = this._intBrowserType | this.MACINTOSH;
+			$j.ajaxQueue({
+				url: strFormAction,
+				type: "POST",
+				data: strPostData,
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
+					var objErrorWindow = window.open('about:blank', 'qcodo_error','menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
+					objErrorWindow.focus();
+					objErrorWindow.document.write(XMLHttpRequest.responseText);
+					return;
+				},
+				success: function (xml) {			
+					$j(xml).find('control').each(function() {
+						var strControlId = '#' + $j(this).attr("id");
+						var strControlHtml = $j(this).text();				
+						
+						if (strControlId == "#Qform__FormState") {
+							$j(strControlId).val(strControlHtml);
+						} else {
+							$j(strControlId + "_ctl").html(strControlHtml);
+						}
+					});			
+					var strCommand = '';
+					$j(xml).find('command').each(function() {						
+						strCommand += $j(this).text();										
+					});				
+					eval(strCommand);					
+					if (qcubed.objAjaxWaitIcon)
+						qcubed.objAjaxWaitIcon.style.display = 'none';
+				}
+			});
+			
+		},
+			
+		initialize: function() {
 
 
 
@@ -167,133 +275,8 @@
 		// QForm-related functionality
 		/////////////////////////////
 
-			this.registerForm = function() {
-				// "Lookup" the QForm's FormId
-				var strFormId = document.getElementById("Qform__FormId").value;
-
-				// Register the Various Hidden Form Elements needed for QForms
-				this.registerFormHiddenElement("Qform__FormControl", strFormId);
-				this.registerFormHiddenElement("Qform__FormEvent", strFormId);
-				this.registerFormHiddenElement("Qform__FormParameter", strFormId);
-				this.registerFormHiddenElement("Qform__FormCallType", strFormId);
-				this.registerFormHiddenElement("Qform__FormUpdates", strFormId);
-				this.registerFormHiddenElement("Qform__FormCheckableControls", strFormId);
-			};
-
-			this.registerFormHiddenElement = function(strId, strFormId) {
-				var objHiddenElement = document.createElement("input");
-				objHiddenElement.type = "hidden";
-				objHiddenElement.id = strId;
-				objHiddenElement.name = strId;
-				document.getElementById(strFormId).appendChild(objHiddenElement);
-			};
-
 			this.wrappers = new Array();
 
-
-
-		////////////////////////////////////
-		// Mouse Drag Handling Functionality
-		////////////////////////////////////
-
-			this.enableMouseDrag = function() {
-				document.onmousedown = qcodo.handleMouseDown;
-				document.onmousemove = qcodo.handleMouseMove;
-				document.onmouseup = qcodo.handleMouseUp;
-			};
-
-			this.handleMouseDown = function(objEvent) {
-				objEvent = qcodo.handleEvent(objEvent);
-
-				var objHandle = qcodo.target;
-				if (!objHandle) return true;
-
-				var objWrapper = objHandle.wrapper;
-				if (!objWrapper) return true;
-
-				// Qcodo-Wide Mouse Handling Functions only operate on the Left Mouse Button
-				// (Control-specific events can respond to QRightMouse-based Events)
-				if (qcodo.mouse.left) {
-					if (objWrapper.handleMouseDown) {
-						// Specifically for Microsoft IE
-						if (objHandle.setCapture)
-							objHandle.setCapture();
-
-						// Ensure the Cleanliness of Dragging
-						objHandle.onmouseout = null;
-						if (document.selection)
-							document.selection.empty();
-
-						qcodo.currentMouseHandleControl = objWrapper;
-						return objWrapper.handleMouseDown(objEvent, objHandle);
-					};
-				};
-
-				qcodo.currentMouseHandleControl = null;
-				return true;
-			};
-
-			this.handleMouseMove = function(objEvent) {
-				objEvent = qcodo.handleEvent(objEvent);
-
-				if (qcodo.currentMouseHandleControl) {
-					var objWrapper = qcodo.currentMouseHandleControl;
-					var objHandle = objWrapper.handle;
-
-					// In case IE accidentally marks a selection...
-					if (document.selection)
-						document.selection.empty();
-
-					if (objWrapper.handleMouseMove)
-						return objWrapper.handleMouseMove(objEvent, objHandle);
-				};
-
-				return true;
-			};
-
-			this.handleMouseUp = function(objEvent) {
-				objEvent = qcodo.handleEvent(objEvent);
-
-				if (qcodo.currentMouseHandleControl) {
-					var objWrapper = qcodo.currentMouseHandleControl;
-					var objHandle = objWrapper.handle;
-
-					// In case IE accidentally marks a selection...
-					if (document.selection)
-						document.selection.empty();
-
-					// For IE to release release/setCapture
-					if (objHandle.releaseCapture) {
-						objHandle.releaseCapture();
-						objHandle.onmouseout = function() {this.releaseCapture()};
-					};
-
-					qcodo.currentMouseHandleControl = null;
-
-					if (objWrapper.handleMouseUp)
-						return objWrapper.handleMouseUp(objEvent, objHandle);
-				};
-
-				return true;
-			};
-
-
-
-		////////////////////////////////////
-		// Window Unloading
-		////////////////////////////////////
-
-			this.unloadFlag = false;
-			this.handleUnload = function() {
-				qcodo.unloadFlag = true;
-			};
-			window.onunload= this.handleUnload;
-
-			this.beforeUnloadFlag = false;
-			this.handleBeforeUnload = function() {
-				qcodo.beforeUnloadFlag = true;
-			};
-			window.onbeforeunload= this.handleBeforeUnload;
 
 		}
 	};
@@ -304,9 +287,10 @@
 // Qcodo Shortcut and Initialize
 ////////////////////////////////
 	// Make sure we set $j.noConflict() to $j
-	var $j = jQuery.noConflict();
 	
-	var qc = qcodo;
+	var qc = qcubed;
 	qc.initialize();
 	
+	qc.pB = qcubed.postBack;
+	qc.pA = qcubed.postAjax;
 	
