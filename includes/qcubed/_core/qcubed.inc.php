@@ -31,7 +31,7 @@
 	 */
 
 	// Versioning Information
-	define('QCUBED_VERSION_NUMBER_ONLY', '2.0 alpha');
+	define('QCUBED_VERSION_NUMBER_ONLY', '2.0.0');
 	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 
 	// Preload Required Framework Classes
