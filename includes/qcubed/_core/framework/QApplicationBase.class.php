@@ -222,11 +222,11 @@
 			}
 
 			// Setup PathInfo and QueryString (if applicable)
-      QApplication::$PathInfo = null;
-      if(array_key_exists('PATH_INFO', $_SERVER)) {
-        QApplication::$PathInfo = urlencode(trim($_SERVER['PATH_INFO']));
-        QApplication::$PathInfo = str_ireplace('%2f', '/', QApplication::$PathInfo);
-      }
+			QApplication::$PathInfo = null;
+			if(array_key_exists('PATH_INFO', $_SERVER)) {
+				QApplication::$PathInfo = urlencode(trim($_SERVER['PATH_INFO']));
+				QApplication::$PathInfo = str_ireplace('%2f', '/', QApplication::$PathInfo);
+			}
 			QApplication::$QueryString = array_key_exists('QUERY_STRING', $_SERVER) ? $_SERVER['QUERY_STRING'] : null;
 
 			// Setup RequestUri
@@ -589,7 +589,7 @@
 				return false;
 
 			// Are we localhost?
-			if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')
+			if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == '::1')
 				return false;
 
 			// Are we the correct IP?
