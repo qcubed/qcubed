@@ -252,13 +252,17 @@
 					break;
 				case QFileAssetType::Pdf:
 					$this->intFileAssetType = $intFileAssetType;
-					$this->strAcceptibleMimeArray = array('application/pdf' => 'pdf');
+					$this->strAcceptibleMimeArray = array(
+						'application/pdf' => 'pdf',
+						'application/octet-stream' => 'pdf'
+						);
 					$this->strUnacceptableMessage = QApplication::Translate('Must be a PDF');
 					break;
 				case QFileAssetType::Document:
 					$this->intFileAssetType = $intFileAssetType;
 					$this->strAcceptibleMimeArray = array(
 						'application/pdf' => 'pdf',
+						'application/octet-stream' => 'pdf',
 						'image/pjpeg' => 'jpg',
 						'image/jpeg' => 'jpg',
 						'image/jpg' => 'jpg',
