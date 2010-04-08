@@ -121,7 +121,7 @@
 
 			// CHROME (eventually supporting versions 0 and 1)
 			if (strUserAgent.indexOf("chrome") >= 0) {
-				this._intBrowserType = this._intBrowserType | this.CHROME;
+				this._intBrowserType = (this._intBrowserType | this.CHROME) & ~this.SAFARI;
 
 				if (strUserAgent.indexOf("chrome/0") >= 0)
 					this._intBrowserType = this._intBrowserType | this.CHROME_0;
@@ -183,7 +183,7 @@
 					var objNewScriptInclude = document.createElement("style");
 					objNewScriptInclude.setAttribute("type", "text/css");
 					objNewScriptInclude.setAttribute("media", strMediaType);
-					objNewScriptInclude.innerHTML = '@import "' + strStyleSheetFile + '";';
+					objNewScriptInclude.appendChild(document.createTextNode('@import "' + strStyleSheetFile + '";'));
 					document.body.appendChild(objNewScriptInclude);
 				};
 			};
