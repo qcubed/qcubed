@@ -237,23 +237,14 @@
 				this.updateStyle("enabled", (this.control.disabled) ? true : false);
 		};
 
-		objWrapper.registerClickPosition = function(objEvent) {
-			objEvent = (objEvent) ? objEvent : ((typeof(event) == "object") ? event : null);
-			qcubed.handleEvent(objEvent);
-
-			var intX = qcubed.mouse.x - this.getAbsolutePosition().x + qcubed.scroll.x;
-			var intY = qcubed.mouse.y - this.getAbsolutePosition().y + qcubed.scroll.y;
-
-			// Random IE Check
-			if (qcubed.isBrowser(qcubed.IE)) {
-				intX = intX - 2;
-				intY = intY - 2;
-			};
-
-			document.getElementById(this.control.id + "_x").value = intX;
-			document.getElementById(this.control.id + "_y").value = intY;
+		objWrapper.registerClickPosition = function(objEvent) {			
+			var intX = objEvent.pageX - this.control.offsetLeft;
+			var intY = objEvent.pageY - this.control.offsetTop;
+			
+			$j('#' + this.control.id + "_x").val(intX);
+			$j('#' + this.control.id + "_y").val(intY);
 		};
-
+		
 		// Focus
 		objWrapper.focus = function() {
 			$j('#' + this.control.id).focus();	

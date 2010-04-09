@@ -281,6 +281,46 @@ $j.ajaxSync.data = [];
 		}
 	};
 
+	///////////////////////////////
+	// Timers-related functionality
+	///////////////////////////////
+
+		qcubed._objTimers = new Object();
+
+		qcubed.clearTimeout = function(strTimerId) {
+			if (qcubed._objTimers[strTimerId]) {
+				clearTimeout(qcubed._objTimers[strTimerId]);
+				qcubed._objTimers[strTimerId] = null;
+			};
+		};
+
+		qcubed.setTimeout = function(strTimerId, strAction, intDelay) {
+			qcubed.clearTimeout(strTimerId);
+			qcubed._objTimers[strTimerId] = setTimeout(strAction, intDelay);
+		};
+
+
+
+	/////////////////////////////////////
+	// Event Object-related functionality
+	/////////////////////////////////////
+
+				
+		qcubed.terminateEvent = function(objEvent) {
+			objEvent = qcubed.handleEvent(objEvent);
+
+			if (objEvent) {
+				// Stop Propogation
+				if (objEvent.preventDefault)
+					objEvent.preventDefault();
+				if (objEvent.stopPropagation)
+					objEvent.stopPropagation();
+				objEvent.cancelBubble = true;
+				objEvent.returnValue = false;
+			};
+
+			return false;
+		};
 
 
 ////////////////////////////////
