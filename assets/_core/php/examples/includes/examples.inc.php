@@ -456,8 +456,8 @@
 				$intPartId = 3;
 
 			$strToReturn .= ' &nbsp; | &nbsp; ';
-			$strToReturn .= sprintf('<strong><a href="%s/index.php/%s" class="headerLink">Back to Main</a></strong>',
-				__VIRTUAL_DIRECTORY__ . __EXAMPLES__, $intPartId);
+			$strToReturn .= sprintf('<strong><a href="%s/index.php%s" class="headerLink">Back to Main</a></strong>',
+				__VIRTUAL_DIRECTORY__ . __EXAMPLES__, $intPartId == 1 ? "" : "/" . $intPartId);
 			$strToReturn .= ' &nbsp; | &nbsp; ';
 
 			if ($strNext)

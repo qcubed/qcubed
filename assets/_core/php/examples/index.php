@@ -1,6 +1,12 @@
 <?php
-	require_once(dirname(__FILE__).'/../../../../qcubed.inc.php');	$mainPage = true;
+	require_once(dirname(__FILE__).'/../../../../qcubed.inc.php');	
+	$mainPage = true;
 	require('includes/header.inc.php');
+	
+	$intSectionToShow = QApplication::PathInfo(0);
+	if (!$intSectionToShow) {		
+		$intSectionToShow = 1; // show first section by default
+	}
 ?>
 		<div class="instructions">
 			<div class="instruction_title">QCubed Examples Site</div>
@@ -50,15 +56,16 @@
 						document.getElementById("link3").className = "main_navselected";
 						break;
 				}
+				return false;
 			}
 		</script>
 
 		<div class="main_navigator">
-		<a id="link1" href="javascript:DisplayPart('1')" class="main_navselected">The Code Generator</a>
+		<a id="link1" href="<?php _p(QApplication::$ScriptName) ?>" onclick="return DisplayPart('1')" class="<?php _p(($intSectionToShow == 1)? "main_navselected":"main_navlink"); ?>">The Code Generator</a>
 		 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
-		<a id="link2" href="javascript:DisplayPart('2')" class="main_navlink">The QForm and QControl Library</a>
+		<a id="link2" href="<?php _p(QApplication::$ScriptName) ?>/2" onclick="return DisplayPart('2')" class="<?php _p(($intSectionToShow == 2)? "main_navselected":"main_navlink"); ?>">The QForm and QControl Library</a>
 		 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
-		<a id="link3" href="javascript:DisplayPart('3')" class="main_navlink">Other QCubed Functionality</a>
+		<a id="link3" href="<?php _p(QApplication::$ScriptName) ?>/3" onclick="return DisplayPart('3')" class="<?php _p(($intSectionToShow == 3)? "main_navselected":"main_navlink"); ?>">Other QCubed Functionality</a>
 		</div>
 
 <?php
@@ -67,7 +74,7 @@
 
 				if ($intIndex == 0) {
 ?>
-					<div id="part1">
+					<div id="part1" <?php if($intSectionToShow != 1){ _p('style="display: none;"', false); } ?>>
 					<div class="main_info">
 						<p><strong>The Code Generator</strong> is at the heart of the Model in the MVC (Model, View, Controller) architecture.
 						It uses the data model you have defined to create all your data objects, relationships and CRUD
@@ -83,7 +90,7 @@
 				if ($intIndex == 3) {
 ?>
 					</blockquote></div>
-					<div id="part2" style="display: none;">
+					<div id="part2" <?php if($intSectionToShow != 2){ _p('style="display: none;"', false); } ?>>
 					<div class="main_info">
 						<p>QForms is a <strong>stateful, event-driven architecture for web-based forms</strong>, providing the display and
 						presentation functionality for QCubed.  Basically, it is your "V" and "C" of the MVC architecture.</p>
@@ -98,7 +105,7 @@
 				if ($intIndex == 10) {
 ?>
 					</blockquote></div>
-					<div id="part3" style="display: none;">
+					<div id="part3" <?php if($intSectionToShow != 3){ _p('style="display: none;"', false); } ?>>
 					<div class="main_info">
 						<p>Beyond the <strong>Code Generator</strong> and the <strong>Qform Library</strong>, QCubed also many other modules and features
 						that is useful for web application developers.</p>
@@ -122,7 +129,5 @@
 		</blockquote></div>
 
 <?php
-	if (QApplication::PathInfo(0))
-		printf('<script type="text/javascript">DisplayPart("%s");</script>', QApplication::PathInfo(0));
 	require('includes/footer.inc.php');
 ?>
