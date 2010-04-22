@@ -177,7 +177,7 @@ $j.ajaxSync.data = [];
 				switch (strType) {				
 					case "checkbox":
 					case "radio":
-						if ($j(this).checked) {
+						if ($j(this).attr("checked")) {
 							var strTestName = $j(this).attr("name") + "_";
 							if (strControlId.substring(0, strTestName.length) == strTestName)
 								strPostData += "&" + $j(this).attr("name") + "=" + strControlId.substring(strTestName.length);
