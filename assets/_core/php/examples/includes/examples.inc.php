@@ -21,8 +21,8 @@
 			self::AddCoreExampleFile($intIndex, '/code_generator/relationships_many.php * Many-to-Many Relationships');
 			self::AddCoreExampleFile($intIndex, '/code_generator/script_path.php Defining Relationships without Foreign Keys');
 			self::AddCoreExampleFile($intIndex, '/code_generator/primary_keys.php Explanation of QCubed Primary Key Requirement');
-			Examples::$AdditionalCode[__EXAMPLES__ . '/code_generator/intro.php'] = array('mysql_innodb.sql','sql_server.sql');
-			Examples::$AdditionalCode[__EXAMPLES__ . '/code_generator/script_path.php'] = array('mysql_myisam.sql', 'relationships.txt');
+			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/code_generator/intro.php'] = array('mysql_innodb.sql','sql_server.sql');
+			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__  . __EXAMPLES__ . '/code_generator/script_path.php'] = array('mysql_myisam.sql', 'relationships.txt');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
@@ -99,8 +99,8 @@
 			self::AddCoreExampleFile($intIndex, '/datagrid/ajax.php * Enabling AJAX on the QDataGrid');
 			self::AddCoreExampleFile($intIndex, '/datarepeater/ajax.php * Simple QDataRepeater using AJAX-triggered Pagination');
 			self::AddCoreExampleFile($intIndex, '/datagrid/extend.php * Creating Your Own Custom QDataGrid Subclass');
-			Examples::$AdditionalCode[__EXAMPLES__  . '/datarepeater/ajax.php'] = array('dtr_persons.tpl.php');
-			Examples::$AdditionalCode[__EXAMPLES__  . '/datagrid/extend.php'] = array('QDataGrid.class.php');
+			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/datarepeater/ajax.php'] = array('dtr_persons.tpl.php');
+			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/datagrid/extend.php'] = array('QDataGrid.class.php');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
@@ -137,7 +137,7 @@
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/dialog_box.php Modal "Dialog Boxes"');
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/jquery_effects.php JQuery Effects');
 			
-			Examples::$AdditionalCode[__EXAMPLES__ . '/advanced_ajax/dialog_box.php'] = array('CalculatorWidget.class.php','CalculatorWidget.tpl.php');
+			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/advanced_ajax/dialog_box.php'] = array('CalculatorWidget.class.php','CalculatorWidget.tpl.php');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
@@ -215,14 +215,14 @@
 		}
 		
 		private static function AddCoreExampleFile($intIndex, $strExampleFileName) {
-			array_push(Examples::$Categories[$intIndex], __EXAMPLES__ . $strExampleFileName);
+			array_push(Examples::$Categories[$intIndex], __VIRTUAL_DIRECTORY__ . __EXAMPLES__ . $strExampleFileName);
 		}
 		
 		private static function AddCoreReferencedFile($strExampleFileName, $mixReferencedFile) {
 			if (!is_array($mixReferencedFile)) {
 				$mixReferencedFile = array($mixReferencedFile);
 			}
-			Examples::$AdditionalCode[__EXAMPLES__ . $strExampleFileName] = $mixReferencedFile;
+			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . $strExampleFileName] = $mixReferencedFile;
 		}
 
 		public static function GetCategoryId() {
