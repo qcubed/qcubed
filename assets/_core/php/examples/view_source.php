@@ -42,7 +42,7 @@
 		$strFilename = __QCUBED_CORE__ . '/framework/' . str_replace('__CORE_FRAMEWORK__', '', str_replace('/', '', $strScript));
 	} else {		
 		$strFilename = substr($strReference, 1);
-		$strFilename = __DOCROOT__ . '/' . substr($strFilename, 0, strrpos($strReference, '/')) . '/' . $strScript;
+		$strFilename = __DOCROOT__ . '/' . substr($strFilename, strlen(__VIRTUAL_DIRECTORY__), strrpos($strReference, '/') - strlen(__VIRTUAL_DIRECTORY__)) . '/' . $strScript;
 	}
 
 	if (!file_exists($strFilename)) {

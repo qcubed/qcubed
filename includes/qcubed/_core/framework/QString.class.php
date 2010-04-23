@@ -69,5 +69,36 @@
 
 			return $strString;
 		}
+		
+		// Implementation from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
+		public final static function LongestCommonSubsequence($str1, $str2) {
+			$m = strlen($str1);
+			$n = strlen($str2);
+			$L = array();
+			$z = 0;
+			$ret = array();
+		 
+			for($i=0; $i<$m; $i++){
+				$L[$i] = array();
+				for($j=0; $j<$n; $j++){
+					$L[$i][$j] = 0;
+				}
+			}
+		 
+			for($i=0; $i<$m; $i++){
+				for($j=0; $j<$n; $j++){
+					if( $str1[$i] == $str2[$j] ){
+						$L[$i][$j] = $L[$i-1][$j-1] + 1;
+						if( $L[$i][$j] > $z ){
+							$z = $L[$i][$j];
+							$ret = array();
+						}
+						if( $L[$i][$j] == $z )
+							$ret[] = substr($str1, $i-$z+1, $z);
+					}
+				}
+			}
+			return $ret[0];			
+		}
 	}
 ?>
