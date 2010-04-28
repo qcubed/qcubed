@@ -15,11 +15,11 @@
 class QCalendar extends QDateTimeTextBox {
 	protected $strJavaScripts = __JQUERY_EFFECTS__;
 	protected $strStyleSheets = __JQUERY_CSS__;
-	protected $strMinDate = null;
-	protected $strMaxDate = null;
-	protected $strDefDate = null;
-	protected $strFirstDay = null;
-	protected $strNumberOfMonths = null;
+	protected $datMinDate = null;
+	protected $datMaxDate = null;
+	protected $datDefaultDate = null;
+	protected $intFirstDay = null;
+	protected $mixNumberOfMonths = null;
 	protected $blnAutoSize = false;
 	protected $blnGotoCurrent = false;
 	protected $blnIsRtl = false;
@@ -30,19 +30,23 @@ class QCalendar extends QDateTimeTextBox {
 	}
 
 	public function GetControlHtml() {
-		$strToReturn = parent :: GetControlHtml();
+		$strToReturn = parent::GetControlHtml();
 		
-		QApplication :: ExecuteJavaScript(
+		QApplication::ExecuteJavaScript(
 			sprintf('jQuery("#%s").datepicker({showButtonPanel: true,  dateFormat: "M d yy"' . 
-				(($this->blnAutoSize) ? ', autoSize: true' : '') . 
-				(($this->strMinDate) ? ', minDate: ' . $this->strMinDate : '') . 
-				(($this->strMaxDate) ? ', maxDate: "' . $this->strMaxDate . '"' : '') . 
-				(($this->strDefDate) ? $this->strDefDate : '') . 
-				(($this->strFirstDay) ? $this->strFirstDay : '') . 
-				(($this->blnGotoCurrent) ? ', gotoCurrent: true' : '') . 
-				(($this->blnIsRtl) ? ', isRTL: true' : '') . 
-				(($this->strNumberOfMonths) ? $this->strNumberOfMonths : '') . 
-			'})', $this->strControlId));
+					(($this->blnAutoSize) ? ', autoSize: true' : '') . 
+					(($this->datMinDate) ? ', minDate: "' . $this->datMinDate->__toString() .'"': '') . 
+					(($this->datMaxDate) ? ', maxDate: "' . $this->datMaxDate->__toString() . '"' : '') . 
+					(($this->datDefaultDate) ? ', defaultDate: "'.$this->datDefaultDate->__toString().'"' : '') . 
+					(($this->intFirstDay) ? ', firstDay: '.$this->intFirstDay : '') . 
+					(($this->blnGotoCurrent) ? ', gotoCurrent: true' : '') . 
+					(($this->blnIsRtl) ? ', isRTL: true' : '') . 
+					(($this->mixNumberOfMonths) ? (
+							is_array($this->mixNumberOfMonths)? 
+							'['.implode(', ',$this->mixNumberOfMonths).']' : $this->mixNumberOfMonths
+							) :
+						'') . 
+					'})', $this->strControlId));
 
 		return $strToReturn;
 	}
@@ -53,29 +57,29 @@ class QCalendar extends QDateTimeTextBox {
 	public function __get($strName) {
 		switch ($strName) {
 			case "MinDate" :
-				return $this->strMinDate;
+				return $this->datMinDate;
 			case "MaxDate" :
-				return $this->strMaxDate;
-			case "DefDate" :
-				return $this->strDefDate;
+				return $this->datMaxDate;
+			case "DefaultDate" :
+				return $this->datDefaultDate;
 			case "FirstDay" :
-				return $this->strFirstDay;
-			case "blnGotoCurrent" :
+				return $this->intFirstDay;
+			case "GotoCurrent" :
 				return $this->blnGotoCurrent;
-			case "blnIsRtl" :
+			case "IsRtl" :
 				return $this->blnIsRtl;
 			case "NumberOfMonths" :
-				return $this->strNumberOfMonths;
-			case "blnAutoSize" :
+				return $this->mixNumberOfMonths;
+			case "AutoSize" :
 				return $this->blnAutoSize;
 			default :
-				try {
-					return parent :: __get($strName);
-				}
-				catch (QCallerException $objExc) {
-					$objExc->IncrementOffset();
-					throw $objExc;
-				}
+			try {
+				return parent::__get($strName);
+			}
+			catch (QCallerException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
 		}
 	}
 
@@ -86,36 +90,56 @@ class QCalendar extends QDateTimeTextBox {
 		$this->blnModified = true;
 		switch ($strName) {
 			case "MinDate" :
-				$blnMinDate = true;
-				if ($mixValue == "Today")
-					$this->strMinDate = "new Date()";
-				else
-					$this->strMinDate = "new Date(" . $mixValue . ")";
-				break;
-			case "MaxDate" :
-				$blnMaxDate = true;
-				$this->strMaxDate = "new MaxDate('" . $mixValue . "')";
-				break;
-			case "defaultDate" :
-				$blnDefDate = true;
-				$this->strDefDate = ", defaultDate: +" . $mixValue . " ";
-				break;
-			case "FirstDay" :
-				$blnFirstDay = true;
-				$this->strFirstDay = ", FirstDay: " . $mixValue;
-				break;
-			case "gotoCurrent" :
 				try {
-					$this->blnGotoCurrent = QType :: Cast($mixValue, QType :: Boolean);
+					$this->datMinDate = QType::Cast($mixValue, QType::DateTime);
 					break;
 				}
 				catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
-			case "isRTL" :
+			case "MaxDate" :
+				$blnMaxDate = true;
 				try {
-					$this->blnIsRtl = QType :: Cast($mixValue, QType :: Boolean);
+					$this->datMaxDate = QType::Cast($mixValue, QType::DateTime);
+					break;
+				}
+				catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			case "DefaultDate" :
+				$blnDefaultDate = true;
+				try {
+					$this->datDefaultDate = QType::Cast($mixValue, QType::DateTime);
+					break;
+				}
+				catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			case "FirstDay" :
+				$blnFirstDay = true;
+				try {
+					$this->intFirstDay = QType::Cast($mixValue, QType::Integer);
+					break;
+				}
+				catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			case "GotoCurrent" :
+				try {
+					$this->blnGotoCurrent = QType::Cast($mixValue, QType::Boolean);
+					break;
+				}
+				catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			case "IsRTL" :
+				try {
+					$this->blnIsRtl = QType::Cast($mixValue, QType::Boolean);
 					break;
 				}
 				catch (QInvalidCastException $objExc) {
@@ -124,12 +148,13 @@ class QCalendar extends QDateTimeTextBox {
 				}
 			case "NumberOfMonths" :
 				$blnNumberOfMonths = true;
-				$mixRowsCols = explode(',', $mixValue);
-				$this->strNumberOfMonths = ", NumberOfMonths: [" . $mixRowsCols[1] . ", " . $mixRowsCols[1] . "]";
+				if(!is_array($mixValue) && !is_numeric($mixValue))
+					throw new exception('NumberOfMonths must be an integer or an array');
+				$this->mixNumberOfMonths = $mixValue;
 				break;
 			case "AutoSize" :
 				try {
-					$this->blnAutoSize = QType :: Cast($mixValue, QType :: Boolean);
+					$this->blnAutoSize = QType::Cast($mixValue, QType::Boolean);
 					break;
 				}
 				catch (QInvalidCastException $objExc) {
@@ -138,7 +163,7 @@ class QCalendar extends QDateTimeTextBox {
 				}
 			default :
 				try {
-					parent :: __set($strName, $mixValue);
+					parent::__set($strName, $mixValue);
 				}
 				catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
