@@ -46,6 +46,7 @@
 	 * @property string $Left CSS left property
 	 * @property-read boolean $Modified indicates if the control has been changed. Used to tell Qcubed to rerender the control or not (Ajax calls).
 	 * @property boolean $Moveable
+	 * @property boolean $Resizable
 	 * @property string $Name sets the Name of the Control (see {@link QControl::RenderWithName})
 	 * @property-read boolean $OnPage is true if the control is connected to the form
 	 * @property integer $Opacity sets the opacity of the control (0-100)
@@ -117,7 +118,8 @@
 		protected $strLeft = null;
 
 		protected $blnMoveable = false;
-
+		protected $blnResizable = false;
+		
 		// MISC	
 		protected $strControlId;
 		protected $objForm = null;
@@ -891,7 +893,10 @@
 		public function GetEndScript() {
 			
 			$strToReturn = $this->GetActionAttributes();
-
+			
+			if ($this->blnResizable)
+					$strToReturn = sprintf('$j("#%s").resizable({}); %s', $this->strControlId, $strToReturn);
+				
 			if ($this->blnMoveable)
 				return sprintf('$j("#%s").draggable(); %s', $this->strControlId, $strToReturn);
 			else
@@ -1276,7 +1281,8 @@
 				case "Left": return $this->strLeft;
 
 				case "Moveable": return $this->blnMoveable;
-
+				case "Resizable": return $this->blnResizable;
+				
 				// MISC
 				case "ControlId": return $this->strControlId;
 				case "Form": return $this->objForm;
@@ -1619,6 +1625,16 @@
 						throw $objExc;
 					}
 
+				case "Resizable":
+					try {
+						$this->blnResizable = QType::Cast($mixValue, QType::Boolean);
+						$this->AddCssFile(__JQUERY_CSS__);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
 				// MISC
 				case "Name":
 					try {
