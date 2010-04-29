@@ -32,15 +32,17 @@
 			else
 				$strCommand = "button";
 
-			$strToReturn = sprintf('<input type="%s" name="%s" id="%s" value="%s" %s%s />',
+			$strToReturn = sprintf('%s<input type="%s" name="%s" id="%s" value="%s" %s%s />%s',
+				$this->strHtmlBefore,
 				$strCommand,
 				$this->strControlId,
 				$this->strControlId,
 				($this->blnHtmlEntities) ?
-					QApplication::HtmlEntities($this->strText) :
-					$this->strText,
+				QApplication::HtmlEntities($this->strText) :
+				$this->strText,
 				$this->GetAttributes(),
-				$strStyle);
+				$strStyle,
+				$this->strHtmlAfter);
 
 			return $strToReturn;
 		}
