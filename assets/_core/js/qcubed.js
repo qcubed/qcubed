@@ -83,7 +83,7 @@ $j.ajaxSync.data = [];
 			
 			$j(':input').each(function (i) {
 				if ($j('#' + strForm + ' :input[name="' + this.name + '"]').val() == undefined) {
-					var real = $j("#" + this.name); 
+					var real = $j("#" + $j(this).name); 
 					var cloned = real.clone(true); 
 					real.hide(); 
 					cloned.insertAfter(real);    
@@ -177,7 +177,7 @@ $j.ajaxSync.data = [];
 				switch (strType) {				
 					case "checkbox":
 					case "radio":
-						if ($j(this).attr("checked")) {
+						if ($j(this).attr("checked") {
 							var strTestName = $j(this).attr("name") + "_";
 							if (strControlId.substring(0, strTestName.length) == strTestName)
 								strPostData += "&" + $j(this).attr("name") + "=" + strControlId.substring(strTestName.length);
@@ -188,8 +188,8 @@ $j.ajaxSync.data = [];
 
 					case "select-multiple":
 						var blnOneSelected = false;
-						this.children(':selected').each (function (i) {
-							strPostData += "&" + $j(this).attr("name") + "=";
+						$j(this).children(':selected').each (function (i) {
+							strPostData += "&" + $j(this).parent().attr("name") + "=";
 							strPostData += $j(this).val();
 						});
 						break;
