@@ -18,6 +18,8 @@
 		public $btnUpdate;
 		public $btnCancel;
 		
+		protected $intWidth = 240; 
+		
 		// Object Variables
 		protected $strCloseCallback;
 		protected $fltValue;
@@ -59,7 +61,7 @@
 			$this->btnClear->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnClear_Click'));
 			
 			$this->btnUpdate = new QButton($this);
-			$this->btnUpdate->Text = 'Save/Update';
+			$this->btnUpdate->Text = 'Save';
 			$this->btnUpdate->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnUpdate_Click'));
 			
 			$this->btnCancel = new QButton($this);

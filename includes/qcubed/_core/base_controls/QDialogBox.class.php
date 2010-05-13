@@ -22,6 +22,7 @@
 		// APPEARANCE
 		protected $strMatteColor = '#000000';
 		protected $intMatteOpacity = 50;
+		protected $intWidth = 350;
 		/* protected $strCssClass = 'dialogbox';  this is now handled through jQuery UI */
 
 		// BEHAVIOR
@@ -48,10 +49,10 @@
 			$strOptions = "";
 			if ($this->strCssClass != "")
 				$strOptions .= sprintf(', dialogClass: "%s"', $this->strCssClass);
-				
+
 			$strOptions = sprintf(', modal: true', $this->strCssClass);
-				
-			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog({autoOpen: false %s })', $this->strControlId, $strOptions));
+
+			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog({autoOpen: false %s, width: ' . $this->intWidth . '})', $this->strControlId, $strOptions));
 			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog("open")', $this->strControlId));
 			
 			$this->blnWrapperModified = false;
@@ -130,6 +131,15 @@
 				case "AnyKeyCloses":
 					try {
 						$this->blnAnyKeyCloses = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "Width":
+					try {
+						$this->intWidth = QType::Cast($mixValue, QType::Integer);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
