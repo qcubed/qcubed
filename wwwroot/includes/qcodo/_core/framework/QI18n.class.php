@@ -25,11 +25,8 @@
 				
 				// If cached data exists and is valid, use it
 				$strData = $objCache->GetData();
-				if ($strData)
-					QApplication::$LanguageObject = unserialize($strData);
-					
-				// Otherwise, reload all langauge files and update the cache
-				else {
+				if (!$strData || (false === QApplication::$LanguageObject = @unserialize($strData)))
+				{
 					$objLanguage = new QI18n();
 					
 					foreach ($strLanguageFiles as $strLanguageFile)
