@@ -140,7 +140,7 @@
 					fgets($objResource, 4096);
 
 				// Write the Connection Command
-				fwrite($objResource, sprintf("telnet %s %s\r\n", QEmailServer::$SmtpServer, QEmailServer::$SmtpPort));
+				fwrite($objResource, sprintf("telnet %s %s\n", QEmailServer::$SmtpServer, QEmailServer::$SmtpPort));
 			} else {
 				$objResource = fsockopen(QEmailServer::$SmtpServer, QEmailServer::$SmtpPort);
 				if (!$objResource)
@@ -149,7 +149,7 @@
 
 			// Connect
 			$strResponse = null;
-			if (!QEmailServer::$TestMode && !feof($objResource)) {
+			if (!feof($objResource)) {
 				$strResponse = fgets($objResource, 4096);
 
 				// Iterate through all "220-" responses (stop at "220 ")
@@ -158,13 +158,14 @@
 						$strResponse = fgets($objResource, 4096);
 
 				// Check for a "220" response
-				if ((strpos($strResponse, "220") === false) || (strpos($strResponse, "220") != 0))
-					throw new QEmailException(sprintf('Error Response on Connect: %s', $strResponse));
+				if (!QEmailServer::$TestMode)
+					if ((strpos($strResponse, "220") === false) || (strpos($strResponse, "220") != 0))
+						throw new QEmailException(sprintf('Error Response on Connect: %s', $strResponse));
 			}
 
 			// Send: EHLO
-			fwrite($objResource, sprintf("EHLO %s\r\n", QEmailServer::$OriginatingServerIp));
-			if (!QEmailServer::$TestMode && !feof($objResource)) {
+			fwrite($objResource, sprintf("EHLO %s\n", QEmailServer::$OriginatingServerIp));
+			if (!feof($objResource)) {
 				$strResponse = fgets($objResource, 4096);
 
 				// Iterate through all "250-" responses (stop at "250 ")
@@ -173,14 +174,15 @@
 						$strResponse = fgets($objResource, 4096);
 
 				// Check for a "250" response
-				if ((strpos($strResponse, "250") === false) || (strpos($strResponse, "250") != 0))
-					throw new QEmailException(sprintf('Error Response on EHLO: %s', $strResponse));
+				if (!QEmailServer::$TestMode)
+					if ((strpos($strResponse, "250") === false) || (strpos($strResponse, "250") != 0))
+						throw new QEmailException(sprintf('Error Response on EHLO: %s', $strResponse));
 			}
 
 			// Send Authentication
 			if (QEmailServer::$AuthPlain) {
-				fwrite($objResource, "AUTH PLAIN " . base64_encode(QEmailServer::$SmtpUsername . "\0" . QEmailServer::$SmtpUsername . "\0" . QEmailServer::$SmtpPassword) . "\r\n");
-				if (!QEmailServer::$TestMode && !feof($objResource)) {
+				fwrite($objResource, "AUTH PLAIN " . base64_encode(QEmailServer::$SmtpUsername . "\0" . QEmailServer::$SmtpUsername . "\0" . QEmailServer::$SmtpPassword) . "\n");
+				if (!feof($objResource)) {
 					$strResponse = fgets($objResource, 4096);
 					if ((strpos($strResponse, "235") === false) || (strpos($strResponse, "235") != 0))
 						throw new QEmailException(sprintf('Error in response from AUTH PLAIN: %s', $strResponse));
@@ -188,25 +190,28 @@
 			}
 
 			if (QEmailServer::$AuthLogin) {
-				fwrite($objResource,"AUTH LOGIN\r\n");
-				if (!QEmailServer::$TestMode && !feof($objResource)) {
+				fwrite($objResource,"AUTH LOGIN\n");
+				if (!feof($objResource)) {
 					$strResponse = fgets($objResource, 4096);
-					if ((strpos($strResponse, "334") === false) || (strpos($strResponse, "334") != 0))
-						throw new QEmailException(sprintf('Error in response from AUTH LOGIN: %s', $strResponse));
+					if (!QEmailServer::$TestMode)
+						if ((strpos($strResponse, "334") === false) || (strpos($strResponse, "334") != 0))
+							throw new QEmailException(sprintf('Error in response from AUTH LOGIN: %s', $strResponse));
 				}
 
-				fwrite($objResource, base64_encode(QEmailServer::$SmtpUsername) . "\r\n");
-				if (!QEmailServer::$TestMode && !feof($objResource)) {
+				fwrite($objResource, base64_encode(QEmailServer::$SmtpUsername) . "\n");
+				if (!feof($objResource)) {
 					$strResponse = fgets($objResource, 4096);
-					if ((strpos($strResponse, "334") === false) || (strpos($strResponse, "334") != 0))
-						throw new QEmailException(sprintf('Error in response from AUTH LOGIN: %s', $strResponse));
+					if (!QEmailServer::$TestMode)
+						if ((strpos($strResponse, "334") === false) || (strpos($strResponse, "334") != 0))
+							throw new QEmailException(sprintf('Error in response from AUTH LOGIN: %s', $strResponse));
 				}
 
-				fwrite($objResource, base64_encode(QEmailServer::$SmtpPassword) . "\r\n");
-				if (!QEmailServer::$TestMode && !feof($objResource)) {
+				fwrite($objResource, base64_encode(QEmailServer::$SmtpPassword) . "\n");
+				if (!feof($objResource)) {
  					$strResponse = fgets($objResource, 4096);
-					if ((strpos($strResponse, "235") === false) || (strpos($strResponse, "235") != 0))
-						throw new QEmailException(sprintf('Error in response from AUTH LOGIN: %s', $strResponse));
+					if (!QEmailServer::$TestMode)
+						if ((strpos($strResponse, "235") === false) || (strpos($strResponse, "235") != 0))
+							throw new QEmailException(sprintf('Error in response from AUTH LOGIN: %s', $strResponse));
 				}
 			}
 
@@ -216,13 +221,14 @@
 				throw new QEmailException(sprintf('Not a valid From address: %s', $objMessage->From));
 
 			// Send: MAIL FROM line
-			fwrite($objResource, sprintf("MAIL FROM: <%s>\r\n", $strAddressArray[0]));			
-			if (!QEmailServer::$TestMode && !feof($objResource)) {
+			fwrite($objResource, sprintf("MAIL FROM: <%s>\n", $strAddressArray[0]));			
+			if (!feof($objResource)) {
 				$strResponse = fgets($objResource, 4096);
 				
 				// Check for a "250" response
-				if ((strpos($strResponse, "250") === false) || (strpos($strResponse, "250") != 0))
-					throw new QEmailException(sprintf('Error Response on MAIL FROM: %s', $strResponse));
+				if (!QEmailServer::$TestMode)
+					if ((strpos($strResponse, "250") === false) || (strpos($strResponse, "250") != 0))
+						throw new QEmailException(sprintf('Error Response on MAIL FROM: %s', $strResponse));
 			}
 
 			// Setup RCPT TO line(s)
@@ -243,134 +249,135 @@
 
 			// Send: RCPT TO line(s)
 			foreach ($strAddressArray as $strAddress) {
-				fwrite($objResource, sprintf("RCPT TO: <%s>\r\n", $strAddress));
-				if (!QEmailServer::$TestMode && !feof($objResource)) {
+				fwrite($objResource, sprintf("RCPT TO: <%s>\n", $strAddress));
+				if (!feof($objResource)) {
 					$strResponse = fgets($objResource, 4096);
 					
 					// Check for a "250" response
-					if ((strpos($strResponse, "250") === false) || (strpos($strResponse, "250") != 0))
-						throw new QEmailException(sprintf('Error Response on RCPT TO: %s', $strResponse));
+					if (!QEmailServer::$TestMode)
+						if ((strpos($strResponse, "250") === false) || (strpos($strResponse, "250") != 0))
+							throw new QEmailException(sprintf('Error Response on RCPT TO: %s', $strResponse));
 				}
 			}
 
 			// Send: DATA
-			fwrite($objResource, "DATA\r\n");
-			if (!QEmailServer::$TestMode && !feof($objResource)) {
+			fwrite($objResource, "DATA\n");
+			if (!feof($objResource)) {
 				$strResponse = fgets($objResource, 4096);
 				
 				// Check for a "354" response
-				if ((strpos($strResponse, "354") === false) || (strpos($strResponse, "354") != 0))
-					throw new QEmailException(sprintf('Error Response on DATA: %s', $strResponse));
+				if (!QEmailServer::$TestMode)
+					if ((strpos($strResponse, "354") === false) || (strpos($strResponse, "354") != 0))
+						throw new QEmailException(sprintf('Error Response on DATA: %s', $strResponse));
 			}
 
 			// Send: Required Headers
-			fwrite($objResource, sprintf("Date: %s\r\n", QDateTime::NowToString(QDateTime::FormatRfc822)));
-			fwrite($objResource, sprintf("To: %s\r\n", $objMessage->To));
-			fwrite($objResource, sprintf("From: %s\r\n", $objMessage->From));
+			fwrite($objResource, sprintf("Date: %s\n", QDateTime::NowToString(QDateTime::FormatRfc822)));
+			fwrite($objResource, sprintf("To: %s\n", $objMessage->To));
+			fwrite($objResource, sprintf("From: %s\n", $objMessage->From));
 
-			// Send: Optional Headers
-			if ($objMessage->Subject)
-				fwrite($objResource, sprintf("Subject: %s\r\n", $objMessage->Subject));
-			if ($objMessage->Cc)
-				fwrite($objResource, sprintf("Cc: %s\r\n", $objMessage->Cc));
-
-			// Send: Content-Type Header (if applicable)
-			$semi_random = md5(time());			
-			$strBoundary = sprintf('==qcodo_qemailserver_multipart_boundary____x%sx', $semi_random);
-			
-			// Send: Other Headers (if any)
-			foreach ($objArray = $objMessage->HeaderArray as $strKey => $strValue)
-				fwrite($objResource, sprintf("%s: %s\r\n", $strKey, $strValue));			
-			
-			// if we are adding an html or files to the message we need these headers.
-			if ($objMessage->HasFiles || $objMessage->HtmlBody)  {
-				fwrite($objResource, "MIME-Version: 1.0\r\n");
-				fwrite($objResource, sprintf("Content-Type: multipart/mixed;\r\n boundary=\"%s\"\r\n", $strBoundary));
-				fwrite($objResource, sprintf("This is a multipart message in MIME format.\r\n\r\n", $strBoundary));
-				fwrite($objResource, sprintf("--%s\r\n", $strBoundary));				
-				
-			}					
-			
-			$strAltBoundary = sprintf('==qcodo_qemailserver_alternative_boundary____x%sx', $semi_random);
-						   
-			// Send: Body
-			
 			// Setup Encoding Type (use QEmailServer if specified, otherwise default to QApplication's)
 			if (!($strEncodingType = QEmailServer::$EncodingType))
 				$strEncodingType = QApplication::$EncodingType;
-				
-			if ($objMessage->HtmlBody) {
-				
-				fwrite($objResource, sprintf("Content-Type: multipart/alternative;\r\n boundary=\"%s\"\r\n\r\n", $strAltBoundary));
-				fwrite($objResource, sprintf("--%s\r\n", $strAltBoundary));
-				fwrite($objResource, sprintf("Content-Type: text/plain; charset=\"%s\"\r\n", $strEncodingType));
-				fwrite($objResource, sprintf("Content-Transfer-Encoding: 7bit\r\n\r\n"));
 
-				fwrite($objResource, $objMessage->Body);
-				fwrite($objResource, "\r\n\r\n");
+			// Send: Optional Headers
+			if ($objMessage->Subject)
+				fwrite($objResource, sprintf("Subject: =?%s?Q?%s?=\n", $strEncodingType, self::QuotedPrintableEncode($objMessage->Subject)));
+			if ($objMessage->Cc)
+				fwrite($objResource, sprintf("Cc: %s\n", $objMessage->Cc));
 
-				fwrite($objResource, sprintf("--%s\r\n", $strAltBoundary));
-				fwrite($objResource, sprintf("Content-Type: text/html; charset=\"%s\"\r\n", $strEncodingType));
-//				fwrite($objResource, sprintf("Content-Transfer-Encoding: quoted-printable\r\n\r\n"));
-				fwrite($objResource, sprintf("Content-Transfer-Encoding: 7bit\r\n\r\n"));
+			// Send: Content-Type Header (if applicable)
 
-				fwrite($objResource, $objMessage->HtmlBody);
-				fwrite($objResource, "\r\n\r\n");
+			// First, setup boundaries (may be needed if multipart)
+			$strBoundary = sprintf('qcodo_mixed_boundary_%s', md5(microtime()));
+			$strAltBoundary = sprintf('qcodo_alt_boundary_%s', md5(microtime()));
 
-				fwrite($objResource, sprintf("--%s--\r\n", $strAltBoundary));
-			} elseif($objMessage->HasFiles) {
-				fwrite($objResource, sprintf("Content-Type: multipart/alternative;\r\n boundary=\"%s\"\r\n\r\n", $strAltBoundary));				
-				fwrite($objResource, sprintf("--%s\r\n", $strAltBoundary));
-				fwrite($objResource, sprintf("Content-Type: text/plain; charset=\"%s\"\r\n", $strEncodingType));
-				fwrite($objResource, sprintf("Content-Transfer-Encoding: 7bit\r\n\r\n"));
-				fwrite($objResource, $objMessage->Body);
-				fwrite($objResource, "\r\n\r\n");
-				fwrite($objResource, sprintf("--%s--\r\n", $strAltBoundary));
-			} else {
-				fwrite($objResource, sprintf("Content-Type: text/plain; charset=\"%s\"\r\n", $strEncodingType));
-				fwrite($objResource, sprintf("Content-Transfer-Encoding: 7bit\r\n\r\n"));
-				fwrite($objResource, "\r\n" . $objMessage->Body);
+			// Send: Other Headers (if any)
+			foreach ($objArray = $objMessage->HeaderArray as $strKey => $strValue)
+				fwrite($objResource, sprintf("%s: %s\n", $strKey, $strValue));			
+
+			// if we are adding an html or files to the message we need these headers.
+			if ($objMessage->HasFiles || $objMessage->HtmlBody)  {
+				fwrite($objResource, "MIME-Version: 1.0\n");
+				fwrite($objResource, sprintf("Content-Type: multipart/mixed;\n boundary=\"%s\"\n", $strBoundary));
+				fwrite($objResource, sprintf("This is a multipart message in MIME format.\n\n", $strBoundary));
+				fwrite($objResource, sprintf("--%s\n", $strBoundary));				
 			}
-			
+
+			// Send: Body
+			if ($objMessage->HtmlBody) {
+				fwrite($objResource, sprintf("Content-Type: multipart/alternative;\n boundary=\"%s\"\n\n", $strAltBoundary));
+				fwrite($objResource, sprintf("--%s\n", $strAltBoundary));
+				fwrite($objResource, sprintf("Content-Type: text/plain; charset=\"%s\"\n", $strEncodingType));
+				fwrite($objResource, sprintf("Content-Transfer-Encoding: quoted-printable\n\n"));
+
+				fwrite($objResource, self::QuotedPrintableEncode($objMessage->Body));
+				fwrite($objResource, "\n\n");
+
+				fwrite($objResource, sprintf("--%s\n", $strAltBoundary));
+				fwrite($objResource, sprintf("Content-Type: text/html; charset=\"%s\"\n", $strEncodingType));
+				fwrite($objResource, sprintf("Content-Transfer-Encoding: quoted-printable\n\n"));								
+		
+				fwrite($objResource, self::QuotedPrintableEncode($objMessage->HtmlBody));
+				fwrite($objResource, "\n\n");
+				
+				fwrite($objResource, sprintf("--%s--\n", $strAltBoundary));
+			} else if($objMessage->HasFiles) {
+				fwrite($objResource, sprintf("Content-Type: multipart/alternative;\n boundary=\"%s\"\n\n", $strAltBoundary));				
+				fwrite($objResource, sprintf("--%s\n", $strAltBoundary));
+				fwrite($objResource, sprintf("Content-Type: text/plain; charset=\"%s\"\n", $strEncodingType));
+				fwrite($objResource, sprintf("Content-Transfer-Encoding: quoted-printable\n\n"));
+				fwrite($objResource, self::QuotedPrintableEncode($objMessage->Body));
+				fwrite($objResource, "\n\n");
+				fwrite($objResource, sprintf("--%s--\n", $strAltBoundary));
+			} else {
+				fwrite($objResource, sprintf("Content-Type: text/plain; charset=\"%s\"\n", $strEncodingType));
+				fwrite($objResource, sprintf("Content-Transfer-Encoding: quoted-printable\n\n"));
+				fwrite($objResource, "\n" . self::QuotedPrintableEncode($objMessage->Body));
+			}
+
 			// Send: File Attachments
 			if($objMessage->HasFiles) {
 				foreach ($objArray = $objMessage->FileArray as $objFile) {
-					fwrite($objResource, sprintf("--%s\r\n", $strBoundary));
-					fwrite($objResource, sprintf("Content-Type: %s;\r\n", $objFile->MimeType ));
-					fwrite($objResource, sprintf("      name=\"%s\"\r\n", $objFile->FileName ));
-					fwrite($objResource, "Content-Transfer-Encoding: base64\r\n");
-					fwrite($objResource, sprintf("Content-Length: %s\r\n", strlen($objFile->EncodedFileData)));
-					fwrite($objResource, "Content-Disposition: attachment;\r\n");
-					fwrite($objResource, sprintf("      filename=\"%s\"\r\n\r\n", $objFile->FileName));
+					fwrite($objResource, sprintf("--%s\n", $strBoundary));
+					fwrite($objResource, sprintf("Content-Type: %s;\n", $objFile->MimeType ));
+					fwrite($objResource, sprintf("	  name=\"%s\"\n", $objFile->FileName ));
+					fwrite($objResource, "Content-Transfer-Encoding: base64\n");
+					fwrite($objResource, sprintf("Content-Length: %s\n", strlen($objFile->EncodedFileData)));
+					fwrite($objResource, "Content-Disposition: attachment;\n");
+					fwrite($objResource, sprintf("	  filename=\"%s\"\n\n", $objFile->FileName));
 					fwrite($objResource, $objFile->EncodedFileData);
 //					foreach (explode("\n", $objFile->EncodedFileData) as $strLine) {
 //						$strLine = trim($strLine);
-//						fwrite($objResource, $strLine . "\r\n");
+//						fwrite($objResource, $strLine . "\n");
 //					}
 				}
 			}
 
 			// close a message with these boundaries if the message had files or had html
 			if($objMessage->HasFiles || $objMessage->HtmlBody)
-	   			fwrite($objResource, sprintf("\r\n\r\n--%s--\r\n", $strBoundary)); // send end of file attachments...
+	   			fwrite($objResource, sprintf("\n\n--%s--\n", $strBoundary)); // send end of file attachments...
 
 			// Send: Message End
-			fwrite($objResource, "\r\n.\r\n");
-			if (!QEmailServer::$TestMode && !feof($objResource)) {
+			fwrite($objResource, "\n.\n");
+			if (!feof($objResource)) {
 				$strResponse = fgets($objResource, 4096);
 				
 				// Check for a "250" response
-				if ((strpos($strResponse, "250") === false) || (strpos($strResponse, "250") != 0))
-					throw new QEmailException(sprintf('Error Response on MAIL FROM: %s', $strResponse));
+				if (!QEmailServer::$TestMode)
+					if ((strpos($strResponse, "250") === false) || (strpos($strResponse, "250") != 0))
+						throw new QEmailException(sprintf('Error Response on DATA finish: %s', $strResponse));
 			}
 
 			// Send: QUIT
-			fwrite($objResource, "QUIT\r\n");
+			fwrite($objResource, "QUIT\n");
 			if (!feof($objResource))
 				$strResponse = fgets($objResource, 4096);
 				
 			// Close the Resource
 			fclose($objResource);
+			if (QEmailServer::$TestMode)
+				chmod($strFileName, 0777);
 		}
 	}
 
@@ -535,12 +542,14 @@
 					case 'Body':
 						$strBody = QType::Cast($mixValue, QType::String);
 						$strBody = str_replace("\r", "", $strBody);
-						$strBody = str_replace("\n", "\r\n", $strBody);
+						$strBody = str_replace("\n", "\n", $strBody);
+						$strBody = str_replace("\n.", "\n..", $strBody);
 						return ($this->strBody = $strBody);
 					case 'HtmlBody':
 						$strHtmlBody = QType::Cast($mixValue, QType::String);
 						$strHtmlBody = str_replace("\r", "", $strHtmlBody);
-						$strHtmlBody = str_replace("\n", "\r\n", $strHtmlBody);
+						$strHtmlBody = str_replace("\n", "\n", $strHtmlBody);
+						$strHtmlBody = str_replace("\n.", "\n..", $strHtmlBody);
 						return ($this->strHtmlBody = $strHtmlBody);
 
 					case 'Cc': return ($this->strCc = QType::Cast($mixValue, QType::String));
