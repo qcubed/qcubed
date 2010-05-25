@@ -51,6 +51,7 @@
 
 	// Preload Other Framework Classes
 	require(__QCUBED_CORE__ . '/framework/QDatabaseBase.class.php');
+	require(__QCUBED_CORE__ . '/database/QPdoDatabase.class.php');
 	if (version_compare(PHP_VERSION, '5.2.0', '<'))
 		// Use the Legacy (Pre-5.2.0) QDateTime class
 		require(__QCUBED_CORE__ . '/framework/QDateTime.legacy.class.php');
