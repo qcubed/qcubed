@@ -171,18 +171,14 @@
 			}
 
 			if ($objClass) {
-				global $$strFormId;
-				$$strFormId = $objClass;
+				// Globalize
+				$_FORM = $objClass;
 
 				$objClass->strCallType = $_POST['Qform__FormCallType'];
 				$objClass->intFormStatus = QFormBase::FormStatusUnrendered;
 
 				if ($objClass->strCallType == QCallType::Ajax)
 					QApplication::$RequestMode = QRequestMode::Ajax;
-
-				// Globalize and Set Variable
-				global $$strFormId;
-				$$strFormId = $objClass;
 
 				// Iterate through all the control modifications
 				$strModificationArray = explode("\n", trim($_POST['Qform__FormUpdates']));
@@ -262,6 +258,9 @@
 			} else {
 				// We have no form state -- Create Brand New One
 				$objClass = new $strFormId();
+				
+				// Globalize
+  				$_FORM = $objClass;
 
 				// Setup HTML Include File Path, based on passed-in strAlternateHtmlFile (if any)
 				try {
@@ -271,9 +270,6 @@
 					throw $objExc;
 				}
 
-				global $$strFormId;
-				$$strFormId = $objClass;
-
 				// By default, this form is being created NOT via a PostBack
 				// So there is no CallType
 				$objClass->strCallType = QCallType::None;
@@ -282,10 +278,6 @@
 				$objClass->intFormStatus = QFormBase::FormStatusUnrendered;
 				$objClass->objControlArray = array();
 				$objClass->objGroupingArray = array();
-
-				// Globalize and Set Variable
-				global $$strFormId;
-				$$strFormId = $objClass;
 
 				// Trigger Run Event (if applicable)
 				$objClass->Form_Run();
@@ -686,6 +678,7 @@
 		public function EvaluateTemplate($strTemplate) {
 			global $_ITEM;
 			global $_CONTROL;
+			global $_FORM;
 
 			$_FORM = $this;
 
