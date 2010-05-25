@@ -72,6 +72,11 @@
 				case 'Server':
 				case 'Port':
 				case 'Database':
+				// Informix naming
+				case 'Service':
+				case 'Protocol':
+				case 'Host':
+				
 				case 'Username':
 				case 'Password':
 					return $this->objConfigArray[strtolower($strName)];
