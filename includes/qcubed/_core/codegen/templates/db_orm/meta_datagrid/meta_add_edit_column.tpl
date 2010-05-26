@@ -10,7 +10,7 @@
 		public function MetaAddEditLinkColumn($strLinkUrl, $strLinkHtml = 'Edit', $strColumnTitle = 'Edit', $intArgumentType = QMetaControlArgumentType::PathInfo) {
 			switch ($intArgumentType) {
 				case QMetaControlArgumentType::QueryString:
-					$strLinkUrl .= '?<% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {%><%= $objColumn->VariableName %>=<?=urlencode($_ITEM-><%=$objColumn->PropertyName%>)?>&<%}%><%-%>';
+					$strLinkUrl .= (strpos($strLinkUrl, '?') !== false ? '&' : '?').'<% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {%><%= $objColumn->VariableName %>=<?=urlencode($_ITEM-><%=$objColumn->PropertyName%>)?>&<%}%><%-%>';
 					break;
 				case QMetaControlArgumentType::PathInfo:
 					$strLinkUrl .= '<% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {%>/<?=urlencode($_ITEM-><%=$objColumn->PropertyName%>)?><%}%>';
