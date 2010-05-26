@@ -584,12 +584,25 @@
 		public static function GenerateQueryString() {
 			if (count($_GET)) {
 				$strToReturn = '';
-				foreach ($_GET as $strKey => $strValue)
-					$strToReturn .= '&' . urlencode($strKey) . '=' . urlencode($strValue);
+				foreach ($_GET as $strKey => $mixValue)
+					$strToReturn .= QApplication::GenerateQueryStringHelper(urlencode($strKey), $mixValue);
 				return '?' . substr($strToReturn, 1);
 			} else
 				return '';
 		}
+
+
+		protected static function GenerateQueryStringHelper($strKey, $mixValue) {
+			if (is_array($mixValue)) {
+				$strToReturn = null;
+				foreach ($mixValue as $strSubKey => $mixValue) {
+					$strToReturn .= QApplication::GenerateQueryStringHelper($strKey . '[' . $strSubKey . ']', $mixValue);
+				}
+				return $strToReturn;
+			} else
+				return '&' . $strKey . '=' . urlencode($mixValue);
+		}
+
 
 		/**
 		 * By default, this is used by the codegen and form drafts to do a quick check
