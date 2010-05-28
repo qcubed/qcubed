@@ -1,7 +1,7 @@
 <?php
 $__CONFIG_ONLY__ = true;
 require('../qcubed.inc.php');
-require('../../../../../qcubed/includes/qcubed/_core/framework/QString.class.php');
+require('../../../../includes/qcubed/_core/framework/QString.class.php');
 
 $arrInstallationMessages = ValidateInstall();
 if (sizeof($arrInstallationMessages) == 0) {
