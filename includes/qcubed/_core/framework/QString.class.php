@@ -72,33 +72,55 @@
 		
 		// Implementation from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
 		public final static function LongestCommonSubsequence($str1, $str2) {
-			$m = strlen($str1);
-			$n = strlen($str2);
-			$L = array();
-			$z = 0;
+			$str1Len = strlen($str1);
+			$str2Len = strlen($str2);
+			
+			if($str1Len == 0 || $str2Len == 0)
+				return '';
+			
+			$CSL = array(); //Common Sequence Length array
+			$intLargestSize = 0;
 			$ret = array();
-		 
-			for($i=0; $i<$m; $i++){
-				$L[$i] = array();
-				for($j=0; $j<$n; $j++){
-					$L[$i][$j] = 0;
+			
+			//initialize the CSL array to assume there are no similarities
+			for($i=0; $i<$str1Len; $i++){
+				$CSL[$i] = array();
+				for($j=0; $j<$str2Len; $j++){
+					$CSL[$i][$j] = 0;
 				}
 			}
-		 
-			for($i=0; $i<$m; $i++){
-				for($j=0; $j<$n; $j++){
+			
+			for($i=0; $i<$str1Len; $i++){
+				for($j=0; $j<$str2Len; $j++){
+					//check every combination of characters
 					if( $str1[$i] == $str2[$j] ){
-						$L[$i][$j] = $L[$i-1][$j-1] + 1;
-						if( $L[$i][$j] > $z ){
-							$z = $L[$i][$j];
+						//these are the same in both strings
+						if($i == 0 || $j == 0)
+							//it's the first character, so it's clearly only 1 character long
+							$CSL[$i][$j] = 1; 
+						else
+							//it's one character longer than the string from the previous character
+							$CSL[$i][$j] = $CSL[$i-1][$j-1] + 1; 
+
+						if( $CSL[$i][$j] > $intLargestSize ){
+							//remember this as the largest
+							$intLargestSize = $CSL[$i][$j]; 
+							//wipe any previous results
 							$ret = array();
+							//and then fall through to remember this new value
 						}
-						if( $L[$i][$j] == $z )
-							$ret[] = substr($str1, $i-$z+1, $z);
+						if( $CSL[$i][$j] == $intLargestSize )
+							//remember the largest string(s)
+							$ret[] = substr($str1, $i-$intLargestSize+1, $intLargestSize);
 					}
+					//else, $CSL should be set to 0, which it was already initialized to
 				}
 			}
-			return $ret[0];			
+			//return the first match
+			if(count($ret) > 0)
+				return $ret[0];
+			else
+				return ''; //no matches
 		}
 	}
 ?>
