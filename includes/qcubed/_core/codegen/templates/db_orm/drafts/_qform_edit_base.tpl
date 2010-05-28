@@ -18,6 +18,9 @@
 	 */
 	abstract class <%= $objTable->ClassName %>EditFormBase extends QForm {
 		// Local instance of the <%= $objTable->ClassName %>MetaControl
+		/**
+		 * @var <%= $objTable->ClassName %>MetaControlGen mct<%= $objTable->ClassName %>
+		 */
 		protected $mct<%= $objTable->ClassName %>;
 
 		// Controls for <%= $objTable->ClassName %>'s Data Fields
@@ -36,8 +39,17 @@
 <% } %>
 
 		// Other Controls
+		/**
+		 * @var QButton Save
+		 */
 		protected $btnSave;
+		/**
+		 * @var QButton Delete
+		 */
 		protected $btnDelete;
+		/**
+		 * @var QButton Cancel
+		 */
 		protected $btnCancel;
 
 		// Create QForm Event Handlers as Needed

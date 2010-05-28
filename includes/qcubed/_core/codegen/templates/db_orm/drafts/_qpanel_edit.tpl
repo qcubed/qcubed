@@ -18,6 +18,9 @@
 	 */
 	class <%= $objTable->ClassName %>EditPanel extends QPanel {
 		// Local instance of the <%= $objTable->ClassName %>MetaControl
+		/**
+		 * @var <%= $objTable->ClassName %>MetaControl
+		 */
 		protected $mct<%= $objTable->ClassName %>;
 
 		// Controls for <%= $objTable->ClassName %>'s Data Fields
@@ -36,8 +39,17 @@
 <% } %>
 
 		// Other Controls
+		/**
+		 * @var QButton Save
+		 */
 		public $btnSave;
+		/**
+		 * @var QButton Delete
+		 */
 		public $btnDelete;
+		/**
+		 * @var QButton Cancel
+		 */
 		public $btnCancel;
 
 		// Callback

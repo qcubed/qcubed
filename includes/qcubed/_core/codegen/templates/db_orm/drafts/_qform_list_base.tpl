@@ -18,6 +18,9 @@
 	 */
 	abstract class <%= $objTable->ClassName %>ListFormBase extends QForm {
 		// Local instance of the Meta DataGrid to list <%= $objTable->ClassNamePlural %>
+		/**
+		 * @var <%= $objTable->ClassName %>DataGrid dtg<%= $objTable->ClassNamePlural %>
+		 */
 		protected $dtg<%= $objTable->ClassNamePlural %>;
 
 		// Create QForm Event Handlers as Needed

@@ -20,14 +20,29 @@
 	 */
 	class <%= $objTable->ClassName %>ListPanel extends QPanel {
 		// Local instance of the Meta DataGrid to list <%= $objTable->ClassNamePlural %>
+		/**
+		 * @var <%= $objTable->ClassName %>DataGrid
+		 */
 		public $dtg<%= $objTable->ClassNamePlural %>;
 
 		// Other public QControls in this panel
+		/**
+		 * @var QButton CreateNew
+		 */
 		public $btnCreateNew;
+		/**
+		 * @var QControlProxy ProxyEdit
+		 */
 		public $pxyEdit;
 
 		// Callback Method Names
+		/**
+		 * @var string SetEditPanelMethod
+		 */
 		protected $strSetEditPanelMethod;
+		/**
+		 * @var string CloseEditPanelMethod
+		 */
 		protected $strCloseEditPanelMethod;
 		
 		public function __construct($objParentObject, $strSetEditPanelMethod, $strCloseEditPanelMethod, $strControlId = null) {
