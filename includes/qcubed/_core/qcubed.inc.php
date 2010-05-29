@@ -31,8 +31,8 @@
 	 */
 
 	// Versioning Information
-	define('QCUBED_VERSION_NUMBER_ONLY', '2.0.0');
-	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
+	define('QCUBED_VERSION_NUMBER_ONLY', '2.0.1');
+	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' alpha)');
 
 	// Preload Required Framework Classes
 	require(__QCUBED_CORE__ . '/framework/QBaseClass.class.php');
