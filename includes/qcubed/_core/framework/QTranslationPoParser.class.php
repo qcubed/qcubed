@@ -27,7 +27,7 @@ class QTranslationPoParser implements QTranslationBase {
 			}
 
 			// Setup the LanguageFileObject cache mechanism
-			$objCache = new QCache('i18n', $strCode, 'i18n', $strLanguageFiles);
+			$objCache = new QCache('i18n.po', $strCode, 'i18n', $strLanguageFiles);
 
 			// If cached data exists and is valid, use it
 			$strData = $objCache->GetData();
