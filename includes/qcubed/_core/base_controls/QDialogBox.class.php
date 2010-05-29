@@ -11,6 +11,7 @@
 	 * @property string $MatteColor
 	 * @property string $MatteOpacity
 	 * @property string $MatteClickable
+	 * @property boolean $Modal
 	 * @property string $AnyKeyCloses
 	 */
 	class QDialogBox extends QPanel {
@@ -28,6 +29,13 @@
 		// BEHAVIOR
 		protected $blnMatteClickable = true;
 		protected $blnAnyKeyCloses = false;
+		
+		protected $blnModal = true; 
+
+		public function  __construct($objParentObject, $strControlId = null) { 
+			parent::__construct($objParentObject, $strControlId); 
+			$this->blnDisplay = false; 
+		}
 
 		protected function GetControlHtml() {
 			$strToReturn = parent::GetControlHtml();
@@ -49,8 +57,12 @@
 			$strOptions = "";
 			if ($this->strCssClass != "")
 				$strOptions .= sprintf(', dialogClass: "%s"', $this->strCssClass);
+			if ($this->strWidth != "") 
+				$strOptions .= sprintf(', width: %s', $this->strWidth); 
+			if ($this->strHeight != "") 
+				$strOptions .= sprintf(', height: %s', $this->strHeight); 
 
-			$strOptions = sprintf(', modal: true', $this->strCssClass);
+			$strOptions .= sprintf(', modal: %s', ($this->blnModal ? 'true' : 'false')); 
 
 			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog({autoOpen: false %s, width: ' . $this->intWidth . '})', $this->strControlId, $strOptions));
 			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog("open")', $this->strControlId));
@@ -77,7 +89,8 @@
 				// BEHAVIOR
 				case "MatteClickable": return $this->blnMatteClickable;
 				case "AnyKeyCloses": return $this->blnAnyKeyCloses;
-
+				case "Modal": return $this->blnModal; 
+				
 				default:
 					try {
 						return parent::__get($strName);
@@ -136,6 +149,15 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case "Modal": 
+					try { 
+						$this->blnModal = QType::Cast($mixValue, QType::Boolean); 
+						break; 
+					} catch (QInvalidCastException $objExc) { 
+						$objExc->IncrementOffset(); 
+						throw $objExc; 
+					} 
 
 				case "Width":
 					try {
