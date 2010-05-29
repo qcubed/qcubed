@@ -116,6 +116,34 @@
 		}
 
 		/**
+		 * This will check to see if an email address is considered "Valid" according to RFC 2822.
+		 * It utilizes the GetEmailAddresses static method, which does the actual logic work of checking.
+		 * @param string $strEmailAddress
+		 * @return boolean
+		 */
+		public static function IsEmailValid($strEmailAddress) {
+			$strEmailAddressArray = QEmailServer::GetEmailAddresses($strEmailAddress);
+			return ((count($strEmailAddressArray) == 1) && ($strEmailAddressArray[0] == $strEmailAddress));  
+		}
+
+		/**
+		 * Encodes given 8 bit string to a quoted-printable string,
+		 * @param string $strString
+		 * @return encoded string
+		 */
+		private static function QuotedPrintableEncode($strString) {
+			if ( function_exists('quoted_printable_encode') )
+				$strText = quoted_printable_encode($strString);
+			else
+				$strText = preg_replace( '/[^\x21-\x3C\x3E-\x7E\x09\x20]/e', 'sprintf( "=%02X", ord ( "$0" ) ) ;', $strString );
+
+			preg_match_all( '/.{1,73}([^=]{0,2})?/', $strText, $arrMatch );
+			$strText = implode( '=' . "\r\n", $arrMatch[0] );
+			return $strText;
+		}
+
+
+		/**
 		 * Sends a message out via SMTP according to the server, ip, etc. preferences
 		 * as set up on the class.  Takes in a QEmailMessage object.
 		 *
