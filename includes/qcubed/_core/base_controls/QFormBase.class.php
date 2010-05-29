@@ -1116,11 +1116,20 @@
 				$strEndScript .= sprintf('qc.regCA(new Array(%s)); ', implode(',', $strControlIdToRegister));
 
 			// Next, run any GetEndScrips on Controls and Groupings
-			foreach ($this->GetAllControls() as $objControl)
-				if ($objControl->Rendered)
-					$strEvents .= $objControl->GetEndScript();
-			foreach ($this->objGroupingArray as $objGrouping)
-				$strEvents .= $objGrouping->Render();
+			foreach ($this->GetAllControls() as $objControl) {
+				if ($objControl->Rendered) {
+					$strControlScript = $objControl->GetEndScript();
+					if (strlen($strControlScript) > 0) {
+						$strEvents .= $strControlScript . ";";
+					}
+				}
+			}
+			foreach ($this->objGroupingArray as $objGrouping) {
+				$strGroupingScript = $objGrouping->Render();
+				if (strlen($strGrouping) > 0) {
+					$strEvents .= $strGroupingScript . ";";
+				}
+			}
 
 			// Run End Script Compressor
 			$strEndScriptArray = explode('; ', $strEndScript);
