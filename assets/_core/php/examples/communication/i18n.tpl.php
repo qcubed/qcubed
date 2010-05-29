@@ -24,7 +24,9 @@
 
 		<?php _t('Language files are in the GNU PO format (see'); ?>
 		<a href="http://www.gnu.org/software/gettext/manual/html_node/gettext_9.html" class="bodyLink">http://www.gnu.org/software/gettext/manual/html_node/gettext_9.html</a>
-		<?php _t('for more information), and are placed in the <b>' . __QCUBED__ . '/i18n</b> directory.'); ?>
+		<?php _t('for more information), and are placed in the <b>' . __QI18N_PO_PATH__ . '</b> directory. Note that 
+		you can modify the location of the PO files by changing the <b>__QI18N_PO_PATH__</b> constant in 
+		your configuration.inc.php file.'); ?>
 		<br/><br/>
 
 		<?php _t('
@@ -37,7 +39,7 @@
 		<?php _t('
 		Note that generated Form Drafts and the QControls are all I18n aware -- they will translate themselves
 		based on the selected language (as long as the appropriate language file exists).  QCubed-specific
-		langauge files are part of QCubed core, and exist in <b>' . __QCUBED_CORE__ . '/i18n</b>.
+		langauge files are part of QCubed core, and exist in <b>' . __QI18N_PO_PATH__ . '</b>.
 		we are desparately in need of more language files. If you are able to contribute, please take
 		the current en.po file and translate it to any currently unsupported language and feel free to
 		submit it.  Also note that the Spanish translation (es.po) language files (both in the example

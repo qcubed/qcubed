@@ -89,6 +89,8 @@
 	QApplicationBase::$ClassFile['qcryptography'] = __QCUBED_CORE__ . '/framework/QCryptography.class.php';
 	QApplicationBase::$ClassFile['qsoapservice'] = __QCUBED_CORE__ . '/framework/QSoapService.class.php';
 	QApplicationBase::$ClassFile['qi18n'] = __QCUBED_CORE__ . '/framework/QI18n.class.php';
+	QApplicationBase::$ClassFile['qtranslationbase'] = __QCUBED_CORE__ . '/framework/QTranslationBase.class.php';
+	QApplicationBase::$ClassFile['qtranslationpoparser'] = __QCUBED_CORE__ . '/framework/QTranslationPoParser.class.php';
 	QApplicationBase::$ClassFile['qqn'] = __MODEL_GEN__ . '/QQN.class.php';
 	QApplicationBase::$ClassFile['qqueryexpansion'] = __QCUBED_CORE__ . '/framework/QQueryExpansion.class.php';
 	QApplicationBase::$ClassFile['qconvertnotation'] = __QCUBED__ . '/codegen/QConvertNotation.class.php';

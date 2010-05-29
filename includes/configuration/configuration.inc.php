@@ -141,6 +141,9 @@ if (!defined('SERVER_INSTANCE')) {
 			// Location of the Examples site
 			define ('__EXAMPLES__', __PHP_ASSETS__ . '/examples');
 
+			// Location of .po translation files
+			define ('__QI18N_PO_PATH__', __QCUBED__ . '/i18n');
+			
 			/* Database Connection SerialArrays
 			 *
 			 * Note that all Database Connections are defined as constant serialized arrays.  QCubed supports
