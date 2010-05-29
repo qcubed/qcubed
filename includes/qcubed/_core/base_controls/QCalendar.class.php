@@ -24,7 +24,50 @@ class QCalendar extends QDateTimeTextBox {
 	protected $blnGotoCurrent = false;
 	protected $blnIsRtl = false;
 	protected $blnModified = false;
+	protected $strJqDateFormat = 'M d yy';
 
+	// map the JQuery datepicker format specs to QCodo QDateTime format specs.
+	//qcodo	jquery			php	Description
+	//-------------------------------------------------
+	//MMMM	MM			F	Month as full name (e.g., March)
+	//MMM	M			M	Month as three-letters (e.g., Mar)
+	//MM	mm			m	Month as an integer with leading zero (e.g., 03)
+	//M	m			n	Month as an integer (e.g., 3)
+	//DDDD	DD			l	Day of week as full name (e.g., Wednesday)
+	//DDD	D			D	Day of week as three-letters (e.g., Wed)
+	//DD	dd			d	Day as an integer with leading zero (e.g., 02)
+	//D	d			j	Day as an integer (e.g., 2)
+	//YYYY	yy			Y	Year as a four-digit integer (e.g., 1977)
+	//YY	y			y	Year as a two-digit integer (e.g., 77)
+	static private $mapQC2JQ = array(
+		'MMMM' => 'MM',
+		'MMM' => 'M',
+		'MM' => 'mm',
+		'M' => 'm',
+		'DDDD' => 'DD',
+		'DDD' => 'D',
+		'DD' => 'dd',
+		'D' => 'd',
+		'YYYY' => 'yy',
+		'YY' => 'y',
+		);
+	static private $mapJQ2QC = null;
+
+	static private function qcFrmt($jqFrmt) {
+		if (!QCalendar::$mapJQ2QC) {
+			QCalendar::$mapJQ2QC = array_flip(QCalendar::$mapQC2JQ);
+		}
+		return strtr($jqFrmt, QCalendar::$mapJQ2QC);
+	} 
+		
+	static private function jqFrmt($qcFrmt) {
+		return strtr($qcFrmt, QCalendar::$mapQC2JQ);
+	} 
+		
+	static private function jsDate(QDateTime $dt) {
+		return 'new Date('.$dt->Year.','.$dt->Month.','.$dt->Day.')';
+	} 
+		
 	public function Validate() {
 		return true;
 	}
@@ -33,11 +76,11 @@ class QCalendar extends QDateTimeTextBox {
 		$strToReturn = parent::GetControlHtml();
 		
 		QApplication::ExecuteJavaScript(
-			sprintf('jQuery("#%s").datepicker({showButtonPanel: true,  dateFormat: "M d yy"' . 
+			sprintf('jQuery("#%s").datepicker({showButtonPanel: true, dateFormat: "' . $this->strJqDateFormat . '"' .  
 					(($this->blnAutoSize) ? ', autoSize: true' : '') . 
-					(($this->datMinDate) ? ', minDate: "' . $this->datMinDate->__toString() .'"': '') . 
-					(($this->datMaxDate) ? ', maxDate: "' . $this->datMaxDate->__toString() . '"' : '') . 
-					(($this->datDefaultDate) ? ', defaultDate: "'.$this->datDefaultDate->__toString().'"' : '') . 
+					(($this->datMinDate) ? ', minDate: ' . QCalendar::jsDate($this->datMinDate) : '') . 
+					(($this->datMaxDate) ? ', maxDate: ' . QCalendar::jsDate($this->datMaxDate) : '') . 
+					(($this->datDefaultDate) ? ', defaultDate: ' . QCalendar::jsDate($this->datDefaultDate) : '') . 
 					(($this->intFirstDay) ? ', firstDay: '.$this->intFirstDay : '') . 
 					(($this->blnGotoCurrent) ? ', gotoCurrent: true' : '') . 
 					(($this->blnIsRtl) ? ', isRTL: true' : '') . 
@@ -72,6 +115,10 @@ class QCalendar extends QDateTimeTextBox {
 				return $this->mixNumberOfMonths;
 			case "AutoSize" :
 				return $this->blnAutoSize;
+			case "DateFormat" :
+				return $this->strDateTimeFormat;
+			case "JqDateFormat" :
+				return $this->strJqDateFormat;
 			default :
 			try {
 				return parent::__get($strName);
@@ -161,7 +208,22 @@ class QCalendar extends QDateTimeTextBox {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
-			default :
+			case "JqDateFormat":
+				try {
+					$this->strJqDateFormat = QType::Cast($mixValue, QType::String);
+					parent::__set('DateTimeFormat', QCalendar::qcFrmt($this->strJqDateFormat));
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			case "DateTimeFormat":
+			case "DateFormat":
+				parent::__set('DateTimeFormat', $mixValue);
+				$this->strJqDateFormat = QCalendar::jqFrmt($this->strDateTimeFormat);
+				break;
+
+ 			default :
 				try {
 					parent::__set($strName, $mixValue);
 				}

@@ -10,7 +10,8 @@
 	 *
 	 * @property QDateTime $Maximum
 	 * @property QDateTime $Minimum
-	 * @property-read QDateTime $DateTime
+	 * @property string $DateTimeFormat
+	 * @property QDateTime $DateTime
 	 * @property string $LabelForInvalid
 	 */
 	class QDateTimeTextBox extends QTextBox {
@@ -21,6 +22,8 @@
 		// MISC
 		protected $dttMinimum = null;
 		protected $dttMaximum = null;
+		protected $strDateTimeFormat = "MMM D, YYYY";
+		protected $dttDateTime = null;
 		
 		protected $strLabelForInvalid = 'For example, "Mar 20, 4:30pm" or "Mar 20"';
 		protected $calLinkedControl;
@@ -29,6 +32,14 @@
 		// Methods
 		//////////
 		
+		public function ParsePostData() {
+			// Check to see if this Control's Value was passed in via the POST data
+			if (array_key_exists($this->strControlId, $_POST)) {
+				parent::ParsePostData();
+				$this->dttDateTime = QDateTimeTextBox::ParseForDateTimeValue($this->strText);
+			}
+		}
+
 		public static function ParseForDateTimeValue($strText) {
 			// Trim and Clean
 			$strText = strtolower(trim($strText));
@@ -124,7 +135,8 @@
 				// MISC
 				case "Maximum": return $this->dttMaximum;
 				case "Minimum": return $this->dttMinimum;
-				case 'DateTime': return QDateTimeTextBox::ParseForDateTimeValue($this->strText);
+				case 'DateTimeFormat': return $this->strDateTimeFormat;
+				case 'DateTime': return $this->dttDateTime;
 				case 'LabelForInvalid': return $this->strLabelForInvalid;
 
 				default:
@@ -168,6 +180,35 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case 'DateTimeFormat':
+					try {
+						$this->strDateTimeFormat = QType::Cast($mixValue, QType::String);
+						// trigger an update to reformat the text with the new format
+						$this->DateTime = $this->dttDateTime;
+						return $this->strDateTimeFormat;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'DateTime':
+					try {
+						$this->dttDateTime = QType::Cast($mixValue, QType::DateTime);
+						if (!$this->dttDateTime || !$this->strDateTimeFormat) {
+							parent::__set('Text', '');
+						} else {
+							parent::__set('Text', $this->dttDateTime->qFormat($this->strDateTimeFormat));
+						}
+						return $this->dttDateTime;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Text':
+					$this->dttDateTime = QDateTimeTextBox::ParseForDateTimeValue($this->strText);
+					return parent::__set('Text', $mixValue);
 
 				case 'LabelForInvalid':
 					try {
