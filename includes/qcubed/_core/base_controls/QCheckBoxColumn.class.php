@@ -4,7 +4,7 @@
  * Inspired by Hunter Jensen's work at <http://www.qcodo.com/forums/topic.php/3267>
  * 
  * @author Ryan Peters
- * @copyright ICOM Productions 2008
+ * @copyright ICOM Productions 2010
  * @license MIT
  * @name QCheckBoxColumn
  * 
@@ -36,7 +36,7 @@ class QCheckBoxColumn extends QDataGridColumn
 		
 		//change the QDataGrid argument we get, and pass the parent constructor the HTML parameter it expects
 		$arrParentArgs[1] = '<?=$_COLUMN->chkSelected_Render($_ITEM) ?>';
-		if (version_compare(PHP_VERSION, '5.1.6', '>')) 
+		if (version_compare(PHP_VERSION, '5.1.6', '>=')) 
 			return call_user_func_array(array($this, 'parent::__construct'), $arrParentArgs);
 		else
 		{
@@ -101,7 +101,7 @@ class QCheckBoxColumn extends QDataGridColumn
 			//so we'll just have to include all the code in the onclick itself
 			//hopefully this won't result in much duplication, since there shouldn't be too many
 			//of these on a single form
-			$strJavascript = "var datagrid = document.getElementById('{$this->objDataGrid->ControlId}');var selectAll = document.getElementById('{$this->chkSelectAll->ControlId}');var childInputs = datagrid.getElementsByTagName('input');for(var i = 0;i < childInputs.length; i++){var subid = childInputs[i].id.substring($strControlIdStartLen, 0);if(subid == '$strControlIdStart')childInputs[i].checked = selectAll.checked;}";
+			$strJavascript = "var datagrid = document.getElementById('{$this->objDataGrid->ControlId}');var selectAll = document.getElementById('{$this->chkSelectAll->ControlId}');var childInputs = datagrid.getElementsByTagName('input');for(var i = 0; i < childInputs.length; i++){var subid = childInputs[i].id.substring($strControlIdStartLen, 0);if(subid == '$strControlIdStart')childInputs[i].checked = selectAll.checked;}";
 			
 			$this->chkSelectAll->AddAction(new QClickEvent(), new QJavaScriptAction($strJavascript));
 		}
@@ -195,7 +195,7 @@ class QCheckBoxColumn extends QDataGridColumn
 	 * @return bool[] Key is the object Id, value is the new check state (bln)
 	 *
 	 */
-	public function GetChangedIds()
+	public function GetChangedIds($blnRemember = false)
 	{
 		//because of formstate, this will even include ones not currently displayed.
 		$childControls = $this->objDataGrid->GetChildControls();
@@ -214,10 +214,23 @@ class QCheckBoxColumn extends QDataGridColumn
 				$wasChecked = $arrParams[1] == 1;
 				if($wasChecked != $objControl->Checked)
 					$itemIds[$id] = $objControl->Checked;
+				if($blnRemember)
+					$objControl->ActionParameter = $id.','.($objControl->Checked?1:0);
 			}
 		}
 		
 		return $itemIds;
+	}
+	
+	/**
+	 * Considers the current state to be the new baseline
+	 *
+	 * @return void
+	 *
+	 */
+	public function AcceptChanges()
+	{
+		$this->GetChangedIds(true);
 	}
 	
 	public function SetSelectAllCheckbox($value)
