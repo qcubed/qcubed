@@ -80,17 +80,6 @@ $j.ajaxSync.data = [];
 		},
 		
 		postBack: function(strForm, strControl, strEvent, strParameter) {
-			
-			$j(':input').each(function (i) {
-				if ($j('#' + strForm + ' :input[name="' + this.name + '"]').val() == undefined) {
-					var real = $j("#" + $j(this).name); 
-					var cloned = real.clone(true); 
-					real.hide(); 
-					cloned.insertAfter(real);    
-					real.appendTo("#" + strForm);
-				}
-			});		
-			
 			var strForm = $j("#Qform__FormId").attr("value");
 			var objForm = $j('#' + strForm);
 

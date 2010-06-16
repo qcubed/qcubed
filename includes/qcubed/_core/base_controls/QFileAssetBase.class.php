@@ -16,6 +16,8 @@
 	 * @property string $TemporaryUploadPath
 	 * @property boolean $ClickToView
 	 * @property string $DialogBoxCssClass
+	 * @property string $DialogBoxWidth
+	 * @property string $DialogBoxHeight
 	 * @property string $UploadText
 	 * @property string $CancelText
 	 * @property string $DialogBoxHtml
@@ -55,14 +57,19 @@
 			// Setup Controls
 			$this->btnUpload = new QLinkButton($this);
 			$this->btnUpload->HtmlEntities = false;
-			$this->btnUpload->AddAction(new QClickEvent(), new QShowDialogBox($this->dlgFileAsset));
-			$this->btnUpload->AddAction(new QClickEvent(), new QTerminateAction());
+			$this->SetupUpdateActions();
 
 			// Define the "Delete" Button
 			$this->btnDelete = new QLinkButton($this);
 			$this->btnDelete->HtmlEntities = false;
 			$this->btnDelete->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnDelete_Click'));
 			$this->btnDelete->AddAction(new QClickEvent(), new QTerminateAction());
+		}
+
+		protected function SetupUpdateActions() {
+			$this->btnUpload->RemoveAllActions('click');
+			$this->btnUpload->AddAction(new QClickEvent(), new QShowDialogBox($this->dlgFileAsset));
+			$this->btnUpload->AddAction(new QClickEvent(), new QTerminateAction());
 		}
 		
 		protected function SetupIconFilePathArray() {
@@ -159,6 +166,8 @@
 				case 'ClickToView': return $this->blnClickToView;
 
 				case 'DialogBoxCssClass': return $this->dlgFileAsset->CssClass;
+				case 'DialogBoxWidth': return $this->dlgFileAsset->Width;
+				case 'DialogBoxHeight': return $this->dlgFileAsset->Height;
 				case 'UploadText': return $this->dlgFileAsset->btnUpload->Text;
 				case 'CancelText': return $this->dlgFileAsset->btnCancel->Text;
 				case 'DialogBoxHtml': return $this->dlgFileAsset->lblMessage->Text;
@@ -293,7 +302,29 @@
 
 				case 'DialogBoxCssClass':
 					try {
-						return ($this->dlgFileAsset->CssClass = $mixValue);
+						$this->dlgFileAsset->CssClass = $mixValue;
+						$this->SetupUpdateActions();
+						return $this->dlgFileAsset->CssClass;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'DialogBoxWidth':
+					try {
+						$this->dlgFileAsset->Width = $mixValue;
+						$this->SetupUpdateActions();
+						return $this->dlgFileAsset->Width;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'DialogBoxHeight':
+					try {
+						$this->dlgFileAsset->Height = $mixValue;
+						$this->SetupUpdateActions();
+						return $this->dlgFileAsset->Height;
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;

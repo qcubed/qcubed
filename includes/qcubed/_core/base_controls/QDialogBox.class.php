@@ -23,56 +23,57 @@
 		// APPEARANCE
 		protected $strMatteColor = '#000000';
 		protected $intMatteOpacity = 50;
-		protected $intWidth = 350;
+		protected $strWidth = '350';
 		/* protected $strCssClass = 'dialogbox';  this is now handled through jQuery UI */
 
 		// BEHAVIOR
 		protected $blnMatteClickable = true;
 		protected $blnAnyKeyCloses = false;
 		
-		protected $blnModal = true; 
+		protected $blnModal = true;
 
-		public function  __construct($objParentObject, $strControlId = null) { 
-			parent::__construct($objParentObject, $strControlId); 
-			$this->blnDisplay = false; 
+		public function  __construct($objParentObject, $strControlId = null) {
+			parent::__construct($objParentObject, $strControlId);
+			$this->blnDisplay = false;
 		}
 
-		protected function GetControlHtml() {
-			$strToReturn = parent::GetControlHtml();
-			return $strToReturn;
+		public function GetShowDialogJavaScript() {
+			$strOptions = 'autoOpen: false';
+			$strOptions .= ', modal: '.($this->blnModal ? 'true' : 'false');
+			if ($this->strTitle)
+				$strOptions .= ', title: "'.$this->strTitle.'"';
+			if ($this->strCssClass)
+				$strOptions .= ', dialogClass: "'.$this->strCssClass.'"';
+			if (null === $this->strWidth)
+				$strOptions .= ", width: 'auto'";
+			else if ($this->strWidth)
+				$strOptions .= ', width: '. $this->strWidth;
+			if (null === $this->strHeight)
+				$strOptions .= ", height: 'auto'";
+			else if ($this->strHeight)
+				$strOptions .= ', height: '. $this->strHeight;
+			$strParentId = $this->ParentControl ? $this->ParentControl->ControlId : $this->Form->FormId;
+			$strOptions .= sprintf(', open: function() { $j(this).parent().appendTo("#%s"); }', $strParentId);
+
+			return sprintf('$j("#%s").dialog({%s}); $j("#%s").dialog("open");', $this->strControlId, $strOptions, $this->strControlId);
 		}
 
-		public function GetEndScript() {
-			$strToReturn = parent::GetEndScript();
-			return $strToReturn;
+		public function GetHideDialogJavaScript() {
+			return sprintf('$j("#%s").dialog("close");', $this->strControlId);
 		}
 
 		public function ShowDialogBox() {
-			$this->SetCustomAttribute("title", $this->strTitle);		// not sure if this is the right place to do it, we could probably do it in the set()	
 			if (!$this->blnVisible)
 				$this->Visible = true;
 			if (!$this->blnDisplay)
 				$this->Display = true;
-
-			$strOptions = "";
-			if ($this->strCssClass != "")
-				$strOptions .= sprintf(', dialogClass: "%s"', $this->strCssClass);
-			if ($this->strWidth != "") 
-				$strOptions .= sprintf(', width: %s', $this->strWidth); 
-			if ($this->strHeight != "") 
-				$strOptions .= sprintf(', height: %s', $this->strHeight); 
-
-			$strOptions .= sprintf(', modal: %s', ($this->blnModal ? 'true' : 'false')); 
-
-			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog({autoOpen: false %s, width: ' . $this->intWidth . '})', $this->strControlId, $strOptions));
-			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog("open")', $this->strControlId));
-			
+			QApplication::ExecuteJavaScript($this->GetShowDialogJavaScript());
 			$this->blnWrapperModified = false;
 		}
 
 		public function HideDialogBox() {
 			$this->blnDisplay = false;
-			QApplication::ExecuteJavaScript(sprintf('$j("#%s").dialog("close")', $this->strControlId));
+			QApplication::ExecuteJavaScript($this->GetHideDialogJavaScript());
 			$this->blnWrapperModified = false;
 		}
 
@@ -89,8 +90,8 @@
 				// BEHAVIOR
 				case "MatteClickable": return $this->blnMatteClickable;
 				case "AnyKeyCloses": return $this->blnAnyKeyCloses;
-				case "Modal": return $this->blnModal; 
-				
+				case "Modal": return $this->blnModal;
+
 				default:
 					try {
 						return parent::__get($strName);
@@ -150,18 +151,41 @@
 						throw $objExc;
 					}
 
-				case "Modal": 
+				case "Modal":
 					try { 
-						$this->blnModal = QType::Cast($mixValue, QType::Boolean); 
-						break; 
-					} catch (QInvalidCastException $objExc) { 
-						$objExc->IncrementOffset(); 
-						throw $objExc; 
-					} 
+						$this->blnModal = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				case "Width":
 					try {
-						$this->intWidth = QType::Cast($mixValue, QType::Integer);
+						if (null === $mixValue || 'auto' === $mixValue) {
+							$this->strWidth = null;
+						} else {
+							$mixValue = str_replace("px", "", strtolower($mixValue)); // Replace the text "px" (pixels) with empty string if it's there
+							
+							// for now, jQuery dialog only accepts integers as width
+							$this->strWidth = QType::Cast($mixValue, QType::Integer);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "Height":
+					try {
+						if (null === $mixValue || 'auto' === $mixValue) {
+							$this->strHeight = null;
+						} else {
+							$mixValue = str_replace("px", "", strtolower($mixValue)); // Replace the text "px" (pixels) with empty string if it's there
+
+							// for now, jQuery dialog only accepts integers as height
+							$this->strHeight = QType::Cast($mixValue, QType::Integer);
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

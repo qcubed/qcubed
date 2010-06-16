@@ -403,16 +403,18 @@
 	 */
 	class QShowDialogBox extends QAction {
 		protected $strControlId = null;
+		protected $strJavaScript = null;
 
 		public function __construct($objControl) {
 			if (!($objControl instanceof QDialogBox))
     			throw new QCallerException('First parameter of constructor is expecting an object of type QDialogBox');
 
 			$this->strControlId = $objControl->ControlId;
+			$this->strJavaScript = $objControl->GetShowDialogJavaScript();
 		}
 
-		public function RenderScript(QControl $objControl) {				
-			return (sprintf('$j("#%s").dialog({ modal: true }); if (!$j("#%s").dialog("isOpen")) $j("#%s").dialog("open");qcubed.recordControlModification("%s", "Display", "1");', $this->strControlId, $this->strControlId,$this->strControlId,$this->strControlId));			
+		public function RenderScript(QControl $objControl) {
+			return (sprintf('%s; qcubed.recordControlModification("%s", "Display", "1");', $this->strJavaScript, $this->strControlId));
 		}
 	}
 
@@ -421,17 +423,17 @@
 	 * @package Actions
 	 */
 	class QHideDialogBox extends QAction {
-		protected $strControlId = null;
+		protected $strJavaScript = null;
 
 		public function __construct($objControl) {
 			if (!($objControl instanceof QDialogBox))
     			throw new QCallerException('First parameter of constructor is expecting an object of type QDialogBox');
 
-			$this->strControlId = $objControl->ControlId;
+			$this->strJavaScript = $objControl->GetHideDialogJavaScript();
 		}
 
 		public function RenderScript(QControl $objControl) {
-			return (sprintf('$j("#%s").dialog("close");', $this->strControlId));			
+			return $this->strJavaScript;
 		}
 	}
 
