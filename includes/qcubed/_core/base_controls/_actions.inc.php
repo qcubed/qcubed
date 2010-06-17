@@ -19,7 +19,7 @@
 			$strToReturn = '';
 
 			if ($objActions && count($objActions)) foreach ($objActions as $objAction) {
-				if ($objAction->objEvent->JavaScriptEvent != $strEventName)
+				if ($objAction->objEvent->EventName != $strEventName)
 					throw new Exception('Invalid Action Event in this entry in the ActionArray');
 
 				if ($objAction->objEvent->Delay > 0) {

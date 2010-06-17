@@ -325,7 +325,7 @@
 			$objAction->Event = $objEvent;
 
 			// Pull out the Event Name
-			$strEventName = $objEvent->JavaScriptEvent;
+			$strEventName = $objEvent->EventName;
 
 			if (!array_key_exists($strEventName, $this->objActionArray))
 				$this->objActionArray[$strEventName] = array();
