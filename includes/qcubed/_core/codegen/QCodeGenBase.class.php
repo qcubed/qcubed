@@ -931,7 +931,7 @@
 		}
 
 		protected function FormControlVariableNameForManyToManyReference(QManyToManyReference $objManyToManyReference) {
-			return sprintf("lst%s", $objManyToManyReference->ObjectDescriptionPlural);
+			return sprintf("dtg%s", $objManyToManyReference->ObjectDescriptionPlural);
 		}
 
 		protected function FormLabelVariableNameForColumn(QColumn $objColumn) {

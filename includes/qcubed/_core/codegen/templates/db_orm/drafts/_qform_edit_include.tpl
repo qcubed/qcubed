@@ -29,7 +29,7 @@
 <% } %>
 <% } %>
 <% foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { %>
-		<?php $this-><%= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); %>->RenderWithName(true, "Rows=7"); ?>
+		<?php $this-><%= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); %>->RenderWithName(true); ?>
 
 <% } %>
 	</div>
