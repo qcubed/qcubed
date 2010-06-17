@@ -105,6 +105,14 @@ abstract class QInstallationValidator {
 			$result[] = $obj;
 		}
 		
+		if (!QFolder::isWritable(__FORMBASE_CLASSES__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Generated form base classes directory (" . __FORMBASE_CLASSES__ . ") " .
+				"needs to be writable for the code generator to work";
+			$obj->strCommandToFix = "chmod 777 " . __FORMBASE_CLASSES__;
+			$result[] = $obj;
+		}
+		
 		if (!QFolder::isWritable(__MODEL__)) {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "Model destination directory (" . __MODEL__ . ") " .
