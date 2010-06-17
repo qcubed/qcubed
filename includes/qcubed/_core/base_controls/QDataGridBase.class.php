@@ -803,7 +803,7 @@
 			return 'ctl'.$this->ControlId.'flt'.$objColumn->FilterColId;
 		}
 
-		protected function GetFilterControl($objColumn)
+		public function GetFilterControl($objColumn)
 		{
 			$strControlId = $this->GetColumnFilterControlId($objColumn);
 			//find/build the control
