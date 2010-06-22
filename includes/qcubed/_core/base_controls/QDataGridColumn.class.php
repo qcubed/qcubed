@@ -53,6 +53,7 @@
 	 * @property string $Html is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
 	 * @property string $Name is the name of the column, as displayed in the DataGrid's header row for that column
 	 * @property boolean $HtmlEntities
+	 * @property boolean $HasResetButton
 	 */
 	class QDataGridColumn extends QBaseClass {
 		// APPEARANCE
@@ -73,6 +74,7 @@
 		protected $strVerticalAlign = QVerticalAlign::NotSet;
 		protected $strWidth = null;
 		protected $blnWrap = true;
+		protected $blnHasResetButton = false;
 
 		// BEHAVIOR
 		protected $objOrderByClause = null;
@@ -328,6 +330,7 @@
 				case "Html": return $this->strHtml;
 				case "Name": return $this->strName;
 				case "HtmlEntities": return $this->blnHtmlEntities;
+				case "HasResetButton": return $this->blnHasResetButton;
 
 				default:
 					try {
@@ -664,6 +667,15 @@
 				case "HtmlEntities":
 					try {
 						$this->blnHtmlEntities = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "HasResetButton":
+					try {
+						$this->blnHasResetButton = QType::Cast($mixValue, QType::Boolean);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

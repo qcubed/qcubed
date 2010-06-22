@@ -232,6 +232,8 @@
 	 * @property-write boolean $UseAjax
 	 * @property-write string $RowActionParameterHtml
 	 * @property-write mixed $Owner
+	 * @property-read QButton $FilterButton
+	 * @property-read QWaitIcon $WaitIcon
 	 */
 	abstract class QDataGridBase extends QPaginatedControl {
 		// APPEARANCE
@@ -274,8 +276,8 @@
 
 		protected $objOwner = null;
 
-		protected $btnFilter;
-		protected $btnFilterReset;
+		protected $btnFilter = null;
+		protected $btnFilterResetArray = array();
 
 		public function AddRowAction($objEvent, $objAction) {
 			array_push($this->objRowEventArray, $objEvent);
@@ -312,8 +314,6 @@
 			$this->AddAction(new QClickEvent(), new QTerminateAction());
 
 			$this->objWaitIcon_Create();
-			$this->btnFilter_Create();
-			$this->btnFilterReset_Create();
 		}
 
 		// Used to add a DataGridColumn to this DataGrid
@@ -758,6 +758,7 @@
 			$intColumnIndex = 0;
 			if($this->objColumnArray !== null)
 			{
+				$blnResetButtonRendered = false;
 				for ($intIndex = 0; $intIndex < count($this->objColumnArray); $intIndex++)
 				{
 					$objColumn = $this->objColumnArray[$intIndex];
@@ -775,16 +776,26 @@
 							//display the control
 							$colContent = $ctlFilter->Render(false);
 					}
+					if ($this->ShowFilterResetButton) {
+						if (!$blnResetButtonRendered && $intIndex == count($this->objColumnArray) -1) {
+							// no column has the reset button, but ShowFilterResetButton is true
+							// put the reset button in the last column
+							$objColumn->HasResetButton = true;
+						}
+						$btnReset = $this->GetResetButton($objColumn);
+						if (null !== $btnReset) {
+							$colContent .= $btnReset->Render(false);
+							$blnResetButtonRendered = true;
+						}
+					}
 
-					//show the filter and reset buttons in the last column (if set to)
+					//show the filter button in the last column (if set to)
 					if($intIndex == count($this->objColumnArray) -1)
 					{
-						if ($this->ShowFilterResetButton)
-							$colContent .= $this->btnFilterReset->Render(false);
-						if ($this->ShowFilterResetButton && $this->ShowFilterButton)
-							$colContent .= '&nbsp;';
-						if ($this->ShowFilterButton)
-							$colContent .= $this->btnFilter->Render(false);
+						$btnFilter = $this->FilterButton;
+						if (null !== $btnFilter) {
+							$colContent .= $btnFilter->Render(false);
+						}
 						$colContent .= $this->objWaitIcon->Render(false);
 					}
 
@@ -811,6 +822,20 @@
 				//create the control this first time
 				$ctlFilter = $this->CreateFilterControl($strControlId, $objColumn);
 			return $ctlFilter;
+		}
+
+		public function GetResetButton($objColumn)
+		{
+			if (!$this->ShowFilterResetButton)
+				return null;
+			if (!$objColumn->HasResetButton)
+				return null;
+
+			$strControlId = $this->GetColumnFilterControlId($objColumn);
+			if (!array_key_exists($strControlId, $this->btnFilterResetArray)) {
+				return ($this->btnFilterResetArray[$strControlId] = $this->btnFilterReset_Create());
+			}
+			return $this->btnFilterResetArray[$strControlId];
 		}
 
 		/******
@@ -959,14 +984,15 @@
 		 *
 		 */
 		protected function btnFilterReset_Create() {
-			$this->btnFilterReset = new QButton($this);
-			$this->btnFilterReset->Text = QApplication::Translate('Reset');;
+			$btnFilterReset = new QButton($this);
+			$btnFilterReset->Text = QApplication::Translate('Reset');;
 
 			if ($this->blnUseAjax)
-				$this->btnFilterReset->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilterReset_Click', $this->objWaitIcon));
+				$btnFilterReset->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilterReset_Click', $this->objWaitIcon));
 			else
-				$this->btnFilterReset->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilterReset_Click'));
-			$this->btnFilterReset->AddAction(new QClickEvent(), new QTerminateAction());
+				$btnFilterReset->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilterReset_Click'));
+			$btnFilterReset->AddAction(new QClickEvent(), new QTerminateAction());
+			return $btnFilterReset;
 		}
 
 
@@ -978,18 +1004,19 @@
 		 */
 		protected function btnFilter_Create()
 		{
-			$this->btnFilter = new QButton($this);
-			$this->btnFilter->Name = QApplication::Translate('Filter');
-			$this->btnFilter->Text = QApplication::Translate('Filter');
+			$btnFilter = new QButton($this);
+			$btnFilter->Name = QApplication::Translate('Filter');
+			$btnFilter->Text = QApplication::Translate('Filter');
 
 			if ($this->blnUseAjax)
-				$this->btnFilter->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilter_Click', $this->objWaitIcon));
+				$btnFilter->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilter_Click', $this->objWaitIcon));
 			else
-				$this->btnFilter->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilter_Click'));
+				$btnFilter->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilter_Click'));
 
-			$this->btnFilter->AddAction(new QClickEvent(), new QTerminateAction());
+			$btnFilter->AddAction(new QClickEvent(), new QTerminateAction());
 
-			$this->btnFilter->CausesValidation = false;
+			$btnFilter->CausesValidation = false;
+			return $btnFilter;
 		}
 
 
@@ -1030,7 +1057,7 @@
 							//update the column's filterByCommand with the user-entered value
 							$filter = $objColumn->FilterByCommand;
 
-							if($strValue !== null && $objColumn->FilterType !== "Reset")
+							if($strValue !== null)
 								$filter['value'] = $strValue;
 							else if(isset($filter['value']))
 								unset($filter['value']);
@@ -1279,6 +1306,16 @@
 					}
 
 					return $dtgConditions;
+
+				case "FilterButton":
+					if (!$this->ShowFilterButton)
+						return null;
+					if (null !== $this->btnFilter)
+						return $this->btnFilter;
+					return ($this->btnFilter = $this->btnFilter_Create());
+
+				case "WaitIcon": return $this->objWaitIcon;
+
 				default:
 					try {
 						return parent::__get($strName);
@@ -1398,7 +1435,7 @@
 							$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
 							if ($ctlFilter !== null) 
 							{
-								$ctlFilter->RemoveAllActions('onkeydown');
+								$ctlFilter->RemoveAllActions(QKeyDownEvent::EventName);
 								if ($this->blnUseAjax)
 									$ctlFilter->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, $actionName, $this->objWaitIcon));
 								else
@@ -1409,19 +1446,23 @@
 						}
 					}
 
-					$this->btnFilter->RemoveAllActions('onclick');
-					if ($this->blnUseAjax)
-						$this->btnFilter->AddAction(new QClickEvent(), new QAjaxControlAction($this, $actionName, $this->objWaitIcon));
-					else
-						$this->btnFilter->AddAction(new QClickEvent(), new QServerControlAction($this, $actionName));
-					$this->btnFilter->AddAction(new QClickEvent(), new QTerminateAction());
+					if (null !== $this->btnFilter) {
+						$this->btnFilter->RemoveAllActions(QClickEvent::EventName);
+						if ($this->blnUseAjax)
+							$this->btnFilter->AddAction(new QClickEvent(), new QAjaxControlAction($this, $actionName, $this->objWaitIcon));
+						else
+							$this->btnFilter->AddAction(new QClickEvent(), new QServerControlAction($this, $actionName));
+						$this->btnFilter->AddAction(new QClickEvent(), new QTerminateAction());
+					}
 
-					$this->btnFilterReset->RemoveAllActions('onclick');
-					if ($this->blnUseAjax)
-						$this->btnFilterReset->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilterReset_Click', $this->objWaitIcon));
-					else
-						$this->btnFilterReset->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilterReset_Click'));
-					$this->btnFilterReset->AddAction(new QClickEvent(), new QTerminateAction());
+					foreach ($this->btnFilterResetArray as $btnFilterReset) {
+						$btnFilterReset->RemoveAllActions(QClickEvent::EventName);
+						if ($this->blnUseAjax)
+							$btnFilterReset->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnFilterReset_Click', $this->objWaitIcon));
+						else
+							$btnFilterReset->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnFilterReset_Click'));
+						$btnFilterReset->AddAction(new QClickEvent(), new QTerminateAction());
+					}
 					return $blnToReturn;
 
 				// LAYOUT
