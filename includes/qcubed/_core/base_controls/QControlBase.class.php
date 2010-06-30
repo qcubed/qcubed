@@ -66,7 +66,7 @@
 	 * @property string $Warning is warning text (looks like an error, but it can be user defined) that will be shown next to the control's name label {@link QControl::RenderWithName}
 	 * @property string $Width
 	 * @property-read boolean $WrapperModified
-	 * 
+	 * @property string $WrapperCssClass
 	 */
 	abstract class QControlBase extends QBaseClass {
 		///////////////////////////
@@ -136,6 +136,7 @@
 		protected $strCustomStyleArray = null;
 		protected $objActionArray = array();
 		protected $strActionParameter = null;
+		protected $strWrapperCssClass = null;
 
 		// SETTINGS
 		protected $strJavaScripts = null;
@@ -995,6 +996,10 @@
 					$strStyle .= sprintf('top:%spx;', $this->strTop);
 			}
 
+			$strWrapperAttributes = '';
+			if ($this->strWrapperCssClass)
+				$strWrapperAttributes .= sprintf(' class="%s"', $this->strWrapperCssClass);
+
 			switch ($this->objForm->CallType) {
 				case QCallType::Ajax:
 					// If we have a ParentControl and the ParentControl has NOT been rendered, then output
@@ -1004,9 +1009,9 @@
 							$strStyle = sprintf('style="%s"', $strStyle);
 
 						if ($blnIsBlockElement)
-							$strOutput = sprintf('<div id="%s_ctl" %s>%s</div>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
+							$strOutput = sprintf('<div id="%s_ctl" %s%s>%s</div>%s', $this->strControlId, $strStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
 						else
-							$strOutput = sprintf('<span id="%s_ctl" %s>%s</span>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
+							$strOutput = sprintf('<span id="%s_ctl" %s%s>%s</span>%s', $this->strControlId, $strStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
 //						$strOutput = sprintf('<ins id="%s_ctl" style="%stext-decoration:inherit;">%s</ins>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
 //						$strOutput = sprintf('<q id="%s_ctl" style="%s">%s</q>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
 					} else {
@@ -1025,7 +1030,7 @@
 						
 						if (($this->blnWrapperModified) && ($this->blnVisible))
 //							QApplication::ExecuteJavaScript(sprintf('qcodo.getWrapper("%s").style.cssText = "%s"; ', $this->strControlId, $strStyle));
-							QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").style.cssText = "%stext-decoration:inherit;"; ', $this->strControlId, $strStyle));
+							QApplication::ExecuteJavaScript(sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strStyle, $this->strWrapperCssClass));
 					}
 					break;
 
@@ -1036,9 +1041,9 @@
 //					$strOutput = sprintf('<div id="%s_ctl" style="%s">%s</div>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
 //					$strOutput = sprintf('<ins id="%s_ctl" style="%stext-decoration:inherit;">%s</ins>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
 					if ($blnIsBlockElement)
-						$strOutput = sprintf('<div id="%s_ctl" %s>%s</div>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
+						$strOutput = sprintf('<div id="%s_ctl" %s%s>%s</div>%s', $this->strControlId, $strStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
 					else
-						$strOutput = sprintf('<span id="%s_ctl" %s>%s</span>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
+						$strOutput = sprintf('<span id="%s_ctl" %s%s>%s</span>%s', $this->strControlId, $strStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
 					break;
 			}
 
@@ -1297,7 +1302,8 @@
 				case "WrapperModified": return $this->blnWrapperModified;
 				case "ActionParameter": return $this->strActionParameter;
 				case "ActionsMustTerminate": return $this->blnActionsMustTerminate;
-				
+				case "WrapperCssClass": return $this->strWrapperCssClass;
+
 				// SETTINGS
 				case "JavaScripts": return $this->strJavaScripts;
 				case "StyleSheets": return $this->strStyleSheets;
@@ -1647,6 +1653,16 @@
 				case "ActionParameter":
 					try {
 						$this->strActionParameter = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "WrapperCssClass":
+					try {
+						$this->strWrapperCssClass = QType::Cast($mixValue, QType::String);
+						$this->MarkAsWrapperModified();
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
