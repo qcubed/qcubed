@@ -31,7 +31,7 @@
 	 */
 
 	// Versioning Information
-	define('QCODO_VERSION', '1.0.2 Stable (QCubed 1.0.2 Stable)');
+	define('QCODO_VERSION', '1.0.3 Legacy Maintenance (QCubed 1.0.3 Legacy Maintenance)');
 
 	// Preload Required Framework Classes
 	require(__QCODO_CORE__ . '/framework/QBaseClass.class.php');
