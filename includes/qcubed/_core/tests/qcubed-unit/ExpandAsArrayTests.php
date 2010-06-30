@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Tests for the ExpandAsArray functionality in QQuery
  * 
  * @package Tests
  */
@@ -9,15 +10,10 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		$arrPeople = Person::LoadAll(
 			self::getTestClauses()
 		);
+				
+		$this->assertEqual(sizeof($arrPeople), 12, "12 Person objects found");
+		$targetPerson = $this->verifyObjectPropertyHelper($arrPeople, 'LastName', 'Wolfe');
 		
-		$targetPerson = null;
-		foreach ($arrPeople as $objPerson) {
-			if ($objPerson->LastName == "Wolfe") {
-				$targetPerson = $objPerson;
-			}
-		}
-		
-		$this->assertEqual(sizeof($arrPeople), 12);
 		$this->helperVerifyKarenWolfe($targetPerson);
 	}
 	
@@ -32,33 +28,18 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 	
 	private static function getTestClauses() {
 		return QQ::Clause(
-				QQ::ExpandAsArray(QQN::Person()->Address),
-				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager),
-				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone)
+			QQ::ExpandAsArray(QQN::Person()->Address),
+			QQ::ExpandAsArray(QQN::Person()->ProjectAsManager),
+			QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone)
 		);
 	}
 	
-	private function helperVerifyKarenWolfe(Person $targetPerson) {
-		$this->assertNotEqual($targetPerson, null, "Karen Wolfe found");
-		
-		$targetProject = null;
-		foreach ($targetPerson->_ProjectAsManagerArray as $objProject) {
-			if ($objProject->Name == "ACME Payment System") {
-				$targetProject = $objProject;
-			}
-		}
+	private function helperVerifyKarenWolfe(Person $targetPerson) {		
 		$this->assertEqual(sizeof($targetPerson->_ProjectAsManagerArray), 2, "2 projects found");
-		$this->assertNotEqual($targetProject, null, "ACME Payment System project found");
-		
-		$targetMilestone = null;
-		foreach ($targetProject->_MilestoneArray as $objMilestone) {
-			if ($objMilestone->Name == "Milestone H") {
-				$targetMilestone = $objMilestone;
-			}
-		}
+		$targetProject = $this->verifyObjectPropertyHelper($targetPerson->_ProjectAsManagerArray, 'Name', 'ACME Payment System');
 		
 		$this->assertEqual(sizeof($targetProject->_MilestoneArray), 4, "4 milestones found");
-		$this->assertNotEqual($targetMilestone, null, "Milestone H found");				
+		$this->verifyObjectPropertyHelper($targetProject->_MilestoneArray, 'Name', 'Milestone H');
 	}
 }
 ?>
