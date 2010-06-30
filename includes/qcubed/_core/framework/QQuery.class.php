@@ -3,6 +3,7 @@
 		protected $objParentNode;
 		protected $strType;
 		protected $strName;
+		protected $strAlias;
 		protected $strPropertyName;
 		protected $strRootTableName;
 
@@ -16,6 +17,8 @@
 					return $this->objParentNode;
 				case '_Name':
 					return $this->strName;
+				case '_Alias':
+					return $this->strAlias;
 				case '_PropertyName':
 					return $this->strPropertyName;
 				case '_Type':
@@ -39,7 +42,31 @@
 					}
 			}
 		}
-		
+
+		public function __set($strName, $mixValue) {
+			switch ($strName) {
+				case 'Alias':
+					/**
+					 * Sets the value for strAlias
+					 * @param string $mixValue
+					 * @return string
+					 */
+					try {
+						return ($this->strAlias= QType::Cast($mixValue, QType::String));
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				default:
+					try {
+						return parent::__set($strName, $mixValue);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+
 		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $strBegin, $strEnd, $blnExpandSelection);
 	}
 
@@ -48,6 +75,7 @@
 		public function __construct($strName, $strPropertyName, $strType, $objParentNode = null) {
 			$this->objParentNode = $objParentNode;
 			$this->strName = $strName;
+			$this->strAlias = $strName;
 			$this->strPropertyName = $strPropertyName;
 			$this->strType = $strType;
 			if ($objParentNode) {
@@ -165,7 +193,7 @@
 					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
 
 					// Next, Join the Appropriate Table
-					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strName,
+					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias,
 						$strParentAlias, $this->strName, $this->strPrimaryKey, $objJoinCondition);
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
@@ -174,11 +202,11 @@
 
 				// Next, Expand the Selection Fields for this Table (if applicable)
 				if ($blnExpandSelection) {
-					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strName);
+					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strAlias);
 				}
 
 				// Return the Parent Alias
-				return $strParentAlias . '__' . $this->strName;
+				return $strParentAlias . '__' . $this->strAlias;
 			}
 		}
 
@@ -294,6 +322,7 @@
 			} else
 				throw new QCallerException('ReverseReferenceNodes must have a Parent Node');
 			$this->strName = $strName;
+			$this->strAlias = $strName;
 			$this->strType = $strType;
 			$this->strForeignKey = $strForeignKey;
 			$this->strPropertyName = $strPropertyName;
@@ -344,16 +373,16 @@
 				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
 
 				// Next, Join the Appropriate Table
-				$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strName, $strParentAlias, $this->objParentNode->_PrimaryKey, $this->strForeignKey, $objJoinCondition);
+				$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias, $strParentAlias, $this->objParentNode->_PrimaryKey, $this->strForeignKey, $objJoinCondition);
 				
 				// Next, Expand the Selection Fields for this Table (if applicable)
 				// TODO: If/when we add assn-based attributes, possibly add selectionfields addition here?
 				if ($blnExpandSelection) {
-					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strName);
+					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strAlias);
 				}
 
 				// Return the Parent Alias
-				return $strParentAlias . '__' . $this->strName;
+				return $strParentAlias . '__' . $this->strAlias;
 			}
 		}
 
@@ -383,6 +412,7 @@
 					$this->strRootTableName = $objParentNode->_RootTableName;
 			} else
 				$this->strRootTableName = $strName;
+			$this->strAlias = $this->strName;
 		}
 
 		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
@@ -429,7 +459,7 @@
 				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
 
 				// Next, Join the Appropriate Table
-					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strName,
+					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias,
 						$strParentAlias, $this->objParentNode->_PrimaryKey, $this->strPrimaryKey);
 
 				// Next, Expand the Selection Fields for this Table (if applicable)
@@ -439,7 +469,7 @@
 //				}
 
 				// Return the Parent Alias
-				return $strParentAlias . '__' . $this->strName;
+				return $strParentAlias . '__' . $this->strAlias;
 			}
 		}
 		
@@ -1044,6 +1074,23 @@
 
 		static public function Distinct() {
 			return new QQDistinct();
+		}
+
+		/////////////////////////
+		// Aliased QQ Node
+		/////////////////////////
+		/**
+		 * Returns the supplied node object, after seting its alias to the value supplied
+		 *
+		 * @param QQBaseNode $objNode The node object to set alias on
+		 * @param string $strAlias The alias to set
+		 * @return mixed The same node that was passed in, but with the alias set
+		 *
+		 */
+		static public function Alias(QQBaseNode $objNode, $strAlias)
+		{
+			$objNode->Alias = $strAlias;
+			return $objNode;
 		}
 
 		/////////////////////////
