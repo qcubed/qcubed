@@ -1,0 +1,847 @@
+<?php
+	/**
+	 * @property boolean $Disabled Disables (true) or enables (false) the sortable. Can be set when
+	 * 		initialising (first creating) the sortable.
+	 * @property string $AppendTo Defines where the helper that moves with the mouse is being appended to
+	 * 		during the drag (for example, to resolve overlap/zIndex issues).
+	 * @property string $Axis If defined, the items can be dragged only horizontally or vertically.
+	 * 		Possible values:'x', 'y'.
+	 * @property QJsClosure $Cancel Prevents sorting if you start on elements matching the selector.
+	 * @property QJsClosure $ConnectWith Takes a jQuery selector with items that also have sortables applied. If
+	 * 		used, the sortable is now connected to the other one-way, so you can drag
+	 * 		from this sortable to the other.
+	 * @property mixed $Containment Constrains dragging to within the bounds of the specified element - can be
+	 * 		a DOM element, 'parent', 'document', 'window', or a jQuery selector.
+	 * @property string $Cursor Defines the cursor that is being shown while sorting.
+	 * @property mixed $CursorAt Moves the sorting element or helper so the cursor always appears to drag
+	 * 		from the same position. Coordinates can be given as a hash using a
+	 * 		combination of one or two keys: { top, left, right, bottom }.
+	 * @property integer $Delay Time in milliseconds to define when the sorting should start. It helps
+	 * 		preventing unwanted drags when clicking on an element.
+	 * @property integer $Distance Tolerance, in pixels, for when sorting should start. If specified, sorting
+	 * 		will not start until after mouse is dragged beyond distance. Can be used to
+	 * 		allow for clicks on elements within a handle.
+	 * @property boolean $DropOnEmpty If false items from this sortable can't be dropped to an empty linked
+	 * 		sortable.
+	 * @property boolean $ForceHelperSize If true, forces the helper to have a size.
+	 * @property boolean $ForcePlaceholderSize If true, forces the placeholder to have a size.
+	 * @property array $Grid Snaps the sorting element or helper to a grid, every x and y pixels. Array
+	 * 		values: [x, y]
+	 * @property mixed $Handle Restricts sort start click to the specified element.
+	 * @property mixed $Helper Allows for a helper element to be used for dragging display. The supplied
+	 * 		function receives the event and the element being sorted, and should return
+	 * 		a DOMElement to be used as a custom proxy helper. Possible values:
+	 * 		'original', 'clone'
+	 * @property QJsClosure $Items Specifies which items inside the element should be sortable.
+	 * @property QJsClosure $Opacity Defines the opacity of the helper while sorting. From 0.01 to 1
+	 * @property string $Placeholder Class that gets applied to the otherwise white space.
+	 * @property QJsClosure $Revert If set to true, the item will be reverted to its new DOM position with a
+	 * 		smooth animation. Optionally, it can also be set to a number that controls
+	 * 		the duration of the animation in ms.
+	 * @property boolean $Scroll If set to true, the page scrolls when coming to an edge.
+	 * @property integer $ScrollSensitivity Defines how near the mouse must be to an edge to start scrolling.
+	 * @property integer $ScrollSpeed The speed at which the window should scroll once the mouse pointer gets
+	 * 		within the scrollSensitivity distance.
+	 * @property string $Tolerance This is the way the reordering behaves during drag. Possible values:
+	 * 		'intersect', 'pointer'. In some setups, 'pointer' is more
+	 * 		natural.
+	 * 
+	 * 
+	 * intersect: draggable overlaps the droppable at least
+	 * 		50%
+	 * pointer: mouse pointer overlaps the droppable
+	 * @property integer $ZIndex Z-index for element/helper while being sorted.
+	 * @property QJsClosure $OnStart This event is triggered when sorting starts.
+	 * @property QJsClosure $OnSort This event is triggered during sorting.
+	 * @property QJsClosure $OnChange This event is triggered during sorting, but only when the DOM position has
+	 * 		changed.
+	 * @property QJsClosure $OnBeforeStop This event is triggered when sorting stops, but when the placeholder/helper
+	 * 		is still available.
+	 * @property QJsClosure $OnStop This event is triggered when sorting has stopped.
+	 * @property QJsClosure $OnUpdate This event is triggered when the user stopped sorting and the DOM position
+	 * 		has changed.
+	 * @property QJsClosure $OnReceive This event is triggered when a connected sortable list has received an item
+	 * 		from another list.
+	 * @property QJsClosure $OnRemove This event is triggered when a sortable item has been dragged out from the
+	 * 		list and into another.
+	 * @property QJsClosure $OnOver This event is triggered when a sortable item is moved into a connected
+	 * 		list.
+	 * @property QJsClosure $OnOut This event is triggered when a sortable item is moved away from a connected
+	 * 		list.
+	 * @property QJsClosure $OnActivate This event is triggered when using connected lists, every connected list on
+	 * 		drag start receives it.
+	 * @property QJsClosure $OnDeactivate This event is triggered when sorting was stopped, is propagated to all
+	 * 		possible connected lists.
+	 */
+
+	class QSortableBase extends QPanel	{
+		protected $strJavaScripts = __JQUERY_EFFECTS__;
+		protected $strStyleSheets = __JQUERY_CSS__;
+		/** @var boolean */
+		protected $blnDisabled = null;
+		/** @var string */
+		protected $strAppendTo = null;
+		/** @var string */
+		protected $strAxis = null;
+		/** @var QJsClosure */
+		protected $mixCancel = null;
+		/** @var QJsClosure */
+		protected $mixConnectWith = null;
+		/** @var mixed */
+		protected $mixContainment = null;
+		/** @var string */
+		protected $strCursor = null;
+		/** @var mixed */
+		protected $mixCursorAt = null;
+		/** @var integer */
+		protected $intDelay;
+		/** @var integer */
+		protected $intDistance = null;
+		/** @var boolean */
+		protected $blnDropOnEmpty = null;
+		/** @var boolean */
+		protected $blnForceHelperSize = null;
+		/** @var boolean */
+		protected $blnForcePlaceholderSize = null;
+		/** @var array */
+		protected $arrGrid = null;
+		/** @var mixed */
+		protected $mixHandle = null;
+		/** @var mixed */
+		protected $mixHelper = null;
+		/** @var QJsClosure */
+		protected $mixItems = null;
+		/** @var QJsClosure */
+		protected $mixOpacity = null;
+		/** @var string */
+		protected $strPlaceholder = null;
+		/** @var QJsClosure */
+		protected $mixRevert = null;
+		/** @var boolean */
+		protected $blnScroll = null;
+		/** @var integer */
+		protected $intScrollSensitivity = null;
+		/** @var integer */
+		protected $intScrollSpeed = null;
+		/** @var string */
+		protected $strTolerance = null;
+		/** @var integer */
+		protected $intZIndex = null;
+		/** @var QJsClosure */
+		protected $mixOnStart = null;
+		/** @var QJsClosure */
+		protected $mixOnSort = null;
+		/** @var QJsClosure */
+		protected $mixOnChange = null;
+		/** @var QJsClosure */
+		protected $mixOnBeforeStop = null;
+		/** @var QJsClosure */
+		protected $mixOnStop = null;
+		/** @var QJsClosure */
+		protected $mixOnUpdate = null;
+		/** @var QJsClosure */
+		protected $mixOnReceive = null;
+		/** @var QJsClosure */
+		protected $mixOnRemove = null;
+		/** @var QJsClosure */
+		protected $mixOnOver = null;
+		/** @var QJsClosure */
+		protected $mixOnOut = null;
+		/** @var QJsClosure */
+		protected $mixOnActivate = null;
+		/** @var QJsClosure */
+		protected $mixOnDeactivate = null;
+
+		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+			$objValue = $this->$strProp;
+			if (null === $objValue) {
+				return '';
+			}
+
+			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+		}
+
+		protected function makeJqOptions() {
+			$strJson = '{';
+			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJson .= $this->makeJsProperty('AppendTo', 'appendTo');
+			$strJson .= $this->makeJsProperty('Axis', 'axis');
+			$strJson .= $this->makeJsProperty('Cancel', 'cancel');
+			$strJson .= $this->makeJsProperty('ConnectWith', 'connectWith');
+			$strJson .= $this->makeJsProperty('Containment', 'containment');
+			$strJson .= $this->makeJsProperty('Cursor', 'cursor');
+			$strJson .= $this->makeJsProperty('CursorAt', 'cursorAt');
+			$strJson .= $this->makeJsProperty('Delay', 'delay');
+			$strJson .= $this->makeJsProperty('Distance', 'distance');
+			$strJson .= $this->makeJsProperty('DropOnEmpty', 'dropOnEmpty');
+			$strJson .= $this->makeJsProperty('ForceHelperSize', 'forceHelperSize');
+			$strJson .= $this->makeJsProperty('ForcePlaceholderSize', 'forcePlaceholderSize');
+			$strJson .= $this->makeJsProperty('Grid', 'grid');
+			$strJson .= $this->makeJsProperty('Handle', 'handle');
+			$strJson .= $this->makeJsProperty('Helper', 'helper');
+			$strJson .= $this->makeJsProperty('Items', 'items');
+			$strJson .= $this->makeJsProperty('Opacity', 'opacity');
+			$strJson .= $this->makeJsProperty('Placeholder', 'placeholder');
+			$strJson .= $this->makeJsProperty('Revert', 'revert');
+			$strJson .= $this->makeJsProperty('Scroll', 'scroll');
+			$strJson .= $this->makeJsProperty('ScrollSensitivity', 'scrollSensitivity');
+			$strJson .= $this->makeJsProperty('ScrollSpeed', 'scrollSpeed');
+			$strJson .= $this->makeJsProperty('Tolerance', 'tolerance');
+			$strJson .= $this->makeJsProperty('ZIndex', 'zIndex');
+			$strJson .= $this->makeJsProperty('OnStart', 'start');
+			$strJson .= $this->makeJsProperty('OnSort', 'sort');
+			$strJson .= $this->makeJsProperty('OnChange', 'change');
+			$strJson .= $this->makeJsProperty('OnBeforeStop', 'beforeStop');
+			$strJson .= $this->makeJsProperty('OnStop', 'stop');
+			$strJson .= $this->makeJsProperty('OnUpdate', 'update');
+			$strJson .= $this->makeJsProperty('OnReceive', 'receive');
+			$strJson .= $this->makeJsProperty('OnRemove', 'remove');
+			$strJson .= $this->makeJsProperty('OnOver', 'over');
+			$strJson .= $this->makeJsProperty('OnOut', 'out');
+			$strJson .= $this->makeJsProperty('OnActivate', 'activate');
+			$strJson .= $this->makeJsProperty('OnDeactivate', 'deactivate');
+			return $strJson.'}';
+		}
+
+		protected function getJqControlId() {
+			return $this->ControlId;
+		}
+
+		protected function getJqSetupFunction() {
+			return 'sortable';
+		}
+
+		public function GetControlHtml() {
+			$strToReturn = parent::GetControlHtml();
+
+			$strJs = sprintf('jQuery("#%s").%s(%s)', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
+			QApplication::ExecuteJavaScript($strJs);
+			return $strToReturn;
+		}
+
+		/**
+		 * Remove the sortable functionality completely. This will return the element
+		 * back to its pre-init state.
+		 */
+		public function Destroy() {
+			$args = array();
+			$args[] = "destroy";
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Disable the sortable.
+		 */
+		public function Disable() {
+			$args = array();
+			$args[] = "disable";
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Enable the sortable.
+		 */
+		public function Enable() {
+			$args = array();
+			$args[] = "enable";
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Get or set any sortable option. If no value is specified, will act as a
+		 * getter.
+		 * @param $optionName
+		 * @param $value
+		 */
+		public function Option($optionName, $value = null) {
+			$args = array();
+			$args[] = "option";
+			$args[] = $optionName;
+			if ($value !== null) {
+				$args[] = $value;
+			}
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Set multiple sortable options at once by providing an options object.
+		 * @param $options
+		 */
+		public function Option1($options) {
+			$args = array();
+			$args[] = "option";
+			$args[] = $options;
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Serializes the sortable's item id's into a form/ajax submittable string.
+		 * Calling this method produces a hash that can be appended to any url to
+		 * easily submit a new item order back to the server.
+		 * It works by default by looking at the id of each item in the format
+		 * 'setname_number', and it spits out a hash like
+		 * "setname[]=number&amp;setname[]=number".
+		 * You can also give in a option hash as second argument to custom define how
+		 * the function works. The possible options are: 'key' (replaces part1[] with
+		 * whatever you want), 'attribute' (test another attribute than 'id') and
+		 * 'expression' (use your own regexp).
+		 * If serialize returns an empty string, make sure the id attributes include
+		 * an underscore.  They must be in the form: "set_number" For example, a 3
+		 * element list with id attributes foo_1, foo_5, foo_2 will serialize to
+		 * foo[]=1&amp;foo[]=5&amp;foo[]=2. You can use an underscore, equal sign or
+		 * hyphen to separate the set and number.  For example foo=1 or foo-1 or foo_1
+		 * all serialize to foo[]=1.
+		 * @param $options
+		 */
+		public function Serialize($options = null) {
+			$args = array();
+			$args[] = "serialize";
+			if ($options !== null) {
+				$args[] = $options;
+			}
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Serializes the sortable's item id's into an array of string. If you have
+		 * 
+		 * 
+		 * &lt;ul id=&quot;a_sortable&quot;&gt;&lt;br&gt;
+		 * &lt;li id=&quot;hello&quot;&gt;Hello&lt;/li&gt;&lt;br&gt;
+		 * &lt;li id=&quot;goodbye&quot;&gt;Good bye&lt;/li&gt;&lt;br&gt;
+		 * &lt;/ul&gt;
+		 * 
+		 * and do
+		 * 
+		 * var result = $('#a_sortable').sortable('toArray');
+		 * then
+		 * 
+		 * result[0] will contain &quot;hello&quot; and result[1] will contain
+		 * &quot;goodbye&quot;.</p>
+		 */
+		public function ToArray() {
+			$args = array();
+			$args[] = "toArray";
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Refresh the sortable items. Custom trigger the reloading of all sortable
+		 * items, causing new items to be recognized.
+		 */
+		public function Refresh() {
+			$args = array();
+			$args[] = "refresh";
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Refresh the cached positions of the sortables' items. Calling this method
+		 * refreshes the cached item positions of all sortables. This is usually done
+		 * automatically by the script and slows down performance. Use wisely.
+		 */
+		public function RefreshPositions() {
+			$args = array();
+			$args[] = "refreshPositions";
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+		/**
+		 * Cancels a change in the current sortable and reverts it back to how it was
+		 * before the current sort started. Useful in the stop and receive callback
+		 * functions.
+		 * If the sortable item is not being moved from one connected sortable to
+		 * another:
+		 * 
+		 * $(this).sortable('cancel');
+		 * will cancel the change.
+		 * If the sortable item is being moved from one connected sortable to
+		 * another:
+		 * 
+		 * $(ui.sender).sortable('cancel');
+		 * will cancel the change. Useful in the 'receive' callback.
+		 */
+		public function Cancel() {
+			$args = array();
+			$args[] = "cancel";
+
+			$strArgs = JavaScriptHelper::toJson($args);
+			$strJs = sprintf('jQuery("#%s").sortable(%s)', 
+				$this->getJqControlId(),
+				substr($strArgs, 1, strlen($strArgs)-2));
+			QApplication::ExecuteJavaScript($strJs);
+		}
+
+
+		public function __get($strName) {
+			switch ($strName) {
+				case 'Disabled': return $this->blnDisabled;
+				case 'AppendTo': return $this->strAppendTo;
+				case 'Axis': return $this->strAxis;
+				case 'Cancel': return $this->mixCancel;
+				case 'ConnectWith': return $this->mixConnectWith;
+				case 'Containment': return $this->mixContainment;
+				case 'Cursor': return $this->strCursor;
+				case 'CursorAt': return $this->mixCursorAt;
+				case 'Delay': return $this->intDelay;
+				case 'Distance': return $this->intDistance;
+				case 'DropOnEmpty': return $this->blnDropOnEmpty;
+				case 'ForceHelperSize': return $this->blnForceHelperSize;
+				case 'ForcePlaceholderSize': return $this->blnForcePlaceholderSize;
+				case 'Grid': return $this->arrGrid;
+				case 'Handle': return $this->mixHandle;
+				case 'Helper': return $this->mixHelper;
+				case 'Items': return $this->mixItems;
+				case 'Opacity': return $this->mixOpacity;
+				case 'Placeholder': return $this->strPlaceholder;
+				case 'Revert': return $this->mixRevert;
+				case 'Scroll': return $this->blnScroll;
+				case 'ScrollSensitivity': return $this->intScrollSensitivity;
+				case 'ScrollSpeed': return $this->intScrollSpeed;
+				case 'Tolerance': return $this->strTolerance;
+				case 'ZIndex': return $this->intZIndex;
+				case 'OnStart': return $this->mixOnStart;
+				case 'OnSort': return $this->mixOnSort;
+				case 'OnChange': return $this->mixOnChange;
+				case 'OnBeforeStop': return $this->mixOnBeforeStop;
+				case 'OnStop': return $this->mixOnStop;
+				case 'OnUpdate': return $this->mixOnUpdate;
+				case 'OnReceive': return $this->mixOnReceive;
+				case 'OnRemove': return $this->mixOnRemove;
+				case 'OnOver': return $this->mixOnOver;
+				case 'OnOut': return $this->mixOnOut;
+				case 'OnActivate': return $this->mixOnActivate;
+				case 'OnDeactivate': return $this->mixOnDeactivate;
+				default: 
+					try { 
+						return parent::__get($strName); 
+					} catch (QCallerException $objExc) { 
+						$objExc->IncrementOffset(); 
+						throw $objExc; 
+					}
+			}
+		}
+
+		public function __set($strName, $mixValue) {
+			$this->blnModified = true;
+
+			switch ($strName) {
+				case 'Disabled':
+					try {
+						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'AppendTo':
+					try {
+						$this->strAppendTo = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Axis':
+					try {
+						$this->strAxis = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Cancel':
+					try {
+						$this->mixCancel = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'ConnectWith':
+					try {
+						$this->mixConnectWith = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Containment':
+					$this->mixContainment = $mixValue;
+					break;
+
+				case 'Cursor':
+					try {
+						$this->strCursor = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'CursorAt':
+					$this->mixCursorAt = $mixValue;
+					break;
+
+				case 'Delay':
+					try {
+						$this->intDelay = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Distance':
+					try {
+						$this->intDistance = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'DropOnEmpty':
+					try {
+						$this->blnDropOnEmpty = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'ForceHelperSize':
+					try {
+						$this->blnForceHelperSize = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'ForcePlaceholderSize':
+					try {
+						$this->blnForcePlaceholderSize = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Grid':
+					try {
+						$this->arrGrid = QType::Cast($mixValue, QType::ArrayType);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Handle':
+					$this->mixHandle = $mixValue;
+					break;
+
+				case 'Helper':
+					$this->mixHelper = $mixValue;
+					break;
+
+				case 'Items':
+					try {
+						$this->mixItems = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Opacity':
+					try {
+						$this->mixOpacity = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Placeholder':
+					try {
+						$this->strPlaceholder = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Revert':
+					try {
+						$this->mixRevert = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Scroll':
+					try {
+						$this->blnScroll = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'ScrollSensitivity':
+					try {
+						$this->intScrollSensitivity = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'ScrollSpeed':
+					try {
+						$this->intScrollSpeed = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Tolerance':
+					try {
+						$this->strTolerance = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'ZIndex':
+					try {
+						$this->intZIndex = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnStart':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnStart = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnSort':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnSort = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnChange':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnChange = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnBeforeStop':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnBeforeStop = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnStop':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnStop = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnUpdate':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnUpdate = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnReceive':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnReceive = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnRemove':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnRemove = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnOver':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnOver = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnOut':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnOut = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnActivate':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnActivate = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnDeactivate':
+					try {
+						if ($mixValue instanceof QAjaxAction) {
+						    /** @var QAjaxAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnDeactivate = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				default:
+					try {
+						parent::__set($strName, $mixValue);
+						break;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+	}
+
+?>
