@@ -1148,7 +1148,7 @@
 			{
 				if(isset($filters[$col->Name]))
 				{
-					if(isset($col->FilterByCommand['operator']))
+					if(null !== $col->FilterByCommand)
 					{
 						//if filterbycommand is used
 						$filterCommand = $col->FilterByCommand;
