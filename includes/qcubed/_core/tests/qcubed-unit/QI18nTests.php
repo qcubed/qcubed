@@ -28,8 +28,8 @@ class QI18nTests extends QUnitTestCaseBase {
 		// Force spanish
 		$translator = QI18n::Load('es');
 
-		$this->verifyTranslation("Current Language", $translator->TranslateToken("Current Language"), "Idioma Actual");
-		$this->verifyTranslation("Switch to", $translator->TranslateToken("Switch to"), "Cambie a");
+		$this->verifyTranslation("List All", $translator->TranslateToken("List All"), "Mostrar Todos");
+		$this->verifyTranslation("Create a New", $translator->TranslateToken("Create a New"), "Crear uno Nuevo");
 		
 		// Verify the case when there's no translation available
 		$this->verifyTranslation("Can't translate me!", $translator->TranslateToken("Can't translate me!"), "Can't translate me!");
