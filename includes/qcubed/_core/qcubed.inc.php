@@ -32,7 +32,7 @@
 
 	// Versioning Information
 	define('QCUBED_VERSION_NUMBER_ONLY', '1.1.2');
-	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' pre-release (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
+	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Stable (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 
 	// Preload Required Framework Classes
 	require(__QCUBED_CORE__ . '/framework/QBaseClass.class.php');
