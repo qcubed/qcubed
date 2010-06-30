@@ -65,6 +65,8 @@
 		}
 
 		protected function Form_Create() {
+			parent::Form_Create();
+			
 			// Use the CreateFromPathInfo shortcut (this can also be done manually using the <%= $objTable->ClassName %>MetaControl constructor)
 			// MAKE SURE we specify "$this" as the MetaControl's (and thus all subsequent controls') parent
 			$this->mct<%= $objTable->ClassName %> = <%= $objTable->ClassName %>MetaControl::CreateFromPathInfo($this);

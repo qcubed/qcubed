@@ -37,6 +37,8 @@
 		}
 
 		protected function Form_Create() {
+			parent::Form_Create();
+			
 			// Instantiate the Meta DataGrid
 			$this->dtg<%= $objTable->ClassNamePlural %> = new <%= $objTable->ClassName %>DataGrid($this);
 
