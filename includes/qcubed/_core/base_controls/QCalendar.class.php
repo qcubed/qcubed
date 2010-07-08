@@ -53,18 +53,18 @@ class QCalendar extends QDateTimeTextBox {
 		);
 	static private $mapJQ2QC = null;
 
-	static private function qcFrmt($jqFrmt) {
+	static public function qcFrmt($jqFrmt) {
 		if (!QCalendar::$mapJQ2QC) {
 			QCalendar::$mapJQ2QC = array_flip(QCalendar::$mapQC2JQ);
 		}
 		return strtr($jqFrmt, QCalendar::$mapJQ2QC);
 	} 
 		
-	static private function jqFrmt($qcFrmt) {
+	static public function jqFrmt($qcFrmt) {
 		return strtr($qcFrmt, QCalendar::$mapQC2JQ);
 	} 
 		
-	static private function jsDate(QDateTime $dt) {
+	static public function jsDate(QDateTime $dt) {
 		return 'new Date('.$dt->Year.','.$dt->Month.','.$dt->Day.')';
 	} 
 		
