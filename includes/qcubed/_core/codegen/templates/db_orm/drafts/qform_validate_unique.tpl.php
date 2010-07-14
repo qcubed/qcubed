@@ -9,7 +9,7 @@ foreach ($objTable->IndexArray as $objIndex) {
 if ($blnHasUnique) {
 ?>
 // Check for records that may violate Unique Clauses
-<?php 
+<?php
 	require 'validate_unique.tpl.php';
 
 } ?>

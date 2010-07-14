@@ -6,7 +6,7 @@
 				foreach($temp as $item) {
 					$changedItems[$item->Id] = $item;
 				}
-				
+
 				foreach($changedIds as $id=>$blnSelected) {
 					$item = $changedItems[$id];
 					if($blnSelected) {

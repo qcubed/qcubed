@@ -8,7 +8,7 @@
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
 	 * here by overriding existing or implementing new methods, properties and variables.
-	 * 
+	 *
 	 * NOTE: This file is overwritten on any code regenerations.  If you want to make
 	 * permanent changes, it is STRONGLY RECOMMENDED to move both <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.php AND
 	 * <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.tpl.php out of this Form Drafts directory.
@@ -124,7 +124,7 @@
 			$strMethod = $this->strClosePanelMethod;
 			$this->objForm->$strMethod($blnChangesMade);
 		}
-	
+
 		<%@ qpanel_validate_unique('objTable'); %>
 	}
 ?>

@@ -8,7 +8,7 @@
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
 	 * here by overriding existing or implementing new methods, properties and variables.
-	 * 
+	 *
 	 * NOTE: This file is overwritten on any code regenerations.  If you want to make
 	 * permanent changes, it is STRONGLY RECOMMENDED to move both <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.php AND
 	 * <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.tpl.php out of this Form Drafts directory.
@@ -66,7 +66,7 @@
 
 		protected function Form_Create() {
 			parent::Form_Create();
-			
+
 			// Use the CreateFromPathInfo shortcut (this can also be done manually using the <%= $objTable->ClassName %>MetaControl constructor)
 			// MAKE SURE we specify "$this" as the MetaControl's (and thus all subsequent controls') parent
 			$this->mct<%= $objTable->ClassName %> = <%= $objTable->ClassName %>MetaControl::CreateFromPathInfo($this);

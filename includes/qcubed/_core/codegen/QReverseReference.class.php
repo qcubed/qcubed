@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * Used by the QCubed Code Generator to describe a column reference from 
+	 * Used by the QCubed Code Generator to describe a column reference from
 	 * the table's perspective (aka a Foreign Key from the referenced Table's point of view)
 	 * @package Codegen
 	 */
@@ -58,7 +58,7 @@
 
 		/**
 		 * Property Name of the referencing column (the column that owns the foreign key)
-		 * in the associated Class.  So if this is a reverse reference to the "person" table 
+		 * in the associated Class.  So if this is a reverse reference to the "person" table
 		 * via the table/column "report.owner_person_id", the PropertyName would be "OwnerPersonId"
 		 * @var string PropertyName
 		 */

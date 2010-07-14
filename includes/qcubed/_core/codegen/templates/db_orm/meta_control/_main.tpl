@@ -13,7 +13,7 @@
 	 *
 	 * Any and all changes to this file will be overwritten with any subsequent
 	 * code re-generation.
-	 * 
+	 *
 	 * @package <%= QCodeGen::$ApplicationName; %>
 	 * @subpackage MetaControls
 <%@ property_comments('objTable'); %>
@@ -50,7 +50,7 @@
 
 		<%@ save_object('objTable'); %>
 
-		<%@ delete_object('objTable'); %>		
+		<%@ delete_object('objTable'); %>
 
 
 

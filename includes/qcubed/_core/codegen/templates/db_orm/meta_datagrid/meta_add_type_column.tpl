@@ -1,7 +1,7 @@
 /**
 		 * Similar to MetaAddColumn, except it creates a column for a Type-based Id.  You MUST specify
 		 * the name of the Type class that this will attempt to use $NameArray against.
-		 * 
+		 *
 		 * Also, $mixContent cannot be an array.  Only a single field can be specified.
 		 *
 		 * @param mixed $mixContent string or QQNode from <%= $objTable->ClassName %>

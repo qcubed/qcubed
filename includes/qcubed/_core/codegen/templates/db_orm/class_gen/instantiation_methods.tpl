@@ -29,8 +29,8 @@
 			$strAlias = $strAliasPrefix . '<%= $objTable->PrimaryKeyColumnArray[0]->Name %>';
 			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
 			if (($strExpandAsArrayNodes) && is_array($arrPreviousItems) && count($arrPreviousItems)) {
-				foreach ($arrPreviousItems as $objPreviousItem) {            
-					if ($objPreviousItem-><%= $objTable->PrimaryKeyColumnArray[0]->VariableName %> == $objDbRow->GetColumn($strAliasName, '<%= $objTable->PrimaryKeyColumnArray[0]->DbType %>')) {        
+				foreach ($arrPreviousItems as $objPreviousItem) {
+					if ($objPreviousItem-><%= $objTable->PrimaryKeyColumnArray[0]->VariableName %> == $objDbRow->GetColumn($strAliasName, '<%= $objTable->PrimaryKeyColumnArray[0]->DbType %>')) {
 						// We are.  Now, prepare to check for ExpandAsArray clauses
 						$blnExpandedViaArray = false;
 						if (!$strAliasPrefix)
@@ -196,7 +196,7 @@
 		 */
 		public static function InstantiateDbResult(QDatabaseResultBase $objDbResult, $strExpandAsArrayNodes = null, $strColumnAliasArray = null) {
 			$objToReturn = array();
-			
+
 			if (!$strColumnAliasArray)
 				$strColumnAliasArray = array();
 

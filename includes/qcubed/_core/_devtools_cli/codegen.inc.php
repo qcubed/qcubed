@@ -30,7 +30,7 @@ For more information, please go to http://qcu.be
 		PrintInstructions();
 
 	/////////////////////
-	// Run Code Gen	
+	// Run Code Gen
 	QCodeGen::Run($_SERVER['argv'][1]);
 	/////////////////////
 
@@ -49,7 +49,7 @@ For more information, please go to http://qcu.be
 			printf("The following errors were reported:\r\n%s\r\n", $strErrors);
 		print("\r\n");
 	}
-	
+
 	foreach (QCodeGen::GenerateAggregate() as $strMessage) {
 		printf("%s\r\n\r\n", $strMessage);
 	}
