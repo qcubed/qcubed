@@ -1,4 +1,44 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered every time the accordion changes. If the accordion
+	 * 		is animated, the event will be triggered upon completion of the animation;
+	 * 		otherwise, it is triggered
+	 * 		immediately.
+	 * 
+	 * $('.ui-accordion').bind('accordionchange', function(event,
+	 * 		ui) {
+	 *   ui.newHeader // jQuery object, activated header
+	 *   ui.oldHeader //
+	 * 		jQuery object, previous header
+	 *   ui.newContent // jQuery object, activated
+	 * 		content
+	 *   ui.oldContent // jQuery object, previous content
+	 * });</p>
+	 */
+	class QAccordion_ChangeEvent extends QEvent {
+		const EventName = 'QAccordion_Change';
+	}
+
+	/**
+	 * This event is triggered every time the accordion starts to
+	 * 		change.
+	 * 
+	 * $('.ui-accordion').bind('accordionchangestart', function(event,
+	 * 		ui) {
+	 *   ui.newHeader // jQuery object, activated header
+	 *   ui.oldHeader //
+	 * 		jQuery object, previous header
+	 *   ui.newContent // jQuery object, activated
+	 * 		content
+	 *   ui.oldContent // jQuery object, previous content
+	 * });</p>
+	 */
+	class QAccordion_ChangestartEvent extends QEvent {
+		const EventName = 'QAccordion_Changestart';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the accordion. Can be set when
 	 * 		initialising (first creating) the accordion.
@@ -85,32 +125,38 @@
 		/** @var QJsClosure */
 		protected $mixOnChangestart = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QAccordion_ChangeEvent' => 'OnChange',
+			'QAccordion_ChangestartEvent' => 'OnChangestart',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('Active', 'active');
-			$strJson .= $this->makeJsProperty('Animated', 'animated');
-			$strJson .= $this->makeJsProperty('AutoHeight', 'autoHeight');
-			$strJson .= $this->makeJsProperty('ClearStyle', 'clearStyle');
-			$strJson .= $this->makeJsProperty('Collapsible', 'collapsible');
-			$strJson .= $this->makeJsProperty('Event', 'event');
-			$strJson .= $this->makeJsProperty('FillSpace', 'fillSpace');
-			$strJson .= $this->makeJsProperty('Header', 'header');
-			$strJson .= $this->makeJsProperty('Icons', 'icons');
-			$strJson .= $this->makeJsProperty('Navigation', 'navigation');
-			$strJson .= $this->makeJsProperty('NavigationFilter', 'navigationFilter');
-			$strJson .= $this->makeJsProperty('OnChange', 'change');
-			$strJson .= $this->makeJsProperty('OnChangestart', 'changestart');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('Active', 'active');
+			$strJqOptions .= $this->makeJsProperty('Animated', 'animated');
+			$strJqOptions .= $this->makeJsProperty('AutoHeight', 'autoHeight');
+			$strJqOptions .= $this->makeJsProperty('ClearStyle', 'clearStyle');
+			$strJqOptions .= $this->makeJsProperty('Collapsible', 'collapsible');
+			$strJqOptions .= $this->makeJsProperty('Event', 'event');
+			$strJqOptions .= $this->makeJsProperty('FillSpace', 'fillSpace');
+			$strJqOptions .= $this->makeJsProperty('Header', 'header');
+			$strJqOptions .= $this->makeJsProperty('Icons', 'icons');
+			$strJqOptions .= $this->makeJsProperty('Navigation', 'navigation');
+			$strJqOptions .= $this->makeJsProperty('NavigationFilter', 'navigationFilter');
+			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
+			$strJqOptions .= $this->makeJsProperty('OnChangestart', 'changestart');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -137,7 +183,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").accordion(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -151,7 +197,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").accordion(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -165,7 +211,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").accordion(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -186,7 +232,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").accordion(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -202,7 +248,7 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").accordion(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -221,7 +267,7 @@
 			$args[] = "activate";
 			$args[] = $index;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").accordion(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -237,13 +283,30 @@
 			$args = array();
 			$args[] = "resize";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").accordion(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -365,8 +428,8 @@
 
 				case 'OnChange':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnChange = QType::Cast($mixValue, 'QJsClosure');
@@ -378,8 +441,8 @@
 
 				case 'OnChangestart':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnChangestart = QType::Cast($mixValue, 'QJsClosure');

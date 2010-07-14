@@ -1,4 +1,55 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered when clicking a tab.
+	 */
+	class QTabs_SelectEvent extends QEvent {
+		const EventName = 'QTabs_Select';
+	}
+
+	/**
+	 * This event is triggered after the content of a remote tab has been loaded.
+	 */
+	class QTabs_LoadEvent extends QEvent {
+		const EventName = 'QTabs_Load';
+	}
+
+	/**
+	 * This event is triggered when a tab is shown.
+	 */
+	class QTabs_ShowEvent extends QEvent {
+		const EventName = 'QTabs_Show';
+	}
+
+	/**
+	 * This event is triggered when a tab is added.
+	 */
+	class QTabs_AddEvent extends QEvent {
+		const EventName = 'QTabs_Add';
+	}
+
+	/**
+	 * This event is triggered when a tab is removed.
+	 */
+	class QTabs_RemoveEvent extends QEvent {
+		const EventName = 'QTabs_Remove';
+	}
+
+	/**
+	 * This event is triggered when a tab is enabled.
+	 */
+	class QTabs_EnableEvent extends QEvent {
+		const EventName = 'QTabs_Enable';
+	}
+
+	/**
+	 * This event is triggered when a tab is disabled.
+	 */
+	class QTabs_DisableEvent extends QEvent {
+		const EventName = 'QTabs_Disable';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the tabs. Can be set when initialising
 	 * 		(first creating) the tabs.
@@ -94,39 +145,50 @@
 		/** @var QJsClosure */
 		protected $mixOnDisable = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QTabs_SelectEvent' => 'OnSelect',
+			'QTabs_LoadEvent' => 'OnLoad',
+			'QTabs_ShowEvent' => 'OnShow',
+			'QTabs_AddEvent' => 'OnAdd',
+			'QTabs_RemoveEvent' => 'OnRemove',
+			'QTabs_EnableEvent' => 'OnEnable',
+			'QTabs_DisableEvent' => 'OnDisable',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('AjaxOptions', 'ajaxOptions');
-			$strJson .= $this->makeJsProperty('Cache', 'cache');
-			$strJson .= $this->makeJsProperty('Collapsible', 'collapsible');
-			$strJson .= $this->makeJsProperty('Cookie', 'cookie');
-			$strJson .= $this->makeJsProperty('Deselectable', 'deselectable');
-			$strJson .= $this->makeJsProperty('Disabled1', 'disabled');
-			$strJson .= $this->makeJsProperty('Event', 'event');
-			$strJson .= $this->makeJsProperty('Fx', 'fx');
-			$strJson .= $this->makeJsProperty('IdPrefix', 'idPrefix');
-			$strJson .= $this->makeJsProperty('PanelTemplate', 'panelTemplate');
-			$strJson .= $this->makeJsProperty('Selected', 'selected');
-			$strJson .= $this->makeJsProperty('Spinner', 'spinner');
-			$strJson .= $this->makeJsProperty('TabTemplate', 'tabTemplate');
-			$strJson .= $this->makeJsProperty('OnSelect', 'select');
-			$strJson .= $this->makeJsProperty('OnLoad', 'load');
-			$strJson .= $this->makeJsProperty('OnShow', 'show');
-			$strJson .= $this->makeJsProperty('OnAdd', 'add');
-			$strJson .= $this->makeJsProperty('OnRemove', 'remove');
-			$strJson .= $this->makeJsProperty('OnEnable', 'enable');
-			$strJson .= $this->makeJsProperty('OnDisable', 'disable');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('AjaxOptions', 'ajaxOptions');
+			$strJqOptions .= $this->makeJsProperty('Cache', 'cache');
+			$strJqOptions .= $this->makeJsProperty('Collapsible', 'collapsible');
+			$strJqOptions .= $this->makeJsProperty('Cookie', 'cookie');
+			$strJqOptions .= $this->makeJsProperty('Deselectable', 'deselectable');
+			$strJqOptions .= $this->makeJsProperty('Disabled1', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('Event', 'event');
+			$strJqOptions .= $this->makeJsProperty('Fx', 'fx');
+			$strJqOptions .= $this->makeJsProperty('IdPrefix', 'idPrefix');
+			$strJqOptions .= $this->makeJsProperty('PanelTemplate', 'panelTemplate');
+			$strJqOptions .= $this->makeJsProperty('Selected', 'selected');
+			$strJqOptions .= $this->makeJsProperty('Spinner', 'spinner');
+			$strJqOptions .= $this->makeJsProperty('TabTemplate', 'tabTemplate');
+			$strJqOptions .= $this->makeJsProperty('OnSelect', 'select');
+			$strJqOptions .= $this->makeJsProperty('OnLoad', 'load');
+			$strJqOptions .= $this->makeJsProperty('OnShow', 'show');
+			$strJqOptions .= $this->makeJsProperty('OnAdd', 'add');
+			$strJqOptions .= $this->makeJsProperty('OnRemove', 'remove');
+			$strJqOptions .= $this->makeJsProperty('OnEnable', 'enable');
+			$strJqOptions .= $this->makeJsProperty('OnDisable', 'disable');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -153,7 +215,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -167,7 +229,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -181,7 +243,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -201,7 +263,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -217,7 +279,7 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -243,7 +305,7 @@
 				$args[] = $index;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -260,7 +322,7 @@
 			$args[] = "remove";
 			$args[] = $index;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -278,7 +340,7 @@
 			$args[] = "enable";
 			$args[] = $index;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -296,7 +358,7 @@
 			$args[] = "disable";
 			$args[] = $index;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -315,7 +377,7 @@
 			$args[] = "select";
 			$args[] = $index;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -334,7 +396,7 @@
 			$args[] = "load";
 			$args[] = $index;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -357,7 +419,7 @@
 			$args[] = $index;
 			$args[] = $url;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -371,7 +433,7 @@
 			$args = array();
 			$args[] = "length";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -385,7 +447,7 @@
 			$args = array();
 			$args[] = "abort";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -409,13 +471,30 @@
 				$args[] = $continuing;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").tabs(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -572,8 +651,8 @@
 
 				case 'OnSelect':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnSelect = QType::Cast($mixValue, 'QJsClosure');
@@ -585,8 +664,8 @@
 
 				case 'OnLoad':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnLoad = QType::Cast($mixValue, 'QJsClosure');
@@ -598,8 +677,8 @@
 
 				case 'OnShow':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnShow = QType::Cast($mixValue, 'QJsClosure');
@@ -611,8 +690,8 @@
 
 				case 'OnAdd':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnAdd = QType::Cast($mixValue, 'QJsClosure');
@@ -624,8 +703,8 @@
 
 				case 'OnRemove':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnRemove = QType::Cast($mixValue, 'QJsClosure');
@@ -637,8 +716,8 @@
 
 				case 'OnEnable':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnEnable = QType::Cast($mixValue, 'QJsClosure');
@@ -650,8 +729,8 @@
 
 				case 'OnDisable':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnDisable = QType::Cast($mixValue, 'QJsClosure');

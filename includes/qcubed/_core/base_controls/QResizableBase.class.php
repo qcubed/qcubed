@@ -1,4 +1,28 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered at the start of a resize operation.
+	 */
+	class QResizable_StartEvent extends QEvent {
+		const EventName = 'QResizable_Start';
+	}
+
+	/**
+	 * This event is triggered during the resize, on the drag of the resize
+	 * 		handler.
+	 */
+	class QResizable_ResizeEvent extends QEvent {
+		const EventName = 'QResizable_Resize';
+	}
+
+	/**
+	 * This event is triggered at the end of a resize operation.
+	 */
+	class QResizable_StopEvent extends QEvent {
+		const EventName = 'QResizable_Stop';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the resizable. Can be set when
 	 * 		initialising (first creating) the resizable.
@@ -11,7 +35,7 @@
 	 * 		Otherwise a custom aspect ratio can be specified, such as 9 / 16, or 0.5.
 	 * @property boolean $AutoHide If set to true, automatically hides the handles except when the mouse
 	 * 		hovers over the element.
-	 * @property QJsClosure $Cancel Prevents resizing if you start on elements matching the selector.
+	 * @property mixed $Cancel Prevents resizing if you start on elements matching the selector.
 	 * @property mixed $Containment Constrains resizing to within the bounds of the specified element. Possible
 	 * 		values: 'parent', 'document', a DOMElement, or a Selector.
 	 * @property integer $Delay Tolerance, in milliseconds, for when resizing should start. If specified,
@@ -61,7 +85,7 @@
 		protected $mixAspectRatio = null;
 		/** @var boolean */
 		protected $blnAutoHide = null;
-		/** @var QJsClosure */
+		/** @var mixed */
 		protected $mixCancel = null;
 		/** @var mixed */
 		protected $mixContainment = null;
@@ -92,40 +116,47 @@
 		/** @var QJsClosure */
 		protected $mixOnStop = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QResizable_StartEvent' => 'OnStart',
+			'QResizable_ResizeEvent' => 'OnResize',
+			'QResizable_StopEvent' => 'OnStop',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('AlsoResize', 'alsoResize');
-			$strJson .= $this->makeJsProperty('Animate', 'animate');
-			$strJson .= $this->makeJsProperty('AnimateDuration', 'animateDuration');
-			$strJson .= $this->makeJsProperty('AnimateEasing', 'animateEasing');
-			$strJson .= $this->makeJsProperty('AspectRatio', 'aspectRatio');
-			$strJson .= $this->makeJsProperty('AutoHide', 'autoHide');
-			$strJson .= $this->makeJsProperty('Cancel', 'cancel');
-			$strJson .= $this->makeJsProperty('Containment', 'containment');
-			$strJson .= $this->makeJsProperty('Delay', 'delay');
-			$strJson .= $this->makeJsProperty('Distance', 'distance');
-			$strJson .= $this->makeJsProperty('Ghost', 'ghost');
-			$strJson .= $this->makeJsProperty('Grid', 'grid');
-			$strJson .= $this->makeJsProperty('Handles', 'handles');
-			$strJson .= $this->makeJsProperty('Helper', 'helper');
-			$strJson .= $this->makeJsProperty('MaxHeight', 'maxHeight');
-			$strJson .= $this->makeJsProperty('MaxWidth', 'maxWidth');
-			$strJson .= $this->makeJsProperty('MinHeight', 'minHeight');
-			$strJson .= $this->makeJsProperty('MinWidth', 'minWidth');
-			$strJson .= $this->makeJsProperty('OnStart', 'start');
-			$strJson .= $this->makeJsProperty('OnResize', 'resize');
-			$strJson .= $this->makeJsProperty('OnStop', 'stop');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('AlsoResize', 'alsoResize');
+			$strJqOptions .= $this->makeJsProperty('Animate', 'animate');
+			$strJqOptions .= $this->makeJsProperty('AnimateDuration', 'animateDuration');
+			$strJqOptions .= $this->makeJsProperty('AnimateEasing', 'animateEasing');
+			$strJqOptions .= $this->makeJsProperty('AspectRatio', 'aspectRatio');
+			$strJqOptions .= $this->makeJsProperty('AutoHide', 'autoHide');
+			$strJqOptions .= $this->makeJsProperty('Cancel', 'cancel');
+			$strJqOptions .= $this->makeJsProperty('Containment', 'containment');
+			$strJqOptions .= $this->makeJsProperty('Delay', 'delay');
+			$strJqOptions .= $this->makeJsProperty('Distance', 'distance');
+			$strJqOptions .= $this->makeJsProperty('Ghost', 'ghost');
+			$strJqOptions .= $this->makeJsProperty('Grid', 'grid');
+			$strJqOptions .= $this->makeJsProperty('Handles', 'handles');
+			$strJqOptions .= $this->makeJsProperty('Helper', 'helper');
+			$strJqOptions .= $this->makeJsProperty('MaxHeight', 'maxHeight');
+			$strJqOptions .= $this->makeJsProperty('MaxWidth', 'maxWidth');
+			$strJqOptions .= $this->makeJsProperty('MinHeight', 'minHeight');
+			$strJqOptions .= $this->makeJsProperty('MinWidth', 'minWidth');
+			$strJqOptions .= $this->makeJsProperty('OnStart', 'start');
+			$strJqOptions .= $this->makeJsProperty('OnResize', 'resize');
+			$strJqOptions .= $this->makeJsProperty('OnStop', 'stop');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -152,7 +183,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").resizable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -166,7 +197,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").resizable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -180,7 +211,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").resizable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -201,7 +232,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").resizable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -217,13 +248,30 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").resizable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -312,13 +360,8 @@
 					}
 
 				case 'Cancel':
-					try {
-						$this->mixCancel = QType::Cast($mixValue, 'QJsClosure');
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
+					$this->mixCancel = $mixValue;
+					break;
 
 				case 'Containment':
 					$this->mixContainment = $mixValue;
@@ -411,8 +454,8 @@
 
 				case 'OnStart':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnStart = QType::Cast($mixValue, 'QJsClosure');
@@ -424,8 +467,8 @@
 
 				case 'OnResize':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnResize = QType::Cast($mixValue, 'QJsClosure');
@@ -437,8 +480,8 @@
 
 				case 'OnStop':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnStop = QType::Cast($mixValue, 'QJsClosure');

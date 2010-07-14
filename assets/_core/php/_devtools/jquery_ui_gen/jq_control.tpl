@@ -1,4 +1,17 @@
 <?php
+	/* Custom event classes for this control */
+<% foreach ($objJqDoc->options as $option) { %>
+	<% if ($option instanceof Event) { %>
+	/**
+	 * <%= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), 75, "\n\t\t")) %>
+	 */
+	class <%= $option->eventClassName %> extends QEvent {
+		const EventName = '<%= $option->eventName %>';
+	}
+
+	<% } %>
+<% } %>
+
 	/**
 <% foreach ($objJqDoc->options as $option) { %>
 	 * @property <%= $option->phpType %> $<%= $option->propName %> <%= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), 75, "\n\t\t")) %>
@@ -18,21 +31,30 @@
 	<% } %>
 <% } %>
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+<% foreach ($objJqDoc->options as $option) { %>
+	<% if ($option instanceof Event) { %>
+			'<%= $option->eventClassName %>' => '<%= $option->propName %>',
+	<% } %>
+<% } %>
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
+			$strJqOptions = '{';
 <% foreach ($objJqDoc->options as $option) { %>
-			$strJson .= $this->makeJsProperty('<%= $option->propName %>', '<%= $option->name %>');
+			$strJqOptions .= $this->makeJsProperty('<%= $option->propName %>', '<%= $option->name %>');
 <% } %>
-			return $strJson.'}';
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -74,7 +96,7 @@
 			}
 <% } %>
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s")<%= $method->call %>(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -82,6 +104,23 @@
 		}
 
 <% } %>
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -111,8 +150,8 @@
 	<% if ($option->phpQType) { %>
 					try {
 	    <% if ($option instanceof Event) { %>
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
     	<% } %>

@@ -1,4 +1,13 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered when the value of the progressbar changes.
+	 */
+	class QProgressbar_ChangeEvent extends QEvent {
+		const EventName = 'QProgressbar_Change';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the progressbar. Can be set when
 	 * 		initialising (first creating) the progressbar.
@@ -16,21 +25,26 @@
 		/** @var QJsClosure */
 		protected $mixOnChange = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QProgressbar_ChangeEvent' => 'OnChange',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('Value', 'value');
-			$strJson .= $this->makeJsProperty('OnChange', 'change');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('Value', 'value');
+			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -57,7 +71,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").progressbar(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -71,7 +85,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").progressbar(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -85,7 +99,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").progressbar(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -106,7 +120,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").progressbar(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -122,7 +136,7 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").progressbar(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -140,13 +154,30 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").progressbar(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -187,8 +218,8 @@
 
 				case 'OnChange':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnChange = QType::Cast($mixValue, 'QJsClosure');

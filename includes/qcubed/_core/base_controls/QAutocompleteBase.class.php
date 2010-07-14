@@ -1,4 +1,59 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * Before a request (source-option) is started, after minLength and delay are
+	 * 		met. Can be canceled (return false), then no request will be started and no
+	 * 		items suggested.
+	 */
+	class QAutocomplete_SearchEvent extends QEvent {
+		const EventName = 'QAutocomplete_Search';
+	}
+
+	/**
+	 * Triggered when the suggestion menu is opened.
+	 */
+	class QAutocomplete_OpenEvent extends QEvent {
+		const EventName = 'QAutocomplete_Open';
+	}
+
+	/**
+	 * Before focus is moved to an item (not selecting), ui.item refers to the
+	 * 		focused item. The default action of focus is to replace the text field's
+	 * 		value with the value of the focused item, though only if the focus event
+	 * 		was triggered by a keyboard interaction. Canceling this event prevents the
+	 * 		value from being updated, but does not prevent the menu item from being
+	 * 		focused.
+	 */
+	class QAutocomplete_FocusEvent extends QEvent {
+		const EventName = 'QAutocomplete_Focus';
+	}
+
+	/**
+	 * Triggered when an item is selected from the menu; ui.item refers to the
+	 * 		selected item. The default action of select is to replace the text field's
+	 * 		value with the value of the selected item. Canceling this event prevents
+	 * 		the value from being updated, but does not prevent the menu from closing.
+	 */
+	class QAutocomplete_SelectEvent extends QEvent {
+		const EventName = 'QAutocomplete_Select';
+	}
+
+	/**
+	 * When the list is hidden - doesn't have to occur together with a change.
+	 */
+	class QAutocomplete_CloseEvent extends QEvent {
+		const EventName = 'QAutocomplete_Close';
+	}
+
+	/**
+	 * After an item was selected; ui.item refers to the selected item. Always
+	 * 		triggered after the close event.
+	 */
+	class QAutocomplete_ChangeEvent extends QEvent {
+		const EventName = 'QAutocomplete_Change';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the autocomplete. Can be set when
 	 * 		initialising (first creating) the autocomplete.
@@ -54,28 +109,38 @@
 		/** @var QJsClosure */
 		protected $mixOnChange = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QAutocomplete_SearchEvent' => 'OnSearch',
+			'QAutocomplete_OpenEvent' => 'OnOpen',
+			'QAutocomplete_FocusEvent' => 'OnFocus',
+			'QAutocomplete_SelectEvent' => 'OnSelect',
+			'QAutocomplete_CloseEvent' => 'OnClose',
+			'QAutocomplete_ChangeEvent' => 'OnChange',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('Delay', 'delay');
-			$strJson .= $this->makeJsProperty('MinLength', 'minLength');
-			$strJson .= $this->makeJsProperty('Source', 'source');
-			$strJson .= $this->makeJsProperty('OnSearch', 'search');
-			$strJson .= $this->makeJsProperty('OnOpen', 'open');
-			$strJson .= $this->makeJsProperty('OnFocus', 'focus');
-			$strJson .= $this->makeJsProperty('OnSelect', 'select');
-			$strJson .= $this->makeJsProperty('OnClose', 'close');
-			$strJson .= $this->makeJsProperty('OnChange', 'change');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('Delay', 'delay');
+			$strJqOptions .= $this->makeJsProperty('MinLength', 'minLength');
+			$strJqOptions .= $this->makeJsProperty('Source', 'source');
+			$strJqOptions .= $this->makeJsProperty('OnSearch', 'search');
+			$strJqOptions .= $this->makeJsProperty('OnOpen', 'open');
+			$strJqOptions .= $this->makeJsProperty('OnFocus', 'focus');
+			$strJqOptions .= $this->makeJsProperty('OnSelect', 'select');
+			$strJqOptions .= $this->makeJsProperty('OnClose', 'close');
+			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -102,7 +167,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").autocomplete(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -116,7 +181,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").autocomplete(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -130,7 +195,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").autocomplete(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -151,7 +216,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").autocomplete(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -167,7 +232,7 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").autocomplete(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -189,7 +254,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").autocomplete(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -204,13 +269,30 @@
 			$args = array();
 			$args[] = "close";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").autocomplete(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -271,8 +353,8 @@
 
 				case 'OnSearch':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnSearch = QType::Cast($mixValue, 'QJsClosure');
@@ -284,8 +366,8 @@
 
 				case 'OnOpen':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnOpen = QType::Cast($mixValue, 'QJsClosure');
@@ -297,8 +379,8 @@
 
 				case 'OnFocus':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnFocus = QType::Cast($mixValue, 'QJsClosure');
@@ -310,8 +392,8 @@
 
 				case 'OnSelect':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnSelect = QType::Cast($mixValue, 'QJsClosure');
@@ -323,8 +405,8 @@
 
 				case 'OnClose':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnClose = QType::Cast($mixValue, 'QJsClosure');
@@ -336,8 +418,8 @@
 
 				case 'OnChange':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnChange = QType::Cast($mixValue, 'QJsClosure');

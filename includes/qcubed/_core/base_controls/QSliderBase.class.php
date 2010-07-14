@@ -1,4 +1,43 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered when the user starts sliding.
+	 */
+	class QSlider_StartEvent extends QEvent {
+		const EventName = 'QSlider_Start';
+	}
+
+	/**
+	 * This event is triggered on every mouse move during slide. Use ui.value
+	 * 		(single-handled sliders) to obtain the value of the current handle,
+	 * 		$(..).slider('value', index) to get another handles' value.
+	 * Return false in
+	 * 		order to prevent a slide, based on ui.value.
+	 */
+	class QSlider_SlideEvent extends QEvent {
+		const EventName = 'QSlider_Slide';
+	}
+
+	/**
+	 * This event is triggered on slide stop, or if the value is changed
+	 * 		programmatically (by the value method).  Takes arguments event and ui.  Use
+	 * 		event.orginalEvent to detect whether the value changed by mouse, keyboard,
+	 * 		or programmatically. Use ui.value (single-handled sliders) to obtain the
+	 * 		value of the current handle, $(this).slider('values', index) to get another
+	 * 		handle's value.
+	 */
+	class QSlider_ChangeEvent extends QEvent {
+		const EventName = 'QSlider_Change';
+	}
+
+	/**
+	 * This event is triggered when the user stops sliding.
+	 */
+	class QSlider_StopEvent extends QEvent {
+		const EventName = 'QSlider_Stop';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the slider. Can be set when initialising
 	 * 		(first creating) the slider.
@@ -67,31 +106,39 @@
 		/** @var QJsClosure */
 		protected $mixOnStop = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QSlider_StartEvent' => 'OnStart',
+			'QSlider_SlideEvent' => 'OnSlide',
+			'QSlider_ChangeEvent' => 'OnChange',
+			'QSlider_StopEvent' => 'OnStop',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('Animate', 'animate');
-			$strJson .= $this->makeJsProperty('Max', 'max');
-			$strJson .= $this->makeJsProperty('Min', 'min');
-			$strJson .= $this->makeJsProperty('Orientation', 'orientation');
-			$strJson .= $this->makeJsProperty('Range', 'range');
-			$strJson .= $this->makeJsProperty('Step', 'step');
-			$strJson .= $this->makeJsProperty('Value', 'value');
-			$strJson .= $this->makeJsProperty('Values', 'values');
-			$strJson .= $this->makeJsProperty('OnStart', 'start');
-			$strJson .= $this->makeJsProperty('OnSlide', 'slide');
-			$strJson .= $this->makeJsProperty('OnChange', 'change');
-			$strJson .= $this->makeJsProperty('OnStop', 'stop');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('Animate', 'animate');
+			$strJqOptions .= $this->makeJsProperty('Max', 'max');
+			$strJqOptions .= $this->makeJsProperty('Min', 'min');
+			$strJqOptions .= $this->makeJsProperty('Orientation', 'orientation');
+			$strJqOptions .= $this->makeJsProperty('Range', 'range');
+			$strJqOptions .= $this->makeJsProperty('Step', 'step');
+			$strJqOptions .= $this->makeJsProperty('Value', 'value');
+			$strJqOptions .= $this->makeJsProperty('Values', 'values');
+			$strJqOptions .= $this->makeJsProperty('OnStart', 'start');
+			$strJqOptions .= $this->makeJsProperty('OnSlide', 'slide');
+			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
+			$strJqOptions .= $this->makeJsProperty('OnStop', 'stop');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -118,7 +165,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").slider(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -132,7 +179,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").slider(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -146,7 +193,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").slider(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -167,7 +214,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").slider(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -183,7 +230,7 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").slider(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -201,7 +248,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").slider(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -222,13 +269,30 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").slider(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -332,8 +396,8 @@
 
 				case 'OnStart':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnStart = QType::Cast($mixValue, 'QJsClosure');
@@ -345,8 +409,8 @@
 
 				case 'OnSlide':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnSlide = QType::Cast($mixValue, 'QJsClosure');
@@ -358,8 +422,8 @@
 
 				case 'OnChange':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnChange = QType::Cast($mixValue, 'QJsClosure');
@@ -371,8 +435,8 @@
 
 				case 'OnStop':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnStop = QType::Cast($mixValue, 'QJsClosure');

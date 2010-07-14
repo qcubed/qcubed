@@ -1,4 +1,27 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered when dragging starts.
+	 */
+	class QDraggable_StartEvent extends QEvent {
+		const EventName = 'QDraggable_Start';
+	}
+
+	/**
+	 * This event is triggered when the mouse is moved during the dragging.
+	 */
+	class QDraggable_DragEvent extends QEvent {
+		const EventName = 'QDraggable_Drag';
+	}
+
+	/**
+	 * This event is triggered when dragging stops.
+	 */
+	class QDraggable_StopEvent extends QEvent {
+		const EventName = 'QDraggable_Stop';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the draggable. Can be set when
 	 * 		initialising (first creating) the draggable.
@@ -10,8 +33,8 @@
 	 * 		appended to the same container as the draggable.
 	 * @property string $Axis Constrains dragging to either the horizontal (x) or vertical (y) axis.
 	 * 		Possible values: 'x', 'y'.
-	 * @property QJsClosure $Cancel Prevents dragging from starting on specified elements.
-	 * @property QJsClosure $ConnectToSortable Allows the draggable to be dropped onto the specified sortables. If this
+	 * @property mixed $Cancel Prevents dragging from starting on specified elements.
+	 * @property mixed $ConnectToSortable Allows the draggable to be dropped onto the specified sortables. If this
 	 * 		option is used (helper must be set to 'clone' in order to work flawlessly),
 	 * 		a draggable can be dropped onto a sortable list and then becomes part of
 	 * 		it.
@@ -64,7 +87,7 @@
 	 * 		if snap is false. Possible values: 'inner', 'outer', 'both'
 	 * @property integer $SnapTolerance The distance in pixels from the snap element edges at which snapping should
 	 * 		occur. Ignored if snap is false.
-	 * @property QJsClosure $Stack Controls the z-Index of the set of elements that match the selector, always
+	 * @property mixed $Stack Controls the z-Index of the set of elements that match the selector, always
 	 * 		brings to front the dragged item. Very useful in things like window
 	 * 		managers.
 	 * @property integer $ZIndex z-index for the helper while being dragged.
@@ -84,9 +107,9 @@
 		protected $mixAppendTo = null;
 		/** @var string */
 		protected $strAxis = null;
-		/** @var QJsClosure */
+		/** @var mixed */
 		protected $mixCancel = null;
-		/** @var QJsClosure */
+		/** @var mixed */
 		protected $mixConnectToSortable = null;
 		/** @var mixed */
 		protected $mixContainment = null;
@@ -128,7 +151,7 @@
 		protected $strSnapMode = null;
 		/** @var integer */
 		protected $intSnapTolerance = null;
-		/** @var QJsClosure */
+		/** @var mixed */
 		protected $mixStack = null;
 		/** @var integer */
 		protected $intZIndex = null;
@@ -139,49 +162,56 @@
 		/** @var QJsClosure */
 		protected $mixOnStop = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QDraggable_StartEvent' => 'OnStart',
+			'QDraggable_DragEvent' => 'OnDrag',
+			'QDraggable_StopEvent' => 'OnStop',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('AddClasses', 'addClasses');
-			$strJson .= $this->makeJsProperty('AppendTo', 'appendTo');
-			$strJson .= $this->makeJsProperty('Axis', 'axis');
-			$strJson .= $this->makeJsProperty('Cancel', 'cancel');
-			$strJson .= $this->makeJsProperty('ConnectToSortable', 'connectToSortable');
-			$strJson .= $this->makeJsProperty('Containment', 'containment');
-			$strJson .= $this->makeJsProperty('Cursor', 'cursor');
-			$strJson .= $this->makeJsProperty('CursorAt', 'cursorAt');
-			$strJson .= $this->makeJsProperty('Delay', 'delay');
-			$strJson .= $this->makeJsProperty('Distance', 'distance');
-			$strJson .= $this->makeJsProperty('Grid', 'grid');
-			$strJson .= $this->makeJsProperty('Handle', 'handle');
-			$strJson .= $this->makeJsProperty('Helper', 'helper');
-			$strJson .= $this->makeJsProperty('IframeFix', 'iframeFix');
-			$strJson .= $this->makeJsProperty('Opacity', 'opacity');
-			$strJson .= $this->makeJsProperty('RefreshPositions', 'refreshPositions');
-			$strJson .= $this->makeJsProperty('Revert', 'revert');
-			$strJson .= $this->makeJsProperty('RevertDuration', 'revertDuration');
-			$strJson .= $this->makeJsProperty('Scope', 'scope');
-			$strJson .= $this->makeJsProperty('Scroll', 'scroll');
-			$strJson .= $this->makeJsProperty('ScrollSensitivity', 'scrollSensitivity');
-			$strJson .= $this->makeJsProperty('ScrollSpeed', 'scrollSpeed');
-			$strJson .= $this->makeJsProperty('Snap', 'snap');
-			$strJson .= $this->makeJsProperty('SnapMode', 'snapMode');
-			$strJson .= $this->makeJsProperty('SnapTolerance', 'snapTolerance');
-			$strJson .= $this->makeJsProperty('Stack', 'stack');
-			$strJson .= $this->makeJsProperty('ZIndex', 'zIndex');
-			$strJson .= $this->makeJsProperty('OnStart', 'start');
-			$strJson .= $this->makeJsProperty('OnDrag', 'drag');
-			$strJson .= $this->makeJsProperty('OnStop', 'stop');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('AddClasses', 'addClasses');
+			$strJqOptions .= $this->makeJsProperty('AppendTo', 'appendTo');
+			$strJqOptions .= $this->makeJsProperty('Axis', 'axis');
+			$strJqOptions .= $this->makeJsProperty('Cancel', 'cancel');
+			$strJqOptions .= $this->makeJsProperty('ConnectToSortable', 'connectToSortable');
+			$strJqOptions .= $this->makeJsProperty('Containment', 'containment');
+			$strJqOptions .= $this->makeJsProperty('Cursor', 'cursor');
+			$strJqOptions .= $this->makeJsProperty('CursorAt', 'cursorAt');
+			$strJqOptions .= $this->makeJsProperty('Delay', 'delay');
+			$strJqOptions .= $this->makeJsProperty('Distance', 'distance');
+			$strJqOptions .= $this->makeJsProperty('Grid', 'grid');
+			$strJqOptions .= $this->makeJsProperty('Handle', 'handle');
+			$strJqOptions .= $this->makeJsProperty('Helper', 'helper');
+			$strJqOptions .= $this->makeJsProperty('IframeFix', 'iframeFix');
+			$strJqOptions .= $this->makeJsProperty('Opacity', 'opacity');
+			$strJqOptions .= $this->makeJsProperty('RefreshPositions', 'refreshPositions');
+			$strJqOptions .= $this->makeJsProperty('Revert', 'revert');
+			$strJqOptions .= $this->makeJsProperty('RevertDuration', 'revertDuration');
+			$strJqOptions .= $this->makeJsProperty('Scope', 'scope');
+			$strJqOptions .= $this->makeJsProperty('Scroll', 'scroll');
+			$strJqOptions .= $this->makeJsProperty('ScrollSensitivity', 'scrollSensitivity');
+			$strJqOptions .= $this->makeJsProperty('ScrollSpeed', 'scrollSpeed');
+			$strJqOptions .= $this->makeJsProperty('Snap', 'snap');
+			$strJqOptions .= $this->makeJsProperty('SnapMode', 'snapMode');
+			$strJqOptions .= $this->makeJsProperty('SnapTolerance', 'snapTolerance');
+			$strJqOptions .= $this->makeJsProperty('Stack', 'stack');
+			$strJqOptions .= $this->makeJsProperty('ZIndex', 'zIndex');
+			$strJqOptions .= $this->makeJsProperty('OnStart', 'start');
+			$strJqOptions .= $this->makeJsProperty('OnDrag', 'drag');
+			$strJqOptions .= $this->makeJsProperty('OnStop', 'stop');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -208,7 +238,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").draggable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -222,7 +252,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").draggable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -236,7 +266,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").draggable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -257,7 +287,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").draggable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -273,13 +303,30 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").draggable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -360,22 +407,12 @@
 					}
 
 				case 'Cancel':
-					try {
-						$this->mixCancel = QType::Cast($mixValue, 'QJsClosure');
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
+					$this->mixCancel = $mixValue;
+					break;
 
 				case 'ConnectToSortable':
-					try {
-						$this->mixConnectToSortable = QType::Cast($mixValue, 'QJsClosure');
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
+					$this->mixConnectToSortable = $mixValue;
+					break;
 
 				case 'Containment':
 					$this->mixContainment = $mixValue;
@@ -523,13 +560,8 @@
 					}
 
 				case 'Stack':
-					try {
-						$this->mixStack = QType::Cast($mixValue, 'QJsClosure');
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
+					$this->mixStack = $mixValue;
+					break;
 
 				case 'ZIndex':
 					try {
@@ -542,8 +574,8 @@
 
 				case 'OnStart':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnStart = QType::Cast($mixValue, 'QJsClosure');
@@ -555,8 +587,8 @@
 
 				case 'OnDrag':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnDrag = QType::Cast($mixValue, 'QJsClosure');
@@ -568,8 +600,8 @@
 
 				case 'OnStop':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnStop = QType::Cast($mixValue, 'QJsClosure');

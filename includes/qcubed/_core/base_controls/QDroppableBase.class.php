@@ -1,4 +1,49 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered any time an accepted draggable starts dragging.
+	 * 		This can be useful if you want to make the droppable 'light up' when it can
+	 * 		be dropped on.
+	 */
+	class QDroppable_ActivateEvent extends QEvent {
+		const EventName = 'QDroppable_Activate';
+	}
+
+	/**
+	 * This event is triggered any time an accepted draggable stops dragging.
+	 */
+	class QDroppable_DeactivateEvent extends QEvent {
+		const EventName = 'QDroppable_Deactivate';
+	}
+
+	/**
+	 * This event is triggered as an accepted draggable is dragged 'over' (within
+	 * 		the tolerance of) this droppable.
+	 */
+	class QDroppable_OverEvent extends QEvent {
+		const EventName = 'QDroppable_Over';
+	}
+
+	/**
+	 * This event is triggered when an accepted draggable is dragged out (within
+	 * 		the tolerance of) this droppable.
+	 */
+	class QDroppable_OutEvent extends QEvent {
+		const EventName = 'QDroppable_Out';
+	}
+
+	/**
+	 * This event is triggered when an accepted draggable is dropped 'over'
+	 * 		(within the tolerance of) this droppable. In the callback, $(this)
+	 * 		represents the droppable the draggable is dropped on.
+	 * ui.draggable
+	 * 		represents the draggable.
+	 */
+	class QDroppable_DropEvent extends QEvent {
+		const EventName = 'QDroppable_Drop';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the droppable. Can be set when
 	 * 		initialising (first creating) the droppable.
@@ -73,31 +118,40 @@
 		/** @var QJsClosure */
 		protected $mixOnDrop = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QDroppable_ActivateEvent' => 'OnActivate',
+			'QDroppable_DeactivateEvent' => 'OnDeactivate',
+			'QDroppable_OverEvent' => 'OnOver',
+			'QDroppable_OutEvent' => 'OnOut',
+			'QDroppable_DropEvent' => 'OnDrop',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('Accept', 'accept');
-			$strJson .= $this->makeJsProperty('ActiveClass', 'activeClass');
-			$strJson .= $this->makeJsProperty('AddClasses', 'addClasses');
-			$strJson .= $this->makeJsProperty('Greedy', 'greedy');
-			$strJson .= $this->makeJsProperty('HoverClass', 'hoverClass');
-			$strJson .= $this->makeJsProperty('Scope', 'scope');
-			$strJson .= $this->makeJsProperty('Tolerance', 'tolerance');
-			$strJson .= $this->makeJsProperty('OnActivate', 'activate');
-			$strJson .= $this->makeJsProperty('OnDeactivate', 'deactivate');
-			$strJson .= $this->makeJsProperty('OnOver', 'over');
-			$strJson .= $this->makeJsProperty('OnOut', 'out');
-			$strJson .= $this->makeJsProperty('OnDrop', 'drop');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('Accept', 'accept');
+			$strJqOptions .= $this->makeJsProperty('ActiveClass', 'activeClass');
+			$strJqOptions .= $this->makeJsProperty('AddClasses', 'addClasses');
+			$strJqOptions .= $this->makeJsProperty('Greedy', 'greedy');
+			$strJqOptions .= $this->makeJsProperty('HoverClass', 'hoverClass');
+			$strJqOptions .= $this->makeJsProperty('Scope', 'scope');
+			$strJqOptions .= $this->makeJsProperty('Tolerance', 'tolerance');
+			$strJqOptions .= $this->makeJsProperty('OnActivate', 'activate');
+			$strJqOptions .= $this->makeJsProperty('OnDeactivate', 'deactivate');
+			$strJqOptions .= $this->makeJsProperty('OnOver', 'over');
+			$strJqOptions .= $this->makeJsProperty('OnOut', 'out');
+			$strJqOptions .= $this->makeJsProperty('OnDrop', 'drop');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -124,7 +178,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").droppable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -138,7 +192,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").droppable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -152,7 +206,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").droppable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -173,7 +227,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").droppable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -189,13 +243,30 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").droppable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -295,8 +366,8 @@
 
 				case 'OnActivate':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnActivate = QType::Cast($mixValue, 'QJsClosure');
@@ -308,8 +379,8 @@
 
 				case 'OnDeactivate':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnDeactivate = QType::Cast($mixValue, 'QJsClosure');
@@ -321,8 +392,8 @@
 
 				case 'OnOver':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnOver = QType::Cast($mixValue, 'QJsClosure');
@@ -334,8 +405,8 @@
 
 				case 'OnOut':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnOut = QType::Cast($mixValue, 'QJsClosure');
@@ -347,8 +418,8 @@
 
 				case 'OnDrop':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnDrop = QType::Cast($mixValue, 'QJsClosure');

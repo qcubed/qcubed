@@ -1,4 +1,52 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered at the end of the select operation, on each element
+	 * 		added to the selection.
+	 */
+	class QSelectable_SelectedEvent extends QEvent {
+		const EventName = 'QSelectable_Selected';
+	}
+
+	/**
+	 * This event is triggered during the select operation, on each element added
+	 * 		to the selection.
+	 */
+	class QSelectable_SelectingEvent extends QEvent {
+		const EventName = 'QSelectable_Selecting';
+	}
+
+	/**
+	 * This event is triggered at the beginning of the select operation.
+	 */
+	class QSelectable_StartEvent extends QEvent {
+		const EventName = 'QSelectable_Start';
+	}
+
+	/**
+	 * This event is triggered at the end of the select operation.
+	 */
+	class QSelectable_StopEvent extends QEvent {
+		const EventName = 'QSelectable_Stop';
+	}
+
+	/**
+	 * This event is triggered at the end of the select operation, on each element
+	 * 		removed from the selection.
+	 */
+	class QSelectable_UnselectedEvent extends QEvent {
+		const EventName = 'QSelectable_Unselected';
+	}
+
+	/**
+	 * This event is triggered during the select operation, on each element
+	 * 		removed from the selection.
+	 */
+	class QSelectable_UnselectingEvent extends QEvent {
+		const EventName = 'QSelectable_Unselecting';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the selectable. Can be set when
 	 * 		initialising (first creating) the selectable.
@@ -6,12 +54,12 @@
 	 * 		each selectee at the beginning of each select operation. If you have many
 	 * 		many items, you may want to set this to false and call the refresh method
 	 * 		manually.
-	 * @property QJsClosure $Cancel Prevents selecting if you start on elements matching the selector.
+	 * @property mixed $Cancel Prevents selecting if you start on elements matching the selector.
 	 * @property integer $Delay Time in milliseconds to define when the selecting should start. It helps
 	 * 		preventing unwanted selections when clicking on an element.
 	 * @property integer $Distance Tolerance, in pixels, for when selecting should start. If specified,
 	 * 		selecting will not start until after mouse is dragged beyond distance.
-	 * @property QJsClosure $Filter The matching child elements will be made selectees (able to be selected).
+	 * @property mixed $Filter The matching child elements will be made selectees (able to be selected).
 	 * @property string $Tolerance Possible values: 'touch', 'fit'.
 	 * 
 	 * 
@@ -37,13 +85,13 @@
 		protected $blnDisabled = null;
 		/** @var boolean */
 		protected $blnAutoRefresh = null;
-		/** @var QJsClosure */
+		/** @var mixed */
 		protected $mixCancel = null;
 		/** @var integer */
 		protected $intDelay;
 		/** @var integer */
 		protected $intDistance;
-		/** @var QJsClosure */
+		/** @var mixed */
 		protected $mixFilter = null;
 		/** @var string */
 		protected $strTolerance = null;
@@ -60,31 +108,41 @@
 		/** @var QJsClosure */
 		protected $mixOnUnselecting = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QSelectable_SelectedEvent' => 'OnSelected',
+			'QSelectable_SelectingEvent' => 'OnSelecting',
+			'QSelectable_StartEvent' => 'OnStart',
+			'QSelectable_StopEvent' => 'OnStop',
+			'QSelectable_UnselectedEvent' => 'OnUnselected',
+			'QSelectable_UnselectingEvent' => 'OnUnselecting',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('AutoRefresh', 'autoRefresh');
-			$strJson .= $this->makeJsProperty('Cancel', 'cancel');
-			$strJson .= $this->makeJsProperty('Delay', 'delay');
-			$strJson .= $this->makeJsProperty('Distance', 'distance');
-			$strJson .= $this->makeJsProperty('Filter', 'filter');
-			$strJson .= $this->makeJsProperty('Tolerance', 'tolerance');
-			$strJson .= $this->makeJsProperty('OnSelected', 'selected');
-			$strJson .= $this->makeJsProperty('OnSelecting', 'selecting');
-			$strJson .= $this->makeJsProperty('OnStart', 'start');
-			$strJson .= $this->makeJsProperty('OnStop', 'stop');
-			$strJson .= $this->makeJsProperty('OnUnselected', 'unselected');
-			$strJson .= $this->makeJsProperty('OnUnselecting', 'unselecting');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('AutoRefresh', 'autoRefresh');
+			$strJqOptions .= $this->makeJsProperty('Cancel', 'cancel');
+			$strJqOptions .= $this->makeJsProperty('Delay', 'delay');
+			$strJqOptions .= $this->makeJsProperty('Distance', 'distance');
+			$strJqOptions .= $this->makeJsProperty('Filter', 'filter');
+			$strJqOptions .= $this->makeJsProperty('Tolerance', 'tolerance');
+			$strJqOptions .= $this->makeJsProperty('OnSelected', 'selected');
+			$strJqOptions .= $this->makeJsProperty('OnSelecting', 'selecting');
+			$strJqOptions .= $this->makeJsProperty('OnStart', 'start');
+			$strJqOptions .= $this->makeJsProperty('OnStop', 'stop');
+			$strJqOptions .= $this->makeJsProperty('OnUnselected', 'unselected');
+			$strJqOptions .= $this->makeJsProperty('OnUnselecting', 'unselecting');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -111,7 +169,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").selectable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -125,7 +183,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").selectable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -139,7 +197,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").selectable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -160,7 +218,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").selectable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -176,7 +234,7 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").selectable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -192,13 +250,30 @@
 			$args = array();
 			$args[] = "refresh";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").selectable(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -248,13 +323,8 @@
 					}
 
 				case 'Cancel':
-					try {
-						$this->mixCancel = QType::Cast($mixValue, 'QJsClosure');
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
+					$this->mixCancel = $mixValue;
+					break;
 
 				case 'Delay':
 					try {
@@ -275,13 +345,8 @@
 					}
 
 				case 'Filter':
-					try {
-						$this->mixFilter = QType::Cast($mixValue, 'QJsClosure');
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
+					$this->mixFilter = $mixValue;
+					break;
 
 				case 'Tolerance':
 					try {
@@ -294,8 +359,8 @@
 
 				case 'OnSelected':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnSelected = QType::Cast($mixValue, 'QJsClosure');
@@ -307,8 +372,8 @@
 
 				case 'OnSelecting':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnSelecting = QType::Cast($mixValue, 'QJsClosure');
@@ -320,8 +385,8 @@
 
 				case 'OnStart':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnStart = QType::Cast($mixValue, 'QJsClosure');
@@ -333,8 +398,8 @@
 
 				case 'OnStop':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnStop = QType::Cast($mixValue, 'QJsClosure');
@@ -346,8 +411,8 @@
 
 				case 'OnUnselected':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnUnselected = QType::Cast($mixValue, 'QJsClosure');
@@ -359,8 +424,8 @@
 
 				case 'OnUnselecting':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnUnselecting = QType::Cast($mixValue, 'QJsClosure');

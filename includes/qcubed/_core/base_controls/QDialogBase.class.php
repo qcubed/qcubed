@@ -1,4 +1,78 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * This event is triggered when a dialog attempts to close. If the beforeclose
+	 * 		event handler (callback function) returns false, the close will be
+	 * 		prevented.
+	 */
+	class QDialog_BeforecloseEvent extends QEvent {
+		const EventName = 'QDialog_Beforeclose';
+	}
+
+	/**
+	 * This event is triggered when dialog is opened.
+	 */
+	class QDialog_OpenEvent extends QEvent {
+		const EventName = 'QDialog_Open';
+	}
+
+	/**
+	 * This event is triggered when the dialog gains focus.
+	 */
+	class QDialog_FocusEvent extends QEvent {
+		const EventName = 'QDialog_Focus';
+	}
+
+	/**
+	 * This event is triggered at the beginning of the dialog being dragged.
+	 */
+	class QDialog_DragStartEvent extends QEvent {
+		const EventName = 'QDialog_DragStart';
+	}
+
+	/**
+	 * This event is triggered when the dialog is dragged.
+	 */
+	class QDialog_DragEvent extends QEvent {
+		const EventName = 'QDialog_Drag';
+	}
+
+	/**
+	 * This event is triggered after the dialog has been dragged.
+	 */
+	class QDialog_DragStopEvent extends QEvent {
+		const EventName = 'QDialog_DragStop';
+	}
+
+	/**
+	 * This event is triggered at the beginning of the dialog being resized.
+	 */
+	class QDialog_ResizeStartEvent extends QEvent {
+		const EventName = 'QDialog_ResizeStart';
+	}
+
+	/**
+	 * This event is triggered when the dialog is resized. demo
+	 */
+	class QDialog_ResizeEvent extends QEvent {
+		const EventName = 'QDialog_Resize';
+	}
+
+	/**
+	 * This event is triggered after the dialog has been resized.
+	 */
+	class QDialog_ResizeStopEvent extends QEvent {
+		const EventName = 'QDialog_ResizeStop';
+	}
+
+	/**
+	 * This event is triggered when the dialog is closed.
+	 */
+	class QDialog_CloseEvent extends QEvent {
+		const EventName = 'QDialog_Close';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the dialog. Can be set when initialising
 	 * 		(first creating) the dialog.
@@ -121,49 +195,63 @@
 		/** @var QJsClosure */
 		protected $mixOnClose = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QDialog_BeforecloseEvent' => 'OnBeforeclose',
+			'QDialog_OpenEvent' => 'OnOpen',
+			'QDialog_FocusEvent' => 'OnFocus',
+			'QDialog_DragStartEvent' => 'OnDragStart',
+			'QDialog_DragEvent' => 'OnDrag',
+			'QDialog_DragStopEvent' => 'OnDragStop',
+			'QDialog_ResizeStartEvent' => 'OnResizeStart',
+			'QDialog_ResizeEvent' => 'OnResize',
+			'QDialog_ResizeStopEvent' => 'OnResizeStop',
+			'QDialog_CloseEvent' => 'OnClose',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('AutoOpen', 'autoOpen');
-			$strJson .= $this->makeJsProperty('Buttons', 'buttons');
-			$strJson .= $this->makeJsProperty('CloseOnEscape', 'closeOnEscape');
-			$strJson .= $this->makeJsProperty('CloseText', 'closeText');
-			$strJson .= $this->makeJsProperty('DialogClass', 'dialogClass');
-			$strJson .= $this->makeJsProperty('Draggable', 'draggable');
-			$strJson .= $this->makeJsProperty('Height', 'height');
-			$strJson .= $this->makeJsProperty('Hide', 'hide');
-			$strJson .= $this->makeJsProperty('MaxHeight', 'maxHeight');
-			$strJson .= $this->makeJsProperty('MaxWidth', 'maxWidth');
-			$strJson .= $this->makeJsProperty('MinHeight', 'minHeight');
-			$strJson .= $this->makeJsProperty('MinWidth', 'minWidth');
-			$strJson .= $this->makeJsProperty('Modal', 'modal');
-			$strJson .= $this->makeJsProperty('Position', 'position');
-			$strJson .= $this->makeJsProperty('Resizable', 'resizable');
-			$strJson .= $this->makeJsProperty('Show', 'show');
-			$strJson .= $this->makeJsProperty('Stack', 'stack');
-			$strJson .= $this->makeJsProperty('Title', 'title');
-			$strJson .= $this->makeJsProperty('Width', 'width');
-			$strJson .= $this->makeJsProperty('ZIndex', 'zIndex');
-			$strJson .= $this->makeJsProperty('OnBeforeclose', 'beforeclose');
-			$strJson .= $this->makeJsProperty('OnOpen', 'open');
-			$strJson .= $this->makeJsProperty('OnFocus', 'focus');
-			$strJson .= $this->makeJsProperty('OnDragStart', 'dragStart');
-			$strJson .= $this->makeJsProperty('OnDrag', 'drag');
-			$strJson .= $this->makeJsProperty('OnDragStop', 'dragStop');
-			$strJson .= $this->makeJsProperty('OnResizeStart', 'resizeStart');
-			$strJson .= $this->makeJsProperty('OnResize', 'resize');
-			$strJson .= $this->makeJsProperty('OnResizeStop', 'resizeStop');
-			$strJson .= $this->makeJsProperty('OnClose', 'close');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('AutoOpen', 'autoOpen');
+			$strJqOptions .= $this->makeJsProperty('Buttons', 'buttons');
+			$strJqOptions .= $this->makeJsProperty('CloseOnEscape', 'closeOnEscape');
+			$strJqOptions .= $this->makeJsProperty('CloseText', 'closeText');
+			$strJqOptions .= $this->makeJsProperty('DialogClass', 'dialogClass');
+			$strJqOptions .= $this->makeJsProperty('Draggable', 'draggable');
+			$strJqOptions .= $this->makeJsProperty('Height', 'height');
+			$strJqOptions .= $this->makeJsProperty('Hide', 'hide');
+			$strJqOptions .= $this->makeJsProperty('MaxHeight', 'maxHeight');
+			$strJqOptions .= $this->makeJsProperty('MaxWidth', 'maxWidth');
+			$strJqOptions .= $this->makeJsProperty('MinHeight', 'minHeight');
+			$strJqOptions .= $this->makeJsProperty('MinWidth', 'minWidth');
+			$strJqOptions .= $this->makeJsProperty('Modal', 'modal');
+			$strJqOptions .= $this->makeJsProperty('Position', 'position');
+			$strJqOptions .= $this->makeJsProperty('Resizable', 'resizable');
+			$strJqOptions .= $this->makeJsProperty('Show', 'show');
+			$strJqOptions .= $this->makeJsProperty('Stack', 'stack');
+			$strJqOptions .= $this->makeJsProperty('Title', 'title');
+			$strJqOptions .= $this->makeJsProperty('Width', 'width');
+			$strJqOptions .= $this->makeJsProperty('ZIndex', 'zIndex');
+			$strJqOptions .= $this->makeJsProperty('OnBeforeclose', 'beforeclose');
+			$strJqOptions .= $this->makeJsProperty('OnOpen', 'open');
+			$strJqOptions .= $this->makeJsProperty('OnFocus', 'focus');
+			$strJqOptions .= $this->makeJsProperty('OnDragStart', 'dragStart');
+			$strJqOptions .= $this->makeJsProperty('OnDrag', 'drag');
+			$strJqOptions .= $this->makeJsProperty('OnDragStop', 'dragStop');
+			$strJqOptions .= $this->makeJsProperty('OnResizeStart', 'resizeStart');
+			$strJqOptions .= $this->makeJsProperty('OnResize', 'resize');
+			$strJqOptions .= $this->makeJsProperty('OnResizeStop', 'resizeStop');
+			$strJqOptions .= $this->makeJsProperty('OnClose', 'close');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -190,7 +278,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -204,7 +292,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -218,7 +306,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -239,7 +327,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -255,7 +343,7 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -269,7 +357,7 @@
 			$args = array();
 			$args[] = "close";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -283,7 +371,7 @@
 			$args = array();
 			$args[] = "isOpen";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -297,7 +385,7 @@
 			$args = array();
 			$args[] = "moveToTop";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -311,13 +399,30 @@
 			$args = array();
 			$args[] = "open";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -547,8 +652,8 @@
 
 				case 'OnBeforeclose':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnBeforeclose = QType::Cast($mixValue, 'QJsClosure');
@@ -560,8 +665,8 @@
 
 				case 'OnOpen':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnOpen = QType::Cast($mixValue, 'QJsClosure');
@@ -573,8 +678,8 @@
 
 				case 'OnFocus':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnFocus = QType::Cast($mixValue, 'QJsClosure');
@@ -586,8 +691,8 @@
 
 				case 'OnDragStart':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnDragStart = QType::Cast($mixValue, 'QJsClosure');
@@ -599,8 +704,8 @@
 
 				case 'OnDrag':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnDrag = QType::Cast($mixValue, 'QJsClosure');
@@ -612,8 +717,8 @@
 
 				case 'OnDragStop':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnDragStop = QType::Cast($mixValue, 'QJsClosure');
@@ -625,8 +730,8 @@
 
 				case 'OnResizeStart':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnResizeStart = QType::Cast($mixValue, 'QJsClosure');
@@ -638,8 +743,8 @@
 
 				case 'OnResize':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnResize = QType::Cast($mixValue, 'QJsClosure');
@@ -651,8 +756,8 @@
 
 				case 'OnResizeStop':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnResizeStop = QType::Cast($mixValue, 'QJsClosure');
@@ -664,8 +769,8 @@
 
 				case 'OnClose':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnClose = QType::Cast($mixValue, 'QJsClosure');

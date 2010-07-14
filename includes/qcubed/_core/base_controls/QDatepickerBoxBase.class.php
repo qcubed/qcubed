@@ -1,4 +1,55 @@
 <?php
+	/* Custom event classes for this control */
+	/**
+	 * Can be a function that takes an input field and current datepicker instance
+	 * 		and returns an options object to update the datepicker with. It is called
+	 * 		just before the datepicker is displayed.
+	 */
+	class QDatepickerBox_BeforeShowEvent extends QEvent {
+		const EventName = 'QDatepickerBox_BeforeShow';
+	}
+
+	/**
+	 * The function takes a date as a parameter and must return an array with [0]
+	 * 		equal to true/false indicating whether or not this date is selectable, [1]
+	 * 		equal to a CSS class name(s) or '' for the default presentation, and [2] an
+	 * 		optional popup tooltip for this date. It is called for each day in the
+	 * 		datepicker before it is displayed.
+	 */
+	class QDatepickerBox_BeforeShowDayEvent extends QEvent {
+		const EventName = 'QDatepickerBox_BeforeShowDay';
+	}
+
+	/**
+	 * Allows you to define your own event when the datepicker moves to a new
+	 * 		month and/or year. The function receives the selected year, month (1-12),
+	 * 		and the datepicker instance as parameters. this refers to the associated
+	 * 		input field.
+	 */
+	class QDatepickerBox_ChangeMonthYearEvent extends QEvent {
+		const EventName = 'QDatepickerBox_ChangeMonthYear';
+	}
+
+	/**
+	 * Allows you to define your own event when the datepicker is closed, whether
+	 * 		or not a date is selected. The function receives the selected date as text
+	 * 		('' if none) and the datepicker instance as parameters. this refers to the
+	 * 		associated input field.
+	 */
+	class QDatepickerBox_CloseEvent extends QEvent {
+		const EventName = 'QDatepickerBox_Close';
+	}
+
+	/**
+	 * Allows you to define your own event when the datepicker is selected. The
+	 * 		function receives the selected date as text and the datepicker instance as
+	 * 		parameters. this refers to the associated input field.
+	 */
+	class QDatepickerBox_SelectEvent extends QEvent {
+		const EventName = 'QDatepickerBox_Select';
+	}
+
+
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the datepicker. Can be set when
 	 * 		initialising (first creating) the datepicker.
@@ -297,69 +348,78 @@
 		/** @var mixed */
 		protected $mixOnSelect = null;
 
-		protected function makeJsProperty($strProp, $strKey, $strQuote = "'") {
+		/** @var array $custom_events Event Class Name => Event Property Name */
+		protected static $custom_events = array(
+			'QDatepickerBox_BeforeShowEvent' => 'OnBeforeShow',
+			'QDatepickerBox_BeforeShowDayEvent' => 'OnBeforeShowDay',
+			'QDatepickerBox_ChangeMonthYearEvent' => 'OnChangeMonthYear',
+			'QDatepickerBox_CloseEvent' => 'OnClose',
+			'QDatepickerBox_SelectEvent' => 'OnSelect',
+		);
+		
+		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
 			if (null === $objValue) {
 				return '';
 			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJson($objValue, $strQuote) . ', ';
+			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 		}
 
 		protected function makeJqOptions() {
-			$strJson = '{';
-			$strJson .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJson .= $this->makeJsProperty('AltField', 'altField');
-			$strJson .= $this->makeJsProperty('AltFormat', 'altFormat');
-			$strJson .= $this->makeJsProperty('AppendText', 'appendText');
-			$strJson .= $this->makeJsProperty('AutoSize', 'autoSize');
-			$strJson .= $this->makeJsProperty('ButtonImage', 'buttonImage');
-			$strJson .= $this->makeJsProperty('ButtonImageOnly', 'buttonImageOnly');
-			$strJson .= $this->makeJsProperty('ButtonText', 'buttonText');
-			$strJson .= $this->makeJsProperty('CalculateWeek', 'calculateWeek');
-			$strJson .= $this->makeJsProperty('ChangeMonth', 'changeMonth');
-			$strJson .= $this->makeJsProperty('ChangeYear', 'changeYear');
-			$strJson .= $this->makeJsProperty('CloseText', 'closeText');
-			$strJson .= $this->makeJsProperty('ConstrainInput', 'constrainInput');
-			$strJson .= $this->makeJsProperty('CurrentText', 'currentText');
-			$strJson .= $this->makeJsProperty('DateFormat', 'dateFormat');
-			$strJson .= $this->makeJsProperty('DayNames', 'dayNames');
-			$strJson .= $this->makeJsProperty('DayNamesMin', 'dayNamesMin');
-			$strJson .= $this->makeJsProperty('DayNamesShort', 'dayNamesShort');
-			$strJson .= $this->makeJsProperty('DefaultDate', 'defaultDate');
-			$strJson .= $this->makeJsProperty('Duration', 'duration');
-			$strJson .= $this->makeJsProperty('FirstDay', 'firstDay');
-			$strJson .= $this->makeJsProperty('GotoCurrent', 'gotoCurrent');
-			$strJson .= $this->makeJsProperty('HideIfNoPrevNext', 'hideIfNoPrevNext');
-			$strJson .= $this->makeJsProperty('IsRTL', 'isRTL');
-			$strJson .= $this->makeJsProperty('MaxDate', 'maxDate');
-			$strJson .= $this->makeJsProperty('MinDate', 'minDate');
-			$strJson .= $this->makeJsProperty('MonthNames', 'monthNames');
-			$strJson .= $this->makeJsProperty('MonthNamesShort', 'monthNamesShort');
-			$strJson .= $this->makeJsProperty('NavigationAsDateFormat', 'navigationAsDateFormat');
-			$strJson .= $this->makeJsProperty('NextText', 'nextText');
-			$strJson .= $this->makeJsProperty('NumberOfMonths', 'numberOfMonths');
-			$strJson .= $this->makeJsProperty('PrevText', 'prevText');
-			$strJson .= $this->makeJsProperty('SelectOtherMonths', 'selectOtherMonths');
-			$strJson .= $this->makeJsProperty('ShortYearCutoff', 'shortYearCutoff');
-			$strJson .= $this->makeJsProperty('ShowAnim', 'showAnim');
-			$strJson .= $this->makeJsProperty('ShowButtonPanel', 'showButtonPanel');
-			$strJson .= $this->makeJsProperty('ShowCurrentAtPos', 'showCurrentAtPos');
-			$strJson .= $this->makeJsProperty('ShowMonthAfterYear', 'showMonthAfterYear');
-			$strJson .= $this->makeJsProperty('ShowOn', 'showOn');
-			$strJson .= $this->makeJsProperty('ShowOptions', 'showOptions');
-			$strJson .= $this->makeJsProperty('ShowOtherMonths', 'showOtherMonths');
-			$strJson .= $this->makeJsProperty('ShowWeek', 'showWeek');
-			$strJson .= $this->makeJsProperty('StepMonths', 'stepMonths');
-			$strJson .= $this->makeJsProperty('WeekHeader', 'weekHeader');
-			$strJson .= $this->makeJsProperty('YearRange', 'yearRange');
-			$strJson .= $this->makeJsProperty('YearSuffix', 'yearSuffix');
-			$strJson .= $this->makeJsProperty('OnBeforeShow', 'beforeShow');
-			$strJson .= $this->makeJsProperty('OnBeforeShowDay', 'beforeShowDay');
-			$strJson .= $this->makeJsProperty('OnChangeMonthYear', 'onChangeMonthYear');
-			$strJson .= $this->makeJsProperty('OnClose', 'onClose');
-			$strJson .= $this->makeJsProperty('OnSelect', 'onSelect');
-			return $strJson.'}';
+			$strJqOptions = '{';
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('AltField', 'altField');
+			$strJqOptions .= $this->makeJsProperty('AltFormat', 'altFormat');
+			$strJqOptions .= $this->makeJsProperty('AppendText', 'appendText');
+			$strJqOptions .= $this->makeJsProperty('AutoSize', 'autoSize');
+			$strJqOptions .= $this->makeJsProperty('ButtonImage', 'buttonImage');
+			$strJqOptions .= $this->makeJsProperty('ButtonImageOnly', 'buttonImageOnly');
+			$strJqOptions .= $this->makeJsProperty('ButtonText', 'buttonText');
+			$strJqOptions .= $this->makeJsProperty('CalculateWeek', 'calculateWeek');
+			$strJqOptions .= $this->makeJsProperty('ChangeMonth', 'changeMonth');
+			$strJqOptions .= $this->makeJsProperty('ChangeYear', 'changeYear');
+			$strJqOptions .= $this->makeJsProperty('CloseText', 'closeText');
+			$strJqOptions .= $this->makeJsProperty('ConstrainInput', 'constrainInput');
+			$strJqOptions .= $this->makeJsProperty('CurrentText', 'currentText');
+			$strJqOptions .= $this->makeJsProperty('DateFormat', 'dateFormat');
+			$strJqOptions .= $this->makeJsProperty('DayNames', 'dayNames');
+			$strJqOptions .= $this->makeJsProperty('DayNamesMin', 'dayNamesMin');
+			$strJqOptions .= $this->makeJsProperty('DayNamesShort', 'dayNamesShort');
+			$strJqOptions .= $this->makeJsProperty('DefaultDate', 'defaultDate');
+			$strJqOptions .= $this->makeJsProperty('Duration', 'duration');
+			$strJqOptions .= $this->makeJsProperty('FirstDay', 'firstDay');
+			$strJqOptions .= $this->makeJsProperty('GotoCurrent', 'gotoCurrent');
+			$strJqOptions .= $this->makeJsProperty('HideIfNoPrevNext', 'hideIfNoPrevNext');
+			$strJqOptions .= $this->makeJsProperty('IsRTL', 'isRTL');
+			$strJqOptions .= $this->makeJsProperty('MaxDate', 'maxDate');
+			$strJqOptions .= $this->makeJsProperty('MinDate', 'minDate');
+			$strJqOptions .= $this->makeJsProperty('MonthNames', 'monthNames');
+			$strJqOptions .= $this->makeJsProperty('MonthNamesShort', 'monthNamesShort');
+			$strJqOptions .= $this->makeJsProperty('NavigationAsDateFormat', 'navigationAsDateFormat');
+			$strJqOptions .= $this->makeJsProperty('NextText', 'nextText');
+			$strJqOptions .= $this->makeJsProperty('NumberOfMonths', 'numberOfMonths');
+			$strJqOptions .= $this->makeJsProperty('PrevText', 'prevText');
+			$strJqOptions .= $this->makeJsProperty('SelectOtherMonths', 'selectOtherMonths');
+			$strJqOptions .= $this->makeJsProperty('ShortYearCutoff', 'shortYearCutoff');
+			$strJqOptions .= $this->makeJsProperty('ShowAnim', 'showAnim');
+			$strJqOptions .= $this->makeJsProperty('ShowButtonPanel', 'showButtonPanel');
+			$strJqOptions .= $this->makeJsProperty('ShowCurrentAtPos', 'showCurrentAtPos');
+			$strJqOptions .= $this->makeJsProperty('ShowMonthAfterYear', 'showMonthAfterYear');
+			$strJqOptions .= $this->makeJsProperty('ShowOn', 'showOn');
+			$strJqOptions .= $this->makeJsProperty('ShowOptions', 'showOptions');
+			$strJqOptions .= $this->makeJsProperty('ShowOtherMonths', 'showOtherMonths');
+			$strJqOptions .= $this->makeJsProperty('ShowWeek', 'showWeek');
+			$strJqOptions .= $this->makeJsProperty('StepMonths', 'stepMonths');
+			$strJqOptions .= $this->makeJsProperty('WeekHeader', 'weekHeader');
+			$strJqOptions .= $this->makeJsProperty('YearRange', 'yearRange');
+			$strJqOptions .= $this->makeJsProperty('YearSuffix', 'yearSuffix');
+			$strJqOptions .= $this->makeJsProperty('OnBeforeShow', 'beforeShow');
+			$strJqOptions .= $this->makeJsProperty('OnBeforeShowDay', 'beforeShowDay');
+			$strJqOptions .= $this->makeJsProperty('OnChangeMonthYear', 'onChangeMonthYear');
+			$strJqOptions .= $this->makeJsProperty('OnClose', 'onClose');
+			$strJqOptions .= $this->makeJsProperty('OnSelect', 'onSelect');
+			return $strJqOptions.'}';
 		}
 
 		protected function getJqControlId() {
@@ -386,7 +446,7 @@
 			$args = array();
 			$args[] = "destroy";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -400,7 +460,7 @@
 			$args = array();
 			$args[] = "disable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -414,7 +474,7 @@
 			$args = array();
 			$args[] = "enable";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -435,7 +495,7 @@
 				$args[] = $value;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -451,7 +511,7 @@
 			$args[] = "option";
 			$args[] = $options;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -487,7 +547,7 @@
 				$args[] = $pos;
 			}
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -501,7 +561,7 @@
 			$args = array();
 			$args[] = "isDisabled";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -515,7 +575,7 @@
 			$args = array();
 			$args[] = "hide";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -529,7 +589,7 @@
 			$args = array();
 			$args[] = "show";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -543,7 +603,7 @@
 			$args = array();
 			$args[] = "refresh";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -558,7 +618,7 @@
 			$args = array();
 			$args[] = "getDate";
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
@@ -578,13 +638,30 @@
 			$args[] = "setDate";
 			$args[] = $date;
 
-			$strArgs = JavaScriptHelper::toJson($args);
+			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").datepicker(%s)', 
 				$this->getJqControlId(),
 				substr($strArgs, 1, strlen($strArgs)-2));
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
+
+		public function AddAction($objEvent, $objAction) {
+			$strEventClass = get_class($objEvent);
+			if (array_key_exists($strEventClass, self::$custom_events)) {
+				$objAction->Event = $objEvent;
+				$strEventName = self::$custom_events[$strEventClass];
+				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+				if ($objAction instanceof QAjaxAction) {
+					$objAction = new QNoScriptAjaxAction($objAction);
+					parent::AddAction($objEvent, $objAction);
+				} else if (!($objAction instanceof QJavaScriptAction)) {
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+				}
+			} else {
+				parent::AddAction($objEvent, $objAction);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -1043,8 +1120,8 @@
 
 				case 'OnBeforeShowDay':
 					try {
-						if ($mixValue instanceof QAjaxAction) {
-						    /** @var QAjaxAction $mixValue */
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnBeforeShowDay = QType::Cast($mixValue, 'QJsClosure');

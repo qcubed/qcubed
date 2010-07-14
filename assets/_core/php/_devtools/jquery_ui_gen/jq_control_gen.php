@@ -28,6 +28,7 @@ class Option extends JqAttributes {
 		case 'Boolean': return 'boolean';
 		case 'String': return 'string';
 		case 'Object': return 'mixed';
+		case 'Selector': return 'mixed';
 		case 'Integer': return 'integer';
 		case 'Number': return 'integer';
 		case 'Date': return 'QDateTime';
@@ -105,6 +106,15 @@ class Option extends JqAttributes {
 
 class Event extends Option
 {
+	public $eventClassName;
+	public $eventName;
+
+	public function __construct($strQcClass, $name, $origName, $type, $description) {
+		parent::__construct($name, $origName, $type, 'null', $description);
+		$this->eventName = $strQcClass . '_' . substr($name, 2);
+		$this->eventClassName = $this->eventName . 'Event';
+	}
+
 }
 
 class Method extends JqAttributes {
@@ -232,7 +242,7 @@ class JqDoc {
 			$nodes = $htmlEvent->find('div.event-description');
 			$description = $nodes[0]->plaintext();
 
-			$this->options[] = new Event($name, $origName, $type, 'null', $description);
+			$this->options[] = new Event($this->strQcClass, $name, $origName, $type, $description);
 			$names[$name] = $name;
 		}
 
