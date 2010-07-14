@@ -140,7 +140,7 @@ class QOracleDatabase extends QDatabaseBase {
    * @param resource $objResult
    * @return QOracleDatabaseResult
    */
-  public function Execute ($objResult) {
+  protected function Execute ($objResult) {
     $blnReturn = false;
     if($objResult)
     {
@@ -164,7 +164,7 @@ class QOracleDatabase extends QDatabaseBase {
   }
 
 
-	public function Query($strQuery) {
+	protected function ExecuteQuery($strQuery) {
 		
 		// Connect if Applicable
 		if (!$this->blnConnectedFlag) $this->Connect();
@@ -178,10 +178,6 @@ class QOracleDatabase extends QDatabaseBase {
 		//remove backslash from escaped characters like \" and \\
 		//Oracle has a problem only with single quotes escaped
 		$strQuery = stripslashes($strQuery);
-
-
-		// Log Query (for Profiling, if applicable)
-		$this->LogQuery($strQuery);
 
 		//oracle does not accept the word AS to alias a table
 		$strQuery = str_replace(' AS ',' ',$strQuery);
@@ -239,7 +235,7 @@ class QOracleDatabase extends QDatabaseBase {
 
 
 
-	public function NonQuery($strNonQuery) {
+	protected function ExecuteNonQuery($strNonQuery) {
 
 		// Connect if Applicable
 		if (!$this->blnConnectedFlag) $this->Connect();
@@ -254,8 +250,6 @@ class QOracleDatabase extends QDatabaseBase {
 		//Oracle has a problem only with single quotes escaped
 		$strNonQuery = stripslashes($strNonQuery);
 
-		// Log Query (for Profiling, if applicable)
-		$this->LogQuery($strNonQuery);
 		// Perform the Query
 		$objResult = oci_parse($this->objOracle,$strNonQuery);
 

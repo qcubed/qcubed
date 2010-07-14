@@ -83,13 +83,7 @@
 			}
 		}
 
-		public function Query($strQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strQuery);
-
+		protected function ExecuteQuery($strQuery) {
 			// Perform the Query
 			$objResult = $this->objMySqli->query($strQuery);
 			if ($this->objMySqli->error)
@@ -100,13 +94,7 @@
 			return $objMySqliDatabaseResult;
 		}
 
-		public function NonQuery($strNonQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strNonQuery);
-
+		protected function ExecuteNonQuery($strNonQuery) {
 			// Perform the Query
 			$this->objMySqli->query($strNonQuery);
 			if ($this->objMySqli->error)
@@ -114,9 +102,6 @@
 		}
 		
 		public function GetTables() {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
 			// Use the MySQL "SHOW TABLES" functionality to get a list of all the tables in this database
 			$objResult = $this->Query("SHOW TABLES");
 			$strToReturn = array();
@@ -126,9 +111,6 @@
 		}
 		
 		public function GetFieldsForTable($strTableName) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
 			$objResult = $this->Query(sprintf('SELECT * FROM %s%s%s LIMIT 1', $this->strEscapeIdentifierBegin, $strTableName, $this->strEscapeIdentifierEnd));
 			return $objResult->FetchFields();
 		}
@@ -142,26 +124,17 @@
 		}
 		
 		public function TransactionBegin() {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=0;');
 		}
 
 		public function TransactionCommit() {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
 			$this->NonQuery('COMMIT;');
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=1;');
 		}
 
 		public function TransactionRollback() {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
 			$this->NonQuery('ROLLBACK;');
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=1;');
@@ -384,9 +357,6 @@
 		}
 
 		private function GetCreateStatementForTable($strTableName) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
 			// Use the MySQL "SHOW CREATE TABLE" functionality to get the table's Create statement
 			$objResult = $this->Query(sprintf('SHOW CREATE TABLE `%s`', $strTableName));
 			$objRow = $objResult->FetchRow();

@@ -275,13 +275,7 @@ class QSqLite3PdoDatabase extends QPdoDatabase {
 				return $objForeignKeyArrayReturn;
 		}
 
-		public function Query($strQuery) {
-				// Connect if Applicable
-				if (!$this->blnConnectedFlag) $this->Connect();
-
-				// Log Query (for Profiling, if applicable)
-				$this->LogQuery($strQuery);
-
+		protected function ExecuteQuery($strQuery) {
 				// Perform the Query
 				$objResult = $this->objPdo->query($strQuery);
 				if ($objResult === false)

@@ -61,13 +61,7 @@
 			}
 		}
 
-		public function Query($strQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strQuery);
-
+		protected function ExecuteQuery($strQuery) {
 			// Perform the Query
 			$objResult = mysql_query($strQuery, $this->objDb);			
 			if (mysql_errno($this->objDb))
@@ -78,13 +72,7 @@
 			return $objMySqlDatabaseResult;
 		}
 
-		public function NonQuery($strNonQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strNonQuery);
-
+		protected function ExecuteNonQuery($strNonQuery) {
 			// Perform the Query
 			mysql_query($strNonQuery, $this->objDb);
 			if (mysql_errno($this->objDb))

@@ -184,13 +184,7 @@
 			}
 		}
 
-		public function Query($strQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strQuery);
-
+		protected function ExecuteQuery($strQuery) {
 			// Perform the Query
 			$objResult = pg_query($this->objPgSql, $strQuery);
 			if (!$objResult)
@@ -202,13 +196,7 @@
 			return $objPgSqlDatabaseResult;
 		}
 
-		public function NonQuery($strNonQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strNonQuery);
-			
+		protected function ExecuteNonQuery($strNonQuery) {
 			// Perform the Query
 			$objResult = pg_query($this->objPgSql, $strNonQuery);
 			if (!$objResult)

@@ -227,13 +227,7 @@
 			}
 		}
 
-		public function Query($strQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strQuery);
-
+		protected function ExecuteQuery($strQuery) {
 			// First, check for QCODO_OFFSET<#> for LIMIT INFO Offseting
 			if ( ($intPosition = strpos($strQuery, 'QCODO_OFFSET<')) !== false) {
 				$intEndPosition = strpos($strQuery, '>', $intPosition);
@@ -272,13 +266,7 @@
 			return $objSqlServerDatabaseResult;
 		}
 
-		public function NonQuery($strNonQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strNonQuery);
-
+		protected function ExecuteNonQuery($strNonQuery) {
 			// Perform the Query
 
 			// Because the MSSQL extension throws warnings, we want to make our mssql_query

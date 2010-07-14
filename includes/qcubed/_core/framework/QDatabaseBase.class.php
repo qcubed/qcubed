@@ -32,8 +32,9 @@
 
 		// Abstract Methods that ALL Database Adapters MUST implement
 		abstract public function Connect();
-		abstract public function Query($strQuery);
-		abstract public function NonQuery($strNonQuery);
+		// these are protected - externally, the "Query/NonQuery" wrappers are meant to be called
+		abstract protected function ExecuteQuery($strQuery);
+		abstract protected function ExecuteNonQuery($strNonQuery);
 
 		abstract public function GetTables();
 		abstract public function InsertId($strTableName = null, $strColumnName = null);
@@ -51,6 +52,54 @@
 		abstract public function SqlSortByVariable($strSortByInfo);
 
 		abstract public function Close();
+		
+		public final function Query($strQuery) {
+			$timerName = null;
+			if (!$this->blnConnectedFlag) {
+				$this->Connect();
+			}
+			
+			
+			if ($this->blnEnableProfiling) {
+				$timerName = 'queryExec' . mt_rand() ;
+				QTimer::Start($timerName);
+			}
+			
+			$result = $this->ExecuteQuery($strQuery);
+			
+			if ($this->blnEnableProfiling) {
+				$dblQueryTime = QTimer::Stop($timerName);
+				QTimer::Reset($timerName);
+				
+				// Log Query (for Profiling, if applicable)
+				$this->LogQuery($strQuery, $dblQueryTime);
+			}
+
+			return $result;
+		}
+		
+		public final function NonQuery($strNonQuery) {
+			if (!$this->blnConnectedFlag) {
+				$this->Connect();
+			}
+
+			if ($this->blnEnableProfiling) {
+				$timerName = 'queryExec' . mt_rand() ;
+				QTimer::Start($timerName);
+			}
+			
+			$result = $this->ExecuteNonQuery($strNonQuery);
+
+			if ($this->blnEnableProfiling) {
+				$dblQueryTime = QTimer::Stop($timerName);
+				QTimer::Reset($timerName);
+	
+				// Log Query (for Profiling, if applicable)
+				$this->LogQuery($strNonQuery, $dblQueryTime);
+			}
+			
+			return $result;
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -133,41 +182,52 @@
 		 * If EnableProfiling is on, then log the query to the profile array
 		 *
 		 * @param string $strQuery
+		 * @param double $dblQueryTime query execution time in milliseconds
 		 * @return void
 		 */
-		protected function LogQuery($strQuery) {
+		private function LogQuery($strQuery, $dblQueryTime) {
 			if ($this->blnEnableProfiling) {
 				// Dereference-ize Backtrace Information
 				$objDebugBacktrace = debug_backtrace();
-				$objDebugBacktrace = unserialize(serialize($objDebugBacktrace));
-
-				// Get Rid of Unnecessary Backtrace Info
-				$intLength = count($objDebugBacktrace);
-				for ($intIndex = 0; $intIndex < $intLength; $intIndex++) {
-					if (($intIndex < 2) || ($intIndex > 3))
-						$objDebugBacktrace[$intIndex] = 'BackTrace ' . $intIndex;
-					else {
-						if (array_key_exists('args', $objDebugBacktrace[$intIndex])) {
-							$intInnerLength = count($objDebugBacktrace[$intIndex]['args']);
-							for ($intInnerIndex = 0; $intInnerIndex < $intInnerLength; $intInnerIndex++)
-								if (($objDebugBacktrace[$intIndex]['args'][$intInnerIndex] instanceof QQClause) ||
-									($objDebugBacktrace[$intIndex]['args'][$intInnerIndex] instanceof QQCondition))
-									$objDebugBacktrace[$intIndex]['args'][$intInnerIndex] = sprintf("[%s]", $objDebugBacktrace[$intIndex]['args'][$intInnerIndex]->__toString());
-								else if (is_null($objDebugBacktrace[$intIndex]['args'][$intInnerIndex]))
-									$objDebugBacktrace[$intIndex]['args'][$intInnerIndex] = 'null';
-								else if (gettype($objDebugBacktrace[$intIndex]['args'][$intInnerIndex]) == 'integer')
-									$objDebugBacktrace[$intIndex]['args'][$intInnerIndex] = $objDebugBacktrace[$intIndex]['args'][$intInnerIndex];
-								else if (gettype($objDebugBacktrace[$intIndex]['args'][$intInnerIndex]) == 'object')
-									$objDebugBacktrace[$intIndex]['args'][$intInnerIndex] = 'Object';
-								else
-									$objDebugBacktrace[$intIndex]['args'][$intInnerIndex] = sprintf("'%s'", $objDebugBacktrace[$intIndex]['args'][$intInnerIndex]);
-						}
-					}
-				}
-
+				
+				// get rid of unnecessary backtrace info in case of:
+				// query
+				if ((count($objDebugBacktrace) > 3) &&
+					(array_key_exists('function', $objDebugBacktrace[2])) &&
+					(($objDebugBacktrace[2]['function'] == 'QueryArray') ||
+					 ($objDebugBacktrace[2]['function'] == 'QuerySingle') ||
+					 ($objDebugBacktrace[2]['function'] == 'QueryCount')))
+					$objBacktrace = $objDebugBacktrace[3];
+				else
+					if (isset($objDebugBacktrace[2]))
+						// non query
+						$objBacktrace = $objDebugBacktrace[2];
+					else
+						// ad hoc query
+						$objBacktrace = $objDebugBacktrace[1];
+				
+				// get rid of reference to current object in backtrace array
+				if( isset($objBacktrace['object']))
+					$objBacktrace['object'] = null;
+				
+				for ($intIndex = 0; $intIndex < count($objBacktrace['args']); $intIndex++)
+					if (($objBacktrace['args'][$intIndex] instanceof QQClause) || ($objBacktrace['args'][$intIndex] instanceof QQCondition))
+						$objBacktrace['args'][$intIndex] = sprintf("[%s]", $objBacktrace['args'][$intIndex]->__toString());
+					else if (is_null($objBacktrace['args'][$intIndex]))
+						$objBacktrace['args'][$intIndex] = 'null';
+					else if (gettype($objBacktrace['args'][$intIndex]) == 'integer') {}
+					else if (gettype($intIndex['args'][$intIndex]) == 'object')
+						$objBacktrace['args'][$intIndex] = 'Object';
+					else
+						$objBacktrace['args'][$intIndex] = sprintf("'%s'", $objBacktrace['args'][$intIndex]);
+				
 				// Push it onto the profiling information array
-				array_push($this->strProfileArray, $objDebugBacktrace);
-				array_push($this->strProfileArray, $strQuery);
+				$arrProfile = array(
+					'objBacktrace' 	=> $objBacktrace,
+					'strQuery'			=> $strQuery,
+					'dblTimeInfo'		=> $dblQueryTime);
+				
+				array_push( $this->strProfileArray, $arrProfile);
 			}
 		}
 
@@ -286,7 +346,7 @@
 				printf('<input type="hidden" name="intDatabaseIndex" value="%s" />', $this->intDatabaseIndex);
 				printf('<input type="hidden" name="strReferrer" value="%s" /></div></form>', QApplication::HtmlEntities(QApplication::$RequestUri));
 
-				$intCount = round(count($this->strProfileArray) / 2);
+				$intCount = round(count($this->strProfileArray));
 				if ($intCount == 0)
 					printf('<b>PROFILING INFORMATION FOR DATABASE CONNECTION #%s</b>: No queries performed.  Please <a href="#" onclick="var frmDbProfile = document.getElementById(\'frmDbProfile%s\'); frmDbProfile.target = \'_blank\'; frmDbProfile.submit(); return false;">click here to view profiling detail</a><br />',
 						$this->intDatabaseIndex, $this->intDatabaseIndex);

@@ -459,12 +459,12 @@ class QInformixPdoDatabase extends QPdoDatabase {
 						 * 				AND	pc.contype = \'f\'
 						 * 			', $this->SqlVariable($strTableName));
 						 */            
-				 // BG copy of InformixSql    
-		// Use Query to pull the FKs
-		$strQuery = sprintf(
+				// BG copy of InformixSql    
+				// Use Query to pull the FKs
+				$strQuery = sprintf(
 						"SELECT a.constrid, a.constrname, a.tabid, b.primary pconstrid, b.ptabid, pk_tables.tabname pk_table, fk_tables.tabname fk_table
-					 FROM sysconstraints a, sysreferences b, systables pk_tables, systables fk_tables
-					WHERE a.constrid = b.constrid 
+						FROM sysconstraints a, sysreferences b, systables pk_tables, systables fk_tables
+						WHERE a.constrid = b.constrid 
 								AND b.ptabid = pk_tables.tabid 
 								AND a.tabid = fk_tables.tabid 
 								AND fk_tables.tabname = %s", 
@@ -511,8 +511,31 @@ class QInformixPdoDatabase extends QPdoDatabase {
 				 */
 				 // Bg copy of InformixSql 
 				$strKeyName = '';
-		while ($objRow = $objResult->GetNextRow()) {
-			if ($strKeyName != $objRow->GetColumn('constrname')) {
+				while ($objRow = $objResult->GetNextRow()) {
+						if ($strKeyName != $objRow->GetColumn('constrname')) {
+								if ($strKeyName) {
+									$objForeignKey = new QDatabaseForeignKey(
+									$strKeyName,
+									$strColumnNameArray,
+									$strReferenceTableName,
+									$strReferenceColumnNameArray);
+									array_push($objForeignKeyArray, $objForeignKey);
+								}
+				
+								$strKeyName = $objRow->GetColumn('constrname');
+								$intConstraintId = $objRow->GetColumn('constrid');
+								$intTableId = $objRow->GetColumn('tabid');
+								$strReferenceTableName = $objRow->GetColumn('pk_table');
+								$intReferenceConstraintId = $objRow->GetColumn('pconstrid');
+								$intReferenceTableId = $objRow->GetColumn('ptabid');
+								$strColumnNameArray = array();
+								$strReferenceColumnNameArray = array();
+						}
+					
+					$strColumnNameArray = $this->GetColumnsForConstraint($intConstraintId, $intTableId); 
+					$strReferenceColumnNameArray = $this->GetColumnsForConstraint($intReferenceConstraintId, $intReferenceTableId);
+				}
+
 				if ($strKeyName) {
 					$objForeignKey = new QDatabaseForeignKey(
 					$strKeyName,
@@ -522,28 +545,6 @@ class QInformixPdoDatabase extends QPdoDatabase {
 					array_push($objForeignKeyArray, $objForeignKey);
 				}
 
-				$strKeyName = $objRow->GetColumn('constrname');
-				$intConstraintId = $objRow->GetColumn('constrid');
-				$intTableId = $objRow->GetColumn('tabid');
-				$strReferenceTableName = $objRow->GetColumn('pk_table');
-				$intReferenceConstraintId = $objRow->GetColumn('pconstrid');
-				$intReferenceTableId = $objRow->GetColumn('ptabid');
-				$strColumnNameArray = array();
-				$strReferenceColumnNameArray = array();
-			}
-			
-			$strColumnNameArray = $this->GetColumnsForConstraint($intConstraintId, $intTableId); 
-			$strReferenceColumnNameArray = $this->GetColumnsForConstraint($intReferenceConstraintId, $intReferenceTableId);
-		}
-
-		if ($strKeyName) {
-			$objForeignKey = new QDatabaseForeignKey(
-			$strKeyName,
-			$strColumnNameArray,
-			$strReferenceTableName,
-			$strReferenceColumnNameArray);
-			array_push($objForeignKeyArray, $objForeignKey);
-		}
 				// --- BG End of Copy 
 				 
 				// Return the Array of Foreign Keys
@@ -552,16 +553,9 @@ class QInformixPdoDatabase extends QPdoDatabase {
 
 
 
-		public function Query($strQuery) {
-				// Connect if Applicable
-				if (!$this->blnConnectedFlag) $this->Connect();
+		protected function ExecuteQuery($strQuery) {
+				$strQuery = $this->QueryStringToInformixSyntax ($strQuery);  
 
-		$strQuery = $this->QueryStringToInformixSyntax ($strQuery);  
-
- 
-				// Log Query (for Profiling, if applicable)
-				$this->LogQuery($strQuery);
-				
 				// echo "$strQuery <br>" ;
 				// $objResult = $this->objPdo->query($strQuery);
 				
@@ -589,14 +583,8 @@ class QInformixPdoDatabase extends QPdoDatabase {
 
 
 		// BG Copied from generic PDO-adapter, because SQL-String not comaptible with Informix (to much  " )  
-		public function NonQuery($strNonQuery) {
-				// Connect if Applicable
-				if (!$this->blnConnectedFlag) $this->Connect();
-				
-		$strNonQuery = $this->QueryStringToInformixSyntax ($strNonQuery);  
-
-				// Log Query (for Profiling, if applicable)
-				$this->LogQuery($strNonQuery);
+		protected function ExecuteNonQuery($strNonQuery) {
+				$strNonQuery = $this->QueryStringToInformixSyntax ($strNonQuery);  
 
 				// Perform the Query
 				$objResult = $this->objPdo->query($strNonQuery);
@@ -605,14 +593,13 @@ class QInformixPdoDatabase extends QPdoDatabase {
 				$this->objMostRecentResult = $objResult;
 		}
 		
-		function QueryStringToInformixSyntax ( $strQuery )
-		{
+		function QueryStringToInformixSyntax ( $strQuery ) {
 				$strQuery = str_replace('"','',$strQuery); //
-			//remove backslash from escaped characters like \" and \\
-		$strQuery = stripslashes($strQuery);
+				//remove backslash from escaped characters like \" and \\
+				$strQuery = stripslashes($strQuery);
 				
 				// Informix does not accept the word AS to alias a table
-		$strQuery = str_replace(' AS ',' ',$strQuery);
+				$strQuery = str_replace(' AS ',' ',$strQuery);
 
 				return $strQuery ;  
 		}

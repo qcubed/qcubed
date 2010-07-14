@@ -40,13 +40,7 @@
 			return $strToReturn;
 		}
 
-		public function Query($strQuery) {
-			// Connect if Applicable
-			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strQuery);
-
+		protected function ExecuteQuery($strQuery) {
 			// Perform the Query
 			$objResult = $this->objMySqli->query($strQuery);
 			if ($this->objMySqli->error)
@@ -67,9 +61,6 @@
 		public function MultiQuery($strQuery) {
 			// Connect if Applicable
 			if (!$this->blnConnectedFlag) $this->Connect();
-
-			// Log Query (for Profiling, if applicable)
-			$this->LogQuery($strQuery);
 
 			// Perform the Query
 			$this->objMySqli->multi_query($strQuery);
