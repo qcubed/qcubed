@@ -893,13 +893,7 @@
 
 			// Update FormStatus and Clear Included JS/CSS list
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
-			$this->strIncludedJavaScriptFileArray = array();
 			$this->strIncludedStyleSheetFileArray = array();
-
-			// Figure out initial list of JavaScriptIncludes
-			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',qcubed.js, control.js');
-			if (!$strJavaScriptArray)
-				$strJavaScriptArray = array();
 
 			// Figure out initial list of StyleSheet includes
 			$strStyleSheetArray = array();
@@ -908,11 +902,6 @@
 			$this->strFormAttributeArray = array();
 
 			foreach ($this->GetAllControls() as $objControl) {
-				// Include any JavaScripts?  The control would have a
-				// comma-delimited list of javascript files to include (if applicable)
-				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts))
-					$strJavaScriptArray = array_merge($strJavaScriptArray, $strScriptArray);
-
 				// Include any StyleSheets?  The control would have a
 				// comma-delimited list of stylesheet files to include (if applicable)
 				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
@@ -923,7 +912,7 @@
 					$this->strFormAttributeArray = array_merge($this->strFormAttributeArray, $objControl->FormAttributes);
 				}
 			}
-			
+
 			if (is_array($this->strCustomAttributeArray))
 				$this->strFormAttributeArray = array_merge($this->strFormAttributeArray, $this->strCustomAttributeArray);
 
@@ -948,12 +937,6 @@
 			// Setup Rendered HTML
 			$strToReturn .= sprintf('<form method="post" id="%s" action="%s"%s>', $this->strFormId, htmlentities(QApplication::$RequestUri), $strFormAttributes);
 			$strToReturn .= "\r\n";
-
-			// Include javascripts that need to be included
-			foreach ($strJavaScriptArray as $strScript) {
-				$strToReturn .= sprintf('<script type="text/javascript" src="%s/%s"></script>', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__, $strScript);
-				$strToReturn .= "\r\n";
-			}
 
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
@@ -1102,6 +1085,17 @@
 				default:
 					throw new QCallerException('FormStatus is in an unknown status');
 			}
+			//Clear included javascript array
+			$this->strIncludedJavaScriptFileArray = array();
+			// Figure out initial list of JavaScriptIncludes
+			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',qcubed.js, control.js');
+			// Setup IncludeJs
+			$strToReturn = "\r\n";
+			// Include javascripts that need to be included
+			foreach ($strJavaScriptArray as $strScript) {
+				$strToReturn .= sprintf('<script type="text/javascript" src="%s/%s"></script>', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__, $strScript);
+				$strToReturn .= "\r\n";
+			}
 
 			// Setup End Script
 			$strEndScript = '';
@@ -1208,7 +1202,7 @@
 			$objForm = clone($this);
 
 			// Render HTML
-			$strToReturn = "\r\n<div style=\"display: none;\">\r\n\t";
+			$strToReturn .= "\r\n<div style=\"display: none;\">\r\n\t";
 			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormState" id="Qform__FormState" value="%s" />', QForm::Serialize($objForm));
 
 			$strToReturn .= "\r\n\t";
