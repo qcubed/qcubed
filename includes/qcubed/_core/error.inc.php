@@ -109,6 +109,15 @@
 			case E_USER_NOTICE:
 				$__exc_strObjectType = "E_USER_NOTICE";
 				break;
+			case E_DEPRECATED:
+				$__exc_strObjectType = 'E_DEPRECATED';
+				break;
+			case E_USER_DEPRECATED:
+				$__exc_strObjectType = 'E_USER_DEPRECATED';
+				break;
+			case E_RECOVERABLE_ERROR:
+				$__exc_strObjectType = 'E_RECOVERABLE_ERROR';
+				break;
 			default:
 				$__exc_strObjectType = "Unknown";
 				break;
