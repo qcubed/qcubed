@@ -63,7 +63,7 @@
 	<% } %>
 <% } %><%-----%>
 						');
-						
+
 						$objRow = $objResult->FetchArray();
 						if ($objRow[0] != $this-><%= $objColumn->VariableName %>)
 							throw new QOptimisticLockingException('<%= $objTable->ClassName %>');
@@ -146,12 +146,12 @@
 	<% } %>
 <% } %><%-----%>
 			');
-						
+
 			$objRow = $objResult->FetchArray();
 			$this-><%= $objColumn->VariableName %> = $objRow[0];
 	<% } %>
 <% } %>
 
-			// Return 
+			// Return
 			return $mixToReturn;
 		}

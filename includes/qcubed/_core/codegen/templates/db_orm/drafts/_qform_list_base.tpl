@@ -8,7 +8,7 @@
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
 	 * here by overriding existing or implementing new methods, properties and variables.
-	 * 
+	 *
 	 * NOTE: This file is overwritten on any code regenerations.  If you want to make
 	 * permanent changes, it is STRONGLY RECOMMENDED to move both <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_list.php AND
 	 * <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_list.tpl.php out of this Form Drafts directory.
@@ -38,7 +38,7 @@
 
 		protected function Form_Create() {
 			parent::Form_Create();
-			
+
 			// Instantiate the Meta DataGrid
 			$this->dtg<%= $objTable->ClassNamePlural %> = new <%= $objTable->ClassName %>DataGrid($this);
 

@@ -12,19 +12,19 @@
 	 *
 	 * Any and all changes to this file will be overwritten with any subsequent re-
 	 * code generation.
-	 * 
+	 *
 	 * @package <%= QCodeGen::$ApplicationName; %>
 	 * @property QQCondition $AdditionalConditions Any conditions to use during binding
 	 * @property QQClause $AdditionalClauses Any clauses to use during binding
 	 * @subpackage MetaControls
-	 * 
+	 *
 	 */
 	class <%= $objTable->ClassName %>DataGridGen extends QDataGrid {
 		protected $conAdditionalConditions;
 		protected $clsAdditionalClauses;
-		
+
 		protected $blnShowFilter = true;
-		
+
 		<%@ constructor('objTable'); %>
 
 

@@ -102,7 +102,7 @@
 		 * @var Reference Reference
 		 */
 		protected $objReference;
-		
+
 		/**
 		 * The string value of the comment field in the database.
 		 * @var string Comment

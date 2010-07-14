@@ -1,22 +1,22 @@
-<?php 
+<?php
 	foreach ($objTable->IndexArray as $objIndex) {
 		if ($objIndex->Unique && !$objIndex->PrimaryKey) {
 			$objColumnArray = $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray); ?>
-			if (($obj<?php print $objTable->ClassName;?> = <?php print $objTable->ClassName;?>::LoadBy<?php print $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);?>(<?php 
-				foreach ($objColumnArray as $intColumnIndex => $objColumn) { 
+			if (($obj<?php print $objTable->ClassName;?> = <?php print $objTable->ClassName;?>::LoadBy<?php print $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);?>(<?php
+				foreach ($objColumnArray as $intColumnIndex => $objColumn) {
 					print '$this->';
 					print $objCodeGen->FormControlVariableNameForColumn($objColumn);
 					print '->';
-					if ($objColumn->VariableType == QType::DateTime) { 
+					if ($objColumn->VariableType == QType::DateTime) {
 						print 'DateTime';
-					} elseif ($objColumn->VariableType == QType::Boolean) { 
+					} elseif ($objColumn->VariableType == QType::Boolean) {
 						print 'Checked';
-					} elseif ($objColumn->Reference) { 
+					} elseif ($objColumn->Reference) {
 						print 'SelectedValue';
-					} else { 
+					} else {
 						print 'Text';
 					}
-					if ($intColumnIndex != count($objIndex->ColumnNameArray)-1) { print ','; } 
+					if ($intColumnIndex != count($objIndex->ColumnNameArray)-1) { print ','; }
 				}?>))<?php
 					foreach ($objPrimaryColumnArray = $objTable->PrimaryKeyColumnArray as $objColumn){
 						if ($objColumn->PrimaryKey){

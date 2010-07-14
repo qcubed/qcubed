@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * Used by the QCubed Code Generator to describe a column reference from 
+	 * Used by the QCubed Code Generator to describe a column reference from
 	 * the table's perspective (aka a Foreign Key from the referenced Table's point of view)
 	 * @package Codegen
 	 */

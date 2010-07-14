@@ -78,8 +78,8 @@
 		 */
 		public function GetColumnByName($strColumnName) {
 			if ($this->objColumnArray) {
-				foreach ($this->objColumnArray as $objColumn){ 
-					if ($objColumn->Name == $strColumnName) 
+				foreach ($this->objColumnArray as $objColumn){
+					if ($objColumn->Name == $strColumnName)
 						return $objColumn;
 				}
 			}

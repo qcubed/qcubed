@@ -15,7 +15,7 @@
 	 *
 	 * This file is intended to be modified.  Subsequent code regenerations will NOT modify
 	 * or overwrite this file.
-	 * 
+	 *
 	 * @package <%= QCodeGen::$ApplicationName; %>
 	 * @subpackage MetaControls
 	 */

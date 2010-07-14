@@ -15,7 +15,7 @@
 			'strClassName' => $objTable->ClassName,
 			'strControlId' => $objCodeGen->FormControlVariableNameForColumn($objColumn)
 		);
-	
+
 		// Figure out WHICH "control_create_" to use
 		if ($objColumn->Reference) {
 			if ($objColumn->Reference->IsType)
@@ -51,7 +51,7 @@
 			'strClassName' => $objTable->ClassName,
 			'strControlId' => $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference)
 		);
-	
+
 		// Get the subtemplate and evaluate
 		return $objCodeGen->EvaluateSubTemplate('control_update_unique_reversereference.tpl', $strModuleName, $mixArguments) . "\n";
 	} else

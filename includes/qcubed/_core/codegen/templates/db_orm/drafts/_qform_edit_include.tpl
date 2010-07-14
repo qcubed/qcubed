@@ -3,7 +3,7 @@
 	// This is the HTML template include file (.tpl.php) for the <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.php
 	// form DRAFT page.  Remember that this is a DRAFT.  It is MEANT to be altered/modified.
 
-	// Be sure to move this out of the generated/ subdirectory before modifying to ensure that subsequent 
+	// Be sure to move this out of the generated/ subdirectory before modifying to ensure that subsequent
 	// code re-generations do not overwrite your changes.
 
 	$strPageTitle = QApplication::Translate('<%= $objTable->ClassName %>') . ' - ' . $this->mct<%= $objTable->ClassName %>->TitleVerb;
@@ -40,6 +40,6 @@
 		<div id="delete"><?php $this->btnDelete->Render(); ?></div>
 	</div>
 
-	<?php $this->RenderEnd() ?>	
+	<?php $this->RenderEnd() ?>
 
 <?php require(__CONFIGURATION__ .'/footer.inc.php'); ?>

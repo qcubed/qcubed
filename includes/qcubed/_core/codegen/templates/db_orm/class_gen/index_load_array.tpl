@@ -2,7 +2,7 @@
 		/**
 		 * Load an array of <%= $objTable->ClassName %> objects,
 		 * by <%= $objCodeGen->ImplodeObjectArray(', ', '', '', 'PropertyName', $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray)) %> Index(es)
-<% foreach ($objColumnArray as $objColumn) { %> 
+<% foreach ($objColumnArray as $objColumn) { %>
 		 * @param <%= $objColumn->VariableType %> $<%= $objColumn->VariableName %>
 <% } %>
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
@@ -31,7 +31,7 @@
 		/**
 		 * Count <%= $objTable->ClassNamePlural %>
 		 * by <%= $objCodeGen->ImplodeObjectArray(', ', '', '', 'PropertyName', $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray)) %> Index(es)
-<% foreach ($objColumnArray as $objColumn) { %> 
+<% foreach ($objColumnArray as $objColumn) { %>
 		 * @param <%= $objColumn->VariableType %> $<%= $objColumn->VariableName %>
 <% } %>
 		 * @return int

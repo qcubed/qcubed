@@ -22,12 +22,12 @@
 	} else {
 		$strTemplateFilename = $objColumn->VariableType;
 	}
-	
+
 	// Get the subtemplate and evaluate
 	return $objCodeGen->EvaluateSubTemplate(sprintf('control_create_%s.tpl', $strTemplateFilename), $strModuleName, $mixArguments) . "\n\n";
 %><% } %>
 <% foreach ($objTable->ReverseReferenceArray as $objReverseReference) { %><%
-	if ($objReverseReference->Unique) { 
+	if ($objReverseReference->Unique) {
 		// Use the "control_create_" subtemplates to generate the code
 		// required to create/setup the control.
 		$mixArguments = array(

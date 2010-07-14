@@ -7,7 +7,7 @@
 		 * Gets all associated <%= $objReverseReference->ObjectDescriptionPlural %> as an array of <%= $objReverseReference->VariableType %> objects
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @return <%= $objReverseReference->VariableType %>[]
-		*/ 
+		*/
 		public function Get<%= $objReverseReference->ObjectDescription %>Array($objOptionalClauses = null) {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				return array();
@@ -23,7 +23,7 @@
 		/**
 		 * Counts all associated <%= $objReverseReference->ObjectDescriptionPlural %>
 		 * @return int
-		*/ 
+		*/
 		public function Count<%= $objReverseReference->ObjectDescriptionPlural %>() {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				return 0;
@@ -35,7 +35,7 @@
 		 * Associates a <%= $objReverseReference->ObjectDescription %>
 		 * @param <%= $objReverseReference->VariableType %> $<%= $objReverseReference->VariableName %>
 		 * @return void
-		*/ 
+		*/
 		public function Associate<%= $objReverseReference->ObjectDescription %>(<%= $objReverseReference->VariableType %> $<%= $objReverseReference->VariableName %>) {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				throw new QUndefinedPrimaryKeyException('Unable to call Associate<%= $objReverseReference->ObjectDescription %> on this unsaved <%= $objTable->ClassName %>.');
@@ -63,7 +63,7 @@
 		 * Unassociates a <%= $objReverseReference->ObjectDescription %>
 		 * @param <%= $objReverseReference->VariableType %> $<%= $objReverseReference->VariableName %>
 		 * @return void
-		*/ 
+		*/
 		public function Unassociate<%= $objReverseReference->ObjectDescription %>(<%= $objReverseReference->VariableType %> $<%= $objReverseReference->VariableName %>) {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<%= $objReverseReference->ObjectDescription %> on this unsaved <%= $objTable->ClassName %>.');
@@ -91,7 +91,7 @@
 		/**
 		 * Unassociates all <%= $objReverseReference->ObjectDescriptionPlural %>
 		 * @return void
-		*/ 
+		*/
 		public function UnassociateAll<%= $objReverseReference->ObjectDescriptionPlural %>() {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<%= $objReverseReference->ObjectDescription %> on this unsaved <%= $objTable->ClassName %>.');
@@ -114,7 +114,7 @@
 		 * Deletes an associated <%= $objReverseReference->ObjectDescription %>
 		 * @param <%= $objReverseReference->VariableType %> $<%= $objReverseReference->VariableName %>
 		 * @return void
-		*/ 
+		*/
 		public function DeleteAssociated<%= $objReverseReference->ObjectDescription %>(<%= $objReverseReference->VariableType %> $<%= $objReverseReference->VariableName %>) {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<%= $objReverseReference->ObjectDescription %> on this unsaved <%= $objTable->ClassName %>.');
@@ -140,7 +140,7 @@
 		/**
 		 * Deletes all associated <%= $objReverseReference->ObjectDescriptionPlural %>
 		 * @return void
-		*/ 
+		*/
 		public function DeleteAll<%= $objReverseReference->ObjectDescriptionPlural %>() {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<%= $objReverseReference->ObjectDescription %> on this unsaved <%= $objTable->ClassName %>.');

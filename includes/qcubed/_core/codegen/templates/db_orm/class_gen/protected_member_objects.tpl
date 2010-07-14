@@ -27,12 +27,12 @@
 		 * @var <%= $objReverseReference->VariableType %> <%= $objReverseReference->ObjectMemberVariable %>
 		 */
 		protected $<%= $objReverseReference->ObjectMemberVariable %>;
-		
+
 		/**
 		 * Used internally to manage whether the adjoined <%= $objReverseReference->ObjectDescription %> object
 		 * needs to be updated on save.
-		 * 
-		 * NOTE: Do not manually update this value 
+		 *
+		 * NOTE: Do not manually update this value
 		 */
 		protected $blnDirty<%= $objReverseReference->ObjectPropertyName %>;
 

@@ -6,7 +6,7 @@
 		 * Gets all many-to-many associated <%= $objManyToManyReference->ObjectDescriptionPlural %> as an array of <%= $objManyToManyReference->VariableType %> objects
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @return <%= $objManyToManyReference->VariableType %>[]
-		*/ 
+		*/
 		public function Get<%= $objManyToManyReference->ObjectDescription %>Array($objOptionalClauses = null) {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				return array();
@@ -22,7 +22,7 @@
 		/**
 		 * Counts all many-to-many associated <%= $objManyToManyReference->ObjectDescriptionPlural %>
 		 * @return int
-		*/ 
+		*/
 		public function Count<%= $objManyToManyReference->ObjectDescriptionPlural %>() {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				return 0;
@@ -55,7 +55,7 @@
 		 * Associates a <%= $objManyToManyReference->ObjectDescription %>
 		 * @param <%= $objManyToManyReference->VariableType %> $<%= $objManyToManyReference->VariableName %>
 		 * @return void
-		*/ 
+		*/
 		public function Associate<%= $objManyToManyReference->ObjectDescription %>(<%= $objManyToManyReference->VariableType %> $<%= $objManyToManyReference->VariableName %>) {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				throw new QUndefinedPrimaryKeyException('Unable to call Associate<%= $objManyToManyReference->ObjectDescription %> on this unsaved <%= $objTable->ClassName %>.');
@@ -81,7 +81,7 @@
 		 * Unassociates a <%= $objManyToManyReference->ObjectDescription %>
 		 * @param <%= $objManyToManyReference->VariableType %> $<%= $objManyToManyReference->VariableName %>
 		 * @return void
-		*/ 
+		*/
 		public function Unassociate<%= $objManyToManyReference->ObjectDescription %>(<%= $objManyToManyReference->VariableType %> $<%= $objManyToManyReference->VariableName %>) {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<%= $objManyToManyReference->ObjectDescription %> on this unsaved <%= $objTable->ClassName %>.');
@@ -104,7 +104,7 @@
 		/**
 		 * Unassociates all <%= $objManyToManyReference->ObjectDescriptionPlural %>
 		 * @return void
-		*/ 
+		*/
 		public function UnassociateAll<%= $objManyToManyReference->ObjectDescriptionPlural %>() {
 			if (<%= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) %>)
 				throw new QUndefinedPrimaryKeyException('Unable to call UnassociateAll<%= $objManyToManyReference->ObjectDescription %>Array on this unsaved <%= $objTable->ClassName %>.');

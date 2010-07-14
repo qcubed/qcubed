@@ -31,9 +31,9 @@
 		 * Static Helper Method to Create using PK arguments
 		 * You must pass in the PK arguments on an object to load, or leave it blank to create a new one.
 		 * If you want to load via QueryString or PathInfo, use the CreateFromQueryString or CreateFromPathInfo
-		 * static helper methods.  Finally, specify a CreateType to define whether or not we are only allowed to 
+		 * static helper methods.  Finally, specify a CreateType to define whether or not we are only allowed to
 		 * edit, or if we are also allowed to create a new one, etc.
-		 * 
+		 *
 		 * @param mixed $objParentObject QForm or QPanel which will be using this <%= $objTable->ClassName %>MetaControl
 <% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { %>
 		 * @param <%= $objColumn->VariableType %> $<%= $objColumn->VariableName %> primary key value

@@ -91,7 +91,7 @@
 
 				// Otherwise
 				else
-					// Don't add a space					
+					// Don't add a space
 					$strToReturn .= $strChar;
 			}
 
@@ -113,7 +113,7 @@
 				else
 					$strToReturn .= $strChar;
 			}
-			
+
 			return strtolower($strToReturn);
 		}
 

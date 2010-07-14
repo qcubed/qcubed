@@ -13,10 +13,10 @@
 	 *
 	 * Any and all changes to this file will be overwritten with any subsequent re-
 	 * code generation.
-	 * 
+	 *
 	 * @package <%= QCodeGen::$ApplicationName; %>
 	 * @subpackage Drafts
-	 * 
+	 *
 	 */
 	class <%= $objTable->ClassName %>ListPanel extends QPanel {
 		// Local instance of the Meta DataGrid to list <%= $objTable->ClassNamePlural %>
@@ -44,7 +44,7 @@
 		 * @var string CloseEditPanelMethod
 		 */
 		protected $strCloseEditPanelMethod;
-		
+
 		public function __construct($objParentObject, $strSetEditPanelMethod, $strCloseEditPanelMethod, $strControlId = null) {
 			// Call the Parent
 			try {

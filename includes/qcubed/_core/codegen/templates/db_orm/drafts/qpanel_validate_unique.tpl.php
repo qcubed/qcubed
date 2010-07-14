@@ -11,7 +11,7 @@ if ($blnHasUnique) {
 // Check for records that may violate Unique Clauses
 		public function Validate() {
 			$blnToReturn = true;
-<?php 
+<?php
 	require 'validate_unique.tpl.php';
 ?>
 	return $blnToReturn;
