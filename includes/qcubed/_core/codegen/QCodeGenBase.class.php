@@ -89,6 +89,12 @@
 
 		public static $RootErrors = '';
 
+		/** 
+		 * @var string[] array of directories to be excluded in codegen (lower cased)
+		 * @access protected 
+		 */ 
+		protected static $DirectoriesToExcludeArray = array('.','..','.svn','svn','cvs','.git'); 
+
 		public static function GetSettingsXml() {
 			$strCrLf = "\r\n";
 
@@ -258,8 +264,7 @@
 			// Go through standard templates first
 			$objDirectory = opendir($strTemplatePath);
 			while ($strModuleName = readdir($objDirectory)) {
-				if (($strModuleName != '.') && ($strModuleName != '..') &&
-					($strModuleName != 'SVN') && ($strModuleName != 'CVS') &&
+				if (!in_array(strtolower($strModuleName), QCodeGen::$DirectoriesToExcludeArray) &&
 					is_dir($strTemplatePath . '/' . $strModuleName)) {
 
 					// We're in a valid Module -- look for any _*.tpl template files
@@ -278,8 +283,7 @@
 			if (is_dir($strTemplatePathCustom)) {
 				$objDirectory = opendir($strTemplatePathCustom);
 				while ($strModuleName = readdir($objDirectory)) {
-					if (($strModuleName != '.') && ($strModuleName != '..') &&
-						($strModuleName != 'SVN') && ($strModuleName != 'CVS') &&
+					if (!in_array(strtolower($strModuleName), QCodeGen::$DirectoriesToExcludeArray) &&
 						is_dir($strTemplatePathCustom . '/' . $strModuleName)) {
 						$objModuleDirectory = opendir($strTemplatePathCustom . '/' . $strModuleName);
 						while ($strFilename = readdir($objModuleDirectory))
