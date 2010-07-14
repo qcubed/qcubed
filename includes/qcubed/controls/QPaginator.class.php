@@ -7,8 +7,6 @@
 		protected $strLabelForNext;
 
 		protected $strCssClass = 'paginator';
-		
-		protected $prxPagination;
 
 		//////////
 		// Methods
@@ -18,16 +16,6 @@
 
 			$this->strLabelForPrevious = QApplication::Translate('Previous');
 			$this->strLabelForNext = QApplication::Translate('Next');
-			
-			$this->prxPagination = new QControlProxy($this);
-			
-			if ($this->blnUseAjax) {
-				$this->prxPagination->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Page_Click'));
-			}
-			else {
-				$this->prxPagination->AddAction(new QClickEvent(), new QServerControlAction($this, 'Page_Click'));
-			}			
-			$this->prxPagination->AddAction(new QClickEvent, new QTerminateAction());
 		}		
 		
 		public function GetControlHtml() {
@@ -45,7 +33,7 @@
 				$this->strActionParameter = $this->intPageNumber - 1;
 				$strToReturn .= sprintf('<span class="arrow"><a id="%s" href="%s" %s>%s</a></span>',
 					$this->ControlId . "_arrow_" . $this->strActionParameter,
-                    QApplication::$RequestUri,
+					QApplication::$RequestUri,
 					$this->prxPagination->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_arrow_" . $this->strActionParameter, false),
 					$this->strLabelForPrevious);							
 					
@@ -63,7 +51,7 @@
 						$this->strActionParameter = $intIndex;
 						$strToReturn .= sprintf('<span class="page"><a id="%s" href="%s" %s>%s</a></span>',
 							$this->ControlId . "_page_" . $this->strActionParameter,
-                        	QApplication::$RequestUri,
+							QApplication::$RequestUri,
 							$this->prxPagination->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_page_" . $this->strActionParameter, false),
 							$intIndex);							
 					}
@@ -138,7 +126,7 @@
 					$this->strActionParameter = 1;
 					$strStartEllipsis = sprintf('<span class="page"><a id="%s" href="%s" %s>%s</a></span>',
 						$this->ControlId . "_page_" . $this->strActionParameter,
-                        QApplication::$RequestUri,
+						QApplication::$RequestUri,
 						$this->prxPagination->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_page_" . $this->strActionParameter, false),
 						1);							
 					
@@ -155,7 +143,7 @@
 					$this->strActionParameter = $this->PageCount;
 					$strEndEllipsis .= sprintf('<span class="page"><a id="%s" href="%s" %s>%s</a></span>',
 						$this->ControlId . "_page_" . $this->strActionParameter,
-                        QApplication::$RequestUri,
+						QApplication::$RequestUri,
 						$this->prxPagination->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_page_" . $this->strActionParameter, false),
 						$this->PageCount);							
 						
@@ -170,7 +158,7 @@
 						$this->strActionParameter = $intIndex;
 						$strToReturn .= sprintf('<span class="page"><a id="%s" href="%s" %s>%s</a></span>',
 							$this->ControlId . "_page_" . $this->strActionParameter,
-	                        QApplication::$RequestUri,
+							QApplication::$RequestUri,
 							$this->prxPagination->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_page_" . $this->strActionParameter, false),
 							$intIndex);						
 						
@@ -188,7 +176,7 @@
 				$this->strActionParameter = $this->intPageNumber + 1;
 				$strToReturn .= sprintf('<span class="arrow"><a id="%s" href="%s" %s>%s</a></span>',
 					$this->ControlId . "_arrow_" . $this->strActionParameter,
-                    QApplication::$RequestUri,
+					QApplication::$RequestUri,
 					$this->prxPagination->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_arrow_" . $this->strActionParameter, false),
 					$this->strLabelForNext);						
 				

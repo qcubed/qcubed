@@ -29,6 +29,8 @@
 		protected $objPaginatedControl;
 		protected $objWaitIcon = 'default';
 
+		protected $prxPagination = null;
+
 		// SETUP
 		protected $blnIsBlockElement = false;
 
@@ -43,18 +45,21 @@
 				throw $objExc;
 			}
 			
+			$this->prxPagination = new QControlProxy($this);
 			$this->Setup();
 		}
 	
 		protected function Setup()
 		{
 			// Setup Pagination Events
-			if ($this->blnUseAjax)
-				$this->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Page_Click', $this->objWaitIcon));
-			else
-				$this->AddAction(new QClickEvent(), new QServerControlAction($this, 'Page_Click'));
-
-			$this->AddAction(new QClickEvent(), new QTerminateAction());
+			$this->prxPagination->RemoveAllActions(QClickEvent::EventName);			
+			if ($this->blnUseAjax) {
+				$this->prxPagination->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Page_Click'));
+			}
+			else {
+				$this->prxPagination->AddAction(new QClickEvent(), new QServerControlAction($this, 'Page_Click'));
+			}
+			$this->prxPagination->AddAction(new QClickEvent, new QTerminateAction());
 		}
 
 		public function ParsePostData() {}
@@ -156,7 +161,6 @@
 					}
 
 					// Because we are switching to/from Ajax, we need to reset the events
-					$this->RemoveAllActions('onclick');
 					$this->Setup();
 
 					return $blnToReturn;
@@ -165,7 +169,6 @@
 					try {
 						$mixToReturn = $this->objWaitIcon = $mixValue;
 						//ensure we update our ajax action to use it
-						$this->RemoveAllActions('onclick');
 						$this->Setup();
 						return $mixToReturn;
 					} catch (QCallerException $objExc) {

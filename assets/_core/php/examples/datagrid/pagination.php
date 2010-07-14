@@ -10,7 +10,10 @@
 			$this->dtgPersons = new QDataGrid($this);
 			$this->dtgPersons->CellPadding = 5;
 			$this->dtgPersons->CellSpacing = 0;
-			
+
+			// Using Ajax for Pagination
+			$this->dtgPersons->UseAjax = true;
+						
 			// To create pagination, we will create a new paginator, and specify the datagrid
 			// as the paginator's parent.  (We do this because the datagrid is the control
 			// who is responsible for rendering the paginator, as opposed to the form.)
