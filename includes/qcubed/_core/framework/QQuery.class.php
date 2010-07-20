@@ -1310,6 +1310,22 @@
 		public function __toString() {
 			return 'QQLimitInfo Clause';
 		}
+
+		public function __get($strName) {
+			switch ($strName) {
+				case 'MaxRowCount':
+					return $this->intMaxRowCount;
+				case 'Offset':
+					return $this->intOffset;
+			default:
+				try {
+					return parent::__get($strName);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			}
+		}
 	}
 	
 	class QQExpandVirtualNode extends QQClause {
