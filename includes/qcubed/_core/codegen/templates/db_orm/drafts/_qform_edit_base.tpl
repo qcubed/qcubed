@@ -8,7 +8,7 @@
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
 	 * here by overriding existing or implementing new methods, properties and variables.
-	 *
+	 * 
 	 * NOTE: This file is overwritten on any code regenerations.  If you want to make
 	 * permanent changes, it is STRONGLY RECOMMENDED to move both <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.php AND
 	 * <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.tpl.php out of this Form Drafts directory.
@@ -59,6 +59,8 @@
 //		protected function Form_PreRender() {}
 
 		protected function Form_Run() {
+			parent::Form_Run();
+			
 			// Security check for ALLOW_REMOTE_ADMIN
 			// To allow access REGARDLESS of ALLOW_REMOTE_ADMIN, simply remove the line below
 			QApplication::CheckRemoteAdmin();
@@ -106,8 +108,8 @@
 		 * It will also Blink() on all invalid controls, as well as Focus() on the top-most invalid control.
 		 */
 		protected function Form_Validate() {
-			// By default, we report that Custom Validations passed
-			$blnToReturn = true;
+			// By default, we report the result of validation from the parent
+			$blnToReturn = parent::Form_Validate();
 
 			// Custom Validation Rules
 			// TODO: Be sure to set $blnToReturn to false if any custom validation fails!
