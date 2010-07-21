@@ -13,7 +13,7 @@
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
 	 * here by overriding existing or implementing new methods, properties and variables.
-	 *
+	 * 
 	 * NOTE: This file is overwritten on any code regenerations.  If you want to make
 	 * permanent changes, it is STRONGLY RECOMMENDED to move both <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.php AND
 	 * <%= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) %>_edit.tpl.php out of this Form Drafts directory.
@@ -23,7 +23,13 @@
 	 */
 	class <%= $objTable->ClassName %>EditForm extends <%= $objTable->ClassName %>EditFormBase {
 		// Override Form Event Handlers as Needed
-//		protected function Form_Run() {}
+		protected function Form_Run() {
+			parent::Form_Run();
+
+			// Security check for ALLOW_REMOTE_ADMIN
+			// To allow access REGARDLESS of ALLOW_REMOTE_ADMIN, simply remove the line below
+			QApplication::CheckRemoteAdmin();
+		}
 
 //		protected function Form_Load() {}
 
