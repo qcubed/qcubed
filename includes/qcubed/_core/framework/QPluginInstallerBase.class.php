@@ -74,17 +74,11 @@ abstract class QPluginInstallerBase {
 		$result = "";
 		
 		// Creating folder hierarchy if necessary
-		$arrFolderSteps = explode("/", $strDestinationPath);
-		$cumulativePath = "";
-		for ($i = 0; $i < sizeof($arrFolderSteps) - 1; $i++) {
-			$step = $arrFolderSteps[$i];
-			$cumulativePath .= $step . "/";
-			if (!is_dir($cumulativePath)) {
-				mkdir ($cumulativePath);
-				$result .= "Created deployment destination directory " . $cumulativePath . "\r\n";
-			}
+		if (!is_dir($strDestinationPath)) {
+			mkdir ($strDestinationPath, 0777, true);
+			$result .= "Created deployment destination directory " . $strDestinationPath . "\r\n";
 		}
-		
+
 		copy($strSourcePath, $strDestinationPath);
 		$result .= "Deployed file to " . $strDestinationPath . "\r\n";
 		
