@@ -15,6 +15,12 @@
 			// Only show projects whose status is "open"
 			$this->dtgProjects->AdditionalConditions = QQ::Equal(QQN::Project()->ProjectStatusTypeId, ProjectStatusType::Open);
 
+			//expand on the ManagerPerson's login, since we're displaying it
+			$this->dtgProjects->AdditionalClauses = array(
+				QQ::Expand(QQN::Project()->ManagerPerson),
+				QQ::Expand(QQN::Project()->ManagerPerson->Login)
+				);
+
 			// DataBinding is already configured -- so we do not need to worry about it
 
 			// But remember that dtgProjects is just a regular datagrid, as well

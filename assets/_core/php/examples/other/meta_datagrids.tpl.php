@@ -21,7 +21,7 @@
 		a condition on the meta datagrid - you don't even need to define your own data bind function! Simply set
 		the <b>AdditionalConditions</b> property to an appropriate QQuery condition, and you're good to go. In
 		this example, we'll only show projects whose status is "open". Clauses such as expand can also easily
-		be applied by similarly setting the AdditionalClauses property.</p>
+		be applied by similarly setting the <b>AdditionalClauses</b> property.</p>
 
 		<p>But again, similar to <b>MetaControls</b>, note that the datagrid is just a regular <b>QDataGrid</b> object,
 		and the columns are just regular <b>QDataGridColumn</b> objects, which means that you can modify 
