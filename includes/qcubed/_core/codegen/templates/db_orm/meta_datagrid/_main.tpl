@@ -82,7 +82,7 @@
 				}
 				case 'AdditionalClauses':
 				try {
-					return ($this->clsAdditionalClauses = QType::Cast($mixValue, 'QQClause'));
+					return ($this->clsAdditionalClauses = QType::Cast($mixValue, QType::ArrayType));
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
