@@ -111,7 +111,7 @@
 			$strToReturn = "";
 
 			if ($this->strCssClass)
-				$strToReturn .= sprintf('class="%s" ', $this->strCssClass);
+				$strToReturn .= sprintf(' class="%s" ', $this->strCssClass);
 
 			$strStyle = "";			
 			
@@ -157,7 +157,7 @@
 			}
 			
 			if ($strStyle)
-				$strToReturn .= sprintf('style="%s" ', $strStyle);
+				$strToReturn .= sprintf(' style="%s" ', $strStyle);
 			
 			return $strToReturn;
 		}
