@@ -25,6 +25,7 @@
 
 			// Setup DataGridColumns
 			$this->col<%= $objManyToManyReference->ObjectDescription %>Selected = new QCheckBoxColumn(QApplication::Translate('Select'), $this-><%= $strControlId %>);
+			$this->col<%= $objManyToManyReference->ObjectDescription %>Selected->PrimaryKey = '<%= $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName %>';
 			$this->col<%= $objManyToManyReference->ObjectDescription %>Selected->SetCheckboxCallback($this, '<%= $strControlId %>Select_Created');
 			$this-><%= $strControlId %>->AddColumn($this->col<%= $objManyToManyReference->ObjectDescription %>Selected);
 
@@ -55,7 +56,7 @@
 			if('' != $strURL)
 				return sprintf('<a href="%s%s">%s</a>',
 					$strURL,
-					$_ITEM->Id,
+					$_ITEM-><%= $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName %>,
 					$strName);
 			return $strName;
 		}

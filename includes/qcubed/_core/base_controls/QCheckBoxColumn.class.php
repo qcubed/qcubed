@@ -18,6 +18,7 @@ class QCheckBoxColumn extends QDataGridColumn
 	protected $colIndex = -1;
 	protected $objCheckboxCallback = null;
 	protected $strCheckboxCallbackFunc = null;
+	protected $strPrimaryKey = 'Id';
 	
 	/**
 	 * Creates a QDataGridColumn of checkboxes
@@ -110,7 +111,7 @@ class QCheckBoxColumn extends QDataGridColumn
 	}
 	
 	public function chkSelected_Render($_ITEM) {
-		$intId = $_ITEM->Id;
+		$intId = $_ITEM->{$this->strPrimaryKey};
 		$colIndex = $this->GetColIndex();
 		$strControlId = 'chkSelect' . $colIndex.$this->objDataGrid->ControlId .'n'.$intId;
 		
@@ -144,7 +145,7 @@ class QCheckBoxColumn extends QDataGridColumn
 		$itemIds = $this->GetSelectedIds();
 		
 		//load these items, using QQ::In so that it's a single DB hit
-		$idQQNode = QQN::$strClass()->Id;
+		$idQQNode = QQN::$strClass()->{$this->strPrimaryKey};
 		$conditions = QQ::In($idQQNode, $itemIds);
 		$items = call_user_func(array($strClass, 'QueryArray'), $conditions, $objClauses);
 		
@@ -153,7 +154,7 @@ class QCheckBoxColumn extends QDataGridColumn
 		{
 			$newitems = array();
 			foreach($items as $item)
-				$newitems[$item->Id] = $item;
+				$newitems[$item->{$this->strPrimaryKey}] = $item;
 			return $newitems;
 		}
 		
@@ -260,6 +261,8 @@ class QCheckBoxColumn extends QDataGridColumn
 			case "Name": 
 				$strControl = $this->chkSelectAll_Render();
 				return '<label for="'.$this->chkSelectAll->ControlId.'">' .$this->strName . ' ' . $strControl. '</label>';
+			case "PrimaryKey": 
+				return $this->strPrimaryKey;
 			default:
 			try {
 				return parent::__get($strName);
@@ -269,6 +272,42 @@ class QCheckBoxColumn extends QDataGridColumn
 			}
 		}
 	}
+	
+	/**
+	 * Override method to perform a property "Set"
+	 * This will set the property $strName to be $mixValue
+	 *
+	 * @param string $strName Name of the property to set
+	 * @param string $mixValue New value of the property
+	 * @return mixed
+	 */
+	public function __set($strName, $mixValue) {
+		switch ($strName) {
+			///////////////////
+			// Member Variables
+			///////////////////
+			case 'PrimaryKey':
+				/**
+				 * Sets the value for strPrimaryKey 
+				 * @param integer $mixValue
+				 * @return string
+				 */
+				try {
+					return ($this->strPrimaryKey = QType::Cast($mixValue, QType::String));
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			default:
+				try {
+					return parent::__set($strName, $mixValue);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+			}
+		}
+	}
+
 }
 
 ?>
