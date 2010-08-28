@@ -17,6 +17,8 @@
 		protected $Accordion;
 		/** @var QAutocomplete */
 		protected $Autocomplete;
+		/** @var QAutocomplete */
+		protected $AjaxAutocomplete;
 		/** @var QButton */
 		protected $Button;
 		/** @var QDatepicker */
@@ -31,7 +33,9 @@
 		protected $Slider;
 		/** @var QTabs */
 		protected $Tabs;
-	
+
+		static private $LANGUAGES = array("c++", "java", "php", "coldfusion", "javascript", "asp", "ruby");
+
 		protected function Form_Create() {
 			// Draggable
 			$this->Draggable = new QDraggable($this);
@@ -87,8 +91,13 @@
 
 			// Autocomplete
 			$this->Autocomplete = new QAutocomplete($this);
-			$this->Autocomplete->Source = array("c++", "java", "php", "coldfusion", "javascript", "asp", "ruby");
+			$this->Autocomplete->Source = self::$LANGUAGES;
 	
+			// Ajax Autocomplete
+			$this->AjaxAutocomplete = new QAutocomplete($this);
+//			$this->AjaxAutocomplete->Source = new QAjaxAction("update_autocompleteList");
+			$this->AjaxAutocomplete->SetDataBinder("update_autocompleteList");
+
 			// Button
 			$this->Button = new QJqButton($this);
 			$this->Button->Label = "Click me";
@@ -120,6 +129,16 @@
 			$tab3 = new QPanel($this->Tabs);
 			$tab3->Text = 'Tab 3';
 			$this->Tabs->Headers = array('One', 'Two', 'Three');
+		}
+
+		protected function update_autocompleteList() {
+			$strTyped = $this->AjaxAutocomplete->Text;
+			$lst = array();
+			foreach (self::$LANGUAGES as $lang) {
+				if (strpos($lang, $strTyped) === 0)
+					$lst[] = $lang;
+			}
+			$this->AjaxAutocomplete->DataSource = $lst; 
 		}
 	}
 

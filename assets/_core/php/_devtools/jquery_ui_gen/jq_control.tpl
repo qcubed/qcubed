@@ -104,18 +104,46 @@
 		}
 
 <% } %>
-
-		public function AddAction($objEvent, $objAction) {
+		/**
+		 * returns the property name corresponding to the given custom event
+		 * @param QEvent $objEvent the custom event
+		 * @return the property name corresponding to $objEvent
+		 */
+		protected function getCustomEventPropertyName(QEvent $objEvent) {
 			$strEventClass = get_class($objEvent);
-			if (array_key_exists($strEventClass, self::$custom_events)) {
-				$objAction->Event = $objEvent;
-				$strEventName = self::$custom_events[$strEventClass];
-				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+			if (array_key_exists($strEventClass, <%= $objJqDoc->strQcClass %>::$custom_events))
+				return <%= $objJqDoc->strQcClass %>::$custom_events[$strEventClass];
+			return null;
+		}
+
+		/**
+		 * Wraps $objAction into an object (typically a QJsClosure) that can be assigned to the corresponding Event
+		 * property (e.g. OnFocus)
+		 * @param QEvent $objEvent
+		 * @param QAction $objAction
+		 * @return mixed the wrapped object
+		 */
+		protected function createEventWrapper(QEvent $objEvent, QAction $objAction) {
+			$objAction->Event = $objEvent;
+			return new QJsClosure($objAction->RenderScript($this));
+		}
+
+		/**
+		 * If $objEvent is one of the custom events (as determined by getCustomEventPropertyName() method)
+		 * the corresponding JQuery event is used and if needed a no-script action is added. Otherwise the normal
+		 * QCubed AddAction is performed.
+		 * @param QEvent  $objEvent
+		 * @param QAction $objAction
+		 */
+		public function AddAction($objEvent, $objAction) {
+			$strEventName = $this->getCustomEventPropertyName($objEvent);
+			if ($strEventName) {
+				$this->$strEventName = $this->createEventWrapper($objEvent, $objAction);
 				if ($objAction instanceof QAjaxAction) {
 					$objAction = new QNoScriptAjaxAction($objAction);
 					parent::AddAction($objEvent, $objAction);
 				} else if (!($objAction instanceof QJavaScriptAction)) {
-					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . get_class($objEvent) . '" events not yet implemented');
 				}
 			} else {
 				parent::AddAction($objEvent, $objAction);

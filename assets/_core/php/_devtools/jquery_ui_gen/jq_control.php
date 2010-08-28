@@ -7,7 +7,7 @@ class JqAttributes {
 	public $name;
 	public $description;
 
-	public function __construct($name, $origName, $description) {
+	public function __construct($origName, $description) {
 		$this->name = $origName;
 		$this->description = $description;
 	}
@@ -92,10 +92,13 @@ class Option extends JqAttributes {
 
 
 	public function __construct($name, $origName, $type, $defaultValue, $description) {
-		parent::__construct($name, $origName, $description);
+		parent::__construct($origName, $description);
 		$this->type = $type;
 		if ($defaultValue !== null)
 			$this->defaultValue = self::php_value($defaultValue);
+
+		if (($origName === 'dateFormat' || $origName === 'dateTimeFomat') && $name === $origName)
+			$name = 'jq'.ucfirst($name);
 
 		$this->phpType = self::php_type($type);
 		$this->propName = ucfirst($name);
@@ -125,7 +128,7 @@ class Method extends JqAttributes {
 	public $optionalArgs = array();
 
 	public function __construct($name, $origName, $signature, $description) {
-		parent::__construct($name, $origName, $description);
+		parent::__construct($origName, $description);
 		$this->name = ucfirst($name);
 		$signature = str_replace("\n", '', $signature);
 		$this->signature = $signature;

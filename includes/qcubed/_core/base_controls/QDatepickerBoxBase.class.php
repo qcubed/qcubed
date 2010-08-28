@@ -98,7 +98,7 @@
 	 * 		regionalisation attributes. Use the <a
 	 * 		href="/UI/Datepicker#option-showButtonPanel"
 	 * 		title="UI/Datepicker">showButtonPanel</a> to display this button.
-	 * @property string $DateFormat The format for parsed and displayed dates. This attribute is one of the
+	 * @property string $JqDateFormat The format for parsed and displayed dates. This attribute is one of the
 	 * 		regionalisation attributes. For a full list of the possible formats see the
 	 * 		<a href="/UI/Datepicker/formatDate"
 	 * 		title="UI/Datepicker/formatDate">formatDate</a> function.
@@ -274,7 +274,7 @@
 		/** @var string */
 		protected $strCurrentText = null;
 		/** @var string */
-		protected $strDateFormat = null;
+		protected $strJqDateFormat = null;
 		/** @var array */
 		protected $arrDayNames = null;
 		/** @var array */
@@ -382,7 +382,7 @@
 			$strJqOptions .= $this->makeJsProperty('CloseText', 'closeText');
 			$strJqOptions .= $this->makeJsProperty('ConstrainInput', 'constrainInput');
 			$strJqOptions .= $this->makeJsProperty('CurrentText', 'currentText');
-			$strJqOptions .= $this->makeJsProperty('DateFormat', 'dateFormat');
+			$strJqOptions .= $this->makeJsProperty('JqDateFormat', 'dateFormat');
 			$strJqOptions .= $this->makeJsProperty('DayNames', 'dayNames');
 			$strJqOptions .= $this->makeJsProperty('DayNamesMin', 'dayNamesMin');
 			$strJqOptions .= $this->makeJsProperty('DayNamesShort', 'dayNamesShort');
@@ -645,18 +645,46 @@
 			QApplication::ExecuteJavaScript($strJs);
 		}
 
-
-		public function AddAction($objEvent, $objAction) {
+		/**
+		 * returns the property name corresponding to the given custom event
+		 * @param QEvent $objEvent the custom event
+		 * @return the property name corresponding to $objEvent
+		 */
+		protected function getCustomEventPropertyName(QEvent $objEvent) {
 			$strEventClass = get_class($objEvent);
-			if (array_key_exists($strEventClass, self::$custom_events)) {
-				$objAction->Event = $objEvent;
-				$strEventName = self::$custom_events[$strEventClass];
-				$this->$strEventName = new QJsClosure($objAction->RenderScript($this));
+			if (array_key_exists($strEventClass, QDatepickerBox::$custom_events))
+				return QDatepickerBox::$custom_events[$strEventClass];
+			return null;
+		}
+
+		/**
+		 * Wraps $objAction into an object (typically a QJsClosure) that can be assigned to the corresponding Event
+		 * property (e.g. OnFocus)
+		 * @param QEvent $objEvent
+		 * @param QAction $objAction
+		 * @return mixed the wrapped object
+		 */
+		protected function createEventWrapper(QEvent $objEvent, QAction $objAction) {
+			$objAction->Event = $objEvent;
+			return new QJsClosure($objAction->RenderScript($this));
+		}
+
+		/**
+		 * If $objEvent is one of the custom events (as determined by getCustomEventPropertyName() method)
+		 * the corresponding JQuery event is used and if needed a no-script action is added. Otherwise the normal
+		 * QCubed AddAction is performed.
+		 * @param QEvent  $objEvent
+		 * @param QAction $objAction
+		 */
+		public function AddAction($objEvent, $objAction) {
+			$strEventName = $this->getCustomEventPropertyName($objEvent);
+			if ($strEventName) {
+				$this->$strEventName = $this->createEventWrapper($objEvent, $objAction);
 				if ($objAction instanceof QAjaxAction) {
 					$objAction = new QNoScriptAjaxAction($objAction);
 					parent::AddAction($objEvent, $objAction);
 				} else if (!($objAction instanceof QJavaScriptAction)) {
-					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . $strEventClass . '" events not yet implemented');
+					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . get_class($objEvent) . '" events not yet implemented');
 				}
 			} else {
 				parent::AddAction($objEvent, $objAction);
@@ -679,7 +707,7 @@
 				case 'CloseText': return $this->strCloseText;
 				case 'ConstrainInput': return $this->blnConstrainInput;
 				case 'CurrentText': return $this->strCurrentText;
-				case 'DateFormat': return $this->strDateFormat;
+				case 'JqDateFormat': return $this->strJqDateFormat;
 				case 'DayNames': return $this->arrDayNames;
 				case 'DayNamesMin': return $this->arrDayNamesMin;
 				case 'DayNamesShort': return $this->arrDayNamesShort;
@@ -856,9 +884,9 @@
 						throw $objExc;
 					}
 
-				case 'DateFormat':
+				case 'JqDateFormat':
 					try {
-						$this->strDateFormat = QType::Cast($mixValue, QType::String);
+						$this->strJqDateFormat = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

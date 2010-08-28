@@ -46,6 +46,10 @@
 			 <p>Type "c" to test</p>
 			<?php $this->Autocomplete->Render(); ?>
 		</div>
+		<div class="example"><h3>Ajax Autocomplete</h3>
+			 <p>Type "c" to test</p>
+			<?php $this->AjaxAutocomplete->Render(); ?>
+		</div>
 		<div class="example"><h3>Button</h3>
 			<?php $this->Button->Render(); ?>
 		</div>
