@@ -64,32 +64,37 @@ class QCalendar extends QDateTimeTextBox {
 		return strtr($qcFrmt, QCalendar::$mapQC2JQ);
 	} 
 		
-	static public function jsDate(QDateTime $dt) {
-		return 'new Date('.$dt->Year.','.$dt->Month.','.$dt->Day.')';
-	} 
-		
 	public function Validate() {
 		return true;
+	}
+
+	protected function makeJsProperty($strProp, $strKey) {
+		$objValue = $this->$strProp;
+		if (null === $objValue) {
+			return '';
+		}
+
+		return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
 	}
 
 	public function GetControlHtml() {
 		$strToReturn = parent::GetControlHtml();
 		
+		$strJqOptions = '{';
+		$strJqOptions .= $this->makeJsProperty('ShowButtonPanel', 'showButtonPanel');
+		$strJqOptions .= $this->makeJsProperty('JqDateFormat', 'dateFormat');
+		$strJqOptions .= $this->makeJsProperty('AutoSize', 'autoSize');
+		$strJqOptions .= $this->makeJsProperty('MaxDate', 'maxDate');
+		$strJqOptions .= $this->makeJsProperty('MinDate', 'minDate');
+		$strJqOptions .= $this->makeJsProperty('DefaultDate', 'defaultDate');
+		$strJqOptions .= $this->makeJsProperty('FirstDay', 'firstDay');
+		$strJqOptions .= $this->makeJsProperty('GotoCurrent', 'gotoCurrent');
+		$strJqOptions .= $this->makeJsProperty('IsRTL', 'isRTL');
+		$strJqOptions .= $this->makeJsProperty('NumberOfMonths', 'numberOfMonths');
+		$strJqOptions .= '}';
+
 		QApplication::ExecuteJavaScript(
-			sprintf('jQuery("#%s").datepicker({showButtonPanel: true, dateFormat: "' . $this->strJqDateFormat . '"' .  
-					(($this->blnAutoSize) ? ', autoSize: true' : '') . 
-					(($this->datMinDate) ? ', minDate: ' . QCalendar::jsDate($this->datMinDate) : '') . 
-					(($this->datMaxDate) ? ', maxDate: ' . QCalendar::jsDate($this->datMaxDate) : '') . 
-					(($this->datDefaultDate) ? ', defaultDate: ' . QCalendar::jsDate($this->datDefaultDate) : '') . 
-					(($this->intFirstDay) ? ', firstDay: '.$this->intFirstDay : '') . 
-					(($this->blnGotoCurrent) ? ', gotoCurrent: true' : '') . 
-					(($this->blnIsRtl) ? ', isRTL: true' : '') . 
-					(($this->mixNumberOfMonths) ? (
-							is_array($this->mixNumberOfMonths)? 
-							'['.implode(', ',$this->mixNumberOfMonths).']' : $this->mixNumberOfMonths
-							) :
-						'') . 
-					'})', $this->strControlId));
+			sprintf('jQuery("#%s").datepicker(%s)', $this->strControlId, $strJqOptions));
 
 		return $strToReturn;
 	}
