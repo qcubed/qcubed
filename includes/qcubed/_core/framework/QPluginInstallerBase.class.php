@@ -74,9 +74,10 @@ abstract class QPluginInstallerBase {
 		$result = "";
 		
 		// Creating folder hierarchy if necessary
-		if (!is_dir($strDestinationPath)) {
-			mkdir ($strDestinationPath, 0777, true);
-			$result .= "Created deployment destination directory " . $strDestinationPath . "\r\n";
+		$strDestinationDir = dirname($strDestinationPath);
+		if (!is_dir($strDestinationDir)) {
+			mkdir ($strDestinationDir, 0777, true);
+			$result .= "Created deployment destination directory " . $strDestinationDir . "\r\n";
 		}
 
 		copy($strSourcePath, $strDestinationPath);
