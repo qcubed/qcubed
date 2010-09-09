@@ -8,13 +8,6 @@
 		protected $calQJQCalendar;
 		protected $btnQJQCalendar;
 		
-		protected $calCalendar;
-		protected $dtxCalendar;
-		protected $btnCalendar;
-
-		protected $calCalendarPopup;
-		protected $btnCalendarPopup;
-
 		protected $dtpDatePicker;
 		protected $btnDatePicker;
 
@@ -46,17 +39,6 @@
 			$this->btnQJQCalendar->AddAction(new QClickEvent(), new QAjaxAction('btnUpdate_Click'));
 			$this->btnQJQCalendar->ActionParameter = $this->calQJQCalendar->ControlId;
 			
-			$this->btnCalendar = new QButton($this);
-			$this->btnCalendar->Text = 'Update';
-			$this->btnCalendar->AddAction(new QClickEvent(), new QAjaxAction('btnUpdate_Click'));
-			// NOTE -- to get the Value of the Calendar, we MUST look it up from the linked dtxCalendar
-			$this->btnCalendar->ActionParameter = $this->dtxCalendar->ControlId;
-
-			$this->btnCalendarPopup = new QButton($this);
-			$this->btnCalendarPopup->Text = 'Update';
-			$this->btnCalendarPopup->AddAction(new QClickEvent(), new QAjaxAction('btnUpdate_Click'));
-			$this->btnCalendarPopup->ActionParameter = $this->calCalendarPopup->ControlId;
-
 			$this->btnDateTimeTextBox = new QButton($this);
 			$this->btnDateTimeTextBox->Text = 'Update';
 			$this->btnDateTimeTextBox->AddAction(new QClickEvent(), new QAjaxAction('btnUpdate_Click'));

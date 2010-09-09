@@ -36,7 +36,6 @@
 	</div>
 	<div style="float: left; margin-left: 45px;">
 		<strong>QCalendar</strong><br/>
-		<?php // $this->dtxCalendar->Render(); ?>
 		<?php $this->calQJQCalendar->Render(); ?><br/>
 		<?php $this->btnQJQCalendar->Render(); ?>
 	</div>
