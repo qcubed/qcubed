@@ -91,16 +91,16 @@ class Option extends JqAttributes {
 	}
 
 
-	public function __construct($name, $origName, $type, $defaultValue, $description) {
+	public function __construct($name, $origName, $jsType, $defaultValue, $description) {
 		parent::__construct($origName, $description);
-		$this->type = $type;
+		$this->type = $jsType;
 		if ($defaultValue !== null)
 			$this->defaultValue = self::php_value($defaultValue);
 
 		if (($origName === 'dateFormat' || $origName === 'dateTimeFomat') && $name === $origName)
 			$name = 'jq'.ucfirst($name);
 
-		$this->phpType = self::php_type($type);
+		$this->phpType = self::php_type($jsType);
 		$this->propName = ucfirst($name);
 		$this->varName = self::php_type_prefix($this->phpType).$this->propName;
 		$this->phpQType = self::php_qtype($this->phpType);
