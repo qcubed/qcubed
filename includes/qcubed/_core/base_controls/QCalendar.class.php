@@ -63,7 +63,14 @@ class QCalendar extends QDateTimeTextBox {
 	static public function jqFrmt($qcFrmt) {
 		return strtr($qcFrmt, QCalendar::$mapQC2JQ);
 	} 
-		
+
+	/**
+	 * @deprecated Use JavaScriptHelper::toJsObject
+	 */
+	static public function jsDate(QDateTime $dt) {
+		return JavaScriptHelper::toJsObject($dt);
+	}
+
 	public function Validate() {
 		return true;
 	}
@@ -241,7 +248,9 @@ class QCalendar extends QDateTimeTextBox {
 	}
 
 	public function AddAction($objEvent, $objAction) {
-		throw new QCallerException('QCalendar does not support custom events');
+		if ($objEvent instanceof QClickEvent) {
+			throw new QCallerException('QCalendar does not support click events');
+		}
 	}
 }
 ?>
