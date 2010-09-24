@@ -1123,7 +1123,7 @@
 			}
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strGroupingScript = $objGrouping->Render();
-				if (strlen($strGrouping) > 0) {
+				if (strlen($strGroupingScript) > 0) {
 					$strEvents .= $strGroupingScript . ";";
 				}
 			}
