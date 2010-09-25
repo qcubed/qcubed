@@ -137,7 +137,7 @@
 		}
 
 		protected function makeJqOptions() {
-			$strJqOptions = '{';
+			$strJqOptions = '';
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('Accept', 'accept');
 			$strJqOptions .= $this->makeJsProperty('ActiveClass', 'activeClass');
@@ -151,7 +151,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnOver', 'over');
 			$strJqOptions .= $this->makeJsProperty('OnOut', 'out');
 			$strJqOptions .= $this->makeJsProperty('OnDrop', 'drop');
-			return $strJqOptions.'}';
+			return $strJqOptions;
 		}
 
 		protected function getJqControlId() {
@@ -162,12 +162,8 @@
 			return 'droppable';
 		}
 
-		public function GetControlHtml() {
-			$strToReturn = parent::GetControlHtml();
-
-			$strJs = sprintf('jQuery("#%s").%s(%s)', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
-			QApplication::ExecuteJavaScript($strJs);
-			return $strToReturn;
+		public function GetEndScript() {
+			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
 		/**

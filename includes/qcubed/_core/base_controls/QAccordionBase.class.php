@@ -141,7 +141,7 @@
 		}
 
 		protected function makeJqOptions() {
-			$strJqOptions = '{';
+			$strJqOptions = '';
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('Active', 'active');
 			$strJqOptions .= $this->makeJsProperty('Animated', 'animated');
@@ -156,7 +156,7 @@
 			$strJqOptions .= $this->makeJsProperty('NavigationFilter', 'navigationFilter');
 			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
 			$strJqOptions .= $this->makeJsProperty('OnChangestart', 'changestart');
-			return $strJqOptions.'}';
+			return $strJqOptions;
 		}
 
 		protected function getJqControlId() {
@@ -167,12 +167,8 @@
 			return 'accordion';
 		}
 
-		public function GetControlHtml() {
-			$strToReturn = parent::GetControlHtml();
-
-			$strJs = sprintf('jQuery("#%s").%s(%s)', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
-			QApplication::ExecuteJavaScript($strJs);
-			return $strToReturn;
+		public function GetEndScript() {
+			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
 		/**

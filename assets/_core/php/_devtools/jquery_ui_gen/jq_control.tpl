@@ -50,11 +50,16 @@
 		}
 
 		protected function makeJqOptions() {
-			$strJqOptions = '{';
+<% if (method_exists($objJqDoc->strQcBaseClass, 'makeJqOptions')) { %>
+			$strJqOptions = parent::makeJqOptions();
+<% } %>
+<% if (!method_exists($objJqDoc->strQcBaseClass, 'makeJqOptions')) { %>
+			$strJqOptions = '';
+<% } %>
 <% foreach ($objJqDoc->options as $option) { %>
 			$strJqOptions .= $this->makeJsProperty('<%= $option->propName %>', '<%= $option->name %>');
 <% } %>
-			return $strJqOptions.'}';
+			return $strJqOptions;
 		}
 
 		protected function getJqControlId() {
@@ -65,12 +70,8 @@
 			return '<%= $objJqDoc->strJqSetupFunc %>';
 		}
 
-		public function GetControlHtml() {
-			$strToReturn = parent::GetControlHtml();
-
-			$strJs = sprintf('jQuery("#%s").%s(%s)', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
-			QApplication::ExecuteJavaScript($strJs);
-			return $strToReturn;
+		public function GetEndScript() {
+			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
 <% foreach ($objJqDoc->methods as $method) { %>
@@ -113,7 +114,12 @@
 			$strEventClass = get_class($objEvent);
 			if (array_key_exists($strEventClass, <%= $objJqDoc->strQcClass %>::$custom_events))
 				return <%= $objJqDoc->strQcClass %>::$custom_events[$strEventClass];
+<% if (method_exists($objJqDoc->strQcBaseClass, 'getCustomEventPropertyName')) { %>
+			return parent::getCustomEventPropertyName($objEvent);
+<% } %>
+<% if (!method_exists($objJqDoc->strQcBaseClass, 'getCustomEventPropertyName')) { %>
 			return null;
+<% } %>
 		}
 
 		/**

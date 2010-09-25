@@ -273,7 +273,7 @@
 		}
 
 		protected function makeJqOptions() {
-			$strJqOptions = '{';
+			$strJqOptions = '';
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('AppendTo', 'appendTo');
 			$strJqOptions .= $this->makeJsProperty('Axis', 'axis');
@@ -311,7 +311,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnOut', 'out');
 			$strJqOptions .= $this->makeJsProperty('OnActivate', 'activate');
 			$strJqOptions .= $this->makeJsProperty('OnDeactivate', 'deactivate');
-			return $strJqOptions.'}';
+			return $strJqOptions;
 		}
 
 		protected function getJqControlId() {
@@ -322,12 +322,8 @@
 			return 'sortable';
 		}
 
-		public function GetControlHtml() {
-			$strToReturn = parent::GetControlHtml();
-
-			$strJs = sprintf('jQuery("#%s").%s(%s)', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
-			QApplication::ExecuteJavaScript($strJs);
-			return $strToReturn;
+		public function GetEndScript() {
+			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
 		/**

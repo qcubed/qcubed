@@ -219,7 +219,7 @@
 		}
 
 		protected function makeJqOptions() {
-			$strJqOptions = '{';
+			$strJqOptions = '';
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('AutoOpen', 'autoOpen');
 			$strJqOptions .= $this->makeJsProperty('Buttons', 'buttons');
@@ -251,7 +251,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnResize', 'resize');
 			$strJqOptions .= $this->makeJsProperty('OnResizeStop', 'resizeStop');
 			$strJqOptions .= $this->makeJsProperty('OnClose', 'close');
-			return $strJqOptions.'}';
+			return $strJqOptions;
 		}
 
 		protected function getJqControlId() {
@@ -262,12 +262,8 @@
 			return 'dialog';
 		}
 
-		public function GetControlHtml() {
-			$strToReturn = parent::GetControlHtml();
-
-			$strJs = sprintf('jQuery("#%s").%s(%s)', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
-			QApplication::ExecuteJavaScript($strJs);
-			return $strToReturn;
+		public function GetEndScript() {
+			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
 		/**
