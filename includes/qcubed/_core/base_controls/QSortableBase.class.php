@@ -322,8 +322,12 @@
 			return 'sortable';
 		}
 
-		public function GetEndScript() {
+		public function GetControlJavaScript() {
 			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
+		}
+
+		public function GetEndScript() {
+            return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
 		}
 
 		/**

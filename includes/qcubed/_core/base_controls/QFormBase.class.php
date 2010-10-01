@@ -1179,6 +1179,9 @@
 			foreach ($strStyleSheetToAddArray as $strScript)
 				$strEndScript .= 'qc.loadStyleSheetFile("' . $strScript . '", "all"); ';
 
+            if ($strEvents)
+                $strEndScript = $strEvents . ';' . $strEndScript;
+
 			// Next, add any new JS files that haven't yet been included to the BEGINNING of the High Priority commands string
 			// (already rendered HP commands up to this point will be placed into the callback)
 			foreach (array_reverse($strJavaScriptToAddArray) as $strScript) {
@@ -1195,7 +1198,7 @@
 			$strEndScript = sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) . $strEndScript;
 
 			// Create Final EndScript Script
-			$strEndScript = sprintf('<script type="text/javascript">$j(document).ready(function() { %s; %s; });</script>', $strEvents, $strEndScript);
+			$strEndScript = sprintf('<script type="text/javascript">$j(document).ready(function() { %s; });</script>', $strEndScript);
 
 			// Persist Controls (if applicable)
 			foreach ($this->objPersistentControlArray as $objControl)
