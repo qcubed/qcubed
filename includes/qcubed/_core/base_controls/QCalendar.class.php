@@ -22,7 +22,7 @@ class QCalendar extends QDateTimeTextBox {
 	protected $mixNumberOfMonths = null;
 	protected $blnAutoSize = false;
 	protected $blnGotoCurrent = false;
-	protected $blnIsRtl = false;
+	protected $blnIsRTL = false;
 	protected $blnModified = false;
 	protected $strJqDateFormat = 'M d yy';
     protected $blnShowButtonPanel = true;
@@ -122,8 +122,8 @@ class QCalendar extends QDateTimeTextBox {
 				return $this->intFirstDay;
 			case "GotoCurrent" :
 				return $this->blnGotoCurrent;
-			case "IsRtl" :
-				return $this->blnIsRtl;
+			case "IsRTL" :
+				return $this->blnIsRTL;
 			case "NumberOfMonths" :
 				return $this->mixNumberOfMonths;
 			case "AutoSize" :
@@ -201,7 +201,7 @@ class QCalendar extends QDateTimeTextBox {
 				}
 			case "IsRTL" :
 				try {
-					$this->blnIsRtl = QType::Cast($mixValue, QType::Boolean);
+					$this->blnIsRTL = QType::Cast($mixValue, QType::Boolean);
 					break;
 				}
 				catch (QInvalidCastException $objExc) {
