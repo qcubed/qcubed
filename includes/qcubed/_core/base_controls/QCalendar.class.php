@@ -25,6 +25,7 @@ class QCalendar extends QDateTimeTextBox {
 	protected $blnIsRtl = false;
 	protected $blnModified = false;
 	protected $strJqDateFormat = 'M d yy';
+    protected $blnShowButtonPanel = true;
 
 	// map the JQuery datepicker format specs to QCodo QDateTime format specs.
 	//qcodo	jquery			php	Description
@@ -131,6 +132,8 @@ class QCalendar extends QDateTimeTextBox {
 				return $this->strDateTimeFormat;
 			case "JqDateFormat" :
 				return $this->strJqDateFormat;
+            case "ShowButtonPanel" :
+                return $this->blnShowButtonPanel;
 			default :
 			try {
 				return parent::__get($strName);
@@ -234,6 +237,15 @@ class QCalendar extends QDateTimeTextBox {
 				parent::__set('DateTimeFormat', $mixValue);
 				$this->strJqDateFormat = QCalendar::jqFrmt($this->strDateTimeFormat);
 				break;
+            case "ShowButtonPanel" :
+                try {
+                    $this->blnShowButtonPanel = QType::Cast($mixValue, QType::Boolean);
+                    break;
+                }
+                catch (QInvalidCastException $objExc) {
+                    $objExc->IncrementOffset();
+                    throw $objExc;
+                }
 
  			default :
 				try {
