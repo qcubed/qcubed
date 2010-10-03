@@ -9,8 +9,16 @@
 	 */
 	class QDatepickerBox extends QDatepickerBoxBase
 	{
-		protected $strDateFormat;
+		protected $strDateTimeFormat;
 		protected $dttDateTime;
+
+        public function ParsePostData() {
+            // Check to see if this Control's Value was passed in via the POST data
+            if (array_key_exists($this->strControlId, $_POST)) {
+                parent::ParsePostData();
+                $this->dttDateTime = new QDateTime($this->strText);
+            }
+        }
 
 		/////////////////////////
 		// Public Properties: GET
@@ -21,7 +29,7 @@
 				case "Maximum": return $this->MinDate;
 				case "Minimum": return $this->MaxDate;
 				case 'DateTimeFormat':
-				case 'DateFormat': return $this->strDateFormat;
+				case 'DateFormat': return $this->strDateTimeFormat;
 				case 'DateTime': return $this->dttDateTime;
 
 				default:
@@ -51,10 +59,10 @@
 				case 'DateTime':
 					try {
 						$this->dttDateTime = QType::Cast($mixValue, QType::DateTime);
-						if (!$this->dttDateTime || !$this->strDateFormat) {
+						if (!$this->dttDateTime || !$this->strDateTimeFormat) {
 							parent::__set('Text', '');
 						} else {
-							parent::__set('Text', $this->dttDateTime->qFormat($this->strDateFormat));
+							parent::__set('Text', $this->dttDateTime->qFormat($this->strDateTimeFormat));
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -65,7 +73,7 @@
 				case 'JqDateFormat':
 					try {
 						parent::__set($strName, $mixValue);
-						$this->strDateFormat = QCalendar::qcFrmt($this->strDateFormat);
+						$this->strDateTimeFormat = QCalendar::qcFrmt($this->JqDateFormat);
 						// trigger an update to reformat the text with the new format
 						$this->DateTime = $this->dttDateTime;
 						break;
@@ -77,8 +85,8 @@
 				case 'DateTimeFormat':
 				case 'DateFormat':
 					try {
-						$this->strDateFormat = QType::Cast($mixValue, QType::String);
-						parent::__set('JqDateFormat', QCalendar::jqFrmt($this->strDateFormat));
+						$this->strDateTimeFormat = QType::Cast($mixValue, QType::String);
+						parent::__set('JqDateFormat', QCalendar::jqFrmt($this->strDateTimeFormat));
 						// trigger an update to reformat the text with the new format
 						$this->DateTime = $this->dttDateTime;
 						break;
