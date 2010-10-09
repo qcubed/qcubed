@@ -156,6 +156,7 @@
 			$strJqOptions .= $this->makeJsProperty('NavigationFilter', 'navigationFilter');
 			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
 			$strJqOptions .= $this->makeJsProperty('OnChangestart', 'changestart');
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 

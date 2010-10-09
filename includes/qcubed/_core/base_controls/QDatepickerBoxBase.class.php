@@ -419,6 +419,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnChangeMonthYear', 'onChangeMonthYear');
 			$strJqOptions .= $this->makeJsProperty('OnClose', 'onClose');
 			$strJqOptions .= $this->makeJsProperty('OnSelect', 'onSelect');
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 

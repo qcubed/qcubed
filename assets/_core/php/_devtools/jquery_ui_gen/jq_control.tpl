@@ -52,6 +52,7 @@
 		protected function makeJqOptions() {
 <% if (method_exists($objJqDoc->strQcBaseClass, 'makeJqOptions')) { %>
 			$strJqOptions = parent::makeJqOptions();
+            if ($strJqOptions) $strJqOptions .= ', ';
 <% } %>
 <% if (!method_exists($objJqDoc->strQcBaseClass, 'makeJqOptions')) { %>
 			$strJqOptions = '';
@@ -59,6 +60,7 @@
 <% foreach ($objJqDoc->options as $option) { %>
 			$strJqOptions .= $this->makeJsProperty('<%= $option->propName %>', '<%= $option->name %>');
 <% } %>
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 

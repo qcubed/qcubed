@@ -142,6 +142,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnStop', 'stop');
 			$strJqOptions .= $this->makeJsProperty('OnUnselected', 'unselected');
 			$strJqOptions .= $this->makeJsProperty('OnUnselecting', 'unselecting');
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 

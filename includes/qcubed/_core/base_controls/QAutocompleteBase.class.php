@@ -140,6 +140,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnSelect', 'select');
 			$strJqOptions .= $this->makeJsProperty('OnClose', 'close');
 			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 

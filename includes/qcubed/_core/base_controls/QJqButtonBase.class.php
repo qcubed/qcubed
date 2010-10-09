@@ -49,6 +49,7 @@
 			$strJqOptions .= $this->makeJsProperty('Text', 'text');
 			$strJqOptions .= $this->makeJsProperty('Icons', 'icons');
 			$strJqOptions .= $this->makeJsProperty('Label', 'label');
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 

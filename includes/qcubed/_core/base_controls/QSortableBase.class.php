@@ -311,6 +311,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnOut', 'out');
 			$strJqOptions .= $this->makeJsProperty('OnActivate', 'activate');
 			$strJqOptions .= $this->makeJsProperty('OnDeactivate', 'deactivate');
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 

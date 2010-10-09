@@ -138,6 +138,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnSlide', 'slide');
 			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
 			$strJqOptions .= $this->makeJsProperty('OnStop', 'stop');
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 

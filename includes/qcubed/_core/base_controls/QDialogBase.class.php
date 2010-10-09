@@ -251,6 +251,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnResize', 'resize');
 			$strJqOptions .= $this->makeJsProperty('OnResizeStop', 'resizeStop');
 			$strJqOptions .= $this->makeJsProperty('OnClose', 'close');
+            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 
