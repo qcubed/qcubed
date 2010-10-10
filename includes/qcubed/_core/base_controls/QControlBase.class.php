@@ -1204,6 +1204,10 @@
 			$this->blnWrapperModified = true;
 		}
 
+		public function MarkAsRendered() {
+			$this->blnRendered = true;
+		} 
+
 		public function SetForm($objForm) {
 			$this->objForm = $objForm;
 		}
