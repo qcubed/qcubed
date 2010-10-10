@@ -20,7 +20,7 @@
 			// Define different buttons to show off the various Alert-based Actions
 			$this->btnAlert = new QButton($this);
 			$this->btnAlert->Text = 'QAlertAction Example';
-			$this->btnAlert->AddAction(new QClickEvent(), new QAlertAction('This is a test of the "QAlertAction" example.\r\nIsn\'t this fun? =)'));
+			$this->btnAlert->AddAction(new QClickEvent(), new QAlertAction("This is a test of the \"QAlertAction\" example.\r\nIsn't this fun? =)"));
 
 			// Define different buttons to show off the various Confirm-based Actions
 			$this->btnConfirm = new QButton($this);

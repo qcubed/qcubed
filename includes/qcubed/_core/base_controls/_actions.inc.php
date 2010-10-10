@@ -9,6 +9,7 @@
 	 * Base class for all other Actions. 
 	 * 
 	 * @package Actions
+	 * @property string $Event
 	 */
 	abstract class QAction extends QBaseClass {
 		abstract public function RenderScript(QControl $objControl);
@@ -294,9 +295,8 @@
 		}
 
 		public function RenderScript(QControl $objControl) {
-			$strMessage = QApplication::HtmlEntities($this->strMessage);
-			$strMessage = str_replace("'", "\\'", $strMessage);
-			return sprintf("alert('%s');", $strMessage);
+			$strMessage = JavaScriptHelper::toJsObject($this->strMessage);
+			return sprintf("alert(%s);", $strMessage);
 		}
 	}
 
