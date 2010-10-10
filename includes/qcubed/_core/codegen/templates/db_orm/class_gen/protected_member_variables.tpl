@@ -48,7 +48,7 @@
 		 * an ExpandAsArray on the <%= $objReference->Table %> association table.
 		 * @var <%= $objReference->VariableType %>[] _obj<%=$objReference->ObjectDescription %>Array;
 		 */
-		private $_obj<%=$objReference->ObjectDescription %>Array = array();
+		private $_obj<%=$objReference->ObjectDescription %>Array = null;
 
 <% } %>
 <% foreach ($objTable->ReverseReferenceArray as $objReference) { %><% if (!$objReference->Unique) { %>
@@ -66,7 +66,7 @@
 		 * an ExpandAsArray on the <%= $objReference->Table %> association table.
 		 * @var <%= $objReference->VariableType %>[] _obj<%=$objReference->ObjectDescription %>Array;
 		 */
-		private $_obj<%=$objReference->ObjectDescription %>Array = array();
+		private $_obj<%=$objReference->ObjectDescription %>Array = null;
 
 <% } %><% } %>
 		/**

@@ -42,6 +42,8 @@
 						$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
 						if ((array_key_exists($strAlias, $strExpandAsArrayNodes)) &&
 							(!is_null($objDbRow->GetColumn($strAliasName)))) {
+							if(null === $objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array)
+								$objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array = array();
 							if ($intPreviousChildItemCount = count($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array)) {
 								$objPreviousChildItems = $objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array;
 								$objChildItem = <%= $objReference->VariableType %>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<%= strtolower($objReference->ObjectDescription) %>__<%= $objReference->OppositeColumn %>__', $strExpandAsArrayNodes, $objPreviousChildItems, $strColumnAliasArray);
@@ -62,6 +64,8 @@
 						$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
 						if ((array_key_exists($strAlias, $strExpandAsArrayNodes)) &&
 							(!is_null($objDbRow->GetColumn($strAliasName)))) {
+							if(null === $objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array)
+								$objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array = array();
 							if ($intPreviousChildItemCount = count($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array)) {
 								$objPreviousChildItems = $objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array;
 								$objChildItem = <%= $objReference->VariableType %>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<%= strtolower($objReference->ObjectDescription) %>__', $strExpandAsArrayNodes, $objPreviousChildItems, $strColumnAliasArray);
@@ -163,8 +167,11 @@
 			// Check for <%= $objReference->ObjectDescription %> Virtual Binding
 			$strAlias = $strAliasPrefix . '<%= strtolower($objReference->ObjectDescription) %>__<%= $objReference->OppositeColumn %>__<%= $objCodeGen->GetTable($objReference->AssociatedTable)->PrimaryKeyColumnArray[0]->Name %>';
 			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			$blnExpanded = $strExpandAsArrayNodes && array_key_exists($strAlias, $strExpandAsArrayNodes);
+			if ($blnExpanded && null === $objToReturn->_obj<%= $objReference->ObjectDescription %>Array)
+				$objToReturn->_obj<%= $objReference->ObjectDescription %>Array = array();
 			if (!is_null($objDbRow->GetColumn($strAliasName))) {
-				if (($strExpandAsArrayNodes) && (array_key_exists($strAlias, $strExpandAsArrayNodes)))
+				if ($blnExpanded)
 					$objToReturn->_obj<%= $objReference->ObjectDescription %>Array[] = <%= $objReference->VariableType %>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<%= strtolower($objReference->ObjectDescription) %>__<%= $objReference->OppositeColumn %>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
 				else
 					$objToReturn->_obj<%= $objReference->ObjectDescription %> = <%= $objReference->VariableType %>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<%= strtolower($objReference->ObjectDescription) %>__<%= $objReference->OppositeColumn %>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
@@ -176,8 +183,11 @@
 			// Check for <%= $objReference->ObjectDescription %> Virtual Binding
 			$strAlias = $strAliasPrefix . '<%= strtolower($objReference->ObjectDescription) %>__<%= $objCodeGen->GetTable($objReference->Table)->PrimaryKeyColumnArray[0]->Name %>';
 			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			$blnExpanded = $strExpandAsArrayNodes && array_key_exists($strAlias, $strExpandAsArrayNodes);
+			if ($blnExpanded && null === $objToReturn->_obj<%= $objReference->ObjectDescription %>Array)
+				$objToReturn->_obj<%= $objReference->ObjectDescription %>Array = array();
 			if (!is_null($objDbRow->GetColumn($strAliasName))) {
-				if (($strExpandAsArrayNodes) && (array_key_exists($strAlias, $strExpandAsArrayNodes)))
+				if ($blnExpanded)
 					$objToReturn->_obj<%= $objReference->ObjectDescription %>Array[] = <%= $objReference->VariableType %>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<%= strtolower($objReference->ObjectDescription) %>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
 				else
 					$objToReturn->_obj<%= $objReference->ObjectDescription %> = <%= $objReference->VariableType %>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<%= strtolower($objReference->ObjectDescription) %>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);

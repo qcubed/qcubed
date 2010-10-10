@@ -86,7 +86,7 @@
 					 * if set due to an ExpandAsArray on the <%=$objReference->Table%> association table
 					 * @return <%= $objReference->VariableType %>[]
 					 */
-					return (array) $this->_obj<%=$objReference->ObjectDescription%>Array;
+					return $this->_obj<%=$objReference->ObjectDescription%>Array;
 
 <% } %><% foreach ($objTable->ReverseReferenceArray as $objReference) { %><% if (!$objReference->Unique) { %>
 				case '_<%=$objReference->ObjectDescription%>':
@@ -103,7 +103,7 @@
 					 * if set due to an ExpandAsArray on the <%=$objReference->Table%>.<%=$objReference->Column%> reverse relationship
 					 * @return <%= $objReference->VariableType %>[]
 					 */
-					return (array) $this->_obj<%=$objReference->ObjectDescription%>Array;
+					return $this->_obj<%=$objReference->ObjectDescription%>Array;
 
 <% } %><% } %>
 

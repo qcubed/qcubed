@@ -26,6 +26,24 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		$this->helperVerifyKarenWolfe($targetPerson);
 	}
 	
+	public function testEmptyArray() {
+		$arrPeople = Person::QuerySingle(
+			QQ::Equal(QQN::Person()->Id, 2),
+			self::getTestClauses()
+			);
+			
+		$this->assertTrue(is_array($arrPeople->_ProjectAsManagerArray), "_ProjectAsManagerArray is an array");
+		$this->assertEqual(count($arrPeople->_ProjectAsManagerArray), 0, "_ProjectAsManagerArray has no Project objects");
+	}
+
+	public function testNullArray() {
+		$arrPeople = Person::QuerySingle(
+			QQ::Equal(QQN::Person()->Id, 2)
+			);
+		
+		$this->assertTrue(is_null($arrPeople->_ProjectAsManagerArray), "_ProjectAsManagerArray is null");
+	}
+
 	private static function getTestClauses() {
 		return QQ::Clause(
 			QQ::ExpandAsArray(QQN::Person()->Address),
