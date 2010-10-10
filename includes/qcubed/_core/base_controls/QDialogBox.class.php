@@ -53,7 +53,8 @@
 			else if ($this->strHeight)
 				$strOptions .= ', height: '. $this->strHeight;
 			$strParentId = $this->ParentControl ? $this->ParentControl->ControlId : $this->Form->FormId;
-			$strOptions .= sprintf(', open: function() { $j(this).parent().appendTo("#%s"); }', $strParentId);
+			//move both the dialog and the matte back into the form, to ensure they continue to function
+			$strOptions .= sprintf(', open: function() { $j(this).parent().appendTo("#%s"); $j(".ui-widget-overlay").appendTo("#%s"); }', $strParentId, $strParentId);
 
 			return sprintf('$j("#%s").dialog({%s}); $j("#%s").dialog("open");', $this->strControlId, $strOptions, $this->strControlId);
 		}

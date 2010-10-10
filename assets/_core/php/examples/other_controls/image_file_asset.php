@@ -21,7 +21,7 @@
 			// Feel free to uncomment this yourself, but note that you can pre-define the File property.
 			// Notice how the path is an absolute path to a file.
 			// Also notice that the file doesn't even need to be in the docroot.
-//			$this->flaSample->File = __DOCROOT__ . __IMAGE_ASSETS__ . '/calendar.png';
+//			$this->ifaSample->File = __DOCROOT__ . __IMAGE_ASSETS__ . '/calendar.png';
 
 			// Add Styling
 			$this->ifaSample->CssClass = 'file_asset';
@@ -43,7 +43,7 @@
 		}
 
 		protected function btnButton_Click($strFormId, $strControlId, $strParameter) {
-			$this->lblMessage->Text = 'Thanks for uploading the file: ' . $this->flaSample->FileName;
+			$this->lblMessage->Text = 'Thanks for uploading the file: ' . $this->ifaSample->FileName;
 		}
 	}
 
