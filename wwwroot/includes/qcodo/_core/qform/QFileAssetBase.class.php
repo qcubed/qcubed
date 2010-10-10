@@ -189,7 +189,12 @@
 			} else {
 				// Valid File Selected
 				$this->strFile = realpath($strFile);
-				
+
+				// On Windows, we must replace all "\" with "/"
+				if (substr($this->strFile, 1, 2) == ':\\') {
+					$this->strFile = str_replace('\\', '/', $this->strFile);
+				}
+
 				// Figure Out File Type, and Display Icon Accordingly
 				$strExtension = substr($this->strFile, strrpos($this->strFile, '.') + 1);
 				switch (trim(strtolower($strExtension))) {
