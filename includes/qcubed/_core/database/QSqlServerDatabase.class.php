@@ -355,8 +355,11 @@
 
 		public function Close() {
 			mssql_close($this->objMsSql);
+
+			// Update Connected Flag
+			$this->blnConnectedFlag = false;
 		}
-		
+
 		public function TransactionBegin() {
 			$this->NonQuery('BEGIN TRANSACTION;');
 		}

@@ -268,6 +268,9 @@
 		
 		public function Close() {
 			pg_close($this->objPgSql);
+
+			// Update Connected Flag
+			$this->blnConnectedFlag = false;
 		}
 		
 		public function TransactionBegin() {
