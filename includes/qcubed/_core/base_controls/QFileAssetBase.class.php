@@ -191,6 +191,11 @@
 			if ($this->strFile) {
 				$filePathSubstr = substr($this->strFile, 0, strlen(__DOCROOT__));
                 
+				// On Windows, we must replace all "\" with "/"
+				if (substr($this->strFile, 1, 2) == ':\\') {
+					$this->strFile = str_replace('\\', '/', $this->strFile);
+				}
+
 				// Convert backslashes to forward slashes (relevant for Windows only;
 				// see http://trac.qcu.be/projects/qcubed/ticket/176
 				$filePathSubstr = str_replace("\\", "/", $filePathSubstr);
