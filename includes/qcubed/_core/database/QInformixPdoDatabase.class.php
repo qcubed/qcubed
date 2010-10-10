@@ -87,6 +87,14 @@ class QInformixPdoDatabase extends QPdoDatabase {
 				$this->blnConnectedFlag = true;
 		}
 
+		public function Close()
+		{
+			parent::Close();
+
+			// Update Connected Flag
+			$this->blnConnectedFlag = false;
+		}
+
 		function getInformixPdoDsn($database, $host, $server, $service, $protocol) {
 				/** Informix naming convention:
 				 * host     = IP-Adresse of the Server, where the Informix-Server is running

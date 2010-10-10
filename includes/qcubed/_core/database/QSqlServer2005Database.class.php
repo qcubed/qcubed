@@ -397,6 +397,9 @@
 
 		public function Close() {
 			sqlsrv_close($this->objSqlSrvConn);
+
+			// Update Connected Flag
+			$this->blnConnectedFlag = false;
 		}
 
 		/**

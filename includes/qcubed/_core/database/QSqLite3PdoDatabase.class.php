@@ -29,6 +29,13 @@ class QSqLite3PdoDatabase extends QPdoDatabase {
 				$this->blnConnectedFlag = true;
 		}
 
+		public function Close() {
+			parent::Close();
+
+			// Update Connected Flag
+			$this->blnConnectedFlag = false;
+		}
+
 		public function SqlVariable($mixData, $blnIncludeEquality = false, $blnReverseEquality = false) {
 				// Are we SqlVariabling a BOOLEAN value?
 				if (is_bool($mixData)) {

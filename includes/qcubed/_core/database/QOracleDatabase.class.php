@@ -301,6 +301,9 @@ class QOracleDatabase extends QDatabaseBase {
 
 	public function Close() {
 		oci_close($this->objOracle);
+
+		// Update Connected Flag
+		$this->blnConnectedFlag = false;
 	}
 
 	public function TransactionBegin() {
