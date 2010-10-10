@@ -44,14 +44,14 @@
 			if (array_key_exists($intIndex, $this->objArray))
 				return $this->objArray[$intIndex];
 			else
-				throw new QIndexOutOfRangeException("Index on stack does not exist");
+				throw new QIndexOutOfRangeException($intIndex, "Index on stack does not exist");
 		}
 
 		public function PeekLast() {
 			if ($intCount = count($this->objArray))
 				return $this->objArray[$intCount - 1];
 			else
-				throw new QIndexOutOfRangeException("Stack is empty");
+				throw new QIndexOutOfRangeException($intCount - 1, "Stack is empty");
 		}
 
 		public function IsEmpty() {
