@@ -48,6 +48,12 @@
 		protected $intCellSpacing = -1;
 		protected $intRepeatColumns = 1;
 		protected $strRepeatDirection = QRepeatDirection::Vertical;
+		protected $objItemStyle = null;
+
+		public function __construct($objParentObject, $strControlId = null) {
+			parent::__construct($objParentObject, $strControlId);
+			$this->objItemStyle = new QListItemStyle();
+		}
 
 		//////////
 		// Methods
@@ -66,6 +72,50 @@
 						$this->objItemsArray[$intIndex]->Selected = false;
 				}
 			}
+		}
+
+		protected function GetItemHtml($objItem, $intIndex, $strActions, $strTabIndex) {
+			// The Default Item Style
+			$objStyle = $this->objItemStyle;
+
+			// Apply any Style Override (if applicable)
+			if ($objItem->ItemStyle) {
+				$objStyle = $objStyle->ApplyOverride($objItem->ItemStyle);
+			}
+			$strIndexedId = $this->strControlId.'_'.$intIndex;
+			$strToReturn = '';
+			if (!$this->blnEnabled) {
+				$strToReturn .= '<span disabled="disabled">';
+			}
+
+			$strLabel = sprintf('<label for="%s">%s</label>',
+				$strIndexedId,
+				($this->blnHtmlEntities) ? QApplication::HtmlEntities($objItem->Name) : $objItem->Name
+			);
+
+			$strInput = sprintf('<input id="%s" name="%s" type="radio" %s%s%s%s%s />',
+				$strIndexedId,
+				$this->strControlId,
+				($this->blnEnabled) ? '' : 'disabled="disabled"',
+				($objItem->Selected) ? 'checked="checked"' : '',
+				$objStyle->GetAttributes(),
+				$strActions,
+				$strTabIndex
+			);
+
+			if ($this->strTextAlign == QTextAlign::Left) {
+				$strToReturn .= $strLabel;
+				$strToReturn .= $strInput;
+			} else {
+				$strToReturn .= $strInput;
+				$strToReturn .= $strLabel;
+			}
+
+			if (!$this->blnEnabled) {
+				$strToReturn .= '</span>';
+			}
+			$strToReturn .= '';
+			return $strToReturn;
 		}
 
 		protected function GetControlHtml() {
@@ -149,52 +199,9 @@
 								+ min(($this->ItemCount % $this->intRepeatColumns), $intColIndex)
 								+ $intRowIndex;
 
-						if ($this->objItemsArray[$intIndex]->Selected)
-							$strChecked = 'checked="checked" ';
-						else
-							$strChecked = "";
-	
-						if ($this->blnEnabled) {
-							$strDisabledStart = '';
-							$strDisabledEnd = '';
-							$strDisabled = '';
-						} else {
-							$strDisabledStart = '<span disabled="disabled">';
-							$strDisabledEnd = '</span>';
-							$strDisabled = 'disabled="disabled" ';
-						}
-
-						if ($this->strTextAlign == QTextAlign::Left) {
-							$strToReturn .= sprintf('<td>%s<label for="%s_%s">%s</label><input id="%s_%s" name="%s" value="%s" type="radio" %s%s%s%s />%s</td>',
-								$strDisabledStart,
-								$this->strControlId,
-								$intIndex,
-								($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->objItemsArray[$intIndex]->Name) : $this->objItemsArray[$intIndex]->Name,
-								$this->strControlId,
-								$intIndex,
-								$this->strControlId,
-								$intIndex,
-								$strDisabled,
-								$strChecked,
-								$strActions,
-								$strTabIndex,
-								$strDisabledEnd);
-						} else {
-							$strToReturn .= sprintf('<td>%s<input id="%s_%s" name="%s" value="%s" type="radio" %s%s%s%s /><label for="%s_%s">%s</label>%s</td>',
-								$strDisabledStart,
-								$this->strControlId,
-								$intIndex,
-								$this->strControlId,
-								$intIndex,
-								$strDisabled,
-								$strChecked,
-								$strActions,
-								$strTabIndex,
-								$this->strControlId,
-								$intIndex,
-								($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->objItemsArray[$intIndex]->Name) : $this->objItemsArray[$intIndex]->Name,
-								$strDisabledEnd);
-						}
+						$strToReturn .= '<td>';
+						$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strActions, $strTabIndex);
+						$strToReturn .= '</td>';
 					}
 					
 					$strToReturn .= '</tr>';
@@ -234,6 +241,7 @@
 				case "CellSpacing": return $this->intCellSpacing;
 				case "RepeatColumns": return $this->intRepeatColumns;
 				case "RepeatDirection": return $this->strRepeatDirection;
+				case "ItemStyle": return $this->objItemStyle;
 
 				default:
 					try {
@@ -306,6 +314,14 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+				case "ItemStyle":
+					try {
+						$this->objItemStyle = QType::Cast($mixValue, "QListItemStyle");
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
 
 				default:
 					try {
