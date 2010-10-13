@@ -191,17 +191,35 @@ if (!defined('SERVER_INSTANCE')) {
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
 			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
-			date_default_timezone_set('America/Los_Angeles');
+				date_default_timezone_set('America/Los_Angeles');
 
-				
-			// Determines which class is used to serialize the form in-between Ajax callbacks.
-			// By default, QFormStateHandler will be used (which simply outputs the entire serialized
-			// form data stream to the form), but file- and session- based, or any custom db-
-			// based FormState handling can be used as well.
+
+			/* Form State Handler. Determines which class is used to serialize the form in-between Ajax callbacks.
+			*
+			* Possible values are:
+			* "QFormStateHandler": This is the "standard" FormState handler, storing the base64 encoded session data
+			*	(and if requested by QForm, encrypted) as a hidden form variable on the page, itself.
+			*
+			* "QSessionFormStateHandler": Simple Session-based FormState handler.  Uses PHP Sessions so it's very straightforward
+			*	and simple, utilizing the session handling and cleanup functionality in PHP, itself.
+			*	The downside is that for long running sessions, each individual session file can get
+			*	very, very large, storing all hte various formstate data.  Eventually (if individual
+			*	session files are larger than 10MB), you can theoretically observe a geometrical
+			*	degradation of performance.
+			*
+			* "QFileFormStateHandler": This will store the formstate in a pre-specified directory (__FILE_FORM_STATE_HANDLER_PATH__)
+			*	on the file system. This offers significant speed advantage over PHP SESSION because EACH
+			*	form state is saved in its own file, and only the form state that is needed for loading will
+			*	be accessed (as opposed to with session, ALL the form states are loaded into memory
+			*	every time).
+			*	The downside is that because it doesn't utilize PHP's session management subsystem,
+			*	this class must take care of its own garbage collection/deleting of old/outdated
+			*	formstate files.
+			*/
 			define('__FORM_STATE_HANDLER__', 'QSessionFormStateHandler');
 				
 			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
-			define('__FILE_FORM_STATE_HANDLER_PATH__', __DOCROOT__ . '/tmp');
+			define('__FILE_FORM_STATE_HANDLER_PATH__', __INCLUDES__ . '/tmp');
 
 
 			// Define the Filepath for the error page (path MUST be relative from the DOCROOT)
