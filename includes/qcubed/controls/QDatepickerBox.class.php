@@ -9,7 +9,7 @@
 	 */
 	class QDatepickerBox extends QDatepickerBoxBase
 	{
-		protected $strDateTimeFormat;
+		protected $strDateTimeFormat = "MMM D, YYYY";
 		protected $dttDateTime;
 
         public function ParsePostData() {
