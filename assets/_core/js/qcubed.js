@@ -149,7 +149,7 @@ $j.ajaxSync.data = [];
 
 			var objForm = $j('#' + strForm);
 			var strFormAction = objForm.attr("action");				
-			var objFormElements = $j('#' + strForm + ' input,select,textarea');			
+			var objFormElements = $j('#' + strForm + ' input,#' + strForm + ' select,#' + strForm + ' textarea');			
 			
 			$j('#Qform__FormControl').attr("value", strControl);
 			$j('#Qform__FormEvent').attr("value", strEvent);
