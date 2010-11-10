@@ -16,7 +16,6 @@
 	 */
 	class QDialogBox extends QPanel {
 		protected $strTitle = "";		
-		protected $strPosition = QPosition::Absolute;
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
 
@@ -56,11 +55,11 @@
 			//move both the dialog and the matte back into the form, to ensure they continue to function
 			$strOptions .= sprintf(', open: function() { $j(this).parent().appendTo("#%s"); $j(".ui-widget-overlay").appendTo("#%s"); }', $strParentId, $strParentId);
 
-			return sprintf('$j("#%s").dialog({%s}); $j("#%s").dialog("open");', $this->strControlId, $strOptions, $this->strControlId);
+			return sprintf('$j(qc.getW("%s")).dialog({%s}); $j(qc.getW("%s")).dialog("open");', $this->strControlId, $strOptions, $this->strControlId);
 		}
 
 		public function GetHideDialogJavaScript() {
-			return sprintf('$j("#%s").dialog("close");', $this->strControlId);
+			return sprintf('$j(qc.getW("%s")).dialog("close");', $this->strControlId);
 		}
 
 		public function ShowDialogBox() {
