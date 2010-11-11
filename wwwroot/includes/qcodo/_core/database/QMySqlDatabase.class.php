@@ -88,7 +88,10 @@
 		}
 
 		public function InsertId($strTableName = null, $strColumnName = null) {
-			return mysql_insert_id($this->objDb);
+			$result = $this->Query('SELECT LAST_INSERT_ID();');
+			$data = $result->FetchArray();
+			mysql_free_result($result);
+			return $data[0];
 		}
 
 		public function Close() {
