@@ -31,7 +31,7 @@
 	 */
 
 	// Versioning Information
-	define('QCUBED_VERSION_NUMBER_ONLY', '1.1.2');
+	define('QCUBED_VERSION_NUMBER_ONLY', '1.1.3');
 	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Stable (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 
 	// Preload Required Framework Classes
