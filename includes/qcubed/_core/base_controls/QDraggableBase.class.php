@@ -211,7 +211,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnStart', 'start');
 			$strJqOptions .= $this->makeJsProperty('OnDrag', 'drag');
 			$strJqOptions .= $this->makeJsProperty('OnStop', 'stop');
-            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
+			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 
@@ -228,7 +228,7 @@
 		}
 
 		public function GetEndScript() {
-            return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
 		}
 
 		/**

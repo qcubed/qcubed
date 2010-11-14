@@ -49,7 +49,7 @@
 			$strJqOptions .= $this->makeJsProperty('Text', 'text');
 			$strJqOptions .= $this->makeJsProperty('Icons', 'icons');
 			$strJqOptions .= $this->makeJsProperty('Label', 'label');
-            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
+			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 
@@ -66,7 +66,7 @@
 		}
 
 		public function GetEndScript() {
-            return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
 		}
 
 		/**

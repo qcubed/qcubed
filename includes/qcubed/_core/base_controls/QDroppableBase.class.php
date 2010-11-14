@@ -151,7 +151,7 @@
 			$strJqOptions .= $this->makeJsProperty('OnOver', 'over');
 			$strJqOptions .= $this->makeJsProperty('OnOut', 'out');
 			$strJqOptions .= $this->makeJsProperty('OnDrop', 'drop');
-            if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
+			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
 
@@ -168,7 +168,7 @@
 		}
 
 		public function GetEndScript() {
-            return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
 		}
 
 		/**
