@@ -47,22 +47,24 @@
 					$strToReturn .= ' return false;';
 			}
 
-			if (strlen($strToReturn))
-				if ($objControl instanceof QControlProxy)
-					return sprintf('$j("#%s").bind("%s", function(){
-								%s
-								});
-								', $objControl->TargetControlId, $strEventName,  substr($strToReturn, 1));
-				else
+			if (strlen($strToReturn)) {
+				if ($objControl instanceof QControlProxy) {
+					if ($objControl->TargetControlId) {
+						return sprintf('$j("#%s").bind("%s", function(){
+									%s
+									});
+									', $objControl->TargetControlId, $strEventName,  substr($strToReturn, 1));
+					}
+				} else {
 					return sprintf('$j("#%s").bind("%s", function(event){
 								%s
 								});
 								', $objControl->ControlId, $strEventName,  substr($strToReturn, 1));
 				
 				//return sprintf('%s="%s" ', $strEventName, substr($strToReturn, 1));
-				
-			else
-				return null;
+				}
+			}
+			return null;
 		}
 
 		public function __set($strName, $mixValue) {

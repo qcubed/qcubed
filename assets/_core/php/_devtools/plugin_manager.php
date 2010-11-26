@@ -74,6 +74,8 @@
 		
 		private function dlgUpload_Create() {
 			$this->dlgUpload = new QFileAssetDialog($this, 'dlgUpload_done');
+			$this->dlgUpload->Title = "Install a New Plugin";
+			$this->dlgUpload->Width = null; // auto width
 			$this->dlgUpload->lblMessage->Text = "<p>Please upload a plugin .zip file.</p>" . 
 				"<p>You can get the latest plugins from the " .
 				"<a target='_blank' href='" . QPluginInstaller::ONLINE_PLUGIN_REPOSITORY .
