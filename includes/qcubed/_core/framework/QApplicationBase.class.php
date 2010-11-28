@@ -759,6 +759,8 @@
 			}
 
 			printf('<li>QCUBED_VERSION = "%s"</li>', QCUBED_VERSION);
+			printf('<li>jQuery version = "%s"</li>', __JQUERY_CORE_VERSION__);
+			printf('<li>jQuery UI version = "%s"</li>', __JQUERY_UI_VERSION__);
 			printf('<li>__SUBDIRECTORY__ = "%s"</li>', __SUBDIRECTORY__);
 			printf('<li>__VIRTUAL_DIRECTORY__ = "%s"</li>', __VIRTUAL_DIRECTORY__);
 			printf('<li>__INCLUDES__ = "%s"</li>', __INCLUDES__);

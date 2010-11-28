@@ -131,9 +131,9 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__PLUGIN_ASSETS__', __SUBDIRECTORY__ . '/assets/plugins');
 
 			// jQuery folder location, relative to __JS_ASSETS__
-			define ('__JQUERY_BASE__',  'jquery/jquery-1.4.2.min.js');
-			define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui-1.8.2.custom.min.js');
-			define ('__JQUERY_CSS__', 'jquery-ui-themes-1.8.2/ui-lightness/jquery-ui-1.8.2.custom.css');
+			define ('__JQUERY_BASE__',  'jquery/jquery.min.js');
+			define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.min.js');
+			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-lightness/jquery-ui.custom.css');
 				
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
