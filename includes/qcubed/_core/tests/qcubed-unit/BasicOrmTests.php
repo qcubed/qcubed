@@ -57,6 +57,22 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertEqual($objItems[2]->Project->Name, "State College HR System");
 	}
 	
+	public function testOrderByCondition() {
+		$objItems = Person::QueryArray(
+			QQ::All(),
+			QQ::Clause(
+				QQ::OrderBy(
+					QQ::NotEqual(QQN::Person()->LastName, 'Smith'), 
+					QQN::Person()->FirstName)
+				)
+			);
+
+		$this->assertEqual($objItems[0]->FirstName . " " . $objItems[0]->LastName, "Alex Smith");
+		$this->assertEqual($objItems[1]->FirstName . " " . $objItems[1]->LastName, "Jennifer Smith");
+		$this->assertEqual($objItems[2]->FirstName . " " . $objItems[2]->LastName, "Wendy Smith");
+		$this->assertEqual($objItems[3]->FirstName . " " . $objItems[3]->LastName, "Ben Robinson");
+	}
+	
 	public function testGroupBy() {
 		$objItems = Project::QueryArray(
 			QQ::All(),

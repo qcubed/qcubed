@@ -9,7 +9,7 @@
 
 		The following is the list of QQ Clause classes and what parameters they take:
 		<ul>
-		<li>QQ::OrderBy(array/list of QQNodes)</li>
+		<li>QQ::OrderBy(array/list of QQNodes or QQConditions)</li>
 		<li>QQ::GroupBy(array/list of QQNodes)</li>
 		<li>QQ::Count(QQNode, string)</li>
 		<li>QQ::Minimum(QQNode, string)</li>
@@ -47,6 +47,7 @@
 
 
 	<h3>Select all People, Ordered by Last Name then First Name</h3>
+	<p><i>Note now QQ::OrderBy gets two parameters here</i></p>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::All(),
@@ -64,6 +65,7 @@
 
 
 	<h3>Select all People, Ordered by Last Name then First Name, Limited to the first 4 results</h3>
+	<p><i>Combining QQ::OrderBy and QQ::LimitInfo</i></p>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::All(),
@@ -81,7 +83,26 @@
 
 
 
+	<h3>Select all People, those with last name Smith first, then ordered by First Name</h3>
+	<p><i>Using a QQ::Condition as an ORDER BY clause</i></p>
+<?php
+	$objPersonArray = Person::QueryArray(
+		QQ::All(),
+		QQ::Clause(
+			QQ::OrderBy(QQ::NotEqual(QQN::Person()->LastName, 'Smith'), QQN::Person()->FirstName)
+		)
+	);
+
+	foreach ($objPersonArray as $objPerson) {
+		_p($objPerson->FirstName . ' ' . $objPerson->LastName);
+		_p('<br/>', false);
+	}
+?>
+
+
+
 	<h3>Select all Projects and the Count of Team Members (if applicable)</h3>
+	<p><i>GROUP BY in action</i></p>
 <?php
 	$objProjectArray = Project::QueryArray(
 		QQ::All(),

@@ -1205,14 +1205,14 @@
 
 			$blnPreviousIsNode = false;
 			foreach ($objNodeArray as $objNode)
-				if (!($objNode instanceof QQNode)) {
+				if (!($objNode instanceof QQNode || $objNode instanceof QQCondition) ) {
 					if (!$blnPreviousIsNode)
-						throw new QCallerException('OrderBy clause parameters must all be QQNode objects followed by an optional true/false "Ascending Order" option', 3);
+						throw new QCallerException('OrderBy clause parameters must all be QQNode or QQCondition objects followed by an optional true/false "Ascending Order" option', 3);
 					$blnPreviousIsNode = false;
 				} else {
 					if ($objNode instanceof QQReverseReferenceNode)
 						throw new QInvalidCastException('Cannot order by a ReverseReferenceNode: ' . $objNode->_Name, 4);
-					if (!$objNode->_ParentNode)
+					if ($objNode instanceof QQNode && !$objNode->_ParentNode)
 						throw new QInvalidCastException('Unable to cast "' . $objNode->_Name . '" table to Column-based QQNode', 4);	
 					$blnPreviousIsNode = true;
 				}
@@ -1228,7 +1228,12 @@
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			$intLength = count($this->objNodeArray);
 			for ($intIndex = 0; $intIndex < $intLength; $intIndex++) {
-				$strOrderByCommand = $this->objNodeArray[$intIndex]->GetColumnAlias($objBuilder);
+				$objNode = $this->objNodeArray[$intIndex];
+				if ($objNode instanceof QQNode) {
+					$strOrderByCommand = $objNode->GetColumnAlias($objBuilder);
+				} else if ($objNode instanceof QQCondition) {
+					$strOrderByCommand = $objNode->GetWhereClause($objBuilder);
+				}
 
 				// Check to see if they want a ASC/DESC declarator
 				if ((($intIndex + 1) < $intLength) &&
