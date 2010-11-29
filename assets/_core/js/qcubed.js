@@ -177,8 +177,8 @@ $j.ajaxSync.data = [];
 
 					case "select-multiple":
 						var blnOneSelected = false;
-						$j(this).children(':selected').each (function (i) {
-							strPostData += "&" + $j(this).parent().attr("name") + "=";
+						$j(this).find(':selected').each (function (i) {
+							strPostData += "&" + $j(this).parents("select").attr("name") + "=";
 							strPostData += $j(this).val();
 						});
 						break;
