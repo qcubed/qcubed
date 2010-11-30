@@ -263,6 +263,7 @@ class QCalendar extends QDateTimeTextBox {
 		if ($objEvent instanceof QClickEvent) {
 			throw new QCallerException('QCalendar does not support click events');
 		}
+		parent::AddAction($objEvent, $objAction);
 	}
 }
 ?>
