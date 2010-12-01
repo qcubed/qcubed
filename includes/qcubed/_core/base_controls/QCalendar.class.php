@@ -88,7 +88,7 @@ class QCalendar extends QDateTimeTextBox {
 	public function GetControlHtml() {
 		$strToReturn = parent::GetControlHtml();
 		
-		$strJqOptions = '{';
+		$strJqOptions = '';
 		$strJqOptions .= $this->makeJsProperty('ShowButtonPanel', 'showButtonPanel');
 		$strJqOptions .= $this->makeJsProperty('JqDateFormat', 'dateFormat');
 		$strJqOptions .= $this->makeJsProperty('AutoSize', 'autoSize');
@@ -99,10 +99,10 @@ class QCalendar extends QDateTimeTextBox {
 		$strJqOptions .= $this->makeJsProperty('GotoCurrent', 'gotoCurrent');
 		$strJqOptions .= $this->makeJsProperty('IsRTL', 'isRTL');
 		$strJqOptions .= $this->makeJsProperty('NumberOfMonths', 'numberOfMonths');
-		$strJqOptions .= '}';
+		if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 
 		QApplication::ExecuteJavaScript(
-			sprintf('jQuery("#%s").datepicker(%s)', $this->strControlId, $strJqOptions));
+			sprintf('jQuery("#%s").datepicker({%s})', $this->strControlId, $strJqOptions));
 
 		return $strToReturn;
 	}
