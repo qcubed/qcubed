@@ -96,8 +96,9 @@
 					}
 
 				case 'Text':
+					parent::__set($strName, $mixValue);
 					$this->dttDateTime = new QDateTime($this->strText);
-					return parent::__set($strName, $mixValue);
+					break;
 
 				default:
 					try {
