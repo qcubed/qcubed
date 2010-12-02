@@ -53,7 +53,7 @@
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the datepicker. Can be set when
 	 * 		initialising (first creating) the datepicker.
-	 * @property string $AltField The jQuery selector for another field that is to be updated with the
+	 * @property mixed $AltField The jQuery selector for another field that is to be updated with the
 	 * 		selected date from the datepicker. Use the <a
 	 * 		href="/UI/Datepicker#option-altFormat" title="UI/Datepicker">altFormat</a>
 	 * 		setting to change the format of the date within this field. Leave as blank
@@ -221,7 +221,7 @@
 	 * 		title="UI/Datepicker">maxDate</a> options.
 	 * @property string $YearSuffix Additional text to display after the year in the month headers. This
 	 * 		attribute is one of the regionalisation attributes.
-	 * @property mixed $OnBeforeShow Can be a function that takes an input field and current datepicker instance
+	 * @property QJsClosure $OnBeforeShow Can be a function that takes an input field and current datepicker instance
 	 * 		and returns an options object to update the datepicker with. It is called
 	 * 		just before the datepicker is displayed.
 	 * @property QJsClosure $OnBeforeShowDay The function takes a date as a parameter and must return an array with [0]
@@ -229,15 +229,15 @@
 	 * 		equal to a CSS class name(s) or '' for the default presentation, and [2] an
 	 * 		optional popup tooltip for this date. It is called for each day in the
 	 * 		datepicker before it is displayed.
-	 * @property mixed $OnChangeMonthYear Allows you to define your own event when the datepicker moves to a new
+	 * @property QJsClosure $OnChangeMonthYear Allows you to define your own event when the datepicker moves to a new
 	 * 		month and/or year. The function receives the selected year, month (1-12),
 	 * 		and the datepicker instance as parameters. this refers to the associated
 	 * 		input field.
-	 * @property mixed $OnClose Allows you to define your own event when the datepicker is closed, whether
+	 * @property QJsClosure $OnClose Allows you to define your own event when the datepicker is closed, whether
 	 * 		or not a date is selected. The function receives the selected date as text
 	 * 		('' if none) and the datepicker instance as parameters. this refers to the
 	 * 		associated input field.
-	 * @property mixed $OnSelect Allows you to define your own event when the datepicker is selected. The
+	 * @property QJsClosure $OnSelect Allows you to define your own event when the datepicker is selected. The
 	 * 		function receives the selected date as text and the datepicker instance as
 	 * 		parameters. this refers to the associated input field.
 	 */
@@ -247,8 +247,8 @@
 		protected $strStyleSheets = __JQUERY_CSS__;
 		/** @var boolean */
 		protected $blnDisabled = null;
-		/** @var string */
-		protected $strAltField = null;
+		/** @var mixed */
+		protected $mixAltField = null;
 		/** @var string */
 		protected $strAltFormat = null;
 		/** @var string */
@@ -337,15 +337,15 @@
 		protected $strYearRange = null;
 		/** @var string */
 		protected $strYearSuffix = null;
-		/** @var mixed */
+		/** @var QJsClosure */
 		protected $mixOnBeforeShow = null;
 		/** @var QJsClosure */
 		protected $mixOnBeforeShowDay = null;
-		/** @var mixed */
+		/** @var QJsClosure */
 		protected $mixOnChangeMonthYear = null;
-		/** @var mixed */
+		/** @var QJsClosure */
 		protected $mixOnClose = null;
-		/** @var mixed */
+		/** @var QJsClosure */
 		protected $mixOnSelect = null;
 
 		/** @var array $custom_events Event Class Name => Event Property Name */
@@ -695,7 +695,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
-				case 'AltField': return $this->strAltField;
+				case 'AltField': return $this->mixAltField;
 				case 'AltFormat': return $this->strAltFormat;
 				case 'AppendText': return $this->strAppendText;
 				case 'AutoSize': return $this->blnAutoSize;
@@ -769,13 +769,8 @@
 					}
 
 				case 'AltField':
-					try {
-						$this->strAltField = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
+					$this->mixAltField = $mixValue;
+					break;
 
 				case 'AltFormat':
 					try {
@@ -1144,8 +1139,17 @@
 					}
 
 				case 'OnBeforeShow':
-					$this->mixOnBeforeShow = $mixValue;
-					break;
+					try {
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnBeforeShow = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				case 'OnBeforeShowDay':
 					try {
@@ -1161,16 +1165,43 @@
 					}
 
 				case 'OnChangeMonthYear':
-					$this->mixOnChangeMonthYear = $mixValue;
-					break;
+					try {
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnChangeMonthYear = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				case 'OnClose':
-					$this->mixOnClose = $mixValue;
-					break;
+					try {
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnClose = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				case 'OnSelect':
-					$this->mixOnSelect = $mixValue;
-					break;
+					try {
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnSelect = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				default:
 					try {

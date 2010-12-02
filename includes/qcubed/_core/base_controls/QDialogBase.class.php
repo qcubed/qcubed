@@ -1,12 +1,12 @@
 <?php
 	/* Custom event classes for this control */
 	/**
-	 * This event is triggered when a dialog attempts to close. If the beforeclose
+	 * This event is triggered when a dialog attempts to close. If the beforeClose
 	 * 		event handler (callback function) returns false, the close will be
 	 * 		prevented.
 	 */
-	class QDialog_BeforecloseEvent extends QEvent {
-		const EventName = 'QDialog_Beforeclose';
+	class QDialog_BeforeCloseEvent extends QEvent {
+		const EventName = 'QDialog_BeforeClose';
 	}
 
 	/**
@@ -83,6 +83,8 @@
 	 * 		button is clicked.  The context of the callback is the dialog element; if
 	 * 		you need access to the button, it is available as the target of the event
 	 * 		object.
+	 * @property array $Buttons1 Specifies which buttons should be displayed on the dialog. Each element of
+	 * 		the array must be an Object defining the properties to set on the button.
 	 * @property boolean $CloseOnEscape Specifies whether the dialog should close when it has focus and the user
 	 * 		presses the esacpe (ESC) key.
 	 * @property string $CloseText Specifies the text for the close button. Note that the close text is
@@ -111,11 +113,12 @@
 	 * @property string $Show The effect to be used when the dialog is opened.
 	 * @property boolean $Stack Specifies whether the dialog will stack on top of other dialogs. This will
 	 * 		cause the dialog to move to the front of other dialogs when it gains focus.
-	 * @property string $Title Specifies the title of the dialog. The title can also be specified by the
-	 * 		title attribute on the dialog source element.
+	 * @property string $Title Specifies the title of the dialog. Any valid HTML may be set as the title.
+	 * 		The title can also be specified by the title attribute on the dialog source
+	 * 		element.
 	 * @property integer $Width The width of the dialog, in pixels.
 	 * @property integer $ZIndex The starting z-index for the dialog.
-	 * @property QJsClosure $OnBeforeclose This event is triggered when a dialog attempts to close. If the beforeclose
+	 * @property QJsClosure $OnBeforeClose This event is triggered when a dialog attempts to close. If the beforeClose
 	 * 		event handler (callback function) returns false, the close will be
 	 * 		prevented.
 	 * @property QJsClosure $OnOpen This event is triggered when dialog is opened.
@@ -138,6 +141,8 @@
 		protected $blnAutoOpen = null;
 		/** @var mixed */
 		protected $mixButtons = null;
+		/** @var array */
+		protected $arrButtons1 = null;
 		/** @var boolean */
 		protected $blnCloseOnEscape = null;
 		/** @var string */
@@ -175,7 +180,7 @@
 		/** @var integer */
 		protected $intZIndex = null;
 		/** @var QJsClosure */
-		protected $mixOnBeforeclose = null;
+		protected $mixOnBeforeClose = null;
 		/** @var QJsClosure */
 		protected $mixOnOpen = null;
 		/** @var QJsClosure */
@@ -197,7 +202,7 @@
 
 		/** @var array $custom_events Event Class Name => Event Property Name */
 		protected static $custom_events = array(
-			'QDialog_BeforecloseEvent' => 'OnBeforeclose',
+			'QDialog_BeforeCloseEvent' => 'OnBeforeClose',
 			'QDialog_OpenEvent' => 'OnOpen',
 			'QDialog_FocusEvent' => 'OnFocus',
 			'QDialog_DragStartEvent' => 'OnDragStart',
@@ -223,6 +228,7 @@
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('AutoOpen', 'autoOpen');
 			$strJqOptions .= $this->makeJsProperty('Buttons', 'buttons');
+			$strJqOptions .= $this->makeJsProperty('Buttons1', 'buttons');
 			$strJqOptions .= $this->makeJsProperty('CloseOnEscape', 'closeOnEscape');
 			$strJqOptions .= $this->makeJsProperty('CloseText', 'closeText');
 			$strJqOptions .= $this->makeJsProperty('DialogClass', 'dialogClass');
@@ -241,7 +247,7 @@
 			$strJqOptions .= $this->makeJsProperty('Title', 'title');
 			$strJqOptions .= $this->makeJsProperty('Width', 'width');
 			$strJqOptions .= $this->makeJsProperty('ZIndex', 'zIndex');
-			$strJqOptions .= $this->makeJsProperty('OnBeforeclose', 'beforeclose');
+			$strJqOptions .= $this->makeJsProperty('OnBeforeClose', 'beforeClose');
 			$strJqOptions .= $this->makeJsProperty('OnOpen', 'open');
 			$strJqOptions .= $this->makeJsProperty('OnFocus', 'focus');
 			$strJqOptions .= $this->makeJsProperty('OnDragStart', 'dragStart');
@@ -458,6 +464,7 @@
 				case 'Disabled': return $this->blnDisabled;
 				case 'AutoOpen': return $this->blnAutoOpen;
 				case 'Buttons': return $this->mixButtons;
+				case 'Buttons1': return $this->arrButtons1;
 				case 'CloseOnEscape': return $this->blnCloseOnEscape;
 				case 'CloseText': return $this->strCloseText;
 				case 'DialogClass': return $this->strDialogClass;
@@ -476,7 +483,7 @@
 				case 'Title': return $this->strTitle;
 				case 'Width': return $this->intWidth;
 				case 'ZIndex': return $this->intZIndex;
-				case 'OnBeforeclose': return $this->mixOnBeforeclose;
+				case 'OnBeforeClose': return $this->mixOnBeforeClose;
 				case 'OnOpen': return $this->mixOnOpen;
 				case 'OnFocus': return $this->mixOnFocus;
 				case 'OnDragStart': return $this->mixOnDragStart;
@@ -521,6 +528,15 @@
 				case 'Buttons':
 					$this->mixButtons = $mixValue;
 					break;
+
+				case 'Buttons1':
+					try {
+						$this->arrButtons1 = QType::Cast($mixValue, QType::ArrayType);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				case 'CloseOnEscape':
 					try {
@@ -679,13 +695,13 @@
 						throw $objExc;
 					}
 
-				case 'OnBeforeclose':
+				case 'OnBeforeClose':
 					try {
 						if ($mixValue instanceof QJavaScriptAction) {
 						    /** @var QJavaScriptAction $mixValue */
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
-						$this->mixOnBeforeclose = QType::Cast($mixValue, 'QJsClosure');
+						$this->mixOnBeforeClose = QType::Cast($mixValue, 'QJsClosure');
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

@@ -7,12 +7,22 @@
 		const EventName = 'QProgressbar_Change';
 	}
 
+	/**
+	 * This event is triggered when the value of the progressbar reaches the
+	 * 		maximum value of 100.
+	 */
+	class QProgressbar_CompleteEvent extends QEvent {
+		const EventName = 'QProgressbar_Complete';
+	}
+
 
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the progressbar. Can be set when
 	 * 		initialising (first creating) the progressbar.
 	 * @property integer $Value The value of the progressbar.
 	 * @property QJsClosure $OnChange This event is triggered when the value of the progressbar changes.
+	 * @property QJsClosure $OnComplete This event is triggered when the value of the progressbar reaches the
+	 * 		maximum value of 100.
 	 */
 
 	class QProgressbarBase extends QPanel	{
@@ -24,10 +34,13 @@
 		protected $intValue;
 		/** @var QJsClosure */
 		protected $mixOnChange = null;
+		/** @var QJsClosure */
+		protected $mixOnComplete = null;
 
 		/** @var array $custom_events Event Class Name => Event Property Name */
 		protected static $custom_events = array(
 			'QProgressbar_ChangeEvent' => 'OnChange',
+			'QProgressbar_CompleteEvent' => 'OnComplete',
 		);
 		
 		protected function makeJsProperty($strProp, $strKey) {
@@ -44,6 +57,7 @@
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('Value', 'value');
 			$strJqOptions .= $this->makeJsProperty('OnChange', 'change');
+			$strJqOptions .= $this->makeJsProperty('OnComplete', 'complete');
 			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
@@ -213,6 +227,7 @@
 				case 'Disabled': return $this->blnDisabled;
 				case 'Value': return $this->intValue;
 				case 'OnChange': return $this->mixOnChange;
+				case 'OnComplete': return $this->mixOnComplete;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -252,6 +267,19 @@
 						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
 						}
 						$this->mixOnChange = QType::Cast($mixValue, 'QJsClosure');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'OnComplete':
+					try {
+						if ($mixValue instanceof QJavaScriptAction) {
+						    /** @var QJavaScriptAction $mixValue */
+						    $mixValue = new QJsClosure($mixValue->RenderScript($this));
+						}
+						$this->mixOnComplete = QType::Cast($mixValue, 'QJsClosure');
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

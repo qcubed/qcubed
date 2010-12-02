@@ -22,6 +22,7 @@ class Option extends JqAttributes {
 	public $phpQType;
 
 	static public function php_type($jsType) {
+		$jsType = preg_replace('/\([^\)]*\)/', '', $jsType); // erase possible function args
 		if (strchr($jsType, ',')) return 'mixed';
 		if (stripos($jsType, 'array') === 0) return 'array';
 		switch ($jsType) {

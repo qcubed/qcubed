@@ -57,6 +57,7 @@
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the autocomplete. Can be set when
 	 * 		initialising (first creating) the autocomplete.
+	 * @property mixed $AppendTo Which element the menu should be appended to.
 	 * @property integer $Delay The delay in milliseconds the Autocomplete waits after a keystroke to
 	 * 		activate itself. A zero-delay makes sense for local data (more responsive),
 	 * 		but can produce a lot of load for remote data, while being less responsive.
@@ -90,6 +91,8 @@
 		protected $strStyleSheets = __JQUERY_CSS__;
 		/** @var boolean */
 		protected $blnDisabled = null;
+		/** @var mixed */
+		protected $mixAppendTo = null;
 		/** @var integer */
 		protected $intDelay = null;
 		/** @var integer */
@@ -131,6 +134,7 @@
 		protected function makeJqOptions() {
 			$strJqOptions = '';
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('AppendTo', 'appendTo');
 			$strJqOptions .= $this->makeJsProperty('Delay', 'delay');
 			$strJqOptions .= $this->makeJsProperty('MinLength', 'minLength');
 			$strJqOptions .= $this->makeJsProperty('Source', 'source');
@@ -326,6 +330,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
+				case 'AppendTo': return $this->mixAppendTo;
 				case 'Delay': return $this->intDelay;
 				case 'MinLength': return $this->intMinLength;
 				case 'Source': return $this->mixSource;
@@ -357,6 +362,10 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case 'AppendTo':
+					$this->mixAppendTo = $mixValue;
+					break;
 
 				case 'Delay':
 					try {

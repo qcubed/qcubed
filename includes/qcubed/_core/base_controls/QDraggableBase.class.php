@@ -43,9 +43,9 @@
 	 * 		region. Possible string values: 'parent', 'document', 'window', [x1, y1,
 	 * 		x2, y2].
 	 * @property string $Cursor The css cursor during the drag operation.
-	 * @property mixed $CursorAt Moves the dragging helper so the cursor always appears to drag from the
-	 * 		same position. Coordinates can be given as a hash using a combination of
-	 * 		one or two keys: { top, left, right, bottom }.
+	 * @property mixed $CursorAt Sets the offset of the dragging helper relative to the mouse cursor.
+	 * 		Coordinates can be given as a hash using a combination of one or two keys:
+	 * 		{ top, left, right, bottom }.
 	 * @property integer $Delay Time in milliseconds after mousedown until dragging should start. This
 	 * 		option can be used to prevent unwanted drags when clicking on an element.
 	 * @property integer $Distance Distance in pixels after mousedown the mouse must move before dragging
