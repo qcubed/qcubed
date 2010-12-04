@@ -11,6 +11,18 @@
  *
  * @package Controls
  *
+ * @property QDateTime MinDate
+ * @property QDateTime MaxDate
+ * @property QDateTime DefaultDate
+ * @property int FirstDay
+ * @property int|int[] NumberOfMonths
+ * @property boolean AutoSize
+ * @property boolean GotoCurrent
+ * @property boolean IsRTL
+ * @property string DateFormat
+ * @property-write string DateTimeFormat
+ * @property string JqDateFormat
+ * @property boolean ShowButtonPanel
  */
 class QCalendar extends QDateTimeTextBox {
 	protected $strJavaScripts = __JQUERY_EFFECTS__;
