@@ -48,6 +48,9 @@ abstract class QPdoDatabase extends QDatabaseBase {
 
 		
 		public function TransactionBegin() {
+				if (!$this->blnConnectedFlag) { 
+					$this->Connect(); 
+				}
 				$this->objPdo->beginTransaction();
 		}
 
