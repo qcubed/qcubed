@@ -45,7 +45,7 @@
 		}
 
 		protected function btnButton_Click($strFormId, $strControlId, $strParameter) {
-			$this->lblMessage->Text = 'Thanks for uploading the file: ' . $this->flaSample->FileName;
+			$this->lblMessage->Text = 'Thanks for uploading the file: ' . $this->flaSample->FileName . ". File size: " . $this->flaSample->Size . " bytes";
 		}
 	}
 

@@ -10,6 +10,7 @@
 	 *
 	 * @property string $File
 	 * @property string $FileName
+	 * @property integer $Size
 	 * @property-read string $RandomFileName
 	 * @property string $UnacceptableMessage
 	 * @property integer $FileAssetType
@@ -33,6 +34,7 @@
 		protected $intFileAssetType;
 		protected $strFile;
 		protected $strFileName;
+		protected $intSize;
 		protected $strRandomFileName;
 		protected $blnClickToView;
 
@@ -129,6 +131,8 @@
 
 				// Cleanup and Save Filename
 				$this->strFileName = preg_replace('/[^A-Z^a-z^0-9_\-]/', '', $strBaseFilename) . '.' . $strExtension;
+				
+				$this->intSize = $this->dlgFileAsset->flcFileAsset->Size;
 
 				// Hide the Dialog Box
 				$this->dlgFileAsset->HideDialogBox();
@@ -159,6 +163,7 @@
 			switch ($strName) {
 				case 'File': return $this->strFile;
 				case 'FileName': return $this->strFileName;
+				case 'Size': return $this->intSize;
 				case 'RandomFileName': return $this->strRandomFileName;
 				case 'UnacceptableMessage': return $this->strUnacceptableMessage;
 				case 'FileAssetType': return $this->intFileAssetType;
@@ -398,7 +403,7 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-			}
+			}			
 		}
 	}
 ?>
