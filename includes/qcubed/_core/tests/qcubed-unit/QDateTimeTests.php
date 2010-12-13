@@ -15,6 +15,18 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$this->assertFalse($obj2->IsDateNull());
 		$this->assertTrue($obj2->IsTimeNull());
 	}
+
+	public function testIncompleteDates() {
+		$obj1 = new QDateTime("Feb 12");
+		$this->assertFalse($obj1->IsNull());
+		$this->assertFalse($obj1->IsDateNull());
+		$this->assertTrue($obj1->IsTimeNull());
+
+		$obj2 = new QDateTime("March 2003");
+		$this->assertFalse($obj2->IsNull());
+		$this->assertFalse($obj2->IsDateNull());
+		$this->assertTrue($obj2->IsTimeNull());
+	}
 	
 	public function testConstructor() {
 		$obj1 = QDateTime::Now();

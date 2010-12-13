@@ -157,7 +157,7 @@
 
 					// if $mixValue represent only time string, blnDateNull must be set to true 
 					$objDateTime = (object)date_parse($mixValue); 
-					$this->blnDateNull = ($objDateTime->year && $objDateTime->month && $objDateTime->day)? false : true; 
+					$this->blnDateNull = !$objDateTime->year && !$objDateTime->month && !$objDateTime->day;
 
 					// Update Time Null Value if Time was Specified
 					if (strpos($mixValue, ':') !== false)
