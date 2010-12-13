@@ -94,7 +94,7 @@
 		public function InsertId($strTableName = null, $strColumnName = null) {
 			$result = $this->Query('SELECT LAST_INSERT_ID();');
 			$data = $result->FetchArray();
-			mysql_free_result($result);
+			$result->Close();
 			return $data[0];
 		}
 
