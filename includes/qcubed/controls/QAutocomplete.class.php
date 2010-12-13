@@ -46,7 +46,7 @@
 			if ($filter instanceof QJsClosure) {
 				$filter = $filter->toJsObject();
 			} else if (!is_string($filter)) {
-				throw new QCallerException("filter must be either a atring or an instance of QJsClosure");
+				throw new QCallerException("filter must be either a string or an instance of QJsClosure");
 			}
 			$strJS = '(function($, undefined) { $.ui.autocomplete.filter = ' . $filter . '} (jQuery))';
 			QApplication::ExecuteJavaScript($strJS);
