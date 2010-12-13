@@ -170,11 +170,6 @@ select.listbox { font: 12px 'Arial', 'Helvetica'; width: 208px; background-color
   * Various QControl-specific Styles
   */
 
-/* QFileAsset */
-div.fileassetDbox { border: 4px solid #111; background-color: #EFEEEE; padding: 20px; width: 400px; overflow: auto; }
-	div.fileassetDbox h1 { margin: 0; }
-	div.fileassetDbox input { padding: 3px; margin-right: 5px; }
-
 /* QDialogBox */
 div.dialogbox { border: 4px solid #111; background-color: #fff; padding: 20px; width: 400px; overflow: auto; }
 
@@ -382,3 +377,5 @@ a.main_navselected { color: #ffffff; font-weight: bold; text-transform: uppercas
 
 .file_asset a {color: #111;}
 .file_asset_icon {border-width: 2px; border-style: solid; border-color: #111;}
+
+.ui-dialog .ui-dialog-titlebar-close { border: none; }
