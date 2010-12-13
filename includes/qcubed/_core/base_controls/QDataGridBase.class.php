@@ -313,7 +313,10 @@
 
 			$this->prxDatagridSorting->AddAction(new QClickEvent(), new QTerminateAction());
 
-			$this->objWaitIcon_Create();
+			// The wait icon should only be created if the filter is shown
+			if($this->blnShowFilter) {
+				$this->objWaitIcon_Create();
+			}
 		}
 
 		// Used to add a DataGridColumn to this DataGrid
@@ -1508,6 +1511,14 @@
 				case "ShowFilter":
 					try {
 						$this->blnShowFilter = QType::Cast($mixValue, QType::Boolean);
+						// If the filter is being shown, the table gets its own wait icon. 
+						// When the wait icon changes we need to refresh a lot of actions
+						// that would otherwise use the default wait icon.
+						if($this->blnShowFilter){
+							$this->objWaitIcon_Create();
+						} else{
+							$this->objWaitIcon = "default";
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
