@@ -34,7 +34,9 @@
 		/** @var QTabs */
 		protected $Tabs;
 
-		static private $LANGUAGES = array("c++", "java", "php", "coldfusion", "javascript", "asp", "ruby");
+		// Array we'll use to demonstrate the autocomplete functionality
+		static private $LANGUAGES = array("c++", "java", "php",
+			"coldfusion", "javascript", "asp", "ruby");
 
 		protected function Form_Create() {
 			// Draggable
@@ -90,12 +92,17 @@
 			$pnl->Text = 'Section 3';
 
 			// Autocomplete
+
+			// Both autocomplete controls below will use the mode
+			// "match only on the beginning of the word"
+			QAutocomplete::UseFilter(QAutocomplete::FILTER_STARTS_WITH);
+
+			// Client-side only autocomplete
 			$this->Autocomplete = new QAutocomplete($this);
 			$this->Autocomplete->Source = self::$LANGUAGES;
 	
 			// Ajax Autocomplete
 			$this->AjaxAutocomplete = new QAutocomplete($this);
-//			$this->AjaxAutocomplete->Source = new QAjaxAction("update_autocompleteList");
 			$this->AjaxAutocomplete->SetDataBinder("update_autocompleteList");
 
 			// Button
