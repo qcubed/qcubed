@@ -93,9 +93,10 @@
 				($this->blnHtmlEntities) ? QApplication::HtmlEntities($objItem->Name) : $objItem->Name
 			);
 
-			$strInput = sprintf('<input id="%s" name="%s" type="radio" %s%s%s%s%s />',
+			$strInput = sprintf('<input id="%s" name="%s" value="%s" type="radio" %s%s%s%s%s />',
 				$strIndexedId,
 				$this->strControlId,
+				$intIndex,
 				($this->blnEnabled) ? '' : 'disabled="disabled"',
 				($objItem->Selected) ? 'checked="checked"' : '',
 				$objStyle->GetAttributes(),
