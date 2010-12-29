@@ -2,16 +2,14 @@
     require_once('../qcubed.inc.php');
 
     class ExampleForm extends QForm {
-
         protected $objPanel1;
         protected $objPanel2;
         protected $objPanel3;
         protected $objPanel4;
 
         protected function Form_Create() {
-
             /*
-            * These two panels here will demenstrate even bubbling
+            * These two panels here will demonstrate even bubbling
             */
             $this->objPanel1 = new QPanel($this);
             $this->objPanel1->AutoRenderChildren = true;
@@ -21,8 +19,8 @@
 
             $this->objPanel2 = new QPanel($this->objPanel1);
             $this->objPanel2->CssClass = 'container';
-            $this->objPanel2->Text = "I'm panel 2 and I'm a child of panel 1.
-            <br/><br/>If you click me, both my click action and panel 1's click action will fire";
+            $this->objPanel2->AddCssClass('insidePanel');
+            $this->objPanel2->Text = "I'm panel 2 and I'm a child of panel 1.<br/><br/>If you click me, both my click action and panel 1's click action will fire";
             $this->objPanel2->AddAction(new QClickEvent(), new QAjaxAction('objPanel2_Click'));
 
             /*
@@ -36,8 +34,8 @@
 
             $this->objPanel4 = new QPanel($this->objPanel3);
             $this->objPanel4->CssClass = 'container';
-            $this->objPanel4->Text = "I'm panel 4 and I'm a child of panel 3.
-            <br/><br/>If you click me only my click action will fire thanks to QStopPropagationAction";
+            $this->objPanel4->AddCssClass('insidePanel');
+            $this->objPanel4->Text = "I'm panel 4 and I'm a child of panel 3.<br/><br/>If you click me only my click action will fire thanks to QStopPropagationAction";
             // Note the addition of QStopPropagationAction()
             $this->objPanel4->AddAction(new QClickEvent(), new QStopPropagationAction());
             $this->objPanel4->AddAction(new QClickEvent(), new QAjaxAction('objPanel4_Click'));
@@ -63,5 +61,4 @@
     }
 
     ExampleForm::Run('ExampleForm');
-
 ?>
