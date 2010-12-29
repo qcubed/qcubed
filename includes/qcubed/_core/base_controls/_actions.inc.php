@@ -1,13 +1,13 @@
 <?php
 /**
- * This file contains all basic action classes: QAction, QServerAction, QAjaxAction, etc. 
+ * This file contains all basic action classes: QAction, QServerAction, QAjaxAction, etc.
  *
  * @package Actions
  */
 
 	/**
-	 * Base class for all other Actions. 
-	 * 
+	 * Base class for all other Actions.
+	 *
 	 * @package Actions
 	 * @property string $Event
 	 */
@@ -18,6 +18,10 @@
 
 		public static function RenderActions(QControl $objControl, $strEventName, $objActions) {
 			$strToReturn = '';
+
+			if ($objControl->ActionsMustTerminate) {
+				$strToReturn .= ' event.preventDefault();';
+			}
 
 			if ($objActions && count($objActions)) foreach ($objActions as $objAction) {
 				if ($objAction->objEvent->EventName != $strEventName)
@@ -40,17 +44,10 @@
 				$strToReturn .= $strCode;
 			}
 
-			if ($objControl->ActionsMustTerminate) {
-				if (QApplication::IsBrowser(QBrowserType::InternetExplorer_6_0))
-					$strToReturn .= ' qc.terminateEvent(event);';
-				else
-					$strToReturn .= ' return false;';
-			}
-
 			if (strlen($strToReturn)) {
 				if ($objControl instanceof QControlProxy) {
 					if ($objControl->TargetControlId) {
-						return sprintf('$j("#%s").bind("%s", function(){
+						return sprintf('$j("#%s").bind("%s", function(event){
 									%s
 									});
 									', $objControl->TargetControlId, $strEventName,  substr($strToReturn, 1));
@@ -60,7 +57,7 @@
 								%s
 								});
 								', $objControl->ControlId, $strEventName,  substr($strToReturn, 1));
-				
+
 				//return sprintf('%s="%s" ', $strEventName, substr($strToReturn, 1));
 				}
 			}
@@ -81,7 +78,7 @@
 					}
 			}
 		}
-		
+
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Event': return $this->objEvent;
@@ -97,8 +94,8 @@
 	}
 
 	/**
-	 * Server actions are handled through a full-page postback. 
-	 * 
+	 * Server actions are handled through a full-page postback.
+	 *
 	 * @package Actions
 	 */
 	class QServerAction extends QAction {
@@ -133,9 +130,9 @@
 	}
 
 	/**
-	 * Ajax actions are handled through an asynchronous HTTP request (=AJAX). 
-	 * No full-page refresh happens when such an action is executing. 
-	 * 
+	 * Ajax actions are handled through an asynchronous HTTP request (=AJAX).
+	 * No full-page refresh happens when such an action is executing.
+	 *
 	 * @package Actions
 	 */
 	class QAjaxAction extends QAction {
@@ -183,8 +180,8 @@
 
 	/**
 	 * Server control action is identical to server action, except
-	 * the handler for it is defined NOT on the form host, but on a control. 
-	 * 
+	 * the handler for it is defined NOT on the form host, but on a control.
+	 *
 	 * @package Actions
 	 */
 	class QServerControlAction extends QServerAction {
@@ -195,8 +192,8 @@
 
 	/**
 	 * Ajax control action is identical to Ajax action, except
-	 * the handler for it is defined NOT on the form host, but on a control. 
-	 * 
+	 * the handler for it is defined NOT on the form host, but on a control.
+	 *
 	 * @package Actions
 	 */
 	class QAjaxControlAction extends QAjaxAction {
@@ -206,9 +203,9 @@
 	}
 
 	/**
-	 * Client-side action - no postbacks of any kind are performed. 
-	 * All handling activity happens in Javascript. 
-	 * 
+	 * Client-side action - no postbacks of any kind are performed.
+	 * All handling activity happens in Javascript.
+	 *
 	 * @package Actions
 	 */
 	class QJavaScriptAction extends QAction {
@@ -240,7 +237,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QConfirmAction extends QAction {
@@ -272,7 +269,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QAlertAction extends QAction {
@@ -303,7 +300,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QResetTimerAction extends QAction {
@@ -311,23 +308,31 @@
 			return sprintf("qcubed.clearTimeout('%s');", $objControl->ControlId);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QTerminateAction extends QAction {
 		public function RenderScript(QControl $objControl) {
-			if (QApplication::IsBrowser(QBrowserType::InternetExplorer_6_0))
-				return sprintf('qcubed.terminateEvent(event);', $objControl->ControlId);
-			else
-				return sprintf('return false;', $objControl->ControlId);
-//			return 'return qc.terminatesEvent(event);';
+			return 'event.preventDefault();';
 		}
 	}
 
 	/**
-	 * 
+	 * Prevents the event from bubbling up the DOM tree, preventing any parent
+	 * handlers from being notified of the event.
+	 *
+	 * @package Actions
+	 */
+	class QStopPropagationAction extends QAction {
+		public function RenderScript(QControl $objControl) {
+			return 'event.stopPropagation();';
+		}
+	}
+
+	/**
+	 *
 	 * @package Actions
 	 */
 	class QToggleDisplayAction extends QAction {
@@ -358,7 +363,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QToggleEnableAction extends QAction {
@@ -386,9 +391,9 @@
 			return sprintf("qc.getW('%s').toggleEnabled('%s');", $this->strControlId, $strEnableOrDisable);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QRegisterClickPositionAction extends QAction {
@@ -400,7 +405,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QShowDialogBox extends QAction {
@@ -421,7 +426,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QHideDialogBox extends QAction {
@@ -440,7 +445,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QFocusControlAction extends QAction {
@@ -459,7 +464,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QBlurControlAction extends QAction {
@@ -478,7 +483,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QSelectControlAction extends QAction {
@@ -497,13 +502,13 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QCssClassAction extends QAction {
 		protected $strTemporaryCssClass = null;
 		protected $blnOverride = false;
-		
+
 		public function __construct($strTemporaryCssClass = null, $blnOverride = false) {
 			$this->strTemporaryCssClass = $strTemporaryCssClass;
 			$this->blnOverride = $blnOverride;
@@ -526,16 +531,16 @@
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QCssAction extends QAction {
 		protected $strCssProperty = null;
 		protected $strCssValue = null;
 		protected $strControlId = null;
-		
+
 		public function __construct($strCssProperty, $strCssValue, $objControl = null) {
 			$this->strCssProperty = $strCssProperty;
 			$this->strCssValue = $strCssValue;
@@ -549,10 +554,10 @@
 			// Specified a Temporary Css Class to use?
 			return sprintf('$j("#%s").css("%s", "%s"); ', $this->strControlId, $this->strCssProperty, $this->strCssValue);
 		}
-	}	
+	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QShowCalendarAction extends QAction {
@@ -570,7 +575,7 @@
 	}
 
 	/**
-	 * 
+	 *
 	 * @package Actions
 	 */
 	class QHideCalendarAction extends QAction {

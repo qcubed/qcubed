@@ -15,10 +15,10 @@ $j.fn.extend({
 
 /*
  * Queued Ajax requests.
- * A new Ajax request won't be started until the previous queued 
+ * A new Ajax request won't be started until the previous queued
  * request has finished.
  */
-$j.ajaxQueue = function(o){		
+$j.ajaxQueue = function(o){
 	 $j.ajax( o );
 };
 
@@ -72,13 +72,13 @@ $j.ajaxSync.data = [];
 // The QCubed Object is used for everything in Qcodo
 ///////////////////////////////////////////////////
 	var qcubed = {
-			
+
 		recordControlModification: function (strControlId, strProperty, strNewValue) {
 			if (!qcubed.controlModifications[strControlId])
 				qcubed.controlModifications[strControlId] = new Object;
-			qcubed.controlModifications[strControlId][strProperty] = strNewValue;	
+			qcubed.controlModifications[strControlId][strProperty] = strNewValue;
 		},
-		
+
 		postBack: function(strForm, strControl, strEvent, strParameter) {
 			var strForm = $j("#Qform__FormId").attr("value");
 			var objForm = $j('#' + strForm);
@@ -102,11 +102,11 @@ $j.ajaxSync.data = [];
 			qcubed.controlModifications = new Object;
 			return strToReturn;
 		},
-		
+
 		formCheckableControls: function(strForm, strCallType) {
 
 			// Select the QCubed Form
-			var objFormElements = $j('#' + strForm + ' input,select,textarea');			
+			var objFormElements = $j('#' + strForm + ' input,select,textarea');
 			var strToReturn = "";
 
 			objFormElements.each(function(i) {
@@ -114,7 +114,7 @@ $j.ajaxSync.data = [];
 					 ($j(this).attr("type") == "radio")) &&
 					((strCallType == "Ajax") ||
 					(!$j(this).attr("disabled")))) {
-					
+
 					var strControlId = $j(this).attr("id");
 
 					// CheckBoxList
@@ -131,16 +131,16 @@ $j.ajaxSync.data = [];
 						strToReturn += " " + strControlId;
 					}
 				}
-			});			
+			});
 
 			if (strToReturn.length > 0)
 				return strToReturn.substring(1);
 			else
 				return "";
 		},
-	
+
 		postAjax: function(strForm, strControl, strEvent, strParameter, strWaitIconControlId) {
-			
+
 			var strForm = strForm;
 			var strControl = strControl;
 			var strEvent = strEvent;
@@ -148,22 +148,22 @@ $j.ajaxSync.data = [];
 			var strWaitIconControlId = strWaitIconControlId;
 
 			var objForm = $j('#' + strForm);
-			var strFormAction = objForm.attr("action");				
-			var objFormElements = $j('#' + strForm + ' input,#' + strForm + ' select,#' + strForm + ' textarea');			
-			
+			var strFormAction = objForm.attr("action");
+			var objFormElements = $j('#' + strForm + ' input,#' + strForm + ' select,#' + strForm + ' textarea');
+
 			$j('#Qform__FormControl').attr("value", strControl);
 			$j('#Qform__FormEvent').attr("value", strEvent);
 			$j('#Qform__FormParameter').attr("value", strParameter);
 			$j('#Qform__FormCallType').attr("value", "Ajax");
 			$j('#Qform__FormUpdates').attr("value", this.formUpdates());
 			$j('#Qform__FormCheckableControls').attr("value", this.formCheckableControls(strForm, "Ajax"));
-		
+
 			var strPostData = '';
-			
-			objFormElements.each(function () {			
+
+			objFormElements.each(function () {
 				var strType = $j(this).attr("type");
 				var strControlId = $j(this).attr("id");
-				switch (strType) {				
+				switch (strType) {
 					case "checkbox":
 					case "radio":
 						if ($j(this).attr("checked")) {
@@ -185,16 +185,16 @@ $j.ajaxSync.data = [];
 
 					default:
 						strPostData += "&" + strControlId + "=";
-					
+
 						// For Internationalization -- we must escape the element's value properly
 						var strPostValue = $j(this).val();
 						if (strPostValue) {
 							strPostValue = strPostValue.replace(/\%/g, "%25");
 							strPostValue = strPostValue.replace(/&/g, escape('&'));
-							strPostValue = strPostValue.replace(/\+/g, "%2B");							
+							strPostValue = strPostValue.replace(/\+/g, "%2B");
 						}
 						strPostData += strPostValue;
-						break;				
+						break;
 				}
 			});
 
@@ -216,29 +216,29 @@ $j.ajaxSync.data = [];
 						return;
 					}
 				},
-				success: function (xml) {			
+				success: function (xml) {
 					$j(xml).find('control').each(function() {
 						var strControlId = '#' + $j(this).attr("id");
-						var strControlHtml = $j(this).text();				
-						
+						var strControlHtml = $j(this).text();
+
 						if (strControlId == "#Qform__FormState") {
 							$j(strControlId).val(strControlHtml);
 						} else {
 							$j(strControlId + "_ctl").html(strControlHtml);
 						}
-					});			
+					});
 					var strCommand = '';
-					$j(xml).find('command').each(function() {						
-						strCommand += $j(this).text();										
-					});				
-					eval(strCommand);					
+					$j(xml).find('command').each(function() {
+						strCommand += $j(this).text();
+					});
+					eval(strCommand);
 					if (qcubed.objAjaxWaitIcon)
 						qcubed.objAjaxWaitIcon.style.display = 'none';
 				}
 			});
-			
+
 		},
-			
+
 		initialize: function() {
 
 
@@ -246,7 +246,7 @@ $j.ajaxSync.data = [];
 		////////////////////////////////
 		// Browser-related functionality
 		////////////////////////////////
-					
+
 			this.loadJavaScriptFile = function(strScript, objCallback) {
 				strScript = qc.jsAssets + "/" + strScript;
 				$j.getScript(strScript, objCallback);
@@ -254,8 +254,8 @@ $j.ajaxSync.data = [];
 
 			this.loadStyleSheetFile = function(strStyleSheetFile, strMediaType) {
 				strStyleSheetFile = qc.cssAssets + "/" + strStyleSheetFile;
-				
-				$j('head').append('<link rel="stylesheet" href="' + strStyleSheetFile + '" type="text/css" />');	
+
+				$j('head').append('<link rel="stylesheet" href="' + strStyleSheetFile + '" type="text/css" />');
 
 			};
 
@@ -296,7 +296,11 @@ $j.ajaxSync.data = [];
 	// Event Object-related functionality
 	/////////////////////////////////////
 
-				
+		// You may still use this function but be advised
+		// we no longer use it in core.  All event terminations
+		// and event bubbling are handled through jQuery.
+		// see http://trac.qcu.be/projects/qcubed/ticket/681
+		// @deprecated
 		qcubed.terminateEvent = function(objEvent) {
 			objEvent = qcubed.handleEvent(objEvent);
 
@@ -318,10 +322,9 @@ $j.ajaxSync.data = [];
 // Qcodo Shortcut and Initialize
 ////////////////////////////////
 	// Make sure we set $j.noConflict() to $j
-	
+
 	var qc = qcubed;
 	qc.initialize();
-	
+
 	qc.pB = qcubed.postBack;
 	qc.pA = qcubed.postAjax;
-	
