@@ -80,7 +80,7 @@
 		protected $objOrderByClause = null;
 		protected $objReverseOrderByClause = null;
 
-		protected $FilterBoxSize = '10';
+		protected $intFilterBoxSize = 10;
 		protected $strFilterType = QFilterType::None;
 		protected $intFilterColId = null;
 		protected $arrFilterList = array();
@@ -311,7 +311,7 @@
 				case "ReverseOrderByClause": return $this->objReverseOrderByClause;
 
 				case "FilterByCommand": return $this->arrFilterByCommand;
-				case "FilterBoxSize": return $this->FilterBoxSize;
+				case "FilterBoxSize": return $this->intFilterBoxSize;
 				case "FilterType": return $this->strFilterType;
 				case "FilterList": return $this->arrFilterList;
 				case "FilterColId": return $this->intFilterColId;
@@ -590,7 +590,7 @@
 
 				case "FilterBoxSize":
 					try {
-						$this->FilterBoxSize = QType::Cast($mixValue, QType::Integer);
+						$this->intFilterBoxSize = QType::Cast($mixValue, QType::Integer);
 						$this->FilterType = 'Text';
 						break;
 					} catch (QInvalidCastException $objExc) {
