@@ -216,7 +216,7 @@
 					else if (is_null($objBacktrace['args'][$intIndex]))
 						$objBacktrace['args'][$intIndex] = 'null';
 					else if (gettype($objBacktrace['args'][$intIndex]) == 'integer') {}
-					else if (gettype($intIndex['args'][$intIndex]) == 'object')
+					else if (gettype($objBacktrace['args'][$intIndex]) == 'object')
 						$objBacktrace['args'][$intIndex] = 'Object';
 					else
 						$objBacktrace['args'][$intIndex] = sprintf("'%s'", $objBacktrace['args'][$intIndex]);
