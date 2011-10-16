@@ -56,8 +56,8 @@
 		public function __get($strName) {
 			switch ($strName) {
 				// MISC
-				case "Maximum": return $this->MinDate;
-				case "Minimum": return $this->MaxDate;
+				case "Maximum": return $this->MaxDate;
+				case "Minimum": return $this->MinDate;
 				case 'DateTimeFormat':
 				case 'DateFormat': return $this->strDateTimeFormat;
 				case 'DateTime': return $this->dttDateTime;
