@@ -83,12 +83,12 @@ $j.ajaxSync.data = [];
 			var strForm = $j("#Qform__FormId").attr("value");
 			var objForm = $j('#' + strForm);
 
-			$j('#Qform__FormControl').attr("value", strControl);
-			$j('#Qform__FormEvent').attr("value", strEvent);
-			$j('#Qform__FormParameter').attr("value", strParameter);
-			$j('#Qform__FormCallType').attr("value", "Server");
-			$j('#Qform__FormUpdates').attr("value", this.formUpdates());
-			$j('#Qform__FormCheckableControls').attr("value", this.formCheckableControls(strForm, "Server"));
+			$j('#Qform__FormControl').val(strControl);
+			$j('#Qform__FormEvent').val(strEvent);
+			$j('#Qform__FormParameter').val(strParameter);
+			$j('#Qform__FormCallType').val("Server");
+			$j('#Qform__FormUpdates').val(this.formUpdates());
+			$j('#Qform__FormCheckableControls').val(this.formCheckableControls(strForm, "Server"));
 
 			// have $j trigger the submit event (so it can catch all submit events)
 			objForm.trigger("submit");
@@ -106,7 +106,7 @@ $j.ajaxSync.data = [];
 		formCheckableControls: function(strForm, strCallType) {
 
 			// Select the QCubed Form
-			var objFormElements = $j('#' + strForm + ' input,select,textarea');
+			var objFormElements = $j('#' + strForm).find('input,select,textarea');
 			var strToReturn = "";
 
 			objFormElements.each(function(i) {
@@ -149,14 +149,14 @@ $j.ajaxSync.data = [];
 
 			var objForm = $j('#' + strForm);
 			var strFormAction = objForm.attr("action");
-			var objFormElements = $j('#' + strForm + ' input,#' + strForm + ' select,#' + strForm + ' textarea');
+			var objFormElements = $j('#' + strForm).find('input,select,textarea');
 
-			$j('#Qform__FormControl').attr("value", strControl);
-			$j('#Qform__FormEvent').attr("value", strEvent);
-			$j('#Qform__FormParameter').attr("value", strParameter);
-			$j('#Qform__FormCallType').attr("value", "Ajax");
-			$j('#Qform__FormUpdates').attr("value", this.formUpdates());
-			$j('#Qform__FormCheckableControls').attr("value", this.formCheckableControls(strForm, "Ajax"));
+			$j('#Qform__FormControl').val(strControl);
+			$j('#Qform__FormEvent').val(strEvent);
+			$j('#Qform__FormParameter').val(strParameter);
+			$j('#Qform__FormCallType').val("Ajax");
+			$j('#Qform__FormUpdates').val(this.formUpdates());
+			$j('#Qform__FormCheckableControls').val(this.formCheckableControls(strForm, "Ajax"));
 
 			var strPostData = '';
 
@@ -227,13 +227,13 @@ $j.ajaxSync.data = [];
 							$j(strControlId + "_ctl").html(strControlHtml);
 						}
 					});
-					var strCommand = '';
+					var strCommands = [];
 					$j(xml).find('command').each(function() {
-						strCommand += $j(this).text();
+						strCommands.push($j(this).text());
 					});
-					eval(strCommand);
+					eval(strCommands.join(''));
 					if (qcubed.objAjaxWaitIcon)
-						qcubed.objAjaxWaitIcon.style.display = 'none';
+						$j(qcubed.objAjaxWaitIcon).hide();
 				}
 			});
 
