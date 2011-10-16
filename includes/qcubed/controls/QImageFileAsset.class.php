@@ -78,7 +78,7 @@ class QImageFileAsset extends QFileAsset {
 
 			case 'MaxHeight':
 				try {
-					return ($this->intMinHeight = QType::Cast($mixValue, QType::Integer));
+					return ($this->intMaxHeight = QType::Cast($mixValue, QType::Integer));
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
