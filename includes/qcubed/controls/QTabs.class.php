@@ -7,6 +7,26 @@
 	{
 		protected $objTabHeadersArray = array();
 		protected $blnAutoRenderChildren = true;
+		protected $intSelected = 0;
+
+		public function GetControlJavaScript() {
+			$strJS = parent::GetControlJavaScript();
+			$strJS .= sprintf('; $j("#%s").bind("tabsselect", function(event, ui) {$j("#%s").val(ui.index);})',
+					$this->ControlId,
+					$this->getSelectedInputId());
+			return $strJS;
+		}
+
+		protected function getSelectedInputId() {
+			return $this->ControlId.'_selected';
+		}
+
+		public function ParsePostData() {
+			$strSelectedInputId = $this->getSelectedInputId();
+			if (array_key_exists($strSelectedInputId, $_POST)) {
+				$this->intSelected = $_POST[$strSelectedInputId];
+			}
+		}
 
 		protected function RenderChildren($blnDisplayOutput = true) {
 			$strToReturn = $this->GetTabHeaderHtml();
@@ -28,7 +48,8 @@
 		}
 
 		protected function GetTabHeaderHtml() {
-			$strResult = '<ul>';
+			$strResult = sprintf('<input id="%s" type="hidden" value="%d"/>', $this->getSelectedInputId(), $this->intSelected);
+			$strResult .= '<ul>';
 			$childControls = $this->GetChildControls();
 			for ($i = 0, $cnt = count($childControls); $i < $cnt; ++$i) {
 				$strControlId = $childControls[$i]->ControlId;
