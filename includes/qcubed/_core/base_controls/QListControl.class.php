@@ -122,6 +122,17 @@
 		}
 
 		/**
+		 * This will return an array of ALL the QListItems associated with this QListControl.
+		 * Please note that while each individual item can be altered, altering the array, itself,
+		 * will not affect any change on the QListControl.  So existing QListItems may be modified,
+		 * but to add / remove items from the QListControl, you should use AddItem() and RemoveItem().
+		 * @return QListItem[]
+		 */
+		public function GetAllItems() {
+			return $this->objItemsArray;
+		}
+
+		/**
 		 * Removes all the items in objItemsArray
 		 */
 		public function RemoveAllItems() {
