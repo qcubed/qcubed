@@ -231,7 +231,6 @@
 	 * @property-write QPaginatorBase $PaginatorAlternate
 	 * @property-write boolean $UseAjax
 	 * @property-write string $RowActionParameterHtml
-	 * @property-write mixed $Owner
 	 * @property-read QButton $FilterButton
 	 * @property-read QWaitIcon $WaitIcon
 	 */
