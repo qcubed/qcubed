@@ -20,6 +20,36 @@
             }
         }
 
+		public function Validate() {
+			if (!parent::Validate()) {
+				return false;
+			}
+
+			if ($this->strText != '') {
+				$dttDateTime = new QDateTime($this->strText);
+				if ($dttDateTime->IsDateNull()) {
+					$this->strValidationError = QApplication::Translate("invalid date");
+					return false;
+				}
+				if (!is_null($this->Minimum)) {
+					if ($dttDateTime->IsEarlierThan($this->Minimum)) {
+						$this->strValidationError = QApplication::Translate("date is earlier than minimum allowed");
+						return false;
+					}
+				}
+
+				if (!is_null($this->Maximum)) {
+					if ($dttDateTime->IsLaterThan($this->Maximum)) {
+						$this->strValidationError = QApplication::Translate("date is later than maximum allowed");
+						return false;
+					}
+				}
+			}
+
+			$this->strValidationError = '';
+			return true;
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -48,12 +78,20 @@
 			$this->blnModified = true;
 
 			switch ($strName) {
+				case 'MaxDate':
 				case 'Maximum':
-					parent::__set('MaxDate', $mixValue);
+					if (is_string($mixValue)) {
+						$mixValue = new QDateTime($mixValue);
+					}
+					parent::__set('MaxDate', QType::Cast($mixValue, QType::DateTime));
 					break;
 
+				case 'MinDate':
 				case 'Minimum':
-					parent::__set('MinDate', $mixValue);
+					if (is_string($mixValue)) {
+						$mixValue = new QDateTime($mixValue);
+					}
+					parent::__set('MinDate', QType::Cast($mixValue, QType::DateTime));
 					break;
 
 				case 'DateTime':
