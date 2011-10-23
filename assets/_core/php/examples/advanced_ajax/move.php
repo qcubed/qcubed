@@ -6,21 +6,42 @@
 		// Local declarations of our Qcontrols
 		protected $pnlPanel;
 
+		protected $lblHandle;
+		protected $txtTextbox;
+		protected $pnlParent;
+
 		// Initialize our Controls during the Form Creation process
 		protected function Form_Create() {
 			// Define the Panel
 			$this->pnlPanel = new QPanel($this);
 			$this->pnlPanel->Text = 'You can click on me to drag me around.';
 
-			// Make the Panel's Positioning Absolute, and specify a starting location
 			$this->pnlPanel->Position = QPosition::Absolute;
 			$this->pnlPanel->Top = 450;
 			$this->pnlPanel->Left = 150;
 
-			// Finally, let's make this moveable.  We do this by using the methods
-			// which specify it as a move handle, and we assign itself as the target
-			// control which it will move.
-			$this->pnlPanel->AddControlToMove($this->pnlPanel);
+			$this->pnlPanel->Moveable = true;
+			
+			$this->pnlParent = new QPanel ($this);
+			$this->pnlParent->AutoRenderChildren = true;
+			$this->pnlParent->Position = QPosition::Absolute;
+			$this->pnlParent->Top = 450;
+			$this->pnlParent->Left = 350;
+			
+			$this->lblHandle = new QPanel($this->pnlParent);
+			$this->lblHandle->Text = 'Please Enter your Name';
+			$this->lblHandle->Cursor='move';
+			$this->lblHandle->BackColor='#ddffdd';
+			$this->lblHandle->Width='250px';
+			$this->lblHandle->Padding='4';
+
+			$this->txtTextbox = new QTextBox($this->pnlParent);
+			$this->txtTextbox->Width='250px';
+			
+			// Let's assign the panel as a moveable control, handled
+			// by the label.
+			$this->pnlParent->Moveable = true;
+			$this->pnlParent->DragObj->Handle = $this->lblHandle;
 		}
 	}
 

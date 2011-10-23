@@ -32,6 +32,11 @@
 	 * @property boolean $HtmlEntities
 	 */
 	class QCheckBoxList extends QListControl {
+		
+		const ButtonModeNone = 0;
+		const ButtonModeJq = 1;
+		const ButtonModeSet = 2;
+		
 		///////////////////////////
 		// Private Member Variables
 		///////////////////////////
@@ -48,6 +53,7 @@
 		protected $intRepeatColumns = 1;
 		protected $strRepeatDirection = QRepeatDirection::Vertical;
 		protected $objItemStyle = null;
+		protected $intButtonMode;
 
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
@@ -72,6 +78,18 @@
 				}
 			}
 		}
+		
+		public function GetEndScript() {
+			$strScript = parent::GetEndScript();
+			
+			$ctrlId = $this->ControlId;
+			if ($this->intButtonMode == self::ButtonModeSet) {
+				$strScript = sprintf ('jQuery("#%s").buttonset();', $ctrlId) . "\n" . $strScript;
+			} elseif ($this->intButtonMode == self::ButtonModeJq) {
+				$strScript = sprintf ('jQuery("input:checkbox", "#%s").button();', $ctrlId) . "\n" . $strScript;
+			}
+			return $strScript;
+		}
 
 		protected function GetItemHtml($objItem, $intIndex, $strActions, $strTabIndex) {
 			// The Default Item Style
@@ -81,7 +99,8 @@
 			if ($objItem->ItemStyle) {
 				$objStyle = $objStyle->ApplyOverride($objItem->ItemStyle);
 			}
-			$strIndexedId = $this->strControlId.'['.$intIndex .']';
+			//$strIndexedId = $this->strControlId.'['.$intIndex .']'; Buggy, html spec says no [] allowed
+			$strIndexedId = $this->strControlId.'__'.$intIndex;
 			$strToReturn = '';
 			if (!$this->blnEnabled) {
 				$strToReturn .= '<span disabled="disabled">';
@@ -94,7 +113,7 @@
 
 			$strInput = sprintf('<input id="%s" name="%s" type="checkbox" %s%s%s%s%s />',
 				$strIndexedId,
-				$strIndexedId,
+				$this->strControlId . '[' . $intIndex . ']',
 				($this->blnEnabled) ? '' : 'disabled="disabled"',
 				($objItem->Selected) ? 'checked="checked"' : '',
 				$objStyle->GetAttributes(),
@@ -159,6 +178,22 @@
 			else
 				$strCellSpacing = "";
 			
+			if ($this->intButtonMode == self::ButtonModeSet) {
+				$strToReturn = sprintf('<div id="%s" %s%s%s%s%s>',
+					$this->strControlId,
+					$strAccessKey,
+					$strToolTip,
+					$strCssClass,
+					$strStyle,
+					$strCustomAttributes) . "\n";
+					
+				$count = $this->ItemCount;
+				for ($intIndex = 0; $intIndex < $count; $intIndex++) {
+					$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strActions, $strTabIndex) . "\n";
+				}
+				$strToReturn .= '</div>';
+				return $strToReturn;
+			}
 			// Generate Table HTML
 			$strToReturn = sprintf('<table id="%s" %s%sborder="0" %s%s%s%s%s>',
 				$this->strControlId,
@@ -241,6 +276,7 @@
 				case "RepeatColumns": return $this->intRepeatColumns;
 				case "RepeatDirection": return $this->strRepeatDirection;
 				case "ItemStyle": return $this->objItemStyle;
+				case "ButtonMode": return $this->intButtonMode;
 
 				default:
 					try {
@@ -316,6 +352,15 @@
 				case "ItemStyle":
 					try {
 						$this->objItemStyle = QType::Cast($mixValue, "QListItemStyle");
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+
+				case "ButtonMode":
+					try {
+						$this->intButtonMode = QType::Cast($mixValue, QType::Integer);
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;

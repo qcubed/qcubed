@@ -1,8 +1,8 @@
 <?php
 	/**
-	 * The  QJqButtonBase class defined here provides an interface between the generated
-	 * QJqButtonGen class, and QCubed. This file is part of the core and will be overwritten
-	 * when you update QCubed. To override, make your changes to the QJqButton.class.php file instead.
+	 * The  QJqCheckBoxBase class defined here provides an interface between the generated
+	 * QJqCheckBoxGen class, and QCubed. This file is part of the core and will be overwritten
+	 * when you update QCubed. To override, make your changes to the QJqCheckBox.class.php file instead.
 	 *
 	 */
 
@@ -19,11 +19,11 @@
 	  * 
 	  */
 	 
-	class QJqButtonBase extends QJqButtonGen
+	class QJqCheckBoxBase extends QJqCheckBoxGen
 	{
 		public function __get($strName) {
 			switch ($strName) {
-				case 'ShowText': return $this->blnText;	// from Gen superclass
+				case 'ShowText': return $this->blnText;
 				case 'Text': return $this->strText; // overwrite auto-generated implementation in parent
 				default: 
 					try { 

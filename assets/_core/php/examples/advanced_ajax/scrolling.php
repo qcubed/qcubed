@@ -20,7 +20,7 @@
 			// Finally, let's make this moveable.  We do this by using the methods
 			// which specify it as a move handle, and we assign itself as the target
 			// control which it will move.
-			$this->pnlPanel->AddControlToMove($this->pnlPanel);
+			$this->pnlPanel->Moveable = true;
 		}
 	}
 

@@ -28,6 +28,21 @@
 			return sprintf('<%= $objTable->ClassName %> Object <% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { %>%s - <% } %><%---%>', <% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { %> $this-><%= $objColumn->VariableName %>, <% } %><%--%>);
 		}
 
+		/**
+		 * Default "toJsObject" handler
+		 * Specifies how the object should be displayed in JQuery UI lists and menus. Note that these lists use
+		 * value and label differently. 
+		 *
+		 * value 	= The short form of what to display in the list and selection.
+		 * label 	= [optional] If defined, is what is displayed in the menu
+		 * id 		= Primary key of object.
+		 *
+		 * @return an array that specifies how to display the object
+		 */
+		public function toJsObject () {
+			return JavaScriptHelper::toJsObject(array('value' => $this->__toString(), 'id' => <% if ( count($objTable->PrimaryKeyColumnArray) == 1 ) { %> $this-><%= $objTable->PrimaryKeyColumnArray[0]->VariableName %> <% } %><% if ( count($objTable->PrimaryKeyColumnArray) > 1 ) { %> array(<% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { %> $this-><%= $objColumn->VariableName %>, <% } %><%--%>) <% } %>));
+		}
+
 
 		<%@ example_load_methods('objTable'); %>
 

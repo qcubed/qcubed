@@ -117,10 +117,11 @@
 		protected $strTop = null;
 		protected $strLeft = null;
 
-		protected $blnMoveable = false;
-		protected $blnResizable = false;
-		
-		// MISC	
+		protected $objDraggable = null;
+		protected $objResizable = null;
+		protected $objDroppable = null;
+
+		// MISC
 		protected $strControlId;
 		protected $objForm = null;
 		protected $objParentControl = null;
@@ -150,14 +151,14 @@
 		//////////
 		/**
 		 * Creates a QControlBase object
-		 * 
-		 * This constructor will generally not be used to create a QControlBase object.  Instead it is used by the 
+		 *
+		 * This constructor will generally not be used to create a QControlBase object.  Instead it is used by the
 		 * classes which extend the class.  Only the parent object parameter is required.  If the option strControlId
 		 * parameter is not used, QCubed will generate the id.
-		 * 
+		 *
 		 * @param QControl|QForm $objParentObject
-		 * @param string $strControlId 
-		 * 		optional id of this Control. In html, this will be set as the value of the id attribute. The id can only 
+		 * @param string $strControlId
+		 * 		optional id of this Control. In html, this will be set as the value of the id attribute. The id can only
 		 *    contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id
 		 */
 		public function __construct($objParentObject, $strControlId = null) {
@@ -235,10 +236,10 @@
 			$objControl->PersistPrepare();
 			$_SESSION[$this->objForm->FormId . '_' . $this->strControlId] = serialize($objControl);
 		}
-		
+
 		/**
 		 * Adds a control as a child of this control.
-		 * 
+		 *
 		 * @param QControl $objControl the control to add
 		 */
 		public function AddChildControl(QControl $objControl) {
@@ -249,8 +250,8 @@
 
 		/**
 		 * Returns all child controls as an array
-		 * 
-		 * @param boolean $blnUseNumericIndexes  
+		 *
+		 * @param boolean $blnUseNumericIndexes
 		 * @return array an array of QControls
 		 */
 		public function GetChildControls($blnUseNumericIndexes = true) {
@@ -315,10 +316,10 @@
 			if (!($objAction instanceof QAction)) {
 				throw new QCallerException('Second parameter of AddAction is expecting an object of type QAction');
 			}
-			
+
 			// Modified
 			$this->blnModified = true;
-			
+
 			// Store the Event object in the Action object
 			$objAction->Event = $objEvent;
 
@@ -348,8 +349,8 @@
 
 		/**
 		 * Removes all events for a given event name.
-		 * 
-		 * Be sure and use a QFooEvent::EventName constant here 
+		 *
+		 * Be sure and use a QFooEvent::EventName constant here
 		 * (QClickEvent::EventName, for example).
 		 *
 		 * @param string $strEventName
@@ -363,10 +364,10 @@
 
 		/**
 		 * Returns all actions that are connected with specific events
-		 * @param string $strEventType 
+		 * @param string $strEventType
 		 *  the type of the event. Be sure and use a
 		 *  QFooEvent::EventName here. (QClickEvent::EventName, for example)
-		 * @param $strActionType if given only actions of this type will be 
+		 * @param $strActionType if given only actions of this type will be
 		 *  returned
 		 * @return array
 		 */
@@ -381,7 +382,7 @@
 							array_push($objArrayToReturn, $objAction);
 					}
 			}
-			
+
 			return $objArrayToReturn;
 /*				return array();
 			if (!array_key_exists($strEvent, $this->objActionArray) || (count($this->objActionArray[$strEvent]) == 0))
@@ -402,9 +403,9 @@
 
 		/**
 		 * Sets one custom attribute
-		 * 
+		 *
 		 * Custom Attributes refers to the html name-value pairs that can be rendered within the control that are not
-		 * covered by an explicit method. For example, on a textbox, you can render any number of additional name-value 
+		 * covered by an explicit method. For example, on a textbox, you can render any number of additional name-value
 		 * pairs, to assign additional javascript actions, additional formatting, etc.
 		 * <code>
 		 * <?php
@@ -418,7 +419,7 @@
 		 * <code>
 		 *   <input type="text" ...... onfocus="alert('You are about to edit this field');" nowrap="nowrap" blah="foo" />
 		 * </code>
-		 * 
+		 *
 		 * @param string $strName
 		 * @param string $strValue
 		 */
@@ -431,7 +432,7 @@
 				unset($this->strCustomAttributeArray[$strName]);
 			}
 		}
-		
+
 		/**
 		 * Returns the value of a custom attribute
 		 * @param string $strName
@@ -459,7 +460,7 @@
 
 		/**
 		 * Adds a custom style property/value to the html style attribute
-		 * 
+		 *
 		 * Sets a custom css property. For example:
 		 * <code>
 		 * <?php
@@ -472,7 +473,7 @@
 		 * <code>
 		 * 		<input type="text" ...... style="white-space:nowrap;margin:10px" />
 		 * </code>
-		 * 
+		 *
 		 * @param string $strName
 		 * @param string $strValue
 		 */
@@ -485,7 +486,7 @@
 				unset($this->strCustomStyleArray[$strName]);
 			}
 		}
-		
+
 		/**
 		 * Returns the value of the given custom style
 		 * @param string $strName
@@ -518,12 +519,12 @@
 				$this->strJavaScripts = $strJsFileName;
 			}
 		}
-		
+
 		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
 			// Relative path based on the path of the core JS files
 			$this->AddJavascriptFile("../../plugins/" . $strPluginName . "/js/" . $strJsFileName);
 		}
-		
+
 		public function AddCssFile($strCssFileName) {
 			if($this->strStyleSheets) {
 				$this->strStyleSheets .= ','.$strCssFileName;
@@ -536,7 +537,7 @@
 			// Relative path based on the path of the core JS files
 			$this->AddCssFile("../../plugins/" . $strPluginName . "/css/" . $strCssFileName);
 		}
-		
+
 		/**
 		 * This will add a CssClass name to the CssClass property (if it does not yet exist),
 		 * updating the CssClass property accordingly.
@@ -577,34 +578,34 @@
 
 		/**
 		 * ParsePostData parses the value of this control from FormState
-		 * 
+		 *
 		 * This abstract method must be implemented by all controls.
-		 * 
-		 * When utilizing formgen, the programmer should never access form variables directly (e.g. 
-		 * via the $_FORM array). It can be assumed that at *ANY* given time, a control's 
+		 *
+		 * When utilizing formgen, the programmer should never access form variables directly (e.g.
+		 * via the $_FORM array). It can be assumed that at *ANY* given time, a control's
 		 * values/properties will be "up to date" with whatever the webuser has entered in.
-		 * 
-		 * When a Form is Created via Form::Create(string), the form will go through to check and 
-		 * see if it is a first-run of a form, or if it is a post-back.  If it is a postback, it 
+		 *
+		 * When a Form is Created via Form::Create(string), the form will go through to check and
+		 * see if it is a first-run of a form, or if it is a post-back.  If it is a postback, it
 		 * will go through its own private array of controls and call ParsePostData on EVERY control
 		 * it has.  Each control is responsible for "knowing" how to parse the $_POST data to update
 		 * its own values/properties based on what was returned to via the postback.
 		 */
 		abstract public function ParsePostData();
 
-		
+
 		/**
 		 * Returns all attributes in the correct HTML format
-		 * 
+		 *
 		 * This is utilized by Render methods to display various name-value HTML attributes for the
 		 * control.
-		 * 
+		 *
 		 * ControlBase's implementation contains the very-basic set of HTML attributes... it is expected
 		 * that most subclasses will extend this method's functionality to add Control-specific HTML
 		 * attributes (e.g. textbox will likely add the maxlength html attribute, etc.)
-		 * 
-		 * @param boolean $blnIncludeCustom 
-		 * @param boolean $blnIncludeAction 
+		 *
+		 * @param boolean $blnIncludeCustom
+		 * @param boolean $blnIncludeAction
 		 * @return string
 		 */
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
@@ -630,13 +631,13 @@
 
 			return $strToReturn;
 		}
-		
+
 		/**
 		 * Returns the custom attributes HTML formatted
-		 * 
+		 *
 		 * All attributes will be returned as concatened the string of the form
 		 * key1="value1" key2="value2"
-		 * 
+		 *
 		 * @return string
 		 */
 		public function GetCustomAttributes() {
@@ -651,7 +652,7 @@
 
 		/**
 		 * Returns all action attributes
-		 * 
+		 *
 		 * @return string
 		 */
 		public function GetActionAttributes() {
@@ -661,17 +662,17 @@
 			return $strToReturn;
 		}
 
-		
+
 		public function GetJavaScriptForEvent($strEventName) {
 			return QAction::RenderActions($this, $strEventName, $this->objActionArray[$strEventName]);
 		}
 
 		/**
 		 * Returns all style-attributes
-		 * 
-		 * Similar to GetAttributes, but specifically for CSS name/value pairs that will render 
+		 *
+		 * Similar to GetAttributes, but specifically for CSS name/value pairs that will render
 		 * within a control's HTML "style" attribute
-		 * 
+		 *
 		 * <code>
 		 * <?php
 		 * $txtTextbox = new Textbox("txtTextbox");
@@ -682,7 +683,7 @@
 		 * ?>
 		 * will return:
 		 * white-space:nowrap;margin:10px;height:20px;
-		 * 
+		 *
 		 * @return string
 		 */
 		public function GetStyleAttributes() {
@@ -698,10 +699,10 @@
 					$strToReturn .= sprintf("height:%spx;", $this->strHeight);
 				else
 					$strToReturn .= sprintf("height:%s;", $this->strHeight);
-			
+
 			if (($this->strDisplayStyle) && ($this->strDisplayStyle != QDisplayStyle::NotSet))
 				$strToReturn .= sprintf("display:%s;", $this->strDisplayStyle);
-			
+
 			if ($this->strForeColor)
 				$strToReturn .= sprintf("color:%s;", $this->strForeColor);
 			if ($this->strBackColor)
@@ -738,7 +739,7 @@
 				$strToReturn .= "font-weight:bold;";
 			if ($this->blnFontItalic)
 				$strToReturn .= "font-style:italic;";
-			
+
 			$strTextDecoration = "";
 			if ($this->blnFontUnderline)
 				$strTextDecoration .= "underline ";
@@ -746,7 +747,7 @@
 				$strTextDecoration .= "overline ";
 			if ($this->blnFontStrikeout)
 				$strTextDecoration .= "line-through ";
-			
+
 			if ($strTextDecoration) {
 				$strTextDecoration = trim($strTextDecoration);
 				$strToReturn .= sprintf("text-decoration:%s;", $strTextDecoration);
@@ -773,24 +774,24 @@
 		/**
 		 * RenderHelper should be called from all "Render" functions FIRST in order to check for and
 		 * perform attribute overides (if any).
-		 * 
+		 *
 		 * All render methods should take in an optional first boolean parameter blnDisplayOutput
 		 * (default to true), and then any number of attribute overrides.
-		 * 
-		 * Any "Render" method (e.g. Render, RenderWithName, RenderWithError) should call the 
+		 *
+		 * Any "Render" method (e.g. Render, RenderWithName, RenderWithError) should call the
 		 * RenderHelper FIRST in order to:
 		 * <ul>
 		 * <li>Check for and perform attribute overrides</li>
 		 * <li>Check to see if this control is "Visible".  If it is Visible=false, then
 		 * 	the renderhelper will cause the method to immedaitely return</li>
 		 * </ul>
-		 * 
+		 *
 		 * Proper usage within the first line of any Render() method is:
 		 * 	<code>$this->RenderHelper(func_get_args(), __FUNCTION__);</code>
 		 * See {@link QControl::RenderWithName()} as example.
-		 *   
+		 *
 		 * @param $mixParameterArray the parameters given to the render call
-		 * @param $strRenderMethod the method which has been used to render the 
+		 * @param $strRenderMethod the method which has been used to render the
 		 * 	control. This is important for ajax rerendering
 		 * @see QControlBase::RenderOutput()
 		 */
@@ -803,13 +804,13 @@
 					$objExc = new QCallerException('Control cannot be rendered after RenderEnd() has been called on the form.');
 				else
 					$objExc = new QCallerException('Control cannot be rendered until RenderBegin() has been called on the form.');
-				
+
 				// Incremement because we are two-deep below the call stack
 				// (e.g. the Render function call, and then this RenderHelper call)
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
-			
+
 			// Make sure this hasn't yet been rendered
 			if (($this->blnRendered) || ($this->blnRendering)) {
 				$objExc = new QCallerException('This control has already been rendered: ' . $this->strControlId);
@@ -860,7 +861,7 @@
 		public function Focus() {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus();', $this->strControlId));
 		}
-		
+
 		/**
 		 * Same as "Focus": Sets focus to this control
 		 */
@@ -870,41 +871,44 @@
 
 		/**
 		 * Let this control blink
-		 * 
+		 *
 		 * @param string $strFromColor start color
 		 * @param string $strToColor blink color
 		 */
 		public function Blink($strFromColor = '#ffff66', $strToColor = '#ffffff') {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").blink("%s", "%s");', $this->strControlId, $strFromColor, $strToColor));
 		}
-		
+
 		/**
 		 * Returns all Javscript that needs to be executed after rendering of this control
-		 * 
-		 * For any JavaScript calls that need to be made whenever this control is rendered or 
+		 *
+		 * For any JavaScript calls that need to be made whenever this control is rendered or
 		 * re-rendered return here your custom javascript code.
-		 * 
+		 *
 		 * Remember to call $strToReturn = parent::GetEndScript if you want to have basic moveable support.
-		 * 
+		 *
 		 * @return string
 		 */
 		public function GetEndScript() {
-			
+
 			$strToReturn = $this->GetActionAttributes();
-			
-			if ($this->blnResizable)
-					$strToReturn = sprintf('$j("#%s").resizable({}); %s', $this->strControlId, $strToReturn);
-				
-			if ($this->blnMoveable)
-				return sprintf('$j("#%s").draggable(); %s', $this->strControlId, $strToReturn);
-			else
-				return $strToReturn;
+
+			if ($this->objResizable)
+				$strToReturn = sprintf('%s; %s', $this->objResizable->GetControlJavaScript(), $strToReturn);
+
+			if ($this->objDraggable)
+				$strToReturn = sprintf('%s; %s', $this->objDraggable->GetControlJavaScript(), $strToReturn);
+
+			if ($this->objDroppable)
+				$strToReturn = sprintf('%s; %s', $this->objDroppable->GetControlJavaScript(), $strToReturn);
+
+			return $strToReturn;
 		}
 
 		/**
-		 * For any HTML code that needs to be rendered at the END of the QForm when this control is 
+		 * For any HTML code that needs to be rendered at the END of the QForm when this control is
 		 * INITIALLY rendered.
-		 * 
+		 *
 		 * This function is never used throughout the whole framework. So it probably should be
 		 * deprecated. Only Call to this function is in QFormBase Line 1171.
 		 * @deprecated
@@ -912,7 +916,7 @@
 		 */
 		public function GetEndHtml() {}
 /*		public function GetEndHtml() {
-			if ($this->blnMoveable)
+			if ($this->Moveable)
 				return sprintf('<span id="%s_ctlmask" style="position:absolute;"></span>', $this->strControlId);
 			else
 				return null;
@@ -920,7 +924,7 @@
 
 		/**
 		 * Refreshes the control
-		 * 
+		 *
 		 * If not yet rendered during this ajax event, will set the Modified variable to true.  This will
 		 * have the effect of forcing a refresh of this control when it is supposed to be rendered.
 		 * Otherwise, this will do nothing
@@ -932,10 +936,10 @@
 
 		/**
 		 * RenderOutput should be the last call in your custom RenderMethod.
-		 * 
+		 *
 		 * RenderOutput wraps your content with valid divs and control-identifiers, echos your code
 		 * to the content buffer or simply returns it. See {@link QControlBase::RenderHelper()}.
-		 * 
+		 *
 		 * @param string $strOutput
 		 * 			Your html-code which should be given out
 		 * @param boolean $blnDisplayOutput
@@ -1024,7 +1028,7 @@
 //					$strScript = $this->GetEndScript();
 //					if ($strScript)
 //						QApplication::ExecuteJavaScript($strScript);
-						
+
 						if (($this->blnWrapperModified) && ($this->blnVisible))
 //							QApplication::ExecuteJavaScript(sprintf('qcodo.getWrapper("%s").style.cssText = "%s"; ', $this->strControlId, $strStyle));
 							QApplication::ExecuteJavaScript(sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strStyle, $this->strWrapperCssClass));
@@ -1053,8 +1057,8 @@
 
 		/**
 		 * This method will render the control, itself, and will return the rendered HTML as a string
-		 * 
-		 * As an abstract method, any class extending QControlBase must implement it.  This ensures that 
+		 *
+		 * As an abstract method, any class extending QControlBase must implement it.  This ensures that
 		 * each control has its own specific html.
 		 * @return string
 		 */
@@ -1062,18 +1066,18 @@
 
 		/**
 		 * This render method is the most basic render-method available.
-		 * 
-		 * It will perform attribute overiding (if any) and will either display the rendered 
-		 * HTML (if blnDisplayOutput is true, which it is by default), or it will return the 
+		 *
+		 * It will perform attribute overiding (if any) and will either display the rendered
+		 * HTML (if blnDisplayOutput is true, which it is by default), or it will return the
 		 * rendered HTML as a string.
-		 * 
+		 *
 		 * @param boolean $blnDisplayOutput render the control or return as string
 		 * @return string
 		 */
 		public function Render($blnDisplayOutput = true) {
 			// Call RenderHelper
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
-			
+
 			try {
 				$strOutput = $this->GetControlHtml();
 			} catch (QCallerException $objExc) {
@@ -1126,9 +1130,9 @@
 		}
 
 		/**
-		 * This render method will render the control with additional output of 
+		 * This render method will render the control with additional output of
 		 * any validation errors, that might occur
-		 * 
+		 *
 		 * @param boolean $blnDisplayOutput display output (echo out) or just return as string
 		 * @return string
 		 */
@@ -1152,34 +1156,34 @@
 			return $this->RenderOutput($strOutput, $blnDisplayOutput);
 		}
 
-		
+
 		/**
-		 * Helper method to render the control using some other class/method. 
+		 * Helper method to render the control using some other class/method.
 		 *
 		 * Useful for plugins that want to override the render behavior for the controls
-		 * without modifying the control code. 
+		 * without modifying the control code.
 		 */
 		public function RenderExtensionRenderer($classname, $methodname, $args=array()){
 			$RenderExtensionInstance = new $classname;
 			return $RenderExtensionInstance->{$methodname}($args);
 		}
 
-		/** 
+		/**
 		 * Checks if this controls contains a valid value.
-		 * 
+		 *
 		 * This abstract method defines how a control should validate itself based on the value/
-		 * properties it has. It should also include the handling of ensuring the "Required" 
+		 * properties it has. It should also include the handling of ensuring the "Required"
 		 * requirements are obeyed if this control's "Required" flag is set to true.
-		 * 
-		 * For Controls that can't realistically be "validated" (e.g. labels, datagrids, etc.), 
+		 *
+		 * For Controls that can't realistically be "validated" (e.g. labels, datagrids, etc.),
 		 * those controls should simply have Validate() return true.
-		 * 
+		 *
 		 * @return boolean
 		 */
 		abstract public function Validate();
-		
 
-		
+
+
 		// The following three methods are only intended to be called by code within the Form class.
 		// It must be declared as public so that a form object can have access ot them, but it really should never be
 		// called by user code.
@@ -1188,7 +1192,7 @@
 			$this->blnModified = false;
 			$this->blnWrapperModified = false;
 		}
-		
+
 		public function ResetOnPageStatus() {
 			$this->blnOnPage = false;
 		}
@@ -1203,7 +1207,7 @@
 
 		public function MarkAsRendered() {
 			$this->blnRendered = true;
-		} 
+		}
 
 		public function SetForm($objForm) {
 			$this->objForm = $objForm;
@@ -1286,9 +1290,13 @@
 				case "Top": return $this->strTop;
 				case "Left": return $this->strLeft;
 
-				case "Moveable": return $this->blnMoveable;
-				case "Resizable": return $this->blnResizable;
-				
+				case "Moveable": return $this->objDraggable && !$this->objDraggable->Disabled;
+				case "Resizable": return $this->objResizable && !$this->objResizable->Disabled;
+				case "Droppable": return $this->objDroppable && !$this->objDroppable->Disabled;;
+				case "DragObj": return $this->objDraggable;
+				case "ResizeObj": return $this->objResizable;
+				case "DropObj": return $this->objDroppable;
+
 				// MISC
 				case "ControlId": return $this->strControlId;
 				case "Form": return $this->objForm;
@@ -1328,7 +1336,7 @@
 
 			switch ($strName) {
 				// APPEARANCE
-				case "BackColor": 
+				case "BackColor":
 					try {
 						$this->strBackColor = QType::Cast($mixValue, QType::String);
 						break;
@@ -1625,7 +1633,18 @@
 
 				case "Moveable":
 					try {
-						$this->blnMoveable = QType::Cast($mixValue, QType::Boolean);
+						if (QType::Cast($mixValue, QType::Boolean)) {
+							if (!$this->objDraggable) {
+								$this->objDraggable = new QDraggable($this);
+							} else {
+								$this->objDraggable->Disabled = false;
+							}
+						}
+						else {
+							if ($this->objDraggable) {
+								$this->objDraggable->Disabled = true;
+							}
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1634,14 +1653,44 @@
 
 				case "Resizable":
 					try {
-						$this->blnResizable = QType::Cast($mixValue, QType::Boolean);
-						$this->AddCssFile(__JQUERY_CSS__);
+						if (QType::Cast($mixValue, QType::Boolean)) {
+							if (!$this->objResizable) {
+								$this->objResizable = new QResizable($this);
+							} else {
+								$this->objResizable->Disabled = false;
+							}
+						}
+						else {
+							if ($this->objResizable) {
+								$this->objResizable->Disabled = true;
+							}
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					
+
+				case "Droppable":
+					try {
+						if (QType::Cast($mixValue, QType::Boolean)) {
+							if (!$this->objDroppable) {
+								$this->objDroppable = new QDroppable($this);
+							} else {
+								$this->objDroppable->Disabled = false;
+							}
+						}
+						else {
+							if ($this->objDroppable) {
+								$this->objDroppable->Disabled = true;
+							}
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				// MISC
 				case "Name":
 					try {

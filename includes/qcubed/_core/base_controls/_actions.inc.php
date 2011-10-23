@@ -47,13 +47,13 @@
 			if (strlen($strToReturn)) {
 				if ($objControl instanceof QControlProxy) {
 					if ($objControl->TargetControlId) {
-						return sprintf('$j("#%s").bind("%s", function(event){
+						return sprintf('$j("#%s").bind("%s", function(event, ui){
 									%s
 									});
 									', $objControl->TargetControlId, $strEventName,  substr($strToReturn, 1));
 					}
 				} else {
-					return sprintf('$j("#%s").bind("%s", function(event){
+					return sprintf('$j("#%s").bind("%s", function(event, ui){
 								%s
 								});
 								', $objControl->ControlId, $strEventName,  substr($strToReturn, 1));
@@ -444,10 +444,53 @@
 		}
 	}
 
+    /**
+     *
+     * @package Actions
+     *
+     * This is the JQuery UI alternative to show dialog
+     */
+    class QShowDialog extends QAction {
+        protected $strJavaScript = null;
+
+        public function __construct($objControl) {
+            if (!($objControl instanceof QDialog))
+                throw new QCallerException('First parameter of constructor is expecting an object of type QDialog');
+
+            $strControlId = $objControl->getJqControlId();
+            $this->strJavaScript = sprintf ('jQuery("#%s").dialog("open");', $strControlId);
+        }
+
+        public function RenderScript(QControl $objControl) {
+            return $this->strJavaScript;
+        }
+    }
+
 	/**
+     * Hiding a JQuery UI Dialog
 	 *
 	 * @package Actions
 	 */
+    class QHideDialog extends QAction {
+        protected $strJavaScript = null;
+
+        public function __construct($objControl) {
+            if (!($objControl instanceof QDialog))
+                throw new QCallerException('First parameter of constructor is expecting an object of type QDialog');
+
+            $strControlId = $objControl->getJqControlId();
+            $this->strJavaScript = sprintf ('jQuery("#%s").dialog("close");', $strControlId);
+        }
+
+        public function RenderScript(QControl $objControl) {
+            return $this->strJavaScript;
+        }
+    }
+
+/**
+ *
+ * @package Actions
+ */
 	class QFocusControlAction extends QAction {
 		protected $strControlId = null;
 

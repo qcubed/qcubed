@@ -188,39 +188,12 @@
 	
 	QApplicationBase::$ClassFile['qsamplecontrol'] = __QCUBED__ . '/controls/QSampleControl.class.php';
 	
-	// jQuery controls
-	QApplicationBase::$ClassFile['qdraggablebase'] = __QCUBED_CORE__ . '/base_controls/QDraggableBase.class.php';
-	QApplicationBase::$ClassFile['qdroppablebase'] = __QCUBED_CORE__ . '/base_controls/QDroppableBase.class.php';
-	QApplicationBase::$ClassFile['qresizablebase'] = __QCUBED_CORE__ . '/base_controls/QResizableBase.class.php';
-	QApplicationBase::$ClassFile['qselectablebase'] = __QCUBED_CORE__ . '/base_controls/QSelectableBase.class.php';
-	QApplicationBase::$ClassFile['qsortablebase'] = __QCUBED_CORE__ . '/base_controls/QSortableBase.class.php';
-	QApplicationBase::$ClassFile['qaccordionbase'] = __QCUBED_CORE__ . '/base_controls/QAccordionBase.class.php';
-	QApplicationBase::$ClassFile['qautocompletebase'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
-	QApplicationBase::$ClassFile['qjqbuttonbase'] = __QCUBED_CORE__ . '/base_controls/QJqButtonBase.class.php';
-	QApplicationBase::$ClassFile['qdatepickerbase'] = __QCUBED_CORE__ . '/base_controls/QDatepickerBase.class.php';
-	QApplicationBase::$ClassFile['qdatepickerboxbase'] = __QCUBED_CORE__ . '/base_controls/QDatepickerBoxBase.class.php';
-	QApplicationBase::$ClassFile['qdialogbase'] = __QCUBED_CORE__ . '/base_controls/QDialogBase.class.php';
-	QApplicationBase::$ClassFile['qprogressbarbase'] = __QCUBED_CORE__ . '/base_controls/QProgressbarBase.class.php';
-	QApplicationBase::$ClassFile['qsliderbase'] = __QCUBED_CORE__ . '/base_controls/QSliderBase.class.php';
-	QApplicationBase::$ClassFile['qtabsbase'] = __QCUBED_CORE__ . '/base_controls/QTabsBase.class.php';
-        
-	QApplicationBase::$ClassFile['qdraggable'] = __QCUBED__ . '/controls/QDraggable.class.php';
-	QApplicationBase::$ClassFile['qdroppable'] = __QCUBED__ . '/controls/QDroppable.class.php';
-	QApplicationBase::$ClassFile['qresizable'] = __QCUBED__ . '/controls/QResizable.class.php';
-	QApplicationBase::$ClassFile['qselectable'] = __QCUBED__ . '/controls/QSelectable.class.php';
-	QApplicationBase::$ClassFile['qsortable'] = __QCUBED__ . '/controls/QSortable.class.php';
-	QApplicationBase::$ClassFile['qaccordion'] = __QCUBED__ . '/controls/QAccordion.class.php';
-	QApplicationBase::$ClassFile['qautocomplete'] = __QCUBED__ . '/controls/QAutocomplete.class.php';        
-	QApplicationBase::$ClassFile['qjqbutton'] = __QCUBED__ . '/controls/QJqButton.class.php';        
-	QApplicationBase::$ClassFile['qdatepicker'] = __QCUBED__ . '/controls/QDatepicker.class.php';        
-	QApplicationBase::$ClassFile['qdatepickerBox'] = __QCUBED__ . '/controls/QDatepickerBox.class.php';        
-	QApplicationBase::$ClassFile['qdialog'] = __QCUBED__ . '/controls/QDialog.class.php';        
-	QApplicationBase::$ClassFile['qprogressbar'] = __QCUBED__ . '/controls/QProgressbar.class.php';        
-	QApplicationBase::$ClassFile['qslider'] = __QCUBED__ . '/controls/QSlider.class.php';        
-	QApplicationBase::$ClassFile['qtabs'] = __QCUBED__ . '/controls/QTabs.class.php';
-	
 	QApplicationBase::$ClassFile['qjsclosure'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['javascripthelper'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
+	QApplicationBase::$ClassFile['qnoscriptajaxaction'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
+
+	// jQuery controls
+	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
 
 	if (__MODEL_GEN__) {
 		@include(__MODEL_GEN__ . '/_class_paths.inc.php');

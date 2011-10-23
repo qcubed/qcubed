@@ -19,8 +19,8 @@
 			$this->pnlPanel->Top = 500;
 			$this->pnlPanel->Left = 80;
 
-			// Make the Panel Moveable, assigning itself as the target
-			$this->pnlPanel->AddControlToMove($this->pnlPanel);
+			// Make the Panel Moveable, which also creates a DragObj on the panel
+			$this->pnlPanel->Moveable = true;
 
 			// Create some larger panels to use as Drop Zones
 			$this->pnlDropZone1 = new QPanel($this);
@@ -34,16 +34,12 @@
 			$this->pnlDropZone2->Top = 450;
 			$this->pnlDropZone2->Left = 600;
 			$this->pnlDropZone2->Text = 'Drop Zone 2';
-
-			// Finally, let's setup the drop zones for pnlPanel
-			// Note that when a movehandle is first initialized, it's current parent
-			// is pre-defined as a dropzone.  Because pnlPanel's parent is the main form,
-			// pnlPanel currenlty has the main form as a drop zone.  We don't want that here,
-			// so we will first remove all the dropzones, and then we will add the two dropzone
-			// panels as the only two valid drop zones for pnlPanel.
-			$this->pnlPanel->RemoveAllDropZones();
-			$this->pnlPanel->AddDropZone($this->pnlDropZone1);
-			$this->pnlPanel->AddDropZone($this->pnlDropZone2);
+			
+			$this->pnlDropZone1->Droppable = true;
+			$this->pnlDropZone2->Droppable = true;
+			
+			// tell drag panel to go back to original location when not dropped correctly
+			$this->pnlPanel->DragObj->Revert = QDraggable::RevertInvalid;
 			
 			$this->pnlDropZone1->AddAction(new QDragDropEvent(), new QAlertAction("dropped on zone 1"));
 			$this->pnlDropZone2->AddAction(new QDragDropEvent(), new QAlertAction("dropped on zone 2"));

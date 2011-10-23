@@ -112,13 +112,27 @@ class Event extends Option
 {
 	public $eventClassName;
 	public $eventName;
+	public $arrArgs;
 
 	public function __construct($strQcClass, $name, $origName, $type, $description) {
 		parent::__construct($name, $origName, $type, 'null', $description);
-		$this->eventName = $strQcClass . '_' . substr($name, 2);
-		$this->eventClassName = $this->eventName . 'Event';
-	}
+		
+		if (substr ($type, 0, 8) == 'function') {
+			$subject = substr ($type, 8);
+			$subject = str_replace (' ', '', $subject);
+			$tok = strtok($subject,"(),");
+			$a = array();
+			while($tok !== false){
+				$a[] = $tok;
+				$tok = strtok("),");
+			}
 
+			$this->arrArgs = $a;
+		} else {
+			$this->eventName = $type;
+		}
+		$this->eventClassName = $strQcClass . '_' . substr($name, 2) . 'Event';
+	}
 }
 
 class Method extends JqAttributes {
@@ -166,8 +180,10 @@ class JqDoc {
 	public $strJqSetupFunc;
 	public $strQcClass;
 	public $strQcBaseClass;
+	public $strAbstract = '';
 	public $options = array();
 	public $methods = array();
+	public $events = array();
 
 	public function __construct($strJqClass = null, $strJqSetupFunc = null, $strQcClass = null, $strQcBaseClass = 'QPanel')
 	{
@@ -188,6 +204,11 @@ class JqDoc {
 		}
 
 		$this->strQcBaseClass = $strQcBaseClass;
+		
+		$r = new ReflectionClass($this->strQcBaseClass);
+		if ($r->isAbstract()) {
+			$this->strAbstract = 'abstract ';
+		}
 	}
 }
 
@@ -256,7 +277,11 @@ class HtmlJqDoc extends JqDoc {
 			$nodes = $htmlEvent->find('div.event-description');
 			$description = $nodes[0]->plaintext();
 
-			$this->options[] = new Event($this->strQcClass, $name, $origName, $type, $description);
+			if (substr ($type, 0, 8) == 'function') {	// this can only be declared at init time
+				$this->options[] = new Event($this->strQcClass, $name, $origName, $type, $description);
+			} else {
+				$this->events[] = new Event($this->strQcClass, $name, $origName, $type, $description);
+			}
 			$names[$name] = $name;
 		}
 
@@ -301,7 +326,7 @@ class JqControlGen extends QCodeGenBase {
 		QCodeGen::$TemplateEscapeEndLength = strlen(QCodeGen::$TemplateEscapeEnd);
 	}
 
-	public function GenerateControl($objJqDoc ) {
+	public function GenerateControl($objJqDoc) {
 		$strOutDirControls = __INCLUDES__ . "/qcubed/controls";
 		$strOutDirControlsBase = __INCLUDES__ . "/qcubed/_core/base_controls";
 
@@ -309,8 +334,14 @@ class JqControlGen extends QCodeGenBase {
 		$strTemplate = file_get_contents('jq_control.tpl');
 		//use EvaluateTemplate to avoid dealing with XML
 		$strResult = $this->EvaluateTemplate($strTemplate, 'jq_ctl', $mixArgumentArray);
-		$strOutFileName = $strOutDirControlsBase . '/'.$objJqDoc->strQcClass . 'Base.class.php';
+		$strOutFileName = $strOutDirControlsBase . '/'.$objJqDoc->strQcClass . 'Gen.class.php';
 		file_put_contents($strOutFileName, $strResult);
+
+		$strOutFileName = $strOutDirControlsBase . '/' . $objJqDoc->strQcClass . 'Base.class.php';
+		if (!file_exists($strOutFileName)) {
+			$strEmpty = "<?php\n\tclass ".$objJqDoc->strQcClass." extends ".$objJqDoc->strQcClass."Gen\n\t{\n\t}\n?>";
+			file_put_contents($strOutFileName, $strEmpty);
+		}
 
 		$strOutFileName = $strOutDirControls . '/' . $objJqDoc->strQcClass . '.class.php';
 		if (!file_exists($strOutFileName)) {

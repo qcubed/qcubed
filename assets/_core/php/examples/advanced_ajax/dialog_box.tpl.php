@@ -10,21 +10,29 @@
 
 		Obviously, with the current state of HTML and browser technologies, the <b>alert()</b> Javascript method
 		is still the only <i>true</i> way to have any level of a modal dialog interaction.  And unfortuantely,
-		<b>alert()</b> has very few features in terms of functionality.  Some web applications do attempt to use
-		pop-up windows with <b>onblur()</b> events as a way to <i>mimick</i> dialog modality, but this is not considered
-		a very clean or usable approach.
+		<b>alert()</b> has very few features in terms of functionality.  
 		<br/><br/>
 		
-		In <b>QCubed</b>, a standard extension to the <b>QPanel</b> control is the <b>QDialogBox</b>, which gives you
-		modal-like qualities in a control that can look and act like a stand-alone modal dialog box.
+		<b>QCubed</b> implements a JQuery UI dialog box as a standard extension to the <b>QPanel</b>, which gives you
+		the ability to create modal and modeless dialog boxes with a wide range of capabilities and complexities.
 		<br/><br/>
 
 		Because it extends the <b>QPanel</b> control, you have full use of all the <b>QPanel's</b> resources
-		to build and design the content of the dialog box, itself, including using separate template files and
+		to build and design the content of the dialog box itself, including using separate template files and
 		adding child controls, events, actions and validation.
 		<br/><br/>
+		
+		And since it also uses the JQuery UI <b>Dialog</b> control, you have full access to all of the JQuery UI
+		capabilities as well, and a few extra extensions. In particular,
+		you can call <b>AddButton()</b> to add buttons to the dialog that will be placed in standard
+		dialog locations and colored with the current theme. Attach actions to the <b>QDialog_ButtonEvent</b> event,
+		and use the <b>ClickedButton</b> attribute to detect which of these buttons were clicked. Of course, you
+		could use  standard QCubed buttons as well.
+		<br/><br/>
+		
 
-		The two examples below show a simple "display only" dialog box, and a more complex dialog box that is meant to be a
+		The three examples below show a simple "display only" dialog box, a modal dialog that asks for user input,
+		and a more complex dialog box that is meant to be a
 		"calculator widget" with intra-control communication, where the contents of the calculator in the dialog box
 		can be copied into a textbox on the main form.
 	</div>
@@ -42,6 +50,14 @@
 		<p><?php $this->btnDisplaySimpleMessageJsOnly->Render(); ?></p>
 	</fieldset>
 	<br/><br/>
+	<fieldset style="width: 400px;">
+		<legend>Yes/No Example</legend>
+		<?php $this->dlgYesNo->Render(); ?>
+		<?php $this->btnDisplayYesNo->Render(); ?>
+		<?php $this->pnlAnswer->Render(); ?>
+	</fieldset>
+	<br/><br/>
+	
 	<fieldset style="width: 400px;">
 		<legend>Calculator Widget Example</legend>
 		<?php $this->dlgCalculatorWidget->Render(); ?>

@@ -21,6 +21,8 @@
 			
 			// Set the panel to resizable!
 			$this->pnlLeftTop->Resizable = true;
+			$this->pnlLeftTop->ResizeObj->Animate = true;
+			$this->pnlLeftTop->ResizeObj->Helper = 'ui-resizable-helper';
 
 			$this->txtTextbox = new QTextBox($this);
 			$this->txtTextbox->TextMode = QTextMode::MultiLine;

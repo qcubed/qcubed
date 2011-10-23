@@ -10,24 +10,23 @@
 
 		// Initialize our Controls during the Form Creation process
 		protected function Form_Create() {
-			$this->lblHandle = new QLabel($this);
-			$this->lblHandle->Text = 'Please Enter your Name';
-
-			// Make the Label's Positioning Absolute, and specify a starting location
-			$this->lblHandle->Position = QPosition::Absolute;
-			$this->lblHandle->Top = 450;
-			$this->lblHandle->Left = 150;
-
-			// Define the Textbox, and specify positioning and location
-			$this->txtTextbox = new QTextBox($this);
-			$this->txtTextbox->Position = QPosition::Absolute;
-			$this->txtTextbox->Top = 480;
-			$this->txtTextbox->Left = 150;
+			$this->pnlParent = new QPanel ($this);
+			$this->pnlParent->AutoRenderChildren = true;
 			
-			// Let's assign the label and the textbox as moveable controls, handled
+			$this->lblHandle = new QPanel($this->pnlParent);
+			$this->lblHandle->Text = 'Please Enter your Name';
+			$this->lblHandle->Cursor='move';
+			$this->lblHandle->BackColor='#ddffdd';
+			$this->lblHandle->Width='250px';
+			$this->lblHandle->Padding='4';
+
+			$this->txtTextbox = new QTextBox($this->pnlParent);
+			$this->txtTextbox->Width='250px';
+			
+			// Let's assign the panel as a moveable control, handled
 			// by the label.
-			$this->lblHandle->AddControlToMove($this->lblHandle);
-			$this->lblHandle->AddControlToMove($this->txtTextbox);
+			$this->pnlParent->Moveable = true;
+			$this->pnlParent->DragObj->Handle = $this->lblHandle;
 			
 		}
 	}

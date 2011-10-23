@@ -44,15 +44,25 @@
 		</div>
 		<div class="example"><h3>Autocomplete</h3>
 			 <p>Type "c" to test</p>
-			<?php $this->Autocomplete->Render(); ?>
+			<?php $this->Autocomplete1->RenderWithName(); ?>
+			<?php $this->Autocomplete2->RenderWithName(); ?>
 		</div>
 		<div class="example"><h3>Ajax Autocomplete</h3>
-			 <p>Type "c" to test</p>
+			 <p>Type "s" to test</p>
 			<?php $this->AjaxAutocomplete->Render(); ?>
 		</div>
-		<div class="example"><h3>Button</h3>
+		<div class="example"><h3>Buttons</h3>
 			<?php $this->Button->Render(); ?>
+			<?php $this->CheckBox->Render(); ?>
+			<?php $this->RadioButton->Render(); ?>
 		</div>
+		<div class="example"><h3>Lists</h3>
+			<?php $this->CheckList1->RenderWithName(); ?>
+			<?php $this->CheckList2->RenderWithName(); ?>
+			<?php $this->RadioList1->RenderWithName(); ?>
+			<?php $this->RadioList2->RenderWithName(); ?>
+		</div>
+		
 		<div class="example"><h3>Datepicker</h3>
 			<?php $this->Datepicker->Render(); ?>
 		</div>
@@ -67,6 +77,8 @@
 		</div>
 		<div class="example"><h3>Slider</h3>
 			<?php $this->Slider->Render(); ?>
+		<div style="height:10px"></div>
+			<?php $this->Slider2->Render(); ?>
 		</div>
 		<div class="example"><h3>Tabs</h3>
 			<?php $this->Tabs->Render(); ?>

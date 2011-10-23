@@ -4,8 +4,8 @@
 	// values or setting them to zero.
 	//
 	// Obviously, not completely accurate -- but this is really just an example dialog box, and hopefully
-	// this example will give you enough to understand how QDialogBox works overall. =)
-	class CalculatorWidget extends QDialogBox {
+	// this example will give you enough to understand how QDialog works overall. =)
+	class CalculatorWidget extends QDialog {
 		// PUBLIC Child Controls
 		public $pnlValueDisplay;
 		public $pxyNumberControl;
@@ -36,9 +36,11 @@
 		public function __construct($strCloseCallback, $objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->strCloseCallback = $strCloseCallback;
+			$this->DialogClass = $this->strCssClass;
 			
 			// Define local child controls
 			$this->pnlValueDisplay = new QPanel($this);
+			//$this->pnlValueDisplay->Text = '0';
 			$this->pnlValueDisplay->CssClass = 'calculator_display';
 
 			// Define the Proxy
@@ -147,18 +149,27 @@
 		}
 
 		public function btnCancel_Click() {
-			$this->HideDialogBox();
+			$this->Close();
 		}
 		
 		public function btnUpdate_Click() {
 			$this->fltValue = $this->pnlValueDisplay->Text;
 			call_user_func(array($this->objForm, $this->strCloseCallback));
-			$this->HideDialogBox();
+			$this->Close();
 		}
 
+		public function Open() {
+			parent::Open();
+			$this->pnlValueDisplay->Text = ($this->fltValue) ? $this->fltValue : '0';
+			
+			$this->fltInternalValue = 0;
+			$this->blnNextClears = true;
+			$this->strCurrentOperation = null;
+		}
+		
 		public function ShowDialogBox() {
 			parent::ShowDialogBox();
-			$this->pnlValueDisplay->Text = ($this->fltValue) ? $this->fltValue : 0;
+			$this->pnlValueDisplay->Text = ($this->fltValue) ? $this->fltValue : '0';
 
 			$this->fltInternalValue = 0;
 			$this->blnNextClears = true;
