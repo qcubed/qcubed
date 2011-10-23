@@ -39,6 +39,9 @@
 					return $this->strCondition;
 				case 'Delay':
 					return $this->intDelay;
+				case 'JsReturnParam':
+					$strConst = get_class($this).'::JsReturnParam';
+					return defined($strConst) ? constant($strConst) : '';
 				default:
 					try {
 						return parent::__get($strName);

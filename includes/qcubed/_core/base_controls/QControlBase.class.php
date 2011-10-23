@@ -16,7 +16,9 @@
 	 * 
 	 * @property string $AccessKey allows you to specify what Alt-Letter combination will automatically focus that control on the form
 	 * @property boolean $ActionsMustTerminate
-	 * @property string $ActionParameter This property allows you to pass your own parameters to the handlers for actions applied to this control.
+	 * @property mixed $ActionParameter This property allows you to pass your own parameters to the handlers for actions applied to this control.
+	 *			 this can be a string or an object of type QJsClosure. If you pass in a QJsClosure it is possible to return javascript objects/arrays 
+	 *			 when using an ajax or server action.
 	 * @property string $BackColor sets the CSS background-color of the control
 	 * @property string $BorderColor sets the CSS border-color of the control
 	 * @property string $BorderWidth sets the CSS border-width of the control
@@ -136,7 +138,7 @@
 		protected $strCustomAttributeArray = null;
 		protected $strCustomStyleArray = null;
 		protected $objActionArray = array();
-		protected $strActionParameter = null;
+		protected $mixActionParameter = null;
 		protected $strWrapperCssClass = null;
 
 		// SETTINGS
@@ -1309,7 +1311,8 @@
 				case "RenderMethod": return $this->strRenderMethod;
 				case "Modified": return $this->blnModified;
 				case "WrapperModified": return $this->blnWrapperModified;
-				case "ActionParameter": return $this->strActionParameter;
+				case "strActionParameter": //for backward compatibility	
+				case "ActionParameter": return $this->mixActionParameter;
 				case "ActionsMustTerminate": return $this->blnActionsMustTerminate;
 				case "WrapperCssClass": return $this->strWrapperCssClass;
 
@@ -1700,9 +1703,10 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+				case "strActionParameter": // for backward compatibility
 				case "ActionParameter":
 					try {
-						$this->strActionParameter = QType::Cast($mixValue, QType::String);
+						$this->mixActionParameter = ($mixValue instanceof QJsClosure) ? $mixValue : QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

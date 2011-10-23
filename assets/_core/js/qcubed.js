@@ -79,13 +79,18 @@ $j.ajaxSync.data = [];
 			qcubed.controlModifications[strControlId][strProperty] = strNewValue;
 		},
 
-		postBack: function(strForm, strControl, strEvent, strParameter) {
+		postBack: function(strForm, strControl, strEvent, mixParameter) {
 			var strForm = $j("#Qform__FormId").attr("value");
 			var objForm = $j('#' + strForm);
 
+			if (mixParameter && (typeof mixParameter !== "string")) {
+				mixParameter = $j.param({ "Qform__FormParameter" : mixParameter });
+				objForm.append('<input type="hidden" name="Qform__FormParameterType" value="obj">');
+			}
+			
 			$j('#Qform__FormControl').val(strControl);
 			$j('#Qform__FormEvent').val(strEvent);
-			$j('#Qform__FormParameter').val(strParameter);
+			$j('#Qform__FormParameter').val(mixParameter);
 			$j('#Qform__FormCallType').val("Server");
 			$j('#Qform__FormUpdates').val(this.formUpdates());
 			$j('#Qform__FormCheckableControls').val(this.formCheckableControls(strForm, "Server"));
@@ -139,26 +144,25 @@ $j.ajaxSync.data = [];
 				return "";
 		},
 
-		postAjax: function(strForm, strControl, strEvent, strParameter, strWaitIconControlId) {
-
-			var strForm = strForm;
-			var strControl = strControl;
-			var strEvent = strEvent;
-			var strParameter = strParameter;
-			var strWaitIconControlId = strWaitIconControlId;
+		postAjax: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
 
 			var objForm = $j('#' + strForm);
 			var strFormAction = objForm.attr("action");
 			var objFormElements = $j('#' + strForm).find('input,select,textarea');
+			var strPostData = '';
 
+			if (mixParameter && (typeof mixParameter !== "string")) {
+				strPostData = $j.param({ "Qform__FormParameter" : mixParameter });
+				objFormElements = objFormElements.not("#Qform__FormParameter");
+			} else {
+				$j('#Qform__FormParameter').val(mixParameter);
+			}
+			
 			$j('#Qform__FormControl').val(strControl);
 			$j('#Qform__FormEvent').val(strEvent);
-			$j('#Qform__FormParameter').val(strParameter);
 			$j('#Qform__FormCallType').val("Ajax");
 			$j('#Qform__FormUpdates').val(this.formUpdates());
 			$j('#Qform__FormCheckableControls').val(this.formCheckableControls(strForm, "Ajax"));
-
-			var strPostData = '';
 
 			objFormElements.each(function () {
 				var strType = $j(this).attr("type");

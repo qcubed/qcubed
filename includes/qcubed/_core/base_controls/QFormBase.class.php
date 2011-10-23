@@ -182,6 +182,11 @@
 
 				if ($objClass->strCallType == QCallType::Ajax)
 					QApplication::$RequestMode = QRequestMode::Ajax;
+				else if($objClass->strCallType == QCallType::Server && array_key_exists('Qform__FormParameterType', $_POST)) {
+					$param = array();
+					parse_str(urldecode($_POST['Qform__FormParameter']), $param);
+					$_POST['Qform__FormParameter'] = $param['Qform__FormParameter'];
+				}
 
 				// Iterate through all the control modifications
 				$strModificationArray = explode("\n", trim($_POST['Qform__FormUpdates']));

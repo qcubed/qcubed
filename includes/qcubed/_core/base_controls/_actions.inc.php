@@ -101,10 +101,12 @@
 	class QServerAction extends QAction {
 		protected $strMethodName;
 		protected $mixCausesValidationOverride;
+		protected $strJsReturnParam;
 
-		public function __construct($strMethodName = null, $mixCausesValidationOverride = null) {
+		public function __construct($strMethodName = null, $mixCausesValidationOverride = null, $strJsReturnParam = '') {
 			$this->strMethodName = $strMethodName;
 			$this->mixCausesValidationOverride = $mixCausesValidationOverride;
+			$this->strJsReturnParam = $strJsReturnParam;
 		}
 
 		public function __get($strName) {
@@ -113,6 +115,8 @@
 					return $this->strMethodName;
 				case 'CausesValidationOverride':
 					return $this->mixCausesValidationOverride;
+				case 'JsReturnParam':
+					return $this->strJsReturnParam;
 				default:
 					try {
 						return parent::__get($strName);
@@ -123,9 +127,21 @@
 			}
 		}
 
+		protected function getActionParameter($objControl) {
+			if ($objActionParameter = $this->strJsReturnParam)
+				return $objActionParameter;
+			if ($objActionParameter = $this->objEvent->JsReturnParam)
+				return $objActionParameter;
+			$objActionParameter = $objControl->ActionParameter;
+			if ($objActionParameter instanceof QJsClosure) {
+				return $objActionParameter->toJsObject() . '.call()';
+			}
+			return "'" . addslashes($objActionParameter) . "'";
+		}
+
 		public function RenderScript(QControl $objControl) {
-			return sprintf("qc.pB('%s', '%s', '%s', '%s');",
-				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), addslashes($objControl->ActionParameter));
+			return sprintf("qc.pB('%s', '%s', '%s', %s);",
+				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), $this->getActionParameter($objControl));
 		}
 	}
 
@@ -139,11 +155,13 @@
 		protected $strMethodName;
 		protected $objWaitIconControl;
 		protected $mixCausesValidationOverride;
+		protected $strJsReturnParam;
 
-		public function __construct($strMethodName = null, $objWaitIconControl = 'default', $mixCausesValidationOverride = null) {
+		public function __construct($strMethodName = null, $objWaitIconControl = 'default', $mixCausesValidationOverride = null,$strJsReturnParam = "") {
 			$this->strMethodName = $strMethodName;
 			$this->objWaitIconControl = $objWaitIconControl;
 			$this->mixCausesValidationOverride = $mixCausesValidationOverride;
+			$this->strJsReturnParam = $strJsReturnParam;
 		}
 
 		public function __get($strName) {
@@ -154,6 +172,8 @@
 					return $this->objWaitIconControl;
 				case 'CausesValidationOverride':
 					return $this->mixCausesValidationOverride;
+				case 'JsReturnParam':
+					return $this->strJsReturnParam;
 				default:
 					try {
 						return parent::__get($strName);
@@ -162,6 +182,18 @@
 						throw $objExc;
 					}
 			}
+		}
+
+		protected function getActionParameter($objControl) {
+			if ($objActionParameter = $this->strJsReturnParam)
+				return $objActionParameter;
+			if ($objActionParameter = $this->objEvent->JsReturnParam)
+				return $objActionParameter;
+			$objActionParameter = $objControl->ActionParameter;
+			if ($objActionParameter instanceof QJsClosure) {
+				return $objActionParameter->toJsObject() . '.call()';
+			}
+			return "'" . addslashes($objActionParameter) . "'";
 		}
 
 		public function RenderScript(QControl $objControl) {
@@ -173,8 +205,8 @@
 				$strWaitIconControlId = $this->objWaitIconControl->ControlId;
 			}
 
-			return sprintf("qc.pA('%s', '%s', '%s', '%s', '%s');",
-				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), addslashes($objControl->ActionParameter), $strWaitIconControlId);
+			return sprintf("qc.pA('%s', '%s', '%s', %s, '%s');",
+				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), $this->getActionParameter($objControl), $strWaitIconControlId);
 		}
 	}
 
@@ -185,8 +217,8 @@
 	 * @package Actions
 	 */
 	class QServerControlAction extends QServerAction {
-		public function __construct(QControl $objControl, $strMethodName, $mixCausesValidationOverride = null) {
-			parent::__construct($objControl->ControlId . ':' . $strMethodName, $mixCausesValidationOverride);
+		public function __construct(QControl $objControl, $strMethodName, $mixCausesValidationOverride = null, $strJsReturnParam = "") {
+			parent::__construct($objControl->ControlId . ':' . $strMethodName, $mixCausesValidationOverride, $strJsReturnParam);
 		}
 	}
 
@@ -197,8 +229,8 @@
 	 * @package Actions
 	 */
 	class QAjaxControlAction extends QAjaxAction {
-		public function __construct(QControl $objControl, $strMethodName, $objWaitIconControl = 'default', $mixCausesValidationOverride = null) {
-			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride);
+		public function __construct(QControl $objControl, $strMethodName, $objWaitIconControl = 'default', $mixCausesValidationOverride = null, $strJsReturnParam = "") {
+			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride, $strJsReturnParam);
 		}
 	}
 

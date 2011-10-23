@@ -139,6 +139,7 @@
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/resize_jquery.php Resizing Block Controls');
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/dialog_box.php Modal "Dialog Boxes"');
 			self::AddCoreExampleFile($intIndex, '/other_controls/jq_example.php Server-side wrappers for all jQuery UI Controls');
+			self::AddCoreExampleFile($intIndex, '/other_controls/js_return_param_example.php Post data back to the server from jQuery UI controls');
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/jquery_effects.php JQuery Effects');
 			
 			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/advanced_ajax/dialog_box.php'] = array('CalculatorWidget.class.php','CalculatorWidget.tpl.php');
