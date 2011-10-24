@@ -22,7 +22,7 @@
 		// APPEARANCE
 		protected $strMatteColor = '#000000';
 		protected $intMatteOpacity = 50;
-		protected $strWidth = '350';
+		protected $strDialogWidth = '350';
 		/* protected $strCssClass = 'dialogbox';  this is now handled through jQuery UI */
 
 		// BEHAVIOR
@@ -43,10 +43,10 @@
 				$strOptions .= ', title: "'.$this->strTitle.'"';
 			if ($this->strCssClass)
 				$strOptions .= ', dialogClass: "'.$this->strCssClass.'"';
-			if (null === $this->strWidth)
+			if (null === $this->strDialogWidth)
 				$strOptions .= ", width: 'auto'";
-			else if ($this->strWidth)
-				$strOptions .= ', width: '. $this->strWidth;
+			else if ($this->strDialogWidth)
+				$strOptions .= ', width: '. $this->strDialogWidth;
 			if (null === $this->strHeight)
 				$strOptions .= ", height: 'auto'";
 			else if ($this->strHeight)
@@ -83,6 +83,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
+				case "Width": return $this->strDialogWidth;
 				case "Title": return $this->strTitle;
 				case "MatteColor": return $this->strMatteColor;
 				case "MatteOpacity": return $this->intMatteOpacity;
@@ -163,12 +164,12 @@
 				case "Width":
 					try {
 						if (null === $mixValue || 'auto' === $mixValue) {
-							$this->strWidth = null;
+							$this->strDialogWidth = null;
 						} else {
 							$mixValue = str_replace("px", "", strtolower($mixValue)); // Replace the text "px" (pixels) with empty string if it's there
 							
 							// for now, jQuery dialog only accepts integers as width
-							$this->strWidth = QType::Cast($mixValue, QType::Integer);
+							$this->strDialogWidth = QType::Cast($mixValue, QType::Integer);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
