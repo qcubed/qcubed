@@ -294,9 +294,8 @@
 		}
 
 		public function RenderScript(QControl $objControl) {
-			$strMessage = QApplication::HtmlEntities($this->strMessage);
-			$strMessage = str_replace("'", "\\'", $strMessage);
-			return sprintf("if (!confirm('%s')) return false;", $strMessage);
+			$strMessage = JavaScriptHelper::toJsObject($this->strMessage);
+			return sprintf("if (!confirm(%s)) return false;", $strMessage);
 		}
 	}
 
