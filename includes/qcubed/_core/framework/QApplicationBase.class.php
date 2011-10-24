@@ -370,7 +370,10 @@
 		 * @return void
 		 */
 		public static function InitializeDatabaseConnections() {
-			for ($intIndex = 0; $intIndex <= 9; $intIndex++) {
+			// for backward compatibility, don't use MAX_DB_CONNECTION_INDEX directly,
+			// but check if MAX_DB_CONNECTION_INDEX is defined
+			$intMaxIndex = defined('MAX_DB_CONNECTION_INDEX') ? constant('MAX_DB_CONNECTION_INDEX') : 9;
+			for ($intIndex = 0; $intIndex <= $intMaxIndex; $intIndex++) {
 				$strConstantName = sprintf('DB_CONNECTION_%s', $intIndex);
 
 				if (defined($strConstantName)) {

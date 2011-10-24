@@ -143,7 +143,7 @@ if (!defined('SERVER_INSTANCE')) {
 
 			// Location of .po translation files
 			define ('__QI18N_PO_PATH__', __QCUBED__ . '/i18n');
-			
+
 			/* Database Connection SerialArrays
 			 *
 			 * Note that all Database Connections are defined as constant serialized arrays.  QCubed supports
@@ -188,6 +188,11 @@ if (!defined('SERVER_INSTANCE')) {
 			//			define('DB_CONNECTION_4', serialize(array('adapter'=>'MySql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
 			//			define('DB_CONNECTION_5', serialize(array('adapter'=>'PostgreSql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
 
+
+			// Maximum index of the DB connections defined by DB_CONNECTION_# constants above
+			// When reading the DB_CONNECTION_# constants, it will only go up to (and including) the index defined here
+			// See ApplicationBase::InitializeDatabaseConnections()
+			define ('MAX_DB_CONNECTION_INDEX', 9);
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
 			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
