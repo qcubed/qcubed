@@ -40,6 +40,7 @@
 	 * @property mixed $OrderByClause
 	 * @property mixed $ReverseOrderByClause
 	 * @property mixed $FilterByCommand
+	 * @property-read array $FilterInfo
 	 * @property integer $FilterBoxSize
 	 * @property string $FilterType
 	 * @property mixed $FilterList
@@ -47,7 +48,8 @@
 	 * @property string $FilterPrefix
 	 * @property string $FilterPostfix
 	 * @property mixed $FilterConstant
-	 * @property mixed $Filter
+	 * @property-read mixed $ActiveFilter
+	 * @property-write mixed $Filter
 	 * @property mixed $SortByCommand
 	 * @property mixed $ReverseSortByCommand
 	 * @property string $Html is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
@@ -86,7 +88,7 @@
 		protected $arrFilterList = array();
 
 		//The filter this column has applied
-		protected $objFilter = null;
+		protected $objActiveFilter = null;
 		//a Filter that gets applied in addition to $Filter when the user filters on this column
 		protected $objFilterConstant = null;
 
@@ -227,29 +229,98 @@
 				throw new Exception("Please specify a name and QQCondition pair OR a name and value pair as parameters.");
 			}
 		}
-
-		public function FilterActivate($strIndex = 0) {
-			if ($this->strFilterType == QFilterType::TextFilter && count($this->arrFilterList) > 1) {
-				throw new Exception('Trying to activate a Filter when multiple filters are stored (potential ListFilter).');
-				return;
-			}
-
-			//really, this shouldn't happen
-			if(null === $strIndex) {
-				return $this->ClearFilter();
-			}
-
-			$this->objFilter = $this->arrFilterList[$strIndex];
-			return true;
+		
+		public function HasFilter() {
+			return $this->ActiveFilter !== null || $this->FilterByCommand !== null || $this->FilterType != QFilterType::None;
 		}
 
-		public function FilterSetOperand($mixOperand) {
+		/**
+		 * @param mixed $mixFilterValue for the custom filters, $mixFilterValue will be set as FilterByCommand['value'].
+		 * Otherwise, if $mixFilterValue is a QQ condition, it's set as the active filter.
+		 * If $mixFilterValue is not a QQ condition, then it's either the value of the filter for text box filters, or it's the 
+		 * index into the filter list for the list box filters.
+		 * @return void
+		 */
+		public function SetActiveFilterState($mixFilterValue) {
+			//deal with any manual filters
+			if ($this->FilterByCommand !== null) {
+				//update the column's filterByCommand with the user-entered value
+				$filter = $this->FilterByCommand;
+
+				if($mixFilterValue !== null)
+					$filter['value'] = $mixFilterValue;
+				else if(isset($filter['value']))
+					unset($filter['value']);
+
+				$this->FilterByCommand = $filter;
+			} elseif ($mixFilterValue !== null) { //Handle the other methods differently
+				if ($mixFilterValue instanceof QQConditionComparison) {
+					$this->Filter = $mixFilterValue; // should we preserve $arrFilterList instead of replacing it? 
+					$this->objActiveFilter = $mixFilterValue;
+				} else {
+					switch ($this->FilterType) {
+						case QFilterType::ListFilter:
+							$this->objActiveFilter = $this->arrFilterList[$mixFilterValue];
+							break;
+						default:
+						case QFilterType::TextFilter;
+							$this->objActiveFilter = $this->arrFilterList[0];
+							$this->FilterSetOperand($mixFilterValue);
+					}
+				}
+			} else {
+				$this->ClearFilter();
+			}
+		}
+		
+		public function GetActiveFilterState() {
+			//deal with any manual filters
+			if ($this->FilterByCommand !== null && isset($this->FilterByCommand['value'])) {
+				return $this->FilterByCommand['value'];
+			} elseif ($this->objActiveFilter !== null) {
+				if ($this->objActiveFilter instanceof QQConditionComparison) {
+					return $this->objActiveFilter;
+				} else {
+					throw new exception(QApplication::Translate("Unknown Filter type"));
+				}
+			}
+			return null;
+		}
+		
+		public function GetActiveFilterValue() {
+			$value = null;
+			//for manual queries
+			if (isset($this->FilterByCommand['value']))
+				$value = $this->FilterByCommand['value'];
+			//for lists
+			elseif (null !== $this->ActiveFilter && $this->FilterType == QFilterType::ListFilter)
+				$value = array_search($this->ActiveFilter, $this->FilterList);
+			//or for text
+			elseif (null !== $this->FilterList && count($this->FilterList) > 0 && $this->FilterType == QFilterType::TextFilter) {
+				$value = $this->FilterList[0]->mixOperand;
+				if (null !== $value) {
+					//Strip prefix and postfix
+					if (null !== $this->FilterPrefix) {
+						$prefixLength = strlen($this->FilterPrefix);
+						if(substr($value, 0, $prefixLength) == $this->FilterPrefix)
+							$value = substr($value, $prefixLength);
+					}
+					if (null !== $this->FilterPostfix) {
+						$postfixLength = strlen($this->FilterPostfix);
+						if(substr($value, strlen($value) - $postfixLength) == $this->FilterPostfix)
+							$value = substr($value, 0, strlen($value) - $postfixLength);
+					}
+				}
+			}
+		}
+		
+		private function FilterSetOperand($mixOperand) {
 			try {
-				if(null === $this->objFilter) {
+				if(null === $this->objActiveFilter) {
 					return;
-				} elseif($this->objFilter instanceof QQConditionComparison) {
+				} elseif($this->objActiveFilter instanceof QQConditionComparison) {
 					if ($mixOperand instanceof QQNamedValue) {
-						$this->objFilter->mixOperand = $mixOperand;
+						$this->objActiveFilter->mixOperand = $mixOperand;
 					} else if ($mixOperand instanceof QQAssociationNode) {
 						throw new QInvalidCastException('Comparison operand cannot be an Association-based QQNode', 3);
 					} else if ($mixOperand instanceof QQCondition) {
@@ -259,11 +330,11 @@
 					} else if ($mixOperand instanceof QQNode) {
 						if (!$mixOperand->_ParentNode)
 							throw new QInvalidCastException('Unable to cast "' . $mixOperand->_Name . '" table to Column-based QQNode', 3);
-						$this->objFilter->mixOperand = $mixOperand;
+						$this->objActiveFilter->mixOperand = $mixOperand;
 					} else {
 						//must be a string, apply the pre and postfix (This also handles custom filters)
 						$mixOperand = $this->strFilterPrefix . $mixOperand . $this->strFilterPostfix;
-						$this->objFilter->mixOperand = $mixOperand;
+						$this->objActiveFilter->mixOperand = $mixOperand;
 					}
 				} else {
 					throw new Exception('Trying to set Operand on a filter that does not take operands');
@@ -276,7 +347,7 @@
 
 		public function ClearFilter() 
 		{
-			$this->objFilter = null;
+			$this->objActiveFilter = null;
 			if($this->arrFilterByCommand !== null)
 				$this->arrFilterByCommand['value'] = null;
 		}
@@ -312,6 +383,16 @@
 
 				case "FilterByCommand": return $this->arrFilterByCommand;
 				case "FilterBoxSize": return $this->intFilterBoxSize;
+				case "FilterInfo": {
+					if (!isset($this->FilterByCommand['value'])) {
+						return null;
+					}
+					$filterCommand = $this->FilterByCommand;
+					$filterCommand['clause_operator'] = 'AND';
+					//apply the pre and postfix
+					$filterCommand['value'] = $filterCommand['prefix'] . $filterCommand['value'] . $filterCommand['postfix'];
+					return $filterCommand;
+				}
 				case "FilterType": return $this->strFilterType;
 				case "FilterList": return $this->arrFilterList;
 				case "FilterColId": return $this->intFilterColId;
@@ -320,7 +401,7 @@
 				case "FilterPostfix": return $this->strFilterPostfix;
 
 				case "FilterConstant": return $this->objFilterConstant;
-				case "Filter": return $this->objFilter;
+				case "ActiveFilter": return $this->objActiveFilter;
 
 				// MANUAL QUERY BEHAVIORS
 				case "SortByCommand": return $this->objOrderByClause;
@@ -535,7 +616,7 @@
 						$this->strFilterType= QType::Cast($mixValue, QType::String);
 						if($this->strFilterType == QFilterType::None)
 						{
-							$this->Filter = null;
+							$this->objActiveFilter = null;
 							$this->FilterByCommand = null;
 						}
 						break;
@@ -553,27 +634,6 @@
 						throw $objExc;
 					}
 
-				case "FilterByCommand": //for custom filters
-					try {
-						if(null === $mixValue)
-						{
-							$this->arrFilterByCommand = null;
-							break;
-						}
-
-						$arr = QType::Cast($mixValue, QType::ArrayType);
-						//ensure pre and postfix exist
-						if(!isset($arr['prefix']))
-							$arr['prefix'] = '';
-						if(!isset($arr['postfix']))
-							$arr['postfix'] = '';
-						$this->arrFilterByCommand = $arr;
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
 				case "Filter":
 					try {
 						if(null === $mixValue)
@@ -585,8 +645,6 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
-
 
 				case "FilterBoxSize":
 					try {

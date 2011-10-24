@@ -60,6 +60,7 @@
 			switch ($strName) {
 				case "Style":
 					try {
+						/** @var QDataGridRowStyle $objStyle */
 						$objStyle = QType::Cast($mixValue, "QDataGridRowStyle");
 						$this->BackColor = $objStyle->BackColor;
 						$this->BorderColor = $objStyle->BorderColor;
@@ -256,6 +257,7 @@
 		protected $blnShowFooter = false;
 
 		// MISC
+		/** @var QDataGridColumn[] */
 		protected $objColumnArray;
 
 		protected $intRowCount = 0;
@@ -270,6 +272,7 @@
 		protected $strLabelForPaginated;
 		
 		protected $strRowActionParameterHtml;
+		/** @var QEvent[] */
 		protected $objRowEventArray = array();
 		protected $objRowActionArray = array();
 
@@ -419,17 +422,17 @@
 		}
 
 		// Used upon rendering to find backticks and perform PHP eval's
-		protected function ParseColumnHtml($objColumn, $objObject) {
+		protected function ParseColumnHtml(QDataGridColumn $objColumn, $objObject) {
 			return QDataGridBase::ParseHtml($objColumn->Html, $this, $objColumn, $objObject);
 		}
 		
 		// Used upon rendering to find backticks and perform PHP eval's
 		public static function ParseHtml($strHtml, $objControl, $objColumn, $objObject) {
 			$_ITEM = $objObject;
-			$_FORM = $objControl->objForm;
+			$_FORM = $objControl->Form;
 			$_CONTROL = $objControl;
 			$_COLUMN = $objColumn;
-			$_OWNER = $objControl->objOwner;
+			$_OWNER = $objControl->Owner;
 
 			$intPosition = 0;
 			
@@ -755,7 +758,6 @@
 		protected function GetFilterRowHtml() {
 			$objFilterStyle = $this->objRowStyle->ApplyOverride($this->objFilterRowStyle);
 			$strToReturn = sprintf('  <tr %s>'."\r\n", $objFilterStyle->GetAttributes());
-			$intColumnIndex = 0;
 			if($this->objColumnArray !== null)
 			{
 				$blnResetButtonRendered = false;
@@ -765,9 +767,7 @@
 
 					$colContent = '&nbsp;';
 
-					if ($objColumn->Filter !== null || 
-						$objColumn->FilterByCommand !== null || 
-						$objColumn->FilterType != QFilterType::None)
+					if ($objColumn->HasFilter())
 					{
 						// This Column is Filterable
 						$ctlFilter = $this->GetFilterControl($objColumn);
@@ -808,13 +808,13 @@
 			return $strToReturn;
 		}
 
-		protected function GetColumnFilterControlId($objColumn) {
+		protected function GetColumnFilterControlId(QDataGridColumn $objColumn) {
 			if ($objColumn->FilterColId === null)
 				$objColumn->FilterColId = $this->intCurrentColumnId++;
 			return 'ctl'.$this->ControlId.'flt'.$objColumn->FilterColId;
 		}
 
-		public function GetFilterControl($objColumn)
+		public function GetFilterControl(QDataGridColumn $objColumn)
 		{
 			$strControlId = $this->GetColumnFilterControlId($objColumn);
 			//find/build the control
@@ -824,7 +824,7 @@
 			return $ctlFilter;
 		}
 
-		public function GetResetButton($objColumn)
+		public function GetResetButton(QDataGridColumn $objColumn)
 		{
 			if (!$this->ShowFilterResetButton)
 				return null;
@@ -846,39 +846,10 @@
 		*/
 		//this, btnReset_Click and GetControlValue are the functions to override/change if you want to add new types
 
-		protected function CreateFilterControl($strControlId, $objColumn)
+		protected function CreateFilterControl($strControlId, QDataGridColumn $objColumn)
 		{
-			#region Find the value
 			//show the current filter in the control
-			$value = null;
-			//for manual queries
-			if (isset($objColumn->FilterByCommand['value']))
-				$value = $objColumn->FilterByCommand['value'];
-			//for lists
-			elseif (null !==$objColumn->Filter && $objColumn->FilterType == QFilterType::ListFilter)
-				$value = array_search($objColumn->Filter,$objColumn->FilterList);
-			//or for text
-			elseif(null !== $objColumn->FilterList && count($objColumn->FilterList) > 0 && $objColumn->FilterType == QFilterType::TextFilter)
-			{
-				$value = $objColumn->FilterList[0]->mixOperand;
-				if(null !== $value)
-				{
-					//Strip prefix and postfix
-					if(null !== $objColumn->FilterPrefix)
-					{
-						$prefixLength = strlen($objColumn->FilterPrefix);
-						if(substr($value, 0, $prefixLength) == $objColumn->FilterPrefix)
-							$value = substr($value, $prefixLength);
-					}
-					if(null !== $objColumn->FilterPostfix)
-					{
-						$postfixLength = strlen($objColumn->FilterPostfix);
-						if(substr($value, strlen($value) - $postfixLength) == $objColumn->FilterPostfix)
-							$value = substr($value, 0, strlen($value) - $postfixLength);
-					}
-				}
-			}
-			#endregion
+			$value = $objColumn->GetActiveFilterValue();
 
 			#region Create the control
 			//create the appropriate kind of control
@@ -1037,12 +1008,12 @@
 		* @param string $strControlId
 		* @param string $strParameter
 		*/
-			public function btnFilter_Click($strFormId, $strControlId, $strParameter) 
+		public function btnFilter_Click($strFormId, $strControlId, $strParameter)
 		{
 			//set the filter commands
 			foreach($this->objColumnArray as $objColumn)
 			{
-				if ($objColumn->FilterByCommand !== null || $objColumn->FilterType != QFilterType::None)
+				if ($objColumn->HasFilter())
 				{
 					//a filter is defined for this column
 					$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
@@ -1050,36 +1021,8 @@
 					{
 						//we've found the control that has it's value
 						$strValue = $this->GetFilterControlValue($objColumn->FilterType, $ctlFilter);
+						$objColumn->SetActiveFilterState($strValue);
 
-						//deal with any manual filters
-						if ($objColumn->FilterByCommand !== null)
-						{
-							//update the column's filterByCommand with the user-entered value
-							$filter = $objColumn->FilterByCommand;
-
-							if($strValue !== null)
-								$filter['value'] = $strValue;
-							else if(isset($filter['value']))
-								unset($filter['value']);
-
-							$objColumn->FilterByCommand = $filter;
-						}
-						//Handle the other methods differently
-						elseif($strValue !== null)
-						{
-							switch($objColumn->FilterType) {
-								case QFilterType::ListFilter:
-									$objColumn->FilterActivate($strValue);
-									break;
-								default:
-								case QFilterType::TextFilter;
-									$objColumn->FilterActivate();
-									$objColumn->FilterSetOperand($strValue);
-									break;
-							}
-						}
-						else
-							$objColumn->ClearFilter();
 					}
 				}
 			}
@@ -1100,7 +1043,7 @@
 		{
 			foreach($this->objColumnArray as $objColumn)
 			{
-				if($objColumn->FilterByCommand !== null || $objColumn->FilterType != QFilterType::None)
+				if($objColumn->HasFilter())
 				{
 					//both modes clear in the same way
 					$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
@@ -1144,29 +1087,9 @@
 			*/
 		public function SetFilters($filters)
 		{
-			foreach($this->objColumnArray as $col)
-			{
-				if(isset($filters[$col->Name]))
-				{
-					if(null !== $col->FilterByCommand)
-					{
-						//if filterbycommand is used
-						$filterCommand = $col->FilterByCommand;
-						$filterCommand['value'] = $filters[$col->Name];
-						$col->FilterByCommand = $filterCommand;
-					}
-					//AddListItem with filters dont enter this check until filter button clicked
-					elseif($col->FilterType == QFilterType::TextFilter && 
-						$col->FilterList !== null && count($col->FilterList) == 1) {
-						if($col->FilterList[0] instanceof QQConditionComparison)
-						{
-							$col->Filter = $filters[$col->Name];
-							$col->FilterActivate();
-						}
-					}
-					elseif ($col->FilterType == QFilterType::ListFilter){
-						$col->Filter = $filters[$col->Name];
-					}
+			foreach($this->objColumnArray as $col) {
+				if (isset($filters[$col->Name])) {
+					$col->SetActiveFilterState($filters[$col->Name]);
 				}
 			}
 		}
@@ -1177,23 +1100,10 @@
 		public function GetFilters()
 		{
 			$filters = array();
-			foreach($this->objColumnArray as $col)
-			{
-				if(isset($col->FilterByCommand['value']))
-				{
-					//manual filter
-					$filterCommand = $col->FilterByCommand;
-					$filters[$col->Name] = $filterCommand['value'];
-				}
-				elseif($col->Filter !== null) 
-				{
-					if($col->Filter instanceof QQConditionComparison)
-					{
-						$filters[$col->Name] = $col->Filter;
-					}
-					else
-						throw new exception(QApplication::Translate("Unknown Filter type"));
-				}
+			foreach($this->objColumnArray as $col) {
+				$activeFilterState = $col->GetActiveFilterState();
+				if ($activeFilterState !== null)
+					$filters[$col->Name] = $activeFilterState;
 			}
 			return $filters;
 		}
@@ -1262,14 +1172,9 @@
 					$filterArray = array();
 					foreach($this->objColumnArray as $col)
 					{
-						if(isset($col->FilterByCommand['value']))
-						{
-							//manual filter
-							$filterCommand = $col->FilterByCommand;
-							$filterCommand['clause_operator'] = 'AND';
-							//apply the pre and postfix
-							$filterCommand['value'] = $filterCommand['prefix'] . $filterCommand['value'] . $filterCommand['postfix'];
-							$filterArray[] = $filterCommand;
+						$colFilterInfo = $col->FilterInfo;
+						if ($colFilterInfo) {
+							$filterArray[] = $colFilterInfo;
 						}
 					}
 					return $filterArray;
@@ -1282,8 +1187,8 @@
 							//if there's a normal filter type, return the QQConditions related to it
 							if ($objColumn->FilterType != QFilterType::None) {
 								$colCondition = null;
-								if ($objColumn->Filter !== null)
-									$colCondition = $objColumn->Filter;
+								if ($objColumn->ActiveFilter !== null)
+									$colCondition = $objColumn->ActiveFilter;
 							}
 
 							/*FilterConstant allows us to specify a custom QQuery that applies in addition to any 
@@ -1430,7 +1335,7 @@
 					$actionName = 'btnFilter_Click';
 					foreach($this->objColumnArray as $objColumn) 
 					{
-						if ($objColumn->FilterByCommand !== null || $objColumn->FilterType != QFilterType::None)
+						if ($objColumn->HasFilter())
 						{
 							$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
 							if ($ctlFilter !== null) 
