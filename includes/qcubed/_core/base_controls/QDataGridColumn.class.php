@@ -312,6 +312,7 @@
 					}
 				}
 			}
+			return $value;
 		}
 		
 		private function FilterSetOperand($mixOperand) {
