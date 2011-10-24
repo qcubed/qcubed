@@ -253,7 +253,12 @@ $j.ajaxSync.data = [];
 
 			this.loadJavaScriptFile = function(strScript, objCallback) {
 				strScript = qc.jsAssets + "/" + strScript;
-				$j.getScript(strScript, objCallback);
+				$j.ajax({
+					url: strScript,
+					success: objCallback,
+					dataType: "script",
+					cache: true
+				});
 			};
 
 			this.loadStyleSheetFile = function(strStyleSheetFile, strMediaType) {
