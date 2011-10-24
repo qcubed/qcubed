@@ -323,6 +323,10 @@
 			$this->blnModified = true;
 
 			// Store the Event object in the Action object
+			if ($objAction->Event) {
+				//this Action is in use -> clone it
+				$objAction = clone($objAction);
+			}
 			$objAction->Event = $objEvent;
 
 			// Pull out the Event Name
