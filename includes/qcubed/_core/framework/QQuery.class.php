@@ -67,7 +67,7 @@
 			}
 		}
 
-		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $strBegin, $strEnd, $blnExpandSelection);
+		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection);
 	}
 
 
@@ -143,46 +143,66 @@
 				return $this->strName;
 		}
 
-		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
+		public function isTopLevelLeafNode() {
+			return (get_class($this) == 'QQNode') && (is_null($this->objParentNode->_Type));
+		}
+
+		public function GetTable(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
 			// Make sure our Root Tables Match
 			if ($this->_RootTableName != $objBuilder->RootTableName)
 				throw new QCallerException('Cannot use QQNode for "' . $this->_RootTableName . '" when querying against the "' . $objBuilder->RootTableName . '" table', 3);
 
-			// Pull the Begin and End Escape Identifiers from the Database Adapter
-			$strBegin = $objBuilder->Database->EscapeIdentifierBegin;
-			$strEnd = $objBuilder->Database->EscapeIdentifierEnd;
-
 			// If we are a standard QQNode at the top level column, simply return the column name
-			if ((get_class($this) == 'QQNode') && (is_null($this->objParentNode->_Type)))
-				return sprintf('%s%s%s.%s%s%s',
-					$strBegin, $objBuilder->GetTableAlias($this->objParentNode->_Name), $strEnd,
-					$strBegin, $this->strName, $strEnd);
-			else {
+			if ($this->isTopLevelLeafNode()) {
+				return $this->objParentNode->_Name;
+			} else {
 				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
 				try {
-					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
+					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection);
 
 					if ($this->strTableName) {
+						$strJoinTableAlias = $strParentAlias . '__' . $this->strName;
 						// Next, Join the Appropriate Table
-						$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strName,
-							$strParentAlias, $this->strName, $this->strPrimaryKey, $objJoinCondition);
+						$this->addJoinTable($objBuilder, $strJoinTableAlias, $strParentAlias, $objJoinCondition);
 
 						if ($blnExpandSelection)
-							call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strName);
+							call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strJoinTableAlias);
 					}
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
 
-				// Finally, return the final column alias name (Parent Prefix with Current Node Name)
-				return sprintf('%s%s%s.%s%s%s',
-					$strBegin, $objBuilder->GetTableAlias($strParentAlias), $strEnd,
-					$strBegin, $this->strName, $strEnd);
+				return $strParentAlias;
 			}
 		}
 
-		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $strBegin, $strEnd, $blnExpandSelection, QQCondition $objJoinCondition = null) {
+		public function GetTableAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
+			$strTable = $this->GetTable($objBuilder, $blnExpandSelection, $objJoinCondition);
+			return $objBuilder->GetTableAlias($strTable);
+		}
+
+		public function MakeColumnAlias(QQueryBuilder $objBuilder, $strTableAlias) {
+			$strBegin = $objBuilder->Database->EscapeIdentifierBegin;
+			$strEnd = $objBuilder->Database->EscapeIdentifierEnd;
+
+			return sprintf('%s%s%s.%s%s%s',
+					$strBegin, $strTableAlias, $strEnd,
+					$strBegin, $this->strName, $strEnd);
+		}
+
+		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
+			$strTableAlias = $this->GetTableAlias($objBuilder, $blnExpandSelection, $objJoinCondition);
+			// Pull the Begin and End Escape Identifiers from the Database Adapter
+			return $this->MakeColumnAlias($objBuilder, $strTableAlias);
+		}
+
+		protected function addJoinTable(QQueryBuilder $objBuilder, $strJoinTableAlias, $strParentAlias, QQCondition $objJoinCondition = null) {
+			$objBuilder->AddJoinItem($this->strTableName, $strJoinTableAlias,
+				$strParentAlias, $this->strName, $this->strPrimaryKey, $objJoinCondition);
+		}
+
+		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQCondition $objJoinCondition = null) {
 			// Are we at the Parent Node?
 			if (is_null($this->objParentNode))
 				// Yep -- Simply return the Parent Node Name
@@ -190,11 +210,11 @@
 			else {
 				try {
 					// No -- First get the Parent Alias
-					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
+					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection);
 
+					$strJoinTableAlias = $strParentAlias . '__' . $this->strAlias;
 					// Next, Join the Appropriate Table
-					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias,
-						$strParentAlias, $this->strName, $this->strPrimaryKey, $objJoinCondition);
+					$this->addJoinTable($objBuilder, $strJoinTableAlias, $strParentAlias, $objJoinCondition);
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
@@ -202,7 +222,7 @@
 
 				// Next, Expand the Selection Fields for this Table (if applicable)
 				if ($blnExpandSelection) {
-					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strAlias);
+					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strJoinTableAlias);
 				}
 
 				// Return the Parent Alias
@@ -328,62 +348,14 @@
 			$this->strPropertyName = $strPropertyName;
 		}
 
-		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
-			// Make sure our Root Tables Match
-			if ($this->_RootTableName != $objBuilder->RootTableName)
-				throw new QCallerException('Cannot use QQNode for "' . $this->_RootTableName . '" when querying against the "' . $objBuilder->RootTableName . '" table', 3);
-
-			// Pull the Begin and End Escape Identifiers from the Database Adapter
-			$strBegin = $objBuilder->Database->EscapeIdentifierBegin;
-			$strEnd = $objBuilder->Database->EscapeIdentifierEnd;
-
-			// If we are a standard QQNode at the top level column, simply return the column name
-			if ((get_class($this) == 'QQNode') && (is_null($this->objParentNode->_Type)))
-/*				return sprintf('%s%s%s.%s%s%s',
-					$strBegin, $this->objParentNode->_Name, $strEnd,
-					$strBegin, $this->strName, $strEnd);*/
-				return;
-			else {
-				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
-
-				if ($this->strTableName) {
-					// Next, Join the Appropriate Table
-					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strName, $strParentAlias, $this->objParentNode->_PrimaryKey, $this->strForeignKey, $objJoinCondition);
-
-					if ($blnExpandSelection)
-						call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strName);
-				}
-
-				// Finally, return the final column alias name (Parent Prefix with Current Node Name)
-/*				return sprintf('%s%s%s.%s%s%s',
-					$strBegin, $strParentAlias, $strEnd,
-					$strBegin, $this->strName, $strEnd);*/
-				return;
-			}
+		protected function addJoinTable(QQueryBuilder $objBuilder, $strJoinTableAlias, $strParentAlias, QQCondition $objJoinCondition = null) {
+			$objBuilder->AddJoinItem($this->strTableName, $strJoinTableAlias,
+				$strParentAlias, $this->objParentNode->_PrimaryKey, $this->strForeignKey, $objJoinCondition);
 		}
 
-		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $strBegin, $strEnd, $blnExpandSelection, QQCondition $objJoinCondition = null) {
-			// Are we at the Parent Node?
-			if (is_null($this->objParentNode))
-				// Yep -- Simply return the Parent Node Name
-				return $this->strName;
-			else {
-				// No -- First get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
-
-				// Next, Join the Appropriate Table
-				$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias, $strParentAlias, $this->objParentNode->_PrimaryKey, $this->strForeignKey, $objJoinCondition);
-				
-				// Next, Expand the Selection Fields for this Table (if applicable)
-				// TODO: If/when we add assn-based attributes, possibly add selectionfields addition here?
-				if ($blnExpandSelection) {
-					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strAlias);
-				}
-
-				// Return the Parent Alias
-				return $strParentAlias . '__' . $this->strAlias;
-			}
+		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
+			$this->GetTableAlias($objBuilder, $blnExpandSelection, $objJoinCondition);
+			return null;
 		}
 
 		public function GetExpandArrayAlias() {
@@ -411,7 +383,7 @@
 				else
 					$this->strRootTableName = $objParentNode->_RootTableName;
 			} else
-				$this->strRootTableName = $strName;
+				$this->strRootTableName = $this->strName;
 			$this->strAlias = $this->strName;
 		}
 
@@ -449,14 +421,14 @@
 			}
 		}
 		
-		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $strBegin, $strEnd, $blnExpandSelection) {
+		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection) {
 			// Are we at the Parent Node?
 			if (is_null($this->objParentNode))
 				// Yep -- Simply return the Parent Node Name
 				return $this->strName;
 			else {
 				// No -- First get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
+				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection);
 
 				// Next, Join the Appropriate Table
 					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias,
