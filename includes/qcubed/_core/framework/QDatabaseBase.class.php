@@ -13,6 +13,22 @@
 	 * * DatabaseForeignKey
 	 * * DatabaseFieldType (which is an abstract class that solely contains constants)
 	 *
+	 * @property-read string $EscapeIdentifierBegin
+	 * @property-read string $EscapeIdentifierEnd
+	 * @property-read boolean $EnableProfiling
+	 * @property-read int $AffectedRows
+	 * @property-read string $Profile
+	 * @property-read int $DatabaseIndex
+	 * @property-read int $Adapter
+	 * @property-read string $Server
+	 * @property-read string $Port
+	 * @property-read string $Database
+	 * @property-read string $Service
+	 * @property-read string $Protocol
+	 * @property-read string $Host
+	 * @property-read string $Username
+	 * @property-read string $Password
+	 * @property-read string $DateFormat
 	 * @package DatabaseAdapters
 	 */
 	abstract class QDatabaseBase extends QBaseClass {
@@ -82,7 +98,7 @@
 			if (!$this->blnConnectedFlag) {
 				$this->Connect();
 			}
-
+			$timerName = '';
 			if ($this->blnEnableProfiling) {
 				$timerName = 'queryExec' . mt_rand() ;
 				QTimer::Start($timerName);
@@ -305,6 +321,7 @@
 
 			// Check for DATE Value
 			if ($mixData instanceof QDateTime) {
+				/** @var QDateTime $mixData */
 				if ($mixData->IsTimeNull())
 					return $strToReturn . sprintf("'%s'", $mixData->qFormat('YYYY-MM-DD'));
 				else
