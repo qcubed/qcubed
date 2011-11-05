@@ -337,7 +337,7 @@
 				if (is_array($mixValue)) {
 					$strParameters = array();
 					foreach ($mixValue as $mixParameter)
-						array_push($strParameters, $this->Database->SqlVariable($mixParameter));
+						array_push($strParameters, $this->SqlVariable($mixParameter));
 					$strQuery = str_replace(chr(QQNamedValue::DelimiterCode) . '{' . $strKey . '}', implode(',', $strParameters) . ')', $strQuery);
 				} else {
 					$strQuery = str_replace(chr(QQNamedValue::DelimiterCode) . '{=' . $strKey . '=}', $this->SqlVariable($mixValue, true, false), $strQuery);
