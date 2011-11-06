@@ -82,7 +82,7 @@
 		}
 
 		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection);
-		abstract public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection, QQCondition $objJoinCondition);
+		abstract public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null);
 	}
 
 
