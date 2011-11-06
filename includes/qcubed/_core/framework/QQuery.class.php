@@ -423,7 +423,7 @@
 					$strBegin, $this->strName, $strEnd);
 			else {
 				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $strBegin, $strEnd, $blnExpandSelection);
+				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection);
 
 				if ($this->strTableName) {
 					// Next, Join the Appropriate Table
