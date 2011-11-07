@@ -72,7 +72,7 @@
 				if ($objResult = $this->objMySqli->store_result()) {
 					array_push($objResultSets,new QMySqli5DatabaseResult($objResult, $this));
 				}
-			} while ($this->objMySqli->next_result());
+			} while ($this->objMySqli->more_results() && $this->objMySqli->next_result());
 
 			return $objResultSets;
 		}
