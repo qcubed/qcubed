@@ -42,17 +42,14 @@
 			else
 				$strCommand = "button";
 
-			$strToReturn = sprintf('%s<button type="%s" name="%s" id="%s" %s%s > %s </button>%s',
-				$this->strHtmlBefore, 
+			$strToReturn = sprintf('<button type="%s" name="%s" id="%s" %s%s > %s </button>',
 				$strCommand,
 				$this->strControlId,
 				$this->strControlId,
 				$this->GetAttributes(),
 				$strStyle,                    
-				($this->blnHtmlEntities) ?
-					QApplication::HtmlEntities($this->strText) :
-					$this->strText, 
-				$this->strHtmlAfter);
+				($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText
+			);
   
 			return $strToReturn;
 

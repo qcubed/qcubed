@@ -1085,7 +1085,11 @@
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 
 			try {
-				$strOutput = $this->GetControlHtml();
+				$strOutput = sprintf('%s%s%s',
+					$this->strHtmlBefore,
+					$this->GetControlHtml(),
+					$this->strHtmlAfter
+				);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
