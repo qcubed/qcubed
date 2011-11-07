@@ -220,7 +220,7 @@
 				$strParentAlias, $this->strName, $this->strPrimaryKey, $objJoinCondition);
 		}
 
-		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQCondition $objJoinCondition = null) {
+		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection) {
 			// Are we at the Parent Node?
 			if (is_null($this->objParentNode))
 				// Yep -- Simply return the Parent Node Name
@@ -232,7 +232,7 @@
 
 					$strJoinTableAlias = $strParentAlias . '__' . $this->strAlias;
 					// Next, Join the Appropriate Table
-					$this->addJoinTable($objBuilder, $strJoinTableAlias, $strParentAlias, $objJoinCondition);
+					$this->addJoinTable($objBuilder, $strJoinTableAlias, $strParentAlias);
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
