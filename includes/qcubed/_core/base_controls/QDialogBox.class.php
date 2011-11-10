@@ -55,7 +55,7 @@
 			//move both the dialog and the matte back into the form, to ensure they continue to function
 			$strOptions .= sprintf(', open: function() { $j(this).parent().appendTo("#%s"); $j(".ui-widget-overlay").appendTo("#%s"); }', $strParentId, $strParentId);
 
-			return sprintf('$j(qc.getW("%s")).dialog({%s}); $j(qc.getW("%s")).dialog("open");', $this->strControlId, $strOptions, $this->strControlId);
+			return sprintf('$j(qc.getW("%s")).dialog({%s}).dialog("open");', $this->strControlId, $strOptions, $this->strControlId);
 		}
 
 		public function GetHideDialogJavaScript() {
