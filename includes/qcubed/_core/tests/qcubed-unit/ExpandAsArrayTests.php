@@ -59,5 +59,61 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		$this->assertEqual(sizeof($targetProject->_MilestoneArray), 4, "4 milestones found");
 		$this->verifyObjectPropertyHelper($targetProject->_MilestoneArray, 'Name', 'Milestone H');
 	}
+
+	public function testSelectSubsetInExpand() {
+		$objPersonArray = Person::QueryArray(
+			QQ::OrCondition(
+				QQ::Like(QQN::Person()->ProjectAsManager->Name, '%ACME%'),
+				QQ::Like(QQN::Person()->ProjectAsManager->Name, '%HR%')
+			),
+			// Let's expand on the Project, itself
+			QQ::Clause(
+				QQ::Select(QQN::Person()->LastName),
+				QQ::Expand(QQN::Person()->ProjectAsManager, null, QQ::Select(QQN::Person()->ProjectAsManager->Spent)),
+				QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
+			)
+		);
+
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNull($objPerson->FirstName, "FirstName should be null, since it was not selected");
+			$this->assertNotNull($objPerson->Id, "Id should not be null since it's always added to the select list");
+			$this->assertNotNull($objPerson->_ProjectAsManager->Id, "ProjectAsManager->Id should not be null since id's are always added to the select list");
+			$this->assertNull($objPerson->_ProjectAsManager->Name, "ProjectAsManager->Name should be null since it was not selected");
+		}
+	}
+
+	public function testSelectSubsetInExpandAsArray() {
+		$objPersonArray = Person::LoadAll(
+			QQ::Clause(
+				QQ::Select(QQN::Person()->FirstName),
+				QQ::ExpandAsArray(QQN::Person()->Address, QQ::Select(QQN::Person()->Address->Street, QQN::Person()->Address->City)),
+				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager, QQ::Select(QQN::Person()->ProjectAsManager->StartDate)),
+				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone, QQ::Select(QQN::Person()->ProjectAsManager->Milestone->Name))
+			)
+		);
+
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->assertNotNull($objPerson->Id, "Id should not be null since it's always added to the select list");
+			if (sizeof($objPerson->_AddressArray) > 0) {
+				foreach ($objPerson->_AddressArray as $objAddress) {
+					$this->assertNotNull($objAddress->Id, "Address->Id should not be null since it's always added to the select list");
+					$this->assertNull($objAddress->PersonId, "Address->PersonId should be null, since it was not selected");
+				}
+			}
+			if (sizeof($objPerson->_ProjectAsManagerArray) > 0) {
+				foreach($objPerson->_ProjectAsManagerArray as $objProject) {
+					$this->assertNotNull($objProject->Id, "Project->Id should not be null since it's always added to the select list");
+					$this->assertNull($objProject->Name, "Project->Name should be null, since it was not selected");
+					if (sizeof($objProject->_MilestoneArray) > 0) {
+						foreach ($objProject->_MilestoneArray as $objMilestone) {
+							$this->assertNotNull($objMilestone->Id, "Milestone->Id should not be null since it's always added to the select list");
+							$this->assertNull($objMilestone->ProjectId, "Milestone->ProjectId should be null, since it was not selected");
+						}
+					}
+				}
+			}
+		}
+	}
 }
 ?>

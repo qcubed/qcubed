@@ -36,7 +36,7 @@
 				}
 			}
 			if ($blnAddAllFieldsToSelect) {
-				<%= $objTable->ClassName %>::GetSelectFields($objQueryBuilder);
+				<%= $objTable->ClassName %>::GetSelectFields($objQueryBuilder, null, QQuery::extractSelectClause($objOptionalClauses));
 			}
 			$objQueryBuilder->AddFromItem('<%= $objTable->Name %>');
 
@@ -214,7 +214,7 @@
 		 * @param QQueryBuilder $objBuilder the Query Builder object to update
 		 * @param string $strPrefix optional prefix to add to the SELECT fields
 		 */
-		public static function GetSelectFields(QQueryBuilder $objBuilder, $strPrefix = null) {
+		public static function GetSelectFields(QQueryBuilder $objBuilder, $strPrefix = null, QQSelect $objSelect = null) {
 			if ($strPrefix) {
 				$strTableName = $strPrefix;
 				$strAliasPrefix = $strPrefix . '__';
@@ -223,7 +223,14 @@
 				$strAliasPrefix = '';
 			}
 
-<% foreach ($objTable->ColumnArray as $objColumn) { %>
-			$objBuilder->AddSelectItem($strTableName, '<%= $objColumn->Name %>', $strAliasPrefix . '<%= $objColumn->Name %>');
+            if ($objSelect) {
+<% foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { %>
+			    $objBuilder->AddSelectItem($strTableName, '<%= $objColumn->Name %>', $strAliasPrefix . '<%= $objColumn->Name %>');
 <% } %>
+                $objSelect->AddSelectItems($objBuilder, $strTableName, $strAliasPrefix);
+            } else {
+<% foreach ($objTable->ColumnArray as $objColumn) { %>
+			    $objBuilder->AddSelectItem($strTableName, '<%= $objColumn->Name %>', $strAliasPrefix . '<%= $objColumn->Name %>');
+<% } %>
+            }
 		}

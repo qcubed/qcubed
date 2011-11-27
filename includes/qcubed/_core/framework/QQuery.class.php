@@ -81,8 +81,8 @@
 			}
 		}
 
-		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection);
-		abstract public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null);
+		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQSelect $objSelect = null);
+		abstract public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null);
 	}
 
 
@@ -165,7 +165,7 @@
 			return (get_class($this) == 'QQNode') && (is_null($this->objParentNode->_Type));
 		}
 
-		public function GetTable(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
+		public function GetTable(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 			// Make sure our Root Tables Match
 			if ($this->_RootTableName != $objBuilder->RootTableName)
 				throw new QCallerException('Cannot use QQNode for "' . $this->_RootTableName . '" when querying against the "' . $objBuilder->RootTableName . '" table', 3);
@@ -176,7 +176,7 @@
 			} else {
 				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
 				try {
-					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection);
+					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, QQ::Select());
 
 					if ($this->strTableName) {
 						$strJoinTableAlias = $strParentAlias . '__' . $this->strName;
@@ -184,7 +184,7 @@
 						$this->addJoinTable($objBuilder, $strJoinTableAlias, $strParentAlias, $objJoinCondition);
 
 						if ($blnExpandSelection)
-							call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strJoinTableAlias);
+							call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strJoinTableAlias, $objSelect);
 					}
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
@@ -195,8 +195,8 @@
 			}
 		}
 
-		public function GetTableAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
-			$strTable = $this->GetTable($objBuilder, $blnExpandSelection, $objJoinCondition);
+		public function GetTableAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
+			$strTable = $this->GetTable($objBuilder, $blnExpandSelection, $objJoinCondition, $objSelect);
 			return $objBuilder->GetTableAlias($strTable);
 		}
 
@@ -209,8 +209,8 @@
 					$strBegin, $this->strName, $strEnd);
 		}
 
-		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
-			$strTableAlias = $this->GetTableAlias($objBuilder, $blnExpandSelection, $objJoinCondition);
+		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
+			$strTableAlias = $this->GetTableAlias($objBuilder, $blnExpandSelection, $objJoinCondition, $objSelect);
 			// Pull the Begin and End Escape Identifiers from the Database Adapter
 			return $this->MakeColumnAlias($objBuilder, $strTableAlias);
 		}
@@ -220,7 +220,7 @@
 				$strParentAlias, $this->strName, $this->strPrimaryKey, $objJoinCondition);
 		}
 
-		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection) {
+		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQSelect $objSelect = null) {
 			// Are we at the Parent Node?
 			if (is_null($this->objParentNode))
 				// Yep -- Simply return the Parent Node Name
@@ -228,7 +228,7 @@
 			else {
 				try {
 					// No -- First get the Parent Alias
-					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection);
+					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, QQ::Select());
 
 					$strJoinTableAlias = $strParentAlias . '__' . $this->strAlias;
 					// Next, Join the Appropriate Table
@@ -240,7 +240,7 @@
 
 				// Next, Expand the Selection Fields for this Table (if applicable)
 				if ($blnExpandSelection) {
-					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strJoinTableAlias);
+					call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strJoinTableAlias, $objSelect);
 				}
 
 				// Return the Parent Alias
@@ -371,8 +371,8 @@
 				$strParentAlias, $this->objParentNode->_PrimaryKey, $this->strForeignKey, $objJoinCondition);
 		}
 
-		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
-			$this->GetTableAlias($objBuilder, $blnExpandSelection, $objJoinCondition);
+		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
+			$this->GetTableAlias($objBuilder, $blnExpandSelection, $objJoinCondition, $objSelect);
 			return null;
 		}
 
@@ -407,7 +407,7 @@
 			$this->strAlias = $this->strName;
 		}
 
-		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
+		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 			// Make sure our Root Tables Match
 			if ($this->_RootTableName != $objBuilder->RootTableName)
 				throw new QCallerException('Cannot use QQNode for "' . $this->_RootTableName . '" when querying against the "' . $objBuilder->RootTableName . '" table', 3);
@@ -423,7 +423,7 @@
 					$strBegin, $this->strName, $strEnd);
 			else {
 				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection);
+				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, QQ::Select());
 
 				if ($this->strTableName) {
 					// Next, Join the Appropriate Table
@@ -431,7 +431,7 @@
 						$strParentAlias, $this->strName, $this->strPrimaryKey);
 
 					if ($blnExpandSelection)
-						call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strName);
+						call_user_func(array($this->strClassName, 'GetSelectFields'), $objBuilder, $strParentAlias . '__' . $this->strName, $objSelect);
 				}
 
 				// Finally, return the final column alias name (Parent Prefix with Current Node Name)
@@ -441,14 +441,14 @@
 			}
 		}
 		
-		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection) {
+		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQSelect $objSelect = null) {
 			// Are we at the Parent Node?
 			if (is_null($this->objParentNode))
 				// Yep -- Simply return the Parent Node Name
 				return $this->strName;
 			else {
 				// No -- First get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection);
+				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, QQ::Select());
 
 				// Next, Join the Appropriate Table
 					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias,
@@ -1069,18 +1069,22 @@
 			return new QQAverage($objNode, $strAttributeName);
 		}
 
-		static public function Expand($objNode, QQCondition $objJoinCondition = null) {
+		static public function Expand($objNode, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 //			if (gettype($objNode) == 'string')
 //				return new QQExpandVirtualNode(new QQVirtualNode($objNode));
 
 			if ($objNode instanceof QQVirtualNode)
 				return new QQExpandVirtualNode($objNode);
 			else
-				return new QQExpand($objNode, $objJoinCondition);
+				return new QQExpand($objNode, $objJoinCondition, $objSelect);
 		}
 
-		static public function ExpandAsArray($objNode) {
-			return new QQExpandAsArray($objNode);
+		static public function ExpandAsArray($objNode, QQSelect $objSelect = null) {
+			return new QQExpandAsArray($objNode, $objSelect);
+		}
+
+		static public function Select(/* array and/or parameterized list of QQNode objects*/) {
+			return new QQSelect(func_get_args());
 		}
 
 		static public function LimitInfo($intMaxRowCount, $intOffset = 0) {
@@ -1089,6 +1093,31 @@
 
 		static public function Distinct() {
 			return new QQDistinct();
+		}
+
+		/**
+		 * @param QQClause[]|QQClause|null $objClauses QQClause object or array of QQClause objects
+		 * @return QQSelect QQSelect clause containing all the nodes from all the QQSelect clauses from $objClauses,
+		 * or null if $objClauses contains no QQSelect clauses
+		 */
+		public static function extractSelectClause($objClauses) {
+			if ($objClauses instanceof QQSelect)
+				return $objClauses;
+
+			if (is_array($objClauses)) {
+				$hasSelects = false;
+				$objSelect = QQuery::Select();
+				foreach ($objClauses as $objClause) {
+					if ($objClause instanceof QQSelect) {
+						$hasSelects = true;
+						$objSelect->Merge($objClause);
+					}
+				}
+				if (!$hasSelects)
+					return null;
+				return $objSelect;
+			}
+			return null;
 		}
 
 		/////////////////////////
@@ -1166,7 +1195,7 @@
 			$this->objParentQueryNodes = $objParentQueryNodes;
 			$this->strSql = $strSql;
 		}
-		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
+		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 			$strSql = $this->strSql;
 			for ($intIndex = 1; $intIndex < count($this->objParentQueryNodes); $intIndex++) {
 				if (!is_null($this->objParentQueryNodes[$intIndex]))
@@ -1184,7 +1213,7 @@
 			$this->strName = trim(strtolower($strName));
 			$this->objSubQueryDefinition = $objSubQueryDefinition;
 		}
-		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null) {
+		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 			if ($this->objSubQueryDefinition) {
 				$objBuilder->SetVirtualNode($this->strName, $this->objSubQueryDefinition);
 				return $this->objSubQueryDefinition->GetColumnAlias($objBuilder);
@@ -1376,8 +1405,9 @@
 		/** @var QQNode */
 		protected $objNode;
 		protected $objJoinCondition;
+		protected $objSelect;
 
-		public function __construct($objNode, QQCondition $objJoinCondition = null) {
+		public function __construct($objNode, QQCondition $objJoinCondition = null, QQSelect $objSelect  = null) {
 			// Check against root and table QQNodes
 			if ($objNode instanceof QQAssociationNode)
 				throw new QCallerException('Expand clause parameter cannot be the association table\'s QQNode, itself', 2);
@@ -1388,9 +1418,10 @@
 
 			$this->objNode = $objNode;
 			$this->objJoinCondition = $objJoinCondition;
+			$this->objSelect = $objSelect;
 		}
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
-			$this->objNode->GetColumnAlias($objBuilder, true, $this->objJoinCondition);
+			$this->objNode->GetColumnAlias($objBuilder, true, $this->objJoinCondition, $this->objSelect);
 		}
 		public function __toString() {
 			return 'QQExpand Clause';
@@ -1452,18 +1483,20 @@
 	class QQExpandAsArray extends QQClause {
 		/** @var QQNode|QQAssociationNode */
 		protected $objNode;
-		public function __construct($objNode) {
+		protected $objSelect;
+		public function __construct($objNode, QQSelect $objSelect = null) {
 			// Ensure that this is an QQAssociationNode
 			if ((!($objNode instanceof QQAssociationNode)) && (!($objNode instanceof QQReverseReferenceNode)))
 				throw new QCallerException('ExpandAsArray clause parameter must be an Association Table-based QQNode', 2);
 				
 			$this->objNode = $objNode;
+			$this->objSelect = $objSelect;
 		}
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			if ($this->objNode instanceof QQAssociationNode)
-				$this->objNode->_ChildTableNode->GetColumnAlias($objBuilder, true);
+				$this->objNode->_ChildTableNode->GetColumnAlias($objBuilder, true, null, $this->objSelect);
 			else
-				$this->objNode->GetColumnAlias($objBuilder, true);
+				$this->objNode->GetColumnAlias($objBuilder, true, null, $this->objSelect);
 			$objBuilder->AddExpandAsArrayNode($this->objNode);
 		}
 		public function __toString() {
@@ -1513,6 +1546,32 @@
 		}
 		public function __toString() {
 			return 'QQGroupBy Clause';
+		}
+	}
+
+	class QQSelect extends QQClause {
+		protected $arrNodeObj = array();
+
+		public function __construct($arrNodeObj) {
+			$this->arrNodeObj = $arrNodeObj;
+		}
+
+		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+		}
+
+		public function AddSelectItems(QQueryBuilder $objBuilder, $strTableName, $strAliasPrefix) {
+			foreach ($this->arrNodeObj as $objNode) {
+				$objBuilder->AddSelectItem($strTableName, $objNode->_Name, $strAliasPrefix . $objNode->_Name);
+			}
+		}
+
+		public function Merge(QQSelect $objSelect = null) {
+			if ($objSelect) foreach ($objSelect->arrNodeObj as $objNode)
+				array_push($this->arrNodeObj, $objNode);
+		}
+
+		public function __toString() {
+			return 'QQSelectColumn Clause';
 		}
 	}
 

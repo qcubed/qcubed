@@ -128,5 +128,13 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		
 		$this->assertEqual($targetPerson, null, "QuerySingle should return null for a not-found record");		
 	}
+
+	public function testQuerySelectSubset() {
+		$objPersonArray = Person::LoadAll(QQ::Select(QQN::Person()->FirstName));
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->assertNotNull($objPerson->Id, "Id should not be null since it's always added to the select list");
+		}
+	}
 }
 ?>

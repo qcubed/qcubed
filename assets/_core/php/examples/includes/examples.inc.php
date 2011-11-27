@@ -50,6 +50,7 @@
 			self::AddCoreExampleFile($intIndex, '/qcubed_query/reverse.php * QCubed Query: Handling Reverse Relationships');
 			self::AddCoreExampleFile($intIndex, '/qcubed_query/expandasarray.php * ExpandAsArray: Multiple related tables in one swift query');
 			self::AddCoreExampleFile($intIndex, '/qcubed_query/alias.php * SQL Aliases for QQuery');
+			self::AddCoreExampleFile($intIndex, '/qcubed_query/qqselect.php * Picking database columns for QQuery');
 			self::AddCoreExampleFile($intIndex, '/qcubed_query/subsql.php * Custom SQL Subqueries for QQuery');
 			self::AddCoreExampleFile($intIndex, '/qcubed_query/intro.php * Performing Custom SQL Queries');
 			self::AddCoreExampleFile($intIndex, '/qcubed_query/qcache.php * Caching Query Results with QueryArrayCached');
