@@ -102,29 +102,6 @@
 	<% } %>
 <% } %><%-%>
 
-			if (isset($arrPreviousItems) && is_array($arrPreviousItems)) {
-				foreach ($arrPreviousItems as $objPreviousItem) {
-<% foreach ($objTable->PrimaryKeyColumnArray as $col) { %>
-					if ($objToReturn-><%= $col->PropertyName %> != $objPreviousItem-><%= $col->PropertyName %>) {
-						continue;
-					}
-	<% foreach ($objTable->ManyToManyReferenceArray as $objReference) { %>
-					if (array_diff($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array, $objToReturn->_obj<%= $objReference->ObjectDescription %>Array) != null) {
-						continue;
-					}
-	<% } %>
-	<% foreach ($objTable->ReverseReferenceArray as $objReference) { %><% if (!$objReference->Unique) { %>
-					if (array_diff($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array, $objToReturn->_obj<%= $objReference->ObjectDescription %>Array) != null) {
-						continue;
-					}
-	<% } %><% } %>
-<% } %>
-
-					// complete match - all primary key columns are the same
-					return null;
-				}
-			}
-
 			// Instantiate Virtual Attributes
 			foreach ($objDbRow->GetColumnNameArray() as $strColumnName => $mixValue) {
 				$strVirtualPrefix = $strAliasPrefix . '__';
