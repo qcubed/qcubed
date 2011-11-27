@@ -63,6 +63,7 @@
 
 		protected $strEscapeIdentifierBegin = '[';
 		protected $strEscapeIdentifierEnd = ']';
+		protected $blnOnlyFullGroupBy = true;
 
 		// Default query options array
 		protected $mixedOptionsArray = array(

@@ -29,6 +29,9 @@
 	 * @property-read string $Username
 	 * @property-read string $Password
 	 * @property-read string $DateFormat
+	 * @property-read boolean $OnlyFullGroupBy database adapter sub-classes can override and set this property to true
+	 *      to prevent the behavior of automatically adding all the columns to the select clause when the query has
+	 *      an aggregation clause.
 	 * @package DatabaseAdapters
 	 */
 	abstract class QDatabaseBase extends QBaseClass {
@@ -45,6 +48,7 @@
 
 		protected $strEscapeIdentifierBegin = '"';
 		protected $strEscapeIdentifierEnd = '"';
+		protected $blnOnlyFullGroupBy = false; // should be set in sub-classes as appropriate
 
 		// Abstract Methods that ALL Database Adapters MUST implement
 		abstract public function Connect();
@@ -147,6 +151,8 @@
 					return $this->objConfigArray[strtolower($strName)];
 				case 'DateFormat':
 					return (is_null($this->objConfigArray[strtolower($strName)])) ? (QDateTime::FormatIso) : ($this->objConfigArray[strtolower($strName)]);
+				case 'OnlyFullGroupBy':
+					return $this->blnOnlyFullGroupBy;
 
 				default:
 					try {

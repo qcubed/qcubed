@@ -35,6 +35,7 @@
 
 		protected $strEscapeIdentifierBegin = '[';
 		protected $strEscapeIdentifierEnd = ']';
+		protected $blnOnlyFullGroupBy = true;
 
 		/**
 		 * Properly escapes $mixData to be used as a SQL query parameter.

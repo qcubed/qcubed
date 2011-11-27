@@ -15,6 +15,7 @@ class QOracleDatabase extends QDatabaseBase {
 
 	protected $EscapeIdentifierBegin = '';
 	protected $EscapeIdentifierEnd = '';
+	protected $blnOnlyFullGroupBy = true;
 	protected $debug;
 	protected $commitMode;
 

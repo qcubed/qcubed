@@ -18,7 +18,26 @@
 
 			// Create/Build out the QueryBuilder object with <%= $objTable->ClassName %>-specific SELET and FROM fields
 			$objQueryBuilder = new QQueryBuilder($objDatabase, '<%= $objTable->Name %>');
-			<%= $objTable->ClassName %>::GetSelectFields($objQueryBuilder);
+
+			$blnAddAllFieldsToSelect = true;
+			if ($objDatabase->OnlyFullGroupBy) {
+				// see if we have any group by or aggregation clauses, if yes, don't add the fields to select clause
+				if ($objOptionalClauses instanceof QQClause) {
+					if ($objOptionalClauses instanceof QQAggregationClause || $objOptionalClauses instanceof QQGroupBy) {
+						$blnAddAllFieldsToSelect = false;
+					}
+				} else if (is_array($objOptionalClauses)) {
+					foreach ($objOptionalClauses as $objClause) {
+						if ($objClause instanceof QQAggregationClause || $objClause instanceof QQGroupBy) {
+							$blnAddAllFieldsToSelect = false;
+							break;
+						}
+					}
+				}
+			}
+			if ($blnAddAllFieldsToSelect) {
+				<%= $objTable->ClassName %>::GetSelectFields($objQueryBuilder);
+			}
 			$objQueryBuilder->AddFromItem('<%= $objTable->Name %>');
 
 			// Set "CountOnly" option (if applicable)
