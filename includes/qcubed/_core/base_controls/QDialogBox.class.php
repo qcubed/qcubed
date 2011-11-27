@@ -77,6 +77,14 @@
 			$this->blnWrapperModified = false;
 		}
 
+		public function GetEndScript() {
+			$strToReturn = parent::GetEndScript();
+			if ($this->Visible && $this->Display) {
+				$strToReturn .= "; ". $this->GetShowDialogJavaScript();
+			}
+			return $strToReturn;
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
