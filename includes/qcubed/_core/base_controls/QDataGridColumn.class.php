@@ -254,19 +254,14 @@
 
 				$this->FilterByCommand = $filter;
 			} elseif ($mixFilterValue !== null) { //Handle the other methods differently
-				if ($mixFilterValue instanceof QQConditionComparison) {
-					$this->Filter = $mixFilterValue; // should we preserve $arrFilterList instead of replacing it? 
-					$this->objActiveFilter = $mixFilterValue;
-				} else {
-					switch ($this->FilterType) {
-						case QFilterType::ListFilter:
-							$this->objActiveFilter = $this->arrFilterList[$mixFilterValue];
-							break;
-						default:
-						case QFilterType::TextFilter;
-							$this->objActiveFilter = $this->arrFilterList[0];
-							$this->FilterSetOperand($mixFilterValue);
-					}
+				switch ($this->FilterType) {
+					case QFilterType::ListFilter:
+						$this->objActiveFilter = $this->arrFilterList[$mixFilterValue];
+						break;
+					default:
+					case QFilterType::TextFilter;
+						$this->objActiveFilter = $this->arrFilterList[0];
+						$this->FilterSetOperand($mixFilterValue);
 				}
 			} else {
 				$this->ClearFilter();
@@ -274,17 +269,7 @@
 		}
 		
 		public function GetActiveFilterState() {
-			//deal with any manual filters
-			if ($this->FilterByCommand !== null && isset($this->FilterByCommand['value'])) {
-				return $this->FilterByCommand['value'];
-			} elseif ($this->objActiveFilter !== null) {
-				if ($this->objActiveFilter instanceof QQConditionComparison) {
-					return $this->objActiveFilter;
-				} else {
-					throw new exception(QApplication::Translate("Unknown Filter type"));
-				}
-			}
-			return null;
+			return $this->GetActiveFilterValue();
 		}
 		
 		public function GetActiveFilterValue() {

@@ -1087,7 +1087,20 @@
 		{
 			foreach($this->objColumnArray as $col) {
 				if (isset($filters[$col->Name])) {
-					$col->SetActiveFilterState($filters[$col->Name]);
+					$value = $filters[$col->Name];
+					$col->SetActiveFilterState($value);
+					$objFilterControl = $this->GetFilterControl($col);
+					switch($col->FilterType)
+					{
+						default:
+						case QFilterType::TextFilter:
+							$objFilterControl->Text = $value;
+							break;
+						case QFilterType::ListFilter:
+							$objFilterControl->SelectedName = $value;
+							break;
+					}
+
 				}
 			}
 		}
