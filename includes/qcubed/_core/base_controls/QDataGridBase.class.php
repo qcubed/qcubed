@@ -672,13 +672,11 @@
 			$strTrId = sprintf("%srow%s", $this->strControlId, $this->intCurrentRowIndex);
 			$numEvents = count($this->objRowEventArray);
 			if ($numEvents > 0) {
-				$objRow = $this->objForm->GetControl($strTrId);
-				if (!$objRow) {
-					$objRow = new QDataGridRow($this->objForm, $strTrId);
-					// add all the row actions to this proxy 
-					for ($i = 0; $i < $numEvents; ++$i) {
-						$objRow->AddAction($this->objRowEventArray[$i], $this->objRowActionArray[$i]);
-					}
+				$this->RemoveChildControl($strTrId, true);
+				$objRow = new QDataGridRow($this, $strTrId);
+				// add all the row actions to this proxy
+				for ($i = 0; $i < $numEvents; ++$i) {
+					$objRow->AddAction($this->objRowEventArray[$i], $this->objRowActionArray[$i]);
 				}
 				$objRow->Style = $objStyle;
 				// parse the action parameter
@@ -734,7 +732,7 @@
 			// Cleanup all the extra rows from the previous rendering
 			for ($i = $this->intCurrentRowIndex; $i < $this->intRowCount; ++$i) {
 				$strTrId = sprintf("%srow%s", $this->strControlId, $i);
-				$this->objForm->RemoveControl($strTrId);
+				$this->RemoveChildControl($strTrId, true);
 			}
 			$this->intRowCount = $this->intCurrentRowIndex;
 
