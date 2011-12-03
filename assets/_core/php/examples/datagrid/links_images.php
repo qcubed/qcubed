@@ -23,7 +23,7 @@
 			$objControlId = "personImage" . $intPersonId;
 			
 			if (!$objControl = $this->GetControl($objControlId)) {
-				$objControl = new QImageControl($this, $objControlId);
+				$objControl = new QImageControl($this->dtgPersons, $objControlId);
 				
 				$imagePath = "../images/emoticons/" . $intPersonId . ".png";
 				
@@ -37,14 +37,14 @@
 
 			// We pass the parameter of "false" to make sure the control doesn't render
 			// itself RIGHT HERE - that it instead returns its string rendering result.
-			return $objControl->Render(false);		
+			return $objControl->Render(false);
 		}
 		
 		public function renderButton(Person $objPerson) {
 			$objControlId = "editButton" . $objPerson->Id;
 			
 			if (!$objControl = $this->GetControl($objControlId)) {
-				$objControl = new QButton($this, $objControlId);
+				$objControl = new QButton($this->dtgPersons, $objControlId);
 				$objControl->Text = "Edit Person #" . $objPerson->Id;
 				
 				$objControl->AddAction(new QClickEvent(), new QAjaxAction("renderButton_Click"));
@@ -53,7 +53,7 @@
 
 			// We pass the parameter of "false" to make sure the control doesn't render
 			// itself RIGHT HERE - that it instead returns its string rendering result.
-			return $objControl->Render(false);					
+			return $objControl->Render(false);
 		}
 		
 		public function renderButton_Click($strFormId, $strControlId, $strParameter) {
