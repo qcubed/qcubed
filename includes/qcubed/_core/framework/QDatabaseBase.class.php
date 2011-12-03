@@ -232,16 +232,19 @@
 				if( isset($objBacktrace['object']))
 					$objBacktrace['object'] = null;
 				
-				for ($intIndex = 0; $intIndex < count($objBacktrace['args']); $intIndex++)
-					if (($objBacktrace['args'][$intIndex] instanceof QQClause) || ($objBacktrace['args'][$intIndex] instanceof QQCondition))
-						$objBacktrace['args'][$intIndex] = sprintf("[%s]", $objBacktrace['args'][$intIndex]->__toString());
-					else if (is_null($objBacktrace['args'][$intIndex]))
-						$objBacktrace['args'][$intIndex] = 'null';
-					else if (gettype($objBacktrace['args'][$intIndex]) == 'integer') {}
-					else if (gettype($objBacktrace['args'][$intIndex]) == 'object')
-						$objBacktrace['args'][$intIndex] = 'Object';
+				for ($intIndex = 0, $intMax = count($objBacktrace['args']); $intIndex < $intMax; $intIndex++) {
+					$obj = $objBacktrace['args'][$intIndex];
+					if (($obj instanceof QQClause) || ($obj instanceof QQCondition))
+						$obj = sprintf("[%s]", $obj->__toString());
+					else if (is_null($obj))
+						$obj = 'null';
+					else if (gettype($obj) == 'integer') {}
+					else if (gettype($obj) == 'object')
+						$obj = 'Object';
 					else
-						$objBacktrace['args'][$intIndex] = sprintf("'%s'", $objBacktrace['args'][$intIndex]);
+						$obj = sprintf("'%s'", $obj);
+					$objBacktrace['args'][$intIndex] = $obj;
+				}
 				
 				// Push it onto the profiling information array
 				$arrProfile = array(
