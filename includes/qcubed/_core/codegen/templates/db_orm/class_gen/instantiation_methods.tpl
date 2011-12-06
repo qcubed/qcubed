@@ -103,10 +103,10 @@
 <% } %><%-%>
 
 			// Instantiate Virtual Attributes
+			$strVirtualPrefix = $strAliasPrefix . '__';
+			$strVirtualPrefixLength = strlen($strVirtualPrefix);
 			foreach ($objDbRow->GetColumnNameArray() as $strColumnName => $mixValue) {
-				$strVirtualPrefix = $strAliasPrefix . '__';
-				$strVirtualPrefixLength = strlen($strVirtualPrefix);
-				if (substr($strColumnName, 0, $strVirtualPrefixLength) == $strVirtualPrefix)
+				if (strncmp($strColumnName, $strVirtualPrefix, $strVirtualPrefixLength) == 0)
 					$objToReturn->__strVirtualAttributeArray[substr($strColumnName, $strVirtualPrefixLength)] = $mixValue;
 			}
 
