@@ -670,6 +670,8 @@
 					$this->strType = QDatabaseFieldType::Blob;
 					break;
 				case 'timestamp':
+				case 'timestamp with time zone':
+					// this data type is not heavily used but is important to be included to avoid errors when code generating.
 				case 'timestamp without time zone':
 					// System-generated Timestamp values need to be treated as plain text
 					$this->strType = QDatabaseFieldType::VarChar;
