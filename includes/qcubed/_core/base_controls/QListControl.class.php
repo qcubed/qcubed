@@ -163,6 +163,23 @@
 			$this->objItemsArray[$intCount] = null;
 			unset($this->objItemsArray[$intCount]);
 		}
+		
+		/**
+		* Replaces a QListItem at $intIndex. This combines the RemoveItem() and AddItemAt() operations.
+		*
+		* @param integer $intIndex
+		* @param QListItem $objListItem
+		*/
+		public function ReplaceItem($intIndex, QListItem $objListItem) {
+			$this->blnModified = true;
+			try {
+				$intIndex = QType::Cast($intIndex, QType::Integer);
+			} catch (QInvalidCastException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+			$this->objItemsArray[$intIndex] = $objListItem;
+		}
 
 		/////////////////////////
 		// Public Properties: GET
