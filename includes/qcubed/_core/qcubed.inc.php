@@ -192,6 +192,7 @@
 	QApplicationBase::$ClassFile['qjsclosure'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['javascripthelper'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['qnoscriptajaxaction'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
+	QApplicationBase::$ClassFile['qjstimer'] = __QCUBED__ . '/controls/QJsTimer.class.php';
 
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
