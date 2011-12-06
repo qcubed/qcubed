@@ -95,7 +95,8 @@
 			$objToReturn->__blnRestored = true;
 
 <% foreach ($objTable->ColumnArray as $objColumn) { %>
-			$strAliasName = array_key_exists($strAliasPrefix . '<%= $objColumn->Name %>', $strColumnAliasArray) ? $strColumnAliasArray[$strAliasPrefix . '<%= $objColumn->Name %>'] : $strAliasPrefix . '<%= $objColumn->Name %>';
+			$strAlias = $strAliasPrefix . '<%= $objColumn->Name %>';
+			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
 			$objToReturn-><%= $objColumn->VariableName %> = $objDbRow->GetColumn($strAliasName, '<%= $objColumn->DbType %>');
 	<% if (($objColumn->PrimaryKey) && (!$objColumn->Identity)) { %>
 			$objToReturn->__<%= $objColumn->VariableName %> = $objDbRow->GetColumn($strAliasName, '<%= $objColumn->DbType %>');
