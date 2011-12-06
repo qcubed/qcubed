@@ -550,13 +550,16 @@
 		}
 
 		/**
-		 * Generates a valid URL Query String based on values in the global $_GET
+		 * Generates a valid URL Query String based on values in the provided array. If no array is provided, it uses the global $_GET
+		 * @param array $arr
 		 * @return string
 		 */
-		public static function GenerateQueryString() {
-			if (count($_GET)) {
+		public static function GenerateQueryString($arr = null) {
+			if(null === $arr)
+				$arr = $_GET;
+			if (count($arr)) {
 				$strToReturn = '';
-				foreach ($_GET as $strKey => $mixValue)
+				foreach ($arr as $strKey => $mixValue)
 					$strToReturn .= QApplication::GenerateQueryStringHelper(urlencode($strKey), $mixValue);
 				return '?' . substr($strToReturn, 1);
 			} else
