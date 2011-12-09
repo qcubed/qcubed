@@ -86,6 +86,7 @@
 			self::AddCoreExampleFile($intIndex, '/events_actions/javascript_alerts.php Javascript Actions, Alerts and Confirmations');
 			self::AddCoreExampleFile($intIndex, '/events_actions/other_actions.php Other Client-Side QActions');
 			self::AddCoreExampleFile($intIndex, '/events_actions/event_propagation.php Controlling Event Bubbling');
+			self::AddCoreExampleFile($intIndex, '/events_actions/low_priority_js.php JavaScript priorities');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();

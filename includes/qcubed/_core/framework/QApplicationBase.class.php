@@ -648,18 +648,34 @@
 		public static $AlertMessageArray = array();
 		public static $JavaScriptArray = array();
 		public static $JavaScriptArrayHighPriority = array();
+        public static $JavaScriptArrayLowPriority = array();
 
 		public static $ErrorFlag = false;
 		
 		public static function DisplayAlert($strMessage) {
 			array_push(QApplication::$AlertMessageArray, $strMessage);
 		}
-		
-		public static function ExecuteJavaScript($strJavaScript, $blnHighPriority = false) {
-			if ($blnHighPriority)
-				array_push(QApplication::$JavaScriptArrayHighPriority, $strJavaScript);
-			else
-				array_push(QApplication::$JavaScriptArray, $strJavaScript);
+
+		public static function ExecuteJavaScript($strJavaScript, $intPriority = QJsPriority::Standard) {
+			if (is_bool($intPriority)) {
+				//we keep this codepath for backward compatibility
+				if ($intPriority == true)
+					array_push(QApplication::$JavaScriptArrayHighPriority, $strJavaScript);
+				else
+					array_push(QApplication::$JavaScriptArray, $strJavaScript);
+			} else {
+				switch ($intPriority) {
+					case QJsPriority::High:
+						array_push(QApplication::$JavaScriptArrayHighPriority, $strJavaScript);
+						break;
+					case QJsPriority::Low:
+						array_push(QApplication::$JavaScriptArrayLowPriority, $strJavaScript);
+						break;
+					default:
+						array_push(QApplication::$JavaScriptArray, $strJavaScript);
+						break;
+				}
+			}
 		}
 
 		public static function OutputPage($strBuffer) {
@@ -707,10 +723,18 @@
 				else
 					$strScript .= sprintf('%s ', $strJavaScript);
 			}
+			foreach (QApplication::$JavaScriptArrayLowPriority as $strJavaScript) {
+				$strJavaScript = trim($strJavaScript);
+				if (QString::LastCharacter($strJavaScript) != ';')
+					$strScript .= sprintf('%s; ', $strJavaScript);
+				else
+					$strScript .= sprintf('%s ', $strJavaScript);
+			}
 
 			QApplication::$AlertMessageArray = array();
 			QApplication::$JavaScriptArrayHighPriority = array();
 			QApplication::$JavaScriptArray = array();
+			QApplication::$JavaScriptArrayLowPriority = array();
 
 			if ($strScript) {
 				if ($blnOutput)
@@ -798,7 +822,13 @@
 			_p('</ul></div>', false);
 		}		
 	}
-	
+
+	class QJsPriority {
+		const Standard = 0;
+		const High = 1;
+		const Low = -1;
+	}
+
 	class QRequestMode {
 		const Standard = 'Standard';
 		const Ajax = 'Ajax';
