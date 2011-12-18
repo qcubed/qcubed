@@ -13,6 +13,8 @@
 	<p><b>Author</b>: <?php $this->lblAuthorName->Render(); ?> 
 		<?php $this->lblAuthorEmail->Render(); ?></p>
 
+	<p><b>Contains</b>: </b><?php $this->lblFiles->Render(); ?></p>
+
 	<div id="formActions">
 		<?php $this->btnInstall->Render() ?>
 		<?php $this->btnCancelInstallation->Render() ?>

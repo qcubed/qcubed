@@ -15,6 +15,7 @@ class PluginEditForm extends QForm {
 	protected $lblPlatformVersion;
 	protected $lblAuthorName;
 	protected $lblAuthorEmail;
+	protected $lblFiles;
 	protected $dlgStatus;
 	
 	protected $btnInstall;
@@ -62,6 +63,7 @@ class PluginEditForm extends QForm {
 		$this->lblPlatformVersion_Create();
 		$this->lblAuthorName_Create();
 		$this->lblAuthorEmail_Create();
+		$this->lblFiles_Create();
 		$this->dlgStatus_Create();
 		
 		$this->btnInstall_Create();
@@ -137,37 +139,37 @@ class PluginEditForm extends QForm {
 		self::redirectToListPage();
 	}
 			
-	public function lblName_Create() {
+	private function lblName_Create() {
 		$this->lblName = new QLabel($this);
 		$this->lblName->Text = $this->objPlugin->strName;
 		$this->lblName->Name = QApplication::Translate('Title');
 	}
 	
-	public function lblDescription_Create() {
+	private function lblDescription_Create() {
 		$this->lblDescription = new QLabel($this);
 		$this->lblDescription->Text = $this->objPlugin->strDescription;
 		$this->lblDescription->Name = QApplication::Translate('Description');
 	}
 	
-	public function lblPluginVersion_Create() {
+	private function lblPluginVersion_Create() {
 		$this->lblPluginVersion = new QLabel($this);
 		$this->lblPluginVersion->Text = $this->objPlugin->strVersion;
 		$this->lblPluginVersion->Name = QApplication::Translate('Plugin Version');
 	}
 	
-	public function lblPlatformVersion_Create() {
+	private function lblPlatformVersion_Create() {
 		$this->lblPlatformVersion = new QLabel($this);
 		$this->lblPlatformVersion->Text = $this->objPlugin->strPlatformVersion;
 		$this->lblPlatformVersion->Name = QApplication::Translate('Compatible QCubed Version');
 	}
 	
-	public function lblAuthorName_Create() {
+	private function lblAuthorName_Create() {
 		$this->lblAuthorName = new QLabel($this);
 		$this->lblAuthorName->Text = $this->objPlugin->strAuthorName;
 		$this->lblAuthorName->Name = QApplication::Translate('Author');
 	}
 	
-	public function lblAuthorEmail_Create() {
+	private function lblAuthorEmail_Create() {
 		$this->lblAuthorEmail = new QLabel($this);
 		$this->lblAuthorEmail->Name = QApplication::Translate('Author\'s email');
 		$this->lblAuthorEmail->HtmlEntities = false;
@@ -186,8 +188,16 @@ class PluginEditForm extends QForm {
 			$this->lblAuthorEmail->Text = "<a href='mailto:{$email}'>{$email}</a>";
 		}
 	}
+
+	private function lblFiles_Create() {
+		$this->lblFiles = new QLabel($this);
+		$this->lblFiles->Name = QApplication::Translate("Contains: ");
+		$this->lblFiles->Text = count($this->objPlugin->objAllFilesArray) . ' ' . QApplication::Translate("file(s)") . "; ";
+		$this->lblFiles->Text .=  count($this->objPlugin->objIncludesArray) . ' ' . QApplication::Translate("include(s)") . "; ";
+		$this->lblFiles->Text .=  count($this->objPlugin->objExamplesArray) . ' ' . QApplication::Translate("example(s)");
+	}
 	
-	public function redirectToListPage() {
+	private function redirectToListPage() {
 		QApplication::Redirect('plugin_manager.php');
 	}
 }

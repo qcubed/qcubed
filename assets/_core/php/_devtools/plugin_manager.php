@@ -41,12 +41,6 @@
 					'<a href="plugin_edit.php?strType=installed&strName=<?= $_ITEM->strName ?>"><?= $_ITEM->strName ?></a>', 'HtmlEntities=false'));
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Version',
 					'<?= $_ITEM->strVersion ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Files',
-					'<?= count($_ITEM->objAllFilesArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Includes',
-					'<?= count($_ITEM->objIncludesArray) ?>'));
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Examples',
-					'<?= count($_ITEM->objExamplesArray) ?>'));
 
 
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Description',
