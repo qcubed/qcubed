@@ -63,6 +63,7 @@ QApplicationBase::$ClassFile['qautocomplete_closeevent'] = __QCUBED_CORE__ . '/b
 QApplicationBase::$ClassFile['qautocomplete_changeevent'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteGen.class.php';
 QApplicationBase::$ClassFile['qautocompletegen'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteGen.class.php';
 QApplicationBase::$ClassFile['qautocompletebase'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
+QApplicationBase::$ClassFile['qautocompletelistitem'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
 QApplicationBase::$ClassFile['qautocomplete'] = __QCUBED__ . '/controls/QAutocomplete.class.php';
 QApplicationBase::$ClassFile['qjqbutton_createevent'] = __QCUBED_CORE__ . '/base_controls/QJqButtonGen.class.php';
 QApplicationBase::$ClassFile['qjqbuttongen'] = __QCUBED_CORE__ . '/base_controls/QJqButtonGen.class.php';
