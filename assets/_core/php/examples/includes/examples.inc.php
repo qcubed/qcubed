@@ -101,9 +101,15 @@
 			self::AddCoreExampleFile($intIndex, '/datagrid/filtering.php * QDataGrid Filtering');
 			self::AddCoreExampleFile($intIndex, '/datagrid/advanced_filtering.php * Advanced QDataGrid Filtering');
 			self::AddCoreExampleFile($intIndex, '/datagrid/ajax.php * Enabling AJAX on the QDataGrid');
+			self::AddCoreExampleFile($intIndex, '/master_detail/project_list.php * Nested QDataGrid');			
+			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/master_detail/project_list.php'] = array(
+				'records.summary.php',
+				'records.summary.tpl.php',
+				'AddressListPanel.class.php',
+				'AddressListPanel.tpl.php');
 			self::AddCoreExampleFile($intIndex, '/datarepeater/ajax.php * Simple QDataRepeater using AJAX-triggered Pagination');
-			self::AddCoreExampleFile($intIndex, '/datagrid/extend.php * Creating Your Own Custom QDataGrid Subclass');
 			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/datarepeater/ajax.php'] = array('dtr_persons.tpl.php');
+			self::AddCoreExampleFile($intIndex, '/datagrid/extend.php * Creating Your Own Custom QDataGrid Subclass');			
 			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/datagrid/extend.php'] = array('QDataGrid.class.php');
 
 			$intIndex++;
