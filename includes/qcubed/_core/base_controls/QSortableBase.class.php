@@ -55,7 +55,7 @@ FUNC;
 					// used to interface with javascript above. Not intended for public consumption.
 					try {
 						$data = QType::Cast($mixValue, QType::String);
-						$a = split (",", $data);
+						$a = explode (",", $data);
 						$this->aryItemArray = $a;
 						break;
 					} catch (QInvalidCastException $objExc) {
