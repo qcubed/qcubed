@@ -108,6 +108,7 @@ Here is the Child QDataGrid...
 				
 				if ($person_addresses > 0 ) {
 					$objControl = new QButton($parControl, $strControlId);
+					$objControl->Width = 20;
 					$objControl->Text = '+';
 					$objControl->CssClass = 'inputbutton';
 					$objControl->ActionParameter = "$strType->Id";

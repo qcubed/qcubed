@@ -60,22 +60,22 @@
 			// remove filter from field
 			//$this->dtgProjects->MetaAddColumn('StartDate');
 			$colStartDate = $this->dtgProjects->MetaAddColumn('StartDate');
-			$colStartDate->FilterType="";
+			$colStartDate->FilterType = "";
 			
 			// remove filter from field
 			//$this->dtgProjects->MetaAddColumn('EndDate');
 			$colEndDate = $this->dtgProjects->MetaAddColumn('EndDate');
-			$colEndDate->FilterType="";
+			$colEndDate->FilterType = "";
 			
 			// remove filter from field
 			// $this->dtgProjects->MetaAddColumn('Budget');
 			$colBudget = $this->dtgProjects->MetaAddColumn('Budget');
-			$colBudget->FilterType="";
+			$colBudget->FilterType = "";
 			
 			// remove filter from field
 			// $this->dtgProjects->MetaAddColumn('Spent');
 			$colSpent = $this->dtgProjects->MetaAddColumn('Spent');
-			$colSpent->FilterType=""; 
+			$colSpent->FilterType = ""; 
 			
 			// Second... 
 			// we need to create out Child QDataGrid 
@@ -117,6 +117,7 @@
 				// If not exists create our toggle button who his parent
 				// is our master QDataGrid...
 				$objControl = new QButton($this->dtgProjects, $objControlId);
+				$objControl->Width = 20;
 				$objControl->Text = '+';
 				$objControl->CssClass = 'inputbutton';
 				
@@ -127,9 +128,9 @@
 				
 				// Add event on click the toogle button
 				$objControl->AddAction(new QClickEvent(), 
-								   new QAjaxAction(
-											'btnToggleRecordsSummary_Click',
-											$this->dtgProjects->WaitIcon));
+					new QAjaxAction(
+							'btnToggleRecordsSummary_Click',
+							$this->dtgProjects->WaitIcon));
 			}
 			
 			// We pass the parameter of "false" to make sure the control doesn't render
@@ -161,12 +162,12 @@
 					$srcControl->Text = '-';
 				}
 			
-			// Important! Refresh the parent QDataGrid...
-			$this->dtgProjects->Refresh();
+				// Important! Refresh the parent QDataGrid...
+				$this->dtgProjects->Refresh();
 			}
 		}
 			
-		// Ladys and Gentleman... Our Child QDataGrid...
+		// Ladies and Gentlemen... Our Child QDataGrid...
 		public function render_ucRecordsSummary(Project $objProject) {
 			$objControlId = 'ucRecordsSummary' . $objProject->Id;
 			
