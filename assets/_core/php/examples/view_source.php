@@ -21,12 +21,12 @@
 	<body>
 		<div id="page">
 			<div id="header">
-				<div id="headerLeft">
+				<div id="headerLeft" style="width: 80%">
 					<div id="pageName"><?php _p(Examples::PageName($strReference)); ?> - View Source</div>
 					<div id="pageLinks"><span class="headerSmall"><?php _p(Examples::CodeLinks($strReference, $strScript), false); ?></span></div>
 				</div>
-				<div id="headerRight">
-					<div id="closeWindow"><a href="javascript:window.close()">Close Window</a></div>
+				<div id="headerRight" style="width: 17%">
+					<div id="closeWindow"><a href="javascript:window.close()">Close</a></div>
 				</div>
 			<div>
 			<div id="content">
