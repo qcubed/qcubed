@@ -70,7 +70,7 @@ FUNC;
 						} else {
 							// this is coming from our javascript above.
 							$strItems = QType::Cast($mixValue, QType::String);
-							$this->arySelectedItems = split (",", $strItems);
+							$this->arySelectedItems = explode (",", $strItems);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

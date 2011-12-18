@@ -54,7 +54,7 @@ FUNC;
 					// used to interface with javascript above. Not intended for public consumption.
 					try {
 						$data = QType::Cast($mixValue, QType::String);
-						$a = split (",", $data);
+						$a = explode (",", $data);
 						$this->aryOriginalSize['width'] = $a[0];
 						$this->aryOriginalSize['height'] = $a[1];
 						$this->aryNewSize['width'] = $a[2];

@@ -61,7 +61,7 @@ FUNC;
 					// used to interface with javascript above. Not intended for public consumption.
 					try {
 						$data = QType::Cast($mixValue, QType::String);
-						$a = split (",", $data);
+						$a = explode (",", $data);
 						$this->aryOriginalPosition['left'] = $a[0];
 						$this->aryOriginalPosition['top'] = $a[1];
 						$this->aryNewPosition['left'] = $a[2];
