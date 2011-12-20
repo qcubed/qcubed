@@ -452,11 +452,20 @@ class QPostgreSqlPdoDatabaseField extends QDatabaseFieldBase {
 				$this->intMaxLength = $mixFieldData->GetColumn('character_maximum_length', QDatabaseFieldType::Integer);
 				$this->blnNotNull = ($mixFieldData->GetColumn('is_nullable') == "NO") ? true : false;
 
-				// If the first column of the table was created as SERIAL, we assume it's the identity field.
+				// If this column was created as SERIAL and is a simple (non-composite) primary key
+				// then we assume it's the identity field.
 				// Otherwise, no identity field will be set for this table.
-				$ordinalPos = $mixFieldData->GetColumn('ordinal_position', QDatabaseFieldType::Integer);
-				$isSerial = $mixFieldData->GetColumn('is_serial');
-				$this->blnIdentity = ($ordinalPos == 1 && $isSerial) ? true : false;
+				$this->blnIdentity = false;
+				if ($mixFieldData->GetColumn('is_serial')) {
+					$objIndexes = $objDb->GetIndexesForTable($this->strTable);
+					foreach ($objIndexes as $objIndex) {
+						if ($objIndex->PrimaryKey) {
+							$columns = $objIndex->ColumnNameArray;
+							$this->blnIdentity = (count($columns) == 1 && $columns[0] == $this->strName);
+							break;
+						}
+					}
+				}
 
 				// Determine Primary Key
 				$objResult = $objDb->Query(sprintf('
