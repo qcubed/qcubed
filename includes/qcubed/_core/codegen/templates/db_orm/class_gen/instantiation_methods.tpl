@@ -103,6 +103,39 @@
 	<% } %>
 <% } %><%-%>
 
+			if (isset($arrPreviousItems) && is_array($arrPreviousItems)) {
+				foreach ($arrPreviousItems as $objPreviousItem) {
+<% foreach ($objTable->PrimaryKeyColumnArray as $col) { %>
+					if ($objToReturn-><%= $col->PropertyName %> != $objPreviousItem-><%= $col->PropertyName %>) {
+						continue;
+					}
+	<% foreach ($objTable->ManyToManyReferenceArray as $objReference) { %>
+					$prevCnt = count($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array);
+					$cnt = count($objToReturn->_obj<%= $objReference->ObjectDescription %>Array);
+					if ($prevCnt != $cnt)
+						continue;
+					if ($prevCnt == 0 || $cnt == 0 || !array_diff($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array, $objToReturn->_obj<%= $objReference->ObjectDescription %>Array)) {
+						continue;
+					}
+
+	<% } %>
+	<% foreach ($objTable->ReverseReferenceArray as $objReference) { %><% if (!$objReference->Unique) { %>
+					$prevCnt = count($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array);
+					$cnt = count($objToReturn->_obj<%= $objReference->ObjectDescription %>Array);
+					if ($prevCnt != $cnt)
+					    continue;
+					if ($prevCnt == 0 || $cnt == 0 || !array_diff($objPreviousItem->_obj<%= $objReference->ObjectDescription %>Array, $objToReturn->_obj<%= $objReference->ObjectDescription %>Array)) {
+						continue;
+					}
+
+	<% } %><% } %>
+<% } %>
+
+					// complete match - all primary key columns are the same
+					return null;
+				}
+			}
+
 			// Instantiate Virtual Attributes
 			$strVirtualPrefix = $strAliasPrefix . '__';
 			$strVirtualPrefixLength = strlen($strVirtualPrefix);
