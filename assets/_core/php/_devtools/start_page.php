@@ -7,6 +7,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=<?php _p(QApplication::$EncodingType); ?>" />
 		<title>QCubed Development Framework - Start Page</title>
 		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/styles.css'); ?>"></link>
+		<style>
+			.shortcuts li {
+				margin-top: 7px;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="page">
@@ -17,18 +22,23 @@
 				</div>
 			</div>
 			<div id="content">
-				<p><span class="heading">It worked!</span></p>
+				<p><span class="heading">Welcome to QCubed!</span></p>
 
-				<p><strong>If you are seeing this, then it means that the framework has been successfully installed.</strong></p>
+				<p><strong>If you are seeing this, the framework has been successfully installed. Say hi on <a href="http://qcu.be/forum">QCubed Forum</a>, we're here help you!</strong></p>
 				
-				<p>Make sure your database connection properties are up to date, and then you can add tables to your database, and go to any of the following webpages:</p>
-				
-				<ul>
-					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/codegen.php"><?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/codegen.php</a> - to code generate your tables</li>
-					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) ?>/qcubed_unit_tests.php"><?php _p(__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) ?>/qcubed_unit_tests.php</a> - unit tests for QCubed</li>
-					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__) ?>/index.php"><?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__) ?></a> - to view the generated Form Drafts of your database</li>
-					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__) ?>/index.php"><?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__) ?></a> - to run the QCubed Examples Site locally</li>
-					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/plugin_manager.php"><?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/plugin_manager.php</a> - to manage installed plugins</li>
+				<ul class="shortcuts">
+					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/codegen.php">Code Generator</a> - to create ORM objects that map to tables in your database.</li>
+					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__) ?>/index.php">View Form Drafts</a> - to view the generated UI scaffolding (after you run the Code Generator).</li>
+					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__) ?>/index.php">QCubed Examples</a> - learn QCubed by studying and modifying the example files locally.</li>
+					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/plugin_manager.php">Plugin Manager</a> - to extend QCubed with community-contributed plugins.</li>
+					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) ?>/qcubed_unit_tests.php">QCubed Unit Tests</a> - set of tests that QCubed developers use to verify the integrity of the framework. Test dataset required. </li>
+				<?php
+					$arrInstallationMessages = QInstallationValidator::Validate();
+					$strConfigStatus = ($arrInstallationMessages) ? 
+						"<span style='color:red;'>" . count($arrInstallationMessages)." problem(s) found. <a href='" . __VIRTUAL_DIRECTORY__ . __DEVTOOLS__ . "/config_checker.php'>Click here</a> to view details.</span>" : 
+						"<span style='color:green'>all OK.</span>";	
+				?>
+					<li>QCubed Configuration Checker - monitors the health of your installation. Current status:  <?php _p($strConfigStatus, false) ?></li>
 				</ul>
 
 				<div class="code"><?php if (!QApplication::IsRemoteAdminSession()) QApplication::VarDump(); ?></div>
