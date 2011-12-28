@@ -21,7 +21,7 @@
 			$strJS = parent::GetControlJavaScript();
 			
 			$strJS .=<<<FUNC
-			.bind("selectablestop", function (event, ui) {
+			.on("selectablestop", function (event, ui) {
 				var strItems;
 				
 				strItems = "";

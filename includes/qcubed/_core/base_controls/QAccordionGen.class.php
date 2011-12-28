@@ -90,7 +90,8 @@
 	 * @property mixed $Header Selector for the header element.
 	 * @property mixed $Icons Icons to use for headers. Icons may be specified for 'header' and
 	 * 		'headerSelected', and we recommend using the icons native to the jQuery UI
-	 * 		CSS Framework manipulated by jQuery UI ThemeRoller
+	 * 		CSS Framework manipulated by jQuery UI ThemeRoller. Set to false to have no
+	 * 		icons displayed.
 	 * @property boolean $Navigation If set, looks for the anchor that matches location.href and activates it.
 	 * 		Great for href-based state-saving. Use navigationFilter to implement your
 	 * 		own matcher.

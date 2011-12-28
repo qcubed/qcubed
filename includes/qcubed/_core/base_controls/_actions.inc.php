@@ -47,13 +47,13 @@
 			if (strlen($strToReturn)) {
 				if ($objControl instanceof QControlProxy) {
 					if ($objControl->TargetControlId) {
-						return sprintf('$j("#%s").bind("%s", function(event, ui){
+						return sprintf('$j("#%s").on("%s", function(event, ui){
 									%s
 									});
 									', $objControl->TargetControlId, $strEventName,  substr($strToReturn, 1));
 					}
 				} else {
-					return sprintf('$j("#%s").bind("%s", function(event, ui){
+					return sprintf('$j("#%s").on("%s", function(event, ui){
 								%s
 								});
 								', $objControl->ControlId, $strEventName,  substr($strToReturn, 1));

@@ -36,7 +36,7 @@ FUNC;
 			$strJS = parent::GetControlJavaScript();
 			
 			$strJS .=<<<FUNC
-			.bind("sortstop", function (event, ui) {
+			.on("sortstop", function (event, ui) {
 						var ary = jQuery(this).sortable("toArray");
 						var str = ary.join(",");
 			 			qcubed.recordControlModification("$this->ControlId", "ItemArray", str);

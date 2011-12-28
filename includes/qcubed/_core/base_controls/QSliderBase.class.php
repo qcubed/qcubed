@@ -13,7 +13,7 @@
 			$strJS = parent::GetControlJavaScript();
 			
 			$strJS .=<<<FUNC
-			.bind("slidechange", function (event, ui) {
+			.on("slidechange", function (event, ui) {
 					if (ui.values && ui.values.length) {
 			 			qcubed.recordControlModification("$this->ControlId", "Values", ui.values[0] + ',' +  ui.values[1]);
 			 		} else {

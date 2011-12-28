@@ -47,6 +47,8 @@ jq_control_gen($baseUrl."/Progressbar");
 jq_control_gen($baseUrl."/Slider");
 jq_control_gen($baseUrl."/Tabs");
 
+// additional auto-includes
+$aryPathsList["qautocompletelistitem"] = "__QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php'";
 $strResult = '';
 foreach ($aryPathsList as $class=>$path) { 
 	$strResult .= "QApplicationBase::\$ClassFile['$class'] = $path;\n";

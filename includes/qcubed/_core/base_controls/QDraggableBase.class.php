@@ -44,7 +44,7 @@
 			$strJS = parent::GetControlJavaScript();
 			
 			$strJS .=<<<FUNC
-			.bind("dragstop", function (event, ui) {
+			.on("dragstop", function (event, ui) {
 			 			qcubed.recordControlModification("$this->ControlId", "DragData", ui.originalPosition.left + "," + ui.originalPosition.top + "," + ui.position.left + "," + ui.position.top);
 					})						
 FUNC;

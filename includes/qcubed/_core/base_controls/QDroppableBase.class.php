@@ -40,7 +40,7 @@
 			$strJS = parent::GetControlJavaScript();
 			
 			$strJS .=<<<FUNC
-			.bind("drop", function (event, ui) {
+			.on("drop", function (event, ui) {
 			 			qcubed.recordControlModification("$this->ControlId", "DroppedId", ui.draggable.attr("id"));
 					})						
 FUNC;

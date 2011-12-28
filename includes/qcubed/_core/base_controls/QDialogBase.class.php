@@ -1,7 +1,7 @@
 <?php
 	/**
-	 * The  QDialogBase class defined here provides an interface between the generated
-	 * QDialogGen class, and QCubed. This file is part of the core and will be overwritten
+	 * The QDialogBase class defined here provides an interface between the generated
+	 * QDialogGen class and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QDialog.class.php file instead.
 	 *
 	 */
@@ -117,7 +117,7 @@
 			$controlId = $this->ControlId;
 			$strJS =<<<FUNC
 			qcubed.recordControlModification("$controlId", "ClickedButton", "$strButtonId");
-			jQuery($controlId).trigger ("QDialog_Button")
+			jQuery("#$controlId").trigger("QDialog_Button");
 FUNC;
 									
 			$this->mixButtons[$strButtonName] = new QJsClosure($strJS);
@@ -126,7 +126,7 @@ FUNC;
 		}
 		
 		
-		// Deprectated. Call Open() instead.
+		// Deprecated. Call Open() instead.
 		public function ShowDialogBox() {
 			if (!$this->blnVisible)
 				$this->Visible = true;
@@ -142,8 +142,7 @@ FUNC;
 			$this->Close();
 			$this->blnWrapperModified = false;
 		}
-		
-		
+
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 			
@@ -191,7 +190,5 @@ FUNC;
 					}
 			}
 		}
-		
-				
 	}
 ?>

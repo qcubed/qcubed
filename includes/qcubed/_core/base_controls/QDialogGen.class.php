@@ -131,7 +131,7 @@
 	 * 		pixel offset from left, top corner of viewport (e.g. [350,100]) 3) an array
 	 * 		containing x,y position string values (e.g. ['right','top'] for top right
 	 * 		corner).
-	 * @property boolean $Resizable If set to true, the dialog will be resizeable.
+	 * @property boolean $Resizable If set to true, the dialog will be resizable.
 	 * @property mixed $Show The effect to be used when the dialog is opened.
 	 * @property boolean $Stack Specifies whether the dialog will stack on top of other dialogs. This will
 	 * 		cause the dialog to move to the front of other dialogs when it gains focus.

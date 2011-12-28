@@ -63,7 +63,6 @@ QApplicationBase::$ClassFile['qautocomplete_closeevent'] = __QCUBED_CORE__ . '/b
 QApplicationBase::$ClassFile['qautocomplete_changeevent'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteGen.class.php';
 QApplicationBase::$ClassFile['qautocompletegen'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteGen.class.php';
 QApplicationBase::$ClassFile['qautocompletebase'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
-QApplicationBase::$ClassFile['qautocompletelistitem'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
 QApplicationBase::$ClassFile['qautocomplete'] = __QCUBED__ . '/controls/QAutocomplete.class.php';
 QApplicationBase::$ClassFile['qjqbutton_createevent'] = __QCUBED_CORE__ . '/base_controls/QJqButtonGen.class.php';
 QApplicationBase::$ClassFile['qjqbuttongen'] = __QCUBED_CORE__ . '/base_controls/QJqButtonGen.class.php';
@@ -124,5 +123,6 @@ QApplicationBase::$ClassFile['qtabs_disableevent'] = __QCUBED_CORE__ . '/base_co
 QApplicationBase::$ClassFile['qtabsgen'] = __QCUBED_CORE__ . '/base_controls/QTabsGen.class.php';
 QApplicationBase::$ClassFile['qtabsbase'] = __QCUBED_CORE__ . '/base_controls/QTabsBase.class.php';
 QApplicationBase::$ClassFile['qtabs'] = __QCUBED__ . '/controls/QTabs.class.php';
+QApplicationBase::$ClassFile['qautocompletelistitem'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
 
 ?>

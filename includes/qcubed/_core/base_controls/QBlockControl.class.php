@@ -60,7 +60,7 @@
 			
 			if($objTargetControl && $objTargetControl->ControlId != $this->ControlId) {
 				QApplication::ExecuteJavascript(sprintf('var pos_%s = $j("#%s").offset()', $objTargetControl->ControlId, $objTargetControl->ControlId));
-				QApplication::ExecuteJavascript(sprintf('$j("#%s").bind("drag",  function (ev, ui) { p = $j("#%s").offset(); p.left = pos_%s.left + ui.position.left; p.top = pos_%s.top + ui.position.top; $j("#%s").offset(p); } );', $this->strControlId,	$objTargetControl->ControlId,  $objTargetControl->ControlId,  $objTargetControl->ControlId, $objTargetControl->ControlId ));
+				QApplication::ExecuteJavascript(sprintf('$j("#%s").on("drag",  function (ev, ui) { p = $j("#%s").offset(); p.left = pos_%s.left + ui.position.left; p.top = pos_%s.top + ui.position.top; $j("#%s").offset(p); } );', $this->strControlId,	$objTargetControl->ControlId,  $objTargetControl->ControlId,  $objTargetControl->ControlId, $objTargetControl->ControlId ));
 			}
 			
 			$this->blnMoveable = true;

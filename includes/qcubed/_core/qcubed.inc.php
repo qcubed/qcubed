@@ -34,8 +34,8 @@
 	define('QCUBED_VERSION_NUMBER_ONLY', '2.1');
 	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Development Release (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 	
-	define('__JQUERY_CORE_VERSION__', '1.4.4');
-	define('__JQUERY_UI_VERSION__', '1.8.6');
+	define('__JQUERY_CORE_VERSION__', '1.7.1');
+	define('__JQUERY_UI_VERSION__', '1.8.16');
 	
 
 	// Preload Required Framework Classes

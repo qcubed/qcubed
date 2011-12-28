@@ -2,15 +2,14 @@
 	/** @noinspection PhpIncludeInspection */
 	require_once('../qcubed.inc.php');
 
-
-	//adding the java script return parameter to the event is one possibility to retreive values/objects/arrays via an Ajax or Server Action
+	// adding the javascript return parameter to the event is one 
+	// possibility to retrieve values/objects/arrays via an Ajax or Server Action
 	class MyQSlider_ChangeEvent extends QEvent {
 		const EventName = 'slidechange';
 		const JsReturnParam = 'arguments[1].value';
 	}
 
 	class ExampleForm extends QForm {
-
 		/** @var QResizable */
 		protected $Resizable;
 		/** @var QSelectable */
@@ -23,7 +22,6 @@
 		protected $btnSubmit;
 		/** @var QSortable */
 		protected $Sortable2;
-
 
 		/** @var QPanel */
 		protected $SortableResult;
@@ -38,10 +36,8 @@
 		/** @var QPanel */
 		protected $SliderResult;
 
-
 		protected function Form_Create() {
 			$strServerActionJsParam = "";
-
 
 			$this->btnSubmit = new QButton($this);
 			$this->btnSubmit->Text = "ServerAction Submit";
@@ -58,7 +54,10 @@
 			$this->Resizable->CssClass = 'resizable';
 			$this->Resizable->Resizable = true;
 			$this->ResizableResult = new QPanel($this);
-			$strJsParam = '{ "width": $j("#' . $this->Resizable->ControlId . '").width(), "height": $j("#' . $this->Resizable->ControlId . '").height() }';
+			$strJsParam = '{ 
+				"width": $j("#' . $this->Resizable->ControlId . '").width(), 
+				"height": $j("#' . $this->Resizable->ControlId . '").height() 
+			}';
 			$this->Resizable->AddAction(new QResizable_StopEvent(), new QAjaxAction("onResize", "default", null, $strJsParam));
 			$this->ResizableResult = new QPanel($this);
 
@@ -76,19 +75,28 @@
 			$this->Selectable->Filter = 'div.selitem';
 
 			/*
-				* if your objects to return get more complex you can define a javascript function that returns your
-				* object. the essential thing is the ".call()", this executes the function that you have just defined
-				* and returns your object.
-				* In this example a function is uesd to temporary store jquery's search result for selected items,
-				* because it is needed twice. then the ids are stored to objRet.ids as a comma-separated string and
-				* the contents of the selected items are stored to objRet.content as an array.
-				*
-				*
-				*/
+			* if your objects to return get more complex you can define a javascript function that returns your
+			* object. the essential thing is the ".call()", this executes the function that you have just defined
+			* and returns your object.
+			* In this example a function is uesd to temporary store jquery's search result for selected items,
+			* because it is needed twice. then the ids are stored to objRet.ids as a comma-separated string and
+			* the contents of the selected items are stored to objRet.content as an array.
+			*
+			*/
 			$this->SelectableResult = new QPanel($this);
-			$strJsParam = 'function(){objRet=new Object(); selection = $j("#' . $this->Selectable->ControlId . '").find(".ui-selected");
-				objRet.ids = selection.map(function(){return this.id}).get().join(",");
-				objRet.content = selection.map(function(){return $j(this).html()}).get(); return objRet;}.call()';
+			$strJsParam = 'function() { 
+				objRet = new Object(); 
+				selection = $j("#' . $this->Selectable->ControlId . '")
+					.find(".ui-selected");
+				objRet.ids = selection.map(function(){
+						return this.id;
+					}).get()
+					.join(",");
+				objRet.content = selection.map(function() { 
+					return $j(this).html();
+				}).get(); 
+				return objRet;
+			}.call()';
 			$this->Selectable->AddAction(new QSelectable_StopEvent(), new QAjaxAction("onSelect", "default", null, $strJsParam));
 
 			$strServerActionJsParam .= '"selectable": ' . $strJsParam . ', ';
@@ -106,7 +114,11 @@
 			$this->Sortable->Items = 'div.sortitem';
 
 			$this->SortableResult = new QPanel($this);
-			$strJsParam = '$j("#' . $this->Sortable->ControlId . '").find("div.sortitem").map(function(){return $j(this).html()}).get()';
+			$strJsParam = '$j("#' . $this->Sortable->ControlId . '").
+				find("div.sortitem").
+				map(function() { 
+					return $j(this).html()
+				}).get()';
 			$this->Sortable->AddAction(new QSortable_UpdateEvent(), new QAjaxAction("onSort", "default", null, $strJsParam));
 
 			$strServerActionJsParam .= '"sortable": ' . $strJsParam . '}';
@@ -131,7 +143,12 @@
 
 			//using a QJsClosure as the ActionParameter for Sortable2 to return a Js object
 			//the ActionParameter is used for every ajax / server action defined on this control
-			$this->Sortable2->ActionParameter = new QJsClosure('return $j("#' . $this->Sortable2->ControlId . '").find("div.sortitem").map(function(){return $j(this).html()}).get();');
+			$this->Sortable2->ActionParameter = 
+				new QJsClosure('return $j("#' . $this->Sortable2->ControlId . '")
+					.find("div.sortitem")
+					.map(function() { 
+						return $j(this).html()
+					}).get();');
 
 			//(the list of names from the containing items) is returned for the following two Ajax Actions
 			$this->Sortable2->AddAction(new QSortable_UpdateEvent(), new QAjaxAction("onSort2"));
@@ -139,9 +156,7 @@
 
 			$this->Sortable2Result = new QPanel($this);
 
-
 			$this->btnSubmit->AddAction(new QClickEvent(), new QServerAction("onSubmit", null, $strServerActionJsParam));
-
 		}
 
 		public function onSort($formId, $objId, $objParam) {
@@ -167,10 +182,7 @@
 		public function onSlide($formId, $objId, $objParam) {
 			$this->SliderResult->Text = print_r($objParam, true);
 		}
-
-
 	}
-
 
 	ExampleForm::Run('ExampleForm');
 ?>

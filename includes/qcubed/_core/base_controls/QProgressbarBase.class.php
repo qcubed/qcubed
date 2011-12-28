@@ -13,7 +13,7 @@
 			
 			// if something else changes the value of the progress bar, make sure we know about it
 			$strJS .=<<<FUNC
-			.bind("progressbarchange", function (event, ui) {
+			.on("progressbarchange", function (event, ui) {
 			 			qcubed.recordControlModification("$this->ControlId", "Value", jQuery(this).progressbar ("value"));
 					})						
 										

@@ -12,12 +12,13 @@
 		</style>
 
 	<div class="instructions">
+		<h1 class="instruction_title">jQuery Controls: Server-Side Wrappers</h1>
 		QCubed offers a new set of experimental wrappers for all widgets that <a href="http://www.jquery.com/ui">jQuery UI</a> 
 		ships with. These are simple server-side classes that allow you to create PHP objects that will later on be
 		presented as jQuery widgets.<br><br>
 		
-		The best part is that these widgets are still QCubed controls - for example, the fancy-looking QJqButton is still 
-		a QButton, and you can easily attach event handlers to it using AddAction().
+		Explore the variety of these controls on this page, and proceed to the <a href="js_return_param_example.php">next tutorial</a> 
+		to learn how to attach events to these controls and use them in your QForms. 
 	</div>
 
 		<div class="example"><h3>Draggable</h3>

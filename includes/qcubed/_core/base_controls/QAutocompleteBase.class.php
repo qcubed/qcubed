@@ -112,15 +112,15 @@
 			$mustMatch = ($this->blnMustMatch ? '1' : '0');
 			
 			$strJS .=<<<FUNC
-			.bind("autocompleteselect", function (event, ui) {
+			.on("autocompleteselect", function (event, ui) {
 			 			qcubed.recordControlModification("$this->ControlId", "SelectedId", ui.item.id);
 					})						
-			.bind("autocompletefocus",  function (event, ui) {
+			.on("autocompletefocus",  function (event, ui) {
 						if ( /^key/.test(event.originalEvent.originalEvent.type) ) {
 			 				qcubed.recordControlModification("$this->ControlId", "SelectedId", ui.item.id);
 						} 
 					})
-			.bind("autocompletechange", function( event, ui ) {
+			.on("autocompletechange", function( event, ui ) {
 						var toTest = ui.item ? (ui.item.value ? ui.item.value : ui.item.label) : '';
 						if ( !ui.item ||
 							jQuery( this ).val() != toTest) {

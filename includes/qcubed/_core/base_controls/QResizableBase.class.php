@@ -37,7 +37,7 @@
 			$strJS = parent::GetControlJavaScript();
 			
 			$strJS .=<<<FUNC
-			.bind("resizestop", function (event, ui) {
+			.on("resizestop", function (event, ui) {
 			 			qcubed.recordControlModification("$this->ControlId", "ResizeData", ui.originalSize.width + "," + ui.originalSize.height + "," + ui.size.width + "," + ui.size.height);
 					})						
 FUNC;

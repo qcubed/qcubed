@@ -19,7 +19,7 @@
 
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
-			$strJS .= sprintf('; $j("#%s").bind("tabsselect", function(event, ui) {$j("#%s").val(ui.index);})',
+			$strJS .= sprintf('; $j("#%s").on("tabsselect", function(event, ui) {$j("#%s").val(ui.index);})',
 					$this->ControlId,
 					$this->getSelectedInputId());
 			return $strJS;

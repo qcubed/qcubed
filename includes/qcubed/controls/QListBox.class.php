@@ -35,7 +35,7 @@
 				QApplication::Translate('Reset')
 			);
 
-			QApplication::ExecuteJavaScript(sprintf('$j("#reset_ctl_%s").bind("%s", function(){ %s });', $this->strControlId, "click",  $strJavaScriptOnClick));
+			QApplication::ExecuteJavaScript(sprintf('$j("#reset_ctl_%s").on("%s", function(){ %s });', $this->strControlId, "click",  $strJavaScriptOnClick));
 					
 			return $strToReturn;
 		}

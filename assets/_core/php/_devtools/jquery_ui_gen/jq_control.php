@@ -317,7 +317,7 @@ class HtmlJqDoc extends JqDoc {
 }
 
 class JqControlGen extends QCodeGenBase {
-	protected $intDatabaseIndex = 0;
+	protected $intDatabaseIndex = 1;
 
 	public function __construct() {
 		QCodeGen::$TemplateEscapeBegin = '<%';
