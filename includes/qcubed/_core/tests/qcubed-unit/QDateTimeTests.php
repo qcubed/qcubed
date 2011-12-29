@@ -104,5 +104,34 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		//  Back compat
 		$this->assertEqual($obj1->qFormat("M/D/YY h:mm z"), $obj1->__toString("M/D/YY h:mm z"));
 	}
+	
+	public function testFirstOfMonth() {
+		$dt1 = new QDateTime("2/23/2009");
+		$this->assertEqual($dt1->FirstDayOfTheMonth, new QDateTime("2/1/2009"));
+
+		$dt2 = new QDateTime("12/2/2015");
+		$this->assertEqual($dt2->FirstDayOfTheMonth, new QDateTime("12/1/2015"));
+
+		// static function test
+		$this->assertEqual(QDateTime::FirstDayOfTheMonth(1,1923), new QDateTime("1/1/1923"));
+	}
+
+	public function testLastOfMonth() {
+		$dt1 = new QDateTime("2/23/2009");
+		$this->assertEqual($dt1->LastDayOfTheMonth, new QDateTime("2/28/2009"));
+
+		$dt2 = new QDateTime("1/1/1923");
+		$this->assertEqual($dt2->LastDayOfTheMonth, new QDateTime("1/31/1923"));
+
+		// Leap year tests
+		$dt3 = new QDateTime("2/4/2000");
+		$this->assertEqual($dt3->LastDayOfTheMonth, new QDateTime("2/29/2000"));
+
+		$dt4 = new QDateTime("2/4/2016");
+		$this->assertEqual($dt4->LastDayOfTheMonth, new QDateTime("2/29/2016"));
+		
+		// static function test
+		$this->assertEqual(QDateTime::LastDayOfTheMonth(12, 2015), new QDateTime("12/31/2015"));
+	}
 }
 ?>

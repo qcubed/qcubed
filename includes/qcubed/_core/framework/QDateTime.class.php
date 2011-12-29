@@ -184,6 +184,30 @@
 				}
 			}
 		}
+		
+		/**
+		* Returns a new QDateTime object set to the last day of the specified month.
+		* 
+		* @param int month
+		* @param int year
+		* @return QDateTime the last day to a month in a year
+		*/
+		public static function LastDayOfTheMonth($intMonth, $intYear) {
+			$temp = date('Y-m-t',mktime(0,0,0,$intMonth,1,$intYear));
+			return new QDateTime($temp);
+		}
+		
+		/**
+		* Returns a new QDateTime object set to the first day of the specified month.
+		* 
+		* @param int month
+		* @param int year
+		* @return QDateTime the first day of the month
+		*/
+		public static function FirstDayOfTheMonth($intMonth, $intYear) {
+			$temp = date('Y-m-d',mktime(0,0,0,$intMonth,1,$intYear));
+			return new QDateTime($temp);
+		}
 
 		/* The Following Methods are in place because of a bug in PHP 5.2.0 */
 		protected $strSerializedData;
@@ -651,6 +675,10 @@
 					} else
 						return 'right now';
 
+				case 'LastDayOfTheMonth':
+					return self::LastDayOfTheMonth($this->Month, $this->Year);
+				case 'FirstDayOfTheMonth':
+					return self::FirstDayOfTheMonth($this->Month, $this->Year);
 				default:
 					throw new QUndefinedPropertyException('GET', 'QDateTime', $strName);
 			}
