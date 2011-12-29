@@ -73,6 +73,12 @@
 		
 		const Resource = 'resource';
 
+		const NoOp = 1;
+		const CheckOnly = 2;
+		const CastOnly = 3;
+		const CheckAndCast = 4;
+		private static $intBehaviour = QType::CheckAndCast;
+
 		private static function CastObjectTo($objItem, $strType) {
 			try {
 				$objReflection = new ReflectionClass($objItem);
@@ -220,6 +226,22 @@
 		}
 
 		/**
+		 * This method can be used to change the casting behaviour of QType::Cast().
+		 * By default QType::Cast() does lots of validation and type casting (using settype()).
+		 * Depending on your application you may or may not need validation or casting or both.
+		 * In these situations you can set the necessary behaviour by passing the appropriate constant to this function.
+		 *
+		 * @static
+		 * @param int $intBehaviour one of the 4 constants QType::NoOp, QType::CastOnly, QType::CheckOnly, QType::CheckAndCast
+		 * @return int the previous setting
+		 */
+		public static function SetBehaviour($intBehaviour) {
+			$oldBehaviour = QType::$intBehaviour;
+			QType::$intBehaviour = $intBehaviour;
+			return $oldBehaviour;
+		}
+
+		/**
 		 * Used to cast a variable to another type.  Allows for moderate
 		 * support of strongly-named types.
 		 *
@@ -233,6 +255,21 @@
 		 * @return mixed the passed in value/array/object that has been cast to strType
 		 */
 		public final static function Cast($mixItem, $strType) {
+			switch (QType::$intBehaviour) {
+				case QType::NoOp:
+					return $mixItem;
+				case QType::CastOnly:
+					throw new QCallerException("QType::CastOnly handling not yet implemented");
+					break;
+				case QType::CheckOnly:
+					throw new QCallerException("QType::CheckOnly handling not yet implemented");
+					break;
+				case QType::CheckAndCast:
+					break;
+				default:
+					throw new InvalidArgumentException();
+					break;
+			}
 			// Automatically Return NULLs
 			if (is_null($mixItem))
 				return null;
