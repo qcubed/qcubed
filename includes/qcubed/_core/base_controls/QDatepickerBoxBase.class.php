@@ -1,5 +1,6 @@
 <?php
-    /**
+
+	/**
 	 * @property string $DateFormat
 	 * @property string $DateTimeFormat
 	 * @property QDateTime $DateTime
@@ -7,18 +8,21 @@
 	 * @property mixed $Maximum
 	 *
 	 */
-	class QDatepickerBoxBase extends QDatepickerBoxGen
-	{
-		protected $strDateTimeFormat = "MM/DD/YY";	// matches default of JQuery UI control
+	class QDatepickerBoxBase extends QDatepickerBoxGen {
+		protected $strDateTimeFormat = "MM/DD/YY"; // matches default of JQuery UI control
+		/** @var QDateTime */
 		protected $dttDateTime;
 
-        public function ParsePostData() {
-            // Check to see if this Control's Value was passed in via the POST data
-            if (array_key_exists($this->strControlId, $_POST)) {
-                parent::ParsePostData();
-                $this->dttDateTime = new QDateTime($this->strText);
-            }
-        }
+		public function ParsePostData() {
+			// Check to see if this Control's Value was passed in via the POST data
+			if (array_key_exists($this->strControlId, $_POST)) {
+				parent::ParsePostData();
+				$this->dttDateTime = new QDateTime($this->strText);
+				if ($this->dttDateTime->IsNull()) {
+					$this->dttDateTime = null;
+				}
+			}
+		}
 
 		public function Validate() {
 			if (!parent::Validate()) {
@@ -56,11 +60,15 @@
 		public function __get($strName) {
 			switch ($strName) {
 				// MISC
-				case "Maximum": return $this->MaxDate;
-				case "Minimum": return $this->MinDate;
+				case "Maximum":
+					return $this->MaxDate;
+				case "Minimum":
+					return $this->MinDate;
 				case 'DateTimeFormat':
-				case 'DateFormat': return $this->strDateTimeFormat;
-				case 'DateTime': return $this->dttDateTime;
+				case 'DateFormat':
+					return $this->strDateTimeFormat;
+				case 'DateTime':
+					return $this->dttDateTime;
 
 				default:
 					try {
@@ -71,6 +79,7 @@
 					}
 			}
 		}
+
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
@@ -97,6 +106,9 @@
 				case 'DateTime':
 					try {
 						$this->dttDateTime = QType::Cast($mixValue, QType::DateTime);
+						if ($this->dttDateTime->IsNull()) {
+							$this->dttDateTime = null;
+						}
 						if (!$this->dttDateTime || !$this->strDateTimeFormat) {
 							parent::__set('Text', '');
 						} else {
@@ -149,4 +161,5 @@
 			}
 		}
 	}
+
 ?>
