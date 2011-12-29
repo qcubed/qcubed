@@ -130,9 +130,17 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__PHP_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/php');
 			define ('__PLUGIN_ASSETS__', __SUBDIRECTORY__ . '/assets/plugins');
 
-			// jQuery folder location, relative to __JS_ASSETS__
-			define ('__JQUERY_BASE__',  'jquery/jquery.min.js');
-			define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.min.js');
+			// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
+			// the jQuery library is awesome! It's the default option below) - or by using the jQuery
+			// installation that's local to QCubed (in that case, paths must be relative to __JS_ASSETS__
+			define ('__JQUERY_BASE__', ' http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
+			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js');
+
+			// If you want to use the local jQuery files, specify the paths relative to __JS_ASSETS__
+			// or just uncomment the 2 lines below.
+			// define ('__JQUERY_BASE__',  'jquery/jquery.min.js');
+			// define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.min.js');
+
 			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-lightness/jquery-ui.custom.css');
 				
 			// Location of the QCubed-specific web-based development tools, like codegen.php

@@ -1100,9 +1100,14 @@
 			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',qcubed.js, control.js');
 			// Setup IncludeJs
 			$strToReturn = "\r\n";
+
 			// Include javascripts that need to be included
 			foreach ($strJavaScriptArray as $strScript) {
-				$strToReturn .= sprintf('<script type="text/javascript" src="%s/%s"></script>', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__, $strScript);
+				if(strpos($strScript, "http") === 0){ // external JS file
+					$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $strScript);
+				} else {
+					$strToReturn .= sprintf('<script type="text/javascript" src="%s/%s"></script>', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__, $strScript);
+				}
 				$strToReturn .= "\r\n";
 			}
 
