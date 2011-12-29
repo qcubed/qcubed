@@ -111,6 +111,7 @@
 			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/datarepeater/ajax.php'] = array('dtr_persons.tpl.php');
 			self::AddCoreExampleFile($intIndex, '/datagrid/extend.php * Creating Your Own Custom QDataGrid Subclass');			
 			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/datagrid/extend.php'] = array('QDataGrid.class.php');
+			self::AddCoreExampleFile($intIndex, '/datagrid/simple_table.php * Simple Table - an alternative to QDataGrid');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
