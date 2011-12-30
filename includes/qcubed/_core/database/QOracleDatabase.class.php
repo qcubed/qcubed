@@ -647,41 +647,42 @@ class QOracleDatabaseRow extends QDatabaseRowBase {
 
 	public function GetColumn($strColumnName, $strColumnType = null) {
 		if (array_key_exists($strColumnName, $this->strColumnArray)) {
-			if (is_null($this->strColumnArray[$strColumnName]))
-			return null;
+			$strColumnValue = $this->strColumnArray[$strColumnName];
+			if (is_null($strColumnValue))
+				return null;
 
 			switch ($strColumnType) {
 				case QDatabaseFieldType::Bit:
 					// Account for single bit value
-					$chrBit = $this->strColumnArray[$strColumnName];
+					$chrBit = $strColumnValue;
 					if ((strlen($chrBit) == 1) && (ord($chrBit) == 0))
-					return false;
+						return false;
 
 					// Otherwise, use PHP conditional to determine true or false
-					return ($this->strColumnArray[$strColumnName]) ? true : false;
+					return ($strColumnValue) ? true : false;
 
 				case QDatabaseFieldType::Blob:
-					return QType::Cast($this->strColumnArray[$strColumnName]->load(), QType::String);
+					return QType::Cast($strColumnValue->load(), QType::String);
 				case QDatabaseFieldType::Char:
 				case QDatabaseFieldType::VarChar:
-					return QType::Cast($this->strColumnArray[$strColumnName], QType::String);
+					return QType::Cast($strColumnValue, QType::String);
 
 				case QDatabaseFieldType::Date:
 				case QDatabaseFieldType::DateTime:
 				case QDatabaseFieldType::Time:
-					return new QDateTime($this->strColumnArray[$strColumnName]);
+					return new QDateTime($strColumnValue);
 
 				case QDatabaseFieldType::Float:
-					return QType::Cast($this->strColumnArray[$strColumnName], QType::Float);
+					return QType::Cast($strColumnValue, QType::Float);
 
 				case QDatabaseFieldType::Integer:
-					return QType::Cast($this->strColumnArray[$strColumnName], QType::Integer);
+					return QType::Cast($strColumnValue, QType::Integer);
 
 				default:
-					return $this->strColumnArray[$strColumnName];
+					return $strColumnValue;
 			}
 		} else
-		return null;
+			return null;
 	}
 
 	public function ColumnExists($strColumnName) {

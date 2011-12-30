@@ -13,8 +13,8 @@
  * 04/18/2010 BG numbers / dates not working with german setting (DMY4.), only US/english with (DBDATA / DBMONEY) 
  * 
  * programming completly based on
- * - generic PDO adapter    (Marcos Sánchez)  --> unchanged base 
- * - PostgreSql PDO adapater (Marcos Sánchez)  --> base of this file 
+ * - generic PDO adapter    (Marcos Sï¿½nchez)  --> unchanged base 
+ * - PostgreSql PDO adapater (Marcos Sï¿½nchez)  --> base of this file 
  * - InformixSql adapter (PHP-ifx_xxx   functions ) Josue Balbuena --> copied SQLs and some PHP-Lines 
  * 
  * the old Postgres-Code remains, but commented
@@ -49,7 +49,7 @@
 
 /**
  * mainly based on: PDO_PGSQL database driver
- * @author Marcos Sánchez [marcosdsanchez at thinkclear dot com dot ar]
+ * @author Marcos Sï¿½nchez [marcosdsanchez at thinkclear dot com dot ar]
  */
  
 /**
@@ -657,35 +657,36 @@ class QInformixPdoDatabaseRow extends QDatabaseRowBase {
 
 		public function GetColumn($strColumnName, $strColumnType = null) {
 				if (array_key_exists($strColumnName, $this->strColumnArray)) {
-						if (is_null($this->strColumnArray[$strColumnName]))
+					$strColumnValue = $this->strColumnArray[$strColumnName];
+					if (is_null($strColumnValue))
 								return null;
 
 						switch ($strColumnType) {
 								case QDatabaseFieldType::Bit:
-										if (!$this->strColumnArray[$strColumnName]) {
+										if (!$strColumnValue) {
 												return false;
 										} else {
-												return ($this->strColumnArray[$strColumnName]) ? true : false;
+												return ($strColumnValue) ? true : false;
 										}
 
 								case QDatabaseFieldType::Blob:
 								case QDatabaseFieldType::Char:
 								case QDatabaseFieldType::VarChar:
-										return QType::Cast($this->strColumnArray[$strColumnName], QType::String);
+										return QType::Cast($strColumnValue, QType::String);
 
 								case QDatabaseFieldType::Date:
 								case QDatabaseFieldType::DateTime:
 								case QDatabaseFieldType::Time:
-										return new QDateTime($this->strColumnArray[$strColumnName]);
+										return new QDateTime($strColumnValue);
 
 								case QDatabaseFieldType::Float:
-										return QType::Cast($this->strColumnArray[$strColumnName], QType::Float);
+										return QType::Cast($strColumnValue, QType::Float);
 
 								case QDatabaseFieldType::Integer:
-										return QType::Cast($this->strColumnArray[$strColumnName], QType::Integer);
+										return QType::Cast($strColumnValue, QType::Integer);
 
 								default:
-										return $this->strColumnArray[$strColumnName];
+										return $strColumnValue;
 						}
 				} else
 						return null;
