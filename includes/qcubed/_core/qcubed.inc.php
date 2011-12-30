@@ -182,7 +182,10 @@
 	QApplicationBase::$ClassFile['qdatagrid'] = __QCUBED__ . '/controls/QDataGrid.class.php';
 
 	QApplicationBase::$ClassFile['qsimpletablebase'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableBase.class.php';
-	QApplicationBase::$ClassFile['qsimpletablecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qabstractsimpletablecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qsimpletablepropertycolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qsimpletableindexedcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qsimpletableclosurecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletable'] = __QCUBED__ . '/controls/QSimpleTable.class.php';
 
 	QApplicationBase::$ClassFile['qdatarepeater'] = __QCUBED_CORE__ . '/base_controls/QDataRepeater.class.php';

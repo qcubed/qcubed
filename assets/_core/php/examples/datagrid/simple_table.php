@@ -19,23 +19,18 @@
 
 			// The first column demonstrates the use of Closures (for PHP 5.3+), or user defined function (for PHP 5.2 and below)
 			if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-				$objColumn = new QSimpleTableColumn(QApplication::Translate('Full Name'),
+				$objColumn = new QSimpleTableClosureColumn('Full Name',
 					function($item)
 					{
 						return 'Full Name is "' . $item->FirstName . ' ' . $item->LastName . '"';
 					});
 			} else {
-				$objColumn = new QSimpleTableColumn(QApplication::Translate('Full Name'), 'ExampleForm::getFullName');
+				$objColumn = new QSimpleTableClosureColumn('Full Name', 'ExampleForm::getFullName');
 			}
 			$this->tblPersons->AddColumn($objColumn);
 
-			// The second column demonstrates using the column name as the data accessor.
-			$objColumn = new QSimpleTableColumn('FirstName');
-			$objColumn->TranslateName = true; // since we use the name as accessor, use the internal translator for displaying header cell
-			$this->tblPersons->AddColumn($objColumn);
-
-			// The third column demonstrates using a property name as the accessor
-			$this->tblPersons->AddColumn(new QSimpleTableColumn(QApplication::Translate('Last Name'), 'LastName'));
+			// The second column demonstrates using a property name for fetching the data
+			$this->tblPersons->CreatePropertyColumn('Last Name', 'LastName');
 
 			// Specify the local Method which will actually bind the data source to the datagrid.
 			// In order to not over-bloat the form state, the datagrid will use the data source only when rendering itself,
@@ -52,11 +47,14 @@
 			$tbl->AlternateRowCssClass = 'even_row';
 			$tbl->HeaderRowCssClass = 'header_row';
 
-			$tbl->AddColumn(new QSimpleTableColumn("Year", 0));
-			$tbl->AddColumn(new QSimpleTableColumn("Model", 1));
-			$tbl->AddColumn(new QSimpleTableColumn("Col 2", 2));
-			$tbl->AddColumn(new QSimpleTableColumn("Col 3", 3));
-			$tbl->AddColumn(new QSimpleTableColumn("#count"));
+			// "named" index columns
+			$tbl->CreateIndexedColumn("Year", 0);
+			$tbl->CreateIndexedColumn("Model", 1);
+			// "unnamed" index columns
+			$tbl->CreateIndexedColumn();
+			$tbl->CreateIndexedColumn();
+			// index columns for associative arrays
+			$tbl->CreateIndexedColumn("Count", "#count");
 
 			$tbl->SetDataBinder('tblReport_Bind');
 		}
@@ -70,7 +68,7 @@
 			return 'Full Name is "' . $item->FirstName . ' ' . $item->LastName . '"';
 		}
 
-		protected function tblReport_Bind()		{
+		protected function tblReport_Bind() {
 			// build the entire datasource as an array of arrays.
 			$csv = '1997,Ford,E350,"ac, abs, moon",3000.00
 1999,Chevy,"Venture ""Extended Edition""","",4900.00

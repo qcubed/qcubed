@@ -27,8 +27,8 @@
 	 * @throws QCallerException
 	 *
 	 */
-	abstract class QSimpleTableBase extends QPaginatedControl	{
-		/** @var QSimpleTableColumn[] */
+	abstract class QSimpleTableBase extends QPaginatedControl {
+		/** @var QAbstractSimpleTableColumn[] */
 		protected $objColumnArray;
 
 		protected $strRowCssClass = null;
@@ -48,13 +48,34 @@
 
 		public function ParsePostData() { }
 
+		public function CreateIndexedColumn($strName = '', $mixIndex = null) {
+			if (is_null($mixIndex)) {
+				$mixIndex = count($this->objColumnArray);
+			}
+			$objColumn = new QSimpleTableIndexedColumn($strName, $mixIndex);
+			$this->AddColumn($objColumn);
+			return $objColumn;
+		}
+
+		public function CreatePropertyColumn($strName, $strProperty) {
+			$objColumn = new QSimpleTablePropertyColumn($strName, $strProperty);
+			$this->AddColumn($objColumn);
+			return $objColumn;
+		}
+
+		public function CreateClosureColumn($strName, $objClosure) {
+			$objColumn = new QSimpleTableClosureColumn($strName, $objClosure);
+			$this->AddColumn($objColumn);
+			return $objColumn;
+		}
+
 		// Used to add a SimpleTableColumn to this SimpleTable
-		public function AddColumn(QSimpleTableColumn $objColumn) {
+		public function AddColumn(QAbstractSimpleTableColumn $objColumn) {
 			$this->blnModified = true;
 			$this->objColumnArray[] = $objColumn;
 		}
 
-		public function AddColumnAt($intColumnIndex, QSimpleTableColumn $objColumn) {
+		public function AddColumnAt($intColumnIndex, QAbstractSimpleTableColumn $objColumn) {
 			$this->blnModified = true;
 			try {
 				$intColumnIndex = QType::Cast($intColumnIndex, QType::Integer);
@@ -116,7 +137,7 @@
 		}
 
 		/**
-		 * @return QSimpleTableColumn[]
+		 * @return QAbstractSimpleTableColumn[]
 		 */
 		public function GetAllColumns() {
 			return $this->objColumnArray;
