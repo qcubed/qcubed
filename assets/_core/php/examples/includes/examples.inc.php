@@ -162,9 +162,11 @@
 			self::AddCoreExampleFile($intIndex, '/treenav/treenav.php Introduction to QTreeNav');
 			self::AddCoreExampleFile($intIndex, '/other_controls/image.php Introduction to QImageControl');
 			self::AddCoreExampleFile($intIndex, '/other_controls/datetime.php Date and DateTime-based QControls');
-			self::AddCoreExampleFile($intIndex, '/other_controls/file_asset.php Combining Controls: A Better Way to Upload Files');
+			self::AddCoreExampleFile($intIndex, '/other_controls/file_asset.php Combining Controls, Ex. 1: A Better Way to Upload Files');
+			self::AddCoreExampleFile($intIndex, '/image_browser/test_image_browser.php Combining Controls, Ex. 2: Browsing Image Files');
 			self::AddCoreExampleFile($intIndex, '/other_controls/image_file_asset.php Upload Control Just for Images');
 			self::AddCoreExampleFile($intIndex, '/other_controls/timer_js.php JavaScript Timer');
+			self::AddCoreReferencedFile('/image_browser/test_image_browser.php', array('image_browser.tpl.php', 'imagebrowser.css'));
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();

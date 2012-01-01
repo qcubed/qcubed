@@ -140,6 +140,8 @@
 	QApplicationBase::$ClassFile['qimagecontrolbase'] = __QCUBED_CORE__ . '/base_controls/QImageControlBase.class.php';
 	QApplicationBase::$ClassFile['qimagecontrol'] = __QCUBED__ . '/controls/QImageControl.class.php';
 	QApplicationBase::$ClassFile['qimagerollover'] = __QCUBED_CORE__ . '/base_controls/QImageRollover.class.php';
+	QApplicationBase::$ClassFile['qimagebrowser'] = __QCUBED_CORE__ . '/base_controls/QImageBrowser.class.php';
+	QApplicationBase::$ClassFile['qimagebrowsernav'] = __QCUBED_CORE__ . '/base_controls/QImageBrowser.class.php';
 
 	QApplicationBase::$ClassFile['qfileasset'] = __QCUBED__ . '/controls/QFileAsset.class.php';
 	QApplicationBase::$ClassFile['qimagefileasset'] = __QCUBED__ . '/controls/QImageFileAsset.class.php';
