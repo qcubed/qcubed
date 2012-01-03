@@ -419,6 +419,10 @@
 			// Return the Array of Foreign Keys
 			return $objForeignKeyArray;
 		}
+
+		public function ExplainStatement($sql) {
+			return $this->Query("EXPLAIN " . $sql);
+		}
 	}
 
 	/**

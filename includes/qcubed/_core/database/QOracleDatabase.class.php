@@ -566,6 +566,10 @@ class QOracleDatabase extends QDatabaseBase {
 		} else
 		throw new Exception("Invalid Table Description");
 	}
+
+	public function ExplainStatement($sql) {
+		return $this->Query("EXPLAIN PLAN FOR " . $sql);
+	}
 }
 
 class QOracleDatabaseException extends QDatabaseExceptionBase {

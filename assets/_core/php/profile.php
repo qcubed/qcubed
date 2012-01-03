@@ -14,50 +14,103 @@
 	$objProfileArray = unserialize(base64_decode($_POST['strProfileData']));
 	$objProfileArray = QType::Cast($objProfileArray, QType::ArrayType);
 	$intCount = count($objProfileArray);
+	
+	function PrintExplainStatement($strOriginalQuery) {
+		global $intDatabaseIndex;
+		if (substr_count($strOriginalQuery, "AUTOCOMMIT=1") > 0) {
+			return null; 
+		}
+		$result = "";
+		
+		$objDb = QApplication::$Database[$intDatabaseIndex];
+		$objDbResult = $objDb->ExplainStatement($strOriginalQuery);
+		if (!$objDbResult) {
+			return "";
+		}
+		
+		$result .= "<table class='explainTable' border=1>";
+		$headersShown = false;
+		while ($mixRow = $objDbResult->FetchArray()) {
+			if (!$headersShown) {
+				$result .= "<thead class='header'>";
+				foreach ($mixRow as $key=>$value) {
+					if (!is_numeric($key)) {
+						$result .= "<td>" . $key . "</td>";
+						$headersShown = true;
+					}
+				}
+				$result .= '</thead>';
+			}
+			$result .= "<tr>";
+			foreach ($mixRow as $key=>$value) {
+					if (!is_numeric($key)) {
+						$result .= "<td>" . $value . "</td>";
+					}
+			}
+			$result .= "</tr>";
+		}
+		$result .= "</table>";
+		return $result;
+	}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>QCubed Development Framework - Database Profiling Tool</title>
 	<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/corepage.css");</style>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript">
-		function Toggle(strWhatId, strButtonId) {
+		function Toggle(strWhatId) {
 			var obj = document.getElementById(strWhatId);
-			var objButton = document.getElementById(strButtonId);
+			var objButton = document.getElementById("button" + strWhatId);
 
 			if (obj && objButton) {
 				if (obj.style.display == "block") {
 					obj.style.display = "none";
-					objButton.innerHTML = "Show";
+					objButton.innerHTML = objButton.innerHTML.replace("Hide", "Show");
 				}
+				
 				else {
 					obj.style.display = "block";
-					objButton.innerHTML = "Hide";
+					objButton.innerHTML = objButton.innerHTML.replace("Show", "Hide");
 				}
 			}
 			return false;
 		}
 
 		function ShowAll() {
-			for (var intIndex = 1; intIndex <= <?php _p($intCount); ?>; intIndex++) {
-				var objQuery = document.getElementById('query' + intIndex);
-				var objButton = document.getElementById('button' + intIndex);
-				objQuery.style.display = "block";
-				objButton.innerHTML = "Hide";
-			}
+			jQuery(".querySection, .explainSection").each(function() {
+				if ($(this).css('display') == "none") {
+					Toggle(this.id);
+				}
+			});
+
 			return false;
 		}
 
 		function HideAll() {
-			for (var intIndex = 1; intIndex <= <?php _p($intCount); ?>; intIndex++) {
-				var objQuery = document.getElementById('query' + intIndex);
-				var objButton = document.getElementById('button' + intIndex);
-				objQuery.style.display = "none";
-				objButton.innerHTML = "Show";
-			}
+			jQuery(".querySection, .explainSection").each(function() {
+				if ($(this).css('display') == "block") {
+					Toggle(this.id);
+				}
+			});
 			return false;
 		}
 	</script>
+	<style>
+		.explainTable {
+			border: 1px solid black; 
+			border-collapse:collapse;
+			margin-top: 5px;
+		}
+		.explainTable td {
+			padding: 4px;
+		}
+		.explainTable .header td {
+			background: #CCC;
+			font-weight: bold;
+		}
+	</style>
 </head>
 <body>
 	<div id="container">
@@ -114,14 +167,10 @@
 ?>
 			<span class="function">
 				Called by <?php _p($strClass . $strType . $strFunction . '(' . implode(', ', $objArgs) . ')'); ?>
-				<a href="#" onClick="return Toggle('query<?php _p($intIndex); ?>', 'button<?php _p($intIndex); ?>')" id="button<?php _p($intIndex); ?>" class="smallbutton">
-					Show
-				</a>
 			</span>&nbsp;&nbsp;<br/>
 			<span class="function_details">
 				<b>File: </b><?php _p($strFile); ?>; &nbsp;&nbsp;<b>Line: </b><?php _p($strLine); ?>
 			</span>
-			<pre id="query<?php _p($intIndex); ?>" style="display: none"><code><?php _p($strQuery); ?></code></pre>
 <?php
 			//mark slow query - those that take over 1 second
 			if($dblTimeInfo >= 1)
@@ -129,6 +178,21 @@
 			else
 				echo'<div class="time">';
 			printf("Query took %.1f ms", $dblTimeInfo * 1000);
+?>
+			<?php $explainStatement = PrintExplainStatement($strQuery); ?>
+			<a href="#" onClick="return Toggle('query<?php _p($intIndex); ?>')" id="buttonquery<?php _p($intIndex); ?>" class="queryButton smallbutton">
+				Show SQL
+			</a>
+			<?php if ($explainStatement) { ?>
+			&nbsp;&nbsp;
+			<a href="#" onClick="return Toggle('explain<?php _p($intIndex); ?>')" id="buttonexplain<?php _p($intIndex); ?>" class="explainButton smallbutton">
+				Show EXPLAIN statement
+			</a>
+			<?php } ?>
+			
+			<pre id="query<?php _p($intIndex); ?>" style="display: none" class="querySection"><code><?php _p($strQuery); ?></code></pre>
+			<div id="explain<?php _p($intIndex); ?>" style="display: none" class="explainSection"><?php echo $explainStatement; ?></div>				
+<?php			
 			echo '</div>';
 ?>
 			<br/>

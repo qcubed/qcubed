@@ -390,6 +390,16 @@
 				_p('<form></form><b>Profiling was not enabled for this database connection (#' . $this->intDatabaseIndex . ').</b>  To enable, ensure that ENABLE_PROFILING is set to TRUE.', false);
 			}
 		}
+
+		/**
+		 * Executes the explain statement for a given query and returns the output without any transformation.
+		 * If the database adapter does not support EXPLAIN statements, returns null.
+		 *
+		 * @param $strSql
+		 */
+		public function ExplainStatement($sql) {
+			return null;
+		}
 	}
 
 	abstract class QDatabaseFieldBase extends QBaseClass {

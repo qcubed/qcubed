@@ -380,6 +380,10 @@
 			} else
 				throw new Exception("Invalid Table Description");
 		}
+
+		public function ExplainStatement($sql) {
+			return $this->Query("EXPLAIN " . $sql);
+		}
 	}
 
 	/**
