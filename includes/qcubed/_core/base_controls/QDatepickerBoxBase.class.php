@@ -106,7 +106,7 @@
 				case 'DateTime':
 					try {
 						$this->dttDateTime = QType::Cast($mixValue, QType::DateTime);
-						if ($this->dttDateTime->IsNull()) {
+						if ($this->dttDateTime && $this->dttDateTime->IsNull()) {
 							$this->dttDateTime = null;
 						}
 						if (!$this->dttDateTime || !$this->strDateTimeFormat) {
