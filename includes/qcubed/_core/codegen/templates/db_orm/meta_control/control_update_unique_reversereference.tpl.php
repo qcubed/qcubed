@@ -1,0 +1,1 @@
+				if ($this-><?php echo $strControlId  ?>) $this-><?php echo $strObjectName  ?>-><?php echo $objReverseReference->ObjectPropertyName  ?> = <?php echo $objReverseReference->VariableType  ?>::Load($this-><?php echo $strControlId  ?>->SelectedValue);

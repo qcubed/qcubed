@@ -1,0 +1,2 @@
+			if ($this-><?php echo $strControlId  ?>) $this-><?php echo $strControlId  ?>->SelectedValue = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
+			if ($this-><?php echo $strLabelId  ?>) $this-><?php echo $strLabelId  ?>->Text = ($this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>) ? <?php echo $objColumn->Reference->VariableType  ?>::$NameArray[$this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>] : null;

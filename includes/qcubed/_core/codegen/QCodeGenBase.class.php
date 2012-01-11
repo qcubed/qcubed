@@ -4,6 +4,14 @@
 		QCodeGen::$RootErrors .= sprintf("%s\r\n", $strErrorString);
 	}
 
+	function GO_BACK($intNumChars) {
+		$content_so_far = ob_get_contents();
+		ob_end_clean();
+		$content_so_far = substr($content_so_far, 0, strlen($content_so_far) - $intNumChars);
+		ob_start();
+		print $content_so_far;
+	}
+
 	/**
 	 * This is the CodeGen class which performs the code generation
 	 * for both the Object-Relational Model (e.g. Data Objects) as well as
@@ -335,7 +343,7 @@
 
 			// Evaluate the Template
 			if (substr($strFilename, strlen($strFilename) - 8) == '.tpl.php')  {
-				$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $mixArgumentArray);
+				$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $strModuleName, $mixArgumentArray);
 			} else {
 				$strTemplate = $this->EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray);
 			}
@@ -410,7 +418,7 @@
 			}
 		}
 
-		protected function EvaluatePHP($strFilename, $mixArgumentArray)  {
+		protected function EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray)  {
 			// Get all the arguments and set them locally
 			if ($mixArgumentArray) foreach ($mixArgumentArray as $strName=>$mixValue) {
 				$$strName = $mixValue;
@@ -446,7 +454,7 @@
 			// Try the Custom SubTemplate Path (PHP template version)
 			$strFilename = sprintf('%s%s%s/%s.php', __QCUBED__, QCodeGen::TemplatesPathCustom, $strModuleName, $strSubTemplateFilename);
 			if (file_exists($strFilename))
-				return $this->EvaluatePHP($strFilename, $mixArgumentArray);
+				return $this->EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray);
 
 			// Try the Custom SubTemplate Path
 			$strFilename = sprintf('%s%s%s/%s', __QCUBED__, QCodeGen::TemplatesPathCustom, $strModuleName, $strSubTemplateFilename);
@@ -461,7 +469,7 @@
 			// Try the Standard SubTemplate Path (PHP template version)
 			$strFilename = sprintf('%s%s%s/%s.php', __QCUBED_CORE__, QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename);
 			if (file_exists($strFilename))
-				return $this->EvaluatePHP($strFilename, $mixArgumentArray);
+				return $this->EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray);
 
 			// SubTemplate Does Not Exist
 			throw new QCallerException('CodeGen SubTemplate Does Not Exist within the "' . $strModuleName . '" module: ' . $strSubTemplateFilename);

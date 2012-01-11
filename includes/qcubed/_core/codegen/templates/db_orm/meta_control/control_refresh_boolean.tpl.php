@@ -1,0 +1,2 @@
+			if ($this-><?php echo $strControlId  ?>) $this-><?php echo $strControlId  ?>->Checked = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
+			if ($this-><?php echo $strLabelId  ?>) $this-><?php echo $strLabelId  ?>->Text = ($this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>) ? QApplication::Translate('Yes') : QApplication::Translate('No');
