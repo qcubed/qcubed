@@ -26,7 +26,7 @@ class UpdateCheckerForm extends QForm {
 	private function dtgUpdates_Create($latestVersions) {
 		$this->dtgUpdates = new QDataGrid($this, 'dtgUpdates');
 		$this->dtgUpdates->AddColumn(new QDataGridColumn('Name',        '<?= $_FORM->RenderName($_ITEM) ?>', 'HtmlEntities=false'));
-		$this->dtgUpdates->AddColumn(new QDataGridColumn('Description', '<?= $_ITEM->description ?>'));
+		$this->dtgUpdates->AddColumn(new QDataGridColumn('Description', '<?= $_ITEM->description ?>', 'HtmlEntities=false'));
 		$this->dtgUpdates->AddColumn(new QDataGridColumn('Installed',   '<?= $_ITEM->installedVersion ?>'));
 		$this->dtgUpdates->AddColumn(new QDataGridColumn('Available',   '<?= $_ITEM->availableVersion ?>'));
 
@@ -49,7 +49,7 @@ class UpdateCheckerForm extends QForm {
 	private function dtgNew_Create($latestVersions) {
 		$this->dtgNew = new QDataGrid($this, 'dtgNew');
 		$this->dtgNew->AddColumn(new QDataGridColumn('Name', '<?= $_FORM->RenderName($_ITEM) ?>', 'HtmlEntities=false'));
-		$this->dtgNew->AddColumn(new QDataGridColumn('Description', '<?= $_ITEM->description ?>'));
+		$this->dtgNew->AddColumn(new QDataGridColumn('Description', '<?= $_ITEM->description ?>', 'HtmlEntities=false'));
 
 		$arrDataSource = array();
 		foreach ($latestVersions as $item) {

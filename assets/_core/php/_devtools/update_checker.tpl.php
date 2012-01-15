@@ -3,6 +3,12 @@
 	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
 	<?php $this->RenderBegin() ?>
+	<style>
+	.datagrid td {
+		vertical-align: top; 
+	}
+	</style>
+	
 	<div id="page">
 		<div id="header">
 			<div id="headerLeft">
