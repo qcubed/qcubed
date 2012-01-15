@@ -168,4 +168,23 @@
 	abstract class QJqUiEvent extends QEvent {
 		// be sure to subclass your events from this class if they are JqUiEvents
 	}
+
+	abstract class QJqUiPropertyEvent extends QEvent {
+		// be sure to subclass your events from this class if they are JqUiEvents
+		protected $strJqProperty = '';
+
+		public function __get($strName) {
+			switch ($strName) {
+				case 'JqProperty':
+					return $this->strJqProperty;
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+	}
 ?>

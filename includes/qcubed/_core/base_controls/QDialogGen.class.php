@@ -94,6 +94,7 @@
 		const EventName = 'dialogclose';
 	}
 
+	/* Custom "property" event classes for this control */
 
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the dialog. Can be set when initialising
@@ -231,8 +232,12 @@
 			return $this->ControlId;
 		}
 
+		public function getJqSetupFunction() {
+			return 'dialog';
+		}
+
 		public function GetControlJavaScript() {
-			return sprintf('jQuery("#%s").dialog({%s})', $this->getJqControlId(), $this->makeJqOptions());
+			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
 		public function GetEndScript() {
@@ -251,8 +256,9 @@
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
-			$strJs = sprintf('jQuery("#%s").dialog(%s)', 
+			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
+				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
 			QApplication::ExecuteJavaScript($strJs);
 		}

@@ -18,6 +18,7 @@
 
 		public static function RenderActions(QControl $objControl, $strEventName, $objActions) {
 			$strToReturn = '';
+			$strJqUiProperty = null;
 
 			if ($objControl->ActionsMustTerminate) {
 				$strToReturn .= ' event.preventDefault();';
@@ -26,6 +27,10 @@
 			if ($objActions && count($objActions)) foreach ($objActions as $objAction) {
 				if ($objAction->objEvent->EventName != $strEventName)
 					throw new Exception('Invalid Action Event in this entry in the ActionArray');
+
+				if ($objAction->objEvent instanceof QJqUiPropertyEvent) {
+					$strJqUiProperty = $objAction->objEvent->JqProperty;
+				}
 
 				if ($objAction->objEvent->Delay > 0) {
 					$strCode = sprintf(" qcubed.setTimeout('%s', '%s', %s);",
@@ -45,7 +50,12 @@
 			}
 
 			if (strlen($strToReturn)) {
-				if ($objControl instanceof QControlProxy) {
+				if ($strJqUiProperty) {
+					return sprintf('$j("#%s").%s("option", {%s: function(event, ui){
+								%s
+								}});
+								', $objControl->ControlId, $objControl->getJqSetupFunction(), $strJqUiProperty,  substr($strToReturn, 1));
+				} elseif ($objControl instanceof QControlProxy) {
 					if ($objControl->TargetControlId) {
 						return sprintf('$j("#%s").on("%s", function(event, ui){
 									%s

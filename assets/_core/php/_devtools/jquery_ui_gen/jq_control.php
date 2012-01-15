@@ -128,6 +128,7 @@ class Event extends Option
 			}
 
 			$this->arrArgs = $a;
+			$this->eventName = $strQcClass . '_' . substr($name, 2);
 		} else {
 			$this->eventName = $type;
 		}
@@ -339,7 +340,7 @@ class JqControlGen extends QCodeGenBase {
 
 		$strOutFileName = $strOutDirControlsBase . '/' . $objJqDoc->strQcClass . 'Base.class.php';
 		if (!file_exists($strOutFileName)) {
-			$strEmpty = "<?php\n\tclass ".$objJqDoc->strQcClass." extends ".$objJqDoc->strQcClass."Gen\n\t{\n\t}\n?>";
+			$strEmpty = "<?php\n\tclass ".$objJqDoc->strQcClass."Base extends ".$objJqDoc->strQcClass."Gen\n\t{\n\t}\n?>";
 			file_put_contents($strOutFileName, $strEmpty);
 		}
 

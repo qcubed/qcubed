@@ -14,7 +14,13 @@ function jq_control_gen($strUrl, $strQcClass = null, $strQcBaseClass = 'QPanel')
 		$aryPathsList[strtolower($event->eventClassName)] = 
 			sprintf ("__QCUBED_CORE__ . '/base_controls/%sGen.class.php'", $objJqDoc->strQcClass);
 	}
-	$aryPathsList[strtolower($objJqDoc->strQcClass) . 'gen'] = 
+	foreach ($objJqDoc->options as $option) {
+		if ($option instanceof Event) {
+			$aryPathsList[strtolower($option->eventClassName)] =
+				sprintf ("__QCUBED_CORE__ . '/base_controls/%sGen.class.php'", $objJqDoc->strQcClass);
+		}
+	}
+	$aryPathsList[strtolower($objJqDoc->strQcClass) . 'gen'] =
 		sprintf ("__QCUBED_CORE__ . '/base_controls/%sGen.class.php'", $objJqDoc->strQcClass);
 
 	$aryPathsList[strtolower($objJqDoc->strQcClass) . 'base'] = 

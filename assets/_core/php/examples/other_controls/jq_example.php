@@ -189,7 +189,9 @@
 	
 			// DatepickerBox
 			$this->DatepickerBox = new QDatepickerBox($this);
-	
+			$this->DatepickerBox->AddAction(new QDatepicker_CloseEvent(), new QAlertAction("datepicker closed"));
+			$this->DatepickerBox->AddAction(new QDatepicker_CloseEvent(), new QAlertAction("datepicker closed 2"));
+
 			// Dialog
 			$this->Dialog = new QDialog($this);
 			$this->Dialog->Text = 'a non modal dialog';

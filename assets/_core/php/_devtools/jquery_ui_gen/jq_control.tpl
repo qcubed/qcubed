@@ -34,6 +34,19 @@
 	}
 <% } %>
 
+	/* Custom "property" event classes for this control */
+<% foreach ($objJqDoc->options as $option) { %>
+	<% if ($option instanceof Event) { %>
+	/**
+	 * <%= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), 75, "\n\t\t")) %>
+	 */
+	class <%= $option->eventClassName %> extends QJqUiPropertyEvent {
+		const EventName = '<%= $option->eventName %>';
+		protected $strJqProperty = '<%= $option->name %>';
+	}
+
+	<% } %>
+<% } %>
 
 	/**
 <% foreach ($objJqDoc->options as $option) { %>
@@ -82,8 +95,12 @@
 			return $this->ControlId;
 		}
 
+		public function getJqSetupFunction() {
+			return '<%= $objJqDoc->strJqSetupFunc %>';
+		}
+
 		public function GetControlJavaScript() {
-			return sprintf('jQuery("#%s").<%= $objJqDoc->strJqSetupFunc %>({%s})', $this->getJqControlId(), $this->makeJqOptions());
+			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
 		public function GetEndScript() {
@@ -102,8 +119,9 @@
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
-			$strJs = sprintf('jQuery("#%s").<%= $objJqDoc->strJqSetupFunc %>(%s)', 
+			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
+				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
 			QApplication::ExecuteJavaScript($strJs);
 		}
