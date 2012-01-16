@@ -32,6 +32,8 @@ class Option extends JqAttributes {
 		case 'Selector': return 'mixed';
 		case 'Integer': return 'integer';
 		case 'Number': return 'integer';
+		case 'Double': return 'double';
+		case 'Float': return 'double';
 		case 'Date': return 'QDateTime';
 		case 'Options': return 'array';
 		default: return 'QJsClosure';
@@ -44,6 +46,7 @@ class Option extends JqAttributes {
 		case 'string': return 'QType::String';
 		case 'mixed': return null;
 		case 'integer': return 'QType::Integer';
+		case 'double': return 'QType::Float';
 		case 'array': return 'QType::ArrayType';
 		case 'QDateTime': return 'QType::DateTime';
 		default: return "'".$phpType."'";
@@ -56,6 +59,7 @@ class Option extends JqAttributes {
 		case 'string': return 'str';
 		case 'mixed': return 'mix';
 		case 'integer': return 'int';
+		case 'double': return 'flt';
 		case 'array': return 'arr';
 		case 'QDateTime': return 'dtt';
 		default: return 'mix';

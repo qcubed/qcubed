@@ -155,7 +155,7 @@
 	 * 		a DOMElement to be used as a custom proxy helper. Possible values:
 	 * 		'original', 'clone'
 	 * @property mixed $Items Specifies which items inside the element should be sortable.
-	 * @property QJsClosure $Opacity Defines the opacity of the helper while sorting. From 0.01 to 1
+	 * @property double $Opacity Defines the opacity of the helper while sorting. From 0.01 to 1
 	 * @property string $Placeholder Class that gets applied to the otherwise white space.
 	 * @property QJsClosure $Revert If set to true, the item will be reverted to its new DOM position with a
 	 * 		smooth animation. Optionally, it can also be set to a number that controls
@@ -212,8 +212,8 @@
 		protected $mixHelper = null;
 		/** @var mixed */
 		protected $mixItems = null;
-		/** @var QJsClosure */
-		protected $mixOpacity = null;
+		/** @var double */
+		protected $fltOpacity = null;
 		/** @var string */
 		protected $strPlaceholder = null;
 		/** @var QJsClosure */
@@ -435,7 +435,7 @@
 				case 'Handle': return $this->mixHandle;
 				case 'Helper': return $this->mixHelper;
 				case 'Items': return $this->mixItems;
-				case 'Opacity': return $this->mixOpacity;
+				case 'Opacity': return $this->fltOpacity;
 				case 'Placeholder': return $this->strPlaceholder;
 				case 'Revert': return $this->mixRevert;
 				case 'Scroll': return $this->blnScroll;
@@ -635,7 +635,7 @@
 
 				case 'Opacity':
 					try {
-						$this->mixOpacity = QType::Cast($mixValue, 'QJsClosure');
+						$this->fltOpacity = QType::Cast($mixValue, QType::Float);
 						if ($this->Rendered) {
 							$this->CallJqUiMethod("option", $strName, $mixValue);
 						}

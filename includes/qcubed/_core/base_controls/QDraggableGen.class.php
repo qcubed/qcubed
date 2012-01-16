@@ -92,7 +92,7 @@
 	 * 		over the helper. If set to true, transparent overlays will be placed over
 	 * 		all iframes on the page. If a selector is supplied, the matched iframes
 	 * 		will have an overlay placed over them.
-	 * @property QJsClosure $Opacity Opacity for the helper while being dragged.
+	 * @property double $Opacity Opacity for the helper while being dragged.
 	 * @property boolean $RefreshPositions If set to true, all droppable positions are calculated on every mousemove.
 	 * 		Caution: This solves issues on highly dynamic pages, but dramatically
 	 * 		decreases performance.
@@ -156,8 +156,8 @@
 		protected $mixHelper = null;
 		/** @var mixed */
 		protected $mixIframeFix = null;
-		/** @var QJsClosure */
-		protected $mixOpacity = null;
+		/** @var double */
+		protected $fltOpacity = null;
 		/** @var boolean */
 		protected $blnRefreshPositions = null;
 		/** @var mixed */
@@ -316,7 +316,7 @@
 				case 'Handle': return $this->mixHandle;
 				case 'Helper': return $this->mixHelper;
 				case 'IframeFix': return $this->mixIframeFix;
-				case 'Opacity': return $this->mixOpacity;
+				case 'Opacity': return $this->fltOpacity;
 				case 'RefreshPositions': return $this->blnRefreshPositions;
 				case 'Revert': return $this->mixRevert;
 				case 'RevertDuration': return $this->intRevertDuration;
@@ -493,7 +493,7 @@
 
 				case 'Opacity':
 					try {
-						$this->mixOpacity = QType::Cast($mixValue, 'QJsClosure');
+						$this->fltOpacity = QType::Cast($mixValue, QType::Float);
 						if ($this->Rendered) {
 							$this->CallJqUiMethod("option", $strName, $mixValue);
 						}
