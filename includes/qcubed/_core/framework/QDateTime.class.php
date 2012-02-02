@@ -27,6 +27,11 @@
 
 		const FormatSoap = 'YYYY-MM-DDThhhh:mm:ss';
 
+		const UnknownType = 0;
+		const DateOnlyType = 1;
+		const TimeOnlyType = 2;
+		const DateAndTimeType = 3;
+
 		/**
 		 * The "Default" Display Format
 		 * @var string $DefaultFormat
@@ -94,8 +99,26 @@
 			return new QDateTime(date('Y-m-d H:i:s', $intTimestamp), $objTimeZone);
 		}
 
-		public function __construct($mixValue = null, DateTimeZone $objTimeZone = null) {
-
+		public function __construct($mixValue = null, DateTimeZone $objTimeZone = null, $intType = QDateTime::UnknownType) {
+			switch ($intType) {
+				case QDateTime::DateOnlyType:
+					parent::__construct($mixValue);
+					$this->blnTimeNull = true;
+					$this->blnDateNull = false;
+					return;
+				case QDateTime::TimeOnlyType:
+					parent::__construct($mixValue);
+					$this->blnTimeNull = false;
+					$this->blnDateNull = true;
+					return;
+				case QDateTime::DateAndTimeType:
+					parent::__construct($mixValue);
+					$this->blnTimeNull = false;
+					$this->blnDateNull = false;
+					return;
+				default:
+					break;
+			}
 			// Cloning from another QDateTime object
 			if ($mixValue instanceof QDateTime) {
 				if ($objTimeZone)

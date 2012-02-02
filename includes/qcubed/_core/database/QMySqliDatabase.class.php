@@ -497,9 +497,11 @@
 						return QType::Cast($strColumnValue, QType::String);
 
 					case QDatabaseFieldType::Date:
+						return new QDateTime($strColumnValue, null, QDateTime::DateOnlyType);
 					case QDatabaseFieldType::DateTime:
+						return new QDateTime($strColumnValue, null, QDateTime::DateAndTimeType);
 					case QDatabaseFieldType::Time:
-						return new QDateTime($strColumnValue);
+						return new QDateTime($strColumnValue, null, QDateTime::TimeOnlyType);
 
 					case QDatabaseFieldType::Float:
 						return QType::Cast($strColumnValue, QType::Float);
