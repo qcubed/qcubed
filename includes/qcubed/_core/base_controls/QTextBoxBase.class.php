@@ -126,6 +126,8 @@
 			if ($this->blnReadOnly)
 				$strToReturn .= 'readonly="readonly" ';
 			
+			if ($this->intMaxLength)
+				$strToReturn .= sprintf('maxlength="%s" ', $this->intMaxLength);
 			if ($this->strTextMode == QTextMode::MultiLine) {
 				if ($this->intColumns)
 					$strToReturn .= sprintf('cols="%s" ', $this->intColumns);			
@@ -136,8 +138,6 @@
 			} else {
 				if ($this->intColumns)
 					$strToReturn .= sprintf('size="%s" ', $this->intColumns);
-				if ($this->intMaxLength)
-					$strToReturn .= sprintf('maxlength="%s" ', $this->intMaxLength);
 			}
 				
 			return $strToReturn;
