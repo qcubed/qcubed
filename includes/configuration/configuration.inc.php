@@ -122,6 +122,8 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__FORM_DRAFTS__', __SUBDIRECTORY__ . '/drafts');
 			define ('__PANEL_DRAFTS__', __SUBDIRECTORY__ . '/drafts/panels');
 			define ('__FORMBASE_CLASSES__', __INCLUDES__ . '/formbase_classes_generated');
+			define ('__FORM_DRAFTS_FORM_LIST_ITEMS_PER_PAGE__', 20);
+			define ('__FORM_DRAFTS_PANEL_LIST_ITEMS_PER_PAGE__', 8);
 
 			// Location of QCubed-specific Web Assets (JavaScripts, CSS, Images, and PHP Pages/Popups)
 			define ('__JS_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/js');

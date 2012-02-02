@@ -49,7 +49,7 @@
 
 			// Add Pagination (if desired)
 			$this->dtg<?php echo $objTable->ClassNamePlural  ?>->Paginator = new QPaginator($this->dtg<?php echo $objTable->ClassNamePlural  ?>);
-			$this->dtg<?php echo $objTable->ClassNamePlural  ?>->ItemsPerPage = 20;
+			$this->dtg<?php echo $objTable->ClassNamePlural  ?>->ItemsPerPage = __FORM_DRAFTS_FORM_LIST_ITEMS_PER_PAGE__;
 
 			// Use the MetaDataGrid functionality to add Columns for this datagrid
 
