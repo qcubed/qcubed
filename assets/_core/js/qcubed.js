@@ -166,6 +166,7 @@ $j.ajaxSync.data = [];
 
 			objFormElements.each(function () {
 				var strType = $j(this).attr("type");
+				if (strType == undefined) strType = this.type;
 				var strControlId = $j(this).attr("id");
 				switch (strType) {
 					case "checkbox":
