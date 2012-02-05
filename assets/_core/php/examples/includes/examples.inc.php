@@ -200,6 +200,7 @@
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Other Tidbits';
 			Examples::$Categories[$intIndex]['description'] = 'Other random examples, samples and tutorials';
+			self::AddCoreExampleFile($intIndex, '/basic_qform/xss.php * Security: Preventing Cross-Site Scripting');
 			self::AddCoreExampleFile($intIndex, '/other/optimistic_locking.php * Optimistic Locking and QForms');
 			self::AddCoreExampleFile($intIndex, '/other/attribute_overriding.php Attribute Overriding');
 			self::AddCoreExampleFile($intIndex, '/other/alternate_template.php Specifying a Template Filepath');
