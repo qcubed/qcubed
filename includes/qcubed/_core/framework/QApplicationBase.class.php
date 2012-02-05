@@ -29,6 +29,17 @@
 		 */
 		public static $CacheControl = 'private';
 
+        /**
+         * @var #P#C\QCrossScripting.Purify|?
+         * Defines the default mode for controls that need protection against
+         * cross-site scripting. Can be overridden at the individual control level,
+         * or for all controls by overriding it in QApplication.
+         *
+         * Set to QCrossScripting::Legacy for backward compatibility reasons for legacy applications;
+         * For new applications the recommended setting is QCrossScripting::Purify.
+         */
+        public static $DefaultCrossScriptingMode = QCrossScripting::Legacy;
+
 		/**
 		 * Path of the "web root" or "document root" of the web server
 		 * Like "/home/www/htdocs" on Linux/Unix or "c:\inetpub\wwwroot" on Windows

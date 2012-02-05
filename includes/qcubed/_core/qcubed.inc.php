@@ -39,6 +39,7 @@
 	
 
 	// Preload Required Framework Classes
+	require(__QCUBED_CORE__ . '/base_controls/_enumerations.inc.php');
 	require(__QCUBED_CORE__ . '/framework/QBaseClass.class.php');
 	require(__QCUBED_CORE__ . '/framework/QExceptions.class.php');
 	require(__QCUBED_CORE__ . '/framework/QType.class.php');
@@ -64,7 +65,6 @@
 		require(__QCUBED_CORE__ . '/framework/QDateTime.class.php');
 
 	// Define Classes to be Preloaded on QApplication::Initialize()
-	QApplicationBase::$PreloadedClassFile['_enumerations'] = __QCUBED_CORE__ . '/base_controls/_enumerations.inc.php';
 	QApplicationBase::$PreloadedClassFile['qcontrolbase'] = __QCUBED_CORE__ . '/base_controls/QControlBase.class.php';
 	QApplicationBase::$PreloadedClassFile['qcontrol'] = __QCUBED__ . '/controls/QControl.class.php';
 	QApplicationBase::$PreloadedClassFile['qformbase'] = __QCUBED_CORE__ . '/base_controls/QFormBase.class.php';
@@ -202,7 +202,9 @@
 	QApplicationBase::$ClassFile['javascripthelper'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['qnoscriptajaxaction'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['qjstimer'] = __QCUBED__ . '/controls/QJsTimer.class.php';
-
+	
+	QApplicationBase::$ClassFile['htmlpurifier'] = __QCUBED_CORE__ . '/htmlpurifier/library/HTMLPurifier.includes.php';
+	
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
 

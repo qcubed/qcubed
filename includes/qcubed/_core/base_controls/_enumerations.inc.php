@@ -97,6 +97,8 @@
 		const Allow = 'Allow';
 		const HtmlEntities = 'HtmlEntities';
 		const Deny = 'Deny';
+		const Legacy = 'Legacy';
+		const HTMLPurifier = 'HTMLPurifier';
 	}
 	
 	abstract class QCallType {

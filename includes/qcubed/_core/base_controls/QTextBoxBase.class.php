@@ -51,7 +51,8 @@
 		protected $blnReadOnly = false;
 		protected $intRows = 0;
 		protected $strTextMode = QTextMode::SingleLine;
-		protected $strCrossScripting = QCrossScripting::Deny;
+		protected $strCrossScripting;
+		protected $objHTMLPurifierConfig = null;
 		protected $blnValidateTrimmed = false;
 
 		// LAYOUT
@@ -71,8 +72,29 @@
 
 			$this->strLabelForTooLong = QApplication::Translate('%s must have at most %s characters');
 			$this->strLabelForTooLongUnnamed = QApplication::Translate('Must have at most %s characters');
+
+			$this->strCrossScripting = QApplication::$DefaultCrossScriptingMode;
 		}
 
+		/**
+		 * This function allows to set the Configuration for HTMLPurifier
+		 * similar to the HTMLPurifierConfig::set() method from the HTMLPurifier API.
+		 * 
+		 * @param strParameter: The parameter to set for HTMLPurifier
+		 * @param mixValue: Value of the parameter.
+		 * 
+		 * @return None
+		 * 
+		 *  NOTE: THERE IS NO SUPPORT FOR THE DEPRECATED API OF HTMLPURIFIER, HENCE NO THIRD ARGUMENT TO THE
+		 *  	FUNCTION CAN BE PASSED. 
+		 * 
+		 * Visit http://htmlpurifier.org/live/configdoc/plain.html for the list of parameters and their effects.
+		 */
+		public function SetPurifierConfig($strParameter, $mixValue) {
+			if ($this->objHTMLPurifierConfig != null) {
+				$this->objHTMLPurifierConfig->set($strParameter, $mixValue);
+			}
+		}
 
 		public function ParsePostData() {
 			// Check to see if this Control's Value was passed in via the POST data
@@ -88,11 +110,18 @@
 						// Go ahead and perform HtmlEntities on the text
 						$this->strText = QApplication::HtmlEntities($this->strText);
 						break;
+					case QCrossScripting::HTMLPurifier:
+						// let HTMLPurifier do the job! User should have set it up!
+						$objPurifier = new HTMLPurifier($this->objHTMLPurifierConfig);
+						$this->strText = $objPurifier->purify($this->strText);
+						break;
+					// The use of the modes below is not recommended; they're there only for legacy
+					// purposes. If you need to check for cross-site scripting violations, use QCrossScripting::Purify
+					case QCrossScripting::Legacy:
+					case QCrossScripting::Deny:
 					default:
 						// Deny the Use of CrossScripts
-
 						// Check for cross scripting patterns
-						// TODO: Change this to RegExp						
 						$strText = strtolower($this->strText);
 						if ((strpos($strText, '<script') !== false) ||
 							(strpos($strText, '<applet') !== false) ||
@@ -353,6 +382,21 @@
 				case "CrossScripting":
 					try {
 						$this->strCrossScripting = QType::Cast($mixValue, QType::String);
+						// Protect from XSS to the best we can do with HTMLPurifier.
+						if ($this->strCrossScripting == QCrossScripting::HTMLPurifier) {
+							// If we are purifying using HTMLPurify, we will need the autoloader be included.
+							// We load lazy to make sure that the library is not loaded every time 'prepend.inc.php'
+							// or 'qcubed.inc.php' is inlcuded. HTMLPurifier is a HUGE and SLOW library. Lazy loading
+							// keeps it simpler.
+							require_once(__QCUBED_CORE__ .'/htmlpurifier/library/HTMLPurifier.auto.php');
+
+							// We configure the default set of forbidden tags (elements) and attributes here
+							// so that the rules are applicable the moment CrossScripting is set to Purify.
+							// Use the QTextBox::SetPurifierConfig method to override these settings.
+							$this->objHTMLPurifierConfig = HTMLPurifier_Config::createDefault();
+							$this->objHTMLPurifierConfig->set('HTML.ForbiddenElements', 'script,applet,embed,style,link,iframe,body,object');
+							$this->objHTMLPurifierConfig->set('HTML.ForbiddenAttributes', '*@onfocus,*@onblur,*@onkeydown,*@onkeyup,*@onkeypress,*@onmousedown,*@onmouseup,*@onmouseover,*@onmouseout,*@onmousemove,*@onclick');
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -432,7 +476,7 @@
 	class QCrossScriptingException extends QCallerException {
 		public function __construct($strControlId) {
 			parent::__construct("Cross Scripting Violation: Potential cross script injection in Control \"" .
-				$strControlId . "\"\r\nTo allow any input on this TextBox control, set CrossScripting to QCrossScripting::Allow", 2);
+				$strControlId . "\"\r\nTo allow any input on this TextBox control, set CrossScripting to QCrossScripting::Allow. Also consider QCrossScripting::HTMLPurifier.", 2);
 		}
 	}
 ?>
