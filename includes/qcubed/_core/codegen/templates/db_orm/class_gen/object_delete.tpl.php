@@ -52,6 +52,11 @@
 					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objColumn->VariableName  ?>) . ' AND
 <?php } ?>
 <?php } ?><?php GO_BACK(5); ?>');
+
+			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
+				$strCacheKey = QApplication::$objCacheProvider->CreateKey('<?php echo $this->objDb->Database ?>', '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>);
+				QApplication::$objCacheProvider->Delete($strCacheKey);
+			}
 		}
 
 		/**
@@ -67,6 +72,10 @@
 			$objDatabase->NonQuery('
 				DELETE FROM
 					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>');
+
+			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
+				QApplication::$objCacheProvider->DeleteAll();
+			}
 		}
 
 		/**
@@ -80,4 +89,8 @@
 			// Perform the Query
 			$objDatabase->NonQuery('
 				TRUNCATE <?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>');
+
+			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
+				QApplication::$objCacheProvider->DeleteAll();
+			}
 		}

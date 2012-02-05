@@ -7,6 +7,11 @@
 			if (!$this->__blnRestored)
 				throw new QCallerException('Cannot call Reload() on a new, unsaved <?php echo $objTable->ClassName  ?> object.');
 
+			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
+				$strCacheKey = QApplication::$objCacheProvider->CreateKey('<?php echo $this->objDb->Database ?>', '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>);
+				QApplication::$objCacheProvider->Delete($strCacheKey);
+			}
+
 			// Reload the Object
 			$objReloaded = <?php echo $objTable->ClassName  ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$this-><?php echo $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>);
 

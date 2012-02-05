@@ -28,6 +28,7 @@
 	 * @property-read string $Host
 	 * @property-read string $Username
 	 * @property-read string $Password
+	 * @property-read boolean $Caching if true objects loaded from this database will be kept in cache (assuming a cache provider is also configured)
 	 * @property-read string $DateFormat
 	 * @property-read boolean $OnlyFullGroupBy database adapter sub-classes can override and set this property to true
 	 *      to prevent the behavior of automatically adding all the columns to the select clause when the query has
@@ -153,6 +154,8 @@
 				case 'Username':
 				case 'Password':
 					return $this->objConfigArray[strtolower($strName)];
+				case 'Caching':
+					return $this->objConfigArray['caching'];
 				case 'DateFormat':
 					return (is_null($this->objConfigArray[strtolower($strName)])) ? (QDateTime::FormatIso) : ($this->objConfigArray[strtolower($strName)]);
 				case 'OnlyFullGroupBy':

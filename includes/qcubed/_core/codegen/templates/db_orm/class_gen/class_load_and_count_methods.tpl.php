@@ -23,8 +23,16 @@
 
 		 */
 		public static function Load(<?php echo $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray);  ?>, $objOptionalClauses = null) {
+			$strCacheKey = false;
+			if (QApplication::$objCacheProvider && !$objOptionalClauses && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
+				$strCacheKey = QApplication::$objCacheProvider->CreateKey('<?php echo $this->objDb->Database ?>', '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray);  ?>);
+				$objCachedObject = QApplication::$objCacheProvider->Get($strCacheKey);
+				if ($objCachedObject !== false) {
+					return $objCachedObject;
+				}
+			}
 			// Use QuerySingle to Perform the Query
-			return <?php echo $objTable->ClassName  ?>::QuerySingle(
+			$objToReturn = <?php echo $objTable->ClassName  ?>::QuerySingle(
 				QQ::AndCondition(
 <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
 					QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()-><?php echo $objColumn->PropertyName  ?>, $<?php echo $objColumn->VariableName  ?>),
@@ -33,6 +41,10 @@
 				),
 				$objOptionalClauses
 			);
+			if ($strCacheKey !== false) {
+				QApplication::$objCacheProvider->Set($strCacheKey, $objToReturn);
+			}
+			return $objToReturn;
 		}
 
 		/**

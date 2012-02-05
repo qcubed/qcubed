@@ -12,15 +12,6 @@
 		//////////////////////////
 
 		/**
-		 * The cache provider object used for caching ORM objects
-		 * It is initialized below in Initialize(), based on the CACHE_PROVIDER and CACHE_PROVIDER_OPTIONS
-		 * variables defined in configuration.inc.php
-		 *
-		 * @var QAbstractCacheProvider 
-		 */
-		public static $objCacheProvider = null;
-
-		/**
 		 * Internal bitmask signifying which BrowserType the user is using
 		 * Use the QApplication::IsBrowser() method to do browser checking
 		 *
@@ -218,15 +209,6 @@
 		 * @return void
 		 */
 		public static function Initialize() {
-			$strCacheProviderClass = CACHE_PROVIDER_CLASS;
-			if ($strCacheProviderClass) {
-				if (CACHE_PROVIDER_OPTIONS) {
-					QApplicationBase::$objCacheProvider = new $strCacheProviderClass(unserialize(CACHE_PROVIDER_OPTIONS));
-				} else {
-					QApplicationBase::$objCacheProvider = new $strCacheProviderClass();
-				}
-			}
-
 			// Are we running as CLI?
 			if (PHP_SAPI == 'cli')
 				QApplication::$CliMode = true;

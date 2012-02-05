@@ -117,6 +117,13 @@
 	QApplicationBase::$ClassFile['qcache'] = __QCUBED_CORE__ . '/framework/QCache.class.php';
 	QApplicationBase::$ClassFile['qdatetimespan'] = __QCUBED_CORE__ . '/framework/QDateTimeSpan.class.php';
 
+	// Cache providers
+	QApplicationBase::$ClassFile['qabstractcacheprovider'] = __QCUBED_CORE__ . '/framework/QAbstractCacheProvider.class.php';
+	QApplicationBase::$ClassFile['qcacheprovidermemcache'] = __QCUBED_CORE__ . '/framework/QCacheProviderMemcache.class.php';
+	QApplicationBase::$ClassFile['qcacheproviderlocalmemory'] = __QCUBED_CORE__ . '/framework/QCacheProviderLocalMemory.class.php';
+	QApplicationBase::$ClassFile['qcacheprovidernocache'] = __QCUBED_CORE__ . '/framework/QCacheProviderNoCache.class.php';
+	QApplicationBase::$ClassFile['qmultilevelcacheprovider'] = __QCUBED_CORE__ . '/framework/QMultiLevelCacheProvider.class.php';
+
 	// Define ClassFile Locations for Qform Classes
 	QApplicationBase::$ClassFile['qfontfamily'] = __QCUBED_CORE__ . '/base_controls/QFontFamily.class.php';
 
