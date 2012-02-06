@@ -12,10 +12,13 @@
 	switch ($objColumn->DbType) {
 		case QDatabaseFieldType::DateTime:
 			print 'DateTime';
+			break;
 		case QDatabaseFieldType::Time:
 			print 'Time';
+			break;
 		default:
 			print 'Date';
+			break;
 	}
 ?>;
 <?php if ($objColumn->NotNull) { ?>
