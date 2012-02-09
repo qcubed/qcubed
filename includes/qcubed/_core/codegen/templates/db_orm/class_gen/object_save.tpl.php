@@ -171,10 +171,7 @@
 <?php } ?>
 <?php } ?>
 
-			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
-				$strCacheKey = QApplication::$objCacheProvider->CreateKey('<?php echo $this->objDb->Database ?>', '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>);
-				QApplication::$objCacheProvider->Delete($strCacheKey);
-			}
+			$this->DeleteCache();
 
 			// Return
 			return $mixToReturn;

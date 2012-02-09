@@ -53,6 +53,14 @@
 <?php } ?>
 <?php } ?><?php GO_BACK(5); ?>');
 
+			$this->DeleteCache();
+		}
+
+        /**
+ 	     * Delete this <?php echo $objTable->ClassName ?> ONLY from the cache
+ 		 * @return void
+		 */
+		public function DeleteCache() {
 			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
 				$strCacheKey = QApplication::$objCacheProvider->CreateKey('<?php echo $this->objDb->Database ?>', '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>);
 				QApplication::$objCacheProvider->Delete($strCacheKey);
