@@ -134,7 +134,7 @@
 		/**
 		 * An array of Database objects, as initialized by QApplication::InitializeDatabaseConnections()
 		 *
-		 * @var DatabaseBase[] Database
+		 * @var QDatabaseBase[] Database
 		 */
 		public static $Database;
 
@@ -187,7 +187,7 @@
 		/**
 		 * The instance of the active QI18n object (which contains translation strings), if any.
 		 *
-		 * @var QI18n $LanguageObject
+		 * @var QTranslationBase $LanguageObject
 		 */
 		public static $LanguageObject;
 
@@ -199,7 +199,7 @@
 		 * The Application object should never be instantiated, and this constructor
 		 * override simply guarantees it.
 		 *
-		 * @return void
+		 * @return \QApplicationBase
 		 */
 		public final function __construct() {
 			throw new QCallerException('Application should never be instantiated.  All methods and variables are publically statically accessible.');
@@ -656,7 +656,8 @@
 		 * QApplication::PathInfo(1) will return '15'
 		 * QApplication::PathInfo(2) will return 'blue'
 		 *
-		 * @return void
+		 * @param int $intIndex index
+		 * @return string|null
 		 */
 		public static function PathInfo($intIndex) {
 			// TODO: Cache PathInfo
@@ -770,8 +771,8 @@
 					_p($strScript, false);
 				else
 					return $strScript;
-			} else
-				return null;
+			}
+			return null;
 		}
 
   		/**
