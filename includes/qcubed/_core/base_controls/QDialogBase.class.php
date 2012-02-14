@@ -164,6 +164,22 @@ FUNC;
 						throw $objExc;
 					}
 										 
+				case 'Height':
+					try {
+						if ($mixValue == 'auto') {
+							$this->intHeight = 'auto';
+							if ($this->Rendered) {
+								$this->CallJqUiMethod("option", $strName, $mixValue);
+							}
+						} else {
+							parent::__set($strName, $mixValue);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
