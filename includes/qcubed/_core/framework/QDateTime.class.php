@@ -102,17 +102,29 @@
 		public function __construct($mixValue = null, DateTimeZone $objTimeZone = null, $intType = QDateTime::UnknownType) {
 			switch ($intType) {
 				case QDateTime::DateOnlyType:
-					parent::__construct($mixValue, $objTimeZone);
+					if ($objTimeZone) {
+						parent::__construct($mixValue, $objTimeZone);
+					} else {
+						parent::__construct($mixValue);
+					}
 					$this->blnTimeNull = true;
 					$this->blnDateNull = false;
 					return;
 				case QDateTime::TimeOnlyType:
-					parent::__construct($mixValue, $objTimeZone);
+					if ($objTimeZone) {
+						parent::__construct($mixValue, $objTimeZone);
+					} else {
+						parent::__construct($mixValue);
+					}
 					$this->blnTimeNull = false;
 					$this->blnDateNull = true;
 					return;
 				case QDateTime::DateAndTimeType:
-					parent::__construct($mixValue, $objTimeZone);
+					if ($objTimeZone) {
+						parent::__construct($mixValue, $objTimeZone);
+					} else {
+						parent::__construct($mixValue);
+					}
 					$this->blnTimeNull = false;
 					$this->blnDateNull = false;
 					return;
