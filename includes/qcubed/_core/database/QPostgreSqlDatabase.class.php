@@ -106,7 +106,7 @@
 			}
 
 			// Assume it's some kind of string value
-			return $strToReturn . sprintf("'%s'", addslashes($mixData));
+			return $strToReturn . sprintf("'%s'", pg_escape_string($mixData));
 		}
 		
 		public function SqlLimitVariablePrefix($strLimitInfo) {
