@@ -20,6 +20,7 @@
 			require(__DOCROOT__ . __PANEL_DRAFTS__ . '/' . $strClassName . 'EditPanel.class.php');
 		}
 	}
+	asort($strClassNameArray);
 
 	class Dashboard extends QForm {
 		protected $lstClassNames;

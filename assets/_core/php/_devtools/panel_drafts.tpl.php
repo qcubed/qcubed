@@ -5,9 +5,10 @@
 
 	<div id="dashboard">
 		<div id="left">
-			<p><strong>Select a Class to View/Edit</strong></p>
-			<p><?php $this->lstClassNames->Render('FontSize=10px','Width=100px'); ?> <span class="waitIcon"><?php $this->objDefaultWaitIcon->Render(); ?></span></p>
+			<p><strong>Select a Class to View/Edit</strong>
+			<?php $this->lstClassNames->Render('FontSize=10px','Width=100px'); ?> <span class="waitIcon"><?php $this->objDefaultWaitIcon->Render(); ?></span></p>
 		</div>
+		<br />
 		<div id="right">
 			<?php $this->pnlList->Render(); ?>
 			<?php $this->pnlEdit->Render(); ?>
