@@ -123,6 +123,7 @@
 	QApplicationBase::$ClassFile['qcacheproviderlocalmemory'] = __QCUBED_CORE__ . '/framework/QCacheProviderLocalMemory.class.php';
 	QApplicationBase::$ClassFile['qcacheprovidernocache'] = __QCUBED_CORE__ . '/framework/QCacheProviderNoCache.class.php';
 	QApplicationBase::$ClassFile['qmultilevelcacheprovider'] = __QCUBED_CORE__ . '/framework/QMultiLevelCacheProvider.class.php';
+	QApplicationBase::$ClassFile['qdbbackedsessionhandler'] = __QCUBED_CORE__ . '/framework/QDbBackedSessionHandler.class.php';
 
 	// Define ClassFile Locations for Qform Classes
 	QApplicationBase::$ClassFile['qfontfamily'] = __QCUBED_CORE__ . '/base_controls/QFontFamily.class.php';

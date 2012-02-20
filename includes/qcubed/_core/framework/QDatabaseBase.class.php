@@ -74,6 +74,63 @@
 
 		abstract public function Close();
 
+		public function EscapeIdentifier($strIdentifier) {
+			return $this->strEscapeIdentifierBegin . $strIdentifier . $this->strEscapeIdentifierEnd;
+		}
+
+		public function EscapeIdentifiers($mixIdentifiers) {
+			if (is_array($mixIdentifiers)) {
+				return array_map(array($this, 'EscapeIdentifier'), $mixIdentifiers);
+			} else {
+				return $this->EscapeIdentifier($mixIdentifiers);
+			}
+		}
+
+		public function EscapeValues($mixValues) {
+			if (is_array($mixValues)) {
+				return array_map(array($this, 'SqlVariable'), $mixValues);
+			} else {
+				return $this->SqlVariable($mixValues);
+			}
+		}
+
+		public function EscapeIdentifiersAndValues($mixColumnsAndValuesArray) {
+			$result = array();
+			foreach ($mixColumnsAndValuesArray as $strColumn => $mixValue) {
+				$result[$this->EscapeIdentifier($strColumn)] = $this->SqlVariable($mixValue);
+			}
+			return $result;
+		}
+
+		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
+			$strEscapedArray = $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
+			$strColumns = array_keys($strEscapedArray);
+			$strUpdateStatement = '';
+			foreach ($strEscapedArray as $strColumn => $strValue) {
+				if ($strUpdateStatement) $strUpdateStatement .= ', ';
+				$strUpdateStatement .= $strColumn . ' = ' . $strValue;
+			}
+			if (is_null($strPKNames)) {
+				$strMatchCondition = 'target_.'.$strColumns[0].' = source_.'.$strColumns[0];
+			} else if (is_array($strPKNames)) {
+				$strMatchCondition = '';
+				foreach ($strPKNames as $strPKName) {
+					if ($strMatchCondition) $strMatchCondition .= ' AND ';
+					$strMatchCondition .= 'target_.'.$this->EscapeIdentifier($strPKName).' = source_.'.$this->EscapeIdentifier($strPKName);
+				}
+			} else {
+				$strMatchCondition = 'target_.'.$this->EscapeIdentifier($strPKNames).' = source_.'.$this->EscapeIdentifier($strPKNames);
+			}
+			$strTable = $this->EscapeIdentifierBegin . $strTable . $this->EscapeIdentifierEnd;
+			$strSql = sprintf('MERGE INTO %s AS target_ USING %s AS source_ ON %s WHEN MATCHED THEN UPDATE SET %s WHEN NOT MATCHED THEN INSERT (%s) VALUES (%s)',
+				$strTable, $strTable,
+				$strMatchCondition, $strUpdateStatement,
+				implode(', ', $strColumns),
+				implode(', ', array_values($strEscapedArray))
+			);
+			$this->ExecuteNonQuery($strSql);
+		}
+
 		/**
 		 * @param string $strQuery query string
 		 * @return QDatabaseResultBase

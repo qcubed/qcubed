@@ -98,6 +98,8 @@
 		////////////////////////////////////////////////
 		QApplication::Initialize();
 		QApplication::InitializeDatabaseConnections();
+		// Check if we are going to override PHP's default session handler
+		QApplication::SessionOverride();
 
 
 		/////////////////////////////

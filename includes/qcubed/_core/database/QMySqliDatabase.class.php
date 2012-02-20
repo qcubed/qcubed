@@ -48,6 +48,22 @@
 			return null;
 		}
 
+		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
+			$strEscapedArray = $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
+			$strUpdateStatement = '';
+			foreach ($strEscapedArray as $strColumn => $strValue) {
+				if ($strUpdateStatement) $strUpdateStatement .= ', ';
+				$strUpdateStatement .= $strColumn . ' = ' . $strValue;
+			}
+			$strSql = sprintf('INSERT INTO %s%s%s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s',
+				$this->EscapeIdentifierBegin, $strTable, $this->EscapeIdentifierEnd,
+				implode(', ', array_keys($strEscapedArray)),
+				implode(', ', array_values($strEscapedArray)),
+				$strUpdateStatement
+			);
+			$this->ExecuteNonQuery($strSql);
+		}
+
 		public function Connect() {
 			// Connect to the Database Server
 			$this->objMySqli = new MySqli($this->Server, $this->Username, $this->Password, $this->Database, $this->Port);

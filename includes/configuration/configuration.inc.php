@@ -144,7 +144,7 @@ if (!defined('SERVER_INSTANCE')) {
 			// define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.min.js');
 
 			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-lightness/jquery-ui.custom.css');
-				
+
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
 
@@ -269,6 +269,44 @@ if (!defined('SERVER_INSTANCE')) {
 			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
 			define('__FILE_FORM_STATE_HANDLER_PATH__', __INCLUDES__ . '/tmp');
 
+
+			/*
+			 * QCubed allows you to save / read / write your user PHP sessions in a database.
+			 * This is immensely helpful when you want to develop your QCubed based application
+			 * to support running on two different web servers with same data backends or with load balancing.
+			 * If you are using QSessionFormStateHandler, it also automatically centralizes your formstates.
+			 *
+			 * To avail this feature, you must have a dedicated table in one of your databases above.
+			 * The table must have 3 columns with follwing names and datatypes (note that column names should match exactly):
+			 *
+			 * [Column 1]
+			 *      Name = id
+			 *      Data Type = varchar / character varying with length of 32 characters (varchar(32))
+			 *
+			 * [Column 2]
+			 *      Name = last_access_time
+			 *      Data type = integer
+			 *
+			 * [Column 3]
+			 *      Name = data
+			 *      Data type = text
+			 *
+			 * For this to work, we need to know two things:
+			 * 1. The DB_CONNECTION index (repeat: the numerical index) of the database from the list of databases above
+			 *          where this table is located.
+			 * 2. The name of the table in  the database.
+			 *
+			 * Notes:
+			 * 1. if you do not want to use this feature, set the value of DB_BACKED_SESSION_HANDLER_DB_INDEX to 0.
+			 * 2. It is recommended that you create a primary key on the 'id' field and an index on the 'last_access_time' field
+			 *      to speed up the database queries.
+			 * 3. This feature does not make use of the codegen feature. So you may exclude this table from being codegened.
+			 */
+			// The database index where the Session storage tables are present. Remember, define it as an integer.
+			define("DB_BACKED_SESSION_HANDLER_DB_INDEX", 0);
+
+			// The table name to be used for session data storage (must meet the requirements laid out above)
+			define("DB_BACKED_SESSION_HANDLER_TABLE_NAME", "qc_session");
 
 			// Define the Filepath for the error page (path MUST be relative from the DOCROOT)
 			define('ERROR_PAGE_PATH', __PHP_ASSETS__ . '/error_page.php');

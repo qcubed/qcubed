@@ -153,6 +153,45 @@
 			return null;
 		}
 
+		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
+			$strEscapedArray = $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
+			$strColumns = array_keys($strEscapedArray);
+			$strUpdateStatement = '';
+			foreach ($strEscapedArray as $strColumn => $strValue) {
+				if ($strUpdateStatement) $strUpdateStatement .= ', ';
+				$strUpdateStatement .= $strColumn . ' = ' . $strValue;
+			}
+			if (is_null($strPKNames)) {
+				$strPKNames = array($strColumns[0]);
+			} else if (is_array($strPKNames)) {
+				$strPKNames = $this->EscapeIdentifiers($strPKNames);
+			} else {
+				$strPKNames = array($this->EscapeIdentifier($strPKNames));
+			}
+			$strMatchCondition = '';
+			foreach ($strPKNames as $strPKName) {
+				if ($strMatchCondition) $strMatchCondition .= ' AND ';
+				$strMatchCondition .= $strPKName.' = '.$strEscapedArray[$strPKName];
+			}
+			$strTable = $this->EscapeIdentifierBegin . $strTable . $this->EscapeIdentifierEnd;
+			$strUpdateSql = sprintf('UPDATE %s SET %s WHERE %s',
+				$strTable, $strUpdateStatement, $strMatchCondition);
+			$strInsertSql = sprintf('INSERT INTO %s (%s) SELECT %s WHERE NOT EXISTS (SELECT 1 FROM %s WHERE %s)',
+				$strTable,
+				implode(', ', $strColumns),
+				implode(', ', array_values($strEscapedArray)),
+				$strTable, $strMatchCondition);
+			$this->TransactionBegin();
+			try {
+				$this->ExecuteNonQuery($strUpdateSql);
+				$this->ExecuteNonQuery($strInsertSql);
+				$this->TransactionCommit();
+			} catch (Exception $ex) {
+				$this->TransactionRollback();
+				throw $ex;
+			}
+		}
+
 		public function Connect() {
 			// Lookup Adapter-Specific Connection Properties
 			$strServer = $this->Server;

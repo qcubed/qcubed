@@ -16,6 +16,16 @@ class QSqLite3PdoDatabase extends QPdoDatabase {
 	protected $strEscapeIdentifierBeginInternal = '\'';
 	protected $strEscapeIdentifierEndInternal = '\'';	
 
+        public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
+            $strEscapedArray = $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
+            $strSql = sprintf('INSERT OR REPLACE INTO %s%s%s (%s) VALUES (%s)',
+                $this->EscapeIdentifierBegin, $strTable, $this->EscapeIdentifierEnd,
+                implode(', ', array_keys($strEscapedArray)),
+                implode(', ', array_values($strEscapedArray))
+            );
+            $this->ExecuteNonQuery($strSql);
+        }
+
 		public function Connect() {
 				// Lookup Adapter-Specific Connection Properties
 				$strDsn = sprintf('%s:%s', QSqLite3PdoDatabase::PDO_SQLITE3_DSN_IDENTIFIER, $this->Database);
