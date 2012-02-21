@@ -8,6 +8,8 @@
 	 * @property string $CssClass css class of the column
 	 * @property string $HeaderCssClass css class of the column when it's rendered in a table header
 	 * @property boolean $HtmlEntities if true, cell values will be converted using htmlentities()
+	 * @property QQOrderBy $OrderByClause order by clause for sorting the column in ascending order
+	 * @property QQOrderBy $ReverseOrderByClause order by clause for sorting the column in descending order
 	 *
 	 */
 	abstract class QAbstractSimpleTableColumn extends QBaseClass {
@@ -15,6 +17,8 @@
 		protected $strCssClass = null;
 		protected $strHeaderCssClass = null;
 		protected $blnHtmlEntities = true;
+		protected $objOrderByClause = null;
+		protected $objReverseOrderByClause = null;
 
 		/**
 		 * @param string $strName Name of the column
@@ -67,6 +71,10 @@
 					return $this->strHeaderCssClass;
 				case 'HtmlEntities':
 					return $this->blnHtmlEntities;
+				case "OrderByClause":
+					return $this->objOrderByClause;
+				case "ReverseOrderByClause":
+					return $this->objReverseOrderByClause;
 
 				default:
 					try {
@@ -116,6 +124,24 @@
 						throw $objExc;
 					}
 
+				case "OrderByClause":
+					try {
+						$this->objOrderByClause = QType::Cast($mixValue, 'QQOrderBy');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "ReverseOrderByClause":
+					try {
+						$this->objReverseOrderByClause = QType::Cast($mixValue, 'QQOrderBy');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -146,6 +172,7 @@
 			parent::__construct($strName);
 			$this->strProperty = $strProperty;
 		}
+
 		public function FetchCellValue($item) {
 			$strProperty = $this->strProperty;
 			return $item->$strProperty;
