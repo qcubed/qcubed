@@ -32,8 +32,8 @@
 			}
 
 			if ($this->strHeaderCssClass)
-				return '<th class="' . $this->strHeaderCssClass . '">' . $cellValue . '<th>';
-			return '<th>' . $cellValue . '<th>';
+				return '<th class="' . $this->strHeaderCssClass . '">' . $cellValue . '</th>';
+			return '<th>' . $cellValue . '</th>';
 		}
 
 		public function RenderCell($item, $blnAsHeader = false) {
@@ -46,12 +46,12 @@
 
 			if ($blnAsHeader) {
 				if ($this->strHeaderCssClass)
-					return '<th class="' . $this->strHeaderCssClass . '">' . $cellValue . '<th>';
-				return '<th>' . $cellValue . '<th>';
+					return '<th class="' . $this->strHeaderCssClass . '">' . $cellValue . '</th>';
+				return '<th>' . $cellValue . '</th>';
 			} else {
 				if ($this->strCssClass)
-					return '<td class="' . $this->strCssClass . '">' . $cellValue . '<td>';
-				return '<td>' . $cellValue . '<td>';
+					return '<td class="' . $this->strCssClass . '">' . $cellValue . '</td>';
+				return '<td>' . $cellValue . '</td>';
 			}
 		}
 
