@@ -305,7 +305,13 @@
 		 * @return string the string representation of the object or &null;
 		 */
 		public function serialize() {
-			$vars = array($this->strName, $this->strCssClass, $this->strHeaderCssClass, $this->blnHtmlEntities);
+			$vars = array(
+				$this->strName,
+				$this->strCssClass,
+				$this->strHeaderCssClass,
+				$this->blnHtmlEntities,
+				$this->objOrderByClause,
+				$this->objReverseOrderByClause);
 			// Closure is a feature of PHP 5.3
 			// unfortunatly, as of PHP 5.3.6 Closure is not serializable
 			// this code can be removed when Closures become serializable in PHP
@@ -327,10 +333,23 @@
 		public function unserialize($serialized) {
 			$vars = unserialize($serialized);
 			$cnt = count($vars);
-			if ($cnt == 4) {
-				list($this->strName, $this->strCssClass, $this->strHeaderCssClass, $this->blnHtmlEntities) = $vars;
-			} else if ($cnt == 5) {
-				list($this->strName, $this->strCssClass, $this->strHeaderCssClass, $this->blnHtmlEntities, $this->objClosure) = $vars;
+			if ($cnt == 6) {
+				list($this->strName,
+						$this->strCssClass,
+						$this->strHeaderCssClass,
+						$this->blnHtmlEntities,
+						$this->objOrderByClause,
+						$this->objReverseOrderByClause
+						) = $vars;
+			} else if ($cnt == 7) {
+				list($this->strName,
+						$this->strCssClass,
+						$this->strHeaderCssClass,
+						$this->blnHtmlEntities,
+						$this->objOrderByClause,
+						$this->objReverseOrderByClause,
+						$this->objClosure
+						) = $vars;
 			} else {
 				throw new RuntimeException("wrong number of variables when unserializing QSimpleTableClosureColumn");
 			}
