@@ -102,6 +102,38 @@
 		}
 
 		/**
+		 * Adds an array of items, or an array of key=>value pairs. Convenient for adding a list from a type table.
+		 * When passing key=>val pairs, mixSelectedValues can be an array, or just a single value to compare against to indicate what is selected.
+		 * 
+		 * @param array $mixItemArray Array of QListItems or key=>val pairs.
+		 * @param mixed $mixSelectedValues Array of selected values, or value of one selection
+		 * @param string $strItemGroup allows you to apply grouping (<optgroup> tag)
+		 * @param string $strOverrideParameters OverrideParameters for ListItemStyle
+		 */
+		public function AddItems(array $mixItemArray, $mixSelectedValues = null, $strItemGroup = null, $strOverrideParameters = null) {
+			$this->blnModified = true;
+			try {
+				$mixItemArray = QType::Cast($mixItemArray, QType::ArrayType);
+			} catch (QInvalidCastException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+			
+			foreach ($mixItemArray as $val => $item) {
+				if ($val === '') {
+					$val = null; // these are equivalent when specified as a key of an array
+				}
+				if ($mixSelectedValues && is_array($mixSelectedValues)) {
+					$blnSelected = in_array($val, $mixSelectedValues);
+				} else {
+					$blnSelected = ($val === $mixSelectedValues);	// differentiate between null and 0 values
+				}
+				$this->AddItem($item, $val, $blnSelected, $strItemGroup, $strOverrideParameters);
+			};
+		}
+
+
+		/**
 		 * Retrieve the ListItem at the specified index location
 		 * 
 		 * @param integer $intIndex
