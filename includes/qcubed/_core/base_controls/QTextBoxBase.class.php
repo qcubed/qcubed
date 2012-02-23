@@ -195,8 +195,11 @@
 						$strStyle);
 					break;
 				case QTextMode::SingleLine:
+				case QTextMode::Search:
 				default:
-					$strToReturn = sprintf('<input type="text" name="%s" id="%s" value="' . $this->strFormat . '" %s%s />',
+					$typeStr = $this->strTextMode == QTextMode::Search ? 'search' : 'text';
+					$strToReturn = sprintf('<input type="%s" name="%s" id="%s" value="' . $this->strFormat . '" %s%s />',
+						$typeStr,
 						$this->strControlId,
 						$this->strControlId,
 						QApplication::HtmlEntities($this->strText),
