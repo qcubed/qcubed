@@ -38,6 +38,11 @@
 	{
 		protected $strClickedButtonId;
 		protected $blnHasCloseButton = true;
+
+		public function __construct($objParentObject, $strControlId = null) {
+			parent::__construct($objParentObject, $strControlId);
+			$this->blnDisplay = false;
+		}
 		
 		public function getJqControlId() {
 			return $this->ControlId ."_ctl";	
