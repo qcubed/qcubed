@@ -42,58 +42,7 @@
 		public function getJqControlId() {
 			return $this->ControlId ."_ctl";	
 		}
-		
-		/**
-		 * Special RenderOutput to manage the wrapper. We turn off any of our own custom 
-		 * wrapper attributes, because they can interfere with the wrapper JQuery UI 
-		 * creates for the dialog.
-		 * 
-		 * RenderOutput wraps your content with valid divs and control-identifiers, echos your code
-		 * to the content buffer or simply returns it. See {@link QControlBase::RenderHelper()}.
-		 * 
-		 * @param string $strOutput
-		 * 			Your html-code which should be given out
-		 * @param boolean $blnDisplayOutput
-		 * 			should it be given out, or just be returned?
-		 * @param boolean $blnForceAsBlockElement
-		 * 			should it be given out as a block element, regardless of its configured tag?
-		 * @return string
-		 */
-		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false) {
-			// First, let's mark this control as being rendered and is ON the Page
-			$this->blnRendering = false;
-			$this->blnRendered = true;
-			$this->blnOnPage = true;
 
-
-			// Check for Visibility
-			if (!$this->blnVisible)
-				$strOutput = '';
-
-
-			$strWrapperAttributes = '';
-			if ($this->strWrapperCssClass)
-				$strWrapperAttributes .= sprintf(' class="%s"', $this->strWrapperCssClass);
-
-			switch ($this->objForm->CallType) {
-				case QCallType::Ajax:
-					$strOutput = QString::XmlEscape($strOutput);
-					$strOutput = sprintf('<control id="%s">%s</control>', $this->strControlId, $strOutput);
-					break;
-
-				default:
-					$strOutput = sprintf('<div id="%s_ctl" %s>%s</div>%s', $this->strControlId, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
-					break;
-			}
-
-			// Output or Return
-			if ($blnDisplayOutput)
-				print($strOutput);
-			else
-				return $strOutput;
-		}
-				
-		
 		protected function makeJqOptions() {
 			$strOptions = parent::makeJqOptions();
 		
