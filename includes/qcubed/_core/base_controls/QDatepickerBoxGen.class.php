@@ -476,7 +476,6 @@
 		 * @internal param $mixed [optional] $mixParam2
 		 */
 		protected function CallJqUiMethod($strMethodName /*, ... */) {
-			$args = array();
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
@@ -656,7 +655,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -668,7 +667,7 @@
 					$this->mixAltField = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'altField', $mixValue);
 					}
 					break;
 
@@ -676,7 +675,7 @@
 					try {
 						$this->strAltFormat = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'altFormat', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -688,7 +687,7 @@
 					try {
 						$this->strAppendText = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'appendText', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -700,7 +699,7 @@
 					try {
 						$this->blnAutoSize = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'autoSize', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -712,7 +711,7 @@
 					try {
 						$this->strButtonImage = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'buttonImage', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -724,7 +723,7 @@
 					try {
 						$this->blnButtonImageOnly = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'buttonImageOnly', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -736,7 +735,7 @@
 					try {
 						$this->strButtonText = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'buttonText', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -748,7 +747,7 @@
 					try {
 						$this->mixCalculateWeek = QType::Cast($mixValue, 'QJsClosure');
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'calculateWeek', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -760,7 +759,7 @@
 					try {
 						$this->blnChangeMonth = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'changeMonth', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -772,7 +771,7 @@
 					try {
 						$this->blnChangeYear = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'changeYear', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -784,7 +783,7 @@
 					try {
 						$this->strCloseText = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'closeText', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -796,7 +795,7 @@
 					try {
 						$this->blnConstrainInput = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'constrainInput', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -808,7 +807,7 @@
 					try {
 						$this->strCurrentText = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'currentText', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -820,7 +819,7 @@
 					try {
 						$this->strJqDateFormat = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'dateFormat', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -832,7 +831,7 @@
 					try {
 						$this->arrDayNames = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'dayNames', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -844,7 +843,7 @@
 					try {
 						$this->arrDayNamesMin = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'dayNamesMin', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -856,7 +855,7 @@
 					try {
 						$this->arrDayNamesShort = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'dayNamesShort', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -868,7 +867,7 @@
 					$this->mixDefaultDate = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'defaultDate', $mixValue);
 					}
 					break;
 
@@ -876,7 +875,7 @@
 					$this->mixDuration = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'duration', $mixValue);
 					}
 					break;
 
@@ -884,7 +883,7 @@
 					try {
 						$this->intFirstDay = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'firstDay', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -896,7 +895,7 @@
 					try {
 						$this->blnGotoCurrent = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'gotoCurrent', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -908,7 +907,7 @@
 					try {
 						$this->blnHideIfNoPrevNext = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'hideIfNoPrevNext', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -920,7 +919,7 @@
 					try {
 						$this->blnIsRTL = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'isRTL', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -932,7 +931,7 @@
 					$this->mixMaxDate = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'maxDate', $mixValue);
 					}
 					break;
 
@@ -940,7 +939,7 @@
 					$this->mixMinDate = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'minDate', $mixValue);
 					}
 					break;
 
@@ -948,7 +947,7 @@
 					try {
 						$this->arrMonthNames = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'monthNames', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -960,7 +959,7 @@
 					try {
 						$this->arrMonthNamesShort = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'monthNamesShort', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -972,7 +971,7 @@
 					try {
 						$this->blnNavigationAsDateFormat = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'navigationAsDateFormat', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -984,7 +983,7 @@
 					try {
 						$this->strNextText = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'nextText', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -996,7 +995,7 @@
 					$this->mixNumberOfMonths = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'numberOfMonths', $mixValue);
 					}
 					break;
 
@@ -1004,7 +1003,7 @@
 					try {
 						$this->strPrevText = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'prevText', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1016,7 +1015,7 @@
 					try {
 						$this->blnSelectOtherMonths = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'selectOtherMonths', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1028,7 +1027,7 @@
 					$this->mixShortYearCutoff = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'shortYearCutoff', $mixValue);
 					}
 					break;
 
@@ -1036,7 +1035,7 @@
 					try {
 						$this->strShowAnim = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'showAnim', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1048,7 +1047,7 @@
 					try {
 						$this->blnShowButtonPanel = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'showButtonPanel', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1060,7 +1059,7 @@
 					try {
 						$this->intShowCurrentAtPos = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'showCurrentAtPos', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1072,7 +1071,7 @@
 					try {
 						$this->blnShowMonthAfterYear = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'showMonthAfterYear', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1084,7 +1083,7 @@
 					try {
 						$this->strShowOn = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'showOn', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1096,7 +1095,7 @@
 					try {
 						$this->arrShowOptions = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'showOptions', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1108,7 +1107,7 @@
 					try {
 						$this->blnShowOtherMonths = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'showOtherMonths', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1120,7 +1119,7 @@
 					try {
 						$this->blnShowWeek = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'showWeek', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1132,7 +1131,7 @@
 					try {
 						$this->intStepMonths = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'stepMonths', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1144,7 +1143,7 @@
 					try {
 						$this->strWeekHeader = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'weekHeader', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1156,7 +1155,7 @@
 					try {
 						$this->strYearRange = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'yearRange', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1168,7 +1167,7 @@
 					try {
 						$this->strYearSuffix = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'yearSuffix', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

@@ -159,7 +159,6 @@
 		 * @internal param $mixed [optional] $mixParam2
 		 */
 		protected function CallJqUiMethod($strMethodName /*, ... */) {
-			$args = array();
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
@@ -243,7 +242,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -255,7 +254,7 @@
 					try {
 						$this->blnAutoRefresh = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'autoRefresh', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -267,7 +266,7 @@
 					$this->mixCancel = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'cancel', $mixValue);
 					}
 					break;
 
@@ -275,7 +274,7 @@
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'delay', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -287,7 +286,7 @@
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'distance', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -299,7 +298,7 @@
 					$this->mixFilter = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'filter', $mixValue);
 					}
 					break;
 
@@ -307,7 +306,7 @@
 					try {
 						$this->strTolerance = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'tolerance', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

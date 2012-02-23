@@ -102,7 +102,6 @@
 		 * @internal param $mixed [optional] $mixParam2
 		 */
 		protected function CallJqUiMethod($strMethodName /*, ... */) {
-			$args = array();
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
@@ -180,7 +179,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -192,7 +191,7 @@
 					try {
 						$this->intValue = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'value', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

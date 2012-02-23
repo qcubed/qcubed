@@ -178,7 +178,6 @@
 		 * @internal param $mixed [optional] $mixParam2
 		 */
 		protected function CallJqUiMethod($strMethodName /*, ... */) {
-			$args = array();
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
@@ -277,7 +276,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -289,7 +288,7 @@
 					$this->mixActive = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'active', $mixValue);
 					}
 					break;
 
@@ -297,7 +296,7 @@
 					$this->mixAnimated = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'animated', $mixValue);
 					}
 					break;
 
@@ -305,7 +304,7 @@
 					try {
 						$this->blnAutoHeight = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'autoHeight', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -317,7 +316,7 @@
 					try {
 						$this->blnClearStyle = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'clearStyle', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -329,7 +328,7 @@
 					try {
 						$this->blnCollapsible = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'collapsible', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -341,7 +340,7 @@
 					try {
 						$this->strEvent = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'event', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -353,7 +352,7 @@
 					try {
 						$this->blnFillSpace = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'fillSpace', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -365,7 +364,7 @@
 					$this->mixHeader = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'header', $mixValue);
 					}
 					break;
 
@@ -373,7 +372,7 @@
 					$this->mixIcons = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'icons', $mixValue);
 					}
 					break;
 
@@ -381,7 +380,7 @@
 					try {
 						$this->blnNavigation = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'navigation', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -393,7 +392,7 @@
 					try {
 						$this->mixNavigationFilter = QType::Cast($mixValue, 'QJsClosure');
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'navigationFilter', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

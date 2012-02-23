@@ -106,7 +106,6 @@
 		 * @internal param $mixed [optional] $mixParam2
 		 */
 		protected function CallJqUiMethod($strMethodName /*, ... */) {
-			$args = array();
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
@@ -187,7 +186,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -199,7 +198,7 @@
 					try {
 						$this->blnText = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'text', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -211,7 +210,7 @@
 					try {
 						$this->arrIcons = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'icons', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -223,7 +222,7 @@
 					try {
 						$this->strLabel = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'label', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

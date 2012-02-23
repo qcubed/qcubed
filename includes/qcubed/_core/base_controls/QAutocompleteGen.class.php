@@ -165,7 +165,6 @@
 		 * @internal param $mixed [optional] $mixParam2
 		 */
 		protected function CallJqUiMethod($strMethodName /*, ... */) {
-			$args = array();
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
@@ -259,7 +258,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -271,7 +270,7 @@
 					$this->mixAppendTo = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
 					}
 					break;
 
@@ -279,7 +278,7 @@
 					try {
 						$this->blnAutoFocus = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'autoFocus', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -291,7 +290,7 @@
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'delay', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -303,7 +302,7 @@
 					try {
 						$this->intMinLength = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'minLength', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -315,7 +314,7 @@
 					$this->mixPosition = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'position', $mixValue);
 					}
 					break;
 
@@ -323,7 +322,7 @@
 					$this->mixSource = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'source', $mixValue);
 					}
 					break;
 

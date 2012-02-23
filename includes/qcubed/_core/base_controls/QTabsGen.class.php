@@ -204,7 +204,6 @@
 		 * @internal param $mixed [optional] $mixParam2
 		 */
 		protected function CallJqUiMethod($strMethodName /*, ... */) {
-			$args = array();
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
@@ -265,7 +264,7 @@
 		}
 		/**
 		 * Remove a tab. The second argument is the zero-based index of the tab to be
-		 * removed.
+		 * removed. Instead of an index, the href of the tab may be passed.
 		 * @param $index
 		 */
 		public function Remove($index) {
@@ -274,7 +273,8 @@
 		/**
 		 * Enable a disabled tab.  To enable more than one tab at once reset the
 		 * disabled property like: $('#example').tabs("option","disabled",[]);. The
-		 * second argument is the zero-based index of the tab to be enabled.
+		 * second argument is the zero-based index of the tab to be enabled. Instead
+		 * of an index, the href of the tab may be passed.
 		 * @param $index
 		 */
 		public function Enable1($index) {
@@ -284,6 +284,7 @@
 		 * Disable a tab. The selected tab cannot be disabled. To disable more than
 		 * one tab at once use: $('#example').tabs("option","disabled", [1, 2, 3]); 
 		 * The second argument is the zero-based index of the tab to be disabled.
+		 * Instead of an index, the href of the tab may be passed.
 		 * @param $index
 		 */
 		public function Disable1($index) {
@@ -382,7 +383,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -394,7 +395,7 @@
 					try {
 						$this->arrAjaxOptions = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'ajaxOptions', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -406,7 +407,7 @@
 					try {
 						$this->blnCache = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'cache', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -418,7 +419,7 @@
 					try {
 						$this->blnCollapsible = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'collapsible', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -430,7 +431,7 @@
 					$this->mixCookie = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'cookie', $mixValue);
 					}
 					break;
 
@@ -438,7 +439,7 @@
 					try {
 						$this->blnDeselectable = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'deselectable', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -450,7 +451,7 @@
 					try {
 						$this->arrDisabled1 = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -462,7 +463,7 @@
 					try {
 						$this->strEvent = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'event', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -474,7 +475,7 @@
 					$this->mixFx = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', 'fx', $mixValue);
 					}
 					break;
 
@@ -482,7 +483,7 @@
 					try {
 						$this->strIdPrefix = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'idPrefix', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -494,7 +495,7 @@
 					try {
 						$this->strPanelTemplate = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'panelTemplate', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -506,7 +507,7 @@
 					try {
 						$this->intSelected = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'selected', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -518,7 +519,7 @@
 					try {
 						$this->strSpinner = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'spinner', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -530,7 +531,7 @@
 					try {
 						$this->strTabTemplate = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', 'tabTemplate', $mixValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

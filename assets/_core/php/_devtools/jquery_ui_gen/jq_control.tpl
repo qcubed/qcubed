@@ -115,7 +115,6 @@
 		 * @internal param $mixed [optional] $mixParam2
 		 */
 		protected function CallJqUiMethod($strMethodName /*, ... */) {
-			$args = array();
 			$args = func_get_args();
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
@@ -179,7 +178,7 @@
 	<% if (!($option instanceof Event)) { %>
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod("option", $strName, $mixValue);
+						$this->CallJqUiMethod('option', '<%= $option->name %>', $mixValue);
 					}
 					break;
 	<% } %>
@@ -189,7 +188,7 @@
 	<% if (!($option instanceof Event)) { %>
 						$this-><%= $option->varName %> = QType::Cast($mixValue, <%= $option->phpQType %>);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod("option", $strName, $mixValue);
+							$this->CallJqUiMethod('option', '<%= $option->name %>', $mixValue);
 						}
 	<% } %>
 	<% if ($option instanceof Event) { %>
