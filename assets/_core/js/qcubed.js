@@ -122,12 +122,8 @@ $j.ajaxSync.data = [];
 
 					var strControlId = $j(this).attr("id");
 
-					// CheckBoxList
-					if (strControlId.indexOf('[') >= 0) {
-						if (strControlId.indexOf('[0]') >= 0)
-							strToReturn += " " + strControlId.substring(0, strControlId.length - 3);
-					// RadioButtonList
-					} else if (strControlId.indexOf('_') >= 0) {
+					// RadioButtonList or CheckBoxList
+					if (strControlId.indexOf('_') >= 0) {
 						if (strControlId.indexOf('_0') >= 0)
 							strToReturn += " " + strControlId.substring(0, strControlId.length - 2);
 
@@ -172,8 +168,17 @@ $j.ajaxSync.data = [];
 					case "checkbox":
 					case "radio":
 						if ($j(this).attr("checked")) {
-							var strTestName = $j(this).attr("name") + "_";
+							var strTestName;
+							var bracketIndex = $j(this).attr("name").indexOf('[');
+							
+							if (bracketIndex > 0) {
+								strTestName = $j(this).attr("name").substring (0, bracketIndex) + '_';
+							} else {
+								strTestName = $j(this).attr("name") + "_";
+							}
+							
 							if (strControlId.substring(0, strTestName.length) == strTestName)
+								// CheckboxList or RadioButtonList
 								strPostData += "&" + $j(this).attr("name") + "=" + strControlId.substring(strTestName.length);
 							else
 								strPostData += "&" + strControlId + "=" + $j(this).val();

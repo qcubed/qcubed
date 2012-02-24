@@ -100,7 +100,7 @@
 				$objStyle = $objStyle->ApplyOverride($objItem->ItemStyle);
 			}
 			//$strIndexedId = $this->strControlId.'['.$intIndex .']'; Buggy, html spec says no [] allowed
-			$strIndexedId = $this->strControlId.'__'.$intIndex;
+			$strIndexedId = $this->strControlId.'_'.$intIndex;
 			$strToReturn = '';
 			if (!$this->blnEnabled) {
 				$strToReturn .= '<span disabled="disabled">';
