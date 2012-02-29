@@ -22,25 +22,38 @@ class Option extends JqAttributes {
 	public $phpQType;
 
 	static public function php_type($jsType) {
+        $jsType = strtolower($jsType);
 		$jsType = preg_replace('/\([^\)]*\)/', '', $jsType); // erase possible function args
 		if (strchr($jsType, ',')) return 'mixed';
 		if (stripos($jsType, 'array') === 0) return 'array';
 		switch ($jsType) {
-		case 'Boolean': return 'boolean';
-		case 'String': return 'string';
-		case 'Object': return 'mixed';
-		case 'Selector': return 'mixed';
-		case 'Integer': return 'integer';
-		case 'Number': return 'integer';
-		case 'Double': return 'double';
-		case 'Float': return 'double';
-		case 'Date': return 'QDateTime';
-		case 'Options': return 'array';
+		case 'boolean': return 'boolean';
+        case 'boolean[]': return 'boolean[]';
+		case 'string': return 'string';
+        case 'string[]': return 'string[]';
+		case 'object': return 'mixed';
+        case 'object[]': return 'object[]';
+		case 'selector': return 'mixed';
+		case 'int': return 'integer';
+        case 'int[]': return 'int[]';
+		case 'integer': return 'integer';
+        case 'integer[]': return 'int[]';
+		case 'number': return 'integer';
+        case 'number[]': return 'int[]';
+		case 'double': return 'double';
+        case 'double[]': return 'double[]';
+		case 'float': return 'double';
+        case 'float[]': return 'double[]';
+		case 'date': return 'QDateTime';
+		case 'date[]': return 'QDateTime[]';
+		case 'options': return 'array';
+		case 'array[]': return 'array[]';
 		default: return 'QJsClosure';
 		}
 	}
 
 	static public function php_qtype($phpType) {
+        $phpType = str_replace('[]', '', $phpType);
 		switch ($phpType) {
 		case 'boolean': return 'QType::Boolean';
 		case 'string': return 'QType::String';
@@ -54,16 +67,24 @@ class Option extends JqAttributes {
 	}
 
 	static public function php_type_prefix($phpType) {
+        $phpType = str_replace('[]', '', $phpType);
 		switch ($phpType) {
 		case 'boolean': return 'bln';
 		case 'string': return 'str';
 		case 'mixed': return 'mix';
+		case 'int': return 'int';
 		case 'integer': return 'int';
 		case 'double': return 'flt';
 		case 'array': return 'arr';
 		case 'QDateTime': return 'dtt';
 		default: return 'mix';
 		}
+	}
+
+	static public function php_type_suffix($phpType) {
+        if (strpos($phpType, '[]') !== false)
+            return 'Array';
+        return '';
 	}
 
 	static public function php_value($jsValue) {
@@ -106,7 +127,7 @@ class Option extends JqAttributes {
 			$name = 'jq'.ucfirst($name);
 
 		$this->phpType = self::php_type($jsType);
-		$this->propName = ucfirst($name);
+		$this->propName = ucfirst($name).self::php_type_suffix($this->phpType);
 		$this->varName = self::php_type_prefix($this->phpType).$this->propName;
 		$this->phpQType = self::php_qtype($this->phpType);
 	}
@@ -120,7 +141,7 @@ class Event extends Option
 
 	public function __construct($strQcClass, $name, $origName, $type, $description) {
 		parent::__construct($name, $origName, $type, 'null', $description);
-		
+
 		if (substr ($type, 0, 8) == 'function') {
 			$subject = substr ($type, 8);
 			$subject = str_replace (' ', '', $subject);
@@ -189,6 +210,31 @@ class JqDoc {
 	public $options = array();
 	public $methods = array();
 	public $events = array();
+    public $descriptionLine = 75;
+    public $hasDisabledProperty = true;
+    protected $names = array();
+
+    protected function reset_names() {
+        $this->names = array();
+    }
+
+    protected function has_name($name) {
+        return array_key_exists($name, $this->names);
+    }
+
+    protected function add_name($name) {
+        $this->names[$name] = $name;
+    }
+
+    protected function unique_name($name) {
+        $i = 1;
+        while ($this->has_name($name)) {
+            $name .= $i;
+            ++$i;
+        }
+        $this->add_name($name);
+        return $name;
+    }
 
 	public function __construct($strJqClass = null, $strJqSetupFunc = null, $strQcClass = null, $strQcBaseClass = 'QPanel')
 	{
@@ -209,7 +255,7 @@ class JqDoc {
 		}
 
 		$this->strQcBaseClass = $strQcBaseClass;
-		
+
 		$r = new ReflectionClass($this->strQcBaseClass);
 		if ($r->isAbstract()) {
 			$this->strAbstract = 'abstract ';
@@ -232,17 +278,12 @@ class HtmlJqDoc extends JqDoc {
 
 		$htmlOptions = $html->find('div[id=options] li.option');
 
-		$names = array();
 		foreach ($htmlOptions as $htmlOption) {
 			$nodes = $htmlOption->find('h3.option-name');
 			$origName = $name = $nodes[0]->plaintext();
 
 			// sometimes jQuery controls (e.g. tabs) uses the same property name for more than one options
-			$i = 1;
-			while (array_key_exists($name, $names)) {
-				$name .= $i;
-				++$i;
-			}
+            $name = $this->unique_name($name);
 
 			$nodes = $htmlOption->find('dd.option-type');
 			$type = $nodes[0]->plaintext();
@@ -258,7 +299,6 @@ class HtmlJqDoc extends JqDoc {
 			$description = $nodes[0]->plaintext();
 
 			$this->options[] = new Option($name, $origName, $type, $defaultValue, $description);
-			$names[$name] = $name;
 		}
 
 		$htmlEvents = $html->find('div[id=events] li.event');
@@ -270,11 +310,7 @@ class HtmlJqDoc extends JqDoc {
 			}
 
 			// sometimes jQuery controls (e.g. tabs) uses the same property name for more than one options
-			$i = 1;
-			while (array_key_exists($name, $names)) {
-				$name .= $i;
-				++$i;
-			}
+            $name = $this->unique_name($name);
 
 			$nodes = $htmlEvent->find('dd.event-type');
 			$type = $nodes[0]->plaintext();
@@ -287,11 +323,10 @@ class HtmlJqDoc extends JqDoc {
 			} else {
 				$this->events[] = new Event($this->strQcClass, $name, $origName, $type, $description);
 			}
-			$names[$name] = $name;
 		}
 
 		$htmlMethods = $html->find('div[id=methods] li.method');
-		$names = array();
+		$this->reset_names();
 		foreach ($htmlMethods as $htmlMethod) {
 			$nodes = $htmlMethod->find('h3.method-name');
 			$origName = $name = $nodes[0]->plaintext();
@@ -302,11 +337,7 @@ class HtmlJqDoc extends JqDoc {
 			}
 
 			// sometimes jQuery controls (e.g. tabs) uses the same property name for more than one options
-			$i = 1;
-			while (array_key_exists($name, $names)) {
-				$name .= $i;
-				++$i;
-			}
+            $name = $this->unique_name($name);
 
 			$nodes = $htmlMethod->find('dd.method-signature');
 			$signature = $nodes[0]->plaintext();
@@ -315,9 +346,7 @@ class HtmlJqDoc extends JqDoc {
 			$description = $nodes[0]->plaintext();
 
 			$this->methods[] = new Method($name, $origName, $signature, $description);
-			$names[$name] = $name;
 		}
-
 	}
 }
 

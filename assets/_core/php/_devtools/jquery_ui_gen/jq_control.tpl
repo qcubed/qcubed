@@ -27,7 +27,7 @@
 	
 <% foreach ($objJqDoc->events as $event) { %>
 	/**
-	 * <%= str_replace("\n", "\n\t * ", wordwrap(trim($event->description), 75, "\n\t\t")) %>
+	 * <%= str_replace("\n", "\n\t * ", wordwrap(trim($event->description), $objJqDoc->descriptionLine, "\n\t\t")) %>
 	 */
 	class <%= $event->eventClassName %> extends QJqUiEvent {
 		const EventName = '<%= $event->eventName %>';
@@ -38,7 +38,7 @@
 <% foreach ($objJqDoc->options as $option) { %>
 	<% if ($option instanceof Event) { %>
 	/**
-	 * <%= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), 75, "\n\t\t")) %>
+	 * <%= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), $objJqDoc->descriptionLine, "\n\t\t")) %>
 	 */
 	class <%= $option->eventClassName %> extends QJqUiPropertyEvent {
 		const EventName = '<%= $option->eventName %>';
@@ -50,7 +50,7 @@
 
 	/**
 <% foreach ($objJqDoc->options as $option) { %>
-	 * @property <%= $option->phpType %> $<%= $option->propName %> <%= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), 75, "\n\t\t")) %>
+	 * @property <%= $option->phpType %> $<%= $option->propName %> <%= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), $objJqDoc->descriptionLine, "\n\t\t")) %>
 <% } %>
 	 */
 
@@ -203,11 +203,13 @@
 
 <% } %>
 
+<% if ($objJqDoc->hasDisabledProperty) { %>
 				case 'Enabled':
 					$this->Disabled = !$mixValue;	// Tie in standard QCubed functionality
 					parent::__set($strName, $mixValue);
 					break;
 					
+<% } %>
 				default:
 					try {
 						parent::__set($strName, $mixValue);
