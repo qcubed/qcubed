@@ -172,7 +172,7 @@
 
 			// Parse the Value string
 			} else {
-				$intTimestamp = null;
+				$strTimeISO8601 = null;
 				$blnValid = false;
 				QApplication::SetErrorHandler('QDateTimeErrorHandler');
 				try {
@@ -182,13 +182,14 @@
 						$blnValid = parent::__construct($mixValue);
 				} catch (Exception $objExc) {}
 				if ($blnValid !== false)
-					$intTimestamp = parent::format('U');
+					$strTimeISO8601 = parent::format(DateTime::ISO8601);
 				QApplication::RestoreErrorHandler();
 
 				// Valid Value String
-				if ($intTimestamp) {
+				if ($strTimeISO8601) {
 					// To deal with "Tues" and date skipping bug in PHP 5.2
-					parent::__construct(date('Y-m-d H:i:s', parent::format('U')));
+					if ($strTimeISO8601 != $mixValue)
+						parent::__construct($strTimeISO8601);
 
 					// if $mixValue represent only time string, blnDateNull must be set to true 
 					$objDateTime = (object)date_parse($mixValue); 
