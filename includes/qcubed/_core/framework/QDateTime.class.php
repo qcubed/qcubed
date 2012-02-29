@@ -109,6 +109,7 @@
 					}
 					$this->blnTimeNull = true;
 					$this->blnDateNull = false;
+					$this->ReinforceNullProperties();
 					return;
 				case QDateTime::TimeOnlyType:
 					if ($objTimeZone) {
@@ -118,6 +119,7 @@
 					}
 					$this->blnTimeNull = false;
 					$this->blnDateNull = true;
+					$this->ReinforceNullProperties();
 					return;
 				case QDateTime::DateAndTimeType:
 					if ($objTimeZone) {
@@ -219,6 +221,7 @@
 						parent::__construct('2000-01-01 00:00:00');
 				}
 			}
+			$this->ReinforceNullProperties();
 		}
 		
 		/**
@@ -318,7 +321,6 @@
 		 * @return string the formatted date as a string
 		 */
 		public function qFormat($strFormat = null) {
-			$this->ReinforceNullProperties();
 			if (is_null($strFormat))
 				$strFormat = QDateTime::$DefaultFormat;
 
@@ -434,16 +436,12 @@
 			return $strToReturn;
 		}
 
-		public function format($strFormat) {
-			$this->ReinforceNullProperties();
-			return parent::format($strFormat);
-		}
-
 		public function setTime($intHour, $intMinute = null, $intSecond = null) {
 			// If HOUR or MINUTE is NULL...
 			if (is_null($intHour) || is_null($intMinute)) {
 				parent::setTime($intHour, $intMinute, $intSecond);
 				$this->blnTimeNull = true;
+				$this->ReinforceNullProperties();
 				return $this;
 			}
 
@@ -650,8 +648,6 @@
 		}
 
 		public function __get($strName) {
-			$this->ReinforceNullProperties();
-
 			switch ($strName) {
 				case 'Month':
 					if ($this->blnDateNull)
