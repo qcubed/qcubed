@@ -949,7 +949,7 @@
 
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
-				$strToReturn .= sprintf('<style type="text/css" media="all">@import "%s/%s";</style>', __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__, $strScript);
+				$strToReturn  .= sprintf('<style type="text/css" media="all">@import "%s";</style>', $this->GetCssFileURI($strScript));
 				$strToReturn .= "\r\n";
 			}
 
@@ -1081,6 +1081,22 @@
 			return $objToReturn;
 		}
 
+		public function GetJsFileURI($strFile) {
+			if (strpos($strFile, "http") === 0)
+				return $strFile;
+			if (strpos($strFile, "/") === 0)
+				return __VIRTUAL_DIRECTORY__ . $strFile;
+			return __VIRTUAL_DIRECTORY__ . __JS_ASSETS__ . '/' . $strFile;
+		}
+
+		public function GetCssFileURI($strFile) {
+			if (strpos($strFile, "http") === 0)
+				return $strFile;
+			if (strpos($strFile, "/") === 0)
+				return __VIRTUAL_DIRECTORY__ . $strFile;
+			return __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/' . $strFile;
+		}
+
 		public function RenderEnd($blnDisplayOutput = true) {
 			// Ensure that RenderEnd() has not yet been called
 			switch ($this->intFormStatus) {
@@ -1103,11 +1119,7 @@
 
 			// Include javascripts that need to be included
 			foreach ($strJavaScriptArray as $strScript) {
-				if(strpos($strScript, "http") === 0){ // external JS file
-					$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $strScript);
-				} else {
-					$strToReturn .= sprintf('<script type="text/javascript" src="%s/%s"></script>', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__, $strScript);
-				}
+				$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $this->GetJsFileURI($strScript));
 				$strToReturn .= "\r\n";
 			}
 
@@ -1203,6 +1215,7 @@
 			}
 
 			// Finally, add QCubed includes path
+			$strEndScript = sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__) . $strEndScript;
 			$strEndScript = sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__) . $strEndScript;

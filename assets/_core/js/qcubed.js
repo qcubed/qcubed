@@ -258,7 +258,11 @@ $j.ajaxSync.data = [];
 		////////////////////////////////
 
 			this.loadJavaScriptFile = function(strScript, objCallback) {
-				strScript = qc.jsAssets + "/" + strScript;
+				if (strScript.indexOf("/") == 0) {
+					strScript = qc.baseDir + strScript;
+				} else if (strScript.indexOf("http") != 0) {
+					strScript = qc.jsAssets + "/" + strScript;
+				}
 				$j.ajax({
 					url: strScript,
 					success: objCallback,
@@ -268,7 +272,11 @@ $j.ajaxSync.data = [];
 			};
 
 			this.loadStyleSheetFile = function(strStyleSheetFile, strMediaType) {
-				strStyleSheetFile = qc.cssAssets + "/" + strStyleSheetFile;
+				if (strStyleSheetFile.indexOf("/") == 0) {
+					strStyleSheetFile = qc.baseDir + strStyleSheetFile;
+				} else if (strStyleSheetFile.indexOf("http") != 0) {
+					strStyleSheetFile = qc.cssAssets + "/" + strStyleSheetFile;
+				}
 
 				$j('head').append('<link rel="stylesheet" href="' + strStyleSheetFile + '" type="text/css" />');
 
