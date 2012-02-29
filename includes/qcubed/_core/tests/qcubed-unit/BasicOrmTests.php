@@ -136,5 +136,26 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			$this->assertNotNull($objPerson->Id, "Id should not be null since it's always added to the select list");
 		}
 	}
+	
+	public function testExpand() {
+		// Test intermediate nodes on expansion
+		 $clauses = QQ::Clause(
+			QQ::Expand(QQN::Milestone()->Project->ManagerPerson)
+		);
+		
+		$objMilestone = 
+			Milestone::QuerySingle(
+				QQ::Equal (QQN::Milestone()->Id, 1),
+				$clauses
+			);
+		
+		$this->assertTrue(!is_null($objMilestone->Name), "Milestone 1 has a name");
+		$this->assertEqual($objMilestone->Name, "Milestone A", "Milestone 1 has name of Milestone A");
+		$this->assertTrue(!is_null($objMilestone->Project->Name), "Project 1 has a name");
+		$this->assertEqual($objMilestone->Project->Name, "ACME Website Redesign", "Project 1 has name of ACME Website Redesign");
+		$this->assertTrue(!is_null($objMilestone->Project->ManagerPerson->FirstName), "Person 7 has a name");
+		$this->assertEqual($objMilestone->Project->ManagerPerson->FirstName, "Karen", "Person 7 has first name of Karen");
+		
+	}
 }
 ?>

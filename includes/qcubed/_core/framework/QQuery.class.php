@@ -176,7 +176,7 @@
 			} else {
 				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
 				try {
-					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, QQ::Select());
+					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
 
 					if ($this->strTableName) {
 						$strJoinTableAlias = $strParentAlias . '__' . $this->strName;
@@ -228,7 +228,7 @@
 			else {
 				try {
 					// No -- First get the Parent Alias
-					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, QQ::Select());
+					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
 
 					$strJoinTableAlias = $strParentAlias . '__' . $this->strAlias;
 					// Next, Join the Appropriate Table
@@ -423,7 +423,7 @@
 					$strBegin, $this->strName, $strEnd);
 			else {
 				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, QQ::Select());
+				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
 
 				if ($this->strTableName) {
 					// Next, Join the Appropriate Table
@@ -448,7 +448,7 @@
 				return $this->strName;
 			else {
 				// No -- First get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, QQ::Select());
+				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
 
 				// Next, Join the Appropriate Table
 					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias,
