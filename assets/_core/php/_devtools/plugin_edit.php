@@ -79,7 +79,7 @@ class PluginEditForm extends QForm {
 		// Let's setup some basic appearance options
 		// This could and should normally be done in a separate CSS class using the CssClass property
 		$this->dlgStatus->Width = '500px';
-		$this->dlgStatus->Height = '300px';
+		$this->dlgStatus->Height = 'auto';
 		$this->dlgStatus->Overflow = QOverflow::Auto;
 		$this->dlgStatus->Padding = '10px';
 		$this->dlgStatus->MatteClickable = false;
@@ -97,10 +97,10 @@ class PluginEditForm extends QForm {
 	}
 	
 	public function btnInstall_Click() {
-		$status = QPluginInstaller::installFromExpanded(QApplication::QueryString('strName'));
+		list($status, $log) = QPluginInstaller::installFromExpanded(QApplication::QueryString('strName'));
 		
 		$linkToProceed = "<h2><a href='plugin_manager.php'>Click here to continue</a></h2>";
-		$this->dlgStatus->Text = nl2br($status) . $linkToProceed;
+		$this->dlgStatus->Text = $status.'<br/>'.$linkToProceed.'<a href="#" onclick="jQuery(\'#install_details\').toggle()">Details</a><div id="install_details" style="display:none;border:1px solid black;height:300px; overflow-y:auto;margin-top:20px;padding:10px;">'.nl2br($log).'</div>';
 		$this->dlgStatus->ShowDialogBox();
 	}
 	
@@ -116,10 +116,10 @@ class PluginEditForm extends QForm {
 	}
 	
 	public function btnUninstall_Click() {
-		$status = QPluginUninstaller::uninstallExisting(QApplication::QueryString('strName'));
+		list($status,$log) = QPluginUninstaller::uninstallExisting(QApplication::QueryString('strName'));
 
 		$linkToProceed = "<h2><a href='plugin_manager.php'>Click here to continue</h2></a>";
-		$this->dlgStatus->Text = nl2br($status) . $linkToProceed;
+		$this->dlgStatus->Text = $status.'<br/>'.$linkToProceed.'<a href="#" onclick="jQuery(\'#uninstall_details\').toggle()">Details</a><div id="uninstall_details" style="display:none;border:1px solid black;height:300px; overflow-y:auto;margin-top:20px;padding:10px;">'.nl2br($log).'</div>';
 		$this->dlgStatus->ShowDialogBox();
 	}
 

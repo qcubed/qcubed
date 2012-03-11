@@ -12,27 +12,30 @@
  */
 abstract class QPluginUninstaller extends QPluginInstallerBase {
 	public static function uninstallExisting($strPluginName) {
-		$blnMasterConfigUpdated 	= self::deleteFromMasterConfig($strPluginName);
-		$blnIncludesFileUpdated 	= self::removeMarkedSectionHelper($strPluginName, self::getMasterIncludeFilePath());
-		$blnExamplesConfigUpdated 	= self::removeMarkedSectionHelper($strPluginName, self::getMasterExamplesFilePath());
-		$strDeleteStatus 			= self::deleteFiles($strPluginName);
-		
-		$strStatus = "Uninstalling plugin " . $strPluginName . "\r\n\r\n";
-		if ($blnMasterConfigUpdated) {
-			$strStatus .= "Master plugin configuration file updated\r\n";
+		$strLog = "Uninstalling plugin " . $strPluginName . "\r\n\r\n";
+		try {
+			$blnMasterConfigUpdated 	= self::deleteFromMasterConfig($strPluginName);
+			$blnIncludesFileUpdated 	= self::removeMarkedSectionHelper($strPluginName, self::getMasterIncludeFilePath());
+			$blnExamplesConfigUpdated 	= self::removeMarkedSectionHelper($strPluginName, self::getMasterExamplesFilePath());
+			$strDeleteStatus 			= self::deleteFiles($strPluginName);
+
+			if ($blnMasterConfigUpdated) {
+				$strLog .= "Master plugin configuration file updated\r\n";
+			}
+			if ($blnIncludesFileUpdated) {
+				$strLog .= "Class file references updated\r\n";
+			}
+			if ($blnExamplesConfigUpdated) {
+				$strLog .= "Examples file references updated\r\n";
+			}
+
+			$strLog .= $strDeleteStatus;
+			$strStatus = "Uninstallation completed successfully.";
+		} catch (Exception $ex) {
+			$strStatus = "Installation failed:\r\n".$ex;
 		}
-		if ($blnIncludesFileUpdated) {
-			$strStatus .= "Class file references updated\r\n";
-		}
-		if ($blnExamplesConfigUpdated) {
-			$strStatus .= "Examples file references updated\r\n";
-		}
-		
-		$strStatus .= $strDeleteStatus;
-		
-		$strStatus .= "\r\nUninstallation completed successfully.";
-		
-		return $strStatus;
+		$strLog .= "\r\n".$strStatus;
+		return array($strStatus, $strLog);
 	}
 	
 	private static function deleteFiles($strPluginName) {		

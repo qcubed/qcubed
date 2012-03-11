@@ -17,11 +17,11 @@ if (sizeof($arrFiles) > 0) {
 		try {
 			$pluginFolder = QPluginInstaller::installPluginFromZip($fullFilePath);
 			if ($pluginFolder) {
-				$strLog = QPluginInstaller::installFromExpanded($pluginFolder);
+				list($strStatus, $strLog) = QPluginInstaller::installFromExpanded($pluginFolder);
 			
 				unlink($fullFilePath);
+				echo nl2br($strLog);
 			}
-			echo nl2br($strLog);
 		} catch (Exception $e) {
 			echo '<div class="error">Error installing the plugin: ' . $e->getMessage() . '</div>';
 		}

@@ -44,27 +44,30 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 	}	
 
 	public static function installFromExpanded($strExtractedFolderName) {
-		$expandedDir = self::getExpandedPath($strExtractedFolderName);
-		$objPlugin = QPluginConfigParser::parseNewPlugin($expandedDir . self::PLUGIN_CONFIG_FILE);
+		$strLog = "Installing plugin ";
+		try {
+			$expandedDir = self::getExpandedPath($strExtractedFolderName);
+			$objPlugin = QPluginConfigParser::parseNewPlugin($expandedDir . self::PLUGIN_CONFIG_FILE);
 
-		$strStatus = "Installing plugin " . $objPlugin->strName . "\r\n\r\n";
+			$strLog .= $objPlugin->strName . "\r\n\r\n";
 
-		if (self::isPluginInstalled($objPlugin->strName)) {
-			$strStatus .= "Plugin with the same name is already installed - aborting";
-			return $strStatus;
+			if (self::isPluginInstalled($objPlugin->strName)) {
+				$strStatus = "Plugin with the same name is already installed - aborting";
+			} else {
+				$strLog .= self::appendPluginConfigToMasterConfig($strExtractedFolderName);
+				$strLog .= self::deployFilesForNewPlugin($objPlugin, $strExtractedFolderName);
+				$strLog .= self::appendClassFileReferences($objPlugin, $strExtractedFolderName);
+				$strLog .= self::appendExampleFileReferences($objPlugin, $strExtractedFolderName);
+
+				// When installation is done, clean up
+				$strLog .= self::cleanupExtractedFiles($strExtractedFolderName);
+				$strStatus = "Installation completed successfully.";
+			}
+		} catch (Exception $ex) {
+			$strStatus = "Installation failed:\r\n".$ex;
 		}
-
-		$strStatus .= self::appendPluginConfigToMasterConfig($strExtractedFolderName);
-		$strStatus .= self::deployFilesForNewPlugin($objPlugin, $strExtractedFolderName);
-		$strStatus .= self::appendClassFileReferences($objPlugin, $strExtractedFolderName);
-		$strStatus .= self::appendExampleFileReferences($objPlugin, $strExtractedFolderName);
-	
-		// When installation is done, clean up
-		$strStatus .= self::cleanupExtractedFiles($strExtractedFolderName);
-
-		$strStatus .= "\r\nInstallation completed successfully.";
-
-		return $strStatus;
+		$strLog .= "\r\n".$strStatus;
+		return array($strStatus, $strLog);
 	}
 	
 	private static function deployFilesForNewPlugin($objPlugin, $strExtractedFolderName) {
