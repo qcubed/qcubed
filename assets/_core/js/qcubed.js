@@ -218,12 +218,32 @@ $j.ajaxSync.data = [];
 				type: "POST",
 				data: strPostData,
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					if (XMLHttpRequest.status != 0 || XMLHttpRequest.responseText.length > 0) {
-						alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
-						var objErrorWindow = window.open('about:blank', 'qcodo_error','menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
-						objErrorWindow.focus();
-						objErrorWindow.document.write(XMLHttpRequest.responseText);
-						return;
+					var result = XMLHttpRequest.responseText;
+					if (XMLHttpRequest.status != 0 || result.length > 0) {
+						if (result.substr(0,6) == '<html>') {
+                            alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
+                            var objErrorWindow = window.open('about:blank', 'qcubed_error','menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
+                            objErrorWindow.focus();
+                            objErrorWindow.document.write(result);
+                            return false;
+						} else {
+							var dialog = $j('<div id="Qcubed_AJAX_Error"></div>')
+									.html(result)
+									.dialog({
+										modal: true,
+										height: 200,
+										width: 400,
+										autoOpen: true,
+										title: 'An Error Occurred',
+										buttons: {
+											Ok: function() {
+												$j(this).dialog("close");
+											}
+										}
+									});
+							dialog.dialog('open');
+							return false;
+						}
 					}
 				},
 				success: function (xml) {

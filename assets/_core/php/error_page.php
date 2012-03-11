@@ -19,21 +19,16 @@
 			// Reset the Buffer
 			while(ob_get_level()) ob_end_clean();
 
-			// Setup the Friendly Response
-			header('Content-Type: text/xml');
-			$strToReturn = '<controls/><commands><command>alert("' . str_replace('"', '\\"', ERROR_FRIENDLY_AJAX_MESSAGE) . '");</command></commands>';
-			if (QApplication::$EncodingType)
-				printf("<?xml version=\"1.0\" encoding=\"%s\"?><response>%s</response>\r\n", QApplication::$EncodingType, $strToReturn);
-			else
-				printf("<?xml version=\"1.0\"?><response>%s</response>\r\n", $strToReturn);
-			return false;
+			//$strAlertMsg = str_replace('"', '\\"', ERROR_FRIENDLY_AJAX_MESSAGE);
+			$strMsg = str_replace('\r\n', '<br />', ERROR_FRIENDLY_AJAX_MESSAGE);
+			echo '<div style="font-size: 12px;">' . $strMsg . '<br/><br/></div>';
 		}
 	} else {
 		if (defined('ERROR_FRIENDLY_PAGE_PATH') && ERROR_FRIENDLY_PAGE_PATH) {
 			// Reset the Buffer
 			while(ob_get_level()) ob_end_clean();
-			header("HTTP/1.1 500 Internal Server Error");
-			require(__DOCROOT__ . ERROR_FRIENDLY_PAGE_PATH);		
+			header("HTTP/1.1 500 Internal Server Error", null, 500);
+			require(__DOCROOT__ . ERROR_FRIENDLY_PAGE_PATH);
 		}
 	}
 ?>

@@ -19,8 +19,17 @@
 	$__exc_strMessageBody = str_replace(" ", "&nbsp;", str_replace("\n", "<br/>\n", $__exc_strMessageBody));
 	$__exc_strMessageBody = str_replace(":&nbsp;", ": ", $__exc_strMessageBody);
 	$__exc_objFileArray = file($__exc_strFilename);
-	
+
 	header("HTTP/1.1 500 Internal Server Error");
+?>
+<?php
+if(stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
+	// It was a invalid form state data
+	// We return this string because invalid form state data error response does not behave like other errors
+	// and gets unable to render the QDialogBox for the error. Since qcubed.js searches for '<html>' in the beginning
+	// of the response to display it in the new Window, the following line will circumvent that behavior
+	echo '<!-- -->';
+}
 ?>
 <html>
 	<head>
@@ -37,11 +46,11 @@
 			.title { font-family: 'Verdana' 'Arial' 'Helvetica' 'sans-serif'; font-size: 19px; font-style: italic; color: #330055; }
 			.code { background-color: #f4eeff; padding: 1px 10px 1px 10px; }
 		</style>
-		<script type="text/javascript">			
+		<script type="text/javascript">
 			function ToggleHidden(strDiv) { var obj = document.getElementById(strDiv); var stlSection = obj.style; var isCollapsed = obj.style.display.length; if (isCollapsed) stlSection.display = ''; else stlSection.display = 'none'; }
 		</script>
 	</head>
-	<body bgcolor="white" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0"> 
+	<body bgcolor="white" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
 
 	<table border="0" cellspacing="0" width="100%">
 		<tr>
@@ -52,7 +61,7 @@
 				<b>HTTP User Agent:</b> <?php _p($_SERVER['HTTP_USER_AGENT']); ?></td>
 		</tr>
 	</table>
-	
+
 	<div class="page">
 		<span class="title"><?php _p($__exc_strMessageBody, false); ?></span><br />
 			<b><?php _p($__exc_strType); ?> Type:</b>&nbsp;&nbsp;
@@ -87,7 +96,7 @@
 						_p('</pre>', false);
 ?>
 			</div><br />
-			
+
 <?php
 			if (isset($__exc_objErrorAttributeArray))
 				foreach ($__exc_objErrorAttributeArray as $__exc_objErrorAttribute) {
@@ -147,7 +156,7 @@
 							else
 								$__exc_StrVarExport = htmlentities(var_export($__exc_ObjVariableArray[$__exc_Key], true));
 
-							$__exc_StrToDisplay .= sprintf("  <a href=\"#\" onclick=\"ToggleHidden(%s); return false;\">%s</a>\n", $varCounter, $__exc_Key);
+							$__exc_StrToDisplay .= sprintf("  <a href=\"#\" onclick=\"ToggleHidden('%s'); return false;\">%s</a>\n", $varCounter, $__exc_Key);
 							$__exc_StrToDisplay .= sprintf("<div id=\"%s\" style='display:none'>%s</div>", $varCounter, $__exc_StrVarExport);
 							$varCounter++;
 						} catch (Exception $__exc_objExcOnVarDump) {
