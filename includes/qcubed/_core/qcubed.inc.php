@@ -211,8 +211,6 @@
 	QApplicationBase::$ClassFile['qnoscriptajaxaction'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['qjstimer'] = __QCUBED__ . '/controls/QJsTimer.class.php';
 	
-	QApplicationBase::$ClassFile['htmlpurifier'] = __QCUBED_CORE__ . '/htmlpurifier/library/HTMLPurifier.includes.php';
-	
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
 
