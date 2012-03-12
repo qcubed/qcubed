@@ -62,7 +62,7 @@
 				<?php foreach (QCodeGen::$CodeGenArray as $objCodeGen) { ?>
 					<p><strong><?php _p($objCodeGen->GetTitle()); ?></strong></p>
 					<div class="code"><p class="code_title"><?php _p($objCodeGen->GetReportLabel()); ?></p>
-						<?php DisplayMonospacedText($objCodeGen->GenerateAll()); ?>
+						<?php @DisplayMonospacedText($objCodeGen->GenerateAll()); ?>
 						<?php if ($strErrors = $objCodeGen->Errors) { ?>
 							<p class="code_title">The following errors were reported:</p>
 							<?php DisplayMonospacedText($objCodeGen->Errors); ?>
