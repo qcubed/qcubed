@@ -256,11 +256,9 @@
 		
 		protected function button_click() {
 			$dtt = $this->DatepickerBox->DateTime;
-			QApplication::DisplayAlert ($dtt->__toString('MM/DD/YY'));
-
-			//$this->Datepicker->Disable();
-			$this->Progressbar->Disabled = true;
-
+			if ($dtt) {
+				QApplication::DisplayAlert ($dtt->qFormat('MM/DD/YY'));
+			}
 		}
 		
 		protected function slider_change() {
