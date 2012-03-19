@@ -117,18 +117,27 @@ class Option extends JqAttributes {
 	}
 
 
-	public function __construct($name, $origName, $jsType, $defaultValue, $description) {
+	public function __construct($propName, $origName, $jsType, $defaultValue, $description, $phpType = null) {
 		parent::__construct($origName, $description);
 		$this->type = $jsType;
 		if ($defaultValue !== null)
 			$this->defaultValue = self::php_value($defaultValue);
 
-		if (($origName === 'dateFormat' || $origName === 'dateTimeFomat') && $name === $origName)
-			$name = 'jq'.ucfirst($name);
+		$this->propName = ucfirst($propName);
+		if (($origName === 'dateFormat' || $origName === 'dateTimeFomat') && $propName === $origName)
+			$this->propName = 'Jq'.$this->propName;
 
-		$this->phpType = self::php_type($jsType);
-		$this->propName = ucfirst($name).self::php_type_suffix($this->phpType);
-		$this->varName = self::php_type_prefix($this->phpType).$this->propName;
+		$this->setPhpType($phpType);
+	}
+
+	public function setPhpType($phpType = null) {
+		$this->phpType = $phpType == null ? self::php_type($this->type) : $phpType;
+		$suffix = self::php_type_suffix($this->phpType);
+		if ($suffix && strrpos($this->propName, $suffix) !== strlen($this->propName) - strlen($suffix)) {
+			// propName doesn't end with suffix
+			$this->propName .= $suffix;
+		}
+		$this->varName = self::php_type_prefix($this->phpType) . $this->propName;
 		$this->phpQType = self::php_qtype($this->phpType);
 	}
 }
@@ -139,11 +148,14 @@ class Event extends Option
 	public $eventName;
 	public $arrArgs;
 
-	public function __construct($strQcClass, $name, $origName, $type, $description) {
-		parent::__construct($name, $origName, $type, 'null', $description);
+	public function __construct($strQcClass, $name, $origName, $jsType, $description, $phpType = null) {
+		parent::__construct($name, $origName, $jsType, 'null', $description, $phpType);
 
-		if (substr ($type, 0, 8) == 'function') {
-			$subject = substr ($type, 8);
+		if (strpos($name, 'on') === 0) {
+			$name = substr($name, 2);
+		}
+		if (substr ($jsType, 0, 8) == 'function') {
+			$subject = substr ($jsType, 8);
 			$subject = str_replace (' ', '', $subject);
 			$tok = strtok($subject,"(),");
 			$a = array();
@@ -153,11 +165,11 @@ class Event extends Option
 			}
 
 			$this->arrArgs = $a;
-			$this->eventName = $strQcClass . '_' . substr($name, 2);
+			$this->eventName = $strQcClass . '_' . $name;
 		} else {
-			$this->eventName = $type;
+			$this->eventName = $jsType;
 		}
-		$this->eventClassName = $strQcClass . '_' . substr($name, 2) . 'Event';
+		$this->eventClassName = $strQcClass . '_' . $name . 'Event';
 	}
 }
 
