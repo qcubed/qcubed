@@ -76,7 +76,6 @@ QApplicationBase::$ClassFile['qjqradiobutton_createevent'] = __QCUBED_CORE__ . '
 QApplicationBase::$ClassFile['qjqradiobuttongen'] = __QCUBED_CORE__ . '/base_controls/QJqRadioButtonGen.class.php';
 QApplicationBase::$ClassFile['qjqradiobuttonbase'] = __QCUBED_CORE__ . '/base_controls/QJqRadioButtonBase.class.php';
 QApplicationBase::$ClassFile['qjqradiobutton'] = __QCUBED__ . '/controls/QJqRadioButton.class.php';
-QApplicationBase::$ClassFile['qdatepicker_createevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerGen.class.php';
 QApplicationBase::$ClassFile['qdatepicker_beforeshowevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerGen.class.php';
 QApplicationBase::$ClassFile['qdatepicker_beforeshowdayevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerGen.class.php';
 QApplicationBase::$ClassFile['qdatepicker_changemonthyearevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerGen.class.php';
@@ -85,7 +84,6 @@ QApplicationBase::$ClassFile['qdatepicker_selectevent'] = __QCUBED_CORE__ . '/ba
 QApplicationBase::$ClassFile['qdatepickergen'] = __QCUBED_CORE__ . '/base_controls/QDatepickerGen.class.php';
 QApplicationBase::$ClassFile['qdatepickerbase'] = __QCUBED_CORE__ . '/base_controls/QDatepickerBase.class.php';
 QApplicationBase::$ClassFile['qdatepicker'] = __QCUBED__ . '/controls/QDatepicker.class.php';
-QApplicationBase::$ClassFile['qdatepickerbox_createevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerBoxGen.class.php';
 QApplicationBase::$ClassFile['qdatepickerbox_beforeshowevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerBoxGen.class.php';
 QApplicationBase::$ClassFile['qdatepickerbox_beforeshowdayevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerBoxGen.class.php';
 QApplicationBase::$ClassFile['qdatepickerbox_changemonthyearevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerBoxGen.class.php';
@@ -134,5 +132,6 @@ QApplicationBase::$ClassFile['qtabsgen'] = __QCUBED_CORE__ . '/base_controls/QTa
 QApplicationBase::$ClassFile['qtabsbase'] = __QCUBED_CORE__ . '/base_controls/QTabsBase.class.php';
 QApplicationBase::$ClassFile['qtabs'] = __QCUBED__ . '/controls/QTabs.class.php';
 QApplicationBase::$ClassFile['qautocompletelistitem'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
+QApplicationBase::$ClassFile['jqicon'] = __QCUBED_CORE__ . '/base_controls/_jq_ui.inc.php';
 
 ?>

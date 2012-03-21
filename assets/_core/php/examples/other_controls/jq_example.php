@@ -1,6 +1,6 @@
 <?php
-    require_once('../qcubed.inc.php');
-
+    require_once('../qcubed.inc.php');	
+    
 	class ExampleForm extends QForm {
 		/** @var QDraggable */
 		protected $Draggable;
@@ -26,6 +26,8 @@
 		protected $CheckBox;
 		/** @var QJqRadioButton */
 		protected $RadioButton;
+		/** @var QJqButton */
+		protected $IconButton;
 		/** @var QCheckBoxList */
 		protected $CheckList1;
 		/** @var QCheckBoxList */
@@ -115,6 +117,8 @@
 			$lbl->Text = 'Header 3';
 			$pnl = new QPanel($this->Accordion);
 			$pnl->Text = 'Section 3';
+			
+			$this->Accordion->AddAction (new QChangeEvent(), new QAjaxAction ('accordion_change'));
 
 			// Autocomplete
 
@@ -151,7 +155,11 @@
 			
 			$this->RadioButton = new QJqRadioButton($this);
 			$this->RadioButton->Text = "RadioButton";
-			
+
+			$this->IconButton = new QJqButton($this);
+			$this->IconButton->Text = "Sample";
+			$this->IconButton->ShowText = false;
+			$this->IconButton->Icons = array ("primary"=>JqIcon::Lightbulb);
 			
 			// Lists
 			$this->CheckList1 = new QCheckBoxList($this);
@@ -189,8 +197,6 @@
 	
 			// DatepickerBox
 			$this->DatepickerBox = new QDatepickerBox($this);
-			$this->DatepickerBox->AddAction(new QDatepicker_CloseEvent(), new QAlertAction("datepicker closed"));
-			$this->DatepickerBox->AddAction(new QDatepicker_CloseEvent(), new QAlertAction("datepicker closed 2"));
 
 			// Dialog
 			$this->Dialog = new QDialog($this);
@@ -301,7 +307,10 @@
 			$strItems = join (",", $a);
 			QApplication::DisplayAlert ($strItems);
 		}
-		
+
+		protected function accordion_change() {
+			QApplication::DisplayAlert ($this->Accordion->Active . ' selected.');
+		}
 		
 	}
 

@@ -157,9 +157,9 @@ class Event extends Option
 		if (strpos($name, 'on') === 0) {
 			$name = substr($name, 2);
 		}
-		if (substr ($jsType, 0, 8) == 'function') {
-			$subject = substr ($jsType, 8);
-			$subject = str_replace (' ', '', $subject);
+		if (substr($jsType, 0, 8) == 'function') {
+			$subject = substr($jsType, 8);
+			$subject = str_replace(' ', '', $subject);
 			$tok = strtok($subject,"(),");
 			$a = array();
 			while($tok !== false){
@@ -274,93 +274,6 @@ class JqDoc {
 		$r = new ReflectionClass($this->strQcBaseClass);
 		if ($r->isAbstract()) {
 			$this->strAbstract = 'abstract ';
-		}
-	}
-}
-
-class HtmlJqDoc extends JqDoc {
-
-	public function __construct($strUrl, $strJqClass = null, $strJqSetupFunc = null, $strQcClass = null, $strQcBaseClass = 'QPanel')
-	{
-		$html = file_get_html($strUrl);
-
-		if ($strJqClass === null) {
-			$nodes = $html->find('h1.firstHeading');
-			$strJqClass = preg_replace('/.*\//', '', $nodes[0]->plaintext());
-		}
-
-		parent::__construct($strJqClass, $strJqSetupFunc, $strQcClass, $strQcBaseClass);
-
-		$htmlOptions = $html->find('div[id=options] li.option');
-
-		foreach ($htmlOptions as $htmlOption) {
-			$nodes = $htmlOption->find('h3.option-name');
-			$origName = $name = $nodes[0]->plaintext();
-
-			// sometimes jQuery controls (e.g. tabs) uses the same property name for more than one options
-            $name = $this->unique_name($name);
-
-			$nodes = $htmlOption->find('dd.option-type');
-			$type = $nodes[0]->plaintext();
-
-			$defaultValue = null;
-			$nodes = $htmlOption->find('dt.option-default-label');
-			if ($nodes) {
-				$nodes = $htmlOption->find('dd.option-default');
-				$defaultValue = html_entity_decode($nodes[0]->plaintext(), ENT_COMPAT, 'UTF-8');
-			}
-
-			$nodes = $htmlOption->find('div.option-description');
-			$description = $nodes[0]->plaintext();
-
-			$this->options[] = new Option($name, $origName, $type, $defaultValue, $description);
-		}
-
-		$htmlEvents = $html->find('div[id=events] li.event');
-		foreach ($htmlEvents as $htmlEvent) {
-			$nodes = $htmlEvent->find('h3.event-name');
-			$origName = $name = $nodes[0]->plaintext();
-			if (substr($name, 0, 2) !== "on") {
-				$name = "on".ucfirst($name);
-			}
-
-			// sometimes jQuery controls (e.g. tabs) uses the same property name for more than one options
-            $name = $this->unique_name($name);
-
-			$nodes = $htmlEvent->find('dd.event-type');
-			$type = $nodes[0]->plaintext();
-
-			$nodes = $htmlEvent->find('div.event-description');
-			$description = $nodes[0]->plaintext();
-
-			if (substr ($type, 0, 8) == 'function') {	// this can only be declared at init time
-				$this->options[] = new Event($this->strQcClass, $name, $origName, $type, $description);
-			} else {
-				$this->events[] = new Event($this->strQcClass, $name, $origName, $type, $description);
-			}
-		}
-
-		$htmlMethods = $html->find('div[id=methods] li.method');
-		$this->reset_names();
-		foreach ($htmlMethods as $htmlMethod) {
-			$nodes = $htmlMethod->find('h3.method-name');
-			$origName = $name = $nodes[0]->plaintext();
-			if ($origName === "widget") {
-				// the widget method doesn't make much sense in our context
-				// skip it
-				continue;
-			}
-
-			// sometimes jQuery controls (e.g. tabs) uses the same property name for more than one options
-            $name = $this->unique_name($name);
-
-			$nodes = $htmlMethod->find('dd.method-signature');
-			$signature = $nodes[0]->plaintext();
-
-			$nodes = $htmlMethod->find('div.method-description');
-			$description = $nodes[0]->plaintext();
-
-			$this->methods[] = new Method($name, $origName, $signature, $description);
 		}
 	}
 }
