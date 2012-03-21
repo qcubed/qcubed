@@ -39,6 +39,7 @@
 	{
 		protected $strClickedButtonId;
 		protected $blnHasCloseButton = true;
+		protected $blnUseWrapper = true;	// fix for jQuery UI interaction problem with Ajax updated dialogs.
 
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
@@ -46,7 +47,10 @@
 		}
 		
 		public function getJqControlId() {
-			return $this->ControlId ."_ctl";	
+			if ($this->blnUseWrapper) {
+				return $this->ControlId . '_ctl';
+			}
+			return $this->ControlId;
 		}
 
 		protected function makeJqOptions() {

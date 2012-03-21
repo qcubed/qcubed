@@ -12,18 +12,30 @@
 	 * 
 	 * @package Controls
 	 */
-	abstract class QControl extends QControlBase {
-		/**
-		 * Renders the control with an attached name
-		 * 
-		 * This will call {@link QControlBase::GetControlHtml()} for the bulk of the work, but will add layout html as well.  It will include
-		 * the rendering of the Controls' name label, any errors or warnings, instructions, and html before/after (if specified).
-		 * As this is the parent class of all controls, this method defines how ALL controls will render.  If you need certain
-		 * controls to display differently, override this function in that control's class. 
-		 * 
-		 * @param boolean $blnDisplayOutput true to send to display buffer, false to just return then html
-		 * @return string HTML of rendered Control
+ 	abstract class QControl extends QControlBase {
+		
+ 		/**
+		 * By default, wrappers are turned on for all controls. Wrappers create an extra <div> tag around
+		 * QControls, and were historically used to help manipulate QControls, and to group a name and error 
+		 * message with a control. However, they can at times get in the way. Now that we are using jQuery to
+		 * manipulate controls, they are not needed as much, but they are still useful for grouping names and
+		 * error messages with a control. If you want to turn global wrappers off and rather set a wrapper for 
+		 * individual controls, uncomment the line below.
 		 */
+		//protected $blnUseWrapper = false;
+		
+		/**
+ 		 * Renders the control with an attached name
+ 		 * 
+ 		 * This will call {@link QControlBase::GetControlHtml()} for the bulk of the work, but will add layout html as well.  It will include
+ 		 * the rendering of the Controls' name label, any errors or warnings, instructions, and html before/after (if specified).
+		 * As this is the parent class of all controls, this method defines how ALL controls will render when rendered with a name.  
+		 * If you need certain controls to display differently, override this function in that control's class. 
+ 		 * 
+ 		 * @param boolean $blnDisplayOutput true to send to display buffer, false to just return then html
+ 		 * @return string HTML of rendered Control
+ 		 */
+		
 		public function RenderWithName($blnDisplayOutput = true) {
 			////////////////////
 			// Call RenderHelper

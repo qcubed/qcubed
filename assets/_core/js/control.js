@@ -11,19 +11,16 @@
 
 	qcubed.getWrapper = function(mixControl) {
 		var objControl;
-		if (!(objControl = qcubed.getControl(mixControl))) 
-		{
+		if (!(objControl = qcubed.getControl(mixControl))) {
             //maybe it doesn't have a child control, just the wrapper
 			if (typeof(mixControl) == 'string')
 		    	return this.getControl(mixControl + "_ctl");
-		    	
-		    return;
+			return null;
+		} else if (objControl.wrapper) {
+			return objControl.wrapper;
 		}
 
-		if (objControl)
-			return this.getControl(objControl.id + "_ctl");			
-		else
-			return null;
+		return objControl; //a wrapper-less control, return the control itself
 	};
 
 
@@ -57,44 +54,29 @@
 		var objControl; 
 		objControl = qcubed.getControl(mixControl);
 
-		// Link the Wrapper and the Control together
-		var objWrapper = this.getWrapper(mixControl);
-		if(!objWrapper) return;
+		if (!objControl)
+			return;
 
-	    if(objControl !== null)
+		// Link the Wrapper and the Control together
+		var objWrapper = this.getControl(objControl.id + "_ctl");
+		if (!objWrapper) {
+			objWrapper = objControl; //wrapper-less control
+		} else {
+			objWrapper.control = objControl;
     		objControl.wrapper = objWrapper;
     	
-		objWrapper.control = objControl;
-
-		// Add the wrapper to the global qcodo wrappers array
-		qcubed.wrappers[objWrapper.id] = objWrapper;
-
-
+			// Add the wrapper to the global qcodo wrappers array
+			qcubed.wrappers[objWrapper.id] = objWrapper;
+		}
+	
+	
 		// Create New Methods, etc.
 		// Like: objWrapper.something = xyz;
-
+	
 		// Updating Style-related Things
 		objWrapper.updateStyle = function(strStyleName, strNewValue) {
-		    if(this.control === null)
-		    {
-			    switch (strStyleName) {
-				    case "display":
-					    if (strNewValue) {
-						    objWrapper.style.display = "inline";
-					    } else {
-						    objWrapper.style.display = "none";
-					    };
-					    break;
-				    default:
-					    if (qcubed.javascriptWrapperStyleToQcodo[strStyleName]) {
-						    this.style[strStyleName] = strNewValue;
-					    };
-					    break;
-			    };
-    		    return;
-		    }
-		
-			var objControl = this.control;
+	
+			var objControl = (this.control) ? this.control:this;
 			
 			switch (strStyleName) {
 				case "className":
@@ -111,7 +93,7 @@
 						var objParentControl = this.parentNode;
 						objParentControl.removeChild(this);
 						qcubed.recordControlModification(objControl.id, "Parent", "");
-					};
+					}
 					break;
 				
 				case "displayStyle":
@@ -121,22 +103,22 @@
 
 				case "display":
 					if (strNewValue) {
-						objWrapper.style.display = "inline";
+						$j(this).show();
 						qcubed.recordControlModification(objControl.id, "Display", "1");
 					} else {
-						objWrapper.style.display = "none";
+						$j(this).hide();
 						qcubed.recordControlModification(objControl.id, "Display", "0");
-					};
+					}
 					break;
 
 				case "enabled":
 					if (strNewValue) {
-						objWrapper.control.disabled = false;
+						objControl.disabled = false;
 						qcubed.recordControlModification(objControl.id, "Enabled", "1");
 					} else {
-						objWrapper.control.disabled = true;
+						objControl.disabled = true;
 						qcubed.recordControlModification(objControl.id, "Enabled", "0");
-					};
+					}
 					break;
 					
 				case "width":
@@ -144,8 +126,8 @@
 					objControl.style[strStyleName] = strNewValue;
 					if (qcubed.javascriptStyleToQcodo[strStyleName])
 						qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcodo[strStyleName], strNewValue);
-					if (objWrapper.handle)
-						objWrapper.updateHandle();
+					if (this.handle)
+						this.updateHandle();
 					break;
 
 				case "text":
@@ -161,32 +143,17 @@
 						objControl.style[strStyleName] = strNewValue;
 						if (qcubed.javascriptStyleToQcodo[strStyleName])
 							qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcodo[strStyleName], strNewValue);
-					};
+					}
 					break;
-			};
+			}
 		};
 
 		// Positioning-related functions
 
 		objWrapper.getAbsolutePosition = function() {
-			var intOffsetLeft = 0;
-			var intOffsetTop = 0;
-
-			var objControl = this.control;
-
-			while (objControl) {
-				// If we are IE, we don't want to include calculating
-				// controls who's wrappers are position:relative
-				if ((objControl.wrapper) && (objControl.wrapper.style.position == "relative")) {
-					
-				} else {
-					intOffsetLeft += objControl.offsetLeft;
-					intOffsetTop += objControl.offsetTop;
-				};
-				objControl = objControl.offsetParent;
-			};
-
-			return {x:intOffsetLeft, y:intOffsetTop};
+			var objControl = (this.control) ? this.control:this;
+			var pos = $j(objControl).offset();
+			return {x:pos.left, y:pos.top};
 		};
 
 		objWrapper.setAbsolutePosition = function(intNewX, intNewY, blnBindToParent) {
@@ -196,7 +163,7 @@
 				intNewX -= objControl.offsetLeft;
 				intNewY -= objControl.offsetTop;
 				objControl = objControl.offsetParent;
-			};
+			}
 
 			if (blnBindToParent) {
 				if (this.parentNode.nodeName.toLowerCase() != 'form') {
@@ -206,8 +173,8 @@
 
 					intNewX = Math.min(intNewX, this.offsetParent.offsetWidth - this.offsetWidth);
 					intNewY = Math.min(intNewY, this.offsetParent.offsetHeight - this.offsetHeight);
-				};
-			};
+				}
+			}
 
 			this.updateStyle("left", intNewX + "px");
 			this.updateStyle("top", intNewY + "px");
@@ -228,39 +195,46 @@
 		};
 
 		objWrapper.toggleEnabled = function(strEnableOrDisable) {
+			var objControl = (this.control) ? this.control:this;
 			if (strEnableOrDisable) {
 				if (strEnableOrDisable == "enable")
 					this.updateStyle("enabled", true);
 				else
 					this.updateStyle("enabled", false);
 			} else
-				this.updateStyle("enabled", (this.control.disabled) ? true : false);
+				this.updateStyle("enabled", (objControl.disabled) ? true : false);
 		};
 
 		objWrapper.registerClickPosition = function(objEvent) {			
-			var intX = objEvent.pageX - this.control.offsetLeft;
-			var intY = objEvent.pageY - this.control.offsetTop;
+			var objControl = (this.control) ? this.control:this;
+			var intX = objEvent.pageX - objControl.offsetLeft;
+			var intY = objEvent.pageY - objControl.offsetTop;
 			
-			$j('#' + this.control.id + "_x").val(intX);
-			$j('#' + this.control.id + "_y").val(intY);
+			$j('#' + objControl.id + "_x").val(intX);
+			$j('#' + objControl.id + "_y").val(intY);
 		};
 		
 		// Focus
-		objWrapper.focus = function() {
-			$j('#' + this.control.id).focus();	
-		};
+		if (objWrapper.control) {
+			objWrapper.focus = function() {
+				$j(this.control).focus();
+			};
+		}
 		
 		// Select All (will only work for textboxes only)
-		objWrapper.select = function() {
-			$j('#' + this.control.id).select();
-		};
+		if (objWrapper.control) {
+			objWrapper.select = function() {
+				$j(this.control).select();
+			};
+		} 
 
 		// Blink
 		objWrapper.blink = function(strFromColor, strToColor) {		
-			$j('#' + this.control.id).css('background-color', '' + strFromColor);
-			$j('#' + this.control.id).animate({ backgroundColor: '' + strToColor }, 500)
+			var objControl = (this.control) ? this.control:this;
+			$j(objControl).css('background-color', '' + strFromColor);
+			$j(objControl).animate({backgroundColor: '' + strToColor}, 500);
 		};
-	}
+	};
 
 	qcubed.registerControlArray = function(mixControlArray) {
 		var intLength = mixControlArray.length;

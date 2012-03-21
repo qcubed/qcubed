@@ -67,6 +67,7 @@
 	 * @property boolean $Visible specifies whether or not the control should be rendered in the page.  This is in contrast to Display, which will just hide the control via CSS styling.
 	 * @property string $Warning is warning text (looks like an error, but it can be user defined) that will be shown next to the control's name label {@link QControl::RenderWithName}
 	 * @property string $Width
+	 * @property boolean $UseWrapper defaults to true
 	 * @property-read boolean $WrapperModified
 	 * @property string $WrapperCssClass
 	 */
@@ -140,6 +141,7 @@
 		protected $objActionArray = array();
 		protected $mixActionParameter = null;
 		protected $strWrapperCssClass = null;
+		protected $blnUseWrapper = true;
 
 		// SETTINGS
 		protected $strJavaScripts = null;
@@ -382,7 +384,6 @@
 			if ($this->objActionArray) foreach ($this->objActionArray as $objActionArray) {
 				foreach ($objActionArray as $objAction)
 					if (get_class($objAction->Event) == $strEventType) {
-//					if ($objAction->Event instanceof $strEventType) {
 						if ((!$strActionType) ||
 							($objAction instanceof $strActionType))
 							array_push($objArrayToReturn, $objAction);
@@ -390,21 +391,6 @@
 			}
 
 			return $objArrayToReturn;
-/*				return array();
-			if (!array_key_exists($strEvent, $this->objActionArray) || (count($this->objActionArray[$strEvent]) == 0))
-				return null;
-
-			if ($strActionType) {
-				$objToReturn = array();
-				if ($this->objActionArray[$strEvent]) foreach ($this->objActionArray[$strEvent] as $objAction) {
-					if ($objAction instanceof $strActionType)
-						array_push($objToReturn, $objAction);
-				}
-
-				return $objToReturn;
-			} else {
-				return $this->objActionArray[$strEvent];
-			}*/
 		}
 
 		/**
@@ -695,20 +681,30 @@
 		public function GetStyleAttributes() {
 			$strToReturn = "";
 
-			if ($this->strWidth)
+			if ($this->strWidth) {
 				if (is_numeric($this->strWidth))
 					$strToReturn .= sprintf("width:%spx;", $this->strWidth);
 				else
 					$strToReturn .= sprintf("width:%s;", $this->strWidth);
-			if ($this->strHeight)
+			}
+			if ($this->strHeight) {
 				if (is_numeric($this->strHeight))
 					$strToReturn .= sprintf("height:%spx;", $this->strHeight);
 				else
 					$strToReturn .= sprintf("height:%s;", $this->strHeight);
-
-			if (($this->strDisplayStyle) && ($this->strDisplayStyle != QDisplayStyle::NotSet))
-				$strToReturn .= sprintf("display:%s;", $this->strDisplayStyle);
-
+			}
+			if ($this->blnUseWrapper) {
+				if (($this->strDisplayStyle) && ($this->strDisplayStyle != QDisplayStyle::NotSet)) {
+					$strToReturn .= sprintf("display:%s;", $this->strDisplayStyle);
+				}
+			} else {
+				if (($this->blnDisplay) &&($this->strDisplayStyle) && ($this->strDisplayStyle != QDisplayStyle::NotSet)) {
+					//only apply a display style if it should be displayed and a style is set
+					//in case of blnDisplay == false the "display:none;" is set in GetWrapperStyleAttributes
+					$strToReturn .= sprintf("display:%s;", $this->strDisplayStyle); 
+				}
+				$strToReturn .= $this->GetWrapperStyleAttributes();
+			}
 			if ($this->strForeColor)
 				$strToReturn .= sprintf("color:%s;", $this->strForeColor);
 			if ($this->strBackColor)
@@ -765,18 +761,63 @@
 			if (($this->strOverflow) && ($this->strOverflow != QOverflow::NotSet))
 				$strToReturn .= sprintf("overflow:%s;", $this->strOverflow);
 
-			if (!is_null($this->intOpacity))
+			if (!is_null($this->intOpacity)) {
 				if (QApplication::IsBrowser(QBrowserType::InternetExplorer))
 					$strToReturn .= sprintf('filter:alpha(opacity=%s);', $this->intOpacity);
 				else
 					$strToReturn .= sprintf('opacity:%s;', $this->intOpacity / 100.0);
-
+			}
 			if ($this->strCustomStyleArray) foreach ($this->strCustomStyleArray as $strKey => $strValue)
 				$strToReturn .= sprintf('%s:%s;', $strKey, $strValue);
 
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns all wrapper-style-attributes
+		 * 
+		 * Similar to GetStyleAttributes, but specifically for CSS name/value pairs that will render 
+		 * within a wrapper's HTML "style" attribute
+		 * 
+		 * @return string
+		 */
+		protected function GetWrapperStyleAttributes($blnIsBlockElement=false) {
+			$strStyle = '';
+			if (($this->strPosition) && ($this->strPosition != QPosition::NotSet))
+				$strStyle .= sprintf('position:%s;', $this->strPosition);
+
+			if (!$this->blnDisplay)
+				$strStyle .= 'display:none;';
+			else if ($blnIsBlockElement)
+				$strStyle .= 'display:inline;';
+
+			if (strlen(trim($this->strLeft)) > 0) {
+				$strLeft = null;
+				try {
+					$strLeft = QType::Cast($this->strLeft, QType::Integer);
+				} catch (QInvalidCastException $objExc) {}
+
+				if (is_null($strLeft))
+					$strStyle .= sprintf('left:%s;', $this->strLeft);
+				else
+					$strStyle .= sprintf('left:%spx;', $this->strLeft);
+			}
+
+			if (strlen(trim($this->strTop)) > 0) {
+				$strTop = null;
+				try {
+					$strTop = QType::Cast($this->strTop, QType::Integer);
+				} catch (QInvalidCastException $objExc) {}
+
+				if (is_null($strTop))
+					$strStyle .= sprintf('top:%s;', $this->strTop);
+				else
+					$strStyle .= sprintf('top:%spx;', $this->strTop);
+			}
+			
+			return $strStyle;
+		}
+		
 		/**
 		 * RenderHelper should be called from all "Render" functions FIRST in order to check for and
 		 * perform attribute overides (if any).
@@ -921,12 +962,6 @@
 		 * @return unknown_type
 		 */
 		public function GetEndHtml() {}
-/*		public function GetEndHtml() {
-			if ($this->Moveable)
-				return sprintf('<span id="%s_ctlmask" style="position:absolute;"></span>', $this->strControlId);
-			else
-				return null;
-		}*/
 
 		/**
 		 * Refreshes the control
@@ -954,103 +989,72 @@
 		 * 			should it be given out as a block element, regardless of its configured tag?
 		 * @return string
 		 */
-		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false) {
+		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strWrapperAttributes = '') {
 			// First, let's mark this control as being rendered and is ON the Page
 			$this->blnRendering = false;
 			$this->blnRendered = true;
 			$this->blnOnPage = true;
 
+			$strWrapperStyle='';
 			// Determine whether or not $strOutput is considered a XHTML "Block" Element
-			if (($blnForceAsBlockElement) || ($this->blnIsBlockElement))
-				$blnIsBlockElement = true;
-			else
-				$blnIsBlockElement = false;
+			$blnIsBlockElement = $blnForceAsBlockElement || $this->blnIsBlockElement;
+			if($this->blnUseWrapper) {
+				// Check for Visibility
+				if (!$this->blnVisible)
+					$strOutput = '';
 
-			// Check for Visibility
-			if (!$this->blnVisible)
-				$strOutput = '';
+				$strWrapperStyle = $this->GetWrapperStyleAttributes($blnIsBlockElement);
 
-			$strStyle = '';
-			if (($this->strPosition) && ($this->strPosition != QPosition::NotSet))
-				$strStyle .= sprintf('position:%s;', $this->strPosition);
-
-			if (!$this->blnDisplay)
-				$strStyle .= 'display:none;';
-			else if ($blnIsBlockElement)
-				$strStyle .= 'display:inline;';
-
-			if (strlen(trim($this->strLeft)) > 0) {
-				$strLeft = null;
-				try {
-					$strLeft = QType::Cast($this->strLeft, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strLeft))
-					$strStyle .= sprintf('left:%s;', $this->strLeft);
-				else
-					$strStyle .= sprintf('left:%spx;', $this->strLeft);
+				if ($this->strWrapperCssClass)
+					$strWrapperAttributes .= sprintf(' class="%s"', $this->strWrapperCssClass);
+			} else if (!$this->blnVisible) {
+				/*no wrapper is used + the control should not be visible
+				 *	--> render a span with the control id and display:none
+				 *  This allows us to change blnVisible to true in an Ajax call
+				 *  as the span will get replaced with the real control 
+				 */
+				$strOutput = sprintf('<span id="%s" style="display:none;"></span>', $this->strControlId);
 			}
-
-			if (strlen(trim($this->strTop)) > 0) {
-				$strTop = null;
-				try {
-					$strTop = QType::Cast($this->strTop, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strTop))
-					$strStyle .= sprintf('top:%s;', $this->strTop);
-				else
-					$strStyle .= sprintf('top:%spx;', $this->strTop);
-			}
-
-			$strWrapperAttributes = '';
-			if ($this->strWrapperCssClass)
-				$strWrapperAttributes .= sprintf(' class="%s"', $this->strWrapperCssClass);
 
 			switch ($this->objForm->CallType) {
 				case QCallType::Ajax:
 					// If we have a ParentControl and the ParentControl has NOT been rendered, then output
 					// as standard HTML
 					if (($this->objParentControl) && ($this->objParentControl->Rendered || $this->objParentControl->Rendering)) {
-						if ($strStyle)
-							$strStyle = sprintf('style="%s"', $strStyle);
-
-						if ($blnIsBlockElement)
-							$strOutput = sprintf('<div id="%s_ctl" %s%s>%s</div>%s', $this->strControlId, $strStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
-						else
-							$strOutput = sprintf('<span id="%s_ctl" %s%s>%s</span>%s', $this->strControlId, $strStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
-//						$strOutput = sprintf('<ins id="%s_ctl" style="%stext-decoration:inherit;">%s</ins>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
-//						$strOutput = sprintf('<q id="%s_ctl" style="%s">%s</q>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
+						if ($strWrapperStyle)
+							$strWrapperStyle = sprintf('style="%s"', $strWrapperStyle);
+						if($this->blnUseWrapper) {
+							if ($blnIsBlockElement)
+								$strOutput = sprintf('<div id="%s_ctl" %s%s>%s</div>%s', $this->strControlId, $strWrapperStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
+							else
+								$strOutput = sprintf('<span id="%s_ctl" %s%s>%s</span>%s', $this->strControlId, $strWrapperStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
+						} else {
+							$strOutput = $strOutput . $this->GetNonWrappedHtml();
+						}
 					} else {
 						// Otherwise, we are rendering as a top-level AJAX response
 						// Surround Output HTML around CDATA tags
 						$strOutput = QString::XmlEscape($strOutput);
 						$strOutput = sprintf('<control id="%s">%s</control>', $this->strControlId, $strOutput);
 
-
-//					QApplication::ExecuteJavaScript(sprintf('qcodo.registerControl("%s"); ', $this->strControlId), true);
-//					QApplication::ExecuteJavaScript(sprintf('qc.regC("%s"); ', $this->strControlId), true);
-
-//					$strScript = $this->GetEndScript();
-//					if ($strScript)
-//						QApplication::ExecuteJavaScript($strScript);
-
-						if (($this->blnWrapperModified) && ($this->blnVisible))
-//							QApplication::ExecuteJavaScript(sprintf('qcodo.getWrapper("%s").style.cssText = "%s"; ', $this->strControlId, $strStyle));
-							QApplication::ExecuteJavaScript(sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strStyle, $this->strWrapperCssClass));
+						if (($this->blnWrapperModified) && ($this->blnVisible) && ($this->blnUseWrapper)) {
+							QApplication::ExecuteJavaScript(sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass));
+						}
 					}
 					break;
 
 				default:
-					if ($strStyle)
-						$strStyle = sprintf('style="%s"', $strStyle);
+					if ($strWrapperStyle)
+						$strWrapperStyle = sprintf('style="%s"', $strWrapperStyle);
 
-//					$strOutput = sprintf('<div id="%s_ctl" style="%s">%s</div>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
-//					$strOutput = sprintf('<ins id="%s_ctl" style="%stext-decoration:inherit;">%s</ins>%s', $this->strControlId, $strStyle, $strOutput, $this->GetNonWrappedHtml());
-					if ($blnIsBlockElement)
-						$strOutput = sprintf('<div id="%s_ctl" %s%s>%s</div>%s', $this->strControlId, $strStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
-					else
-						$strOutput = sprintf('<span id="%s_ctl" %s%s>%s</span>%s', $this->strControlId, $strStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
+					if ($this->blnUseWrapper) {
+						if ($blnIsBlockElement)
+							$strOutput = sprintf('<div id="%s_ctl" %s%s>%s</div>%s', $this->strControlId, $strWrapperStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
+						else
+							$strOutput = sprintf('<span id="%s_ctl" %s%s>%s</span>%s', $this->strControlId, $strWrapperStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
+					} else {
+						$strOutput = $strOutput . $this->GetNonWrappedHtml();
+					}
 					break;
 			}
 
@@ -1150,6 +1154,9 @@
 			// Call RenderHelper
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 
+			//rendering with error -> we have to use a wrapper
+			$this->blnUseWrapper = true;
+			
 			try {
 				$strOutput = $this->GetControlHtml();
 
@@ -1323,6 +1330,7 @@
 				case "ActionParameter": return $this->mixActionParameter;
 				case "ActionsMustTerminate": return $this->blnActionsMustTerminate;
 				case "WrapperCssClass": return $this->strWrapperCssClass;
+				case "UseWrapper": return $this->blnUseWrapper;
 
 				// SETTINGS
 				case "JavaScripts": return $this->strJavaScripts;
@@ -1730,7 +1738,18 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
+				case "UseWrapper":
+					try {
+						if($this->blnUseWrapper != QType::Cast($mixValue, QType::Boolean)) {
+							$this->blnUseWrapper = !$this->blnUseWrapper;
+							//need to render the parent again (including its children)
+							$this->ParentControl->MarkAsModified();
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 				default:
 					try {
 						parent::__set($strName, $mixValue);

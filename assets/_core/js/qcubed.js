@@ -254,7 +254,12 @@ $j.ajaxSync.data = [];
 						if (strControlId == "#Qform__FormState") {
 							$j(strControlId).val(strControlHtml);
 						} else {
-							$j(strControlId + "_ctl").html(strControlHtml);
+							var control = $j(strControlId); 
+							if (control.length != 0) 
+								control.replaceWith(strControlHtml); 
+							else 
+								// Special case when a control is being changed from hidden to visible. Wrapper exists, but not content.
+								$j(strControlId + '_ctl').html(strControlHtml); 						
 						}
 					});
 					var strCommands = [];
