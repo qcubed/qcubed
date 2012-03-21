@@ -144,6 +144,22 @@ FUNC;
 						throw $objExc;
 					}
 
+				case 'Width':
+					try {
+						if ($mixValue == 'auto') {
+							$this->intWidth = 'auto';
+							if ($this->Rendered) {
+								$this->CallJqUiMethod("option", $strName, $mixValue);
+							}
+						} else {
+							parent::__set($strName, $mixValue);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
