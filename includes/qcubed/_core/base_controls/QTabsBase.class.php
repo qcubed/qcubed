@@ -92,12 +92,11 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'Headers':
 					try {
 						$this->objTabHeadersArray = QType::Cast($mixValue, QType::ArrayType);
+						$this->blnModified = true;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

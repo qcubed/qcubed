@@ -23,7 +23,7 @@
 
 		// The datebpicker will not send its results to us by default
 		protected function OnSelectJs () {
-			$strJS = 'qcubed.recordControlModification("' . $this->getJqControlId() . '", "Text", dateText)';
+			$strJS = 'qcubed.recordControlModification("' . $this->getJqControlId() . '", "_Text", dateText)';
 			return $strJS;
 		}
 		
@@ -53,8 +53,6 @@
 		// Public Properties: SET
 		/////////////////////////
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'MaxDate':
 				case 'Maximum':
@@ -75,12 +73,7 @@
 				case 'DateTime':
 					try {
 						$this->dttDateTime = QType::Cast($mixValue, QType::DateTime);
-						/*
-						if (!$this->dttDateTime || !$this->strDateTimeFormat) {
-							parent::__set('Text', '');
-						} else {
-							parent::__set('Text', $this->dttDateTime->qFormat($this->strDateTimeFormat));
-						}*/
+						$this->blnModified = true;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -112,8 +105,12 @@
 						throw $objExc;
 					}
 
-				case 'Text':
-					//parent::__set($strName, $mixValue);
+				case 'Text':	// Set the selected date with a text value
+					$this->dttDateTime = new QDateTime($mixValue);
+					$this->blnModified = true;
+					break;
+
+				case '_Text':	// Internal only. Do not use. Called by JS above to keep track of user selection.
 					$this->dttDateTime = new QDateTime($mixValue);
 					break;
 					

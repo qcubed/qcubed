@@ -339,14 +339,12 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -358,7 +356,7 @@
 					try {
 						$this->blnAddClasses = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'addClasses', $mixValue);
+							$this->CallJqUiMethod('option', 'addClasses', $this->blnAddClasses);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -378,7 +376,7 @@
 					try {
 						$this->strAxis = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'axis', $mixValue);
+							$this->CallJqUiMethod('option', 'axis', $this->strAxis);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -414,7 +412,7 @@
 					try {
 						$this->strCursor = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'cursor', $mixValue);
+							$this->CallJqUiMethod('option', 'cursor', $this->strCursor);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -434,7 +432,7 @@
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'delay', $mixValue);
+							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -446,7 +444,7 @@
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'distance', $mixValue);
+							$this->CallJqUiMethod('option', 'distance', $this->intDistance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -458,7 +456,7 @@
 					try {
 						$this->arrGrid = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'grid', $mixValue);
+							$this->CallJqUiMethod('option', 'grid', $this->arrGrid);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -494,7 +492,7 @@
 					try {
 						$this->fltOpacity = QType::Cast($mixValue, QType::Float);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'opacity', $mixValue);
+							$this->CallJqUiMethod('option', 'opacity', $this->fltOpacity);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -506,7 +504,7 @@
 					try {
 						$this->blnRefreshPositions = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'refreshPositions', $mixValue);
+							$this->CallJqUiMethod('option', 'refreshPositions', $this->blnRefreshPositions);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -526,7 +524,7 @@
 					try {
 						$this->intRevertDuration = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'revertDuration', $mixValue);
+							$this->CallJqUiMethod('option', 'revertDuration', $this->intRevertDuration);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -538,7 +536,7 @@
 					try {
 						$this->strScope = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scope', $mixValue);
+							$this->CallJqUiMethod('option', 'scope', $this->strScope);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -550,7 +548,7 @@
 					try {
 						$this->blnScroll = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scroll', $mixValue);
+							$this->CallJqUiMethod('option', 'scroll', $this->blnScroll);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -562,7 +560,7 @@
 					try {
 						$this->intScrollSensitivity = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scrollSensitivity', $mixValue);
+							$this->CallJqUiMethod('option', 'scrollSensitivity', $this->intScrollSensitivity);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -574,7 +572,7 @@
 					try {
 						$this->intScrollSpeed = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scrollSpeed', $mixValue);
+							$this->CallJqUiMethod('option', 'scrollSpeed', $this->intScrollSpeed);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -594,7 +592,7 @@
 					try {
 						$this->strSnapMode = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'snapMode', $mixValue);
+							$this->CallJqUiMethod('option', 'snapMode', $this->strSnapMode);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -606,7 +604,7 @@
 					try {
 						$this->intSnapTolerance = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'snapTolerance', $mixValue);
+							$this->CallJqUiMethod('option', 'snapTolerance', $this->intSnapTolerance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -626,7 +624,7 @@
 					try {
 						$this->intZIndex = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'zIndex', $mixValue);
+							$this->CallJqUiMethod('option', 'zIndex', $this->intZIndex);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

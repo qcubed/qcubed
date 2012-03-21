@@ -45,7 +45,7 @@
 			
 			$strJS .=<<<FUNC
 			.on("dragstop", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "DragData", ui.originalPosition.left + "," + ui.originalPosition.top + "," + ui.position.left + "," + ui.position.top);
+			 			qcubed.recordControlModification("$this->ControlId", "_DragData", ui.originalPosition.left + "," + ui.originalPosition.top + "," + ui.position.left + "," + ui.position.top);
 					})						
 FUNC;
 			
@@ -54,11 +54,8 @@ FUNC;
 
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-			
 			switch ($strName) {
-				case 'DragData':
-					// used to interface with javascript above. Not intended for public consumption.
+				case '_DragData': // Internal only. Do not use. Used by JS above to keep track of user selection.
 					try {
 						$data = QType::Cast($mixValue, QType::String);
 						$a = explode (",", $data);
@@ -73,9 +70,11 @@ FUNC;
 					}
 					
 				case 'Handle':
+					// Override to let you set the handle to: 
+					//	a QControl or array of QControls, or
+					//  a control id, or array of control ids
 					if ($mixValue instanceof QControl) {
 						parent::__set($strName, '#' . $mixValue->ControlId);
-						break;
 					} elseif (is_array($mixValue)) {
 						$aHandles = array();
 						foreach ($mixValue as $mixItem) {
@@ -90,9 +89,13 @@ FUNC;
 							}
 						}
 						parent::__set($strName, join(',', $aHandles));
-						break;
-					}			
-					parent::__set($strName, $mixValue);
+					} elseif (is_string($mixItem) && substr($mixItem, 0, 1) != '#') {
+						$mixItem = '#' . $mixItem;	// turn the control id into a jQuery selector
+						parent::__set($strName, $mixValue);
+						
+					} else {		
+						parent::__set($strName, $mixValue);
+					}
 					break;
 					 
 				default:

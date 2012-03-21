@@ -32,7 +32,7 @@
 				if (strItems) {
 					strItems = strItems.substring (1);
 				}
-				qcubed.recordControlModification("$this->ControlId", "SelectedItems", strItems);
+				qcubed.recordControlModification("$this->ControlId", "_SelectedItems", strItems);
 				
 			})
 FUNC;
@@ -42,41 +42,45 @@ FUNC;
 
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-			
 			switch ($strName) {
-				case 'SelectedItems':
+				case '_SelectedItems':	// Internal only. Do not use. Used by JS above to keep track of selections.
 					try {
-						if (is_array($mixValue)) {
-							foreach ($mixValue as &$val) {
-								$val = '"#' . $val . '"';
-							}
-							$items = join (',', $mixValue);
-							
-							$strJS =<<<FUNC
-								
-								var item = jQuery("#$this->ControlId");
-								
-								jQuery(".ui-selectee", item).each(function() {
-									jQuery(this).removeClass('ui-selected');
-								});
-								
-								jQuery($items).each(function() {
-									jQuery(this).addClass('ui-selected');
-								});
-FUNC;
-							$this->arySelectedItems = $mixValue;
-							QApplication::ExecuteJavascript ($strJS);
-						} else {
-							// this is coming from our javascript above.
-							$strItems = QType::Cast($mixValue, QType::String);
-							$this->arySelectedItems = explode (",", $strItems);
-						}
-						break;
+						$strItems = QType::Cast($mixValue, QType::String);
+						$this->arySelectedItems = explode (",", $strItems);
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+					break;
+					
+				case 'SelectedItems':
+					// Set the selected items to an array of object ids
+					try {
+						$aValues = QType::Cast($mixValue, QType::ArrayType);
+						$aJqIds = array();
+						foreach ($aValues as $val) {
+							$aJqIds[] = '"#' . $val . '"';
+						}
+						$strJqItems = join (',', $aJqIds);
+							
+						$strJS =<<<FUNC
+							var item = jQuery("#$this->ControlId");
+							
+							jQuery(".ui-selectee", item).each(function() {
+								jQuery(this).removeClass('ui-selected');
+							});
+							
+							jQuery($strJqItems).each(function() {
+								jQuery(this).addClass('ui-selected');
+							});
+FUNC;
+						$this->arySelectedItems = $aValues;
+						QApplication::ExecuteJavascript ($strJS);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
 					 
 				default:
 					try {

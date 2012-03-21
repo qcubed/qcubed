@@ -84,23 +84,31 @@
 		// Public Properties: SET
 		/////////////////////////
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'MaxDate':
 				case 'Maximum':
-					if (is_string($mixValue)) {
-						$mixValue = new QDateTime($mixValue);
+					try{
+						if (is_string($mixValue)) {
+							$mixValue = new QDateTime($mixValue);
+						}
+						parent::__set('MaxDate', QType::Cast($mixValue, QType::DateTime));
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
 					}
-					parent::__set('MaxDate', QType::Cast($mixValue, QType::DateTime));
 					break;
 
 				case 'MinDate':
 				case 'Minimum':
-					if (is_string($mixValue)) {
-						$mixValue = new QDateTime($mixValue);
+					try {
+						if (is_string($mixValue)) {
+							$mixValue = new QDateTime($mixValue);
+						}
+						parent::__set('MinDate', QType::Cast($mixValue, QType::DateTime));
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
 					}
-					parent::__set('MinDate', QType::Cast($mixValue, QType::DateTime));
 					break;
 
 				case 'DateTime':
@@ -108,30 +116,31 @@
 						$this->dttDateTime = QType::Cast($mixValue, QType::DateTime);
 						if ($this->dttDateTime && $this->dttDateTime->IsNull()) {
 							$this->dttDateTime = null;
+							$this->blnModified = true;
 						}
 						if (!$this->dttDateTime || !$this->strDateTimeFormat) {
 							parent::__set('Text', '');
 						} else {
 							parent::__set('Text', $this->dttDateTime->qFormat($this->strDateTimeFormat));
 						}
-						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
+					break;
+					
 				case 'JqDateFormat':
 					try {
 						parent::__set($strName, $mixValue);
 						$this->strDateTimeFormat = QCalendar::qcFrmt($this->JqDateFormat);
 						// trigger an update to reformat the text with the new format
 						$this->DateTime = $this->dttDateTime;
-						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
+					break;
+					
 				case 'DateTimeFormat':
 				case 'DateFormat':
 					try {
@@ -139,12 +148,12 @@
 						parent::__set('JqDateFormat', QCalendar::jqFrmt($this->strDateTimeFormat));
 						// trigger an update to reformat the text with the new format
 						$this->DateTime = $this->dttDateTime;
-						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
+					break;
+					
 				case 'Text':
 					parent::__set($strName, $mixValue);
 					$this->dttDateTime = new QDateTime($this->strText);

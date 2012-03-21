@@ -168,8 +168,6 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 <% foreach ($objJqDoc->options as $option) { %>
 				case '<%= $option->propName %>':
@@ -188,7 +186,7 @@
 	<% if (!($option instanceof Event)) { %>
 						$this-><%= $option->varName %> = QType::Cast($mixValue, <%= $option->phpQType %>);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', '<%= $option->name %>', $mixValue);
+							$this->CallJqUiMethod('option', '<%= $option->name %>', $this-><%= $option->varName %>);
 						}
 	<% } %>
 	<% if ($option instanceof Event) { %>

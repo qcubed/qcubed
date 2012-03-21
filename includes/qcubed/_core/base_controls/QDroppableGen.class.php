@@ -239,14 +239,12 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -266,7 +264,7 @@
 					try {
 						$this->strActiveClass = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'activeClass', $mixValue);
+							$this->CallJqUiMethod('option', 'activeClass', $this->strActiveClass);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -278,7 +276,7 @@
 					try {
 						$this->blnAddClasses = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'addClasses', $mixValue);
+							$this->CallJqUiMethod('option', 'addClasses', $this->blnAddClasses);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -290,7 +288,7 @@
 					try {
 						$this->blnGreedy = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'greedy', $mixValue);
+							$this->CallJqUiMethod('option', 'greedy', $this->blnGreedy);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -302,7 +300,7 @@
 					try {
 						$this->strHoverClass = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'hoverClass', $mixValue);
+							$this->CallJqUiMethod('option', 'hoverClass', $this->strHoverClass);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -314,7 +312,7 @@
 					try {
 						$this->strScope = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scope', $mixValue);
+							$this->CallJqUiMethod('option', 'scope', $this->strScope);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -326,7 +324,7 @@
 					try {
 						$this->strTolerance = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'tolerance', $mixValue);
+							$this->CallJqUiMethod('option', 'tolerance', $this->strTolerance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

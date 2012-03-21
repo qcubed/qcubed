@@ -41,7 +41,7 @@
 			
 			$strJS .=<<<FUNC
 			.on("drop", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "DroppedId", ui.draggable.attr("id"));
+			 			qcubed.recordControlModification("$this->ControlId", "_DroppedId", ui.draggable.attr("id"));
 					})						
 FUNC;
 			
@@ -50,26 +50,24 @@ FUNC;
 
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-			
 			switch ($strName) {
-				case 'DroppedId':
+				case '_DroppedId': // Internal only. Do not use. Used by JS above to track user actions.
 					try {
 						$this->strDroppedId = QType::Cast($mixValue, QType::String);
-						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					 
+					break;
+					
 				default:
 					try {
 						parent::__set($strName, $mixValue);
-						break;
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+					break;
 			}
 			
 		}

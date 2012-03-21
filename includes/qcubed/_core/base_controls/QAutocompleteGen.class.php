@@ -251,14 +251,12 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -278,7 +276,7 @@
 					try {
 						$this->blnAutoFocus = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'autoFocus', $mixValue);
+							$this->CallJqUiMethod('option', 'autoFocus', $this->blnAutoFocus);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -290,7 +288,7 @@
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'delay', $mixValue);
+							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -302,7 +300,7 @@
 					try {
 						$this->intMinLength = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'minLength', $mixValue);
+							$this->CallJqUiMethod('option', 'minLength', $this->intMinLength);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

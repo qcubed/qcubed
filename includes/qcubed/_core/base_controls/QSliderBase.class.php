@@ -15,9 +15,9 @@
 			$strJS .=<<<FUNC
 			.on("slidechange", function (event, ui) {
 					if (ui.values && ui.values.length) {
-			 			qcubed.recordControlModification("$this->ControlId", "Values", ui.values[0] + ',' +  ui.values[1]);
+			 			qcubed.recordControlModification("$this->ControlId", "_Values", ui.values[0] + ',' +  ui.values[1]);
 			 		} else {
-			 			qcubed.recordControlModification("$this->ControlId", "Value", ui.value);
+			 			qcubed.recordControlModification("$this->ControlId", "_Value", ui.value);
 					}
 				})						
 FUNC;
@@ -26,26 +26,37 @@ FUNC;
 		}
 		
 		public function __set($strName, $mixValue) {
-			//$this->blnModified = true;
 
 			switch ($strName) {
-				case 'Values':
-					if (is_string($mixValue)) {
-						$mixValue = explode (',', $mixValue);
+				case '_Value':	// Internal Only. Used by JS above. Do Not Call.
+					try {
+						$this->intValue = QType::Cast($mixValue, QType::Integer);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
 					}
-					parent::__set($strName, $mixValue);
+					break;
+
+				case '_Values': // Internal Only. Used by JS above. Do Not Call.
+					try {
+						$aValues = explode (',', $mixValue);
+						$aValues[0] = QType::Cast( $aValues[0], QType::Integer); // important to make sure JS sends values as ints instead of strings
+						$aValues[1] = QType::Cast($aValues[1], QType::Integer); // important to make sure JS sends values as ints instead of strings
+						$this->arrValues = $aValues;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 					break;
 														
 				default:
 					try {
 						parent::__set($strName, $mixValue);
-						break;
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
-				
+					break;
 			}
 		}
 

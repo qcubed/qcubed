@@ -124,7 +124,10 @@ class Option extends JqAttributes {
 			$this->defaultValue = self::php_value($defaultValue);
 
 		$this->propName = ucfirst($propName);
-		if (($origName === 'dateFormat' || $origName === 'dateTimeFomat') && $propName === $origName)
+		if (($origName === 'dateFormat' ||
+				$origName === 'dateTimeFomat' ||
+				$origName ==='text')
+			&& $propName === $origName)
 			$this->propName = 'Jq'.$this->propName;
 
 		$this->setPhpType($phpType);

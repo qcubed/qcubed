@@ -269,14 +269,12 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -304,7 +302,7 @@
 					try {
 						$this->blnAutoHeight = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'autoHeight', $mixValue);
+							$this->CallJqUiMethod('option', 'autoHeight', $this->blnAutoHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -316,7 +314,7 @@
 					try {
 						$this->blnClearStyle = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'clearStyle', $mixValue);
+							$this->CallJqUiMethod('option', 'clearStyle', $this->blnClearStyle);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -328,7 +326,7 @@
 					try {
 						$this->blnCollapsible = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'collapsible', $mixValue);
+							$this->CallJqUiMethod('option', 'collapsible', $this->blnCollapsible);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -340,7 +338,7 @@
 					try {
 						$this->strEvent = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'event', $mixValue);
+							$this->CallJqUiMethod('option', 'event', $this->strEvent);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -352,7 +350,7 @@
 					try {
 						$this->blnFillSpace = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'fillSpace', $mixValue);
+							$this->CallJqUiMethod('option', 'fillSpace', $this->blnFillSpace);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -380,7 +378,7 @@
 					try {
 						$this->blnNavigation = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'navigation', $mixValue);
+							$this->CallJqUiMethod('option', 'navigation', $this->blnNavigation);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -392,7 +390,7 @@
 					try {
 						$this->mixNavigationFilter = QType::Cast($mixValue, 'QJsClosure');
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'navigationFilter', $mixValue);
+							$this->CallJqUiMethod('option', 'navigationFilter', $this->mixNavigationFilter);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

@@ -50,7 +50,7 @@
 	/**
 	 * This event is triggered on slide stop, or if the value is changed
 	 * 		programmatically (by the value method).  Takes arguments event and ui.  Use
-	 * 		event.orginalEvent to detect whether the value changed by mouse, keyboard,
+	 * 		event.originalEvent to detect whether the value changed by mouse, keyboard,
 	 * 		or programmatically. Use ui.value (single-handled sliders) to obtain the
 	 * 		value of the current handle, $(this).slider('values', index) to get another
 	 * 		handle's value.
@@ -248,14 +248,12 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -275,7 +273,7 @@
 					try {
 						$this->intMax = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'max', $mixValue);
+							$this->CallJqUiMethod('option', 'max', $this->intMax);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -287,7 +285,7 @@
 					try {
 						$this->intMin = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'min', $mixValue);
+							$this->CallJqUiMethod('option', 'min', $this->intMin);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -299,7 +297,7 @@
 					try {
 						$this->strOrientation = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'orientation', $mixValue);
+							$this->CallJqUiMethod('option', 'orientation', $this->strOrientation);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -319,7 +317,7 @@
 					try {
 						$this->intStep = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'step', $mixValue);
+							$this->CallJqUiMethod('option', 'step', $this->intStep);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -331,7 +329,7 @@
 					try {
 						$this->intValue = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'value', $mixValue);
+							$this->CallJqUiMethod('option', 'value', $this->intValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -343,7 +341,7 @@
 					try {
 						$this->arrValues = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'values', $mixValue);
+							$this->CallJqUiMethod('option', 'values', $this->arrValues);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

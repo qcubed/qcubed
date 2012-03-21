@@ -37,7 +37,7 @@
 	/**
 	 * @property boolean $Disabled Disables (true) or enables (false) the button. Can be set when initialising
 	 * 		(first creating) the button.
-	 * @property boolean $Text Whether to show any text - when set to false (display no text), icons (see
+	 * @property boolean $JqText Whether to show any text - when set to false (display no text), icons (see
 	 * 		icons option) must be enabled, otherwise it'll be ignored.
 	 * @property array $Icons Icons to display, with or without text (see text option). The primary icon
 	 * 		is displayed by default on the left of the label text, the secondary by
@@ -57,7 +57,7 @@
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var boolean */
-		protected $blnText = null;
+		protected $blnJqText = null;
 		/** @var array */
 		protected $arrIcons = null;
 		/** @var string */
@@ -75,7 +75,7 @@
 		protected function makeJqOptions() {
 			$strJqOptions = '';
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJqOptions .= $this->makeJsProperty('Text', 'text');
+			$strJqOptions .= $this->makeJsProperty('JqText', 'text');
 			$strJqOptions .= $this->makeJsProperty('Icons', 'icons');
 			$strJqOptions .= $this->makeJsProperty('Label', 'label');
 			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
@@ -165,7 +165,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
-				case 'Text': return $this->blnText;
+				case 'JqText': return $this->blnJqText;
 				case 'Icons': return $this->arrIcons;
 				case 'Label': return $this->strLabel;
 				default: 
@@ -179,14 +179,12 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -194,11 +192,11 @@
 						throw $objExc;
 					}
 
-				case 'Text':
+				case 'JqText':
 					try {
-						$this->blnText = QType::Cast($mixValue, QType::Boolean);
+						$this->blnJqText = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'text', $mixValue);
+							$this->CallJqUiMethod('option', 'text', $this->blnJqText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -210,7 +208,7 @@
 					try {
 						$this->arrIcons = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'icons', $mixValue);
+							$this->CallJqUiMethod('option', 'icons', $this->arrIcons);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -222,7 +220,7 @@
 					try {
 						$this->strLabel = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'label', $mixValue);
+							$this->CallJqUiMethod('option', 'label', $this->strLabel);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

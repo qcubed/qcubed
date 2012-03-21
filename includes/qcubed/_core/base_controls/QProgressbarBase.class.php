@@ -14,7 +14,7 @@
 			// if something else changes the value of the progress bar, make sure we know about it
 			$strJS .=<<<FUNC
 			.on("progressbarchange", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "Value", jQuery(this).progressbar ("value"));
+			 			qcubed.recordControlModification("$this->ControlId", "_Value", jQuery(this).progressbar ("value"));
 					})						
 										
 FUNC;
@@ -22,6 +22,27 @@ FUNC;
 			return $strJS;
 		}
 
+		public function __set($strName, $mixValue) {
+			switch ($strName) {
+				case '_Value':	// Internal Only. Used by JS above. Do Not Call.
+					try {
+						$this->intValue = QType::Cast($mixValue, QType::Integer);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+
+				default:
+					try {
+						parent::__set($strName, $mixValue);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+			}
+		}
 	}
 
 ?>

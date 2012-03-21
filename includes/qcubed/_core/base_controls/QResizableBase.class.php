@@ -38,7 +38,7 @@
 			
 			$strJS .=<<<FUNC
 			.on("resizestop", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "ResizeData", ui.originalSize.width + "," + ui.originalSize.height + "," + ui.size.width + "," + ui.size.height);
+			 			qcubed.recordControlModification("$this->ControlId", "_ResizeData", ui.originalSize.width + "," + ui.originalSize.height + "," + ui.size.width + "," + ui.size.height);
 					})						
 FUNC;
 			
@@ -47,11 +47,8 @@ FUNC;
 
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-			
 			switch ($strName) {
-				case 'ResizeData':
-					// used to interface with javascript above. Not intended for public consumption.
+				case '_ResizeData': // Internal only. Do not use. Called by JS above to keep track of user selection.
 					try {
 						$data = QType::Cast($mixValue, QType::String);
 						$a = explode (",", $data);

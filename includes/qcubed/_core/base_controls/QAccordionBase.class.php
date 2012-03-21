@@ -26,6 +26,7 @@
 	 * See the jQuery UI documentation for additional events, methods and options that may be useful.
 	 * 
 	 */
+
 	class QAccordionBase extends QAccordionGen
 	{
 		protected $blnAutoRenderChildren = true;
@@ -58,7 +59,7 @@
 			
 			$strJS .=<<<FUNC
 			.on("accordionchange", function(event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "SelectedIndex", ui.options.active);
+			 			qcubed.recordControlModification("$this->ControlId", "_SelectedIndex", ui.options.active);
 						qc.pA("$formId", "$this->ControlId", "QChangeEvent", "", "");
 			})						
 FUNC;
@@ -67,16 +68,23 @@ FUNC;
 		}
 				
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-			
 			switch ($strName) {
-				case 'SelectedIndex':
-					// Do not call this function, only for jQuery UI. Call ->Active or Activate() instead.
-					$this->mixActive = QType::Cast($mixValue, QType::Integer);	// will cause ->Active getter to always return index of content item that is currently active
+				case '_SelectedIndex': // Internal Only. Used by JS above. Do Not Call.
+					try {
+						$this->mixActive = QType::Cast($mixValue, QType::Integer);	// will cause ->Active getter to always return index of content item that is currently active
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 					break;
-
+					
 				default:
-					parent::__set($strName, $mixValue);
+					try {
+						parent::__set($strName, $mixValue);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 					break;
 			}
 			

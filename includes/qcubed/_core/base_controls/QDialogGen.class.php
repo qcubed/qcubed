@@ -118,7 +118,8 @@
 	 * 		titlebar.
 	 * @property integer $Height The height of the dialog, in pixels. Specifying 'auto' is also supported to
 	 * 		make the dialog adjust based on its content.
-	 * @property mixed $Hide The effect to be used when the dialog is closed.
+	 * @property string $Hide The effect to be used when the dialog is closed.
+	 * @property mixed $Hide1 The effect to be used when the dialog is closed.
 	 * @property integer $MaxHeight The maximum height to which the dialog can be resized, in pixels.
 	 * @property integer $MaxWidth The maximum width to which the dialog can be resized, in pixels.
 	 * @property integer $MinHeight The minimum height to which the dialog can be resized, in pixels.
@@ -133,7 +134,8 @@
 	 * 		containing x,y position string values (e.g. ['right','top'] for top right
 	 * 		corner).
 	 * @property boolean $Resizable If set to true, the dialog will be resizable.
-	 * @property mixed $Show The effect to be used when the dialog is opened.
+	 * @property string $Show The effect to be used when the dialog is opened.
+	 * @property mixed $Show1 The effect to be used when the dialog is opened.
 	 * @property boolean $Stack Specifies whether the dialog will stack on top of other dialogs. This will
 	 * 		cause the dialog to move to the front of other dialogs when it gains focus.
 	 * @property string $Title Specifies the title of the dialog. Any valid HTML may be set as the title.
@@ -164,8 +166,10 @@
 		protected $blnDraggable = null;
 		/** @var integer */
 		protected $intHeight = null;
+		/** @var string */
+		protected $strHide = null;
 		/** @var mixed */
-		protected $mixHide = null;
+		protected $mixHide1 = null;
 		/** @var integer */
 		protected $intMaxHeight = null;
 		/** @var integer */
@@ -180,8 +184,10 @@
 		protected $mixPosition = null;
 		/** @var boolean */
 		protected $blnResizable = null;
+		/** @var string */
+		protected $strShow = null;
 		/** @var mixed */
-		protected $mixShow = null;
+		protected $mixShow1 = null;
 		/** @var boolean */
 		protected $blnStack = null;
 		/** @var string */
@@ -212,6 +218,7 @@
 			$strJqOptions .= $this->makeJsProperty('Draggable', 'draggable');
 			$strJqOptions .= $this->makeJsProperty('Height', 'height');
 			$strJqOptions .= $this->makeJsProperty('Hide', 'hide');
+			$strJqOptions .= $this->makeJsProperty('Hide1', 'hide');
 			$strJqOptions .= $this->makeJsProperty('MaxHeight', 'maxHeight');
 			$strJqOptions .= $this->makeJsProperty('MaxWidth', 'maxWidth');
 			$strJqOptions .= $this->makeJsProperty('MinHeight', 'minHeight');
@@ -220,6 +227,7 @@
 			$strJqOptions .= $this->makeJsProperty('Position', 'position');
 			$strJqOptions .= $this->makeJsProperty('Resizable', 'resizable');
 			$strJqOptions .= $this->makeJsProperty('Show', 'show');
+			$strJqOptions .= $this->makeJsProperty('Show1', 'show');
 			$strJqOptions .= $this->makeJsProperty('Stack', 'stack');
 			$strJqOptions .= $this->makeJsProperty('Title', 'title');
 			$strJqOptions .= $this->makeJsProperty('Width', 'width');
@@ -335,7 +343,8 @@
 				case 'DialogClass': return $this->strDialogClass;
 				case 'Draggable': return $this->blnDraggable;
 				case 'Height': return $this->intHeight;
-				case 'Hide': return $this->mixHide;
+				case 'Hide': return $this->strHide;
+				case 'Hide1': return $this->mixHide1;
 				case 'MaxHeight': return $this->intMaxHeight;
 				case 'MaxWidth': return $this->intMaxWidth;
 				case 'MinHeight': return $this->intMinHeight;
@@ -343,7 +352,8 @@
 				case 'Modal': return $this->blnModal;
 				case 'Position': return $this->mixPosition;
 				case 'Resizable': return $this->blnResizable;
-				case 'Show': return $this->mixShow;
+				case 'Show': return $this->strShow;
+				case 'Show1': return $this->mixShow1;
 				case 'Stack': return $this->blnStack;
 				case 'Title': return $this->strTitle;
 				case 'Width': return $this->intWidth;
@@ -359,14 +369,12 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $mixValue);
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -378,7 +386,7 @@
 					try {
 						$this->blnAutoOpen = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'autoOpen', $mixValue);
+							$this->CallJqUiMethod('option', 'autoOpen', $this->blnAutoOpen);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -398,7 +406,7 @@
 					try {
 						$this->arrButtons1 = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'buttons', $mixValue);
+							$this->CallJqUiMethod('option', 'buttons', $this->arrButtons1);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -410,7 +418,7 @@
 					try {
 						$this->blnCloseOnEscape = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'closeOnEscape', $mixValue);
+							$this->CallJqUiMethod('option', 'closeOnEscape', $this->blnCloseOnEscape);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -422,7 +430,7 @@
 					try {
 						$this->strCloseText = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'closeText', $mixValue);
+							$this->CallJqUiMethod('option', 'closeText', $this->strCloseText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -434,7 +442,7 @@
 					try {
 						$this->strDialogClass = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'dialogClass', $mixValue);
+							$this->CallJqUiMethod('option', 'dialogClass', $this->strDialogClass);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -446,7 +454,7 @@
 					try {
 						$this->blnDraggable = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'draggable', $mixValue);
+							$this->CallJqUiMethod('option', 'draggable', $this->blnDraggable);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -458,7 +466,7 @@
 					try {
 						$this->intHeight = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'height', $mixValue);
+							$this->CallJqUiMethod('option', 'height', $this->intHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -467,7 +475,19 @@
 					}
 
 				case 'Hide':
-					$this->mixHide = $mixValue;
+					try {
+						$this->strHide = QType::Cast($mixValue, QType::String);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'hide', $this->strHide);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Hide1':
+					$this->mixHide1 = $mixValue;
 				
 					if ($this->Rendered) {
 						$this->CallJqUiMethod('option', 'hide', $mixValue);
@@ -478,7 +498,7 @@
 					try {
 						$this->intMaxHeight = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'maxHeight', $mixValue);
+							$this->CallJqUiMethod('option', 'maxHeight', $this->intMaxHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -490,7 +510,7 @@
 					try {
 						$this->intMaxWidth = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'maxWidth', $mixValue);
+							$this->CallJqUiMethod('option', 'maxWidth', $this->intMaxWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -502,7 +522,7 @@
 					try {
 						$this->intMinHeight = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'minHeight', $mixValue);
+							$this->CallJqUiMethod('option', 'minHeight', $this->intMinHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -514,7 +534,7 @@
 					try {
 						$this->intMinWidth = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'minWidth', $mixValue);
+							$this->CallJqUiMethod('option', 'minWidth', $this->intMinWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -526,7 +546,7 @@
 					try {
 						$this->blnModal = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'modal', $mixValue);
+							$this->CallJqUiMethod('option', 'modal', $this->blnModal);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -546,7 +566,7 @@
 					try {
 						$this->blnResizable = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'resizable', $mixValue);
+							$this->CallJqUiMethod('option', 'resizable', $this->blnResizable);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -555,7 +575,19 @@
 					}
 
 				case 'Show':
-					$this->mixShow = $mixValue;
+					try {
+						$this->strShow = QType::Cast($mixValue, QType::String);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'show', $this->strShow);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Show1':
+					$this->mixShow1 = $mixValue;
 				
 					if ($this->Rendered) {
 						$this->CallJqUiMethod('option', 'show', $mixValue);
@@ -566,7 +598,7 @@
 					try {
 						$this->blnStack = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'stack', $mixValue);
+							$this->CallJqUiMethod('option', 'stack', $this->blnStack);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -578,7 +610,7 @@
 					try {
 						$this->strTitle = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'title', $mixValue);
+							$this->CallJqUiMethod('option', 'title', $this->strTitle);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -590,7 +622,7 @@
 					try {
 						$this->intWidth = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'width', $mixValue);
+							$this->CallJqUiMethod('option', 'width', $this->intWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -602,7 +634,7 @@
 					try {
 						$this->intZIndex = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'zIndex', $mixValue);
+							$this->CallJqUiMethod('option', 'zIndex', $this->intZIndex);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

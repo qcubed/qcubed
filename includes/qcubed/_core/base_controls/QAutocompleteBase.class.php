@@ -126,7 +126,6 @@
 							jQuery( this ).val() != toTest) {
 								// remove invalid value, as no match 
 								if ($mustMatch) {
-									
 									jQuery( this ).val( "" );
 									jQuery( this ).data( "autocomplete" ).term = '';
 								}
@@ -150,33 +149,46 @@ FUNC;
 
 
 		public function __set($strName, $mixValue) {
-			// Assign data to a DataSource from within the data binder function only.
-			// Data should be array items that at a minimum contain a 'value' and an 'id'
-			// They can also contain a 'label', which will be displayed in the popup menu only
-			if ($strName === 'DataSource') {
-				if ($this->blnUseAjax) {
-					$this->prepareAjaxList($mixValue);
-				} else {
-					$this->Source = $mixValue;
-				}
-				return;
-			}
-			
-			$this->blnModified = true;
-			
 			switch ($strName) {
-				case 'SelectedId':
-					$this->strSelectedId = $mixValue;
-					$this->blnModified = true;
-					 break;
-					 
+				case 'DataSource':
+					// Assign data to a DataSource from within the data binder function only.
+					// Data should be array items that at a minimum contain a 'value' and an 'id'
+					// They can also contain a 'label', which will be displayed in the popup menu only
+					if ($this->blnUseAjax) {
+						$this->prepareAjaxList($mixValue);
+					} else {
+						$this->Source = $mixValue;
+					}
+					break;
+					
+				case 'SelectedId': 
+					// Set this at creation time to initialize the selected id. 
+					// This is also set by the javascript above to keep track of subsequent selections made by the user.
+					try {
+						$this->strSelectedId = QType::Cast($mixValue, QType::String);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+					
 				case 'MustMatch':
-					$this->blnMustMatch = $mixValue;
-					$this->blnModified = true;
+					try {
+						$this->blnMustMatch = QType::Cast($mixValue, QType::Boolean);
+						$this->blnModified = true;	// Be sure control gets redrawn
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 					break;
 					
 				default:
-					parent::__set($strName, $mixValue);
+					try {
+						parent::__set($strName, $mixValue);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 					break;
 			}
 			

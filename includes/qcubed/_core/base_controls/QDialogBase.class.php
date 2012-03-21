@@ -30,8 +30,9 @@
 
 
 	/**
-	 * @property boolean $HasCloseButton Disables (false) or enables (true) the close X in the upper right corner of the title. 
-	 * Can be set when initializing the dialog.
+	 * @property boolean $HasCloseButton Disables (false) or enables (true) the close X in the upper right corner of the title. Can be set when initializing the dialog.
+	 * @property-read integer $ClickedButton Returns the id of the button most recently clicked. (read-only)
+	 * 
 	 */
 	
 	class QDialogBase extends QDialogGen
@@ -50,12 +51,14 @@
 
 		protected function makeJqOptions() {
 			$strOptions = parent::makeJqOptions();
-		
+
+			$strParentId = $this->ParentControl ? $this->ParentControl->ControlId : $this->Form->FormId;
+			$strId = $this->getJqControlId();
+			
 			if (!$this->blnHasCloseButton) {
-				$strOptions .= sprintf(', %s open: function(event, ui) { $j(".ui-dialog-titlebar-close", ui.dialog).hide(); }', "\n", "\n");
+				$strOptions .= sprintf(', %s open: function(event, ui) { $j(this).parent().find(".ui-dialog-titlebar-close").hide(); }', "\n", $strId);
 			}
 			
-			$strParentId = $this->ParentControl ? $this->ParentControl->ControlId : $this->Form->FormId;
 			//move both the dialog and the matte back into the form, to ensure they continue to function
 			$strOptions .= sprintf(', %s create: function() { $j(this).parent().appendTo("#%s"); $j(".ui-widget-overlay").appendTo("#%s"); }%s', "\n", $strParentId, $strParentId, "\n");
 			return $strOptions;
@@ -70,7 +73,7 @@
 			}
 			$controlId = $this->ControlId;
 			$strJS =<<<FUNC
-			qcubed.recordControlModification("$controlId", "ClickedButton", "$strButtonId");
+			qcubed.recordControlModification("$controlId", "_ClickedButton", "$strButtonId");
 			jQuery("#$controlId").trigger("QDialog_Button");
 FUNC;
 									
@@ -98,12 +101,14 @@ FUNC;
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-			
 			switch ($strName) {
-				// Used by framework code above, do not call directly
-				case 'ClickedButton':
-					$this->strClickedButtonId = $mixValue;
+				case '_ClickedButton': // Internal only. Do not use. Used by JS above to keep track of clicked button.
+					try {
+						$this->strClickedButtonId = QType::Cast($mixValue, QType::String);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 					break;
 					
 				// set to false to remove the close x in upper right corner and disable the
@@ -112,6 +117,7 @@ FUNC;
 					try {
 						$this->blnHasCloseButton = QType::Cast($mixValue, QType::Boolean);
 						$this->blnCloseOnEscape = $this->blnHasCloseButton;
+						$this->blnModified = true;	// redraw
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

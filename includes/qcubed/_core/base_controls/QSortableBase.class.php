@@ -27,7 +27,7 @@
 			create: function (event, ui) {
 						var ary = jQuery(this).sortable("toArray");
 						var str = ary.join(",");
-			 			qcubed.recordControlModification("$this->ControlId", "ItemArray", str);
+			 			qcubed.recordControlModification("$this->ControlId", "_ItemArray", str);
 					}					
 FUNC;
 			return $strJqOptions; 
@@ -39,7 +39,7 @@ FUNC;
 			.on("sortstop", function (event, ui) {
 						var ary = jQuery(this).sortable("toArray");
 						var str = ary.join(",");
-			 			qcubed.recordControlModification("$this->ControlId", "ItemArray", str);
+			 			qcubed.recordControlModification("$this->ControlId", "_ItemArray", str);
 					})						
 FUNC;
 			
@@ -47,12 +47,9 @@ FUNC;
 		}
 
 
-		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-			
+		public function __set($strName, $mixValue) {			
 			switch ($strName) {
-				case 'ItemArray':
-					// used to interface with javascript above. Not intended for public consumption.
+				case '_ItemArray': // Internal only. Do not use. Used by JS above to track selections.
 					try {
 						$data = QType::Cast($mixValue, QType::String);
 						$a = explode (",", $data);
