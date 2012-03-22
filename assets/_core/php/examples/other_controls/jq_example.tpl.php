@@ -56,6 +56,7 @@
 			<?php $this->Button->Render(); ?>
 			<?php $this->CheckBox->Render(); ?>
 			<?php $this->RadioButton->Render(); ?>
+			<?php $this->IconButton->Render(); ?>
 		</div>
 		<div class="example"><h3>Lists</h3>
 			<?php $this->CheckList1->RenderWithName(); ?>
