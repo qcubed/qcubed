@@ -102,7 +102,7 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$this->assertEqual($obj1->qFormat("One random DDDD in MMMM"), "One random Tuesday in March");
 		
 		//  Back compat
-		$this->assertEqual($obj1->qFormat("M/D/YY h:mm z"), $obj1->__toString("M/D/YY h:mm z"));
+		$this->assertEqual($obj1->qFormat("M/D/YY h:mm z"), $obj1->qFormat("M/D/YY h:mm z"));
 	}
 	
 	public function testFirstOfMonth() {
