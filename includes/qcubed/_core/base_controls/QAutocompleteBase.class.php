@@ -26,7 +26,9 @@
 
 
 	/**
-	 * @property-write array $DataSource an array of strings, QAutocompleteListItem's, 
+	 * @property string $SelectedId the id of the selected item. When QAutocompleteListItem objects are used for the DataSource, this corresponds to the Value of the item
+	 * @property boolean $MustMatch if true, non matching values are not accepted by the input
+	 * @property-write array $DataSource an array of strings, QAutocompleteListItem's,
 	 */
 	class QAutocompleteBase extends QAutocompleteGen
 	{
