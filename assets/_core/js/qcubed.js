@@ -255,10 +255,9 @@ $j.ajaxSync.data = [];
 							$j(strControlId).val(strControlHtml);
 						} else {
 							var control = $j(strControlId); 
-							if (control.length != 0) 
+							if (control.length != 0 && !control.get(0).wrapper) 
 								control.replaceWith(strControlHtml); 
 							else 
-								// Special case when a control is being changed from hidden to visible. Wrapper exists, but not content.
 								$j(strControlId + '_ctl').html(strControlHtml); 						
 						}
 					});
