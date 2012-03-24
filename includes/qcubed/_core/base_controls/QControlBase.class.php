@@ -1743,7 +1743,9 @@
 						if($this->blnUseWrapper != QType::Cast($mixValue, QType::Boolean)) {
 							$this->blnUseWrapper = !$this->blnUseWrapper;
 							//need to render the parent again (including its children)
-							$this->ParentControl->MarkAsModified();
+							if ($this->ParentControl) {
+								$this->ParentControl->MarkAsModified();
+							}
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
