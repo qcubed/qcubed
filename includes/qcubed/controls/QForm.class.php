@@ -42,19 +42,7 @@
 		 */
 		protected $strIgnoreJavaScriptFileArray = array();
 		/* protected $strIgnoreJavaScriptFileArray = array(
-			'calendar.js',
-			'calendar_popup.js',
-			'control.js',
-			'control_dialog.js',
-			'control_handle.js',
-			'control_move.js',
-			'control_resize.js',
-			'control_rollover.js',
 			'date_time_picker.js',
-			'event.js',
-			'listbox.js',
-			'logger.js',
-			'post.js',
 			'qcubed.js',
 			'treenav.js'); */
 
