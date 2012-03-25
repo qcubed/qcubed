@@ -17,15 +17,14 @@
 			$this->objMemcache = new Memcache();
 			foreach ($objOptionsArray as $objServerOptions) {
 				$host = $objServerOptions["host"];
-				$port = array_key_exists("port", $objServerOptions) ? $objServerOptions["port"] : null;
-				$persistent = array_key_exists("persistent", $objServerOptions) ? $objServerOptions["persistent"] : null;
-				$weight = array_key_exists("weight", $objServerOptions) ? $objServerOptions["weight"] : null;
-				$timeout = array_key_exists("timeout", $objServerOptions) ? $objServerOptions["timeout"] : null;
-				$retry_interval = array_key_exists("retry_interval", $objServerOptions) ? $objServerOptions["retry_interval"] : null;
-				$status = array_key_exists("status", $objServerOptions) ? $objServerOptions["status"] : null;
+				$port = array_key_exists("port", $objServerOptions) ? $objServerOptions["port"] : 11211;
+				$persistent = array_key_exists("persistent", $objServerOptions) ? $objServerOptions["persistent"] : true;
+				$weight = array_key_exists("weight", $objServerOptions) ? $objServerOptions["weight"] : 10;
+				$timeout = array_key_exists("timeout", $objServerOptions) ? $objServerOptions["timeout"] : 1;
+				$retry_interval = array_key_exists("retry_interval", $objServerOptions) ? $objServerOptions["retry_interval"] : 15;
+				$status = array_key_exists("status", $objServerOptions) ? $objServerOptions["status"] : true;
 				$failure_callback = array_key_exists("failure_callback", $objServerOptions) ? $objServerOptions["failure_callback"] : null;
-				$timeoutms = array_key_exists("timeoutms", $objServerOptions) ? $objServerOptions["timeoutms"] : null;
-				$this->objMemcache->addserver($host, $port, $persistent, $weight, $timeout, $retry_interval, $status, $failure_callback, $timeoutms);
+				$this->objMemcache->addserver($host, $port, $persistent, $weight, $timeout, $retry_interval, $status, $failure_callback);
 			}
 		}
 

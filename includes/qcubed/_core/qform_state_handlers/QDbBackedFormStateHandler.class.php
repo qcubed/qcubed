@@ -17,7 +17,7 @@
 		/**
 		 * The database index in configuration.inc.php where the formstates have to be managed
 		 */
-		public static $intDbIndex = 1;
+		public static $intDbIndex = __DB_BACKED_FORM_STATE_HANDLER_DB_INDEX__;
 
 		/**
 		 * The table name which will handle the formstates. It must have the following columns:
@@ -26,7 +26,7 @@
 		 * 3. state_data: text
 		 * 4. session_id: varchar(32)
 		 */
-		public static $strTableName = 'qc_formstate';
+		public static $strTableName = __DB_BACKED_FORM_STATE_HANDLER_TABLE_NAME__;
 		/**
 		 * The interval of hits before the garbage collection should kick in to delete
 		 * old FormState files, or 0 if it should never be run.  The higher the number,
