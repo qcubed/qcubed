@@ -67,6 +67,8 @@ if (!defined('SERVER_INSTANCE')) {
 			 */
 			define ('__INCLUDES__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes');
 			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
+			// The directory where the external libraries are placed
+			define ('__EXTERNAL_LIBRARIES__', __INCLUDES__ . '/external_libraries');
 
 			/*
 			 * If you are using Apache-based mod_rewrite to perform URL rewrites, please specify "apache" here.

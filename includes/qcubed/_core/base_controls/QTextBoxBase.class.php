@@ -391,7 +391,7 @@
 							// We load lazy to make sure that the library is not loaded every time 'prepend.inc.php'
 							// or 'qcubed.inc.php' is inlcuded. HTMLPurifier is a HUGE and SLOW library. Lazy loading
 							// keeps it simpler.
-							require_once(__INCLUDES__ .'/external_libraries/htmlpurifier/library/HTMLPurifier.auto.php');
+							require_once(__EXTERNAL_LIBRARIES__ . '/htmlpurifier/library/HTMLPurifier.auto.php');
 
 							// We configure the default set of forbidden tags (elements) and attributes here
 							// so that the rules are applicable the moment CrossScripting is set to Purify.
