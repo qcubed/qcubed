@@ -281,6 +281,11 @@ if (!defined('SERVER_INSTANCE')) {
 			 *                 ii) save_time: integer - This column should be indexed for performance reasons
 			 *                iii) session_id: varchar(32) - This column should be indexed for performance reasons
 			 *                 iv) state_data: text - This column must NOT be indexed otherwise it will degrade the performance.
+			 *
+			 * NOTE: Formstates can be large, depending on the complexity of your forms.
+			 *       For MySQL, you might have to increase the max_allowed_packet variable in your my.cnf file to the maximum size of a formstate.
+			 *       Also for MySQL, you should choose a MEDIUMTEXT type of column, rather than TEXT. TEXT is limited to 64KB,
+			 *       which will not be big enough for moderately complex forms, and will result in data errors.
 			 */
 			define('__FORM_STATE_HANDLER__', 'QSessionFormStateHandler');
 				
