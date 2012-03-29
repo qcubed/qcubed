@@ -387,6 +387,12 @@
 				require($strClassFile);
 		}
 
+		/**
+		 * Checks for the type of browser in use by the client.
+		 * @static
+		 * @param int $intBrowserType
+		 * @return int
+		 */
 		public static function IsBrowser($intBrowserType) {
 			return ($intBrowserType & QApplication::$BrowserType);
 		}
@@ -452,6 +458,7 @@
 		/**
 		 * This is called by the PHP5 Autoloader.  This static method can be overridden.
 		 *
+		 * @param $strClassName
 		 * @return boolean whether or not a class was found / included
 		 */
 		public static function Autoload($strClassName) {
@@ -505,12 +512,13 @@
 		public static function MakeDirectory($strPath, $intMode = null) {
 			return QFolder::MakeDirectory($strPath, $intMode);
 		}
-		
+
 
 		/**
 		 * This will redirect the user to a new web location.  This can be a relative or absolute web path, or it
 		 * can be an entire URL.
 		 *
+		 * @param string $strLocation target patch
 		 * @return void
 		 */
 		public static function Redirect($strLocation) {
@@ -578,7 +586,9 @@
 		/**
 		 * Gets the value of the QueryString item $strItem.  Will return NULL if it doesn't exist.
 		 *
-		 * @return string
+		 * @param string $strItem the parameter name
+		 *
+		 * @return string value of the parameter
 		 */
 		public static function QueryString($strItem) {
 			if (array_key_exists($strItem, $_GET))
@@ -619,12 +629,9 @@
 		 * By default, this is used by the codegen and form drafts to do a quick check
 		 * on the ALLOW_REMOTE_ADMIN constant (as defined in configuration.inc.php).  If enabled,
 		 * then anyone can access the page.  If disabled, only "localhost" can access the page.
-		 * 
 		 * If you want to run a script that should be accessible regardless of
 		 * ALLOW_REMOTE_ADMIN, simply remove the CheckRemoteAdmin() method call from that script.
-		 *
-		 * @param string $strFile script filename doing the check
-		 * @param integer $intLine line number of the check call
+		 * @return
 		 */
 		public static function CheckRemoteAdmin() {
 			if (!QApplication::IsRemoteAdminSession()) {
@@ -637,7 +644,17 @@
 
 			throw new QRemoteAdminDeniedException();
 		}
-		
+
+		/**
+		 * Checks whether the current request was made by an ADMIN
+		 * This does not refer to your Database admin or an Admin user defined in your application but an IP address
+		 * (or IP address range) defined in configuration.inc.php.
+		 *
+		 * The function can be used to restrict access to sensitive pages to a list of IPs (or IP ranges), such as the LAN to which
+		 * the server hosting the QCubed application is connected.
+		 * @static
+		 * @return bool
+		 */
 		public static function IsRemoteAdminSession() {
 			// Allow Remote?
 			if (ALLOW_REMOTE_ADMIN === true)
@@ -687,7 +704,7 @@
 		public static $AlertMessageArray = array();
 		public static $JavaScriptArray = array();
 		public static $JavaScriptArrayHighPriority = array();
-        public static $JavaScriptArrayLowPriority = array();
+		public static $JavaScriptArrayLowPriority = array();
 
 		public static $ErrorFlag = false;
 		
@@ -695,6 +712,13 @@
 			array_push(QApplication::$AlertMessageArray, $strMessage);
 		}
 
+		/**
+		 * Thic class can be used to call a Javascript function sittin in the client browser from the server side.
+		 * Can be used inside event handlers to do something after verification  on server side.
+		 * @static
+		 * @param string $strJavaScript the javascript to execute
+		 * @param int $intPriority
+		 */
 		public static function ExecuteJavaScript($strJavaScript, $intPriority = QJsPriority::Standard) {
 			if (is_bool($intPriority)) {
 				//we keep this codepath for backward compatibility
@@ -742,6 +766,12 @@
 			}
 		}
 
+		/**
+		 * Function renders Javascript on the client browser.
+		 * @static
+		 * @param bool $blnOutput if true print the result, otherwise return it
+		 * @return null|string
+		 */
 		public static function RenderJavaScript($blnOutput = true) {
 			$strScript = '';
 			foreach (QApplication::$AlertMessageArray as $strAlert) {
@@ -862,12 +892,18 @@
 		}		
 	}
 
+	/**
+	 * Class for enumerating Javascript priority.
+	 */
 	class QJsPriority {
 		const Standard = 0;
 		const High = 1;
 		const Low = -1;
 	}
 
+	/**
+	 * This is an enumerator class for listing Request Modes
+	 */
 	class QRequestMode {
 		const Standard = 'Standard';
 		const Ajax = 'Ajax';
