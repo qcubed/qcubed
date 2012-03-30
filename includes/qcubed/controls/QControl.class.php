@@ -42,6 +42,9 @@
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 			////////////////////
 
+			//rendering with name -> we have to use a wrapper
+			$this->blnUseWrapper=true; 
+			
 			// Custom Render Functionality Here
 
 			// Because this example RenderWithName will render a block-based element (e.g. a DIV), let's ensure
