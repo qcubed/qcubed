@@ -103,8 +103,8 @@ FUNC;
 							}
 						}
 						parent::__set($strName, join(',', $aHandles));
-					} elseif (is_string($mixItem) && substr($mixItem, 0, 1) != '#') {
-						$mixItem = '#' . $mixItem;	// turn the control id into a jQuery selector
+					} elseif (is_string($mixValue) && substr($mixValue, 0, 1) != '#') {
+						$mixValue = '#' . $mixValue;	// turn the control id into a jQuery selector
 						parent::__set($strName, $mixValue);
 						
 					} else {		
