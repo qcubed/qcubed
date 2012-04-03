@@ -1259,6 +1259,21 @@
 				return var_export($this, true);
 		}
 
+		/**
+		 * Used by jQuery UI wrapper controls to find the element on which to apply the jQuery function
+		 *
+		 * NOTE: Some controls that use jQuery will get wrapped with extra divs by the jQuery library.
+		 * If such a control then gets replaced by Ajax, the jQuery effects will be deleted. To solve this,
+		 * the corresponding QCubed control should set UseWrapper to true, attach the jQuery effect to
+		 * the wrapper, and override this function to return the id of the wrapper. See QDialogBase.class.php for
+		 * an exaple.
+		 *
+		 * @return string the DOM element id on which to apply the jQuery UI function
+		 */
+		public function getJqControlId() {
+			return $this->ControlId;
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////

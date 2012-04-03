@@ -54,7 +54,7 @@
 					return sprintf('$j("#%s").%s("option", {%s: function(event, ui){
 								%s
 								}});
-								', $objControl->ControlId, $objControl->getJqSetupFunction(), $strJqUiProperty,  substr($strToReturn, 1));
+								', $objControl->getJqControlId(), $objControl->getJqSetupFunction(), $strJqUiProperty,  substr($strToReturn, 1));
 				} elseif ($objControl instanceof QControlProxy) {
 					if ($objControl->TargetControlId) {
 						return sprintf('$j("#%s").on("%s", function(event, ui){
@@ -66,7 +66,7 @@
 					return sprintf('$j("#%s").on("%s", function(event, ui){
 								%s
 								});
-								', $objControl->ControlId, $strEventName,  substr($strToReturn, 1));
+								', $objControl->getJqControlId(), $strEventName,  substr($strToReturn, 1));
 
 				//return sprintf('%s="%s" ', $strEventName, substr($strToReturn, 1));
 				}

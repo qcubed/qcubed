@@ -446,10 +446,6 @@
 			return $strJqOptions;
 		}
 
-		public function getJqControlId() {
-			return $this->ControlId;
-		}
-
 		public function getJqSetupFunction() {
 			return 'datepicker';
 		}
@@ -518,8 +514,8 @@
 		}
 		/**
 		 * Open a datepicker in a "dialog" box.
-		 * dateText: the initial date for the date picker as either a Date or a
-		 * string in the current date format.
+		 * dateText: the initial date for the date picker as either a Date or a string
+		 * in the current date format.
 		 * onSelect: A callback function when a date is selected. The function
 		 * receives the date text and date picker instance as parameters.
 		 * settings: The new settings for the date picker.

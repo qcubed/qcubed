@@ -236,10 +236,6 @@
 			return $strJqOptions;
 		}
 
-		public function getJqControlId() {
-			return $this->ControlId;
-		}
-
 		public function getJqSetupFunction() {
 			return 'dialog';
 		}
