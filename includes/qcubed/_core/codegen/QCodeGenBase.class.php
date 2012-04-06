@@ -434,7 +434,7 @@
 			// Store the Output Buffer locally
 			$strAlreadyRendered = ob_get_contents();
 
-			ob_clean();
+			if (ob_get_level()) ob_clean();
 			ob_start();
 			include($strFilename);
 			$strTemplate = ob_get_contents();

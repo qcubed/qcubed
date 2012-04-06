@@ -7,7 +7,7 @@
 	require('cli_prepend.inc.php');
 
 	// Include the QCodeGen class library
-	require(__QCUBED__. '/custom/codegen/QCodeGen.class.php');
+	require(__QCUBED__. '/codegen/QCodeGen.class.php');
 
 	function PrintInstructions() {
 		global $strCommandName;
@@ -26,19 +26,24 @@ For more information, please go to http://qcu.be
 		exit();
 	}
 
-	if ($_SERVER['argc'] != 2)
+	$settingsFile = $strPathToPrepend . '/codegen_settings.xml';
+	if ($_SERVER['argc'] >= 2)
+		$settingsFile = $_SERVER['argv'][1];
+
+	if (!is_file($settingsFile)) {
 		PrintInstructions();
+	}
 
 	/////////////////////
 	// Run Code Gen
-	QCodeGen::Run($_SERVER['argv'][1]);
+	QCodeGen::Run($settingsFile);
 	/////////////////////
 
 
-	if ($strErrors == QCodeGen::$RootErrors) {
+	if ($strErrors = QCodeGen::$RootErrors) {
 		printf("The following ROOT ERRORS were reported:\r\n%s\r\n\r\n", $strErrors);
 	} else {
-		printf("CodeGen settings (as evaluted from %s):\r\n%s\r\n\r\n", $_SERVER['argv'][1], QCodeGen::GetSettingsXml());
+		printf("CodeGen settings (as evaluted from %s):\r\n%s\r\n\r\n", $settingsFile, QCodeGen::GetSettingsXml());
 	}
 
 	foreach (QCodeGen::$CodeGenArray as $objCodeGen) {
