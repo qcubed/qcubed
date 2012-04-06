@@ -37,15 +37,24 @@
 		protected function GetControlHtml() {}
 		public function Validate() {return true;}
 		public function ParsePostData() {}
-		// These functions are used to keep track of the selected value, and to implement 
-		// optional autocomplete functionality.
+		
+		
+		// These functions are used to keep track of the position of the draggable. Note that event though
+		// the draggable interface includes a 'ui' that is supposed to return original and new position of the 
+		// draggable, there are bugs in the jQuery UI code such that it doesn't always work, so we use
+		// an alternate way of doing it.
 		
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
 			
 			$strJS .=<<<FUNC
-			.on("dragstop", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "_DragData", ui.originalPosition.left + "," + ui.originalPosition.top + "," + ui.position.left + "," + ui.position.top);
+			.on("dragstart", function () {
+						var c = jQuery(this);
+						c.data ("originalPosition", c.position());
+					})						
+			.on("dragstop", function () {
+						var c = jQuery(this);
+			 			qcubed.recordControlModification("$this->ControlId", "_DragData", c.data("originalPosition").left + "," + c.data("originalPosition").top + "," + c.position().left + "," + c.position().top);
 					})						
 FUNC;
 			
@@ -63,7 +72,12 @@ FUNC;
 						$this->aryOriginalPosition['top'] = $a[1];
 						$this->aryNewPosition['left'] = $a[2];
 						$this->aryNewPosition['top'] = $a[3];
+						
+						// update parent's coordinates
+						$this->objParentControl->strTop = $this->aryNewPosition['top'];
+						$this->objParentControl->strLeft = $this->aryNewPosition['left'];
 						break;
+						
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
