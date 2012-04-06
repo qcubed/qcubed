@@ -69,6 +69,8 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
 			// The directory where the external libraries are placed
 			define ('__EXTERNAL_LIBRARIES__', __INCLUDES__ . '/external_libraries');
+			// The application includes directory
+			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 
 			/*
 			 * If you are using Apache-based mod_rewrite to perform URL rewrites, please specify "apache" here.
@@ -128,11 +130,18 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__FORM_DRAFTS_PANEL_LIST_ITEMS_PER_PAGE__', 8);
 
 			// Location of QCubed-specific Web Assets (JavaScripts, CSS, Images, and PHP Pages/Popups)
+			// Note: These locations are for use by the framework only. You should put your own files in __APP*_ASSETS__ directories defined below
 			define ('__JS_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/js');
 			define ('__CSS_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/css');
 			define ('__IMAGE_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/images');
 			define ('__PHP_ASSETS__', __SUBDIRECTORY__ . '/assets/_core/php');
 			define ('__PLUGIN_ASSETS__', __SUBDIRECTORY__ . '/assets/plugins');
+
+			// Location of asset files for your application
+			define ('__APP_JS_ASSETS__', __SUBDIRECTORY__ . '/assets/js');
+			define ('__APP_CSS_ASSETS__', __SUBDIRECTORY__ . '/assets/css');
+			define ('__APP_IMAGE_ASSETS__', __SUBDIRECTORY__ . '/assets/images');
+			define ('__APP_PHP_ASSETS__', __SUBDIRECTORY__ . '/assets/php');
 
 			// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery
