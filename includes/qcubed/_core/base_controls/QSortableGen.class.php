@@ -269,10 +269,6 @@
 			return $strJqOptions;
 		}
 
-		public function getJqControlId() {
-			return $this->ControlId;
-		}
-
 		public function getJqSetupFunction() {
 			return 'sortable';
 		}
@@ -405,8 +401,7 @@
 		 * 
 		 * $(this).sortable('cancel');
 		 * will cancel the change.
-		 * If the sortable item is being moved from one connected sortable to
-		 * another:
+		 * If the sortable item is being moved from one connected sortable to another:
 		 * 
 		 * $(ui.sender).sortable('cancel');
 		 * will cancel the change. Useful in the 'receive' callback.
