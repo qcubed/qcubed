@@ -57,14 +57,15 @@
 			$strOptions = parent::makeJqOptions();
 
 			$strParentId = $this->ParentControl ? $this->ParentControl->ControlId : $this->Form->FormId;
-			$strId = $this->getJqControlId();
-			
+
 			if (!$this->blnHasCloseButton) {
-				$strOptions .= sprintf(', %s open: function(event, ui) { $j(this).parent().find(".ui-dialog-titlebar-close").hide(); }', "\n", $strId);
+				if ($strOptions) $strOptions .= ', ';
+				$strOptions .= 'open: function(event, ui) { $j(this).parent().find(".ui-dialog-titlebar-close").hide(); }';
 			}
 			
 			//move both the dialog and the matte back into the form, to ensure they continue to function
-			$strOptions .= sprintf(', %s create: function() { $j(this).parent().appendTo("#%s"); $j(".ui-widget-overlay").appendTo("#%s"); }%s', "\n", $strParentId, $strParentId, "\n");
+			if ($strOptions) $strOptions .= ', ';
+			$strOptions .= sprintf('create: function() { $j(this).parent().appendTo("#%s"); $j(".ui-widget-overlay").appendTo("#%s"); }', $strParentId, $strParentId);
 			return $strOptions;
 		}
 	
