@@ -193,13 +193,10 @@
 					if ($strTimeISO8601 != $mixValue)
 						parent::__construct($strTimeISO8601);
 
-					// if $mixValue represent only time string, blnDateNull must be set to true 
+					// Set DateNull and TimeNull according to the value of $mixValue
 					$objDateTime = (object)date_parse($mixValue); 
 					$this->blnDateNull = !$objDateTime->year && !$objDateTime->month && !$objDateTime->day;
-
-					// Update Time Null Value if Time was Specified
-					if (strpos($mixValue, ':') !== false)
-						$this->blnTimeNull = false;
+					$this->blnTimeNull = ($objDateTime->hour === false) || ($objDateTime->minute === false) || ($objDateTime->second === false);
 
 				// Timestamp-based Value string
 				} else if (is_numeric($mixValue)) {
