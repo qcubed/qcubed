@@ -35,10 +35,15 @@
 		
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
-			
 			$strJS .=<<<FUNC
-			.on("resizestop", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "_ResizeData", ui.originalSize.width + "," + ui.originalSize.height + "," + ui.size.width + "," + ui.size.height);
+			.on("resizestart", function () {
+						var c = jQuery(this);
+						c.data ("oW", c.width());
+						c.data ("oH", c.height());
+			})						
+			.on("resizestop", function () {
+						var c = jQuery(this);
+			 			qcubed.recordControlModification("$this->ControlId", "_ResizeData", c.data("oW") + "," + c.data("oH") + "," + c.width() + "," + c.height());
 					})						
 FUNC;
 			
@@ -56,6 +61,10 @@ FUNC;
 						$this->aryOriginalSize['height'] = $a[1];
 						$this->aryNewSize['width'] = $a[2];
 						$this->aryNewSize['height'] = $a[3];
+						
+						// update dimensions
+						$this->strWidth = $this->aryNewSize['width'];
+						$this->strHeight = $this->aryNewSize['height'];
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
