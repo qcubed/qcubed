@@ -449,7 +449,7 @@
 		public static function SessionOverride() {
 			// Are we using QDbBackedSessionHandler?
 			if (defined("DB_BACKED_SESSION_HANDLER_DB_INDEX") &&
-					constant("DB_BACKED_SESSION_HANDLER_DB_INDEX") != 0 && defined(DB_BACKED_SESSION_HANDLER_TABLE_NAME)) {
+					constant("DB_BACKED_SESSION_HANDLER_DB_INDEX") != 0 && defined("DB_BACKED_SESSION_HANDLER_TABLE_NAME")) {
 				// Yes we are going to override PHP's default file based handlers.
 				QDbBackedSessionHandler::Initialize(DB_BACKED_SESSION_HANDLER_DB_INDEX, DB_BACKED_SESSION_HANDLER_TABLE_NAME);
 			}
