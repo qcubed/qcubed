@@ -10,7 +10,8 @@
 	 * @property boolean $HtmlEntities if true, cell values will be converted using htmlentities()
 	 * @property QQOrderBy $OrderByClause order by clause for sorting the column in ascending order
 	 * @property QQOrderBy $ReverseOrderByClause order by clause for sorting the column in descending order
-	 *
+	 * @property string $Format the default format to use for FetchCellValueFormatted().
+	 *    For date columns it should be a format accepted by QDateTime::qFormat()
 	 */
 	abstract class QAbstractSimpleTableColumn extends QBaseClass {
 		protected $strName;
@@ -19,6 +20,7 @@
 		protected $blnHtmlEntities = true;
 		protected $objOrderByClause = null;
 		protected $objReverseOrderByClause = null;
+		protected $strFormat = null;
 
 		/**
 		 * @param string $strName Name of the column
@@ -61,6 +63,23 @@
 
 		abstract public function FetchCellValue($item);
 
+		public function FetchCellValueFormatted($item, $strFormat = null) {
+			$cellValue = $this->FetchCellValue($item);
+			if (!$cellValue)
+				return '';
+			if (!$strFormat)
+				$strFormat = $this->strFormat;
+			if ($cellValue instanceof QDateTime) {
+				return $cellValue->qFormat($strFormat);
+			}
+			if (is_object($cellValue)) {
+				$cellValue = $cellValue->__toString();
+			}
+			if ($strFormat)
+				return sprintf($strFormat, $cellValue);
+			return $cellValue;
+		}
+
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Name':
@@ -75,6 +94,8 @@
 					return $this->objOrderByClause;
 				case "ReverseOrderByClause":
 					return $this->objReverseOrderByClause;
+				case "Format":
+					return $this->strFormat;
 
 				default:
 					try {
@@ -136,6 +157,15 @@
 				case "ReverseOrderByClause":
 					try {
 						$this->objReverseOrderByClause = QType::Cast($mixValue, 'QQOrderBy');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "Format":
+					try {
+						$this->strFormat = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
