@@ -56,7 +56,6 @@
 		protected function makeJqOptions() {
 			$strOptions = parent::makeJqOptions();
 
-			$strParentId = $this->ParentControl ? $this->ParentControl->ControlId : $this->Form->FormId;
 			$strId = $this->getJqControlId();
 			
 			if (!$this->blnHasCloseButton) {
@@ -64,7 +63,7 @@
 			}
 			
 			//move both the dialog and the matte back into the form, to ensure they continue to function
-			$strOptions .= sprintf(', %s create: function() { $j(this).parent().appendTo("#%s"); $j(".ui-widget-overlay").appendTo("#%s"); }%s', "\n", $strParentId, $strParentId, "\n");
+			$strOptions .= ', create: function() { $j(this).parent().appendTo($j("form:first")); }';
 			return $strOptions;
 		}
 	
