@@ -343,11 +343,20 @@
 
 			// Evaluate the Template
 			if (substr($strFilename, strlen($strFilename) - 8) == '.tpl.php')  {
+				// make sure paths are set up to pick up included files from both the override directory and _core directory
+				$strSearchPath = __QCUBED__ . QCodeGen::TemplatesPathCustom . $strModuleName . PATH_SEPARATOR .
+						__QCUBED_CORE__ . QCodeGen::TemplatesPath . $strModuleName . PATH_SEPARATOR .
+						get_include_path();
+				set_include_path ($strSearchPath);
+				if ($strSearchPath != get_include_path()) {
+					throw new QCallerException ('Can\'t override include path. Make sure your apache or server settings allow include paths to be overriden. ' );
+				}
 				$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $strModuleName, $mixArgumentArray);
+				restore_include_path();
 			} else {
 				$strTemplate = $this->EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray);
 			}
-
+			
 			// Parse out the first line (which contains path and overwriting information)
 			$intPosition = strpos($strTemplate, "\n");
 			if ($intPosition === false)
