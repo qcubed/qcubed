@@ -11,7 +11,8 @@
 	 * @property string $Value is any text that represents the value of the ListItem (e.g. maybe a DB Id)
 	 * @property boolean $Selected is a boolean of whether or not this item is selected or not (do only! use during initialization, otherwise this should be set by the {@link QListControl}!)
 	 * @property string $ItemGroup is the group (if any) in which the Item should be displayed 
-	 * @property QListItemStyle $ItemStyle is the QListItemStyle in which the Item should be rendered (set by 
+	 * @property QListItemStyle $ItemStyle is the QListItemStyle in which the Item should be rendered
+	 * @property string $Label is optional text to display in the drop down menu of a QAutocomplete instead of the Name. The Name will still be what gets filled in to the text box. 
 	 */
 	class QListItem extends QBaseClass {
 		///////////////////////////
@@ -22,6 +23,7 @@
 		protected $blnSelected = false;
 		protected $strItemGroup = null;
 		protected $objItemStyle;
+		protected $strLabel = null;
 
 		/////////////////////////
 		// Methods
@@ -66,6 +68,18 @@
 			$strToReturn = $this->objItemStyle->GetAttributes();
 			return $strToReturn;
 		}
+		
+		public function toJsObject() {
+			$a = array('value' => $this->strName, 'id' => $this->strValue);
+			if ($this->strLabel) {
+				$a['label'] = $this->strLabel;
+			}
+			if ($this->strItemGroup) {
+				$a['category'] = $this->strItemGroup;
+			}
+			return JavaScriptHelper::toJsObject($a);
+		}
+		
 
 		/////////////////////////
 		// Public Properties: GET
@@ -77,6 +91,7 @@
 				case "Selected": return $this->blnSelected;
 				case "ItemGroup": return $this->strItemGroup;
 				case "ItemStyle": return $this->objItemStyle;
+				case "Label": return $this->strLabel;
 
 				default:
 					try {
@@ -133,7 +148,15 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
+				case "Label":
+					try {
+						$this->strLabel = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+										
 				default:
 					try {
 						parent::__set($strName, $mixValue);

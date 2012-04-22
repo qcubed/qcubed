@@ -8,11 +8,29 @@
 
 
 	/**
+	 * @deprecated since Qcubed 2.1.1. Please use QListItem
 	 * List items that can be sent to an autocomplete in non-ajax mode. Put them in an array and send to ->Source.
 	 */
 	class QAutocompleteListItem extends QListItem {
-		// Note: JQuery UI does not use the terms 'value' and 'label' in the same way that QListItem uses them.
+		/**
+		 * @deprecated since Qcubed 2.1.1. Please use QListItem
+		 * @param $strName
+		 * @param $strValue
+		 * @param bool $blnSelected
+		 * @param null $strItemGroup
+		 * @param null $strOverrideParameters
+		 */
+		public function __construct($strName, $strValue, $blnSelected = false, $strItemGroup = null, $strOverrideParameters = null) {
+			parent::__construct($strName, $strValue, $blnSelected, $strItemGroup, $strOverrideParameters);
+			trigger_error("QAutocompleteListItem has been deprecated. Please use QListItem", E_USER_NOTICE);
+		}
+
+		/**
+		 * @deprecated since Qcubed 2.1.1. Please use QListItem
+		 * @return string
+		 */
 		public function toJsObject() {
+			trigger_error("QAutocompleteListItem has been deprecated. Please use QListItem", E_USER_NOTICE);
 			return JavaScriptHelper::toJsObject(array("value" => $this->Name, "id" => $this->Value));
 		}
 	}
@@ -183,6 +201,26 @@ FUNC;
 						throw $objExc;
 					}
 					break;
+					
+				case 'Source':
+					try {
+						if (is_array ($mixValue) && is_a ($mixValue[0], 'QListItem')) {
+							// figure out what item is selected
+							foreach ($mixValue as $objItem) {
+								if ($objItem->Selected) {
+									$this->strSelectedId = $objItem->Value;
+									$this->Text = $objItem->Name;
+								}
+							}
+						}
+						// do parent action too
+						parent::__set($strName, $mixValue);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+					
 					
 				default:
 					try {

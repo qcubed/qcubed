@@ -251,7 +251,7 @@
 			//$this->AjaxAutocomplete->DataSource = $lst; 
 			$a = array();
 			foreach ($lst as $objPerson) {
-				$a[] = new QAutocompleteListItem ($objPerson->FirstName . ' ' . $objPerson->LastName, $objPerson->Id);
+				$a[] = new QListItem ($objPerson->FirstName . ' ' . $objPerson->LastName, $objPerson->Id);
 			}
 			$this->AjaxAutocomplete->DataSource = $a;
 		}
