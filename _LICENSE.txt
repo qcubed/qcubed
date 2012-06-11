@@ -31,3 +31,4 @@ includes/external_libraries/htmlpurifier directory in the project root directory
 
 HTMLPurifier utilizes the GNU LGPL v2.1 license. You can see the license in:
 includes/external_libraries/htmlpurifier/LICENSE
+
