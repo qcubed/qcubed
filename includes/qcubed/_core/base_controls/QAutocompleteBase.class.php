@@ -204,7 +204,7 @@ FUNC;
 					
 				case 'Source':
 					try {
-						if (is_array ($mixValue) && is_a ($mixValue[0], 'QListItem')) {
+						if (is_array ($mixValue) && count($mixValue) > 0 && $mixValue[0] instanceof QListItem) {
 							// figure out what item is selected
 							foreach ($mixValue as $objItem) {
 								if ($objItem->Selected) {
