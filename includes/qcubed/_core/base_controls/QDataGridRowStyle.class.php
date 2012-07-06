@@ -136,7 +136,7 @@
 			$strStyle = "";			
 			
 			if ($this->strHeight) {
-				if (is_numeric($this->strHeight))
+				if (!is_numeric($this->strHeight))
 					$strStyle .= sprintf("height:%s;", $this->strHeight);
 				else
 					$strStyle .= sprintf("height:%spx;", $this->strHeight);
