@@ -73,8 +73,12 @@ FUNC;
 					try {
 						$this->mixActive = QType::Cast($mixValue, QType::Integer);	// will cause ->Active getter to always return index of content item that is currently active
 					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
+						try {
+							$this->mixActive = QType::Cast($mixValue, QType::Boolean);
+						} catch (QInvalidCastException $objExc) {
+							$objExc->IncrementOffset();
+							throw $objExc;
+						}
 					}
 					break;
 					
