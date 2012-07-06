@@ -12,15 +12,29 @@
 	 * @property QQOrderBy $ReverseOrderByClause order by clause for sorting the column in descending order
 	 * @property string $Format the default format to use for FetchCellValueFormatted().
 	 *    For date columns it should be a format accepted by QDateTime::qFormat()
+	 * @property-write string $PostMethod after the cell object is retrieved, call this method on the obtained object
+	 * @property-write callback $PostCallback after the cell object is retrieved, call this callback on the obtained object.
+	 *    If $PostMethod is also set, this will be called after that method call
 	 */
 	abstract class QAbstractSimpleTableColumn extends QBaseClass {
+		/** @var string */
 		protected $strName;
+		/** @var string */
 		protected $strCssClass = null;
+		/** @var string */
 		protected $strHeaderCssClass = null;
+		/** @var boolean */
 		protected $blnHtmlEntities = true;
+		/** @var QQOrderBy */
 		protected $objOrderByClause = null;
+		/** @var QQOrderBy */
 		protected $objReverseOrderByClause = null;
+		/** @var string */
 		protected $strFormat = null;
+		/** @var string */
+		protected $strPostMethod = null;
+		/** @var callback */
+		protected $objPostCallback = null;
 
 		/**
 		 * @param string $strName Name of the column
@@ -61,7 +75,19 @@
 			}
 		}
 
-		abstract public function FetchCellValue($item);
+		public function FetchCellValue($item) {
+			$cellValue = $this->FetchCellObject($item);
+			if ($this->strPostMethod) {
+				$strPostMethod = $this->strPostMethod;
+				$cellValue = $cellValue->$strPostMethod();
+			}
+			if ($this->objPostCallback) {
+				$cellValue = call_user_func($this->objPostCallback, $cellValue);
+			}
+			return $cellValue;
+		}
+
+		abstract public function FetchCellObject($item);
 
 		public function FetchCellValueFormatted($item, $strFormat = null) {
 			$cellValue = $this->FetchCellValue($item);
@@ -172,6 +198,19 @@
 						throw $objExc;
 					}
 
+				case "PostMethod":
+					try {
+						$this->strPostMethod = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "PostCallback":
+					$this->objPostCallback = $mixValue;
+					break;
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -189,29 +228,51 @@
 	 * DataSource array
 	 *
 	 * @property string $Property the property to use when accessing the objects in the DataSource array
+	 * @property boolean $NullSafe if true the value fetcher will check for nulls before accessing the properties
 	 *
 	 */
 	class QSimpleTablePropertyColumn extends QAbstractSimpleTableColumn {
 		protected $strProperty;
+		protected $strPropertiesArray;
+		protected $blnNullSafe = true;
 
 		/**
 		 * @param string $strName name of the column
 		 * @param string $strProperty the property name to use when accessing the DataSource row object
+		 * @param QQBaseNode $objBaseNode if not null the OrderBy and ReverseORderBy clauses will be created using the property path and the given node
 		 */
-		public function __construct($strName, $strProperty) {
+		public function __construct($strName, $strProperty, $objBaseNode = null) {
 			parent::__construct($strName);
 			$this->strProperty = $strProperty;
+			$this->strPropertiesArray = explode('->', $strProperty);
+
+			if ($objBaseNode != null) {
+				foreach ($this->strPropertiesArray as $strProperty) {
+					$objBaseNode = $objBaseNode->$strProperty;
+				}
+
+				$this->OrderByClause = QQ::OrderBy($objBaseNode);
+				$this->ReverseOrderByClause = QQ::OrderBy($objBaseNode, 'desc');
+			}
 		}
 
-		public function FetchCellValue($item) {
-			$strProperty = $this->strProperty;
-			return $item->$strProperty;
+		public function FetchCellObject($item) {
+			if ($this->blnNullSafe && $item == null)
+				return null;
+			foreach ($this->strPropertiesArray as $strProperty) {
+				$item = $item->$strProperty;
+				if ($this->blnNullSafe && $item == null)
+					break;
+			}
+			return $item;
 		}
 
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Property':
 					return $this->strProperty;
+				case 'NullSafe':
+					return $this->blnNullSafe;
 				default:
 					try {
 						return parent::__get($strName);
@@ -227,6 +288,15 @@
 				case "Property":
 					try {
 						$this->strProperty = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "NullSafe":
+					try {
+						$this->blnNullSafe = QType::Cast($mixValue, QType::Boolean);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -263,7 +333,7 @@
 			$this->mixIndex = $mixIndex;
 		}
 
-		public function FetchCellValue($item) {
+		public function FetchCellObject($item) {
 			return $item[$this->mixIndex];
 		}
 
@@ -307,11 +377,12 @@
 	 *
 	 */
 	class QSimpleTableClosureColumn extends QAbstractSimpleTableColumn implements Serializable {
+		/** @var callback */
 		protected $objClosure;
 
 		/**
 		 * @param string $strName name of the column
-		 * @param object $objClosure a callable object (e.g. Closure). It should take a single argument, and it
+		 * @param callback $objClosure a callable object (e.g. Closure). It should take a single argument, and it
 		 * will be called with the row of the DataSource as that single argument.
 		 *
 		 * @throws InvalidArgumentException
@@ -324,7 +395,7 @@
 			$this->objClosure = $objClosure;
 		}
 
-		public function FetchCellValue($item) {
+		public function FetchCellObject($item) {
 			return call_user_func($this->objClosure, $item);
 		}
 
@@ -343,7 +414,7 @@
 				$this->objOrderByClause,
 				$this->objReverseOrderByClause);
 			// Closure is a feature of PHP 5.3
-			// unfortunatly, as of PHP 5.3.6 Closure is not serializable
+			// unfortunately, as of PHP 5.3.6 Closure is not serializable
 			// this code can be removed when Closures become serializable in PHP
 			if (version_compare(PHP_VERSION, '5.3.0', '<') || (!$this->objClosure instanceof Closure)) {
 				$vars[] = $this->objClosure;
@@ -358,6 +429,7 @@
 		 * @param string $serialized <p>
 		 * The string representation of the object.
 		 * </p>
+		 * @throws RuntimeException
 		 * @return mixed the original value unserialized.
 		 */
 		public function unserialize($serialized) {
