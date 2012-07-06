@@ -666,12 +666,53 @@
 
 			// Are we the correct IP?
 			if (is_string(ALLOW_REMOTE_ADMIN))
-				foreach (explode(',', ALLOW_REMOTE_ADMIN) as $strIpAddress)
-					if ($_SERVER['REMOTE_ADDR'] == trim($strIpAddress) ||
-						(array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && ($_SERVER['HTTP_X_FORWARDED_FOR'] == trim($strIpAddress))))
+				foreach (explode(',', ALLOW_REMOTE_ADMIN) as $strIpAddress) {
+					if (QApplication::IsIPInRange($_SERVER['REMOTE_ADDR'], $strIpAddress) ||
+						(array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && (QApplication::IsIPInRange($_SERVER['HTTP_X_FORWARDED_FOR'], $strIpAddress)))) {
 						return false;
+					}
+				}
 					
 			return true;
+		}
+
+		/**
+		 * Checks whether the given IP falls into the given IP range
+		 * @static
+		 * @param string $ip the IP number to check
+		 * @param string $range the IP number range. The range could be in 'IP/mask' or 'IP - IP' format. mask could be a simple
+		 * integer or a dotted netmask.
+		 * @return bool
+		 */
+		public static function IsIPInRange($ip, $range) {
+			$ip = trim($ip);
+			if (strpos($range, '/') !== false) {
+				// we are given a IP/mask
+				list($net, $mask) = explode('/', $range);
+				$net = ip2long(trim($net));
+				$mask = trim($mask);
+				$ip_net = ip2long($net);
+				if (strpos($mask, '.') !== false) {
+					// mask has the dotted notation
+					$ip_mask = ip2long($mask);
+				} else {
+					// mask is an integer
+					$ip_mask = ~((1 << (32 - $mask)) - 1);
+				}
+				$ip = ip2long($ip);
+				return ($net & $ip_mask) == ($ip & $ip_mask);
+			}
+			if (strpos($range, '-') !== false) {
+				// we are given an IP - IP range
+				list($first, $last) = explode('-', $range);
+				$first = ip2long(trim($first));
+				$last = ip2long(trim($last));
+				$ip = ip2long($ip);
+				return $first <= $ip && $ip <= $last;
+			}
+
+			// $range is a simple IP
+			return $ip == trim($range);
 		}
 
 		/**
