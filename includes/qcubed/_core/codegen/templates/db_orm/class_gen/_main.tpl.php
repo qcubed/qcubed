@@ -94,7 +94,7 @@
 		<?php include("associated_objects_methods.tpl.php"); ?>
 
 
-
+		<?php include("class_info.tpl.php"); ?>
 
 
 		<?php include("soap_methods.tpl.php"); ?>
