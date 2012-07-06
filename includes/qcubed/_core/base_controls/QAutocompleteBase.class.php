@@ -111,8 +111,7 @@
 			// empty action to tie the action to the data binder method name
 			$objEvent = new QAutocomplete_SourceEvent();
 			$objAction->Event = $objEvent;
-			$strBody = JavaScriptHelper::customDataInsertion($this, self::RESPONSE_ATTR, "response");
-			$strBody .= $objAction->RenderScript($this);			
+			$strBody = $objAction->RenderScript($this);
 			$this->mixSource = new QJsClosure($strBody, array('request', 'response'));
 					
 			$this->RemoveAllActions(QAutocomplete_SourceEvent::EventName);
@@ -161,9 +160,8 @@ FUNC;
 		
 		// Response to an ajax request for data
 		protected function prepareAjaxList($dataSource) {
-			$strJS = JavaScriptHelper::customDataRetrieval($this, self::RESPONSE_ATTR, "response");
 			$list = $dataSource ? JavaScriptHelper::toJsObject($dataSource) : "[]";
-			$strJS .= 'response(' . $list .');';
+			$strJS = sprintf('$j("#%s").data("autocomplete").response(%s);', $this->ControlId, $list);
 			QApplication::ExecuteJavaScript($strJS, true);
 		}
 
