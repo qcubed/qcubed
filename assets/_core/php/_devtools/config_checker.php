@@ -1,7 +1,7 @@
 <?php
 $__CONFIG_ONLY__ = true;
 require('../qcubed.inc.php');
-require('../../../../includes/qcubed/_core/framework/QInstallationValidator.class.php');
+require(__QCUBED_CORE__ . '/framework/QInstallationValidator.class.php');
 
 $arrInstallationMessages = QInstallationValidator::Validate();
 if (sizeof($arrInstallationMessages) == 0) {
