@@ -65,7 +65,7 @@
 		 * @static
 		 * This function is responsible for removing the old values from
 		 */
-		private static function GarbageCollect() {
+		public static function GarbageCollect() {
 			// Its not perfect and not sure but should be executed on expected intervals
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			$query = '
@@ -74,7 +74,7 @@
 	                                WHERE
                                                 ' . $objDatabase->EscapeIdentifier('save_time') . ' < ' . $objDatabase->SqlVariable(time() - 60 * 60 * 24 * self::$intGarbageCollectDaysOld);
 
-			$result = $objDatabase->Query($query);
+			$objDatabase->Query($query);
 		}
 
 		/**
