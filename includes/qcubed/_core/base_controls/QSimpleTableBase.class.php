@@ -48,24 +48,24 @@
 
 		public function ParsePostData() { }
 
-		public function CreateIndexedColumn($strName = '', $mixIndex = null) {
+		public function CreateIndexedColumn($strName = '', $mixIndex = null, $intColumnIndex = -1) {
 			if (is_null($mixIndex)) {
 				$mixIndex = count($this->objColumnArray);
 			}
 			$objColumn = new QSimpleTableIndexedColumn($strName, $mixIndex);
-			$this->AddColumn($objColumn);
+			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
 
-		public function CreatePropertyColumn($strName, $strProperty) {
-			$objColumn = new QSimpleTablePropertyColumn($strName, $strProperty);
-			$this->AddColumn($objColumn);
+		public function CreatePropertyColumn($strName, $strProperty, $intColumnIndex = -1, $objBaseNode = null) {
+			$objColumn = new QSimpleTablePropertyColumn($strName, $strProperty, $objBaseNode);
+			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
 
-		public function CreateClosureColumn($strName, $objClosure) {
+		public function CreateClosureColumn($strName, $objClosure, $intColumnIndex = -1) {
 			$objColumn = new QSimpleTableClosureColumn($strName, $objClosure);
-			$this->AddColumn($objColumn);
+			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
 
@@ -75,16 +75,29 @@
 			$this->objColumnArray[] = $objColumn;
 		}
 
+		public function MoveColumn($strName, $intColumnIndex = -1) {
+			$col = $this->RemoveColumnByName($strName);
+			$this->AddColumnAt($intColumnIndex, $col);
+			return $col;
+		}
+
+		public function RenameColumn($strOldName, $strNewName) {
+			$col = $this->GetColumnByName($strOldName);
+			$col->Name = $strNewName;
+			return $col;
+		}
+
 		public function AddColumnAt($intColumnIndex, QAbstractSimpleTableColumn $objColumn) {
-			$this->blnModified = true;
 			try {
 				$intColumnIndex = QType::Cast($intColumnIndex, QType::Integer);
 			} catch (QInvalidCastException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
+			$this->blnModified = true;
 			if ($intColumnIndex < 0 || $intColumnIndex > count($this->objColumnArray)) {
-				throw new QIndexOutOfRangeException($intColumnIndex, "AddColumnAt()");
+				$this->AddColumn($objColumn);
+				return;
 			}
 
 			if ($intColumnIndex == 0) {
@@ -96,6 +109,11 @@
 			}
 		}
 
+		/**
+		 * @param int $intColumnIndex 0-based index of the column to remove
+		 * @return QAbstractSimpleTableColumn the removed column
+		 * @throws QIndexOutOfRangeException|QInvalidCastException
+		 */
 		public function RemoveColumn($intColumnIndex) {
 			$this->blnModified = true;
 			try {
@@ -108,27 +126,55 @@
 				throw new QIndexOutOfRangeException($intColumnIndex, "RemoveColumn()");
 			}
 
+			$col = $this->objColumnArray[$intColumnIndex];
 			array_splice($this->objColumnArray, $intColumnIndex, 1);
+			return $col;
 		}
 
+		/**
+		 * Remove the first column that has the given name
+		 * @param string $strName name of the column to remove
+		 * @return QAbstractSimpleTableColumn the removed column or null of no column with the given name was found
+		 */
 		public function RemoveColumnByName($strName) {
 			$this->blnModified = true;
 			for ($intIndex = 0; $intIndex < count($this->objColumnArray); $intIndex++) {
 				if ($this->objColumnArray[$intIndex]->Name == $strName) {
+					$col = $this->objColumnArray[$intIndex];
 					array_splice($this->objColumnArray, $intIndex, 1);
-					return;
+					return $col;
 				}
 			}
+			return null;
 		}
 
-		public function RemoveColumnsByName($strName) {
+		/**
+		 * Remove all the columns that have the given name
+		 * @param string $strName name of the columns to remove
+		 * @return QAbstractSimpleTableColumn[] the array of columns removed
+		 */
+		public function RemoveColumnsByName($strName/*...*/) {
+			return $this->RemoveColumns(func_get_args());
+		}
+
+		/**
+		 * Remove all the columns that have any of the names in $strNamesArray
+		 * @param string[] $strNamesArray names of the columns to remove
+		 * @return QAbstractSimpleTableColumn[] the array of columns removed
+		 */
+		public function RemoveColumns($strNamesArray) {
 			$this->blnModified = true;
-			for ($intIndex = 0; $intIndex < count($this->objColumnArray); $intIndex++) {
-				if ($this->objColumnArray[$intIndex]->Name == $strName) {
-					array_splice($this->objColumnArray, $intIndex, 1);
-					$intIndex--;
+			$kept = array();
+			$removed = array();
+			foreach ($this->objColumnArray as $objColumn) {
+				if (array_search($objColumn->Name, $strNamesArray) === false) {
+					$kept[] = $objColumn;
+				} else {
+					$removed[] = $objColumn;
 				}
 			}
+			$this->objColumnArray = $kept;
+			return $removed;
 		}
 
 		public function RemoveAllColumns() {
@@ -143,12 +189,22 @@
 			return $this->objColumnArray;
 		}
 
+		/**
+		 * Get the column at the given index, or null if the index is not valid
+		 * @param $intColumnIndex
+		 * @return QAbstractSimpleTableColumn
+		 */
 		public function GetColumn($intColumnIndex) {
 			if (array_key_exists($intColumnIndex, $this->objColumnArray))
 				return $this->objColumnArray[$intColumnIndex];
 			return null;
 		}
 
+		/**
+		 * Get the first column that has the given name, or null if a column with the given name does not exist
+		 * @param string $strName column name
+		 * @return QAbstractSimpleTableColumn
+		 */
 		public function GetColumnByName($strName) {
 			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn)
 				if ($objColumn->Name == $strName)
@@ -156,6 +212,26 @@
 			return null;
 		}
 
+		/**
+		 * Get the first column that has the given name, or null if a column with the given name does not exist
+		 * @param string $strName column name
+		 * @return QAbstractSimpleTableColumn
+		 */
+		public function GetColumnIndex($strName) {
+			$intIndex = -1;
+			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn) {
+				++$intIndex;
+				if ($objColumn->Name == $strName)
+					return $intIndex;
+			}
+			return $intIndex;
+		}
+
+		/**
+		 * Get all the columns that have the given name
+		 * @param string $strName column name
+		 * @return QAbstractSimpleTableColumn[]
+		 */
 		public function GetColumnsByName($strName) {
 			$objColumnArrayToReturn = array();
 			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn)
