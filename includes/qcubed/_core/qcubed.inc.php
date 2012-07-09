@@ -273,6 +273,10 @@
 			print(QApplication::Translate($strString));
 		}
 
+		function _tr($strString) {
+			return QApplication::Translate($strString);
+		}
+
 		function _i($intNumber) {
 			// Not Yet Implemented
 			// Print Integer with Localized Formatting
