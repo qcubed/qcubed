@@ -21,7 +21,7 @@
 		 * @return string Name of the table from which this class has been created.
 		 */
 		public static function GetDatabaseName() {
-			return "<?php echo $this->objDb->Database;  ?>";
+			return QApplication::$Database[<?php echo $objTable->ClassName; ?>::GetDatabaseIndex()]->Database;
 		}
 
 		/**
