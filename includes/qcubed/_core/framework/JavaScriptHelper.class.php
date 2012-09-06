@@ -107,7 +107,7 @@
 					// simple array - create a list
 					$strList = '';
 					foreach ($array as $objItem) {
-						if ($strList) $strList .= ',';
+						if (strlen($strList) > 0) $strList .= ',';
 						$strList .= self::toJsObject($objItem);
 					}
 					return '['.$strList.']';
