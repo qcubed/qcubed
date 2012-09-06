@@ -920,6 +920,35 @@
 					return sprintf('txt%s', $objColumn->PropertyName);
 			}
 		}
+
+		/**
+		 * This function returns the data type for table column
+		 * NOTE: The data type is not the PHP data type, but classes used by QCubed
+		 * @param QColumn $objColumn
+		 *
+		 * @return string
+		 */
+		protected function FormControlVariableDataTypeForColumn(QColumn $objColumn) {
+			if ($objColumn->Identity || $objColumn->Timestamp)
+				return 'QLabel';
+
+			if ($objColumn->Reference)
+				return 'QListBox';
+
+			switch ($objColumn->VariableType) {
+				case QType::Boolean:
+					return 'QCheckBox';
+				case QType::DateTime:
+					return 'QDateTime';
+				case QType::Integer:
+					return 'QIntegerTextBox';
+				case QType::Float:
+					return 'QFloatTextBox';
+				default:
+					return 'QTextBox';
+			}
+		}
+
 		protected function FormControlClassForColumn(QColumn $objColumn) {
 			if ($objColumn->Identity)
 				return 'QLabel';
