@@ -1,3 +1,4 @@
+// BEWARE: this cleares the $ variable!
 var $j = jQuery.noConflict();
 
 $j.fn.extend({
@@ -19,7 +20,12 @@ $j.fn.extend({
  * request has finished.
  */
 $j.ajaxQueue = function(o){
-	 $j.ajax( o );
+	if (typeof $j.ajaxq == "undefined") {
+		$j.ajax( o );
+	} else {
+		// see http://code.google.com/p/jquery-ajaxq/ for details
+		$j.ajaxq( "qcu.be", o );
+	}
 };
 
 
@@ -182,7 +188,7 @@ $j.ajaxSync.data = [];
 								strPostData += "&" + $j(this).attr("name") + "=" + strControlId.substring(strTestName.length);
 							else
 								strPostData += "&" + strControlId + "=" + $j(this).val();
-						};
+						}
 						break;
 
 					case "select-multiple":
@@ -212,7 +218,7 @@ $j.ajaxSync.data = [];
 				this.objAjaxWaitIcon = this.getWrapper(strWaitIconControlId);
 				if (this.objAjaxWaitIcon)
 					this.objAjaxWaitIcon.style.display = 'inline';
-			};
+			}
 			$j.ajaxQueue({
 				url: strFormAction,
 				type: "POST",
@@ -329,7 +335,7 @@ $j.ajaxSync.data = [];
 			if (qcubed._objTimers[strTimerId]) {
 				clearTimeout(qcubed._objTimers[strTimerId]);
 				qcubed._objTimers[strTimerId] = null;
-			};
+			}
 		};
 
 		qcubed.setTimeout = function(strTimerId, strAction, intDelay) {
@@ -359,7 +365,7 @@ $j.ajaxSync.data = [];
 					objEvent.stopPropagation();
 				objEvent.cancelBubble = true;
 				objEvent.returnValue = false;
-			};
+			}
 
 			return false;
 		};
