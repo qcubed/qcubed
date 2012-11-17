@@ -629,6 +629,7 @@
 		 *
 		 * All attributes will be returned as concatened the string of the form
 		 * key1="value1" key2="value2"
+		 * Note: if the the value is === false, then the key will be randered as is, without any value
 		 *
 		 * @return string
 		 */
@@ -636,7 +637,11 @@
 			$strToReturn = '';
 			if ($this->strCustomAttributeArray)
 				foreach ($this->strCustomAttributeArray as $strKey => $strValue) {
-					$strToReturn .= sprintf('%s="%s" ', $strKey, $strValue);
+					if ($strValue === false) {
+						$strToReturn .= $strKey . ' ';
+					} else {
+						$strToReturn .= sprintf('%s="%s" ', $strKey, $strValue);
+					}
 				}
 
 			return $strToReturn;
