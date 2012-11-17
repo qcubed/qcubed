@@ -1035,7 +1035,8 @@
 						// Otherwise, we are rendering as a top-level AJAX response
 						// Surround Output HTML around CDATA tags
 						$strOutput = QString::XmlEscape($strOutput);
-						$strOutput = sprintf('<control id="%s">%s</control>', $this->strControlId, $strOutput);
+						// use the wrapper attribute to pass in the special attribute data-hasrel (if no wrappers are used and RenderWithError or similar methods are called)
+						$strOutput = sprintf('<control id="%s" %s>%s</control>', $this->strControlId, $strWrapperAttributes, $strOutput);
 
 						if (($this->blnWrapperModified) && ($this->blnVisible) && ($this->blnUseWrapper)) {
 							QApplication::ExecuteJavaScript(sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass));
@@ -1154,23 +1155,35 @@
 			// Call RenderHelper
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 
-			//rendering with error -> we have to use a wrapper
-			$this->blnUseWrapper = true;
+			/*if we do not use a wrapper we have to ensure that the error element
+				gets removed on an ajax update.
+				==> we pass a special attribute to the top level ajax response element 
+				(called "control" <== created in RenderOutput)
+				If this attribute is present, all elements that have an attribute
+				data-rel="controlid_of_the_related_control" are removed before updating
+			    the control --> no duplication of error/warning controls 
+			 */
+			$strWrapperAttributes = '';
+			$strDataRel = '';
+			if (!$this->blnUseWrapper) {
+				$strWrapperAttributes = 'data-hasrel="1" ';
+				$strDataRel = sprintf('data-rel="#%s" ', $this->strControlId);
+			}
 			
 			try {
 				$strOutput = $this->GetControlHtml();
 
 				if ($this->strValidationError)
-					$strOutput .= sprintf('<br /><span class="warning">%s</span>', $this->strValidationError);
+					$strOutput .= sprintf('<br %s/><span %sclass="warning">%s</span>', $strDataRel, $strDataRel, $this->strValidationError);
 				else if ($this->strWarning)
-					$strOutput .= sprintf('<br /><span class="warning">%s</span>', $this->strWarning);
+					$strOutput .= sprintf('<br %s/><span %sclass="warning">%s</span>', $strDataRel, $strDataRel, $this->strWarning);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
 
 			// Call RenderOutput, Returning its Contents
-			return $this->RenderOutput($strOutput, $blnDisplayOutput);
+			return $this->RenderOutput($strOutput, $blnDisplayOutput, false, $strWrapperAttributes);
 		}
 
 

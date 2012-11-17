@@ -260,11 +260,22 @@ $j.ajaxSync.data = [];
 						if (strControlId == "#Qform__FormState") {
 							$j(strControlId).val(strControlHtml);
 						} else {
-							var control = $j(strControlId); 
-							if (control.length != 0 && !control.get(0).wrapper) 
+							control = $j(strControlId);
+							if (control.length != 0 && !control.get(0).wrapper) {
+								//remove related controls (error, name ...) for wrapper-less controls
+								if($j(this).attr("data-hasrel") != undefined) {
+									//ensure that the control is not wrapped in an element related to it (it would be removed)
+									var relParent = control.parents("[data-rel='" + strControlId + "']").last();
+									if(relParent.length > 0)
+										control.insertBefore(relParent);
+									$j("[data-rel='" + strControlId + "']").remove();
+								}
+								
 								control.replaceWith(strControlHtml); 
-							else 
-								$j(strControlId + '_ctl').html(strControlHtml); 						
+							
+							} else {
+								$j(strControlId + '_ctl').html(strControlHtml);
+							}
 						}
 					});
 					var strCommands = [];

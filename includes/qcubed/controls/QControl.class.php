@@ -42,8 +42,13 @@
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 			////////////////////
 
-			//rendering with name -> we have to use a wrapper
-			$this->blnUseWrapper=true; 
+			$strDataRel = '';
+			$strWrapperAttributes = '';
+			if (!$this->blnUseWrapper) {
+				//there is no wrapper --> add the special attribute data-rel to the name control
+				$strDataRel = sprintf('data-rel="#%s"',$this->strControlId);
+				$strWrapperAttributes = 'data-hasrel="1"';
+			} 
 			
 			// Custom Render Functionality Here
 
@@ -52,7 +57,7 @@
 			$this->blnIsBlockElement = true;
 
 			// Render the Control's Dressing
-			$strToReturn = '<div class="renderWithName">';
+			$strToReturn = '<div class="renderWithName" ' . $strDataRel . '>';
 
 			// Render the Left side
 			$strLeftClass = "left";
@@ -88,7 +93,7 @@
 
 			////////////////////////////////////////////
 			// Call RenderOutput, Returning its Contents
-			return $this->RenderOutput($strToReturn, $blnDisplayOutput);
+			return $this->RenderOutput($strToReturn, $blnDisplayOutput, false, $strWrapperAttributes);
 			////////////////////////////////////////////
 		}
 	}
