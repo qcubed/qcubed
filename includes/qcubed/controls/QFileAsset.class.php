@@ -1,10 +1,30 @@
 <?php
 	/**
+     * QFileAsset
+     * 
 	 * @package Controls
 	 */
+     
+	/**
+	 * QFileAsset
+	 * 
+	 * @package Controls  
+	 * @author Qcubed
+	 * @copyright 
+	 * @version 2011
+	 * @access public
+	 */
 	class QFileAsset extends QFileAssetBase {
+	    /** @type string|'/tmp' File Path for Temporary Upload */
 		protected $strTemporaryUploadPath = '/tmp';
 		
+		/**
+		 * QFileAsset::__construct()
+		 * 
+		 * @param mixed $objParentObject
+		 * @param string $strControlId
+		 * @return void
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 

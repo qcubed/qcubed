@@ -2,8 +2,6 @@
 /**
  * EXPERIMENTAL Informix database driver, based on PDO. 
  * 
- * @author BG = Bernhard Gramberg [qcubed@gramberg.de]
- * @package DatabaseAdapters
  *
  * 04/18/2010 BG NonQuery new, because Query-String contans to much  "  
  * 04/18/2010 BG mostly working 
@@ -13,8 +11,8 @@
  * 04/18/2010 BG numbers / dates not working with german setting (DMY4.), only US/english with (DBDATA / DBMONEY) 
  * 
  * programming completly based on
- * - generic PDO adapter    (Marcos S�nchez)  --> unchanged base 
- * - PostgreSql PDO adapater (Marcos S�nchez)  --> base of this file 
+ * - generic PDO adapter    (Marcos Sanchez)  --> unchanged base 
+ * - PostgreSql PDO adapater (Marcos Sanchez)  --> base of this file 
  * - InformixSql adapter (PHP-ifx_xxx   functions ) Josue Balbuena --> copied SQLs and some PHP-Lines 
  * 
  * the old Postgres-Code remains, but commented
@@ -61,6 +59,9 @@
  *
  * Database Adapter for Informix SQL Server
  * Utilizes the Informix extension : ESQL/C is now part of the Informix Client SDK
+ * 
+ * @author BG = Bernhard Gramberg [qcubed@gramberg.de]
+ * @package DatabaseAdapters
 */ 
 class QInformixPdoDatabase extends QPdoDatabase {
 		const Adapter = 'Informix PDO Database Adapter';

@@ -1,12 +1,38 @@
 <?php
-	require(__QCUBED_CORE__ . '/codegen/QCodeGenBase.class.php');
-
-	/**
-	 * Feel free to override any core QCodeGenBase methods here
-	 * @package Codegen
+    /**
+	 * QCodeGen
+	 * 
+     * Feel free to override any core QCodeGenBase methods here
+	 * 
+     * @package Codegen   
+	 * @author Qcubed
+	 * @copyright 
+	 * @version 2011
+	 * @access public
+	 */
+     
+    require(__QCUBED_CORE__ . '/codegen/QCodeGenBase.class.php');     
+	
+    /**
+	 * QCodeGen
+	 * 
+     * Feel free to override any core QCodeGenBase methods here
+	 * 
+     * @package Codegen   
+	 * @author Qcubed
+	 * @copyright 
+	 * @version 2011
+	 * @access public
 	 */
 	class QCodeGen extends QCodeGenBase {
-		// Example: Overriding the Pluralize method
+		/**
+		 * QCodeGen::Pluralize()
+         * 
+         * Example: Overriding the Pluralize method
+		 * 
+		 * @param string $strName
+		 * @return string
+		 */
 		protected function Pluralize($strName) {
 			// Special Rules go Here
 			switch (true) {

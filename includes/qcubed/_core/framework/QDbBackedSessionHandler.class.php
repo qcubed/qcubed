@@ -5,7 +5,7 @@
 	 *
 	 * This file contains the QDbBackedSessionHandler class.
 	 *
-	 * @package: Sessions
+	 * @package Sessions
 	 */
 	class QDbBackedSessionHandler extends QBaseClass {
 
