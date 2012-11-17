@@ -34,7 +34,7 @@
 			}
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			// see if the database contains a table with desired name
-			if (!array_search(self::$strTableName, $objDatabase->GetTables())) {
+			if (!in_array(self::$strTableName, $objDatabase->GetTables())) {
 				throw new QCallerException('Table ' . self::$strTableName . ' not found in database at DB_CONNECTION index ' . self::$intDbIndex . '. Correct your settings in configuration.inc.php.');
 			}
 			// Set session handler functions
