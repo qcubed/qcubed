@@ -455,7 +455,14 @@
 		}
 
 		public function GetEndScript() {
-			return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str = '';
+			if ($this->getJqControlId() !== $this->ControlId) {
+				// #845: if the element receiving the jQuery UI events is different than this control
+				// we need to clean-up the previously attached event handlers, so that they are not duplicated 
+				// during the next ajax update which replaces this control.
+				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
+			}
+			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
 		}
 		
 		/**
@@ -543,7 +550,8 @@
 			$this->CallJqUiMethod("hide");
 		}
 		/**
-		 * Call up a previously attached date picker.
+		 * Call up a previously attached date picker. If the datepicker is attached to
+		 * an input, the input must be visible for the datepicker to be shown.
 		 */
 		public function Show() {
 			$this->CallJqUiMethod("show");
