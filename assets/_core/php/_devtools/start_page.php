@@ -1,5 +1,6 @@
 <?php
 	require_once('../qcubed.inc.php');
+	QApplication::CheckRemoteAdmin();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -24,7 +25,7 @@
 			<div id="content">
 				<p><span class="heading">Welcome to QCubed!</span></p>
 
-				<p><strong>If you are seeing this, the framework has been successfully installed. Say hi on <a href="http://qcu.be/forum">QCubed Forum</a>, we're here help you!</strong></p>
+				<p><strong>If you are seeing this, the framework has been successfully installed. Say hi on <a href="http://qcu.be/forum">QCubed Forum</a>, we're here to help you!</strong></p>
 				
 				<ul class="shortcuts">
 					<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/codegen.php">Code Generator</a> - to create ORM objects that map to tables in your database.</li>
