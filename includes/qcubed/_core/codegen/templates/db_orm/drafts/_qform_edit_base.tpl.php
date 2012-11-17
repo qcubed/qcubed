@@ -149,7 +149,7 @@
 		// Other Methods
 
 		protected function RedirectToListPage() {
-			QApplication::Redirect(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__ . '/<?php echo strtolower($objTable->Name)  ?>_list.php');
+			QApplication::Redirect(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__ . '/<?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_list.php');
 		}
 	}
 ?>

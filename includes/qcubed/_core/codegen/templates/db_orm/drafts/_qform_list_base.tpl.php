@@ -54,7 +54,7 @@
 			// Use the MetaDataGrid functionality to add Columns for this datagrid
 
 			// Create an Edit Column
-			$strEditPageUrl = __VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__ . '/<?php echo strtolower($objTable->Name)  ?>_edit.php';
+			$strEditPageUrl = __VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__ . '/<?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_edit.php';
 			$this->dtg<?php echo $objTable->ClassNamePlural  ?>->MetaAddEditLinkColumn($strEditPageUrl, 'Edit', 'Edit');
 
 			// Create the Other Columns (note that you can use strings for <?php echo $objTable->Name  ?>'s properties, or you
