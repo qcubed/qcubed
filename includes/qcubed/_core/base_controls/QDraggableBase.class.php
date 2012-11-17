@@ -13,7 +13,7 @@
 	/**
 	 * @property-read Integer $DeltaX Amount of change in left that happened on the last drag
 	 * @property-read Integer $DeltaY Amount of change in top that happened on the last drag
-	 * @property mixed $Handle A drag handle. Can be a control, array of controls, array of control ids, or jQuery selector.
+	 * @property mixed $Handle A drag handle. Can be a control, a selector or array of controls or jQuery selectors.
 	 */
 	class QDraggableBase extends QDraggableGen
 	{
@@ -85,8 +85,7 @@ FUNC;
 					
 				case 'Handle':
 					// Override to let you set the handle to: 
-					//	a QControl or array of QControls, or
-					//  a control id, or array of control ids
+					//	a QControl, or selector, or array of QControls or selectors
 					if ($mixValue instanceof QControl) {
 						parent::__set($strName, '#' . $mixValue->ControlId);
 					} elseif (is_array($mixValue)) {
@@ -95,19 +94,11 @@ FUNC;
 							if ($mixItem instanceof QControl) {
 								$aHandles[] = '#' . $mixItem->ControlId;
 							} elseif (is_string($mixItem)) {
-								if (substr($mixItem, 0, 1) == '#') {
-									$aHandles[] = $mixItem;
-								} else {
-									$aHandles[] = '#' . $mixItem;
-								}
+								$aHandles[] = $mixItem;
 							}
 						}
 						parent::__set($strName, join(',', $aHandles));
-					} elseif (is_string($mixValue) && substr($mixValue, 0, 1) != '#') {
-						$mixValue = '#' . $mixValue;	// turn the control id into a jQuery selector
-						parent::__set($strName, $mixValue);
-						
-					} else {		
+					} else {
 						parent::__set($strName, $mixValue);
 					}
 					break;
