@@ -57,6 +57,10 @@
 				case 'MaxDate':
 				case 'Maximum':
 					if (is_string($mixValue)) {
+						if (preg_match('/[+-][0-9]+[dDwWmMyY]/', $mixValue)) {
+							parent::__set($strName, $mixValue);
+							break;
+						}
 						$mixValue = new QDateTime($mixValue);
 					}
 					parent::__set('MaxDate', QType::Cast($mixValue, QType::DateTime));
@@ -65,6 +69,10 @@
 				case 'MinDate':
 				case 'Minimum':
 					if (is_string($mixValue)) {
+						if (preg_match('/[+-][0-9]+[dDwWmMyY]/', $mixValue)) {
+							parent::__set($strName, $mixValue);
+							break;
+						}
 						$mixValue = new QDateTime($mixValue);
 					}
 					parent::__set('MinDate', QType::Cast($mixValue, QType::DateTime));
