@@ -46,6 +46,8 @@
 	/**
 	 * @property string $SelectedId the id of the selected item. When QAutocompleteListItem objects are used for the DataSource, this corresponds to the Value of the item
 	 * @property boolean $MustMatch if true, non matching values are not accepted by the input
+	 * @property string $MultipleValueDelimiter if set, the Autocomplete will keep appending the new selections to the previous term, delimited by this string.
+	 *    This is useful when making QAutocomplete handle multiple values (see http://jqueryui.com/demos/autocomplete/#multiple ).
 	 * @property-write array $DataSource an array of strings, QAutocompleteListItem's,
 	 */
 	class QAutocompleteBase extends QAutocompleteGen
@@ -58,7 +60,9 @@
 		protected $blnUseAjax = false;
 		/** @var boolean */
 		protected $blnMustMatch = false;
-		
+		/** @var string */
+		protected $strMultipleValueDelimiter = null;
+
 		
 		/**
 		 * When this filter is passed to QAutocomplete::UseFilter, only the items in the source list that contain the typed term will be shown in the drop-down
@@ -99,11 +103,20 @@
 
 
 		// Set up an Ajax data binder. 
-		public function SetDataBinder($strMethodName, $objParentControl = null) {
+		public function SetDataBinder($strMethodName, $objParentControl = null, $blnReturnTermAsParameter = false) {
+			$strJsReturnParam = '';
+			$strBody = '';
+			if ($blnReturnTermAsParameter) {
+				if ($this->MultipleValueDelimiter) {
+					$strJsReturnParam = 'this.element.data("splitterFunc")(this.element.get(0))';
+				} else {
+					$strJsReturnParam = 'request.term';
+				}
+			}
 			if ($objParentControl) {
-				$objAction = new QAjaxControlAction($objParentControl, $strMethodName);
+				$objAction = new QAjaxControlAction($objParentControl, $strMethodName, 'default', null, $strJsReturnParam);
 			} else {
-				$objAction = new QAjaxAction($strMethodName);
+				$objAction = new QAjaxAction($strMethodName, 'default', null, $strJsReturnParam);
 			}
 			
 			// use the ajax action to generate an ajax script for us, but 
@@ -123,36 +136,102 @@
 		}
 
 
-		// These functions are used to keep track of the selected value, and to implement 
+		// These functions are used to keep track of the selected value, and to implement
 		// optional autocomplete functionality.
 		
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
-			$mustMatch = ($this->blnMustMatch ? '1' : '0');
-			
-			$strJS .=<<<FUNC
-			.on("autocompleteselect", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "SelectedId", ui.item.id);
-					})						
-			.on("autocompletefocus",  function (event, ui) {
-						if ( /^key/.test(event.originalEvent.originalEvent.type) ) {
-			 				qcubed.recordControlModification("$this->ControlId", "SelectedId", ui.item.id);
-						} 
-					})
-			.on("autocompletechange", function( event, ui ) {
-						var toTest = ui.item ? (ui.item.value ? ui.item.value : ui.item.label) : '';
-						if ( !ui.item ||
-							jQuery( this ).val() != toTest) {
-								// remove invalid value, as no match 
-								if ($mustMatch) {
-									jQuery( this ).val( "" );
-									jQuery( this ).data( "autocomplete" ).term = '';
+			$strValueExpr = 'var value = jQuery(this).val();';
+			$strResetValue = 'var resetValue = "";';
+			if ($this->strMultipleValueDelimiter) {
+				// don't navigate away from the field on tab when selecting an item
+				$strJS .= '.bind("keydown", function(event) {
+								if (event.keyCode === jQuery.ui.keyCode.TAB && jQuery(this).data("autocomplete").menu.active) {
+									event.preventDefault();
 								}
-		 						qcubed.recordControlModification("$this->ControlId", "SelectedId", '');
+							})';
+				$strEscapedDelimiter = preg_quote($this->strMultipleValueDelimiter);
+				$strSplitFunc =sprintf('
+				// splits the value in element el into terms using the delimiter
+				// finds and returns the term at the caret
+				// if the second argument is present replaces that term with val and returns the full (modified) value
+				function (el, val) {
+					var value = jQuery(el).val();
+					// get caret position
+					var caretPos = 0;
+					if (document.selection) { // IE
+						el.focus();
+						var range = document.selection.createRange();
+						range.moveStart("character", -value.length);
+						caretPos = range.text.length;
+					} else if (el.selectionStart) { // MOZ
+						caretPos = el.selectionStart;
+					}
+					// find which term the caret is in
+					var matches = value.substring(0, caretPos).match(/%s\s*/g);
+					var termIdx = matches ? matches.length : 0;
+					var terms = value.split(/%s\s*/);
+					if (termIdx >= terms.length) {
+						termIdx = terms.length;
+						terms.push("");
+					}
+					if (val !== undefined) { // setting the value
+						if (val !== null)
+							terms[termIdx] = val;
+						else
+							terms.splice(termIdx, 1);
+						if (terms.length && terms[terms.length-1]) {
+							terms.push("");
 						}
-					})
-										
-FUNC;
+						return terms.join("%s ");
+					}
+					return terms[termIdx];
+				}', $strEscapedDelimiter, $strEscapedDelimiter, $this->MultipleValueDelimiter);
+				$strJS .= '.data("splitterFunc", '.$strSplitFunc.')';
+				$strValueExpr = 'var splitterFunc = jQuery(this).data("splitterFunc"); var value = splitterFunc(this);';
+				$strResetValue = 'var resetValue = splitterFunc(this, null);';
+
+				$strJS .=sprintf('.on("autocompleteselect",
+				function (event, ui) {
+					var sel = ui.item ? (ui.item.value ? ui.item.value : ui.item.label) : "";
+					this.value = jQuery(this).data("splitterFunc")(this, sel);
+					return false;
+				})', preg_quote($this->strMultipleValueDelimiter), $this->strMultipleValueDelimiter);
+
+				$strJS .= '.on("autocompletefocus",
+				function () {
+					return false;
+				})';
+			} else {
+				$strJS .=sprintf('.on("autocompleteselect",
+				function (event, ui) {
+				    qcubed.recordControlModification("%s", "SelectedId", ui.item.id);
+				})', $this->ControlId);
+
+				$strJS .=sprintf('
+				.on("autocompletefocus",
+				function (event, ui) {
+					if ( /^key/.test(event.originalEvent.originalEvent.type) ) {
+				 		qcubed.recordControlModification("%s", "SelectedId", ui.item.id);
+					}
+				})', $this->ControlId);
+			}
+
+			$strMustMatch = $this->blnMustMatch ? sprintf('// remove invalid value, as no match
+									%s
+									jQuery( this ).val(resetValue);
+									jQuery( this ).data( "autocomplete" ).term = "";
+			', $strResetValue) : '';
+
+			$strJS .=sprintf('
+			.on("autocompletechange", function( event, ui ) {
+				var toTest = ui.item ? (ui.item.value ? ui.item.value : ui.item.label) : "";
+				%s
+				if ( !ui.item || value != toTest) {
+					%s
+		 			qcubed.recordControlModification("%s", "SelectedId", "");
+				}
+			})', $strValueExpr, $strMustMatch, $this->ControlId);
 			
 			return $strJS;
 		}
@@ -211,6 +290,10 @@ FUNC;
 								}
 							}
 						}
+						if ($this->MultipleValueDelimiter) {
+							$strBody = 'response(jQuery.ui.autocomplete.filter('.JavaScriptHelper::toJsObject($mixValue).', this.element.data("splitterFunc")(this.element.get(0))))';
+							$mixValue = new QJsClosure($strBody, array('request', 'response'));
+						}
 						// do parent action too
 						parent::__set($strName, $mixValue);
 					} catch (QInvalidCastException $objExc) {
@@ -218,8 +301,18 @@ FUNC;
 						throw $objExc;
 					}
 					break;
-					
-					
+
+				case 'MultipleValueDelimiter':
+					// Set this at creation time to initialize the selected id.
+					// This is also set by the javascript above to keep track of subsequent selections made by the user.
+					try {
+						$this->strMultipleValueDelimiter = QType::Cast($mixValue, QType::String);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -236,7 +329,8 @@ FUNC;
 			switch ($strName) {
 				case 'SelectedId': return $this->strSelectedId;
 				case 'MustMatch': return $this->blnMustMatch;
-				
+				case 'MultipleValueDelimiter': return $this->strMultipleValueDelimiter;
+
 				default: 
 					try { 
 						return parent::__get($strName); 

@@ -1193,6 +1193,142 @@
 
 
 		/**
+		 * Renders the control with an attached name
+		 *
+		 * This will call {@link QControlBase::GetControlHtml()} for the bulk of the work, but will add layout html as well.  It will include
+		 * the rendering of the Controls' name label, any errors or warnings, instructions, and html before/after (if specified).
+		 * As this is the parent class of all controls, this method defines how ALL controls will render when rendered with a name.
+		 * If you need certain controls to display differently, override this function in that control's class.
+		 *
+		 * @param boolean $blnDisplayOutput true to send to display buffer, false to just return then html
+		 * @throws QCallerException
+		 * @return string HTML of rendered Control
+		 */
+
+		public function RenderWithName($blnDisplayOutput = true) {
+			////////////////////
+			// Call RenderHelper
+			$this->RenderHelper(func_get_args(), __FUNCTION__);
+			////////////////////
+
+			$strDataRel = '';
+			$strWrapperAttributes = '';
+			if (!$this->blnUseWrapper) {
+				//there is no wrapper --> add the special attribute data-rel to the name control
+				$strDataRel = sprintf('data-rel="#%s"',$this->strControlId);
+				$strWrapperAttributes = 'data-hasrel="1"';
+			}
+
+			// Custom Render Functionality Here
+
+			// Because this example RenderWithName will render a block-based element (e.g. a DIV), let's ensure
+			// that IsBlockElement is set to true
+			$this->blnIsBlockElement = true;
+
+			// Render the Control's Dressing
+			$strToReturn = '<div class="renderWithName" ' . $strDataRel . '>';
+
+			// Render the Left side
+			$strLeftClass = "left";
+			if ($this->blnRequired)
+				$strLeftClass .= ' required';
+			if (!$this->blnEnabled)
+				$strLeftClass .= ' disabled';
+
+			if ($this->strInstructions)
+				$strInstructions = '<br/><span class="instructions">' . $this->strInstructions . '</span>';
+			else
+				$strInstructions = '';
+
+			$strToReturn .= sprintf('<div class="%s"><label for="%s">%s</label>%s</div>', $strLeftClass, $this->strControlId, $this->strName, $strInstructions);
+
+			// Render the Right side
+			if ($this->strValidationError)
+				$strMessage = sprintf('<span class="error">%s</span>', $this->strValidationError);
+			else if ($this->strWarning)
+				$strMessage = sprintf('<span class="error">%s</span>', $this->strWarning);
+			else
+				$strMessage = '';
+
+			try {
+				$strToReturn .= sprintf('<div class="right">%s%s%s%s</div>',
+					$this->strHtmlBefore, $this->GetControlHtml(), $this->strHtmlAfter, $strMessage);
+			} catch (QCallerException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+
+			$strToReturn .= '</div>';
+
+			////////////////////////////////////////////
+			// Call RenderOutput, Returning its Contents
+			return $this->RenderOutput($strToReturn, $blnDisplayOutput, false, $strWrapperAttributes);
+			////////////////////////////////////////////
+		}
+
+		public function RenderWithNameOnTop($blnDisplayOutput = true) {
+			////////////////////
+			// Call RenderHelper
+			$this->RenderHelper(func_get_args(), __FUNCTION__);
+			////////////////////
+
+			$strDataRel = '';
+			$strWrapperAttributes = '';
+			if (!$this->blnUseWrapper) {
+				//there is no wrapper --> add the special attribute data-rel to the name control
+				$strDataRel = sprintf('data-rel="#%s"',$this->strControlId);
+				$strWrapperAttributes = 'data-hasrel="1"';
+			}
+
+			// Custom Render Functionality Here
+
+			// Because this example RenderWithName will render a block-based element (e.g. a DIV), let's ensure
+			// that IsBlockElement is set to true
+			$this->blnIsBlockElement = true;
+
+			// Render the Control's Dressing
+			$strToReturn = '<div class="renderWithNameOnTop" ' . $strDataRel . '>';
+
+			$strName = QApplication::Translate($this->strName);
+
+			// Render the top side
+			$strLeftClass = "top_label";
+			if ($this->blnRequired) {
+				$strLeftClass .= ' required';
+				if ($strName) {
+					$strName .= '<span class="required_mark">*</span>';
+				}
+			}
+			if (!$this->blnEnabled)
+				$strLeftClass .= ' disabled';
+
+			if ($this->strInstructions)
+				$strInstructions = '<br/><span class="instructions">' . $this->strInstructions . '</span>';
+			else
+				$strInstructions = '';
+
+			if (!$strName) $strName = '&nbsp;';
+			$strToReturn .= sprintf('<div class="%s"><label for="%s">%s</label>%s</div>', $strLeftClass, $this->strControlId, $strName, $strInstructions);
+
+			$strMessage = '';
+
+			try {
+				$strToReturn .= sprintf('<div class="bottom_control">%s%s%s%s</div>',
+					$this->strHtmlBefore, $this->GetControlHtml(), $this->strHtmlAfter, $strMessage);
+			} catch (QCallerException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+
+			$strToReturn .= '</div>';
+
+			////////////////////////////////////////////
+			// Call RenderOutput, Returning its Contents
+			return $this->RenderOutput($strToReturn, $blnDisplayOutput, false, $strWrapperAttributes);
+			////////////////////////////////////////////
+		}
+
+		/**
 		 * Helper method to render the control using some other class/method.
 		 *
 		 * Useful for plugins that want to override the render behavior for the controls
