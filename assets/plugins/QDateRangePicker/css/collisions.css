@@ -1,0 +1,10 @@
+/* clean up some colisions with the main QCubed styles.css */
+.ui-daterangepickercontain a:visited {
+	border-bottom: none;
+}
+.ui-daterangepickercontain a:link {
+	border-bottom: none;
+}
+.ui-daterangepickercontain li {
+	margin-bottom: 0;
+}
