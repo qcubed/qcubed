@@ -1,0 +1,435 @@
+@body_padding: 0.3em;
+@label_padding: 0.3em;
+@left_sz: 14em;
+@right_sz: 14em;
+@pnl_h1: 26em;
+@pnl_h2: 16em;
+@fieldset_padding_sides:0.8em;
+@fieldset_sz: @left_sz+@right_sz + 2;
+@fieldset_long_sz: 2*(@fieldset_sz + @fieldset_padding_sides);
+@fieldset_long_right_sz: @left_sz+2*@right_sz + 4;
+
+body {
+    font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+    font-size: 12px;
+    margin: 0;
+    min-height: 100%;
+    padding: @body_padding;
+}
+
+.listbox { width: 250px; }
+
+div.renderWithName {
+    label {
+        margin: 0;
+        padding: @label_padding;
+    }
+    div.required {
+        font-weight: bold;
+        color: #800000;
+    }
+    label {
+        cursor: pointer;
+    }
+    div.right {
+//        background-color: white;
+//        border: 1px solid #DDDDDD;
+        margin-top: 1px;
+    }
+}
+
+fieldset legend div.renderWithName {
+    label {
+        padding: 0;
+        font-size: 1em;
+    }
+    div.left {
+        width: auto;
+        padding: 0;
+        margin: 0 4px 0 0;
+    }
+    div.right {
+        width: auto;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+div#formControls {
+    .ui-widget input {
+        font-size: 1.16em;
+    }
+    input, select, textarea {
+        width: @right_sz - 0.2;
+    }
+}
+
+div {
+    .ui-button-text-icon-primary .ui-button-text, .ui-button-text-icons .ui-button-text {
+        padding: 0 0.5em 0 2.1em;
+    }
+}
+
+div.object_selector {
+    .ui-autocomplete-input { margin: 0; padding: 0;}
+    .ui-button-icon-only .ui-button-text { padding: 0; }
+    position: relative;
+    top:0;
+    left:0;
+    div.toolbar {
+        position: absolute;
+        top: -0.5em;
+        right: -0.5em;
+    }
+    input {
+        position: absolute;
+        left: 0;
+    }
+    button {
+        &.ui-button-icon-only {
+            width: 1em;
+        }
+        &.ui-widget {
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+div.control_list_toolbar {
+    padding: 0.5em;
+    margin-bottom: 0.3em;
+}
+
+div.control_list_item {
+    width: @left_sz;
+}
+
+div.left {
+    clear: left;
+    display: block;
+    float: left;
+    width: @left_sz;
+    padding: 4px;
+    text-align: right;
+    label {
+        font-size: 1.1em;
+    }
+}
+div.right {
+    display: block;
+    float: left;
+    padding: 4px;
+    width: @right_sz;
+    min-height: 1.2em;
+}
+
+fieldset {
+    margin: 4px 4px 0 4px;
+    padding: 0 @fieldset_padding_sides;
+
+    &.right, div.right_fieldset {
+        width: @fieldset_sz;
+        float: left;
+    }
+    &.left, div.left_fieldset {
+        clear: both;
+        width: @fieldset_sz;
+        float: left;
+    }
+    &.clear, div.clear_fieldset {
+        clear: both;
+        width: @fieldset_long_sz;
+        div.right {
+            width: @fieldset_long_right_sz;
+        }
+    }
+    textarea.long, input.long, span.long {
+        display: block;
+        width: @fieldset_long_right_sz;
+    }
+}
+
+div.list_panel {
+    min-height: 26em;
+    margin: 0 5px 5px 0;
+}
+
+div.view_panel {
+    div.right {
+        background-color: #f0f0f0;
+    }
+}
+
+div.reservation_view_panel {
+    width: 2*(@left_sz+@right_sz + 2);
+    padding: 5px;
+    margin: 0 5px 5px 0;
+}
+
+div#reservation {
+    float: left;
+//    height: @pnl_h1;
+}
+div#customer {
+    float: left;
+//    height: @pnl_h1;
+}
+div#pickup {
+    clear: both;
+    float: left;
+//    height: @pnl_h2;
+}
+div#dropoff {
+    float: left;
+//    height: @pnl_h2;
+}
+
+div.toolbar {
+    span.toolbar_lbl {
+        display: inline-block;
+        margin-right: 1em;
+        min-width: 10em;
+    }
+}
+
+@jq-header-font-size: 1em;
+.ui-accordion-icons .ui-accordion-header div.pickup_chk {
+    font-size: @jq-header-font-size; padding: .5em .5em .5em .7em;
+}
+
+/*.ui-accordion-icons .ui-accordion-header div.pickup_chk { padding-left: 2.2em; }*/
+
+div.pickup_chk {
+    label {
+        margin-left: .5em;
+    }
+}
+
+div.top_menu {
+    background-color: #ffffff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.9em 0.7em;
+    padding: 3px 5px 3px 5px;
+    border: 1px solid #008000;
+    z-index: 1000;
+    div.title {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+}
+
+div#app_info {
+    dt {
+        text-align: right;
+        clear: left;
+        float: left;
+        width: 100px;
+        border-top: 1px solid #999;
+        margin: 0;
+        padding: 5px;
+    }
+    dd.info {
+        color: #008000;
+        font-weight: bold;
+        text-align: left;
+        float: left;
+        width: 180px;
+        border-top: 1px solid #999;
+        margin: 0;
+        padding: 5px;
+    }
+    background-color: #ffffff;
+    position: absolute;
+    top: 27px;
+    right: 0;
+    margin: 0;
+    padding: 5px;
+    border: 1px solid #008000;
+    z-index: 1001;
+    width: 300px;
+    display: none;
+}
+
+span.clickable {
+    text-decoration: underline;
+    color: #0000ff;
+    cursor: pointer;
+}
+
+div.detail_panel div.toolbar input.load_value {
+    background: none;
+    background-color: #ffffff;
+    width: 4em;
+    height: 1.4em;
+    text-align: right;
+}
+
+button.load {
+    margin-right: 2em;
+}
+
+input.captchatextbox {
+    display: block;
+    width: 133px;
+}
+
+table.dataTable tbody tr {
+    &:hover {
+        cursor: pointer;
+    }
+    &.even {
+        td.highlighted {
+            background-color: #ECFFB3;
+        }
+        &:hover {
+            background-color: #ECFFB3;
+            td {
+                &.sorting_1 {
+                    background-color: #DDFF75;
+                }
+                &.sorting_2 {
+                    background-color: #E7FF9E;
+                }
+                &.sorting_3 {
+                    background-color: #E2FF89;
+                }
+            }
+        }
+    }
+    &.odd {
+        td.highlighted {
+            background-color: #E6FF99;
+        }
+        &:hover {
+            background-color: #E6FF99;
+            td {
+                &.sorting_1 {
+                    background-color: #D6FF5C;
+                }
+                &.sorting_2 {
+                    background-color: #E0FF84;
+                }
+                &.sorting_3 {
+                    background-color: #DBFF70;
+                }
+            }
+        }
+    }
+}
+
+div.reminders {
+    height: 1.5em;
+    color: #708090;
+    font-weight: bold;
+    padding-left: 1em;
+}
+
+span.order_calculations {
+    display: block;
+    height: 5.3em;
+}
+
+textarea.order_calculations {
+    height: 5.3em;
+}
+
+div.alerts_menu {
+    background-color: #ffffff;
+    position: absolute;
+    top: 0;
+    right: 200px;
+    width: 400px;
+    margin: 0.9em 0.7em;
+    padding: 3px 5px 3px 5px;
+    border: 1px solid #008000;
+    z-index: 1000;
+    >span, >select {
+        float: left;
+    }
+    button.export {
+        margin-left: 1em;
+    }
+}
+
+input:disabled {
+    background: #E8E8E8 !important;
+}
+
+div.pnl_guests, div.pnl_pickup_passengers {
+    input {
+        width: 3em;
+    }
+    div.renderWithNameOnTop {
+        float: left;
+    }
+    div.top_label {
+        font-size: 0.8em;
+    }
+    div.bottom_control {
+        margin-right: 0.8em;
+    }
+}
+
+span.no_wrap {
+    white-space: nowrap;
+}
+span.email, span.internet {
+    display: inline-block;
+}
+
+fieldset {
+    legend {
+        min-height: 1.2em;
+    }
+}
+
+div.search_panel {
+    div.renderWithNameOnTop {
+        float: left;
+        padding-right: 1em;
+        font-size: 0.7em;
+    }
+    div.renderWithName {
+        font-size: 0.7em;
+    }
+    .search_num {
+        width: 4em;
+    }
+    .search_txt, .search_date {
+        width: 11em;
+    }
+    input.search_customerobject_name {
+        width: 21em;
+    }
+    input.search_houseobject_name {
+        width: 9em;
+    }
+    input.search_todate {
+        width: 10em;
+    }
+    select.search_status, select.search_type {
+        width: 8.5em;
+    }
+    input.search_adultguests {
+        width: 8.5em;
+    }
+    select.search_pickupstatus, select.search_dropoffstatus {
+        width: 6em;
+    }
+    div.search_controls {
+        float: right;
+        div.search_more {
+            float: left;
+            font-weight: bold;
+            font-style: italic;
+            padding-top: 0.7em;
+        }
+    }
+}
+
+.ui-tabs div.list_detail {
+    padding: 0.3em;
+}

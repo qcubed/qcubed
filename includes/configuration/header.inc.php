@@ -8,16 +8,18 @@
 <?php if (isset($strPageTitle)) { ?>
 		<title><?php _p($strPageTitle); ?></title>
 <?php } ?>
-		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/styles.css");</style>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css">
+		<style type="text/css">@import url("<?php _p(__CSS_ASSETS__ . '/' . __JQUERY_CSS__); ?>");</style>
+<?php
+		require 'lessc.inc.php';
+
+		try {
+			lessc::ccompile(__DOCROOT__ . __SUBDIRECTORY__ .'/assets/css/styles.less', __DOCROOT__ .__SUBDIRECTORY__ .'/assets/css/styles.css');
+		} catch (exception $ex) {
+			exit($ex->getMessage());
+		}
+?>
+		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ .__SUBDIRECTORY__ ); ?>/assets/css/styles.css");</style>
+		<script src="<?php echo __APP_JS_ASSETS__ .'/application.js'; ?>" type="text/javascript"></script>
 	</head>
-	<body>
-		<div id="page">
-			<div id="header">
-				<div id="headerLeft">
-					<div id="codeVersion"><span class="headerSmall">QCubed Development Framework <?php _p(QCUBED_VERSION) ?></span></div>
-					<div id="pageName"><?php if (isset($strPageTitle)) { _p($strPageTitle); } ?></div>
-				</div>
-				<div id="headerRight">
-				</div>
-			</div>
-			<div id="content">
+	<body id="application">
