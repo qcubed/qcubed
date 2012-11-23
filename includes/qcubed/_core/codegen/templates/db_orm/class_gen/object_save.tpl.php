@@ -11,6 +11,36 @@
 			break;
 		}
 	print '		 * @return '.$returnType;
+
+	$strCols = '';
+	$strValues = '';
+	$strColUpdates = '';
+	foreach ($objTable->ColumnArray as $objColumn) {
+		if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) {
+			if ($strCols) $strCols .= ",\n";
+			if ($strValues) $strValues .= ",\n";
+			if ($strColUpdates) $strColUpdates .= ",\n";
+			$strCol = '							' . $strEscapeIdentifierBegin.$objColumn->Name.$strEscapeIdentifierEnd;
+			$strCols .= $strCol;
+			$strValue = '\' . $objDatabase->SqlVariable($this->'.$objColumn->VariableName.') . \'';
+			$strValues .= '							' . $strValue;
+			$strColUpdates .= $strCol .' = '.$strValue;
+		}
+	}
+	if ($strValues) {
+		$strCols = " (\n".$strCols."\n						)";
+		$strValues = " VALUES (\n".$strValues."\n						)\n";
+	} else {
+		$strValues = " DEFAULT VALUES";
+	}
+
+	$strIds = '';
+	foreach ($objTable->PrimaryKeyColumnArray as $objPkColumn) {
+		if ($strIds) $strIds .= " AND \n";
+		$strIds .= '							' . $strEscapeIdentifierBegin.$objPkColumn->Name.$strEscapeIdentifierEnd .
+			' = \' . $objDatabase->SqlVariable($this->' . ($objPkColumn->Identity ? '' : '__')  . $objPkColumn->VariableName . ') . \'';
+	}
+
 ?>
 
 		 */
@@ -24,29 +54,17 @@
 				if ((!$this->__blnRestored) || ($blnForceInsert)) {
 					// Perform an INSERT query
 					$objDatabase->NonQuery('
-						INSERT INTO <?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?> (
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) { ?>
-							<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?>,
-<?php } ?>
-<?php } ?><?php GO_BACK(2); ?>
-
-						) VALUES (
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) { ?>
-							' . $objDatabase->SqlVariable($this-><?php echo $objColumn->VariableName  ?>) . ',
-<?php } ?>
-<?php } ?><?php GO_BACK(2); ?>
-
-						)
+						INSERT INTO <?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?><?php echo $strCols; echo $strValues; ?>
 					');
 
 <?php 
-	foreach ($objArray = $objTable->PrimaryKeyColumnArray as $objColumn)
-		if ($objColumn->Identity)
+	foreach ($objArray = $objTable->PrimaryKeyColumnArray as $objColumn) {
+		if ($objColumn->Identity) {
 			print sprintf('					// Update Identity column and return its value
 					$mixToReturn = $this->%s = $objDatabase->InsertId(\'%s\', \'%s\');',
 					$objColumn->VariableName, $objTable->Name, $objColumn->Name);
+		}
+	}
 ?>
 
 				} else {
@@ -65,13 +83,7 @@
 								<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
 
 							WHERE
-<?php foreach ($objTable->PrimaryKeyColumnArray as $objPkColumn) { ?>
-<?php if ($objPkColumn->Identity) { ?>
-								<?php echo $strEscapeIdentifierBegin  ?><?php echo $objPkColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objPkColumn->VariableName  ?>) . ' AND
-<?php } ?><?php if (!$objPkColumn->Identity) { ?>
-								<?php echo $strEscapeIdentifierBegin  ?><?php echo $objPkColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this->__<?php echo $objPkColumn->VariableName  ?>) . ' AND
-<?php } ?>
-<?php } ?><?php GO_BACK(5); ?>
+<?php echo $strIds; ?>
 
 						');
 
@@ -83,27 +95,21 @@
 <?php } ?>
 
 					// Perform the UPDATE query
+<?php if ($strColUpdates) { ?>
 					$objDatabase->NonQuery('
 						UPDATE
 							<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
 
 						SET
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) { ?>
-							<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objColumn->VariableName  ?>) . ',
-<?php } ?>
-<?php } ?><?php GO_BACK(2); ?>
+<?php echo $strColUpdates; ?>
 
 						WHERE
-<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
-<?php if ($objColumn->Identity) { ?>
-							<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objColumn->VariableName  ?>) . ' AND
-<?php } ?><?php if (!$objColumn->Identity) { ?>
-							<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this->__<?php echo $objColumn->VariableName  ?>) . ' AND
-<?php } ?>
-<?php } ?><?php GO_BACK(5); ?>
+<?php echo $strIds; ?>
 
 					');
+<?php } else { ?>
+					// Nothing to update
+<?php }?>
 				}
 
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
@@ -156,13 +162,7 @@
 					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
 
 				WHERE
-<?php foreach ($objTable->PrimaryKeyColumnArray as $objPkColumn) { ?>
-<?php if ($objPkColumn->Identity) { ?>
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objPkColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objPkColumn->VariableName  ?>) . ' AND
-<?php } ?><?php if (!$objPkColumn->Identity) { ?>
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objPkColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this->__<?php echo $objPkColumn->VariableName  ?>) . ' AND
-<?php } ?>
-<?php } ?><?php GO_BACK(5); ?>
+<?php echo $strIds; ?>
 
 			');
 
