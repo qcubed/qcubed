@@ -161,96 +161,12 @@ div.view_panel {
     }
 }
 
-div.reservation_view_panel {
-    width: 2*(@left_sz+@right_sz + 2);
-    padding: 5px;
-    margin: 0 5px 5px 0;
-}
-
-div#reservation {
-    float: left;
-//    height: @pnl_h1;
-}
-div#customer {
-    float: left;
-//    height: @pnl_h1;
-}
-div#pickup {
-    clear: both;
-    float: left;
-//    height: @pnl_h2;
-}
-div#dropoff {
-    float: left;
-//    height: @pnl_h2;
-}
-
 div.toolbar {
     span.toolbar_lbl {
         display: inline-block;
         margin-right: 1em;
         min-width: 10em;
     }
-}
-
-@jq-header-font-size: 1em;
-.ui-accordion-icons .ui-accordion-header div.pickup_chk {
-    font-size: @jq-header-font-size; padding: .5em .5em .5em .7em;
-}
-
-/*.ui-accordion-icons .ui-accordion-header div.pickup_chk { padding-left: 2.2em; }*/
-
-div.pickup_chk {
-    label {
-        margin-left: .5em;
-    }
-}
-
-div.top_menu {
-    background-color: #ffffff;
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0.9em 0.7em;
-    padding: 3px 5px 3px 5px;
-    border: 1px solid #008000;
-    z-index: 1000;
-    div.title {
-        font-size: 1.2em;
-        font-weight: bold;
-    }
-}
-
-div#app_info {
-    dt {
-        text-align: right;
-        clear: left;
-        float: left;
-        width: 100px;
-        border-top: 1px solid #999;
-        margin: 0;
-        padding: 5px;
-    }
-    dd.info {
-        color: #008000;
-        font-weight: bold;
-        text-align: left;
-        float: left;
-        width: 180px;
-        border-top: 1px solid #999;
-        margin: 0;
-        padding: 5px;
-    }
-    background-color: #ffffff;
-    position: absolute;
-    top: 27px;
-    right: 0;
-    margin: 0;
-    padding: 5px;
-    border: 1px solid #008000;
-    z-index: 1001;
-    width: 300px;
-    display: none;
 }
 
 span.clickable {
@@ -269,11 +185,6 @@ div.detail_panel div.toolbar input.load_value {
 
 button.load {
     margin-right: 2em;
-}
-
-input.captchatextbox {
-    display: block;
-    width: 133px;
 }
 
 table.dataTable tbody tr {
@@ -320,64 +231,12 @@ table.dataTable tbody tr {
     }
 }
 
-div.reminders {
-    height: 1.5em;
-    color: #708090;
-    font-weight: bold;
-    padding-left: 1em;
-}
-
-span.order_calculations {
-    display: block;
-    height: 5.3em;
-}
-
-textarea.order_calculations {
-    height: 5.3em;
-}
-
-div.alerts_menu {
-    background-color: #ffffff;
-    position: absolute;
-    top: 0;
-    right: 200px;
-    width: 400px;
-    margin: 0.9em 0.7em;
-    padding: 3px 5px 3px 5px;
-    border: 1px solid #008000;
-    z-index: 1000;
-    >span, >select {
-        float: left;
-    }
-    button.export {
-        margin-left: 1em;
-    }
-}
-
 input:disabled {
     background: #E8E8E8 !important;
 }
 
-div.pnl_guests, div.pnl_pickup_passengers {
-    input {
-        width: 3em;
-    }
-    div.renderWithNameOnTop {
-        float: left;
-    }
-    div.top_label {
-        font-size: 0.8em;
-    }
-    div.bottom_control {
-        margin-right: 0.8em;
-    }
-}
-
 span.no_wrap {
     white-space: nowrap;
-}
-span.email, span.internet {
-    display: inline-block;
 }
 
 fieldset {
@@ -400,24 +259,6 @@ div.search_panel {
     }
     .search_txt, .search_date {
         width: 11em;
-    }
-    input.search_customerobject_name {
-        width: 21em;
-    }
-    input.search_houseobject_name {
-        width: 9em;
-    }
-    input.search_todate {
-        width: 10em;
-    }
-    select.search_status, select.search_type {
-        width: 8.5em;
-    }
-    input.search_adultguests {
-        width: 8.5em;
-    }
-    select.search_pickupstatus, select.search_dropoffstatus {
-        width: 6em;
     }
     div.search_controls {
         float: right;
