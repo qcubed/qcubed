@@ -12,14 +12,7 @@
 
 	<?php print("<?php"); ?> $this->RenderBegin() ?>
 
-	<div id="titleBar">
-		<h2><?php print("<?php"); ?> _p($this->pnl<?php echo $objTable->ClassName  ?>->TitleVerb); ?></h2>
-		<h1><?php print("<?php"); ?> _t('<?php echo $objTable->ClassName  ?>')?></h1>
-	</div>
-
-	<div id="formControls">
-		<?php print("<?php"); ?> $this->pnl<?php echo $objTable->ClassName  ?>->Render(); ?>
-	</div>
+	<?php print("<?php"); ?> $this->pnl<?php echo $objTable->ClassName  ?>->Render(); ?>
 
 	<?php print("<?php"); ?> $this->RenderEnd() ?>
 

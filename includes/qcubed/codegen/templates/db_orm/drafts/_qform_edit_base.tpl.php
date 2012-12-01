@@ -1,6 +1,6 @@
 <template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __FORMBASE_CLASSES__  ?>" TargetFileName="<?php echo $objTable->ClassName  ?>EditFormBase.class.php"/>
 <?php print("<?php\n"); ?>
-	require_once(__DOCROOT__ . __PANEL_DRAFTS__ . '/<?php echo $objTable->ClassName  ?>EditPanel.class.php');
+	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName  ?>UpdatePanel.class.php');
 	/**
 	 * This is a quick-and-dirty draft QForm object to do Create, Edit, and Delete functionality
 	 * of the <?php echo $objTable->ClassName  ?> class.  It uses the code-generated
@@ -35,7 +35,7 @@
 		protected function Form_Create() {
 			parent::Form_Create();
 
-			$this->pnl<?php echo $objTable->ClassName  ?> = new <?php echo $objTable->ClassName  ?>EditPanel($this, array($this, 'RedirectToListPage'));
+			$this->pnl<?php echo $objTable->ClassName  ?> = new <?php echo $objTable->ClassName  ?>UpdatePanel($this, QApplication::PathInfo(0));
 		}
 
 		/**
