@@ -16,6 +16,8 @@
 	 * @package <?php echo QCodeGen::$ApplicationName;  ?>
 
 	 * @subpackage Drafts
+	 *
+	 * @property-read string $TitleVerb
 	 */
 	class <?php echo $objTable->ClassName  ?>EditPanel extends QPanel {
 		// Local instance of the <?php echo $objTable->ClassName  ?>MetaControl
@@ -54,6 +56,9 @@
 		 */
 		public $btnCancel;
 
+		// @var string TitleVerb
+		protected $strTitleVerb;
+
 		// Callback
 		protected $strClosePanelMethod;
 
@@ -73,6 +78,12 @@
 			// Construct the <?php echo $objTable->ClassName  ?>MetaControl
 			// MAKE SURE we specify "$this" as the MetaControl's (and thus all subsequent controls') parent
 			$this->mct<?php echo $objTable->ClassName  ?> = <?php echo $objTable->ClassName  ?>MetaControl::Create($this<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>, $<?php echo $objColumn->VariableName;  ?><?php } ?>);
+
+			if ($this->mct<?php echo $objTable->ClassName ?>-><?php echo $objTable->ClassName ?>->__Restored) {
+				$this->strTitleVerb = QApplication::Translate('Edit');
+			} else {
+				$this->strTitleVerb = QApplication::Translate('Create');
+			}
 
 			// Call MetaControl's methods to create qcontrols based on <?php echo $objTable->ClassName  ?>'s data fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
@@ -126,6 +137,21 @@
 			$strMethod = $this->strClosePanelMethod;
 			$this->objForm->$strMethod($blnChangesMade);
 		}
+
+		public function __get($strName) {
+			switch ($strName) {
+				case 'TitleVerb': return $this->strTitleVerb;
+
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				}
+		}
+
 
 		<?php include("qpanel_validate_unique.tpl.php"); ?>
 
