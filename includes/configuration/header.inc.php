@@ -14,12 +14,12 @@
 		require 'lessc.inc.php';
 
 		try {
-			lessc::ccompile(__DOCROOT__ . __SUBDIRECTORY__ .'/assets/css/styles.less', __DOCROOT__ .__SUBDIRECTORY__ .'/assets/css/styles.css');
+			lessc::ccompile(__DOCROOT__ . __APP_CSS_ASSETS__ .'/styles.less', __DOCROOT__ .__APP_CSS_ASSETS__ .'/styles.css');
 		} catch (exception $ex) {
 			exit($ex->getMessage());
 		}
 ?>
-		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ .__SUBDIRECTORY__ ); ?>/assets/css/styles.css");</style>
+		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ .__APP_CSS_ASSETS__ ); ?>/styles.css");</style>
 		<script src="<?php echo __APP_JS_ASSETS__ .'/application.js'; ?>" type="text/javascript"></script>
 	</head>
 	<body id="application">
