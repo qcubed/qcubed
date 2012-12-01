@@ -7,7 +7,7 @@
 			$objReference = $objColumn->Reference;
 			$objReferencedTable = $this->GetTable($objReference->Table);
 ?>
-		require_once(__META_CONTROLS__ . '/<?php echo $objReferencedTable->ClassName ?>ViewWithToolbar.class.php');
+	require_once(__META_CONTROLS__ . '/<?php echo $objReferencedTable->ClassName ?>ViewWithToolbar.class.php');
 <?php
 		}
 	}
@@ -23,7 +23,7 @@
 			$objReference = $objColumn->Reference;
 			$objReferencedTable = $this->GetTable($objReference->Table);
 ?>
-	 * @property-read <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar $<?php echo $objReferencedTable->ClassName ?>View
+	 * @property-read <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar $<?php echo $objReference->PropertyName ?>View
 <?php
 		}
 	}
@@ -41,9 +41,9 @@
 			$objReferencedTable = $this->GetTable($objReference->Table);
 ?>
 		/** @var <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar */
-		protected $pnl<?php echo $objReferencedTable->ClassName ?>View;
+		protected $pnl<?php echo $objReference->PropertyName ?>View;
 		/** @var integer */
-		protected $int<?php echo $objReferencedTable->ClassName ?>TabIdx;
+		protected $int<?php echo $objReference->PropertyName ?>TabIdx;
 <?php
 		}
 	}
@@ -79,9 +79,9 @@
 			$objReferencedTable = $this->GetTable($objReference->Table);
 ?>
 			if ($obj<?php echo $objTable->ClassName ?> && $obj<?php echo $objTable->ClassName ?>-><?php echo $objColumn->Reference->PropertyName ?> && $obj<?php echo $objTable->ClassName ?>-><?php echo $objColumn->Reference->PropertyName ?>->__Restored) {
-				$this->pnl<?php echo $objReferencedTable->ClassName ?>View = new <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar($this->tabs, $obj<?php echo $objTable->ClassName ?>-><?php echo $objColumn->Reference->PropertyName ?>, false, true, false, false);
-				$this->int<?php echo $objReferencedTable->ClassName ?>TabIdx = count($headers);
-				$headers[] = QApplication::Translate('<?php echo $objReferencedTable->ClassName ?>');
+				$this->pnl<?php echo $objReference->PropertyName ?>View = new <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar($this->tabs, $obj<?php echo $objTable->ClassName ?>-><?php echo $objColumn->Reference->PropertyName ?>, false, true, false, false);
+				$this->int<?php echo $objReference->PropertyName ?>TabIdx = count($headers);
+				$headers[] = QApplication::Translate('<?php echo $objReference->PropertyName ?>');
 			}
 <?php
 		}
@@ -102,7 +102,7 @@
 			$objReference = $objColumn->Reference;
 			$objReferencedTable = $this->GetTable($objReference->Table);
 ?>
-				case "<?php echo $objReferencedTable->ClassName ?>View": return $this->pnl<?php echo $objReferencedTable->ClassName ?>View;
+				case "<?php echo $objReference->PropertyName ?>View": return $this->pnl<?php echo $objReference->PropertyName ?>View;
 <?php
 		}
 	}
