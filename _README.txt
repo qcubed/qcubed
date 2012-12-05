@@ -9,7 +9,6 @@ For more information, you can also refer the QCubed Documentation online at
 	http://www.qcu.be
 
 
-
 /////////////////////////////
 // STEP ONE - COPY TO DOCROOT
 /////////////////////////////
