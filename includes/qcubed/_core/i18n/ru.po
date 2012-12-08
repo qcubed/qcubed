@@ -1,112 +1,152 @@
 # QCubed Distributed Language File
 # for Russian (default)
-# Contributed by "bermuda"
+# Contributed by "olegabr"
+
 
 
 # For QTextBoxBase controls
 MsgId "%s is required"
-MsgStr "%s ���������"
+MsgStr "необходимо задать %s"
 
 MsgId "Required"
-MsgStr "���������"
+MsgStr "Требуется"
 
+MsgId "%s must have at least %s characters"
+MsgStr "%s должен состоять как минимум из %s символов"
+
+MsgId "Must have at least %s characters"
+MsgStr "Должен состоять как минимум из %s символов"
+
+MsgId "%s must have at most %s characters"
+MsgStr "%s должен состоять максимум из %s символов"
+
+MsgId "Must have at most %s characters"
+MsgStr "Должен состоять максимум из %s символов"
 
 # For QWriteBox controls
 MsgId ""
 "Tags &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; and &lt;http://...&gt; are allowed.  "
 "Use ** at the beginning of any line for a bulleted list."
 MsgStr ""
-"��������� �������� &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; and &lt;http://...&gt;.  "
-"����������� ** � ������ ����� ��� ���� ����� ������� ������."
+"Tags &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; and &lt;http://...&gt; are allowed.  "
+"Use ** at the beginning of any line for a bulleted list."
 
 
 # For QPaginatedControl controls
 MsgId "item"
-MsgStr "�������"
+MsgStr "элемент"
 
 MsgId "items"
-MsgStr "��������"
+MsgStr "элементы"
 
 
 # For QListBox and QCalendar controls
 MsgId "Reset"
-MsgStr "��������"
+MsgStr "Сбросить"
+
+
+# For ListBoxes in Generated Forms
+MsgId "- Select One -"
+MsgStr "- Выберите -"
 
 
 # For QIntegerTextBox and QFloatTextBox controls
 MsgId "Invalid Integer"
-MsgStr "��������� �����"
+MsgStr "Неверное целое число"
 
 MsgId "Invalid Float"
-MsgStr "��������� ��������������"
+MsgStr "Неверное число"
 
 MsgId "Value must be less than %s"
-MsgStr "�������� ������ ���� ������ ��� %s"
+MsgStr "Значение должно быть меньше %s"
 
 MsgId "Value must be greater than %s"
-MsgStr "�������� ������ ���� ������ ���  %s"
+MsgStr "Значение должно быть больше %s"
 
 
 # For QDataGrid controls
 MsgId "<b>Results:</b>&nbsp;Viewing&nbsp;%s&nbsp;%s-%s&nbsp;of&nbsp;%s."
-MsgStr "<b>����������:</b>&nbsp;��������&nbsp;%s&nbsp;%s-%s&nbsp;of&nbsp;%s."
+MsgStr "<b>Результат:</b>&nbsp;Показаны&nbsp;%s&nbsp;%s-%s&nbsp;из&nbsp;%s."
 
 MsgId "<b>Results:</b> No %s found."
-MsgStr "<b>����������:</b> %s �� �������."
+MsgStr "<b>Результат:</b> %s не найдены."
 
 MsgId "<b>Results:</b> 1 %s found."
-MsgStr "<b>����������:</b> ���� %s ������."
-
 MsgId_Plural "<b>Results:</b> %s %s found."
-MsgStr[0] "<b>Results:</b> ���� %s ������."
-MsgStr[1] "<b>Results:</b> %s %s �������."
+MsgStr[0] "<b>Результат:</b> найден 1 %s."
+MsgStr[1] "<b>Результат:</b> найдено %s %s."
 
+MsgId "Filter"
+MsgStr "Фильтровать"
 
 # For QPaginator controls
 MsgId "Previous"
-MsgStr "����������"
+MsgStr "Назад"
 
 MsgId "Next"
-MsgStr "���������"
+MsgStr "Вперёд"
 
 
 # For the List FormDraft Include template
 MsgId "List All"
-MsgStr "�������� ���"
+MsgStr "Показать все"
 
 MsgId "Create a New"
-MsgStr "������� �����"
+MsgStr "Создать"
 
 MsgId "Go to \"Form Drafts\""
-MsgStr "������� � \"Form Drafts\""
+MsgStr "Перейти к списку таблиц"
 
 
 # For the Edit FormBase class template
 MsgId "Create"
-MsgStr "�������"
+MsgStr "Создать"
 
 MsgId "Edit"
-MsgStr "�������������"
+MsgStr "Редактировать"
 
 MsgId "Save"
-MsgStr "���������"
+MsgStr "Сохранить"
 
 MsgId "Cancel"
-MsgStr "������"
+MsgStr "Отменить"
 
 MsgId "Delete"
-MsgStr "�������"
+MsgStr "Удалить"
 
 MsgId "Are you SURE you want to DELETE this %s?"
-MsgStr "�� ������� � ���, ��� ������ ������� %s?"
+MsgStr "Вы действительно хотите удалить этот %s?"
 
+MsgId "Are you SURE you want to DELETE this"
+MsgStr "Вы действительно хотите удалить этот"
 
 # For the form_drafts/index.php page
 MsgId "List of Form Drafts"
-MsgStr "������ Form Drafts"
+MsgStr "Список таблиц"
 
 MsgId "View List"
-MsgStr "�������� ������"
+MsgStr "Просмотреть записи"
 
 MsgId "Create New"
-MsgStr "������� �����"
+MsgStr "Создать запись"
+
+MsgId "?"
+MsgStr "?"
+
+MsgId "True"
+MsgStr "Да"
+
+MsgId "False"
+MsgStr "Нет"
+
+MsgId "Set"
+MsgStr "Установлено"
+
+MsgId "Unset"
+MsgStr "Не установлено"
+
+MsgId "N/A"
+MsgStr "Недоступно"
+
+MsgId "Already in Use"
+MsgStr "Уже используется. Введите другое значение."
