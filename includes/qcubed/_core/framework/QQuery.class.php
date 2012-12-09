@@ -891,13 +891,13 @@
 	class QQConditionEqual extends QQConditionComparison {
 		protected $strOperator = ' = ';
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
-			return $objBuilder->AddWhereItem($this->objQueryNode->GetColumnAlias($objBuilder) . ' ' . $this->objQueryNode->GetValue($this->mixOperand, $objBuilder, true));
+			$objBuilder->AddWhereItem($this->objQueryNode->GetColumnAlias($objBuilder) . ' ' . $this->objQueryNode->GetValue($this->mixOperand, $objBuilder, true));
 		}
 	}
 	class QQConditionNotEqual extends QQConditionComparison {
 		protected $strOperator = ' != ';
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
-			return $objBuilder->AddWhereItem($this->objQueryNode->GetColumnAlias($objBuilder) . ' ' . $this->objQueryNode->GetValue($this->mixOperand, $objBuilder, false));
+			$objBuilder->AddWhereItem($this->objQueryNode->GetColumnAlias($objBuilder) . ' ' . $this->objQueryNode->GetValue($this->mixOperand, $objBuilder, false));
 		}
 	}
 	class QQConditionGreaterThan extends QQConditionComparison {
@@ -1206,7 +1206,6 @@
 	}
 	
 	class QQVirtualNode extends QQNode {
-		protected $strName;
 		protected $objSubQueryDefinition;
 		public function __construct($strName, QQSubQueryNode $objSubQueryDefinition = null) {
 			$this->objParentNode = true;
