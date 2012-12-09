@@ -3,12 +3,9 @@
 		 * way of adding a column to this <?php echo $objTable->ClassName  ?> datagrid.  The description of a column's
 		 * content can be either a text string description of a simple field name
 		 * in the <?php echo $objTable->ClassName  ?> object, or it can be any QQNode extending from QQN::<?php echo $objTable->ClassName  ?>().
-		 *
 		 * MetaAddColumn will automatically pre-configure the column with the name, html
 		 * and sort rules given the content being specified.
-		 *
 		 * Any of these things can be overridden with OverrideParameters.
-		 *
 		 * Finally, $mixContents can also be an array of contents, if displaying and/or
 		 * sorting using two fields from the <?php echo $objTable->ClassName  ?> object.
 		 *

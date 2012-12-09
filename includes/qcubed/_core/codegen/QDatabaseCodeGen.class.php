@@ -19,6 +19,8 @@
 		protected $objDb;
 
 		protected $intDatabaseIndex;
+		/** @var string The delimiter to be used for parsing comments on the DB tables for being used as the text of Meta control's Label */
+		protected $strCommentMetaControlLabelDelimiter;
 
 		// Table Suffixes
 		protected $strTypeTableSuffixArray;
@@ -267,6 +269,9 @@
 			$this->strRelationships = QCodeGen::LookupSetting($objSettingsXml, 'relationships');
 			$this->strRelationshipsScriptPath = QCodeGen::LookupSetting($objSettingsXml, 'relationshipsScript', 'filepath');
 			$this->strRelationshipsScriptFormat = QCodeGen::LookupSetting($objSettingsXml, 'relationshipsScript', 'format');
+
+			// Column Comment for MetaControlLabel setting.
+			$this->strCommentMetaControlLabelDelimiter = QCodeGen::LookupSetting($objSettingsXml, 'columnCommentForMetaControl', 'delimiter');
 
 			// Check to make sure things that are required are there
 			if (!$this->intDatabaseIndex)
@@ -533,9 +538,9 @@
 			}
 
 			if (((!$objFieldArray[0]->PrimaryKey) &&
-				 ($objFieldArray[1]->PrimaryKey)) ||
+				($objFieldArray[1]->PrimaryKey)) ||
 				(($objFieldArray[0]->PrimaryKey) &&
-				 (!$objFieldArray[1]->PrimaryKey))) {
+					(!$objFieldArray[1]->PrimaryKey))) {
 				$this->strErrors .= sprintf("AssociationTable %s only support two-column composite Primary Keys.\n",
 					$strTableName);
 				return;
@@ -706,6 +711,7 @@
 
 		protected function AnalyzeTable(QTable $objTable) {
 			// Setup the Table Object
+			$objTable->OwnerDbIndex = $this->intDatabaseIndex;
 			$strTableName = $objTable->Name;
 			$objTable->ClassName = $this->ClassNameFromTableName($strTableName);
 			$objTable->ClassNamePlural = $this->Pluralize($objTable->ClassName);
@@ -928,7 +934,7 @@
 									$objReverseReference->ObjectDescription = $objReverseReference->VariableType;
 									$objReverseReference->ObjectDescriptionPlural = $this->Pluralize($objReverseReference->VariableType);
 
-								// Otherwise, see if it's just plain ol' unique
+									// Otherwise, see if it's just plain ol' unique
 								} else if ($objColumn->Unique) {
 									$objReverseReference->ObjectMemberVariable = $this->CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName);
 									$objReverseReference->ObjectPropertyName = $this->CalculateObjectPropertyName($strTableName, $strColumnName, $strReferencedTableName);
@@ -1004,7 +1010,7 @@
 		protected function AnalyzeTableColumn(QDatabaseFieldBase $objField, $objTable) {
 			$objColumn = new QColumn();
 			$objColumn->Name = $objField->Name;
-
+			$objColumn->OwnerTable = $objTable;
 			if (substr_count($objField->Name, "-")) {
 				$tableName = $objTable ? " in table " . $objTable->Name : "";
 				$this->strErrors .= "Invalid column name" . $tableName . ": " . $objField->Name . ". Dashes are not allowed.";
@@ -1221,6 +1227,8 @@
 					return $this->objTypeTableArray;
 				case 'DatabaseIndex':
 					return $this->intDatabaseIndex;
+				case 'CommentMetaControlLabelDelimiter':
+					return $this->strCommentMetaControlLabelDelimiter;
 				default:
 					try {
 						return parent::__get($strName);
