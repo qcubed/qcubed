@@ -10,6 +10,11 @@
 		/////////////////////////////
 
 		/**
+		 * @var int DB Index to which it belongs in the configuration.inc.php and codegen_settings.xml files.
+		 */
+		protected $intOwnerDbIndex;
+
+		/**
 		 * Name of the table (as defined in the database)
 		 * @var string Name
 		 */
@@ -120,6 +125,8 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
+				case 'OwnerDbIndex':
+					return $this->intOwnerDbIndex;
 				case 'Name':
 					return $this->strName;
 				case 'ClassNamePlural':
@@ -170,6 +177,8 @@
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
+					case 'OwnerDbIndex':
+						return $this->intOwnerDbIndex = QType::Cast($mixValue, QType::Integer);
 					case 'Name':
 						return $this->strName = QType::Cast($mixValue, QType::String);
 					case 'ClassName':

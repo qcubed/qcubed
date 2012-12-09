@@ -10,6 +10,11 @@
 		/////////////////////////////
 
 		/**
+		 * @var QTable The table in which this column exists.
+		 */
+		protected $objOwnerTable;
+
+		/**
 		 * Specifies whether or not the column is a Primary Key
 		 * @var bool PrimaryKey
 		 */
@@ -125,6 +130,8 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
+				case 'OwnerTable':
+					return $this->objOwnerTable;
 				case 'PrimaryKey':
 					return $this->blnPrimaryKey;
 				case 'Name':
@@ -178,6 +185,8 @@
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
+					case 'OwnerTable':
+						return $this->objOwnerTable = QType::cast($mixValue, 'QTable');
 					case 'PrimaryKey':
 						return $this->blnPrimaryKey = QType::Cast($mixValue, QType::Boolean);
 					case 'Name':

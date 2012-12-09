@@ -256,21 +256,25 @@
 			$strTableName = $this->SqlVariable($strTableName);
 			$strQuery = sprintf('
 				SELECT 
-					table_name,
-					column_name, 
-					ordinal_position, 
-					column_default, 
-					is_nullable, 
-					data_type, 
-					character_maximum_length,
-					(pg_get_serial_sequence(table_name,column_name) IS NOT NULL) AS is_serial
+					columns.table_name,
+					columns.column_name,
+					columns.ordinal_position,
+					columns.column_default,
+					columns.is_nullable,
+					columns.data_type,
+					columns.character_maximum_length,
+					descr.description AS comment,
+					(pg_get_serial_sequence(columns.table_name,columns.column_name) IS NOT NULL) AS is_serial
 				FROM 
-					INFORMATION_SCHEMA.COLUMNS 
+					INFORMATION_SCHEMA.COLUMNS columns
+					JOIN pg_catalog.pg_class klass ON (columns.table_name = klass.relname AND klass.relkind = \'r\')
+					LEFT JOIN pg_catalog.pg_description descr ON (descr.objoid = klass.oid AND descr.objsubid = columns.ordinal_position)
 				WHERE 
-					table_schema = current_schema() 
-				AND 
-					table_name = %s 
-				ORDER BY ordinal_position		
+					columns.table_schema = current_schema()
+				AND
+					columns.table_name = %s
+				ORDER BY
+					ordinal_position
 			', $strTableName);
 	
 			$objResult = $this->Query($strQuery);
@@ -739,7 +743,10 @@
 					break;
 				default:
 					throw new QPostgreSqlDatabaseException('Unsupported Field Type: ' . $this->strType, 0, null);
-			}			
+			}
+
+			// Retrieve comment
+			$this->strComment = $mixFieldData->GetColumn('comment');
 		}
 	}
 ?>
