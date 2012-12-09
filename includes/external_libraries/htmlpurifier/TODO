@@ -1,4 +1,3 @@
-
 TODO List
 
 = KEY ====================
@@ -14,20 +13,24 @@ afraid to cast your vote for the next feature to be implemented!
 Things to do as soon as possible:
 
  - Think about allowing explicit order of operations hooks for transforms
- - Inputs don't do the right thing with submit
  - Fix "<.<" bug (trailing < is removed if not EOD)
  - Build in better internal state dumps and debugging tools for remote
    debugging
  - Allowed/Allowed* have strange interactions when both set
- - Transform lone embeds into object tags
+ ? Transform lone embeds into object tags
  - Deprecated config options that emit warnings when you set them (with'
    a way of muting the warning if you really want to)
  - Make HTML.Trusted work with Output.FlashCompat
+ - HTML.Trusted and HTML.SafeObject have funny interaction; general
+   problem is what to do when a module "supersedes" another
+   (see also tables and basic tables.)  This is a little dicier
+   because HTML.SafeObject has some extra functionality that
+   trusted might find useful.  See http://htmlpurifier.org/phorum/read.php?3,5762,6100
 
 FUTURE VERSIONS
 ---------------
 
-4.4 release [OMG CONFIG PONIES]
+4.5 release [OMG CONFIG PONIES]
  ! Fix Printer. It's from the old days when we didn't have decent XML classes
  ! Factor demo.php into a set of Printer classes, and then create a stub
    file for users here (inside the actual HTML Purifier library)
@@ -112,6 +115,10 @@ Neat feature related
     3. Extend the tag exclusion system to specify whether or not the
     contents should be dropped or not (currently, there's code that could do
     something like this if it didn't drop the inner text too.)
+ ? Make AutoParagraph also support paragraph-izing double <br> tags, and not
+   just double newlines.  This is kind of tough to do in the current framework,
+   though, and might be reasonably approximated by search replacing double <br>s
+   with newlines before running it through HTML Purifier.
 
 Maintenance related (slightly boring)
  # CHMOD install script for PEAR installs
