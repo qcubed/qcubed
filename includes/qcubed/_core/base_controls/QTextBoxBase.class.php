@@ -20,6 +20,7 @@
 	 * @property string $LabelForTooShortUnnamed
 	 * @property string $LabelForTooLong
 	 * @property string $LabelForTooLongUnnamed
+	 * @property string $Placeholder
 	 * @property string $CrossScripting can be Allow, HtmlEntities, or Deny.  Deny is the default. Prevents cross scripting hacks.  HtmlEntities causes framework to automatically call php function htmlentities on the input data.  Allow allows everything to come through without altering at all.  USE "ALLOW" judiciously: using ALLOW on text entries, and then outputting that data WILL allow hackers to perform cross scripting hacks.
 	 * @property integer $MaxLength is the "maxlength" html attribute (applicable for SingleLine textboxes)
 	 * @property integer $MinLength is the minimum requred length to pass validation
@@ -35,27 +36,46 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var int */
 		protected $intColumns = 0;
+		/** @var string */
 		protected $strText = null;
+		/** @var string */
 		protected $strLabelForRequired;
+		/** @var string */
 		protected $strLabelForRequiredUnnamed;
+		/** @var string */
 		protected $strLabelForTooShort;
+		/** @var string */
 		protected $strLabelForTooShortUnnamed;
+		/** @var string */
 		protected $strLabelForTooLong;
+		/** @var string */
 		protected $strLabelForTooLongUnnamed;
+		/** @var string */
+		protected $strPlaceholder = '';
+		/** @var string */
 		protected $strFormat = '%s';
 
 		// BEHAVIOR
+		/** @var int */
 		protected $intMaxLength = 0;
+		/** @var int */
 		protected $intMinLength = 0;
+		/** @var bool */
 		protected $blnReadOnly = false;
+		/** @var int */
 		protected $intRows = 0;
+		/** @var string */
 		protected $strTextMode = QTextMode::SingleLine;
+		/** @var string */
 		protected $strCrossScripting;
 		protected $objHTMLPurifierConfig = null;
+		/** @var bool */
 		protected $blnValidateTrimmed = false;
 
 		// LAYOUT
+		/** @var bool */
 		protected $blnWrap = true;
 
 		//////////
@@ -79,15 +99,15 @@
 		/**
 		 * This function allows to set the Configuration for HTMLPurifier
 		 * similar to the HTMLPurifierConfig::set() method from the HTMLPurifier API.
-		 * 
+		 *
 		 * @param strParameter: The parameter to set for HTMLPurifier
 		 * @param mixValue: Value of the parameter.
-		 * 
+		 *
 		 * @return None
-		 * 
+		 *
 		 *  NOTE: THERE IS NO SUPPORT FOR THE DEPRECATED API OF HTMLPURIFIER, HENCE NO THIRD ARGUMENT TO THE
-		 *  	FUNCTION CAN BE PASSED. 
-		 * 
+		 *  	FUNCTION CAN BE PASSED.
+		 *
 		 * Visit http://htmlpurifier.org/live/configdoc/plain.html for the list of parameters and their effects.
 		 */
 		public function SetPurifierConfig($strParameter, $mixValue) {
@@ -100,8 +120,8 @@
 			// Check to see if this Control's Value was passed in via the POST data
 			if (array_key_exists($this->strControlId, $_POST)) {
 				// It was -- update this Control's value with the new value passed in via the POST arguments
-				$this->strText = $_POST[$this->strControlId];	
-				
+				$this->strText = $_POST[$this->strControlId];
+
 				switch ($this->strCrossScripting) {
 					case QCrossScripting::Allow:
 						// Do Nothing, allow everything
@@ -150,17 +170,23 @@
 			}
 		}
 
+		/**
+		 * @param bool $blnIncludeCustom
+		 * @param bool $blnIncludeAction
+		 *
+		 * @return string
+		 */
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
 			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
 
 			if ($this->blnReadOnly)
 				$strToReturn .= 'readonly="readonly" ';
-			
+
 			if ($this->intMaxLength)
 				$strToReturn .= sprintf('maxlength="%s" ', $this->intMaxLength);
 			if ($this->strTextMode == QTextMode::MultiLine) {
 				if ($this->intColumns)
-					$strToReturn .= sprintf('cols="%s" ', $this->intColumns);			
+					$strToReturn .= sprintf('cols="%s" ', $this->intColumns);
 				if ($this->intRows)
 					$strToReturn .= sprintf('rows="%s" ', $this->intRows);
 				if (!$this->blnWrap)
@@ -169,7 +195,11 @@
 				if ($this->intColumns)
 					$strToReturn .= sprintf('size="%s" ', $this->intColumns);
 			}
-				
+
+			if(strlen($this->strPlaceholder) > 0) {
+				$strToReturn .= sprintf('placeholder="%s" ', $this->strPlaceholder);
+			}
+
 			return $strToReturn;
 		}
 
@@ -278,6 +308,7 @@
 				case "LabelForTooShortUnnamed": return $this->strLabelForTooShortUnnamed;
 				case "LabelForTooLong": return $this->strLabelForTooLong;
 				case "LabelForTooLongUnnamed": return $this->strLabelForTooLongUnnamed;
+				case "Placeholder": return $this->strPlaceholder;
 
 				// BEHAVIOR
 				case "CrossScripting": return $this->strCrossScripting;
@@ -376,6 +407,14 @@
 				case "LabelForTooLongUnnamed":
 					try {
 						$this->strLabelForTooLongUnnamed = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case "Placeholder":
+					try {
+						$this->strPlaceholder = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
