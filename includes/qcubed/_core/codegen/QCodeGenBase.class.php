@@ -66,7 +66,7 @@
 		/**
 		 * This is the SimpleXML representation of the Settings XML file
 		 *
-		 * @var SimpleXmlObject the XML representation
+		 * @var SimpleXmlElement the XML representation
 		 */
 		protected static $SettingsXml;
 
@@ -97,11 +97,11 @@
 
 		public static $RootErrors = '';
 
-		/** 
+		/**
 		 * @var string[] array of directories to be excluded in codegen (lower cased)
-		 * @access protected 
-		 */ 
-		protected static $DirectoriesToExcludeArray = array('.','..','.svn','svn','cvs','.git'); 
+		 * @access protected
+		 */
+		protected static $DirectoriesToExcludeArray = array('.','..','.svn','svn','cvs','.git');
 
 		public static function GetSettingsXml() {
 			$strCrLf = "\r\n";
@@ -221,6 +221,7 @@
 
 		/**
 		 *
+		 * @return array
 		 */
 		public static function GenerateAggregate() {
 			$objDbOrmCodeGen = array();
@@ -802,6 +803,39 @@
 		protected function VariableNameFromColumn(QColumn $objColumn) {
 			return QConvertNotation::PrefixFromType($objColumn->VariableType) .
 				QConvertNotation::CamelCaseFromUnderscore($objColumn->Name);
+		}
+
+		/**
+		 * The function determines whether there is a comment on the column or not.
+		 * If yes, and the settings for the database has the option for using comments for Meta Control label names turned on
+		 * along with a preferred delimiter supplied, then the function will return the computed meta control label name. Otherwise it
+		 * just returns the PropertyName of the column.
+		 *
+		 * @param QColumn $objColumn
+		 *
+		 * @internal param string $strDelimiter
+		 * @return string
+		 */
+		public static function MetaControlLabelNameFromColumn (QColumn $objColumn) {
+			$strDelimiter = null;
+			$objTable = $objColumn->OwnerTable;
+			$objDbIndex = $objTable->OwnerDbIndex;
+
+			foreach (QCodeGen::$CodeGenArray as $DatabaseCodeGen) {
+				if (($DatabaseCodeGen instanceof QDatabaseCodeGen) && ($DatabaseCodeGen->DatabaseIndex == $objDbIndex)) {
+					$strDelimiter = $DatabaseCodeGen->CommentMetaControlLabelDelimiter;
+					break;
+				}
+			}
+
+			if (trim($strDelimiter) == '') {
+				$strDelimiter = null;
+			}
+
+			if ($strDelimiter && $objColumn->Comment && ($strLabelText = strstr($objColumn->Comment, $strDelimiter, true))) {
+				return addslashes($strLabelText);
+			}
+            return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
 		}
 
 		protected function PropertyNameFromColumn(QColumn $objColumn) {

@@ -41,6 +41,19 @@
 			<!-- Support for "Beta 2" version of Manual Queries and Hard Coded Column Names -->
 			<manualQuery support="false"/>
 
+			<!--
+				This feature allows you to use the comments made on the column of database table to be used as
+				the label text generated for meta controls (used in form drafts as the text in front of the input control).
+				If you do not want to use this feature, leave the delimiter as blank. Also, you cannot set it to be a whitespace (a sequence of space characters, or tabs or newlines); under such case, it behaves as if it has been left blank.
+
+				Behavior (assumes "::" (without the quotes) as the character sequence used for delimiter):
+					1. If you enable this feature but do not want to use the comment as meta control label, make sure that you are not going to use the delimiter in the comment.
+					   e.g. a comment like "The weight of the object" will not make use of this feature and your column property name will be used as the meta control label.
+					2. In case you HAVE TO use the delimiter in the column comment, please prepend the comment with the delimiter. eg. a
+					   comment like "The ratio (::) of weight to cost" will put the string "The ratio (" as the meta control label. To prevent this, write the same comment as ":: The ratio (::) of weight to cost".
+					3. If the delimiter occurs multiple times in the comment on the column, only the part before the first occurrence is taken as the label for meta control (this also explains the behavior of the above point).
+			-->
+			<columnCommentForMetaControl delimiter="" />
 			<!-- Virtual Foreign Key Relationships -->
 			<!--
 				There are two ways to define relationships.  To signify a virtual FK
