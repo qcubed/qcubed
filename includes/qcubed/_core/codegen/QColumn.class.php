@@ -10,6 +10,11 @@
 		/////////////////////////////
 
 		/**
+		 * @var QTable The table in which this column exists.
+		 */
+		protected $objOwnerTable;
+
+		/**
 		 * Specifies whether or not the column is a Primary Key
 		 * @var bool PrimaryKey
 		 */
@@ -28,6 +33,16 @@
 		 * @var string PropertyName
 		 */
 		protected $strPropertyName;
+
+		/**
+		 * The Label which is to be shown in front of the generated meta control inputs
+		 * (the ones which are shown on the generated drafts and can be reused later)
+		 * It is generatedby determining if there was a comment on the column. If there was none
+		 * or if the comment did not contain the sequence which could indicate that it is OK to use
+		 * it as the lable for the meta control, PropertyName (strPropertyName) will be used instead.
+		 * @var string MetaControlLabel
+		 */
+		protected $strMetaControlLabel;
 
 		/**
 		 * Name of the column as an object protected Member Variable
@@ -125,6 +140,8 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
+				case 'OwnerTable':
+					return $this->objOwnerTable;
 				case 'PrimaryKey':
 					return $this->blnPrimaryKey;
 				case 'Name':
@@ -178,6 +195,8 @@
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
+					case 'OwnerTable':
+						return $this->objOwnerTable = QType::cast($mixValue, 'QTable');
 					case 'PrimaryKey':
 						return $this->blnPrimaryKey = QType::Cast($mixValue, QType::Boolean);
 					case 'Name':

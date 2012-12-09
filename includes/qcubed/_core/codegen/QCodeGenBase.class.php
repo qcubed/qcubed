@@ -66,7 +66,7 @@
 		/**
 		 * This is the SimpleXML representation of the Settings XML file
 		 *
-		 * @var SimpleXmlObject the XML representation
+		 * @var SimpleXmlElement the XML representation
 		 */
 		protected static $SettingsXml;
 
@@ -97,11 +97,11 @@
 
 		public static $RootErrors = '';
 
-		/** 
+		/**
 		 * @var string[] array of directories to be excluded in codegen (lower cased)
-		 * @access protected 
-		 */ 
-		protected static $DirectoriesToExcludeArray = array('.','..','.svn','svn','cvs','.git'); 
+		 * @access protected
+		 */
+		protected static $DirectoriesToExcludeArray = array('.','..','.svn','svn','cvs','.git');
 
 		public static function GetSettingsXml() {
 			$strCrLf = "\r\n";
@@ -221,6 +221,7 @@
 
 		/**
 		 *
+		 * @return array
 		 */
 		public static function GenerateAggregate() {
 			$objDbOrmCodeGen = array();
@@ -281,8 +282,8 @@
 						if ((QString::FirstCharacter($strFilename) == '_') &&
 							(
 								(substr($strFilename, strlen($strFilename) - 4) == '.tpl') ||
-								(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
-							)
+									(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
+						)
 							$strTemplateArray[$strModuleName][$strFilename] = false;
 				}
 			}
@@ -298,8 +299,8 @@
 							if ((QString::FirstCharacter($strFilename) == '_') &&
 								(
 									(substr($strFilename, strlen($strFilename) - 4) == '.tpl') ||
-									(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
-								)
+										(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
+							)
 								$strTemplateArray[$strModuleName][$strFilename] = true;
 					}
 				}
@@ -345,8 +346,8 @@
 			if (substr($strFilename, strlen($strFilename) - 8) == '.tpl.php')  {
 				// make sure paths are set up to pick up included files from both the override directory and _core directory
 				$strSearchPath = __QCUBED__ . QCodeGen::TemplatesPathCustom . $strModuleName . PATH_SEPARATOR .
-						__QCUBED_CORE__ . QCodeGen::TemplatesPath . $strModuleName . PATH_SEPARATOR .
-						get_include_path();
+					__QCUBED_CORE__ . QCodeGen::TemplatesPath . $strModuleName . PATH_SEPARATOR .
+					get_include_path();
 				set_include_path ($strSearchPath);
 				if ($strSearchPath != get_include_path()) {
 					throw new QCallerException ('Can\'t override include path. Make sure your apache or server settings allow include paths to be overriden. ' );
@@ -356,7 +357,7 @@
 			} else {
 				$strTemplate = $this->EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray);
 			}
-			
+
 			// Parse out the first line (which contains path and overwriting information)
 			$intPosition = strpos($strTemplate, "\n");
 			if ($intPosition === false)
@@ -509,7 +510,7 @@
 
 				// Get and cleanup the Eval Statement
 				$strStatement = substr($strTemplate, $intPosition + QCodeGen::$TemplateEscapeBeginLength,
-										$intPositionEnd - $intPosition - QCodeGen::$TemplateEscapeEndLength);
+					$intPositionEnd - $intPosition - QCodeGen::$TemplateEscapeEndLength);
 				$strStatement = trim($strStatement);
 
 				if (substr($strStatement, 0, 1) == '=') {
@@ -579,7 +580,7 @@
 					$strStatement = '';
 
 
-				// Check if we're starting an open-ended statemen
+					// Check if we're starting an open-ended statemen
 				} else if (substr($strStatement, strlen($strStatement) - 1) == '{') {
 					// We ARE in an open-ended statement
 
@@ -804,6 +805,40 @@
 				QConvertNotation::CamelCaseFromUnderscore($objColumn->Name);
 		}
 
+		/**
+		 * The function determines whether there is a comment on the column or not.
+		 * If yes, and the settings for the database has the option for using comments for Meta Control label names turned on
+		 * along with a preferred delimiter supplied, then the function will return the computed meta control label name. Otherwise it
+		 * just returns the PropertyName of the column.
+		 *
+		 * @param QColumn $objColumn
+		 *
+		 * @internal param string $strDelimiter
+		 * @return string
+		 */
+		public static function MetaControlLabelNameFromColumn (QColumn $objColumn) {
+			$strDelimiter = null;
+			$objTable = $objColumn->OwnerTable;
+			$objDbIndex = $objTable->OwnerDbIndex;
+
+			foreach (QCodeGen::$CodeGenArray as $DatabaseCodeGen) {
+				if (($DatabaseCodeGen instanceof QDatabaseCodeGen) && ($DatabaseCodeGen->DatabaseIndex == $objDbIndex)) {
+					$strDelimiter = $DatabaseCodeGen->CommentMetaControlLabelDelimiter;
+					break;
+				}
+			}
+
+			if (trim($strDelimiter) == '') {
+				$strDelimiter = null;
+			}
+
+			if ($strDelimiter && $objColumn->Comment && ($strLabelText = strstr($objColumn->Comment, $strDelimiter, true))) {
+				return addslashes($strLabelText);
+			} else {
+				return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
+			}
+		}
+
 		protected function PropertyNameFromColumn(QColumn $objColumn) {
 			return QConvertNotation::CamelCaseFromUnderscore($objColumn->Name);
 		}
@@ -888,11 +923,11 @@
 			$strToReturn = '';
 			for($intIndex = 0; $intIndex < strlen($strName); $intIndex++)
 				if (((ord($strName[$intIndex]) >= ord('a')) &&
-					 (ord($strName[$intIndex]) <= ord('z'))) ||
+					(ord($strName[$intIndex]) <= ord('z'))) ||
 					((ord($strName[$intIndex]) >= ord('A')) &&
-					 (ord($strName[$intIndex]) <= ord('Z'))) ||
+						(ord($strName[$intIndex]) <= ord('Z'))) ||
 					((ord($strName[$intIndex]) >= ord('0')) &&
-					 (ord($strName[$intIndex]) <= ord('9'))) ||
+						(ord($strName[$intIndex]) <= ord('9'))) ||
 					($strName[$intIndex] == '_'))
 					$strToReturn .= $strName[$intIndex];
 
@@ -1164,7 +1199,7 @@
 				$strGraphPrefixArray[0] = '';
 				$strGraphPrefixArray[1] = 'Parent';
 			} else if ((strpos(strtolower($objForeignKeyArray[0]->ColumnNameArray[0]), 'child') !== false) ||
-						(strpos(strtolower($objForeignKeyArray[1]->ColumnNameArray[0]), 'parent') !== false)) {
+				(strpos(strtolower($objForeignKeyArray[1]->ColumnNameArray[0]), 'parent') !== false)) {
 				$strGraphPrefixArray[0] = 'Parent';
 				$strGraphPrefixArray[1] = '';
 			} else {
@@ -1196,7 +1231,7 @@
 					return QType::DateTime;
 				case QDatabaseFieldType::VarChar:
 					return QType::String;
-				throw new Exception("Invalid Db Type to Convert: $strDbType");
+					throw new Exception("Invalid Db Type to Convert: $strDbType");
 			}
 		}
 

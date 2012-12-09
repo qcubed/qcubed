@@ -19,6 +19,9 @@
 
 			// Setup and perform the Query
 			if (is_null($objCondition)) $objCondition = QQ::All();
+			if (is_null($objOptionalClauses)) {
+				$objOptionalClauses = QQ::Clause(QQ::OrderBy(QQN::<?php echo $objColumn->Reference->VariableType  ?>()-><?php echo $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName  ?>));
+			}
 			$<?php echo $objColumn->Reference->VariableName  ?>Cursor = <?php echo $objColumn->Reference->VariableType  ?>::QueryCursor($objCondition, $objOptionalClauses);
 
 			// Iterate through the Cursor

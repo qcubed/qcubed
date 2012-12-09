@@ -25,7 +25,7 @@
 		public static function Load(<?php echo $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray);  ?>, $objOptionalClauses = null) {
 			$strCacheKey = false;
 			if (QApplication::$objCacheProvider && !$objOptionalClauses && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
-				$strCacheKey = QApplication::$objCacheProvider->CreateKey('<?php echo $this->objDb->Database ?>', '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray);  ?>);
+				$strCacheKey = QApplication::$objCacheProvider->CreateKey(QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Database, '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray);  ?>);
 				$objCachedObject = QApplication::$objCacheProvider->Get($strCacheKey);
 				if ($objCachedObject !== false) {
 					return $objCachedObject;

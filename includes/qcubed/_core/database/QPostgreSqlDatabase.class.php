@@ -28,7 +28,7 @@
 	 * identity column.  Otherwise, no identity column will be set for that table.
 	 *
 	 * @package DatabaseAdapters
-	 */		
+	 */
 	class QPostgreSqlDatabase extends QDatabaseBase {
 		const Adapter = 'PostgreSQL Database Adapter';
 
@@ -108,7 +108,7 @@
 			// Assume it's some kind of string value
 			return $strToReturn . sprintf("'%s'", pg_escape_string($mixData));
 		}
-		
+
 		public function SqlLimitVariablePrefix($strLimitInfo) {
 			// PostgreSQL uses Limit by Suffixes (via a LIMIT clause)
 			// Prefix is not used, therefore, return null
@@ -122,10 +122,10 @@
 					throw new Exception('Invalid Semicolon in LIMIT Info');
 				if (strpos($strLimitInfo, '`') !== false)
 					throw new Exception('Invalid Backtick in LIMIT Info');
-				
+
 				// First figure out if we HAVE an offset
 				$strArray = explode(',', $strLimitInfo);
-				
+
 				if (count($strArray) == 2) {
 					// Yep -- there's an offset
 					return sprintf('LIMIT %s OFFSET %s', $strArray[1], $strArray[0]);
@@ -149,7 +149,7 @@
 
 				return "ORDER BY $strSortByInfo";
 			}
-			
+
 			return null;
 		}
 
@@ -229,7 +229,7 @@
 			$objResult = pg_query($this->objPgSql, $strQuery);
 			if (!$objResult)
 				throw new QPostgreSqlDatabaseException(pg_last_error(), 0, $strQuery);
-				
+
 			// Return the Result
 			$this->objMostRecentResult = $objResult;
 			$objPgSqlDatabaseResult = new QPostgreSqlDatabaseResult($objResult, $this);
@@ -251,28 +251,32 @@
 				array_push($strToReturn, $strRowArray[0]);
 			return $strToReturn;
 		}
-		
+
 		public function GetFieldsForTable($strTableName) {
 			$strTableName = $this->SqlVariable($strTableName);
 			$strQuery = sprintf('
 				SELECT 
-					table_name,
-					column_name, 
-					ordinal_position, 
-					column_default, 
-					is_nullable, 
-					data_type, 
-					character_maximum_length,
-					(pg_get_serial_sequence(table_name,column_name) IS NOT NULL) AS is_serial
+					columns.table_name,
+					columns.column_name,
+					columns.ordinal_position,
+					columns.column_default,
+					columns.is_nullable,
+					columns.data_type,
+					columns.character_maximum_length,
+					descr.description AS comment,
+					(pg_get_serial_sequence(columns.table_name,columns.column_name) IS NOT NULL) AS is_serial
 				FROM 
-					INFORMATION_SCHEMA.COLUMNS 
+					INFORMATION_SCHEMA.COLUMNS columns
+					JOIN pg_catalog.pg_class klass ON (columns.table_name = klass.relname AND klass.relkind = \'r\')
+					LEFT JOIN pg_catalog.pg_description descr ON (descr.objoid = klass.oid AND descr.objsubid = columns.ordinal_position)
 				WHERE 
-					table_schema = current_schema() 
-				AND 
-					table_name = %s 
-				ORDER BY ordinal_position		
+					columns.table_schema = current_schema()
+				AND
+					columns.table_name = %s
+				ORDER BY
+					ordinal_position
 			', $strTableName);
-	
+
 			$objResult = $this->Query($strQuery);
 
 			$objFields = array();
@@ -288,12 +292,12 @@
 			$strQuery = sprintf('
 				SELECT currval(pg_get_serial_sequence(%s, %s))
 			', $this->SqlVariable($strTableName), $this->SqlVariable($strColumnName));
-			
+
 			$objResult = $this->Query($strQuery);
 			$objRow = $objResult->FetchRow();
 			return $objRow[0];
 		}
-		
+
 		public function Close() {
 			pg_close($this->objPgSql);
 
@@ -315,7 +319,7 @@
 
 		private function ParseColumnNameArrayFromKeyDefinition($strKeyDefinition) {
 			$strKeyDefinition = trim($strKeyDefinition);
-			
+
 			// Get rid of the opening "(" and the closing ")"
 			$intPosition = strpos($strKeyDefinition, '(');
 			if ($intPosition === false)
@@ -327,7 +331,7 @@
 				throw new Exception("Invalid Key Definition: $strKeyDefinition");
 			$strKeyDefinition = trim(substr($strKeyDefinition, 0, $intPosition));
 			$strKeyDefinition = str_replace(" ","",$strKeyDefinition);
-			
+
 			// Create the Array
 			// TODO: Current method doesn't support key names with commas or parenthesis in them!
 			$strToReturn = explode(',', $strKeyDefinition);
@@ -341,13 +345,13 @@
 
 				$strToReturn[$intIndex] = $strColumn;
 			}
-			
+
 			return $strToReturn;
 		}
-		
+
 		public function GetIndexesForTable($strTableName) {
 			$objIndexArray = array();
-			
+
 			$objResult = $this->Query(sprintf('
 				SELECT 
 					c2.relname AS indname, 
@@ -369,24 +373,24 @@
 				ORDER BY 
 					c2.relname
 			', $this->SqlVariable($strTableName)));
-			
+
 			while ($objRow = $objResult->GetNextRow()) {
 				$strIndexDefinition = $objRow->GetColumn('inddef');
 				$strKeyName = $objRow->GetColumn('indname');
 				$blnPrimaryKey = ($objRow->GetColumn('indisprimary') === "t");
 				$blnUnique = ($objRow->GetColumn('indisunique') === "t");
 				$strColumnNameArray = $this->ParseColumnNameArrayFromKeyDefinition($strIndexDefinition);
-				
+
 				$objIndex = new QDatabaseIndex($strKeyName, $blnPrimaryKey, $blnUnique, $strColumnNameArray);
 				array_push($objIndexArray, $objIndex);
 			}
-			
+
 			return $objIndexArray;
 		}
-		
+
 		public function GetForeignKeysForTable($strTableName) {
 			$objForeignKeyArray = array();
-			
+
 			// Use Query to pull the FKs
 			$strQuery = sprintf('
 				SELECT
@@ -417,12 +421,12 @@
 				AND 
 					pc.contype = \'f\'
 			', $this->SqlVariable($strTableName));
-			
+
 			$objResult = $this->Query($strQuery);
-			
+
 			while ($objRow = $objResult->GetNextRow()) {
 				$strKeyName = $objRow->GetColumn('conname');
-				
+
 				// Remove leading and trailing '"' characters (if applicable)
 				if (substr($strKeyName, 0, 1) == '"')
 					$strKeyName = substr($strKeyName, 1, strlen($strKeyName) - 2);
@@ -438,15 +442,15 @@
 				$strTokenArray[2] = explode("(", $strTokenArray[2]);
 				$strTokenArray[3] = "(".$strTokenArray[2][1];
 				$strTokenArray[2] = $strTokenArray[2][0];
-				
+
 				// Remove leading and trailing '"' characters (if applicable)
 				if (substr($strTokenArray[2], 0, 1) == '"')
 					$strTokenArray[2] = substr($strTokenArray[2], 1, strlen($strTokenArray[2]) - 2);
-					
+
 				$strColumnNameArray = $this->ParseColumnNameArrayFromKeyDefinition($strTokenArray[1]);
 				$strReferenceTableName = $strTokenArray[2];
 				$strReferenceColumnNameArray = $this->ParseColumnNameArrayFromKeyDefinition($strTokenArray[3]);
-				
+
 				$objForeignKey = new QDatabaseForeignKey(
 					$strKeyName,
 					$strColumnNameArray,
@@ -516,10 +520,10 @@
 		public function Close() {
 			pg_free_result($this->objPgSqlResult);
 		}
-		
+
 		public function GetNextRow() {
 			$strColumnArray = $this->FetchArray();
-			
+
 			if ($strColumnArray)
 				return new QPostgreSqlDatabaseRow($strColumnArray);
 			else
@@ -559,8 +563,9 @@
 						} else {
 							return ($strColumnValue) ? true : false;
 						}
-						
+
 					case QDatabaseFieldType::Blob:
+						return QType::Cast($strColumnValue, QType::String);
 					case QDatabaseFieldType::Char:
 					case QDatabaseFieldType::VarChar:
 						return QType::Cast($strColumnValue, QType::String);
@@ -605,7 +610,7 @@
 			$this->strDefault = $mixFieldData->GetColumn('column_default');
 			$this->intMaxLength = $mixFieldData->GetColumn('character_maximum_length', QDatabaseFieldType::Integer);
 			$this->blnNotNull = ($mixFieldData->GetColumn('is_nullable') == "NO") ? true : false;
-			
+
 			// If this column was created as SERIAL and is a simple (non-composite) primary key
 			// then we assume it's the identity field.
 			// Otherwise, no identity field will be set for this table.
@@ -641,12 +646,12 @@
 				AND 
 					kcu.constraint_name = tc.constraint_name
 			', $objDb->SqlVariable($this->strTable)));
-			
+
 			while ($objRow = $objResult->GetNextRow()) {
 				if ($objRow->GetColumn('column_name') == $this->strName)
 					$this->blnPrimaryKey = true;
 			}
-			
+
 			if (!$this->blnPrimaryKey)
 				$this->blnPrimaryKey = false;
 
@@ -677,11 +682,11 @@
 					$this->blnUnique = true;
 			}
 			if (!$this->blnUnique)
-			$this->blnUnique = false;	
-			
+				$this->blnUnique = false;
+
 			// Determine Type
 			$this->strType = $mixFieldData->GetColumn('data_type');
-			
+
 			switch ($this->strType) {
 				case 'integer':
 				case 'smallint':
@@ -693,16 +698,16 @@
 					break;
 				case 'bigint':
 				case 'decimal':
-				case 'numeric':					
+				case 'numeric':
 				case 'real':
 					// "BIGINT" must be specified here as a float so that PHP can support it's size
 					// http://www.postgresql.org/docs/8.2/static/datatype-numeric.html
 					$this->strType = QDatabaseFieldType::Float;
-					break;					
+					break;
 				case 'bit':
-					if ($this->intMaxLength == 1)			
+					if ($this->intMaxLength == 1)
 						$this->strType = QDatabaseFieldType::Bit;
-					else 
+					else
 						throw new QPostgreSqlDatabaseException('Unsupported Field Type: bit with MaxLength > 1', 0, null);
 					break;
 				case 'boolean':
@@ -710,9 +715,9 @@
 					break;
 				case 'character':
 					$this->strType = QDatabaseFieldType::Char;
-					break;				
+					break;
 				case 'character varying':
-				case 'double precision': 
+				case 'double precision':
 					// NOTE: PHP does not offer full support of double-precision floats.
 					// Value will be set as a VarChar which will guarantee that the precision will be maintained.
 					//    However, you will not be able to support full typing control (e.g. you would
@@ -734,12 +739,15 @@
 					$this->strType = QDatabaseFieldType::Date;
 					break;
 				case 'time':
-				case 'time without time zone':		
+				case 'time without time zone':
 					$this->strType = QDatabaseFieldType::Time;
 					break;
 				default:
 					throw new QPostgreSqlDatabaseException('Unsupported Field Type: ' . $this->strType, 0, null);
-			}			
+			}
+
+			// Retrieve comment
+			$this->strComment = $mixFieldData->GetColumn('comment');
 		}
 	}
 ?>
