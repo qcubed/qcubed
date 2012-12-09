@@ -162,7 +162,7 @@
 
 		public function GetParameter($strName) {
 			if (array_key_exists($strName, $this->objParameters))
-				return $this->objParameters[$objParameter->Name];
+				return $this->objParameters[$strName];
 			else
 				return null;
 		}
