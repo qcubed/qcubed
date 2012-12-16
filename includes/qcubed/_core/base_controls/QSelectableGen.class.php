@@ -26,47 +26,76 @@
 	
 	
 	/**
-	 * This event is triggered when selectable is created.
+	 * <div>Triggered when the selectable is
+	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
 	 */
 	class QSelectable_CreateEvent extends QJqUiEvent {
 		const EventName = 'selectablecreate';
 	}
 	/**
-	 * This event is triggered at the end of the select operation, on each element
-	 * 		added to the selection.
+	 * <div>Triggered at the end of the select operation, on each element added to
+	 * 		the selection.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div>
+	 * 		<ul><li><div><strong>selected</strong></div> <div>Type:
+	 * 		<a>Element</a></div> <div>The selectable item that has been
+	 * 		selected.</div></li></ul></li></ul>
 	 */
 	class QSelectable_SelectedEvent extends QJqUiEvent {
 		const EventName = 'selectableselected';
 	}
 	/**
-	 * This event is triggered during the select operation, on each element added
-	 * 		to the selection.
+	 * <div>Triggered during the select operation, on each element added to the
+	 * 		selection.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div>
+	 * 		<ul><li><div><strong>selecting</strong></div> <div>Type:
+	 * 		<a>Element</a></div> <div>The current selectable item being
+	 * 		selected.</div></li></ul></li></ul>
 	 */
 	class QSelectable_SelectingEvent extends QJqUiEvent {
 		const EventName = 'selectableselecting';
 	}
 	/**
-	 * This event is triggered at the beginning of the select operation.
+	 * <div>Triggered at the beginning of the select
+	 * 		operation.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
 	 */
 	class QSelectable_StartEvent extends QJqUiEvent {
 		const EventName = 'selectablestart';
 	}
 	/**
-	 * This event is triggered at the end of the select operation.
+	 * <div>Triggered at the end of the select
+	 * 		operation.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
 	 */
 	class QSelectable_StopEvent extends QJqUiEvent {
 		const EventName = 'selectablestop';
 	}
 	/**
-	 * This event is triggered at the end of the select operation, on each element
-	 * 		removed from the selection.
+	 * <div>Triggered at the end of the select operation, on each element removed
+	 * 		from the selection.</div><ul><li><div><strong>event</strong></div>
+	 * 		<div>Type: <a>Event</a></div> <div></div></li>
+	 * 		<li><div><strong>ui</strong></div> <div>Type: <a>Object</a></div>
+	 * 		<div></div> <ul><li><div><strong>unselected</strong></div> <div>Type:
+	 * 		<a>Element</a></div> <div>The selectable item that has been
+	 * 		unselected.</div></li></ul></li></ul>
 	 */
 	class QSelectable_UnselectedEvent extends QJqUiEvent {
 		const EventName = 'selectableunselected';
 	}
 	/**
-	 * This event is triggered during the select operation, on each element
-	 * 		removed from the selection.
+	 * <div>Triggered during the select operation, on each element removed from
+	 * 		the selection.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div>
+	 * 		<ul><li><div><strong>unselecting</strong></div> <div>Type:
+	 * 		<a>Element</a></div> <div>The current selectable item being
+	 * 		unselected.</div></li></ul></li></ul>
 	 */
 	class QSelectable_UnselectingEvent extends QJqUiEvent {
 		const EventName = 'selectableunselecting';
@@ -75,37 +104,41 @@
 	/* Custom "property" event classes for this control */
 
 	/**
-	 * @property boolean $Disabled Disables (true) or enables (false) the selectable. Can be set when
-	 * 		initialising (first creating) the selectable.
-	 * @property boolean $AutoRefresh This determines whether to refresh (recalculate) the position and size of
-	 * 		each selectee at the beginning of each select operation. If you have many
-	 * 		many items, you may want to set this to false and call the refresh method
-	 * 		manually.
-	 * @property mixed $Cancel Prevents selecting if you start on elements matching the selector.
-	 * @property integer $Delay Time in milliseconds to define when the selecting should start. It helps
-	 * 		preventing unwanted selections when clicking on an element.
-	 * @property integer $Distance Tolerance, in pixels, for when selecting should start. If specified,
-	 * 		selecting will not start until after mouse is dragged beyond distance.
-	 * @property mixed $Filter The matching child elements will be made selectees (able to be selected).
-	 * @property string $Tolerance Possible values: 'touch', 'fit'.
-	 * 
-	 * 
-	 * fit: draggable overlaps the droppable
-	 * 		entirely
-	 * touch: draggable overlaps the droppable any amount
+	 * @property mixed $AppendTo <div>Which element the selection helper (the lasso) should be appended
+	 * 		to.</div>
+	 * @property boolean $AutoRefresh <div>This determines whether to refresh (recalculate) the position and size
+	 * 		of each selectee at the beginning of each select operation. If you have
+	 * 		many items, you may want to set this to false and call the
+	 * 		<a><code>refresh()</code></a> method manually.</div>
+	 * @property mixed $Cancel <div>Prevents selecting if you start on elements matching the
+	 * 		selector.</div>
+	 * @property integer $Delay <div>Time in milliseconds to define when the selecting should start. This
+	 * 		helps prevent unwanted selections when clicking on an element.</div>
+	 * @property boolean $Disabled <div>Disables the selectable if set to <code>true</code>.</div>
+	 * @property integer $Distance <div>Tolerance, in pixels, for when selecting should start. If specified,
+	 * 		selecting will not start until the mouse has been dragged beyond the
+	 * 		specified distance.</div>
+	 * @property mixed $Filter <div>The matching child elements will be made selectees (able to be
+	 * 		selected).</div>
+	 * @property string $Tolerance <div>Specifies which mode to use for testing whether the lasso should
+	 * 		select an item. Possible values: 				<ul><li><code>"fit"</code>: Lasso
+	 * 		overlaps the item entirely.</li> 					<li><code>"touch"</code>: Lasso
+	 * 		overlaps the item by any amount.</li></ul></div>
 	 */
 
 	class QSelectableGen extends QPanel	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
-		/** @var boolean */
-		protected $blnDisabled = null;
+		/** @var mixed */
+		protected $mixAppendTo = null;
 		/** @var boolean */
 		protected $blnAutoRefresh = null;
 		/** @var mixed */
 		protected $mixCancel = null;
 		/** @var integer */
 		protected $intDelay;
+		/** @var boolean */
+		protected $blnDisabled = null;
 		/** @var integer */
 		protected $intDistance;
 		/** @var mixed */
@@ -124,10 +157,11 @@
 
 		protected function makeJqOptions() {
 			$strJqOptions = '';
-			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
+			$strJqOptions .= $this->makeJsProperty('AppendTo', 'appendTo');
 			$strJqOptions .= $this->makeJsProperty('AutoRefresh', 'autoRefresh');
 			$strJqOptions .= $this->makeJsProperty('Cancel', 'cancel');
 			$strJqOptions .= $this->makeJsProperty('Delay', 'delay');
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('Distance', 'distance');
 			$strJqOptions .= $this->makeJsProperty('Filter', 'filter');
 			$strJqOptions .= $this->makeJsProperty('Tolerance', 'tolerance');
@@ -174,44 +208,73 @@
 
 
 		/**
-		 * Remove the selectable functionality completely. This will return the
-		 * element back to its pre-init state.
+		 * <div>Removes the selectable functionality completely. This will return the
+		 * element back to its pre-init state.</div><ul><li><div>This method does not
+		 * accept any arguments.</div></li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * Disable the selectable.
+		 * <div>Disables the selectable.</div><ul><li><div>This method does not accept
+		 * any arguments.</div></li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * Enable the selectable.
+		 * <div>Enables the selectable.</div><ul><li><div>This method does not accept
+		 * any arguments.</div></li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * Get or set any selectable option. If no value is specified, will act as a
-		 * getter.
+		 * <div>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
+		 * <div>Type: <a>String</a></div> <div>The name of the option to
+		 * get.</div></li></ul>
+		 * @param $optionName
+		 */
+		public function Option($optionName) {
+			$this->CallJqUiMethod("option", $optionName);
+		}
+		/**
+		 * <div>Gets an object containing key/value pairs representing the current
+		 * selectable options hash.</div><ul><li><div>This method does not accept any
+		 * arguments.</div></li></ul>
+		 */
+		public function Option1() {
+			$this->CallJqUiMethod("option");
+		}
+		/**
+		 * <div>Sets the value of the selectable option associated with the specified
+		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
+		 * <div>Type: <a>String</a></div> <div>The name of the option to
+		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
+		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
-		public function Option($optionName, $value = null) {
+		public function Option2($optionName, $value) {
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * Set multiple selectable options at once by providing an options object.
+		 * <div>Sets one or more options for the
+		 * selectable.</div><ul><li><div><strong>options</strong></div> <div>Type:
+		 * <a>Object</a></div> <div>A map of option-value pairs to
+		 * set.</div></li></ul>
 		 * @param $options
 		 */
-		public function Option1($options) {
+		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * Refresh the position and size of each selectee element. This method can be
-		 * used to manually recalculate the position and size of each selectee
-		 * element. Very useful if autoRefresh is set to false.
+		 * <div>Refresh the position and size of each selectee element. This method
+		 * can be used to manually recalculate the position and size of each selectee
+		 * when the <a><code>autoRefresh</code></a> option is set to
+		 * <code>false</code>.</div><ul><li><div>This method does not accept any
+		 * arguments.</div></li></ul>
 		 */
 		public function Refresh() {
 			$this->CallJqUiMethod("refresh");
@@ -220,10 +283,11 @@
 
 		public function __get($strName) {
 			switch ($strName) {
-				case 'Disabled': return $this->blnDisabled;
+				case 'AppendTo': return $this->mixAppendTo;
 				case 'AutoRefresh': return $this->blnAutoRefresh;
 				case 'Cancel': return $this->mixCancel;
 				case 'Delay': return $this->intDelay;
+				case 'Disabled': return $this->blnDisabled;
 				case 'Distance': return $this->intDistance;
 				case 'Filter': return $this->mixFilter;
 				case 'Tolerance': return $this->strTolerance;
@@ -239,17 +303,13 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case 'Disabled':
-					try {
-						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
+				case 'AppendTo':
+					$this->mixAppendTo = $mixValue;
+				
+					if ($this->Rendered) {
+						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
 					}
+					break;
 
 				case 'AutoRefresh':
 					try {
@@ -276,6 +336,18 @@
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
 							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Disabled':
+					try {
+						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
