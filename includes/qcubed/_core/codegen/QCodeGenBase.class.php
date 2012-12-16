@@ -833,7 +833,7 @@
 			}
 
 			if ($strDelimiter && $objColumn->Comment && ($strLabelText = strstr($objColumn->Comment, $strDelimiter, true))) {
-				return addslashes($strLabelText);
+				return str_replace("'", "\\'", $strLabelText);
 			}
             return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
 		}
