@@ -131,7 +131,7 @@ FUNC;
 				case 'Height':
 					try {
 						if ($mixValue == 'auto') {
-							$this->intHeight = 'auto';
+							$this->mixHeight = 'auto';
 							if ($this->Rendered) {
 								$this->CallJqUiMethod("option", $strName, $mixValue);
 							}
