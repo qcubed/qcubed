@@ -25,6 +25,7 @@ class Option extends JqAttributes {
         $jsType = strtolower($jsType);
 		$jsType = preg_replace('/\([^\)]*\)/', '', $jsType); // erase possible function args
 		if (strchr($jsType, ',')) return 'mixed';
+		if (strchr($jsType, ' or ')) return 'mixed';
 		if (stripos($jsType, 'array') === 0) return 'array';
 		switch ($jsType) {
 		case 'boolean': return 'boolean';
@@ -40,10 +41,10 @@ class Option extends JqAttributes {
         case 'integer[]': return 'int[]';
 		case 'number': return 'integer';
         case 'number[]': return 'int[]';
-		case 'double': return 'double';
-        case 'double[]': return 'double[]';
-		case 'float': return 'double';
-        case 'float[]': return 'double[]';
+		case 'double': return 'float';
+        case 'double[]': return 'float[]';
+		case 'float': return 'float';
+        case 'float[]': return 'float[]';
 		case 'date': return 'QDateTime';
 		case 'date[]': return 'QDateTime[]';
 		case 'options': return 'array';
@@ -157,17 +158,16 @@ class Event extends Option
 		if (strpos($name, 'on') === 0) {
 			$name = substr($name, 2);
 		}
-		if (substr($jsType, 0, 8) == 'function') {
+		if (stripos($jsType, 'function') === 0) {
 			$subject = substr($jsType, 8);
-			$subject = str_replace(' ', '', $subject);
-			$tok = strtok($subject,"(),");
-			$a = array();
-			while($tok !== false){
-				$a[] = $tok;
-				$tok = strtok("),");
+			$subject = trim($subject, '()');
+			$this->arrArgs = array();
+			foreach (explode(',', $subject) as $arg) {
+				$arg = trim($arg);
+				$arg = preg_replace('/.*\s/', '', $arg);
+				$this->arrArgs[] = $arg;
 			}
 
-			$this->arrArgs = $a;
 			$this->eventName = $strQcClass . '_' . $name;
 		} else {
 			$this->eventName = $jsType;
@@ -194,14 +194,18 @@ class Method extends JqAttributes {
 		$args = explode(',', preg_replace('/.*\((.*)\)/', '$1', $signature));
 		for ($i = 0, $cnt = count($args); $i < $cnt; ++$i) {
 			$arg = trim($args[$i]);
+			if (!$arg)
+				continue;
 			if ($arg{0} == '"') {
 				// constant argument (most likely the name of the method itself)
 				$this->requiredArgs[] = $arg;
 				continue;
+			} else if ($i == 0) {
+				$this->requiredArgs[] = '"'.$origName.'"';
 			}
 			if ($arg{0} == '[') {
 				// optional arg
-				$arg = trim($arg, '[]');
+				$arg = trim($arg, '[] ');
 				$this->phpSignature .= '$'.$arg.' = null';
 				$this->optionalArgs[] = '$'.$arg;
 			} else {
@@ -213,6 +217,9 @@ class Method extends JqAttributes {
 			}
 		}
 		$this->phpSignature .= ')';
+		if (!$this->requiredArgs) {
+			$this->requiredArgs[] = '"'.$origName.'"';
+		}
 	}
 }
 
@@ -243,12 +250,13 @@ class JqDoc {
 
     protected function unique_name($name) {
         $i = 1;
-        while ($this->has_name($name)) {
-            $name .= $i;
+		$unique_name = $name;
+        while ($this->has_name($unique_name)) {
+			$unique_name = $name.$i;
             ++$i;
         }
-        $this->add_name($name);
-        return $name;
+        $this->add_name($unique_name);
+        return $unique_name;
     }
 
 	public function __construct($strJqClass = null, $strJqSetupFunc = null, $strQcClass = null, $strQcBaseClass = 'QPanel')
