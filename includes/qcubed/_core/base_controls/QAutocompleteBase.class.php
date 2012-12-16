@@ -211,7 +211,7 @@
 				$strJS .=sprintf('
 				.on("autocompletefocus",
 				function (event, ui) {
-					if ( /^key/.test(event.originalEvent.originalEvent.type) ) {
+					if ( /^key/.test(event.originalEvent.type) ) {
 				 		qcubed.recordControlModification("%s", "SelectedId", ui.item.id);
 					}
 				})', $this->ControlId);
