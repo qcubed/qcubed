@@ -129,6 +129,16 @@
 			return $strToReturn;
 		}
 		protected $intNextControlId = 1;
+		
+		/////////////////////////
+		// Helpers for AjaxActionId Generation
+		/////////////////////////
+		public function GenerateAjaxActionId() {
+			$strToReturn = sprintf('a%s', $this->intNextAjaxActionId);
+			$this->intNextAjaxActionId++;
+			return $strToReturn;
+		}
+		protected $intNextAjaxActionId = 1;
 
 		/////////////////////////
 		// Event Handlers
@@ -753,6 +763,8 @@
 				else
 					$strId = $_POST['Qform__FormControl'];
 				$strEvent = $_POST['Qform__FormEvent'];
+				
+				$strAjaxActionId = NULL;
 
 				if ($strId != '') {
 					// Does this Control which performed the action exist?
@@ -762,6 +774,9 @@
 
 						switch ($this->strCallType) {
 							case QCallType::Ajax:
+								$arTmp = explode('#',$strEvent);
+								$strEvent = $arTmp[0];
+								$strAjaxActionId = $arTmp[1];
 								$objActions = $objActionControl->GetAllActions($strEvent, 'QAjaxAction');
 								break;
 							case QCallType::Server:
@@ -851,7 +866,8 @@
 						if ($blnValid) {
 							if ($objActions) foreach ($objActions as $objAction) {
 								if ($strMethodName = $objAction->MethodName) {
-									$this->TriggerMethod($strId, $strMethodName);
+									if ( ($strAjaxActionId == NULL) || ($objAction->Id == NULL) || ($strAjaxActionId == $objAction->Id) )
+										$this->TriggerMethod($strId, $strMethodName);
 								}
 							}
 						}
