@@ -187,4 +187,60 @@
 			}
 		}
 	}
+	
+	<?php
+
+	/**
+	* 
+	* a custom event with event delegation
+	* With this event you can delegate events of child controls or any html element
+	* to a parent. By using the selector you can limit the event sources this event
+	* gets triggered from. You can use a css class (or any jquery selector) for
+	* $strSelector. Example ( new QCustomEvent("click",".remove",new QAjaxControlAction( ... )); )
+	* 
+	* This event can help you reduce the produced javascript to a minimum.
+	* One positive side effect is that this event will also work for html child elements added
+	* in the future (after the event was created).
+	* 
+	* @param $strEventName the name of the event i.e.: "click"
+	* @param $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()... 
+	* 
+	*/
+	class QCustomEvent extends QEvent{
+		protected $strEventName;
+		
+		public function __construct($strEventName, $strSelector= null,$strCondition = null,$intDelay = 0) {
+			$this->strEventName=$strEventName;
+			if($strSelector) {
+				$strSelector = str_replace('\"',"'",$strSelector);
+				$strSelector = str_replace('"',"'",$strSelector);
+				$this->strEventName .= '","'.$strSelector;
+			}
+			
+			try {
+			  parent::__construct($intDelay,$strCondition);
+			} catch (QCallerException $objExc) {
+			  $objExc->IncrementOffset();
+			  throw $objExc;
+			}
+		}
+		
+		public function __get($strName) {
+			switch ($strName) {
+				case 'EventName':
+					return $this->strEventName;
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+		
+	}
+
+?>
+
 ?>
