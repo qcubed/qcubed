@@ -774,9 +774,9 @@
 
 						switch ($this->strCallType) {
 							case QCallType::Ajax:
-								$arTmp = explode('#',$strEvent);
-								$strEvent = $arTmp[0];
-								$strAjaxActionId = $arTmp[1];
+								$arrTmp = explode('#',$strEvent);
+								$strEvent = $arrTmp[0];
+								$strAjaxActionId = $arrTmp[1];
 								$objActions = $objActionControl->GetAllActions($strEvent, 'QAjaxAction');
 								break;
 							case QCallType::Server:
