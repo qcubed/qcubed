@@ -195,7 +195,7 @@
 	* With this event you can delegate events of child controls or any html element
 	* to a parent. By using the selector you can limit the event sources this event
 	* gets triggered from. You can use a css class (or any jquery selector) for
-	* $strSelector. Example ( new QCustomEvent("click",".remove",new QAjaxControlAction( ... )); )
+	* $strSelector. Example ( new QJsDelegateEvent("click",".remove",new QAjaxControlAction( ... )); )
 	* 
 	* This event can help you reduce the produced javascript to a minimum.
 	* One positive side effect is that this event will also work for html child elements added
@@ -205,7 +205,7 @@
 	* @param $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()... 
 	* 
 	*/
-	class QCustomEvent extends QEvent{
+	class QJsDelegateEvent extends QEvent{
 		protected $strEventName;
 		
 		public function __construct($strEventName, $strSelector= null,$strCondition = null,$intDelay = 0) {
