@@ -774,9 +774,10 @@
 
 						switch ($this->strCallType) {
 							case QCallType::Ajax:
-								$arrTmp = explode('#',$strEvent);
-								$strEvent = $arrTmp[0];
-								$strAjaxActionId = $arrTmp[1];
+								// split up event class name and ajax action id: i.e.: QClickEvent#a3 => [QClickEvent, a3]
+								$arrTemp = explode('#',$strEvent);
+								$strEvent = $arrTemp[0];
+								$strAjaxActionId = $arrTemp[1];
 								$objActions = $objActionControl->GetAllActions($strEvent, 'QAjaxAction');
 								break;
 							case QCallType::Server:
@@ -865,8 +866,11 @@
 						// Go ahead and run the ServerActions or AjaxActions if Validation Passed and if there are Server/Ajax-Actions defined
 						if ($blnValid) {
 							if ($objActions) foreach ($objActions as $objAction) {
-								if ($strMethodName = $objAction->MethodName) {
-									if ( ($strAjaxActionId == NULL) || ($objAction->Id == NULL) || ($strAjaxActionId == $objAction->Id) )
+								if ($strMethodName = $objAction->MethodName) {	 
+									if ( ($strAjaxActionId == NULL) 		//if this call was not an ajax call
+									|| ($objAction->Id == NULL) 			// or the QAjaxAction derived action has no id set 
+															//(a possible way to add a callback that gets executed on every ajax call for this control) 
+									|| ($strAjaxActionId == $objAction->Id) ) 	//or the ajax action id passed from client side equals the id of the current ajax action
 										$this->TriggerMethod($strId, $strMethodName);
 								}
 							}
