@@ -208,19 +208,19 @@
 	class QJsDelegateEvent extends QEvent{
 		protected $strEventName;
 		
-		public function __construct($strEventName, $strSelector= null,$strCondition = null,$intDelay = 0) {
+		public function __construct($strEventName, $strSelector = null, $strCondition = null, $intDelay = 0) {
 			$this->strEventName=$strEventName;
-			if($strSelector) {
+			if ($strSelector) {
 				$strSelector = str_replace('\"',"'",$strSelector);
 				$strSelector = str_replace('"',"'",$strSelector);
 				$this->strEventName .= '","'.$strSelector;
 			}
 			
 			try {
-			  parent::__construct($intDelay,$strCondition);
+				parent::__construct($intDelay,$strCondition);
 			} catch (QCallerException $objExc) {
-			  $objExc->IncrementOffset();
-			  throw $objExc;
+				$objExc->IncrementOffset();
+				throw $objExc;
 			}
 		}
 		
