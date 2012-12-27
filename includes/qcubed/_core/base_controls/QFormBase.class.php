@@ -867,10 +867,10 @@
 						if ($blnValid) {
 							if ($objActions) foreach ($objActions as $objAction) {
 								if ($strMethodName = $objAction->MethodName) {	 
-									if ( ($strAjaxActionId == NULL) 		//if this call was not an ajax call
-									|| ($objAction->Id == NULL) 			// or the QAjaxAction derived action has no id set 
+									if (($strAjaxActionId == NULL) 			//if this call was not an ajax call
+										|| ($objAction->Id == NULL) 		// or the QAjaxAction derived action has no id set 
 															//(a possible way to add a callback that gets executed on every ajax call for this control) 
-									|| ($strAjaxActionId == $objAction->Id) ) 	//or the ajax action id passed from client side equals the id of the current ajax action
+										|| ($strAjaxActionId == $objAction->Id)) //or the ajax action id passed from client side equals the id of the current ajax action
 										$this->TriggerMethod($strId, $strMethodName);
 								}
 							}
