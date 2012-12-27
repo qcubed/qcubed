@@ -11,10 +11,12 @@
 		<ul>
 		<li>QQ::OrderBy(array/list of QQNodes or QQConditions)</li>
 		<li>QQ::GroupBy(array/list of QQNodes)</li>
+		<li>QQ::Having(QQSubSqlNode)</li>
 		<li>QQ::Count(QQNode, string)</li>
 		<li>QQ::Minimum(QQNode, string)</li>
 		<li>QQ::Maximum(QQNode, string)</li>
 		<li>QQ::Average(QQNode, string)</li>
+		<li>QQ::Sum(QQNode, string)</li>
 		<li>QQ::Expand(QQNode)</li>
 		<li>QQ::ExpandAsArray(QQNode for an Association Table)</li>
 		<li>QQ::LimitInfo(integer[, integer = 0])</li>
@@ -28,9 +30,15 @@
 		order, add a "false" after the QQ Node.  So for example, <b>QQ::OrderBy(QQN::Person()->LastName, false,
 		QQN::Person()->FirstName)</b> will do the SQL equivalent of "ORDER BY last_name DESC, first_name ASC".<br/><br/>
 
-		<b>Count</b>, <b>Minimum</b>, <b>Maximum </b>and <b>Average</b> are aggregation-related clauses, and
-		only work when <b>GroupBy</b> is specified.  These methods take in an attribute name, which
-		can then be restored using <b>GetVirtualAttribute()</b> on the object.<br/><br/>
+		<b>Count</b>, <b>Minimum</b>, <b>Maximum </b>, <b>Average</b> and <b>Sum</b> are aggregation-related clauses, and
+		only work when <b>GroupBy</b> is specified.  These methods take in an attribute name. By calling
+		<b>GetVirtualAttribute()</b> on the object and passing that attribute name, you can see the result 
+		of the corresponding function.<br/><br/>
+		
+		<b>Having</b> adds a SQL Having clause, which allows you to filter the results of your query based
+		on the results of the aggregation-related functions. <b>Having</b> requires a Subquery, which is a SQL code
+		snippet you create to specify the criteria to filter on. (See the Subquery section
+		later in this tutorial for more information on those).<br/><br/>
 
 		<b>Expand</b> and <b>ExapandAsArray</b> deals with Object Expansion / Early Binding.  More on this
 		can be seen in the <a href="../more_codegen/early_bind.php">Early Binding of Related Objects example</a>.<br/><br/>
@@ -117,5 +125,24 @@
 		_p('<br/>', false);
 	}
 ?>
+
+	<h3>Select all Projects with more than 5 team members. </h3>
+	<p><i>Using a Having clause to further limit group functions</i></p>
+<?php
+	$objProjectArray = Project::QueryArray(
+		QQ::All(),
+		QQ::Clause(
+			QQ::GroupBy(QQN::Project()->Id),
+			QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
+			QQ::Having (QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId))
+		)
+	);
+
+	foreach ($objProjectArray as $objProject) {
+		_p($objProject->Name . ' (' . $objProject->GetVirtualAttribute('team_member_count') . ' team members)');
+		_p('<br/>', false);
+	}
+?>
+
 
 <?php require('../includes/footer.inc.php'); ?>
