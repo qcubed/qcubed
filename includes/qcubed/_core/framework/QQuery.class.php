@@ -1,4 +1,12 @@
 <?php
+
+	/*
+	*	QQuery.class.php
+	*
+	*	Classes to simplify the creation of SQL statements.
+	*/
+	
+	
 	/**
 	 * The abstract QQBaseNode class
 	 * @property-read QQBaseNode $_ParentNode
