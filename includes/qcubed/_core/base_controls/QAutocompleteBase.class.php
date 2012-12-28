@@ -124,7 +124,8 @@
 			// empty action to tie the action to the data binder method name
 			$objEvent = new QAutocomplete_SourceEvent();
 			$objAction->Event = $objEvent;
-			$strBody = $objAction->RenderScript($this);
+			$strBody = 'this.response = response;';	// response is a javascript closure, and we have to save it to use it later.
+			$strBody .= $objAction->RenderScript($this);
 			$this->mixSource = new QJsClosure($strBody, array('request', 'response'));
 					
 			$this->RemoveAllActions(QAutocomplete_SourceEvent::EventName);
