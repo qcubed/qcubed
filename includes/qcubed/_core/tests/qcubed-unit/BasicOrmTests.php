@@ -157,5 +157,21 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertEqual($objMilestone->Project->ManagerPerson->FirstName, "Karen", "Person 7 has first name of Karen");
 		
 	}
+	
+	public function testHaving() {
+		$objItems = Project::QueryArray(
+			QQ::All(),
+			QQ::Clause(
+				QQ::GroupBy(QQN::Project()->Id),
+				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
+				QQ::Having(QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId))
+			)
+		);
+		
+		$this->assertEqual(sizeof($objItems), 2, "2 projects found");
+		
+		$this->assertEqual($objItems[0]->Name, "State College HR System", "Project " . $objItems[1]->Name . " found");
+		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for project " . $objItems[1]->Name);	
+	}
 }
 ?>
