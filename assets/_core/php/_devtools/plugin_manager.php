@@ -76,8 +76,6 @@
 				"'>online repository</a>.</p>";
 			$this->dlgUpload->btnUpload->Text = "Upload";
 			$this->dlgUpload->btnCancel->Text = "Cancel";
-			$this->dlgUpload->SetCustomStyle("background-color", "rgb(238, 255, 221)");
-			$this->dlgUpload->SetCustomStyle("padding", "10px");
 		}
 		
 		public function dlgUpload_done($strFormId, $strControlId, $strParameter) {
