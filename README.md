@@ -1,112 +1,219 @@
-# Welcome to QCubed!
+# Getting started with QCubed
 
 ## Releases
-**Newest stable release: [version 2.1.1, released on Dec 1, 2012](https://github.com/qcubed/framework/archive/2.1.1.zip)**. See the [ChangeLog](#Changes) for what's new in this release.
+**Newest stable release: [version 2.1.1, released on Dec 1, 2012](https://github.com/qcubed/framework/archive/2.1.1.zip)**.
 
-Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads). 
+Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads).
 
 ## What is QCubed?
 
-QCubed (pronounced 'Q' - cubed) is a PHP5 Model-View-Controller framework. The goal of the framework is to save the time for developers around mundane, repeatable tasks - allowing them to concentrate on things that are useful AND fun.
+QCubed (pronounced 'Q' - cubed) is a PHP5 Model-View-Controller framework. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun.
 
-How many times have you written that SQL query, and then parsed out the results? How about that time when you had to create a form with validation logic? How about a situation where you had to move your database back-end from MySQL to PostgreSQL or another database?
+## The Code Generator
 
-All of these situations, and many more, can be simplified with QCubed. There are two key elements to the framework: the Code Generator, and the event-driven, stateful user interface framework (QForms). 
+The Code Generator creates PHP classes based on your database schema. It uses the concept of ORM, [object-relational mapping](http://en.wikipedia.org/wiki/Object-relational_mapping), to practically create your whole model layer for you.
+Codegen can take advantage of foreign key relationships and field constraints to generate ready-to-use data models complete with validation routines and powerful CRUD methods, allowing you to manipulate objects instead of constantly issuing SQL queries.
 
-### The Code Generator
-The Code Generator creates PHP classes based on your database schema. It uses the concept of ORM, [object-relational mapping](http://en.wikipedia.org/wiki/Object-relational_mapping), to map your DB tables to PHP classes, to allow you to manipulate objects, instead of constantly issuing SQL queries. One-to-many relationship? No problem. Association tables? No problem. Ease of transitioning between RDBMS systems? That's the whole point. Object-oriented querying? We got it.
+More info as well as examples are available online at <http://examples.qcu.be/>
 
-### User Interface Library
-QForms provide a framework for a true model-view-controller infrastructure in your application. Using standard HTML, create a layout of your page (view). Insert a few controls into that HTML to make it a template that will display the form data. Define those controls and their logic in a PHP class that derives from QForm (controller). Use the code-generated ORM classes to read and write from the database (model).
+### Object-oriented querying
 
-Customize and extend any component of the system: override properties of a QForm; create your own custom control; use a combination of controls to define a reusable QPanel that can be used as a building block across multiple pages. Abstract out the complex database logic into customizable ORM classes. 
+Using QQueries allows for simple yet powerful loading of models, all generated ORM classes have Query methods and QQNodes. By using these methods, getting a complex subset of data is pretty straightforward - and can be used on almost any relational database.
 
-Interested? Check out [QCubed video screencasts](http://qcu.be/content/video-screencasts) or [text-based QCubed tutorials](http://trac.qcu.be/projects/qcubed/wiki/Tutorials). 
+## User Interface Library
 
-## Changes
-### Release 2.1.1
-[845](http://trac.qcu.be/projects/qcubed/ticket/845) QDialog rendering events problems when modified
+QCubed uses the concept of a QForm to keep form state between POST transactions. A QForm serves as the controller and can contain QControls which are UI components.
 
-[861](http://trac.qcu.be/projects/qcubed/ticket/861) AJAX is too async in qcubed
+All QControls (including QForm itself) can use a template which is the view layer, completing the MVC structure.
 
-[813](http://trac.qcu.be/projects/qcubed/ticket/813) Immediate patch for release 2.1
+QControls can take advantage of the QForm's FormState to update themselves through Ajax callbacks as easily as synchronous server POSTs. All jQuery UI core widgets are available as QControls.
 
-[816](http://trac.qcu.be/projects/qcubed/ticket/816) QDialog re-parenting causes problems for stacked dialogs
+Some QControls include:
+- QDialog
+- QTextBox
+- QListBox
+- QTabs
+- QAccordion
 
-[818](http://trac.qcu.be/projects/qcubed/ticket/818) HTMLPurifier supported XSS protection not working on 2.1
+A full list and examples are available online at <http://examples.qcu.be/>
 
-[835](http://trac.qcu.be/projects/qcubed/ticket/835) Utilizing comments on table columns (in database definitions) for meta control {Create()} methods
+### Plugins
 
-[838](http://trac.qcu.be/projects/qcubed/ticket/838) QDbBackedSessionHandler functionality was broken in 2.1 release, fixed again.
+Through its plugin system, QCubed makes it easy to package and deliver enhancements and additions to the core codebase. The plugin project is located at <https://github.com/qcubed/plugins> and contains an exhaustive list of contributed plugins.
 
-[839](http://trac.qcu.be/projects/qcubed/ticket/839) codegen template overrides not working
+## Learn more
+Interested? Check out [QCubed video screencasts](http://qcu.be/content/video-screencasts) or [text-based QCubed tutorials](http://trac.qcu.be/projects/qcubed/wiki/Tutorials).
 
-[840](http://trac.qcu.be/projects/qcubed/ticket/840) Incorrect draft filenames
+The [github wiki](https://github.com/qcubed/framework/wiki) will eventually supersede these.
 
-[850](http://trac.qcu.be/projects/qcubed/ticket/850) FormStates Garbage Collection made public
+* * *
 
-[853](http://trac.qcu.be/projects/qcubed/ticket/853) QAutocomplete remote JSON DataSource Problem after unsuccessful validation
+## Installation
 
-[870](http://trac.qcu.be/projects/qcubed/ticket/870) Applying CheckRemoteAdmin for the start page
+### File System
 
-[821](http://trac.qcu.be/projects/qcubed/ticket/821) fix command line codegen
+Copy the contents of wwwroot/* to the ROOT level of your web site's DOCROOT
+(also known as DocumentRoot, webroot, wwwroot, etc., depending on which platform
+you are using).
 
-[823](http://trac.qcu.be/projects/qcubed/ticket/823) QDraggable not recording results correctly
+At a later point, you may choose to move folders around in your system,
+putting them in subdirectories, etc.  QCubed offers the flexibility to have
+these framework files in any location.
 
-[824](http://trac.qcu.be/projects/qcubed/ticket/824) Wrapper-less controls: change in QControl.class.php got lost in 2.1
+But for now, since we're getting started, we'll provide you with the instructions
+on how to finish the installation assuming that you're keeping the entire
+QCubed installation together as originally released.
 
-[825](http://trac.qcu.be/projects/qcubed/ticket/825) QDraggable Handle error
 
-[826](http://trac.qcu.be/projects/qcubed/ticket/826) QDialog not receiving events
+### Modify Configuration
 
-[827](http://trac.qcu.be/projects/qcubed/ticket/827) Error when using QDialog with no properties
+Inside of wwwroot/configuration/includes you'll find the configuration.inc.php file.  You'll need
+to open it to specify the actual location of your __DOCROOT__.
 
-[828](http://trac.qcu.be/projects/qcubed/ticket/828) QDateTime returns with TimeNull = true when passed a date in IsoCompressed (20120402082830)
+IMPORTANT NOTE FOR WINDOWS USERS:
+Please note that all paths should use standard "forward" slashes instead of
+"backslashes".  So windows paths would look like "c:/wwwroot" instead of
+"c:\wwwroot".
 
-[832](http://trac.qcu.be/projects/qcubed/ticket/832) QResizable not accurate in its dimensions, and also should update object width and height
+Also, if you are putting QCubed into a SUBDIRECTORY of DOCROOT, then be sure
+to set the __SUBDIRECTORY__ constant to whatever the subdirectory is
+within DOCROOT.
 
-[842](http://trac.qcu.be/projects/qcubed/ticket/842) problem in collabsable QAccordion with no active panels
+If you are using QCubed inside of a Virtual Directory (also known as a Directory
+Alias), be sure to specify the __VIRTUAL_DIRECTORY__ constant, too.
 
-[844](http://trac.qcu.be/projects/qcubed/ticket/844) handle IP ranges in remote admin check
+Next, specify a location to put your "_devtools_cli" directory (this could be either
+inside or outside of docroot), and update the __DEVTOOLS_CLI__ constant accordingly.
 
-[846](http://trac.qcu.be/projects/qcubed/ticket/846) Over-optimization in codegen for cache key creation
+Finally, be sure to update the DB_CONNECTION_1 serialized array constant with the
+correct database connection information for your database.
 
-[847](http://trac.qcu.be/projects/qcubed/ticket/847) "QDatepicker does not supports ""-1d"" or ""+1m"" syntax for minDate/maxDate"
+(Information on all these constants are in configuration.inc.php, itself.)
 
-[849](http://trac.qcu.be/projects/qcubed/ticket/849) QDataGrid top (header) row height fixed
+> We are working on a guided installation to ease this step.
 
-[851](http://trac.qcu.be/projects/qcubed/ticket/851) Upgrading HTMLPurifier from 4.3.0 to 4.4.0
+### Include prepend.inc.php
 
-[855](http://trac.qcu.be/projects/qcubed/ticket/855) The codegen fails to handle tables with only one id column
+Calling require() on prepend.inc.php is necessary to include the framework in your PHP file.
 
-[856](http://trac.qcu.be/projects/qcubed/ticket/856) New methods in codegened classes to extract info about the class itself.
+Note that by default, this is already setup for you in:
+* /index.php
+* /sample.php
+* /_devtools/codegen.php
+* /form_drafts/index.php
+* All the /examples/
+* Any code generated form_draft page
 
-[857](http://trac.qcu.be/projects/qcubed/ticket/857) Config Checker failing when includes directory is out of the web directory
+To change this or for any new PHP scripts you want to write, simply make sure any PHP
+script that wants to utilize the QCubed Framework STARTS with:
+	require('includes/prepend.inc.php');
+on the very first line.
 
-[858](http://trac.qcu.be/projects/qcubed/ticket/858) Generate PHPDoc Comments on QPanel variables
+NOTE that the "includes/configuration/prepend.inc.php" may be different -- it depends on the relative
+path to the includes/prepend.inc.php file.  So if you have a docroot structure like:
+	docroot/
+	docroot/pages/foo/blah.php
+	docroot/includes/configuration/prepend.inc.php
+then in blah.php, the require line will be:
+	require('../../includes/configuration/prepend.inc.php');
 
-[859](http://trac.qcu.be/projects/qcubed/ticket/859) QControl.class.php and QcontrolBase.class.php is problematic...
+Note that if you move your .php script to another directory level, you may need to update
+the relative path to prepend.inc
 
-[871](http://trac.qcu.be/projects/qcubed/ticket/871) PHPDocs added
+If you specified the includes/ in your includes_path in your php.ini file (see optional
+STEP FIVE below), then all you need to do is have
+	require('prepend.inc.php');
+at the top of each file (no need to specify a relative path).
 
-[811](http://trac.qcu.be/projects/qcubed/ticket/811) Autoloading Custom files, making use of the existing directories
+### File Permissions
 
-[814](http://trac.qcu.be/projects/qcubed/ticket/814) Defining the External Libraries directory in configuration.inc.php
+Because the code generator generates files in multiple locations, you want to be sure that the
+webserver process has permissions to write to the docroot.
 
-[817](http://trac.qcu.be/projects/qcubed/ticket/817) QDbBackedFormStateHandler additional comments for MySQL
+The simplest way to do this is just to allow full access to the docroot for everyone.  While this
+is obviously not recommended for production environments, if you are reading this, I think it is
+safe to assume you are working in a development environment. =P
 
-[830](http://trac.qcu.be/projects/qcubed/ticket/830) Adding Licensing info for HTMLPurifier Library
+On Unix/Linux, simply run "chmod -R ugo+w" on your docroot directory.
 
-[833](http://trac.qcu.be/projects/qcubed/ticket/833) QDraggable cannot take jQuery selector as Handle
+On Windows, you will want to right-click on the docroot folder and select "Properties",
+go to the "Security" tab, Add a "Everyone" user, and specify that "Everyone" has "Full Control".
+Also, on the "general" tab, make sure that "Read-Only" is unchecked.  If asked, be sure to
+apply changes to this folder and all subfolders.
 
-[837](http://trac.qcu.be/projects/qcubed/ticket/837) Delete QAutocompleteListItem and move support to QListItem
+If this doesn't work, an additional task would be to use Start - Control Panel - Administrative Tools
+- Computer Management - Local Users and Groups - Users.  Look for a user with a name like
+IUSR_ComputerName (where ComputerName is your computer name).  Right-click on this user then
+Properties - Member of.  If it just shows Guests, make sure it's selected.  And then finally
+right-click on your QCubed folder, select Properties, and add the group Guests with Full Control.
 
-[854](http://trac.qcu.be/projects/qcubed/ticket/854) Updating Simple HTML Parser in the jquery_ui_gen directory
 
-[863](http://trac.qcu.be/projects/qcubed/ticket/863) Blank Attributes in QLabels
 
-[864](http://trac.qcu.be/projects/qcubed/ticket/864) Improvement for QFolder class
+### (Optional) Set up the include path
 
-[868](http://trac.qcu.be/projects/qcubed/ticket/868) QDbBackedSessionHandler can't use database where qc_session is first table in database
+NOTE THAT THIS STEP IS OPTIONAL!  While this adds a VERY slight benefit from a
+convenience standpoint, note that doing this will also have a slight performance cost,
+and also may cause complications if trying to integrate with other PHP frameworks.
 
-[819](http://trac.qcu.be/projects/qcubed/ticket/819) Missing PHPDOC comment on method QApplication::QueryString
+Starting with Qcodo 0.2.13, you no longer need to update the PHP include_path
+to run Qcodo.  However, you may still want to update the include_path for any
+of the following reasons:
+* All PHP scripts will only need to have "require('prepend.inc.php')" without needing
+  to specify a relative path.  This makes file management slightly easier; whenever
+  you want to move your files in and out of directories/subdirectories, you can do
+  so without needing to worry to update the relative paths in your "require"
+  statement (see STEP THREE for more information)
+* With the include_path in place, you can also easily place other include files
+  (like headers, footers, other libraries, etc.) in the includes/ directory, and
+  then you can include them, too, without worrying about relative paths
+
+Again, NOTE THAT THIS STEP IS OPTIONAL.
+
+If you wish to do this, then the PREFERRED way of doing this is simply edit your
+PHP.INI file, and set the include path to:
+	.;c:\path\to\DOCROOT\includes\configuration (for windows)
+		or
+	.:/path/to/DOCROOT/includes/configuration (for unix)
+(If you put QCubed into a subdirectory, then you want to make sure to specify it
+in include_path by specifying /path/to/DOCROOT/subdir/includes/configuration)
+
+NOTE: the "current directory" marker must be present (e.g. the ".;" or the ".:" at
+the beginning of the path)
+
+Now, depending on your server configuration, ISP, webhost, etc., you may
+not necessarily have access to the php.ini file on the server.  SOME web servers
+(e.g. Apache) will allow you to make folder-level or virtualhost directives
+to the php.ini file.  See the PHP documentation for more information.
+
+
+ALTERNATIVELY, if you like the idea of being able to simply have
+"require('prepend.inc.php')" with no relative path inforamtion at the top of your
+pages, but if you are unable for whatever reason to set the include_path, then you
+could use one of the following "set_include_path" lines at the top of each
+web-accessed *.php file/script in your web application.
+
+IMPORTANT NOTE: Because the Code Generator can also generate some of your
+web-accessed *.php files, you will need to ALSO update the codegen template files
+	DOCROOT/includes/qcodo/_core/codegen/templates/db_orm_edit_form_draft.tpl
+	DOCROOT/includes/qcodo/_core/codegen/templates/db_orm_list_form_draft.tpl
+to have the same "set_include_path" line at the top.
+
+The line to choose depends on whether you're running the PHP engine as a Plug-In/Module
+or a CGI (and of course, keep in mind that if you threw QCubed within a subdirectory of
+DOCROOT, be sure to specify that in the line you select).
+
+Use this if running PHP as a Apache/IIS/Etc. Plug-in or Module
+set_include_path(sprintf('.%s%s/includes', PATH_SEPARATOR, $_SERVER['DOCUMENT_ROOT']));
+
+Use this if running PHP as a CGI executable
+set_include_path(sprintf('.%s%s/includes', PATH_SEPARATOR, substr($_SERVER['SCRIPT_FILENAME'], 0, strlen($_SERVER['SCRIPT_FILENAME']) - strlen($_SERVER['SCRIPT_NAME']))));
+
+* * *
+
+## Latest commits
+
+A list of the latest changes is available at https://github.com/qcubed/framework/commits/master
+
+## Credits
+
+QCubed was born out of QCodo, and uses jQuery UI libraries.
