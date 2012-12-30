@@ -205,7 +205,7 @@
 	* @param $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()... 
 	* 
 	*/
-	class QJsDelegateEvent extends QEvent{
+	class QOnEvent extends QEvent{
 		protected $strEventName;
 		
 		public function __construct($strEventName, $strSelector = null, $strCondition = null, $intDelay = 0) {
