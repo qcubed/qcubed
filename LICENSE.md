@@ -1,0 +1,35 @@
+# QCubed Copyright and License
+
+Unless otherwise specified, all files in the QCubed Development Framework
+are under the following copyright and licensing policies:
+
+The QCubed Development Framework is distributed by the QCubed Project
+under the terms of the MIT License.  More information can be found at
+http://www.opensource.org/licenses/mit-license.php
+
+Copyright (c) 2001 - 2012, Quasidea Development, LLC, QCubed Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+========== THIRD PARTY LIBRARIES ==========
+The HTMLPurifier Library is an external (third party) library included in the
+QCubed framework and is licensed under the LGPL license. Usage of HTMLPurifier
+with QCubed is thus limited by LGPL license. Please read the
+includes/external_libraries/htmlpurifier/LICENSE file for more on licensing of
+HTMLPurifier library.
