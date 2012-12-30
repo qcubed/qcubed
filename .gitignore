@@ -1,2 +1,7 @@
 *~
 .idea
+nbproject
+/nbproject/private/
+vendor/
+includes/tmp/cache/i18n.po/
+includes/configuration/configuration.inc.php
