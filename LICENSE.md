@@ -1,3 +1,5 @@
+# QCubed Copyright and License
+
 Unless otherwise specified, all files in the QCubed Development Framework
 are under the following copyright and licensing policies:
 
