@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions" style="max-height: none">
-		<h1 class="instruction_title">Make Your Own Plugin, Part 1: Plugin Components</h1>
+		<h1>Make Your Own Plugin, Part 1: Plugin Components</h1>
 		If you've written a component that you think may be broadly usable for
 		the QCubed community, it would be amazing if you took a few minutes to
 		wrap it up nicely as a plugin - this would help everyone install your

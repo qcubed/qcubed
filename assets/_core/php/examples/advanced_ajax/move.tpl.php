@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Making a Control Moveable</h1>
+	<div id="instructions">
+		<h1>Making a Control Moveable</h1>
 		Here we demonstrate the moveable controls capability of QCubed, also known as 
 		"Drag and Drop". All dragging, dropping and resizing capabilities are implemented
 		through an interface to JQuery UI. Seeing the examples and reviewing the documentation

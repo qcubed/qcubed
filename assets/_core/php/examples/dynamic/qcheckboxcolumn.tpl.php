@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Using the QCheckBoxColumn</h1>
+	<div id="instructions">
+		<h1>Using the QCheckBoxColumn</h1>
 		<p>In this example we will take our Paginated <b>QDataGrid</b>, and add a column which has a
 		"Select" checkbox.  Sound familiar? Yep, <a href="select.php">the last example </a> achieved 
 		the same goal by creating checkbox controls on the fly. Well, this time, we're going to do it 

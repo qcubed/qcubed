@@ -8,8 +8,8 @@
 		$intSectionToShow = 1; // show first section by default
 	}
 ?>
-		<div class="instructions">
-			<div class="instruction_title">QCubed Examples Site</div>
+		<div id="instructions">
+			<h1>QCubed Examples Site</h1>
 			
 			<p>This is a collection of many small examples that demonstrate the functionality
 			in QCubed.  Later examples tend to build upon functionality or concepts that are
@@ -25,42 +25,9 @@
 			for more information.</p>
 		</div>
 		
-		<script type="text/javascript">
-			function DisplayPart(strPartId) {
-				switch (strPartId) {
-					case "1":
-						document.getElementById("part1").style.display = "block";
-						document.getElementById("part2").style.display = "none";
-						document.getElementById("part3").style.display = "none";
+		
 
-						document.getElementById("link1").className = "main_navselected";
-						document.getElementById("link2").className = "main_navlink";
-						document.getElementById("link3").className = "main_navlink";
-						break;
-					case "2":
-						document.getElementById("part1").style.display = "none";
-						document.getElementById("part2").style.display = "block";
-						document.getElementById("part3").style.display = "none";
-						
-						document.getElementById("link1").className = "main_navlink";
-						document.getElementById("link2").className = "main_navselected";
-						document.getElementById("link3").className = "main_navlink";
-						break;
-					case "3":
-						document.getElementById("part1").style.display = "none";
-						document.getElementById("part2").style.display = "none";
-						document.getElementById("part3").style.display = "block";
-						
-						document.getElementById("link1").className = "main_navlink";
-						document.getElementById("link2").className = "main_navlink";
-						document.getElementById("link3").className = "main_navselected";
-						break;
-				}
-				return false;
-			}
-		</script>
-
-		<div class="main_navigator">
+		<div class="main_navigator ui-widget ui-corner-all">
 		<a id="link1" href="<?php _p(QApplication::$ScriptName) ?>" onclick="return DisplayPart('1')" class="<?php _p(($intSectionToShow == 1)? "main_navselected":"main_navlink"); ?>">The Code Generator</a>
 		 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
 		<a id="link2" href="<?php _p(QApplication::$ScriptName) ?>/2" onclick="return DisplayPart('2')" class="<?php _p(($intSectionToShow == 2)? "main_navselected":"main_navlink"); ?>">The QForm and QControl Library</a>
@@ -77,8 +44,7 @@
 					<div id="part1" <?php if($intSectionToShow != 1){ _p('style="display: none;"', false); } ?>>
 					<div class="main_info">
 						<p><strong>The Code Generator</strong> is at the heart of the Model in the MVC (Model, View, Controller) architecture.
-						It uses the data model you have defined to create all your data objects, relationships and CRUD
-						functionality.</p>
+						It uses the data model you have defined to create all your data objects, relationships and <abbr title="Create, Restore, Update, Delete">CRUD</abbr> functionality.</p>
 						
 						<p>Sections 1 - 3 look specifically at the <strong>Code Generator</strong>, the <strong>Object Relational Model</strong> it creates, and the
 						<strong>QCubed Query</strong> library which powers it.</p>
@@ -92,7 +58,7 @@
 					</blockquote></div>
 					<div id="part2" <?php if($intSectionToShow != 2){ _p('style="display: none;"', false); } ?>>
 					<div class="main_info">
-						<p>QForms is a <strong>stateful, event-driven architecture for web-based forms</strong>, providing the display and
+						<p><em>QForms</em> is a <strong>stateful, event-driven architecture for web-based forms</strong>, providing the display and
 						presentation functionality for QCubed.  Basically, it is your "V" and "C" of the MVC architecture.</p>
 			
 						<p>Sections 4 - 10 are examples on how to use the <strong>QForm</strong> and <strong>QControl</strong> libraries
@@ -107,8 +73,8 @@
 					</blockquote></div>
 					<div id="part3" <?php if($intSectionToShow != 3){ _p('style="display: none;"', false); } ?>>
 					<div class="main_info">
-						<p>Beyond the <strong>Code Generator</strong> and the <strong>Qform Library</strong>, QCubed also many other modules and features
-						that is useful for web application developers.</p>
+						<p>Beyond the <strong>Code Generator</strong> and the <strong>QForm Library</strong>, QCubed also has many other modules and features
+						that are useful for web application developers.</p>
 					</div>
 					<blockquote>
 <?php
@@ -128,6 +94,39 @@
 ?>
 		</blockquote></div>
 
-<?php
-	require('includes/footer.inc.php');
-?>
+<script type="text/javascript">
+	function DisplayPart(strPartId) {
+		switch (strPartId) {
+			case "1":
+				document.getElementById("part1").style.display = "block";
+				document.getElementById("part2").style.display = "none";
+				document.getElementById("part3").style.display = "none";
+
+				document.getElementById("link1").className = "main_navselected";
+				document.getElementById("link2").className = "main_navlink";
+				document.getElementById("link3").className = "main_navlink";
+				break;
+			case "2":
+				document.getElementById("part1").style.display = "none";
+				document.getElementById("part2").style.display = "block";
+				document.getElementById("part3").style.display = "none";
+
+				document.getElementById("link1").className = "main_navlink";
+				document.getElementById("link2").className = "main_navselected";
+				document.getElementById("link3").className = "main_navlink";
+				break;
+			case "3":
+				document.getElementById("part1").style.display = "none";
+				document.getElementById("part2").style.display = "none";
+				document.getElementById("part3").style.display = "block";
+
+				document.getElementById("link1").className = "main_navlink";
+				document.getElementById("link2").className = "main_navlink";
+				document.getElementById("link3").className = "main_navselected";
+				break;
+		}
+		return false;
+	}
+</script>
+
+<?php require('includes/footer.inc.php'); ?>

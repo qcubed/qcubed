@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">QCubed and Foreign Key Relationships</h1>
+	<div id="instructions">
+		<h1>QCubed and Foreign Key Relationships</h1>
 		In addition to your basic CRUD functionality, QCubed will also analyze the Foreign Key relationships
 		in your database to generate relationships between your objects.<br/><br/>
 		

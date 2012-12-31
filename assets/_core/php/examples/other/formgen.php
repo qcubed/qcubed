@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions" style="max-height: none">
-		<h1 class="instruction_title">Integrating QForms and the Code Generator</h1>
+		<h1>Integrating QForms and the Code Generator</h1>
 		
 		With the understanding of how the <b>Code Generator</b> can generate your data
 		objects which is the heart of your <b>Model</b>, and with the examples

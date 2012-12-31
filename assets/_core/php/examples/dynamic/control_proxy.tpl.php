@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Using a QControlProxy to Receive Events</h1>
+	<div id="instructions">
+		<h1>Using a QControlProxy to Receive Events</h1>
 		Sometimes you may want to create buttons, links or other HTML items which can "trigger" a Server or Ajax
 		action without actually creating a control.  The typical example of this is if you want to dynamically
 		create a large number of links or buttons (e.g. in a <b>QDataGrid</b> or <b>QDataRepeater</b>) which would trigger

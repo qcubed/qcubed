@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Late Binding: The Default Load Method</h1>
+	<div id="instructions">
+		<h1>Late Binding: The Default Load Method</h1>
 		By default, any object with related objects (e.g. in our <b>Examples Site Database</b>, an example
 		of this is how the <b>Project</b> object has a related <b>ManagerPerson</b> object) will perform
 		"late binding" on that related object.<br/><br/>

@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Security: Cross-Site Scripting (XSS) Prevention</h1>
+	<div id="instructions">
+		<h1>Security: Cross-Site Scripting (XSS) Prevention</h1>
 		Cross-site scripting, or XSS, is a type of software vulnerability that allows attackers to inject JavaScript
 		into web pages viewed by other users. This attack, if executed successfully, can provide the attacker
 		a way to steal other users' cookies, thus enabling them to gain unauthorized access to your website. 

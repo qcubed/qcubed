@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Using Association Tables</h1>
+	<div id="instructions">
+		<h1>Using Association Tables</h1>
 		QCubed also supports handling many-to-many relationships.  Typically, many-to-many relationships are
 		mapped in the database using an <b>Association Table</b> (sometimes also called a <b>Mapping</b>
 		or a <b>Join Table</b>).  It is basically a two-column table where both

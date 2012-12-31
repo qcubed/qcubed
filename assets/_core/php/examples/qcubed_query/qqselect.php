@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div class="instructions">
-	<h1 class="instruction_title">Picking database columns for QQuery</h1>
+<div id="instructions">
+	<h1>Picking database columns for QQuery</h1>
 	By default <strong>QQuery</strong> selects all the columns from the table and thus populates all the properties of
 	the resulting objects.
 	Normally, this is the right thing to do - the most expensive part of a typical query is hitting the database and

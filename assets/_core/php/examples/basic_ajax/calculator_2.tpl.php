@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">AJAX Calculator</h1>
+	<div id="instructions">
+		<h1>AJAX Calculator</h1>
 
 		To show the ease of AJAX in a slightly more complex QForm, we take our <b>Calculator Example
 		with Validation</b> from before... and we only change <i>one word</i>.<br/><br/>

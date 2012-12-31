@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Setting Up an RSS Feed</h1>
+	<div id="instructions">
+		<h1>Setting Up an RSS Feed</h1>
 
 		The <b>QRssFeed</b> class can be used to create an <b>RSS 2.0</b>-compliant XML feed.
 		For more information about <b>RSS 2.0</b>, please view the official

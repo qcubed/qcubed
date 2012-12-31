@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Making Events Conditional</h1>
+	<div id="instructions">
+		<h1>Making Events Conditional</h1>
 		Somtimes we want events to trigger conditionally. Given our editable listbox, a good example
 		of this is that we want the submitting of the new Item to only happen if the user has
 		typed in something in the textbox.<br/><br/>

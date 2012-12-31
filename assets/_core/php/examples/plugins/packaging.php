@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions" style="max-height: none">
-		<h1 class="instruction_title">Make Your Own Plugin, Part 2: Packaging and Distributing</h1>
+		<h1>Make Your Own Plugin, Part 2: Packaging and Distributing</h1>
 		Now that you <a href="components.php">know</a> how to create a plugin
 		configuration file, all that's left before you can share your plugin is to
 		package it nicely, test it, and you're good to go!<br /><br />

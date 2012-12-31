@@ -6,8 +6,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 	
-	<div class="instructions">
-		<h1 class="instruction_title">Handling "Multiple QForms" on the Same Page</h1>
+	<div id="instructions">
+		<h1>Handling "Multiple QForms" on the Same Page</h1>
 		QCubed only allows each front-end "web page" to only have a maximum of one <b>QForm</b> class per page.  Because of
 		the many issues of managing and maintaining formstate across multiple <b>QForms</b>, QCubed simply does not allow
 		for the ability to have multiple <b>QForms</b> per page.<br/><br/>

@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Sorting a QDataGrid by Columns</h1>
+	<div id="instructions">
+		<h1>Sorting a QDataGrid by Columns</h1>
 		In this example we show how to make the datagrid sortable by individual columns.<br/><br/>
 
 		For each column, we add the properties <b>OrderByClause</b> and <b>ReverseOrderByClause</b> (it is possible

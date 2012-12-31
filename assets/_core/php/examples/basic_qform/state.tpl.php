@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Understanding State</h1>
+	<div id="instructions">
+		<h1>Understanding State</h1>
 		Note that when you clicked on the button, the form actually posted back to itself.  However,
 		the state of the form was remembered from one webpage view to the next.  This is known as
 		<b>FormState</b>.<br/><br/>

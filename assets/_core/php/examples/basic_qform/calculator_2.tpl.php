@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Learning about Validation</h1>
+	<div id="instructions">
+		<h1>Learning about Validation</h1>
 		
 		In this example, we extend our calculator application to include Validation.<br/><br/>
 		

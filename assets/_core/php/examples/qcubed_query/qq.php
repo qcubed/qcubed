@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Introduction to QCubed Query</h1>
+	<div id="instructions">
+		<h1>Introduction to QCubed Query</h1>
 		The querying logic behind all the Load methods in your ORM classes is powered by <b>QCubed Query</b>,
 		or <b>QQ</b> for short.  Put simply, <b>QQ</b> is a completely object oriented API to perform any SELECT-based
 		query on your database to return any result or hierarchy of your ORM objects.<br/><br/>

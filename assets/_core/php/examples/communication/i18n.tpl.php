@@ -6,8 +6,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title"><?php _t('Internationalization and Translation') ?></h1>
+	<div id="instructions">
+		<h1><?php _t('Internationalization and Translation') ?></h1>
 		<?php _t('
 		QQubed offers internationalization support via <b>QApplication::Translate()</b> (which internally
 		will use the <b>QI18n</b> class). Default language and country

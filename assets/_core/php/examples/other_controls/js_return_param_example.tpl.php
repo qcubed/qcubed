@@ -11,8 +11,8 @@
 			.selectable .ui-selected { background: gray; }
 		</style>
 
-	<div class="instructions">
-		<h1 class="instruction_title">jQuery Controls: Adding Actions</h1>
+	<div id="instructions">
+		<h1>jQuery Controls: Adding Actions</h1>
 		QCubed offers a new set of experimental wrappers for all widgets that <a href="http://www.jquery.com/ui">jQuery UI</a>
 		ships with. These are simple server-side classes that allow you to create PHP objects that will later on be
 		presented as jQuery widgets.<br><br>

@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Generated MetaControl Objects</h1>
+	<div id="instructions">
+		<h1>Generated MetaControl Objects</h1>
 		As you build out more and more database-driven <b>QForms</b> and <b>QPanels</b>, you'll notice
 		that you still may spend quite a bit of wasted time coding the same type of Control
 		definition, setup and data binding procedures over and over again. This becomes

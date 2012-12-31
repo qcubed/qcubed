@@ -42,7 +42,6 @@
 				__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__, $strObject, QApplication::Translate('Create New'));
 		}
 ?>
-		<hr />
 		<h1>Panel Drafts &ldquo;AJAX Dashboard&rdquo;</h1>
 		<p class="create"><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __PANEL_DRAFTS__) ?>">Go to Dashboard</a></p>
 	</div>

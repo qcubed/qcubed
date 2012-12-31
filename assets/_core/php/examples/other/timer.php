@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
-		<div class="instructions">
-			<h1 class="instruction_title">Measuring Performance using QTimer</h1>
+		<div id="instructions">
+			<h1>Measuring Performance using QTimer</h1>
 
 			<p>If you ever need to do light-weight profiling of your QCubed application, 
 				you might find the <b>QTimer</b> class useful. It's really simple: you can start

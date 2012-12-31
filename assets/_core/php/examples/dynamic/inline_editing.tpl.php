@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Creating a QDataGrid with Inline Editing</h1>
+	<div id="instructions">
+		<h1>Creating a QDataGrid with Inline Editing</h1>
 		Using the techniques for dynamically creating controls and utilizing the AJAX
 		features in QCubed, we update our <b>Person</b> datagrid to include functionality for
 		inline editing.<br/><br/>
