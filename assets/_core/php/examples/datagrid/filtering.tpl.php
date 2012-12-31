@@ -1,32 +1,35 @@
 <?php require('../includes/header.inc.php'); ?>
-	<?php $this->RenderBegin(); ?>
+<?php $this->RenderBegin(); ?>
 
-	<div id="instructions">
-		<h1>Adding Filters to Your QDataGrid</h1>
-		Now, we will add a filter bar to our datagrid.<br/><br/>
+<div id="instructions">
+	<h1>Adding Filters to Your QDataGrid</h1>
 
-		Enabling the filter bar is as easy as setting the datagrid's <b>ShowFilter</b> property to true. 
-		Specifying the filters to use is all that's left.<br/><br/>
-		
-		While creating the datagrid's columns, you can also specify a filter to use for that column.
-		These can either be custom filters for you to handle yourself, or <b>QConditions</b> (specifically, any 
-		<b>QQConditionComparison</b>) for your use with QQuerys. We'll be looking at the latter in this example.<br/><br/>
-		
-		So the first step is defining the filters. In this example, we set up an <b>Equal</b> filter for the 
-		Person Id and <b>Like</b> filters for the name columns. Note that if you just want to use the default
-		filter for that database column's type, you can just use the node's <b>SetFilteredDataGridColumnFilter</b>
-		function, as shown for the Last Name column.<br/><br/>
-		
-		Then, in our <b>dtgPersons_Bind</b> function we just make sure we use the conditions the datagrid 
-		provides us with. And there you have it, a filtered data grid.<br/><br/>
-		
-		But know what's even easier than that? The <b>MetaDataGrids</b> generated for you already include these
-		filters by default! Any time you use <b>MetaAddColumn</b>, it will set any appropriate filters for that 
+	<p>Now, we will add a filter bar to our datagrid.</p>
+
+	<p>Enabling the filter bar is as easy as setting the datagrid's <strong>ShowFilter</strong> property to true.
+		Specifying the filters to use is all that's left.</p>
+
+	<p>While creating the datagrid's columns, you can also specify a filter to use for that column.
+		These can either be custom filters for you to handle yourself, or <strong>QConditions</strong> (specifically, any
+		<strong>QQConditionComparison</strong>) for your use with QQuerys. We'll be looking at the latter in this example.</p>
+
+	<p>So the first step is defining the filters. In this example, we set up an <strong>Equal</strong> filter for the
+		Person Id and <strong>Like</strong> filters for the name columns. Note that if you just want to use the default
+		filter for that database column's type, you can just use the node's <strong>SetFilteredDataGridColumnFilter</strong>
+		function, as shown for the Last Name column.</p>
+
+	<p>Then, in our <strong>dtgPersons_Bind</strong> function we just make sure we use the conditions the datagrid
+		provides us with. And there you have it, a filtered data grid.</p>
+
+	<p>But know what's even easier than that? The <strong>MetaDataGrids</strong> generated for you already include these
+		filters by default! Any time you use <strong>MetaAddColumn</strong>, it will set any appropriate filters for that
 		column without a single line of extra code on your part. :) See the <a href="../other/meta_datagrids.php">
-		Introduction to Meta DataGrids</a> for more information.
-	</div>
+			Introduction to Meta DataGrids</a> for more information.</p>
+</div>
 
-		<?php $this->dtgPersons->Render(); ?>
+<div class="demo-zone">
+	<?php $this->dtgPersons->Render(); ?>
+</div>
 
-	<?php $this->RenderEnd(); ?>
+<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

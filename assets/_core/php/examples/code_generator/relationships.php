@@ -27,6 +27,7 @@
 		<li>Project ID: <?php _p($objProject->Id); ?></li>
 		<li>Project Name: <?php _p($objProject->Name); ?></li>
 	</ul>
+
 	<ul class="project-list">
 		<li>Manager Person ID: <?php _p($objProject->ManagerPerson->Id); ?></li>
 		<li>Manager's First Name: <?php _p($objProject->ManagerPerson->FirstName); ?></li>

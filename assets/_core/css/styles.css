@@ -1,17 +1,17 @@
-@import url(http://fonts.googleapis.com/css?family=Titillium+Web:400,600);
+@import url(http://fonts.googleapis.com/css?family=Brawler|Titillium+Web:400,700);
 /* Basic elements */
 body { color: #333; font-family: 'Titillium Web', sans-serif; margin:0; padding: 0; }
 a, a:visited, a:link { color: #780000; }
 a:hover, a:active { color: #d90d0d; }
 button { cursor: pointer; }
 
-h1 { font-family: serif; }
-h2, h3, h4, h5, h6 { font-weight: 600; }
+h1 { font-family: 'Brawler', serif; font-weight: 400; }
+h2, h3, h4, h5, h6 { font-weight: 700; }
 
 section { padding: 10px; }
 footer { background: #333; color: #fff; padding: 10px; }
 
-code pre { background: #f6f6f6; border: 1px solid #ddd; border-radius: 3px; padding: 10px; margin:10px auto; white-space: normal; }
+code pre { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; padding: 10px; margin:10px auto; white-space: normal; }
 
 #logo { float: left; height: 30px; }
 #tagline a { color: #fff; font-weight: 700; line-height: 30px; margin-left: 10px; text-decoration: none; }

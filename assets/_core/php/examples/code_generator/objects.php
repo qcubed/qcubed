@@ -7,6 +7,7 @@
 	<p>The Code Generator will more or less create a PHP object for each table in your database.
 		For our three main tables (<strong>login</strong>, <strong>person</strong> and <strong>project</strong>), the Code Generator
 		created the following PHP classes:</p>
+
 	<ul>
 		<li>Login</li>
 		<li>LoginGen</li>
@@ -30,6 +31,7 @@
 
 	<p>For every object, the Code Generator will generate the getter and setter properties for each
 		of the attributes in the table.  It will also generate the following basic <abbr title="Create, Restore, Update, Delete">CRUD</abbr> methods:</p>
+
 	<ul>
 		<li>Load</li>
 		<li>LoadAll</li>
@@ -76,4 +78,5 @@
 	<h3>Using CountAll to get a Count of All Persons in the Database</h3>
 	<p>There are <?php _p(Person::CountAll()); ?> person(s) in the system.</p>
 </div>
+
 <?php require('../includes/footer.inc.php'); ?>
