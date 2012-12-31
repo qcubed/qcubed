@@ -11,25 +11,17 @@
 	if (!$strScript)
 		QApplication::Redirect(QApplication::$RequestUri . substr($strReference, strrpos($strReference, '/')));
 ?>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=<?php _p(QApplication::$EncodingType); ?>" />
+		<meta charset="<?php _p(QApplication::$EncodingType); ?>" />
 		<title>QCubed PHP 5 Development Framework - View Source</title>
 		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/styles.css'); ?>"></link>
 		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/includes/examples.css'); ?>"></link>
 	</head>
 	<body>
-		<div id="page">
-			<div id="header">
-				<div id="headerLeft" style="width: 80%">
-					<div id="pageName"><?php _p(Examples::PageName($strReference)); ?> - View Source</div>
-					<div id="pageLinks"><span class="headerSmall"><?php _p(Examples::CodeLinks($strReference, $strScript), false); ?></span></div>
-				</div>
-				<div id="headerRight" style="width: 17%">
-					<div id="closeWindow"><a href="javascript:window.close()">Close</a></div>
-				</div>
-			<div>
-			<div id="content">
+		<div id="closeWindow"><a href="javascript:window.close()" class="close-window">Close this Window</a></div>
+		<header><nav class="page-links"><span class="headerSmall"><?php _p(Examples::CodeLinks($strReference, $strScript), false); ?></nav></header>
+		<section id="content">
 <?php
 	// Filename Cleanup
 	if (($strScript == 'header.inc.php') || ($strScript == 'footer.inc.php') || ($strScript == 'examples.css'))
@@ -49,12 +41,8 @@
 		throw new Exception("Example file does not exist: " . $strFilename);
 	}
 ?>
-				<h3>Source Listing for: <?php _p(preg_replace('/__.*__/', '', $strScript)); ?></h3>
-		
-				<div class="code" style="padding: 10px;" nowrap="nowrap">
-					<?php highlight_file($strFilename); ?>
-				</div>
-			</div>
-		</div>
+			<h1>Source of: <?php _p(preg_replace('/__.*__/', '', $strScript)); ?></h1>
+			<code><pre><?php highlight_file($strFilename); ?></pre></code>
+		</section>
 	</body>
 </html>

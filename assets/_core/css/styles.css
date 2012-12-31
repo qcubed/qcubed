@@ -2,7 +2,7 @@
 body { color: #333; font-family: Arial, sans-serif; margin:0; padding: 0; }
 a, a:visited, a:link { color: #780000; }
 a:hover, a:active { color: #d90d0d; }
-
+button { cursor: pointer; }
 h1, h2, h3, h4, h5, h6 { font-family: serif; }
 
 section { padding: 10px; }
@@ -20,11 +20,3 @@ code pre { background: #f6f6f6; border: 1px solid #ddd; border-radius: 3px; padd
 #tagline a { color: #fff; font-weight: 700; line-height: 30px; margin-left: 10px; text-decoration: none; }
 
 .link-list li { margin-top: 7px; }
-
-/* Examples style */
-#instructions { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; margin: 10px auto; max-height: 300px; overflow: auto; padding: 10px 20px; }
-#instructions h1 { color: #330000; margin: 0; padding: 0; }
-.main_navigator { background-color: #333; border:1px solid #333; border-bottom: none; border-radius:3px 3px 0 0; color: #FFF; margin: 10px auto 0; padding: 10px 20px; text-align: center; }
-a.main_navlink { color: #FFF; font-weight: normal; text-decoration: none; }
-a.main_navselected { color: #FFF; font-weight: bold; text-transform: uppercase; text-decoration: underline; }
-.main_info { padding: 10px 20px; background-color: #F6F6F6; margin:0 auto 10px; border:1px solid #dedede; border-radius: 0 0 3px 3px;}
