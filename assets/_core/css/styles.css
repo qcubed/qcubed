@@ -14,9 +14,17 @@ code pre { background: #f6f6f6; border: 1px solid #ddd; border-radius: 3px; padd
 
 .datagrid { margin: auto; width: 100%; }
 .datagrid th { background: #333; color: #fff; padding: 5px; }
+.datagrid th a { color:#f6f6f6; text-decoration: none; text-transform: uppercase; }
+.datagrid th a:hover { text-decoration: underline; }
 .datagrid td { padding: 5px; }
 
 #logo { float: left; height: 30px; }
 #tagline a { color: #fff; font-weight: 700; line-height: 30px; margin-left: 10px; text-decoration: none; }
 
 .link-list li { margin-top: 7px; }
+
+.form-actions { border-radius: 3px; background: #333; padding: 10px; margin: 10px auto; }
+.form-save,
+.form-cancel { display: inline; }
+.form-delete { float: right; }
+.form-delete button { color: #780000; font-weight: 700; }
