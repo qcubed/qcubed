@@ -1,30 +1,37 @@
-/* red color:#780000; grey color:#F6F6F6; */
-body { color: #333; font-family: Arial, sans-serif; margin:0; padding: 0; }
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web:400,600);
+/* Basic elements */
+body { color: #333; font-family: 'Titillium Web', sans-serif; margin:0; padding: 0; }
 a, a:visited, a:link { color: #780000; }
 a:hover, a:active { color: #d90d0d; }
 button { cursor: pointer; }
-h1, h2, h3, h4, h5, h6 { font-family: serif; }
+
+h1 { font-family: serif; }
+h2, h3, h4, h5, h6 { font-weight: 600; }
 
 section { padding: 10px; }
 footer { background: #333; color: #fff; padding: 10px; }
 
 code pre { background: #f6f6f6; border: 1px solid #ddd; border-radius: 3px; padding: 10px; margin:10px auto; white-space: normal; }
-.warning { color: #d90d0d; }
-.success { color: green; }
 
+#logo { float: left; height: 30px; }
+#tagline a { color: #fff; font-weight: 700; line-height: 30px; margin-left: 10px; text-decoration: none; }
+
+/* QControls */
 .datagrid { margin: auto; width: 100%; }
 .datagrid th { background: #333; color: #fff; padding: 5px; }
 .datagrid th a { color:#f6f6f6; text-decoration: none; text-transform: uppercase; }
 .datagrid th a:hover { text-decoration: underline; }
 .datagrid td { padding: 5px; }
 
-#logo { float: left; height: 30px; }
-#tagline a { color: #fff; font-weight: 700; line-height: 30px; margin-left: 10px; text-decoration: none; }
-
-.link-list li { margin-top: 7px; }
-
+/* Form fields */
 .form-actions { border-radius: 3px; background: #333; padding: 10px; margin: 10px auto; }
 .form-save,
 .form-cancel { display: inline; }
 .form-delete { float: right; }
 .form-delete button { color: #780000; font-weight: 700; }
+
+/* Status coloring */
+.warning { color: #d90d0d; }
+.success { color: green; }
+
+.link-list li { margin-top: 7px; }
