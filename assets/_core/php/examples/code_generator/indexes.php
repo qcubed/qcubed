@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Load Methods that Utilize Database Indexes</h1>
+	<div id="instructions">
+		<h1>Load Methods that Utilize Database Indexes</h1>
 		As you saw in the previous example, the Code Generator will always generate two load methods,
 		<b>Load</b> and <b>LoadAll</b>, for every code generated class.  <b>Load</b> takes in the primary
 		key (or primary keys if you have multiple PKs defined on the table) as the parameter, while

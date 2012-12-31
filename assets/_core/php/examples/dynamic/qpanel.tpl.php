@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Introduction to QPanel and QLabel</h1>
+	<div id="instructions">
+		<h1>Introduction to QPanel and QLabel</h1>
 		It may seem funny that we are "introducing" the <b>QPanel</b> and <b>QLabel</b> controls
 		now, especially since we have already been using them a lot throughout the examples.<br/><br/>
 

@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Print Command Shortcuts</h1>
+	<div id="instructions">
+		<h1>Print Command Shortcuts</h1>
 
 		Developers will tend to use the following PHP <b>Print</b> methods fairly often
 		in the template include files:

@@ -5,8 +5,8 @@
 		.image_canvas {border-width: 4px; border-style: solid; border-color: #a9f;}
 	</style>
 
-	<div class="instructions">
-		<h1 class="instruction_title">The QImageFileAsset Control</h1>
+	<div id="instructions">
+		<h1>The QImageFileAsset Control</h1>
 
 		The <strong>QImageFileAsset</strong> is a control to handle upload image files.
 		<br/><br/>

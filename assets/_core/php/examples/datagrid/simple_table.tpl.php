@@ -28,8 +28,8 @@
 	}
 </style>
 
-<div class="instructions">
-	<h1 class="instruction_title">Displaying a simple table with QSimpleTable</h1>
+<div id="instructions">
+	<h1>Displaying a simple table with QSimpleTable</h1>
 	The <b>QSimpleTable</b> control is similar to <b>QDataGrid</b> in that it allows to present a collection of objects
 	or data in a grid-based
 	(&lt;table&gt;) format. The data binding for QSimpleTable is done the same way as for QDataGrid - by simply setting
@@ -85,7 +85,7 @@
 	<?php $this->tblPersons->Render(); ?>
 </div>
 
-<div class="instructions">
+<div id="instructions">
 	<p>The second example demonstrates how to use the indexed columns when the DataSource is an array of arrays. This is
 	typically necessary in complex reports, when the data comes from external sources or cannot be easily generated with
 	a simple QQuery.</p>

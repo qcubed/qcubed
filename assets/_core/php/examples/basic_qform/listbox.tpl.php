@@ -6,8 +6,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 	
-	<div class="instructions">
-		<h1 class="instruction_title">The QListControl Family of Controls</h1>
+	<div id="instructions">
+		<h1>The QListControl Family of Controls</h1>
 		<b>QListControl</b> controls handle simple lists of objects which can be selected.  In its most
 		basic form, we are basically talking about HTML listboxes (e.g. &lt;select&gt;) with name/value
 		pairs (e.g. &lt;option&gt;).<br/><br/>

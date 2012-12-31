@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Adding More Complicated Filters to Your QDataGrid</h1>
+	<div id="instructions">
+		<h1>Adding More Complicated Filters to Your QDataGrid</h1>
 		<p>This example will walk us through more advanced methods and types of filtering that can be done
 		on your <b>QDataGrid</b>. Make sure you've got a good handle on the <a href="filtering.php">first 
 		example</a> before you dive into these shark-infested waters.</p>

@@ -2,8 +2,8 @@
 	<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . "/" . __JQUERY_CSS__); ?>");</style>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Executing Javascript with low/high priority</h1>
+	<div id="instructions">
+		<h1>Executing Javascript with low/high priority</h1>
                 In this example you learn about executing javascript with <b>QApplication::ExecuteJavaScript</b>
                 with different priority levels.<br/><br/>
 

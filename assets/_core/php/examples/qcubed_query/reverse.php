@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">QQ and Reverse Relationships</h1>
+	<div id="instructions">
+		<h1>QQ and Reverse Relationships</h1>
 		The power of QCubed ORM is the ability not just to code generate the code to handle foreign key
 		relationships, but also the ability to have that code handle the "reverse" foreign key relationships. 
 		So in the Examples Site data model, we're talking about not just a <b>Project</b> and its <b>ManagerPerson</b>

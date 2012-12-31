@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Customizing the QDataGrid subclass</h1>
+	<div id="instructions">
+		<h1>Customizing the QDataGrid subclass</h1>
 		
 		All QDataGrids, by default, can be customized by altering the <b>QDataGrid</b>
 		custom subclass in <b>/includes/qform/QDataGrid.inc</b>.  This class extends from

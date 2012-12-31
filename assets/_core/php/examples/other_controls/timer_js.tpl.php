@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">QJsTimer - Qcubed JavaScript Timer</h1>
+	<div id="instructions">
+		<h1>QJsTimer - Qcubed JavaScript Timer</h1>
 				<p> In the following example QJsTimer is used to update a datagrid displaying the 
 				incoming orders of a fictional web shop.<br/>
 				QJsTimer can be used as a periodic or a one-shot timer.

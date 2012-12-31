@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Non-Table Bound Attributes</h1>
+	<div id="instructions">
+		<h1>Non-Table Bound Attributes</h1>
 		Occasionally you may need to create custom database queries which retrieve other columns
 		or values which are not in the table itself.  This may be a one-off column in another
 		table, a calculated value, etc.<br/><br/>

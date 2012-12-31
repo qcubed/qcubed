@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">SQL Aliases for QQuery</h1>
+	<div id="instructions">
+		<h1>SQL Aliases for QQuery</h1>
 		<p>Up until now, we've only described doing simple joins with QQuery, where each
 		table is only needed for a single related record. But what about when you need 
 		to check on multiple entries in the same joined table. In standard SQL, you 

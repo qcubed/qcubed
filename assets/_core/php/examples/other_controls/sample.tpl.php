@@ -5,8 +5,8 @@
 		.image_canvas {border-width: 4px; border-style: solid; border-color: #a9f;}
 	</style>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Creating Your Own Control</h1>
+	<div id="instructions">
+		<h1>Creating Your Own Control</h1>
 
 		Many developers may want to create their own, custom QControl to perform a very specific interaction.
 		Alternatively, developers may wish to utilize exernal JavaScript libraries like Dojo, Yahoo! YUI, etc.

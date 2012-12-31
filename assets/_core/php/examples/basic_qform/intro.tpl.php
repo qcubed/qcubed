@@ -6,8 +6,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 	
-	<div class="instructions">
-		<h1 class="instruction_title">Learning the Basics</h1>
+	<div id="instructions">
+		<h1>Learning the Basics</h1>
 		Welcome to your first <b>QForm</b>!  This example shows how you can create a few
 		<b>QControl</b> objects (in this case, a <b>QLabel</b> and a <b>QButton</b>) and set their text
 		inside.  It also assigns a <b>QClickEvent</b> on the button to a <b>QServerAction</b>.  

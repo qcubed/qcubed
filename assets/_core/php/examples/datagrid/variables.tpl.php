@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">The QDataGrid Variables -- $_ITEM, $_COLUMN, $_CONTROL and $_FORM</h1>
+	<div id="instructions">
+		<h1>The QDataGrid Variables -- $_ITEM, $_COLUMN, $_CONTROL and $_FORM</h1>
 		As you may have noticed in the first example, we make use of the $_ITEM variable when we render
 		each row's column.  There are in fact three special variables used by the QDataGrid:
 		<b>$_ITEM</b>, <b>$_COLUMN</b>, <b>$_CONTROL</b> and <b>$_FORM</b>.<br/><br/>

@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 	
-	<div class="instructions">
-		<h1 class="instruction_title">Making Renameable Labels</h1>
+	<div id="instructions">
+		<h1>Making Renameable Labels</h1>
 		
 		With the use of <b>QLabel</b> and <b>QTextBox</b> controls that can show, hide and change
 		<b>CssClass</b> names depending on what action we must execute, we use

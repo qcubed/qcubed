@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Optimistic Locking and TIMESTAMP Columns</h1>
+	<div id="instructions">
+		<h1>Optimistic Locking and TIMESTAMP Columns</h1>
 		If you are generating any table that has a TIMESTAMP column, then QCubed will automatically
 		generate the functionality to perform <b>Optimistic Locking</b> for that object. In this example,
 		the <b>person_with_lock</b> table is defined with a TIMESTAMP column so that we can demonstrate

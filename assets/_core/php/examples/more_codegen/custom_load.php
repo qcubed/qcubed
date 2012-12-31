@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Implementing a Customized LoadBy or LoadArrayBy</h1>
+	<div id="instructions">
+		<h1>Implementing a Customized LoadBy or LoadArrayBy</h1>
 		(Note: for more information about creating custom queries, please refer to Section 3 of the Examples Site.)<br/><br/>
 
 		With the <b>InstantiateDbResult</b> method that is code generated for you in each

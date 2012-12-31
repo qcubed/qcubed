@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Triggering Arbitrary JavaScript, Alerts and Confirms</h1>
+	<div id="instructions">
+		<h1>Triggering Arbitrary JavaScript, Alerts and Confirms</h1>
 		QCubed includes several commonly used Javascript-based actions:
 		<ul>
 			<li><b>QAlertAction</b> - to display a javascript "alert" type of dialog box</li>

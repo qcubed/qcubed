@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Generated DataGrid Objects</h1>
+	<div id="instructions">
+		<h1>Generated DataGrid Objects</h1>
 		<p>Although the <i>concept</i> is known as a <b>Meta</b> DataGrid... the generated <b>DataGrid</b> objects
 		in and of itself is just a subclass of the actual <b>QDataGrid</b> object.  (Note that this is different
 		than a <b>MetaControl</b>, which is <i>not</i> a control, but is in fact a single data object

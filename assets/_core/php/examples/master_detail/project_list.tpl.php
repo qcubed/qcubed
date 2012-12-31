@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Nested QDataGrid - Drilling Into a Dataset</h1>
+	<div id="instructions">
+		<h1>Nested QDataGrid - Drilling Into a Dataset</h1>
 		In this example, we will demonstrate how to create a nested <b>QDataGrid</b>.<br/><br />
 
 		In a top-level grid, we will list projects; for each of the projects, and through an expand/collapse button,

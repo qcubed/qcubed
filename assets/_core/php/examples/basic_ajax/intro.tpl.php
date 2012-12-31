@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Hello World, Revisited</h1>
+	<div id="instructions">
+		<h1>Hello World, Revisited</h1>
 		This example revisits our original Hello World example to show how you can easily
 		change a postback-based form and interactions into AJAX-postback based ones.<br/><br/>
 		

@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">An Introduction to the QDataGrid Class</h1>
+	<div id="instructions">
+		<h1>An Introduction to the QDataGrid Class</h1>
 		The <b>QDataGrid</b> control is used to present a collection of objects or data in a grid-based
 		(e.g. &lt;table&gt;) format.  All <b>QDataGrid</b> objects take in a <b>DataSource</b>, which can be an array
 		of anything (or in our example, an array of Person objects).<br/><br/>

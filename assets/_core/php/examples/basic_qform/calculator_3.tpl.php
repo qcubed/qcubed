@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Custom Renderers and Control Properties</h1>
+	<div id="instructions">
+		<h1>Custom Renderers and Control Properties</h1>
 		
 		In our final Calculator example, we show how you can use custom renderers to affect layout,
 		as well as use control properties to change the appearance of your QControls.<br/><br/>

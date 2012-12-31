@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Combining Multiple Actions on Events</h1>
+	<div id="instructions">
+		<h1>Combining Multiple Actions on Events</h1>
 		We can combine mulitple actions together for events, and we can also use the same set of
 		actions for on multiple events or controls.<br/><br/>
 		

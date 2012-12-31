@@ -5,8 +5,8 @@
 		.image_canvas {border-width: 4px; border-style: solid; border-color: #a9f;}
 	</style>
 
-	<div class="instructions">
-		<h1 class="instruction_title">QImageControl</h1>
+	<div id="instructions">
+		<h1>QImageControl</h1>
 
 		This example shows off the <b>QImageControl</b> control.  It <b>REQUIRES</b> that GD be installed.  Moreover, for <strong>QImageControl</strong> support
 		with JPEG, PNG and/or GIF images, it requires that GD be installed <em>with</em> those respective graphic file format libraries.

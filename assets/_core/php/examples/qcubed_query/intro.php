@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">SQL Queries in QCubed</h1>
+	<div id="instructions">
+		<h1>SQL Queries in QCubed</h1>
 		Although the QCubed can generate the SQL query code for most of your application, you will undoubtedly
 		need to write your own custom queries, to either perform more refined Load methods, execute searches,
 		generate reports, etc.<br/><br/>
