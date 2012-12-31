@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Advanced Localization Techniques</h1>
+	<div id="instructions">
+		<h1>Advanced Localization Techniques</h1>
 		QCubed allows you to store your translations in any format that works for you. If you
 		already have a database with translated terms in a given schema, you probably don't want 
 		to have to generate .po files, right? Or, if you have a custom XML file that defines the

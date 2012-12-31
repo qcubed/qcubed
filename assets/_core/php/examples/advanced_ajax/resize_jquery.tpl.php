@@ -6,8 +6,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Resizing Block Controls</h1>
+	<div id="instructions">
+		<h1>Resizing Block Controls</h1>
 		Any control can be resizeable by simply setting the <b>Resizable</b> attribute to true.
 		As in draggable controls, when you set <b>Resizable</b> to true, you can then access
 		the <b>ResizeObj</b> attribute to get access to the JQuery UI <b>resizable</b> functions.

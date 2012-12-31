@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Adding QControls to QDataGrids</h1>
+	<div id="instructions">
+		<h1>Adding QControls to QDataGrids</h1>
 		In the previous examples, you learned about using basic <b>QDataGrid</b>
 		elements QDataGridColumn, and the all important $_ITEM. Let's now put this
 		knowledge to some use: let's add some custom QControls to our datagrid. <br/><br/>

@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Analyzing Reverse Relationships</h1>
+	<div id="instructions">
+		<h1>Analyzing Reverse Relationships</h1>
 		Although it's a bit hard to undrestand at first, one of the unique and more powerful features of QCubed
 		is its ability to generate code to handle reverse relationships as well.
 		Given our previous example with the <b>Project</b> and <b>ManagerPerson</b>, we showed how

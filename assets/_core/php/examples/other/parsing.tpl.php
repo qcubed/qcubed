@@ -1,7 +1,7 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
-		<div class="instructions">
-			<h1 class="instruction_title">Parsing using QLexer and QRegex</h1>
+		<div id="instructions">
+			<h1>Parsing using QLexer and QRegex</h1>
 
 			<p>If you ever need to parse user input, or configuration files, <strong>QLexer</strong>
 			is a QCubed component that may save you some time. QLexer allows you to

@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Conditional Joins with QQ::Expand()</h1>
+	<div id="instructions">
+		<h1>Conditional Joins with QQ::Expand()</h1>
 	
 		Sometimes, you find yourself in a situation when you want to issue a 
 		query for ALL items in a given table, and only some information in

@@ -44,8 +44,8 @@
 	<?php require('../includes/header.inc.php'); ?>
 		<?php $this->RenderBegin(); ?>
 
-		<div class="instructions">
-			<h1 class="instruction_title">Hello World, Revisited... Again... Again</h1>
+		<div id="instructions">
+			<h1>Hello World, Revisited... Again... Again</h1>
 			We use the AJAX-enabled "Hello World" example to explain how you can make single file <b>QForm</b> pages.
 			Note that this approach is <i>not always recommended</i> -- keeping the display logic (.php) file separate
 			from the presentation HTML template (.tpl.php) file helps to enforce the good design and separation of display

@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Dynamically Creating QControls in a QDataGrid</h1>
+	<div id="instructions">
+		<h1>Dynamically Creating QControls in a QDataGrid</h1>
 		In this example we will take our Paginated <b>QDataGrid</b>, and add a column which has a
 		"Select" checkbox.  When clicking the checkbox, a server action will update the response label
 		to say who has been selected or deselected.<br/><br/>

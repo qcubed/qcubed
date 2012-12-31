@@ -2,8 +2,8 @@
 
 <link rel="stylesheet" type="text/css" href="imagebrowser.css" />
 
-	<div class="instructions">
-		<h1 class="instruction_title">Combining Controls: Image Browser</h1>
+	<div id="instructions">
+		<h1>Combining Controls: Image Browser</h1>
 		
 		<p>The <b>QImageBrowser</b> control demonstrates how you can combine several controls
 		together to create a reusable component. It lets you browse through images 

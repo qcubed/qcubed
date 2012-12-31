@@ -1,40 +1,42 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Extending QPanels to Create Modal "Dialog Boxes"</h1>
-		In general UI programming, there are two kinds of dialog boxes: modal and non-modal.  Modal dialog boxes are
+	<div id="instructions">
+		<h1>Extending QPanels to Create Modal "Dialog Boxes"</h1>
+		<p>
+			In general UI programming, there are two kinds of dialog boxes: modal and non-modal.  Modal dialog boxes are
 		the most common. When a program displays a modal dialog box, the user cannot switch between the dialog box
 		and the program's main UI.  The user must explicitly close the dialog box, usually by clicking either "Ok" or "Cancel".
-		<br/><br/>
+		</p>
 
-		Obviously, with the current state of HTML and browser technologies, the <b>alert()</b> Javascript method
-		is still the only <i>true</i> way to have any level of a modal dialog interaction.  And unfortuantely,
-		<b>alert()</b> has very few features in terms of functionality.  
-		<br/><br/>
+		<p>
+			Obviously, with the current state of HTML and browser technologies, the <em>alert()</em> Javascript method
+		is still the only <em>true</em> way to have any level of a modal dialog interaction.  And unfortuantely,
+		<em>alert()</em> has very few features in terms of functionality.  
+		</p>
 		
-		<b>QCubed</b> implements a JQuery UI dialog box as a standard extension to the <b>QPanel</b>, which gives you
+		<p><strong>QCubed</strong> implements a JQuery UI dialog box as a standard extension to the <strong>QPanel</strong>, which gives you
 		the ability to create modal and modeless dialog boxes with a wide range of capabilities and complexities.
-		<br/><br/>
+		</p>
 
-		Because it extends the <b>QPanel</b> control, you have full use of all the <b>QPanel's</b> resources
+		<p>Because it extends the <strong>QPanel</strong> control, you have full use of all the <strong>QPanel's</strong> resources
 		to build and design the content of the dialog box itself, including using separate template files and
 		adding child controls, events, actions and validation.
-		<br/><br/>
+		</p>
 		
-		And since it also uses the JQuery UI <b>Dialog</b> control, you have full access to all of the JQuery UI
+		<p>And since it also uses the JQuery UI <strong>Dialog</strong> control, you have full access to all of the JQuery UI
 		capabilities as well, and a few extra extensions. In particular,
-		you can call <b>AddButton()</b> to add buttons to the dialog that will be placed in standard
-		dialog locations and colored with the current theme. Attach actions to the <b>QDialog_ButtonEvent</b> event,
-		and use the <b>ClickedButton</b> attribute to detect which of these buttons were clicked. Of course, you
+		you can call <strong>AddButton()</strong> to add buttons to the dialog that will be placed in standard
+		dialog locations and colored with the current theme. Attach actions to the <strong>QDialog_ButtonEvent</strong> event,
+		and use the <strong>ClickedButton</strong> attribute to detect which of these buttons were clicked. Of course, you
 		could use  standard QCubed buttons as well.
-		<br/><br/>
+		</p>
 		
 
-		The three examples below show a simple "display only" dialog box, a modal dialog that asks for user input,
+		<p>The three examples below show a simple "display only" dialog box, a modal dialog that asks for user input,
 		and a more complex dialog box that is meant to be a
 		"calculator widget" with intra-control communication, where the contents of the calculator in the dialog box
-		can be copied into a textbox on the main form.
+		can be copied into a textbox on the main form.</p>
 	</div>
 	
 	<style type="text/css">

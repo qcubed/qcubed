@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">QQ and Association Tables (Many-to-Many Relationships)</h1>
+	<div id="instructions">
+		<h1>QQ and Association Tables (Many-to-Many Relationships)</h1>
 		One key feature of <b>QCubed Query</b> is its ability to treat relationships in Association tables just like
 		any other foreign key relationship.  <b>QQ</b> has the ability to perform the full set of <b>QQ</b> functionality
 		(including conditions, expansions, ordering, grouping, etc.) on tables related via association tables

@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Understanding the QForm Process Flow</h1>
+	<div id="instructions">
+		<h1>Understanding the QForm Process Flow</h1>
 
 		First of all, don't adjust your screen. =)<br/><br/>
 

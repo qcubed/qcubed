@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 	<div class="instructions" style="max-height: none">
-		<h1 class="instruction_title">Moving your /includes outside of the __DOCROOT__</h1>
+		<h1>Moving your /includes outside of the __DOCROOT__</h1>
 
 		There is a school of security thought that suggests that files that aren't meant to 
 		be web-accessible aren't even supposed to be in a web-accessible directory. An approach 

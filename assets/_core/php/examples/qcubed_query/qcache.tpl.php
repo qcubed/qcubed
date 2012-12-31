@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Caching Query Results with QueryArrayCached</h1>
+	<div id="instructions">
+		<h1>Caching Query Results with QueryArrayCached</h1>
 		
 		If your application has a component that needs to issue the same query
 		multiple times, you should know about <b>QueryArrayCached</b>. This method is

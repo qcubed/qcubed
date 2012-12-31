@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Integrating QForms and the Code Generator</h1>
+	<div id="instructions">
+		<h1>Integrating QForms and the Code Generator</h1>
 
 		When you code generate your objects, QCubed will actually provide a starting
 		point for this integration in the generated <b>Drafts</b>.  These generated

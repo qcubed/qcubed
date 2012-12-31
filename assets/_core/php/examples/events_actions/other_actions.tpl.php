@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Other Client-Side Action Types</h1>
+	<div id="instructions">
+		<h1>Other Client-Side Action Types</h1>
 		Below is a sampling of just <i>some</i> of the other <b>QAction</b> types that are available to you
 		as part of the core QCubed distribution.
 		<br/><br/>

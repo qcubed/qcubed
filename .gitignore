@@ -1,2 +1,4 @@
 *~
 .idea
+/nbproject/private/
+/includes/configuration/configuration.inc.php

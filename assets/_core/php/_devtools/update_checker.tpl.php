@@ -2,31 +2,16 @@
 	$strPageTitle = "Update Checker";
 	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
-	<?php $this->RenderBegin() ?>
-	<style>
-	.datagrid td {
-		vertical-align: top; 
-	}
-	</style>
-	
-	<div id="page">
-		<div id="header">
-			<div id="headerLeft">
-				<div id="codeVersion">QCubed Development Framework <?= QCUBED_VERSION ?></div>
-				<div id="pageName">QCubed Update Checker</div>
-			</div>
-		</div>
-		<div id="content">
-			<h2>Available Updates</h2>
-			<?php $this->dtgUpdates->Render() ?>
-			<div id="lblNoUpdates">No updates - you are up to date!</div>
+<h1>Available Updates</h1>
+<?php $this->RenderBegin() ?>
 
-			<br />
-			<h2>New Plugins Available for Download</h2>
-			<?php $this->dtgNew->Render() ?>
-			<div id="lblNoNew">No new plugins available for download.</div>
-		</div>
-	</div>
-	<?php $this->RenderEnd() ?>
+<?php $this->dtgUpdates->Render() ?>
+<p id="lblNoUpdates">No updates - you are up to date!</p>
+
+<h2>New Plugins Available for Download</h2>
+<?php $this->dtgNew->Render() ?>
+<div id="lblNoNew">No new plugins available for download.</div>
+
+<?php $this->RenderEnd() ?>
 
 <?php require(__CONFIGURATION__ .'/footer.inc.php'); ?>

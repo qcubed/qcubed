@@ -6,8 +6,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 	
-	<div class="instructions">
-		<h1 class="instruction_title">Dynamically Created Image Labels</h1>
+	<div id="instructions">
+		<h1>Dynamically Created Image Labels</h1>
 		The <b>QImageLabel</b> allows you to create dynamically generated images based on text strings.
 		The image label can also take font, size, color and positioning attributes to allow you to
 		add a great level of sophistication/visual polish to your web applications.<br/><br/>

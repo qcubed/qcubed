@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Saving and Deleting Objects</h1>
+	<div id="instructions">
+		<h1>Saving and Deleting Objects</h1>
 		The C, U and D in CRUD is handled by the code generated <b>Save</b> and <b>Delete</b> methods in
 		every object.<br/><br/>
 		

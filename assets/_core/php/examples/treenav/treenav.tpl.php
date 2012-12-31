@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Tree Navigation Control</h1>
+	<div id="instructions">
+		<h1>Tree Navigation Control</h1>
 
 		<p>This example shows off the <strong>QTreeNav</strong> control.</p>
 

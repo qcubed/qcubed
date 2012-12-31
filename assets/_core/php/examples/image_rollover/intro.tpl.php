@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 	
-	<div class="instructions">
-		<h1 class="instruction_title">Rollover Images using QImageRollover</h1>
+	<div id="instructions">
+		<h1>Rollover Images using QImageRollover</h1>
 		A frequent component of a web application is an image control that changes as
 		the user hovers over it with their mouse. You can find examples of this pattern
 		in navigational menus that highlight when you hover over the menu items: each 

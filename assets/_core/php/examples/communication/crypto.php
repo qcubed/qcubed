@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Implementing Cryptography</h1>
+	<div id="instructions">
+		<h1>Implementing Cryptography</h1>
 
 		The <b>QCryptography</b> class is used to implement cryptography for your site and
 		back-end.  It primarly serves as a cohesive wrapper around the <b>libmcrypt</b> library,

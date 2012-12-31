@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
+	<div id="instructions">
 		<div class="instruction_title">The Examples Site Database</div>
 		
 		Before learning about the Code Generator, it might be good to first get acquainted with the

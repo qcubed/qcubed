@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Adding Filters to Your QDataGrid</h1>
+	<div id="instructions">
+		<h1>Adding Filters to Your QDataGrid</h1>
 		Now, we will add a filter bar to our datagrid.<br/><br/>
 
 		Enabling the filter bar is as easy as setting the datagrid's <b>ShowFilter</b> property to true. 

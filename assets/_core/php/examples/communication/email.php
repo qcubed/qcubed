@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Emailing via SMTP</h1>
+	<div id="instructions">
+		<h1>Emailing via SMTP</h1>
 
 		The <b>QEmailServer</b> class can be used to send email messages via any accessible
 		SMTP server.  Obviously, many PHP developers will be familiar with the PHP <b>mail()</b>

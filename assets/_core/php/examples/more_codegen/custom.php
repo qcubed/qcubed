@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Implementing Custom Business Logic</h1>
+	<div id="instructions">
+		<h1>Implementing Custom Business Logic</h1>
 		Almost no application can be purely code generated.  As you develop your application, you will likely
 		have to implement your own custom business rules and functionality.<br/><br/>
 		

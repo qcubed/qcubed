@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
     <?php $this->RenderBegin(); ?>
 
-    <div class="instructions">
-        <h1 class="instruction_title">Event Propagation</h1>
+    <div id="instructions">
+        <h1>Event Propagation</h1>
         Whenever an event fires on a control inside an HTML document, it "bubbles" up to the parents - to allow the
 	    parents to react to that event as well. This is a standard feature of all modern browsers; read more about it
 	    on <a href="http://en.wikipedia.org/wiki/DOM_events">Wikipedia</a>.<br><br>

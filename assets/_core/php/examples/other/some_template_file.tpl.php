@@ -1,8 +1,8 @@
 <?php require('../includes/header.inc.php'); ?>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Hello World, Revisited... Again...</h1>
+	<div id="instructions">
+		<h1>Hello World, Revisited... Again...</h1>
 		By default, the <b>QForm</b> engine will insert <b>.tpl</b> to the PHP script's file path to use as the 
 		template file path.  For example, for the very first example, the script with the form defintion
 		was named <b>intro.php</b>. Therefore, by default, QCubed used <b>intro.tpl.php</b> as the HTML template

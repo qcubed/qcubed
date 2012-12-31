@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">QCubed Query Conditions</h1>
+	<div id="instructions">
+		<h1>QCubed Query Conditions</h1>
 		All <b>QCubed Query</b> method calls require a <b>QQ Condition</b>. <b>QQ Conditions</b> allow you
 		to create a nested/hierarchical set of conditions to describe what essentially becomes your
 		WHERE clause in a SQL query statement.<br/><br/>

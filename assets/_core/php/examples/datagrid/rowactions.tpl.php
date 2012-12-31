@@ -7,8 +7,8 @@
 </style>
 	<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">The QDataGrid Row Actions</h1>
+	<div id="instructions">
+		<h1>The QDataGrid Row Actions</h1>
 		Adding actions to data grid row is very similar to adding actions
 		to any other <b>QControl</b>. In a <b>QControl</b>, we use the
 		<b>AddAction()</b> method for adding actions. For data grid rows

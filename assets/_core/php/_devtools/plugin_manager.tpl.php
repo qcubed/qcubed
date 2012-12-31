@@ -2,10 +2,10 @@
 	$strPageTitle = "Plugin Manager";
 	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
-	<?php $this->RenderBegin() ?>
-
 	<h1><?php _t('Plugin Manager'); ?></h1>
-
+	
+		<?php $this->RenderBegin() ?>
+	
 	<?php $this->dtgPlugins->Render(); ?>
 
 	<div id="formActions">

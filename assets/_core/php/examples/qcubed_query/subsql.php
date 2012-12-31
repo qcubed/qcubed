@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">SQL Subqueries for QQuery</h1>
+	<div id="instructions">
+		<h1>SQL Subqueries for QQuery</h1>
 		QQuery provides excellent means to perform many common queries; however,
 		once in a while, you'll find yourself needing to do some custom SQL. Don't
 		jump into <a href="intro.php">full custom queries</a> just yet. You can

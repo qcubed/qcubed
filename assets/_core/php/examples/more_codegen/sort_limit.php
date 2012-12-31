@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Manipulating LoadAll and LoadArrayBy Results</h1>
+	<div id="instructions">
+		<h1>Manipulating LoadAll and LoadArrayBy Results</h1>
 		(Note: for more information about "QQ::"-related classes (a.k.a. <b>QCubed Query</b>), please refer to section 3 of the
 		Examples Site.)<br/><br/>
 
