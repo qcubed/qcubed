@@ -1,34 +1,32 @@
 <?php require('../includes/header.inc.php'); ?>
-	<?php $this->RenderBegin(); ?>
+<?php $this->RenderBegin(); ?>
 
-	<div id="instructions">
-		<h1>The Four-Function Calculator: Our First Simple Application</h1>
-		We can combine this understanding of statefulness and events to make our first simple
-		Qforms application.<br/><br/>
+<div id="instructions">
+	<h1>The Four-Function Calculator: Our First Simple Application</h1>
 
-		This calculator is just a collection of two <b>QTextBox</b> objects (one for each operand), a
-		<b>QListBox</b> object containing the four arithmetic functions, a <b>QButton</b> object to execute
-		the operation, and a <b>QLabel</b> to view the result.
+	<p>We can combine this understanding of statefulness and events to make our first simple
+		Qforms application.</p>
 
-		Note that there is no validation, checking, etc. currently in the Qform.  Any string data
+	<p>This calculator is just a collection of two <strong>QTextBox</strong> objects (one for each operand), a
+		<strong>QListBox</strong> object containing the four arithmetic functions, a <strong>QButton</strong> object to execute
+		the operation, and a <strong>QLabel</strong> to view the result.</p>
+
+	<p>Note that there is no validation, checking, etc. currently in the QForm.  Any string data
 		will be parsed by PHP to see if there is any numeric data, and if not, it will be parsed as 0.  Dividing
-		by zero will throw a PHP error.
-	</div>
+		by zero will throw a PHP error.</p>
+</div>
 
-	<div>
-		Value 1: <?php $this->txtValue1->Render(); ?>
-		<br/><br/>
+<div class="demo-zone">
+	<p>Value 1: <?php $this->txtValue1->Render(); ?></p>
 
-		Value 2: <?php $this->txtValue2->Render(); ?>
-		<br/><br/>
+	<p>Value 2: <?php $this->txtValue2->Render(); ?></p>
 
-		Operation: <?php $this->lstOperation->Render(); ?>
-		<br/><br/>
+	<p>Operation: <?php $this->lstOperation->Render(); ?></p>
 
-		<?php $this->btnCalculate->Render(); ?>
-		<hr/>
-		<?php $this->lblResult->Render(); ?>
-	</div>
+	<?php $this->btnCalculate->Render(); ?>
+	<hr/>
+	<?php $this->lblResult->Render(); ?>
+</div>
 
-	<?php $this->RenderEnd(); ?>
+<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

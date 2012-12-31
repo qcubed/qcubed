@@ -13,3 +13,5 @@ a.main_navselected { color: #FFF; font-weight: bold; text-transform: uppercase; 
 
 /* The "View Source" button */
 #viewSource { border: 1px solid #d90d0d; border-radius: 3px; background: #780000; color: #FFF; line-height: 2; }
+
+.demo-zone { min-height: 220px; overflow: auto; position: relative; }

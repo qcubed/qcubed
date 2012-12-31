@@ -1,38 +1,40 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div id="instructions">
-		<div class="instruction_title">The Examples Site Database</div>
-		
-		Before learning about the Code Generator, it might be good to first get acquainted with the
-		data model which the Code Generator will be generating from.<br/><br/>
-		
-		Click on the "View Source" link in the upper righthand corner to view the
-		<b>mysql_innodb.sql</b> to examine the data model in script form, or you can
-		view an ER diagram of the data model below.<br/><br/>
+<div id="instructions">
+	<h1>The Examples Site Database</h1>
 
-		If you have not installed this <b>Examples Site Database</b> on your MySQL server, you might want to
+	<p>Before learning about the Code Generator, it might be good to first get acquainted with the
+		data model which the Code Generator will be generating from.</p>
+
+	<p>Click on the "View Source" link in the upper righthand corner to view the
+		<strong>mysql_innodb.sql</strong> to examine the data model in script form, or you can
+		view an ER diagram of the data model below.</p>
+
+	<p>If you have not installed this <strong>Examples Site Database</strong> on your MySQL server, you might want to
 		do that now.  After installing the database, you must also remember to
-		<b><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__ . '/codegen.php'); ?>" class="bodyLink">code generate</a></b>
-		the corresponding objects <i>before</i> trying to any of the further code generation examples.<br/><br/>
-		
-		Note that there is also a SQL Server version of this database script called <b>sql_server.sql</b>.<br/><br/>
+		<strong><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__ . '/codegen.php'); ?>" class="bodyLink">code generate</a></strong>
+		the corresponding objects <i>before</i> trying to any of the further code generation examples.</p>
 
-		In the script, we have six tables defined.  The bulk of our examples will focus on the main three
-		tables of the database:
-		<ul>
-		<li><b>login</b></li>
-		<li><b>person</b></li>
-		<li><b>project</b></li>
-		</ul><br/>
+	<p>Note that there is also a SQL Server version of this database script called <strong>sql_server.sql</strong>.</p>
 
-		The <b>team_member_project_assn</b> table handles the many-to-many relationship between
-		<b>person</b> and <b>project</b>.
-		The <b>project_status_type</b> table is a <b>Type Table</b> which will be discussed in
-		the example for <b>Type Tables</b>.  Finally the <b>person_with_lock</b> table is
-		specifically used by the example for <b>Optimistic Locking</b>.
-	</div>
+	<p>In the script, we have six tables defined.  The bulk of our examples will focus on the main three
+		tables of the database:</p>
+	<ul>
+		<li><strong>login</strong></li>
+		<li><strong>person</strong></li>
+		<li><strong>project</strong></li>
+	</ul>
 
+	<p>The <strong>team_member_project_assn</strong> table handles the many-to-many relationship between
+		<strong>person</strong> and <strong>project</strong>.
+		The <strong>project_status_type</strong> table is a <strong>Type Table</strong> which will be discussed in
+		the example for <strong>Type Tables</strong>.  Finally the <strong>person_with_lock</strong> table is
+		specifically used by the example for <strong>Optimistic Locking</strong>.</p>
+</div>
+
+<div class="demo-zone">
 	<img src="../images/data_model.png" alt="&quot;Examples Site Database&quot; data model" style="display:block; border-width: 0px; margin:auto; text-align:center;" />
-	
+</div>
+
 <?php require('../includes/footer.inc.php'); ?>
