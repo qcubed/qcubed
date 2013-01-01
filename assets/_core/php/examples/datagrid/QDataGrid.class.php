@@ -16,5 +16,4 @@ class QDataGrid extends QDataGridBase {
 			return sprintf('<tr><td colspan="%s">%s</td></tr>', count($this->objColumnArray), $this->GetPaginatorRowHtml($this->objPaginatorAlternate));
 	}
 }
-
 ?>

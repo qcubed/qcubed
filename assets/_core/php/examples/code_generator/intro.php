@@ -14,7 +14,7 @@
 	<p>If you have not installed this <strong>Examples Site Database</strong> on your MySQL server, you might want to
 		do that now.  After installing the database, you must also remember to
 		<strong><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__ . '/codegen.php'); ?>" class="bodyLink">code generate</a></strong>
-		the corresponding objects <i>before</i> trying to any of the further code generation examples.</p>
+		the corresponding objects <em>before</em> trying to any of the further code generation examples.</p>
 
 	<p>Note that there is also a SQL Server version of this database script called <strong>sql_server.sql</strong>.</p>
 

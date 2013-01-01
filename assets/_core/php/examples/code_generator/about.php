@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div class="instructions" style="max-height: none">
+<div id="instructions" style="max-height: none">
 	<h1>About Sections 1 - 3</h1>
 
 	<p>Sections 1 through 3 are dedicated to just the <strong>Code Generator</strong>.  In order

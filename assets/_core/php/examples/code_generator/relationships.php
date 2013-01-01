@@ -34,4 +34,5 @@
 		<li>Manager's Last Name: <?php _p($objProject->ManagerPerson->LastName); ?></li>
 	</ul>
 </div>
+
 <?php require('../includes/footer.inc.php'); ?>

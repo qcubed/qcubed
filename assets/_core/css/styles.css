@@ -1,6 +1,6 @@
 @import url('http://fonts.googleapis.com/css?family=Brawler|Titillium+Web:400,700');
 /* Basic elements */
-body { color: #333; font-family: 'Titillium Web', sans-serif; font-size: 100%; margin:0; padding: 0; }
+body { color: #333; font-family: 'Titillium Web', sans-serif; font-size: 1em; line-height: 1.22; margin:0; padding: 0; }
 a, a:visited, a:link { color: #780000; }
 a:hover, a:active { color: #d90d0d; }
 button { cursor: pointer; }
@@ -41,11 +41,11 @@ code pre { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; p
 .datagrid caption { overflow: hidden; padding: 5px; position: relative; }
 .datagrid .paginator-control { float: right; }
 .datagrid .paginator-results { float: left; }
-.datagrid .arrow { color: #dedede; font-style: italic; }
-.datagrid .arrow a { font-style: normal; }
-.datagrid .break { color: #dedede; padding: 5px; }
-.datagrid .page { color: #dedede; display: inline-block; padding: 0 5px; }
-.datagrid .selected { background: #780000; border:1px solid #d90d0d; border-radius: 3px; display: inline-block; color: #fff; padding: 0 5px; }
+.paginator .arrow { color: #dedede; font-style: italic; }
+.paginator .arrow a { font-style: normal; }
+.paginator .break { color: #dedede; padding: 5px; }
+.paginator .page { color: #dedede; display: inline-block; padding: 0 5px; }
+.paginator .selected { background: #780000; border:1px solid #d90d0d; border-radius: 3px; display: inline-block; color: #fff; padding: 0 5px; }
 
 /* Form fields */
 .renderWithName { padding: 5px 0; overflow: hidden; position: relative; }

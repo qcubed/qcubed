@@ -22,9 +22,8 @@
 		that makes the <strong>QForm</strong> work. (QCubed will in fact throw an exception
 		if either <strong>RenderBegin</strong> and <strong>RenderEnd</strong> are not called.)</p>
 
-	<p>Click on the "View Source" link in the upper righthand corner to view the
-		<strong>intro.php</strong> and <strong>intro.tpl.php</strong> code, which together define this <strong>QForm</strong>
-		you are seeing.</p>
+	<p>Click on the "View Source" link below to view the <strong>intro.php</strong> and <strong>intro.tpl.php</strong> code,
+		which together define this <strong>QForm</strong> you are seeing.</p>
 </div>
 
 <div class="demo-zone">
@@ -33,5 +32,6 @@
 	<p><?php $this->lblMessage->Render(); ?></p>
 	<p><?php $this->btnButton->Render(); ?></p>
 </div>
+
 <?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>
