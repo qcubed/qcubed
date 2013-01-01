@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Brawler|Titillium+Web:400,700);
+@import url('http://fonts.googleapis.com/css?family=Brawler|Titillium+Web:400,700');
 /* Basic elements */
 body { color: #333; font-family: 'Titillium Web', sans-serif; margin:0; padding: 0; }
 a, a:visited, a:link { color: #780000; }
@@ -7,6 +7,14 @@ button { cursor: pointer; }
 
 h1 { font-family: 'Brawler', serif; font-weight: 400; }
 h2, h3, h4, h5, h6 { font-weight: 700; }
+
+input,
+textarea,
+select { border: 1px inset #dedede; border-radius: 3px; padding: 5px; }
+
+textarea:focus,
+input:focus,
+select:focus { border: 1px solid #333; box-shadow: 0 0 5px #dedede; outline: 0; }
 
 section { padding: 10px; }
 footer { background: #333; color: #fff; padding: 10px; }
@@ -24,14 +32,21 @@ code pre { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; p
 .datagrid td { padding: 5px; }
 
 /* Form fields */
+.renderWithName { padding: 5px 0; overflow: hidden; position: relative; }
+.form-name { float: left; padding-right:10px; text-align:right; width:33%; }
+.form-field { float: left; width: 50%; }
+.form-field input,
+.form-field textarea { max-width: 250px; width:99%; }
 .form-actions { border-radius: 3px; background: #333; padding: 10px; margin: 10px auto; }
 .form-save,
-.form-cancel { display: inline; }
-.form-delete { float: right; }
+.form-cancel,
+.form-delete{ display: inline; }
+.form-save { padding-left: 33%; }
+.form-delete { padding-left: 6%; }
 .form-delete button { color: #780000; font-weight: 700; }
 
 /* Status coloring */
-.warning { color: #d90d0d; }
+.warning, .error { color: #d90d0d; }
 .success { color: green; }
 
 .link-list li { margin-top: 7px; }
