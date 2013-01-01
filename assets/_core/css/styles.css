@@ -31,19 +31,37 @@ code pre { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; p
 .datagrid th a:hover { text-decoration: underline; }
 .datagrid td { padding: 5px; }
 
+.datagrid caption { overflow: hidden; padding: 5px; position: relative; }
+.datagrid .paginator-control { float: right; }
+.datagrid .paginator-results { float: left; }
+.datagrid .arrow { color: #dedede; font-style: italic; }
+.datagrid .arrow a { font-style: normal; }
+.datagrid .break { color: #dedede; padding: 5px; }
+.datagrid .page { color: #dedede; display: inline-block; padding: 0 5px; }
+.datagrid .selected { background: #780000; border:1px solid #d90d0d; border-radius: 3px; display: inline-block; color: #fff; padding: 0 5px; }
+
 /* Form fields */
 .renderWithName { padding: 5px 0; overflow: hidden; position: relative; }
-.form-name { float: left; padding-right:10px; text-align:right; width:33%; }
-.form-field { float: left; width: 50%; }
+
 .form-field input,
 .form-field textarea { max-width: 250px; width:99%; }
 .form-actions { border-radius: 3px; background: #333; padding: 10px; margin: 10px auto; }
 .form-save,
 .form-cancel,
 .form-delete{ display: inline; }
+.form-delete button { color: #780000; font-weight: 700; }
+
+/* To change form label/field layout, swap the comment here */
+.form-name { padding-right: 10px; }
+.form-field {  }
+.form-save {  }
+.form-delete { padding-left: 20px; }
+/*
+.form-name { float: left; padding-right: 10px; text-align: right; width: 33%; }
+.form-field { float: left; width: 50%; }
 .form-save { padding-left: 33%; }
 .form-delete { padding-left: 6%; }
-.form-delete button { color: #780000; font-weight: 700; }
+*/
 
 /* Status coloring */
 .warning, .error { color: #d90d0d; }
