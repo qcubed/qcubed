@@ -26,106 +26,125 @@
 	
 	
 	/**
-	 * This event is triggered when accordion is created.
+	 * <div>Triggered after a panel has been activated (after animation
+	 * 		completes). If the accordion was previously collapsed,
+	 * 		<code>ui.oldHeader</code> and <code>ui.oldPanel</code> will be empty jQuery
+	 * 		objects. If the accordion is collapsing, <code>ui.newHeader</code> and
+	 * 		<code>ui.newPanel</code> will be empty jQuery
+	 * 		objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div>
+	 * 		<ul><li><div><strong>newHeader</strong></div> <div>Type:
+	 * 		<a>jQuery</a></div> <div>The header that was just activated.</div></li>
+	 * 		<li><div><strong>oldHeader</strong></div> <div>Type: <a>jQuery</a></div>
+	 * 		<div>The header that was just deactivated.</div></li>
+	 * 		<li><div><strong>newPanel</strong></div> <div>Type: <a>jQuery</a></div>
+	 * 		<div>The panel that was just activated.</div></li>
+	 * 		<li><div><strong>oldPanel</strong></div> <div>Type: <a>jQuery</a></div>
+	 * 		<div>The panel that was just deactivated.</div></li></ul></li></ul>
+	 */
+	class QAccordion_ActivateEvent extends QJqUiEvent {
+		const EventName = 'accordionactivate';
+	}
+	/**
+	 * <div>Triggered directly before a panel is activated. Can be canceled to
+	 * 		prevent the panel from activating. If the accordion is currently collapsed,
+	 * 		<code>ui.oldHeader</code> and <code>ui.oldPanel</code> will be empty jQuery
+	 * 		objects. If the accordion is collapsing, <code>ui.newHeader</code> and
+	 * 		<code>ui.newPanel</code> will be empty jQuery
+	 * 		objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div>
+	 * 		<ul><li><div><strong>newHeader</strong></div> <div>Type:
+	 * 		<a>jQuery</a></div> <div>The header that is about to be
+	 * 		activated.</div></li> <li><div><strong>oldHeader</strong></div> <div>Type:
+	 * 		<a>jQuery</a></div> <div>The header that is about to be
+	 * 		deactivated.</div></li> <li><div><strong>newPanel</strong></div> <div>Type:
+	 * 		<a>jQuery</a></div> <div>The panel that is about to be
+	 * 		activated.</div></li> <li><div><strong>oldPanel</strong></div> <div>Type:
+	 * 		<a>jQuery</a></div> <div>The panel that is about to be
+	 * 		deactivated.</div></li></ul></li></ul>
+	 */
+	class QAccordion_BeforeActivateEvent extends QJqUiEvent {
+		const EventName = 'accordionbeforeactivate';
+	}
+	/**
+	 * <div>Triggered when the accordion is created. If the accordion is
+	 * 		collapsed, <code>ui.header</code> and <code>ui.panel</code> will be empty
+	 * 		jQuery objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div>
+	 * 		<ul><li><div><strong>header</strong></div> <div>Type: <a>jQuery</a></div>
+	 * 		<div>The active header.</div></li> <li><div><strong>panel</strong></div>
+	 * 		<div>Type: <a>jQuery</a></div> <div>The active
+	 * 		panel.</div></li></ul></li></ul>
 	 */
 	class QAccordion_CreateEvent extends QJqUiEvent {
 		const EventName = 'accordioncreate';
-	}
-	/**
-	 * This event is triggered every time the accordion changes. If the accordion
-	 * 		is animated, the event will be triggered upon completion of the animation;
-	 * 		otherwise, it is triggered
-	 * 		immediately.
-	 * 
-	 * $('.ui-accordion').bind('accordionchange', function(event,
-	 * 		ui) {
-	 *   ui.newHeader // jQuery object, activated header
-	 *   ui.oldHeader //
-	 * 		jQuery object, previous header
-	 *   ui.newContent // jQuery object, activated
-	 * 		content
-	 *   ui.oldContent // jQuery object, previous content
-	 * });</p>
-	 */
-	class QAccordion_ChangeEvent extends QJqUiEvent {
-		const EventName = 'accordionchange';
-	}
-	/**
-	 * This event is triggered every time the accordion starts to
-	 * 		change.
-	 * 
-	 * $('.ui-accordion').bind('accordionchangestart', function(event,
-	 * 		ui) {
-	 *   ui.newHeader // jQuery object, activated header
-	 *   ui.oldHeader //
-	 * 		jQuery object, previous header
-	 *   ui.newContent // jQuery object, activated
-	 * 		content
-	 *   ui.oldContent // jQuery object, previous content
-	 * });</p>
-	 */
-	class QAccordion_ChangestartEvent extends QJqUiEvent {
-		const EventName = 'accordionchangestart';
 	}
 
 	/* Custom "property" event classes for this control */
 
 	/**
-	 * @property boolean $Disabled Disables (true) or enables (false) the accordion. Can be set when
-	 * 		initialising (first creating) the accordion.
-	 * @property mixed $Active Selector for the active element. Set to false to display none at start.
-	 * 		Needs collapsible: true.
-	 * @property mixed $Animated Choose your favorite animation, or disable them (set to false). In addition
-	 * 		to the default, 'bounceslide' and all defined easing methods are supported
-	 * 		('bounceslide' requires UI Effects Core).
-	 * @property boolean $AutoHeight If set, the highest content part is used as height reference for all other
-	 * 		parts. Provides more consistent animations.
-	 * @property boolean $ClearStyle If set, clears height and overflow styles after finishing animations. This
-	 * 		enables accordions to work with dynamic content. Won't work together with
-	 * 		autoHeight.
-	 * @property boolean $Collapsible Whether all the sections can be closed at once. Allows collapsing the
-	 * 		active section by the triggering event (click is the default).
-	 * @property string $Event The event on which to trigger the accordion.
-	 * @property boolean $FillSpace If set, the accordion completely fills the height of the parent element.
-	 * 		Overrides autoheight.
-	 * @property mixed $Header Selector for the header element.
-	 * @property mixed $Icons Icons to use for headers. Icons may be specified for 'header' and
-	 * 		'headerSelected', and we recommend using the icons native to the jQuery UI
-	 * 		CSS Framework manipulated by jQuery UI ThemeRoller. Set to false to have no
-	 * 		icons displayed.
-	 * @property boolean $Navigation If set, looks for the anchor that matches location.href and activates it.
-	 * 		Great for href-based state-saving. Use navigationFilter to implement your
-	 * 		own matcher.
-	 * @property QJsClosure $NavigationFilter Overwrite the default location.href-matching with your own matcher.
+	 * @property mixed $Active <div>Which panel is currently open.</div><strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Boolean</strong>: Setting
+	 * 		<code>active</code> to <code>false</code> will collapse all panels. This
+	 * 		requires the <a><code>collapsible</code></a> option to be
+	 * 		<code>true</code>.</li> <li><strong>Integer</strong>: The zero-based index
+	 * 		of the panel that is active (open). A negative value selects panels going
+	 * 		backward from the last panel.</li></ul>
+	 * @property mixed $Animate <div>If and how to animate changing panels.</div><strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Boolean</strong>: A value of
+	 * 		<code>false</code> will disable animations.</li>
+	 * 		<li><strong>Number</strong>: Duration in milliseconds with default
+	 * 		easing.</li> <li><strong>String</strong>: Name of <a>easing</a> to use with
+	 * 		default duration.</li> <li><strong>Object</strong>: Animation settings with
+	 * 		<code>easing</code> and <code>duration</code> properties. 					<ul><li>Can
+	 * 		also contain a <code>down</code> property with any of the above
+	 * 		options.</li> 						<li>"Down" animations occur when the panel being
+	 * 		activated has a lower index than the currently active
+	 * 		panel.</li></ul></li></ul>
+	 * @property boolean $Collapsible <div>Whether all the sections can be closed at once. Allows collapsing the
+	 * 		active section.</div>
+	 * @property boolean $Disabled <div>Disables the accordion if set to <code>true</code>.</div>
+	 * @property string $Event <div>The event that accordion headers will react to in order to activate
+	 * 		the associated panel. Multiple events can be specificed, separated by a
+	 * 		space.</div>
+	 * @property mixed $Header <div><p>Selector for the header element, applied via <code>.find()</code>
+	 * 		on the main accordion element. Content panels must be the sibling
+	 * 		immedately after their associated headers.</p></div>
+	 * @property string $HeightStyle <div><p>Controls the height of the accordion and each panel. Possible
+	 * 		values:</p> 				<ul><li><code>"auto"</code>: All panels will be set to the
+	 * 		height of the tallest panel.</li> 					<li><code>"fill"</code>: Expand to
+	 * 		the available height based on the accordion's parent height.</li>
+	 * 							<li><code>"content"</code>: Each panel will be only as tall as its
+	 * 		content.</li></ul></div>
+	 * @property mixed $Icons <div><p>Icons to use for headers, matching an icon defined by the jQuery UI
+	 * 		CSS Framework. Set to <code>false</code> to have no icons displayed.</p>
+	 * 						<ul><li>header (string, default: "ui-icon-triangle-1-e")</li>
+	 * 							<li>activeHeader (string, default:
+	 * 		"ui-icon-triangle-1-s")</li></ul></div>
 	 */
 
 	class QAccordionGen extends QPanel	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
-		/** @var boolean */
-		protected $blnDisabled = null;
 		/** @var mixed */
 		protected $mixActive;
 		/** @var mixed */
-		protected $mixAnimated = null;
-		/** @var boolean */
-		protected $blnAutoHeight = null;
-		/** @var boolean */
-		protected $blnClearStyle = null;
+		protected $mixAnimate = null;
 		/** @var boolean */
 		protected $blnCollapsible = null;
+		/** @var boolean */
+		protected $blnDisabled = null;
 		/** @var string */
 		protected $strEvent = null;
-		/** @var boolean */
-		protected $blnFillSpace = null;
 		/** @var mixed */
 		protected $mixHeader = null;
+		/** @var string */
+		protected $strHeightStyle = null;
 		/** @var mixed */
 		protected $mixIcons = null;
-		/** @var boolean */
-		protected $blnNavigation = null;
-		/** @var QJsClosure */
-		protected $mixNavigationFilter;
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
@@ -138,18 +157,14 @@
 
 		protected function makeJqOptions() {
 			$strJqOptions = '';
-			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('Active', 'active');
-			$strJqOptions .= $this->makeJsProperty('Animated', 'animated');
-			$strJqOptions .= $this->makeJsProperty('AutoHeight', 'autoHeight');
-			$strJqOptions .= $this->makeJsProperty('ClearStyle', 'clearStyle');
+			$strJqOptions .= $this->makeJsProperty('Animate', 'animate');
 			$strJqOptions .= $this->makeJsProperty('Collapsible', 'collapsible');
+			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('Event', 'event');
-			$strJqOptions .= $this->makeJsProperty('FillSpace', 'fillSpace');
 			$strJqOptions .= $this->makeJsProperty('Header', 'header');
+			$strJqOptions .= $this->makeJsProperty('HeightStyle', 'heightStyle');
 			$strJqOptions .= $this->makeJsProperty('Icons', 'icons');
-			$strJqOptions .= $this->makeJsProperty('Navigation', 'navigation');
-			$strJqOptions .= $this->makeJsProperty('NavigationFilter', 'navigationFilter');
 			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
@@ -193,74 +208,88 @@
 
 
 		/**
-		 * Remove the accordion functionality completely. This will return the element
-		 * back to its pre-init state.
+		 * <div>Removes the accordion functionality completely. This will return the
+		 * element back to its pre-init state.</div><ul><li><div>This method does not
+		 * accept any arguments.</div></li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * Disable the accordion.
+		 * <div>Disables the accordion.</div><ul><li><div>This method does not accept
+		 * any arguments.</div></li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * Enable the accordion.
+		 * <div>Enables the accordion.</div><ul><li><div>This method does not accept
+		 * any arguments.</div></li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * Get or set any accordion option. If no value is specified, will act as a
-		 * getter.
+		 * <div>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
+		 * <div>Type: <a>String</a></div> <div>The name of the option to
+		 * get.</div></li></ul>
+		 * @param $optionName
+		 */
+		public function Option($optionName) {
+			$this->CallJqUiMethod("option", $optionName);
+		}
+		/**
+		 * <div>Gets an object containing key/value pairs representing the current
+		 * accordion options hash.</div><ul><li><div>This method does not accept any
+		 * arguments.</div></li></ul>
+		 */
+		public function Option1() {
+			$this->CallJqUiMethod("option");
+		}
+		/**
+		 * <div>Sets the value of the accordion option associated with the specified
+		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
+		 * <div>Type: <a>String</a></div> <div>The name of the option to
+		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
+		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
-		public function Option($optionName, $value = null) {
+		public function Option2($optionName, $value) {
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * Set multiple accordion options at once by providing an options object.
+		 * <div>Sets one or more options for the
+		 * accordion.</div><ul><li><div><strong>options</strong></div> <div>Type:
+		 * <a>Object</a></div> <div>A map of option-value pairs to
+		 * set.</div></li></ul>
 		 * @param $options
 		 */
-		public function Option1($options) {
+		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * Activate a content part of the Accordion programmatically. The index can be
-		 * a zero-indexed number to match the position of the header to close or a
-		 * Selector matching an element. Pass false to close all (only possible with
-		 * collapsible:true).
-		 * @param $index
+		 * <div>Recompute the height of the accordion panels. Results depend on the
+		 * content and the <a><code>heightStyle</code></a>
+		 * option.</div><ul><li><div>This method does not accept any
+		 * arguments.</div></li></ul>
 		 */
-		public function Activate($index) {
-			$this->CallJqUiMethod("activate", $index);
-		}
-		/**
-		 * Recompute heights of the accordion contents when using the fillSpace option
-		 * and the container height changed. For example, when the container is a
-		 * resizable, this method should be called by its resize-event.
-		 */
-		public function Resize() {
-			$this->CallJqUiMethod("resize");
+		public function Refresh() {
+			$this->CallJqUiMethod("refresh");
 		}
 
 
 		public function __get($strName) {
 			switch ($strName) {
-				case 'Disabled': return $this->blnDisabled;
 				case 'Active': return $this->mixActive;
-				case 'Animated': return $this->mixAnimated;
-				case 'AutoHeight': return $this->blnAutoHeight;
-				case 'ClearStyle': return $this->blnClearStyle;
+				case 'Animate': return $this->mixAnimate;
 				case 'Collapsible': return $this->blnCollapsible;
+				case 'Disabled': return $this->blnDisabled;
 				case 'Event': return $this->strEvent;
-				case 'FillSpace': return $this->blnFillSpace;
 				case 'Header': return $this->mixHeader;
+				case 'HeightStyle': return $this->strHeightStyle;
 				case 'Icons': return $this->mixIcons;
-				case 'Navigation': return $this->blnNavigation;
-				case 'NavigationFilter': return $this->mixNavigationFilter;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -273,18 +302,6 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case 'Disabled':
-					try {
-						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
 				case 'Active':
 					$this->mixActive = $mixValue;
 				
@@ -293,43 +310,31 @@
 					}
 					break;
 
-				case 'Animated':
-					$this->mixAnimated = $mixValue;
+				case 'Animate':
+					$this->mixAnimate = $mixValue;
 				
 					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'animated', $mixValue);
+						$this->CallJqUiMethod('option', 'animate', $mixValue);
 					}
 					break;
-
-				case 'AutoHeight':
-					try {
-						$this->blnAutoHeight = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'autoHeight', $this->blnAutoHeight);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case 'ClearStyle':
-					try {
-						$this->blnClearStyle = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'clearStyle', $this->blnClearStyle);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 
 				case 'Collapsible':
 					try {
 						$this->blnCollapsible = QType::Cast($mixValue, QType::Boolean);
 						if ($this->Rendered) {
 							$this->CallJqUiMethod('option', 'collapsible', $this->blnCollapsible);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'Disabled':
+					try {
+						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -349,18 +354,6 @@
 						throw $objExc;
 					}
 
-				case 'FillSpace':
-					try {
-						$this->blnFillSpace = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'fillSpace', $this->blnFillSpace);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
 				case 'Header':
 					$this->mixHeader = $mixValue;
 				
@@ -369,6 +362,18 @@
 					}
 					break;
 
+				case 'HeightStyle':
+					try {
+						$this->strHeightStyle = QType::Cast($mixValue, QType::String);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'heightStyle', $this->strHeightStyle);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				case 'Icons':
 					$this->mixIcons = $mixValue;
 				
@@ -376,30 +381,6 @@
 						$this->CallJqUiMethod('option', 'icons', $mixValue);
 					}
 					break;
-
-				case 'Navigation':
-					try {
-						$this->blnNavigation = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'navigation', $this->blnNavigation);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case 'NavigationFilter':
-					try {
-						$this->mixNavigationFilter = QType::Cast($mixValue, 'QJsClosure');
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'navigationFilter', $this->mixNavigationFilter);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 
 
 				case 'Enabled':

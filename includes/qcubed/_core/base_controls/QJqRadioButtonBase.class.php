@@ -27,7 +27,7 @@
 	{
 		public function __get($strName) {
 			switch ($strName) {
-				case 'ShowText': return $this->blnText;
+				case 'ShowText': return $this->blnJqText;
 				
 				default: 
 					try { 

@@ -26,7 +26,10 @@
 	
 	
 	/**
-	 * This event is triggered when button is created.
+	 * <div>Triggered when the button is
+	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
+	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
 	 */
 	class QJqCheckBox_CreateEvent extends QJqUiEvent {
 		const EventName = 'buttoncreate';
@@ -35,20 +38,23 @@
 	/* Custom "property" event classes for this control */
 
 	/**
-	 * @property boolean $Disabled Disables (true) or enables (false) the button. Can be set when initialising
-	 * 		(first creating) the button.
-	 * @property boolean $JqText Whether to show any text - when set to false (display no text), icons (see
-	 * 		icons option) must be enabled, otherwise it'll be ignored.
-	 * @property array $Icons Icons to display, with or without text (see text option). The primary icon
-	 * 		is displayed by default on the left of the label text, the secondary by
-	 * 		default is on the right. Value for the primary and secondary properties
-	 * 		must be a classname (String), eg. "ui-icon-gear". For using only one icon:
-	 * 		icons: {primary:'ui-icon-locked'}. For using two icons: icons:
-	 * 		{primary:'ui-icon-gear',secondary:'ui-icon-triangle-1-s'}
-	 * @property string $Label Text to show on the button. When not specified (null), the element's html
-	 * 		content is used, or its value attribute when it's an input element of type
-	 * 		submit or reset; or the html content of the associated label element if its
-	 * 		an input of type radio or checkbox
+	 * @property boolean $Disabled <div>Disables the button if set to <code>true</code>.</div>
+	 * @property mixed $Icons <div>Icons to display, with or without text (see <a><code>text</code></a>
+	 * 		option). By default, the primary icon is displayed on the left of the label
+	 * 		text and the secondary is displayed on the right. The positioning can be
+	 * 		controlled via CSS. The value for the <code>primary</code> and
+	 * 		<code>secondary</code> properties must be a class name, e.g.,
+	 * 		<code>"ui-icon-gear"</code>. For using only one icon: <code>icons: {
+	 * 		primary: "ui-icon-locked" }</code>. For using two icons: <code>icons: {
+	 * 		primary: "ui-icon-gear", secondary: "ui-icon-triangle-1-s" }</code>.</div>
+	 * @property string $Label <div>Text to show in the button. When not specified (<code>null</code>),
+	 * 		the element's HTML content is used, or its <code>value</code> attribute if
+	 * 		the element is an input element of type submit or reset, or the HTML
+	 * 		content of the associated label element if the element is an input of type
+	 * 		radio or checkbox.</div>
+	 * @property boolean $JqText <div>Whether to show the label. When set to <code>false</code> no text will
+	 * 		be displayed, but the <a><code>icons</code></a> option must be enabled,
+	 * 		otherwise the <code>text</code> option will be ignored.</div>
 	 */
 
 	class QJqCheckBoxGen extends QCheckBox	{
@@ -56,12 +62,12 @@
 		protected $strStyleSheets = __JQUERY_CSS__;
 		/** @var boolean */
 		protected $blnDisabled = null;
+		/** @var mixed */
+		protected $mixIcons = null;
+		/** @var string */
+		protected $strLabel = null;
 		/** @var boolean */
 		protected $blnJqText = null;
-		/** @var array */
-		protected $arrIcons = null;
-		/** @var string */
-		protected $strLabel;
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
@@ -75,9 +81,9 @@
 		protected function makeJqOptions() {
 			$strJqOptions = '';
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
-			$strJqOptions .= $this->makeJsProperty('JqText', 'text');
 			$strJqOptions .= $this->makeJsProperty('Icons', 'icons');
 			$strJqOptions .= $this->makeJsProperty('Label', 'label');
+			$strJqOptions .= $this->makeJsProperty('JqText', 'text');
 			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
@@ -121,44 +127,72 @@
 
 
 		/**
-		 * Remove the button functionality completely. This will return the element
-		 * back to its pre-init state.
+		 * <div>Removes the button functionality completely. This will return the
+		 * element back to its pre-init state.</div><ul><li><div>This method does not
+		 * accept any arguments.</div></li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * Disable the button.
+		 * <div>Disables the button.</div><ul><li><div>This method does not accept any
+		 * arguments.</div></li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * Enable the button.
+		 * <div>Enables the button.</div><ul><li><div>This method does not accept any
+		 * arguments.</div></li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * Get or set any button option. If no value is specified, will act as a
-		 * getter.
+		 * <div>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
+		 * <div>Type: <a>String</a></div> <div>The name of the option to
+		 * get.</div></li></ul>
+		 * @param $optionName
+		 */
+		public function Option($optionName) {
+			$this->CallJqUiMethod("option", $optionName);
+		}
+		/**
+		 * <div>Gets an object containing key/value pairs representing the current
+		 * button options hash.</div><ul><li><div>This method does not accept any
+		 * arguments.</div></li></ul>
+		 */
+		public function Option1() {
+			$this->CallJqUiMethod("option");
+		}
+		/**
+		 * <div>Sets the value of the button option associated with the specified
+		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
+		 * <div>Type: <a>String</a></div> <div>The name of the option to
+		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
+		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
-		public function Option($optionName, $value = null) {
+		public function Option2($optionName, $value) {
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * Set multiple button options at once by providing an options object.
+		 * <div>Sets one or more options for the
+		 * button.</div><ul><li><div><strong>options</strong></div> <div>Type:
+		 * <a>Object</a></div> <div>A map of option-value pairs to
+		 * set.</div></li></ul>
 		 * @param $options
 		 */
-		public function Option1($options) {
+		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * Refreshes the visual state of the button. Useful for updating button state
-		 * after the native element's checked or disabled state is changed
-		 * programatically.
+		 * <div>Refreshes the visual state of the button. Useful for updating button
+		 * state after the native element's checked or disabled state is changed
+		 * programmatically.</div><ul><li><div>This method does not accept any
+		 * arguments.</div></li></ul>
 		 */
 		public function Refresh() {
 			$this->CallJqUiMethod("refresh");
@@ -168,9 +202,9 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
-				case 'JqText': return $this->blnJqText;
-				case 'Icons': return $this->arrIcons;
+				case 'Icons': return $this->mixIcons;
 				case 'Label': return $this->strLabel;
+				case 'JqText': return $this->blnJqText;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -195,35 +229,31 @@
 						throw $objExc;
 					}
 
-				case 'JqText':
-					try {
-						$this->blnJqText = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'text', $this->blnJqText);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
 				case 'Icons':
-					try {
-						$this->arrIcons = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'icons', $this->arrIcons);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
+					$this->mixIcons = $mixValue;
+				
+					if ($this->Rendered) {
+						$this->CallJqUiMethod('option', 'icons', $mixValue);
 					}
+					break;
 
 				case 'Label':
 					try {
 						$this->strLabel = QType::Cast($mixValue, QType::String);
 						if ($this->Rendered) {
 							$this->CallJqUiMethod('option', 'label', $this->strLabel);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'JqText':
+					try {
+						$this->blnJqText = QType::Cast($mixValue, QType::Boolean);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'text', $this->blnJqText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
