@@ -15,3 +15,6 @@ a.main_navselected { color: #FFF; font-weight: bold; text-transform: uppercase; 
 #viewSource { border: 1px solid #d90d0d; border-radius: 3px; background: #780000; color: #FFF; line-height: 2; }
 
 .demo-zone { min-height: 220px; overflow: auto; position: relative; }
+
+.renamer_item { cursor: pointer; padding: 5px; }
+.renamer_item_selected { background: #ffffcc; border-radius: 3px; }
