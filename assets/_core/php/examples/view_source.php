@@ -42,7 +42,7 @@
 	}
 ?>
 			<h1>Source of: <?php _p(preg_replace('/__.*__/', '', $strScript)); ?></h1>
-			<code><pre><?php highlight_file($strFilename); ?></pre></code>
+			<pre><code><?php highlight_file($strFilename); ?></code></pre>
 		</section>
 	</body>
 </html>

@@ -22,10 +22,10 @@
 			// Define the Simple Message Dialog Box
 			$this->dlgSimpleMessage = new QDialog($this);
 			$this->dlgSimpleMessage->Title = "Hello World!";
-			$this->dlgSimpleMessage->Text = '<i>Hello, world!</i><br/><br/>This is a standard, no-frills dialog box.<br/><br/>Notice how the contents of the dialog '.
-				'box can scroll, and notice how everything else in the application is grayed out.<br/><br/>Because we set <b>MatteClickable</b> to <b>true</b> ' .
-				'(by default), you can click anywhere outside of this dialog box to "close" it.<br/><br/>Additional text here is just to help show the scrolling ' .
-				'capability built-in to the panel/dialog box via the "Overflow" property of the control.';
+			$this->dlgSimpleMessage->Text = '<p><em>Hello, world!</em></p><p>This is a standard, no-frills dialog box.</p><p>Notice how the contents of the dialog '.
+				'box can scroll, and notice how everything else in the application is grayed out.</p><p>Because we set <strong>MatteClickable</strong> to <strong>true</strong> ' .
+				'(by default), you can click anywhere outside of this dialog box to "close" it.</p><p>Additional text here is just to help show the scrolling ' .
+				'capability built-in to the panel/dialog box via the "Overflow" property of the control.</p>';
 			$this->dlgSimpleMessage->AutoOpen = false;
 
 			// Make sure this Dislog Box is "hidden"

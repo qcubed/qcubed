@@ -6,10 +6,17 @@
 #instructions h1 { color: #330000; margin: 0; padding: 0; }
 
 /* Main page navigation. */
-.main_navigator { background-color: #333; border:1px solid #333; border-bottom: none; border-radius:3px 3px 0 0; color: #FFF; margin: 10px auto 0; padding: 10px 20px; text-align: center; }
-a.main_navlink { color: #FFF; font-weight: normal; text-decoration: none; }
-a.main_navselected { color: #FFF; font-weight: bold; text-transform: uppercase; text-decoration: underline; }
-.main_info { padding: 10px 20px; background-color: #F6F6F6; margin:0 auto 10px; border:1px solid #dedede; border-radius: 0 0 3px 3px; }
+.main-navigator { background-color: #333; border: 1px solid #333; border-bottom: none; border-radius: 3px 3px 0 0; color: #FFF; margin: 10px auto 0; padding: 10px 20px; text-align: center; }
+.main-navigator a { color: #FFF; font-weight: normal; text-decoration: none; }
+.main-navigator .selected { color: #FFF; font-weight: 700; text-transform: uppercase; text-decoration: underline; }
+.main-info { padding: 10px 20px; background-color: #F6F6F6; margin:0 auto 10px; border:1px solid #dedede; border-radius: 0 0 3px 3px; }
 
 /* The "View Source" button */
-#viewSource { border: 1px solid #d90d0d; border-radius: 3px; background: #780000; color: #FFF; line-height: 2; }
+#viewSource { border: 1px solid #d90d0d; border-radius: 3px; background: #780000; color: #FFF; line-height: 2; margin: 10px 0 0 0; }
+
+.demo-zone { min-height: 220px; overflow: auto; position: relative; }
+
+.data_repeater_example { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; float: left; margin: 10px; padding: 10px; width: 33%; }
+
+.renamer_item { cursor: pointer; padding: 5px; }
+.renamer_item_selected { background: #ffffcc; border-radius: 3px; }
