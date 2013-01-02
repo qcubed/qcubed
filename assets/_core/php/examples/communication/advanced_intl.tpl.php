@@ -13,22 +13,19 @@
         exactly the translations should be retrieved. There are static methods that you need
         to implement:</p>
     <ol>
-        <li>
-            <code>public static function Initialize()</code>
+        <li><code>public static function Initialize()</code>
             <p>In this factory method, your class is 
                 supposed to read <code>QApplication::$LanguageCode</code> and 
                 <code>QApplication::$CountryCode</code> settings and  based on these settings, 
                 initialize itself, returning a new instance (usually by calling <code>self::Load()</code>)</p>
         </li>
-        <li>
-            <code>public static function Load ($strLanguageCode = null, $strCountryCode = null)</code> 
+        <li><code>public static function Load ($strLanguageCode = null, $strCountryCode = null)</code> 
             <p>In this factory method, your class is supposed to load up everything it needs to later on spit
                 out translations really quickly. If you store translations in the database, load them 
                 here and cache them. Just like any factory method, this methoid is supposed to return an 
                 instance of your translator class.</p>
         </li>
-        <li>
-            <code>public function TranslateToken ($strToken)</code>
+        <li><code>public function TranslateToken ($strToken)</code>
             <p>Just like you'd expect, after everything is initialized, you can do the actual translation :-). This method is called every 
                 time something is to be translated in the user interface - for example, when 
                 <code>QApplication::Translate()</code> is called. Remember that this method is NOT supposed
@@ -41,18 +38,15 @@
         that's done, quickly translates everything in <code>TranslateToken()</code>.</p> 
 </div>
 
-<h2>Translations made using the custom QSampleTranslation class</h2>
-
-<div>
+<div class="demo-zone">
+	<h2>Translations made using the custom QSampleTranslation class</h2>
     <h3>French <small>(default set in <code>Form_Create()</code>)</small></h3>
     <ul>
         <li>Required -> <?php _t('Required'); ?></li>
         <li>Optional -> <?php _t('Optional'); ?></li>
     </ul>
     <h3><strong>Spanish</strong></h3>
-    <?php
-    $i18n = QI18n::Load('es');
-    ?>
+    <?php $i18n = QI18n::Load('es'); ?>
     <ul>
         <li>Required -> <?php echo $i18n->TranslateToken('Required'); ?></li>
         <li>Optional -> <?php echo $i18n->TranslateToken('Optional'); ?></li>

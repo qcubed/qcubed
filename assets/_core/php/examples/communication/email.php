@@ -36,50 +36,51 @@
         <strong>QEmailMessage</strong> class work.</p>
 </div>
 
-<p>For obvious reasons, this page is non-functional.  To view the commented out source,
-    please click on <strong>View Source</strong> button.</p>
-
+<div class="demo-zone">
+	<p>For obvious reasons, this page is non-functional.  To view the commented out source,
+		please click on <strong>View Source</strong> button.</p>
 <?php
-// We want to define our email SMTP server (it defaults to "localhost")
-// This would typically be done in prepend.inc, and its value should probably be a constant
-// that is defined in _configuration.inc
-QEmailServer::$SmtpServer = 'mx.acme.com';
-
-// Create a new message
-// Note that you can list multiple addresses and that QCubed supports Bcc and Cc
-$objMessage = new QEmailMessage();
-$objMessage->From = 'ACME Reporting Service <reporting@acme.com>';
-$objMessage->To = 'John Doe <jdoe@acme.com>, Jane Doe <jdoe2@acme.com>';
-$objMessage->Bcc = 'audit-system@acme.com';
-$objMessage->Subject = 'Report for ' . QDateTime::NowToString(QDateTime::FormatDisplayDate);
-
-// Setup Plaintext Message
-$strBody = "Dear John and Jane Doe,\r\n\r\n";
-$strBody .= "You have new reports to review.  Please go to the ACME Portal at http://portal.acme.com/ to review.\r\n\r\n";
-$strBody .= "Regards,\r\nACME Reporting Service";
-$objMessage->Body = $strBody;
-
-// Also setup HTML message (optional)
-$strBody = 'Dear John and Jane Doe,</p>';
-$strBody .= '<strong>You have new reports to review.</strong>  Please go to the <a href="http://portal.acme.com/">ACME Portal</a> to review.</p>';
-$strBody .= 'Regards,<br/><strong>ACME Reporting Service</strong>';
-$objMessage->HtmlBody = $strBody;
-
-// Add random/custom email headers
-$objMessage->SetHeader('x-application', 'ACME Reporting Service v1.2a');
-
-// Add a text file attachment (you can also send non-text attachments with QEmailAttachment)
-$strAttachmentContents = "This is the text file's contents";
-$objAttachment = new QEmailStringAttachment($strAttachmentContents, QMimeType::PlainText, "attachment.txt");
-$objMessage->AddAttachment($objAttachment);
-
-// Send the Message (Commented out for obvious reasons)
-//	QEmailServer::Send($objMessage);
-// Note that you can also shortcut the Send command to one line for simple messages (similar to PHP's mail())
-$strBody = "Dear John and Jane Doe,\r\n\r\n";
-$strBody .= "You have new reports to review.  Please go to the ACME Portal at http://portal.acme.com/ to review.\r\n\r\n";
-$strBody .= "Regards,\r\nACME Reporting Service";
-//	QEmailServer::Send(new QEmailMessage('reporting@acme.com', 'jdoe@acme.com', 'Alerts Received!', $strBody));
+	// We want to define our email SMTP server (it defaults to "localhost")
+	// This would typically be done in prepend.inc, and its value should probably be a constant
+	// that is defined in _configuration.inc
+	QEmailServer::$SmtpServer = 'mx.acme.com';
+	
+	// Create a new message
+	// Note that you can list multiple addresses and that QCubed supports Bcc and Cc
+	$objMessage = new QEmailMessage();
+	$objMessage->From = 'ACME Reporting Service <reporting@acme.com>';
+	$objMessage->To = 'John Doe <jdoe@acme.com>, Jane Doe <jdoe2@acme.com>';
+	$objMessage->Bcc = 'audit-system@acme.com';
+	$objMessage->Subject = 'Report for ' . QDateTime::NowToString(QDateTime::FormatDisplayDate);
+	
+	// Setup Plaintext Message
+	$strBody = "Dear John and Jane Doe,\r\n\r\n";
+	$strBody .= "You have new reports to review.  Please go to the ACME Portal at http://portal.acme.com/ to review.\r\n\r\n";
+	$strBody .= "Regards,\r\nACME Reporting Service";
+	$objMessage->Body = $strBody;
+	
+	// Also setup HTML message (optional)
+	$strBody = 'Dear John and Jane Doe,</p>';
+	$strBody .= '<strong>You have new reports to review.</strong>  Please go to the <a href="http://portal.acme.com/">ACME Portal</a> to review.</p>';
+	$strBody .= 'Regards,<br/><strong>ACME Reporting Service</strong>';
+	$objMessage->HtmlBody = $strBody;
+	
+	// Add random/custom email headers
+	$objMessage->SetHeader('x-application', 'ACME Reporting Service v1.2a');
+	
+	// Add a text file attachment (you can also send non-text attachments with QEmailAttachment)
+	$strAttachmentContents = "This is the text file's contents";
+	$objAttachment = new QEmailStringAttachment($strAttachmentContents, QMimeType::PlainText, "attachment.txt");
+	$objMessage->AddAttachment($objAttachment);
+	
+	// Send the Message (Commented out for obvious reasons)
+	//	QEmailServer::Send($objMessage);
+	// Note that you can also shortcut the Send command to one line for simple messages (similar to PHP's mail())
+	$strBody = "Dear John and Jane Doe,\r\n\r\n";
+	$strBody .= "You have new reports to review.  Please go to the ACME Portal at http://portal.acme.com/ to review.\r\n\r\n";
+	$strBody .= "Regards,\r\nACME Reporting Service";
+	//	QEmailServer::Send(new QEmailMessage('reporting@acme.com', 'jdoe@acme.com', 'Alerts Received!', $strBody));
 ?>
+</div>
 
 <?php require('../includes/footer.inc.php'); ?>

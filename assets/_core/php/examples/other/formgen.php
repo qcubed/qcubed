@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions" style="max-height: none">
+<div id="instructions" class="full">
 	<h1>Integrating QForms and the Code Generator</h1>
 
 	<p>With the understanding of how the <strong>Code Generator</strong> can generate your data
@@ -24,5 +24,7 @@
 		<li>QForm and QPanel Drafts</li>
 	</ul>
 </div>
+
+<style>#viewSource { display: none; }</style>
 
 <?php require('../includes/footer.inc.php'); ?>

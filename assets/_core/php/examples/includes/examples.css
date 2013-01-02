@@ -2,7 +2,9 @@
 .breadcrumb { border-bottom: 1px solid #dedede; padding: 5px; }
 .page-links { margin: 5px auto; text-align: center; }
 
-#instructions { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; margin: 10px auto; max-height: 300px; overflow: auto; padding: 10px 20px; }
+#instructions { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; margin:10px auto; padding: 1%; }
+#instructions.full { float: none; width: auto; }
+
 #instructions h1 { color: #330000; margin: 0; padding: 0; }
 
 /* Main page navigation. */
@@ -12,11 +14,17 @@
 .main-info { padding: 10px 20px; background-color: #F6F6F6; margin:0 auto 10px; border:1px solid #dedede; border-radius: 0 0 3px 3px; }
 
 /* The "View Source" button */
-#viewSource { border: 1px solid #d90d0d; border-radius: 3px; background: #780000; color: #FFF; line-height: 2; margin: 10px 0 0 0; }
-
-.demo-zone { min-height: 220px; overflow: auto; position: relative; }
+#viewSource { border: 1px solid #d90d0d; border-radius: 3px; background: #780000; color: #FFF; float: right; line-height: 2; margin-left: 1% }
 
 .data_repeater_example { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; float: left; margin: 10px; padding: 10px; width: 33%; }
 
 .renamer_item { cursor: pointer; padding: 5px; }
 .renamer_item_selected { background: #ffffcc; border-radius: 3px; }
+
+footer { clear: both; }
+
+@media screen and (min-width: 720px) {
+	#instructions { float: left;  width: 40%; }
+	.demo-zone { float: left; margin-left: 2%; min-height: 220px; width: 44%; }
+	#viewSource { float: right; margin-left: 1%; }
+}

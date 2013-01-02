@@ -34,7 +34,7 @@
 </div>
 
 <div class="demo-zone">
-	<img src="../images/data_model.png" alt="&quot;Examples Site Database&quot; data model" style="display:block; border-width: 0px; margin:auto; text-align:center;" />
+	<img src="../images/data_model.png" alt="&quot;Examples Site Database&quot; data model" style="max-width:100%" />
 </div>
 
 <?php require('../includes/footer.inc.php'); ?>

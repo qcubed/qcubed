@@ -29,52 +29,56 @@
         <a href="http://www.php.net/manual/en/ref.mcrypt.php" class="bodyLink">PHP Documentation</a>.</p>
 </div>
 
-<h3>TripleDES, Electronic Codebook Encryption</h3>
-<ul>
-    <?php
-    $strOriginal = 'The quick brown fox jumps over the lazy dog.';
+<div class="demo-zone">
+	<h2>TripleDES, Electronic Codebook Encryption</h3>
+	<ul>
+<?php
+		$strOriginal = 'The quick brown fox jumps over the lazy dog.';
+	
+		// Modify the cipher and base64 mode by modifying the "default" cipher and mode on the class, itself
+		// Specify a Key (this would typically be defined as a constant (e.g. in _configuration.inc)
+		QCryptography::$Key = 'SampleKey';
+	
+		// By default, let's leave Base64 encoding turned off
+		QCryptography::$Base64 = false;
+	
+		try {
+			$objCrypto = new QCryptography();
+			$strEncrypted = $objCrypto->Encrypt($strOriginal);
+			$strDecrypted = $objCrypto->Decrypt($strEncrypted);
+	
+			printf('<li>Original Data: <strong>%s</strong></li>', $strOriginal);
+			printf('<li>Encrypted Data: <pre><code>%s</code></pre></li>', $strEncrypted);
+			printf('<li>Decrypted Data: <strong>%s</strong></li>', $strDecrypted);
+		} catch (QCryptographyException $e) {
+			echo "<li>Cannot run the sample code because libmcrypt PHP module is not installed</li>";
+		}
+?>
+	</ul>
 
-    // Modify the cipher and base64 mode by modifying the "default" cipher and mode on the class, itself
-    // Specify a Key (this would typically be defined as a constant (e.g. in _configuration.inc)
-    QCryptography::$Key = 'SampleKey';
+	<h2>TripleDES, Electronic Codebook Encryption (with Base64 encoding)</h2>
+	<ul>
+<?php
+		$strOriginal = 'Just keep examining every low bid quoted for zinc etchings.';
+	
+		// Modify the base64 mode while making the specification on the constructor, itself
+		// By default, let's instantiate a QCryptography object with Base64 encoding enabled
+		// Note: while the resulting encrypted data is safe for any text-based stream, including
+		// use as GET/POST data, inside the URL, etc., the resulting encrypted data stream will
+		// be 33% larger.
+		try {
+			$objCrypto = new QCryptography(null, true);
+			$strEncrypted = $objCrypto->Encrypt($strOriginal);
+			$strDecrypted = $objCrypto->Decrypt($strEncrypted);
+	
+			printf('<li>Original Data: <strong>%s</strong></li>', $strOriginal);
+			printf('<li>Encrypted Data: <pre><code>%s</code></pre></li>', $strEncrypted);
+			printf('<li>Decrypted Data: <strong>%s</strong></li>', $strDecrypted);
+		} catch (QCryptographyException $e) {
+			echo "<li>Cannot run the sample code because libmcrypt PHP module is not installed</li>";
+		}
+?>
+	</ul>
+</div>
 
-    // By default, let's leave Base64 encoding turned off
-    QCryptography::$Base64 = false;
-
-    try {
-        $objCrypto = new QCryptography();
-        $strEncrypted = $objCrypto->Encrypt($strOriginal);
-        $strDecrypted = $objCrypto->Decrypt($strEncrypted);
-
-        printf('<li>Original Data: <strong>%s</strong></li>', $strOriginal);
-        printf('<li>Encrypted Data: <strong>%s</strong></li>', $strEncrypted);
-        printf('<li>Decrypted Data: <strong>%s</strong></li>', $strDecrypted);
-    } catch (QCryptographyException $e) {
-        echo "<p>Cannot run the sample code because libmcrypt PHP module is not installed</p>";
-    }
-    ?>
-</ul>
-<h3>TripleDES, Electronic Codebook Encryption (with Base64 encoding)</h3>
-<ul>
-    <?php
-    $strOriginal = 'Just keep examining every low bid quoted for zinc etchings.';
-
-    // Modify the base64 mode while making the specification on the constructor, itself
-    // By default, let's instantiate a QCryptography object with Base64 encoding enabled
-    // Note: while the resulting encrypted data is safe for any text-based stream, including
-    // use as GET/POST data, inside the URL, etc., the resulting encrypted data stream will
-    // be 33% larger.
-    try {
-        $objCrypto = new QCryptography(null, true);
-        $strEncrypted = $objCrypto->Encrypt($strOriginal);
-        $strDecrypted = $objCrypto->Decrypt($strEncrypted);
-
-        printf('<li>Original Data: <strong>%s</strong></li>', $strOriginal);
-        printf('<li>Encrypted Data: <strong>%s</strong></li>', $strEncrypted);
-        printf('<li>Decrypted Data: <strong>%s</strong></li>', $strDecrypted);
-    } catch (QCryptographyException $e) {
-        echo "<p>Cannot run the sample code because libmcrypt PHP module is not installed</p>";
-    }
-    ?>
-</ul>
-    <?php require('../includes/footer.inc.php'); ?>
+<?php require('../includes/footer.inc.php'); ?>
