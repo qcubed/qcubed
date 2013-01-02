@@ -36,15 +36,13 @@ QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE
 
 	<p>To define the QPlugin object, we'll first set simple metadata on it:</p>
 
-	<code><pre>
-				$objPlugin = new QPlugin();<br />
-				$objPlugin->strName = "MyCoolPlugin"; // no spaces allowed<br />
-				$objPlugin->strDescription = 'A great little plugin that does this and that';<br />
-				$objPlugin->strVersion = "0.1";<br />
-				$objPlugin->strPlatformVersion = "1.1"; // version of QCubed that this plugin works well with<br />
-				$objPlugin->strAuthorName = "Alex Weinstein, a.k.a. alex94040";<br />
-				$objPlugin->strAuthorEmail ="alex94040 [at] yahoo [dot] com";				
-		</pre></code>
+	<pre><code>	$objPlugin = new QPlugin();<br />
+	$objPlugin->strName = "MyCoolPlugin"; // no spaces allowed<br />
+	$objPlugin->strDescription = 'A great little plugin that does this and that';<br />
+	$objPlugin->strVersion = "0.1";<br />
+	$objPlugin->strPlatformVersion = "1.1"; // version of QCubed that this plugin works well with<br />
+	$objPlugin->strAuthorName = "Alex Weinstein, a.k.a. alex94040";<br />
+	$objPlugin->strAuthorEmail ="alex94040 [at] yahoo [dot] com";</code></pre>
 
 	<p>Then, let's add <strong>QPluginFile</strong>'s to the plugin. Each of the files that you
 		added to the root folder will need to be mentioned, along with some relevant
@@ -60,41 +58,41 @@ QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE
 
 	<p>Let's now register several <strong>QPluginFiles</strong> with your <strong>QPlugin</strong>. Note that
 		all paths are relative to the root of your plugin:</p>
-	<code><pre>
+	<pre><code>
 		$files = array(); <br />
 		$files[] = new QPluginControlFile("includes/QPhoneTextBox.class.php");<br />
 		$files[] = new QPluginJsFile("js/phonetextbox.js");<br />
 		$files[] = new QPluginExampleFile("example/phonetextbox.php");<br />
 		$files[] = new QPluginExampleFile("example/phonetextbox.tpl.php");<br />
 		$objPlugin->addComponents($files);
-	</pre></code>
+	</code></pre>
 
 	<p>After you've added all the files, it's time to declare any classfiles that need
 		to be included when QCubed attempts to instantiate your plugin. You can do this
 		by adding a <strong>QPluginIncludedClass</strong> component to your <strong>QPlugin</strong>:</p>
-	<code><pre>
+	<pre><code>
 			$components = array(); <br />
 			// First parameter is the name of the class, second - path to the file, <br />
 			// relative to the root of your plugin. Note that the QFile for this included<br />
 			// class should already be declared above! <br />
 			$components[] = new QPluginIncludedClass("QPhoneTextBox", "includes/QPhoneTextBox.class.php");<br />
 			$objPlugin->addComponents($components);<br />
-		</pre></code>
+		</code></pre>
 
 	<p>It's always a good idea to provide a few examples with your plugin. To do so,
 		we will create <strong>QPluginExample</strong> components, and add them to our <strong>QPlugin</strong>:</p>
-	<code><pre>
+	<pre><code>
 		$components = array(); <br />
 		// First parameter is the path to the file, relative to the root of your plugin.<br />
 		// Second parameter is the description of the example. <br />
 		$components[] = new QPluginExample("example/phonetextbox.php", "Validate and format phone numbers");<br />
 		$objPlugin->addComponents($components);<br />
-	</pre></code>
+	</code></pre>
 
 	<p>Now, add a magical line to the end of the configuration file...</p>	
-	<code><pre>
+	<pre><code>
 		$objPlugin->install();
-	</pre></code>
+	</code></pre>
 
 	<p>..and you're done! <a href="packaging.php">Read the next chapter</a> to
 		learn about ways to package and distribute your plugin.</p>

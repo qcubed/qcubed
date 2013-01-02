@@ -20,10 +20,10 @@
 	<p><strong>Full Name</strong>: Notice how the QDataGridColumn definition contains
 		this very interesting statement:</p>
 
-	<code><pre>$this->dtgPersons->AddColumn(new QDataGridColumn(
+	<pre><code>$this->dtgPersons->AddColumn(new QDataGridColumn(
 	'Full Name',
 	'&lt;?= $_FORM->renderFullName($_ITEM) ?&gt;',
-	'HtmlEntities=false'));</pre></code>
+	'HtmlEntities=false'));</code></pre>
 
 	<p>Here's what it means - let's look at parameters passed to the QDataGridColumn
 		constructor.</p>

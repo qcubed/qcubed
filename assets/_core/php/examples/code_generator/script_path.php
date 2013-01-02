@@ -18,12 +18,12 @@
 		a real foreign key).  This file can be formatted in one of two ways.  The standard "QCubed"
 		format is basically:</p>
 
-	<code><pre>table1.column1 => table2.column2</pre></code>
+	<pre><code>table1.column1 => table2.column2</code></pre>
 
 	<p>where <strong>table1.column1</strong> is meant to be a Foreign Key to <strong>table2.column2</strong>.  The other
 		option is to use standard ANSI "sql" format:</p>
 
-	<code><pre>ALTER TABLE table1 ADD CONSTRAINT foo_bar FOREIGN KEY column1 ON table2(column2);</pre></code>
+	<pre><code>ALTER TABLE table1 ADD CONSTRAINT foo_bar FOREIGN KEY column1 ON table2(column2);</code></pre>
 
 	<p>This format is more compatible with ER Diagramming applications which can generate SQL scripts for use
 		with the database.  You can simply point the code generator to use the generated SQL script to help

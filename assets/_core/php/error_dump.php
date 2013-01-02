@@ -57,7 +57,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 ?>
 			<p><strong>Source File:</strong> <?php _p($__exc_strFilename); ?> <strong>Line:</strong> <?php _p($__exc_intLineNumber); ?></p>
 
-			<code><pre>
+			<pre><code>
 <?php
 			for ($__exc_intLine = max(1, $__exc_intLineNumber - 5); $__exc_intLine <= min(count($__exc_objFileArray), $__exc_intLineNumber + 5); $__exc_intLine++) {
 				if ($__exc_intLineNumber == $__exc_intLine){
@@ -66,7 +66,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 					printf("Line %s:    %s", $__exc_intLine, htmlentities($__exc_objFileArray[$__exc_intLine - 1]));
 				}
 			}
-?></pre></code>
+?></code></pre>
 <?php
 			if (isset($__exc_objErrorAttributeArray)) {
 				foreach ($__exc_objErrorAttributeArray as $__exc_objErrorAttribute) {
@@ -74,7 +74,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 					$__exc_strJavascriptLabel = str_replace(" ", "", $__exc_objErrorAttribute->Label);
 					if ($__exc_objErrorAttribute->MultiLine) {
 						printf("\n<a href=\"#\" onclick=\"ToggleHidden('%s'); return false;\">Show/Hide</a></p>", $__exc_strJavascriptLabel);
-						printf('<code id="%s" style="display: none;"><pre>%s</pre></code>', $__exc_strJavascriptLabel, htmlentities($__exc_objErrorAttribute->Contents));
+						printf('<code id="%s" style="display: none;"><pre>%s</code></pre>', $__exc_strJavascriptLabel, htmlentities($__exc_objErrorAttribute->Contents));
 					} else {
 						printf("%s</p>\n", htmlentities($__exc_objErrorAttribute->Contents));
 					}
@@ -83,7 +83,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 ?>
 
 			<p><strong>Call Stack:</strong></p>
-			<code><pre><?php _p($__exc_strStackTrace); ?></pre></code>
+			<pre><code><?php _p($__exc_strStackTrace); ?></code></pre>
 
 			<p><strong>Variable Dump:</strong> <a href="#" onclick="ToggleHidden('VariableDump'); return false;">Show/Hide</a></p>
 			<code id="VariableDump" style="display: none;"><pre><?php
@@ -127,7 +127,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 				}
 
 				_p($__exc_StrToDisplay, false);
-?></pre></code>
+?></code></pre>
 		</section>
 
 		<hr />
