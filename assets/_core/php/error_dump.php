@@ -61,9 +61,9 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 <?php
 			for ($__exc_intLine = max(1, $__exc_intLineNumber - 5); $__exc_intLine <= min(count($__exc_objFileArray), $__exc_intLineNumber + 5); $__exc_intLine++) {
 				if ($__exc_intLineNumber == $__exc_intLine){
-					printf("<span class='warning'>Line %s:    %s</span>\n", $__exc_intLine, htmlentities($__exc_objFileArray[$__exc_intLine - 1]));
+					printf("<span class='warning'>Line %s:    %s</span>", $__exc_intLine, htmlentities($__exc_objFileArray[$__exc_intLine - 1]));
 				}else{
-					printf("Line %s:    %s\n", $__exc_intLine, htmlentities($__exc_objFileArray[$__exc_intLine - 1]));
+					printf("Line %s:    %s", $__exc_intLine, htmlentities($__exc_objFileArray[$__exc_intLine - 1]));
 				}
 			}
 ?>
