@@ -26,6 +26,6 @@
 		<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) ?>/qcubed_unit_tests.php">QCubed Unit Tests</a> - set of tests that QCubed developers use to verify the integrity of the framework. Test dataset required. </li>
 	</ul>
 <?php if (!QApplication::IsRemoteAdminSession()) { ?>
-	<code><pre><?php QApplication::VarDump(); ?></pre></code>
+	<pre><code><?php QApplication::VarDump(); ?></code></pre>
 <?php } ?>
 <?php require(__CONFIGURATION__ . '/footer.inc.php'); ?>

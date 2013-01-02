@@ -1,22 +1,77 @@
-/* red color:#780000; grey color:#F6F6F6; */
-body { color: #333; font-family: Arial, sans-serif; margin:0; padding: 0; }
+@import url('http://fonts.googleapis.com/css?family=Brawler|Titillium+Web:400,700');
+/* Basic elements */
+body { color: #333; font-family: 'Titillium Web', sans-serif; font-size: 1em; line-height: 1.22; margin:0; padding: 0; }
 a, a:visited, a:link { color: #780000; }
 a:hover, a:active { color: #d90d0d; }
 button { cursor: pointer; }
-h1, h2, h3, h4, h5, h6 { font-family: serif; }
+
+h1 { font-family: 'Brawler', serif; font-weight: 400; }
+h2, h3, h4, h5, h6 { font-weight: 700; }
+
+form { margin:0; padding: 0; position: relative; }
+
+input,
+textarea,
+select { border: 1px inset #dedede; border-radius: 3px; padding: 5px; }
+input[type=file] { border: none; padding:0; }
+
+textarea:focus,
+input:focus,
+select:focus { border: 1px solid #333; box-shadow: 0 0 5px #dedede; outline: 0; }
+
+textarea:disabled,
+input:disabled,
+select:disabled { border: 1px solid #dedede; color: #dedede; font-style: italic; }
 
 section { padding: 10px; }
 footer { background: #333; color: #fff; padding: 10px; }
 
-code pre { background: #f6f6f6; border: 1px solid #ddd; border-radius: 3px; padding: 10px; margin:10px auto; white-space: normal; }
-.warning { color: #d90d0d; }
-.success { color: green; }
-
-.datagrid { margin: auto; width: 100%; }
-.datagrid th { background: #333; color: #fff; padding: 5px; }
-.datagrid td { padding: 5px; }
+pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; display: block; padding: 10px; margin:10px auto; white-space: pre-wrap; }
 
 #logo { float: left; height: 30px; }
 #tagline a { color: #fff; font-weight: 700; line-height: 30px; margin-left: 10px; text-decoration: none; }
+
+/* QControls */
+.datagrid { margin: auto; width: 100%; }
+.datagrid th { background: #333; color: #fff; padding: 5px; }
+.datagrid th a { color:#f6f6f6; text-decoration: none; text-transform: uppercase; }
+.datagrid th a:hover { text-decoration: underline; }
+.datagrid td { border-bottom:1px solid #dedede; padding: 5px; }
+
+.datagrid caption { overflow: hidden; padding: 5px; position: relative; }
+.datagrid .paginator-control { float: right; }
+.datagrid .paginator-results { float: left; }
+.paginator .arrow { color: #dedede; font-style: italic; }
+.paginator .arrow a { font-style: normal; }
+.paginator .break { color: #dedede; padding: 5px; }
+.paginator .page { color: #dedede; display: inline-block; padding: 0 5px; }
+.paginator .selected { background: #780000; border:1px solid #d90d0d; border-radius: 3px; display: inline-block; color: #fff; padding: 0 5px; }
+
+/* Form fields */
+.renderWithName { padding: 5px 0; overflow: hidden; position: relative; }
+
+.form-field input,
+.form-field textarea { max-width: 300px; width: 99%; }
+.form-actions { border-radius: 3px; background: #333; padding: 10px; margin: 10px auto; }
+.form-save,
+.form-cancel,
+.form-delete{ display: inline; }
+.form-delete button { color: #780000; font-weight: 700; }
+
+/* To change form label/field layout, swap the comment here */
+.form-name { padding-right: 10px; }
+.form-field {  }
+.form-save {  }
+.form-delete { padding-left: 20px; }
+/*
+.form-name { float: left; padding-right: 10px; text-align: right; width: 33%; }
+.form-field { float: left; width: 50%; }
+.form-save { padding-left: 33%; }
+.form-delete { padding-left: 6%; }
+*/
+
+/* Status coloring */
+.warning, .error { color: #d90d0d; }
+.success { color: green; }
 
 .link-list li { margin-top: 7px; }

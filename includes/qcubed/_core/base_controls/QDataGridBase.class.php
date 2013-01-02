@@ -566,9 +566,9 @@
 		}
 
 		protected function GetPaginatorRowHtml($objPaginator) {
-			$strToReturn = "  <span class=\"right\">";
+			$strToReturn = "  <span class=\"paginator-control\">";
 			$strToReturn .= $objPaginator->Render(false);
-			$strToReturn .= "</span>\r\n  <span class=\"left\">";
+			$strToReturn .= "</span>\r\n  <span class=\"paginator-results\">";
 			if ($this->TotalItemCount > 0) {
 				$intStart = (($this->PageNumber - 1) * $this->ItemsPerPage) + 1;
 				$intEnd = $intStart + count($this->DataSource) - 1;
@@ -596,9 +596,9 @@
 			$strToReturn = sprintf('<span style="text-transform: uppercase;">%s</span>', $objColumn->Name);
 
 			if ($this->intSortDirection == 0)
-				$strToReturn .= sprintf(' <img src="%s/sort_arrow.png" width="7" height="7" border="0" alt="Sorted" />', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__);
+				$strToReturn .= sprintf(' <img src="%s/sort_arrow.png" alt="Sorted" />', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__);
 			else
-				$strToReturn .= sprintf(' <img src="%s/sort_arrow_reverse.png" width="7" height="7" border="0" alt="Reverse Sorted" />', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__);
+				$strToReturn .= sprintf(' <img src="%s/sort_arrow_reverse.png" alt="Reverse Sorted" />', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__);
 
 			return $strToReturn;
 		}

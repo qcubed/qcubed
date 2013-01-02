@@ -2,6 +2,7 @@
 require_once('../qcubed.inc.php');
 
 class ExampleForm extends QForm {
+
 	// Declare the DataGrids
 	protected $dtgProjects;
 	protected $dtgCustom;
@@ -28,7 +29,6 @@ class ExampleForm extends QForm {
 		$this->dtgProjects->ItemsPerPage = 20;
 
 		// Define Columns
-
 		//Project Name
 		$colName = new QDataGridColumn('Project', '<?= $_ITEM->Name?>');
 		$colName->OrderByClause = QQ::OrderBy(QQN::Project()->Name);
@@ -40,8 +40,8 @@ class ExampleForm extends QForm {
 		$colType->OrderByClause = QQ::OrderBy(QQN::Project()->ProjectStatusTypeId);
 		$colType->ReverseOrderByClause = QQ::OrderBy(QQN::Project()->ProjectStatusTypeId, false);
 		$colType->FilterType = QFilterType::ListFilter;
-		foreach(ProjectStatusType::$NameArray as $value=>$name)
-			$colType->FilterAddListItem($name, QQ::Equal(QQN::Project()->ProjectStatusTypeId,$value));
+		foreach (ProjectStatusType::$NameArray as $value => $name)
+			$colType->FilterAddListItem($name, QQ::Equal(QQN::Project()->ProjectStatusTypeId, $value));
 		$this->dtgProjects->AddColumn($colType);
 
 		//Manager First Name
@@ -62,17 +62,17 @@ class ExampleForm extends QForm {
 		$this->dtgProjects->SetDataBinder('dtgProjects_Bind');
 
 
-		/**************************/
+		/*		 * *********************** */
 		// Make the DataGrid look nice
 		$objStyle = $this->dtgProjects->RowStyle;
 		$objStyle->FontSize = 12;
 
 		$objStyle = $this->dtgProjects->AlternateRowStyle;
-		$objStyle->BackColor = '#eaeaea';
+		$objStyle->BackColor = '#f6f6f6';
 
 		$objStyle = $this->dtgProjects->HeaderRowStyle;
 		$objStyle->ForeColor = 'white';
-		$objStyle->BackColor = '#000066';
+		$objStyle->BackColor = '#780000';
 
 		// Because browsers will apply different styles/colors for LINKs
 		// We must explicitly define the ForeColor for the HeaderLink.
@@ -87,11 +87,9 @@ class ExampleForm extends QForm {
 
 		// Next, we must be sure to load the data source, passing in the datagrid's
 		// limit info into our loadall method.
-		$this->dtgProjects->DataSource = Project::QueryArray($this->dtgProjects->Conditions,
-				QQ::Clause(
-					$this->dtgProjects->OrderByClause,
-					$this->dtgProjects->LimitClause
-					));
+		$this->dtgProjects->DataSource = Project::QueryArray($this->dtgProjects->Conditions, QQ::Clause(
+								$this->dtgProjects->OrderByClause, $this->dtgProjects->LimitClause
+						));
 	}
 
 	protected function dtgCustom_Create() {
@@ -104,20 +102,20 @@ class ExampleForm extends QForm {
 		$this->dtgCustom->AddColumn($colName);
 
 		$colAddresses = new QDataGridColumn('# of Addresses', '<?= $_ITEM["AddressCount"] ?>');
-		$colAddresses->FilterByCommand = array('column'=>'AddressCount');
+		$colAddresses->FilterByCommand = array('column' => 'AddressCount');
 		$this->dtgCustom->AddColumn($colAddresses);
 
-		/**************************/
+		/*		 * *********************** */
 		// Make the DataGrid look nice
 		$objStyle = $this->dtgCustom->RowStyle;
 		$objStyle->FontSize = 12;
 
 		$objStyle = $this->dtgCustom->AlternateRowStyle;
-		$objStyle->BackColor = '#eaeaea';
+		$objStyle->BackColor = '#f6f6f6';
 
 		$objStyle = $this->dtgCustom->HeaderRowStyle;
 		$objStyle->ForeColor = 'white';
-		$objStyle->BackColor = '#000066';
+		$objStyle->BackColor = '#780000';
 
 		// Because browsers will apply different styles/colors for LINKs
 		// We must explicitly define the ForeColor for the HeaderLink.
@@ -126,7 +124,7 @@ class ExampleForm extends QForm {
 		$objStyle->ForeColor = 'white';
 	}
 
-	protected function dtgCustom_Bind()	{
+	protected function dtgCustom_Bind() {
 		//Set up our normal query
 		$sql = 'SELECT
 					p.first_name as FirstName,
@@ -137,9 +135,9 @@ class ExampleForm extends QForm {
 				GROUP BY p.id';
 
 		//apply any filters the user has set
-		foreach($this->dtgCustom->FilterInfo as $filter) {
-			if($filter['column'] == 'AddressCount') {
-				$sql .= ' HAVING count(a.id) = '. $filter['value'];
+		foreach ($this->dtgCustom->FilterInfo as $filter) {
+			if ($filter['column'] == 'AddressCount') {
+				$sql .= ' HAVING count(a.id) = ' . $filter['value'];
 			}
 		}
 

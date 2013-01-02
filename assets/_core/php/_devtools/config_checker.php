@@ -33,7 +33,7 @@
 	</ol>
 <?php	if (!strtoupper(substr(PHP_OS, 0, 3) == 'WIN') && strlen($commands) > 0) { // On non-windows only, and only if there's at least 1 command to show ?>
 	<p>Here are commands that can fix several of these issues:</p>
-	<code><pre><?php _p($commands); ?></pre></code>
+	<pre><code><?php _p($commands); ?></code></pre>
 <?php	} ?>
 	<p><input type='button' value="I'm done, continue" onclick="window.location.reload()" /></p>
 	<p><a href="start_page.php">Ignore these warnings and continue</a> (not recommended)</p>

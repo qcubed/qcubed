@@ -36,21 +36,21 @@
 	<div>
 		<?php if ($strErrors = QCodeGen::$RootErrors) { ?>
 			<p><strong>The following root errors were reported:</strong></p>
-			<code><pre><?php DisplayMonospacedText($strErrors); ?></pre></code>
+			<pre><code><?php DisplayMonospacedText($strErrors); ?></code></pre>
 		<?php } else { ?>
 			<p><strong>CodeGen Settings (as evaluated from <?php _p(QCodeGen::$SettingsFilePath); ?>):</strong></p>
-			<code><pre><?php DisplayMonospacedText(QCodeGen::GetSettingsXml()); ?></pre></code>
+			<pre><code><?php DisplayMonospacedText(QCodeGen::GetSettingsXml()); ?></code></pre>
 		<?php } ?>
 
 		<?php foreach (QCodeGen::$CodeGenArray as $objCodeGen) { ?>
 			<p><strong><?php _p($objCodeGen->GetTitle()); ?></strong></p>
-			<code><pre><p class="code_title"><?php _p($objCodeGen->GetReportLabel()); ?></p>
+			<pre><code><p class="code_title"><?php _p($objCodeGen->GetReportLabel()); ?></p>
 				<?php @DisplayMonospacedText($objCodeGen->GenerateAll()); ?>
 				<?php if ($strErrors = $objCodeGen->Errors) { ?>
 					<p class="code_title">The following errors were reported:</p>
 					<?php DisplayMonospacedText($objCodeGen->Errors); ?>
 				<?php } ?>
-			</pre></code>
+			</code></pre>
 		<?php } ?>
 
 		<?php foreach (QCodeGen::GenerateAggregate() as $strMessage) { ?>

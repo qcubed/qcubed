@@ -4,26 +4,23 @@
 	<div id="instructions">
 		<h1>AJAX Calculator</h1>
 
-		To show the ease of AJAX in a slightly more complex QForm, we take our <b>Calculator Example
-		with Validation</b> from before... and we only change <i>one word</i>.<br/><br/>
+		<p>To show the ease of Ajax in a slightly more complex QForm, we take our <strong>Calculator Example
+		with Validation</strong> from before... and we only change <em>one word</em>.</p>
 		
-		We change the <b>QServerAction</b> call to a <b>QAjaxAction</b> call, and now, we've
-		created an AJAX-based calculator.  Note that even things like validation messages, etc.,
-		will appear via AJAX and without a page refresh.
+		<p>We change the <strong>QServerAction</strong> call to a <strong>QAjaxAction</strong> call, and now, we've
+		created an Ajax-based calculator.  Note that even things like validation messages, etc.,
+		will appear via Ajax and without a page refresh.</p>
 	</div>
 
-	<div>
-		Value 1: <?php $this->txtValue1->RenderWithError(); ?>
-		<br/><br/>
+	<div class="demo-zone">
+		<p>Value 1: <?php $this->txtValue1->RenderWithError(); ?></p>
 		
-		Value 2: <?php $this->txtValue2->RenderWithError(); ?>
-		<br/><br/>
+		<p>Value 2: <?php $this->txtValue2->RenderWithError(); ?></p>
 		
-		Operation: <?php $this->lstOperation->Render(); ?>
-		<br/><br/>
+		<p>Operation: <?php $this->lstOperation->Render(); ?></p>
 		
 		<?php $this->btnCalculate->Render(); ?>
-		<hr/>
+		<hr />
 		<?php $this->lblResult->Render(); ?>
 	</div>
 
