@@ -17,6 +17,7 @@
 
 	<p>The next couple of pages will discuss the three main <strong>QForm</strong>- and <strong>QControl</strong>-related
 		components that the Code Generator generates code for:</p>
+
 	<ul>
 		<li>MetaControl Classes</li>
 		<li>Meta DataGrid Classes</li>

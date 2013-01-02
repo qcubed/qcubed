@@ -52,7 +52,6 @@ class ExamplesForm extends QForm {
 
 		$this->lblMessage->Text = '<strong>The Total</strong>: ' . $intTotal;
 	}
-
 }
 
 // Run the Form we have defined
