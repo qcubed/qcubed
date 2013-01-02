@@ -1,69 +1,69 @@
 <?php
-	require_once('../qcubed.inc.php');
+require_once('../qcubed.inc.php');
 
-	// Define the Qform with all our Qcontrols
-	class ExamplesForm extends QForm {
-		// Local declarations of the DataGrid
-		protected $dtgProjects;
-		protected $pxyExample;
+// Define the Qform with all our Qcontrols
+class ExamplesForm extends QForm {
 
-		protected function Form_Create() {
-			// Define the DataGrid -- note that the Meta DataGrid is a DataGrid, itself --
-			// so let's just use it as a datagrid
-			$this->dtgProjects = new ProjectDataGrid($this);
-			
-			// Only show projects whose status is "open"
-			$this->dtgProjects->AdditionalConditions = QQ::Equal(QQN::Project()->ProjectStatusTypeId, ProjectStatusType::Open);
+	// Local declarations of the DataGrid
+	protected $dtgProjects;
+	protected $pxyExample;
 
-			//expand on the ManagerPerson's login, since we're displaying it
-			$this->dtgProjects->AdditionalClauses = array(
-				QQ::Expand(QQN::Project()->ManagerPerson),
-				QQ::Expand(QQN::Project()->ManagerPerson->Login)
-				);
+	protected function Form_Create() {
+		// Define the DataGrid -- note that the Meta DataGrid is a DataGrid, itself --
+		// so let's just use it as a datagrid
+		$this->dtgProjects = new ProjectDataGrid($this);
 
-			// DataBinding is already configured -- so we do not need to worry about it
+		// Only show projects whose status is "open"
+		$this->dtgProjects->AdditionalConditions = QQ::Equal(QQN::Project()->ProjectStatusTypeId, ProjectStatusType::Open);
 
-			// But remember that dtgProjects is just a regular datagrid, as well
-			// So we can configure as we see fit, e.g. adding pagination or styling
-			$this->dtgProjects->Paginator = new QPaginator($this->dtgProjects);
-			$this->dtgProjects->ItemsPerPage = 6;
-			$this->dtgProjects->AlternateRowStyle->CssClass = 'alternate';
+		//expand on the ManagerPerson's login, since we're displaying it
+		$this->dtgProjects->AdditionalClauses = array(
+			QQ::Expand(QQN::Project()->ManagerPerson),
+			QQ::Expand(QQN::Project()->ManagerPerson->Login)
+		);
 
-			// All we need to do is to utilize the ProjectDataGrid built-in functionality
-			// to create, define and setup the various columns that WE choose, in the order
-			// that WE want.  NOTE that we use simple string-based property names, OR QQuery
-			// node descriptors to specify what we want for each column.
-			$this->dtgProjects->MetaAddColumn('Name');
-			$this->dtgProjects->MetaAddColumn('StartDate');
-			$this->dtgProjects->MetaAddColumn(QQN::Project()->EndDate);
+		// DataBinding is already configured -- so we do not need to worry about it
+		// But remember that dtgProjects is just a regular datagrid, as well
+		// So we can configure as we see fit, e.g. adding pagination or styling
+		$this->dtgProjects->Paginator = new QPaginator($this->dtgProjects);
+		$this->dtgProjects->ItemsPerPage = 6;
+		$this->dtgProjects->AlternateRowStyle->CssClass = 'alternate';
 
-			// We can easily add columns from linked/related tables.  However, to do this
-			// you MUST use a QQuery node descriptor.  No string-based properties allowed.
-			// Bonus: the Meta DataGrid will even automatically add sorting for columns in related tables.
-			$colUsername = $this->dtgProjects->MetaAddColumn(QQN::Project()->ManagerPerson->Login->Username);
+		// All we need to do is to utilize the ProjectDataGrid built-in functionality
+		// to create, define and setup the various columns that WE choose, in the order
+		// that WE want.  NOTE that we use simple string-based property names, OR QQuery
+		// node descriptors to specify what we want for each column.
+		$this->dtgProjects->MetaAddColumn('Name');
+		$this->dtgProjects->MetaAddColumn('StartDate');
+		$this->dtgProjects->MetaAddColumn(QQN::Project()->EndDate);
 
-			// And remember, since it's a regular datagrid with regular columns,
-			// we can stylize as we see fit
-			$colUsername->BackColor = '#cef';
-			$colUsername->Name = 'Manager\'s Username';
+		// We can easily add columns from linked/related tables.  However, to do this
+		// you MUST use a QQuery node descriptor.  No string-based properties allowed.
+		// Bonus: the Meta DataGrid will even automatically add sorting for columns in related tables.
+		$colUsername = $this->dtgProjects->MetaAddColumn(QQN::Project()->ManagerPerson->Login->Username);
 
-			// Also, note that MetaAddColumn and MetaAddTypeColumn can use attribute overriding as well
-			$this->dtgProjects->MetaAddTypeColumn('ProjectStatusTypeId', 'ProjectStatusType', 'FontBold=true');
+		// And remember, since it's a regular datagrid with regular columns,
+		// we can stylize as we see fit
+		$colUsername->BackColor = '#cef';
+		$colUsername->Name = 'Manager\'s Username';
 
-			$this->pxyExample = new QControlProxy($this);
-			$this->pxyExample->AddAction(new QClickEvent(), new QAjaxAction('pxyExample_Click'));
+		// Also, note that MetaAddColumn and MetaAddTypeColumn can use attribute overriding as well
+		$this->dtgProjects->MetaAddTypeColumn('ProjectStatusTypeId', 'ProjectStatusType', 'FontBold=true');
 
-			// FInally, there are even Meta methods to add an Edit Button column
-			$this->dtgProjects->MetaAddEditProxyColumn($this->pxyExample, 'Click Me', 'Faux Edit Column');
-		}
+		$this->pxyExample = new QControlProxy($this);
+		$this->pxyExample->AddAction(new QClickEvent(), new QAjaxAction('pxyExample_Click'));
 
-		// Instead of actually redirecting you to an example edit project page, we'll
-		// use a DisplayAlert() call as a stub function.  Hopefully, you get the idea. =)
-		protected function pxyExample_Click($strFormId, $strControlId, $strParameter) {
-			QApplication::DisplayAlert('Pretending to edit Project #' . $strParameter);
-		}
+		// FInally, there are even Meta methods to add an Edit Button column
+		$this->dtgProjects->MetaAddEditProxyColumn($this->pxyExample, 'Click Me', 'Faux Edit Column');
 	}
 
-	// Run the Form we have defined
-	ExamplesForm::Run('ExamplesForm');
+	// Instead of actually redirecting you to an example edit project page, we'll
+	// use a DisplayAlert() call as a stub function.  Hopefully, you get the idea. =)
+	protected function pxyExample_Click($strFormId, $strControlId, $strParameter) {
+		QApplication::DisplayAlert('Pretending to edit Project #' . $strParameter);
+	}
+}
+
+// Run the Form we have defined
+ExamplesForm::Run('ExamplesForm');
 ?>
