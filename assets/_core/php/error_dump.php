@@ -50,15 +50,14 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 				$_SESSION['RenderedPageForError'] = $__exc_strRenderedPage;
 ?>
 				<p><strong>Rendered Page:</strong>
-					<a target="_blank" href="<?php _p(__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__); ?>/error_already_rendered_page.php">Click here</a> to view contents able to be rendered</a>
+					<a target="_blank" href="<?php _p(__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__); ?>/error_already_rendered_page.php">Click here to view contents able to be rendered.</a>
 				</p>
 <?php
 			}
 ?>
 			<p><strong>Source File:</strong> <?php _p($__exc_strFilename); ?> <strong>Line:</strong> <?php _p($__exc_intLineNumber); ?></p>
 
-			<pre><code>
-<?php
+			<pre><code><?php
 			for ($__exc_intLine = max(1, $__exc_intLineNumber - 5); $__exc_intLine <= min(count($__exc_objFileArray), $__exc_intLineNumber + 5); $__exc_intLine++) {
 				if ($__exc_intLineNumber == $__exc_intLine){
 					printf("<span class='warning'>Line %s:    %s</span>", $__exc_intLine, htmlentities($__exc_objFileArray[$__exc_intLine - 1]));
@@ -74,7 +73,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 					$__exc_strJavascriptLabel = str_replace(" ", "", $__exc_objErrorAttribute->Label);
 					if ($__exc_objErrorAttribute->MultiLine) {
 						printf("\n<a href=\"#\" onclick=\"ToggleHidden('%s'); return false;\">Show/Hide</a></p>", $__exc_strJavascriptLabel);
-						printf('<code id="%s" style="display: none;"><pre>%s</code></pre>', $__exc_strJavascriptLabel, htmlentities($__exc_objErrorAttribute->Contents));
+						printf('<pre><code id="%s" style="display: none;">%s</code></pre>', $__exc_strJavascriptLabel, htmlentities($__exc_objErrorAttribute->Contents));
 					} else {
 						printf("%s</p>\n", htmlentities($__exc_objErrorAttribute->Contents));
 					}
@@ -86,7 +85,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 			<pre><code><?php _p($__exc_strStackTrace); ?></code></pre>
 
 			<p><strong>Variable Dump:</strong> <a href="#" onclick="ToggleHidden('VariableDump'); return false;">Show/Hide</a></p>
-			<code id="VariableDump" style="display: none;"><pre><?php
+			<pre><code id="VariableDump" style="display: none;"><?php
 				// Dump All Variables
 				foreach ($GLOBALS as $__exc_Key => $__exc_Value) {
 					// TODO: Figure out why this is so strange
@@ -118,7 +117,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 								$__exc_StrVarExport = htmlentities(var_export($__exc_ObjVariableArray[$__exc_Key], true));
 
 							$__exc_StrToDisplay .= sprintf("<a style='display:block' href='#%s' onclick='javascript:ToggleHidden(\"%s\"); return false;'>%s</a>", $varCounter, $varCounter, $__exc_Key);
-							$__exc_StrToDisplay .= sprintf("<div id=\"%s\" style='display:none'>%s</div>", $varCounter, $__exc_StrVarExport);
+							$__exc_StrToDisplay .= sprintf("<span id=\"%s\" style='display:none'>%s</span>", $varCounter, $__exc_StrVarExport);
 							$varCounter++;
 						} catch (Exception $__exc_objExcOnVarDump) {
 							$__exc_StrToDisplay .= sprintf("Fatal error:  Nesting level too deep - recursive dependency?\n", $__exc_objExcOnVarDump->Message);
