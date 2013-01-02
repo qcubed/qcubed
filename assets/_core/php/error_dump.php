@@ -66,8 +66,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 					printf("Line %s:    %s", $__exc_intLine, htmlentities($__exc_objFileArray[$__exc_intLine - 1]));
 				}
 			}
-?>
-			</pre></code>
+?></pre></code>
 <?php
 			if (isset($__exc_objErrorAttributeArray)) {
 				foreach ($__exc_objErrorAttributeArray as $__exc_objErrorAttribute) {
@@ -87,8 +86,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 			<code><pre><?php _p($__exc_strStackTrace); ?></pre></code>
 
 			<p><strong>Variable Dump:</strong> <a href="#" onclick="ToggleHidden('VariableDump'); return false;">Show/Hide</a></p>
-			<code id="VariableDump" style="display: none;"><pre>
-<?php
+			<code id="VariableDump" style="display: none;"><pre><?php
 				// Dump All Variables
 				foreach ($GLOBALS as $__exc_Key => $__exc_Value) {
 					// TODO: Figure out why this is so strange
@@ -119,18 +117,17 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 							else
 								$__exc_StrVarExport = htmlentities(var_export($__exc_ObjVariableArray[$__exc_Key], true));
 
-							$__exc_StrToDisplay .= sprintf("  <a style='display:block' href='#%s' onclick='javascript:ToggleHidden(\"%s\"); return false;'>%s</a>\n", $varCounter, $varCounter, $__exc_Key);
+							$__exc_StrToDisplay .= sprintf("<a style='display:block' href='#%s' onclick='javascript:ToggleHidden(\"%s\"); return false;'>%s</a>", $varCounter, $varCounter, $__exc_Key);
 							$__exc_StrToDisplay .= sprintf("<div id=\"%s\" style='display:none'>%s</div>", $varCounter, $__exc_StrVarExport);
 							$varCounter++;
 						} catch (Exception $__exc_objExcOnVarDump) {
-							$__exc_StrToDisplay .= sprintf("  Fatal error:  Nesting level too deep - recursive dependency?\n", $__exc_objExcOnVarDump->Message);
+							$__exc_StrToDisplay .= sprintf("Fatal error:  Nesting level too deep - recursive dependency?\n", $__exc_objExcOnVarDump->Message);
 						}
 					}
 				}
 
 				_p($__exc_StrToDisplay, false);
-?>
-			</pre></code>
+?></pre></code>
 		</section>
 
 		<hr />
