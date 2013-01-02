@@ -2,3 +2,4 @@
 .idea
 /nbproject/private/
 /includes/configuration/configuration.inc.php
+.DS_Store
