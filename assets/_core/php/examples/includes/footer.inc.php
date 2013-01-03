@@ -7,8 +7,8 @@
 		</footer>
 		
 		<script type="text/javascript">
-			jQuery('#viewSource').on("click", function (e) {
-				e.preventDefault();
+			// jQuery isn't always available
+			document.getElementById('viewSource').onclick = function (){
 				var fileNameSection = "",
 					objWindow;
 				if (arguments.length == 3) {
@@ -16,7 +16,8 @@
 				}
 				objWindow = window.open("<?php echo __VIRTUAL_DIRECTORY__ . __EXAMPLES__ ?>/view_source.php/<?php _p(Examples::GetCategoryId()."/".Examples::GetExampleId()); ?>" + fileNameSection, "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
 				objWindow.focus();
-			});
+				return false;
+			};
 			
 			window.gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
