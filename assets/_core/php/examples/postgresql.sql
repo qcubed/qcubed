@@ -20,10 +20,12 @@ CREATE TABLE login (
     username VARCHAR(20) NOT NULL,
     password VARCHAR(20),
     is_enabled BIGINT NOT NULL,
-    CONSTRAINT PK_login PRIMARY KEY (id)
+    CONSTRAINT PK_login PRIMARY KEY (id),
+    UNIQUE (person_id),
+    UNIQUE (username)
 );
-CREATE UNIQUE INDEX IDX_login_1 ON login (person_id);
-CREATE UNIQUE INDEX IDX_login_2 ON login (username);
+--CREATE UNIQUE INDEX IDX_login_1 ON login (person_id);
+--CREATE UNIQUE INDEX IDX_login_2 ON login (username);
 
 DROP TABLE IF EXISTS project;
 CREATE TABLE project (
@@ -55,9 +57,10 @@ CREATE TABLE project_status_type (
     name VARCHAR(50) NOT NULL,
     description TEXT,
     guidelines TEXT,
-    CONSTRAINT PK_project_status_type PRIMARY KEY (id)
+    CONSTRAINT PK_project_status_type PRIMARY KEY (id),
+    UNIQUE (name)
 );
-CREATE UNIQUE INDEX IDX_projectstatustype_1 ON project_status_type (name);
+--CREATE UNIQUE INDEX IDX_projectstatustype_1 ON project_status_type (name);
 
 DROP TABLE IF EXISTS person_with_lock;
 CREATE TABLE person_with_lock (
