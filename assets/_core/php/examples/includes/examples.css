@@ -6,6 +6,7 @@
 #instructions.full { float: none; width: auto; }
 
 #instructions h1 { color: #330000; margin: 0; padding: 0; }
+#instructions code { background: #fff; border: 1px solid #ccc; }
 
 /* Main page navigation. */
 .main-navigator { background-color: #333; border: 1px solid #333; border-bottom: none; border-radius: 3px 3px 0 0; color: #FFF; margin: 10px auto 0; padding: 10px 20px; text-align: center; }

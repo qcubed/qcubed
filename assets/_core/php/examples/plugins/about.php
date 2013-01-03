@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions" style="max-height: none">
+<div id="instructions" class="full">
 	<h1>Introduction to the Plugin Ecosystem</h1>
 
 	<p>QCubed was built on a principle that the core distribution should be
@@ -46,5 +46,7 @@
 		need to make sure that the folders are writeable before you ask QCubed to
 		uninstall the plugin.</p>
 </div>
+
+<style>#viewSource { display: none; }</style>
 
 <?php require('../includes/footer.inc.php'); ?>

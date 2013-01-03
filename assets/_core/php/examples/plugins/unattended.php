@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions" style="max-height: none">
+<div id="instructions" class="file">
 	<h1>Unattended Installation for Plugins</h1>
 
 	<p>When you're developing a plugin, it's often awkward to try to click-click-click
@@ -21,5 +21,7 @@
 	<p>Note that if you want to do run this utility remotely, you'll have to configure
 		the <strong>AllowRemoteAdmin</strong> settings in configuration.inc.php.</p>
 </div>
+
+<style>#viewSource { display: none; }</style>
 
 <?php require('../includes/footer.inc.php'); ?>
