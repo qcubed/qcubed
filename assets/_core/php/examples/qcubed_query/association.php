@@ -11,7 +11,7 @@
 
 	<p>Naming standards for the many to many relationship are the same as the naming standards for the public methods
 	for associating/unassociating in the class, itself.  So just as <strong>$objPerson->Get<span style="text-decoration: underline;">ProjectAsTeamMember</span>Array</strong> will
-	retrieve an array of Project objects that are associated to this Person object as a "Team Member", 
+	retrieve an array of Project objects that are associated to this Person object as a "Team Member",
 	<strong>QQN::Person()->ProjectAsTeamMember</strong> will refer to the "team_member_project_assn" association table joined against
 	the "person" table.</p>
 
@@ -31,6 +31,7 @@
 
 <div id="demoZone">
 	<h2>Get All People Who Are on a Project Managed by Karen Wolfe (Person ID #7)</h2>
+	<ul>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::Equal(QQN::Person()->ProjectAsTeamMember->Project->ManagerPersonId, 7),
@@ -42,15 +43,16 @@
 			QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
 		)
 	);
-	
+
 	foreach ($objPersonArray as $objPerson) {
-		_p($objPerson->FirstName . ' ' . $objPerson->LastName);
-		_p('<br/>', false);
+		_p('<li>'.$objPerson->FirstName . ' ' . $objPerson->LastName.'</li>', false);
 	}
 ?>
+	</ul>
 
 	<h2>Get All People Who Are on a Project Managed by Karen Wolfe (Person ID #7)<br/>showing the Project which is involved in the JOIN via Expand()</h2>
 	<p><i>Notice how some people may be listed twice, once for each project which he or she is part of that is managed by Karen Wolfe.</i></p>
+	<ul>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::Equal(QQN::Person()->ProjectAsTeamMember->Project->ManagerPersonId, 7),
@@ -60,15 +62,16 @@
 			QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
 		)
 	);
-	
+
 	foreach ($objPersonArray as $objPerson) {
-		printf('%s %s (via the "%s" project)<br/>',
+		printf('<li>%s %s (via the "%s" project)</li>',
 			QApplication::HtmlEntities($objPerson->FirstName),
 			QApplication::HtmlEntities($objPerson->LastName),
 			// Use the _ProjectAsTeamMember virtual attribute, which gives us the Project object
 			QApplication::HtmlEntities($objPerson->_ProjectAsTeamMember->Name));
 	}
 ?>
+	</ul>
 
 	<h2>Same as above, but this time, use ExpandAsArray()</h2>
 	<p><i>Notice how each person is only listed once... but each person has an internal/virtual <strong>_ProjectAsTeamMemberArray</strong> which may list more than one project.</i></p>
@@ -83,18 +86,17 @@
 			QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName, QQN::Person()->ProjectAsTeamMember->Project->Name)
 		)
 	);
-	
+
 	foreach ($objPersonArray as $objPerson) {
-		_p($objPerson->FirstName . ' ' . $objPerson->LastName);
-		_p('<br/>', false);
+		_p('<li>'.$objPerson->FirstName . ' ' . $objPerson->LastName, false);
 
 		// Now, instead of using the _ProjectAsTeamMember virtual attribute, we will use
 		// the _ProjectAsTeamMemberArray virtual attribute, which gives us an array of Project objects
 		$strProjectNameArray = array();
-		foreach ($objPerson->_ProjectAsTeamMemberArray as $objProject)
+		foreach ($objPerson->_ProjectAsTeamMemberArray as $objProject){
 			array_push($strProjectNameArray, QApplication::HtmlEntities($objProject->Name));
-
-		printf('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;via: %s<br/>', implode(', ', $strProjectNameArray));
+		}
+		printf(' via: %s</li>', implode(', ', $strProjectNameArray));
 	}
 ?>
 </div>
