@@ -173,13 +173,13 @@
 			$objClauses[] = QQ::Expand(
 				QQ::Virtual('assn_item', 
 					QQ::SubSql(
-						"select 
-							`project_id`
+						'select 
+							"project_id"
 					 	from 
-					 		`related_project_assn`
+					 		"related_project_assn"
 					 	where 
-							`child_project_id` = {1} 
-							 and `project_id` = 1", 
+							"child_project_id" = {1} 
+							 and "project_id" = 1', 
 							QQN::Project()->Id)
 				)
 			);
