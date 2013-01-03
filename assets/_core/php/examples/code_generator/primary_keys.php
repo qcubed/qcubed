@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions" style="max-height: none">
+<div id="instructions" class="full">
 	<h1>Primary Keys in Your Tables</h1>
 
 	<p>In order for any ORM architecture to work, there must be at least some kind of Primary Key defined
@@ -29,5 +29,7 @@
 		or database, then it is recommended that all tables have a single-column Primary Key (with one that
 		preferably is sequenced, auto_increment, or identity, depending on which DB platform you are using).</p>
 </div>
+
+<style>#viewSource { display: none; }</style>
 
 <?php require('../includes/footer.inc.php'); ?>

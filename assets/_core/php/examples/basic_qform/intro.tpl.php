@@ -26,7 +26,7 @@
 		which together define this <strong>QForm</strong> you are seeing.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h2>Hello World Example</h2>
 
 	<p><?php $this->lblMessage->Render(); ?></p>

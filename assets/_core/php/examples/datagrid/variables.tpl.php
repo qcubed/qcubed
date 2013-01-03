@@ -26,7 +26,7 @@
 		<strong>Public</strong> methods in your <strong>ExampleForm</strong> class.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->dtgPersons->Render(); ?>
 </div>
 

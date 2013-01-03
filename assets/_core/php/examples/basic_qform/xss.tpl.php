@@ -61,7 +61,7 @@
 	<p>See the five textboxes below to learn more about how this XSS protection works.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p><strong>Textbox protected with the default <code>QCrossScripting::Deny</code>. If you enter any text that contains one of
 			the disallowed tags, pressing any of the buttons on this page will result in an exception.</strong></p>
 	<p><?php $this->txtTextbox1->Render() ?></p>

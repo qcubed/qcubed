@@ -63,7 +63,7 @@ if (!isset($this)) {
 	<p>Feel free to <strong>View Source</strong> (the button below) to see how this is done.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p><?php $this->lblMessage->Render(); ?></p>
 	<p><?php $this->btnButton->Render(); ?></p>
 </div>

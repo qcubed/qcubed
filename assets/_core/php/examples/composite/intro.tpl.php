@@ -25,7 +25,7 @@
 		for the composite control which is doing the bulk of the work in this example.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<table border="0">
 		<tr>
 			<td><?php $this->objCounter1->Render(); ?></td>

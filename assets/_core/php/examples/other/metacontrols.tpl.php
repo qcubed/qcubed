@@ -37,7 +37,7 @@
 	if you want to view or edit multiple objects of any class at the same time.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p>Click on any label to edit:</p>
 	<?php $this->lblFirstName->RenderWithName(); ?><?php $this->txtFirstName->RenderWithName(); ?>
 	<?php $this->lblLastName->RenderWithName(); ?><?php $this->txtLastName->RenderWithName(); ?>

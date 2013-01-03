@@ -15,7 +15,7 @@
 	form definition code and the HTML include files are more or less the
 	exact same.</p>
 </div>
-<div class="demo-zone">
+<div id="demoZone">
 	<table style="width:<?php _p((ord('J') - ord('A') + 1) * 200); ?>px;">
 <?php
 		// Create the cells for our oversized table

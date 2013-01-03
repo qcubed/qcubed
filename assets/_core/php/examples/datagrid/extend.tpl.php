@@ -19,7 +19,7 @@
 		object.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->dtgPersons->Render(); ?>
 </div>
 

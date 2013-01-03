@@ -6,7 +6,7 @@ $intSectionToShow = (!QApplication::PathInfo(0)) ? 1 : QApplication::PathInfo(0)
 $mainPage = true;
 require('includes/header.inc.php');
 ?>
-<div id="instructions">
+<div id="instructions" class="full">
 	<h1>QCubed Examples Site</h1>
 
 	<p>This is a collection of many small examples that demonstrate the functionality

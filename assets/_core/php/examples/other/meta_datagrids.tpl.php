@@ -35,7 +35,7 @@
 		because the old text filter would otherwise show up as an entry in the dropdown labeled "0".</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->dtgProjects->Render(); ?>
 </div>
 

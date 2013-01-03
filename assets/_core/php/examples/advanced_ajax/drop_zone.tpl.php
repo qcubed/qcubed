@@ -12,7 +12,7 @@
 		or revert when it is NOT dropped on a Droppable control.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 <?php $this->pnlDropZone1->Render('BackColor=#dedede', 'Width=250', 'Height=150', 'Padding=10', 'BorderWidth=1', 'CssClass=ui-corner-all'); ?>
 <?php $this->pnlDropZone2->Render('BackColor=#ffeeee', 'Width=250', 'Height=150', 'Padding=10', 'BorderWidth=1', 'CssClass=ui-corner-all'); ?>
 <?php $this->pnlPanel->Render('Cursor=move', 'BackColor=#f6f6f6', 'Width=130', 'Height=50', 'Padding=10', 'BorderWidth=1', 'CssClass=ui-corner-all'); ?>

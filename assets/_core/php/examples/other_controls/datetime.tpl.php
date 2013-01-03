@@ -25,7 +25,7 @@
 		And finally, <b>QCalendar</b> is a jQuery-based visual calendar picker control.
 	</div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<div style="margin: 10px 0; background: #f6f6f6; border:1px solid #dedede; border-radius: 3px; display: inline-block; padding: 10px;">
 		<?php $this->lblResult->Render('HtmlEntities=false'); ?>
 	</div>

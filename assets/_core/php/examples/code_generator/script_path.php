@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div class="instructions" style="max-height: none">
+<div id="instructions" class="full">
 	<h1>Using a Relationships Script</h1>
 
 	<p>Our <strong>Examples Site Database</strong> uses the InnoDB storage engine in MySQL, which has
@@ -37,5 +37,7 @@
 		and the <strong>relationships.txt</strong> file should functionally give you the same, equivalent
 		database as the InnoDB version of our <strong>Examples Site Database</strong>.</p>
 </div>
+
+<style>#viewSource { display: none; }</style>
 
 <?php require('../includes/footer.inc.php'); ?>

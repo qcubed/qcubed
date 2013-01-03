@@ -32,7 +32,7 @@
 		call on our <strong>QListBox</strong>.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p><?php $this->lstPersons->Render(); ?></p>
 	<p>Currently Selected: <?php $this->lblMessage->Render(); ?></p>
 </div>

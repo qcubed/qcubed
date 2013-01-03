@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions" style="max-height: none">
+<div id="instructions" class="full">
 	<h1>Make Your Own Plugin, Part 2: Packaging and Distributing</h1>
 
 	<p>Now that you <a href="components.php">know</a> how to create a plugin
@@ -60,5 +60,7 @@
 		href="http://qcu.be/forum">QCubed forums</a> and let the community know
 		about your contribution.</p>
 </div>
+
+<style>#viewSource { display: none; }</style>
 
 <?php require('../includes/footer.inc.php'); ?>

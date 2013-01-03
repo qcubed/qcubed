@@ -20,7 +20,7 @@
 	<p>Convenient how they end up working together, isn't it? =)</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->dtgPersons->Render(); ?>
 </div>
 

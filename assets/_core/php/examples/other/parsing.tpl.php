@@ -61,7 +61,7 @@
 		do share your code!</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p>Input your BBCode here and click the button. Supported tags: [b],
 		[i], [code], [url], [img].</p>
 	<p><?php $this->txtInput->Render("Width=400"); ?></p>

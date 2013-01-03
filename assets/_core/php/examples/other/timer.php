@@ -21,7 +21,7 @@ echo $objTimer->CountStarted;</code></pre>
 	<p>Take a look at a sample usage example below by clicking View Source.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 <?php
 	QTimer::start('longCalculation');
 	for ($i = 0; $i < 1000000; $i++) {

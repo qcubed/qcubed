@@ -17,16 +17,16 @@
 			$this->pnlPanel->Text = 'You can click on me to drag me around.';
 
 			$this->pnlPanel->Position = QPosition::Absolute;
-			$this->pnlPanel->Top = 50;
-			$this->pnlPanel->Left = 150;
+			$this->pnlPanel->Top = 5;
+			$this->pnlPanel->Left = 5;
 
 			$this->pnlPanel->Moveable = true;
 
 			$this->pnlParent = new QPanel ($this);
 			$this->pnlParent->AutoRenderChildren = true;
 			$this->pnlParent->Position = QPosition::Absolute;
-			$this->pnlParent->Top = 10;
-			$this->pnlParent->Left = 350;
+			$this->pnlParent->Top = 100;
+			$this->pnlParent->Left = 100;
 
 			$this->lblHandle = new QPanel($this->pnlParent);
 			$this->lblHandle->Text = 'Please Enter your Name';

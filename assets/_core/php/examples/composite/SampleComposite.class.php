@@ -15,7 +15,7 @@ class SampleComposite extends QControl {
 	protected $blnUseAjax = false;
 	protected $strPadding = '10px';
 	// Let's Override the Default Style Settings
-	protected $strWidth = '200px';
+	protected $strWidth = '100px';
 	protected $strFontSize = '36px';
 	protected $blnFontBold = true;
 	protected $strBackColor = '#cccccc';

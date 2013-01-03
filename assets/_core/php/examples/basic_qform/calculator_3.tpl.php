@@ -25,7 +25,7 @@
 		we no longer need to hard code the "Value 1" and "Value 2" HTML in the template.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p><?php $this->txtValue1->RenderWithName(); ?></p>
 
 	<p><?php $this->txtValue2->RenderWithName(); ?></p>
