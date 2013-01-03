@@ -57,7 +57,7 @@
 	</ul>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p><?php $this->lblMessage->Render(); ?></p>
 	<p><?php $this->btnButton->Render(); ?></p>
 </div>

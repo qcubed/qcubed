@@ -16,7 +16,7 @@
 		UNIQUE), forcing the INSERT <em>may</em> throw an exception.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h2>Load a Person Object, Modify It, and Save</h2>
 <?php
 	// Let's load a Person object -- let's select the Person with ID #3

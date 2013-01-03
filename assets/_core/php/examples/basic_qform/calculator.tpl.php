@@ -16,7 +16,7 @@
 		by zero will throw a PHP error.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p>Value 1: <?php $this->txtValue1->Render(); ?></p>
 
 	<p>Value 2: <?php $this->txtValue2->Render(); ?></p>

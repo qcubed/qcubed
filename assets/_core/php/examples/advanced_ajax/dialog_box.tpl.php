@@ -39,7 +39,7 @@
 	.calculator_top_button { width: 78px; height: 45px; font: 10px verdana, arial, helvetica; color: white; border-width: 1px; background-color: #336644; }
 </style>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<fieldset style="width: 400px;">
 		<legend>Simple Message Example</legend>
 		<?php $this->dlgSimpleMessage->Render(); ?>

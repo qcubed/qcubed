@@ -35,7 +35,7 @@
 	<p>Here are commands that can fix several of these issues:</p>
 	<pre><code><?php _p($commands); ?></code></pre>
 <?php	} ?>
-	<p><input type='button' value="I'm done, continue" onclick="window.location.reload()" /></p>
+	<p><button onclick="window.location.reload()">I'm done, continue</button></p>
 	<p><a href="start_page.php">Ignore these warnings and continue</a> (not recommended)</p>
 <?php
 		require(__CONFIGURATION__ . '/footer.inc.php');

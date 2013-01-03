@@ -17,7 +17,7 @@
 		any other property, like <strong>Name</strong> and <strong>Description</strong>.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h3>Load a Project Object and its ManagerPerson</h3>
 <?php
 	// Let's load a Project object -- let's select the Project with ID #3

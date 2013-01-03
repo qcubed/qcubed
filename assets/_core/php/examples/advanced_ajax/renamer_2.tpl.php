@@ -23,7 +23,7 @@
 
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php for ($intIndex = 0; $intIndex < 10; $intIndex++) { ?>
 		<p style="height: 16px;">
 			<?php $this->lblArray[$intIndex]->Render(); ?>

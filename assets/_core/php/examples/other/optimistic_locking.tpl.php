@@ -27,7 +27,7 @@
 		override the changes made by the previous <strong>Save</strong> call, forcing the update.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<table cellspacing="10" cellpadding="10" border="0">
 		<tr>
 			<td align="center" colspan="2">

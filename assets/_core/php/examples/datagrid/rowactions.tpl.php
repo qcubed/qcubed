@@ -30,7 +30,7 @@
 		QForm's method which will simply tell us which row we just clicked on.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->dtgPersons->Render(); ?>
 </div>
 

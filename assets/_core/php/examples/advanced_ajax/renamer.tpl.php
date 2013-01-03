@@ -15,7 +15,7 @@
 		escape, the change will be canceled.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 <?php for ($intIndex = 0; $intIndex < 10; $intIndex++) { ?>
 	<p>
 		<?php $this->lblArray[$intIndex]->Render(); ?>

@@ -32,7 +32,7 @@
 	perform batch or back-end operations to rescale whole directories of images, etc.).
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<style type="text/css">
 		.image_canvas { border-width: 2px; border-style: dashed; border-color: #780000; }
 	</style>

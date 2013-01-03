@@ -24,7 +24,7 @@
 		row attributes for all rows, just the header, and just alternating rows.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->dtgPersons->Render(); ?>
 </div>
 

@@ -90,14 +90,14 @@
 		indexed array, or a fully associative array.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h2>Example One</h2>
 	<div style="margin-left: 100px">
 		<?php $this->tblPersons->Render(); ?>
 	</div>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h2>Example Two</h2>
 	<div style="margin-left: 100px">
 		<?php $this->tblReport->Render(); ?>

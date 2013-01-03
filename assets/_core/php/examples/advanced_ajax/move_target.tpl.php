@@ -18,7 +18,7 @@
 		still click "into" the textbox to enter in data.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->pnlParent->Render(); ?>
 </div>
 

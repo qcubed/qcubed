@@ -35,7 +35,7 @@
 		the bulk of the form state is being stored as a PHP Session Variable, which is located on the server, itself.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php
 	// We will override the ForeColor, FontBold and the FontSize.  Note how we can optionally
 	// add quotes around our value.

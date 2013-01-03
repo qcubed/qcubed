@@ -49,9 +49,9 @@
 		your <b>QCubed Query</b> calls.
 	</div>
 
-
-
-	<h3>QuerySingle Example</h3>
+<div id="demoZone">
+	<h2>QuerySingle Example</h2>
+	<p>
 <?php
 	$objPerson = Person::QuerySingle(
 		QQ::Equal(QQN::Person()->Id, 1)
@@ -59,12 +59,10 @@
 
 	// Notice that QuerySingle returned just a single Person object
 	_p($objPerson->FirstName . ' ' . $objPerson->LastName);
-	_p('<br/>', false);
 ?>
-
-
-
-	<h3>QueryArray Example</h3>
+	</p>
+	<h2>QueryArray Example</h2>
+	<ul>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::In(QQN::Person()->Id, array(5, 6, 8))
@@ -73,14 +71,12 @@
 	// Notice that QueryArray returns an array of Person objects... this will
 	// be true even if the result set only yields 1 row.=
 	foreach ($objPersonArray as $objPerson) {
-		_p($objPerson->FirstName . ' ' . $objPerson->LastName);
-		_p('<br/>', false);
+		_p("<li>".$objPerson->FirstName . ' ' . $objPerson->LastName."</li>", false);
 	}
 ?>
-
-
-
-	<h3>QueryCount Example</h3>
+	</ul>
+	<h2>QueryCount Example</h2>
+	<p>
 <?php
 	$intCount = Person::QueryCount(
 		QQ::In(QQN::Person()->Id, array(5, 6, 8))
@@ -89,7 +85,7 @@
 	// Notice that QueryCount returns an integer
 	_p($intCount . ' rows.');
 ?>
-
-
+	</p>
+</div>
 
 <?php require('../includes/footer.inc.php'); ?>

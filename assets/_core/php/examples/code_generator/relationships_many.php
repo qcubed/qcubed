@@ -52,7 +52,7 @@
 		etc.)</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h3>Person's Many-to-Many Relationship with Project (via team_member_project_assn)</h3>
 <?php
 	// Let's load a Person object -- let's select the Person with ID #2

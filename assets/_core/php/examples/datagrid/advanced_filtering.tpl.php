@@ -55,7 +55,7 @@
 		that state (such as at Form_Create), use SetFilters to re-apply them.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h2>Example A</h2>
 	<?php $this->dtgProjects->Render(); ?>
 	

@@ -20,7 +20,7 @@
 	action)</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p><?php $this->lblMessage->Render(); ?></p>
 	<p><?php $this->btnButton->Render(); ?> <?php $this->btnButton2->Render(); ?></p>
 	<p><?php $this->objDefaultWaitIcon->Render('Position=absolute', 'Top=10px', 'Left=200px'); ?></p>

@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions" style="max-height: none">
+<div id="instructions" class="full">
 	<h1>Moving your /includes outside of the __DOCROOT__</h1>
 
 	<p>There is a school of security thought that suggests that files that aren't meant to
@@ -27,5 +27,7 @@
 		probably know what you're doing :-). If you have any questions along the way,
 		<a href="http://qcu.be/forums/qcubed-framework/help">QCubed Forums</a> are there to help.</p>
 </div>
+
+<style>#viewSource { display: none; }</style>
 
 <?php require('../includes/footer.inc.php'); ?>

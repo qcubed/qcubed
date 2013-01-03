@@ -45,7 +45,7 @@
 		for <strong>objects.php</strong> which makes these calls.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h3>Displaying the Properties of a Project</h3>
 <?php
 	// Let's load a project object -- let's select the

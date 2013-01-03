@@ -42,7 +42,7 @@
 		can be found on the <a target="_blank" href="http://docs.jquery.com/UI/Effects">JQuery UI Effects</a> site.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->btnToggle->Render() ?>
 	<?php $this->btnHide->Render() ?>
 	<?php $this->btnShow->Render() ?>

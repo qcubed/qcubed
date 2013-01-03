@@ -30,7 +30,7 @@
 		use them.  Your templates can just as easily make the fully-named method/function calls.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p>Examples: <?php _p('Hello, world'); ?></p>
 </div>
 

@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions" style="max-height: none">
+<div id="instructions" class="full">
 	<h1>About Sections 1 - 3</h1>
 
 	<p>Sections 1 through 3 are dedicated to just the <strong>Code Generator</strong>.  In order
@@ -20,5 +20,7 @@
 	<p>For more information on how to better architect the control and view layers of a QCubed-based
 		application, we recommend you check out sections 4 - 10 of the examples.</p>
 </div>
+
+<style>#viewSource { display: none; }</style>
 
 <?php require('../includes/footer.inc.php'); ?>
