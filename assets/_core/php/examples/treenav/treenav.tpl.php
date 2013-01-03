@@ -20,13 +20,9 @@
 		recursively add the treenav nodes/items to the tree nav control in either situation.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->tnvExample->Render(); ?>
-</div>
-
-<hr />
-
-<div class="demo-zone">
+	<hr />
 	<?php $this->tnvExampleDynamic->Render(); ?>
 	<p><?php $this->objDefaultWaitIcon->Render(); ?></p>
 	<?php $this->pnlCode->Render(); ?>

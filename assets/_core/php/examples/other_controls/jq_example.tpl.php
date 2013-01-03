@@ -12,7 +12,7 @@
 	to learn how to attach events to these controls and use them in your QForms.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<style type="text/css">
 		.example { border: 1px solid #dedede; margin: 10px; padding: 10px;}
 		.draggable, .resizable { background-color: #780000; color: #fff; cursor:move; height: 50px; padding: 10px; width: 100px; }

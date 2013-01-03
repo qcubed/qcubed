@@ -19,7 +19,7 @@
 	<b>QEnterKeyEvent</b>.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->lstListbox->RenderWithName(); ?>
 
 	<?php $this->txtItem->RenderWithName(); ?>

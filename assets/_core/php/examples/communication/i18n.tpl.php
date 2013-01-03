@@ -51,7 +51,7 @@
 	</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h2><?php _t('Internationalization Example'); ?></h2>
 	<p>
 		<?php _t('Current Language'); ?>: 

@@ -14,7 +14,7 @@
 	see the <b>Documentation</b> section of the QCubed website.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<style type="text/css">
 		.panelHover { background-color: #eeeeff; border:1px solid #000078; width: 400px; padding: 10px;}
 		.panelHighlight { background-color: #ffeeee; border-color: #780000; cursor: pointer;}

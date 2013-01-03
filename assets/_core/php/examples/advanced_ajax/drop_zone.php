@@ -16,8 +16,8 @@
 
 			// Make the Panel's Positioning Absolute, and specify a starting location
 			$this->pnlPanel->Position = QPosition::Absolute;
-			$this->pnlPanel->Top = 50;
-			$this->pnlPanel->Left = 80;
+			$this->pnlPanel->Top = 40;
+			$this->pnlPanel->Left = -20;
 
 			// Make the Panel Moveable, which also creates a DragObj on the panel
 			$this->pnlPanel->Moveable = true;
@@ -26,13 +26,13 @@
 			$this->pnlDropZone1 = new QPanel($this);
 			$this->pnlDropZone1->Position = QPosition::Absolute;
 			$this->pnlDropZone1->Top = 10;
-			$this->pnlDropZone1->Left = 300;
+			$this->pnlDropZone1->Left = 10;
 			$this->pnlDropZone1->Text = 'Drop Zone 1';
 
 			$this->pnlDropZone2 = new QPanel($this);
 			$this->pnlDropZone2->Position = QPosition::Absolute;
-			$this->pnlDropZone2->Top = 10;
-			$this->pnlDropZone2->Left = 600;
+			$this->pnlDropZone2->Top = 200;
+			$this->pnlDropZone2->Left = 10;
 			$this->pnlDropZone2->Text = 'Drop Zone 2';
 
 			$this->pnlDropZone1->Droppable = true;

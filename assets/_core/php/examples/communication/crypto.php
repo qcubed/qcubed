@@ -29,7 +29,7 @@
         <a href="http://www.php.net/manual/en/ref.mcrypt.php" class="bodyLink">PHP Documentation</a>.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h2>TripleDES, Electronic Codebook Encryption</h3>
 	<ul>
 <?php

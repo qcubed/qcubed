@@ -20,7 +20,7 @@
 				on Code Generation</a></strong>.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	To view one of the generated <strong>Form Drafts</strong>, please click here to
 	view the <strong><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__); ?>/person_list.php"
 						class="bodyLink">Person List</a></strong> page (available only if you are running examples locally).

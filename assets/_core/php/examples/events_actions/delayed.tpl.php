@@ -18,7 +18,7 @@
 	by the fact that the text in the textbox has been changed.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p><?php $this->txtItem->RenderWithName(); ?></p>
 
 	<p><?php $this->lblSelected->RenderWithName(); ?></p>

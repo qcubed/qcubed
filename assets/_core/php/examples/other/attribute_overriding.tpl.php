@@ -28,7 +28,7 @@
 		without needing the intervention of the developer working on the <strong>QForm</strong> object definition.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php // We will override the ForeColor, FontBold and the FontSize.  Note how we can optionally
 	// add quotes around our value. 
 	?>

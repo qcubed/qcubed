@@ -29,7 +29,7 @@
 </div>
 
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h3>Using LoadByUsername to get a Single Login Object</h3>
 <?php
 	// Let's load a login object -- let's select the username 'jdoe'

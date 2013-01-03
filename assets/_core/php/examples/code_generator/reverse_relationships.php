@@ -71,7 +71,7 @@
 		defined in the <strong>Examples Site Database</strong>.)</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 
 	<h2>Person's Reverse Relationships with Project (via project.manager_person_id) and Login (via login.person_id)</h2>
 <?php

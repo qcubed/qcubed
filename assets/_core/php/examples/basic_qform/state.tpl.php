@@ -20,7 +20,7 @@
 		Those letters and numbers actually represent the serialized version of this <strong>QForm</strong> object.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p>The current count is: <?php _p($this->intCounter); ?></p>
 	<p><?php $this->btnButton->Render(); ?></p>
 </div>

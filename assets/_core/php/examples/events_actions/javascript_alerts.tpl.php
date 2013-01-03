@@ -20,7 +20,7 @@
 	<a href="../../../../plugins/DialogBoxes/example/more_dialog_boxes.php">plugin that offers pre-built QDialogBox subclasses</a>.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p><?php $this->btnAlert->Render(); ?></p>
 	<p><?php $this->btnConfirm->Render(); ?></p>
 	<p><?php $this->btnJavaScript->Render(); ?></p>

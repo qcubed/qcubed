@@ -38,7 +38,7 @@
         that's done, quickly translates everything in <code>TranslateToken()</code>.</p> 
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<h2>Translations made using the custom QSampleTranslation class</h2>
     <h3>French <small>(default set in <code>Form_Create()</code>)</small></h3>
     <ul>

@@ -33,7 +33,7 @@
 		specifically used by the example for <strong>Optimistic Locking</strong>.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<img src="../images/data_model.png" alt="&quot;Examples Site Database&quot; data model" style="max-width:100%" />
 </div>
 

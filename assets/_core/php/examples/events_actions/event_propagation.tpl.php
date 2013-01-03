@@ -17,7 +17,7 @@
 	panel 4, only panel 4 will respond to the click, and the click handler will never be called for panel 3.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
     <style>
         .container {
             padding: 20px;

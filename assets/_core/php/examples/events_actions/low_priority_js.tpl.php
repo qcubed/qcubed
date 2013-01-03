@@ -40,7 +40,7 @@
 	all scripts are executed with standard priority.</p>    
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . "/" . __JQUERY_CSS__); ?>");</style>
 	<?php $this->dtgButtons->Render(); ?>
 </div>

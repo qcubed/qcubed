@@ -28,7 +28,7 @@
 		are also available to you in your <strong>QDataRepeater</strong> template file.</p>
 	</div>
 
-	<div class="demo-zone">
+	<div id="demoZone">
 		<?php $this->dtrPersons->Paginator->Render(); ?>
 
 		<?php $this->dtrPersons->Render(); ?>

@@ -36,7 +36,7 @@
         <strong>QEmailMessage</strong> class work.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p>For obvious reasons, this page is non-functional.  To view the commented out source,
 		please click on <strong>View Source</strong> button.</p>
 <?php

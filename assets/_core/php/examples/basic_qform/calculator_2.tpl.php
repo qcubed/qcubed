@@ -42,7 +42,7 @@
 		the action, while <strong>SiblingsOnly</strong> specifies to validate the triggering control's siblings, only.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<p>Value 1: <?php $this->txtValue1->RenderWithError(); ?></p>
 
 	<p>Value 2: <?php $this->txtValue2->RenderWithError(); ?></p>

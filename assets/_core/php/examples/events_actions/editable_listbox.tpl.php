@@ -35,7 +35,7 @@
 	together and the concept of reusing an array of actions on different controls/events remain the same.</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php $this->lstListbox->RenderWithName(); ?>
 	
 	<?php $this->txtItem->RenderWithName(); ?>

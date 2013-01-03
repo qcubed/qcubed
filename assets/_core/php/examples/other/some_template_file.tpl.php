@@ -17,7 +17,7 @@
 		filepath of the template file you wish to use, overriding the default "script_name.tpl.php".</p>
 </div>
 
-<div class="demo-zone">
+<div id="demoZone">
 	<?php
 	// We will override some visual attributes of the controls here -
 	// the ForeColor, FontBold and the FontSize.

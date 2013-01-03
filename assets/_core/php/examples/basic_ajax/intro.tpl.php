@@ -13,7 +13,7 @@
 		that after clicking the button, the page doesn't "refresh" -- but the label's content
 		changes as defined in the PHP method <strong>btnButton_Click</strong>.</p>
 	</div>
-	<div class="demo-zone">
+	<div id="demoZone">
 		<p><?php $this->lblMessage->Render(); ?></p>
 		<p><?php $this->btnButton->Render(); ?></p>
 	</div>
