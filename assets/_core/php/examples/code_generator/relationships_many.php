@@ -53,7 +53,7 @@
 </div>
 
 <div id="demoZone">
-	<h3>Person's Many-to-Many Relationship with Project (via team_member_project_assn)</h3>
+	<h2>Person's Many-to-Many Relationship with Project (via team_member_project_assn)</h2>
 <?php
 	// Let's load a Person object -- let's select the Person with ID #2
 	$objPerson = Person::Load(2);
@@ -65,7 +65,7 @@
 	</ul>
 
 
-	<h3>Listing of the Project(s) that This Person is a Team Member of</h3>
+	<h2>Listing of the Project(s) that This Person is a Team Member of</h2>
 	<ul>
 <?php
 		foreach ($objPerson->GetProjectAsTeamMemberArray() as $objProject) {
@@ -75,7 +75,7 @@
 	</ul>
 	<p>There are <?php _p($objPerson->CountProjectsAsTeamMember()); ?> project(s) that this person is a team member of.</p>
 
-	<h3>Project's Many-to-Many Relationship with Person (via team_member_project_assn)</h3>
+	<h2>Project's Many-to-Many Relationship with Person (via team_member_project_assn)</h2>
 <?php
 	// Let's load a Project object -- let's select the Project with ID #1
 	$objProject = Project::Load(1);
@@ -85,12 +85,14 @@
 		<li>Project Name: <?php _p($objProject->Name); ?></li>
 	</ul>
 
-	<h3>Listing of the Person(s) that This Project has as Team Members</h3>
+	<h2>Listing of the Person(s) that This Project has as Team Members</h2>
+	<ul>
 <?php
 	foreach ($objProject->GetPersonAsTeamMemberArray() as $objPerson){
-		_p('&bull; ' . $objPerson->FirstName . ' ' . $objPerson->LastName . '<br/>', false);
+		_p('<li>' . $objPerson->FirstName . ' ' . $objPerson->LastName . '</li>', false);
 	}
 ?>
+	</ul>
 	<p>There are <?php _p($objProject->CountPeopleAsTeamMember()); ?> person(s) that this project has as team members.</p>
 </div>
 

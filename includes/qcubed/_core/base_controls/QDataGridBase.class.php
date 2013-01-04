@@ -707,8 +707,8 @@
 			if ($this->objPaginator)
 				$strToReturn .= "<caption>\r\n" . $this->GetPaginatorRowHtml($this->objPaginator) . "</caption>\r\n";
 			// bottom paginator
-			if ($this->objPaginatorAlternate)
-				$strToReturn .= "<caption align=\"bottom\">\r\n" . $this->GetPaginatorRowHtml($this->objPaginatorAlternate) . "</caption>\r\n";
+			//if ($this->objPaginatorAlternate)
+			//	$strToReturn .= "<caption align=\"bottom\">\r\n" . $this->GetPaginatorRowHtml($this->objPaginatorAlternate) . "</caption>\r\n";
 
 			// Header Row (if applicable)
 			if ($this->blnShowHeader)

@@ -15,7 +15,7 @@
 .main-info { padding: 10px 20px; background-color: #F6F6F6; margin:0 auto 10px; border:1px solid #dedede; border-radius: 0 0 3px 3px; }
 
 /* The "View Source" button */
-#viewSource { border: 1px solid #d90d0d; border-radius: 3px; background: #780000; color: #FFF; float: right; line-height: 2; margin-left: 1% }
+#viewSource { border: 1px solid #d90d0d; border-radius: 3px; background: #780000; color: #FFF; line-height: 2; }
 
 #demoZone { border: 1px solid #f6f6f6; border-radius: 3px; min-height: 400px; overflow: auto; position: relative; padding: 10px; }
 
@@ -29,5 +29,5 @@ footer { clear: both; }
 @media screen and (min-width: 720px) {
 	#instructions { float: left;  width: 42%; }
 	#demoZone { float: left; margin: 10px 0 10px 10px; width: 46%; }
-	#viewSource { float: right; margin: 10px 0; }
+	#viewSource { float: right; }
 }
