@@ -17,6 +17,7 @@
 	object (no additional query to the database is needed).  This <strong>Person</strong> is
 	essentially bound, as late as possible, to the <strong>Project</strong>, thus the term "late binding".</p>
 
+
 	<p>The advantages of "late binding" is that the data going between the database and the application
 	is as minimal as possible.  You only get the minimal amount data that you need, when you need it,
 	and nothing else.  And fortunately, because the QCubed generated code does the binding for you
@@ -37,6 +38,7 @@
 
 <div id="demoZone">
 	<h2>List All Projects and its Manager</h2>
+	<ul>
 <?php
 	// Enable Profiling (we're assuming the Examples Site Database is at index 1)
 	// NOTE: Profiling should only be enabled when you are actively wanting to profile a specific PHP script.
@@ -50,13 +52,10 @@
 	// already bound to that project object.
 	$objProjectArray = Project::LoadAll();
 	foreach ($objProjectArray as $objProject) {
-		_p($objProject->Name . ' is managed by ' . $objProject->ManagerPerson->FirstName . ' ' . 
-			$objProject->ManagerPerson->LastName);
-		_p('<br/>', false);
+		_p('<li>'.$objProject->Name . ' is managed by ' . $objProject->ManagerPerson->FirstName . ' ' . 
+			$objProject->ManagerPerson->LastName.'</li>', false);
 	}
-
-	_p('<br/>', false);
-
+	_p('</ul>', false);
 	// Output Profiling Data
 	QApplication::$Database[1]->OutputProfiling();
 ?>

@@ -7,7 +7,7 @@
 	<p>(Note: for more information about "QQ::"-related classes (a.k.a. <strong>QCubed Query</strong>), please refer to section 3 of the
 	Examples Site.)</p>
 
-	<p>All Code Genereated <strong>LoadAll</strong> and <strong>LoadArrayBy...</strong> methods take in an optional
+	<p>All Code Generated <strong>LoadAll</strong> and <strong>LoadArrayBy...</strong> methods take in an optional
 	<strong>QCubed Query Clauses</strong> parameter, where you can specify an unlimited number of <strong>QQClause</strong>
 	objects, including (but not limited) functionality that handles <strong>ORDER BY</strong>, <strong>LIMIT</strong>
 	and <strong>Object Expansion</strong>.  We will
@@ -32,6 +32,7 @@
 
 <div id="demoZone">
 	<h2>List All Persons, Ordered by Last Name then First Name</h2>
+
 <?php
 	// Load the Person array, sorted
 	$objPersonArray = Person::LoadAll(QQ::Clause(
