@@ -1,7 +1,5 @@
 <?php    
 	/**
-	 * QDatepicker
-	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 
@@ -10,8 +8,6 @@
 	 */
      
 	/**
-	 * QDatepicker
-	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 

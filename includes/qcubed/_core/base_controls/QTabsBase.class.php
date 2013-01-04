@@ -1,5 +1,7 @@
 <?php
 	/**
+	 * QTabs Base File
+	 * 
 	 * The QTabsBase class defined here provides an interface between the generated
 	 * QTabsGen class, and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QTabs.class.php file instead.
@@ -8,8 +10,15 @@
 
 
     /**
+     * Impelements JQuery Ui Tabs
+     * 
+     * Tabs are similary to an Accorion, but tabs along the top are used to switch between panels. The top
+     * level html items in the panel will become the items that are switched.
+     * 
 	 * @property-write array $Headers
 	 *
+	 * @link http://jqueryui.com/tabs/
+	 * @package Controls\Base
 	 */
 	class QTabsBase extends QTabsGen
 	{
@@ -82,6 +91,11 @@
 
 		/**
 		 * Set the tab header for a tab
+		 * 
+		 * Give it a control and a name to set the header
+		 * 
+		 * TBD: impelment ajax fetch of tab content
+		 * 
 		 * @param integer|QControl|string $mixHeaderIndicator either the 0-based index of the header, or the section control or that control's id
 		 * @param string|QControl $mixHeader string or control to render as the tab header
 		 * @return void

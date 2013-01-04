@@ -241,8 +241,8 @@ jq_control_gen($baseUrl."/Progressbar");
 jq_control_gen($baseUrl."/Slider");
 jq_control_gen($baseUrl."/Tabs");
 jq_control_gen($baseUrl."/Menu");
-jq_control_gen($baseUrl."/Spinner");
-jq_control_gen($baseUrl."/Tooltip");
+jq_control_gen($baseUrl."/Spinner", null, 'QTextBox');
+//jq_control_gen($baseUrl."/Tooltip"); A JQuery UI tool tip is not a control, but rather is straight javascript that changes how tooltips work on a whole page. Implementation would need to be very different.
 
 jq_inc_gen();
 

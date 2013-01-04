@@ -1,19 +1,25 @@
 <?php
 	/**
+	 * QDraggable Base File
+	 * 
 	 * The QDraggableBase class defined here provides an interface between the generated
 	 * QDraggableGen class, and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QDraggable.class.php file instead.
+	 */
+
+	/**
+	 * Implements the jQuery UI Draggable capabilities on to a control.
 	 * 
 	 * This class is designed to work as a kind of add-on class to a QControl, giving its capabilities
 	 * to the control. To make a QControl draggable, simply set $ctl->Dragable = true. You can then 
 	 * get to this class to further manipulate the aspects of the draggable through $ctl->DragObj.
 	 *
-	 */
-
-	/**
 	 * @property-read Integer $DeltaX Amount of change in left that happened on the last drag
 	 * @property-read Integer $DeltaY Amount of change in top that happened on the last drag
 	 * @property mixed $Handle A drag handle. Can be a control, a selector or array of controls or jQuery selectors.
+	 * 
+	 * @link http://jqueryui.com/draggable/
+	 * @package Controls\Base
 	 */
 	class QDraggableBase extends QDraggableGen
 	{
