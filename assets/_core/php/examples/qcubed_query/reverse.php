@@ -1,26 +1,29 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div id="instructions">
-		<h1>QQ and Reverse Relationships</h1>
-		The power of QCubed ORM is the ability not just to code generate the code to handle foreign key
-		relationships, but also the ability to have that code handle the "reverse" foreign key relationships. 
-		So in the Examples Site data model, we're talking about not just a <b>Project</b> and its <b>ManagerPerson</b>
-		property... but we're also talking about a Person and methods like <b>GetProjectAsManagerArray()</b>.<br/><br/>
-		
-		<b>QCubed Query</b> also has this built-in capability, which works very similar to the way <b>QQ</b> handles Associations.
-		And this should make sense -- from <b>Person's</b> point of view, it has a "-to-Many" relationship with <b>Project</b> as a Manager
-		(via the reverse relationship), and it has a "-to-Many" relationship with <b>Project</b> as a Team Member (via the
-		association table).  Therefore <b>QQ</b> has the ability to perform the full set of <b>QQ</b> functionality
-		(including conditions, expansions, ordering, grouping, etc.) on tables related via these reverse relationships
-		just as it would on tables related via a direct foreign key or association table.<br/><br/>
+<div id="instructions">
+	<h1>QQ and Reverse Relationships</h1>
 
-		The naming standards for the relationship as well as the differences between <b>Expand</b> vs. <b>ExpandAsArray</b>
-		are all the exact same as the case with association tables.
-	</div>
+	<p>The power of QCubed ORM is the ability not just to code generate the code to handle foreign key
+	relationships, but also the ability to have that code handle the "reverse" foreign key relationships. 
+	So in the Examples Site data model, we're talking about not just a <strong>Project</strong> and its <strong>ManagerPerson</strong>
+	property... but we're also talking about a Person and methods like <strong>GetProjectAsManagerArray()</strong>.</p>
 
-	<h3>Get All People, Specifying the Project They Manage (if any), for Projects that have 'ACME' or 'HR' in it</h3>
-	<i>Notice how some people may be listed twice, if they manage more than one project.</i><br/><br/>
+	<p><strong>QCubed Query</strong> also has this built-in capability, which works very similar to the way <strong>QQ</strong> handles Associations.
+	And this should make sense -- from <strong>Person's</strong> point of view, it has a "-to-Many" relationship with <strong>Project</strong> as a Manager
+	(via the reverse relationship), and it has a "-to-Many" relationship with <strong>Project</strong> as a Team Member (via the
+	association table).  Therefore <strong>QQ</strong> has the ability to perform the full set of <strong>QQ</strong> functionality
+	(including conditions, expansions, ordering, grouping, etc.) on tables related via these reverse relationships
+	just as it would on tables related via a direct foreign key or association table.</p>
+
+	<p>The naming standards for the relationship as well as the differences between <strong>Expand</strong> vs. <strong>ExpandAsArray</strong>
+	are all the exact same as the case with association tables.</p>
+</div>
+
+<div id="demoZone">
+	<h2>Get All People, Specifying the Project They Manage (if any), for Projects that have 'ACME' or 'HR' in it</h2>
+	<p><em>Notice how some people may be listed twice, if they manage more than one project.</em></p>
+	<ul>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::OrCondition(
@@ -35,18 +38,15 @@
 	);
 
 	foreach ($objPersonArray as $objPerson) {
-		printf('%s %s (managing the "%s" project)<br/>',
+		printf('<li>%s %s (managing the "%s" project)</li>',
 			QApplication::HtmlEntities($objPerson->FirstName),
 			QApplication::HtmlEntities($objPerson->LastName),
-			QApplication::HtmlEntities($objPerson->_ProjectAsManager->Name));
+			QApplication::HtmlEntities($objPerson->_ProjectAsManager->Name), false);
 	}
 ?>
-
-
-
-	<br/>
+	</ul>
 	<h3>Same as above, but this time, use ExpandAsArray()</h3>
-	<i>Notice how each person is only listed once... but each person has an internal/virtual <b>_ProjectAsManagerArray</b> which may list more than one project.</i><br/><br/>
+	<em>Notice how each person is only listed once... but each person has an internal/virtual <strong>_ProjectAsManagerArray</strong> which may list more than one project.</em></p>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::OrCondition(
@@ -61,17 +61,17 @@
 	);
 	
 	foreach ($objPersonArray as $objPerson) {
-		_p($objPerson->FirstName . ' ' . $objPerson->LastName);
-		_p('<br/>', false);
+		_p('<li>'.$objPerson->FirstName . ' ' . $objPerson->LastName, false);
 
 		// Now, instead of using the _ProjectAsManager virtual attribute, we will use
 		// the _ProjectAsManagerArray virtual attribute, which gives us an array of Project objects
 		$strProjectNameArray = array();
-		foreach ($objPerson->_ProjectAsManagerArray as $objProject)
+		foreach ($objPerson->_ProjectAsManagerArray as $objProject){
 			array_push($strProjectNameArray, QApplication::HtmlEntities($objProject->Name));
-
-		printf('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;via: %s<br/>', implode(', ', $strProjectNameArray));
+		}
+		printf(' via: %s</li>', implode(', ', $strProjectNameArray));
 	}
 ?>
+</div>
 
 <?php require('../includes/footer.inc.php'); ?>

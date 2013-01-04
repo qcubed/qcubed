@@ -1,7 +1,7 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions" class="file">
+<div id="instructions" class="full">
 	<h1>Unattended Installation for Plugins</h1>
 
 	<p>When you're developing a plugin, it's often awkward to try to click-click-click
