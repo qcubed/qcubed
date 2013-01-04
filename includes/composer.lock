@@ -1,0 +1,97 @@
+{
+    "hash": "330a29d6697e10282a1401220f82c125",
+    "packages": [
+        {
+            "name": "ezyang/htmlpurifier",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/ezyang/htmlpurifier.git",
+                "reference": "344e0640b6610883a0aa6766cc6750d26d091c76"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/ezyang/htmlpurifier/archive/344e0640b6610883a0aa6766cc6750d26d091c76.zip",
+                "reference": "344e0640b6610883a0aa6766cc6750d26d091c76",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "time": "2012-12-21 08:16:16",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ]
+        },
+        {
+            "name": "lastcraft/simpletest",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lox/simpletest",
+                "reference": "d02732a94f1e78f2b45665d80c9b89caf2ee318e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/lox/simpletest/archive/d02732a94f1e78f2b45665d80c9b89caf2ee318e.zip",
+                "reference": "d02732a94f1e78f2b45665d80c9b89caf2ee318e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.5"
+            },
+            "time": "2012-12-04 07:26:10",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "classmap": [
+                    "."
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Marcus Baker",
+                    "email": "marcus@lastcraft.com"
+                }
+            ],
+            "description": "Unit testing, mock objects and web testing framework for PHP built around test cases.",
+            "homepage": "http://simpletest.org/"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "ezyang/htmlpurifier": 20,
+        "lastcraft/simpletest": 20
+    }
+}
