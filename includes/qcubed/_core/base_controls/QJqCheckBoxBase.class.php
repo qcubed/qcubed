@@ -22,14 +22,11 @@
 	 *  Label = override of standard HTML text, if you want a button to say something different when JS is on or off
 	 *  ShowText = whether or not to hide the text of the button when icons are set
 	 *  
+	 * @property boolean $ShowText Causes text to be shown when icons are also defined.
+	 * 
 	 * @link http://jqueryui.com/button/#checkbox
 	 * @package Controls\Base
 	 */
-
-	 /* @property boolean $ShowText Causes text to be shown when icons are also defined.
-	  * 
-	  */
-	 
 	class QJqCheckBoxBase extends QJqCheckBoxGen
 	{
 		public function __get($strName) {

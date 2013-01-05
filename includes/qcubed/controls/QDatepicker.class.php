@@ -1,5 +1,9 @@
 <?php    
 	/**
+	 * QDatePicker
+	 * 
+	 * Put your customizations of the standard behavior here.
+	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 
