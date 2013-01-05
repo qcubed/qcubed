@@ -2,6 +2,8 @@
 	/**
 	 * QDroppable
 	 * 
+	 * Put your customizations of the standard behavior here.
+	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 
@@ -10,8 +12,6 @@
 	 */
      
 	/**
-	 * QDroppable
-	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 

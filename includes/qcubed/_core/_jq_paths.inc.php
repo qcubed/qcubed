@@ -146,12 +146,6 @@ QApplicationBase::$ClassFile['qspinner_stopevent'] = __QCUBED_CORE__ . '/base_co
 QApplicationBase::$ClassFile['qspinnergen'] = __QCUBED_CORE__ . '/base_controls/QSpinnerGen.class.php';
 QApplicationBase::$ClassFile['qspinnerbase'] = __QCUBED_CORE__ . '/base_controls/QSpinnerBase.class.php';
 QApplicationBase::$ClassFile['qspinner'] = __QCUBED__ . '/controls/QSpinner.class.php';
-QApplicationBase::$ClassFile['qtooltip_closeevent'] = __QCUBED_CORE__ . '/base_controls/QTooltipGen.class.php';
-QApplicationBase::$ClassFile['qtooltip_createevent'] = __QCUBED_CORE__ . '/base_controls/QTooltipGen.class.php';
-QApplicationBase::$ClassFile['qtooltip_openevent'] = __QCUBED_CORE__ . '/base_controls/QTooltipGen.class.php';
-QApplicationBase::$ClassFile['qtooltipgen'] = __QCUBED_CORE__ . '/base_controls/QTooltipGen.class.php';
-QApplicationBase::$ClassFile['qtooltipbase'] = __QCUBED_CORE__ . '/base_controls/QTooltipBase.class.php';
-QApplicationBase::$ClassFile['qtooltip'] = __QCUBED__ . '/controls/QTooltip.class.php';
 QApplicationBase::$ClassFile['qautocompletelistitem'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
 QApplicationBase::$ClassFile['jqicon'] = __QCUBED_CORE__ . '/base_controls/_jq_ui.inc.php';
 

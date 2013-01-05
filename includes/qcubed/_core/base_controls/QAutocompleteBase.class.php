@@ -1,5 +1,7 @@
 <?php
 	/**
+	 * Autocomplete Base File
+	 * 
 	 * The QAutocompleteBase class defined here provides an interface between the generated
 	 * QAutocompleteGen class, and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QAutocomplete.class.php file instead.
@@ -44,11 +46,22 @@
 
 
 	/**
+	 * Implements the JQuery UI Autocomplete widget
+	 * 
+	 * The Autocomplete is JQuery UIs version of a field with an attached drop down menu. As you type in
+	 * the field, the menu appears, and the items in the menu are filtered by what the user types. This class allows
+	 * you to use an array of QListItems, or an array of database objects as the source. You can also pass this array
+	 * statically in the Source parameter at creation time, or dynamically via Ajax by using SetDataBinder, and then
+	 * in your data binder function, setting the DataSource parameter.
+	 *
 	 * @property string $SelectedId the id of the selected item. When QAutocompleteListItem objects are used for the DataSource, this corresponds to the Value of the item
 	 * @property boolean $MustMatch if true, non matching values are not accepted by the input
 	 * @property string $MultipleValueDelimiter if set, the Autocomplete will keep appending the new selections to the previous term, delimited by this string.
 	 *    This is useful when making QAutocomplete handle multiple values (see http://jqueryui.com/demos/autocomplete/#multiple ).
 	 * @property-write array $DataSource an array of strings, QAutocompleteListItem's,
+	 * 
+	 * @link http://jqueryui.com/autocomplete/
+	 * @package Controls\Base
 	 */
 	class QAutocompleteBase extends QAutocompleteGen
 	{
