@@ -1,6 +1,8 @@
 <?php    
 	/**
-	 * QDatepicker
+	 * QDatePicker
+	 * 
+	 * Put your customizations of the standard behavior here.
 	 * 
 	 * @package Controls  
 	 * @author Qcubed
@@ -10,8 +12,6 @@
 	 */
      
 	/**
-	 * QDatepicker
-	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 

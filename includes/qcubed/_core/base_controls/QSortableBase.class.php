@@ -1,5 +1,7 @@
 <?php
 	/**
+	 * Sortable Base File
+	 * 
 	 * The QSortableBase class defined here provides an interface between the generated
 	 * QSortableGen class, and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QSortable.class.php file instead.
@@ -7,9 +9,18 @@
 	 */
 
 	/**
+	 * Impelements a JQuery UI Sortable 
+	 * 
+	 * Sortable is a group of panels that can be dragged to reorder them. You will need to put
+	 * some care into the css styling of the objects so that the css allows them to be moved. It
+	 * will use the top level html objects inside the panel to decide what to sort. Make sure
+	 * they have ids so it can return the ids of the items in sort order.
+	 * 
 	 * @property-read Array $ItemArray	List of ControlIds in sort order.
+	 * 
+	 * @link http://jqueryui.com/sortable/
+	 * @package Controls\Base
 	 */
-
 	class QSortableBase extends QSortableGen	{
 		/** @var array */
 		protected $aryItemArray = null;

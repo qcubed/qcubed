@@ -2,6 +2,8 @@
 	/**
 	 * QDraggable
 	 * 
+	 * Put your customizations of the standard behavior here.
+	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 
@@ -10,8 +12,6 @@
 	 */
      
 	/**
-	 * QDraggable
-	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 
