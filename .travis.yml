@@ -1,0 +1,14 @@
+language: php
+
+php:
+    - 5.3
+
+env:
+    - DB=mysql
+
+#before_script:
+    - mysql create database qcubed
+    - mysql qcubed < assets/_core/php/examples/mysql_innodb.sql
+
+# execute the unit test script
+script: travis/test.php
