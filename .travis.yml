@@ -6,9 +6,8 @@ php:
 env:
     - DB=mysql
 
-#before_script:
-    - mysql create database qcubed
-    - mysql qcubed < assets/_core/php/examples/mysql_innodb.sql
+before_script:
+    - mysql -e 'create database qcubed;'
+    - mysql -u root qcubed < assets/_core/php/examples/mysql_innodb.sql
 
-# execute the unit test script
 script: travis/test.php

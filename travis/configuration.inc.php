@@ -66,7 +66,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 * These definitions will hardly change, but you may change them based on your setup
 			 */
 			define ('__INCLUDES__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes');
-			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
+			define ('__CONFIGURATION__',__DOCROOT__ . __SUBDIRECTORY__ . '/travis');
 			// The directory where the external libraries are placed
 			define ('__EXTERNAL_LIBRARIES__', __INCLUDES__ . '/external_libraries');
 			// The application includes directory

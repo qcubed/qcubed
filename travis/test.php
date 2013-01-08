@@ -1,11 +1,11 @@
 #!/usr/bin/env php
-
 <?php
 
 /* This file is the file to point the browser to to launch unit tests */
 
 $filesToSkip = array(
-	"QUnitTestCaseBase.php"
+	"QUnitTestCaseBase.php",
+    "ExpandAsArrayTest.php"
 );
 
 
@@ -16,7 +16,7 @@ require_once(__QCUBED_CORE__ . '/tests/simpletest/unit_tester.php');
 require_once(__QCUBED_CORE__ . '/tests/simpletest/reporter.php');
 
 $__CONFIG_ONLY__ = false;
-require('qcubed.inc.php');
+require('travis/qcubed.inc.php');
 
 // Codegen for testing
 // Running as a Non-Windows Command Name
