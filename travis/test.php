@@ -4,8 +4,7 @@
 /* This file is the file to point the browser to to launch unit tests */
 
 $filesToSkip = array(
-	"QUnitTestCaseBase.php",
-    "ExpandAsArrayTest.php"
+	"QUnitTestCaseBase.php"
 );
 
 

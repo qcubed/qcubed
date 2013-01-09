@@ -1,4 +1,9 @@
 <?php
+// If the test is being run in php cli mode, the autoloader does not work.
+// Check to see if the models you need exist and if not, include them here.
+if(!Person){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Person.class.php';
+}
 
 /**
  * Tests for the ExpandAsArray functionality in QQuery
