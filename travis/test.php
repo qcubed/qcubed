@@ -1,8 +1,10 @@
 #!/usr/bin/env php
 <?php
 /* This file runs the travis unit tests. */
+
+/* Define the working directory for the build */
 $workingDir = getcwd();
-echo "Working dir:" . $workingDir . "\r\n";
+define('__TRAVIS_DIR__', $workingDir);
 
 // If you need to skip any tests, list them in this array
 $filesToSkip = array(
