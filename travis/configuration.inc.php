@@ -58,7 +58,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', '/home/travis/builds/qcubed/framework');
+			define ('__DOCROOT__', '/home/travis/builds/jamescmunro/framework');
 			define ('__VIRTUAL_DIRECTORY__', '');
 			define ('__SUBDIRECTORY__', '');
 

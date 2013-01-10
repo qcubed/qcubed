@@ -2,7 +2,8 @@
 <?php
 
 /* This file runs the travis unit tests. */
-
+$workingDir = getcwd();
+echo "Working dir:" . $workingDir . "\r\n";
 // If you need to skip any tests, list them in this array
 $filesToSkip = array(
 	"QUnitTestCaseBase.php"
