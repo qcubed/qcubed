@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-
 /* This file runs the travis unit tests. */
 $workingDir = getcwd();
 echo "Working dir:" . $workingDir . "\r\n";
