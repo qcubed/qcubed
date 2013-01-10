@@ -1,3 +1,5 @@
+# NOTE: If you are trying to run this off of your fork, you have to change the
+# docroot in travis/configuration.inc.php from /qcubed/ to the name of your fork.
 language: php
 
 php:

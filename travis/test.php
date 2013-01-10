@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-/* This file is the file to point the browser to to launch unit tests */
+/* This file runs the travis unit tests. */
 
+// If you need to skip any tests, list them in this array
 $filesToSkip = array(
 	"QUnitTestCaseBase.php"
 );
@@ -45,12 +46,13 @@ class QHtmlReporter extends HtmlReporter {
 		$tempBreadcrumb = $this->getTestList();
 		array_shift($tempBreadcrumb);
 		$breadcrumb = implode("-&gt;", $tempBreadcrumb);
-
-		echo "<b>{$breadcrumb} > {$test_name}</b><br />";
+        echo "\r\n**********************************\r\n";
+		echo "{$breadcrumb} - {$test_name}\r\n";
+        echo "**********************************\r\n";
 	}
 
 	function paintMethodEnd($test_name) {
-		echo "<br />";
+		
 	}
 
 	function paintPass($message) {
@@ -62,9 +64,9 @@ class QHtmlReporter extends HtmlReporter {
 			return;
 		}
 
-		print "<span class=\"pass\">Pass</span>: ";
+		print "Pass: ";
 
-		print "{$messageWithoutTrace}<br />\n";
+		print "{$messageWithoutTrace}\n";
 	}
 }
 
