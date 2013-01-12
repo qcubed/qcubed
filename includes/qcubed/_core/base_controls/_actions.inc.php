@@ -162,16 +162,22 @@
 	 * @package Actions
 	 */
 	class QAjaxAction extends QAction {
+		protected $strId;
 		protected $strMethodName;
 		protected $objWaitIconControl;
 		protected $mixCausesValidationOverride;
 		protected $strJsReturnParam;
 
 		public function __construct($strMethodName = null, $objWaitIconControl = 'default', $mixCausesValidationOverride = null,$strJsReturnParam = "") {
+			$this->strId = NULL;
 			$this->strMethodName = $strMethodName;
 			$this->objWaitIconControl = $objWaitIconControl;
 			$this->mixCausesValidationOverride = $mixCausesValidationOverride;
 			$this->strJsReturnParam = $strJsReturnParam;
+		}
+		
+		public function __clone() {
+			$this->strId = NULL; //we are a fresh clone, lets reset the id and get our own later (in RenderScript)
 		}
 
 		public function __get($strName) {
@@ -184,6 +190,8 @@
 					return $this->mixCausesValidationOverride;
 				case 'JsReturnParam':
 					return $this->strJsReturnParam;
+				case 'Id':
+					return $this->strId;
 				default:
 					try {
 						return parent::__get($strName);
@@ -208,6 +216,10 @@
 
 		public function RenderScript(QControl $objControl) {
 			$strWaitIconControlId = null;
+			if ($this->strId == NULL) {
+				$this->strId = $objControl->Form->GenerateAjaxActionId();
+			}
+			
 			if ((gettype($this->objWaitIconControl) == 'string') && ($this->objWaitIconControl == 'default')) {
 				if ($objControl->Form->DefaultWaitIcon)
 					$strWaitIconControlId = $objControl->Form->DefaultWaitIcon->ControlId;
@@ -215,8 +227,8 @@
 				$strWaitIconControlId = $this->objWaitIconControl->ControlId;
 			}
 
-			return sprintf("qc.pA('%s', '%s', '%s', %s, '%s');",
-				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), $this->getActionParameter($objControl), $strWaitIconControlId);
+			return sprintf("qc.pA('%s', '%s', '%s#%s', %s, '%s');",
+				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), $this->strId, $this->getActionParameter($objControl), $strWaitIconControlId);
 		}
 	}
 
