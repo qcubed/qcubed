@@ -1,4 +1,4 @@
-<?php
+<?php 
 	// First, let's make sure that path_to_prepend.txt exists
 	$strPathToPrependTextFile = dirname(__FILE__) . '/path_to_prepend.txt';
 	if (!is_file($strPathToPrependTextFile))

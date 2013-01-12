@@ -4,6 +4,22 @@
  * 
  * @package Tests
  */
+if(!class_exists('Person')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Person.class.php';
+    
+}
+if(!class_exists('Project')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Project.class.php';
+}
+if(!class_exists('Login')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Login.class.php';
+}
+if(!class_exists('Milestone')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Milestone.class.php';
+}
+if(!class_exists('Address')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Address.class.php';
+}
 class BasicOrmTests extends QUnitTestCaseBase {    
 	public function testSaveAndDelete() {
 		$objPerson1 = new Person();
