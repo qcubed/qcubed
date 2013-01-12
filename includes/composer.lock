@@ -1,5 +1,5 @@
 {
-    "hash": "330a29d6697e10282a1401220f82c125",
+    "hash": "b62175ef908259bdecf83c2b94943f3b",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -45,44 +45,6 @@
             "keywords": [
                 "html"
             ]
-        },
-        {
-            "name": "lastcraft/simpletest",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lox/simpletest",
-                "reference": "d02732a94f1e78f2b45665d80c9b89caf2ee318e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/lox/simpletest/archive/d02732a94f1e78f2b45665d80c9b89caf2ee318e.zip",
-                "reference": "d02732a94f1e78f2b45665d80c9b89caf2ee318e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.0.5"
-            },
-            "time": "2012-12-04 07:26:10",
-            "type": "library",
-            "installation-source": "source",
-            "autoload": {
-                "classmap": [
-                    "."
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Marcus Baker",
-                    "email": "marcus@lastcraft.com"
-                }
-            ],
-            "description": "Unit testing, mock objects and web testing framework for PHP built around test cases.",
-            "homepage": "http://simpletest.org/"
         }
     ],
     "packages-dev": null,
