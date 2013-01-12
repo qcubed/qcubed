@@ -1,7 +1,8 @@
 {
-    "name": "olegabr/qcubed",
-    "require": {
-        "ezyang/htmlpurifier": "dev-master",
-	"lastcraft/simpletest": "dev-master"
-    }
+	"name": "qcubed/qcubed",
+	"require": {
+		"ezyang/htmlpurifier": "dev-master",
+		"lastcraft/simpletest": "dev-master",
+		"monolog/monolog": "1.3.*@dev"
+	}
 }
