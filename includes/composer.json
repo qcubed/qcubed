@@ -1,7 +1,22 @@
 {
-    "name": "olegabr/qcubed",
-    "require": {
-        "ezyang/htmlpurifier": "dev-master",
-	"lastcraft/simpletest": "dev-master"
-    }
+	"name": "qcubed/qcubed",
+	"description": "QCubed is a PHP framework for rapid web development. Building on top of jQuery, with OOP at its core, QCubed provides a powerful solution for building database-driven Web 2.0 applications.",
+	"keywords": ["php", "framework", "jquery"],
+	"homepage": "http://qcu.be/",
+	"type": "library",
+	"license": "MIT",
+	"support": {
+        "issues": "https://github.com/qcubed/framework/issues",
+        "forum": "http://qcu.be/forum",
+        "wiki": "https://github.com/qcubed/framework/wiki",
+        "source": "https://github.com/qcubed/framework",
+        "irc": "irc://irc.freenode.net/qcubed"
+    },
+	"require": {
+		"php": ">=5.3.0",
+		"ezyang/htmlpurifier": "dev-master"
+	},
+	"require-dev": {
+		"lastcraft/simpletest": "dev-master"
+	}
 }
