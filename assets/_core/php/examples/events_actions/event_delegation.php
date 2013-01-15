@@ -103,7 +103,7 @@
 			//where event.currentTarget is the tr element that was clicked.
 			//As a result the person id stored in the first collumn is returned
 			$this->dtgPersonsDelegated->AddAction(new QOnEvent("click","tr"), 
-					new QAjaxAction('dtgPersonsRow_Click', 'default', null, '$j(event.currentTarget).children().first().text()'));
+					new QAjaxAction('dtgPersonsDelegatedRow_Click', 'default', null, '$j(event.currentTarget).children().first().text()'));
 			
 			//handle person removing with event delegation
 			//filter for buttons with ids that begin with "delete_" and returns the id 
@@ -167,6 +167,15 @@
 			$intPersonId = intval($strParameter);
 			
 			$objPerson = $this->arrPersons[$intPersonId];
+			
+			QApplication::ExecuteJavascript("alert('You clicked on a person with ID #" . $intPersonId .
+				": " . $objPerson->FirstName . " " . $objPerson->LastName . "');");
+		}
+		
+		public function dtgPersonsDelegatedRow_Click($strFormId, $strControlId, $strParameter) {
+			$intPersonId = intval($strParameter);
+			
+			$objPerson = $this->arrPersonsDelegated[$intPersonId];
 			
 			QApplication::ExecuteJavascript("alert('You clicked on a person with ID #" . $intPersonId .
 				": " . $objPerson->FirstName . " " . $objPerson->LastName . "');");
