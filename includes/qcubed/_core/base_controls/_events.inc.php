@@ -211,8 +211,7 @@
 		public function __construct($strEventName, $strSelector = null, $strCondition = null, $intDelay = 0) {
 			$this->strEventName=$strEventName;
 			if ($strSelector) {
-				$strSelector = str_replace('\"',"'",$strSelector);
-				$strSelector = str_replace('"',"'",$strSelector);
+				$strSelector = addslashes ($strSelector);
 				$this->strEventName .= '","'.$strSelector;
 			}
 			
