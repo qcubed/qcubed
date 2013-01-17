@@ -717,15 +717,11 @@
 			if ($this->strBorderColor)
 				$strToReturn .= sprintf("border-color:%s;", $this->strBorderColor);
 			if (strlen(trim($this->strBorderWidth)) > 0) {
-				$strBorderWidth = null;
-				try {
-					$strBorderWidth = QType::Cast($this->strBorderWidth, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strBorderWidth))
+				if (is_numeric($this->strBorderWidth) && is_null((int)$this->strBorderWidth)) {
 					$strToReturn .= sprintf('border-width:%s;', $this->strBorderWidth);
-				else
+				} else {
 					$strToReturn .= sprintf('border-width:%spx;', $this->strBorderWidth);
+				}
 
 				if ((!$this->strBorderStyle) || ($this->strBorderStyle == QBorderStyle::NotSet))
 					// For "No Border Style" -- apply a "solid" style because width is set
@@ -797,27 +793,19 @@
 				$strStyle .= 'display:inline;';
 
 			if (strlen(trim($this->strLeft)) > 0) {
-				$strLeft = null;
-				try {
-					$strLeft = QType::Cast($this->strLeft, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strLeft))
+				if (is_numeric($this->strLeft) && is_null((int)$this->strLeft)) {
 					$strStyle .= sprintf('left:%s;', $this->strLeft);
-				else
+				} else {
 					$strStyle .= sprintf('left:%spx;', $this->strLeft);
+				}
 			}
 
 			if (strlen(trim($this->strTop)) > 0) {
-				$strTop = null;
-				try {
-					$strTop = QType::Cast($this->strTop, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strTop))
+				if (is_numeric($this->strTop) && is_null((int)$this->strTop)) {
 					$strStyle .= sprintf('top:%s;', $this->strTop);
-				else
+				} else {
 					$strStyle .= sprintf('top:%spx;', $this->strTop);
+				}
 			}
 			
 			return $strStyle;
