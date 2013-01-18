@@ -777,7 +777,8 @@
 								// split up event class name and ajax action id: i.e.: QClickEvent#a3 => [QClickEvent, a3]
 								$arrTemp = explode('#',$strEvent);
 								$strEvent = $arrTemp[0];
-								$strAjaxActionId = $arrTemp[1];
+								if(count($arrTemp) == 2)
+									$strAjaxActionId = $arrTemp[1];
 								$objActions = $objActionControl->GetAllActions($strEvent, 'QAjaxAction');
 								break;
 							case QCallType::Server:
