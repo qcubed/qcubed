@@ -90,6 +90,7 @@
 	QApplicationBase::$ClassFile['qmimetype'] = __QCUBED_CORE__ . '/framework/QMimeType.class.php';
 	QApplicationBase::$ClassFile['qdatetime'] = __QCUBED_CORE__ . '/framework/QDateTime.class.php';
 	QApplicationBase::$ClassFile['qstring'] = __QCUBED_CORE__ . '/framework/QString.class.php';
+	QApplicationBase::$ClassFile['qcss'] = __QCUBED_CORE__ . '/framework/QCss.class.php';
 	QApplicationBase::$ClassFile['qstack'] = __QCUBED_CORE__ . '/framework/QStack.class.php';
 	QApplicationBase::$ClassFile['qcryptography'] = __QCUBED_CORE__ . '/framework/QCryptography.class.php';
 	QApplicationBase::$ClassFile['qsoapservice'] = __QCUBED_CORE__ . '/framework/QSoapService.class.php';
