@@ -1,12 +1,29 @@
 <?php
 
 	/**
-	 * @property string $DateFormat
-	 * @property string $DateTimeFormat
-	 * @property QDateTime $DateTime
-	 * @property mixed $Minimum
-	 * @property mixed $Maximum
+	 * DatepickerBox Base File
+	 * 
+	 * The QDatepickerBoxBase class defined here provides an interface between the generated
+	 * QDatepickerBoxGen class, and QCubed. This file is part of the core and will be overwritten
+	 * when you update QCubed. To override, make your changes to the QDatepickerBox.class.php file instead.
 	 *
+	 */
+
+    /**
+     * Impelements a JQuery UI Datepicker in a box
+     * 
+     * A Datepicker Box is similar to a Datepicker, but its not associated with a field. It
+     * just displays a calendar for picking a date.
+     * 
+	 * @property string $DateFormat			The format to use for displaying the date
+	 * @property string $DateTimeFormat		Alias for DateFormat
+	 * @property QDateTime $DateTime		The date to set the field to
+	 * @property mixed $Minimum				Alias for MinDate
+	 * @property mixed $Maximum				Alias for MaxDate
+	 * @property string $Text				Textual date to set it to
+	 *
+	 * @link http://jqueryui.com/datepicker/#inline
+	 * @package Controls\Base
 	 */
 	class QDatepickerBoxBase extends QDatepickerBoxGen {
 		protected $strDateTimeFormat = "MM/DD/YY"; // matches default of JQuery UI control

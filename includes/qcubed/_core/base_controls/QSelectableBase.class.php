@@ -1,5 +1,7 @@
 <?php
 	/**
+	 * Selectable Base File
+	 * 
 	 * The QSelectableBase class defined here provides an interface between the generated
 	 * QSelectableGen class, and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QSelectable.class.php file instead.
@@ -7,7 +9,16 @@
 	 */
 
 	/**
-	 * @property-read Array $SelectedItems ControlIds of the items selected
+	 * Impelments a JQuery UI Selectable box
+	 * 
+	 * A selectable box makes the items inside of it selectable. This is a QPanel, so
+	 * whatever top level items drown inside of it will become selectable. Make sure 
+	 * the items have ids.
+	 * 
+	 * @property Array $SelectedItems ControlIds of the items selected
+	 * 
+	 * @link http://jqueryui.com/selectable/
+	 * @package Controls\Base
 	 */
 	class QSelectableBase extends QSelectableGen
 	{

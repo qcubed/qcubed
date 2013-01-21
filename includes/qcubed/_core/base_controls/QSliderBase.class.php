@@ -1,5 +1,7 @@
 <?php
 	/**
+	 * QSlider Base File
+	 * 
 	 * The  QSliderBase class defined here provides an interface between the generated
 	 * QSliderGen class, and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QSlider.class.php file in
@@ -8,6 +10,18 @@
 	 */
 
 
+	/**
+	 * 
+	 * Implements a JQuery UI Slider
+	 * 
+	 * A slider can have one or two handles to represent a range of things, similar to a scroll bar.
+	 * 
+	 * Use the inherited properties to manipulate it. Call Value or Values to get the values.
+	 * 
+	 * @link http://jqueryui.com/slider/
+	 * @package Controls\Base
+	 *
+	 */
 	class QSliderBase extends QSliderGen	{
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();

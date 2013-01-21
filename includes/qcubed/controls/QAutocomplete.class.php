@@ -1,7 +1,8 @@
 <?php
 	/**
-	 * QAutocomplete
+	 * QAccordion
 	 * 
+	 * Put your customizations of the standard behavior here.
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 
@@ -10,8 +11,6 @@
 	 */
      
 	/**
-	 * QAutocomplete
-	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 
