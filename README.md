@@ -1,5 +1,7 @@
 # Welcome to QCubed!
 
+[![Build Status](https://travis-ci.org/qcubed/framework.png?branch=f-travis)](https://travis-ci.org/jamescmunro/framework)
+
 ## Releases
 **Newest stable release: [version 2.1.1, released on Dec 1, 2012](https://github.com/qcubed/framework/archive/2.1.1.zip)**. See the [ChangeLog](#Changes) for what's new in this release.
 

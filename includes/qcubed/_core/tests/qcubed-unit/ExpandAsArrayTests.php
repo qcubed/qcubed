@@ -1,10 +1,31 @@
 <?php
+// If the test is being run in php cli mode, the autoloader does not work.
+// Check to see if the models you need exist and if not, include them here.
+if(!class_exists('Person')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Person.class.php';
+}
 
 /**
  * Tests for the ExpandAsArray functionality in QQuery
  * 
  * @package Tests
  */
+if(!class_exists('Person')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Person.class.php';
+    
+}
+if(!class_exists('Project')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Project.class.php';
+}
+if(!class_exists('Login')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Login.class.php';
+}
+if(!class_exists('Milestone')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Milestone.class.php';
+}
+if(!class_exists('Address')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Address.class.php';
+}
 class ExpandAsArrayTests extends QUnitTestCaseBase {    
 	public function testMultiLevel() {
 		$arrPeople = Person::LoadAll(
