@@ -127,9 +127,9 @@ class ExampleForm extends QForm {
 	protected function dtgCustom_Bind() {
 		//Set up our normal query
 		$sql = 'SELECT
-					p.first_name as FirstName,
-					p.last_name as LastName,
-					count(a.id) as AddressCount
+					p.first_name as "FirstName",
+					p.last_name as "LastName",
+					count(a.id) as "AddressCount"
 				FROM person as p
 					LEFT JOIN address as a on a.person_id = p.id
 				GROUP BY p.id';
