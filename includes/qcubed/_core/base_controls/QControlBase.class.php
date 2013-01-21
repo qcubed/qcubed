@@ -686,17 +686,11 @@
 		public function GetStyleAttributes() {
 			$strToReturn = "";
 
-			if ($this->strWidth) {
-				if (is_numeric($this->strWidth))
-					$strToReturn .= sprintf("width:%spx;", $this->strWidth);
-				else
-					$strToReturn .= sprintf("width:%s;", $this->strWidth);
+			if (strlen(trim($this->strWidth)) > 0) {
+				$strToReturn .= sprintf('width:%s;', QCss::FormatLength($this->strWidth));
 			}
-			if ($this->strHeight) {
-				if (is_numeric($this->strHeight))
-					$strToReturn .= sprintf("height:%spx;", $this->strHeight);
-				else
-					$strToReturn .= sprintf("height:%s;", $this->strHeight);
+			if (strlen(trim($this->strHeight)) > 0) {
+				$strToReturn .= sprintf('height:%s;', QCss::FormatLength($this->strHeight));
 			}
 			if ($this->blnUseWrapper) {
 				if (($this->strDisplayStyle) && ($this->strDisplayStyle != QDisplayStyle::NotSet)) {
@@ -717,15 +711,7 @@
 			if ($this->strBorderColor)
 				$strToReturn .= sprintf("border-color:%s;", $this->strBorderColor);
 			if (strlen(trim($this->strBorderWidth)) > 0) {
-				$strBorderWidth = null;
-				try {
-					$strBorderWidth = QType::Cast($this->strBorderWidth, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strBorderWidth))
-					$strToReturn .= sprintf('border-width:%s;', $this->strBorderWidth);
-				else
-					$strToReturn .= sprintf('border-width:%spx;', $this->strBorderWidth);
+				$strToReturn .= sprintf('border-width:%s;', QCss::FormatLength($this->strBorderWidth));
 
 				if ((!$this->strBorderStyle) || ($this->strBorderStyle == QBorderStyle::NotSet))
 					// For "No Border Style" -- apply a "solid" style because width is set
@@ -773,7 +759,7 @@
 					$strToReturn .= sprintf('opacity:%s;', $this->intOpacity / 100.0);
 			}
 			if ($this->strCustomStyleArray) foreach ($this->strCustomStyleArray as $strKey => $strValue)
-				$strToReturn .= sprintf('%s:%s;', $strKey, $strValue);
+				$strToReturn .= sprintf('%s:%s;', $strKey, QCss::FormatLength($strValue));
 
 			return $strToReturn;
 		}
@@ -797,27 +783,11 @@
 				$strStyle .= 'display:inline;';
 
 			if (strlen(trim($this->strLeft)) > 0) {
-				$strLeft = null;
-				try {
-					$strLeft = QType::Cast($this->strLeft, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strLeft))
-					$strStyle .= sprintf('left:%s;', $this->strLeft);
-				else
-					$strStyle .= sprintf('left:%spx;', $this->strLeft);
+				$strStyle .= sprintf('left:%s;', QCss::FormatLength($this->strLeft));
 			}
 
 			if (strlen(trim($this->strTop)) > 0) {
-				$strTop = null;
-				try {
-					$strTop = QType::Cast($this->strTop, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strTop))
-					$strStyle .= sprintf('top:%s;', $this->strTop);
-				else
-					$strStyle .= sprintf('top:%spx;', $this->strTop);
+				$strStyle .= sprintf('top:%s;', QCss::FormatLength($this->strTop));
 			}
 			
 			return $strStyle;
