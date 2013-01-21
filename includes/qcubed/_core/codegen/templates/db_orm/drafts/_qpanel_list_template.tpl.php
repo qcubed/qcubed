@@ -7,4 +7,4 @@
 ?>
 	<?php print("<?php"); ?> $_CONTROL->dtg<?php echo $objTable->ClassNamePlural  ?>->Render(); ?>
 
-	<p><?php print("<?php"); ?> $_CONTROL->btnCreateNew->Render(); ?></p>
+	<p class="create"><?php print("<?php"); ?> $_CONTROL->btnCreateNew->Render(); ?></p>

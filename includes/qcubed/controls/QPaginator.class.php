@@ -27,18 +27,19 @@
 
 			$strToReturn = sprintf('<span id="%s" %s%s>', $this->strControlId, $strStyle, $this->GetAttributes(true, false));
 
-			if ($this->intPageNumber <= 1)
-				$strToReturn .= sprintf('<span class="arrow">%s</span>', $this->strLabelForPrevious);
-			else {
+			if ($this->intPageNumber <= 1) {
+				$strPrevious = $this->strLabelForPrevious;
+			} else {
 				$this->strActionParameter = $this->intPageNumber - 1;
-				$strToReturn .= sprintf('<span class="arrow"><a id="%s" href="%s" %s>%s</a></span>',
+				$strPrevious = sprintf('<a id="%s" href="%s" %s>%s</a>',
 					$this->ControlId . "_arrow_" . $this->strActionParameter,
 					QApplication::$RequestUri,
 					$this->prxPagination->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_arrow_" . $this->strActionParameter, false),
-					$this->strLabelForPrevious);							
-					
+					$this->strLabelForPrevious);
 			}
 
+			$strToReturn .= sprintf('<span class="arrow previous">%s</span>', $strPrevious);
+			
 			$strToReturn .= '<span class="break">|</span>';
 			
 			if ($this->PageCount <= $this->intIndexCount) {
@@ -170,17 +171,18 @@
 	
 			$strToReturn .= '<span class="break">|</span>';
 	
-			if ($this->intPageNumber >= $this->PageCount)
-				$strToReturn .= sprintf('<span class="arrow">%s</span>', $this->strLabelForNext);
-			else {
+			if ($this->intPageNumber >= $this->PageCount) {
+				$strNext = $this->strLabelForNext;
+			} else {
 				$this->strActionParameter = $this->intPageNumber + 1;
-				$strToReturn .= sprintf('<span class="arrow"><a id="%s" href="%s" %s>%s</a></span>',
+				$strNext = sprintf('<a id="%s" href="%s" %s>%s</a>',
 					$this->ControlId . "_arrow_" . $this->strActionParameter,
 					QApplication::$RequestUri,
 					$this->prxPagination->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_arrow_" . $this->strActionParameter, false),
-					$this->strLabelForNext);						
-				
+					$this->strLabelForNext);
 			}
+			
+			$strToReturn .= sprintf('<span class="arrow next">%s</span>', $strNext);
 
 			$strToReturn .= '</span>';
 

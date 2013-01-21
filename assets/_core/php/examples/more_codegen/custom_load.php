@@ -1,21 +1,23 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Implementing a Customized LoadBy or LoadArrayBy</h1>
-		(Note: for more information about creating custom queries, please refer to Section 3 of the Examples Site.)<br/><br/>
+	<div id="instructions">
+		<h1>Implementing a Customized LoadBy or LoadArrayBy</h1>
+		
+		<p>(Note: for more information about creating custom queries, please refer to Section 3 of the Examples Site.)</p>
 
-		With the <b>InstantiateDbResult</b> method that is code generated for you in each
-		generated class, it is very simple to create your own custom <b>LoadBy</b> or <b>LoadArrayBy</b>
-		method using your own custom SQL. Simply specify a custom Load query by using <b>QCubed Query</b> (or by writing your
-		own SQL statement and passing the results into <b>InstantiateDbResult</b>).  The code generated logic will take care
-		of the rest, transforming your DB result into an array of that object.<br/><br/>
+		<p>With the <strong>InstantiateDbResult</strong> method that is code generated for you in each
+		generated class, it is very simple to create your own custom <strong>LoadBy</strong> or <strong>LoadArrayBy</strong>
+		method using your own custom SQL. Simply specify a custom Load query by using <strong>QCubed Query</strong> (or by writing your
+		own SQL statement and passing the results into <strong>InstantiateDbResult</strong>).  The code generated logic will take care
+		of the rest, transforming your DB result into an array of that object.</p>
 
-		In our example below, we have a custom load function to get an array of all 
-		<b>Project</b> objects where the budget is over a given amount.  We pass this amount
-		as a parameter to <b>LoadArrayByBudgetMinimum</b>.
+		<p>In our example below, we have a custom load function to get an array of all 
+		<strong>Project</strong> objects where the budget is over a given amount.  We pass this amount
+		as a parameter to <strong>LoadArrayByBudgetMinimum</strong>.</p>
 	</div>
 
+<div id="demoZone">
 <?php
 	// Let's define our Project SubClass
 
@@ -36,15 +38,15 @@
 		}
 	}
 ?>
-
-
-
-	<h3>Load an Array of Projects Where the Budget >= $8,000</h3>
+	<h2>Load an Array of Projects Where the Budget >= $8,000</h2>
+	<ul>
 <?php
 	// Let's load all Projects > $10,000 in budget
 	$objProjectArray = Project::LoadArrayByBudgetMinimum(8000);
 	foreach ($objProjectArray as $objProject)
-		_p('&bull; ' . QApplication::HtmlEntities($objProject->Name) . ' (Budget: $' . QApplication::HtmlEntities($objProject->Budget) . ')<br/>', false);
+		_p('<li>' . QApplication::HtmlEntities($objProject->Name) . ' (Budget: $' . QApplication::HtmlEntities($objProject->Budget) . ')</li>', false);
 ?>
+	</ul>
+</div>
 
 <?php require('../includes/footer.inc.php'); ?>

@@ -1,44 +1,45 @@
 <?php require('../includes/header.inc.php'); ?>
-	<?php $this->RenderBegin(); ?>
+<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Introduction to QPanel and QLabel</h1>
-		It may seem funny that we are "introducing" the <b>QPanel</b> and <b>QLabel</b> controls
-		now, especially since we have already been using them a lot throughout the examples.<br/><br/>
+<div id="instructions">
+	<h1>Introduction to QPanel and QLabel</h1>
+	
+	<p>It may seem funny that we are "introducing" the <strong>QPanel</strong> and <strong>QLabel</strong> controls
+	now, especially since we have already been using them a lot throughout the examples.</p>
 
-		On the surface, it may seem that <b>QLabel</b> is very simple -- you specify the <b>Text</b>
-		that you want it to display and maybe some styles around it, and then you can just <b>Render</b>
-		it out.  And while <b>QLabel</b> and <b>QPanel</b> controls should certainly be used for 
-		that purpose, they also offer a lot more in functionality.<br/><br/>
+	<p>On the surface, it may seem that <strong>QLabel</strong> is very simple -- you specify the <strong>Text</strong>
+	that you want it to display and maybe some styles around it, and then you can just <strong>Render</strong>
+	it out.  And while <strong>QLabel</strong> and <strong>QPanel</strong> controls should certainly be used for 
+	that purpose, they also offer a lot more in functionality.</p>
 
-		Both the <b>QLabel</b> and <b>QPanel</b> controls extend from the <b>QBlockControl</b> class.
-		The only difference between the two is that labels will render as a &lt;span&gt; and panels will render
-		as a &lt;div&gt;.  And in fact, because in HTML there is very little difference between &lt;span&gt;
-		and &lt;div&gt; anyway, it is safe to say that a <b>QLabel</b> with its <b>DisplayStyle</b> set to
-		"block" will be equivalent to a <b>QPanel</b> with its <b>DisplayStyle</b> set to "inline".<br/><br/>
-		
-		In addition to defining the <b>Text</b> to display, these controls can also use a <b>Template</b> file.
-		Moreover, these controls can also have any of its unrendered child controls auto-rendered out.  This offers
-		a <i>lot</i> of power and flexibility, basically allowing you to render out an arbitrary number of dynamically
-		created controls, without needing to hard code or specify these controls anywhere or on any template.<br/><br/>
+	<p>Both the <strong>QLabel</strong> and <strong>QPanel</strong> controls extend from the <strong>QBlockControl</strong> class.
+	The only difference between the two is that labels will render as a &lt;span&gt; and panels will render
+	as a &lt;div&gt;.  And in fact, because in HTML there is very little difference between &lt;span&gt;
+	and &lt;div&gt; anyway, it is safe to say that a <strong>QLabel</strong> with its <strong>DisplayStyle</strong> set to
+	"block" will be equivalent to a <strong>QPanel</strong> with its <strong>DisplayStyle</strong> set to "inline".</p>
 
-		The order of rendering for block controls are:
-		<ul>
-		<li>Display the <b>Text</b> (if applicable)</li>
-		<li>Pull in the <b>Template</b> and render it (if applicable)</li>
-		<li>If <b>AutoRenderChildren</b> is set to true, then get all child controls and call <b>Render</b> on all of them
+	<p>In addition to defining the <strong>Text</strong> to display, these controls can also use a <strong>Template</strong> file.
+	Moreover, these controls can also have any of its unrendered child controls auto-rendered out.  This offers
+	a <i>lot</i> of power and flexibility, basically allowing you to render out an arbitrary number of dynamically
+	created controls, without needing to hard code or specify these controls anywhere or on any template.</p>
+
+	<p>The order of rendering for block controls are:</p>
+	<ul>
+		<li>Display the <strong>Text</strong> (if applicable)</li>
+		<li>Pull in the <strong>Template</strong> and render it (if applicable)</li>
+		<li>If <strong>AutoRenderChildren</strong> is set to true, then get all child controls and call <strong>Render</strong> on all of them
 		that have not been rendered yet</li>
-		</ul>
-		
-		In our example below, we define a <b>QPanel</b> and assign textboxes as child controls.  We specify
-		a <b>Text</b> value and also setup a <b>Template</b>.  Finally, we render that entire panel out (complete
-		with the text, template and child controls) with a single <b>Render</b> call.<br/><br/>
-		
-		Note that even though 10 textboxes are being rendered, we never explicitly code a <b>QTextBox->Render</b>
-		call <i>anywhere</i> in our code.
-	</div>
+	</ul>
 
-		<?php $this->pnlPanel->Render(); ?>
+	<p>In our example below, we define a <strong>QPanel</strong> and assign textboxes as child controls.  We specify
+	a <strong>Text</strong> value and also setup a <strong>Template</strong>.  Finally, we render that entire panel out (complete
+	with the text, template and child controls) with a single <strong>Render</strong> call.</p>
 
-	<?php $this->RenderEnd(); ?>
+	<p>Note that even though 10 textboxes are being rendered, we never explicitly code a <strong>QTextBox->Render</strong>
+	call <em>anywhere</em> in our code.</p>
+</div>
+
+<div id="demoZone"><?php $this->pnlPanel->Render(); ?></div>
+
+<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

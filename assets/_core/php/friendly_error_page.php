@@ -1,6 +1,6 @@
 <?php require(__CONFIGURATION__ . '/header.inc.php'); ?>
 
-	<h3>Oops!</h3>
+	<h1>Oops!</h1>
 
 	<p>An error has occurred. It has been logged and we'll look into it right away.</p>
 
