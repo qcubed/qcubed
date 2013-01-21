@@ -12,10 +12,12 @@
 	<ul>
 		<li>QQ::OrderBy(array/list of QQNodes or QQConditions)</li>
 		<li>QQ::GroupBy(array/list of QQNodes)</li>
+		<li>QQ::Having(QQSubSqlNode)</li>
 		<li>QQ::Count(QQNode, string)</li>
 		<li>QQ::Minimum(QQNode, string)</li>
 		<li>QQ::Maximum(QQNode, string)</li>
 		<li>QQ::Average(QQNode, string)</li>
+		<li>QQ::Sum(QQNode, string)</li>
 		<li>QQ::Expand(QQNode)</li>
 		<li>QQ::ExpandAsArray(QQNode for an Association Table)</li>
 		<li>QQ::LimitInfo(integer[, integer = 0])</li>
@@ -32,6 +34,11 @@
 	<p><strong>Count</strong>, <strong>Minimum</strong>, <strong>Maximum </strong>and <strong>Average</strong> are aggregation-related clauses, and
 	only work when <strong>GroupBy</strong> is specified.  These methods take in an attribute name, which
 	can then be restored using <strong>GetVirtualAttribute()</strong> on the object.</p>
+    
+    <p><strong>Having</strong> adds a SQL Having clause, which allows you to filter the results of your query based
+		on the results of the aggregation-related functions. <strong>Having</strong> requires a Subquery, which is a SQL code
+		snippet you create to specify the criteria to filter on. (See the Subquery section
+		later in this tutorial for more information on those).</p>
 
 	<p><strong>Expand</strong> and <strong>ExapandAsArray</strong> deals with Object Expansion / Early Binding.  More on this
 	can be seen in the <a href="../more_codegen/early_bind.php">Early Binding of Related Objects example</a>.</p>
@@ -49,6 +56,7 @@
 	<h2>Select all People, Ordered by Last Name then First Name</h2>
 	<p><em>Note now QQ::OrderBy gets two parameters here</em></p>
 	<ul>
+
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::All(),
@@ -112,6 +120,24 @@
 	}
 ?>
 	</ul>
-</div>
 
+	<h3>Select all Projects with more than 5 team members. </h3>
+	<p><i>Using a Having clause to further limit group functions</i></p>
+<?php
+	$objProjectArray = Project::QueryArray(
+		QQ::All(),
+		QQ::Clause(
+			QQ::GroupBy(QQN::Project()->Id),
+			QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
+			QQ::Having (QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId))
+		)
+	);
+
+	foreach ($objProjectArray as $objProject) {
+		_p($objProject->Name . ' (' . $objProject->GetVirtualAttribute('team_member_count') . ' team members)');
+		_p('<br/>', false);
+	}
+?>
+
+</div>
 <?php require('../includes/footer.inc.php'); ?>
