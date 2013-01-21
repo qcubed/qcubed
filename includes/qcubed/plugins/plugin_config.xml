@@ -2,4 +2,156 @@
 <plugins>
 	
 
+<plugin>
+	<name><![CDATA[QCaptchaTextBox]]></name>
+	<description><![CDATA[Render a textbox with Captcha Image to prevent Spam bot to hack a form.]]></description>
+	<version>1.1</version>
+	<platform_version>2.0.2</platform_version>
+	<author name="Mike Quirion" email="mikequirion [at] gmail [dot] com"/>
+	<files>
+		<file type="control" filename="includes/QCaptchaTextBox.class.php"/>
+		<file type="control" filename="includes/QCaptchaImage.class.php"/>
+		<file type="control" filename="includes/QCaptchaFilters.class.php"/>
+		<file type="control" filename="fonts/bluehigl.ttf"/>
+		<file type="control" filename="fonts/typewriterA602.ttf"/>
+		<file type="image" filename="images/errorsign.jpg"/>
+		<file type="image" filename="captcha.php"/>
+		<file type="example" filename="example/QCaptchaTextBoxExample.php"/>
+		<file type="example" filename="example/QCaptchaTextBoxExample.tpl.php"/>
+	</files>
+	<includes>
+		<include_files classname="QCaptchaTextBox" filename="includes/QCaptchaTextBox.class.php"/>
+		<include_files classname="QCaptchaImage" filename="includes/QCaptchaImage.class.php"/>
+		<include_files classname="QCaptchaFilters" filename="includes/QCaptchaFilters.class.php"/>
+	</includes>
+	<examples>
+		<example filename="example/QCaptchaTextBoxExample.php" description="QCaptchaTextBox: Simple example using QCaptcha Textbox"/>
+	</examples>
+</plugin>
+
+<plugin>
+	<name><![CDATA[QJqDateTimePicker]]></name>
+	<description><![CDATA[Date time picker control based on <a href="http://trentrichardson.com/examples/timepicker">jQuery date picker plugin</a>.]]></description>
+	<version>0.4</version>
+	<platform_version>2.1.0</platform_version>
+	<author name="Vardan Akopian" email="vakopian+qcubed [at] gmail [dot] com"/>
+	<files>
+		<file type="js" filename="js/jquery-ui-timepicker-addon-0.9.9.min.js"/>
+		<file type="js" filename="js/jquery-ui-timepicker-addon-0.9.9.js"/>
+		<file type="css" filename="css/jquery-ui-timepicker-addon-0.9.9.css"/>
+		<file type="control" filename="includes/QJqDateTimePicker.class.php"/>
+		<file type="control" filename="includes/QJqDateTimePickerBase.class.php"/>
+		<file type="control" filename="includes/QJqDateTimePickerGen.class.php"/>
+		<file type="example" filename="example/datetimepicker.php"/>
+		<file type="example" filename="example/datetimepicker.tpl.php"/>
+	</files>
+	<includes>
+		<include_files classname="QJqDateTimePicker" filename="includes/QJqDateTimePicker.class.php"/>
+		<include_files classname="QJqDateTimePickerBase" filename="includes/QJqDateTimePickerBase.class.php"/>
+		<include_files classname="QJqDateTimePickerGen" filename="includes/QJqDateTimePickerGen.class.php"/>
+	</includes>
+	<examples>
+		<example filename="example/datetimepicker.php" description="QJqDateTimePicker: Date time picker control"/>
+	</examples>
+</plugin>
+
+<plugin>
+	<name><![CDATA[QDataTables]]></name>
+	<description><![CDATA[table control based on jQuery DataTables plugin.]]></description>
+	<version>0.2</version>
+	<platform_version>2.1</platform_version>
+	<author name="Vardan Akopian" email="vakopian+qcubed [at] gmail [dot] com"/>
+	<files>
+		<file type="js" filename="DataTables-1.9.0/media/js/jquery.dataTables.js"/>
+		<file type="js" filename="DataTables-1.9.0/media/js/jquery.dataTables.min.js"/>
+		<file type="js" filename="DataTables-1.9.0/plugin-apis/media/js/dataTables.fnSetFilteringDelay.js"/>
+		<file type="js" filename="DataTables-1.9.0/plugin-apis/media/js/dataTables.fnFilterOnReturn.js"/>
+		<file type="css" filename="DataTables-1.9.0/media/css/demo_table.css"/>
+		<file type="css" filename="DataTables-1.9.0/media/css/jquery.dataTables.css"/>
+		<file type="css" filename="DataTables-1.9.0/media/css/jquery.dataTables_themeroller.css"/>
+		<file type="css" filename="DataTables-1.9.0/media/css/demo_page.css"/>
+		<file type="css" filename="DataTables-1.9.0/media/css/demo_table_jui.css"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/sort_asc.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/back_enabled_hover.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/sort_asc_disabled.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/back_disabled.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/forward_disabled.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/favicon.ico"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/Sorting icons.psd"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/forward_enabled_hover.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/back_enabled.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/forward_enabled.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/sort_both.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/sort_desc_disabled.png"/>
+		<file type="image" filename="DataTables-1.9.0/media/images/sort_desc.png"/>
+		<file type="control" filename="includes/QDataTable.class.php"/>
+		<file type="control" filename="includes/QDataTableBase.class.php"/>
+		<file type="control" filename="includes/QDataTableGen.class.php"/>
+		<file type="example" filename="example/datatable.php"/>
+		<file type="example" filename="example/datatable.tpl.php"/>
+	</files>
+	<includes>
+		<include_files classname="QDataTable" filename="includes/QDataTable.class.php"/>
+		<include_files classname="QDataTableBase" filename="includes/QDataTableBase.class.php"/>
+		<include_files classname="QDataTableGen" filename="includes/QDataTableGen.class.php"/>
+	</includes>
+	<examples>
+		<example filename="example/datatable.php" description="QDataTables: table control based on jQuery DataTables plugin"/>
+	</examples>
+</plugin>
+
+<plugin>
+	<name><![CDATA[QDateRangePicker]]></name>
+	<description><![CDATA[Date range picker control based on datrangepicker jQuery plugin.]]></description>
+	<version>0.4.1</version>
+	<platform_version>2.0.2</platform_version>
+	<author name="Vardan Akopian" email="vakopian+qcubed [at] gmail [dot] com"/>
+	<files>
+		<file type="js" filename="js/daterangepicker.jQuery.js" />
+		<file type="css" filename="css/ui.daterangepicker.css" />
+		<file type="css" filename="css/collisions.css" />
+		<file type="control" filename="includes/QDateRangePicker.class.php" />
+		<file type="control" filename="includes/QDateRangePickerBase.class.php" />
+		<file type="misc_include" filename="includes/QDateRangePickerPreset.class.php" />
+		<file type="misc_include" filename="includes/QDateRangePickerPresetRange.class.php" />
+		<file type="example" filename="example/daterangepicker.php" />
+		<file type="example" filename="example/daterangepicker.tpl.php" />
+	</files>
+	<includes>
+		<include_files classname="QDateRangePicker" filename="includes/QDateRangePicker.class.php" />
+		<include_files classname="QDateRangePickerBase" filename="includes/QDateRangePickerBase.class.php" />
+	</includes>
+	<examples>
+		<example filename="example/daterangepicker.php" description="QDateRangePicker: Date range picker control" />
+	</examples>
+</plugin>
+
+<plugin>
+	<name><![CDATA[QSelect2ListBox]]></name>
+	<description><![CDATA[Selector control based on <a href="http://ivaynberg.github.com/select2/">jQuery select2 plugin</a>.]]></description>
+	<version>0.1</version>
+	<platform_version>2.1</platform_version>
+	<author name="Vardan Akopian" email="vakopian+github [at] gmail [dot] com"/>
+	<files>
+		<file type="js" filename="select2-release-3.2/select2.min.js" />
+		<file type="css" filename="select2-release-3.2/select2.css" />
+		<file type="image" filename="select2-release-3.2/select2.png" />
+		<file type="image" filename="select2-release-3.2/select2x2.png" />
+		<file type="image" filename="select2-release-3.2/spinner.gif" />
+		<file type="control" filename="includes/QSelect2ListBox.class.php" />
+		<file type="control" filename="includes/QSelect2ListBoxBase.class.php" />
+		<file type="control" filename="includes/QSelect2ListBoxGen.class.php" />
+		<file type="example" filename="example/select2listbox.php" />
+		<file type="example" filename="example/select2listbox.tpl.php" />
+	</files>
+	<includes>
+		<include_files classname="QSelect2ListBox" filename="includes/QSelect2ListBox.class.php" />
+		<include_files classname="QSelect2ListBoxBase" filename="includes/QSelect2ListBoxBase.class.php" />
+		<include_files classname="QSelect2ListBoxGen" filename="includes/QSelect2ListBoxGen.class.php" />
+	</includes>
+	<examples>
+		<example filename="example/select2listbox.php" description="QSelect2ListBox: QSelect2ListBox: selector control based on select2 JQuery plugin" />
+	</examples>
+</plugin>
+
 </plugins>
