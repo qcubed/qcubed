@@ -6,8 +6,8 @@
 	// The first thing to do is to see if the variables are set.
 
 	// Find the current file path.
-	$strCurrentFullPath = __FILE__;
-
+	$strCurrentFullPath = $_SERVER['SCRIPT_FILENAME'];
+	
 	// Get the directory name
 	$strCurrDir = dirname($strCurrentFullPath);
 

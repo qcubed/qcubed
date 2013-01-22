@@ -65,7 +65,7 @@
 
 	// Installation directory seems to be under document root.
 	// Try to figure out the subdirectory
-	$strSubDirectory = substr($strInstallationDir, (strlen($strServerDocumentRoot) - 1), (strlen($strInstallationDir) - 1));
+	$strSubDirectory = substr($strInstallationDir, (strlen($strServerDocumentRoot)), (strlen($strInstallationDir) - 1));
 
 	// Make sure the installation directory supplied exists
 	if(!is_dir($strInstallationDir)) {
@@ -158,6 +158,11 @@
         <h2 style="color: #AA3333">Step 2: Set the variables and database information</h2>
 
         <div>
+			<div class="helptext">
+				Make sure that the configuration directory is writable:<br/>
+				<code>chmod 777 <?php echo $strServerDocumentRoot . $strSubDirectory . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'configuration' ; ?></code>
+			</div>
+			<p></p>
             <form action="step_3.php" method="post">
                 <label for="docroot">__DOCROOT__</label>
                 <input type="text" id="docroot" name="docroot" value="<?php echo $strServerDocumentRoot; ?>"/>
