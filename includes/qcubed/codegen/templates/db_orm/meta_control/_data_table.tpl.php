@@ -53,7 +53,14 @@
 		}
 
 		protected function getSearchClausesForTotalCount() {
-			return $this->Clauses;
+			$objClauseArray = $this->Clauses;
+			$objClauseArray2 = array();
+			foreach ($objClauseArray as $objClause) {
+					if (!($objClause instanceof QQOrderBy)) {
+							$objClauseArray2[] = $objClause;
+					}
+			}
+			return $objClauseArray2;
 		}
 
 		/**
