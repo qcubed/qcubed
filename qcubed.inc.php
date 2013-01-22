@@ -1,6 +1,6 @@
 <?php 
 
-$configPath = "includes/configuration";
+$configPath = __CONFIGURATION__;
 
 if (isset($__CONFIG_ONLY__) && $__CONFIG_ONLY__ == true) {
 	require_once($configPath . '/configuration.inc.php');
