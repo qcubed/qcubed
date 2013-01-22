@@ -67,6 +67,8 @@
 			$strTableName = strtolower($strTableName);
 			if (array_key_exists($strTableName, $this->objTableArray))
 				return $this->objTableArray[$strTableName];
+			if (array_key_exists($strTableName, $this->objTypeTableArray)) 
+				return $this->objTypeTableArray[$strTableName];;	// deal with table special
 			throw new QCallerException(sprintf('Table does not exist or does not have a defined Primary Key: %s', $strTableName));
 		}
 
@@ -221,6 +223,7 @@
 		}
 
 		public function __construct($objSettingsXml) {
+			parent::__construct($objSettingsXml);
 			// Setup Local Arrays
 			$this->strAssociationTableNameArray = array();
 			$this->objTableArray = array();
@@ -566,7 +569,7 @@
 				array_key_exists($objForeignKeyArray[1]->ReferenceTableName, $this->strExcludedTableArray))
 				return;
 
-			// Setup GraphPrevixArray (if applicable)
+			// Setup GraphPrefixArray (if applicable)
 			if ($objForeignKeyArray[0]->ReferenceTableName == $objForeignKeyArray[1]->ReferenceTableName) {
 				// We are analyzing a graph association
 				$strGraphPrefixArray = $this->CalculateGraphPrefixArray($objForeignKeyArray);
@@ -598,7 +601,9 @@
 				// Do this by first making a fake column which is the PK column of the AssociatedTable,
 				// but who's column name is ManyToManyReference->Column
 //				$objOppositeColumn = clone($this->objTableArray[strtolower($objManyToManyReference->AssociatedTable)]->PrimaryKeyColumnArray[0]);
-				$objOppositeColumn = clone($this->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]);
+
+				$objTable = $this->GetTable($objManyToManyReference->AssociatedTable);
+				$objOppositeColumn = clone($objTable->PrimaryKeyColumnArray[0]);
 				$objOppositeColumn->Name = $objManyToManyReference->OppositeColumn;
 				$objManyToManyReference->OppositeVariableName = $this->VariableNameFromColumn($objOppositeColumn);
 				$objManyToManyReference->OppositePropertyName = $this->PropertyNameFromColumn($objOppositeColumn);
@@ -633,11 +638,10 @@
 				$objManyToManyReference = $objManyToManyReferenceArray[$intIndex];
 				$strTableWithReference = $objManyToManyReferenceArray[($intIndex == 0) ? 1 : 0]->AssociatedTable;
 
-//				$objArray = $this->objTableArray[strtolower($strTableWithReference)]->ManyToManyReferenceArray;
-				$objArray = $this->GetTable($strTableWithReference)->ManyToManyReferenceArray;
+				$objTable = $this->GetTable($strTableWithReference);
+				$objArray = $objTable->ManyToManyReferenceArray;
 				array_push($objArray, $objManyToManyReference);
-//				$this->objTableArray[strtolower($strTableWithReference)]->ManyToManyReferenceArray = $objArray;
-				$this->GetTable($strTableWithReference)->ManyToManyReferenceArray = $objArray;
+				$objTable->ManyToManyReferenceArray = $objArray;
 			}
 
 		}
@@ -707,6 +711,7 @@
 			$objTypeTable->TokenArray = $strTokenArray;
 			$objTypeTable->ExtraFieldNamesArray = $strExtraFields;
 			$objTypeTable->ExtraPropertyArray = $strExtraPropertyArray;
+			$objTypeTable->KeyColumn = $this->AnalyzeTableColumn ($objFieldArray[0], $objTypeTable);
 		}
 
 		protected function AnalyzeTable(QTable $objTable) {
