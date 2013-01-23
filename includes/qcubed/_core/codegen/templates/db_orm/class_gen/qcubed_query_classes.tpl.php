@@ -24,10 +24,12 @@
 			switch ($strName) {
 				case '<?php echo $objReference->OppositePropertyName  ?>':
 					return new QQNode('<?php echo $objReference->OppositeColumn  ?>', '<?php echo $objReference->OppositePropertyName  ?>', '<?php echo $objReference->OppositeVariableType  ?>', $this);
+<?php //if (substr($objReference->AssociatedTable,-5) != '_type') : ?>
 				case '<?php echo $objReference->VariableType  ?>':
 					return new QQNode<?php echo $objReference->VariableType  ?>('<?php echo $objReference->OppositeColumn  ?>', '<?php echo $objReference->OppositePropertyName  ?>', '<?php echo $objReference->OppositeVariableType  ?>', $this);
 				case '_ChildTableNode':
 					return new QQNode<?php echo $objReference->VariableType  ?>('<?php echo $objReference->OppositeColumn  ?>', '<?php echo $objReference->OppositePropertyName  ?>', '<?php echo $objReference->OppositeVariableType  ?>', $this);
+<?php //endif;?>
 				default:
 					try {
 						return parent::__get($strName);
