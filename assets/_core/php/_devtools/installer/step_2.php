@@ -33,7 +33,7 @@
 	// decode it properly to be safe
 	$strInstallationDir = urldecode($strInstallationDir);
 	// Get the current Server DocumentRoot
-	$strServerDocumentRoot = $_SERVER['DOCUMENT_ROOT'];
+	$strServerDocumentRoot = rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR);
 	// Check that the current installation directory is within the document root
 	$intPos = strpos($strInstallationDir, $strServerDocumentRoot);
 	if($intPos !== 0) {
