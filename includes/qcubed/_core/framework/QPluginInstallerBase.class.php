@@ -14,7 +14,7 @@ abstract class QPluginInstallerBase {
 	
 	const ONLINE_PLUGIN_REPOSITORY = "http://trac.qcu.be/projects/qcubed/wiki/plugins";
 	
-	const PLUGIN_EXTRACTION_DIR = "/tmp/plugin.tmp/";
+	const PLUGIN_EXTRACTION_DIR = __PLUGIN_TMP__;
 	/**
 	 * @var string Name of the the file defines plugin settings in XML format.
 	 */
@@ -95,7 +95,7 @@ abstract class QPluginInstallerBase {
 	}
 	
 	public static function cleanupExtractedFiles($strExtractedFolderName) {
-		QFolder::DeleteFolder(__INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName);
+		QFolder::DeleteFolder(self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName);
 		return "\r\nCleaned up installation files.\r\n";
 	}
 		
