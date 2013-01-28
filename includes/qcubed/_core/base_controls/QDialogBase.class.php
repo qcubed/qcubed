@@ -1,28 +1,17 @@
 <?php
 	/**
+	 * Dialog Base Class
+	 * 
 	 * The QDialogBase class defined here provides an interface between the generated
 	 * QDialogGen class and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QDialog.class.php file instead.
 	 *
 	 */
 	 
-	 /*
-	 	Notes on the dialog:
-	 	
-	 	This dialog will turn a panel into a dialog box. The general idea is that your
-	 	panel should have all of your form objects, except for the buttons. Use the AddButton
-	 	function to add buttons to the dialog. The dialog will automatically
-	 	arrange the buttons and color them with the current theme. Add an action to the
-	 	QDialog_ButtonEvent to respond to a button click.
-	 	
-	 	If you want to use your own buttons, that is fine. 
-	 	Call ->Close from your button script to close down
-	 	this dialog.
-	 */
-
-
 	/**
-	 * Special event to handle button clicks. Add an action to this event to get a button click.
+	 * Special event to handle button clicks. 
+	 * 
+	 * Add an action to this event to get a button click.
 	 */
 	class QDialog_ButtonEvent extends QEvent {
 		const EventName = 'QDialog_Button';	
@@ -30,9 +19,42 @@
 
 
 	/**
+	 * Implements a JQuery UI Dialog
+	 * 
+	 * A QDialog is a QPanel that pops up on the screen and implements an "in window" dialog.
+	 * 
+	 * There are a couple of ways to use the dialog. The simplest is as follows:
+	 * 
+	 * In your Form_Create():
+	 * <code>
+	 * $this->dlg = new QDialog($this);
+	 * $this->dlg->AutoOpen = false;
+	 * $this->dlg->Modal = true;
+	 * $this->dlg->Text = 'Show this on the dialog.'
+	 * $this->dlg->AddButton ('OK', 'ok');
+	 * $this->dlg->AddAction (new QDialog_ButtonEvent(), new QHideDialog());
+	 * </code>
+	 * 
+	 * When you want to show the dialog:
+	 * <code>
+	 * $this->dlg->Open();
+	 * </code>
+	 * 
+	 * And, also remember to draw the dialog in your form template:
+	 * 
+	 * <code>
+	 * $this->dlg->Render();
+	 * </code>
+	 * 
+	 * 
+	 * Since QDialog is a decendant of QPanel, you can do anything you can to a normal QPanel, 
+	 * inluding add Qcontrols and use a template. When you want to hide the dialog, call <code>Close()</code>
+	 * 
 	 * @property boolean $HasCloseButton Disables (false) or enables (true) the close X in the upper right corner of the title. Can be set when initializing the dialog.
 	 * @property-read integer $ClickedButton Returns the id of the button most recently clicked. (read-only)
 	 * 
+	 * @link http://jqueryui.com/dialog/
+	 * @package Controls\Base
 	 */
 	
 	class QDialogBase extends QDialogGen
@@ -68,9 +90,14 @@
 			return $strOptions;
 		}
 	
-		// Use this override to add buttons BEFORE bringing up the dialog
-		// Attach actions to the QDialog_ButtonEvent event, and then call
-		// $dlg->ClickedButton to see which button was clicked.
+		/**
+		 * Add a button to the dialog.
+		 * 
+		 * Use this override to add buttons BEFORE bringing up the dialog
+		 * Attach actions to the QDialog_ButtonEvent event, and then call
+		 * $dlg->ClickedButton to see which button was clicked.
+		 */
+		
 		public function AddButton ($strButtonName, $strButtonId) {
 			if (!$this->mixButtons) {
 				$this->mixButtons = array();
@@ -87,7 +114,11 @@ FUNC;
 		}
 		
 		
-		// Deprecated. Call Open() instead.
+		/**
+		 * Show the dialog.
+		 * 
+		 * @deprecated
+		 */
 		public function ShowDialogBox() {
 			if (!$this->blnVisible)
 				$this->Visible = true;
@@ -97,7 +128,11 @@ FUNC;
 			$this->blnWrapperModified = false;
 		}
 
-		// Deprecated. Call Close() instead.
+		/**
+		 * Hide the dialog
+		 * 
+		 * @deprecated
+		 */
 		public function HideDialogBox() {
 			$this->blnDisplay = false;
 			$this->Close();
@@ -131,7 +166,7 @@ FUNC;
 				case 'Height':
 					try {
 						if ($mixValue == 'auto') {
-							$this->intHeight = 'auto';
+							$this->mixHeight = 'auto';
 							if ($this->Rendered) {
 								$this->CallJqUiMethod("option", $strName, $mixValue);
 							}
