@@ -38,8 +38,8 @@ require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
 $arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');
 $arrTests = array();
 foreach ($arrFiles as $filename) {
-	require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/' . $filename);
 	if (!in_array($filename, $filesToSkip)) {
+		require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/' . $filename);
 		$arrTests[] = str_replace(".php", "", $filename);
 	}
 }
