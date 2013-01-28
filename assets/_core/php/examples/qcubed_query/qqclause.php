@@ -119,10 +119,10 @@
 	}
 ?>
 	</ul>
-</div>
 
-	<h3>Select all Projects with more than 5 team members. </h3>
-	<p><i>Using a Having clause to further limit group functions</i></p>
+	<h2>Select all Projects with more than 5 team members. </h2>
+	<p><em>Using a Having clause to further limit group functions</em></p>
+	<ul>
 <?php
 	$objProjectArray = Project::QueryArray(
 		QQ::All(),
@@ -138,6 +138,8 @@
 		_p('<br/>', false);
 	}
 ?>
+	</ul>
+</div>
 
 
 <?php require('../includes/footer.inc.php'); ?>
