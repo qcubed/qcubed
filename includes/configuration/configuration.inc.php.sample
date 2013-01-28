@@ -58,9 +58,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs');
-			define ('__VIRTUAL_DIRECTORY__', '');
-			define ('__SUBDIRECTORY__', '/qcubed2');
+			define ('__DOCROOT__', '{C:/xampp/xampp/htdocs}');
+			define ('__VIRTUAL_DIRECTORY__', '{~my_user}');
+			define ('__SUBDIRECTORY__', '{/qcubed2}');
 
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
@@ -195,12 +195,12 @@ if (!defined('SERVER_INSTANCE')) {
 			 * Note: any option not used or set to blank will result in using the default value for that option
 			 */
 			define('DB_CONNECTION_1', serialize(array(
-				'adapter' => 'MySqli5',
-				'server' => 'localhost',
-				'port' => null,
-				'database' => 'qcubed',
-				'username' => 'root',
-				'password' => '',
+				'adapter' => '{db1_adapter}',
+				'server' => '{db1_serverAddress}',
+				'port' => {db1_serverport},
+				'database' => '{db1_dbname}',
+				'username' => '{db1_username}',
+				'password' => '{db1_password}',
 				'caching' => false,
 				'profiling' => false)));
 
