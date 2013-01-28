@@ -1199,92 +1199,36 @@
 			$strToReturn = '<div class="renderWithName" ' . $strDataRel . '>';
 
 			// Render the Left side
-			$strLeftClass = "left";
-			if ($this->blnRequired)
-				$strLeftClass .= ' required';
-			if (!$this->blnEnabled)
-				$strLeftClass .= ' disabled';
+			$strLabelClass = "form-name";
+			if ($this->blnRequired){
+				$strLabelClass .= ' required';
+			}
+			if (!$this->blnEnabled){
+				$strLabelClass .= ' disabled';
+			}
 
-			if ($this->strInstructions)
+			if ($this->strInstructions){
 				$strInstructions = '<br/><span class="instructions">' . $this->strInstructions . '</span>';
-			else
+			}else{
 				$strInstructions = '';
-
-			$strToReturn .= sprintf('<div class="%s"><label for="%s">%s</label>%s</div>', $strLeftClass, $this->strControlId, $this->strName, $strInstructions);
+			}
+			
+			$strToReturn .= sprintf('<div class="%s"><label for="%s">%s</label>%s</div>', $strLabelClass, $this->strControlId, $this->strName, $strInstructions);
 
 			// Render the Right side
-			if ($this->strValidationError)
-				$strMessage = sprintf('<span class="error">%s</span>', $this->strValidationError);
-			else if ($this->strWarning)
-				$strMessage = sprintf('<span class="error">%s</span>', $this->strWarning);
-			else
-				$strMessage = '';
-
-			try {
-				$strToReturn .= sprintf('<div class="right">%s%s%s%s</div>',
-					$this->strHtmlBefore, $this->GetControlHtml(), $this->strHtmlAfter, $strMessage);
-			} catch (QCallerException $objExc) {
-				$objExc->IncrementOffset();
-				throw $objExc;
-			}
-
-			$strToReturn .= '</div>';
-
-			////////////////////////////////////////////
-			// Call RenderOutput, Returning its Contents
-			return $this->RenderOutput($strToReturn, $blnDisplayOutput, false, $strWrapperAttributes);
-			////////////////////////////////////////////
-		}
-
-		public function RenderWithNameOnTop($blnDisplayOutput = true) {
-			////////////////////
-			// Call RenderHelper
-			$this->RenderHelper(func_get_args(), __FUNCTION__);
-			////////////////////
-
-			$strDataRel = '';
-			$strWrapperAttributes = '';
-			if (!$this->blnUseWrapper) {
-				//there is no wrapper --> add the special attribute data-rel to the name control
-				$strDataRel = sprintf('data-rel="#%s"',$this->strControlId);
-				$strWrapperAttributes = 'data-hasrel="1"';
-			}
-
-			// Custom Render Functionality Here
-
-			// Because this example RenderWithName will render a block-based element (e.g. a DIV), let's ensure
-			// that IsBlockElement is set to true
-			$this->blnIsBlockElement = true;
-
-			// Render the Control's Dressing
-			$strToReturn = '<div class="renderWithNameOnTop" ' . $strDataRel . '>';
-
-			$strName = QApplication::Translate($this->strName);
-
-			// Render the top side
-			$strLeftClass = "top_label";
-			if ($this->blnRequired) {
-				$strLeftClass .= ' required';
-				if ($strName) {
-					$strName .= '<span class="required_mark">*</span>';
-				}
-			}
-			if (!$this->blnEnabled)
-				$strLeftClass .= ' disabled';
-
-			if ($this->strInstructions)
-				$strInstructions = '<br/><span class="instructions">' . $this->strInstructions . '</span>';
-			else
-				$strInstructions = '';
-
-			if (!$strName) $strName = '&nbsp;';
-			$strToReturn .= sprintf('<div class="%s"><label for="%s">%s</label>%s</div>', $strLeftClass, $this->strControlId, $strName, $strInstructions);
-
 			$strMessage = '';
-
+			if ($this->strValidationError){
+				$strMessage = sprintf('<span class="error">%s</span>', $this->strValidationError);
+			}else if ($this->strWarning){
+				$strMessage = sprintf('<span class="error">%s</span>', $this->strWarning);
+			}
+			
 			try {
-				$strToReturn .= sprintf('<div class="bottom_control">%s%s%s%s</div>',
-					$this->strHtmlBefore, $this->GetControlHtml(), $this->strHtmlAfter, $strMessage);
+				$strToReturn .= sprintf('<div class="form-field">%s%s%s%s</div>',
+					$this->strHtmlBefore,
+					$this->GetControlHtml(),
+					$this->strHtmlAfter,
+					$strMessage);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;

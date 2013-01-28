@@ -1,14 +1,15 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">QCubed Query Clauses</h1>
-		All <b>QCubed Query</b> method calls take in an optional set of <b>QQ Clauses</b>. <b>QQ Clauses</b> allow you
-		alter the result set by performing the equivalents of most of your major SQL clauses, including JOIN, ORDER BY,
-		GROUP BY and DISTINCT.<br/><br/>
+<div id="instructions">
+	<h1>QCubed Query Clauses</h1>
 
-		The following is the list of QQ Clause classes and what parameters they take:
-		<ul>
+	<p>All <strong>QCubed Query</strong> method calls take in an optional set of <strong>QQ Clauses</strong>. <strong>QQ Clauses</strong> allow you
+	alter the result set by performing the equivalents of most of your major SQL clauses, including JOIN, ORDER BY,
+	GROUP BY and DISTINCT.</p>
+
+	<p>The following is the list of QQ Clause classes and what parameters they take:</p>
+	<ul>
 		<li>QQ::OrderBy(array/list of QQNodes or QQConditions)</li>
 		<li>QQ::GroupBy(array/list of QQNodes)</li>
 		<li>QQ::Having(QQSubSqlNode)</li>
@@ -21,41 +22,40 @@
 		<li>QQ::ExpandAsArray(QQNode for an Association Table)</li>
 		<li>QQ::LimitInfo(integer[, integer = 0])</li>
 		<li>QQ::Distinct()</li>
-		</ul>
+	</ul>
 
-		<b>OrderBy</b> and <b>GroupBy</b> follow the conventions of SQL ORDER BY and GROUP BY.  It takes in a
-		list of one or more <b>QQ Column Nodes</b>. This list could be a parameterized list and/or an array.<br/><br/>
-		
-		Specifically for <b>OrderBy</b>, to specify a <b>QQ Node</b> that you wish to order by in descending
-		order, add a "false" after the QQ Node.  So for example, <b>QQ::OrderBy(QQN::Person()->LastName, false,
-		QQN::Person()->FirstName)</b> will do the SQL equivalent of "ORDER BY last_name DESC, first_name ASC".<br/><br/>
+	<p><strong>OrderBy</strong> and <strong>GroupBy</strong> follow the conventions of SQL ORDER BY and GROUP BY.  It takes in a
+	list of one or more <strong>QQ Column Nodes</strong>. This list could be a parameterized list and/or an array.</p>
 
-		<b>Count</b>, <b>Minimum</b>, <b>Maximum </b>, <b>Average</b> and <b>Sum</b> are aggregation-related clauses, and
-		only work when <b>GroupBy</b> is specified.  These methods take in an attribute name. By calling
-		<b>GetVirtualAttribute()</b> on the object and passing that attribute name, you can see the result 
-		of the corresponding function.<br/><br/>
-		
-		<b>Having</b> adds a SQL Having clause, which allows you to filter the results of your query based
-		on the results of the aggregation-related functions. <b>Having</b> requires a Subquery, which is a SQL code
-		snippet you create to specify the criteria to filter on. (See the Subquery section
-		later in this tutorial for more information on those).<br/><br/>
+	<p>Specifically for <strong>OrderBy</strong>, to specify a <strong>QQ Node</strong> that you wish to order by in descending
+	order, add a "false" after the QQ Node.  So for example, <strong>QQ::OrderBy(QQN::Person()->LastName, false,
+	QQN::Person()->FirstName)</strong> will do the SQL equivalent of "ORDER BY last_name DESC, first_name ASC".</p>
 
-		<b>Expand</b> and <b>ExapandAsArray</b> deals with Object Expansion / Early Binding.  More on this
-		can be seen in the <a href="../more_codegen/early_bind.php">Early Binding of Related Objects example</a>.<br/><br/>
-		
-		<b>LimitInfo</b> will limit the result set.  The first integer is the maximum number of rows
-		you wish to limit the query to.  The <i>optional</i> second integer is the offset (if any).<br/><br/>
-		
-		And finally, <b>Distinct</b> will cause the query to be called with SELECT DISTINCT.<br/><br/>
-		
-		All clauses must be wrapped around a single <b>QQ::Clause()</b> call, which takes in any
-		number of clause classes for your query.
-	</div>
+	<p><strong>Count</strong>, <strong>Minimum</strong>, <strong>Maximum </strong>, <strong>Average</strong> and <strong>Sum</strong> are aggregation-related clauses, and
+	only work when <strong>GroupBy</strong> is specified.  These methods take in an attribute name, which
+	can then be restored using <strong>GetVirtualAttribute()</strong> on the object.</p>
 
+	<p><strong>Having</strong> adds a SQL Having clause, which allows you to filter the results of your query based
+	on the results of the aggregation-related functions. <strong>Having</strong> requires a Subquery, which is a SQL code
+	snippet you create to specify the criteria to filter on. (See the Subquery section
+	later in this tutorial for more information on those).</p>
 
+	<p><strong>Expand</strong> and <strong>ExapandAsArray</strong> deals with Object Expansion / Early Binding.  More on this
+	can be seen in the <a href="../more_codegen/early_bind.php">Early Binding of Related Objects example</a>.</p>
 
-	<h3>Select all People, Ordered by Last Name then First Name</h3>
-	<p><i>Note now QQ::OrderBy gets two parameters here</i></p>
+	<p><strong>LimitInfo</strong> will limit the result set.  The first integer is the maximum number of rows
+	you wish to limit the query to.  The <em>optional</em> second integer is the offset (if any).</p>
+
+	<p>And finally, <strong>Distinct</strong> will cause the query to be called with SELECT DISTINCT.</p>
+
+	<p>All clauses must be wrapped around a single <strong>QQ::Clause()</strong> call, which takes in any
+	number of clause classes for your query.</p>
+</div>
+
+<div id="demoZone">
+	<h2>Select all People, Ordered by Last Name then First Name</h2>
+	<p><em>Note now QQ::OrderBy gets two parameters here</em></p>
+	<ul>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::All(),
@@ -65,15 +65,13 @@
 	);
 
 	foreach ($objPersonArray as $objPerson) {
-		_p($objPerson->FirstName . ' ' . $objPerson->LastName);
-		_p('<br/>', false);
+		_p('<li>'.$objPerson->FirstName . ' ' . $objPerson->LastName.'</li>', false);
 	}
 ?>
-
-
-
-	<h3>Select all People, Ordered by Last Name then First Name, Limited to the first 4 results</h3>
-	<p><i>Combining QQ::OrderBy and QQ::LimitInfo</i></p>
+	</ul>
+	<h2>Select all People, Ordered by Last Name then First Name, Limited to the first 4 results</h2>
+	<p><em>Combining QQ::OrderBy and QQ::LimitInfo</em></p>
+	<ul>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::All(),
@@ -84,15 +82,13 @@
 	);
 
 	foreach ($objPersonArray as $objPerson) {
-		_p($objPerson->FirstName . ' ' . $objPerson->LastName);
-		_p('<br/>', false);
+		_p('<li>'.$objPerson->FirstName . ' ' . $objPerson->LastName.'</li>', false);
 	}
 ?>
-
-
-
-	<h3>Select all People, those with last name Smith first, then ordered by First Name</h3>
-	<p><i>Using a QQ::Condition as an ORDER BY clause</i></p>
+	</ul>
+	<h2>Select all People, those with last name Smith first, then ordered by First Name</h2>
+	<p><em>Using a QQ::Condition as an ORDER BY clause</em></p>
+	<ul>
 <?php
 	$objPersonArray = Person::QueryArray(
 		QQ::All(),
@@ -102,15 +98,13 @@
 	);
 
 	foreach ($objPersonArray as $objPerson) {
-		_p($objPerson->FirstName . ' ' . $objPerson->LastName);
-		_p('<br/>', false);
+		_p('<li>'.$objPerson->FirstName . ' ' . $objPerson->LastName.'</li>', false);
 	}
 ?>
-
-
-
-	<h3>Select all Projects and the Count of Team Members (if applicable)</h3>
-	<p><i>GROUP BY in action</i></p>
+	</ul>
+	<h2>Select all Projects and the Count of Team Members (if applicable)</h2>
+	<p><em>GROUP BY in action</em></p>
+	<ul>
 <?php
 	$objProjectArray = Project::QueryArray(
 		QQ::All(),
@@ -121,10 +115,11 @@
 	);
 
 	foreach ($objProjectArray as $objProject) {
-		_p($objProject->Name . ' (' . $objProject->GetVirtualAttribute('team_member_count') . ' team members)');
-		_p('<br/>', false);
+		_p('<li>'.$objProject->Name . ' (' . $objProject->GetVirtualAttribute('team_member_count') . ' team members)'.'</li>', false);
 	}
 ?>
+	</ul>
+</div>
 
 	<h3>Select all Projects with more than 5 team members. </h3>
 	<p><i>Using a Having clause to further limit group functions</i></p>

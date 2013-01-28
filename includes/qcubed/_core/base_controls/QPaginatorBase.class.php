@@ -49,8 +49,7 @@
 			$this->Setup();
 		}
 	
-		protected function Setup()
-		{
+		protected function Setup() {
 			// Setup Pagination Events
 			$this->prxPagination->RemoveAllActions(QClickEvent::EventName);			
 			if ($this->blnUseAjax) {

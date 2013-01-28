@@ -8,12 +8,10 @@ foreach ($objTable->IndexArray as $objIndex) {
 }
 if ($blnHasUnique) {
 ?>
-// Check for records that may violate Unique Clauses
-		public function Validate() {
-			$blnToReturn = true;
-<?php
-	require 'validate_unique.tpl.php';
-?>
-	return $blnToReturn;
-		}
+	// Check for records that may violate Unique Clauses
+	public function Validate() {
+		$blnToReturn = true;
+<?php require 'validate_unique.tpl.php'; ?>
+		return $blnToReturn;
+	}
 <?php } ?>

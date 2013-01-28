@@ -1,20 +1,21 @@
-	<style>
-	.ui-resizable-helper { border: 1px dotted #00F; }
-	</style>
-
-
 <?php require('../includes/header.inc.php'); ?>
-	<?php $this->RenderBegin(); ?>
+<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Resizing Block Controls</h1>
-		Any control can be resizeable by simply setting the <b>Resizable</b> attribute to true.
-		As in draggable controls, when you set <b>Resizable</b> to true, you can then access
-		the <b>ResizeObj</b> attribute to get access to the JQuery UI <b>resizable</b> functions.
-	</div>
+<div id="instructions">
+	<h1>Resizing Block Controls</h1>
+	<p>Any control can be resizeable by simply setting the <strong>Resizable</strong> attribute to true.
+		As in draggable controls, when you set <strong>Resizable</strong> to true, you can then access
+		the <strong>ResizeObj</strong> attribute to get access to the JQuery UI <strong>resizable</strong> functions.</p>
+</div>
 
-		<p><?php $this->pnlLeftTop->Render('BackColor=#f0e0ff','BorderColor=#9966cc','BorderWidth=1px 1px 1px 1px'); ?></p>
-		<p><?php $this->txtTextbox->Render(); ?></p>
+<style>
+	.ui-resizable-helper { border: 2px dotted #78000; }
+</style>
 
-	<?php $this->RenderEnd(); ?>
+<div id="demoZone">
+	<p><?php $this->pnlLeftTop->Render('BackColor=#f6f6f6', 'BorderColor=#dedede', 'BorderWidth=1px 1px 1px 1px'); ?></p>
+	<p><?php $this->txtTextbox->Render(); ?></p>
+</div>
+
+<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>
