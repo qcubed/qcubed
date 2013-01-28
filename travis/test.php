@@ -9,6 +9,7 @@ define('__TRAVIS_DIR__', $workingDir);
 // If you need to skip any tests, list them in this array
 $filesToSkip = array(
 	"QUnitTestCaseBase.php"
+	, "QTestForm.tpl.php"
 );
 
 
