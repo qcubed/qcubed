@@ -3,13 +3,16 @@ Qcubed ChangeLog
 
 ## Release 2.2.0
 [88](https://github.com/qcubed/framework/issues/88) The QDbBackedSessionHandler SessionOpen method is not static
-[87](https://github.com/qcubed/framework/pull/87) Installer built
+[87](https://github.com/qcubed/framework/pull/87) Qcubed Installer built.
 [58](https://github.com/qcubed/framework/issues/58) The css creation problem in the QControlBase.class.php
+[57](https://github.com/qcubed/framework/pull/57) The PostgreSQL fails to execute queries with a backtick character.
+[55](https://github.com/qcubed/framework/pull/55) Fixed bug for postgres installation.
 Total skin rework by @scottux. New jqueryui-based theme for qcubed is generated.
-[20](https://github.com/qcubed/framework/pull/20) add the QOnEvent class for event delegation
+[49](https://github.com/qcubed/framework/issues/49) The metacontrol generated is broken
+[20](https://github.com/qcubed/framework/pull/20) Add the QOnEvent class for event delegation.
 [23](https://github.com/qcubed/framework/issues/23) Adding Having clause.
 [4](https://github.com/qcubed/framework/issues/4) Upgrade to jQuery UI 1.9.2
-The correct russian language translation in UTF-8 encoding.
+The correct russian language translation in UTF-8 encoding added.
 
 ## Release 2.1.1
 [845](http://trac.qcu.be/projects/qcubed/ticket/845) QDialog rendering events problems when modified
