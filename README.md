@@ -52,7 +52,7 @@ The [github wiki](https://github.com/qcubed/framework/wiki) will eventually supe
 
 ## Installation
 
-The installation procedure is described in a detail here: [Installation instructions](INSTALL.md "Installation instructions").
+The installation procedure is described in a detail here: [Installation instructions](https://github.com/qcubed/framework/blob/rc-2.2.0/INSTALL.md "Installation instructions").
 
 * * *
 
