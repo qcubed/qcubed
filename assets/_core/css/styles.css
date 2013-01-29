@@ -1,4 +1,25 @@
-@import url('http://fonts.googleapis.com/css?family=Brawler|Titillium+Web:400,700');
+/*@import url('http://fonts.googleapis.com/css?family=Brawler|Titillium+Web:400,700');*/
+@font-face {
+  font-family: 'Brawler';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/Brawler.eot);
+  src: local('Brawler'), url(../fonts/Brawler.eot) format('embedded-opentype'), url(../fonts/Brawler.woff) format('woff');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Titillium+Web.eot');
+  src: local('Titillium Web'), local('TitilliumWeb-Regular'), url('../fonts/Titillium+Web.eot') format('embedded-opentype'), url('../fonts/Titillium+Web.woff') format('woff');
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/Titillium+WebBold.eot');
+  src: local('Titillium WebBold'), local('TitilliumWeb-Bold'), url('../fonts/Titillium+WebBold.eot') format('embedded-opentype'), url('../fonts/Titillium+WebBold.woff') format('woff');
+}
 /* Basic elements */
 body { color: #333; font-family: 'Titillium Web', sans-serif; font-size: 1em; line-height: 1.22; margin:0; padding: 0; }
 a, a:visited, a:link { color: #780000; }
