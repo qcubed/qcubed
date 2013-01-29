@@ -68,8 +68,8 @@
 			$strJS = parent::GetControlJavaScript();
 			
 			$strJS .=<<<FUNC
-			.on("accordionchange", function(event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "_SelectedIndex", ui.options.active);
+			.on("accordionactivate", function(event, ui) {
+			 			qcubed.recordControlModification("$this->ControlId", "_SelectedIndex", jQuery(this).accordion("option", "active"));
 						qc.pA("$formId", "$this->ControlId", "QChangeEvent", "", "");
 			})						
 FUNC;
