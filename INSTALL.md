@@ -4,7 +4,7 @@
 
 ### File System
 
-It begins with the extraction of the QCubed tarball. If you have downloaded QCubed by cloning the Git Repositiory then it is not needed. We would recommend you to clone the Git repository - it contains latest stable code. Copy the QCubed files to the ROOT level of your web site's DOCROOT (also known as DocumentRoot, webroot, wwwroot, etc., depending on which platform you are using).
+It begins with the extraction of the QCubed tarball. If you have downloaded QCubed by cloning the Git Repositiory then it is not needed. We would recommend you to clone the Git repository - it contains latest stable code. Copy the QCubed files to a directory within the webserver's DOCROOT (also known as DocumentRoot, webroot, wwwroot, etc., depending on which platform you are using).
 
 At a later point, you may choose to move folders around in your system, splitting them at different location etc.  QCubed offers the flexibility to have the framework files in any location. But that is a story you learn after using the framework (shhh.... just refer to the ```configuration.inc.php.sample``` file in ```includes/configuration``` directory).
 
@@ -12,7 +12,27 @@ But, since we're just getting started, we'll provide you with the instructions o
 
 ### Automated installation
 
-### Modify Configuration
+Beginning Release 2.2, we have created an automated installer which will help you configure and install QCubed.
+
+#### How to use the installer
+
+  1. You should have copied the QCubed into its own directory under DocumentRoot. We assume that your DocumentRoot is```/var/www``` and you copied QCubed under ```/var/www/qcubed```.
+  2. Open ```http://localhost/qcubed``` from your browser. You should be provided with two options
+    * To go to the start page
+    * To launch the installer
+  3. Since we have not installed the framework, we will launch the installer.
+  4. Installer will come to its first step and will ask you for the location where you copied the file. It tries to make a guess and in most cases, the guess is right. However, you should verify the same and click on the **Next** button. Also, the instructions to install QCubed manually are shown on this (first) page of installer as well. Should you desire to do it manually, or if the installer fails, you can use the manual procedure.
+  5. The installer will redirect to the second step and check for certain things to be true. These include:
+    * The installation path was supplied.
+    * The given directory (*wwwroot*) path must be inside the webserver's DocumentRoot.
+    * The *wwwroot* directory must be existing.
+    * Check for the availability of the ```includes```, ```assets``` and ```drafts``` directories inside *wwwroot* directory.
+  6. If any of the conditions do not match, the installer will throw an error. Otherwise it will ask for the values of different fields such as ```__SUBDIRETORY__```, ```__DOCROOT__``` and ```__VIRTUAL_DIRETORY__``` along with the database settings (adapter, port, database name, databse username and password). You should enter those and proceed to the 'Write Configuration' step.
+  7. In the last step (Write Configuration step), the installer will read the ```configuration.inc.php.sample``` file in the ```includes/configuration``` directory and replace the values with with you entered and dump them to a new file called as ```configuration.inc.php```. If ```configuration.inc.php``` exists already then it will not overwrite the file (to save your current configuration) but it will show you the file contents so that you can use them later at your will. If the installer fails to create the file due to restricted permissions, it would still show you the contents. The feature of *not overwriting current configuration file* is in place to make sure that even if someone else gains the access to the installer script, he should not be able to overwrite the configuration.
+
+**NOTE**: After the installation has been finished, it is recommended to delete the installer files. They are located in ```assets/_core/php/_devtools/installer``` directory within *wwwroot*.
+
+### Manual Installation
 
 Inside of wwwroot/configuration/includes you'll find the configuration.inc.php file.  You'll need
 to open it to specify the actual location of your __DOCROOT__.
