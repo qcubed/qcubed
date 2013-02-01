@@ -4,7 +4,7 @@
 
 ### File System
 
-It begins with the extraction of the QCubed tarball. If you have downloaded QCubed by cloning the Git Repositiory then it is not needed. We would recommend you to clone the Git repository - it contains latest stable code. Copy the QCubed files to a directory within the webserver's DOCROOT (also known as DocumentRoot, webroot, wwwroot, etc., depending on which platform you are using).
+It begins with the extraction of the QCubed tarball. If you have downloaded QCubed by cloning the Git Repositiory then it is not needed. We would recommend you to clone the Git repository (master branch) - it contains latest stable code. Copy the QCubed files to a directory within the webserver's DOCROOT (also known as DocumentRoot, webroot, wwwroot, etc., depending on which platform you are using. We will use the word 'DocumentRoot' in this document).
 
 At a later point, you may choose to move folders around in your system, splitting them at different location etc.  QCubed offers the flexibility to have the framework files in any location. But that is a story you learn after using the framework (shhh.... just refer to the ```configuration.inc.php.sample``` file in ```includes/configuration``` directory).
 
@@ -28,13 +28,13 @@ Beginning Release 2.2, we have created an automated installer which will help yo
     * The *instdir* directory must be existing.
     * Check for the availability of the ```includes```, ```assets``` and ```drafts``` directories inside *instdir* directory.
   6. If any of the conditions do not match, the installer will throw an error. Otherwise it will ask for the values of different fields such as ```__SUBDIRETORY__```, ```__DOCROOT__``` and ```__VIRTUAL_DIRETORY__``` along with the database settings (adapter, port, database name, databse username and password). You should enter those and proceed to the 'Write Configuration' step.
-  7. In the last step (Write Configuration step), the installer will read the ```configuration.inc.php.sample``` file in the ```includes/configuration``` directory and replace the values with with you entered and dump them to a new file called as ```configuration.inc.php```. If ```configuration.inc.php``` exists already then it will not overwrite the file (to save your current configuration) but it will show you the file contents so that you can use them later at your will. If the installer fails to create the file due to restricted permissions, it would still show you the contents. The feature of *not overwriting current configuration file* is in place to make sure that even if someone else gains the access to the installer script, he should not be able to overwrite the configuration.
+  7. In the last step (Write Configuration step), the installer will read the ```configuration.inc.php.sample``` file in the ```includes/configuration``` directory and use the placeholders therein to replace the values with what you entered.It will then dump the contents to a new file called as ```configuration.inc.php```. If ```configuration.inc.php``` already exists, then it will not overwrite the file (to make sure you do not lose your current configuration) but it will show you the file contents so that you can use them later at your will. If the installer fails to create the file due to restricted permissions, it would still show you the contents. The feature of *not overwriting current configuration file* is in place to make sure that even if someone else (unwanted user) gains the access to the installer script, he should not be able to overwrite the configuration.
 
 **NOTE**: After the installation has been finished, it is recommended to delete the installer files. They are located in ```assets/_core/php/_devtools/installer``` directory within *instdir*.
 
 ### Manual Installation
 
-To install QCubed manually in face of the failure of installer due to any reason, follow the following steps
+To install QCubed manually in face of failure of the installer due to any reason, follow the following steps
 
   1. Open the ```includes/configuration/configuration.inc.php.sample``` file within the *instdir* directory.
   2. Copy the contents of this file and paste it in a new file called ```configuration.inc.php``` in the same directory (if you want, you can rename the ```configuration.inc.php.sample``` file to ```configuration.inc.php``` as well, but we would not recomment that). Save the ```configuration.inc.php``` file.
@@ -45,35 +45,27 @@ To install QCubed manually in face of the failure of installer due to any reason
 
 ### Include prepend.inc.php or qcubed.inc.php
 
-Calling require() on prepend.inc.php is necessary to include the framework in your PHP file.
+Calling ```require()``` on ```prepend.inc.php``` is necessary to include the framework in your PHP file.
 
-Note that by default, this is already setup for you in:
-* /index.php
-* /sample.php
-* /_devtools/codegen.php
-* /form_drafts/index.php
-* All the examples that come along with QCubed
-* Any code generated form_draft page
+Note that by default, this is already setup for you in most files (actually, almost every file that you get with QCubed, or the ones that QCubed generates).
 
-To change this or for any new PHP scripts you want to write, simply make sure any PHP
-script that wants to utilize the QCubed Framework STARTS with:
-	require('includes/prepend.inc.php');
+To change this or for any new PHP scripts you want to write, simply make sure any PHP script that wants to utilize the QCubed Framework STARTS with:
+	```require('includes/prepend.inc.php');```
 on the very first line.
 
-NOTE that the "includes/configuration/prepend.inc.php" may be different -- it depends on the relative
-path to the includes/prepend.inc.php file.  So if you have a docroot structure like:
+NOTE that the ```includes/configuration/prepend.inc.php``` may be different -- it depends on the relative path to the ```includes/prepend.inc.php``` file.  So if you have a docroot structure like:
+```
 	docroot/
 	docroot/pages/foo/blah.php
 	docroot/includes/configuration/prepend.inc.php
+```
 then in blah.php, the require line will be:
-	require('../../includes/configuration/prepend.inc.php');
+	```require('../../includes/configuration/prepend.inc.php');```
 
-Note that if you move your .php script to another directory level, you may need to update
-the relative path to prepend.inc
+Note that if you move your .php script to another directory level, you may need to update the relative path to ```prepend.inc.php```
 
-If you specified the includes/ in your includes_path in your php.ini file (see optional
-STEP FIVE below), then all you need to do is have
-	require('prepend.inc.php');
+If you specified the includes/ in your includes_path in your php.ini file (discussed later in this document), then all you need to do is have
+	```require('prepend.inc.php');```
 at the top of each file (no need to specify a relative path).
 
 #### qcubed.inc.php
