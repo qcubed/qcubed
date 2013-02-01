@@ -13,7 +13,20 @@
 		 * to move the configuration file anywhere you want.  But be sure to provide
 		 * a relative or absolute path to the file.
 		 */
-		require(dirname(__FILE__) . '/configuration.inc.php');
+		if (file_exists(dirname(__FILE__) . '/configuration.inc.php')) {
+			require(dirname(__FILE__) . '/configuration.inc.php');
+		}
+		else {
+			// The minimal constants set to work
+			define ('__DOCROOT__', dirname(__FILE__) . '/../..');
+			define ('__INCLUDES__', dirname(__FILE__) . '/..');
+			define ('__QCUBED__', __INCLUDES__ . '/qcubed');
+			define ('__PLUGINS__', __QCUBED__ . '/plugins');
+			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');
+			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
+			define ('__MODEL__', __INCLUDES__ . '/model' );
+			define ('__MODEL_GEN__', __MODEL__ . '/generated' );
+		}
 
 
 		//////////////////////////////

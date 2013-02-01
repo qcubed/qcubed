@@ -216,7 +216,7 @@
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
 
-	if (__MODEL_GEN__) {
+	if (defined('__MODEL_GEN__')) {
 		@include(__MODEL_GEN__ . '/_class_paths.inc.php');
 		@include(__MODEL_GEN__ . '/_type_class_paths.inc.php');
 	}

@@ -218,9 +218,12 @@
 		 * @return void
 		 */
 		public static function Initialize() {
-			$strCacheProviderClass = CACHE_PROVIDER_CLASS;
+			$strCacheProviderClass = 'QCacheProviderNoCache';
+			if (defined('CACHE_PROVIDER_CLASS')) {
+				$strCacheProviderClass = CACHE_PROVIDER_CLASS;
+			}
 			if ($strCacheProviderClass) {
-				if (CACHE_PROVIDER_OPTIONS) {
+				if (defined('CACHE_PROVIDER_OPTIONS')) {
 					QApplicationBase::$objCacheProvider = new $strCacheProviderClass(unserialize(CACHE_PROVIDER_OPTIONS));
 				} else {
 					QApplicationBase::$objCacheProvider = new $strCacheProviderClass();
