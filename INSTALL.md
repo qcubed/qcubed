@@ -8,7 +8,7 @@ It begins with the extraction of the QCubed tarball. If you have downloaded QCub
 
 At a later point, you may choose to move folders around in your system, splitting them at different location etc.  QCubed offers the flexibility to have the framework files in any location. But that is a story you learn after using the framework (shhh.... just refer to the ```configuration.inc.php.sample``` file in ```includes/configuration``` directory).
 
-But, since we're just getting started, we'll provide you with the instructions on how to finish the installation assuming that you're keeping the entire QCubed installation together as originally released. In the later part of the document, we will call the installation directory (the place where you have copied QCubed framework files) as *wwwroot*.
+But, since we're just getting started, we'll provide you with the instructions on how to finish the installation assuming that you're keeping the entire QCubed installation together as originally released. In the later part of the document, we will call the installation directory (the place where you have copied QCubed framework files) as *instdir*.
 
 ### Automated installation
 
@@ -24,42 +24,26 @@ Beginning Release 2.2, we have created an automated installer which will help yo
   4. Installer will come to its first step and will ask you for the location where you copied the file. It tries to make a guess and in most cases, the guess is right. However, you should verify the same and click on the **Next** button. Also, the instructions to install QCubed manually are shown on this (first) page of installer as well. Should you desire to do it manually, or if the installer fails, you can use the manual procedure.
   5. The installer will redirect to the second step and check for certain things to be true. These include:
     * The installation path was supplied.
-    * The given directory (*wwwroot*) path must be inside the webserver's DocumentRoot.
-    * The *wwwroot* directory must be existing.
-    * Check for the availability of the ```includes```, ```assets``` and ```drafts``` directories inside *wwwroot* directory.
+    * The given directory ( *instdir* ) path must be inside the webserver's DocumentRoot.
+    * The *instdir* directory must be existing.
+    * Check for the availability of the ```includes```, ```assets``` and ```drafts``` directories inside *instdir* directory.
   6. If any of the conditions do not match, the installer will throw an error. Otherwise it will ask for the values of different fields such as ```__SUBDIRETORY__```, ```__DOCROOT__``` and ```__VIRTUAL_DIRETORY__``` along with the database settings (adapter, port, database name, databse username and password). You should enter those and proceed to the 'Write Configuration' step.
   7. In the last step (Write Configuration step), the installer will read the ```configuration.inc.php.sample``` file in the ```includes/configuration``` directory and replace the values with with you entered and dump them to a new file called as ```configuration.inc.php```. If ```configuration.inc.php``` exists already then it will not overwrite the file (to save your current configuration) but it will show you the file contents so that you can use them later at your will. If the installer fails to create the file due to restricted permissions, it would still show you the contents. The feature of *not overwriting current configuration file* is in place to make sure that even if someone else gains the access to the installer script, he should not be able to overwrite the configuration.
 
-**NOTE**: After the installation has been finished, it is recommended to delete the installer files. They are located in ```assets/_core/php/_devtools/installer``` directory within *wwwroot*.
+**NOTE**: After the installation has been finished, it is recommended to delete the installer files. They are located in ```assets/_core/php/_devtools/installer``` directory within *instdir*.
 
 ### Manual Installation
 
-Inside of wwwroot/configuration/includes you'll find the configuration.inc.php file.  You'll need
-to open it to specify the actual location of your __DOCROOT__.
+To install QCubed manually in face of the failure of installer due to any reason, follow the following steps
 
-IMPORTANT NOTE FOR WINDOWS USERS:
-Please note that all paths should use standard "forward" slashes instead of
-"backslashes".  So windows paths would look like "c:/wwwroot" instead of
-"c:\wwwroot".
+  1. Open the ```includes/configuration/configuration.inc.php.sample``` file within the *instdir* directory.
+  2. Copy the contents of this file and paste it in a new file called ```configuration.inc.php``` in the same directory (if you want, you can rename the ```configuration.inc.php.sample``` file to ```configuration.inc.php``` as well, but we would not recomment that). Save the ```configuration.inc.php``` file.
+  3. Edit the ```configuration.inc.php``` file and set the values for ```__DOCROOT__```, ```__VIRTUAL_DIRECTORY__``` and ```__SUBDIRECTORY__``` and set the correct values. You should also set the values for the definition of ```DB_CONNECTION_1``` correctly. All these variables have been explained well in the comments in the file.
+  4. Save the ```configuration.inc.php``` file.
 
-Also, if you are putting QCubed into a SUBDIRECTORY of DOCROOT, then be sure
-to set the __SUBDIRECTORY__ constant to whatever the subdirectory is
-within DOCROOT.
+**IMPORTANT NOTE FOR WINDOWS USERS**: Please note that all paths should use standard "forward" slashes instead of "backslashes".  So windows paths would look like "c:/xampp/htdocs" instead of "c:\xampp\htdocs".
 
-If you are using QCubed inside of a Virtual Directory (also known as a Directory
-Alias), be sure to specify the __VIRTUAL_DIRECTORY__ constant, too.
-
-Next, specify a location to put your "_devtools_cli" directory (this could be either
-inside or outside of docroot), and update the __DEVTOOLS_CLI__ constant accordingly.
-
-Finally, be sure to update the DB_CONNECTION_1 serialized array constant with the
-correct database connection information for your database.
-
-(Information on all these constants are in configuration.inc.php, itself.)
-
-> We are working on a guided installation to ease this step.
-
-### Include prepend.inc.php
+### Include prepend.inc.php or qcubed.inc.php
 
 Calling require() on prepend.inc.php is necessary to include the framework in your PHP file.
 
@@ -68,7 +52,7 @@ Note that by default, this is already setup for you in:
 * /sample.php
 * /_devtools/codegen.php
 * /form_drafts/index.php
-* All the /examples/
+* All the examples that come along with QCubed
 * Any code generated form_draft page
 
 To change this or for any new PHP scripts you want to write, simply make sure any PHP
@@ -92,28 +76,31 @@ STEP FIVE below), then all you need to do is have
 	require('prepend.inc.php');
 at the top of each file (no need to specify a relative path).
 
+#### qcubed.inc.php
+Througout the QCubed installation, you will find a number of ```qcubed.inc.php``` files at a number of places and these files have been used at multiple places as well. While some of these files are pretty important, others are not. The one you should be concerned with is the one located inside the *instdir* (no subdirectories). This file helps in the particular case when you want to move the ```includes``` directory outside the DocumentRoot on webserver. It is a good security practice.
+
+```qcubed.inc.php``` (the file we talked about) calls (includes) the ```prepend.inc.php``` file automatically. So you can also include this file instead of ```prepend.inc.php```. While you are free to choose the way you want, QCubed uses this file to ease the pain of making sure that even the files you create can be moved wherever you want.
+
+If you go to the ```assets``` directory inside *instdir*, then you would find a file named as ```qcubed.inc.php``` too. This file does nothing but include the one in the *instdir*. Another ```qcubed.inc.php``` is located in ```assets/_core``` directory as well, with the same contents. So basically, you can copy and paste these files in any directory you manually create and *include* the file in other php files in the same directory. This will make sure that if you later choose to move the files around, they will not have to undergo path changes in the first ```prepend.inc.php``` include (i.e. you would not have to change a line like ```require_once '../../../includes/configuration/prepend.inc.php``` to ```../../includes/configuration/prepend.inc.php```.
+
+**Moving the includes directory outside DocumentRoot**: We have already said that moving the includes directory out of the DocumentRoot is a good security practice. If you want to do the same, you have 4 steps to follow:
+
+  1. Change the ```__INCLUDES__``` directive in ```includes/configuration/configuration.inc.php``` file.
+  2. Move the includes directory to another location.
+  3. Alther the ```qcubed.inc.php``` file (inside the *instdir* ) to contain the updated location of the includes directory.
+  4. Make sure that at all the php files you have written includes the ```qcubed.inc.php``` file instead of ```prepend.inc.php```.
+
+These steps makes sure that you would be able to move around the includes directory elsewhere. Also, it signifies the importance and usage of ```qcubed.inc.php``` located in the *instdir*.
+
 ### File Permissions
 
-Because the code generator generates files in multiple locations, you want to be sure that the
-webserver process has permissions to write to the docroot.
+Because the code generator generates files in multiple locations, you need to be sure that the webserver process has permissions to write to the docroot. The simplest way to do this is just to allow full access to the docroot for everyone.  While this is obviously not recommended for production environments, if you are reading this, we believe it is safe to assume you are working in a development environment. =P
 
-The simplest way to do this is just to allow full access to the docroot for everyone.  While this
-is obviously not recommended for production environments, if you are reading this, I think it is
-safe to assume you are working in a development environment. =P
+On Unix/Linux, simply run "chmod -R ugo+w" on your docroot directory (or better still, your *instdir* only).
 
-On Unix/Linux, simply run "chmod -R ugo+w" on your docroot directory.
+On Windows, you will want to right-click on the docroot folder and select "Properties", go to the "Security" tab, Add a "Everyone" user, and specify that "Everyone" has "Full Control". Also, on the "general" tab, make sure that "Read-Only" is unchecked.  If asked, be sure to apply changes to this folder and all subfolders.
 
-On Windows, you will want to right-click on the docroot folder and select "Properties",
-go to the "Security" tab, Add a "Everyone" user, and specify that "Everyone" has "Full Control".
-Also, on the "general" tab, make sure that "Read-Only" is unchecked.  If asked, be sure to
-apply changes to this folder and all subfolders.
-
-If this doesn't work, an additional task would be to use Start - Control Panel - Administrative Tools
-- Computer Management - Local Users and Groups - Users.  Look for a user with a name like
-IUSR_ComputerName (where ComputerName is your computer name).  Right-click on this user then
-Properties - Member of.  If it just shows Guests, make sure it's selected.  And then finally
-right-click on your QCubed folder, select Properties, and add the group Guests with Full Control.
-
+If this doesn't work, an additional task would be to use Start - Control Panel - Administrative Tools - Computer Management - Local Users and Groups - Users.  Look for a user with a name like IUSR_ComputerName (where ComputerName is your computer name).  Right-click on this user then Properties - Member of.  If it just shows Guests, make sure it's selected.  And then finally right-click on your QCubed folder, select Properties, and add the group Guests with Full Control.
 
 
 ### (Optional) Set up the include path
@@ -150,14 +137,11 @@ the beginning of the path)
 Now, depending on your server configuration, ISP, webhost, etc., you may
 not necessarily have access to the php.ini file on the server.  SOME web servers
 (e.g. Apache) will allow you to make folder-level or virtualhost directives
-to the php.ini file.  See the PHP documentation for more information.
+to the php.ini file - however those capabilities are not availed to the user by all hosts.
+See the PHP documentation for more information about this and contact your hosting service provider to learn about the possibilities.
 
-
-ALTERNATIVELY, if you like the idea of being able to simply have
-"require('prepend.inc.php')" with no relative path inforamtion at the top of your
-pages, but if you are unable for whatever reason to set the include_path, then you
-could use one of the following "set_include_path" lines at the top of each
-web-accessed *.php file/script in your web application.
+ALTERNATIVELY, if you like the idea of being able to simply have ```require('prepend.inc.php')``` (or ```require 'qcubed.inc.php'``` ) with no relative path inforamtion at the top of your
+pages, but if you are unable for whatever reason to set the include_path, then you could use one of the following "set_include_path" lines at the top of each web-accessed *.php file/script in your web application.
 
 IMPORTANT NOTE: Because the Code Generator can also generate some of your
 web-accessed *.php files, you will need to ALSO update the codegen template files
@@ -170,7 +154,7 @@ or a CGI (and of course, keep in mind that if you threw QCubed within a subdirec
 DOCROOT, be sure to specify that in the line you select).
 
 Use this if running PHP as a Apache/IIS/Etc. Plug-in or Module
-set_include_path(sprintf('.%s%s/includes', PATH_SEPARATOR, $_SERVER['DOCUMENT_ROOT']));
+```set_include_path(sprintf('.%s%s/includes', PATH_SEPARATOR, $_SERVER['DOCUMENT_ROOT']));```
 
 Use this if running PHP as a CGI executable
-set_include_path(sprintf('.%s%s/includes', PATH_SEPARATOR, substr($_SERVER['SCRIPT_FILENAME'], 0, strlen($_SERVER['SCRIPT_FILENAME']) - strlen($_SERVER['SCRIPT_NAME']))));
+```set_include_path(sprintf('.%s%s/includes', PATH_SEPARATOR, substr($_SERVER['SCRIPT_FILENAME'], 0, strlen($_SERVER['SCRIPT_FILENAME']) - strlen($_SERVER['SCRIPT_NAME']))));```
