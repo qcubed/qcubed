@@ -22,12 +22,11 @@
 		// slash in end
 		$strCurrentInstallationDir = substr($strCurrentInstallationDir, 0, (strlen($strCurrentInstallationDir) - 1));
 	}
-	
 	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/css/styles.css');
-	$arrDirs = explode(DIRECTORY_SEPARATOR, $strCurrentInstallationDir);
-	$strDirName = $arrDirs[count($arrDirs) - 1];
-	$strStyleUrl = DIRECTORY_SEPARATOR . $strDirName . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/css/styles.css');
-	$strImagesUrl = DIRECTORY_SEPARATOR . $strDirName . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/images');
+	
+	$strCurrentInstallationUrl = substr($strCurrentInstallationDir, strlen(rtrim($_SERVER['DOCUMENT_ROOT'])));
+	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/css/styles.css');
+	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/images');
 ?>
 <!DOCTYPE html>
 <html>

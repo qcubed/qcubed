@@ -82,11 +82,11 @@
 	
 	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/css/styles.css');
 	$strExamplesStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/php/examples/includes/examples.css');
-	$arrDirs = explode(DIRECTORY_SEPARATOR, $strCurrentInstallationDir);
-	$strDirName = $arrDirs[count($arrDirs) - 1];
-	$strStyleUrl = DIRECTORY_SEPARATOR . $strDirName . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/css/styles.css');
-	$strExamplesStyleUrl = DIRECTORY_SEPARATOR . $strDirName . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/php/examples/includes/examples.css');
-	$strImagesUrl = DIRECTORY_SEPARATOR . $strDirName . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/images');
+	
+	$strCurrentInstallationUrl = substr($strCurrentInstallationDir, strlen(rtrim($_SERVER['DOCUMENT_ROOT'])));
+	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/css/styles.css');
+	$strExamplesStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/php/examples/includes/examples.css');
+	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/images');
 	
 	// We will start the HTML output now.
 ?>
