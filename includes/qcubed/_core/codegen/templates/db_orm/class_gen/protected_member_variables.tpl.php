@@ -36,6 +36,27 @@
 
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objReference) { ?>
+<?php 
+		$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
+		if (is_a($objAssociatedTable, 'QTypeTable')) {
+?>
+		/**
+		 * Private member variable that stores a <?php echo $objReference->VariableType  ?> id,
+		 * if this <?php echo $objTable->ClassName  ?> object was restored with
+		 * an expansion on the <?php echo $objReference->Table  ?> association table.
+		 * @var integer _int<?php echo $objReference->ObjectDescription  ?>;
+		 */
+		private $_int<?php echo $objReference->ObjectDescription  ?>;
+
+		/**
+		 * Private member variable that stores an array of <?php echo $objReference->VariableType  ?> ids,
+		 * if this <?php echo $objTable->ClassName  ?> object was restored with
+		 * an ExpandAsArray on the <?php echo $objReference->ObjectDescription  ?> association table.
+		 * @var integer[] _int<?php echo $objReference->ObjectDescription  ?>Array;
+		 */
+		private $_int<?php echo $objReference->ObjectDescription  ?>Array = null;
+
+<?php 	} else { ?>
 		/**
 		 * Private member variable that stores a reference to a single <?php echo $objReference->ObjectDescription  ?> object
 		 * (of type <?php echo $objReference->VariableType  ?>), if this <?php echo $objTable->ClassName  ?> object was restored with
@@ -51,7 +72,7 @@
 		 * @var <?php echo $objReference->VariableType  ?>[] _obj<?php echo $objReference->ObjectDescription  ?>Array;
 		 */
 		private $_obj<?php echo $objReference->ObjectDescription  ?>Array = null;
-
+<?php 	} ?>
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
 		/**
