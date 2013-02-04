@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS person_type (
   name varchar(50) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY name (name)
-) TYPE=InnoDB ;
+) ENGINE=InnoDB ;
 
 DROP TABLE IF EXISTS person_type_assn;
 CREATE TABLE IF NOT EXISTS person_type_assn (
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS person_type_assn (
   person_type_id int(10) unsigned NOT NULL,
   PRIMARY KEY (person_id,person_type_id),
   KEY person_type_id (person_type_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 #========================================================================== #
 #  Foreign Keys                                                             #
