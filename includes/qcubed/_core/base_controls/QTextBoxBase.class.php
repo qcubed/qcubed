@@ -6,8 +6,8 @@
 	 */
 
 	/**
-	 * This class will render an HTML Textbox -- which can either be <input type="text">,
-	 * <input type="password"> or <textarea> depending on the TextMode (see below).
+	 * This class will render an HTML Textbox -- which can either be [input type="text"],
+	 * [input type="password"] or [textarea] depending on the TextMode (see below).
 	 *
 	 * @package Controls
 	 *
