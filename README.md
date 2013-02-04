@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/qcubed/framework.png?branch=rc-2.2.0)](https://travis-ci.org/qcubed/framework)
 
 ## Releases
-**Newest stable release: [version 2.1.1, released on Dec 1, 2012](https://github.com/qcubed/framework/archive/2.1.1.zip)**.
+**Newest stable release: [version 2.2.0, released on Feb 4, 2013](https://github.com/qcubed/framework/archive/2.2.0.zip)**.
 
 Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads).
 
