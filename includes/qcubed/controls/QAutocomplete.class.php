@@ -4,18 +4,13 @@
 	 * 
 	 * Put your customizations of the standard behavior here.
 	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
 	 */
      
 	/**
+	 * This class only extends QAutocompleteBase which implements the actual functionality.
+	 *
+	 * It will create textbox with autocomplete functionality
 	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
 	 */
 	class QAutocomplete extends QAutocompleteBase
 	{

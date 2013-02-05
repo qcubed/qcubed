@@ -1,10 +1,8 @@
 <?php    
 	/**
 	 * QDatePicker
-	 * 
-	 * Put your customizations of the standard behavior here.
-	 * 
-	 * @package Controls  
+	 *
+	 * @package Controls
 	 * @author Qcubed
 	 * @copyright 
 	 * @version 2011
@@ -12,6 +10,7 @@
 	 */
      
 	/**
+	 * Put your customizations to the standard behavior of QDataPickerBase class in this class
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 
