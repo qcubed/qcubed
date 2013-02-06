@@ -60,9 +60,8 @@
 	Project ID: <?php _p($objProject->Id); ?><br/>
 	Project Name: <?php _p($objProject->Name); ?><br/>
 	Project Status: <?php _p(ProjectStatusType::ToString($objProject->ProjectStatusTypeId)); ?>
-</div>
 
-	<h3>List the employees and their options.</h3>
+	<h2>List the employees and their options.</h2>
 <?php
 	// Load all the people and expand the type array associated with the person table
 	$objClauses[] = QQ::ExpandAsArray (QQN::Person()->PersonTypeAsType);
@@ -79,6 +78,7 @@
 		_p('<br/>', false);
 	}
 ?>
+</div>
 
 
 <?php require('../includes/footer.inc.php'); ?>
