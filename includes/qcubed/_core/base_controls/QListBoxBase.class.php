@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * QListBoxBase.class.php contains QListBoxBase
+	 * contains QListBoxBase class
 	 * @package Controls
 	 */
 	/**

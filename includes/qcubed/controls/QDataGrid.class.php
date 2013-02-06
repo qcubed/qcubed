@@ -3,6 +3,7 @@
 	 * contains the QDataGrid class
 	 *
 	 * @package Controls
+	 * @filesource
 	 */
 
 

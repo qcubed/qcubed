@@ -2,6 +2,7 @@
 	/**
 	 * Contains the QControl Class - one of the most important classes in the framework
 	 * @package Controls
+	 * @filesource
 	 */
 	/**
 	 * QControl is the user overridable Base-Class for all Controls.
