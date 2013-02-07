@@ -625,7 +625,12 @@
 						$this->prxDatagridSorting->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_col_" . $this->strActionParameter, false),
 						$this->objHeaderLinkStyle->GetAttributes(),
 						$strName);
-				} else
+				}
+				elseif ($objColumn instanceof QCheckBoxColumn) {	
+					$strCheck = $objColumn->chkSelectAll_Render(true);
+					$strToReturn .= sprintf("    <th %s>%s</th>\r\n", $this->objHeaderRowStyle->GetAttributes(), $strCheck);
+				}
+				else
 					$strToReturn .= sprintf("    <th %s>%s</th>\r\n", $this->objHeaderRowStyle->GetAttributes(), $objColumn->Name);
 				$intColumnIndex++;
 			}
