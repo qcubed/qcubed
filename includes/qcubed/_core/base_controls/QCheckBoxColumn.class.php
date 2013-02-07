@@ -38,7 +38,7 @@ class QCheckBoxColumn extends QDataGridColumn
 		//change the QDataGrid argument we get, and pass the parent constructor the HTML parameter it expects
 		$arrParentArgs[1] = '<?=$_COLUMN->chkSelected_Render($_ITEM) ?>';
 		if (version_compare(PHP_VERSION, '5.1.6', '>=')) 
-			return call_user_func_array(array($this, 'parent::__construct'), $arrParentArgs);
+			return call_user_func_array(array($this, 'QDataGridColumn::__construct'), $arrParentArgs);
 		else
 		{
 			$parent_class=get_parent_class($this);
@@ -82,10 +82,10 @@ class QCheckBoxColumn extends QDataGridColumn
 	}
 	
 	// Render the Select All checkbox to be displayed in the datagrid header row
-	public function chkSelectAll_Render() {
+	public function chkSelectAll_Render($blnWithLabel = false) {
 		$colIndex = $this->GetColIndex();
 		
-		$controlId = 'chkSelectAll' . $colIndex.$this->objDataGrid->ControlId ;
+		$controlId = 'chkSelectAll' . $colIndex . $this->objDataGrid->ControlId ;
 		
 		$this->chkSelectAll = $this->objDataGrid->GetChildControl($controlId);
 		
@@ -107,13 +107,19 @@ class QCheckBoxColumn extends QDataGridColumn
 			$this->chkSelectAll->AddAction(new QClickEvent(), new QJavaScriptAction($strJavascript));
 		}
 		
-		return $this->chkSelectAll->Render(false);
+		$strOutput = $this->chkSelectAll->Render(false);
+		
+		if ($blnWithLabel) {
+			$strOutput = '<label for="'.$this->chkSelectAll->ControlId.'">' . $this->strName . ' ' . $strOutput . '</label>';
+		}
+		
+		return $strOutput;
 	}
 	
 	public function chkSelected_Render($_ITEM) {
 		$intId = $_ITEM->{$this->strPrimaryKey};
 		$colIndex = $this->GetColIndex();
-		$strControlId = 'chkSelect' . $colIndex.$this->objDataGrid->ControlId .'n'.$intId;
+		$strControlId = 'chkSelect' . $colIndex . $this->objDataGrid->ControlId . 'n' . $intId;
 		
 		//Don't re-render an existing checkbox
 		$chkSelected = $this->objDataGrid->GetChildControl($strControlId);
@@ -130,6 +136,18 @@ class QCheckBoxColumn extends QDataGridColumn
 			$chkSelected->ActionParameter = $intId.','.($chkSelected->Checked?1:0);
 		}
 		return $chkSelected->Render(false);
+	}
+	
+	/**
+	 * Convert a checkbox id to its corresponding item id
+	 * @param string $chkId
+	 */
+	public function chkIdToItemId ($strCheckId) {
+		$colIndex = $this->GetColIndex();
+		$strControlIdPrefix = 'chkSelect' . $colIndex . $this->objDataGrid->ControlId . 'n';
+		
+		$len = strlen ($strControlIdPrefix);
+		return substr ($strCheckId, $len);
 	}
 	
 	/**
@@ -257,10 +275,11 @@ class QCheckBoxColumn extends QDataGridColumn
 	
 	public function __get($strName) {
 		switch ($strName) {
-			
+			/*
 			case "Name": 
-				$strControl = $this->chkSelectAll_Render();
-				return '<label for="'.$this->chkSelectAll->ControlId.'">' .$this->strName . ' ' . $strControl. '</label>';
+				// TODO: This can break if someone calls this. chkSelectAll_Render needs to be called directly from the data grid.
+				$strControl = $this->chkSelectAll_Render(true);
+				return '<label for="'.$this->chkSelectAll->ControlId.'">' .$this->strName . ' ' . $strControl. '</label>';*/
 			case "PrimaryKey": 
 				return $this->strPrimaryKey;
 			default:
