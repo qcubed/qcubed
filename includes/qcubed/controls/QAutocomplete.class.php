@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * QAccordion
+	 * Override file for QAutocomplete. Put your autocomplete customizations here.
 	 * 
 	 * Put your customizations of the standard behavior here.
 	 * @package Controls  
