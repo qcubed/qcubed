@@ -240,8 +240,18 @@
 			return $objColumnArrayToReturn;
 		}
 
+		/**
+		 * 
+		 * Returns the HTML for the header row, including the <<tr>> and <</tr>> tags
+		 */
 		protected function GetHeaderRowHtml() {
-			$strToReturn = $this->strHeaderRowCssClass ? '<tr class="' . $this->strHeaderRowCssClass . '">' : '<tr>';
+			$strToReturn = '<tr';
+			$strParamArray = $this->GetHeaderRowParams();
+			foreach ($strParamArray as $key=>$str) {
+				$strToReturn .= ' ' . $key . '="' . $str . '"';
+			}
+			$strToReturn .= '>';
+			
 			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn) {
 				$strToReturn .= $objColumn->RenderHeaderCell();
 			}
@@ -249,15 +259,36 @@
 
 			return $strToReturn;
 		}
-
-		protected function GetDataGridRowHtml($objObject, $intCurrentRowIndex) {
-			if (($intCurrentRowIndex % 2) == 1 && $this->strAlternateRowCssClass) {
-				$strToReturn = '<tr class="' . $this->strAlternateRowCssClass . '">';
-			} else if ($this->strRowCssClass) {
-				$strToReturn = '<tr class="' . $this->strRowCssClass . '">';
-			} else {
-				$strToReturn = '<tr>';
+		
+		/**
+		 * 
+		 * Returns a key=>val array of parameters to insert inside of the header row's <<tr>> tag.
+		 */
+		protected function GetHeaderRowParams () {
+			$strParamArray = array();
+			if ($strClass = $this->strHeaderRowCssClass) {
+				$strParamArray['class'] = $strClass;
 			}
+			return $strParamArray;		
+		}
+		
+		
+		/**
+		 * 
+		 * Get the html for the row, from the opening <<tr>> to the closing <</tr>> inclusive
+		 * @param object $objObject Current object from the DataSource array
+		 * @param integer $intCurrentRowIndex Current visual row index being output. 
+		 *  This is NOT the index of the data source, only the visual row number currently on screen.
+		 */
+		protected function GetDataGridRowHtml($objObject, $intCurrentRowIndex) {
+			$strToReturn = '<tr';
+			
+			$strParamArray = $this->GetRowParams($objObject, $intCurrentRowIndex);
+			foreach ($strParamArray as $key=>$str) {
+				$strToReturn .= ' ' . $key . '="' . $str . '"';
+			}
+			
+			$strToReturn .= '>';
 
 			foreach ($this->objColumnArray as $objColumn) {
 				try {
@@ -267,10 +298,77 @@
 					throw $objExc;
 				}
 			}
-			$strToReturn .= '</tr>';
+			$strToReturn .= "</tr>\r\n";
 			return $strToReturn;
 		}
+		
+		/**
+		 * Returns a key/val array of params that will be inserted inside the <<tr>> tag for this row. 
+		 * 
+		 * Handles  class, style, and id by default. Override to add additional types of parameters,
+		 * like an 'onclick' paramater for example. No checking is done on these params, the raw strings are output.
+		 * 
+		 * @param mixValue $item
+		 */
+		protected function GetRowParams ($objObject, $intCurrentRowIndex) {
+			$strParamArray = array();
+			if ($strClass = $this->GetRowClass ($objObject, $intCurrentRowIndex)) {
+				$strParamArray['class'] = $strClass;
+			}
+			
+			if ($strId = $this->GetRowId ($objObject, $intCurrentRowIndex)) {
+				$strParamArray['id'] = addslashes($strId);
+			}
+			
+			if ($strStyle = $this->GetRowStyle ($objObject, $intCurrentRowIndex)) {
+				$strParamArray['style'] = $strStyle;
+			}
+			return $strParamArray;		
+		}
+		
+		
+		/**
+		 * 
+		 * Return the html row id.
+		 * 
+		 * Override this to give the row an id.
+		 * 
+		 * @param object $objObject	object associated with this row
+		 * @param integer $intRowIndex  index of the row
+		 */
+		protected function GetRowId ($objObject, $intRowIndex) {
+			return null;
+		}
 
+		/**
+		 * 
+		 * Return the style string for this row.
+		 * 
+		 * @param object $objObject
+		 * @param integer $intRowIndex
+		 */
+		protected function GetRowStyle ($objObject, $intRowIndex) {
+			return null;
+		}
+		
+		/**
+		 * 
+		 * Return the class string of this row.
+		 * 
+		 * @param object $objObject
+		 * @param integer $intRowIndex
+		 */
+		protected function GetRowClass ($objObject, $intRowIndex) {
+			if (($intRowIndex % 2) == 1 && $this->strAlternateRowCssClass) {
+				return $this->strAlternateRowCssClass;
+			} else if ($this->strRowCssClass) {
+				return $this->strRowCssClass;
+			}
+			else {
+				return null;
+			}
+		}
+		
 		protected function GetFooterRowHtml() { }
 
 		protected function GetControlHtml() {
