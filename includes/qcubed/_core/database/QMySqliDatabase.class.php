@@ -492,10 +492,8 @@
 		}
 
 		public function GetColumn($strColumnName, $strColumnType = null) {
-			if (array_key_exists($strColumnName, $this->strColumnArray)) {
+			if (!empty($this->strColumnArray[$strColumnName])) {
 				$strColumnValue = $this->strColumnArray[$strColumnName];
-				if (is_null($strColumnValue))
-					return null;
 
 				switch ($strColumnType) {
 					case QDatabaseFieldType::Bit:
