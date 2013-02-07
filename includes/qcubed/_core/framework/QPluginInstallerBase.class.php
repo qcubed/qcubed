@@ -4,17 +4,22 @@
  * @author Alex Weinstein <alex94040@yahoo.com>
  */
 
+// define __PLUGIN_TMP__ if not defined. Change it by defining this in your config file.
+defined ('__PLUGIN_TMP__') or define ('__PLUGIN_TMP__', '/tmp/plugin.tmp/');
+
 /**
  * This class has shared settings and constants that are used by both the 
  * plugin installer and uninstaller child classes. 
  * It also has a very useful function for the outside world: isPluginInstalled(). 
  */
+
+
 abstract class QPluginInstallerBase {
 	private static $strLastError = "";
 	
 	const ONLINE_PLUGIN_REPOSITORY = "http://trac.qcu.be/projects/qcubed/wiki/plugins";
 	
-	const PLUGIN_EXTRACTION_DIR = "/tmp/plugin.tmp/";
+	const PLUGIN_EXTRACTION_DIR = __PLUGIN_TMP__;
 	/**
 	 * @var string Name of the the file defines plugin settings in XML format.
 	 */
