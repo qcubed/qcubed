@@ -275,11 +275,6 @@ class QCheckBoxColumn extends QDataGridColumn
 	
 	public function __get($strName) {
 		switch ($strName) {
-			/*
-			case "Name": 
-				// TODO: This can break if someone calls this. chkSelectAll_Render needs to be called directly from the data grid.
-				$strControl = $this->chkSelectAll_Render(true);
-				return '<label for="'.$this->chkSelectAll->ControlId.'">' .$this->strName . ' ' . $strControl. '</label>';*/
 			case "PrimaryKey": 
 				return $this->strPrimaryKey;
 			default:
