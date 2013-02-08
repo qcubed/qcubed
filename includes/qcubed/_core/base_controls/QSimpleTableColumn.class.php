@@ -596,9 +596,11 @@
 	class QVirtualAttributeColumn extends QAbstractSimpleTableColumn {
 		protected $strAttribute;
 		
-		public function __construct($strName, $strAttribute) {
+		public function __construct($strName, $strAttribute = null) {
 			parent::__construct($strName);
-			$this->strAttribute = $strAttribute;
+			if ($strAttribute) {
+				$this->strAttribute = $strAttribute;
+			}
 		}
 		
 		public function FetchCellObject($item) {
