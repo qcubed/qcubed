@@ -10,6 +10,8 @@
 
 	<div id="formActions">
 		<?php $this->btnNewPlugin->Render(); ?>
+		<?php $this->btnUnattendedPlugin->Render(); ?>
+		
 	</div>
 	
 	<p><a target="_blank" href="<?php echo QPluginInstaller::ONLINE_PLUGIN_REPOSITORY ?>">
