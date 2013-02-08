@@ -5,7 +5,7 @@
  */
 
 // define __PLUGIN_TMP__ if not defined. Change it by defining this in your config file.
-defined ('__PLUGIN_TMP__') or define ('__PLUGIN_TMP__', '/tmp/plugin.tmp/');
+defined ('__PLUGIN_TMP__') or define ('__PLUGIN_TMP__', __INCLUDES__ . '/tmp/plugin.tmp/');
 
 /**
  * This class has shared settings and constants that are used by both the 
@@ -100,7 +100,7 @@ abstract class QPluginInstallerBase {
 	}
 	
 	public static function cleanupExtractedFiles($strExtractedFolderName) {
-		QFolder::DeleteFolder(__INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName);
+		QFolder::DeleteFolder(self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName);
 		return "\r\nCleaned up installation files.\r\n";
 	}
 		
