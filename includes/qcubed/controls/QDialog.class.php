@@ -2,6 +2,8 @@
 	/**
 	 * QDialog
 	 * 
+	 * Put your customizations of the standard behavior here.
+	 * 
 	 * @package Controls   
 	 * @author Qcubed
 	 * @copyright 
@@ -10,8 +12,6 @@
 	 */
 	
     /**
-	 * QDialog
-	 * 
 	 * @package Controls   
 	 * @author Qcubed
 	 * @copyright 

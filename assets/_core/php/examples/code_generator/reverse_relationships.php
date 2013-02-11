@@ -1,18 +1,19 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Analyzing Reverse Relationships</h1>
-		Although it's a bit hard to undrestand at first, one of the unique and more powerful features of QCubed
-		is its ability to generate code to handle reverse relationships as well.
-		Given our previous example with the <b>Project</b> and <b>ManagerPerson</b>, we showed how
-		QCubed generated code in the <b>Project</b> class to handle the relationship.  But QCubed will also geneate
-		code in the <b>Person</b> class to handle the reverse aspects of this relationship.<br/><br/>
+<div id="instructions">
+	<h1>Analyzing Reverse Relationships</h1>
 
-		In this case, <b>Person</b> is on the "to Many" side of a "One to Many" relationship with <b>Project</b>.
-		So QCubed will generate the following methods in <b>Person</b> to deal with this reverse
-		relationship:
-		<ul>
+	<p>Although it's a bit hard to understand at first, one of the unique and more powerful features of QCubed
+		is its ability to generate code to handle reverse relationships as well.
+		Given our previous example with the <strong>Project</strong> and <strong>ManagerPerson</strong>, we showed how
+		QCubed generated code in the <strong>Project</strong> class to handle the relationship.  But QCubed will also geneate
+		code in the <strong>Person</strong> class to handle the reverse aspects of this relationship.</p>
+
+	<p>In this case, <strong>Person</strong> is on the "to Many" side of a "One to Many" relationship with <strong>Project</strong>.
+		So QCubed will generate the following methods in <strong>Person</strong> to deal with this reverse
+		relationship:</p>
+	<ul>
 		<li>GetProjectsAsManagerArray</li>
 		<li>CountProjectsAsManager</li>
 		<li>AssociateProjectAsManager</li>
@@ -20,43 +21,43 @@
 		<li>UnassociateAllProjectsAsManager</li>
 		<li>DeleteAssociatedProjectAsManager</li>
 		<li>DeleteAllProjectsAsManager</li>
-		</ul>
+	</ul>
 
-		And in fact, QCubed will generate the same seven methods for any "One to Many" reverse relationship
+	<p>And in fact, QCubed will generate the same seven methods for any "One to Many" reverse relationship
 		(get, count all, associate, unassociate, and unassociate all, delete associated, and delete all associated).
 		Note that the "AsManager" token in all these methods are there because we named the column in the
-		<b>project</b> table <b>manager_person_id</b>.  If we simply named it as <b>person_id</b>,
+		<strong>project</strong> table <strong>manager_person_id</strong>.  If we simply named it as <strong>person_id</strong>,
 		the methods would be named without the "AsManager" token (e.g. "GetProjectsArray", "CountProjects",
-		etc.)<br/><br/>
-		
-		Also note that <b>GetProjectsAsManagerArray</b> utilizes the <b>LoadArrayByManagerPersonId</b>
-		method in the <b>Project</b> object.  Of course, this was generated because <b>manager_person_id</b> is already
-		an index (as well as a Foreign Key) in the <b>project</b> table.<br/><br/>
-		
-		QCubed's Reverse Relationships functionality
+		etc.)</p>
+
+	<p>Also note that <strong>GetProjectsAsManagerArray</strong> utilizes the <strong>LoadArrayByManagerPersonId</strong>
+		method in the <strong>Project</strong> object.  Of course, this was generated because <strong>manager_person_id</strong> is already
+		an index (as well as a Foreign Key) in the <strong>project</strong> table.</p>
+
+	<p>QCubed's Reverse Relationships functionality
 		is dependent on the data model having indexes defined on all columns that are foreign keys.  For many
 		database platforms (e.g. MySQL) this should not be a problem b/c the index is created implicitly by the engine.
 		But for some (e.g. SQL Server) platforms, make sure that you have indexes defined on your Foreign Key columns,
-		or else you forgo being able to use the Reverse Relationship functionality.
+		or else you forgo being able to use the Reverse Relationship functionality.</p>
 
-		<h3>Unique Reverse Relationships (e.g. "One to One" Relationships)</h3>
+	<h2>Unique Reverse Relationships (e.g. "One to One" Relationships)</h2>
 
-		QCubed will generate a different set of code if it knows the reverse relationship to be a "Zero
+	<p>QCubed will generate a different set of code if it knows the reverse relationship to be a "Zero
 		to One" or "One to One" type of relationship.  This occurs in the relationship between
-		our <b>login</b> and <b>person</b> tables.  Note that <b>login</b>.<b>person_id</b> is a unique
+		our <strong>login</strong> and <strong>person</strong> tables.  Note that <strong>login</strong>.<strong>person_id</strong> is a unique
 		column.  Therefore, QCubed recognizes this as a "Zero- or One-to-One" relationship.  So for the
-		reverse relationship, QCubed will not generate the five methods (listed above) in the <b>Person</b>
-		table for the <b>Login</b> relationship.  Instead, QCubed generates a <b>Login</b> property in
-		<b>Person</b> object which can be set, modified, etc. just like the <b>Person</b> property in
-		the <b>Login</b> object.
+		reverse relationship, QCubed will not generate the five methods (listed above) in the <strong>Person</strong>
+		table for the <strong>Login</strong> relationship.  Instead, QCubed generates a <strong>Login</strong> property in
+		<strong>Person</strong> object which can be set, modified, etc. just like the <strong>Person</strong> property in
+		the <strong>Login</strong> object.</p>
 
-		<h3>Self-Referential Tables</h3>
+	<h3>Self-Referential Tables</h3>
 
-		QCubed also has full support for self-referential tables (e.g. a <b>category</b> table that
-		contains a <b>parent_category_id</b> column which would foreign key back to itself).
+	<p>QCubed also has full support for self-referential tables (e.g. a <strong>category</strong> table that
+		contains a <strong>parent_category_id</strong> column which would foreign key back to itself).
 		In this case, the QCubed will generated the following seven methods to assist with the reverse
-		relationship for this self-reference:
-		<ul>
+		relationship for this self-reference:</p>
+	<ul>
 		<li>GetChildCategoryArray</li>
 		<li>CountChildCategories</li>
 		<li>AssociateChildCategory</li>
@@ -64,36 +65,40 @@
 		<li>UnassociateAllChildCategories</li>
 		<li>DeleteChildCategory</li>
 		<li>DeleteAllChildCategories</li>
-		</ul>
-		(Note that even though this is being documented here, self-referential tables aren't actually
-		defined in the <b>Examples Site Database</b>.)
-	</div>
+	</ul>
 
+	<p>(Note that even though this is being documented here, self-referential tables aren't actually
+		defined in the <strong>Examples Site Database</strong>.)</p>
+</div>
 
+<div id="demoZone">
 
-	<h3>Person's Reverse Relationships with Project (via project.manager_person_id)<br/>and Login (via login.person_id)</h3>
+	<h2>Person's Reverse Relationships with Project (via project.manager_person_id) and Login (via login.person_id)</h2>
 <?php
-	// Let's load a Person object -- let's select the Person with ID #1
+	// Let's load a Person object -- let's select the Person with ID #7
 	$objPerson = Person::Load(7);
 ?>
-	Person ID: <?php _p($objPerson->Id); ?><br/>
-	First Name: <?php _p($objPerson->FirstName); ?><br/>
-	Last Name: <?php _p($objPerson->LastName); ?><br/><br/><br/>
+	<ul class="person-list">
+		<li>Person ID: <?php _p($objPerson->Id); ?></li>
+		<li>First Name: <?php _p($objPerson->FirstName); ?></li>
+		<li>Last Name: <?php _p($objPerson->LastName); ?></li>
+	</ul>
 
-
-
-	<b><i>Listing of the Project(s) that This Person Manages</i></b><br/>
+	<h3>Listing of the Project(s) that This Person Manages</h3>
+	<ul class="project-list">
 <?php
-	foreach ($objPerson->GetProjectAsManagerArray() as $objProject)
-		_p('&bull; ' . $objProject->Name . '<br/>', false);
+		foreach ($objPerson->GetProjectAsManagerArray() as $objProject) {
+			_p('<li>' . $objProject->Name . '</li>', false);
+		}
 ?>
-	<br/>There are <?php _p($objPerson->CountProjectsAsManager()); ?> project(s) that this person manages.<br/><br/><br/>
+	</ul>
+	<p>There are <?php _p($objPerson->CountProjectsAsManager()); ?> project(s) that this person manages.</p>
 
-
-
-	<b><i>This Person's Login Object</i></b><br/>
-	Username: <?php _p($objPerson->Login->Username); ?><br/>
-	Password: <?php _p($objPerson->Login->Password); ?><br/>
-
+	<h3>This Person's Login Object</h3>
+	<ul class="person-list">
+		<li>Username: <?php _p($objPerson->Login->Username); ?></li>
+		<li>Password: <?php _p($objPerson->Login->Password); ?></li>
+	</ul>
+</div>
 
 <?php require('../includes/footer.inc.php'); ?>

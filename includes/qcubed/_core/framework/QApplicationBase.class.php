@@ -218,9 +218,12 @@
 		 * @return void
 		 */
 		public static function Initialize() {
-			$strCacheProviderClass = CACHE_PROVIDER_CLASS;
+			$strCacheProviderClass = 'QCacheProviderNoCache';
+			if (defined('CACHE_PROVIDER_CLASS')) {
+				$strCacheProviderClass = CACHE_PROVIDER_CLASS;
+			}
 			if ($strCacheProviderClass) {
-				if (CACHE_PROVIDER_OPTIONS) {
+				if (defined('CACHE_PROVIDER_OPTIONS')) {
 					QApplicationBase::$objCacheProvider = new $strCacheProviderClass(unserialize(CACHE_PROVIDER_OPTIONS));
 				} else {
 					QApplicationBase::$objCacheProvider = new $strCacheProviderClass();
@@ -892,10 +895,10 @@
 		 * @return void
 		 */
 		public static function VarDump() {
-			_p('<div style="background-color: #cccccc; padding: 5px;"><b>QCubed Settings</b><ul>', false);
+			_p('<div class="var-dump"><strong>QCubed Settings</strong><ul>', false);
 			$arrValidationErrors = QInstallationValidator::Validate();
 			foreach ($arrValidationErrors as $objResult) {
-				printf('<li><font color="red"><b>WARNING:</b> %s</font></li>', $objResult->strMessage);
+				printf('<li><strong class="warning">WARNING:</strong> %s</li>', $objResult->strMessage);
 			}
 
 			printf('<li>QCUBED_VERSION = "%s"</li>', QCUBED_VERSION);

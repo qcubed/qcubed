@@ -93,11 +93,11 @@
 			$objStyle->FontSize = 12;
 			
 			$objStyle = $this->dtgProjects->AlternateRowStyle;
-			$objStyle->BackColor = '#eaeaea';
+			$objStyle->BackColor = '#f6f6f6';
 
 			$objStyle = $this->dtgProjects->HeaderRowStyle;
 			$objStyle->ForeColor = 'white';
-			$objStyle->BackColor = '#000066';
+			$objStyle->BackColor = '#780000';
 
 			// Because browsers will apply different styles/colors for LINKs
 			// We must explicitly define the ForeColor for the HeaderLink.

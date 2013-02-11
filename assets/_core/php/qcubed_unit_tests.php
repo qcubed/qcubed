@@ -1,11 +1,7 @@
+#!/usr/bin/php
 <?php
 
 /* This file is the file to point the browser to to launch unit tests */
-
-$filesToSkip = array(
-	"QUnitTestCaseBase.php"
-);
-
 
 $__CONFIG_ONLY__ = true;
 require('./qcubed.inc.php');
@@ -20,15 +16,6 @@ require(dirname(__FILE__).'/../../../qcubed.inc.php');
 restore_error_handler();
 
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
-
-$arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');
-$arrTests = array();
-foreach ($arrFiles as $filename) {
-	require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/' . $filename);
-	if (!in_array($filename, $filesToSkip)) {
-		$arrTests[] = str_replace(".php", "", $filename);
-	}
-}
 
 
 class QHtmlReporter extends HtmlReporter {
@@ -59,9 +46,31 @@ class QHtmlReporter extends HtmlReporter {
 	}
 }
 
-$suite = new TestSuite('QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - SimpleTest ' . SimpleTest::getVersion());
-foreach ($arrTests as $className) {
-	$suite->add(new $className);
+class QTestForm extends QForm {
+
+	protected function Form_Create() {
+		$filesToSkip = array(
+			"QUnitTestCaseBase.php"
+			, "QTestForm.tpl.php"
+		);
+
+		$arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');
+		$arrTests = array();
+		foreach ($arrFiles as $filename) {
+			if (!in_array($filename, $filesToSkip)) {
+				require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/' . $filename);
+				$arrTests[] = str_replace(".php", "", $filename);
+			}
+		}
+
+		$suite = new TestSuite('QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - SimpleTest ' . SimpleTest::getVersion());
+		foreach ($arrTests as $className) {
+			$suite->add(new $className($this));
+		}
+		$suite->run(new QHtmlReporter());
+	}
 }
-$suite->run(new QHtmlReporter());
+
+QTestForm::Run('QTestForm', __QCUBED_CORE__ . "/tests/qcubed-unit/QTestForm.tpl.php");
+
 ?>

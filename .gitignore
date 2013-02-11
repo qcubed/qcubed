@@ -1,7 +1,6 @@
 *~
 .idea
 nbproject
-/nbproject/private/
 /includes/vendor/
 /includes/configuration/configuration.inc.php
 /includes/formbase_classes_generated/*.class.php
@@ -22,3 +21,5 @@ nbproject
 /includes/tmp/cache/i18n.po/
 /includes/tmp/cache/soap/
 /includes/tmp/cache/qquery/
+.DS_Store
+*.orig

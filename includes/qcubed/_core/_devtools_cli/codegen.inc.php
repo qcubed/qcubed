@@ -4,7 +4,7 @@
 	 */
 
 	// Call the CLI prepend.inc.php
-	require('cli_prepend.inc.php');
+//	require('cli_prepend.inc.php');
 
 	// Include the QCodeGen class library
 	require(__QCUBED__. '/codegen/QCodeGen.class.php');
@@ -26,7 +26,7 @@ For more information, please go to http://qcu.be
 		exit();
 	}
 
-	$settingsFile = $strPathToPrepend . '/codegen_settings.xml';
+	$settingsFile = __CONFIGURATION__ . '/codegen_settings.xml';
 	if ($_SERVER['argc'] >= 2)
 		$settingsFile = $_SERVER['argv'][1];
 

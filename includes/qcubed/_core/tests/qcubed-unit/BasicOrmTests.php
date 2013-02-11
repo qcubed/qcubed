@@ -4,6 +4,22 @@
  * 
  * @package Tests
  */
+if(!class_exists('Person')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Person.class.php';
+    
+}
+if(!class_exists('Project')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Project.class.php';
+}
+if(!class_exists('Login')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Login.class.php';
+}
+if(!class_exists('Milestone')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Milestone.class.php';
+}
+if(!class_exists('Address')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Address.class.php';
+}
 class BasicOrmTests extends QUnitTestCaseBase {    
 	public function testSaveAndDelete() {
 		$objPerson1 = new Person();
@@ -156,6 +172,22 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertTrue(!is_null($objMilestone->Project->ManagerPerson->FirstName), "Person 7 has a name");
 		$this->assertEqual($objMilestone->Project->ManagerPerson->FirstName, "Karen", "Person 7 has first name of Karen");
 		
+	}
+	
+	public function testHaving() {
+		$objItems = Project::QueryArray(
+			QQ::All(),
+			QQ::Clause(
+				QQ::GroupBy(QQN::Project()->Id),
+				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
+				QQ::Having(QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId))
+			)
+		);
+		
+		$this->assertEqual(sizeof($objItems), 2, "2 projects found");
+		
+		$this->assertEqual($objItems[0]->Name, "State College HR System", "Project " . $objItems[0]->Name . " found");
+		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for project " . $objItems[0]->Name);	
 	}
 }
 ?>
