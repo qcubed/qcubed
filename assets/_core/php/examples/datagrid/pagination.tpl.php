@@ -1,25 +1,28 @@
 <?php require('../includes/header.inc.php'); ?>
-	<?php $this->RenderBegin(); ?>
+<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Adding Pagination to Your QDataGrid</h1>
-		Now, we will add pagination to our datagrid.<br/><br/>
+<div id="instructions">
+	<h1>Adding Pagination to Your QDataGrid</h1>
 
-		In order to enable pagination, we need to define a <b>QPaginator</b> object and assign it to
-		the <b>QDataGrid</b>.  Because the <b>QPaginator</b> will be rendered by the <b>QDataGrid</b>
-		(instead of being rendered on the form via a <b>$this->objPaginator->Render()</b>
-		call), we will set the <b>QDataGrid</b> as the <b>QPaginator</b>'s parent in the
-		<b>QPaginator</b> constructor call.<br/><br/>
-		
-		In the locally defined <b>dtgPersons_Bind</b> method, in addition to setting the datagrid's <b>DataSource</b>,
-		we also give the datagrid the <b>TotalItemCount</b> (via a <b>Person::CountAll</b> call).
-		And finally, when we make the <b>Person::LoadAll</b> call, we make sure to
-		pass in the datagrid's <b>LimitClause</b>, which will pass the paging information
-		into our <b>LoadAll</b> call to only retrieve the items on the page we are
-		currently viewing.
-	</div>
+	<p>Now, we will add pagination to our datagrid.</p>
 
-		<?php $this->dtgPersons->Render(); ?>
+	<p>In order to enable pagination, we need to define a <strong>QPaginator</strong> object and assign it to
+		the <strong>QDataGrid</strong>.  Because the <strong>QPaginator</strong> will be rendered by the <strong>QDataGrid</strong>
+		(instead of being rendered on the form via a <code>$this->objPaginator->Render()</code>
+		call), we will set the <strong>QDataGrid</strong> as the <strong>QPaginator</strong>'s parent in the
+		<strong>QPaginator</strong> constructor call.</p>
 
-	<?php $this->RenderEnd(); ?>
+	<p>In the locally defined <strong>dtgPersons_Bind</strong> method, in addition to setting the datagrid's <strong>DataSource</strong>,
+		we also give the datagrid the <strong>TotalItemCount</strong> (via a <strong>Person::CountAll</strong> call).
+		And finally, when we make the <strong>Person::LoadAll</strong> call, we make sure to
+		pass in the datagrid's <strong>LimitClause</strong>, which will pass the paging information
+		into our <strong>LoadAll</strong> call to only retrieve the items on the page we are
+		currently viewing.</p>
+</div>
+
+<div id="demoZone">
+	<?php $this->dtgPersons->Render(); ?>
+</div>
+
+<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

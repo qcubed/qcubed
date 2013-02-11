@@ -1,7 +1,8 @@
 .ib_main_image_pnl { 
 	height: 200px; 
 	width: 400px; 
-	border: 1px solid black; 
+	border: 1px solid #dedede; 
+	border-radius: 3px;
 	margin-top: 10px;
 }
 .ib_main_image { 
@@ -10,7 +11,7 @@
 	margin: 5px; 
 }
 .ib_thm {
-	border: 1px solid black; 
+	border: 1px solid #dedede; 
 	width: 400px; 
 	height: 100px; 
 	overflow-x: auto; 
@@ -25,7 +26,7 @@
 	border: none;
 }
 .ib_thm_selected { 
-	border: 2px solid red; 
+	border: 2px solid #780000; 
 }
 .ib_nav_button {
 	margin-right: 10px;
@@ -38,9 +39,4 @@ textarea.ib_caption {
 	padding: 0;
 }
 
-[disabled] {
-	cursor: not-allowed;
-	color:grey;
-	background-color:white;
-	border-color: grey;
-}
+button[disabled] { cursor: not-allowed; }

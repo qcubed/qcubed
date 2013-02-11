@@ -16,7 +16,7 @@
 			$this->pnlPanel = new QPanel($this);
 			$this->pnlPanel->Width = 300;
 			$this->pnlPanel->BackColor = '#dddddd';
-			$this->pnlPanel->Padding = '10px 0px 10px 0px';
+			$this->pnlPanel->Padding = '10px 0px';
 			$this->pnlPanel->HorizontalAlign = QHorizontalAlign::Center;
 
 			// Define a Template to make it Pretty

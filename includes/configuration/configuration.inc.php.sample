@@ -58,9 +58,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs');
-			define ('__VIRTUAL_DIRECTORY__', '');
-			define ('__SUBDIRECTORY__', '/qcubed2');
+			define ('__DOCROOT__', '{C:/xampp/xampp/htdocs}');
+			define ('__VIRTUAL_DIRECTORY__', '{~my_user}');
+			define ('__SUBDIRECTORY__', '{/qcubed2}');
 
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
@@ -147,15 +147,14 @@ if (!defined('SERVER_INSTANCE')) {
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery
 			// installation that's local to QCubed (in that case, paths must be relative to __JS_ASSETS__
 			define ('__JQUERY_BASE__', ' http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
-			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js');
+			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js');
 
 			// If you want to use the local jQuery files, specify the paths relative to __JS_ASSETS__
 			// or just uncomment the 2 lines below.
 			// define ('__JQUERY_BASE__',  'jquery/jquery.min.js');
 			// define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.min.js');
 
-//			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-lightness/jquery-ui.custom.css');
-			define ('__JQUERY_CSS__', 'jquery-ui-themes/sunny/jquery-ui-1.8.20.custom.css');
+			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-qcubed/jquery-ui.custom.css');
 
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
@@ -196,12 +195,12 @@ if (!defined('SERVER_INSTANCE')) {
 			 * Note: any option not used or set to blank will result in using the default value for that option
 			 */
 			define('DB_CONNECTION_1', serialize(array(
-				'adapter' => 'MySqli5',
-				'server' => 'localhost',
-				'port' => null,
-				'database' => 'qcubed',
-				'username' => 'root',
-				'password' => '',
+				'adapter' => '{db1_adapter}',
+				'server' => '{db1_serverAddress}',
+				'port' => {db1_serverport},
+				'database' => '{db1_dbname}',
+				'username' => '{db1_username}',
+				'password' => '{db1_password}',
 				'caching' => false,
 				'profiling' => false)));
 

@@ -1,4 +1,12 @@
 <?php
+
+	/*
+	*	QQuery.class.php
+	*
+	*	Classes to simplify the creation of SQL statements.
+	*/
+	
+	
 	/**
 	 * The abstract QQBaseNode class
 	 * @property-read QQBaseNode $_ParentNode
@@ -1049,6 +1057,10 @@
 			return new QQGroupBy(func_get_args());
 		}
 
+		static public function Having(QQSubQuerySqlNode $objNode) {
+			return new QQHavingClause($objNode);
+		}
+		
 		static public function Count($objNode, $strAttributeName) {
 			return new QQCount($objNode, $strAttributeName);
 		}
@@ -1427,6 +1439,29 @@
 		}
 	}
 
+	/*
+	 * Allows a custom sql injection as a having clause. Its up to you to make sure its correct, but you can use subquery placeholders
+	 * to expand column names. Standard SQL has limited Having capabilities, but many SQL engines have useful extensions. 
+	 */
+	class QQHavingClause extends QQClause {
+		protected $objNode;
+		public function __construct(QQSubQueryNode $objSubQueryDefinition) {
+			$this->objNode = $objSubQueryDefinition;
+		}
+		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+			$objBuilder->AddHavingItem (
+				$this->objNode->GetColumnAlias($objBuilder)
+			);
+		}
+		public function GetAttributeName() {
+			return $this->strName;
+		}
+		public function __toString() {
+			return "Having Clause";
+		}
+		
+	}
+	
 	abstract class QQAggregationClause extends QQClause {
 		/** @var QQNode */
 		protected $objNode;
@@ -1596,6 +1631,7 @@
 		protected $strWhereArray;
 		protected $strOrderByArray;
 		protected $strGroupByArray;
+		protected $strHavingArray;
 		/** @var QQVirtualNode[] */
 		protected $objVirtualNodeArray;
 		protected $strLimitInfo;
@@ -1755,6 +1791,11 @@
 			array_push($this->strGroupByArray, $strItem);
 		}
 
+		public function AddHavingItem ($strItem) {
+			array_push($this->strHavingArray, $strItem);
+		}
+
+		
 		public function SetLimitInfo($strLimitInfo) {
 			$this->strLimitInfo = $strLimitInfo;
 		}
@@ -1798,6 +1839,7 @@
 			$this->strWhereArray = array();
 			$this->strOrderByArray = array();
 			$this->strGroupByArray = array();
+			$this->strHavingArray = array();
 			$this->objVirtualNodeArray = array();
 
 			$this->strExpandAsArrayNodes = array();
@@ -1834,9 +1876,13 @@
 					$strSql .= "\r\nWHERE\r\n    " . $strWhere;
 			}
 
-			// Additional Ordering/Grouping clauses
+			// Additional Ordering/Grouping/Having clauses
 			if (count($this->strGroupByArray))
 				$strSql .= "\r\nGROUP BY\r\n    " . implode(",\r\n    ", $this->strGroupByArray);
+			if (count($this->strHavingArray)) {
+				$strHaving = implode("\r\n    ", $this->strHavingArray);
+				$strSql .= "\r\nHaving\r\n    " . $strHaving;
+			}
 			if (count($this->strOrderByArray))
 				$strSql .= "\r\nORDER BY\r\n    " . implode(",\r\n    ", $this->strOrderByArray);
 

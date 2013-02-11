@@ -1,5 +1,4 @@
 <?php $_CONTROL->pnlValueDisplay->Render(); ?>
-<br/>
 <table>
 	<tr>
 		<td colspan="3"><?php $_CONTROL->btnUpdate->Render('CssClass=calculator_top_button'); ?> <?php $_CONTROL->btnCancel->Render('CssClass=calculator_top_button'); ?></td>

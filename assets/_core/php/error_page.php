@@ -1,6 +1,6 @@
 <?php
 	// Generate the Error Dump
-	if (!ob_get_level()) ob_start();
+	if (!ob_get_level()) { ob_start(); }
 	require(__DOCROOT__ . __PHP_ASSETS__ . '/error_dump.php');
 
 	// Do We Log???
@@ -21,7 +21,7 @@
 
 			//$strAlertMsg = str_replace('"', '\\"', ERROR_FRIENDLY_AJAX_MESSAGE);
 			$strMsg = str_replace('\r\n', '<br />', ERROR_FRIENDLY_AJAX_MESSAGE);
-			echo '<div style="font-size: 12px;">' . $strMsg . '<br/><br/></div>';
+			echo '<p>' . $strMsg . '</p>';
 		}
 	} else {
 		if (defined('ERROR_FRIENDLY_PAGE_PATH') && ERROR_FRIENDLY_PAGE_PATH) {

@@ -1,26 +1,28 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Non-Table Bound Attributes</h1>
-		Occasionally you may need to create custom database queries which retrieve other columns
-		or values which are not in the table itself.  This may be a one-off column in another
-		table, a calculated value, etc.<br/><br/>
-		
-		You can utlize the generated data object to easily retrieve these <b>virtual attributes</b>
-		from the object, itself, as long as you code your custom database query correctly.  In short,
-		if you prefix any additional or non-table bound columns with a double-underscore ("__"), the
-		generated object will read in the column as a virtual attribute.  You can then use the generated
-		<b>GetVirtualAttribute</b> method to retrieve the value of the data.<br/><br/>
-		
-		In our example below, we create a custom SQL query which uses SQL's <b>COUNT</b> function and
-		subselects to calculate the number of team member for each project.<br/><br/>
+<div id="instructions">
+	<h1>Non-Table Bound Attributes</h1>
 
-		By utilizing <b>Virtual Attributes</b>, complex queries with calculated values,
-		subselects, etc. can be retrieved in a single database query, and all the values can be
-		stored in the data object, itself.
-	</div>
+	<p>Occasionally you may need to create custom database queries which retrieve other columns
+	or values which are not in the table itself.  This may be a one-off column in another
+	table, a calculated value, etc.</p>
 
+	<p>You can utlize the generated data object to easily retrieve these <strong>virtual attributes</strong>
+	from the object, itself, as long as you code your custom database query correctly.  In short,
+	if you prefix any additional or non-table bound columns with a double-underscore ("__"), the
+	generated object will read in the column as a virtual attribute.  You can then use the generated
+	<strong>GetVirtualAttribute</strong> method to retrieve the value of the data.</p>
+
+	<p>In our example below, we create a custom SQL query which uses SQL's <strong>COUNT</strong> function and
+	subselects to calculate the number of team member for each project.</p>
+
+	<p>By utilizing <strong>Virtual Attributes</strong>, complex queries with calculated values,
+	subselects, etc. can be retrieved in a single database query, and all the values can be
+	stored in the data object, itself.</p>
+</div>
+
+<div id="demoZone">
 <?php
 	// Let's Define the Query
 	$strQuery =
@@ -40,8 +42,7 @@
 	// Get the Database object from the Project table
 	$objDatabase = Project::GetDatabase();
 ?>
-
-	<h3>List All the Projects and Its Team Member Count</h3>
+	<h2>List All Projects and its Team Member Count</h2>
 <?php
 
 	// Query() the Database and Instantiate on the ResultSet into a Project[] array
@@ -53,7 +54,6 @@
 		_p('<br/>', false);
 	}
 ?>
-
-
+</div>
 
 <?php require('../includes/footer.inc.php'); ?>
