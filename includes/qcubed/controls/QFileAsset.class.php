@@ -1,29 +1,29 @@
 <?php
 	/**
-     * QFileAsset
-     * 
+	 * QFileAsset class is defined here
+	 * @package Controls
+	 * @filesource
+	 */
+
+	/**
+	 * QFileAsset class is control you can use to upload files to the server
+	 *
+	 * It extends the QFileAssetBase class. When writing your code, use this class instead of QFileAssetBase.
+	 * This class is intended to be modified by the developer to add functions and alter the functions
+	 * already present in QFileAssetBase class.
 	 * @package Controls
 	 */
-     
-	/**
-	 * QFileAsset
-	 * 
-	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
-	 */
 	class QFileAsset extends QFileAssetBase {
-	    /** @type string|'/tmp' File Path for Temporary Upload */
+		/** @var string File Path for Temporary Upload, default to '/tmp' directory inside includes */
 		protected $strTemporaryUploadPath = '/tmp';
-		
+
 		/**
-		 * QFileAsset::__construct()
-		 * 
-		 * @param mixed $objParentObject
-		 * @param string $strControlId
-		 * @return void
+		 * The QFileAsset constructor
+		 *
+		 * @param mixed  $objParentObject The parent control
+		 * @param string $strControlId The ID to be assigned to this control
+		 *
+		 * @return \QFileAsset
 		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
@@ -38,4 +38,5 @@
 			$this->DialogBoxHtml = '<p>' . QApplication::Translate('Please select a file to upload.') . '</p>';
 		}
 	}
+
 ?>

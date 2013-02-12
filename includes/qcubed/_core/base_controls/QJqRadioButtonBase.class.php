@@ -17,7 +17,7 @@
 	  * The text property is a boolean in the JqUi object that specifies whether
 	  * to show text or just icons (provided icons are defined), and the Label property overrides
 	  * the standard HTML of the button. Because of the name conflict, the JQ UI property is called
-	  * ->JqText. You can also use ShowText as an alias to this as well so that your code is more readable.
+	  * <code>JqText</code>. You can also use ShowText as an alias to this as well so that your code is more readable.
 	  * 	Text = standard html text of button
 	  *  Label = override of standard HTML text, if you want a button to say something different when JS is on or off
 	  *  ShowText = whether or not to hide the text of the button when icons are set

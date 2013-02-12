@@ -21,65 +21,153 @@
 	 * any information or code changes.  All customizations should be done by
 	 * overriding existing or implementing new methods, properties and variables
 	 * in the QAccordion class file.
-	 *
+	 * @package Control\Base
+	 * @filesource
 	 */
 
-	/* Custom event classes for this control */
-	
-	
 	/**
-	 * <div>Triggered after a panel has been activated (after animation
-	 * 		completes). If the accordion was previously collapsed,
-	 * 		<code>ui.oldHeader</code> and <code>ui.oldPanel</code> will be empty jQuery
-	 * 		objects. If the accordion is collapsing, <code>ui.newHeader</code> and
-	 * 		<code>ui.newPanel</code> will be empty jQuery
-	 * 		objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>newHeader</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The header that was just activated.</div></li>
-	 * 		<li><div><strong>oldHeader</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The header that was just deactivated.</div></li>
-	 * 		<li><div><strong>newPanel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel that was just activated.</div></li>
-	 * 		<li><div><strong>oldPanel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel that was just deactivated.</div></li></ul></li></ul>
+	 * 	    Triggered after a panel has been activated (after animation
+	 * 	    completes). If the accordion was previously collapsed,
+	 * 	    <code>ui.oldHeader</code> and <code>ui.oldPanel</code> will be empty jQuery
+	 * 	    objects. If the accordion is collapsing, <code>ui.newHeader</code> and
+	 * 	    <code>ui.newPanel</code> will be empty jQuery
+	 * 	    objects.
+	 * </div>
+	 * <div>
+	 * <ul>
+	 * 	    <li>
+	 * 	        <div><strong>event</strong></div>
+	 * 	        <div>Type:
+	 * 	            <a>Event</a></div>
+	 * 	        <div></div>
+	 * 	    </li>
+	 * 	    <li>
+	 * 	        <div><strong>ui</strong></div>
+	 * 	        <div>Type: <a>Object</a></div>
+	 * 	        <div></div>
+	 * 	        <ul>
+	 * 	            <li>
+	 * 	                <div><strong>newHeader</strong></div>
+	 * 	                <div>Type:
+	 * 	                    <a>jQuery</a></div>
+	 * 	                <div>The header that was just activated.</div>
+	 * 	            </li>
+	 * 	            <li>
+	 * 	                <div><strong>oldHeader</strong></div>
+	 * 	                <div>Type: <a>jQuery</a></div>
+	 * 	                <div>The header that was just deactivated.</div>
+	 * 	            </li>
+	 * 	            <li>
+	 * 	                <div><strong>newPanel</strong></div>
+	 * 	                <div>Type: <a>jQuery</a></div>
+	 * 	                <div>The panel that was just activated.</div>
+	 * 	            </li>
+	 * 	            <li>
+	 * 	                <div><strong>oldPanel</strong></div>
+	 * 	                <div>Type: <a>jQuery</a></div>
+	 * 	                <div>The panel that was just deactivated.</div>
+	 * 	            </li>
+	 * 	        </ul>
+	 * 	    </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAccordion_ActivateEvent extends QJqUiEvent {
 		const EventName = 'accordionactivate';
 	}
 	/**
 	 * <div>Triggered directly before a panel is activated. Can be canceled to
-	 * 		prevent the panel from activating. If the accordion is currently collapsed,
-	 * 		<code>ui.oldHeader</code> and <code>ui.oldPanel</code> will be empty jQuery
-	 * 		objects. If the accordion is collapsing, <code>ui.newHeader</code> and
-	 * 		<code>ui.newPanel</code> will be empty jQuery
-	 * 		objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>newHeader</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The header that is about to be
-	 * 		activated.</div></li> <li><div><strong>oldHeader</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The header that is about to be
-	 * 		deactivated.</div></li> <li><div><strong>newPanel</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The panel that is about to be
-	 * 		activated.</div></li> <li><div><strong>oldPanel</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The panel that is about to be
-	 * 		deactivated.</div></li></ul></li></ul>
+	 * 	    prevent the panel from activating. If the accordion is currently collapsed,
+	 * 	    <code>ui.oldHeader</code> and <code>ui.oldPanel</code> will be empty jQuery
+	 * 	    objects. If the accordion is collapsing, <code>ui.newHeader</code> and
+	 * 	    <code>ui.newPanel</code> will be empty jQuery
+	 * 	    objects.
+	 * </div>
+	 * <div>
+	 * <ul>
+	 * 	    <li>
+	 * 	        <div><strong>event</strong></div>
+	 * 	        <div>Type:
+	 * 	            <a>Event</a></div>
+	 * 	        <div></div>
+	 * 	    </li>
+	 * 	    <li>
+	 * 	        <div><strong>ui</strong></div>
+	 * 	        <div>Type: <a>Object</a></div>
+	 * 	        <div></div>
+	 * 	        <ul>
+	 * 	            <li>
+	 * 	                <div><strong>newHeader</strong></div>
+	 * 	                <div>Type:
+	 * 	                    <a>jQuery</a></div>
+	 * 	                <div>The header that is about to be
+	 * 	                    activated.
+	 * 	                </div>
+	 * 	            </li>
+	 * 	            <li>
+	 * 	                <div><strong>oldHeader</strong></div>
+	 * 	                <div>Type:
+	 * 	                    <a>jQuery</a></div>
+	 * 	                <div>The header that is about to be
+	 * 	                    deactivated.
+	 * 	                </div>
+	 * 	            </li>
+	 * 	            <li>
+	 * 	                <div><strong>newPanel</strong></div>
+	 * 	                <div>Type:
+	 * 	                    <a>jQuery</a></div>
+	 * 	                <div>The panel that is about to be
+	 * 	                    activated.
+	 * 	                </div>
+	 * 	            </li>
+	 * 	            <li>
+	 * 	                <div><strong>oldPanel</strong></div>
+	 * 	                <div>Type:
+	 * 	                    <a>jQuery</a></div>
+	 * 	                <div>The panel that is about to be
+	 * 	                    deactivated.
+	 * 	                </div>
+	 * 	            </li>
+	 * 	        </ul>
+	 * 	    </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAccordion_BeforeActivateEvent extends QJqUiEvent {
 		const EventName = 'accordionbeforeactivate';
 	}
 	/**
-	 * <div>Triggered when the accordion is created. If the accordion is
-	 * 		collapsed, <code>ui.header</code> and <code>ui.panel</code> will be empty
-	 * 		jQuery objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>header</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The active header.</div></li> <li><div><strong>panel</strong></div>
-	 * 		<div>Type: <a>jQuery</a></div> <div>The active
-	 * 		panel.</div></li></ul></li></ul>
+	 * <div>
+	 *     Triggered when the accordion is created. If the accordion is
+	 *     collapsed, <code>ui.header</code> and <code>ui.panel</code> will be empty
+	 *     jQuery objects.
+	 * </div>
+	 * <div>
+	 *     <ul>
+	 *         <li>
+	 *             <div><strong>event</strong></div>
+	 *             <div>Type:
+	 *                 <a>Event</a></div>
+	 *         </li>
+	 *         <li>
+	 *             <div><strong>ui</strong></div>
+	 *             <div>Type:
+	 *                 <a>Object</a></div>
+	 *         </li>
+	 *         <li>
+	 *             <div><strong>header</strong></div>
+	 *             <div>Type:
+	 *                 <a>jQuery</a></div>
+	 *             <div>The active header.</div>
+	 *         </li>
+	 *         <li>
+	 *             <div><strong>panel</strong></div>
+	 *             <div>Type:
+	 *                 <a>jQuery</a></div>
+	 *             <div>The active panel.</div>
+	 *         </li>
+	 *     </ul>
+	 * </div>
 	 */
 	class QAccordion_CreateEvent extends QJqUiEvent {
 		const EventName = 'accordioncreate';
@@ -98,13 +186,13 @@
 	 * 
 	 * @see QAccordionBase
 	 * @package Controls\Base
-	 * @property mixed $Active <div>Which panel is currently open.</div><strong>Multiple types
+	 * @property mixed $Active Which panel is currently open.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: Setting
-	 * 		<code>active</code> to <code>false</code> will collapse all panels. This
-	 * 		requires the <a><code>collapsible</code></a> option to be
-	 * 		<code>true</code>.</li> <li><strong>Integer</strong>: The zero-based index
-	 * 		of the panel that is active (open). A negative value selects panels going
-	 * 		backward from the last panel.</li></ul>
+	 *                 <code>active</code> to <code>false</code> will collapse all panels. This
+	 *                 requires the <code>collapsible</code> option to be
+	 *                 <code>true</code>.</li> <li><strong>Integer</strong>: The zero-based index
+	 *                 of the panel that is active (open). A negative value selects panels going
+	 *                 backward from the last panel.</li></ul>
 	 * @property mixed $Animate <div>If and how to animate changing panels.</div><strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: A value of
 	 * 		<code>false</code> will disable animations.</li>
@@ -263,7 +351,8 @@
 		}
 		/**
 		 * <div>Sets the value of the accordion option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
+		 * <code>optionName</code>.</div>
+		 * <ul><li><div><strong>optionName</strong></div>
 		 * <div>Type: <a>String</a></div> <div>The name of the option to
 		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
 		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
@@ -293,7 +382,13 @@
 			$this->CallJqUiMethod("refresh");
 		}
 
-
+		/**
+		 * PHP Magic _get method for getting property values from the object of this class.
+		 * @param string $strName Name of the property
+		 *
+		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Active': return $this->mixActive;
@@ -314,6 +409,14 @@
 			}
 		}
 
+		/**
+		 * PHP Magic _set method for setting property values for the object of this class
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case 'Active':
@@ -413,5 +516,4 @@
 			}
 		}
 	}
-
 ?>
