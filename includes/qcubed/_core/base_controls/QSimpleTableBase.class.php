@@ -73,6 +73,7 @@
 		public function AddColumn(QAbstractSimpleTableColumn $objColumn) {
 			$this->blnModified = true;
 			$this->objColumnArray[] = $objColumn;
+			$objColumn->_ParentTable = $this;
 		}
 
 		public function MoveColumn($strName, $intColumnIndex = -1) {

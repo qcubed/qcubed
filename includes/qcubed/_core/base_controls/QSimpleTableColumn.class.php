@@ -8,13 +8,7 @@
 	 * @property string $CssClass css class of the column
 	 * @property string $HeaderCssClass css class of the column when it's rendered in a table header
 	 * @property boolean $HtmlEntities if true, cell values will be converted using htmlentities()
-	 * @property QQOrderBy $OrderByClause order by clause for sorting the column in ascending order. Used by QDataTables plugin.
-	 * @property QQOrderBy $ReverseOrderByClause order by clause for sorting the column in descending order. Used by QDataTables plugin.
-	 * @property string $Format the default format to use for FetchCellValueFormatted(). Used by QDataTables plugin.
-	 *    For date columns it should be a format accepted by QDateTime::qFormat()
-	 * @property-write string $PostMethod after the cell object is retrieved, call this method on the obtained object
-	 * @property-write callback $PostCallback after the cell object is retrieved, call this callback on the obtained object.
-	 *    If $PostMethod is also set, this will be called after that method call
+	 * @property boolean $RenderAsHeader if true, all cells in the column will be rendered with a <<th>> tag instead of <<td>>
 	 */
 	abstract class QAbstractSimpleTableColumn extends QBaseClass {
 		/** @var string */
@@ -25,17 +19,11 @@
 		protected $strHeaderCssClass = null;
 		/** @var boolean */
 		protected $blnHtmlEntities = true;
-		/** @var QQOrderBy */
-		protected $objOrderByClause = null;
-		/** @var QQOrderBy */
-		protected $objReverseOrderByClause = null;
-		/** @var string */
-		protected $strFormat = null;
-		/** @var string */
-		protected $strPostMethod = null;
-		/** @var callback */
-		protected $objPostCallback = null;
-
+		/** @var boolean */
+		protected $blnRenderAsHeader = false;
+		/** @var QSimpleTableBase */
+		protected $objParentTable = null;
+		
 		/**
 		 * @param string $strName Name of the column
 		 */
@@ -52,23 +40,47 @@
 		 * 
 		 */
 		public function RenderHeaderCell() {
-			$cellValue = $this->strName;
+			$cellValue = $this->FetchHeaderCellValue();
 			if ($this->blnHtmlEntities)
 				$cellValue = QApplication::HtmlEntities($cellValue);
 			if ($cellValue == '' && QApplication::IsBrowser(QBrowserType::InternetExplorer)) {
 				$cellValue = '&nbsp;';
 			}
-
-			if ($this->strHeaderCssClass)
-				return '<th class="' . $this->strHeaderCssClass . '">' . $cellValue . '</th>';
-			return '<th>' . $cellValue . '</th>';
+			
+			$strToReturn = '<th';
+			$aParams = $this->GetCellParams($item);
+			foreach ($aParams as $key=>$str) {
+				$strToReturn .= ' ' . $key . '="' . $str . '"';
+			}
+			$strToReturn .= '>' . $cellValue . '</th>';
+			return $strToReturn;
 		}
-
+		
+		/**
+		 * Returns the text to print in the header cell, if one is to be drawn. Override if you want
+		 * something other than the default.
+		 */
+		public function FetchHeaderCellValue() {
+			return $this->strName;
+		}
+		
+		/**
+		 * Returns an array of key/value pairs to insert as parameters in the header cell. Override and add
+		 * more if you need them.
+		 */
+		public function GetHeaderCellParams () {
+			$aParams = array();
+			if ($this->strHeaderCssClass) {
+				$aParams['class'] = $this->strHeaderCssClass;
+			}
+			return $aParams;		
+		}
+		
 		/**
 		 * Render a cell. 
 		 * 
 		 * Called by data table for each cell. Override and call with $blnHeader = true if you want
-		 * this column to render with <<th>> tags instead of <<td>>.
+		 * this individual cell to render with <<th>> tags instead of <<td>>.
 		 * 
 		 * @param mixed $item
 		 * @param boolean $blnAsHeader
@@ -81,7 +93,7 @@
 				$cellValue = '&nbsp;';
 			}
 	
-			if ($blnAsHeader) {
+			if ($blnAsHeader || $this->blnRenderAsHeader) {
 				$tag = 'th';
 			} else {
 				$tag = 'td';
@@ -89,8 +101,8 @@
 			
 			$strToReturn = '<' . $tag;
 			
-			$strParamArray = $this->GetCellParams($item);
-			foreach ($strParamArray as $key=>$str) {
+			$aParams = $this->GetCellParams($item);
+			foreach ($aParams as $key=>$str) {
 				$strToReturn .= ' ' . $key . '="' . $str . '"';
 			}
 			$strToReturn .= '>' . $cellValue . '</' . $tag . '>';
@@ -153,50 +165,8 @@
 		 * 
 		 * @param mixed $item
 		 */
-		public function FetchCellValue($item) {
-			$cellValue = $this->FetchCellObject($item);
-			if ($this->strPostMethod) {
-				$strPostMethod = $this->strPostMethod;
-				$cellValue = $cellValue->$strPostMethod();
-			}
-			if ($this->objPostCallback) {
-				$cellValue = call_user_func($this->objPostCallback, $cellValue);
-			}
-			return $cellValue;
-		}
-
-		/**
-		 * Return the value of the cell. FetchCellValue will process this more if needed.
-		 * 
-		 * @param mixed $item
-		 */
-		abstract public function FetchCellObject($item);
-
-		/**
-		 * Fetch the cell in a formatted way.
-		 * 
-		 * Currently used by the QDataTables plugin to enable extra formatting on a cell.
-		 * 
-		 * @param mixed $item
-		 * @param string $strFormat
-		 */
-		public function FetchCellValueFormatted($item, $strFormat = null) {
-			$cellValue = $this->FetchCellValue($item);
-			if (!$cellValue)
-				return '';
-			if (!$strFormat)
-				$strFormat = $this->strFormat;
-			if ($cellValue instanceof QDateTime) {
-				return $cellValue->qFormat($strFormat);
-			}
-			if (is_object($cellValue)) {
-				$cellValue = $cellValue->__toString();
-			}
-			if ($strFormat)
-				return sprintf($strFormat, $cellValue);
-			return $cellValue;
-		}
-
+		abstract public function FetchCellValue($item);
+		
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Name':
@@ -207,13 +177,9 @@
 					return $this->strHeaderCssClass;
 				case 'HtmlEntities':
 					return $this->blnHtmlEntities;
-				case "OrderByClause":
-					return $this->objOrderByClause;
-				case "ReverseOrderByClause":
-					return $this->objReverseOrderByClause;
-				case "Format":
-					return $this->strFormat;
-
+				case 'RenderAsHeader':
+					return $this->blnRenderAsHeader;
+					
 				default:
 					try {
 						return parent::__get($strName);
@@ -261,7 +227,126 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+					
+				case "RenderAsHeader":
+					try {
+						$this->blnRenderAsHeader = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
+				case "_ParentTable":
+					try {
+						$this->objParentTable = QType::Cast($mixValue, 'QSimpleTableBase');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
+				default:
+					try {
+						parent::__set($strName, $mixValue);
+						break;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+	}
+	
+	/**
+	 * An abstract column designed to work with QDataTables and other tables that require more than basic columns.
+	 * Supports post processing of cell contents for further formatting, and orderby clauses. 
+	 *
+	 * @property QQOrderBy $OrderByClause order by clause for sorting the column in ascending order. Used by QDataTables plugin.
+	 * @property QQOrderBy $ReverseOrderByClause order by clause for sorting the column in descending order. Used by QDataTables plugin.
+	 * @property string $Format the default format to use for FetchCellValueFormatted(). Used by QDataTables plugin.
+	 *    For date columns it should be a format accepted by QDateTime::qFormat()
+	 * @property-write string $PostMethod after the cell object is retrieved, call this method on the obtained object
+	 * @property-write callback $PostCallback after the cell object is retrieved, call this callback on the obtained object.
+	 *    If $PostMethod is also set, this will be called after that method call.
+	 */
+	 
+	abstract class QAbstractSimpleTableDataColumn extends QAbstractSimpleTableColumn {
+		/** @var QQOrderBy */
+		protected $objOrderByClause = null;
+		/** @var QQOrderBy */
+		protected $objReverseOrderByClause = null;
+		/** @var string */
+		protected $strFormat = null;
+		/** @var string */
+		protected $strPostMethod = null;
+		/** @var callback */
+		protected $objPostCallback = null;
+		
+		/**
+		 * Return the raw string that represents the cell value. 
+		 * 
+		 * This version uses a combination of post processing strategies so that you can set 
+		 * column options to format the raw data. If no
+		 * options are set, then $item will just pass through, or __toString() will be called
+		 * if its an object. If none of these work for you, just override FetchCellObject and
+		 * return your formatted string from there.
+		 * 
+		 * @param mixed $item
+		 */
+		public function FetchCellValue($item) {
+			$cellValue = $this->FetchCellObject($item);
+						
+			if ($this->strPostMethod) {
+				$strPostMethod = $this->strPostMethod;
+				$cellValue = $cellValue->$strPostMethod();
+			}
+			if ($this->objPostCallback) {
+				$cellValue = call_user_func($this->objPostCallback, $cellValue);
+			}
+			if (!$cellValue)
+				return '';
+
+			if ($cellValue instanceof QDateTime) {
+				return $cellValue->qFormat($this->strFormat);
+			}
+			if (is_object($cellValue)) {
+				$cellValue = $cellValue->__toString();
+			}
+			if ($this->strFormat)
+				return sprintf($this->strFormat, $cellValue);
+			return $cellValue;
+		}
+
+		/**
+		 * Return the value of the cell. FetchCellValue will process this more if needed.
+		 * Default returns an entire data row and relies on FetchCellValue to extract the needed data.
+		 * 
+		 * @param mixed $item
+		 */
+		abstract public function FetchCellObject($item);
+
+		public function __get($strName) {
+			switch ($strName) {
+				case "OrderByClause":
+					return $this->objOrderByClause;
+				case "ReverseOrderByClause":
+					return $this->objReverseOrderByClause;
+				case "Format":
+					return $this->strFormat;
+
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+
+		public function __set($strName, $mixValue) {
+			switch ($strName) {
 				case "OrderByClause":
 					try {
 						$this->objOrderByClause = QType::Cast($mixValue, 'QQOrderBy');
@@ -326,7 +411,7 @@
 	 * @property boolean $NullSafe if true the value fetcher will check for nulls before accessing the properties
 	 *
 	 */
-	class QSimpleTablePropertyColumn extends QAbstractSimpleTableColumn {
+	class QSimpleTablePropertyColumn extends QAbstractSimpleTableDataColumn {
 		protected $strProperty;
 		protected $strPropertiesArray;
 		protected $blnNullSafe = true;
@@ -416,7 +501,7 @@
 	 * @property int|string $Index the index or key to use when accessing the arrays in the DataSource array
 	 *
 	 */
-	class QSimpleTableIndexedColumn extends QAbstractSimpleTableColumn {
+	class QSimpleTableIndexedColumn extends QAbstractSimpleTableDataColumn {
 		protected $mixIndex;
 
 		/**
@@ -471,7 +556,7 @@
 	 * @property int|string $Index the index or key to use when accessing the arrays in the DataSource array
 	 *
 	 */
-	class QSimpleTableClosureColumn extends QAbstractSimpleTableColumn implements Serializable {
+	class QSimpleTableClosureColumn extends QAbstractSimpleTableDataColumn implements Serializable {
 		/** @var callback */
 		protected $objClosure;
 
@@ -593,7 +678,7 @@
 	 *
 	 * @property string Attribute 
 	 */
-	class QVirtualAttributeColumn extends QAbstractSimpleTableColumn {
+	class QVirtualAttributeColumn extends QAbstractSimpleTableDataColumn {
 		protected $strAttribute;
 		
 		public function __construct($strName, $strAttribute = null) {
@@ -638,6 +723,90 @@
 			}
 		}
 		
+	}
+	
+	/**
+	 * 
+	 * A column of checkboxes. 
+	 * 
+	 * Prints checkboxes in a column, including the header. Override this class and implement whatever hooks you need. In
+	 * particular implement the CheckId hooks, and IsChecked hooks. 
+	 *
+	 */
+	class QSimpleTableCheckBoxColumn extends QAbstractSimpleTableDataColumn {
+		protected $blnHtmlEntities = false;
+		
+		public function FetchHeaderCellValue() {
+			$strToReturn = '<input type="checkbox"';
+			$aParams = $this->GetHeaderCheckboxParams($item);
+			foreach ($aParams as $key=>$str) {
+				$strToReturn .= ' ' . $key . '="' . $str . '"';
+			}
+			
+			$strToReturn .= ' />';
+		}
+		public function GetHeaderCheckboxParams ($item) {
+			$aParams = array();
+			
+			if ($strId = $this->GetHeaderCheckId ($item)) {
+				$aParams['id'] = addslashes($strId);
+			}
+			
+			if ($strCheck = $this->IsHeaderChecked ($item)) {
+				$aParams['checked'] = 'checked';
+			}
+			return $aParams;		
+		}
+		
+		function GetHeaderCheckId () {
+			return null;	
+		}
+		
+		function IsHeaderChecked () {
+			return false;
+		}
+		
+		public function FetchCellObject($item) {
+			
+			$strToReturn = '<input type="checkbox"';
+			
+			$aParams = $this->GetCheckboxParams($item);
+			foreach ($aParams as $key=>$str) {
+				$strToReturn .= ' ' . $key . '="' . $str . '"';
+			}
+			
+			$strToReturn .= ' />';
+			return $chkSelected->Render(false);
+		}
+		
+		public function GetCheckboxParams ($item) {
+			$aParams = array();
+			
+			if ($strId = $this->GetCheckId ($item)) {
+				$aParams['id'] = addslashes($strId);
+			}
+			
+			if ($strCheck = $this->IsChecked ($item)) {
+				$aParams['checked'] = 'checked';
+			}
+			return $aParams;		
+		}
+		
+		/**
+		 * Returns the id for the checkbox itself. This is used together with the check action to send the item
+		 * id to the action. This system currently supports only one checkbox column. 
+		 * @param unknown_type $item
+		 */
+		function GetCheckId ($item) {
+			return null;
+			//return 'colCheck' . $this->objParentTable->Id . '_' . $this->GetItemId($item);	
+		}
+		
+		function GetItemId ($item){}
+		
+		function IsChecked ($item) {
+			return false;
+		}
 	}
 	
 
