@@ -6,6 +6,7 @@
 		// Local instance of the Meta DataGrid to list Addresses
 		protected $dtgPlugins;
 		protected $btnNewPlugin;
+		protected $btnUnattendedPlugin;
 		protected $dlgUpload;
 		
 		private $objPluginArray;
@@ -17,18 +18,31 @@
 		protected function Form_Create() {
 			$this->dtgPlugins_Create();
 			$this->btnNewPlugin_Create();
+			$this->btnUnattendedPlugin_Create();
 			$this->dlgUpload_Create();
 		}
 				
 		private function btnNewPlugin_Create() {
 			$this->btnNewPlugin = new QButton($this);
-			$this->btnNewPlugin->Text = "Install a New Plugin";
+			$this->btnNewPlugin->Text = "Upload a New Plugin";
 			$this->btnNewPlugin->AddAction(new QClickEvent(), new QAjaxAction('btnNewPlugin_Click'));
 		}
+		
+		private function btnUnattendedPlugin_Create() {
+			$this->btnUnattendedPlugin = new QButton($this);
+			$this->btnUnattendedPlugin->Text = "Install Plugins in plugin.install Directory";
+			$this->btnUnattendedPlugin->AddAction(new QClickEvent(), new QAjaxAction('btnUnattendedPlugin_Click'));
+		}
+		
 		
 		public function btnNewPlugin_Click() {
 			$this->dlgUpload->ShowDialogBox();
 		}
+		
+		public function btnUnattendedPlugin_Click() {
+			QApplication::Redirect (__DEVTOOLS__ . '/plugin_unattended.php');
+		}
+		
 		
 		private function dtgPlugins_Create() {
 			$this->dtgPlugins = new QDataGrid($this, 'dtgPlugins');
