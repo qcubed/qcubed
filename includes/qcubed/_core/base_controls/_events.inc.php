@@ -165,6 +165,15 @@
 		protected $strCondition = 'event.keyCode == 40';
 	}
 
+	class QTabKeyEvent extends QKeyDownEvent {
+		protected $strCondition = 'event.keyCode == 9';
+	}
+
+	class QBackspaceKeyEvent extends QKeyDownEvent {
+		protected $strCondition = 'event.keyCode == 8';
+	}
+	
+	
 	abstract class QJqUiEvent extends QEvent {
 		// be sure to subclass your events from this class if they are JqUiEvents
 	}
