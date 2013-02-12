@@ -6,6 +6,8 @@
 	 * The QAccordionBase class defined here provides an interface between the generated
 	 * QAccordianGen class, and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, make your changes to the QAccordion.class.php file instead.
+	 * @package Controls\Base
+	 * @filesource
 	 */
 	 
 

@@ -212,7 +212,13 @@
 			$this->CallJqUiMethod("refresh");
 		}
 
-
+		/**
+		 * The PHP magic function to get value for properties of an object of this class
+		 * @param string $strName Name of the property to get
+		 *
+		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
@@ -229,6 +235,14 @@
 			}
 		}
 
+		/**
+		 * * The PHP magic function to set properties for objects of this class
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case 'Disabled':

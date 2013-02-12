@@ -1,18 +1,15 @@
 <?php
 	/**
 	 * This file contains the QCheckBox class.
-	 *
 	 * @package Controls
 	 */
 
 	/**
 	 * This class will render an HTML Checkbox.
-	 *
 	 * @package Controls
-	 *
-	 * @property string $Text is used to display text that is displayed next to the checkbox.  The text is rendered as an html "Label For" the checkbox.
-	 * @property string $TextAlign specifies if "Text" should be displayed to the left or to the right of the checkbox.
-	 * @property boolean $Checked specifices whether or not hte checkbox is checked
+	 * @property string  $Text      is used to display text that is displayed next to the checkbox.  The text is rendered as an html "Label For" the checkbox.
+	 * @property string  $TextAlign specifies if "Text" should be displayed to the left or to the right of the checkbox.
+	 * @property boolean $Checked   specifices whether or not hte checkbox is checked
 	 * @property boolean $HtmlEntities
 	 */
 	class QCheckBox extends QControl {
@@ -23,7 +20,7 @@
 		// APPEARANCE
 		protected $strText = null;
 		protected $strTextAlign = QTextAlign::Right;
-		
+
 		// BEHAVIOR
 		protected $blnHtmlEntities = true;
 
@@ -36,10 +33,11 @@
 		public function ParsePostData() {
 			if ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (array_key_exists($this->strControlId, $_POST)) {
-					if ($_POST[$this->strControlId])
+					if ($_POST[$this->strControlId]) {
 						$this->blnChecked = true;
-					else
+					} else {
 						$this->blnChecked = false;
+					}
 				} else {
 					$this->blnChecked = false;
 				}
@@ -47,39 +45,46 @@
 		}
 
 		protected function GetControlHtml() {
-			if (!$this->blnEnabled)
+			if (!$this->blnEnabled) {
 				$strDisabled = 'disabled="disabled" ';
-			else
+			} else {
 				$strDisabled = "";
+			}
 
-			if ($this->intTabIndex)
+			if ($this->intTabIndex) {
 				$strTabIndex = sprintf('tabindex="%s" ', $this->intTabIndex);
-			else
+			} else {
 				$strTabIndex = "";
+			}
 
-			if ($this->strToolTip)
+			if ($this->strToolTip) {
 				$strToolTip = sprintf('title="%s" ', $this->strToolTip);
-			else
+			} else {
 				$strToolTip = "";
+			}
 
-			if ($this->strCssClass)
+			if ($this->strCssClass) {
 				$strCssClass = sprintf('class="%s" ', $this->strCssClass);
-			else
+			} else {
 				$strCssClass = "";
+			}
 
-			if ($this->strAccessKey)
+			if ($this->strAccessKey) {
 				$strAccessKey = sprintf('accesskey="%s" ', $this->strAccessKey);
-			else
+			} else {
 				$strAccessKey = "";
-				
-			if ($this->blnChecked)
+			}
+
+			if ($this->blnChecked) {
 				$strChecked = 'checked="checked" ';
-			else
+			} else {
 				$strChecked = "";
+			}
 
 			$strStyle = $this->GetStyleAttributes();
-			if (strlen($strStyle) > 0)
+			if (strlen($strStyle) > 0) {
 				$strStyle = sprintf('style="%s" ', $strStyle);
+			}
 
 			$strCustomAttributes = $this->GetCustomAttributes();
 
@@ -102,7 +107,7 @@
 						$strChecked,
 						$strAccessKey,
 						$strTabIndex
-					);				
+					);
 				} else {
 					$strToReturn = sprintf('<table cellspacing="0" cellpadding="0" border="0"><tr><td><input type="checkbox" id="%s" name="%s" %s%s%s%s /></td><td %s%s%s%s%s><label for="%s">%s</label></td></tr></table>',
 						$this->strControlId,
@@ -141,10 +146,11 @@
 		public function Validate() {
 			if ($this->blnRequired) {
 				if (!$this->blnChecked) {
-					if ($this->strName)
+					if ($this->strName) {
 						$this->strValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
-					else
+					} else {
 						$this->strValidationError = QApplication::Translate('Required');
+					}
 					return false;
 				}
 			}
@@ -159,14 +165,18 @@
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
-				case "Text": return $this->strText;
-				case "TextAlign": return $this->strTextAlign;
+				case "Text":
+					return $this->strText;
+				case "TextAlign":
+					return $this->strTextAlign;
 
 				// BEHAVIOR
-				case "HtmlEntities": return $this->blnHtmlEntities;
+				case "HtmlEntities":
+					return $this->blnHtmlEntities;
 
 				// MISC
-				case "Checked": return $this->blnChecked;
+				case "Checked":
+					return $this->blnChecked;
 				default:
 					try {
 						return parent::__get($strName);
@@ -220,7 +230,7 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -232,4 +242,5 @@
 			}
 		}
 	}
+
 ?>

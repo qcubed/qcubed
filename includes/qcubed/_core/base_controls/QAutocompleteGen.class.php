@@ -29,98 +29,232 @@
 	
 	/**
 	 * <div>Triggered when the field is blurred, if the value has
-	 * 		changed.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The item selected from the menu, if any. Otherwise the property is
-	 * 		<code>null</code>.</div></li></ul></li></ul>
+	 * 	    changed.
+	 * 	</div>
+	 * <div>
+	 * <ul>
+	 *     <li>
+	 *         <div><strong>event</strong></div>
+	 *         <div>Type:
+	 *             <a>Event</a></div>
+	 *         <div></div>
+	 *     </li>
+	 *     <li>
+	 *         <div><strong>ui</strong></div>
+	 *         <div>Type: <a>Object</a></div>
+	 *         <div></div>
+	 *         <ul>
+	 *             <li>
+	 *                 <div><strong>item</strong></div>
+	 *                 <div>Type: <a>jQuery</a></div>
+	 *                 <div>The item selected from the menu, if any. Otherwise the property is
+	 *                     <code>null</code>.
+	 *                 </div>
+	 *             </li>
+	 *         </ul>
+	 *     </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAutocomplete_ChangeEvent extends QJqUiEvent {
 		const EventName = 'autocompletechange';
 	}
 	/**
 	 * <div>Triggered when the menu is hidden. Not every <code>close</code> event
-	 * 		will be accompanied by a <code>change</code>
-	 * 		event.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * 	    will be accompanied by a <code>change</code>
+	 *     event.
+	 * </div>
+	 * <div>
+	 * <ul>
+	 *     <li>
+	 *         <div><strong>event</strong></div>
+	 *         <div>Type:
+	 *             <a>Event</a></div>
+	 *         <div></div>
+	 *     </li>
+	 *     <li>
+	 *         <div><strong>ui</strong></div>
+	 *         <div>Type: <a>Object</a></div>
+	 *         <div></div>
+	 *     </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAutocomplete_CloseEvent extends QJqUiEvent {
 		const EventName = 'autocompleteclose';
 	}
 	/**
 	 * <div>Triggered when the autocomplete is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * 	    created.
+	 * </div>
+	 * <div>
+	 * <ul>
+	 *     <li>
+	 *         <div><strong>event</strong></div>
+	 *         <div>Type:
+	 *             <a>Event</a></div>
+	 *         <div></div>
+	 *     </li>
+	 *     <li>
+	 *         <div><strong>ui</strong></div>
+	 *         <div>Type: <a>Object</a></div>
+	 *         <div></div>
+	 *     </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAutocomplete_CreateEvent extends QJqUiEvent {
 		const EventName = 'autocompletecreate';
 	}
 	/**
 	 * <div>Triggered when focus is moved to an item (not selecting). The default
-	 * 		action is to replace the text field's value with the value of the focused
-	 * 		item, though only if the event was triggered by a keyboard interaction.
-	 * 						<p>Canceling this event prevents the value from being updated, but does
-	 * 		not prevent the menu item from being
-	 * 		focused.</p></div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The focused item.</div></li></ul></li></ul>
+	 * 	    action is to replace the text field's value with the value of the focused
+	 *     item, though only if the event was triggered by a keyboard interaction.
+	 *     <p>Canceling this event prevents the value from being updated, but does
+	 *         not prevent the menu item from being
+	 *         focused.</p>
+	 * </div>
+	 * <div>
+	 * <ul>
+	 *     <li>
+	 *         <div><strong>event</strong></div>
+	 *         <div>Type:
+	 *             <a>Event</a></div>
+	 *         <div></div>
+	 *     </li>
+	 *     <li>
+	 *         <div><strong>ui</strong></div>
+	 *         <div>Type: <a>Object</a></div>
+	 * 	        <div></div>
+	 *         <ul>
+	 *             <li>
+	 *                 <div><strong>item</strong></div>
+	 *                 <div>Type: <a>jQuery</a></div>
+	 *                 <div>The focused item.</div>
+	 *             </li>
+	 *         </ul>
+	 *     </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAutocomplete_FocusEvent extends QJqUiEvent {
 		const EventName = 'autocompletefocus';
 	}
 	/**
 	 * <div>Triggered when the suggestion menu is opened or
-	 * 		updated.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * 	    updated.
+	 * </div>
+	 * <div>
+	 * <ul>
+	 *     <li>
+	 *         <div><strong>event</strong></div>
+	 *         <div>Type:
+	 *             <a>Event</a></div>
+	 *         <div></div>
+	 *     </li>
+	 *     <li>
+	 *         <div><strong>ui</strong></div>
+	 *         <div>Type: <a>Object</a></div>
+	 *         <div></div>
+	 *     </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAutocomplete_OpenEvent extends QJqUiEvent {
 		const EventName = 'autocompleteopen';
 	}
 	/**
 	 * <div>Triggered after a search completes, before the menu is shown. Useful
-	 * 		for local manipulation of suggestion data, where a custom
-	 * 		<a><code>source</code></a> option callback is not required. This event is
-	 * 		always triggered when a search completes, even if the menu will not be
-	 * 		shown because there are no results or the Autocomplete is
-	 * 		disabled.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>content</strong></div> <div>Type: <a>Array</a></div>
-	 * 		<div>Contains the response data and can be modified to change the results
-	 * 		that will be shown. This data is already normalized, so if you modify the
-	 * 		data, make sure to include both <code>value</code> and <code>label</code>
-	 * 		properties for each item.</div></li></ul></li></ul>
+	 * 	    for local manipulation of suggestion data, where a custom
+	 *     <a><code>source</code></a> option callback is not required. This event is
+	 *     always triggered when a search completes, even if the menu will not be
+	 *     shown because there are no results or the Autocomplete is
+	 *     disabled.
+	 * </div>
+	 * <div>
+	 * <ul>
+	 *     <li>
+	 *         <div><strong>event</strong></div>
+	 *         <div>Type:
+	 *             <a>Event</a></div>
+	 *         <div></div>
+	 *     </li>
+	 *     <li>
+	 *         <div><strong>ui</strong></div>
+	 *         <div>Type: <a>Object</a></div>
+	 *         <div></div>
+	 *         <ul>
+	 *             <li>
+	 *                 <div><strong>content</strong></div>
+	 *                 <div>Type: <a>Array</a></div>
+	 *                 <div>Contains the response data and can be modified to change the results
+	 *                     that will be shown. This data is already normalized, so if you modify the
+	 *                     data, make sure to include both <code>value</code> and <code>label</code>
+	 *                     properties for each item.
+	 *                 </div>
+	 *             </li>
+	 *         </ul>
+	 *     </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAutocomplete_ResponseEvent extends QJqUiEvent {
 		const EventName = 'autocompleteresponse';
 	}
 	/**
 	 * <div>Triggered before a search is performed, after
-	 * 		<a><code>minLength</code></a> and <a><code>delay</code></a> are met. If
-	 * 		canceled, then no request will be started and no items
-	 * 		suggested.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * 	    <a><code>minLength</code></a> and <a><code>delay</code></a> are met. If
+	 *     canceled, then no request will be started and no items
+	 *     suggested.
+	 * </div>
+	 * <div>
+	 * <ul>
+	 *     <li>
+	 *         <div><strong>event</strong></div>
+	 *         <div>Type:
+	 *             <a>Event</a></div>
+	 *         <div></div>
+	 *     </li>
+	 *     <li>
+	 *         <div><strong>ui</strong></div>
+	 *         <div>Type: <a>Object</a></div>
+	 *         <div></div>
+	 *     </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAutocomplete_SearchEvent extends QJqUiEvent {
 		const EventName = 'autocompletesearch';
 	}
 	/**
 	 * <div>Triggered when an item is selected from the menu. The default action
-	 * 		is to replace the text field's value with the value of the selected item.
-	 * 						<p>Canceling this event prevents the value from being updated, but does
-	 * 		not prevent the menu from
-	 * 		closing.</p></div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The selected item.</div></li></ul></li></ul>
+	 * 	    is to replace the text field's value with the value of the selected item.
+	 *     <p>Canceling this event prevents the value from being updated, but does
+	 *         not prevent the menu from
+	 *         closing.</p>
+	 * </div>
+	 * <div>
+	 * <ul>
+	 *     <li>
+	 *         <div><strong>event</strong></div>
+	 *         <div>Type:
+	 *             <a>Event</a></div>
+	 *         <div></div>
+	 *     </li>
+	 *     <li>
+	 *         <div><strong>ui</strong></div>
+	 *         <div>Type: <a>Object</a></div>
+	 *         <div></div>
+	 *         <ul>
+	 *             <li>
+	 *                 <div><strong>item</strong></div>
+	 *                 <div>Type: <a>jQuery</a></div>
+	 *                 <div>The selected item.</div>
+	 *             </li>
+	 *         </ul>
+	 *     </li>
+	 * </ul>
+	 * </div>
 	 */
 	class QAutocomplete_SelectEvent extends QJqUiEvent {
 		const EventName = 'autocompleteselect';
@@ -158,48 +292,69 @@
 	 * 		element, but you can specify another element to position against. You can
 	 * 		refer to the <a>jQuery UI Position</a> utility for more details about the
 	 * 		various options.</div>
-	 * @property mixed $Source <div>Defines the data to use, must be specified. 				<p>Independent of the
-	 * 		variant you use, the label is always treated as text. If you want the label
-	 * 		to be treated as html you can use <a>Scott González' html extension</a>.
-	 * 		The demos all focus on different variations of the <code>source</code>
-	 * 		option - look for one that matches your use case, and check out the
-	 * 		code.</p></div><strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Array</strong>:  					An array can be
-	 * 		used for local data. There are two supported formats: 					<ul><li>An array
-	 * 		of strings: <code>[ "Choice1", "Choice2" ]</code></li> 						<li>An array
-	 * 		of objects with <code>label</code> and <code>value</code> properties:
-	 * 		<code>[ { label: "Choice1", value: "value1" }, ... ]</code></li></ul>
-	 * 							The label property is displayed in the suggestion menu. The value will
-	 * 		be inserted into the input element when a user selects an item. If just one
-	 * 		property is specified, it will be used for both, e.g., if you provide only
-	 * 		<code>value</code> properties, the value will also be used as the
-	 * 		label.</li> <li><strong>String</strong>: When a string is used, the
-	 * 		Autocomplete plugin expects that string to point to a URL resource that
-	 * 		will return JSON data. It can be on the same host or on a different one
-	 * 		(must provide JSONP). The Autocomplete plugin does not filter the results,
-	 * 		instead a query string is added with a <code>term</code> field, which the
-	 * 		server-side script should use for filtering the results. For example, if
-	 * 		the <code>source</code> option is set to <code>"http://example.com"</code>
-	 * 		and the user types <code>foo</code>, a GET request would be made to
-	 * 		<code>http://example.com?term=foo</code>. The data itself can be in the
-	 * 		same format as the local data described above.</li>
-	 * 		<li><strong>Function</strong>:  					The third variation, a callback,
-	 * 		provides the most flexibility and can be used to connect any data source to
-	 * 		Autocomplete. The callback gets two arguments: 					<ul><li>A
-	 * 		<code>request</code> object, with a single <code>term</code> property,
-	 * 		which refers to the value currently in the text input. For example, if the
-	 * 		user enters <code>"new yo"</code> in a city field, the Autocomplete term
-	 * 		will equal <code>"new yo"</code>.</li> 						<li>A <code>response</code>
-	 * 		callback, which expects a single argument: the data to suggest to the user.
-	 * 		This data should be filtered based on the provided term, and can be in any
-	 * 		of the formats described above for simple local data. It's important when
-	 * 		providing a custom source callback to handle errors during the request. You
-	 * 		must always call the <code>response</code> callback even if you encounter
-	 * 		an error. This ensures that the widget always has the correct
-	 * 		state.</li></ul> 					<p>When filtering data locally, you can make use of
-	 * 		the built-in <code>$.ui.autocomplete.escapeRegex</code> function. It'll
-	 * 		take a single string argument and escape all regex characters, making the
-	 * 		result safe to pass to <code>new RegExp()</code>.</p></li></ul>
+	 * @property mixed $Source <div>Defines the data to use, must be specified. <p>Independent of the
+	 * 	    variant you use, the label is always treated as text. If you want the label
+	 *     to be treated as html you can use <a>Scott González' html extension</a>.
+	 *     The demos all focus on different variations of the <code>source</code>
+	 *     option - look for one that matches your use case, and check out the
+	 *     code.</p>
+	 * <strong>Multiple types
+	 *     supported:</strong>
+	 * </div>
+	 * <div>
+	 * <ul>
+	 *     <li><strong>Array</strong>: An array can be
+	 *         used for local data. There are two supported formats:
+	 *         <ul>
+	 *             <li>An array
+	 *                 of strings: <code>[ "Choice1", "Choice2" ]</code></li>
+	 *             <li>An array
+	 *                 of objects with <code>label</code> and <code>value</code> properties:
+	 *                 <code>[ { label: "Choice1", value: "value1" }, ... ]</code></li>
+	 *         </ul>
+	 *         The label property is displayed in the suggestion menu. The value will
+	 *         be inserted into the input element when a user selects an item. If just one
+	 *         property is specified, it will be used for both, e.g., if you provide only
+	 *         <code>value</code> properties, the value will also be used as the
+	 *         label.
+	 *     </li>
+	 *     <li><strong>String</strong>: When a string is used, the
+	 *         Autocomplete plugin expects that string to point to a URL resource that
+	 *         will return JSON data. It can be on the same host or on a different one
+	 *         (must provide JSONP). The Autocomplete plugin does not filter the results,
+	 *         instead a query string is added with a <code>term</code> field, which the
+	 *         server-side script should use for filtering the results. For example, if
+	 *         the <code>source</code> option is set to <code>"http://example.com"</code>
+	 *         and the user types <code>foo</code>, a GET request would be made to
+	 *         <code>http://example.com?term=foo</code>. The data itself can be in the
+	 *         same format as the local data described above.
+	 *     </li>
+	 *     <li><strong>Function</strong>: The third variation, a callback,
+	 *         provides the most flexibility and can be used to connect any data source to
+	 *         Autocomplete. The callback gets two arguments:
+	 *         <ul>
+	 *             <li>A
+	 *                 <code>request</code> object, with a single <code>term</code> property,
+	 *                 which refers to the value currently in the text input. For example, if the
+	 *                 user enters <code>"new yo"</code> in a city field, the Autocomplete term
+	 *                 will equal <code>"new yo"</code>.
+	 *             </li>
+	 *             <li>A <code>response</code>
+	 *                 callback, which expects a single argument: the data to suggest to the user.
+	 *                 This data should be filtered based on the provided term, and can be in any
+	 *                 of the formats described above for simple local data. It's important when
+	 *                 providing a custom source callback to handle errors during the request. You
+	 *                 must always call the <code>response</code> callback even if you encounter
+	 *                 an error. This ensures that the widget always has the correct
+	 *                 state.
+	 *             </li>
+	 *         </ul>
+	 *         <p>When filtering data locally, you can make use of
+	 *             the built-in <code>$.ui.autocomplete.escapeRegex</code> function. It'll
+	 *             take a single string argument and escape all regex characters, making the
+	 *             result safe to pass to <code>new RegExp()</code>.</p></li>
+	 * </ul>
+	 * </div>
 	 */
 
 	class QAutocompleteGen extends QTextBox	{
@@ -479,5 +634,4 @@
 			}
 		}
 	}
-
 ?>

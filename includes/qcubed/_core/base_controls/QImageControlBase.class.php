@@ -6,13 +6,15 @@
 	 */
 
 	/**
-	 * This class will render an Image Control of any image file in the system
+	 * This class will render an Image Control of any image file in the system.
 	 *
 	 * @package Controls
 	 *
 	 * @property boolean $ScaleCanvasDown
 	 * @property boolean $ScaleImageUp
-	 * @property string $ImageType
+	 * @property string $ImageType This is the path to the image which is to be rendered.
+	 *      The path of image must be absolute path on server. The __DOCROOT__, __SUBDIRECTORY__ and other constants
+	 *      can be used to help keep the path portable enough for migration.
 	 * @property integer $Quality
 	 * @property string $CacheFolder
 	 * @property string $CacheFilename
