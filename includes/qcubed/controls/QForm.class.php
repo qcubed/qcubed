@@ -43,6 +43,8 @@
 		 * about what __FORM_STATE_HANDLER__ does. Though you can change it here,
 		 * try to change the __FORM_STATE_HANDLER__ in the configuration file alone.
 		 *
+		 * It overrides the default value in the QFormBase Class file
+		 *
 		 * @var string FormStateHandler the classname of the FormState handler to use
 		 */
 		public static $FormStateHandler = __FORM_STATE_HANDLER__;

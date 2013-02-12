@@ -10,17 +10,30 @@
 	 * @package Controls
 	 */
 	class QImageFileAsset extends QFileAsset {
-
+		/** @var integer the variable is used to contain minimum width of image in pixels  */
 		protected $intMinWidth;
+		/** @var integer the variable is used to contain maxiimum width of image in pixels  */
 		protected $intMaxWidth;
+		/** @var integer the variable is used to contain minimum height of image in pixels  */
 		protected $intMinHeight;
+		/** @var integer the variable is used to contain maxiimum width of image in pixels  */
 		protected $intMaxHeight;
 
+		/**
+		 * Constructor function to create a new QImageFileAsset
+		 * @param mixed $objParentObject Should be a QControl
+		 * @param null  $strControlId The Control ID of the control (optional)
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->SetFileAssetType(QFileAssetType::Image);
 		}
 
+		/**
+		 * This function tests whether everything was as needed or not
+		 * (uploaded image was within the range specified)
+		 * @return bool
+		 */
 		public function Validate() {
 			$blnToReturn = parent::Validate();
 
@@ -53,6 +66,14 @@
 			return $blnToReturn;
 		}
 
+		/**
+		 * PHP magic function to handle object properties
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @return mixed|null|string|void
+		 * @throws QCallerException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

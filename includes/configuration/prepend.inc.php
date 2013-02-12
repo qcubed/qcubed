@@ -1,6 +1,7 @@
 <?php
 	if (!defined('__PREPEND_INCLUDED__')) {
 		// Ensure prepend.inc is only executed once
+		/** Define __PREPENT_INCLUDED__ */
 		define('__PREPEND_INCLUDED__', 1);
 
 
@@ -17,14 +18,22 @@
 			require(dirname(__FILE__) . '/configuration.inc.php');
 		}
 		else {
-			// The minimal constants set to work
+			// The minimal constants set to work if configuration.inc.php file is not present
+			/** Document Root */
 			define ('__DOCROOT__', dirname(__FILE__) . '/../..');
+			/** Includes directory */
 			define ('__INCLUDES__', dirname(__FILE__) . '/..');
+			/** Location of the framework */
 			define ('__QCUBED__', __INCLUDES__ . '/qcubed');
+			/** Location of Plugins */
 			define ('__PLUGINS__', __QCUBED__ . '/plugins');
+			/** Location of QCubed Core */
 			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');
+			/** Location of the app_includes directory */
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
+			/** Generated model classes */
 			define ('__MODEL__', __INCLUDES__ . '/model' );
+			/** Generated Model classes */
 			define ('__MODEL_GEN__', __MODEL__ . '/generated' );
 		}
 
@@ -54,12 +63,16 @@
 			 * This is called by the PHP5 Autoloader.  This method overrides the
 			 * one in ApplicationBase.
 			 *
+			 * @param string $strClassName Name of the class which is to be autoloaded.
+			 *
 			 * @return void
 			 */
 			public static function Autoload($strClassName) {
 				// First use the QCubed Autoloader
 				if (!parent::Autoload($strClassName)) {
-					// TODO: Run any custom autoloading functionality (if any) here...
+					// Run any custom autoloading functionality (if any) here...
+					// Most autoloading functionality is taken care of by the app_includes.
+					// Refer includes/app_includes/app_includes.inc.php for more details
 				}
 			}
 
