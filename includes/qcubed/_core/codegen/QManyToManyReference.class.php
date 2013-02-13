@@ -152,6 +152,9 @@
 					return $this->strObjectDescriptionPlural;
 				case 'ColumnArray':
 					return $this->objColumnArray;
+				case 'IsTypeAssociation':
+					return substr($this->strAssociatedTable,-5) == '_type';
+					
 				default:
 					try {
 						return parent::__get($strName);
@@ -200,7 +203,7 @@
 					case 'ObjectDescriptionPlural':
 						return $this->strObjectDescriptionPlural = QType::Cast($mixValue, QType::String);
 					case 'ColumnArray':
-						return $this->objColumnArray = QType::Cast($mixValue, QType::ArrayType);
+						return $this->objColumnArray = QType::Cast($mixValue, QType::ArrayType);						
 					default:
 						return parent::__set($strName, $mixValue);
 				}
