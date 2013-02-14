@@ -117,7 +117,7 @@
 		 * 
 		 * @param mixed $item
 		 */
-		public function GetCellParams ($item) {
+		protected function GetCellParams ($item) {
 			$aParams = array();
 			if ($strClass = $this->GetCellClass ($item)) {
 				$aParams['class'] = $strClass;
@@ -137,7 +137,7 @@
 		 * Return the class of the cell.
 		 * @param mixed $item
 		 */
-		public function GetCellClass ($item) {
+		protected function GetCellClass ($item) {
 			if ($this->strCssClass) {
 				return $this->strCssClass;
 			}
@@ -148,7 +148,7 @@
 		 * Return the id of the cell.
 		 * @param mixed $item
 		 */
-		public function GetCellId ($item) {
+		protected function GetCellId ($item) {
 			return '';
 		}
 		
@@ -156,7 +156,7 @@
 		 * Return the style string for the cell.
 		 * @param unknown_type $item
 		 */
-		public function GetCellStyle ($item) {
+		protected function GetCellStyle ($item) {
 			return '';
 		}
 		
