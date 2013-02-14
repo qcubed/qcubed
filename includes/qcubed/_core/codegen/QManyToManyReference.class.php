@@ -106,7 +106,12 @@
 		 * @var Column[] ColumnArray
 		 */
 		protected $objColumnArray;
-
+		/**
+		 * Array of non-FK Column objects (as indexed by Column name)
+		 * @var boolean IsTypeAssociation
+		 */
+		protected $blnIsTypeAssociation;
+		
 
 
 
@@ -153,7 +158,7 @@
 				case 'ColumnArray':
 					return $this->objColumnArray;
 				case 'IsTypeAssociation':
-					return substr($this->strAssociatedTable,-5) == '_type';
+					return $this->blnIsTypeAssociation;
 					
 				default:
 					try {
@@ -204,6 +209,8 @@
 						return $this->strObjectDescriptionPlural = QType::Cast($mixValue, QType::String);
 					case 'ColumnArray':
 						return $this->objColumnArray = QType::Cast($mixValue, QType::ArrayType);						
+					case 'IsTypeAssociation':
+						return $this->blnIsTypeAssociation = QType::Cast($mixValue, QType::Boolean);						
 					default:
 						return parent::__set($strName, $mixValue);
 				}
