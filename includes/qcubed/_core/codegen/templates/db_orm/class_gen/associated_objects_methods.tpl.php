@@ -9,10 +9,10 @@ foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
 	}
 } 
 foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) {
-    if (substr($objManyToManyReference->AssociatedTable,-5) != '_type') {
-    	include("associated_object_manytomany.tpl.php");
-    } elseif (substr($objManyToManyReference->AssociatedTable,-5) == '_type') {
+	if ($objManyToManyReference->IsTypeAssociation) {
         include("associated_object_type_manytomany.tpl.php");
+    } else {
+    	include("associated_object_manytomany.tpl.php");
     }
 } 
 ?>

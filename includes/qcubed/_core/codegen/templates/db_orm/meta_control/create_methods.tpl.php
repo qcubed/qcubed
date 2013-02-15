@@ -48,7 +48,11 @@
 		$strControlId = $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference);
 		$strLabelId = $objCodeGen->FormLabelVariableNameForManyToManyReference($objManyToManyReference);
 		// Get the subtemplate and evaluate
-		include('control_create_manytomany_reference.tpl.php');
+		if ($objManyToManyReference->IsTypeAssociation) {
+        	include("control_create_manytomany_type.tpl.php");
+		} else {
+			include('control_create_manytomany_reference.tpl.php');
+		}
 		echo "\n\n";
 	}
 ?>
