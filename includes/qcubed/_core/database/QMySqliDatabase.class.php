@@ -531,7 +531,7 @@
 		}
 
 		public function ColumnExists($strColumnName) {
-			return array_key_exists($strColumnName, $this->strColumnArray);
+			return !empty($this->strColumnArray[$strColumnName]);
 		}
 
 		public function GetColumnNameArray() {
