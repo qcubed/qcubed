@@ -344,7 +344,7 @@ class QSqLite3PdoDatabaseRow extends QDatabaseRowBase {
 		}
 
 		public function GetColumn($strColumnName, $strColumnType = null) {
-				if (array_key_exists($strColumnName, $this->strColumnArray)) {
+				if (!empty($this->strColumnArray[$strColumnName])) {
 					$strColumnValue = $this->strColumnArray[$strColumnName];
 					if (is_null($strColumnValue))
 								return null;
@@ -381,7 +381,7 @@ class QSqLite3PdoDatabaseRow extends QDatabaseRowBase {
 		}
 
 		public function ColumnExists($strColumnName) {
-				return array_key_exists($strColumnName, $this->strColumnArray);
+			return !empty($this->strColumnArray[$strColumnName]);
 		}
 
 		public function GetColumnNameArray() {
