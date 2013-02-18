@@ -296,7 +296,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 *       Also for MySQL, you should choose a MEDIUMTEXT type of column, rather than TEXT. TEXT is limited to 64KB,
 			 *       which will not be big enough for moderately complex forms, and will result in data errors.
 			 */
-			define('__FORM_STATE_HANDLER__', 'QSessionFormStateHandler');
+			define('__FORM_STATE_HANDLER__', 'QFormStateHandler');
 				
 			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
 			define('__FILE_FORM_STATE_HANDLER_PATH__', __INCLUDES__ . '/tmp');
