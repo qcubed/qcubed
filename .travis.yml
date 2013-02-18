@@ -5,6 +5,9 @@ language: php
 php:
     - 5.3
 
+install:
+    - cd includes; composer install
+
 env:
     - DB=mysql
 
