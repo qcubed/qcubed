@@ -29,7 +29,7 @@ restore_error_handler();
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
 
 
-class QHtmlReporter extends HtmlReporter {
+class QTravisReporter extends TextReporter {
 	function paintMethodStart($test_name) {
 		$tempBreadcrumb = $this->getTestList();
 		array_shift($tempBreadcrumb);
@@ -58,6 +58,11 @@ class QHtmlReporter extends HtmlReporter {
 	}
 }
 
+/**
+ * @var QTravisReporter 
+ */
+$rptReporter = null;
+
 class QTestForm extends QForm {
 
 	protected function Form_Create() {
@@ -79,10 +84,15 @@ class QTestForm extends QForm {
 		foreach ($arrTests as $className) {
 			$suite->add(new $className($this));
 		}
-		$suite->run(new QHtmlReporter());
+		global $rptReporter;
+		$rptReporter = new QTravisReporter();
+		$suite->run($rptReporter);
 	}
 }
 
-QTestForm::Run('QTestForm', __QCUBED_CORE__ . "/tests/qcubed-unit/QTestForm.tpl.php");
+QTestForm::Run('QTestForm', __DOCROOT__ . "/travis/QTestForm.tpl.php");
+
+// Need to return value greater then zero in a case of an error.
+return ($rptReporter->getFailCount() + $rptReporter->getExceptionCount());
 
 ?>
