@@ -6,7 +6,7 @@ php:
     - 5.3
 
 install:
-    - cd includes; composer install
+    - cd includes; composer install; cd ..
 
 env:
     - DB=mysql
