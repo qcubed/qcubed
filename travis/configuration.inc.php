@@ -68,7 +68,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__INCLUDES__', __DOCROOT__ . __SUBDIRECTORY__ . '/includes');
 			define ('__CONFIGURATION__',__DOCROOT__ . __SUBDIRECTORY__ . '/travis');
 			// The directory where the external libraries are placed
-			define ('__EXTERNAL_LIBRARIES__', __INCLUDES__ . '/external_libraries');
+			define ('__EXTERNAL_LIBRARIES__', __INCLUDES__ . '/vendor');
 			// The application includes directory
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 
@@ -147,14 +147,14 @@ if (!defined('SERVER_INSTANCE')) {
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery
 			// installation that's local to QCubed (in that case, paths must be relative to __JS_ASSETS__
 			define ('__JQUERY_BASE__', ' http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
-			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js');
+			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js');
 
 			// If you want to use the local jQuery files, specify the paths relative to __JS_ASSETS__
 			// or just uncomment the 2 lines below.
 			// define ('__JQUERY_BASE__',  'jquery/jquery.min.js');
 			// define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.min.js');
 
-			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-lightness/jquery-ui.custom.css');
+			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-qcubed/jquery-ui.custom.css');
 
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
@@ -296,7 +296,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 *       Also for MySQL, you should choose a MEDIUMTEXT type of column, rather than TEXT. TEXT is limited to 64KB,
 			 *       which will not be big enough for moderately complex forms, and will result in data errors.
 			 */
-			define('__FORM_STATE_HANDLER__', 'QFormStateHandler');
+			define('__FORM_STATE_HANDLER__', 'QSessionFormStateHandler');
 				
 			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
 			define('__FILE_FORM_STATE_HANDLER_PATH__', __INCLUDES__ . '/tmp');
