@@ -107,6 +107,6 @@ class QTestForm extends QForm {
 QTestForm::Run('QTestForm', __DOCROOT__ . "/travis/QTestForm.tpl.php");
 
 // Need to return value greater then zero in a case of an error.
-return ($rptReporter->getFailCount() + $rptReporter->getExceptionCount());
+exit (intval($rptReporter->getFailCount() + $rptReporter->getExceptionCount()));
 
 ?>
