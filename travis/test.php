@@ -56,6 +56,20 @@ class QTravisReporter extends TextReporter {
 
 		print "{$messageWithoutTrace}\n";
 	}
+	
+	function paintFail($message) {
+		SimpleReporter::paintFail($message);
+
+		$messageWithoutTrace = trim(substr($message, 0, strpos($message, " at [")));
+		if (strlen($messageWithoutTrace) == 0) {
+			// don't show empty messages (they appear if debugging is conditionally disabled)
+			return;
+		}
+
+		print "Fail: ";
+
+		print "{$messageWithoutTrace}\n";
+	}
 }
 
 /**
