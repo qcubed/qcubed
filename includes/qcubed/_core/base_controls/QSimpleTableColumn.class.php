@@ -48,7 +48,7 @@
 			}
 			
 			$strToReturn = '<th';
-			$aParams = $this->GetCellParams($item);
+			$aParams = $this->GetHeaderCellParams();
 			foreach ($aParams as $key=>$str) {
 				$strToReturn .= ' ' . $key . '="' . $str . '"';
 			}
@@ -179,7 +179,8 @@
 					return $this->blnHtmlEntities;
 				case 'RenderAsHeader':
 					return $this->blnRenderAsHeader;
-					
+				case 'ParentTable':
+					return $this->objParentTable;
 				default:
 					try {
 						return parent::__get($strName);
@@ -514,7 +515,11 @@
 		}
 
 		public function FetchCellObject($item) {
-			return $item[$this->mixIndex];
+			if (isset ($item[$this->mixIndex])) {
+				return $item[$this->mixIndex];
+			} else {
+				return '';
+			}
 		}
 
 		public function __get($strName) {
