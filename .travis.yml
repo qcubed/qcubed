@@ -7,9 +7,10 @@ php:
 
 env:
     - DB=mysql
+    - DB=pgsql
 
 before_script:
-    - mysql -e 'create database qcubed;'
-    - mysql -u root qcubed < assets/_core/php/examples/mysql_innodb.sql
+    - sh -c "if [ '$DB' = 'mysqli' ]; then mysql -e 'create database qcubed;'; mysql -u root qcubed < assets/_core/php/examples/mysql_innodb.sql; fi"
+    - sh -c "if [ '$DB' = 'pgsql' ]; then createdb qcubed -U postgres; psql -d qcubed -f assets/_core/php/examples/pgsql.sql -U postgres; fi"
 
 script: travis/test.php
