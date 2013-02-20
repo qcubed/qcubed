@@ -55,7 +55,7 @@
 			return $session_ok;
 		}
 
-		public function SessionOpen($save_path, $session_name) {
+		public static function SessionOpen($save_path, $session_name) {
 			// Nothing to do
 			return true;
 		}

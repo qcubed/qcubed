@@ -6,8 +6,8 @@
 	 */
 
 	/**
-	 * This class will render an HTML Textbox -- which can either be <input type="text">,
-	 * <input type="password"> or <textarea> depending on the TextMode (see below).
+	 * This class will render an HTML Textbox -- which can either be [input type="text"],
+	 * [input type="password"] or [textarea] depending on the TextMode (see below).
 	 *
 	 * @package Controls
 	 *
@@ -20,7 +20,7 @@
 	 * @property string $LabelForTooShortUnnamed
 	 * @property string $LabelForTooLong
 	 * @property string $LabelForTooLongUnnamed
-	 * @property string $Placeholder
+	 * @property string $Placeholder HTML5 Only. Placeholder text that gets erased once a user types.
 	 * @property string $CrossScripting can be Allow, HtmlEntities, or Deny.  Deny is the default. Prevents cross scripting hacks.  HtmlEntities causes framework to automatically call php function htmlentities on the input data.  Allow allows everything to come through without altering at all.  USE "ALLOW" judiciously: using ALLOW on text entries, and then outputting that data WILL allow hackers to perform cross scripting hacks.
 	 * @property integer $MaxLength is the "maxlength" html attribute (applicable for SingleLine textboxes)
 	 * @property integer $MinLength is the minimum requred length to pass validation

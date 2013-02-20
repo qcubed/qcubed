@@ -1,0 +1,15 @@
+# NOTE: If you are trying to run this off of your fork, you have to change the
+# docroot in travis/configuration.inc.php from /qcubed/ to the name of your fork.
+language: php
+
+php:
+    - 5.3
+
+env:
+    - DB=mysql
+
+before_script:
+    - mysql -e 'create database qcubed;'
+    - mysql -u root qcubed < assets/_core/php/examples/mysql_innodb.sql
+
+script: travis/test.php

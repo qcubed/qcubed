@@ -1,5 +1,7 @@
 <?php
 	/**
+	 * QProgressbar Base File
+	 * 
 	 * The  QProgressbarBase class defined here provides an interface between the generated
 	 * QProgressbarGen class, and QCubed. This file is part of the core and will be overwritten
 	 * when you update QCubed. To override, see the QProgressbar.class.php file in the controls
@@ -7,6 +9,15 @@
 	 *
 	 */
 
+	/**
+	 * Implements a JQuery UI Progress Bar
+	 * 
+	 * Use the inherited interface to control the progress bar.
+	 * 
+	 * @link http://jqueryui.com/progressbar/
+	 * @package Controls\Base
+	 *
+	 */
 	class QProgressbarBase extends QProgressbarGen	{
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();

@@ -31,11 +31,11 @@
 	 */
 
 	// Versioning Information
-	define('QCUBED_VERSION_NUMBER_ONLY', '2.1');
+	define('QCUBED_VERSION_NUMBER_ONLY', '2.2');
 	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Development Release (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 	
 	define('__JQUERY_CORE_VERSION__', '1.7.1');
-	define('__JQUERY_UI_VERSION__', '1.8.16');
+	define('__JQUERY_UI_VERSION__', '1.9.2');
 	
 
 	// Preload Required Framework Classes
@@ -90,6 +90,7 @@
 	QApplicationBase::$ClassFile['qmimetype'] = __QCUBED_CORE__ . '/framework/QMimeType.class.php';
 	QApplicationBase::$ClassFile['qdatetime'] = __QCUBED_CORE__ . '/framework/QDateTime.class.php';
 	QApplicationBase::$ClassFile['qstring'] = __QCUBED_CORE__ . '/framework/QString.class.php';
+	QApplicationBase::$ClassFile['qcss'] = __QCUBED_CORE__ . '/framework/QCss.class.php';
 	QApplicationBase::$ClassFile['qstack'] = __QCUBED_CORE__ . '/framework/QStack.class.php';
 	QApplicationBase::$ClassFile['qcryptography'] = __QCUBED_CORE__ . '/framework/QCryptography.class.php';
 	QApplicationBase::$ClassFile['qsoapservice'] = __QCUBED_CORE__ . '/framework/QSoapService.class.php';
@@ -215,7 +216,7 @@
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
 
-	if (__MODEL_GEN__) {
+	if (defined('__MODEL_GEN__')) {
 		@include(__MODEL_GEN__ . '/_class_paths.inc.php');
 		@include(__MODEL_GEN__ . '/_type_class_paths.inc.php');
 	}

@@ -89,13 +89,13 @@
 			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
 			$objClauses[] = QQ::Expand(
 				QQ::Virtual('assn_item',
-					QQ::SubSql("select <?php echo $strEscapeIdentifierBegin  ?><?php echo $objManyToManyReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?>
+					QQ::SubSql('select <?php echo $strEscapeIdentifierBegin  ?><?php echo $objManyToManyReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?>
 
 					 from <?php echo $strEscapeIdentifierBegin  ?><?php echo $objManyToManyReference->Table  ?><?php echo $strEscapeIdentifierEnd  ?>
 
 					 where
 					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objManyToManyReference->OppositeColumn  ?><?php echo $strEscapeIdentifierEnd  ?> = {1}
-					and <?php echo $strEscapeIdentifierBegin  ?><?php echo $objManyToManyReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = ".
+					and <?php echo $strEscapeIdentifierBegin  ?><?php echo $objManyToManyReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = '.
 					$objDatabase->SqlVariable($this-><?php echo $strObjectName  ?>-><?php echo $objTable->PrimaryKeyColumnArray[0]->PropertyName  ?>),
 						QQN::<?php echo $objManyToManyReference->VariableType  ?>()-><?php echo $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName  ?>)
 						)

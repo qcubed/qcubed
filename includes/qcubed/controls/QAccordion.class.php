@@ -2,6 +2,8 @@
 	/**
 	 * QAccordion
 	 * 
+	 * Put your customizations of the standard behavior here.
+	 * 
 	 * @package Controls
 	 * @author 
 	 * @copyright 2011
@@ -10,8 +12,6 @@
 	 */
      
 	/**
-	 * QAccordion
-	 * 
 	 * @package Controls  
 	 * @author Qcubed
 	 * @copyright 

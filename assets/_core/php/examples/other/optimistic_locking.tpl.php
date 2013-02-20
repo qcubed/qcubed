@@ -1,40 +1,41 @@
 <?php require('../includes/header.inc.php'); ?>
-	<?php $this->RenderBegin(); ?>
+<?php $this->RenderBegin(); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Integrating Optimistic Locking into QForms</h1>
-		
-		In Section 2, we showed how by using the TIMESTAMP column types, QCubed will generate
-		code to handle <b>Optimistic Locking</b>.  In this example, we take this a step further
-		to illustrate a more functional approach to utilizing <b>Optimistic Locking</b> in your
-		web based application.<br/><br/>
+<div id="instructions">
+	<h1>Integrating Optimistic Locking into QForms</h1>
 
-		In our example below, we have the same <b>Person</b> object instantiated twice.  This
+	<p>In Section 2, we showed how by using the TIMESTAMP column types, QCubed will generate
+		code to handle <strong>Optimistic Locking</strong>.  In this example, we take this a step further
+		to illustrate a more functional approach to utilizing <strong>Optimistic Locking</strong> in your
+		web based application.</p>
+
+	<p>In our example below, we have the same <strong>Person</strong> object instantiated twice.  This
 		is supposed to mimic two users on two different computers trying to edit the same
-		<b>Person</b> object at the same time.<br/><br/>
+		<strong>Person</strong> object at the same time.</p>
 
-		(Note: on some database platforms, including MySQL, no SQL UPDATE will be performed
+	<p>(Note: on some database platforms, including MySQL, no SQL UPDATE will be performed
 		unless the data has actually been changed.  It's recommended that you make a change
-		to either the <b>First Name</b> or the <b>Last Name</b> before hitting <b>Save</b>
-		in order to see this example in action.)<br/><br/>
+		to either the <strong>First Name</strong> or the <strong>Last Name</strong> before hitting <strong>Save</strong>
+		in order to see this example in action.)</p>
 
-		As you can see, the <b>Optimstic Locking</b> functionality will allow both "users" to
-		view the data.  But once one user tries to update one of the <b>Person</b> objects,
-		the other <b>Person</b> object is recognized as "stale" (because of a TIMESTAMP
-		mismatch).  Any subsequent call to <b>Save</b> on the "stale" <b>Person</b> will throw
-		an exception.  We catch this <b>QOptimsiticLockingException</b> in our <b>QForm</b>
+	<p>As you can see, the <strong>Optimstic Locking</strong> functionality will allow both "users" to
+		view the data.  But once one user tries to update one of the <strong>Person</strong> objects,
+		the other <strong>Person</strong> object is recognized as "stale" (because of a TIMESTAMP
+		mismatch).  Any subsequent call to <strong>Save</strong> on the "stale" <strong>Person</strong> will throw
+		an exception.  We catch this <strong>QOptimsiticLockingException</strong> in our <strong>QForm</strong>
 		in order to present a more graceful response to the user, allowing the user the option to
-		override the changes made by the previous <b>Save</b> call, forcing the update.
-	</div>
+		override the changes made by the previous <strong>Save</strong> call, forcing the update.</p>
+</div>
 
+<div id="demoZone">
 	<table cellspacing="10" cellpadding="10" border="0">
 		<tr>
 			<td align="center" colspan="2">
-				Current <b>Name</b> and <b>Timestamp</b> values in the database for this <b>PersonWithLock</b> object:<br/>
-				<b><?php _p($this->objPersonReference->FirstName . ' ' . $this->objPersonReference->LastName); ?></b>
-				 &nbsp;|&nbsp; 
-				<b><?php _p($this->objPersonReference->SysTimestamp); ?></b>
-				<br/><?php $this->lblMessage->Render('ForeColor=Red','FontBold=true'); ?>
+				Current <strong>Name</strong> and <strong>Timestamp</strong> values in the database for this <strong>PersonWithLock</strong> object:<br/>
+				<strong><?php _p($this->objPersonReference->FirstName . ' ' . $this->objPersonReference->LastName); ?></strong>
+				&nbsp;|&nbsp;
+				<strong><?php _p($this->objPersonReference->SysTimestamp); ?></strong>
+				<br/><?php $this->lblMessage->Render('ForeColor=Red', 'FontBold=true'); ?>
 			</td>
 		</tr>
 		<tr>
@@ -43,7 +44,7 @@
 				<?php $this->txtFirstName1->RenderWithName('Name=First Name'); ?><br/>
 				<?php $this->txtLastName1->RenderWithName('Name=Last Name'); ?><br/>
 				<?php $this->lblTimestamp1->RenderWithName('Name=Timestamp Value'); ?><br/>
-				<?php $this->btnSave1->Render('Text=Save This Person Object'); ?><br/><br/>
+				<?php $this->btnSave1->Render('Text=Save This Person Object'); ?></p>
 				<?php $this->btnForceUpdate1->Render('Text=Save This Person Object (Force Update)'); ?><br/>
 			</td>
 			<td valign="top" style="width:300px;background-color:#ccffaa">
@@ -51,11 +52,12 @@
 				<?php $this->txtFirstName2->RenderWithName('Name=First Name'); ?><br/>
 				<?php $this->txtLastName2->RenderWithName('Name=Last Name'); ?><br/>
 				<?php $this->lblTimestamp2->RenderWithName('Name=Timestamp Value'); ?><br/>
-				<?php $this->btnSave2->Render('Text=Save This Person Object'); ?><br/><br/>
+				<?php $this->btnSave2->Render('Text=Save This Person Object'); ?></p>
 				<?php $this->btnForceUpdate2->Render('Text=Save This Person Object (Force Update)'); ?><br/>
 			</td>
 		</tr>
 	</table>
+</div>
 
-	<?php $this->RenderEnd(); ?>
+<?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

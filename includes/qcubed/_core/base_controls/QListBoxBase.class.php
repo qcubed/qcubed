@@ -4,7 +4,7 @@
 	 * @package Controls
 	 */
 	/**
-	 * QListBoxBase will render an HTML DropDown or MultiSelect box <SELECT>.
+	 * QListBoxBase will render an HTML DropDown or MultiSelect box [SELECT element].
 	 * 
 	 * It extends {@link QListControl}.  By default, the number of visible rows is set to 1 and
 	 * the selection mode is set to single, creating a dropdown select box.

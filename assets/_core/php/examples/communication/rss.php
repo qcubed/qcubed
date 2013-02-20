@@ -1,8 +1,8 @@
 <?php require_once('../qcubed.inc.php'); ?>
 <?php require('../includes/header.inc.php'); ?>
 
-	<div class="instructions">
-		<h1 class="instruction_title">Setting Up an RSS Feed</h1>
+	<div id="instructions">
+		<h1>Setting Up an RSS Feed</h1>
 
 		The <b>QRssFeed</b> class can be used to create an <b>RSS 2.0</b>-compliant XML feed.
 		For more information about <b>RSS 2.0</b>, please view the official
@@ -19,11 +19,13 @@
 		view <b>QRssFeed</b> in action.
 	</div>
 
-	To view an example RSS feed of the Examples Site Projects, please run <a href="rss_feed.php" class="bodyLink"><b>rss_feed.php</b></a>.
+<div id="demoZone">
+	<p>To view an example RSS feed of the Examples Site Projects, please run <a href="rss_feed.php" class="bodyLink"><b>rss_feed.php</b></a>.</p>
 
 	<!-- Note, X/HTML Standards Compliance dictates that this "<link>" tag be in the "<head>" of this XHTML document. -->
 	<!-- For purposes of this demonstration, we've put the link tag here, in the body. -->
 	<!-- In your own applications, it is recommended that this reside in the <HEAD> section of your document. -->
 	<link rel="alternate" type="application/rss+xml" title="Qcodo Examples Site Projects" href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__); ?>/communication/rss_feed.php" />
-
+</div>
+	
 <?php require('../includes/footer.inc.php'); ?>

@@ -53,11 +53,11 @@
 			$objStyle->FontSize = 12;
 
 			$objStyle = $this->dtgPersons->AlternateRowStyle;
-			$objStyle->BackColor = '#eaeaea';
+			$objStyle->BackColor = '#f6f6f6';
 
 			$objStyle = $this->dtgPersons->HeaderRowStyle;
 			$objStyle->ForeColor = 'white';
-			$objStyle->BackColor = '#000066';
+			$objStyle->BackColor = '#780000';
 
 			// Because browsers will apply different styles/colors for LINKs
 			// We must explicitly define the ForeColor for the HeaderLink.
@@ -173,13 +173,13 @@
 			$objClauses[] = QQ::Expand(
 				QQ::Virtual('assn_item', 
 					QQ::SubSql(
-						"select 
-							`project_id`
+						'select 
+							"project_id"
 					 	from 
-					 		`related_project_assn`
+					 		"related_project_assn"
 					 	where 
-							`child_project_id` = {1} 
-							 and `project_id` = 1", 
+							"child_project_id" = {1} 
+							 and "project_id" = 1', 
 							QQN::Project()->Id)
 				)
 			);
