@@ -30,45 +30,9 @@ require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
 
 
 class QTravisReporter extends TextReporter {
-	function paintMethodStart($test_name) {
-		$tempBreadcrumb = $this->getTestList();
-		array_shift($tempBreadcrumb);
-		$breadcrumb = implode("-&gt;", $tempBreadcrumb);
-        echo "\r\n**********************************\r\n";
-		echo "{$breadcrumb} - {$test_name}\r\n";
-        echo "**********************************\r\n";
-	}
-
-	function paintMethodEnd($test_name) {
-		
-	}
-
+	// Do not print passed tests. For travis we want to see only failed tests
 	function paintPass($message) {
 		parent::paintPass($message);
-
-		$messageWithoutTrace = trim(substr($message, 0, strpos($message, " at [")));
-		if (strlen($messageWithoutTrace) == 0) {
-			// don't show empty messages (they appear if debugging is conditionally disabled)
-			return;
-		}
-
-		print "Pass: ";
-
-		print "{$messageWithoutTrace}\n";
-	}
-	
-	function paintFail($message) {
-		SimpleReporter::paintFail($message);
-
-		$messageWithoutTrace = trim(substr($message, 0, strpos($message, " at [")));
-		if (strlen($messageWithoutTrace) == 0) {
-			// don't show empty messages (they appear if debugging is conditionally disabled)
-			return;
-		}
-
-		print "Fail: ";
-
-		print "{$messageWithoutTrace}\n";
 	}
 }
 
