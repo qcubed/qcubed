@@ -45,18 +45,11 @@
 		 * These are the list of core QForm JavaScript files, or JavaScript files needed by
 		 * a QControl, which QForm should IGNORE trying to load during a RenderBegin() or RenderAjax() call.
 		 * 
-		 * In production or as a performance tweak, you may want to use the compressed "_qc_packed.js"
-		 * library (which is a compressed, single file version of ALL the QCubed .js files that is in _core).
-		 * 
-		 * If you want to do this, MAKE SURE you FIRST MANUALLY do a <script> inclusion of "/assets/js/_qc_packed.js" in
-		 * your HTML.  Then, you can specify that QForm "ignore" all the other QCubed _core javascripts.
-		 *
 		 * @var array
 		 */
 		protected $strIgnoreJavaScriptFileArray = array();
 		/* protected $strIgnoreJavaScriptFileArray = array(
 			'date_time_picker.js',
-			'qcubed.js',
 			'treenav.js'); */
 
 		/**
