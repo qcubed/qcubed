@@ -73,6 +73,23 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertEqual($objItems[2]->Project->Name, "State College HR System");
 	}
 	
+        // Test for the #149 issue: https://github.com/qcubed/framework/issues/149
+	public function testQueryCount_149() {
+		$someDate = new QDateTime();
+		$someDate->setDate(2006, 1, 1);
+		
+		$intItemCount = Milestone::QueryCount(
+			QQ::GreaterThan(QQN::Milestone()->Project->StartDate, $someDate)
+		);
+		$this->assertEqual($intItemCount, 3);
+                
+		$intItemCount2 = Milestone::QueryCount(
+			QQ::GreaterThan(QQN::Milestone()->Project->StartDate, $someDate)
+                        , QQ::LimitInfo(2)
+		);
+		$this->assertEqual($intItemCount2, 2);
+	}
+	
 	public function testOrderByCondition() {
 		$objItems = Person::QueryArray(
 			QQ::All(),
