@@ -91,7 +91,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			// test for an array of QQClause objects
 			QQ::Clause(
 				QQ::OrderBy(QQN::Milestone()->Project->Name)
-                                , QQ::OrderBy(QQN::Milestone()->Project->Alias)
+                                , QQ::OrderBy(QQN::Milestone()->Project->Id)
 			)
 		);
 		
