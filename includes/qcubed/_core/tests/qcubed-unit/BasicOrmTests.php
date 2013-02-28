@@ -91,11 +91,11 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			// test for an array of QQClause objects
 			QQ::Clause(
 				QQ::OrderBy(QQN::Milestone()->Project->Name)
-				, QQ::LimitInfo(2)
+                                , QQ::OrderBy(QQN::Milestone()->Project->Alias)
 			)
 		);
 		
-		$this->assertEqual($intItemCount2, 2);
+		$this->assertEqual($intItemCount2, 3);
 	}
 	
 	public function testOrderByCondition() {
