@@ -194,15 +194,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 * 		those constraints are.  The path of the script can be defined here. - default is blank or none
 			 * Note: any option not used or set to blank will result in using the default value for that option
 			 */
-			define('DB_CONNECTION_1', serialize(array(
-				'adapter' => 'MySqli5',
-				'server' => 'localhost',
-				'port' => null,
-				'database' => 'qcubed',
-				'username' => 'root',
-				'password' => '',
-				'caching' => false,
-				'profiling' => false)));
+			require_once (getenv("DB") . '.inc.php');
 
 			// Additional Database Connection Strings can be defined here (e.g. for connection #2, #3, #4, #5, etc.)
 			//			define('DB_CONNECTION_2', serialize(array('adapter'=>'SqlServer', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
