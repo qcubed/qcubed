@@ -979,10 +979,17 @@
 
 			// Return or Display
 			if ($blnDisplayOutput) {
-				print($strToReturn);
+				if(!QApplication::$CliMode) {
+					print($strToReturn);
+				}
 				return null;
-			} else
-				return $strToReturn;
+			} else {
+				if(!QApplication::$CliMode) {
+					return $strToReturn;
+				} else {
+					return '';
+				}
+			}
 		}
 
 		/**
@@ -1282,10 +1289,17 @@
 
 			// Display or Return
 			if ($blnDisplayOutput) {
-				print($strToReturn);
+				if(!QApplication::$CliMode) {
+					print($strToReturn);
+				}
 				return null;
-			} else
-				return $strToReturn;
+			} else {
+				if(!QApplication::$CliMode) {
+					return $strToReturn;
+				} else {
+					return '';
+				}
+			}
 		}
 	}
 	
