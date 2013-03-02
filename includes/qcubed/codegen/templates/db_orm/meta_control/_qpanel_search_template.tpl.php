@@ -5,8 +5,8 @@
 	// Be sure to move this out of the drafts/dashboard subdirectory before modifying to ensure that subsequent
 	// code re-generations do not overwrite your changes.
 	/** @var <?php echo $objTable->ClassName ?>SearchPanel $_CONTROL */
-	$strRenderMethod = 'RenderWithNameOnTop';
-	$strBtnRenderMethod = 'RenderWithNameOnTop';
+	$strRenderMethod = 'RenderWithName';
+	$strBtnRenderMethod = 'RenderWithName';
 ?>
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if (!$objColumn->Reference || $objColumn->Reference->IsType) { ?>
