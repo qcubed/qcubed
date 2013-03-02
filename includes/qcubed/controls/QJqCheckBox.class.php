@@ -1,25 +1,19 @@
 <?php
 	/**
 	 * QJqCheckBox
-	 * 
+	 *
 	 * Put your customizations of the standard behavior here.
-	 * 
+	 *
 	 * @package Controls
-	 * @author 
-	 * @copyright 2011
-	 * @version $Id$
-	 * @access public
-	 */
-     
-	/**
-	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * @filesource
 	 */
 
-	class QJqCheckBox extends QJqCheckBoxBase
-	{
+	/**
+	 * This class mplements a JQuery Ui Check Box.
+	 *
+	 * It extends the QJqCheckBoxBase class. When writing your code, use this class instead of QJqCheckBoxBase.
+	 * This class can be modified by the developer to add functions and alter the already present functions.
+	 * @package Controls
+	 */
+	class QJqCheckBox extends QJqCheckBoxBase {
 	}
-?>

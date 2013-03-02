@@ -372,10 +372,9 @@
 
 		/**
 		 * Returns all actions that are connected with specific events
-		 * @param string $strEventType
-		 *  the type of the event. Be sure and use a
+		 * @param string $strEventType the type of the event. Be sure and use a
 		 *  QFooEvent::EventName here. (QClickEvent::EventName, for example)
-		 * @param $strActionType if given only actions of this type will be
+		 * @param string $strActionType if given only actions of this type will be
 		 *  returned
 		 * @return array
 		 */

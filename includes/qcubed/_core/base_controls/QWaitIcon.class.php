@@ -3,6 +3,7 @@
 	 * This file contains the QWaitIcon class.
 	 *
 	 * @package Controls
+	 * @filesource
 	 */
 
 	/**
@@ -160,4 +161,3 @@
 			}
 		}
 	}
-?>
