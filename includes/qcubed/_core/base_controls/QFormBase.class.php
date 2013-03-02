@@ -1134,7 +1134,7 @@
 			//Clear included javascript array
 			$this->strIncludedJavaScriptFileArray = array();
 			// Figure out initial list of JavaScriptIncludes
-			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',jquery/jquery.ajaxq-0.0.1.js,qcubed.js');
+			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',jquery/jquery.ajaxq-0.0.1.js,' . __QCUBED_JS_CORE__);
 			// Setup IncludeJs
 			$strToReturn = "\r\n";
 
