@@ -100,14 +100,10 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		
 		$this->assertEqual(sizeof($objItems), 4, "4 projects found");
 		
-		$this->assertEqual($objItems[0]->Name, "ACME Website Redesign", "Project " . $objItems[0]->Name . " found");
-		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 5, "5 team members found for project " . $objItems[0]->Name);
-
-		$this->assertEqual($objItems[1]->Name, "State College HR System", "Project " . $objItems[1]->Name . " found");
-		$this->assertEqual($objItems[1]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for project " . $objItems[1]->Name);	
-
-		$this->assertEqual($objItems[2]->Name, "Blueman Industrial Site Architecture", "Project " . $objItems[2]->Name . " found");
-		$this->assertEqual($objItems[2]->GetVirtualAttribute('team_member_count'), 5, "5 team members found for project " . $objItems[2]->Name);	
+		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 5, "5 team members found for the first project");
+		$this->assertEqual($objItems[1]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for the second project");
+		$this->assertEqual($objItems[2]->GetVirtualAttribute('team_member_count'), 5, "5 team members found for the third project");
+		$this->assertEqual($objItems[3]->GetVirtualAttribute('team_member_count'), 7, "7 team members found for the forth project");
 	}
 	
 	public function testAssociationTables() {
@@ -186,8 +182,8 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		
 		$this->assertEqual(sizeof($objItems), 2, "2 projects found");
 		
-		$this->assertEqual($objItems[0]->Name, "State College HR System", "Project " . $objItems[0]->Name . " found");
-		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for project " . $objItems[0]->Name);	
+		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for the first project");
+		$this->assertEqual($objItems[1]->GetVirtualAttribute('team_member_count'), 7, "7 team members found for the second project");
 	}
 }
 ?>
