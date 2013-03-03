@@ -8,8 +8,7 @@
 <?php if (isset($strPageTitle)) { ?>
 		<title><?php _p($strPageTitle); ?></title>
 <?php } ?>
-		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css">
-		<style type="text/css">@import url("<?php _p(__CSS_ASSETS__ . '/' . __JQUERY_CSS__); ?>");</style>
+		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/styles.css");</style>
 <?php
 		require 'lessc.inc.php';
 

@@ -1,1 +1,6 @@
 *.class.php
+*ViewPanel.tpl.php
+*UpdatePanel.tpl.php
+*SearchPanel.tpl.php
+*ListPanel.tpl.php
+
