@@ -28,93 +28,83 @@
 	
 	
 	/**
-	 * <div>Triggered after a tab has been activated (after animation completes).
-	 * 		If the tabs were previously collapsed, <code>ui.oldTab</code> and
+	 * Triggered after a tab has been activated (after animation completes). If
+	 * 		the tabs were previously collapsed, <code>ui.oldTab</code> and
 	 * 		<code>ui.oldPanel</code> will be empty jQuery objects. If the tabs are
 	 * 		collapsing, <code>ui.newTab</code> and <code>ui.newPanel</code> will be
-	 * 		empty jQuery objects.</div><ul><li><div><strong>event</strong></div>
-	 * 		<div>Type: <a>Event</a></div> <div></div></li>
-	 * 		<li><div><strong>ui</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div></div> <ul><li><div><strong>newTab</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The tab that was just activated.</div></li>
-	 * 		<li><div><strong>oldTab</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The tab that was just deactivated.</div></li>
-	 * 		<li><div><strong>newPanel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel that was just activated.</div></li>
-	 * 		<li><div><strong>oldPanel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel that was just deactivated.</div></li></ul></li></ul>
+	 * 		empty jQuery objects.<ul><li><strong>event</strong> Type: <a>Event</a>
+	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>newTab</strong> Type: <a>jQuery</a> The tab that was just
+	 * 		activated.</li> <li><strong>oldTab</strong> Type: <a>jQuery</a> The tab
+	 * 		that was just deactivated.</li> <li><strong>newPanel</strong> Type:
+	 * 		<a>jQuery</a> The panel that was just activated.</li>
+	 * 		<li><strong>oldPanel</strong> Type: <a>jQuery</a> The panel that was just
+	 * 		deactivated.</li></ul></li></ul>
 	 */
 	class QTabs_ActivateEvent extends QJqUiEvent {
 		const EventName = 'tabsactivate';
 	}
 	/**
-	 * <div>Triggered directly after a tab is activated. Can be canceled to
-	 * 		prevent the tab from activating. If the tabs are currently collapsed,
+	 * Triggered directly after a tab is activated. Can be canceled to prevent the
+	 * 		tab from activating. If the tabs are currently collapsed,
 	 * 		<code>ui.oldTab</code> and <code>ui.oldPanel</code> will be empty jQuery
 	 * 		objects. If the tabs are collapsing, <code>ui.newTab</code> and
 	 * 		<code>ui.newPanel</code> will be empty jQuery
-	 * 		objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>newTab</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The tab that is about to be activated.</div></li>
-	 * 		<li><div><strong>oldTab</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The tab that is about to be deactivated.</div></li>
-	 * 		<li><div><strong>newPanel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel that is about to be activated.</div></li>
-	 * 		<li><div><strong>oldPanel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel that is about to be deactivated.</div></li></ul></li></ul>
+	 * 		objects.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>newTab</strong> Type: <a>jQuery</a> The tab that is about
+	 * 		to be activated.</li> <li><strong>oldTab</strong> Type: <a>jQuery</a> The
+	 * 		tab that is about to be deactivated.</li> <li><strong>newPanel</strong>
+	 * 		Type: <a>jQuery</a> The panel that is about to be activated.</li>
+	 * 		<li><strong>oldPanel</strong> Type: <a>jQuery</a> The panel that is about
+	 * 		to be deactivated.</li></ul></li></ul>
 	 */
 	class QTabs_BeforeActivateEvent extends QJqUiEvent {
 		const EventName = 'tabsbeforeactivate';
 	}
 	/**
-	 * <div>Triggered when a remote tab is about to be loaded, after the
+	 * <p>Triggered when a remote tab is about to be loaded, after the
 	 * 		<a><code>beforeActivate</code></a> event. Can be canceled to prevent the
 	 * 		tab panel from loading content; though the panel will still be activated.
 	 * 		This event is triggered just before the Ajax request is made, so
 	 * 		modifications can be made to <code>ui.jqXHR</code> and
-	 * 		<code>ui.ajaxSettings</code>.</div><ul><li><div><strong>event</strong></div>
-	 * 		<div>Type: <a>Event</a></div> <div></div></li>
-	 * 		<li><div><strong>ui</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div></div> <ul><li><div><strong>tab</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The tab that is being loaded.</div></li>
-	 * 		<li><div><strong>panel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel which will be populated by the Ajax response.</div></li>
-	 * 		<li><div><strong>jqXHR</strong></div> <div>Type: <a>jqXHR</a></div>
-	 * 		<div>The <code>jqXHR</code> object that is requesting the
-	 * 		content.</div></li> <li><div><strong>ajaxSettings</strong></div> <div>Type:
-	 * 		<a>Object</a></div> <div>The settings that will be used by
-	 * 		<a><code>jQuery.ajax</code></a> to request the
-	 * 		content.</div></li></ul></li></ul>
+	 * 		<code>ui.ajaxSettings</code>.</p> 				<p><em>Note: Although
+	 * 		<code>ui.ajaxSettings</code> is provided and can be modified, some of these
+	 * 		settings have already been processed by jQuery. For example,
+	 * 		<a>prefilters</a> have been applied, <code>data</code> has been processed,
+	 * 		and <code>type</code> has been determined. The <code>beforeLoad</code>
+	 * 		event occurs at the same time, and therefore has the same restrictions, as
+	 * 		the <code>beforeSend</code> callback from
+	 * 		<a><code>jQuery.ajax()</code></a>.</em></p><ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>tab</strong> Type: <a>jQuery</a> The tab that is being
+	 * 		loaded.</li> <li><strong>panel</strong> Type: <a>jQuery</a> The panel which
+	 * 		will be populated by the Ajax response.</li> <li><strong>jqXHR</strong>
+	 * 		Type: <a>jqXHR</a> The <code>jqXHR</code> object that is requesting the
+	 * 		content.</li> <li><strong>ajaxSettings</strong> Type: <a>Object</a> The
+	 * 		settings that will be used by <a><code>jQuery.ajax</code></a> to request
+	 * 		the content.</li></ul></li></ul>
 	 */
 	class QTabs_BeforeLoadEvent extends QJqUiEvent {
 		const EventName = 'tabsbeforeload';
 	}
 	/**
-	 * <div>Triggered when the tabs are created. If the tabs are collapsed,
+	 * Triggered when the tabs are created. If the tabs are collapsed,
 	 * 		<code>ui.tab</code> and <code>ui.panel</code> will be empty jQuery
-	 * 		objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>tab</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The active tab.</div></li> <li><div><strong>panel</strong></div>
-	 * 		<div>Type: <a>jQuery</a></div> <div>The active
-	 * 		panel.</div></li></ul></li></ul>
+	 * 		objects.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a>  <ul><li><strong>tab</strong>
+	 * 		Type: <a>jQuery</a> The active tab.</li> <li><strong>panel</strong> Type:
+	 * 		<a>jQuery</a> The active panel.</li></ul></li></ul>
 	 */
 	class QTabs_CreateEvent extends QJqUiEvent {
 		const EventName = 'tabscreate';
 	}
 	/**
-	 * <div>Triggered after a remote tab has been
-	 * 		loaded.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>tab</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The tab that was just loaded.</div></li>
-	 * 		<li><div><strong>panel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel which was just populated by the Ajax
-	 * 		response.</div></li></ul></li></ul>
+	 * Triggered after a remote tab has been loaded.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>tab</strong> Type: <a>jQuery</a> The tab that was just
+	 * 		loaded.</li> <li><strong>panel</strong> Type: <a>jQuery</a> The panel which
+	 * 		was just populated by the Ajax response.</li></ul></li></ul>
 	 */
 	class QTabs_LoadEvent extends QJqUiEvent {
 		const EventName = 'tabsload';
@@ -133,69 +123,71 @@
 	 * 
 	 * @see QTabsBase
 	 * @package Controls\Base
-	 * @property mixed $Active <div>Which panel is currently open.</div><strong>Multiple types
+	 * @property mixed $Active Which panel is currently open.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: Setting
 	 * 		<code>active</code> to <code>false</code> will collapse all panels. This
 	 * 		requires the <a><code>collapsible</code></a> option to be
 	 * 		<code>true</code>.</li> <li><strong>Integer</strong>: The zero-based index
 	 * 		of the panel that is active (open). A negative value selects panels going
 	 * 		backward from the last panel.</li></ul>
-	 * @property boolean $Collapsible <div>When set to <code>true</code>, the active panel can be closed.</div>
-	 * @property mixed $Disabled <div>Which tabs are disabled.</div><strong>Multiple types
+	 * @property boolean $Collapsible When set to <code>true</code>, the active panel can be closed.
+	 * @property mixed $Disabled Which tabs are disabled.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: Enable or disable all
 	 * 		tabs.</li> <li><strong>Array</strong>: An array containing the zero-based
 	 * 		indexes of the tabs that should be disabled, e.g., <code>[ 0, 2 ]</code>
 	 * 		would disable the first and third tab.</li></ul>
-	 * @property string $Event <div>The type of event that the tabs should react to in order to activate
-	 * 		the tab. To activate on hover, use <code>"mouseover"</code>.</div>
-	 * @property string $HeightStyle <div>Controls the height of the tabs widget and each panel. Possible
-	 * 		values: 				<ul><li><code>"auto"</code>: All panels will be set to the
-	 * 		height of the tallest panel.</li> 					<li><code>"fill"</code>: Expand to
-	 * 		the available height based on the tabs' parent height.</li>
+	 * @property string $Event The type of event that the tabs should react to in order to activate the
+	 * 		tab. To activate on hover, use <code>"mouseover"</code>.
+	 * @property string $HeightStyle Controls the height of the tabs widget and each panel. Possible values:
+	 * 						<ul><li><code>"auto"</code>: All panels will be set to the height of
+	 * 		the tallest panel.</li> 					<li><code>"fill"</code>: Expand to the
+	 * 		available height based on the tabs' parent height.</li>
 	 * 							<li><code>"content"</code>: Each panel will be only as tall as its
-	 * 		content.</li></ul></div>
-	 * @property mixed $Hide <div>If and how to animate the hiding of the panel.</div><strong>Multiple
-	 * 		types supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
+	 * 		content.</li></ul>
+	 * @property mixed $Hide If and how to animate the hiding of the panel.<strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
 	 * 		<code>false</code>, no animation will be used and the panel will be hidden
 	 * 		immediately. 			When set to <code>true</code>, the panel will fade out with
 	 * 		the default duration and the default easing.</li>
 	 * 		<li><strong>Number</strong>:  			The panel will fade out with the specified
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be hidden using the specified effect. 			The value can either be
-	 * 		the name of a built-in jQuery animateion method, such as
+	 * 		the name of a built-in jQuery animation method, such as
 	 * 		<code>"slideUp"</code>, or the name of a jQuery UI effect, such as
 	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
 	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
-	 * 		If the value is an object, then <code>effect</code>, <code>duration</code>,
-	 * 		and <code>easing</code> properties may be provided. If the
-	 * 		<code>effect</code> property contains the name of a jQuery method, then
-	 * 		that method will be used; otherwise it is assumed to be the name of a
+	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
+	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
+	 * 		If the <code>effect</code> property contains the name of a jQuery method,
+	 * 		then that method will be used; otherwise it is assumed to be the name of a
 	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
 	 * 		settings, you may include those settings in the object and they will be
 	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
 	 * 		omitted, then the default values will be used. If <code>effect</code> is
-	 * 		omitted, then <code>"fadeOut"</code> will be used.</li></ul>
-	 * @property mixed $Show <div>If and how to animate the showing of the panel.</div><strong>Multiple
-	 * 		types supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
+	 * 		omitted, then <code>"fadeOut"</code> will be used. If <code>delay</code> is
+	 * 		omitted, then no delay is used.</li></ul>
+	 * @property mixed $Show If and how to animate the showing of the panel.<strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
 	 * 		<code>false</code>, no animation will be used and the panel will be shown
 	 * 		immediately. 			When set to <code>true</code>, the panel will fade in with
 	 * 		the default duration and the default easing.</li>
 	 * 		<li><strong>Number</strong>:  			The panel will fade in with the specified
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be shown using the specified effect. 			The value can either be
-	 * 		the name of a built-in jQuery animateion method, such as
+	 * 		the name of a built-in jQuery animation method, such as
 	 * 		<code>"slideDown"</code>, or the name of a jQuery UI effect, such as
 	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
 	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
-	 * 		If the value is an object, then <code>effect</code>, <code>duration</code>,
-	 * 		and <code>easing</code> properties may be provided. If the
-	 * 		<code>effect</code> property contains the name of a jQuery method, then
-	 * 		that method will be used; otherwise it is assumed to be the name of a
+	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
+	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
+	 * 		If the <code>effect</code> property contains the name of a jQuery method,
+	 * 		then that method will be used; otherwise it is assumed to be the name of a
 	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
 	 * 		settings, you may include those settings in the object and they will be
 	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
 	 * 		omitted, then the default values will be used. If <code>effect</code> is
-	 * 		omitted, then <code>"fadeIn"</code> will be used.</li></ul>
+	 * 		omitted, then <code>"fadeIn"</code> will be used.  If <code>delay</code> is
+	 * 		omitted, then no delay is used.</li></ul>
 	 */
 
 	class QTabsGen extends QPanel	{
@@ -279,84 +271,78 @@
 
 
 		/**
-		 * <div>Removes the tabs functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the tabs functionality completely. This will return the element
+		 * back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables all tabs.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Disables all tabs.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Disables a tab. The selected tab cannot be disabled. To disable more
-		 * than one tab at once, set the <a><code>disabled</code></a> option: <code>$(
+		 * Disables a tab. The selected tab cannot be disabled. To disable more than
+		 * one tab at once, set the <a><code>disabled</code></a> option: <code>$(
 		 * "#tabs" ).tabs( "option", "disabled", [ 1, 2, 3 ]
-		 * )</code>.</div><ul><li><div><strong>index</strong></div> <div>Type:
-		 * <a>Number</a> or <a>String</a></div> <div>Which tab to
-		 * disable.</div></li></ul>
+		 * )</code>.<ul><li><strong>index</strong> Type: <a>Number</a> or
+		 * <a>String</a> Which tab to disable.</li></ul>
 		 * @param $index
 		 */
 		public function Disable1($index) {
 			$this->CallJqUiMethod("disable", $index);
 		}
 		/**
-		 * <div>Enables all tabs.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Enables all tabs.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Enables a tab. To enable more than one tab at once reset the disabled
+		 * Enables a tab. To enable more than one tab at once reset the disabled
 		 * property like: <code>$( "#example" ).tabs( "option", "disabled", []
-		 * );</code>.</div><ul><li><div><strong>index</strong></div> <div>Type:
-		 * <a>Number</a> or <a>String</a></div> <div>Which tab to
-		 * enable.</div></li></ul>
+		 * );</code>.<ul><li><strong>index</strong> Type: <a>Number</a> or
+		 * <a>String</a> Which tab to enable.</li></ul>
 		 * @param $index
 		 */
 		public function Enable1($index) {
 			$this->CallJqUiMethod("enable", $index);
 		}
 		/**
-		 * <div>Loads the panel content of a remote
-		 * tab.</div><ul><li><div><strong>index</strong></div> <div>Type:
-		 * <a>Number</a> or <a>String</a></div> <div>Which tab to
-		 * load.</div></li></ul>
+		 * Loads the panel content of a remote tab.<ul><li><strong>index</strong>
+		 * Type: <a>Number</a> or <a>String</a> Which tab to load.</li></ul>
 		 * @param $index
 		 */
 		public function Load($index) {
 			$this->CallJqUiMethod("load", $index);
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * tabs options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current tabs
+		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the tabs option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the tabs option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -364,20 +350,18 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * tabs.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the tabs.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Process any tabs that were added or removed directly in the DOM and
+		 * Process any tabs that were added or removed directly in the DOM and
 		 * recompute the height of the tab panels. Results depend on the content and
-		 * the <a><code>heightStyle</code></a> option.</div><ul><li><div>This method
-		 * does not accept any arguments.</div></li></ul>
+		 * the <a><code>heightStyle</code></a> option.<ul><li>This method does not
+		 * accept any arguments.</li></ul>
 		 */
 		public function Refresh() {
 			$this->CallJqUiMethod("refresh");
