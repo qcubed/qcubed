@@ -135,8 +135,10 @@
 		const EventName = 'sortdeactivate';
 	}
 	/**
-	 * <div>This event is triggered when a sortable item is moved away from a
-	 * 		connected list.</div><ul><li><div><strong>event</strong></div> <div>Type:
+	 * <div><p>This event is triggered when a sortable item is moved away from a
+	 * 		connected list.</p> 				<p><em>Note: This event is also triggered when a
+	 * 		sortable item is
+	 * 		dropped.</em></p></div><ul><li><div><strong>event</strong></div> <div>Type:
 	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
 	 * 		<div>Type: <a>Object</a></div> <div></div>
 	 * 		<ul><li><div><strong>helper</strong></div> <div>Type: <a>jQuery</a></div>
@@ -357,7 +359,7 @@
 	 * 		should be connected to. This is a one-way relationship, if you want the
 	 * 		items to be connected in both directions, the <code>connectWith</code>
 	 * 		option must be set on both sortable elements.</div>
-	 * @property mixed $Containment <div><p>Defines a bounding box that the sortable items are contrained to
+	 * @property mixed $Containment <div><p>Defines a bounding box that the sortable items are constrained to
 	 * 		while dragging.</p>  				<p>Note: The element specified for containment
 	 * 		must have a calculated width and height (though it need not be explicit).
 	 * 		For example, if you have <code>float: left</code> sortable children and
@@ -677,11 +679,15 @@
 		}
 		/**
 		 * <div>Serializes the sortable's item id's into an array of
-		 * string.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * string.</div><ul><li><div><strong>options</strong></div> <div>Type:
+		 * <a>Object</a></div> <div>Options to customize the serialization.</div>
+		 * <ul><li><div><strong>attribute</strong> (default: <code>"id"</code>)</div>
+		 * <div>Type: <a>String</a></div> <div>The name of the attribute to use for
+		 * the values.</div></li></ul></li></ul>
+		 * @param $options
 		 */
-		public function ToArray() {
-			$this->CallJqUiMethod("toArray");
+		public function ToArray($options) {
+			$this->CallJqUiMethod("toArray", $options);
 		}
 
 

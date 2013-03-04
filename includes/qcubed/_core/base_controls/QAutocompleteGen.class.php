@@ -139,9 +139,12 @@
 	 * 
 	 * @see QAutocompleteBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo <div>Which element the menu should be appended to. Override this when the
-	 * 		autocomplete is inside a <code>position: fixed</code> element. Otherwise
-	 * 		the popup menu would still scroll with the page.</div>
+	 * @property mixed $AppendTo <div>Which element the menu should be appended to. When the value is
+	 * 		<code>null</code>, the parents of the input field will be checked for a
+	 * 		class of <code>ui-front</code>. If an element with the
+	 * 		<code>ui-front</code> class is found, the menu will be appended to that
+	 * 		element. Regardless of the value, if no element is found, the menu will be
+	 * 		appended to the body.</div>
 	 * @property boolean $AutoFocus <div>If set to <code>true</code> the first item will automatically be
 	 * 		focused when the menu is shown.</div>
 	 * @property integer $Delay <div>The delay in milliseconds between when a keystroke occurs and when a
@@ -196,10 +199,10 @@
 	 * 		providing a custom source callback to handle errors during the request. You
 	 * 		must always call the <code>response</code> callback even if you encounter
 	 * 		an error. This ensures that the widget always has the correct
-	 * 		state.</li></ul> 					<p>When filtering data locally, you can make use of
-	 * 		the built-in <code>$.ui.autocomplete.escapeRegex</code> function. It'll
-	 * 		take a single string argument and escape all regex characters, making the
-	 * 		result safe to pass to <code>new RegExp()</code>.</p></li></ul>
+	 * 		state.</li></ul><p>When filtering data locally, you can make use of the
+	 * 		built-in <code>$.ui.autocomplete.escapeRegex</code> function. It'll take a
+	 * 		single string argument and escape all regex characters, making the result
+	 * 		safe to pass to <code>new RegExp()</code>.</p></li></ul>
 	 */
 
 	class QAutocompleteGen extends QTextBox	{

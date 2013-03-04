@@ -87,19 +87,23 @@
 	 * @property mixed $Icons <div>Icons to use for submenus, matching an icon defined by the jQuery UI
 	 * 		CSS Framework. 				<ul><li>submenu (string, default:
 	 * 		"ui-icon-carat-1-e")</li></ul></div>
-	 * @property string $Menus <div>Selector for the elements that serve as the menu container, including
-	 * 		sub-menus.</div>
+	 * @property string $Menus <div><p>Selector for the elements that serve as the menu container,
+	 * 		including sub-menus.</p> 				<p><em>Note: The <code>menus</code> option
+	 * 		should not be changed after initialization. Existing submenus will not be
+	 * 		updated.</em></p></div>
 	 * @property mixed $Position <div>Identifies the position of submenus in relation to the associated
 	 * 		parent menu item. The <code>of</code> option defaults to the parent menu
 	 * 		item, but you can specify another element to position against. You can
 	 * 		refer to the <a>jQuery UI Position</a> utility for more details about the
 	 * 		various options.</div>
-	 * @property string $Role <div>Customize the ARIA roles used for the menu and menu items. The default
-	 * 		uses <code>"menuitem"</code> for items. Setting the <code>role</code>
-	 * 		option to <code>"listbox"</code> will use <code>"option"</code> for items.
-	 * 		If set to <code>null</code>, no roles will be set, which is useful if the
-	 * 		menu is being controlled by another element that is maintaining
-	 * 		focus.</div>
+	 * @property string $Role <div><p>Customize the ARIA roles used for the menu and menu items. The
+	 * 		default uses <code>"menuitem"</code> for items. Setting the
+	 * 		<code>role</code> option to <code>"listbox"</code> will use
+	 * 		<code>"option"</code> for items. If set to <code>null</code>, no roles will
+	 * 		be set, which is useful if the menu is being controlled by another element
+	 * 		that is maintaining focus.</p> 				<p><em>Note: The <code>role</code>
+	 * 		option should not be changed after initialization. Existing (sub)menus and
+	 * 		menu items will not be updated.</em></p></div>
 	 */
 
 	class QMenuGen extends QPanel	{

@@ -70,7 +70,11 @@
 	 * @package Controls\Base
 	 * @property boolean $Disabled <div>Disables the progressbar if set to <code>true</code>.</div>
 	 * @property integer $Max <div>The maximum value of the progressbar.</div>
-	 * @property integer $Value <div>The value of the progressbar.</div>
+	 * @property mixed $Value <div>The value of the progressbar.</div><strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Number</strong>:  					A value between
+	 * 		<code>0</code> and the <a><code>max</code></a>.</li>
+	 * 		<li><strong>Boolean</strong>:  					Value can be set to <code>false</code>
+	 * 		to create an indeterminate progressbar.</li></ul>
 	 */
 
 	class QProgressbarGen extends QPanel	{
@@ -79,9 +83,9 @@
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var integer */
-		protected $intMax;
-		/** @var integer */
-		protected $intValue;
+		protected $intMax = null;
+		/** @var mixed */
+		protected $mixValue;
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
@@ -213,7 +217,9 @@
 		/**
 		 * <div>Sets the current value of the
 		 * progressbar.</div><ul><li><div><strong>value</strong></div> <div>Type:
-		 * <a>Number</a></div> <div>The value to set.</div></li></ul>
+		 * <a>Number</a> or <a>Boolean</a></div> <div>The value to set. See the
+		 * <a><code>value</code></a> option for details on valid
+		 * values.</div></li></ul>
 		 * @param $value
 		 */
 		public function Value1($value) {
@@ -225,7 +231,7 @@
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
 				case 'Max': return $this->intMax;
-				case 'Value': return $this->intValue;
+				case 'Value': return $this->mixValue;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -263,16 +269,12 @@
 					}
 
 				case 'Value':
-					try {
-						$this->intValue = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'value', $this->intValue);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
+					$this->mixValue = $mixValue;
+				
+					if ($this->Rendered) {
+						$this->CallJqUiMethod('option', 'value', $mixValue);
 					}
+					break;
 
 
 				case 'Enabled':

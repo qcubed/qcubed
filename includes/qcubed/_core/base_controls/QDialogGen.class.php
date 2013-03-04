@@ -116,7 +116,7 @@
 	 * 		resized.</div><ul><li><div><strong>event</strong></div> <div>Type:
 	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
 	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>orginalPosition</strong></div> <div>Type:
+	 * 		<ul><li><div><strong>originalPosition</strong></div> <div>Type:
 	 * 		<a>Object</a></div> <div>The CSS position of the dialog prior to being
 	 * 		resized.</div></li> <li><div><strong>position</strong></div> <div>Type:
 	 * 		<a>Object</a></div> <div>The current CSS position of the dialog.</div></li>
@@ -133,7 +133,7 @@
 	 * 		dialog.</div><ul><li><div><strong>event</strong></div> <div>Type:
 	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
 	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>orginalPosition</strong></div> <div>Type:
+	 * 		<ul><li><div><strong>originalPosition</strong></div> <div>Type:
 	 * 		<a>Object</a></div> <div>The CSS position of the dialog prior to being
 	 * 		resized.</div></li> <li><div><strong>position</strong></div> <div>Type:
 	 * 		<a>Object</a></div> <div>The current CSS position of the dialog.</div></li>
@@ -150,7 +150,7 @@
 	 * 		resized.</div><ul><li><div><strong>event</strong></div> <div>Type:
 	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
 	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>orginalPosition</strong></div> <div>Type:
+	 * 		<ul><li><div><strong>originalPosition</strong></div> <div>Type:
 	 * 		<a>Object</a></div> <div>The CSS position of the dialog prior to being
 	 * 		resized.</div></li> <li><div><strong>position</strong></div> <div>Type:
 	 * 		<a>Object</a></div> <div>The current CSS position of the dialog.</div></li>
@@ -176,6 +176,8 @@
 	 * 
 	 * @see QDialogBase
 	 * @package Controls\Base
+	 * @property mixed $AppendTo <div>Which element the dialog (and overlay, if <a>modal</a>) should be
+	 * 		appended to.<span>(version added: 1.10.0)</span></div>
 	 * @property boolean $AutoOpen <div>If set to <code>true</code>, the dialog will automatically open upon
 	 * 		initialization. If <code>false</code>, the dialog will stay hidden until
 	 * 		the <a><code>open()</code></a> method is called.</div>
@@ -194,7 +196,7 @@
 	 * @property string $DialogClass <div>The specified class name(s) will be added to the dialog, for
 	 * 		additional theming.</div>
 	 * @property boolean $Draggable <div>If set to <code>true</code>, the dialog will be draggable by the title
-	 * 		bar. Requires the <a>jQuery UI Draggable wiget</a> to be included.</div>
+	 * 		bar. Requires the <a>jQuery UI Draggable widget</a> to be included.</div>
 	 * @property mixed $Height <div>The height of the dialog.</div><strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: The height in
 	 * 		pixels.</li> <li><strong>String</strong>: The only supported string value
@@ -206,13 +208,14 @@
 	 * 		duration.</li> <li><strong>String</strong>:  					The dialog will be hidden
 	 * 		using the specified jQuery UI effect. See the <a>list of effects</a> for
 	 * 		possible values.</li> <li><strong>Object</strong>: If the value is an
-	 * 		object, then <code>effect</code>, <code>duration</code>, and
-	 * 		<code>easing</code> properties may be provided. The <code>effect</code>
-	 * 		property must be the name of a jQuery UI effect. When using a jQuery UI
-	 * 		effect that supports additional settings, you may include those settings in
-	 * 		the object and they will be passed to the effect. If <code>duration</code>
-	 * 		or <code>easing</code> is omitted, then the default values will be
-	 * 		used.</li></ul>
+	 * 		object, then <code>effect</code>, <code>delay</code>,
+	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
+	 * 		The <code>effect</code> property must be the name of a jQuery UI effect.
+	 * 		When using a jQuery UI effect that supports additional settings, you may
+	 * 		include those settings in the object and they will be passed to the effect.
+	 * 		If <code>duration</code> or <code>easing</code> is omitted, then the
+	 * 		default values will be used. If <code>delay</code> is omitted, then no
+	 * 		delay is used.</li></ul>
 	 * @property integer $MaxHeight <div>The maximum height to which the dialog can be resized, in
 	 * 		pixels.</div>
 	 * @property integer $MaxWidth <div>The maximum width to which the dialog can be resized, in pixels.</div>
@@ -223,19 +226,21 @@
 	 * 		other items on the page will be disabled, i.e., cannot be interacted with.
 	 * 		Modal dialogs create an overlay below the dialog but above other page
 	 * 		elements.</div>
-	 * @property mixed $Position <div>Specifies where the dialog should be displayed. The dialog will handle
-	 * 		collisions such that as much of the dialog is visible as
-	 * 		possible.</div><strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Object</strong>: Identifies the position
-	 * 		of the dialog when opened. The <code>of</code> option defaults to the
-	 * 		window, but you can specify another element to position against. You can
-	 * 		refer to the <a>jQuery UI Position</a> utility for more details about the
-	 * 		various options.</li> <li><strong>String</strong>: A string representing
-	 * 		the position within the viewport. Possible values: <code>"center"</code>,
-	 * 		<code>"left"</code>, <code>"right"</code>, <code>"top"</code>,
-	 * 		<code>"bottom"</code>.</li> <li><strong>Array</strong>: An array containing
-	 * 		an <em>x, y</em> coordinate pair in pixel offset from the top left corner
-	 * 		of the viewport or the name of a possible string value.</li></ul>
+	 * @property mixed $Position <div><p>Specifies where the dialog should be displayed. The dialog will
+	 * 		handle collisions such that as much of the dialog is visible as
+	 * 		possible.</p> 				<p><em>Note: The <code>String</code> and
+	 * 		<code>Array</code> forms are deprecated.</em></p></div><strong>Multiple
+	 * 		types supported:</strong><ul><li><strong>Object</strong>: Identifies the
+	 * 		position of the dialog when opened. The <code>of</code> option defaults to
+	 * 		the window, but you can specify another element to position against. You
+	 * 		can refer to the <a>jQuery UI Position</a> utility for more details about
+	 * 		the various options.</li> <li><strong>String</strong>: A string
+	 * 		representing the position within the viewport. Possible values:
+	 * 		<code>"center"</code>, <code>"left"</code>, <code>"right"</code>,
+	 * 		<code>"top"</code>, <code>"bottom"</code>.</li> <li><strong>Array</strong>:
+	 * 		An array containing an <em>x, y</em> coordinate pair in pixel offset from
+	 * 		the top left corner of the viewport or the name of a possible string
+	 * 		value.</li></ul>
 	 * @property boolean $Resizable <div>If set to <code>true</code>, the dialog will be resizable. Requires
 	 * 		the <a>jQuery UI Resizable widget</a> to be included.</div>
 	 * @property mixed $Show <div>If and how to animate the showing of the dialog.</div><strong>Multiple
@@ -244,26 +249,25 @@
 	 * 		duration.</li> <li><strong>String</strong>:  					The dialog will be shown
 	 * 		using the specified jQuery UI effect. See the <a>list of effects</a> for
 	 * 		possible values.</li> <li><strong>Object</strong>: If the value is an
-	 * 		object, then <code>effect</code>, <code>duration</code>, and
-	 * 		<code>easing</code> properties may be provided. The <code>effect</code>
-	 * 		property must be the name of a jQuery UI effect. When using a jQuery UI
-	 * 		effect that supports additional settings, you may include those settings in
-	 * 		the object and they will be passed to the effect. If <code>duration</code>
-	 * 		or <code>easing</code> is omitted, then the default values will be
-	 * 		used.</li></ul>
-	 * @property boolean $Stack <div>Specifies whether the dialog will stack on top of other dialogs. This
-	 * 		will cause the dialog to move to the front of other dialogs when it gains
-	 * 		focus.</div>
-	 * @property string $Title <div>Specifies the title of the dialog. Any valid HTML may be set as the
-	 * 		title. The title can also be specified by the <code>title</code> attribute
-	 * 		on the dialog source element.</div>
+	 * 		object, then <code>effect</code>, <code>delay</code>,
+	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
+	 * 		The <code>effect</code> property must be the name of a jQuery UI effect.
+	 * 		When using a jQuery UI effect that supports additional settings, you may
+	 * 		include those settings in the object and they will be passed to the effect.
+	 * 		If <code>duration</code> or <code>easing</code> is omitted, then the
+	 * 		default values will be used. If <code>delay</code> is omitted, then no
+	 * 		delay is used.</li></ul>
+	 * @property string $Title <div>Specifies the title of the dialog. If the value is <code>null</code>,
+	 * 		the <code>title</code> attribute on the dialog source element will be
+	 * 		used.</div>
 	 * @property integer $Width <div>The width of the dialog, in pixels.</div>
-	 * @property integer $ZIndex <div>The starting z-index for the dialog.</div>
 	 */
 
 	class QDialogGen extends QPanel	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
+		/** @var mixed */
+		protected $mixAppendTo = null;
 		/** @var boolean */
 		protected $blnAutoOpen = null;
 		/** @var mixed */
@@ -296,14 +300,10 @@
 		protected $blnResizable = null;
 		/** @var mixed */
 		protected $mixShow = null;
-		/** @var boolean */
-		protected $blnStack = null;
 		/** @var string */
 		protected $strTitle = null;
 		/** @var integer */
 		protected $intWidth = null;
-		/** @var integer */
-		protected $intZIndex = null;
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
@@ -316,6 +316,7 @@
 
 		protected function makeJqOptions() {
 			$strJqOptions = '';
+			$strJqOptions .= $this->makeJsProperty('AppendTo', 'appendTo');
 			$strJqOptions .= $this->makeJsProperty('AutoOpen', 'autoOpen');
 			$strJqOptions .= $this->makeJsProperty('Buttons', 'buttons');
 			$strJqOptions .= $this->makeJsProperty('CloseOnEscape', 'closeOnEscape');
@@ -332,10 +333,8 @@
 			$strJqOptions .= $this->makeJsProperty('Position', 'position');
 			$strJqOptions .= $this->makeJsProperty('Resizable', 'resizable');
 			$strJqOptions .= $this->makeJsProperty('Show', 'show');
-			$strJqOptions .= $this->makeJsProperty('Stack', 'stack');
 			$strJqOptions .= $this->makeJsProperty('Title', 'title');
 			$strJqOptions .= $this->makeJsProperty('Width', 'width');
-			$strJqOptions .= $this->makeJsProperty('ZIndex', 'zIndex');
 			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
@@ -461,6 +460,7 @@
 
 		public function __get($strName) {
 			switch ($strName) {
+				case 'AppendTo': return $this->mixAppendTo;
 				case 'AutoOpen': return $this->blnAutoOpen;
 				case 'Buttons': return $this->mixButtons;
 				case 'CloseOnEscape': return $this->blnCloseOnEscape;
@@ -477,10 +477,8 @@
 				case 'Position': return $this->mixPosition;
 				case 'Resizable': return $this->blnResizable;
 				case 'Show': return $this->mixShow;
-				case 'Stack': return $this->blnStack;
 				case 'Title': return $this->strTitle;
 				case 'Width': return $this->intWidth;
-				case 'ZIndex': return $this->intZIndex;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -493,6 +491,14 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
+				case 'AppendTo':
+					$this->mixAppendTo = $mixValue;
+				
+					if ($this->Rendered) {
+						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
+					}
+					break;
+
 				case 'AutoOpen':
 					try {
 						$this->blnAutoOpen = QType::Cast($mixValue, QType::Boolean);
@@ -665,18 +671,6 @@
 					}
 					break;
 
-				case 'Stack':
-					try {
-						$this->blnStack = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'stack', $this->blnStack);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
 				case 'Title':
 					try {
 						$this->strTitle = QType::Cast($mixValue, QType::String);
@@ -694,18 +688,6 @@
 						$this->intWidth = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
 							$this->CallJqUiMethod('option', 'width', $this->intWidth);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case 'ZIndex':
-					try {
-						$this->intZIndex = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'zIndex', $this->intZIndex);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

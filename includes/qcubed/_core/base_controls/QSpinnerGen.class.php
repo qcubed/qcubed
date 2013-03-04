@@ -295,9 +295,14 @@
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Decrements the value by the specified number of pages, as defined by
-		 * the <a><code>page</code></a> option. Without the parameter, a single page
-		 * is decremented.</div><ul><li><div><strong>pages</strong></div> <div>Type:
+		 * <div><p>Decrements the value by the specified number of pages, as defined
+		 * by the <a><code>page</code></a> option. Without the parameter, a single
+		 * page is decremented.</p> 				<p>If the resulting value is above the max,
+		 * below the min, or results in a step mismatch, the value will be adjusted to
+		 * the closest valid value.</p> 				<p>Invoking <code>pageDown()</code> will
+		 * cause <a><code>start</code></a>, <a><code>spin</code></a>, and
+		 * <a><code>stop</code></a> events to be
+		 * triggered.</p></div><ul><li><div><strong>pages</strong></div> <div>Type:
 		 * <a>Number</a></div> <div>Number of pages to decrement, defaults to
 		 * 1.</div></li></ul>
 		 * @param $pages
@@ -306,9 +311,14 @@
 			$this->CallJqUiMethod("pageDown", $pages);
 		}
 		/**
-		 * <div>Increments the value by the specified number of pages, as defined by
-		 * the <a><code>page</code></a> option. Without the parameter, a single page
-		 * is incremented.</div><ul><li><div><strong>pages</strong></div> <div>Type:
+		 * <div><p>Increments the value by the specified number of pages, as defined
+		 * by the <a><code>page</code></a> option. Without the parameter, a single
+		 * page is incremented.</p> 				<p>If the resulting value is above the max,
+		 * below the min, or results in a step mismatch, the value will be adjusted to
+		 * the closest valid value.</p> 				<p>Invoking <code>pageUp()</code> will
+		 * cause <a><code>start</code></a>, <a><code>spin</code></a>, and
+		 * <a><code>stop</code></a> events to be
+		 * triggered.</p></div><ul><li><div><strong>pages</strong></div> <div>Type:
 		 * <a>Number</a></div> <div>Number of pages to increment, defaults to
 		 * 1.</div></li></ul>
 		 * @param $pages
@@ -317,11 +327,13 @@
 			$this->CallJqUiMethod("pageUp", $pages);
 		}
 		/**
-		 * <div>Decrements the value by the specified number of steps. Without the
-		 * parameter, a single step is decremented. 				<p>If the resulting value is
-		 * above the max, below the min, or reuslts in a step mismatch, the value will
-		 * be adjusted to the closest valid
-		 * value.</p></div><ul><li><div><strong>steps</strong></div> <div>Type:
+		 * <div><p>Decrements the value by the specified number of steps. Without the
+		 * parameter, a single step is decremented.</p> 				<p>If the resulting value
+		 * is above the max, below the min, or results in a step mismatch, the value
+		 * will be adjusted to the closest valid value.</p> 				<p>Invoking
+		 * <code>stepDown()</code> will cause <a><code>start</code></a>,
+		 * <a><code>spin</code></a>, and <a><code>stop</code></a> events to be
+		 * triggered.</p></div><ul><li><div><strong>steps</strong></div> <div>Type:
 		 * <a>Number</a></div> <div>Number of steps to decrement, defaults to
 		 * 1.</div></li></ul>
 		 * @param $steps
@@ -330,11 +342,13 @@
 			$this->CallJqUiMethod("stepDown", $steps);
 		}
 		/**
-		 * <div>Increments the value by the specified number of steps. Without the
-		 * parameter, a single step is incremented. 				<p>If the resulting value is
-		 * above the max, below the min, or reuslts in a step mismatch, the value will
-		 * be adjusted to the closest valid
-		 * value.</p></div><ul><li><div><strong>steps</strong></div> <div>Type:
+		 * <div><p>Increments the value by the specified number of steps. Without the
+		 * parameter, a single step is incremented.</p> 				<p>If the resulting value
+		 * is above the max, below the min, or results in a step mismatch, the value
+		 * will be adjusted to the closest valid value.</p> 				<p>Invoking
+		 * <code>stepUp()</code> will cause <a><code>start</code></a>,
+		 * <a><code>spin</code></a>, and <a><code>stop</code></a> events to be
+		 * triggered.</p></div><ul><li><div><strong>steps</strong></div> <div>Type:
 		 * <a>Number</a></div> <div>Number of steps to increment, defaults to
 		 * 1.</div></li></ul>
 		 * @param $steps

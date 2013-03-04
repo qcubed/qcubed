@@ -69,12 +69,19 @@
 		const EventName = 'tabsbeforeactivate';
 	}
 	/**
-	 * <div>Triggered when a remote tab is about to be loaded, after the
+	 * <div><p>Triggered when a remote tab is about to be loaded, after the
 	 * 		<a><code>beforeActivate</code></a> event. Can be canceled to prevent the
 	 * 		tab panel from loading content; though the panel will still be activated.
 	 * 		This event is triggered just before the Ajax request is made, so
 	 * 		modifications can be made to <code>ui.jqXHR</code> and
-	 * 		<code>ui.ajaxSettings</code>.</div><ul><li><div><strong>event</strong></div>
+	 * 		<code>ui.ajaxSettings</code>.</p> 				<p><em>Note: Although
+	 * 		<code>ui.ajaxSettings</code> is provided and can be modified, some of these
+	 * 		settings have already been processed by jQuery. For example,
+	 * 		<a>prefilters</a> have been applied, <code>data</code> has been processed,
+	 * 		and <code>type</code> has been determined. The <code>beforeLoad</code>
+	 * 		event occurs at the same time, and therefore has the same restrictions, as
+	 * 		the <code>beforeSend</code> callback from
+	 * 		<a><code>jQuery.ajax()</code></a>.</em></p></div><ul><li><div><strong>event</strong></div>
 	 * 		<div>Type: <a>Event</a></div> <div></div></li>
 	 * 		<li><div><strong>ui</strong></div> <div>Type: <a>Object</a></div>
 	 * 		<div></div> <ul><li><div><strong>tab</strong></div> <div>Type:
@@ -162,19 +169,20 @@
 	 * 		<li><strong>Number</strong>:  			The panel will fade out with the specified
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be hidden using the specified effect. 			The value can either be
-	 * 		the name of a built-in jQuery animateion method, such as
+	 * 		the name of a built-in jQuery animation method, such as
 	 * 		<code>"slideUp"</code>, or the name of a jQuery UI effect, such as
 	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
 	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
-	 * 		If the value is an object, then <code>effect</code>, <code>duration</code>,
-	 * 		and <code>easing</code> properties may be provided. If the
-	 * 		<code>effect</code> property contains the name of a jQuery method, then
-	 * 		that method will be used; otherwise it is assumed to be the name of a
+	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
+	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
+	 * 		If the <code>effect</code> property contains the name of a jQuery method,
+	 * 		then that method will be used; otherwise it is assumed to be the name of a
 	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
 	 * 		settings, you may include those settings in the object and they will be
 	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
 	 * 		omitted, then the default values will be used. If <code>effect</code> is
-	 * 		omitted, then <code>"fadeOut"</code> will be used.</li></ul>
+	 * 		omitted, then <code>"fadeOut"</code> will be used. If <code>delay</code> is
+	 * 		omitted, then no delay is used.</li></ul>
 	 * @property mixed $Show <div>If and how to animate the showing of the panel.</div><strong>Multiple
 	 * 		types supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
 	 * 		<code>false</code>, no animation will be used and the panel will be shown
@@ -183,19 +191,20 @@
 	 * 		<li><strong>Number</strong>:  			The panel will fade in with the specified
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be shown using the specified effect. 			The value can either be
-	 * 		the name of a built-in jQuery animateion method, such as
+	 * 		the name of a built-in jQuery animation method, such as
 	 * 		<code>"slideDown"</code>, or the name of a jQuery UI effect, such as
 	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
 	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
-	 * 		If the value is an object, then <code>effect</code>, <code>duration</code>,
-	 * 		and <code>easing</code> properties may be provided. If the
-	 * 		<code>effect</code> property contains the name of a jQuery method, then
-	 * 		that method will be used; otherwise it is assumed to be the name of a
+	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
+	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
+	 * 		If the <code>effect</code> property contains the name of a jQuery method,
+	 * 		then that method will be used; otherwise it is assumed to be the name of a
 	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
 	 * 		settings, you may include those settings in the object and they will be
 	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
 	 * 		omitted, then the default values will be used. If <code>effect</code> is
-	 * 		omitted, then <code>"fadeIn"</code> will be used.</li></ul>
+	 * 		omitted, then <code>"fadeIn"</code> will be used.  If <code>delay</code> is
+	 * 		omitted, then no delay is used.</li></ul>
 	 */
 
 	class QTabsGen extends QPanel	{

@@ -127,7 +127,7 @@
 	 * @property mixed $Range <div>Whether the slider represents a range.</div><strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: If set to
 	 * 		<code>true</code>, the slider will detect if you have two handles and
-	 * 		create a stylable range element between these two.</li>
+	 * 		create a styleable range element between these two.</li>
 	 * 		<li><strong>String</strong>: Either <code>"min"</code> or
 	 * 		<code>"max"</code>. A min range goes from the slider min to one handle. A
 	 * 		max range goes from one handle to the slider max.</li></ul>

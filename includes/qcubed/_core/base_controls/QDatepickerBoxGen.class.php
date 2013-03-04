@@ -119,7 +119,7 @@
 	 * 		<a><code>altField</code></a> option. This allows one date format to be
 	 * 		shown to the user for selection purposes, while a different format is
 	 * 		actually sent behind the scenes. For a full list of the possible formats
-	 * 		see the [[UI/Datepicker/formatDate|formatDate]] function</div>
+	 * 		see the <a><code>formatDate</code></a> function</div>
 	 * @property string $AppendText <div>The text to display after each date field, e.g., to show the required
 	 * 		format.</div>
 	 * @property boolean $AutoSize <div>Set to <code>true</code> to automatically resize the input field to
@@ -160,8 +160,8 @@
 	 * @property string $CurrentText <div>The text to display for the current day link. Use the
 	 * 		<a><code>showButtonPanel</code></a> option to display this button.</div>
 	 * @property string $JqDateFormat <div>The format for parsed and displayed dates. For a full list of the
-	 * 		possible formats see the
-	 * 		<code>[[UI/Datepicker/formatDate|formatDate]]</code> function.</div>
+	 * 		possible formats see the <code><a><code>formatDate</code></a></code>
+	 * 		function.</div>
 	 * @property array $DayNames <div>The list of long day names, starting from Sunday, for use as requested
 	 * 		via the <a><code>dateFormat</code></a> option.</div>
 	 * @property array $DayNamesMin <div>The list of minimised day names, starting from Sunday, for use as
@@ -170,10 +170,10 @@
 	 * 		requested via the <a><code>dateFormat</code></a> option.</div>
 	 * @property mixed $DefaultDate <div>Set the date to highlight on first opening if the field is blank.
 	 * 		Specify either an actual date via a Date object or as a string in the
-	 * 		current <code>[[UI/Datepicker#option-dateFormat|dateFormat]]</code>, or a
-	 * 		number of days from today (e.g. +7) or a string of values and periods ('y'
-	 * 		for years, 'm' for months, 'w' for weeks, 'd' for days, e.g. '+1m +7d'), or
-	 * 		null for today.</div><strong>Multiple types
+	 * 		current <a><code>dateFormat</code></a>, or a number of days from today
+	 * 		(e.g. +7) or a string of values and periods ('y' for years, 'm' for months,
+	 * 		'w' for weeks, 'd' for days, e.g. '+1m +7d'), or null for
+	 * 		today.</div><strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Date</strong>: A date object containing
 	 * 		the default date.</li> <li><strong>Number</strong>: A number of days from
 	 * 		today. For example <code>2</code> represents two days from today and
@@ -227,8 +227,8 @@
 	 * 		option.</div>
 	 * @property boolean $NavigationAsDateFormat <div>Whether the <a><code>prevText</code></a> and
 	 * 		<a><code>nextText</code></a> options should be parsed as dates by the
-	 * 		<code>[[UI/Datepicker/formatDate|formatDate]]</code> function, allowing
-	 * 		them to display the target month names for example.</div>
+	 * 		<code><a><code>formatDate</code></a></code> function, allowing them to
+	 * 		display the target month names for example.</div>
 	 * @property string $NextText <div>The text to display for the next month link. With the standard
 	 * 		ThemeRoller styling, this value is replaced by an icon.</div>
 	 * @property mixed $NumberOfMonths <div>The number of months to show at once.</div><strong>Multiple types
@@ -255,11 +255,10 @@
 	 * 		<a><code>showOtherMonths</code></a> option is set to
 	 * 		<code>true</code>.</div>
 	 * @property mixed $ShortYearCutoff <div>The cutoff year for determining the century for a date (used in
-	 * 		conjunction with
-	 * 		<code>[[UI/Datepicker#option-dateFormat|dateFormat]]</code> 'y'). Any dates
-	 * 		entered with a year value less than or equal to the cutoff year are
-	 * 		considered to be in the current century, while those greater than it are
-	 * 		deemed to be in the previous century.</div><strong>Multiple types
+	 * 		conjunction with <a><code>dateFormat</code></a> 'y'). Any dates entered
+	 * 		with a year value less than or equal to the cutoff year are considered to
+	 * 		be in the current century, while those greater than it are deemed to be in
+	 * 		the previous century.</div><strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: A value between
 	 * 		<code>0</code> and <code>99</code> indicating the cutoff year.</li>
 	 * 		<li><strong>String</strong>: A relative number of years from the current
