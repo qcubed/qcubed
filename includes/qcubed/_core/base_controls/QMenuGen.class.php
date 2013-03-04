@@ -28,43 +28,35 @@
 	
 	
 	/**
-	 * <div>Triggered when the menu loses
-	 * 		focus.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The currently active menu item.</div></li></ul></li></ul>
+	 * Triggered when the menu loses focus.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>item</strong> Type: <a>jQuery</a> The currently active menu
+	 * 		item.</li></ul></li></ul>
 	 */
 	class QMenu_BlurEvent extends QJqUiEvent {
 		const EventName = 'menublur';
 	}
 	/**
-	 * <div>Triggered when the menu is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the menu is created.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QMenu_CreateEvent extends QJqUiEvent {
 		const EventName = 'menucreate';
 	}
 	/**
-	 * <div>Triggered when a menu gains focus or when any menu item is
-	 * 		activated.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The currently active menu item.</div></li></ul></li></ul>
+	 * Triggered when a menu gains focus or when any menu item is
+	 * 		activated.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a>  <ul><li><strong>item</strong>
+	 * 		Type: <a>jQuery</a> The currently active menu item.</li></ul></li></ul>
 	 */
 	class QMenu_FocusEvent extends QJqUiEvent {
 		const EventName = 'menufocus';
 	}
 	/**
-	 * <div>Triggered when a menu item is
-	 * 		selected.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The currently active menu item.</div></li></ul></li></ul>
+	 * Triggered when a menu item is selected.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>item</strong> Type: <a>jQuery</a> The currently active menu
+	 * 		item.</li></ul></li></ul>
 	 */
 	class QMenu_SelectEvent extends QJqUiEvent {
 		const EventName = 'menuselect';
@@ -83,23 +75,27 @@
 	 * 
 	 * @see QMenuBase
 	 * @package Controls\Base
-	 * @property boolean $Disabled <div>Disables the menu if set to <code>true</code>.</div>
-	 * @property mixed $Icons <div>Icons to use for submenus, matching an icon defined by the jQuery UI
-	 * 		CSS Framework. 				<ul><li>submenu (string, default:
-	 * 		"ui-icon-carat-1-e")</li></ul></div>
-	 * @property string $Menus <div>Selector for the elements that serve as the menu container, including
-	 * 		sub-menus.</div>
-	 * @property mixed $Position <div>Identifies the position of submenus in relation to the associated
-	 * 		parent menu item. The <code>of</code> option defaults to the parent menu
-	 * 		item, but you can specify another element to position against. You can
-	 * 		refer to the <a>jQuery UI Position</a> utility for more details about the
-	 * 		various options.</div>
-	 * @property string $Role <div>Customize the ARIA roles used for the menu and menu items. The default
+	 * @property boolean $Disabled Disables the menu if set to <code>true</code>.
+	 * @property mixed $Icons Icons to use for submenus, matching an icon defined by the jQuery UI CSS
+	 * 		Framework. 				<ul><li>submenu (string, default:
+	 * 		"ui-icon-carat-1-e")</li></ul>
+	 * @property string $Menus <p>Selector for the elements that serve as the menu container, including
+	 * 		sub-menus.</p> 				<p><em>Note: The <code>menus</code> option should not be
+	 * 		changed after initialization. Existing submenus will not be
+	 * 		updated.</em></p>
+	 * @property mixed $Position Identifies the position of submenus in relation to the associated parent
+	 * 		menu item. The <code>of</code> option defaults to the parent menu item, but
+	 * 		you can specify another element to position against. You can refer to the
+	 * 		<a>jQuery UI Position</a> utility for more details about the various
+	 * 		options.
+	 * @property string $Role <p>Customize the ARIA roles used for the menu and menu items. The default
 	 * 		uses <code>"menuitem"</code> for items. Setting the <code>role</code>
 	 * 		option to <code>"listbox"</code> will use <code>"option"</code> for items.
 	 * 		If set to <code>null</code>, no roles will be set, which is useful if the
-	 * 		menu is being controlled by another element that is maintaining
-	 * 		focus.</div>
+	 * 		menu is being controlled by another element that is maintaining focus.</p>
+	 * 						<p><em>Note: The <code>role</code> option should not be changed after
+	 * 		initialization. Existing (sub)menus and menu items will not be
+	 * 		updated.</em></p>
 	 */
 
 	class QMenuGen extends QPanel	{
@@ -177,33 +173,28 @@
 
 
 		/**
-		 * <div>Removes focus from a menu, resets any active element styles and
-		 * triggers the menu's <a><code>blur</code></a>
-		 * event.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the menu to blur.</div></li></ul>
+		 * Removes focus from a menu, resets any active element styles and triggers
+		 * the menu's <a><code>blur</code></a> event.<ul><li><strong>event</strong>
+		 * Type: <a>Event</a> What triggered the menu to blur.</li></ul>
 		 * @param $event
 		 */
 		public function Blur($event = null) {
 			$this->CallJqUiMethod("blur", $event);
 		}
 		/**
-		 * <div>Closes the currently active
-		 * sub-menu.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the menu to
-		 * collapse.</div></li></ul>
+		 * Closes the currently active sub-menu.<ul><li><strong>event</strong> Type:
+		 * <a>Event</a> What triggered the menu to collapse.</li></ul>
 		 * @param $event
 		 */
 		public function Collapse($event = null) {
 			$this->CallJqUiMethod("collapse", $event);
 		}
 		/**
-		 * <div>Closes all open
-		 * sub-menus.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the menu to collapse.</div></li>
-		 * <li><div><strong>all</strong></div> <div>Type: <a>Boolean</a></div>
-		 * <div>Indicates whether all sub-menus should be closed or only sub-menus
-		 * below and including the menu that is or contains the target of the
-		 * triggering event.</div></li></ul>
+		 * Closes all open sub-menus.<ul><li><strong>event</strong> Type: <a>Event</a>
+		 * What triggered the menu to collapse.</li> <li><strong>all</strong> Type:
+		 * <a>Boolean</a> Indicates whether all sub-menus should be closed or only
+		 * sub-menus below and including the menu that is or contains the target of
+		 * the triggering event.</li></ul>
 		 * @param $event
 		 * @param $all
 		 */
@@ -211,43 +202,42 @@
 			$this->CallJqUiMethod("collapseAll", $event, $all);
 		}
 		/**
-		 * <div>Removes the menu functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the menu functionality completely. This will return the element
+		 * back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the menu.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Disables the menu.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the menu.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Enables the menu.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Opens the sub-menu below the currently active item, if one
-		 * exists.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the menu to expand.</div></li></ul>
+		 * Opens the sub-menu below the currently active item, if one
+		 * exists.<ul><li><strong>event</strong> Type: <a>Event</a> What triggered the
+		 * menu to expand.</li></ul>
 		 * @param $event
 		 */
 		public function Expand($event = null) {
 			$this->CallJqUiMethod("expand", $event);
 		}
 		/**
-		 * <div>Activates a particular menu item, begins opening any sub-menu if
-		 * present and triggers the menu's <a><code>focus</code></a>
-		 * event.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the menu item to gain
-		 * focus.</div></li> <li><div><strong>item</strong></div> <div>Type:
-		 * <a>jQuery</a></div> <div>The menu item to focus/activate.</div></li></ul>
+		 * Activates a particular menu item, begins opening any sub-menu if present
+		 * and triggers the menu's <a><code>focus</code></a>
+		 * event.<ul><li><strong>event</strong> Type: <a>Event</a> What triggered the
+		 * menu item to gain focus.</li> <li><strong>item</strong> Type: <a>jQuery</a>
+		 * The menu item to focus/activate.</li></ul>
 		 * @param $item
 		 * @param $event
 		 */
@@ -255,64 +245,60 @@
 			$this->CallJqUiMethod("focus", $item, $event);
 		}
 		/**
-		 * <div>Returns a boolean value stating whether or not the currently active
-		 * item is the first item in the menu.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Returns a boolean value stating whether or not the currently active item is
+		 * the first item in the menu.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function IsFirstItem() {
 			$this->CallJqUiMethod("isFirstItem");
 		}
 		/**
-		 * <div>Returns a boolean value stating whether or not the currently active
-		 * item is the last item in the menu.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Returns a boolean value stating whether or not the currently active item is
+		 * the last item in the menu.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function IsLastItem() {
 			$this->CallJqUiMethod("isLastItem");
 		}
 		/**
-		 * <div>Moves active state to next menu
-		 * item.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the focus to move.</div></li></ul>
+		 * Moves active state to next menu item.<ul><li><strong>event</strong> Type:
+		 * <a>Event</a> What triggered the focus to move.</li></ul>
 		 * @param $event
 		 */
 		public function Next($event = null) {
 			$this->CallJqUiMethod("next", $event);
 		}
 		/**
-		 * <div>Moves active state to first menu item below the bottom of a scrollable
-		 * menu or the last item if not
-		 * scrollable.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the focus to move.</div></li></ul>
+		 * Moves active state to first menu item below the bottom of a scrollable menu
+		 * or the last item if not scrollable.<ul><li><strong>event</strong> Type:
+		 * <a>Event</a> What triggered the focus to move.</li></ul>
 		 * @param $event
 		 */
 		public function NextPage($event = null) {
 			$this->CallJqUiMethod("nextPage", $event);
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * menu options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current menu
+		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the menu option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the menu option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -320,49 +306,45 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * menu.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the menu.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Moves active state to previous menu
-		 * item.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the focus to move.</div></li></ul>
+		 * Moves active state to previous menu item.<ul><li><strong>event</strong>
+		 * Type: <a>Event</a> What triggered the focus to move.</li></ul>
 		 * @param $event
 		 */
 		public function Previous($event = null) {
 			$this->CallJqUiMethod("previous", $event);
 		}
 		/**
-		 * <div>Moves active state to first menu item above the top of a scrollable
-		 * menu or the first item if not
-		 * scrollable.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the focus to move.</div></li></ul>
+		 * Moves active state to first menu item above the top of a scrollable menu or
+		 * the first item if not scrollable.<ul><li><strong>event</strong> Type:
+		 * <a>Event</a> What triggered the focus to move.</li></ul>
 		 * @param $event
 		 */
 		public function PreviousPage($event = null) {
 			$this->CallJqUiMethod("previousPage", $event);
 		}
 		/**
-		 * <div>Initializes sub-menus and menu items that have not already been
+		 * Initializes sub-menus and menu items that have not already been
 		 * initialized. New menu items, including sub-menus can be added to the menu
 		 * or all of the contents of the menu can be replaced and then initialized
-		 * with the <code>refresh()</code> method.</div><ul><li><div>This method does
-		 * not accept any arguments.</div></li></ul>
+		 * with the <code>refresh()</code> method.<ul><li>This method does not accept
+		 * any arguments.</li></ul>
 		 */
 		public function Refresh() {
 			$this->CallJqUiMethod("refresh");
 		}
 		/**
-		 * <div>Selects the currently active menu item, collapses all sub-menus and
+		 * Selects the currently active menu item, collapses all sub-menus and
 		 * triggers the menu's <a><code>select</code></a>
-		 * event.</div><ul><li><div><strong>event</strong></div> <div>Type:
-		 * <a>Event</a></div> <div>What triggered the selection.</div></li></ul>
+		 * event.<ul><li><strong>event</strong> Type: <a>Event</a> What triggered the
+		 * selection.</li></ul>
 		 * @param $event
 		 */
 		public function Select($event = null) {

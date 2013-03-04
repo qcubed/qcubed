@@ -28,99 +28,83 @@
 	
 	
 	/**
-	 * <div>Triggered when an accepted draggable starts dragging. This can be
-	 * 		useful if you want to make the droppable "light up" when it can be dropped
-	 * 		on.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>draggable</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>A jQuery object representing the draggable
-	 * 		element.</div></li> <li><div><strong>helper</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>A jQuery object representing the helper that is
-	 * 		being dragged.</div></li> <li><div><strong>position</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>Current CSS position of the draggable
-	 * 		helper as <code>{ top, left }</code> object.</div></li>
-	 * 		<li><div><strong>offset</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div>Current offset position of the draggable helper as <code>{ top, left
-	 * 		}</code> object.</div></li></ul></li></ul>
+	 * Triggered when an accepted draggable starts dragging. This can be useful if
+	 * 		you want to make the droppable "light up" when it can be dropped
+	 * 		on.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>draggable</strong> Type: <a>jQuery</a> A jQuery object
+	 * 		representing the draggable element.</li> <li><strong>helper</strong> Type:
+	 * 		<a>jQuery</a> A jQuery object representing the helper that is being
+	 * 		dragged.</li> <li><strong>position</strong> Type: <a>Object</a> Current CSS
+	 * 		position of the draggable helper as <code>{ top, left }</code> object.</li>
+	 * 		<li><strong>offset</strong> Type: <a>Object</a> Current offset position of
+	 * 		the draggable helper as <code>{ top, left }</code>
+	 * 		object.</li></ul></li></ul>
 	 */
 	class QDroppable_ActivateEvent extends QJqUiEvent {
 		const EventName = 'dropactivate';
 	}
 	/**
-	 * <div>Triggered when the droppable is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the droppable is created.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul>
 	 */
 	class QDroppable_CreateEvent extends QJqUiEvent {
 		const EventName = 'dropcreate';
 	}
 	/**
-	 * <div>Triggered when an accepted draggable stops
-	 * 		dragging.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>draggable</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>A jQuery object representing the draggable
-	 * 		element.</div></li> <li><div><strong>helper</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>A jQuery object representing the helper that is
-	 * 		being dragged.</div></li> <li><div><strong>position</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>Current CSS position of the draggable
-	 * 		helper as <code>{ top, left }</code> object.</div></li>
-	 * 		<li><div><strong>offset</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div>Current offset position of the draggable helper as <code>{ top, left
-	 * 		}</code> object.</div></li></ul></li></ul>
+	 * Triggered when an accepted draggable stops
+	 * 		dragging.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>draggable</strong> Type: <a>jQuery</a> A jQuery object
+	 * 		representing the draggable element.</li> <li><strong>helper</strong> Type:
+	 * 		<a>jQuery</a> A jQuery object representing the helper that is being
+	 * 		dragged.</li> <li><strong>position</strong> Type: <a>Object</a> Current CSS
+	 * 		position of the draggable helper as <code>{ top, left }</code> object.</li>
+	 * 		<li><strong>offset</strong> Type: <a>Object</a> Current offset position of
+	 * 		the draggable helper as <code>{ top, left }</code>
+	 * 		object.</li></ul></li></ul>
 	 */
 	class QDroppable_DeactivateEvent extends QJqUiEvent {
 		const EventName = 'dropdeactivate';
 	}
 	/**
-	 * <div>Triggered when an accepted draggable is dropped on the droppable
-	 * 		(based on the<a><code>tolerance</code></a>
-	 * 		option).</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>draggable</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>A jQuery object representing the draggable
-	 * 		element.</div></li> <li><div><strong>helper</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>A jQuery object representing the helper that is
-	 * 		being dragged.</div></li> <li><div><strong>position</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>Current CSS position of the draggable
-	 * 		helper as <code>{ top, left }</code> object.</div></li>
-	 * 		<li><div><strong>offset</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div>Current offset position of the draggable helper as <code>{ top, left
-	 * 		}</code> object.</div></li></ul></li></ul>
+	 * Triggered when an accepted draggable is dropped on the droppable (based on
+	 * 		the<a><code>tolerance</code></a> option).<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>draggable</strong> Type: <a>jQuery</a> A jQuery object
+	 * 		representing the draggable element.</li> <li><strong>helper</strong> Type:
+	 * 		<a>jQuery</a> A jQuery object representing the helper that is being
+	 * 		dragged.</li> <li><strong>position</strong> Type: <a>Object</a> Current CSS
+	 * 		position of the draggable helper as <code>{ top, left }</code> object.</li>
+	 * 		<li><strong>offset</strong> Type: <a>Object</a> Current offset position of
+	 * 		the draggable helper as <code>{ top, left }</code>
+	 * 		object.</li></ul></li></ul>
 	 */
 	class QDroppable_DropEvent extends QJqUiEvent {
 		const EventName = 'drop';
 	}
 	/**
-	 * <div>Triggered when an accepted draggable is dragged out of the droppable
-	 * 		(based on the<a><code>tolerance</code></a>
-	 * 		option).</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when an accepted draggable is dragged out of the droppable (based
+	 * 		on the<a><code>tolerance</code></a> option).<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul>
 	 */
 	class QDroppable_OutEvent extends QJqUiEvent {
 		const EventName = 'dropout';
 	}
 	/**
-	 * <div>Triggered when an accepted draggable is dragged over the droppable
-	 * 		(based on the<a><code>tolerance</code></a>
-	 * 		option).</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>draggable</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>A jQuery object representing the draggable
-	 * 		element.</div></li> <li><div><strong>helper</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>A jQuery object representing the helper that is
-	 * 		being dragged.</div></li> <li><div><strong>position</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>Current CSS position of the draggable
-	 * 		helper as <code>{ top, left }</code> object.</div></li>
-	 * 		<li><div><strong>offset</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div>Current offset position of the draggable helper as <code>{ top, left
-	 * 		}</code> object.</div></li></ul></li></ul>
+	 * Triggered when an accepted draggable is dragged over the droppable (based
+	 * 		on the<a><code>tolerance</code></a> option).<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>draggable</strong> Type: <a>jQuery</a> A jQuery object
+	 * 		representing the draggable element.</li> <li><strong>helper</strong> Type:
+	 * 		<a>jQuery</a> A jQuery object representing the helper that is being
+	 * 		dragged.</li> <li><strong>position</strong> Type: <a>Object</a> Current CSS
+	 * 		position of the draggable helper as <code>{ top, left }</code> object.</li>
+	 * 		<li><strong>offset</strong> Type: <a>Object</a> Current offset position of
+	 * 		the draggable helper as <code>{ top, left }</code>
+	 * 		object.</li></ul></li></ul>
 	 */
 	class QDroppable_OverEvent extends QJqUiEvent {
 		const EventName = 'dropover';
@@ -139,36 +123,34 @@
 	 * 
 	 * @see QDroppableBase
 	 * @package Controls\Base
-	 * @property mixed $Accept <div>Controls which draggable elements are accepted by the
-	 * 		droppable.</div><strong>Multiple types
+	 * @property mixed $Accept Controls which draggable elements are accepted by the
+	 * 		droppable.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Selector</strong>: A selector indicating
 	 * 		which draggable elements are accepted.</li> <li><strong>Function</strong>:
 	 * 		A function that will be called for each draggable on the page (passed as
 	 * 		the first argument to the function). The function must return
 	 * 		<code>true</code> if the draggable should be accepted.</li></ul>
-	 * @property string $ActiveClass <div>If specified, the class will be added to the droppable while an
-	 * 		acceptable draggable is being dragged.</div>
-	 * @property boolean $AddClasses <div>If set to <code>false</code>, will prevent the
-	 * 		<code>ui-droppable</code> class from being added. This may be desired as a
-	 * 		performance optimization when calling <code>.droppable()</code> init on
-	 * 		hundreds of elements.</div>
-	 * @property boolean $Disabled <div>Disables the droppable if set to <code>true</code>.</div>
-	 * @property boolean $Greedy <div>By default, when an element is dropped on nested droppables, each
-	 * 		droppable will receive the element. However, by setting this option to
-	 * 		<code>true</code>, any parent droppables will not receive the
-	 * 		element.</div>
-	 * @property string $HoverClass <div>If specified, the class will be added to the droppable while an
-	 * 		acceptable draggable is being hovered over the droppable.</div>
-	 * @property string $Scope <div>Used to group sets of draggable and droppable items, in addition to
-	 * 		the <a><code>accept</code></a> option. A draggable with the same scope
-	 * 		value as a droppable will be accepted.</div>
-	 * @property string $Tolerance <div>Specifies which mode to use for testing whether a draggable is
-	 * 		hovering over a droppable. Possible values: 				<ul><li><code>"fit"</code>:
+	 * @property string $ActiveClass If specified, the class will be added to the droppable while an acceptable
+	 * 		draggable is being dragged.
+	 * @property boolean $AddClasses If set to <code>false</code>, will prevent the <code>ui-droppable</code>
+	 * 		class from being added. This may be desired as a performance optimization
+	 * 		when calling <code>.droppable()</code> init on hundreds of elements.
+	 * @property boolean $Disabled Disables the droppable if set to <code>true</code>.
+	 * @property boolean $Greedy By default, when an element is dropped on nested droppables, each droppable
+	 * 		will receive the element. However, by setting this option to
+	 * 		<code>true</code>, any parent droppables will not receive the element.
+	 * @property string $HoverClass If specified, the class will be added to the droppable while an acceptable
+	 * 		draggable is being hovered over the droppable.
+	 * @property string $Scope Used to group sets of draggable and droppable items, in addition to the
+	 * 		<a><code>accept</code></a> option. A draggable with the same scope value as
+	 * 		a droppable will be accepted.
+	 * @property string $Tolerance Specifies which mode to use for testing whether a draggable is hovering
+	 * 		over a droppable. Possible values: 				<ul><li><code>"fit"</code>:
 	 * 		Draggable overlaps the droppable entirely.</li>
 	 * 							<li><code>"intersect"</code>: Draggable overlaps the droppable at
 	 * 		least 50% in both directions.</li> 					<li><code>"pointer"</code>: Mouse
 	 * 		pointer overlaps the droppable.</li> 					<li><code>"touch"</code>:
-	 * 		Draggable overlaps the droppable any amount.</li></ul></div>
+	 * 		Draggable overlaps the droppable any amount.</li></ul>
 	 */
 
 	abstract class QDroppableGen extends QControl	{
@@ -255,51 +237,50 @@
 
 
 		/**
-		 * <div>Removes the droppable functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the droppable functionality completely. This will return the
+		 * element back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the droppable.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Disables the droppable.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the droppable.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Enables the droppable.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * droppable options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current
+		 * droppable options hash.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the droppable option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the droppable option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -307,10 +288,8 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * droppable.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the droppable.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
