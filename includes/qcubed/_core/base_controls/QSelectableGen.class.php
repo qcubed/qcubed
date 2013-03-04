@@ -28,76 +28,65 @@
 	
 	
 	/**
-	 * <div>Triggered when the selectable is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the selectable is created.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul>
 	 */
 	class QSelectable_CreateEvent extends QJqUiEvent {
 		const EventName = 'selectablecreate';
 	}
 	/**
-	 * <div>Triggered at the end of the select operation, on each element added to
-	 * 		the selection.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>selected</strong></div> <div>Type:
-	 * 		<a>Element</a></div> <div>The selectable item that has been
-	 * 		selected.</div></li></ul></li></ul>
+	 * Triggered at the end of the select operation, on each element added to the
+	 * 		selection.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>selected</strong> Type: <a>Element</a> The selectable item
+	 * 		that has been selected.</li></ul></li></ul>
 	 */
 	class QSelectable_SelectedEvent extends QJqUiEvent {
 		const EventName = 'selectableselected';
 	}
 	/**
-	 * <div>Triggered during the select operation, on each element added to the
-	 * 		selection.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>selecting</strong></div> <div>Type:
-	 * 		<a>Element</a></div> <div>The current selectable item being
-	 * 		selected.</div></li></ul></li></ul>
+	 * Triggered during the select operation, on each element added to the
+	 * 		selection.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>selecting</strong> Type: <a>Element</a> The current
+	 * 		selectable item being selected.</li></ul></li></ul>
 	 */
 	class QSelectable_SelectingEvent extends QJqUiEvent {
 		const EventName = 'selectableselecting';
 	}
 	/**
-	 * <div>Triggered at the beginning of the select
-	 * 		operation.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered at the beginning of the select
+	 * 		operation.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QSelectable_StartEvent extends QJqUiEvent {
 		const EventName = 'selectablestart';
 	}
 	/**
-	 * <div>Triggered at the end of the select
-	 * 		operation.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered at the end of the select operation.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul>
 	 */
 	class QSelectable_StopEvent extends QJqUiEvent {
 		const EventName = 'selectablestop';
 	}
 	/**
-	 * <div>Triggered at the end of the select operation, on each element removed
-	 * 		from the selection.</div><ul><li><div><strong>event</strong></div>
-	 * 		<div>Type: <a>Event</a></div> <div></div></li>
-	 * 		<li><div><strong>ui</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div></div> <ul><li><div><strong>unselected</strong></div> <div>Type:
-	 * 		<a>Element</a></div> <div>The selectable item that has been
-	 * 		unselected.</div></li></ul></li></ul>
+	 * Triggered at the end of the select operation, on each element removed from
+	 * 		the selection.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>unselected</strong> Type: <a>Element</a> The selectable
+	 * 		item that has been unselected.</li></ul></li></ul>
 	 */
 	class QSelectable_UnselectedEvent extends QJqUiEvent {
 		const EventName = 'selectableunselected';
 	}
 	/**
-	 * <div>Triggered during the select operation, on each element removed from
-	 * 		the selection.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>unselecting</strong></div> <div>Type:
-	 * 		<a>Element</a></div> <div>The current selectable item being
-	 * 		unselected.</div></li></ul></li></ul>
+	 * Triggered during the select operation, on each element removed from the
+	 * 		selection.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>unselecting</strong> Type: <a>Element</a> The current
+	 * 		selectable item being unselected.</li></ul></li></ul>
 	 */
 	class QSelectable_UnselectingEvent extends QJqUiEvent {
 		const EventName = 'selectableunselecting';
@@ -116,26 +105,23 @@
 	 * 
 	 * @see QSelectableBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo <div>Which element the selection helper (the lasso) should be appended
-	 * 		to.</div>
-	 * @property boolean $AutoRefresh <div>This determines whether to refresh (recalculate) the position and size
-	 * 		of each selectee at the beginning of each select operation. If you have
-	 * 		many items, you may want to set this to false and call the
-	 * 		<a><code>refresh()</code></a> method manually.</div>
-	 * @property mixed $Cancel <div>Prevents selecting if you start on elements matching the
-	 * 		selector.</div>
-	 * @property integer $Delay <div>Time in milliseconds to define when the selecting should start. This
-	 * 		helps prevent unwanted selections when clicking on an element.</div>
-	 * @property boolean $Disabled <div>Disables the selectable if set to <code>true</code>.</div>
-	 * @property integer $Distance <div>Tolerance, in pixels, for when selecting should start. If specified,
+	 * @property mixed $AppendTo Which element the selection helper (the lasso) should be appended to.
+	 * @property boolean $AutoRefresh This determines whether to refresh (recalculate) the position and size of
+	 * 		each selectee at the beginning of each select operation. If you have many
+	 * 		items, you may want to set this to false and call the
+	 * 		<a><code>refresh()</code></a> method manually.
+	 * @property mixed $Cancel Prevents selecting if you start on elements matching the selector.
+	 * @property integer $Delay Time in milliseconds to define when the selecting should start. This helps
+	 * 		prevent unwanted selections when clicking on an element.
+	 * @property boolean $Disabled Disables the selectable if set to <code>true</code>.
+	 * @property integer $Distance Tolerance, in pixels, for when selecting should start. If specified,
 	 * 		selecting will not start until the mouse has been dragged beyond the
-	 * 		specified distance.</div>
-	 * @property mixed $Filter <div>The matching child elements will be made selectees (able to be
-	 * 		selected).</div>
-	 * @property string $Tolerance <div>Specifies which mode to use for testing whether the lasso should
-	 * 		select an item. Possible values: 				<ul><li><code>"fit"</code>: Lasso
-	 * 		overlaps the item entirely.</li> 					<li><code>"touch"</code>: Lasso
-	 * 		overlaps the item by any amount.</li></ul></div>
+	 * 		specified distance.
+	 * @property mixed $Filter The matching child elements will be made selectees (able to be selected).
+	 * @property string $Tolerance Specifies which mode to use for testing whether the lasso should select an
+	 * 		item. Possible values: 				<ul><li><code>"fit"</code>: Lasso overlaps the
+	 * 		item entirely.</li> 					<li><code>"touch"</code>: Lasso overlaps the item
+	 * 		by any amount.</li></ul>
 	 */
 
 	class QSelectableGen extends QPanel	{
@@ -222,51 +208,50 @@
 
 
 		/**
-		 * <div>Removes the selectable functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the selectable functionality completely. This will return the
+		 * element back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the selectable.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Disables the selectable.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the selectable.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Enables the selectable.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * selectable options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current
+		 * selectable options hash.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the selectable option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the selectable option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -274,21 +259,20 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * selectable.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the
+		 * selectable.<ul><li><strong>options</strong> Type: <a>Object</a> A map of
+		 * option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Refresh the position and size of each selectee element. This method
-		 * can be used to manually recalculate the position and size of each selectee
-		 * when the <a><code>autoRefresh</code></a> option is set to
-		 * <code>false</code>.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Refresh the position and size of each selectee element. This method can be
+		 * used to manually recalculate the position and size of each selectee when
+		 * the <a><code>autoRefresh</code></a> option is set to
+		 * <code>false</code>.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Refresh() {
 			$this->CallJqUiMethod("refresh");

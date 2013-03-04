@@ -28,10 +28,8 @@
 	
 	
 	/**
-	 * <div>Triggered when the button is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the button is created.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QJqButton_CreateEvent extends QJqUiEvent {
 		const EventName = 'buttoncreate';
@@ -50,23 +48,23 @@
 	 * 
 	 * @see QJqButtonBase
 	 * @package Controls\Base
-	 * @property boolean $Disabled <div>Disables the button if set to <code>true</code>.</div>
-	 * @property mixed $Icons <div>Icons to display, with or without text (see <a><code>text</code></a>
+	 * @property boolean $Disabled Disables the button if set to <code>true</code>.
+	 * @property mixed $Icons Icons to display, with or without text (see <a><code>text</code></a>
 	 * 		option). By default, the primary icon is displayed on the left of the label
 	 * 		text and the secondary is displayed on the right. The positioning can be
 	 * 		controlled via CSS. The value for the <code>primary</code> and
 	 * 		<code>secondary</code> properties must be a class name, e.g.,
 	 * 		<code>"ui-icon-gear"</code>. For using only one icon: <code>icons: {
 	 * 		primary: "ui-icon-locked" }</code>. For using two icons: <code>icons: {
-	 * 		primary: "ui-icon-gear", secondary: "ui-icon-triangle-1-s" }</code>.</div>
-	 * @property string $Label <div>Text to show in the button. When not specified (<code>null</code>),
-	 * 		the element's HTML content is used, or its <code>value</code> attribute if
-	 * 		the element is an input element of type submit or reset, or the HTML
-	 * 		content of the associated label element if the element is an input of type
-	 * 		radio or checkbox.</div>
-	 * @property boolean $JqText <div>Whether to show the label. When set to <code>false</code> no text will
-	 * 		be displayed, but the <a><code>icons</code></a> option must be enabled,
-	 * 		otherwise the <code>text</code> option will be ignored.</div>
+	 * 		primary: "ui-icon-gear", secondary: "ui-icon-triangle-1-s" }</code>.
+	 * @property string $Label Text to show in the button. When not specified (<code>null</code>), the
+	 * 		element's HTML content is used, or its <code>value</code> attribute if the
+	 * 		element is an input element of type submit or reset, or the HTML content of
+	 * 		the associated label element if the element is an input of type radio or
+	 * 		checkbox.
+	 * @property boolean $JqText Whether to show the label. When set to <code>false</code> no text will be
+	 * 		displayed, but the <a><code>icons</code></a> option must be enabled,
+	 * 		otherwise the <code>text</code> option will be ignored.
 	 */
 
 	class QJqButtonGen extends QButton	{
@@ -141,51 +139,49 @@
 
 
 		/**
-		 * <div>Removes the button functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the button functionality completely. This will return the element
+		 * back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the button.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Disables the button.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the button.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Enables the button.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * button options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current button
+		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the button option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the button option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -193,20 +189,18 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * button.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the button.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Refreshes the visual state of the button. Useful for updating button
-		 * state after the native element's checked or disabled state is changed
-		 * programmatically.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Refreshes the visual state of the button. Useful for updating button state
+		 * after the native element's checked or disabled state is changed
+		 * programmatically.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Refresh() {
 			$this->CallJqUiMethod("refresh");
