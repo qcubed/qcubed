@@ -28,69 +28,56 @@
 	
 	
 	/**
-	 * <div>Triggered after the user slides a handle, if the value has changed; or
-	 * 		if the value is changed programmatically via the <a><code>value</code></a>
-	 * 		method.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>handle</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the handle that was changed.</div></li>
-	 * 		<li><div><strong>value</strong></div> <div>Type: <a>Number</a></div>
-	 * 		<div>The current value of the slider.</div></li></ul></li></ul>
+	 * Triggered after the user slides a handle, if the value has changed; or if
+	 * 		the value is changed programmatically via the <a><code>value</code></a>
+	 * 		method.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>handle</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the handle that was changed.</li> <li><strong>value</strong>
+	 * 		Type: <a>Number</a> The current value of the slider.</li></ul></li></ul>
 	 */
 	class QSlider_ChangeEvent extends QJqUiEvent {
 		const EventName = 'slidechange';
 	}
 	/**
-	 * <div>Triggered when the slider is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the slider is created.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QSlider_CreateEvent extends QJqUiEvent {
 		const EventName = 'slidecreate';
 	}
 	/**
-	 * <div>Triggered on every mouse move during slide. The value provided in the
-	 * 		event as <code>ui.value</code> represents the value that the handle will
-	 * 		have as a result of the current movement. Canceling the event will prevent
-	 * 		the handle from moving and the handle will continue to have its previous
-	 * 		value.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>handle</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the handle being moved.</div></li>
-	 * 		<li><div><strong>value</strong></div> <div>Type: <a>Number</a></div>
-	 * 		<div>The value that the handle will move to if the event is not
-	 * 		canceled.</div></li> <li><div><strong>values</strong></div> <div>Type:
-	 * 		<a>Array</a></div> <div>An array of the current values of a multi-handled
-	 * 		slider.</div></li></ul></li></ul>
+	 * Triggered on every mouse move during slide. The value provided in the event
+	 * 		as <code>ui.value</code> represents the value that the handle will have as
+	 * 		a result of the current movement. Canceling the event will prevent the
+	 * 		handle from moving and the handle will continue to have its previous
+	 * 		value.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>handle</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the handle being moved.</li> <li><strong>value</strong> Type:
+	 * 		<a>Number</a> The value that the handle will move to if the event is not
+	 * 		canceled.</li> <li><strong>values</strong> Type: <a>Array</a> An array of
+	 * 		the current values of a multi-handled slider.</li></ul></li></ul>
 	 */
 	class QSlider_SlideEvent extends QJqUiEvent {
 		const EventName = 'slide';
 	}
 	/**
-	 * <div>Triggered when the user starts
-	 * 		sliding.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>handle</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the handle being moved.</div></li>
-	 * 		<li><div><strong>value</strong></div> <div>Type: <a>Number</a></div>
-	 * 		<div>The current value of the slider.</div></li></ul></li></ul>
+	 * Triggered when the user starts sliding.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>handle</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the handle being moved.</li> <li><strong>value</strong> Type:
+	 * 		<a>Number</a> The current value of the slider.</li></ul></li></ul>
 	 */
 	class QSlider_StartEvent extends QJqUiEvent {
 		const EventName = 'slidestart';
 	}
 	/**
-	 * <div>Triggered after the user slides a
-	 * 		handle.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>handle</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the handle that was moved.</div></li>
-	 * 		<li><div><strong>value</strong></div> <div>Type: <a>Number</a></div>
-	 * 		<div>The current value of the slider.</div></li></ul></li></ul>
+	 * Triggered after the user slides a handle.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>handle</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the handle that was moved.</li> <li><strong>value</strong>
+	 * 		Type: <a>Number</a> The current value of the slider.</li></ul></li></ul>
 	 */
 	class QSlider_StopEvent extends QJqUiEvent {
 		const EventName = 'slidestop';
@@ -109,37 +96,35 @@
 	 * 
 	 * @see QSliderBase
 	 * @package Controls\Base
-	 * @property mixed $Animate <div>Whether to slide the handle smoothly when the user clicks on the
-	 * 		slider track. Also accepts any valid <a>animation
-	 * 		duration</a>.</div><strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Boolean</strong>: When set to
+	 * @property mixed $Animate Whether to slide the handle smoothly when the user clicks on the slider
+	 * 		track. Also accepts any valid <a>animation duration</a>.<strong>Multiple
+	 * 		types supported:</strong><ul><li><strong>Boolean</strong>: When set to
 	 * 		<code>true</code>, the handle will animate with the default duration.</li>
 	 * 		<li><strong>String</strong>: The name of a speed, such as
 	 * 		<code>"fast"</code> or <code>"slow"</code>.</li>
 	 * 		<li><strong>Number</strong>: The duration of the animation, in
 	 * 		milliseconds.</li></ul>
-	 * @property boolean $Disabled <div>Disables the slider if set to <code>true</code>.</div>
-	 * @property integer $Max <div>The maximum value of the slider.</div>
-	 * @property integer $Min <div>The minimum value of the slider.</div>
-	 * @property string $Orientation <div>Determines whether the slider handles move horizontally (min on left,
-	 * 		max on right) or vertically (min on bottom, max on top). Possible values:
-	 * 		<code>"horizontal"</code>, <code>"vertical"</code>.</div>
-	 * @property mixed $Range <div>Whether the slider represents a range.</div><strong>Multiple types
+	 * @property boolean $Disabled Disables the slider if set to <code>true</code>.
+	 * @property integer $Max The maximum value of the slider.
+	 * @property integer $Min The minimum value of the slider.
+	 * @property string $Orientation Determines whether the slider handles move horizontally (min on left, max
+	 * 		on right) or vertically (min on bottom, max on top). Possible values:
+	 * 		<code>"horizontal"</code>, <code>"vertical"</code>.
+	 * @property mixed $Range Whether the slider represents a range.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: If set to
 	 * 		<code>true</code>, the slider will detect if you have two handles and
-	 * 		create a stylable range element between these two.</li>
+	 * 		create a styleable range element between these two.</li>
 	 * 		<li><strong>String</strong>: Either <code>"min"</code> or
 	 * 		<code>"max"</code>. A min range goes from the slider min to one handle. A
 	 * 		max range goes from one handle to the slider max.</li></ul>
-	 * @property integer $Step <div>Determines the size or amount of each interval or step the slider
-	 * 		takes between the min and max. The full specified value range of the slider
-	 * 		(max - min) should be evenly divisible by the step.</div>
-	 * @property integer $Value <div>Determines the value of the slider, if there's only one handle. If
-	 * 		there is more than one handle, determines the value of the first
-	 * 		handle.</div>
-	 * @property array $Values <div>This option can be used to specify multiple handles. If the
+	 * @property integer $Step Determines the size or amount of each interval or step the slider takes
+	 * 		between the min and max. The full specified value range of the slider (max
+	 * 		- min) should be evenly divisible by the step.
+	 * @property integer $Value Determines the value of the slider, if there's only one handle. If there is
+	 * 		more than one handle, determines the value of the first handle.
+	 * @property array $Values This option can be used to specify multiple handles. If the
 	 * 		<a><code>range</code></a> option is set to <code>true</code>, the length of
-	 * 		<code>values</code> should be 2.</div>
+	 * 		<code>values</code> should be 2.
 	 */
 
 	class QSliderGen extends QPanel	{
@@ -229,51 +214,49 @@
 
 
 		/**
-		 * <div>Removes the slider functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the slider functionality completely. This will return the element
+		 * back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the slider.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Disables the slider.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the slider.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Enables the slider.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * slider options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current slider
+		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the slider option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the slider option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -281,54 +264,47 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * slider.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the slider.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Get the value of the slider.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Get the value of the slider.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Value() {
 			$this->CallJqUiMethod("value");
 		}
 		/**
-		 * <div>Set the value of the
-		 * slider.</div><ul><li><div><strong>value</strong></div> <div>Type:
-		 * <a>Number</a></div> <div>The value to set.</div></li></ul>
+		 * Set the value of the slider.<ul><li><strong>value</strong> Type:
+		 * <a>Number</a> The value to set.</li></ul>
 		 * @param $value
 		 */
 		public function Value1($value) {
 			$this->CallJqUiMethod("value", $value);
 		}
 		/**
-		 * <div>Get the value for all handles.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Get the value for all handles.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Values() {
 			$this->CallJqUiMethod("values");
 		}
 		/**
-		 * <div>Get the value for the specified
-		 * handle.</div><ul><li><div><strong>index</strong></div> <div>Type:
-		 * <a>Integer</a></div> <div>The zero-based index of the
-		 * handle.</div></li></ul>
+		 * Get the value for the specified handle.<ul><li><strong>index</strong> Type:
+		 * <a>Integer</a> The zero-based index of the handle.</li></ul>
 		 * @param $index
 		 */
 		public function Values1($index) {
 			$this->CallJqUiMethod("values", $index);
 		}
 		/**
-		 * <div>Set the value for the specified
-		 * handle.</div><ul><li><div><strong>index</strong></div> <div>Type:
-		 * <a>Integer</a></div> <div>The zero-based index of the handle.</div></li>
-		 * <li><div><strong>value</strong></div> <div>Type: <a>Number</a></div>
-		 * <div>The value to set.</div></li></ul>
+		 * Set the value for the specified handle.<ul><li><strong>index</strong> Type:
+		 * <a>Integer</a> The zero-based index of the handle.</li>
+		 * <li><strong>value</strong> Type: <a>Number</a> The value to set.</li></ul>
 		 * @param $index
 		 * @param $value
 		 */
@@ -336,9 +312,8 @@
 			$this->CallJqUiMethod("values", $index, $value);
 		}
 		/**
-		 * <div>Set the value for all
-		 * handles.</div><ul><li><div><strong>values</strong></div> <div>Type:
-		 * <a>Array</a></div> <div>The values to set.</div></li></ul>
+		 * Set the value for all handles.<ul><li><strong>values</strong> Type:
+		 * <a>Array</a> The values to set.</li></ul>
 		 * @param $values
 		 */
 		public function Values3($values) {
