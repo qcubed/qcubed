@@ -1,24 +1,13 @@
 <?php
 	/**
-	 * QDialog
-	 * 
+	 * Contains the QDialog class.
 	 * Put your customizations of the standard behavior here.
-	 * 
-	 * @package Controls   
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * @package Controls
 	 */
-	
-    /**
-	 * @package Controls   
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+
+	/**
+	 * @package Controls
 	 */
-	class QDialog extends QDialogBase
-	{
+	class QDialog extends QDialogBase {
 	}
 ?>

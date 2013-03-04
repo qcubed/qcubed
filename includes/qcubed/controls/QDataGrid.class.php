@@ -1,24 +1,18 @@
 <?php
 	/**
-     * QDataGrid
-     * 
+	 * QDataGrid
 	 * @package Controls
+	 * @filesource
 	 */
-     
-     
+
 	/**
 	 * QDataGrid
-	 * 
-	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * @package Controls
 	 */
-	class QDataGrid extends QDataGridBase  {
-	    /** @type int|0 Set the space between the cells */
+	class QDataGrid extends QDataGridBase {
+		/** @type int|0 Set the space between the cells */
 		protected $intCellSpacing = 0;
-        /** @type int|0 Set the space between the cell wall and the cell content */
+		/** @type int|0 Set the space between the cell wall and the cell content */
 		protected $intCellPadding = 0;
 
 		///////////////////////////
@@ -26,13 +20,14 @@
 		///////////////////////////
 
 		// Feel free to specify global display preferences/defaults for all QDataGrid controls
-        
+
 		/**
-		 * QDataGrid::__construct()
-		 * 
-		 * @param mixed $objParentObject The Datagrid's parent
-		 * @param string $strControlId Control ID
-		 * @return void
+		 * The constructor function.
+		 * @param mixed  $objParentObject The Datagrid's parent
+		 * @param string $strControlId    Control ID
+		 *
+		 * @throws QCallerException
+		 * @return \QDataGrid
 		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			try {

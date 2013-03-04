@@ -1,14 +1,10 @@
 <?php    
 	/**
-	 * QDatePicker
-	 * 
+	 * Constains the QDatePicker class.
 	 * Put your customizations of the standard behavior here.
 	 * 
-	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * @package Controls
+	 * @filesource
 	 */
      
 	/**
@@ -18,7 +14,6 @@
 	 * @version 2011
 	 * @access public
 	 */
-	class QDatepicker extends QDatepickerBase
-	{
+	class QDatepicker extends QDatepickerBase {
 	}
 ?>
