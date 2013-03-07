@@ -1106,7 +1106,7 @@
 			if (strpos($strFile, "http") === 0)
 				return $strFile;
 			if (strpos($strFile, "/") === 0)
-				return __VIRTUAL_DIRECTORY__ . $strFile;
+				return __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . $strFile;
 			return __VIRTUAL_DIRECTORY__ . __JS_ASSETS__ . '/' . $strFile;
 		}
 
@@ -1114,7 +1114,7 @@
 			if (strpos($strFile, "http") === 0)
 				return $strFile;
 			if (strpos($strFile, "/") === 0)
-				return __VIRTUAL_DIRECTORY__ . $strFile;
+				return __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . $strFile;
 			return __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/' . $strFile;
 		}
 

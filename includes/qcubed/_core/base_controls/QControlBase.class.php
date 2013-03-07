@@ -513,9 +513,7 @@
 		}
 
 		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
-			// AddJavascriptFile expects files to be relative to __SUBDIRECTORY__, so we need to chop that off the __PLUGINS_ASSETS__
-			$strPath = substr (__PLUGIN_ASSETS__, strlen(__SUBDIRECTORY__));
-			$this->AddJavascriptFile($strPath . $strPluginName . "/js/" . $strJsFileName);
+			$this->AddJavascriptFile(__PLUGIN_ASSETS__ . $strPluginName . "/js/" . $strJsFileName);
 		}
 
 		public function AddCssFile($strCssFileName) {
