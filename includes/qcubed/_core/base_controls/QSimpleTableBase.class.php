@@ -19,11 +19,12 @@
 	 *
 	 * @package Controls
 	 *
-	 * @property string $RowCssClass
-	 * @property string $AlternateRowCssClass
-	 * @property string $HeaderRowCssClass
-	 * @property boolean $ShowHeader
-	 * @property boolean $ShowFooter
+	 * @property string $RowCssClass class to be given to the row tag
+	 * @property string $AlternateRowCssClass class to be given to each alternate row tag
+	 * @property string $HeaderRowCssClass class to be given the header row
+	 * @property boolean $ShowHeader true to show the header row
+	 * @property boolean $ShowFooter true to show the footer row
+	 * @property boolean $RenderColumnTags true to include col tags in the table output
 	 * @throws QCallerException
 	 *
 	 */
@@ -36,6 +37,8 @@
 		protected $strHeaderRowCssClass = null;
 		protected $blnShowHeader = true;
 		protected $blnShowFooter = false;
+		protected $blnRenderColumnTags = false;
+		protected $strCaption = null;
 
 		public function __construct($objParentObject, $strControlId = null)	{
 			try {
@@ -48,6 +51,13 @@
 
 		public function ParsePostData() { }
 
+		/**
+		 * Add an Index column and return it.
+		 * Enter description here ...
+		 * @param string $strName column name
+		 * @param mixed $mixIndex the index to use to access the cell date. i.e. $item[$index]
+		 * @param integer $intColumnIndex column position
+		 */
 		public function CreateIndexedColumn($strName = '', $mixIndex = null, $intColumnIndex = -1) {
 			if (is_null($mixIndex)) {
 				$mixIndex = count($this->objColumnArray);
@@ -57,37 +67,72 @@
 			return $objColumn;
 		}
 
+		/**
+		 * Add a property column and return it. The assumption is that each row's data is an object.
+		 * 
+		 * @param string $strName name of column
+		 * @param string $strProperty property to use to get the cell data. i.e. $item->$property
+		 * @param integer $intColumnIndex column position
+		 * @param object $objBaseNode a query node from which the property descends, if you are using the sorting capabilities
+		 */
 		public function CreatePropertyColumn($strName, $strProperty, $intColumnIndex = -1, $objBaseNode = null) {
 			$objColumn = new QSimpleTablePropertyColumn($strName, $strProperty, $objBaseNode);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
 
+		/**
+		 * Add a closure column and return it.
+		 * 
+		 * @param string $strName column name
+		 * @param object $objClosure a closure object. Note that this can be an array.
+		 * @param integer $intColumnIndex column position
+		 */
 		public function CreateClosureColumn($strName, $objClosure, $intColumnIndex = -1) {
 			$objColumn = new QSimpleTableClosureColumn($strName, $objClosure);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
 
-		// Used to add a SimpleTableColumn to this SimpleTable
+		/**
+		 * Add a column to the end of the column array.
+		 */
 		public function AddColumn(QAbstractSimpleTableColumn $objColumn) {
 			$this->blnModified = true;
 			$this->objColumnArray[] = $objColumn;
 			$objColumn->_ParentTable = $this;
 		}
 
+		/**
+		 * Move the named column to the given position
+		 * @param string $strName column name
+		 * @param integer $intColumnIndex new position
+		 */
 		public function MoveColumn($strName, $intColumnIndex = -1) {
 			$col = $this->RemoveColumnByName($strName);
 			$this->AddColumnAt($intColumnIndex, $col);
 			return $col;
 		}
 
+		/**
+		 * Rename a named column
+		 * 
+		 * @param string $strOldName
+		 * @param string $strNewName
+		 */
 		public function RenameColumn($strOldName, $strNewName) {
 			$col = $this->GetColumnByName($strOldName);
 			$col->Name = $strNewName;
 			return $col;
 		}
 
+		/**
+		 * Add a column at the given position
+		 * 
+		 * @param integer $intColumnIndex column position
+		 * @param QAbstractSimpleTableColumn $objColumn
+		 * @throws QInvalidCastException
+		 */
 		public function AddColumnAt($intColumnIndex, QAbstractSimpleTableColumn $objColumn) {
 			try {
 				$intColumnIndex = QType::Cast($intColumnIndex, QType::Integer);
@@ -370,7 +415,27 @@
 			}
 		}
 		
+		/**
+		 * Override to return the footer row html
+		 */
 		protected function GetFooterRowHtml() { }
+		
+		/**
+		 * Returns column tags. Only called if blnRenderColumnTags is true.
+		 * @return string Column tag html
+		 */
+		protected function GetColumnTagsHtml() {
+			$strToReturn = '';
+			$len = count($this->objColumnArray);
+			$i = 0;
+			while ($i < $len) {
+				$objColumn = $this->objColumnArray[$i];
+				$strToReturn .= $objColumn->RenderColTag();
+				$i += $objColumn->Span;
+			}
+			$strToReturn .= "\n";
+			return $strToReturn;
+		}
 
 		protected function GetControlHtml() {
 			$this->DataBind();
@@ -381,6 +446,16 @@
 				$strStyle = sprintf('style="%s" ', $strStyle);
 			$strToReturn = sprintf("<table id=\"%s\" %s%s>\n", $this->strControlId, $this->GetAttributes(), $strStyle);
 
+			// Caption if present
+			if ($this->strCaption) {
+				$strToReturn .= "<caption>" . QApplication::HtmlEntities($this->strCaption) . "</caption>\n";
+			}
+			
+			// Column tags (if applicable)
+			if ($this->blnRenderColumnTags) {
+				$strToReturn .= $this->GetColumnTagsHtml();
+			}
+			
 			// Header Row (if applicable)
 			if ($this->blnShowHeader)
 				$strToReturn .= "<thead>\n" . $this->GetHeaderRowHtml() . "</thead>\n";
@@ -418,7 +493,11 @@
 					return $this->blnShowHeader;
 				case 'ShowFooter':
 					return $this->blnShowFooter;
-
+				case 'RenderColumnTags':
+					return $this->blnRenderColumnTags;
+				case 'Caption':
+					return $this->strCaption;
+					
 				default:
 					try {
 						return parent::__get($strName);
@@ -470,6 +549,24 @@
 				case "ShowFooter":
 					try {
 						$this->blnShowFooter = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "RenderColumnTags":
+					try {
+						$this->blnRenderColumnTags = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "Caption":
+					try {
+						$this->strCaption = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

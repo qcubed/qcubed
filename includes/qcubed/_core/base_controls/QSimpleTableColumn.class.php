@@ -23,6 +23,8 @@
 		protected $blnRenderAsHeader = false;
 		/** @var QSimpleTableBase */
 		protected $objParentTable = null;
+		/** @var integer */
+		protected $intSpan = 1;
 		
 		/**
 		 * @param string $strName Name of the column
@@ -167,6 +169,29 @@
 		 */
 		abstract public function FetchCellValue($item);
 		
+		public function RenderColTag() {
+			$strToReturn = '<col ';
+			
+			$aParams = $this->GetColParams();
+			foreach ($aParams as $key=>$str) {
+				$strToReturn .= $key . '="' . $str . '" ';
+			}
+			$strToReturn .= '/>';
+			return $strToReturn;
+		}
+
+		/**
+		 * Return a key/value array of parameters to put in the col tag.
+		 * Override to add parameters, like class, id, etc.
+		 */
+		protected function GetColParams () {
+			$aParams = array();
+			if ($this->intSpan > 1) {
+				$aParams['span'] = $this->intSpan;
+			}
+			return $aParams;		
+		}
+		
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Name':
@@ -181,6 +206,9 @@
 					return $this->blnRenderAsHeader;
 				case 'ParentTable':
 					return $this->objParentTable;
+				case 'Span':
+					return $this->intSpan;
+					
 				default:
 					try {
 						return parent::__get($strName);
@@ -232,6 +260,18 @@
 				case "RenderAsHeader":
 					try {
 						$this->blnRenderAsHeader = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
+				case "Span":
+					try {
+						$this->intSpan = QType::Cast($mixValue, QType::Integer);
+						if ($this->intSpan < 1) {
+							throw new Exception("Span must be 1 or greater.");
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
