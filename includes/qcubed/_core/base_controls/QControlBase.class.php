@@ -504,6 +504,15 @@
 				throw new QCallerException(sprintf("Custom Style does not exist in Control '%s': %s", $this->strControlId, $strName));
 		}
 
+		/**
+		 * Add javascript file to be included in the form.
+		 * The  include mechanism will take care of duplicates, and also change the given URL in the following ways:
+		 * 	- If the file name begins with 'http', it will use it directly as a URL
+		 *  - If the file name begins with '/', the url will be relative to the __SUBDIRECTORY__
+		 *  - If the file name begins with anything else, the url will be relative to __JS_ASSETS__
+		 *  
+		 * @param string $strJsFileName url, path, or file name to include
+		 */
 		public function AddJavascriptFile($strJsFileName) {
 			if($this->strJavaScripts) {
 				$this->strJavaScripts .= ','.$strJsFileName;
@@ -512,11 +521,43 @@
 			}
 		}
 
+		/**
+		 * Add javascript file to be included from a plugin. Plugins should use this function instead of AddJavascriptFile.
+		 * The  include mechanism will take care of duplicates, and also change the given URL in the following ways:
+		 * 	- If the file name begins with 'http', it will use it directly as a URL
+		 *  - If the file name begins with '/', the url will be relative to the __PLUGIN_ASSETS__ directory.
+		 *  - If the file name begins with anything else, the url will be relative to __PLUGIN_ASSETS__/pluginName/js/
+		 *  
+		 * @param string $strPluginName name of plugin
+		 * @param string $strJsFileName url, path, or file name to include
+		 */
 		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
-			// Relative path based on the path of the core JS files
-			$this->AddJavascriptFile("../../plugins/" . $strPluginName . "/js/" . $strJsFileName);
+			if (strpos($strJsFileName, "http") === 0) {
+				$this->AddJavascriptFile($strJsFileName);	// plugin uses js from some other website
+			}
+			else {
+				// AddJavascriptFile expects files to be relative to __SUBDIRECTORY__, so we need to chop that off the __PLUGINS_ASSETS__
+				$strPath = substr (__PLUGIN_ASSETS__, strlen(__SUBDIRECTORY__));
+				
+				if (strpos($strJsFileName, "/") === 0) {
+					// custom location for plugin javascript, relative to plugins dir
+					$this->AddJavascriptFile($strPath . $strJsFileName);
+				} else {
+					// Use the default location 
+					$this->AddJavascriptFile($strPath . $strPluginName . "/js/" . $strJsFileName);
+				}
+			}
 		}
 
+		/**
+		 * Add style sheet file to be included in the form.
+		 * The  include mechanism will take care of duplicates, and also change the given URL in the following ways:
+		 * 	- If the file name begins with 'http', it will use it directly as a URL
+		 *  - If the file name begins with '/', the url will be relative to the __SUBDIRECTORY__
+		 *  - If the file name begins with anything else, the url will be relative to __CSS_ASSETS__
+		 *  
+		 * @param string $strCssFileName url, path, or file name to include
+		 */
 		public function AddCssFile($strCssFileName) {
 			if($this->strStyleSheets) {
 				$this->strStyleSheets .= ','.$strCssFileName;
@@ -525,9 +566,32 @@
 			}
 		}
 
+		/**
+		 * Add style sheet file to be included from a plugin. Plugins should use this function instead of AddCssFile.
+		 * The  include mechanism will take care of duplicates, and also change the given URL in the following ways:
+		 * 	- If the file name begins with 'http', it will use it directly as a URL
+		 *  - If the file name begins with '/', the url will be relative to the __PLUGIN_ASSETS__ directory.
+		 *  - If the file name begins with anything else, the url will be relative to __PLUGIN_ASSETS__/pluginName/css/
+		 *  
+		 * @param string $strPluginName name of plugin
+		 * @param string $strCssFileName url, path, or file name to include
+		 */
 		public function AddPluginCssFile($strPluginName, $strCssFileName) {
-			// Relative path based on the path of the core JS files
-			$this->AddCssFile("../../plugins/" . $strPluginName . "/css/" . $strCssFileName);
+			if (strpos($strCssFileName, "http") === 0) {
+				$this->AddCssFile($strCssFileName);	// plugin uses style sheet from some other website
+			}
+			else {
+				// AddCssFile expects files to be relative to __SUBDIRECTORY__, so we need to chop that off the __PLUGINS_ASSETS__
+				$strPath = substr (__PLUGIN_ASSETS__, strlen(__SUBDIRECTORY__));
+				
+				if (strpos($strCssFileName, "/") === 0) {
+					// custom location for plugin javascript, relative to plugins dir
+					$this->AddCssFile($strPath . $strCssFileName);
+				} else {
+					// Use the default location 
+					$this->AddCssFile($strPath . $strPluginName . "/css/" . $strCssFileName);
+				}
+			}
 		}
 
 		/**
