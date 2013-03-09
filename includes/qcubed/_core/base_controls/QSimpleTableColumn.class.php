@@ -25,6 +25,8 @@
 		protected $objParentTable = null;
 		/** @var integer */
 		protected $intSpan = 1;
+		/** @var string optional id for column tag rendering and datatables*/
+		protected $strId = null;
 		
 		/**
 		 * @param string $strName Name of the column
@@ -182,13 +184,17 @@
 
 		/**
 		 * Return a key/value array of parameters to put in the col tag.
-		 * Override to add parameters, like class, id, etc.
+		 * Override to add parameters, like class, etc.
 		 */
 		protected function GetColParams () {
 			$aParams = array();
 			if ($this->intSpan > 1) {
 				$aParams['span'] = $this->intSpan;
 			}
+			if ($this->strId) {
+				$aParams['id'] = addslashes($this->strId);
+			}
+			
 			return $aParams;		
 		}
 		
@@ -208,6 +214,8 @@
 					return $this->objParentTable;
 				case 'Span':
 					return $this->intSpan;
+				case 'Id':
+					return $this->strId;
 					
 				default:
 					try {
@@ -272,6 +280,15 @@
 						if ($this->intSpan < 1) {
 							throw new Exception("Span must be 1 or greater.");
 						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
+				case "Id":
+					try {
+						$this->strId = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
