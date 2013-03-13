@@ -11,6 +11,9 @@
  * http://code.google.com/p/jquery-ajaxq/
  */
 
+/**
+ * Note: this file has been modified from the original found above.
+ */
 jQuery.ajaxq = function (queue, options)
 {
 	// Initialize storage for request queues if it's not initialized yet
@@ -39,16 +42,24 @@ jQuery.ajaxq = function (queue, options)
 			
 			// Run the original callback
 			if (originalCompleteCallback) originalCompleteCallback (request, status);
+			
+			
 
 			// Run the next request from the queue
-			if (document.ajaxq.q[queue].length > 0) document.ajaxq.r = jQuery.ajax (document.ajaxq.q[queue][0]);
+			if (document.ajaxq.q[queue].length > 0) {
+				if (options.fnInit) options.fnInit (options);	// last minute changes before the event is fired
+				document.ajaxq.r = jQuery.ajax (document.ajaxq.q[queue][0]);
+			}
 		};
 
 		// Enqueue the request
 		document.ajaxq.q[queue].push (options);
 
 		// Also, if no request is currently running, start it
-		if (document.ajaxq.q[queue].length == 1) document.ajaxq.r = jQuery.ajax (options);
+		if (document.ajaxq.q[queue].length == 1) {
+			if (options.fnInit) options.fnInit (options);	// last minute changes before the event is fired
+			document.ajaxq.r = jQuery.ajax (options);
+		}
 	}
 	else // No request settings are given, stop current request and clear the queue
 	{
