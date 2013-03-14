@@ -38,8 +38,6 @@ class QTestControl extends QControl {
 		return parent::GetWrapperStyleAttributes($blnIsBlockElement);
 	}
 }
-	
-
 
 
 class QHtmlReporter extends HtmlReporter {
