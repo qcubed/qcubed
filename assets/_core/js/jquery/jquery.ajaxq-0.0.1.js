@@ -47,8 +47,9 @@ jQuery.ajaxq = function (queue, options)
 
 			// Run the next request from the queue
 			if (document.ajaxq.q[queue].length > 0) {
-				if (options.fnInit) options.fnInit (options);	// last minute changes before the event is fired
-				document.ajaxq.r = jQuery.ajax (document.ajaxq.q[queue][0]);
+				var options2 = document.ajaxq.q[queue][0];
+				if (options2.fnInit) options2.fnInit (options2);	// last minute changes before the event is fired
+				document.ajaxq.r = jQuery.ajax (options2);
 			}
 		};
 
