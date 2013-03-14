@@ -17,6 +17,28 @@ restore_error_handler();
 
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
 
+// This is used by control tests. Must be here so it can be unserialized, since tests are dynamically loaded.
+class QTestControl extends QControl {
+	public $savedValue1 = 1;
+	public $savedValue2 = 0;
+	
+	protected function GetControlHtml() {
+		return "";
+	}
+
+	public function ParsePostData() {
+		
+	}
+
+	public function Validate() {
+		return true;
+	}
+	
+	public function GetWrapperStyleAttributes($blnIsBlockElement=false) {
+		return parent::GetWrapperStyleAttributes($blnIsBlockElement);
+	}
+}
+
 
 class QHtmlReporter extends HtmlReporter {
 	function paintMethodStart($test_name) {
@@ -47,8 +69,32 @@ class QHtmlReporter extends HtmlReporter {
 }
 
 class QTestForm extends QForm {
+	public $ctlTest;
+	public $pnlOutput;
 
 	protected function Form_Create() {
+		$this->ctlTest = new QTestControl($this);
+		$this->pnlOutput = new QPanel($this, 'outputPanel');
+		
+		$t1 = new QJsTimer($this, 200, false, true, 'timer1');
+		$t1->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest'));
+		$t2 = new QJsTimer($this, 201, false, true, 'timer2');
+		$t2->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest2'));
+		$t3 = new QJsTimer($this, 400, false, true, 'timer3');
+		$t3->AddAction(new QTimerExpiredEvent(), new QServerAction ('runTests'));
+	}
+	
+	public function preTest() {
+		$this->ctlTest->savedValue1 = 2;	// for test in QControlBaseTests
+	}
+	
+	public function preTest2() {
+		$this->ctlTest->savedValue2 = $this->ctlTest->savedValue1;	// for test in QControlBaseTests
+	}
+	
+	
+	public function runTests() {
+		
 		$filesToSkip = array(
 			"QUnitTestCaseBase.php"
 			, "QTestForm.tpl.php"
