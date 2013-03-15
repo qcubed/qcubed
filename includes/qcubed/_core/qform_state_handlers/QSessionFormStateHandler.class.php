@@ -30,6 +30,11 @@
 			// In theory, this SHOULD work.  But if there is a webserver/os/php version that doesn't like
 			// binary session streams, you can first base64_encode before saving to session (see note below).
 			$_SESSION['qform_' . $intStateIndex] = $strFormState;
+			
+			// Garbage collect
+			if (isset($_POST['Qform__FormState']) && is_numeric($_POST['Qform__FormState'])) {
+			 	unset ($_SESSION['qform_' . $_POST['Qform__FormState']]);
+			 }
 
 			// Return StateIndex
 			if (!is_null(QForm::$EncryptionKey)) {
