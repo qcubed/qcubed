@@ -16,16 +16,13 @@
 			// Compress (if available)
 			if (function_exists('gzcompress'))
 				$strFormState = gzcompress($strFormState, 9);
-
+				
 			// Setup CurrentStateIndex (if none yet exists)
 			if (!array_key_exists('qform_current_state_index', $_SESSION))
 				$_SESSION['qform_current_state_index'] = 0;
-
-			// Increment CurrentStateIndex if BackButtonFlag is true
-			// Otherwise, we're in an ajax-to-ajax call, and the back button is invalid anyway
-			// No need to increment session state index -- let's not to save space
-			if ($blnBackButtonFlag)
-				$_SESSION['qform_current_state_index'] = $_SESSION['qform_current_state_index'] + 1;
+			
+			// We must always increment the state index, because we may have multiple windows open 
+			$_SESSION['qform_current_state_index'] = $_SESSION['qform_current_state_index'] + 1;
 			$intStateIndex = $_SESSION['qform_current_state_index'];
 
 			// Save THIS formstate
