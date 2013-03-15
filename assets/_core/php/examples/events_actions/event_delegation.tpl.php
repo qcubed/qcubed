@@ -78,6 +78,12 @@ div.table, div.code {
 		and the delete buttons.
 		</p>
 		
+		<p>
+		Standard <b>QEvent</b>s have event delegation too. Pass the selector as the
+		third parameter to any QEvent.
+		</p>
+		
+		
 		
 	</div>
 <div>
