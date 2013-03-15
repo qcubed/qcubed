@@ -32,8 +32,16 @@
 			$_SESSION['qform_' . $intStateIndex] = $strFormState;
 			
 			// Garbage collect
-			if (isset($_POST['Qform__FormState']) && is_numeric($_POST['Qform__FormState'])) {
-			 	unset ($_SESSION['qform_' . $_POST['Qform__FormState']]);
+			
+			if (isset($_POST['Qform__FormState'])) {
+				$strPostDataState = $_POST['Qform__FormState'];
+				if (!is_null(QForm::$EncryptionKey)) {
+					$objCrypto = new QCryptography(QForm::$EncryptionKey, true);
+					$strPostDataState = $objCrypto->Decrypt($strPostDataState);
+				}
+				if (isset($_SESSION['qform_' . $strPostDataState])) {
+					unset ($_SESSION['qform_' . $strPostDataState]);
+				}
 			 }
 
 			// Return StateIndex
