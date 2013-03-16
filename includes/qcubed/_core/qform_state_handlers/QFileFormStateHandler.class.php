@@ -99,7 +99,7 @@
 			}
 		}
 
-		public static function Save($strFormState, $blnBackButtonFlag) {
+		public static function Save($strFormState) {
 			// First see if we need to perform garbage collection
 			if (self::$GarbageCollectInterval > 0) {
 				// This is a crude interval-tester, but it works

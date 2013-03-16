@@ -106,11 +106,10 @@
 		 * @static
 		 *
 		 * @param $strFormState
-		 * @param $blnBackButtonFlag
 		 *
 		 * @return string
 		 */
-		public static function Save($strFormState, $blnBackButtonFlag) {
+		public static function Save($strFormState) {
 			// First see if we need to perform garbage collection
 			// Decide for garbage collection
 			if ((self::$intGarbageCollectOnHitCount > 0) && (rand(1, self::$intGarbageCollectOnHitCount) == 1)) {

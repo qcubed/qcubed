@@ -4,7 +4,7 @@
 	 * (and if requested by QForm, encrypted) as a hidden form variable on the page, itself.
 	 */
 	class QFormStateHandler extends QBaseClass {
-		public static function Save($strFormState, $blnBackButtonFlag) {
+		public static function Save($strFormState) {
 			// Compress (if available)
 			if (function_exists('gzcompress'))
 				$strFormState = gzcompress($strFormState, 9);

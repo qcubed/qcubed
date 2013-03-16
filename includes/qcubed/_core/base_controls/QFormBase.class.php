@@ -508,11 +508,6 @@
 			// Get and then Update PreviousRequestMode
 			$strPreviousRequestMode = $objForm->strPreviousRequestMode;
 			$objForm->strPreviousRequestMode = QApplication::$RequestMode;
-
-			// Figure Out if we need to store state for back-button purposes
-			$blnBackButtonFlag = true;
-			if ($strPreviousRequestMode == QRequestMode::Ajax)
-				$blnBackButtonFlag = false;
 			
 			// Create a Clone of the Form to Serialize
 			$objForm = clone($objForm);
@@ -526,7 +521,7 @@
 
 			// Setup and Call the FormStateHandler to retrieve the PostDataState to return
 			$strSaveCommand = array(QForm::$FormStateHandler, 'Save');
-			$strPostDataState = call_user_func_array($strSaveCommand, array($strSerializedForm, $blnBackButtonFlag));
+			$strPostDataState = call_user_func($strSaveCommand, $strSerializedForm);
 
 			// Return the PostDataState
 			return $strPostDataState;
