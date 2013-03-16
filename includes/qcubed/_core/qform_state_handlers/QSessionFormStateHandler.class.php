@@ -12,7 +12,7 @@
 	 *
 	 */
 	class QSessionFormStateHandler extends QBaseClass {
-		public static function Save($strFormState, $blnBackButtonFlag) {
+		public static function Save($strFormState) {
 			// Compress (if available)
 			if (function_exists('gzcompress'))
 				$strFormState = gzcompress($strFormState, 9);
