@@ -58,9 +58,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', 'C:/xampp/xampp/htdocs');
+			define ('__DOCROOT__', '/Users/Papikodu/Documents/wamp');
 			define ('__VIRTUAL_DIRECTORY__', '');
-			define ('__SUBDIRECTORY__', '/qcubed2');
+			define ('__SUBDIRECTORY__', '/framework');
 
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
@@ -197,10 +197,10 @@ if (!defined('SERVER_INSTANCE')) {
 			define('DB_CONNECTION_1', serialize(array(
 				'adapter' => 'MySqli5',
 				'server' => 'localhost',
-				'port' => null,
-				'database' => 'qcubed',
+				'port' => 8889,
+				'database' => 'qcubed2',
 				'username' => 'root',
-				'password' => '',
+				'password' => 'root',
 				'caching' => false,
 				'profiling' => false)));
 
@@ -218,7 +218,7 @@ if (!defined('SERVER_INSTANCE')) {
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
 			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
-				date_default_timezone_set('America/Los_Angeles');
+				date_default_timezone_set('Estonia/Tallinn');
 
 
 			/*
