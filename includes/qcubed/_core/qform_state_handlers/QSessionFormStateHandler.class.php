@@ -32,7 +32,10 @@
 			$_SESSION['qform_' . $intStateIndex] = $strFormState;
 			
 			// Garbage collect
-			
+			// Can't currently do this. If multiple ServerAction calls happen one after the other,
+			// they will all send the same formstate, and so the first call will delete the old
+			// formstate, and the 2nd call will look for it and crash.
+/*			
 			if (isset($_POST['Qform__FormState'])) {
 				$strPostDataState = $_POST['Qform__FormState'];
 				if (!is_null(QForm::$EncryptionKey)) {
@@ -43,7 +46,8 @@
 					unset ($_SESSION['qform_' . $strPostDataState]);
 				}
 			 }
-
+*/
+			
 			// Return StateIndex
 			if (!is_null(QForm::$EncryptionKey)) {
 				// Use QCryptography to Encrypt
