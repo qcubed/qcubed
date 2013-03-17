@@ -43,15 +43,34 @@ fieldset legend div.renderWithName {
         padding: 0;
         font-size: 1em;
     }
-    div.left {
+    div.form-name {
         width: auto;
         padding: 0;
         margin: 0 4px 0 0;
     }
-    div.right {
+    div.form-field {
         width: auto;
         padding: 0;
         margin: 0;
+    }
+}
+
+fieldset div.renderWithName {
+    div.form-name {
+        clear: left;
+        display: block;
+        float: left;
+        padding: 4px;
+        text-align: right;
+        width: 14em;
+    }
+    div.form-field {
+        display: block;
+        float: left;
+        min-height: 1.2em;
+        padding: 4px;
+        width: 14em;
+        background-color: #F0F0F0;
     }
 }
 
@@ -246,10 +265,9 @@ fieldset {
 }
 
 div.search_panel {
-    div.renderWithNameOnTop {
+    div.search-control, div.search-button, div.search-reset {
         float: left;
         padding-right: 1em;
-        font-size: 0.7em;
     }
     div.renderWithName {
         font-size: 0.7em;
@@ -259,15 +277,6 @@ div.search_panel {
     }
     .search_txt, .search_date {
         width: 11em;
-    }
-    div.search_controls {
-        float: right;
-        div.search_more {
-            float: left;
-            font-weight: bold;
-            font-style: italic;
-            padding-top: 0.7em;
-        }
     }
 }
 

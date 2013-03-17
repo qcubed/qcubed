@@ -10,8 +10,8 @@
 ?>
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if (!$objColumn->Reference || $objColumn->Reference->IsType) { ?>
-	<?php print("<?php"); ?> $_CONTROL-><?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>->$strRenderMethod(); ?>
+	<div class="search-control"><?php print("<?php"); ?> $_CONTROL-><?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>->$strRenderMethod(); ?></div>
 <?php } ?>
 <?php } ?>
-	<?php print("<?php"); ?> $_CONTROL->btnSearch->$strBtnRenderMethod(); ?>
-	<?php print("<?php"); ?> $_CONTROL->btnReset->$strBtnRenderMethod(); ?>
+<div class="search-button"><?php print("<?php"); ?> $_CONTROL->btnSearch->$strBtnRenderMethod(); ?></div>
+<div class="search-reset"><?php print("<?php"); ?> $_CONTROL->btnReset->$strBtnRenderMethod(); ?></div>
