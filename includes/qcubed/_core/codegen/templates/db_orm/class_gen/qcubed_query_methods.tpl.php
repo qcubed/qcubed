@@ -197,10 +197,20 @@
 			// Figure out if the query is using GroupBy
 			$blnGrouped = false;
 
-			if ($objOptionalClauses) foreach ($objOptionalClauses as $objClause) {
-				if ($objClause instanceof QQGroupBy) {
-					$blnGrouped = true;
-					break;
+			if ($objOptionalClauses) {
+				if ($objOptionalClauses instanceof QQClause) {
+					if ($objOptionalClauses instanceof QQGroupBy) {
+						$blnGrouped = true;
+					}
+				} else if (is_array($objOptionalClauses)) {
+					foreach ($objOptionalClauses as $objClause) {
+						if ($objClause instanceof QQGroupBy) {
+							$blnGrouped = true;
+							break;
+						}
+					}
+				} else {
+					throw new QCallerException('Optional Clauses must be a QQClause object or an array of QQClause objects');
 				}
 			}
 
