@@ -15,31 +15,58 @@
 	while ($strFile = readdir($objDirectory)) {
 		if ($intPosition = strpos($strFile, 'ListPanel.class.php')) {
 			$strClassName = substr($strFile, 0, $intPosition);
-			$strClassNameArray[] = $strClassName;
+			$strClassNameArray[$strClassName] = $strClassName . 'ListDetailView';
 			require_once(__META_CONTROLS__ . '/' . $strClassName . 'ListDetailView.class.php');
 		}
 	}
-	sort($strClassNameArray);
+	asort($strClassNameArray);
 
 	class Dashboard extends QForm {
-		/** @var QTabs */
-		protected $tabs;
+		/** @var QLabel */
+		protected $lblTitle;
+		/** @var QSelect2ListBox */
+		protected $lstClassNames;
+		/** @var QPanel */
+		protected $pnlEdit;
 
 		protected function Form_Create() {
-			$this->tabs = new QTabs($this);
-			$headers = array();
+			$this->lblTitle = new QLabel($this);
+			$this->lblTitle->Text = 'AJAX Dashboard';
 
+			$this->lstClassNames = new QSelect2ListBox($this);
+			$this->lstClassNames->Placeholder = QApplication::Translate('Select a Class to View/Edit');
+			$this->lstClassNames->AllowClear = true;
+			$this->lstClassNames->Width = 350;
+			$this->lstClassNames->AddAction(new QChangeEvent(), new QAjaxAction("lstClassNames_Change"));
 			// Use the strClassNameArray as magically determined above to aggregate the listbox of classes
 			// Obviously, this should be modified if you want to make a custom dashboard
 			global $strClassNameArray;
-			foreach ($strClassNameArray as $strClassName) {
-				$strListDetailViewClassName = $strClassName . 'ListDetailView';
-				new $strListDetailViewClassName($this->tabs);
-				$headers[] = _tr($strClassName);
+			$this->lstClassNames->AddItem(null, null, true);
+			foreach ($strClassNameArray as $strEntityClassName => $strPanelClassName) {
+				$this->lstClassNames->AddItem($strEntityClassName, $strPanelClassName);
 			}
-			$this->tabs->Headers = $headers;
 			$this->objDefaultWaitIcon = new QWaitIcon($this);
+
+			$this->pnlEdit = new QPanel($this, 'pnlEdit');
+			$this->pnlEdit->AutoRenderChildren = true;
+			$this->pnlEdit->Visible = false;
 		}
+
+		protected function lstClassNames_Change($strFormId, $strControlId, $strParameter) {
+			// Get rid of all child controls for list and edit panels
+			$this->pnlEdit->RemoveChildControls(true);
+
+			if ($strPanelClassName = $this->lstClassNames->SelectedValue) {
+				// We've selected a Class Name
+				$objNewPanel = new $strPanelClassName($this->pnlEdit);
+				$this->lblTitle->Text = $this->lstClassNames->SelectedName;
+				$this->pnlEdit->Visible = true;
+			} else {
+				$this->lblTitle->Text = 'AJAX Dashboard';
+				$this->pnlEdit->Visible = false;
+			}
+		}
+
 	}
 
 	Dashboard::Run('Dashboard');
