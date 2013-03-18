@@ -71,7 +71,7 @@
 
 			$strBufferArray = array();
 
-			for ($intIndex = 0; $intIndex < strlen($strText); $intIndex++) {
+			for ($intIndex = 0; $intIndex < mb_strlen($strText, QApplication::$EncodingType); $intIndex++) {
 				$strChar = $strText[$intIndex];
 
 				switch ($objStateStack->PeekLast()) {
@@ -153,7 +153,7 @@
 								$strToReturn .= '&nbsp;&nbsp;&nbsp;&nbsp;';
 								break;
 							case ' ':
-								if ((strlen($strText) > ($intIndex + 1)) &&
+								if ((mb_strlen($strText, QApplication::$EncodingType) > ($intIndex + 1)) &&
 									($strText[$intIndex + 1] == ' ')) {
 									$strToReturn .= ' &nbsp;';
 									$intIndex++;
@@ -204,10 +204,10 @@
 											$strToReturn .= '&lt;' . $strBufferArray[QWriteBox::StateTag] . '&gt;';
 										break;
 									default:
-										if ((strlen($strTag) >= 8) && ((substr($strTag, 0, 7) == 'http://') || (substr($strTag, 0, 8) == 'https://')) &&
-											(strpos($strTag, '"') === false) &&
-											(strpos($strTag, ' ') === false) &&
-											(strpos($strTag, '	') === false)) {
+										if ((mb_strlen($strTag, QApplication::$EncodingType) >= 8) && ((mb_substr($strTag, 0, 7, QApplication::$EncodingType) == 'http://') || (substr($strTag, 0, 8) == 'https://')) &&
+											(mb_strpos($strTag, '"', 0, QApplication::$EncodingType) === false) &&
+											(mb_strpos($strTag, ' ', 0, QApplication::$EncodingType) === false) &&
+											(mb_strpos($strTag, '	', 0, QApplication::$EncodingType) === false)) {
 											$strToReturn .= sprintf('&lt;<a href="%s">%s</a>&gt;',
 												$strBufferArray[QWriteBox::StateTag], $strBufferArray[QWriteBox::StateTag]);
 										} else
@@ -225,14 +225,14 @@
 					case QWriteBox::StateCode:
 						$strBufferArray[QWriteBox::StateCode] .= $strChar;
 						$strBuffer = $strBufferArray[QWriteBox::StateCode];
-						if ((strlen($strBuffer) >= 7) && 
-							(strtolower(substr($strBuffer, strlen($strBuffer) - 7)) == '</code>')) {
+						if ((mb_strlen($strBuffer, QApplication::$EncodingType) >= 7) && 
+							(mb_strtolower(mb_substr($strBuffer, mb_strlen($strBuffer, QApplication::$EncodingType) - 7, QApplication::$EncodingType), QApplication::$EncodingType) == '</code>')) {
 								$objStateStack->Pop();
-								$strBuffer = substr($strBuffer, 0, strlen($strBuffer) - 7);
+								$strBuffer = mb_substr($strBuffer, 0, mb_strlen($strBuffer, QApplication::$EncodingType) - 7, QApplication::$EncodingType);
 								$strBuffer = highlight_string(trim($strBuffer), true);
 
 								$strToReturn .= sprintf('<div class="%s">%s</div>', $strCssClass, $strBuffer);
-								if ((strlen($strText) > ($intIndex + 1)) &&
+								if ((mb_strlen($strText, QApplication::$EncodingType) > ($intIndex + 1)) &&
 									($strText[$intIndex + 1] == "\n"))
 									$intIndex++;
 							}
