@@ -7,12 +7,12 @@
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @return <?php echo $objTable->ClassName  ?>[]
 		*/
-		public static function LoadArrayBy<?php echo $objManyToManyReference->ObjectDescription  ?>($<?php echo $objManyToManyReference->OppositeVariableName  ?>, $objOptionalClauses = null) {
+		public static function LoadArrayBy<?php echo $objManyToManyReference->ObjectDescription  ?>($<?php echo $objManyToManyReference->OppositeVariableName  ?>, $objOptionalClauses = null, $objClauses = null) {
 			// Call <?php echo $objTable->ClassName  ?>::QueryArray to perform the LoadArrayBy<?php echo $objManyToManyReference->ObjectDescription  ?> query
 			try {
 				return <?php echo $objTable->ClassName;  ?>::QueryArray(
 					QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()-><?php echo $objManyToManyReference->ObjectDescription  ?>-><?php echo $objManyToManyReference->OppositePropertyName  ?>, $<?php echo $objManyToManyReference->OppositeVariableName  ?>),
-					$objOptionalClauses
+					$objOptionalClauses, $objClauses 
 				);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
