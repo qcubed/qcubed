@@ -52,13 +52,31 @@
 		$result .= "</table>";
 		return $result;
 	}
+	
+	$strJsFileArray = explode(",", __JQUERY_BASE__);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>QCubed Development Framework - Database Profiling Tool</title>
 	<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/corepage.css");</style>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<?php
+	foreach ($strJsFileArray as $strJsFile) {
+		if (false !== strpos($strJsFile, "http")) {
+?>
+	<script type="text/javascript" src="<?php _p($strJsFile); ?>"></script>
+<?php
+		} else {
+			$strSlash = '';
+			if (0 !== strpos($strJsFile, "/")) {
+				$strSlash = '/';
+			}
+?>			
+	<script type="text/javascript" src="<?php _p(__VIRTUAL_DIRECTORY__ . __JS_ASSETS__ . $strSlash . $strJsFile); ?>"></script>
+<?php
+		}
+	}
+?>
 	<script type="text/javascript">
 		function Toggle(strWhatId) {
 			var obj = document.getElementById(strWhatId);
