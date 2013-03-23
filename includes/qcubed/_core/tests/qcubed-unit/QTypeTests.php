@@ -46,13 +46,13 @@ class QTypeTests extends QUnitTestCaseBase {
 				array("25", "25", 25, QType::Integer),
 				array(25, "25", 25, QType::Integer),
 				array(34.51666666667, "34.51666666667", _FAIL_, QType::Integer),
-				array(2147483648, "2147483648", "2147483648", QType::Integer),
+				array(2147483648, "2147483648", 2147483648, QType::Integer),
 				array(-2147483648, "-2147483648", (int)-2147483648, QType::Integer),
-				array(-2147483649, "-2147483649", "-2147483649", QType::Integer),
+				array(-2147483649, "-2147483649", -2147483649, QType::Integer),
 				array("34.51666666667", "34.51666666667", _FAIL_, QType::Integer),
-				array("2147483648", "2147483648", "2147483648", QType::Integer),
+				array("2147483648", "2147483648", 2147483648, QType::Integer),
 				array("-2147483648", "-2147483648", (int)-2147483648, QType::Integer),
-				array("-2147483649", "-2147483649", "-2147483649", QType::Integer),
+				array("-2147483649", "-2147483649", -2147483649, QType::Integer),
 
 				//this number is never stored at full accuracy, so there's no way to tell if it should be
 				// an int (perhaps we should force it if it can be?)
