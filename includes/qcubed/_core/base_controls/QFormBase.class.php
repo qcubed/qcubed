@@ -1010,10 +1010,17 @@
 
 			// Return or Display
 			if ($blnDisplayOutput) {
-				print($strToReturn);
+				if(!QApplication::$CliMode) {
+					print($strToReturn);
+				}
 				return null;
-			} else
-				return $strToReturn;
+			} else {
+				if(!QApplication::$CliMode) {
+					return $strToReturn;
+				} else {
+					return '';
+				}
+			}
 		}
 
 		/**
@@ -1165,7 +1172,7 @@
 			//Clear included javascript array
 			$this->strIncludedJavaScriptFileArray = array();
 			// Figure out initial list of JavaScriptIncludes
-			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',jquery/jquery.ajaxq-0.0.1.js,qcubed.js');
+			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',jquery/jquery.ajaxq-0.0.1.js,' . __QCUBED_JS_CORE__);
 			// Setup IncludeJs
 			$strToReturn = "\r\n";
 
@@ -1313,10 +1320,17 @@
 
 			// Display or Return
 			if ($blnDisplayOutput) {
-				print($strToReturn);
+				if(!QApplication::$CliMode) {
+					print($strToReturn);
+				}
 				return null;
-			} else
-				return $strToReturn;
+			} else {
+				if(!QApplication::$CliMode) {
+					return $strToReturn;
+				} else {
+					return '';
+				}
+			}
 		}
 	}
 	

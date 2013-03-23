@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 
 /* This file is the file to point the browser to to launch unit tests */
