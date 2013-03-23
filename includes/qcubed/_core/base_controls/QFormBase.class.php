@@ -168,7 +168,7 @@
 
 			// Ensure strFormId is a subclass of QForm
 			if (!($objClass instanceof QForm))
-				throw new QCallerException('Object is not a subclass of QForm (note, it can NOT be a subclass of QFormBase): ' . $strFormId);
+				throw new QCallerException('Object must be a subclass of QForm: ' . $strFormId);
 
 			// See if we can get a Form Class out of PostData
 			$objClass = null;			
@@ -180,7 +180,9 @@
 					$objClass = QForm::Unserialize($strPostDataState);
 
 				// If there is no QForm Class, then we have an Invalid Form State
-				if (!$objClass) throw new QInvalidFormStateException($strFormId);
+				if (!$objClass) {
+					self::InvalidFormState();
+				}
 			}
 
 			if ($objClass) {
@@ -346,6 +348,35 @@
 			$objClass->Form_Exit();
 		}
 
+		/**
+		 * An invalid form state was found. 
+		 * We were handed a formstate, but the formstate could not be interpreted. This could be for
+		 * a variety of reasons, and is dependent on the formstate handler. Most likely, the user hit
+		 * the back button past the back button limit of what we remember, or the user lost the session.
+		 * Or, you simply have not set up the form state handler correctly.
+		 * In the past, we threw an exception, but that was not a very user friendly response. 
+		 * The response below resubmits the url without a formstate so that a new one will be created. 
+		 * Override if you want a different response.
+		 */
+		public static function InvalidFormState() {
+			ob_clean();
+			if (isset($_POST['Qform__FormCallType']) &&  $_POST['Qform__FormCallType'] == QCallType::Ajax) {
+				// AJAX-based Response
+
+				// Response is in XML Format
+				header('Content-Type: text/xml');
+
+				// Use javascript to reload
+				_p('<?xml version="1.0"?><response><controls/><commands><command>window.location.reload(true);</command></commands></response>', false);
+
+			} else {
+				header('Location: '. QApplication::$RequestUri);
+			}
+
+			// End the Response Script
+			exit();	
+		}
+		
 		public function CallDataBinder($strMethodName, QPaginatedControl $objPaginatedControl, $objParentControl = null) {
 			try {
 				if ($objParentControl)
