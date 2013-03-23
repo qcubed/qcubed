@@ -271,7 +271,7 @@ $j.ajaxSync.data = [];
 									$j("[data-rel='" + strControlId + "']").remove();
 								}
 								
-								control.replaceWith(strControlHtml); 
+								control.before(strControlHtml).remove();
 							
 							} else {
 								$j(strControlId + '_ctl').html(strControlHtml);
