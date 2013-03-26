@@ -27,6 +27,7 @@ require('travis/qcubed.inc.php');
 restore_error_handler();
 
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
+require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QTestControl.class.php');
 
 
 class QTravisReporter extends TextReporter {
@@ -42,11 +43,15 @@ class QTravisReporter extends TextReporter {
 $rptReporter = null;
 
 class QTestForm extends QForm {
+	public $ctlTest;
 
 	protected function Form_Create() {
+		$this->ctlTest = new QTestControl($this);
+
 		$filesToSkip = array(
 			"QUnitTestCaseBase.php"
 			, "QTestForm.tpl.php"
+			, "QTestControl.class.php"
 		);
 
 		$arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');
