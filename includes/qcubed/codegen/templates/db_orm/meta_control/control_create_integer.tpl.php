@@ -6,13 +6,13 @@
 		 */
 		public function <?php echo $strControlId  ?>_Create($strControlId = null) {
 			$this-><?php echo $strControlId  ?> = new QIntegerTextBox($this->objParentObject, $strControlId);
-			$this-><?php echo $strControlId  ?>->CssClass = 'textbox ui-state-default ui-corner-all';
+			$this-><?php echo $strControlId  ?>->CssClass = 'textbox ui-corner-all';
 			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QConvertNotation::WordsFromCamelCase($objColumn->PropertyName)  ?>');
 			$this-><?php echo $strControlId  ?>->Text = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?php echo $strControlId  ?>->Required = true;
 <?php } ?>
-			$this-><?php echo $strControlId  ?>->CssClass = 'textbox ui-state-default ui-corner-all';
+			$this-><?php echo $strControlId  ?>->CssClass = 'textbox ui-corner-all';
 			return $this-><?php echo $strControlId  ?>;
 		}
 

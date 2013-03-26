@@ -76,7 +76,7 @@
 
 			if ($blnNew) {
 				$this->txtLoad = new QIntegerTextBox($this);
-				$this->txtLoad->CssClass = 'load_value textbox ui-state-default ui-corner-all';
+				$this->txtLoad->CssClass = 'load_value textbox ui-corner-all';
 				$this->txtLoad->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnLoad_Click'));
 
 				$this->btnLoad = new QJqButton($this);

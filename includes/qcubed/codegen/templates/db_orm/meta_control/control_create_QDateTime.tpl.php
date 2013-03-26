@@ -10,7 +10,7 @@
 		case QDatabaseFieldType::DateTime:
 ?>
 			$this-><?php echo $strControlId  ?> = new QJqDateTimePicker($this->objParentObject, $strControlId);
-			$this-><?php echo $strControlId  ?>->CssClass = 'textbox ui-state-default ui-corner-all';
+			$this-><?php echo $strControlId  ?>->CssClass = 'textbox ui-corner-all';
 			$this-><?php echo $strControlId  ?>->DateFormat = "MMM DD, YYYY";
 			$this-><?php echo $strControlId  ?>->TimeFormat = "hhhh:mm";
 <?php
@@ -25,7 +25,7 @@
 		default:
 ?>
 			$this-><?php echo $strControlId  ?> = new QDatePickerBox($this->objParentObject, $strControlId);
-			$this-><?php echo $strControlId  ?>->CssClass = 'textbox ui-state-default ui-corner-all';
+			$this-><?php echo $strControlId  ?>->CssClass = 'textbox ui-corner-all';
 <?php
 			break;
 	}
