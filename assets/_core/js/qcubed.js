@@ -145,11 +145,8 @@ $j.ajaxSync.data = [];
 			else
 				return "";
 		},
-
-		postAjax: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
-
-			var objForm = $j('#' + strForm);
-			var strFormAction = objForm.attr("action");
+		
+		getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
 			var objFormElements = $j('#' + strForm).find('input,select,textarea');
 			var strPostData = '';
 
@@ -213,16 +210,41 @@ $j.ajaxSync.data = [];
 						break;
 				}
 			});
+			return strPostData;
+		},
+		
+		postAjax: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
+			var objForm = $j('#' + strForm);
+			var strFormAction = objForm.attr("action");
+			var qFormParams = {};
+			var strPostData;
+			
+			qFormParams['form'] = strForm;
+			qFormParams['control'] = strControl;
+			qFormParams['event'] = strEvent;
+			qFormParams['param'] = mixParameter;
+			qFormParams['waitIcon'] = strWaitIconControlId;
 
 			if (strWaitIconControlId) {
 				this.objAjaxWaitIcon = this.getWrapper(strWaitIconControlId);
 				if (this.objAjaxWaitIcon)
 					this.objAjaxWaitIcon.style.display = 'inline';
 			}
+			
+			// Use a modified ajax queue so ajax requests happen synchronously
 			$j.ajaxQueue({
 				url: strFormAction,
 				type: "POST",
-				data: strPostData,
+				qFormParams: qFormParams,
+				fnInit: function (o) {	
+					// Get the data at the last possible instant in case the formstate changes between ajax calls
+					o.data = qcubed.getPostData(
+							o.qFormParams['form'],
+							o.qFormParams['control'],
+							o.qFormParams['event'],
+							o.qFormParams['param'],
+							o.qFormParams['waitIcon']);
+				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 					var result = XMLHttpRequest.responseText;
 					if (XMLHttpRequest.status != 0 || result.length > 0) {
