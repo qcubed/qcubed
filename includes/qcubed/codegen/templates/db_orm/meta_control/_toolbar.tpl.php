@@ -76,7 +76,8 @@
 
 			if ($blnNew) {
 				$this->txtLoad = new QIntegerTextBox($this);
-				$this->txtLoad->CssClass = 'load_value textbox ui-state-default ui-corner-all';
+				$this->txtLoad->CssClass = 'load_value textbox ui-corner-all';
+				$this->txtLoad->Required = true;
 				$this->txtLoad->AddAction(new QEnterKeyEvent(), new QAjaxControlAction($this, 'btnLoad_Click'));
 
 				$this->btnLoad = new QJqButton($this);
@@ -85,6 +86,7 @@
 				$this->btnLoad->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnLoad_Click'));
 				$this->btnLoad->Icons = array('primary' => JqIcon::Play);
 				$this->btnLoad->CssClass = 'load';
+				$this->btnLoad->CausesValidation = $this->txtLoad;
 
 				$this->btnNew = new QJqButton($this);
 				$this->btnNew->Text = QApplication::Translate('New');

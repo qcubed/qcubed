@@ -57,7 +57,7 @@
 			$this->CssClass = "object_selector";
 
 			$this->txtAutocomplete = new QAutocomplete($this);
-			$this->txtAutocomplete->CssClass = 'ui-autocomplete-input ui-widget ui-widget-content ui-corner-all ui-state-default';
+			$this->txtAutocomplete->CssClass = 'ui-autocomplete-input ui-corner-all';
 			$this->txtAutocomplete->SetDataBinder("update_autocompleteList", $this);
 			$this->txtAutocomplete->MustMatch = true;
 			$this->txtAutocomplete->UseWrapper = false;
