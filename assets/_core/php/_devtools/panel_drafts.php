@@ -67,6 +67,13 @@
 			}
 		}
 
+		public function Form_Validate() {
+			foreach ($objErrorControls = $this->GetErrorControls() as $objErrorControl) {
+				$objErrorControl->Blink('#ff6666', '#ffff66');
+			}
+			// Because we performed no custom validation, let's always return true
+			return true;
+		}
 	}
 
 	Dashboard::Run('Dashboard');
