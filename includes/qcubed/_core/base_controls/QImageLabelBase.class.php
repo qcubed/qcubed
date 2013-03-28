@@ -148,11 +148,12 @@
 				);
 			}
 
-			$strToReturn = sprintf('<img src="%s"%s%s alt="%s" %s%s/>',
+			$strToReturn = sprintf('<img src="%s"%s%s alt="%s" id="%s" %s%s/>',
 				$strPath, 
 				$strWidth,
 				$strHeight,
 				QApplication::HtmlEntities($this->strText),
+				$this->strControlId,
 				$this->GetAttributes(),
 				$strStyle);
 			return $strToReturn;
