@@ -1,22 +1,5 @@
 <?php
 
-class QTestControl extends QControl {
-	protected function GetControlHtml() {
-		return "";
-	}
-
-	public function ParsePostData() {
-		
-	}
-
-	public function Validate() {
-		return true;
-	}
-	
-	public function GetWrapperStyleAttributes($blnIsBlockElement=false) {
-		return parent::GetWrapperStyleAttributes($blnIsBlockElement);
-	}
-}
 /**
  * 
  * @package Tests
@@ -36,6 +19,7 @@ class QControlBaseTests extends QUnitTestCaseBase {
 	public function __construct($objForm) {
 		parent::__construct($objForm);
 		$this->frmTest = $objForm;
+		$this->ctlTest = $objForm->ctlTest;
 	}
 
 	protected function helpTest($objTestDataArray, $objProperiesArray, $strGetStyleMethod = "GetWrapperStyleAttributes") {
@@ -58,9 +42,7 @@ class QControlBaseTests extends QUnitTestCaseBase {
 		}
 	}
 
-	public function testCss() {
-		$this->ctlTest = new QTestControl($this->frmTest);
-		
+	public function testCss() {		
 		$objCaseArray = array( 
 			array(
 				"Value" => "0", "Expected" => "0;", "Msg" => "String zero renders with no 'px'"
@@ -144,5 +126,13 @@ class QControlBaseTests extends QUnitTestCaseBase {
 		}
 
 	}
+	
+	public function testAjaxChangeFormState() {
+		if (!QApplication::$CliMode) {
+			$this->assertTrue ($this->ctlTest->savedValue1 == 2, "Actions can change state for later queued actions.");
+			$this->assertTrue ($this->ctlTest->savedValue2 == 2, "Actions can change state for later queued actions.");
+		}
+	}
+	
 }
 ?>
