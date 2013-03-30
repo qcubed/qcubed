@@ -58,7 +58,6 @@
 		protected $strIgnoreJavaScriptFileArray = array();
 		/* protected $strIgnoreJavaScriptFileArray = array(
 			'date_time_picker.js',
-			'qcubed.js',
 			'treenav.js'); */
 
 		/**

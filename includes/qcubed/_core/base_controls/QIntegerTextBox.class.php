@@ -12,6 +12,7 @@
 	 * @package Controls
 	 *
 	 */
+
 	class QIntegerTextBox extends QNumericTextBox {
 		//////////
 		// Methods

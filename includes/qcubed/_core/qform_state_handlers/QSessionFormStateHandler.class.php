@@ -1,46 +1,86 @@
 <?php
 	/**
-	 * Simple Session-based FormState handler.  Uses PHP Sessions so it's very straightforward
-	 * and simple, utilizing the session handling and cleanup functionality in PHP, itself.
+	 * Session-based FormState handler.  Uses PHP Sessions to store the form state.
 	 * 
-	 * The downside is that for long running sessions, each individual session file can get
-	 * very, very large, storing all hte various formstate data.  Eventually (if individual
-	 * session files > 10, 15 MB), you can theoretically observe a geometrical
-	 * degradation of performance.
+	 * Stores the variables in the following format:
+	 * $_SESSION['qformstate'][form_uniquid][state#]
+	 *   where the form_uniquid is a unique id that sticks with the window that the
+	 *   form is on, and state# is the formstate associated with that window. Multiple
+	 *   formstates need to be saved to support the browser back button.
 	 * 
 	 * If requested by QForm, the index will be encrypted.
+	 * 
+	 * This incorporates a system of garbage collection that will allow for at most
+	 * 
 	 *
 	 */
 	class QSessionFormStateHandler extends QBaseClass {
+		
+		public static $BackButtonMax = 20; // maximum number of back button states we remember
+		
 		public static function Save($strFormState, $blnBackButtonFlag) {
 			// Compress (if available)
 			if (function_exists('gzcompress'))
 				$strFormState = gzcompress($strFormState, 9);
-
-			// Setup CurrentStateIndex (if none yet exists)
-			if (!array_key_exists('qform_current_state_index', $_SESSION))
-				$_SESSION['qform_current_state_index'] = 0;
-
-			// Increment CurrentStateIndex if BackButtonFlag is true
-			// Otherwise, we're in an ajax-to-ajax call, and the back button is invalid anyway
-			// No need to increment session state index -- let's not to save space
-			if ($blnBackButtonFlag)
-				$_SESSION['qform_current_state_index'] = $_SESSION['qform_current_state_index'] + 1;
-			$intStateIndex = $_SESSION['qform_current_state_index'];
-
-			// Save THIS formstate
-			// NOTE: if gzcompress is used, we are saving the *BINARY* data stream of the compressed formstate
-			// In theory, this SHOULD work.  But if there is a webserver/os/php version that doesn't like
-			// binary session streams, you can first base64_encode before saving to session (see note below).
-			$_SESSION['qform_' . $intStateIndex] = $strFormState;
-
+				
+			if (empty($_POST['Qform__FormState'])) {
+				// no prior form state, so create a new one.
+				$strFormInstance = uniqid();
+				$intFormStateIndex = 1;
+			} else {
+				$strPriorState = $_POST['Qform__FormState'];
+				
+				if (!is_null(QForm::$EncryptionKey)) {
+					// Use QCryptography to Decrypt
+					$objCrypto = new QCryptography(QForm::$EncryptionKey, true);
+					$strPriorState = $objCrypto->Decrypt($strPriorState);
+				}
+				
+				$a = explode ('_', $strPriorState);
+				if (count ($a) == 2 && 
+						is_numeric ($a[1]) &&
+						!empty($_SESSION['qformstate'][$a[0]]['index'])) {
+					$strFormInstance = $a[0];
+					$intFormStateIndex = $_SESSION['qformstate'][$a[0]]['index'];
+					if ($blnBackButtonFlag) { // can we reuse current state info?
+						$intFormStateIndex ++; // nope
+						
+						// try to garbage collect
+						if (count($_SESSION['qformstate'][$a[0]]) > self::$BackButtonMax) {
+							foreach ($_SESSION['qformstate'][$a[0]] as $key=>$val) {
+								if (is_numeric($key) && $key < $_SESSION['qformstate'][$a[0]]['index'] - self::$BackButtonMax) {
+									unset ($_SESSION['qformstate'][$a[0]][$key]);
+								}
+							}
+						}
+					}
+				} else {
+					// couldn't find old session variables, so create new one
+					$strFormInstance = uniqid();
+					$intFormStateIndex = 1;
+				}
+			}
+				
+			// Setup current state variable
+			if (empty($_SESSION['qformstate'])) {
+				$_SESSION['qformstate'] = array();
+			} 
+			if (empty($_SESSION['qformstate'][$strFormInstance])) {
+				$_SESSION['qformstate'][$strFormInstance] = array();
+			} 
+			
+			$_SESSION['qformstate'][$strFormInstance]['index'] = $intFormStateIndex;
+			$_SESSION['qformstate'][$strFormInstance][$intFormStateIndex] = $strFormState;
+			
+			$strPostDataState = $strFormInstance . '_' . $intFormStateIndex;
+			
 			// Return StateIndex
 			if (!is_null(QForm::$EncryptionKey)) {
 				// Use QCryptography to Encrypt
 				$objCrypto = new QCryptography(QForm::$EncryptionKey, true);
-				return $objCrypto->Encrypt($intStateIndex);
+				return $objCrypto->Encrypt($strPostDataState);
 			} else
-				return $intStateIndex;
+				return $strPostDataState;
 		}
 
 		public static function Load($strPostDataState) {
@@ -48,24 +88,27 @@
 			if (!is_null(QForm::$EncryptionKey)) {
 				// Use QCryptography to Decrypt
 				$objCrypto = new QCryptography(QForm::$EncryptionKey, true);
-				$intStateIndex = $objCrypto->Decrypt($strPostDataState);
-			} else
-				$intStateIndex = $strPostDataState;
-
-			// Pull FormState from Session
+				$strPostDataState = $objCrypto->Decrypt($strPostDataState);
+			}
+		
+			$a = explode ('_', $strPostDataState);
+			if (count ($a) == 2 && 
+					is_numeric ($a[1]) &&
+					!empty($_SESSION['qformstate'][$a[0]][$a[1]])) {
+				$strSerializedForm = $_SESSION['qformstate'][$a[0]][$a[1]];
+			} else {
+				return null;
+			}
+			
+			// Uncompress (if available)
 			// NOTE: if gzcompress is used, we are restoring the *BINARY* data stream of the compressed formstate
 			// In theory, this SHOULD work.  But if there is a webserver/os/php version that doesn't like
 			// binary session streams, you can first base64_decode before restoring from session (see note above).
-			if (array_key_exists('qform_' . $intStateIndex, $_SESSION)) {
-				$strSerializedForm = $_SESSION['qform_' . $intStateIndex];
+			if (function_exists('gzcompress')) {
+				$strSerializedForm = gzuncompress($strSerializedForm);
+			}
 
-				// Uncompress (if available)
-				if (function_exists('gzcompress'))
-					$strSerializedForm = gzuncompress($strSerializedForm);
-
-				return $strSerializedForm;
-			} else
-				return null;
+			return $strSerializedForm;
 		}
 	}
 ?>
