@@ -19,7 +19,7 @@
 	 * The difference between QDatepicker class and this class is that QDatepicker will create only the jQuery
 	 * control to select the date. This class will create a textbox which when clicked presents the datepicker
 	 * and allows you to get the date selected in the datepicker as a string in the textbox.
-	 * @package Controls  
+	 * @package Controls
 	 * @author Qcubed
 	 * @copyright 
 	 * @version 2011
