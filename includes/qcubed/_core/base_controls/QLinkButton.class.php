@@ -6,7 +6,7 @@
 	 */
 
 	/**
-	 * This class will render an HTML link [a href], but will act like a Button or ImageButton.
+	 * This class will render an HTML link <a href>, but will act like a Button or ImageButton.
 	 * (it is a subclass of actioncontrol)
 	 * Therefore, you cannot define a "URL/HREF" destination for this LinkButton.  It simply links
 	 * to "#".  And then if a ClientAction is defined, it will execute that when clicked.  If a ServerAction
@@ -14,8 +14,8 @@
 	 *
 	 * @package Controls
 	 *
-	 * @property string $Text text of the Link
-	 * @property string $HtmlEntities Determines whether htmlentities will be run over the text on the link or not
+	 * @property string $Text is the text of the Link
+	 * @property string $HtmlEntities
 	 */
 	class QLinkButton extends QActionControl {
 		///////////////////////////
@@ -23,18 +23,12 @@
 		///////////////////////////
 
 		// APPEARANCE
-		/** @var null|string Text on the button */
 		protected $strText = null;
-		/** @var bool Whether or not to use the htmlentities for the text on the button */
 		protected $blnHtmlEntities = true;
 
 		//////////
 		// Methods
 		//////////
-		/**
-		 * Creates the HTML for the QLinkButton
-		 * @return string
-		 */
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)
@@ -54,13 +48,6 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
-		/**
-		 * The magic _get method to fetch properties of the QLinkButton
-		 * @param string $strName Property name to fetch
-		 *
-		 * @return array|bool|int|mixed|null|QControl|QForm|string
-		 * @throws QCallerException
-		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -79,14 +66,6 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
-		/**
-		 * The magic _set method to fetch properties of the QLinkButton
-		 * @param string $strName Property name
-		 * @param string $mixValue Value to be set
-		 *
-		 * @throws QCallerException
-		 * @throws QInvalidCastException
-		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

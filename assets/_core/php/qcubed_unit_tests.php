@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 
 /* This file is the file to point the browser to to launch unit tests */
@@ -16,7 +15,7 @@ require(dirname(__FILE__).'/../../../qcubed.inc.php');
 restore_error_handler();
 
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
-
+require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QTestControl.class.php');
 
 class QHtmlReporter extends HtmlReporter {
 	function paintMethodStart($test_name) {
@@ -47,11 +46,36 @@ class QHtmlReporter extends HtmlReporter {
 }
 
 class QTestForm extends QForm {
+	public $ctlTest;
+	public $pnlOutput;
 
 	protected function Form_Create() {
+		$this->ctlTest = new QTestControl($this);
+		$this->pnlOutput = new QPanel($this, 'outputPanel');
+		
+		$t1 = new QJsTimer($this, 200, false, true, 'timer1');
+		$t1->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest'));
+		$t2 = new QJsTimer($this, 201, false, true, 'timer2');
+		$t2->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest2'));
+		$t3 = new QJsTimer($this, 400, false, true, 'timer3');
+		$t3->AddAction(new QTimerExpiredEvent(), new QServerAction ('runTests'));
+	}
+	
+	public function preTest() {
+		$this->ctlTest->savedValue1 = 2;	// for test in QControlBaseTests
+	}
+	
+	public function preTest2() {
+		$this->ctlTest->savedValue2 = $this->ctlTest->savedValue1;	// for test in QControlBaseTests
+	}
+	
+	
+	public function runTests() {
+		
 		$filesToSkip = array(
 			"QUnitTestCaseBase.php"
 			, "QTestForm.tpl.php"
+			, "QTestControl.class.php"
 		);
 
 		$arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');

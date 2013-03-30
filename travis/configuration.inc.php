@@ -147,14 +147,19 @@ if (!defined('SERVER_INSTANCE')) {
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery
 			// installation that's local to QCubed (in that case, paths must be relative to __JS_ASSETS__
 			define ('__JQUERY_BASE__', ' http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
-			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js');
+			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js');
 
 			// If you want to use the local jQuery files, specify the paths relative to __JS_ASSETS__
 			// or just uncomment the 2 lines below.
 			// define ('__JQUERY_BASE__',  'jquery/jquery.min.js');
 			// define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.min.js');
 
-			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-lightness/jquery-ui.custom.css');
+			// The core qcubed javascript file to be used.
+			// In production or as a performance tweak, you may want to use the compressed "_qc_packed.js" library
+			define ('__QCUBED_JS_CORE__',  'qcubed.js');
+			//define ('__QCUBED_JS_CORE__',  '_qc_packed.js');
+
+			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-qcubed/jquery-ui.custom.css');
 
 			// Location of the QCubed-specific web-based development tools, like codegen.php
 			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
@@ -209,7 +214,7 @@ if (!defined('SERVER_INSTANCE')) {
 			//			define('DB_CONNECTION_3', serialize(array('adapter'=>'MySqli', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
 			//			define('DB_CONNECTION_4', serialize(array('adapter'=>'MySql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
 			//			define('DB_CONNECTION_5', serialize(array('adapter'=>'PostgreSql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-
+			//			define('DB_CONNECTION_6', serialize(array('adapter' => 'InformixPdo', 'host' => 'maxdata', 'server' => 'maxdata', 'service' => 9088, 'protocol' => 'onsoctcp', 'database' => 'qcubed', 'username' => 'root', 'password' => '', 'profiling' => false)));
 
 			// Maximum index of the DB connections defined by DB_CONNECTION_# constants above
 			// When reading the DB_CONNECTION_# constants, it will only go up to (and including) the index defined here
