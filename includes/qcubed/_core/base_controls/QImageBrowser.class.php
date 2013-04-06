@@ -217,7 +217,7 @@
 			
 				// And finally, let's specify a CacheFolder so that the images are cached
 				// Notice that this CacheFolder path is a complete web-accessible relative-to-docroot path
-				$img->CacheFolder = __VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/image_browser/cache';
+				$img->CacheFolder = __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__ . '/cache';
 				
 				$img->AddAction(new QClickEvent(), new QAjaxControlAction($objImageBrowser, "imgThm_Click"));
 			}
