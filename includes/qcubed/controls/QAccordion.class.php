@@ -13,7 +13,7 @@
 	 *
 	 * It extends the QAccordionBase class. When writing your code, use this class instead of QAccordianBase.
 	 * This class is intended to be modified by the developer to add functions and alter the already present functions.
-	 * @package Controls  
+	 * @package Controls
 	 */
 	class QAccordion extends QAccordionBase
 	{
