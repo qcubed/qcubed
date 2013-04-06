@@ -141,6 +141,17 @@
 
 				$this->strCachedImageFilePath = $strPath;
 			} else {
+				if (strlen($strSerialized) > 255/* safe max filename size */) {
+					throw new QCallerException(
+						sprintf(
+							QApplication::Translate(
+								"The filename size exceeded for the serialized QImageLabel control." .
+								" The size is %s. The maximum value is 255. Try to set the CacheFolder property to solve the problem."
+							)
+							, strlen($strSerialized)
+						)
+					);
+				}
 				$strPath = sprintf('%s/image_label.php/%s/q.%s',
 					__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__,
 					$strSerialized,
