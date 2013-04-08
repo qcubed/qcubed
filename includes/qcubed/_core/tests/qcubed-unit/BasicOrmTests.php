@@ -81,7 +81,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			QQ::GreaterThan(QQN::Milestone()->Project->StartDate, $someDate),
 			// test for single QQClause object
 			// the subject of the https://github.com/qcubed/framework/issues/100 issue #100
-			QQ::OrderBy(QQN::Milestone()->Project->Name)
+			QQ::Distinct()
 		);
 		
 		$this->assertEqual($intItemCount, 3);
@@ -90,8 +90,9 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			QQ::GreaterThan(QQN::Milestone()->Project->StartDate, $someDate),
 			// test for an array of QQClause objects
 			QQ::Clause(
-				QQ::OrderBy(QQN::Milestone()->Project->Name)
-                                , QQ::OrderBy(QQN::Milestone()->Project->Id)
+				// The QQ::Distinct is used because of the https://github.com/qcubed/framework/issues/231 issue #231
+				QQ::Distinct()
+				, QQ::Distinct()
 			)
 		);
 		
