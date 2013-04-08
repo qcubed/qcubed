@@ -30,10 +30,6 @@ class ExampleForm extends QForm {
 		$objStyle = $this->dtgPersons->AlternateRowStyle;
 		$objStyle->BackColor = '#f6f6f6';
 
-		$objStyle = $this->dtgPersons->HeaderRowStyle;
-		$objStyle->ForeColor = 'white';
-		$objStyle->BackColor = '#780000';
-
 		// Higlight the datagrid rows when mousing over them
 		$this->dtgPersons->AddRowAction(new QMouseOverEvent(), new QCssClassAction('selectedStyle'));
 		$this->dtgPersons->AddRowAction(new QMouseOutEvent(), new QCssClassAction());

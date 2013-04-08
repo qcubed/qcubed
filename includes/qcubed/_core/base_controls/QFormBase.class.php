@@ -41,8 +41,8 @@
 		protected $strHtmlIncludeFilePath;
 		protected $strCssClass;
 		
-		protected $strCustomAttributeArray = null;		
-
+		protected $strCustomAttributeArray = null;
+		
 		///////////////////////////
 		// Form Status Constants
 		///////////////////////////
@@ -161,14 +161,14 @@
 		public function IsCheckableControlRendered($strControlId) {
 			return array_key_exists($strControlId, $this->blnRenderedCheckableControlArray);
 		}
-
+		
 		public static function Run($strFormId, $strAlternateHtmlFile = null) {
 			// Ensure strFormId is a class
 			$objClass = new $strFormId();
 
 			// Ensure strFormId is a subclass of QForm
 			if (!($objClass instanceof QForm))
-				throw new QCallerException('Object is not a subclass of QForm (note, it can NOT be a subclass of QFormBase): ' . $strFormId);
+				throw new QCallerException('Object must be a subclass of QForm: ' . $strFormId);
 
 			// See if we can get a Form Class out of PostData
 			$objClass = null;			
@@ -180,13 +180,15 @@
 					$objClass = QForm::Unserialize($strPostDataState);
 
 				// If there is no QForm Class, then we have an Invalid Form State
-				if (!$objClass) throw new QInvalidFormStateException($strFormId);
+				if (!$objClass) {
+					self::InvalidFormState();
+				}
 			}
 
 			if ($objClass) {
 				// Globalize
 				$_FORM = $objClass;
-
+			
 				$objClass->strCallType = $_POST['Qform__FormCallType'];
 				$objClass->intFormStatus = QFormBase::FormStatusUnrendered;
 
@@ -276,7 +278,7 @@
 			} else {
 				// We have no form state -- Create Brand New One
 				$objClass = new $strFormId();
-				
+			
 				// Globalize
   				$_FORM = $objClass;
 
@@ -346,6 +348,35 @@
 			$objClass->Form_Exit();
 		}
 
+		/**
+		 * An invalid form state was found. 
+		 * We were handed a formstate, but the formstate could not be interpreted. This could be for
+		 * a variety of reasons, and is dependent on the formstate handler. Most likely, the user hit
+		 * the back button past the back button limit of what we remember, or the user lost the session.
+		 * Or, you simply have not set up the form state handler correctly.
+		 * In the past, we threw an exception, but that was not a very user friendly response. 
+		 * The response below resubmits the url without a formstate so that a new one will be created. 
+		 * Override if you want a different response.
+		 */
+		public static function InvalidFormState() {
+			ob_clean();
+			if (isset($_POST['Qform__FormCallType']) &&  $_POST['Qform__FormCallType'] == QCallType::Ajax) {
+				// AJAX-based Response
+
+				// Response is in XML Format
+				header('Content-Type: text/xml');
+
+				// Use javascript to reload
+				_p('<?xml version="1.0"?><response><controls/><commands><command>window.location.reload(true);</command></commands></response>', false);
+
+			} else {
+				header('Location: '. QApplication::$RequestUri);
+			}
+
+			// End the Response Script
+			exit();	
+		}
+		
 		public function CallDataBinder($strMethodName, QPaginatedControl $objPaginatedControl, $objParentControl = null) {
 			try {
 				if ($objParentControl)
@@ -543,6 +574,8 @@
 
 			if ($strSerializedForm) {
 				// Unserialize and Cast the Form
+				// For the QSessionFormStateHandler the __PHP_Incomplete_Class occurs sometimes
+				// for the result of the unserialize call.
 				$objForm = unserialize($strSerializedForm);
 				$objForm = QType::Cast($objForm, 'QForm');
 
@@ -612,9 +645,9 @@
 		// Will render:
 		//		<form ...... autocomplete="off">
 		public function SetCustomAttribute($strName, $strValue) {
-      if ($strName == "method" || $strName == "action")
-        throw new QCallerException(sprintf("Custom Attribute not supported through SetCustomAttribute(): %s", $strName));
-      
+			if ($strName == "method" || $strName == "action")
+				throw new QCallerException(sprintf("Custom Attribute not supported through SetCustomAttribute(): %s", $strName));
+	  
 			if (!is_null($strValue))
 				$this->strCustomAttributeArray[$strName] = $strValue;
 			else {
@@ -747,21 +780,25 @@
 			}
 
 			// Recursive call on Child Controls
-			foreach ($objControl->GetChildControls() as $objChildControl)
+			foreach ($objControl->GetChildControls() as $objChildControl) {
 				// Only Enabled and Visible and Rendered controls should be validated
-				if (($objChildControl->Visible) && ($objChildControl->Enabled) && ($objChildControl->RenderMethod) && ($objChildControl->OnPage))
-					if (!$this->ValidateControlAndChildren($objChildControl))
+				if (($objChildControl->Visible) && ($objChildControl->Enabled) && ($objChildControl->RenderMethod) && ($objChildControl->OnPage)) {
+					if (!$this->ValidateControlAndChildren($objChildControl)) {
 						$blnToReturn = false;
+					}
+				}
+			}
 
 			return $blnToReturn;
 		}
 
 		protected function TriggerActions($strControlIdOverride = null) {
 			if (array_key_exists('Qform__FormControl', $_POST)) {
-				if ($strControlIdOverride)
+				if ($strControlIdOverride) {
 					$strId = $strControlIdOverride;
-				else
+				} else {
 					$strId = $_POST['Qform__FormControl'];
+				}
 				$strEvent = $_POST['Qform__FormEvent'];
 				
 				$strAjaxActionId = NULL;
@@ -790,7 +827,6 @@
 
 						// Validation Check
 						$blnValid = true;
-						$objControlsToValidate = array();
 						$mixCausesValidation = null;
 
 						// Figure out what the CausesValidation directive is
@@ -799,69 +835,84 @@
 
 						// Next, go through the linked ajax/server actions to see if a causesvalidation override is set on any of them
 						if ($objActions) foreach ($objActions as $objAction) {
-							if (!is_null($objAction->CausesValidationOverride))
+							if (!is_null($objAction->CausesValidationOverride)) {
 								$mixCausesValidation = $objAction->CausesValidationOverride;
+							}
 						}
 
 						// Now, Do Something with mixCauseValidation...
 
 						// Starting Point is a QControl
 						if ($mixCausesValidation instanceof QControl) {
-							if (!$this->ValidateControlAndChildren($mixCausesValidation))
+							if (!$this->ValidateControlAndChildren($mixCausesValidation)) {
 								$blnValid = false;
+							}
 
 						// Starting Point is an Array of QControls
 						} else if (is_array($mixCausesValidation)) {
-							foreach (((array) $mixCausesValidation) as $objControlToValidate)
-								if (!$this->ValidateControlAndChildren($objControlToValidate))
+							foreach (((array) $mixCausesValidation) as $objControlToValidate) {
+								if (!$this->ValidateControlAndChildren($objControlToValidate)) {
 									$blnValid = false;
+								}
+							}
 
 						// Validate All the Controls on the Form
 						} else if ($mixCausesValidation === QCausesValidation::AllControls) {
-							foreach ($this->GetChildControls($this) as $objControl)
+							foreach ($this->GetChildControls($this) as $objControl) {
 								// Only Enabled and Visible and Rendered controls that are children of this form should be validated
-								if (($objControl->Visible) && ($objControl->Enabled) && ($objControl->RenderMethod) && ($objControl->OnPage))
-									if (!$this->ValidateControlAndChildren($objControl))
+								if (($objControl->Visible) && ($objControl->Enabled) && ($objControl->RenderMethod) && ($objControl->OnPage)) {
+									if (!$this->ValidateControlAndChildren($objControl)) {
 										$blnValid = false;
+									}
+								}
+							}
 
 						// CausesValidation specifed by QCausesValidation directive
 						} else if ($mixCausesValidation == QCausesValidation::SiblingsAndChildren) {
 							// Get only the Siblings of the ActionControl's ParentControl
 							// If not ParentControl, tyhen the parent is the form itself
-							if (!($objParentObject = $objActionControl->ParentControl))
+							if (!($objParentObject = $objActionControl->ParentControl)) {
 								$objParentObject = $this;
+							}
 
 							// Get all the children of ParentObject
-							foreach ($this->GetChildControls($objParentObject) as $objControl)
+							foreach ($this->GetChildControls($objParentObject) as $objControl) {
 								// Only Enabled and Visible and Rendered controls that are children of ParentObject should be validated
-								if (($objControl->Visible) && ($objControl->Enabled) && ($objControl->RenderMethod) && ($objControl->OnPage))
-									if (!$this->ValidateControlAndChildren($objControl))
+								if (($objControl->Visible) && ($objControl->Enabled) && ($objControl->RenderMethod) && ($objControl->OnPage)) {
+									if (!$this->ValidateControlAndChildren($objControl)) {
 										$blnValid = false;
+									}
+								}
+							}
 
 						// CausesValidation specifed by QCausesValidation directive
 						} else if ($mixCausesValidation == QCausesValidation::SiblingsOnly) {
 							// Get only the Siblings of the ActionControl's ParentControl
 							// If not ParentControl, tyhen the parent is the form itself
-							if (!($objParentObject = $objActionControl->ParentControl))
+							if (!($objParentObject = $objActionControl->ParentControl)) {
 								$objParentObject = $this;
+							}
 
 							// Get all the children of ParentObject
 							foreach ($this->GetChildControls($objParentObject) as $objControl)
 								// Only Enabled and Visible and Rendered controls that are children of ParentObject should be validated
-								if (($objControl->Visible) && ($objControl->Enabled) && ($objControl->RenderMethod) && ($objControl->OnPage))
+								if (($objControl->Visible) && ($objControl->Enabled) && ($objControl->RenderMethod) && ($objControl->OnPage)) {
 									if (!$objControl->Validate()) {
 										$objControl->MarkAsModified();
 										$blnValid = false;
 									}
+								}
 
 						// No Validation Requested
 						} else {}
 
 
 						// Run Form-Specific Validation (if any)
-						if ($mixCausesValidation)
-							if (!$this->Form_Validate())
+						if ($mixCausesValidation) {
+							if (!$this->Form_Validate()) {
 								$blnValid = false;
+							}
+						}
 
 
 						// Go ahead and run the ServerActions or AjaxActions if Validation Passed and if there are Server/Ajax-Actions defined
@@ -876,9 +927,10 @@
 								}
 							}
 						}
-					} else
+					} else {
 						// Nope -- Throw an exception
 						throw new Exception(sprintf('Control passed by Qform__FormControl does not exist: %s', $strId));
+					}
 				}/* else {
 					// TODO: Code to automatically execute any PrimaryButton's onclick action, if applicable
 					// Difficult b/c of all the QCubed hidden parameters that need to be set to get the action to work properly
@@ -967,6 +1019,16 @@
 			// Setup Rendered HTML
 			$strToReturn .= sprintf('<form method="post" id="%s" action="%s"%s>', $this->strFormId, htmlentities(QApplication::$RequestUri), $strFormAttributes);
 			$strToReturn .= "\r\n";
+			
+			// In order to make ui-themes workable, move the jquery.css to the end of list.
+			// It should override any rules that it can override.
+			foreach ($strStyleSheetArray as $strScript) {
+				if (__JQUERY_CSS__ == $strScript) {
+					unset($strStyleSheetArray[$strScript]);
+					$strStyleSheetArray[$strScript] = $strScript;
+					break;
+				}
+			}
 
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
@@ -1230,8 +1292,10 @@
 			foreach ($strStyleSheetToAddArray as $strScript)
 				$strEndScript .= 'qc.loadStyleSheetFile("' . $strScript . '", "all"); ';
 
-            if ($strEvents)
-                $strEndScript = $strEvents . ';' . $strEndScript;
+			if ($strEvents) {
+				// qc.regCA first, $strEvents second.
+				$strEndScript = $strEndScript . ';' . $strEvents;
+			}
 
 			// Next, add any new JS files that haven't yet been included to the BEGINNING of the High Priority commands string
 			// (already rendered HP commands up to this point will be placed into the callback)

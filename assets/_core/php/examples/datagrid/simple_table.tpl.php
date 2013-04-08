@@ -10,7 +10,7 @@
 	}
 
 	tr.header_row {
-		background-color: #780000;
+		background-color: #333;
 		color: #ffffff;
 	}
 
