@@ -120,7 +120,8 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			QQ::All(),
 			QQ::Clause(
 				QQ::GroupBy(QQN::Project()->Id),
-				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count')
+				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
+				QQ::OrderBy(QQN::Project()->Id)
 			)
 		);
 		
@@ -202,7 +203,8 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			QQ::Clause(
 				QQ::GroupBy(QQN::Project()->Id),
 				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
-				QQ::Having(QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId))
+				QQ::Having(QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId)),
+				QQ::OrderBy(QQN::Project()->Id)
 			)
 		);
 		
