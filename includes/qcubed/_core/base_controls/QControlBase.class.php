@@ -126,6 +126,10 @@
 
 		// MISC
 		protected $strControlId;
+		/**
+		 *
+		 * @var QForm
+		 */
 		protected $objForm = null;
 		protected $objParentControl = null;
 		protected $objChildControlArray = array();
@@ -924,6 +928,17 @@
 			if ($this->objDroppable)
 				$strToReturn = sprintf('%s; %s', $this->objDroppable->GetControlJavaScript(), $strToReturn);
 
+			// This allows display settings to be applied before other control-specific javascript code is executed
+			// It is important if control was hidden and is now appearing to be visible, and
+			// the control or any of it's childs has a javascript code that depends on jquery width or outerWidth API.
+			// In this case the control should be made visible (display: any-non-hidden-value) first and only then
+			// the jquery width or outerWidth API can be used.
+			if (($this->blnWrapperModified) && ($this->blnVisible) && ($this->blnUseWrapper)) {
+				$strWrapperStyle = $this->GetWrapperStyleAttributes($this->blnIsBlockElement);
+				$strJavaScript = sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass);
+				$strToReturn = sprintf('%s; %s', $strJavaScript, $strToReturn);
+			}
+			
 			return $strToReturn;
 		}
 
@@ -1013,9 +1028,11 @@
 						// use the wrapper attribute to pass in the special attribute data-hasrel (if no wrappers are used and RenderWithError or similar methods are called)
 						$strOutput = sprintf('<control id="%s" %s>%s</control>', $this->strControlId, $strWrapperAttributes, $strOutput);
 
-						if (($this->blnWrapperModified) && ($this->blnVisible) && ($this->blnUseWrapper)) {
-							QApplication::ExecuteJavaScript(sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass));
-						}
+						// This code was moved to the GetEndScript function.
+						// See comment there for an explanation.
+//						if (($this->blnWrapperModified) && ($this->blnVisible) && ($this->blnUseWrapper)) {
+//							QApplication::ExecuteJavaScript(sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass), QJsPriority::High);
+//						}
 					}
 					break;
 
@@ -1480,8 +1497,11 @@
 					}
 				case "Display":
 					try {
-						$this->blnDisplay = QType::Cast($mixValue, QType::Boolean);
-						$this->MarkAsWrapperModified();
+						$blnDisplay = QType::Cast($mixValue, QType::Boolean);
+						if ($blnDisplay != $this->blnDisplay) {
+							$this->blnDisplay = $blnDisplay;
+							$this->MarkAsWrapperModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1707,8 +1727,11 @@
 					}
 				case "Position":
 					try {
-						$this->strPosition = QType::Cast($mixValue, QType::String);
-						$this->MarkAsWrapperModified();
+						$strPosition = QType::Cast($mixValue, QType::String);
+						if ($strPosition != $this->strPosition) {
+							$this->strPosition = $strPosition;
+							$this->MarkAsWrapperModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1716,8 +1739,11 @@
 					}
 				case "Top":
 					try {
-						$this->strTop = QType::Cast($mixValue, QType::String);
-						$this->MarkAsWrapperModified();
+						$strTop = QType::Cast($mixValue, QType::String);
+						if ($strTop != $this->strTop) {
+							$this->strTop = $strTop;
+							$this->MarkAsWrapperModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1725,8 +1751,11 @@
 					}
 				case "Left":
 					try {
-						$this->strLeft = QType::Cast($mixValue, QType::String);
-						$this->MarkAsWrapperModified();
+						$strLeft = QType::Cast($mixValue, QType::String);
+						if ($strLeft != $this->strLeft) {
+							$this->strLeft = $strLeft;
+							$this->MarkAsWrapperModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1814,8 +1843,11 @@
 
 				case "WrapperCssClass":
 					try {
-						$this->strWrapperCssClass = QType::Cast($mixValue, QType::String);
-						$this->MarkAsWrapperModified();
+						$strWrapperCssClass = QType::Cast($mixValue, QType::String);
+						if ($strWrapperCssClass != $this->strWrapperCssClass) {
+							$this->strWrapperCssClass = $strWrapperCssClass;
+							$this->MarkAsWrapperModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

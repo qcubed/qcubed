@@ -34,10 +34,6 @@ class ExampleForm extends QForm {
 		$objStyle = $this->dtgPersons->AlternateRowStyle;
 		$objStyle->BackColor = '#f6f6f6';
 
-		$objStyle = $this->dtgPersons->HeaderRowStyle;
-		$objStyle->ForeColor = 'white';
-		$objStyle->BackColor = '#780000';
-
 		// Because browsers will apply different styles/colors for LINKs
 		// We must explicitly define the ForeColor for the HeaderLink.
 		// The header row turns into links when the column can be sorted.
