@@ -34,12 +34,9 @@
 		const PhpReservedWords = 'new, null, break, return, switch, self, case, const, clone, continue, declare, default, echo, else, elseif, empty, exit, eval, if, try, throw, catch, public, private, protected, function, extends, foreach, for, while, do, var, class, static, abstract, isset, unset, implements, interface, instanceof, include, include_once, require, require_once, abstract, and, or, xor, array, list, false, true, global, parent, print, exception, namespace, goto, final, endif, endswitch, enddeclare, endwhile, use, as, endfor, endforeach, this';
 
 		// Relative Paths (from __QCUBED_CORE__) to the CORE Template and Subtemplate Directories
-		const TemplatesPath = '/codegen/templates/';
+		//const TemplatesPath = '/codegen/templates-2/';
+		const TemplatesPath = CODEGEN_TEMPLATE_PATH;
 //		const SubTemplatesPath = '/codegen/subtemplates/';
-
-		// Relative Paths (from __QCUBED__) to the CUSTOM Template and Subtemplate Directories
-		const TemplatesPathCustom = '/codegen/templates/';
-//		const SubTemplatesPathCustom = '/codegen/subtemplates/';
 
 		// DebugMode -- for Template Developers
 		// This will output the current evaluated template/statement to the screen
@@ -243,10 +240,8 @@
 
 		/**
 		 * Given a template prefix (e.g. db_orm_, db_type_, rest_, soap_, etc.), pull
-		 * all the _*.tpl templates from any subfolders of the template prefix in QCodeGen::TemplatesPath and QCodeGen::TemplatesPathCustom,
-		 * and call GenerateFile() on each one.  If there are any template files that reside
-		 * in BOTH TemplatesPath AND TemplatesPathCustom, then only use the TemplatesPathCustom one (which
-		 * in essence overrides the one in TemplatesPath).
+		 * all the _*.tpl templates from any subfolders of the template prefix in QCodeGen::TemplatesPath
+		 * and call GenerateFile() on each one.
 		 *
 		 * @param string $strTemplatePrefix the prefix of the templates you want to generate against
 		 * @param mixed[] $mixArgumentArray array of arguments to send to EvaluateTemplate
@@ -254,14 +249,9 @@
 		 */
 		public function GenerateFiles($strTemplatePrefix, $mixArgumentArray) {
 			// Make sure both our Template and TemplateCustom paths are valid
-			$strTemplatePath = sprintf('%s%s%s', __QCUBED_CORE__ , QCodeGen::TemplatesPath, $strTemplatePrefix);
+			$strTemplatePath = sprintf('%s%s', QCodeGen::TemplatesPath, $strTemplatePrefix);
 			if (!is_dir($strTemplatePath))
 				throw new Exception(sprintf("QCodeGen::TemplatesPath does not appear to be a valid directory:\r\n%s", $strTemplatePath));
-
-			$strTemplatePathCustom = sprintf('%s%s', __QCUBED__, QCodeGen::TemplatesPathCustom);
-			if (!is_dir($strTemplatePathCustom))
-				throw new Exception(sprintf("QCodeGen::TemplatesPathCustom does not appear to be a valid directory:\r\n%s", $strTemplatePathCustom));
-			$strTemplatePathCustom .= $strTemplatePrefix;
 
 			// Create an array of arrays of standard templates and custom (override) templates to process
 			// Index by [module_name][filename] => true/false where
@@ -282,27 +272,9 @@
 						if ((QString::FirstCharacter($strFilename) == '_') &&
 							(
 								(substr($strFilename, strlen($strFilename) - 4) == '.tpl') ||
-								(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
-							)
-							$strTemplateArray[$strModuleName][$strFilename] = false;
-				}
-			}
-
-			// Go through and create or override with any custom templates
-			if (is_dir($strTemplatePathCustom)) {
-				$objDirectory = opendir($strTemplatePathCustom);
-				while ($strModuleName = readdir($objDirectory)) {
-					if (!in_array(strtolower($strModuleName), QCodeGen::$DirectoriesToExcludeArray) &&
-						is_dir($strTemplatePathCustom . '/' . $strModuleName)) {
-						$objModuleDirectory = opendir($strTemplatePathCustom . '/' . $strModuleName);
-						while ($strFilename = readdir($objModuleDirectory))
-							if ((QString::FirstCharacter($strFilename) == '_') &&
-								(
-									(substr($strFilename, strlen($strFilename) - 4) == '.tpl') ||
 									(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
-								)
-								$strTemplateArray[$strModuleName][$strFilename] = true;
-					}
+						)
+							$strTemplateArray[$strModuleName][$strFilename] = false;
 				}
 			}
 
@@ -328,10 +300,7 @@
 		 */
 		public function GenerateFile($strModuleName, $strFilename, $blnOverrideFlag, $mixArgumentArray, $blnSave = true) {
 			// Figure out the actual TemplateFilePath
-			if ($blnOverrideFlag)
-				$strTemplateFilePath = __QCUBED__ . QCodeGen::TemplatesPathCustom . $strModuleName . '/' . $strFilename;
-			else
-				$strTemplateFilePath = __QCUBED_CORE__ . QCodeGen::TemplatesPath . $strModuleName . '/' . $strFilename;
+			$strTemplateFilePath = QCodeGen::TemplatesPath . $strModuleName . '/' . $strFilename;
 
 			// Setup Debug/Exception Message
 			if (QCodeGen::DebugMode) _p("Evaluating $strTemplateFilePath<br/>", false);
@@ -345,9 +314,8 @@
 			// Evaluate the Template
 			if (substr($strFilename, strlen($strFilename) - 8) == '.tpl.php')  {
 				// make sure paths are set up to pick up included files from both the override directory and _core directory
-				$strSearchPath = __QCUBED__ . QCodeGen::TemplatesPathCustom . $strModuleName . PATH_SEPARATOR .
-						__QCUBED_CORE__ . QCodeGen::TemplatesPath . $strModuleName . PATH_SEPARATOR .
-						get_include_path();
+				$strSearchPath = QCodeGen::TemplatesPath . $strModuleName . PATH_SEPARATOR .
+					get_include_path();
 				set_include_path ($strSearchPath);
 				if ($strSearchPath != get_include_path()) {
 					throw new QCallerException ('Can\'t override include path. Make sure your apache or server settings allow include paths to be overriden. ' );
@@ -357,7 +325,7 @@
 			} else {
 				$strTemplate = $this->EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray);
 			}
-			
+
 			// Parse out the first line (which contains path and overwriting information)
 			$intPosition = strpos($strTemplate, "\n");
 			if ($intPosition === false)
@@ -461,23 +429,13 @@
 		protected function EvaluateSubTemplate($strSubTemplateFilename, $strModuleName, $mixArgumentArray) {
 			if (QCodeGen::DebugMode) _p("Evaluating $strSubTemplateFilename<br/>", false);
 
-			// Try the Custom SubTemplate Path (PHP template version)
-			$strFilename = sprintf('%s%s%s/%s.php', __QCUBED__, QCodeGen::TemplatesPathCustom, $strModuleName, $strSubTemplateFilename);
-			if (file_exists($strFilename))
-				return $this->EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray);
-
-			// Try the Custom SubTemplate Path
-			$strFilename = sprintf('%s%s%s/%s', __QCUBED__, QCodeGen::TemplatesPathCustom, $strModuleName, $strSubTemplateFilename);
-			if (file_exists($strFilename))
-				return $this->EvaluateTemplate(file_get_contents($strFilename), $strModuleName, $mixArgumentArray);
-
 			// Try the Standard SubTemplate Path
-			$strFilename = sprintf('%s%s%s/%s', __QCUBED_CORE__, QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename);
+			$strFilename = sprintf('%s%s/%s', QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename);
 			if (file_exists($strFilename))
 				return $this->EvaluateTemplate(file_get_contents($strFilename), $strModuleName, $mixArgumentArray);
 
 			// Try the Standard SubTemplate Path (PHP template version)
-			$strFilename = sprintf('%s%s%s/%s.php', __QCUBED_CORE__, QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename);
+			$strFilename = sprintf('%s%s/%s.php', QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename);
 			if (file_exists($strFilename))
 				return $this->EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray);
 
@@ -510,7 +468,7 @@
 
 				// Get and cleanup the Eval Statement
 				$strStatement = substr($strTemplate, $intPosition + QCodeGen::$TemplateEscapeBeginLength,
-										$intPositionEnd - $intPosition - QCodeGen::$TemplateEscapeEndLength);
+					$intPositionEnd - $intPosition - QCodeGen::$TemplateEscapeEndLength);
 				$strStatement = trim($strStatement);
 
 				if (substr($strStatement, 0, 1) == '=') {
@@ -580,7 +538,7 @@
 					$strStatement = '';
 
 
-				// Check if we're starting an open-ended statemen
+					// Check if we're starting an open-ended statemen
 				} else if (substr($strStatement, strlen($strStatement) - 1) == '{') {
 					// We ARE in an open-ended statement
 
@@ -835,7 +793,7 @@
 			if ($strDelimiter && $objColumn->Comment && ($strLabelText = strstr($objColumn->Comment, $strDelimiter, true))) {
 				return str_replace("'", "\\'", $strLabelText);
 			}
-            return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
+			return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
 		}
 
 		protected function PropertyNameFromColumn(QColumn $objColumn) {
@@ -922,11 +880,11 @@
 			$strToReturn = '';
 			for($intIndex = 0; $intIndex < strlen($strName); $intIndex++)
 				if (((ord($strName[$intIndex]) >= ord('a')) &&
-					 (ord($strName[$intIndex]) <= ord('z'))) ||
+					(ord($strName[$intIndex]) <= ord('z'))) ||
 					((ord($strName[$intIndex]) >= ord('A')) &&
-					 (ord($strName[$intIndex]) <= ord('Z'))) ||
+						(ord($strName[$intIndex]) <= ord('Z'))) ||
 					((ord($strName[$intIndex]) >= ord('0')) &&
-					 (ord($strName[$intIndex]) <= ord('9'))) ||
+						(ord($strName[$intIndex]) <= ord('9'))) ||
 					($strName[$intIndex] == '_'))
 					$strToReturn .= $strName[$intIndex];
 
@@ -1198,7 +1156,7 @@
 				$strGraphPrefixArray[0] = '';
 				$strGraphPrefixArray[1] = 'Parent';
 			} else if ((strpos(strtolower($objForeignKeyArray[0]->ColumnNameArray[0]), 'child') !== false) ||
-						(strpos(strtolower($objForeignKeyArray[1]->ColumnNameArray[0]), 'parent') !== false)) {
+				(strpos(strtolower($objForeignKeyArray[1]->ColumnNameArray[0]), 'parent') !== false)) {
 				$strGraphPrefixArray[0] = 'Parent';
 				$strGraphPrefixArray[1] = '';
 			} else {
@@ -1230,7 +1188,7 @@
 					return QType::DateTime;
 				case QDatabaseFieldType::VarChar:
 					return QType::String;
-				throw new Exception("Invalid Db Type to Convert: $strDbType");
+					throw new Exception("Invalid Db Type to Convert: $strDbType");
 			}
 		}
 
