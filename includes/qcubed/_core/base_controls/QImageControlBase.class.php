@@ -94,6 +94,17 @@
 				// Store Cache Filepath Info
 				$this->strCachedActualFilePath = $strFilePath;
 			} else {
+				if (strlen($strSerialized) > 255/* safe max filename size */) {
+					throw new QCallerException(
+						sprintf(
+							QApplication::Translate(
+								"The filename size exceeded for the serialized QImageControl control." .
+								" The size is %s. The maximum value is 255. Try to set the CacheFolder property to solve the problem."
+							)
+							, strlen($strSerialized)
+						)
+					);
+				}
 				$strPath = sprintf('%s/image.php/%s?q=%s',
 					__VIRTUAL_DIRECTORY__ . __PHP_ASSETS__,
 					$strImageFilename,
