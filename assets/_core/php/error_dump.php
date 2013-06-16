@@ -36,7 +36,6 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 	<head>
 		<title>PHP <?php _p($__exc_strType); ?> - <?php _p($__exc_strMessage); ?></title>
 		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/styles.css");</style>
-		<style>header { background: #780000; color: #fff; padding: 10px; }</style>
 	</head>
 	<body>
 		<header>

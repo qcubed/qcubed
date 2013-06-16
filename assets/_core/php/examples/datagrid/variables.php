@@ -29,10 +29,6 @@ class ExampleForm extends QForm {
 
 		$objStyle = $this->dtgPersons->AlternateRowStyle;
 		$objStyle->BackColor = '#f6f6f6';
-
-		$objStyle = $this->dtgPersons->HeaderRowStyle;
-		$objStyle->ForeColor = 'white';
-		$objStyle->BackColor = '#780000';
 	}
 
 	// DisplayFullName will be called by the DataGrid on each row, whenever it tries to render
