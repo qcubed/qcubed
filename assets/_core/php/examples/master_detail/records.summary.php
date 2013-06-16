@@ -39,11 +39,11 @@ Here is the Child QDataGrid...
 				$this->objProject = $objProject;
 				
 				// Create the child DataGrid as a normal QDataGrid 
-				$this->dtgRecordsSummary = new QDataGrid($this);
-
+				$this->dtgRecordsSummary = new PersonDataGrid($this);
+				$this->dtgRecordsSummary->ShowFilter = false;
 				// pagination
-				$objPaginator = new QPaginator($this->dtgRecordsSummary);
-				$this->dtgRecordsSummary->Paginator = $objPaginator;
+				$this->dtgRecordsSummary->Paginator = new QPaginator($this->dtgRecordsSummary);
+
 				$this->dtgRecordsSummary->ItemsPerPage = 5;
 
 				$this->dtgRecordsSummary->SetDataBinder('dtgRecordsSummary_Bind', $this);
@@ -79,18 +79,35 @@ Here is the Child QDataGrid...
 		}
 
 		public function dtgRecordsSummary_Bind() {
+			$objConditions = $this->dtgRecordsSummary->Conditions;
+
+			// setup $objClauses array 
+			$objClauses = array();
+
+			// add OrderByClause to the $objClauses array 
+			// if ($objClause = $this->dtgRecordsSummary->OrderByClause){
+			if ($objClause = $this->dtgRecordsSummary->OrderByClause) {
+				array_push($objClauses, $objClause);             
+			}
+
+			// add LimitByClause to the $objClauses array 
+			//if ($objClause = $this->dtgRecordsSummary->LimitClause)
+			if ($objClause = $this->dtgRecordsSummary->LimitClause)	
+				array_push($objClauses, $objClause);
+
+
 			$team_array = $this->objProject->GetPersonAsTeamMemberArray
 												(QQ::Clause($this->dtgRecordsSummary->OrderByClause));
 			$this->dtgRecordsSummary->TotalItemCount = count($team_array);
-			
+
 			$this->dtgRecordsSummary->DataSource = $this->objProject->GetPersonAsTeamMemberArray
-												(QQ::Clause($this->dtgRecordsSummary->OrderByClause));
-			
+												(QQ::Clause($this->dtgRecordsSummary->OrderByClause), $objClauses);
+
 		}
           
-          /***************************************
-          / 
-          /  Addresses of Team Member of project
+		/***************************************
+		/ 
+		/  Addresses of Team Member of project
 		/
 		****************************************/
 		
@@ -160,6 +177,9 @@ Here is the Child QDataGrid...
 				}
 				
 				// And refresh the Child QdataGrid this time...
+				// we need set pagenumber = 1 ? I will try remove next line ...
+				$this->dtgRecordsSummary->PageNumber = 1;
+
 				$this->dtgRecordsSummary->Refresh();
 			}
 		}
