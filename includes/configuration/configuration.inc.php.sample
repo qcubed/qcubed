@@ -222,30 +222,30 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('MAX_DB_CONNECTION_INDEX', 9);
 
 			/**
-                         * Multiple Templates (Vaibhav Kaushal, Apr 16, 2013)
-                         * The following setting (CODEGEN_TEMPLATE_PATH) determines the location of the templates
-                         * which would be used for generating various files (Class files, ClassGen files, FormBase files,
-                         * draft pages etc.) for tables in the databases mentioned above.
-                         *
-                         * Requirements for CODEGEN_TEMPLATE_PATH:
-                         * =======================================
-                         *
-                         * 1. It must be a directory and must already exist.
-                         *      Typically it should contain the directories
-                         *      'aggregate_db_orm', 'aggregate_db_type', 'db_orm' and 'db_type'.
-                         *      Without these directories and the files within them, the code generation process will fail.
-                         * 2. The path provided must be absolute. You can use the constants defined above in this very file.
-                         * 3. The path must end with a slash.
-                         * =======================================
-                         *
-                         * To create your own templates, you can copy the contents of the default directory mentioned below
-                         * and copy them to another directory and change the value here and then alter the template files
-                         * as you desire. Do remember that you must understand the templates before you could modify them.
-                         * There currently are no tutorials for that (understanding QCubed templates) and there probably
-                         * never will be due to the complex nature of the templates. However we can help at GitHub and
-                         * QCubed forums.
-                         */
-                        define('CODEGEN_TEMPLATE_PATH', __QCUBED_CORE__ . '/codegen/templates/');
+			 * Multiple Templates (Vaibhav Kaushal, Apr 16, 2013)
+			 * The following setting (CODEGEN_TEMPLATE_PATH) determines the location of the templates
+			 * which would be used for generating various files (Class files, ClassGen files, FormBase files,
+			 * draft pages etc.) for tables in the databases mentioned above.
+			 *
+			 * Requirements for CODEGEN_TEMPLATE_PATH:
+			 * =======================================
+			 *
+			 * 1. It must be a directory and must already exist.
+			 *      Typically it should contain the directories
+			 *      'aggregate_db_orm', 'aggregate_db_type', 'db_orm' and 'db_type'.
+			 *      Without these directories and the files within them, the code generation process will fail.
+			 * 2. The path provided must be absolute. You can use the constants defined above in this very file.
+			 * 3. The path must end with a slash.
+			 * =======================================
+			 *
+			 * To create your own templates, you can copy the contents of the default directory mentioned below
+			 * and copy them to another directory and change the value here and then alter the template files
+			 * as you desire. Do remember that you must understand the templates before you could modify them.
+			 * There currently are no tutorials for that (understanding QCubed templates) and there probably
+			 * never will be due to the complex nature of the templates. However we can help at GitHub and
+			 * QCubed forums.
+			 */
+			define('CODEGEN_TEMPLATE_PATH', __QCUBED_CORE__ . '/codegen/templates/');
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
 			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
