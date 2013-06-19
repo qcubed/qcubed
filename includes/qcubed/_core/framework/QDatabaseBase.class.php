@@ -50,6 +50,14 @@
 		protected $strEscapeIdentifierBegin = '"';
 		protected $strEscapeIdentifierEnd = '"';
 		protected $blnOnlyFullGroupBy = false; // should be set in sub-classes as appropriate
+		
+		/**
+		 * @var int The transaction depth value.
+		 * It is incremented on a transaction begin,
+		 * decremented on a transaction commit, and reset to zero on a roll back.
+		 * It is used to implement the recursive transaction functionality.
+		 */
+		protected $intTransactionDepth = 0;
 
 		// Abstract Methods that ALL Database Adapters MUST implement
 		abstract public function Connect();
@@ -91,14 +99,23 @@
 		 * @return void Nothing
 		 */
 		public final function TransactionBegin() {
-			$this->ExecuteTransactionBegin();
+			if (0 == $this->intTransactionDepth) {
+				$this->ExecuteTransactionBegin();
+			}
+			$this->intTransactionDepth++;
 		}
 		/**
 		 * This function commits the database transaction.
 		 * @return void Nothing
 		 */
 		public final function TransactionCommit() {
-			$this->ExecuteTransactionCommit();
+			if (1 == $this->intTransactionDepth) {
+				$this->ExecuteTransactionCommit();
+			}
+			if ($this->intTransactionDepth <= 0) {
+				throw new QCallerException("The transaction commit call is called before the transaction begin was called.");
+			}
+			$this->intTransactionDepth--;
 		}
 		/**
 		 * This function rolls back the database transaction.
@@ -106,6 +123,7 @@
 		 */
 		public final function TransactionRollBack() {
 			$this->ExecuteTransactionRollBack();
+			$this->intTransactionDepth = 0;
 		}
 
 		abstract public function SqlLimitVariablePrefix($strLimitInfo);
