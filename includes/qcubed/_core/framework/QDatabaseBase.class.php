@@ -64,9 +64,49 @@
 		abstract public function GetIndexesForTable($strTableName);
 		abstract public function GetForeignKeysForTable($strTableName);
 
-		abstract public function TransactionBegin();
-		abstract public function TransactionCommit();
-		abstract public function TransactionRollBack();
+		/**
+		 * This function actually begins the database transaction.
+		 * Must be implemented in all subclasses.
+		 * The "TransactionBegin" wrapper are meant to be called by end-user code
+		 * @return void Nothing
+		 */
+		abstract protected function ExecuteTransactionBegin();
+		/**
+		 * This function actually commits the database transaction.
+		 * Must be implemented in all subclasses.
+		 * The "TransactionCommit" wrapper are meant to be called by end-user code
+		 * @return void Nothing
+		 */
+		abstract protected function ExecuteTransactionCommit();
+		/**
+		 * This function actually rolls back the database transaction.
+		 * Must be implemented in all subclasses.
+		 * The "TransactionRollBack" wrapper are meant to be called by end-user code
+		 * @return void Nothing
+		 */
+		abstract protected function ExecuteTransactionRollBack();
+
+		/**
+		 * This function begins the database transaction.
+		 * @return void Nothing
+		 */
+		public final function TransactionBegin() {
+			$this->ExecuteTransactionBegin();
+		}
+		/**
+		 * This function commits the database transaction.
+		 * @return void Nothing
+		 */
+		public final function TransactionCommit() {
+			$this->ExecuteTransactionCommit();
+		}
+		/**
+		 * This function rolls back the database transaction.
+		 * @return void Nothing
+		 */
+		public final function TransactionRollBack() {
+			$this->ExecuteTransactionRollBack();
+		}
 
 		abstract public function SqlLimitVariablePrefix($strLimitInfo);
 		abstract public function SqlLimitVariableSuffix($strLimitInfo);
