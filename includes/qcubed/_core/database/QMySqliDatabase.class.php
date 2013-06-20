@@ -142,18 +142,18 @@
 			$this->blnConnectedFlag = false;
 		}
 
-		public function TransactionBegin() {
+		protected function ExecuteTransactionBegin() {
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=0;');
 		}
 
-		public function TransactionCommit() {
+		protected function ExecuteTransactionCommit() {
 			$this->NonQuery('COMMIT;');
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=1;');
 		}
 
-		public function TransactionRollback() {
+		protected function ExecuteTransactionRollBack() {
 			$this->NonQuery('ROLLBACK;');
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=1;');
