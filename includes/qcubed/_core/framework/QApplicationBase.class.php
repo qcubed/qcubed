@@ -129,7 +129,7 @@
 		 *
 		 * @var string EncodingType
 		 */
-		public static $EncodingType = 'UTF-8';
+		public static $EncodingType = __QAPPLICATION_ENCODING_TYPE__;
 
 		/**
 		 * An array of Database objects, as initialized by QApplication::InitializeDatabaseConnections()
@@ -850,10 +850,11 @@
 			QApplication::$JavaScriptArrayLowPriority = array();
 
 			if ($strScript) {
-				if ($blnOutput)
+				if ($blnOutput) {
 					_p($strScript, false);
-				else
+				} else {
 					return $strScript;
+				}
 			}
 			return null;
 		}
