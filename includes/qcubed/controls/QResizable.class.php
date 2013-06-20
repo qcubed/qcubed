@@ -12,7 +12,7 @@
 	 */
      
 	/**
-	 * @package Controls  
+	 * @package Controls
 	 * @author Qcubed
 	 * @copyright 
 	 * @version 2011
