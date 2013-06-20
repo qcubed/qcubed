@@ -1,19 +1,15 @@
 <?php
 	/**
-     * QButton
-     * 
+	 * QButton Class is defined here.
 	 * @package Controls
+	 * @filesource
 	 */
-     
-     
+
+
 	/**
-	 * QButton
-	 * 
-	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * QButton class - You may modify it to contain your own modifications to the
+	 * QButton throughout the framework.
+	 * @package Controls
 	 */
 	class QButton extends QButtonBase {
 		///////////////////////////
@@ -21,10 +17,13 @@
 		///////////////////////////
 
 		// Feel free to specify global display preferences/defaults for all QButton controls
-        /** @type string|'button' Css Class applied to this control */
+		/**
+		 * @var string $strCssClass Default CSS class applied to this control
+		 */
 		protected $strCssClass = 'button';
 //		protected $strFontNames = QFontFamily::Verdana;
 //		protected $strFontSize = '10px';
 //		protected $blnFontBold = true;
 	}
+
 ?>
