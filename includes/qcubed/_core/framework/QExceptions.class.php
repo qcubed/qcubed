@@ -34,6 +34,9 @@
 	 *	}
 	 * Again, this will assure the user that the line of code responsible for the excpetion is properly being reported
 	 * by the QCubed error reporting/handler.
+	 * @property-read int $Offset The exception offset.
+	 * @property-read string $BackTrace The exception backtrace.
+	 * @property-read string $TraceArray The exception backtrace in a form of an array.
 	 */
 	class QCallerException extends Exception {
 		private $intOffset;

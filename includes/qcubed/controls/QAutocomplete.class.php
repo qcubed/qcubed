@@ -1,23 +1,18 @@
 <?php
 	/**
-	 * QAccordion
-	 * 
+	 * Override file for QAutocomplete. Put your autocomplete customizations here.
+	 *
 	 * Put your customizations of the standard behavior here.
-	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * @package Controls
+	 * @filesource
 	 */
-     
+
 	/**
-	 * @package Controls  
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * This class only extends QAutocompleteBase which implements the actual functionality.
+	 *
+	 * It will create textbox with autocomplete functionality
+	 * @package Controls
 	 */
-	class QAutocomplete extends QAutocompleteBase
-	{
+	class QAutocomplete extends QAutocompleteBase {
 	}
 ?>

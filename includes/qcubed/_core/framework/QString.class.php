@@ -22,8 +22,8 @@
 		 * @return string the first character, or null
 		 */
 		public final static function FirstCharacter($strString) {
-			if (strlen($strString) > 0)
-				return substr($strString, 0 , 1);
+			if (mb_strlen($strString, __QAPPLICATION_ENCODING_TYPE__) > 0)
+				return mb_substr($strString, 0 , 1, __QAPPLICATION_ENCODING_TYPE__);
 			else
 				return null;
 		}
@@ -35,9 +35,9 @@
 		 * @return string the last character, or null
 		 */
 		public final static function LastCharacter($strString) {
-			$intLength = strlen($strString);
+			$intLength = mb_strlen($strString, __QAPPLICATION_ENCODING_TYPE__);
 			if ($intLength > 0)
-				return substr($strString, $intLength - 1);
+				return mb_substr($strString, $intLength - 1, 1, __QAPPLICATION_ENCODING_TYPE__);
 			else
 				return null;
 		}
@@ -49,8 +49,8 @@
 		 * @return string the full string or the truncated string with eplise
 		 */
 		public final static function Truncate($strText, $intMaxLength) {
-			if (strlen($strText) > $intMaxLength)
-				return substr($strText, 0, $intMaxLength - 3) . "...";
+			if (mb_strlen($strText, __QAPPLICATION_ENCODING_TYPE__) > $intMaxLength)
+				return mb_substr($strText, 0, $intMaxLength - 3, __QAPPLICATION_ENCODING_TYPE__) . "...";
 			else
 				return $strText;
 		}
@@ -61,8 +61,8 @@
 		 * @return string the XML Node-safe String
 		 */
 		public final static function XmlEscape($strString) {
-			if ((strpos($strString, '<') !== false) ||
-				(strpos($strString, '&') !== false)) {
+			if ((mb_strpos($strString, '<', 0, __QAPPLICATION_ENCODING_TYPE__) !== false) ||
+				(mb_strpos($strString, '&', 0, __QAPPLICATION_ENCODING_TYPE__) !== false)) {
 				$strString = str_replace(']]>', ']]]]><![CDATA[>', $strString);
 				$strString = sprintf('<![CDATA[%s]]>', $strString);
 			}
@@ -72,8 +72,8 @@
 		
 		// Implementation from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
 		public final static function LongestCommonSubsequence($str1, $str2) {
-			$str1Len = strlen($str1);
-			$str2Len = strlen($str2);
+			$str1Len = mb_strlen($str1, __QAPPLICATION_ENCODING_TYPE__);
+			$str2Len = mb_strlen($str2, __QAPPLICATION_ENCODING_TYPE__);
 			
 			if($str1Len == 0 || $str2Len == 0)
 				return '';
