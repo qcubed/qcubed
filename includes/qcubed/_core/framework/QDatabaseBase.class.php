@@ -1,4 +1,79 @@
 <?php
+	if(!class_exists('QAbstractCacheProvider')){
+		include_once __QCUBED_CORE__ . '/framework/QAbstractCacheProvider.class.php';
+	}
+	/**
+	 * Cache provider that records all additions and removals from the cache,
+	 * and provides an interface to replay them on another instance of an QAbstractCacheProvider
+	 */
+	class QCacheProviderProxy extends QAbstractCacheProvider {
+		/**
+		 * @var array Additions to cache
+		 */
+		protected $arrLocalCacheAdditions;
+		/**
+		 * @var array Removals from cache
+		 */
+		protected $arrLocalCacheRemovals;
+		/**
+		 * @var boolean if true, the DeleteAll call was made
+		 */
+		protected $blnIsDeleteAllCalled;
+
+		public function __construct() {
+			$this->arrLocalCacheAdditions = array();
+			$this->arrLocalCacheRemovals = array();
+			$this->blnIsDeleteAllCalled = false;
+		}
+		
+		/**
+		 * Apply changes to the cache object supplyed.
+		 * @param QAbstractCacheProvider $objAbstractCacheProvider The cache object to apply changes.
+		 */
+		public function Replay($objAbstractCacheProvider) {
+			if ($this->blnIsDeleteAllCalled) {
+				$this->blnIsDeleteAllCalled = false;
+				$objAbstractCacheProvider->DeleteAll();
+			}
+			
+			if (count($this->arrLocalCacheAdditions)) {
+				foreach ($this->arrLocalCacheAdditions as $strKey => $objValue) {
+					$objAbstractCacheProvider->Set($strKey, $objValue);
+				}
+			}
+			
+			if (count($this->arrLocalCacheRemovals)) {
+				foreach ($this->arrLocalCacheRemovals as $strKey => $objValue) {
+					$objAbstractCacheProvider->Delete($strKey);
+				}
+			}
+		}
+
+		public function Get($strKey) {
+			if (isset($this->arrLocalCacheAdditions[$strKey])) {
+				return $this->arrLocalCacheAdditions[$strKey];
+			}
+			return false;
+		}
+
+		public function Set($strKey, $objValue) {
+			$this->arrLocalCacheAdditions[$strKey] = $objValue;
+			if (isset($this->arrLocalCacheRemovals[$strKey])) {
+				unset($this->arrLocalCacheRemovals[$strKey]);
+			}
+		}
+
+		public function Delete($strKey) {
+			unset($this->arrLocalCacheAdditions[$strKey]);
+			$this->arrLocalCacheRemovals[$strKey] = true;
+		}
+
+		public function DeleteAll() {
+			$this->arrLocalCacheAdditions = array();
+			$this->arrLocalCacheRemovals = array();
+		}
+	}
+	
 	/**
 	 * Every database adapter must implement the following 5 classes (all which are abstract):
 	 * * DatabaseBase
@@ -28,7 +103,7 @@
 	 * @property-read string $Host
 	 * @property-read string $Username
 	 * @property-read string $Password
-	 * @property-read boolean $Caching if true objects loaded from this database will be kept in cache (assuming a cache provider is also configured)
+	 * @property boolean $Caching if true objects loaded from this database will be kept in cache (assuming a cache provider is also configured)
 	 * @property-read string $DateFormat
 	 * @property-read boolean $OnlyFullGroupBy database adapter sub-classes can override and set this property to true
 	 *      to prevent the behavior of automatically adding all the columns to the select clause when the query has
@@ -58,6 +133,12 @@
 		 * It is used to implement the recursive transaction functionality.
 		 */
 		protected $intTransactionDepth = 0;
+		
+		/**
+		 * @var QAbstractCacheProvider The actual QApplication::$objCacheProvider
+		 * is stored here while transaction is active.
+		 */
+		protected $objActualCacheProvider;
 
 		// Abstract Methods that ALL Database Adapters MUST implement
 		abstract public function Connect();
@@ -101,6 +182,10 @@
 		public final function TransactionBegin() {
 			if (0 == $this->intTransactionDepth) {
 				$this->ExecuteTransactionBegin();
+				if (QApplication::$objCacheProvider && $this->Caching && !(QApplication::$objCacheProvider instanceof QCacheProviderNoCache)) {
+					$this->objActualCacheProvider = QApplication::$objCacheProvider;
+					QApplication::$objCacheProvider = new QCacheProviderProxy;
+				}
 			}
 			$this->intTransactionDepth++;
 		}
@@ -111,6 +196,8 @@
 		public final function TransactionCommit() {
 			if (1 == $this->intTransactionDepth) {
 				$this->ExecuteTransactionCommit();
+				$this->transactionCacheFlush();
+				$this->transactionCacheRestore();
 			}
 			if ($this->intTransactionDepth <= 0) {
 				throw new QCallerException("The transaction commit call is called before the transaction begin was called.");
@@ -124,6 +211,27 @@
 		public final function TransactionRollBack() {
 			$this->ExecuteTransactionRollBack();
 			$this->intTransactionDepth = 0;
+			$this->transactionCacheRestore();
+		}
+		
+		/**
+		 * Flushes all objects from the local cache to the actual one.
+		 */
+		protected final function transactionCacheFlush() {
+			if ($this->objActualCacheProvider) {
+				QApplication::$objCacheProvider->Replay($this->objActualCacheProvider);
+			}
+		}
+
+		/**
+		 * Restores the actual cache to the QApplication variable.
+		 */
+		protected final function transactionCacheRestore() {
+			if ($this->objActualCacheProvider) {
+				// restore the actual cache to the QApplication variable.
+				QApplication::$objCacheProvider = $this->objActualCacheProvider;
+				$this->objActualCacheProvider = null;
+			}
 		}
 
 		abstract public function SqlLimitVariablePrefix($strLimitInfo);
@@ -268,9 +376,8 @@
 				
 				case 'Username':
 				case 'Password':
-					return $this->objConfigArray[strtolower($strName)];
 				case 'Caching':
-					return $this->objConfigArray['caching'];
+					return $this->objConfigArray[strtolower($strName)];
 				case 'DateFormat':
 					return (is_null($this->objConfigArray[strtolower($strName)])) ? (QDateTime::FormatIso) : ($this->objConfigArray[strtolower($strName)]);
 				case 'OnlyFullGroupBy':
@@ -279,6 +386,22 @@
 				default:
 					try {
 						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+		
+		public function __set($strName, $mixValue) {
+			switch ($strName) {
+				case 'Caching':
+					$this->objConfigArray[strtolower($strName)] = $mixValue;
+					break;
+
+				default:
+					try {
+						parent::__set($strName, $mixValue);
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
