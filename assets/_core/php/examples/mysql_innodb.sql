@@ -95,6 +95,21 @@ CREATE TABLE address (
     KEY IDX_address_1(person_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS person_type;
+CREATE TABLE IF NOT EXISTS person_type (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  name varchar(50) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY name (name)
+) ENGINE=InnoDB ;
+
+DROP TABLE IF EXISTS person_type_assn;
+CREATE TABLE IF NOT EXISTS person_type_assn (
+  person_id int(10) unsigned NOT NULL,
+  person_type_id int(10) unsigned NOT NULL,
+  PRIMARY KEY (person_id,person_type_id),
+  KEY person_type_id (person_type_id)
+) ENGINE=InnoDB;
 
 #========================================================================== #
 #  Foreign Keys                                                             #
@@ -111,6 +126,9 @@ ALTER TABLE milestone ADD CONSTRAINT project_milestone FOREIGN KEY (project_id) 
 ALTER TABLE related_project_assn ADD CONSTRAINT related_project_assn_1 FOREIGN KEY (project_id) REFERENCES project (id);
 ALTER TABLE related_project_assn ADD CONSTRAINT related_project_assn_2 FOREIGN KEY (child_project_id) REFERENCES project (id);
 
+ALTER TABLE `person_type_assn` ADD CONSTRAINT person_type_assn_1 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
+ALTER TABLE `person_type_assn` ADD CONSTRAINT person_type_assn_2 FOREIGN KEY (person_id) REFERENCES person (id);
+
 
 #========================================================================== #
 #  Type Data                                                                #
@@ -120,6 +138,11 @@ INSERT INTO project_status_type (name, description, guidelines) VALUES ('Open', 
 INSERT INTO project_status_type (name, description, guidelines) VALUES ('Cancelled', 'The project has been canned', null);
 INSERT INTO project_status_type (name, description, guidelines) VALUES ('Completed', 'The project has been completed successfully', 'Celebrate successes!');
 
+INSERT INTO person_type VALUES(1, 'Contractor');
+INSERT INTO person_type VALUES(2, 'Manager');
+INSERT INTO person_type VALUES(3, 'Inactive');
+INSERT INTO person_type VALUES(4, 'Company Car');
+INSERT INTO person_type VALUES(5, 'Works From Home');
 
 #========================================================================== #
 #  Example Data                                                             #
@@ -215,5 +238,16 @@ INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone G');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone H');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone I');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone J');
+
+INSERT INTO person_type_assn VALUES(3, 1);
+INSERT INTO person_type_assn VALUES(10, 1);
+INSERT INTO person_type_assn VALUES(1, 2);
+INSERT INTO person_type_assn VALUES(3, 2);
+INSERT INTO person_type_assn VALUES(1, 3);
+INSERT INTO person_type_assn VALUES(3, 3);
+INSERT INTO person_type_assn VALUES(9, 3);
+INSERT INTO person_type_assn VALUES(2, 4);
+INSERT INTO person_type_assn VALUES(2, 5);
+INSERT INTO person_type_assn VALUES(5, 5);
 
 SET FOREIGN_KEY_CHECKS = 1;
