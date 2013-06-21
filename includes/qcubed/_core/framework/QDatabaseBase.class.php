@@ -135,10 +135,11 @@
 		protected $intTransactionDepth = 0;
 		
 		/**
-		 * @var QAbstractCacheProvider The actual QApplication::$objCacheProvider
-		 * is stored here while transaction is active.
+		 * @var QStack The stack of cache providers.
+		 * It is populated with cache providers from different databases,
+		 * if there are transaction of one DB in the middle of the transaction of another DB.
 		 */
-		protected $objActualCacheProvider;
+		protected static $objCacheProviderStack;
 
 		// Abstract Methods that ALL Database Adapters MUST implement
 		abstract public function Connect();
@@ -183,7 +184,10 @@
 			if (0 == $this->intTransactionDepth) {
 				$this->ExecuteTransactionBegin();
 				if (QApplication::$objCacheProvider && $this->Caching && !(QApplication::$objCacheProvider instanceof QCacheProviderNoCache)) {
-					$this->objActualCacheProvider = QApplication::$objCacheProvider;
+					if (!self::$objCacheProviderStack) {
+						self::$objCacheProviderStack = new QStack;
+					}
+					self::$objCacheProviderStack->Push(QApplication::$objCacheProvider);
 					QApplication::$objCacheProvider = new QCacheProviderProxy;
 				}
 			}
@@ -218,20 +222,23 @@
 		 * Flushes all objects from the local cache to the actual one.
 		 */
 		protected final function transactionCacheFlush() {
-			if ($this->objActualCacheProvider) {
-				QApplication::$objCacheProvider->Replay($this->objActualCacheProvider);
+			if (!self::$objCacheProviderStack || self::$objCacheProviderStack->IsEmpty()) {
+				return;
 			}
+			$objCacheProvider = self::$objCacheProviderStack->PeekLast();
+			QApplication::$objCacheProvider->Replay($objCacheProvider);
 		}
 
 		/**
 		 * Restores the actual cache to the QApplication variable.
 		 */
 		protected final function transactionCacheRestore() {
-			if ($this->objActualCacheProvider) {
-				// restore the actual cache to the QApplication variable.
-				QApplication::$objCacheProvider = $this->objActualCacheProvider;
-				$this->objActualCacheProvider = null;
+			if (!self::$objCacheProviderStack || self::$objCacheProviderStack->IsEmpty()) {
+				return;
 			}
+			$objCacheProvider = self::$objCacheProviderStack->Pop();
+			// restore the actual cache to the QApplication variable.
+			QApplication::$objCacheProvider = $objCacheProvider;
 		}
 
 		abstract public function SqlLimitVariablePrefix($strLimitInfo);
