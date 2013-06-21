@@ -305,15 +305,15 @@
 			$this->blnConnectedFlag = false;
 		}
 
-		public function TransactionBegin() {
+		protected function ExecuteTransactionBegin() {
 			$this->NonQuery('BEGIN;');
 		}
 
-		public function TransactionCommit() {
+		protected function ExecuteTransactionCommit() {
 			$this->NonQuery('COMMIT;');
 		}
 
-		public function TransactionRollback() {
+		protected function ExecuteTransactionRollBack() {
 			$this->NonQuery('ROLLBACK;');
 		}
 
@@ -550,7 +550,7 @@
 		}
 
 		public function GetColumn($strColumnName, $strColumnType = null) {
-			if (array_key_exists($strColumnName, $this->strColumnArray)) {
+			if (!empty($this->strColumnArray[$strColumnName])) {
 				$strColumnValue = $this->strColumnArray[$strColumnName];
 				if (is_null($strColumnValue))
 					return null;
@@ -588,7 +588,7 @@
 		}
 
 		public function ColumnExists($strColumnName) {
-			return array_key_exists($strColumnName, $this->strColumnArray);
+			return !empty($this->strColumnArray[$strColumnName]);
 		}
 
 		public function GetColumnNameArray() {

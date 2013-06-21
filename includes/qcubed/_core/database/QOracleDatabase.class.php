@@ -307,20 +307,20 @@ class QOracleDatabase extends QDatabaseBase {
 		$this->blnConnectedFlag = false;
 	}
 
-	public function TransactionBegin() {
+	protected function ExecuteTransactionBegin() {
 		// Set to AutoCommit
 		//$this->NonQuery('SET AUTOCOMMIT OFF;');
 		$this->commitMode = true;
 	}
 
-	public function TransactionCommit() {
+	protected function ExecuteTransactionCommit() {
 		/*$this->NonQuery('COMMIT;');
 		// Set to AutoCommit
 		$this->NonQuery('SET AUTOCOMMIT OFF;');*/
 		oci_commit($this->objOracle);
 	}
 
-	public function TransactionRollback() {
+	protected function ExecuteTransactionRollBack() {
 		/*$this->NonQuery('ROLLBACK;');
 		// Set to AutoCommit
 		$this->NonQuery('SET AUTOCOMMIT OFF;');*/
@@ -650,7 +650,7 @@ class QOracleDatabaseRow extends QDatabaseRowBase {
 	}
 
 	public function GetColumn($strColumnName, $strColumnType = null) {
-		if (array_key_exists($strColumnName, $this->strColumnArray)) {
+		if (!empty($this->strColumnArray[$strColumnName])) {
 			$strColumnValue = $this->strColumnArray[$strColumnName];
 			if (is_null($strColumnValue))
 				return null;
@@ -690,7 +690,7 @@ class QOracleDatabaseRow extends QDatabaseRowBase {
 	}
 
 	public function ColumnExists($strColumnName) {
-		return array_key_exists($strColumnName, $this->strColumnArray);
+		return !empty($this->strColumnArray[$strColumnName]);
 	}
 
 	public function GetColumnNameArray() {

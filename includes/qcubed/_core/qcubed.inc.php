@@ -34,7 +34,7 @@
 	define('QCUBED_VERSION_NUMBER_ONLY', '2.2.1');
 	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Development Release (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 	
-	define('__JQUERY_CORE_VERSION__', '1.7.2');
+	define('__JQUERY_CORE_VERSION__', '1.9.1');
 	define('__JQUERY_UI_VERSION__', '1.9.2');
 	
 
@@ -195,6 +195,7 @@
 
 	QApplicationBase::$ClassFile['qsimpletablebase'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableBase.class.php';
 	QApplicationBase::$ClassFile['qabstractsimpletablecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qabstractsimpletabledatacolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletablepropertycolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletableindexedcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletableclosurecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';

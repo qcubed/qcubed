@@ -406,7 +406,7 @@
 		/**
 		 * Begin transaction
 		 */
-		public function TransactionBegin() {
+		protected function ExecuteTransactionBegin() {
 			if (sqlsrv_begin_transaction($this->objSqlSrvConn) === false) {
 				// Determine the errorinformation
 				$this->GetErrorInformation($strErrorinformation, $strErrorCode);
@@ -417,7 +417,7 @@
 		/**
 		 * Commit transaction
 		 */
-		public function TransactionCommit() {
+		protected function ExecuteTransactionCommit() {
 			if (sqlsrv_commit($this->objSqlSrvConn) === false) {
 				// Determine the errorinformation
 				$this->GetErrorInformation($strErrorinformation, $strErrorCode);
@@ -428,7 +428,7 @@
 		/**
 		 * Rollback transaction
 		 */
-		public function TransactionRollback() {
+		protected function ExecuteTransactionRollBack() {
 			if (sqlsrv_rollback($this->objSqlSrvConn) === false) {
 				// Determine the errorinformation
 				$this->GetErrorInformation($strErrorinformation, $strErrorCode);
@@ -617,7 +617,7 @@
 		}
 
 		public function GetColumn($strColumnName, $strColumnType = null) {
-			if (array_key_exists($strColumnName, $this->strColumnArray)) {
+			if (!empty($this->strColumnArray[$strColumnName])) {
 				$strColumnValue = $this->strColumnArray[$strColumnName];
 				if (is_null($strColumnValue))
 					return null;
@@ -650,7 +650,7 @@
 		}
 
 		public function ColumnExists($strColumnName) {
-			return array_key_exists($strColumnName, $this->strColumnArray);
+			return !empty($this->strColumnArray[$strColumnName]);
 		}
 
 		public function GetColumnNameArray() {

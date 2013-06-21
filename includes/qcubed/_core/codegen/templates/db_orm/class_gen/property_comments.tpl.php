@@ -15,8 +15,12 @@
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objReference) { ?>
-	 * @property-read <?php echo $objReference->VariableType  ?> $_<?php echo $objReference->ObjectDescription ?> the value for the private _obj<?php echo $objReference->ObjectDescription ?> (Read-Only) if set due to an expansion on the <?php echo $objReference->Table ?> association table
-	 * @property-read <?php echo $objReference->VariableType  ?>[] $_<?php echo $objReference->ObjectDescription ?>Array the value for the private _obj<?php echo $objReference->ObjectDescription ?>Array (Read-Only) if set due to an ExpandAsArray on the <?php echo $objReference->Table ?> association table
+<?php 
+	$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
+	$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
+?>
+	 * @property-read <?php echo $objReference->VariableType  ?> $_<?php echo $objReference->ObjectDescription ?> the value for the private <?php echo $varPrefix . $objReference->ObjectDescription ?> (Read-Only) if set due to an expansion on the <?php echo $objReference->Table ?> association table
+	 * @property-read <?php echo $objReference->VariableType  ?>[] $_<?php echo $objReference->ObjectDescription ?>Array the value for the private <?php echo $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only) if set due to an ExpandAsArray on the <?php echo $objReference->Table ?> association table
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
 	 * @property-read <?php echo $objReference->VariableType  ?> $_<?php echo $objReference->ObjectDescription ?> the value for the private _obj<?php echo $objReference->ObjectDescription ?> (Read-Only) if set due to an expansion on the <?php echo $objReference->Table ?>.<?php echo $objReference->Column ?> reverse relationship
 	 * @property-read <?php echo $objReference->VariableType  ?>[] $_<?php echo $objReference->ObjectDescription ?>Array the value for the private _obj<?php echo $objReference->ObjectDescription ?>Array (Read-Only) if set due to an ExpandAsArray on the <?php echo $objReference->Table ?>.<?php echo $objReference->Column ?> reverse relationship
