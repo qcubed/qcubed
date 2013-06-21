@@ -1015,7 +1015,12 @@
 		}
 
 		protected function FormControlVariableNameForManyToManyReference(QManyToManyReference $objManyToManyReference) {
-			return sprintf("dtg%s", $objManyToManyReference->ObjectDescriptionPlural);
+			if ($objManyToManyReference->IsTypeAssociation) {
+				$strPre = 'lst%s';
+			} else {
+				$strPre = 'dtg%s';
+			}
+			return sprintf($strPre, $objManyToManyReference->ObjectDescriptionPlural);
 		}
 
 		protected function FormLabelVariableNameForColumn(QColumn $objColumn) {

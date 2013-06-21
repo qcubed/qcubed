@@ -83,5 +83,89 @@
 		}
 
 <?php } ?>
+
+		/**
+		 * Updates a QQueryBuilder with the SELECT fields for this <?php echo $objTypeTable->ClassName  ?>
+
+		 * For use in association tables linked to this type.
+		 * @param QQueryBuilder $objBuilder the Query Builder object to update
+		 * @param string $strPrefix optional prefix to add to the SELECT fields
+		 */
+		public static function GetSelectFields(QQueryBuilder $objBuilder, $strPrefix = null, QQSelect $objSelect = null) {
+			if ($strPrefix) {
+				$strTableName = $strPrefix;
+				$strAliasPrefix = $strPrefix . '__';
+			} else {
+				$strTableName = '<?php echo $objTypeTable->Name;  ?>';
+				$strAliasPrefix = '';
+			}
+
+            if ($objSelect) {
+			    $objBuilder->AddSelectItem($strTableName, 'id', $strAliasPrefix . 'id');
+                $objSelect->AddSelectItems($objBuilder, $strTableName, $strAliasPrefix);
+            } else {
+			    $objBuilder->AddSelectItem($strTableName, 'id', $strAliasPrefix . 'id');
+			    $objBuilder->AddSelectItem($strTableName, 'name', $strAliasPrefix . 'name');
+            }
+		}
+		
+		///////////////////////////////
+		// INSTANTIATION-RELATED METHODS
+		///////////////////////////////
+
+		/**
+		 * Instantiate a <?php echo $objTable->ClassName  ?> from a Database Row. 
+		 * Simply returns the integer id corresponding to this item.
+		 * Takes in an optional strAliasPrefix, used in case another Object::InstantiateDbRow
+		 * is calling this <?php echo $objTable->ClassName  ?>::InstantiateDbRow in order to perform
+		 * early binding on referenced objects.
+		 * @param DatabaseRowBase $objDbRow
+		 * @param string $strAliasPrefix
+		 * @param string $strExpandAsArrayNodes
+		 * @param QBaseClass $arrPreviousItem
+		 * @param string[] $strColumnAliasArray
+		 * @return <?php echo $objTable->ClassName  ?>
+
+		*/
+		public static function InstantiateDbRow($objDbRow, $strAliasPrefix = null, $strExpandAsArrayNodes = null, $arrPreviousItems = null, $strColumnAliasArray = array()) {
+			// If blank row, return null
+			if (!$objDbRow) {
+				return null;
+			}
+			$strAlias = $strAliasPrefix . 'id';
+			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			$intId = $objDbRow->GetColumn($strAliasName, 'Integer');
+			return $intId;
+		}
 	}
+
+	
+    /**
+     * @uses QQNode
+     *
+     * @property-read QQNode $Id
+     * @property-read QQNode $Name
+     * @property-read QQNode $_PrimaryKeyNode
+     **/
+	class QQNode<?php echo $objTypeTable->ClassName  ?> extends QQNode {
+		protected $strTableName = '<?php echo $objTypeTable->Name  ?>';
+		protected $strPrimaryKey = 'id';
+		protected $strClassName = '<?php echo $objTypeTable->ClassName  ?>';
+		public function __get($strName) {
+			switch ($strName) {
+			 	case 'Id':
+					return new QQNode('id', 'Id', 'Integer', $this);
+				case '_PrimaryKeyNode':
+					return new QQNode('id', 'Id', 'Integer', $this);
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+	}
+
 ?>
