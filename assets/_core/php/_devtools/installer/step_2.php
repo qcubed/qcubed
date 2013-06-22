@@ -67,6 +67,9 @@
 	// Installation directory seems to be under document root.
 	// Try to figure out the subdirectory
 	$strSubDirectory = substr($strInstallationDir, (strlen($strServerDocumentRoot)), (strlen($strInstallationDir) - 1));
+	if (DIRECTORY_SEPARATOR !== mb_substr($strSubDirectory, 0, 1)) {
+		$strSubDirectory = DIRECTORY_SEPARATOR . $strSubDirectory;
+	}
 
 	// Make sure the installation directory supplied exists
 	if(!is_dir($strInstallationDir)) {
