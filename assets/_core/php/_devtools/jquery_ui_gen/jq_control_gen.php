@@ -1,5 +1,6 @@
 <?php
 require('jq_control.php');
+	require('qcubed.inc.php');
 
 class HtmlJqDoc extends JqDoc {
 
@@ -15,6 +16,8 @@ class HtmlJqDoc extends JqDoc {
 			$text = preg_replace('/<(\w+)[^>]*>\s*/', '<$1>', $text);
 			$text = preg_replace('/\s*<\/(\w+)>/', '</$1>', $text);
 			$text = preg_replace('/<\/code>\s*<code>/', '', $text);
+			$text = preg_replace('/<div>/', '', $text);
+			$text = preg_replace('/<\/div>/', '', $text);
 			$description .= $text;
 			$desc_node = $desc_node->next_sibling();
 		}

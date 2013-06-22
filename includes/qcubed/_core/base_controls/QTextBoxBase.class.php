@@ -143,28 +143,28 @@
 					default:
 						// Deny the Use of CrossScripts
 						// Check for cross scripting patterns
-						$strText = strtolower($this->strText);
-						if ((strpos($strText, '<script') !== false) ||
-							(strpos($strText, '<applet') !== false) ||
-							(strpos($strText, '<embed') !== false) ||
-							(strpos($strText, '<style') !== false) ||
-							(strpos($strText, '<link') !== false) ||
-							(strpos($strText, '<body') !== false) ||
-							(strpos($strText, '<iframe') !== false) ||
-							(strpos($strText, 'javascript:') !== false) ||
-							(strpos($strText, ' onfocus=') !== false) ||
-							(strpos($strText, ' onblur=') !== false) ||
-							(strpos($strText, ' onkeydown=') !== false) ||
-							(strpos($strText, ' onkeyup=') !== false) ||
-							(strpos($strText, ' onkeypress=') !== false) ||
-							(strpos($strText, ' onmousedown=') !== false) ||
-							(strpos($strText, ' onmouseup=') !== false) ||
-							(strpos($strText, ' onmouseover=') !== false) ||
-							(strpos($strText, ' onmouseout=') !== false) ||
-							(strpos($strText, ' onmousemove=') !== false) ||
-							(strpos($strText, ' onclick=') !== false) ||
-							(strpos($strText, '<object') !== false) ||
-							(strpos($strText, 'background:url') !== false))
+						$strText = mb_strtolower($this->strText, QApplication::$EncodingType);
+						if ((mb_strpos($strText, '<script', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, '<applet', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, '<embed', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, '<style', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, '<link', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, '<body', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, '<iframe', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, 'javascript:', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onfocus=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onblur=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onkeydown=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onkeyup=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onkeypress=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onmousedown=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onmouseup=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onmouseover=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onmouseout=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onmousemove=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, ' onclick=', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, '<object', 0, QApplication::$EncodingType) !== false) ||
+							(mb_strpos($strText, 'background:url', 0, QApplication::$EncodingType) !== false))
 							throw new QCrossScriptingException($this->strControlId);
 				}
 			}
@@ -251,7 +251,7 @@
 				$strText = $this->strText;
 			// Check for Required
 			if ($this->blnRequired) {
-				if (strlen($strText) == 0) {
+				if (mb_strlen($strText, QApplication::$EncodingType) == 0) {
 					if ($this->strName)
 						$this->strValidationError = sprintf($this->strLabelForRequired, $this->strName);
 					else
@@ -262,7 +262,7 @@
 
 			// Check against minimum length?
 			if ($this->intMinLength > 0) {
-				if (strlen($strText) < $this->intMinLength) {
+				if (mb_strlen($strText, QApplication::$EncodingType) < $this->intMinLength) {
 					if ($this->strName)
 						$this->strValidationError = sprintf($this->strLabelForTooShort, $this->strName, $this->intMinLength);
 					else
@@ -273,7 +273,7 @@
 
 			// Check against maximum length?
 			if ($this->intMaxLength > 0) {
-				if (strlen($strText) > $this->intMaxLength) {
+				if (mb_strlen($strText, QApplication::$EncodingType) > $this->intMaxLength) {
 					if ($this->strName)
 						$this->strValidationError = sprintf($this->strLabelForTooLong, $this->strName, $this->intMaxLength);
 					else

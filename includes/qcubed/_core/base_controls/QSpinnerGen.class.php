@@ -28,52 +28,42 @@
 	
 	
 	/**
-	 * <div>Triggered when the value of the spinner has changed and the input is
-	 * 		no longer focused.</div><ul><li><div><strong>event</strong></div>
-	 * 		<div>Type: <a>Event</a></div> <div></div></li>
-	 * 		<li><div><strong>ui</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div></div></li></ul>
+	 * Triggered when the value of the spinner has changed and the input is no
+	 * 		longer focused.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QSpinner_ChangeEvent extends QJqUiEvent {
 		const EventName = 'spinchange';
 	}
 	/**
-	 * <div>Triggered when the spinner is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the spinner is created.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QSpinner_CreateEvent extends QJqUiEvent {
 		const EventName = 'spincreate';
 	}
 	/**
-	 * <div>Triggered during increment/decrement (to determine direction of spin
+	 * Triggered during increment/decrement (to determine direction of spin
 	 * 		compare current value with <code>ui.value</code>). 				<p>Can be canceled,
-	 * 		preventing the value from being
-	 * 		updated.</p></div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>value</strong></div> <div>Type: <a>Number</a></div>
-	 * 		<div>The new value to be set, unless the event is
-	 * 		cancelled.</div></li></ul></li></ul>
+	 * 		preventing the value from being updated.</p><ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>value</strong> Type: <a>Number</a> The new value to be set,
+	 * 		unless the event is cancelled.</li></ul></li></ul>
 	 */
 	class QSpinner_SpinEvent extends QJqUiEvent {
 		const EventName = 'spin';
 	}
 	/**
-	 * <div>Triggered before a spin. Can be canceled, preventing the spin from
-	 * 		occurring.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered before a spin. Can be canceled, preventing the spin from
+	 * 		occurring.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QSpinner_StartEvent extends QJqUiEvent {
 		const EventName = 'spinstart';
 	}
 	/**
-	 * <div>Triggered after a spin.</div><ul><li><div><strong>event</strong></div>
-	 * 		<div>Type: <a>Event</a></div> <div></div></li>
-	 * 		<li><div><strong>ui</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div></div></li></ul>
+	 * Triggered after a spin.<ul><li><strong>event</strong> Type: <a>Event</a>
+	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QSpinner_StopEvent extends QJqUiEvent {
 		const EventName = 'spinstop';
@@ -92,52 +82,50 @@
 	 * 
 	 * @see QSpinnerBase
 	 * @package Controls\Base
-	 * @property string $Culture <div>Sets the culture to use for parsing and formatting the value. If
+	 * @property string $Culture Sets the culture to use for parsing and formatting the value. If
 	 * 		<code>null</code>, the currently set culture in <code>Globalize</code> is
 	 * 		used, see <a>Globalize docs</a> for available cultures. Only relevant if
 	 * 		the <a><code>numberFormat</code></a> option is set. Requires
-	 * 		<a>Globalize</a> to be included.</div>
-	 * @property boolean $Disabled <div>Disables the spinner if set to <code>true</code>.</div>
-	 * @property mixed $Icons <div>Icons to use for buttons, matching an icon defined by the jQuery UI
-	 * 		CSS Framework. 				<ul><li>up (string, default:
-	 * 		"ui-icon-triangle-1-n")</li> 					<li>down (string, default:
-	 * 		"ui-icon-triangle-1-s")</li></ul></div>
-	 * @property mixed $Incremental <div>Controls the number of steps taken when holding down a spin
-	 * 		button.</div><strong>Multiple types
+	 * 		<a>Globalize</a> to be included.
+	 * @property boolean $Disabled Disables the spinner if set to <code>true</code>.
+	 * @property mixed $Icons Icons to use for buttons, matching an icon defined by the jQuery UI CSS
+	 * 		Framework. 				<ul><li>up (string, default: "ui-icon-triangle-1-n")</li>
+	 * 							<li>down (string, default: "ui-icon-triangle-1-s")</li></ul>
+	 * @property mixed $Incremental Controls the number of steps taken when holding down a spin
+	 * 		button.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: When set to
 	 * 		<code>true</code>, the stepping delta will increase when spun incessantly.
 	 * 		When set to <code>false</code>, all steps are equal (as defined by the
 	 * 		<a><code>step</code></a> option).</li> <li><strong>Function</strong>:
 	 * 		Receives one parameter: the number of spins that have occurred. Must return
 	 * 		the number of steps that should occur for the current spin.</li></ul>
-	 * @property mixed $Max <div>The maximum allowed value. The element's <code>max</code> attribute is
-	 * 		used if it exists and the option is not explicitly set. If
-	 * 		<code>null</code>, there is no maximum enforced.</div><strong>Multiple
-	 * 		types supported:</strong><ul><li><strong>Number</strong>: The maximum
-	 * 		value.</li> <li><strong>String</strong>: If <a>Globalize</a> is included,
-	 * 		the <code>max</code> option can be passed as a string which will be parsed
+	 * @property mixed $Max The maximum allowed value. The element's <code>max</code> attribute is used
+	 * 		if it exists and the option is not explicitly set. If <code>null</code>,
+	 * 		there is no maximum enforced.<strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Number</strong>: The maximum value.</li>
+	 * 		<li><strong>String</strong>: If <a>Globalize</a> is included, the
+	 * 		<code>max</code> option can be passed as a string which will be parsed
 	 * 		based on the <a><code>numberFormat</code></a> and
 	 * 		<a><code>culture</code></a> options; otherwise it will fall back to the
 	 * 		native <code>parseFloat()</code> method.</li></ul>
-	 * @property mixed $Min <div>The minimum allowed value. The element's <code>min</code> attribute is
-	 * 		used if it exists and the option is not explicitly set. If
-	 * 		<code>null</code>, there is no minimum enforced.</div><strong>Multiple
-	 * 		types supported:</strong><ul><li><strong>Number</strong>: The minimum
-	 * 		value.</li> <li><strong>String</strong>: If <a>Globalize</a> is included,
-	 * 		the <code>min</code> option can be passed as a string which will be parsed
+	 * @property mixed $Min The minimum allowed value. The element's <code>min</code> attribute is used
+	 * 		if it exists and the option is not explicitly set. If <code>null</code>,
+	 * 		there is no minimum enforced.<strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Number</strong>: The minimum value.</li>
+	 * 		<li><strong>String</strong>: If <a>Globalize</a> is included, the
+	 * 		<code>min</code> option can be passed as a string which will be parsed
 	 * 		based on the <a><code>numberFormat</code></a> and
 	 * 		<a><code>culture</code></a> options; otherwise it will fall back to the
 	 * 		native <code>parseFloat()</code> method.</li></ul>
-	 * @property string $NumberFormat <div>Format of numbers passed to  <a><code>Globalize</code></a>, if
-	 * 		available. Most common are <code>"n"</code> for a decimal number and
-	 * 		<code>"C"</code> for a currency value. Also see the
-	 * 		<a><code>culture</code></a> option.</div>
-	 * @property integer $Page <div>The number of steps to take when paging via the
-	 * 		<a><code>pageUp</code></a>/<a><code>pageDown</code></a> methods.</div>
-	 * @property mixed $Step <div>The size of the step to take when spinning via buttons or via the
+	 * @property string $NumberFormat Format of numbers passed to  <a><code>Globalize</code></a>, if available.
+	 * 		Most common are <code>"n"</code> for a decimal number and <code>"C"</code>
+	 * 		for a currency value. Also see the <a><code>culture</code></a> option.
+	 * @property integer $Page The number of steps to take when paging via the
+	 * 		<a><code>pageUp</code></a>/<a><code>pageDown</code></a> methods.
+	 * @property mixed $Step The size of the step to take when spinning via buttons or via the
 	 * 		<a><code>stepUp()</code></a>/<a><code>stepDown()</code></a> methods. The
 	 * 		element's <code>step</code> attribute is used if it exists and the option
-	 * 		is not explicitly set.</div><strong>Multiple types
+	 * 		is not explicitly set.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: The size of the
 	 * 		step.</li> <li><strong>String</strong>: If <a>Globalize</a> is included,
 	 * 		the <code>step</code> option can be passed as a string which will be parsed
@@ -233,51 +221,49 @@
 
 
 		/**
-		 * <div>Removes the spinner functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the spinner functionality completely. This will return the element
+		 * back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the spinner.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Disables the spinner.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the spinner.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Enables the spinner.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * spinner options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current spinner
+		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the spinner option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the spinner option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -285,77 +271,84 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * spinner.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the spinner.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Decrements the value by the specified number of pages, as defined by
-		 * the <a><code>page</code></a> option. Without the parameter, a single page
-		 * is decremented.</div><ul><li><div><strong>pages</strong></div> <div>Type:
-		 * <a>Number</a></div> <div>Number of pages to decrement, defaults to
-		 * 1.</div></li></ul>
+		 * <p>Decrements the value by the specified number of pages, as defined by the
+		 * <a><code>page</code></a> option. Without the parameter, a single page is
+		 * decremented.</p> 				<p>If the resulting value is above the max, below the
+		 * min, or results in a step mismatch, the value will be adjusted to the
+		 * closest valid value.</p> 				<p>Invoking <code>pageDown()</code> will cause
+		 * <a><code>start</code></a>, <a><code>spin</code></a>, and
+		 * <a><code>stop</code></a> events to be
+		 * triggered.</p><ul><li><strong>pages</strong> Type: <a>Number</a> Number of
+		 * pages to decrement, defaults to 1.</li></ul>
 		 * @param $pages
 		 */
 		public function PageDown($pages = null) {
 			$this->CallJqUiMethod("pageDown", $pages);
 		}
 		/**
-		 * <div>Increments the value by the specified number of pages, as defined by
-		 * the <a><code>page</code></a> option. Without the parameter, a single page
-		 * is incremented.</div><ul><li><div><strong>pages</strong></div> <div>Type:
-		 * <a>Number</a></div> <div>Number of pages to increment, defaults to
-		 * 1.</div></li></ul>
+		 * <p>Increments the value by the specified number of pages, as defined by the
+		 * <a><code>page</code></a> option. Without the parameter, a single page is
+		 * incremented.</p> 				<p>If the resulting value is above the max, below the
+		 * min, or results in a step mismatch, the value will be adjusted to the
+		 * closest valid value.</p> 				<p>Invoking <code>pageUp()</code> will cause
+		 * <a><code>start</code></a>, <a><code>spin</code></a>, and
+		 * <a><code>stop</code></a> events to be
+		 * triggered.</p><ul><li><strong>pages</strong> Type: <a>Number</a> Number of
+		 * pages to increment, defaults to 1.</li></ul>
 		 * @param $pages
 		 */
 		public function PageUp($pages = null) {
 			$this->CallJqUiMethod("pageUp", $pages);
 		}
 		/**
-		 * <div>Decrements the value by the specified number of steps. Without the
-		 * parameter, a single step is decremented. 				<p>If the resulting value is
-		 * above the max, below the min, or reuslts in a step mismatch, the value will
-		 * be adjusted to the closest valid
-		 * value.</p></div><ul><li><div><strong>steps</strong></div> <div>Type:
-		 * <a>Number</a></div> <div>Number of steps to decrement, defaults to
-		 * 1.</div></li></ul>
+		 * <p>Decrements the value by the specified number of steps. Without the
+		 * parameter, a single step is decremented.</p> 				<p>If the resulting value
+		 * is above the max, below the min, or results in a step mismatch, the value
+		 * will be adjusted to the closest valid value.</p> 				<p>Invoking
+		 * <code>stepDown()</code> will cause <a><code>start</code></a>,
+		 * <a><code>spin</code></a>, and <a><code>stop</code></a> events to be
+		 * triggered.</p><ul><li><strong>steps</strong> Type: <a>Number</a> Number of
+		 * steps to decrement, defaults to 1.</li></ul>
 		 * @param $steps
 		 */
 		public function StepDown($steps = null) {
 			$this->CallJqUiMethod("stepDown", $steps);
 		}
 		/**
-		 * <div>Increments the value by the specified number of steps. Without the
-		 * parameter, a single step is incremented. 				<p>If the resulting value is
-		 * above the max, below the min, or reuslts in a step mismatch, the value will
-		 * be adjusted to the closest valid
-		 * value.</p></div><ul><li><div><strong>steps</strong></div> <div>Type:
-		 * <a>Number</a></div> <div>Number of steps to increment, defaults to
-		 * 1.</div></li></ul>
+		 * <p>Increments the value by the specified number of steps. Without the
+		 * parameter, a single step is incremented.</p> 				<p>If the resulting value
+		 * is above the max, below the min, or results in a step mismatch, the value
+		 * will be adjusted to the closest valid value.</p> 				<p>Invoking
+		 * <code>stepUp()</code> will cause <a><code>start</code></a>,
+		 * <a><code>spin</code></a>, and <a><code>stop</code></a> events to be
+		 * triggered.</p><ul><li><strong>steps</strong> Type: <a>Number</a> Number of
+		 * steps to increment, defaults to 1.</li></ul>
 		 * @param $steps
 		 */
 		public function StepUp($steps = null) {
 			$this->CallJqUiMethod("stepUp", $steps);
 		}
 		/**
-		 * <div>Gets the current value as a number. The value is parsed based on the
+		 * Gets the current value as a number. The value is parsed based on the
 		 * <a><code>numberFormat</code></a> and <a><code>culture</code></a>
-		 * options.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * options.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Value() {
 			$this->CallJqUiMethod("value");
 		}
 		/**
-		 * <div></div><ul><li><div><strong>value</strong></div> <div>Type:
-		 * <a>Number</a> or <a>String</a></div> <div>The value to set. If passed as a
-		 * string, the value is parsed based on the <a><code>numberFormat</code></a>
-		 * and <a><code>culture</code></a> options.</div></li></ul>
+		 * <ul><li><strong>value</strong> Type: <a>Number</a> or <a>String</a> The
+		 * value to set. If passed as a string, the value is parsed based on the
+		 * <a><code>numberFormat</code></a> and <a><code>culture</code></a>
+		 * options.</li></ul>
 		 * @param $value
 		 */
 		public function Value1($value) {
