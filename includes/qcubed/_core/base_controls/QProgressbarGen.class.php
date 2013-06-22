@@ -28,28 +28,25 @@
 	
 	
 	/**
-	 * <div>Triggered when the value of the progressbar
-	 * 		changes.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the value of the progressbar
+	 * 		changes.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QProgressbar_ChangeEvent extends QJqUiEvent {
 		const EventName = 'progressbarchange';
 	}
 	/**
-	 * <div>Triggered when the value of the progressbar reaches the maximum
-	 * 		value.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the value of the progressbar reaches the maximum
+	 * 		value.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QProgressbar_CompleteEvent extends QJqUiEvent {
 		const EventName = 'progressbarcomplete';
 	}
 	/**
-	 * <div>Triggered when the progressbar is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the progressbar is created.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul>
 	 */
 	class QProgressbar_CreateEvent extends QJqUiEvent {
 		const EventName = 'progressbarcreate';
@@ -68,9 +65,13 @@
 	 * 
 	 * @see QProgressbarBase
 	 * @package Controls\Base
-	 * @property boolean $Disabled <div>Disables the progressbar if set to <code>true</code>.</div>
-	 * @property integer $Max <div>The maximum value of the progressbar.</div>
-	 * @property integer $Value <div>The value of the progressbar.</div>
+	 * @property boolean $Disabled Disables the progressbar if set to <code>true</code>.
+	 * @property integer $Max The maximum value of the progressbar.
+	 * @property mixed $Value The value of the progressbar.<strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Number</strong>:  					A value between
+	 * 		<code>0</code> and the <a><code>max</code></a>.</li>
+	 * 		<li><strong>Boolean</strong>:  					Value can be set to <code>false</code>
+	 * 		to create an indeterminate progressbar.</li></ul>
 	 */
 
 	class QProgressbarGen extends QPanel	{
@@ -79,9 +80,9 @@
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var integer */
-		protected $intMax;
-		/** @var integer */
-		protected $intValue;
+		protected $intMax = null;
+		/** @var mixed */
+		protected $mixValue;
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
@@ -142,51 +143,50 @@
 
 
 		/**
-		 * <div>Removes the progressbar functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the progressbar functionality completely. This will return the
+		 * element back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the progressbar.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Disables the progressbar.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the progressbar.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Enables the progressbar.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * progressbar options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current
+		 * progressbar options hash.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the progressbar option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the progressbar option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -194,26 +194,25 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * progressbar.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the
+		 * progressbar.<ul><li><strong>options</strong> Type: <a>Object</a> A map of
+		 * option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Gets the current value of the progressbar.</div><ul><li><div>This
-		 * method does not accept any arguments.</div></li></ul>
+		 * Gets the current value of the progressbar.<ul><li>This method does not
+		 * accept any arguments.</li></ul>
 		 */
 		public function Value() {
 			$this->CallJqUiMethod("value");
 		}
 		/**
-		 * <div>Sets the current value of the
-		 * progressbar.</div><ul><li><div><strong>value</strong></div> <div>Type:
-		 * <a>Number</a></div> <div>The value to set.</div></li></ul>
+		 * Sets the current value of the progressbar.<ul><li><strong>value</strong>
+		 * Type: <a>Number</a> or <a>Boolean</a> The value to set. See the
+		 * <a><code>value</code></a> option for details on valid values.</li></ul>
 		 * @param $value
 		 */
 		public function Value1($value) {
@@ -225,7 +224,7 @@
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
 				case 'Max': return $this->intMax;
-				case 'Value': return $this->intValue;
+				case 'Value': return $this->mixValue;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -263,16 +262,12 @@
 					}
 
 				case 'Value':
-					try {
-						$this->intValue = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'value', $this->intValue);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
+					$this->mixValue = $mixValue;
+				
+					if ($this->Rendered) {
+						$this->CallJqUiMethod('option', 'value', $mixValue);
 					}
+					break;
 
 
 				case 'Enabled':
