@@ -51,7 +51,7 @@
 		// blank value.set as null
 		$strDB_Port = 'null';
 	}
-	$strConfigText = str_replace('{db1_serverport}', $strDB_Port, $strConfigText);
+	$strConfigText = str_replace("'{db1_serverport}'", $strDB_Port, $strConfigText);
 	$strConfigText = str_replace('{db1_dbname}', $strDB_DbName, $strConfigText);
 	$strConfigText = str_replace('{db1_username}', $strDB_Username, $strConfigText);
 	$strConfigText = str_replace('{db1_password}', $strDB_Password, $strConfigText);
