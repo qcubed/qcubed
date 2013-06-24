@@ -28,58 +28,48 @@
 	
 	
 	/**
-	 * <div>Triggered after a panel has been activated (after animation
-	 * 		completes). If the accordion was previously collapsed,
-	 * 		<code>ui.oldHeader</code> and <code>ui.oldPanel</code> will be empty jQuery
-	 * 		objects. If the accordion is collapsing, <code>ui.newHeader</code> and
-	 * 		<code>ui.newPanel</code> will be empty jQuery
-	 * 		objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>newHeader</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The header that was just activated.</div></li>
-	 * 		<li><div><strong>oldHeader</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The header that was just deactivated.</div></li>
-	 * 		<li><div><strong>newPanel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel that was just activated.</div></li>
-	 * 		<li><div><strong>oldPanel</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The panel that was just deactivated.</div></li></ul></li></ul>
+	 * Triggered after a panel has been activated (after animation completes). If
+	 * 		the accordion was previously collapsed, <code>ui.oldHeader</code> and
+	 * 		<code>ui.oldPanel</code> will be empty jQuery objects. If the accordion is
+	 * 		collapsing, <code>ui.newHeader</code> and <code>ui.newPanel</code> will be
+	 * 		empty jQuery objects.<ul><li><strong>event</strong> Type: <a>Event</a>
+	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>newHeader</strong> Type: <a>jQuery</a> The header that was
+	 * 		just activated.</li> <li><strong>oldHeader</strong> Type: <a>jQuery</a> The
+	 * 		header that was just deactivated.</li> <li><strong>newPanel</strong> Type:
+	 * 		<a>jQuery</a> The panel that was just activated.</li>
+	 * 		<li><strong>oldPanel</strong> Type: <a>jQuery</a> The panel that was just
+	 * 		deactivated.</li></ul></li></ul>
 	 */
 	class QAccordion_ActivateEvent extends QJqUiEvent {
 		const EventName = 'accordionactivate';
 	}
 	/**
-	 * <div>Triggered directly before a panel is activated. Can be canceled to
-	 * 		prevent the panel from activating. If the accordion is currently collapsed,
+	 * Triggered directly before a panel is activated. Can be canceled to prevent
+	 * 		the panel from activating. If the accordion is currently collapsed,
 	 * 		<code>ui.oldHeader</code> and <code>ui.oldPanel</code> will be empty jQuery
 	 * 		objects. If the accordion is collapsing, <code>ui.newHeader</code> and
 	 * 		<code>ui.newPanel</code> will be empty jQuery
-	 * 		objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>newHeader</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The header that is about to be
-	 * 		activated.</div></li> <li><div><strong>oldHeader</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The header that is about to be
-	 * 		deactivated.</div></li> <li><div><strong>newPanel</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The panel that is about to be
-	 * 		activated.</div></li> <li><div><strong>oldPanel</strong></div> <div>Type:
-	 * 		<a>jQuery</a></div> <div>The panel that is about to be
-	 * 		deactivated.</div></li></ul></li></ul>
+	 * 		objects.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>newHeader</strong> Type: <a>jQuery</a> The header that is
+	 * 		about to be activated.</li> <li><strong>oldHeader</strong> Type:
+	 * 		<a>jQuery</a> The header that is about to be deactivated.</li>
+	 * 		<li><strong>newPanel</strong> Type: <a>jQuery</a> The panel that is about
+	 * 		to be activated.</li> <li><strong>oldPanel</strong> Type: <a>jQuery</a> The
+	 * 		panel that is about to be deactivated.</li></ul></li></ul>
 	 */
 	class QAccordion_BeforeActivateEvent extends QJqUiEvent {
 		const EventName = 'accordionbeforeactivate';
 	}
 	/**
-	 * <div>Triggered when the accordion is created. If the accordion is
-	 * 		collapsed, <code>ui.header</code> and <code>ui.panel</code> will be empty
-	 * 		jQuery objects.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>header</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The active header.</div></li> <li><div><strong>panel</strong></div>
-	 * 		<div>Type: <a>jQuery</a></div> <div>The active
-	 * 		panel.</div></li></ul></li></ul>
+	 * Triggered when the accordion is created. If the accordion is collapsed,
+	 * 		<code>ui.header</code> and <code>ui.panel</code> will be empty jQuery
+	 * 		objects.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>header</strong> Type: <a>jQuery</a> The active header.</li>
+	 * 		<li><strong>panel</strong> Type: <a>jQuery</a> The active
+	 * 		panel.</li></ul></li></ul>
 	 */
 	class QAccordion_CreateEvent extends QJqUiEvent {
 		const EventName = 'accordioncreate';
@@ -98,14 +88,14 @@
 	 * 
 	 * @see QAccordionBase
 	 * @package Controls\Base
-	 * @property mixed $Active <div>Which panel is currently open.</div><strong>Multiple types
+	 * @property mixed $Active Which panel is currently open.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: Setting
 	 * 		<code>active</code> to <code>false</code> will collapse all panels. This
 	 * 		requires the <a><code>collapsible</code></a> option to be
 	 * 		<code>true</code>.</li> <li><strong>Integer</strong>: The zero-based index
 	 * 		of the panel that is active (open). A negative value selects panels going
 	 * 		backward from the last panel.</li></ul>
-	 * @property mixed $Animate <div>If and how to animate changing panels.</div><strong>Multiple types
+	 * @property mixed $Animate If and how to animate changing panels.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: A value of
 	 * 		<code>false</code> will disable animations.</li>
 	 * 		<li><strong>Number</strong>: Duration in milliseconds with default
@@ -116,26 +106,24 @@
 	 * 		options.</li> 						<li>"Down" animations occur when the panel being
 	 * 		activated has a lower index than the currently active
 	 * 		panel.</li></ul></li></ul>
-	 * @property boolean $Collapsible <div>Whether all the sections can be closed at once. Allows collapsing the
-	 * 		active section.</div>
-	 * @property boolean $Disabled <div>Disables the accordion if set to <code>true</code>.</div>
-	 * @property string $Event <div>The event that accordion headers will react to in order to activate
-	 * 		the associated panel. Multiple events can be specificed, separated by a
-	 * 		space.</div>
-	 * @property mixed $Header <div><p>Selector for the header element, applied via <code>.find()</code>
-	 * 		on the main accordion element. Content panels must be the sibling
-	 * 		immedately after their associated headers.</p></div>
-	 * @property string $HeightStyle <div><p>Controls the height of the accordion and each panel. Possible
+	 * @property boolean $Collapsible Whether all the sections can be closed at once. Allows collapsing the
+	 * 		active section.
+	 * @property boolean $Disabled Disables the accordion if set to <code>true</code>.
+	 * @property string $Event The event that accordion headers will react to in order to activate the
+	 * 		associated panel. Multiple events can be specificed, separated by a space.
+	 * @property mixed $Header <p>Selector for the header element, applied via <code>.find()</code> on the
+	 * 		main accordion element. Content panels must be the sibling immedately after
+	 * 		their associated headers.</p>
+	 * @property string $HeightStyle <p>Controls the height of the accordion and each panel. Possible
 	 * 		values:</p> 				<ul><li><code>"auto"</code>: All panels will be set to the
 	 * 		height of the tallest panel.</li> 					<li><code>"fill"</code>: Expand to
 	 * 		the available height based on the accordion's parent height.</li>
 	 * 							<li><code>"content"</code>: Each panel will be only as tall as its
-	 * 		content.</li></ul></div>
-	 * @property mixed $Icons <div><p>Icons to use for headers, matching an icon defined by the jQuery UI
-	 * 		CSS Framework. Set to <code>false</code> to have no icons displayed.</p>
+	 * 		content.</li></ul>
+	 * @property mixed $Icons <p>Icons to use for headers, matching an icon defined by the jQuery UI CSS
+	 * 		Framework. Set to <code>false</code> to have no icons displayed.</p>
 	 * 						<ul><li>header (string, default: "ui-icon-triangle-1-e")</li>
-	 * 							<li>activeHeader (string, default:
-	 * 		"ui-icon-triangle-1-s")</li></ul></div>
+	 * 							<li>activeHeader (string, default: "ui-icon-triangle-1-s")</li></ul>
 	 */
 
 	class QAccordionGen extends QPanel	{
@@ -222,51 +210,50 @@
 
 
 		/**
-		 * <div>Removes the accordion functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the accordion functionality completely. This will return the
+		 * element back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the accordion.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Disables the accordion.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the accordion.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Enables the accordion.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * accordion options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current
+		 * accordion options hash.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the accordion option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the accordion option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -274,20 +261,17 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * accordion.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the accordion.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Recompute the height of the accordion panels. Results depend on the
-		 * content and the <a><code>heightStyle</code></a>
-		 * option.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Recompute the height of the accordion panels. Results depend on the content
+		 * and the <a><code>heightStyle</code></a> option.<ul><li>This method does not
+		 * accept any arguments.</li></ul>
 		 */
 		public function Refresh() {
 			$this->CallJqUiMethod("refresh");

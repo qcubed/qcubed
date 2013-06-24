@@ -1,30 +1,20 @@
 <?php
-		/**
+	/**
 	 * QConvertNotation
-     * 
-     * Feel free to override any core QConvertNotationBase methods here
-	 * 
-     * @category QCubed
-     * @package Codegen   
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * Feel free to override any core QConvertNotationBase methods here
+	 * @category QCubed
+	 * @package  Codegen
 	 */
-     
-    require(__QCUBED_CORE__ . '/codegen/QConvertNotationBase.class.php');
+
+	require(__QCUBED_CORE__ . '/codegen/QConvertNotationBase.class.php');
 
 	/**
 	 * QConvertNotation
-     * 
-     * Feel free to override any core QConvertNotationBase methods here
-	 * 
-     * @category QCubed
-     * @package Codegen   
-	 * @author Qcubed
-	 * @copyright 
-	 * @access public
+	 * Feel free to override any core QConvertNotationBase methods here
+	 * @category QCubed
+	 * @package  Codegen
 	 */
-	abstract class QConvertNotation extends QConvertNotationBase {		
+	abstract class QConvertNotation extends QConvertNotationBase {
 	}
+
 ?>

@@ -1,16 +1,20 @@
-This directory is for customizations and additions of the QCubed Codegen
-Templates and Subtemplates.  If there are any template files in this directory which have the
-same name as a template or subtemplate file in /includes/qcodo/codegen/templates, then the
-file in this directory will be used *instead* of the one there.
+This directory is here to serve as a place for custom made or modified templates.
+If you want to modify the default templates, you can copy the ones in the default
+templates directory. The templates path is defined in configuration.inc.php[.sample]
+file as the CODEGEN_TEMPLATE_PATH constant. The (very) basic intro to templates
+and their organisation is given below.
 
-If there are any template files in this directory in *addition* to the ones in
-/includes/qcodo/codegen/templates, these additional template files will be
-processed as well.
+If you are copying template files here, you would also have to update the definition
+of CODEGEN_TEMPLATE_PATH in the configuration.inc.php file. You can also create another
+directory somewhere else and use that as CODEGEN_TEMPLATE_PATH. Read configuration.inc.php
+for more information.
 
-Feel free to add as you wish.  Just remember the naming structure for CodeGen
-template files:
+===============================================
+The naming structure for CodeGen template files
+(assuming they are placed in the same directory as this file):
 
-/includes/qcodo/codegen/templates/[TYPE]/[MODULE]/[FILE]
+The templates directory would be:
+	includes/qcubed/codegen/templates/[TYPE]/[MODULE]/[FILE]
 
 Where [TYPE] is the object being generated, for example:
 	* db_orm
@@ -27,3 +31,4 @@ And [FILE] is the filename of the  template or subtemplate, itself.
 Note that any file with a "_" prefix is considered a template and will
 be processed by the code generator.  All other files are considered
 subtemplates, and are only processed if envoked by a template.
+===============================================
