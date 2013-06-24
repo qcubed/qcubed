@@ -47,18 +47,18 @@ abstract class QPdoDatabase extends QDatabaseBase {
 		}
 
 		
-		public function TransactionBegin() {
+		protected function ExecuteTransactionBegin() {
 				if (!$this->blnConnectedFlag) { 
 					$this->Connect(); 
 				}
 				$this->objPdo->beginTransaction();
 		}
 
-		public function TransactionCommit() {
+		protected function ExecuteTransactionCommit() {
 				$this->objPdo->commit();
 		}
 
-		public function TransactionRollBack() {
+		protected function ExecuteTransactionRollBack() {
 				$this->objPdo->rollback();
 		}
 

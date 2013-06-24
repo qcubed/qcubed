@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+<title><![CDATA[QCubed API]]></title>
+<parser>
+<target>api/docs</target>
+<default-package-name>QCubed</default-package-name>
+<extensions>
+<extension>class.php</extension>
+</extensions>
+</parser>
+<transformer>
+<target>api/docs</target>
+</transformer>
+<files>
+<directory>.</directory>
+<file>includes/configuration/configuration.inc.php</file>
+<file>includes/configuration/prepend.inc.php</file>
+<ignore>assets/*</ignore>
+<ignore>drafts/*</ignore>
+</files>
+</phpdoc>
