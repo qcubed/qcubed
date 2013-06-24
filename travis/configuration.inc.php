@@ -213,15 +213,43 @@ if (!defined('SERVER_INSTANCE')) {
 			// See ApplicationBase::InitializeDatabaseConnections()
 			define ('MAX_DB_CONNECTION_INDEX', 9);
 
+<<<<<<< HEAD
 			/** The value for QApplication::$EncodingType constant */
 			define('__QAPPLICATION_ENCODING_TYPE__', 'UTF-8');
+=======
+			/**
+			 * Multiple Templates (Vaibhav Kaushal, Apr 16, 2013)
+			 * The following setting (CODEGEN_TEMPLATE_PATH) determines the location of the templates
+			 * which would be used for generating various files (Class files, ClassGen files, FormBase files,
+			 * draft pages etc.) for tables in the databases mentioned above.
+			 *
+			 * Requirements for CODEGEN_TEMPLATE_PATH:
+			 * =======================================
+			 *
+			 * 1. It must be a directory and must already exist.
+			 *      Typically it should contain the directories
+			 *      'aggregate_db_orm', 'aggregate_db_type', 'db_orm' and 'db_type'.
+			 *      Without these directories and the files within them, the code generation process will fail.
+			 * 2. The path provided must be absolute. You can use the constants defined above in this very file.
+			 * 3. The path must end with a slash.
+			 * =======================================
+			 *
+			 * To create your own templates, you can copy the contents of the default directory mentioned below
+			 * and copy them to another directory and change the value here and then alter the template files
+			 * as you desire. Do remember that you must understand the templates before you could modify them.
+			 * There currently are no tutorials for that (understanding QCubed templates) and there probably
+			 * never will be due to the complex nature of the templates. However we can help at GitHub and
+			 * QCubed forums.
+			 */
+			define('CODEGEN_TEMPLATE_PATH', __QCUBED_CORE__ . '/codegen/templates/');
+>>>>>>> 6cd894c43552b360e277db688fe0907cafc484e4
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
 			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
 				date_default_timezone_set('America/Los_Angeles');
 
 
-			/*
+			/**
 			 * Caching support for QCubed (Vaibhav Kaushal Jan 21, 2012)
 			 * Determines which class as a Cache Provider. It should be a subclass of QAbstractCacheProvider.
 			 * Setting it to null will disable caching. Current implentations are
@@ -232,10 +260,12 @@ if (!defined('SERVER_INSTANCE')) {
 			 * "QCacheProviderLocalMemory": a local memory cache provider with a lifespan of the request
 			 *   or session (if KeepInSession is configured).
 			 *
-			 * "QCacheProviderNoCahce": provider which does no caching at all
+			 * "QCacheProviderNoCache": provider which does no caching at all. You can use this to disable caching.
+			 *   However it is recommended to use 'null' to disable caching instead.
 			 *
 			 * "QMultiLevelCacheProvider": a provider that can combine multiple providers into one.
-			 *   This can be used for example to combine the LocalMemory cache provider with the Memcache based provider.
+			 *   This can be used for example to combine the LocalMemory cache provider with the Memcache
+			 *   based provider.
 			 */
 			define("CACHE_PROVIDER_CLASS", null);
  
