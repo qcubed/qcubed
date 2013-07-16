@@ -2,6 +2,91 @@
 	if(!class_exists('QAbstractCacheProvider')){
 		include_once __QCUBED_CORE__ . '/framework/QAbstractCacheProvider.class.php';
 	}
+	
+	/**
+	 * The interface for cache actions to be queued and replayed.
+	 */
+	interface ICacheAction {
+		/**
+		 * Executes action on the given cache object
+		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
+		 */
+		public function Execute(QAbstractCacheProvider $objCache);
+	}
+	/**
+	 * The Set cache action to be queued and replayed.
+	 */
+	class QCacheSetAction implements ICacheAction {
+		/**
+		 * @var string the key to use for the object
+		 */
+		protected $strKey;
+		/**
+		 * @var object the object to put in the cache
+		 */
+		protected $objValue;
+
+		/**
+		 * Construct the new QCacheSetAction object.
+		 * @param string $strKey the key to use for the object
+		 * @param object $objValue the object to put in the cache
+		 */
+		public function __construct($strKey, $objValue) {
+			$this->strKey = $strKey;
+			$this->objValue = $objValue;
+		}
+
+		/**
+		 * Executes action on the given cache object
+		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
+		 */
+		public function Execute(QAbstractCacheProvider $objCache) {
+			$objCache->Set($this->strKey, $this->objValue);
+		}
+	}
+	/**
+	 * The Delete cache action to be queued and replayed.
+	 */
+	class QCacheDeleteAction implements ICacheAction {
+		/**
+		 * @var string the key to use for the object
+		 */
+		protected $strKey;
+
+		/**
+		 * Construct the new QCacheDeleteAction object.
+		 * @param string $strKey the key to use for the object
+		 */
+		public function __construct($strKey) {
+			$this->strKey = $strKey;
+		}
+
+		/**
+		 * Executes action on the given cache object
+		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
+		 */
+		public function Execute(QAbstractCacheProvider $objCache) {
+			$objCache->Delete($this->strKey);
+		}
+	}
+	/**
+	 * The DeleteAll cache action to be queued and replayed.
+	 */
+	class QCacheDeleteAllAction implements ICacheAction {
+		/**
+		 * Construct the new QCacheDeleteAction object.
+		 */
+		public function __construct() {
+		}
+
+		/**
+		 * Executes action on the given cache object
+		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
+		 */
+		public function Execute(QAbstractCacheProvider $objCache) {
+			$objCache->DeleteAll();
+		}
+	}
 	/**
 	 * Cache provider that records all additions and removals from the cache,
 	 * and provides an interface to replay them on another instance of an QAbstractCacheProvider
@@ -16,14 +101,23 @@
 		 */
 		protected $arrLocalCacheRemovals;
 		/**
-		 * @var boolean if true, the DeleteAll call was made
+		 * @var QAbstractCacheProvider The super cache to query values from.
 		 */
-		protected $blnIsDeleteAllCalled;
+		protected $objSuperCache;
 
-		public function __construct() {
+		/**
+		 * @var ICacheAction[] The queue of actions performed on this cache. 
+		 */
+		protected $objCacheActionQueue;
+
+		/**
+		 * @param QAbstractCacheProvider $objSuperCache The super cache to query values from.
+		 */
+		public function __construct($objSuperCache) {
+			$this->objSuperCache = $objSuperCache;
+			$this->objCacheActionQueue = array();
 			$this->arrLocalCacheAdditions = array();
 			$this->arrLocalCacheRemovals = array();
-			$this->blnIsDeleteAllCalled = false;
 		}
 		
 		/**
@@ -31,27 +125,20 @@
 		 * @param QAbstractCacheProvider $objAbstractCacheProvider The cache object to apply changes.
 		 */
 		public function Replay($objAbstractCacheProvider) {
-			if ($this->blnIsDeleteAllCalled) {
-				$this->blnIsDeleteAllCalled = false;
-				$objAbstractCacheProvider->DeleteAll();
+			foreach ($this->objCacheActionQueue as $objCacheAction) {
+				$objCacheAction->Execute($objAbstractCacheProvider);
 			}
-			
-			if (count($this->arrLocalCacheAdditions)) {
-				foreach ($this->arrLocalCacheAdditions as $strKey => $objValue) {
-					$objAbstractCacheProvider->Set($strKey, $objValue);
-				}
-			}
-			
-			if (count($this->arrLocalCacheRemovals)) {
-				foreach ($this->arrLocalCacheRemovals as $strKey => $objValue) {
-					$objAbstractCacheProvider->Delete($strKey);
-				}
-			}
+			$this->objCacheActionQueue = array();
 		}
-
+			
 		public function Get($strKey) {
 			if (isset($this->arrLocalCacheAdditions[$strKey])) {
 				return $this->arrLocalCacheAdditions[$strKey];
+			}
+			if (!isset($this->arrLocalCacheRemovals[$strKey])) {
+				if ($this->objSuperCache) {
+					return $this->objSuperCache->Get($strKey);
+				}
 			}
 			return false;
 		}
@@ -61,16 +148,21 @@
 			if (isset($this->arrLocalCacheRemovals[$strKey])) {
 				unset($this->arrLocalCacheRemovals[$strKey]);
 			}
+			$this->objCacheActionQueue[] = new QCacheSetAction($strKey, $objValue);
 		}
 
 		public function Delete($strKey) {
-			unset($this->arrLocalCacheAdditions[$strKey]);
+			if (isset($this->arrLocalCacheAdditions[$strKey])) {
+				unset($this->arrLocalCacheAdditions[$strKey]);
+			}
 			$this->arrLocalCacheRemovals[$strKey] = true;
+			$this->objCacheActionQueue[] = new QCacheDeleteAction($strKey);
 		}
 
 		public function DeleteAll() {
 			$this->arrLocalCacheAdditions = array();
 			$this->arrLocalCacheRemovals = array();
+			$this->objCacheActionQueue[] = new QCacheDeleteAllAction;
 		}
 	}
 	
@@ -183,12 +275,13 @@
 		public final function TransactionBegin() {
 			if (0 == $this->intTransactionDepth) {
 				$this->ExecuteTransactionBegin();
-				if (QApplication::$objCacheProvider && $this->Caching && !(QApplication::$objCacheProvider instanceof QCacheProviderNoCache)) {
+				$objCacheProvider = QApplication::$objCacheProvider;
+				if ($objCacheProvider && $this->Caching && !($objCacheProvider instanceof QCacheProviderNoCache)) {
 					if (!self::$objCacheProviderStack) {
 						self::$objCacheProviderStack = new QStack;
 					}
-					self::$objCacheProviderStack->Push(QApplication::$objCacheProvider);
-					QApplication::$objCacheProvider = new QCacheProviderProxy;
+					self::$objCacheProviderStack->Push($objCacheProvider);
+					QApplication::$objCacheProvider = new QCacheProviderProxy($objCacheProvider);
 				}
 			}
 			$this->intTransactionDepth++;
