@@ -77,7 +77,7 @@
 
 		public function FetchCellValue($item) {
 			$cellValue = $this->FetchCellObject($item);
-			if ($this->strPostMethod) {
+			if ($cellValue !== null && $this->strPostMethod) {
 				$strPostMethod = $this->strPostMethod;
 				$cellValue = $cellValue->$strPostMethod();
 			}
