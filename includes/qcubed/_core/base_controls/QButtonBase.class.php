@@ -20,18 +20,29 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var string Text on the button  */
 		protected $strText = null;
+		/** @var bool Whether or not to use Htmlentities for the control */
 		protected $blnHtmlEntities = true;
 
 		// BEHAVIOR
+		/** @var bool Is the button a primary button (causes form submission)? */
 		protected $blnPrimaryButton = false;
 
 		// SETTINGS
+		/**
+		 * @var bool Prevent any more actions from happening once action has been taken on this control
+		 *  causes "event.preventDefault()" to be called on the client side
+		 */
 		protected $blnActionsMustTerminate = true;
 
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Return the HTML string for the control
+		 * @return string The HTML string of the control
+		 */
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)
@@ -60,6 +71,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP Magic __get method implementation
+		 * @param string $strName Name of the property to be fetched
+		 *
+		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -82,6 +100,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP Magic method __set implementation for this class (QButtonBase)
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws Exception|QCallerException
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

@@ -479,7 +479,7 @@
 	}
 
 	/**
-	 *
+	 * Toggle the Disaply of a control
 	 * @package Actions
 	 */
 	class QToggleDisplayAction extends QAction {
@@ -510,7 +510,7 @@
 	}
 
 	/**
-	 *
+	 * Toggle the 'enabled' status of a control
 	 * @package Actions
 	 */
 	class QToggleEnableAction extends QAction {
