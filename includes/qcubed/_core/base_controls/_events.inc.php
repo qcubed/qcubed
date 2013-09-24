@@ -205,7 +205,7 @@
 		protected $strCondition = 'event.keyCode == 38';
 	}
 
-	/** When the down array key is pressed while the element is in focus */
+	/** When the down arrow key is pressed while the element is in focus */
 	class QDownArrowKeyEvent extends QKeyDownEvent {
 		/** @var string Condition JS */
 		protected $strCondition = 'event.keyCode == 40';
@@ -247,7 +247,7 @@
 	* One positive side effect is that this event will also work for html child elements added
 	* in the future (after the event was created).
 	* 
-	* @param strnig $strEventName the name of the event i.e.: "click"
+	* @param string $strEventName the name of the event i.e.: "click"
 	* @param string $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()...
 	* 
 	*/
@@ -258,8 +258,8 @@
 		/**
 		 * Constructor
 		 * @param int  $strEventName
-		 * @param null $strSelector
-		 * @param null $strCondition
+		 * @param string $strSelector
+		 * @param string $strCondition
 		 * @param int  $intDelay
 		 *
 		 * @throws Exception|QCallerException

@@ -12,11 +12,16 @@
 	 * @package Controls
 	 *
 	 */
-
 	class QFloatTextBox extends QNumericTextBox {
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Constructor
+		 *
+		 * @param QControl|QForm $objParentObject
+		 * @param null|string    $strControlId
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->strLabelForInvalid = QApplication::Translate('Invalid Float');
