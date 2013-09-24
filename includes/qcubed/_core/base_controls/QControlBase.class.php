@@ -155,15 +155,16 @@
 		//////////
 		/**
 		 * Creates a QControlBase object
-		 *
 		 * This constructor will generally not be used to create a QControlBase object.  Instead it is used by the
 		 * classes which extend the class.  Only the parent object parameter is required.  If the option strControlId
 		 * parameter is not used, QCubed will generate the id.
 		 *
 		 * @param QControl|QForm $objParentObject
-		 * @param string $strControlId
-		 * 		optional id of this Control. In html, this will be set as the value of the id attribute. The id can only
-		 *    contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id
+		 * @param string         $strControlId
+		 *                optional id of this Control. In html, this will be set as the value of the id attribute. The id can only
+		 *                contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id
+		 *
+		 * @throws Exception|QCallerException
 		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			if ($objParentObject instanceof QForm)
@@ -309,8 +310,11 @@
 
 		/**
 		 * Adds an action to the control
-		 * @param QEvent $objEvent
+		 *
+		 * @param QEvent  $objEvent
 		 * @param QAction $objAction
+		 *
+		 * @throws QCallerException
 		 */
 		public function AddAction($objEvent, $objAction) {
 			if (!($objEvent instanceof QEvent)) {
@@ -341,8 +345,11 @@
 
 		/**
 		 * Adds an array of actions to the control
+		 *
 		 * @param QEvent $objEvent
-		 * @param array $objActionArray
+		 * @param array  $objActionArray
+		 *
+		 * @throws QCallerException
 		 */
 		public function AddActionArray($objEvent, $objActionArray) {
 			if (!($objEvent instanceof QEvent)) {
@@ -427,7 +434,10 @@
 
 		/**
 		 * Returns the value of a custom attribute
+		 *
 		 * @param string $strName
+		 *
+		 * @throws QCallerException
 		 * @return string
 		 */
 		public function GetCustomAttribute($strName) {
@@ -439,7 +449,10 @@
 
 		/**
 		 * Removes the given custom attribute
+		 *
 		 * @param string $strName
+		 *
+		 * @throws QCallerException
 		 */
 		public function RemoveCustomAttribute($strName) {
 			$this->blnModified = true;
@@ -481,7 +494,10 @@
 
 		/**
 		 * Returns the value of the given custom style
+		 *
 		 * @param string $strName
+		 *
+		 * @throws QCallerException
 		 * @return string
 		 */
 		public function GetCustomStyle($strName) {
@@ -493,7 +509,10 @@
 
 		/**
 		 * Deletes the given custom style
+		 *
 		 * @param string $strName
+		 *
+		 * @throws QCallerException
 		 */
 		public function RemoveCustomStyle($strName) {
 			$this->blnModified = true;
@@ -766,10 +785,11 @@
 
 		/**
 		 * Returns all wrapper-style-attributes
-		 * 
-		 * Similar to GetStyleAttributes, but specifically for CSS name/value pairs that will render 
+		 * Similar to GetStyleAttributes, but specifically for CSS name/value pairs that will render
 		 * within a wrapper's HTML "style" attribute
-		 * 
+		 *
+		 * @param bool $blnIsBlockElement
+		 *
 		 * @return string
 		 */
 		protected function GetWrapperStyleAttributes($blnIsBlockElement=false) {
@@ -792,29 +812,29 @@
 			
 			return $strStyle;
 		}
-		
+
 		/**
 		 * RenderHelper should be called from all "Render" functions FIRST in order to check for and
 		 * perform attribute overides (if any).
-		 *
 		 * All render methods should take in an optional first boolean parameter blnDisplayOutput
 		 * (default to true), and then any number of attribute overrides.
-		 *
 		 * Any "Render" method (e.g. Render, RenderWithName, RenderWithError) should call the
 		 * RenderHelper FIRST in order to:
 		 * <ul>
 		 * <li>Check for and perform attribute overrides</li>
 		 * <li>Check to see if this control is "Visible".  If it is Visible=false, then
-		 * 	the renderhelper will cause the method to immedaitely return</li>
+		 *        the renderhelper will cause the method to immedaitely return</li>
 		 * </ul>
-		 *
 		 * Proper usage within the first line of any Render() method is:
-		 * 	<code>$this->RenderHelper(func_get_args(), __FUNCTION__);</code>
+		 *        <code>$this->RenderHelper(func_get_args(), __FUNCTION__);</code>
 		 * See {@link QControl::RenderWithName()} as example.
 		 *
 		 * @param $mixParameterArray the parameters given to the render call
-		 * @param $strRenderMethod the method which has been used to render the
-		 * 	control. This is important for ajax rerendering
+		 * @param $strRenderMethod   the method which has been used to render the
+		 *                           control. This is important for ajax rerendering
+		 *
+		 * @throws QCallerException
+		 * @throws Exception|QCallerException
 		 * @see QControlBase::RenderOutput()
 		 */
 		protected function RenderHelper($mixParameterArray, $strRenderMethod) {
@@ -952,16 +972,17 @@
 
 		/**
 		 * RenderOutput should be the last call in your custom RenderMethod.
-		 *
 		 * RenderOutput wraps your content with valid divs and control-identifiers, echos your code
 		 * to the content buffer or simply returns it. See {@link QControlBase::RenderHelper()}.
 		 *
-		 * @param string $strOutput
-		 * 			Your html-code which should be given out
+		 * @param string  $strOutput
+		 *                        Your html-code which should be given out
 		 * @param boolean $blnDisplayOutput
-		 * 			should it be given out, or just be returned?
+		 *                        should it be given out, or just be returned?
 		 * @param boolean $blnForceAsBlockElement
-		 * 			should it be given out as a block element, regardless of its configured tag?
+		 *                        should it be given out as a block element, regardless of its configured tag?
+		 * @param string  $strWrapperAttributes
+		 *
 		 * @return string
 		 */
 		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strWrapperAttributes = '') {
@@ -1052,12 +1073,13 @@
 
 		/**
 		 * This render method is the most basic render-method available.
-		 *
 		 * It will perform attribute overiding (if any) and will either display the rendered
 		 * HTML (if blnDisplayOutput is true, which it is by default), or it will return the
 		 * rendered HTML as a string.
 		 *
 		 * @param boolean $blnDisplayOutput render the control or return as string
+		 *
+		 * @throws Exception|QCallerException
 		 * @return string
 		 */
 		public function Render($blnDisplayOutput = true) {
@@ -1124,6 +1146,8 @@
 		 * any validation errors, that might occur
 		 *
 		 * @param boolean $blnDisplayOutput display output (echo out) or just return as string
+		 *
+		 * @throws Exception|QCallerException
 		 * @return string
 		 */
 		public function RenderWithError($blnDisplayOutput = true) {
