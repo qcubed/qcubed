@@ -17,7 +17,7 @@
 		/**
 		 * Constructor
 		 * @param int  $intDelay
-		 * @param null $strCondition
+		 * @param string $strCondition
 		 *
 		 * @throws Exception|QCallerException
 		 */
@@ -181,16 +181,6 @@
 		const EventName = 'mouseup';
 	}
 
-	class QMoveEvent extends QEvent {
-		/** Event Name */
-		const EventName = 'onqcodomove';
-	}
-
-	class QResizeEvent extends QEvent {
-		/** Event Name */
-		const EventName = 'onqcodoresize';
-	}
-
 	/** When the control/element is selected */
 	class QSelectEvent extends QEvent {
 		/** Event Name */
@@ -262,7 +252,7 @@
 	* 
 	*/
 	class QOnEvent extends QEvent{
-		/** @var string Name of the evet */
+		/** @var string Name of the event */
 		protected $strEventName;
 
 		/**
