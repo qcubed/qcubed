@@ -14,7 +14,8 @@
 		 * The Css object should never be instantiated, and this constructor
 		 * override simply guarantees it.
 		 *
-		 * @return void
+		 * @throws QCallerException
+		 * @return \QCss
 		 */
 		public final function __construct() {
 			throw new QCallerException('Css should never be instantiated.  All methods and variables are publically statically accessible.');

@@ -19,6 +19,10 @@
 	 *
 	 */
 	class QProgressbarBase extends QProgressbarGen	{
+		/**
+		 * The javascript for the control to be sent to the client.
+		 * @return string The control's JS
+		 */
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
 			
@@ -33,6 +37,13 @@ FUNC;
 			return $strJS;
 		}
 
+		/**
+		 * PHP __set magic method
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws Exception|QCallerException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case '_Value':	// Internal Only. Used by JS above. Do Not Call.

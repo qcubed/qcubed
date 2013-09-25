@@ -276,7 +276,7 @@
 	 * Is used in the upload controls
 	 */
 	abstract class QFileAssetType {
-		/** The file is a image */
+		/** The file is an image */
 		const Image = 1;
 		/** File is a PDF Document */
 		const Pdf = 2;
@@ -296,9 +296,17 @@
 		const EditOnly = 3;
 	}
 
+	/**
+	 * Class QMetaControlArgumentType
+	 * Meta controls are created by input recieved from multiple sources. This class enumerates the three.
+	 * Refer to any MetaDataGrid class's MetaAddEditLinkColumn method to see how this is used
+	 */
 	abstract class QMetaControlArgumentType {
+		/** The Pathinfo supplied to the requested file */
 		const PathInfo = 1;
+		/** Via a querystring */
 		const QueryString = 2;
+		/** Via Post Data (not in use currently) */
 		const PostData = 3;
 	}	
 ?>
