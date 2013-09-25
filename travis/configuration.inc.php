@@ -213,10 +213,9 @@ if (!defined('SERVER_INSTANCE')) {
 			// See ApplicationBase::InitializeDatabaseConnections()
 			define ('MAX_DB_CONNECTION_INDEX', 9);
 
-<<<<<<< HEAD
 			/** The value for QApplication::$EncodingType constant */
 			define('__QAPPLICATION_ENCODING_TYPE__', 'UTF-8');
-=======
+
 			/**
 			 * Multiple Templates (Vaibhav Kaushal, Apr 16, 2013)
 			 * The following setting (CODEGEN_TEMPLATE_PATH) determines the location of the templates
@@ -242,7 +241,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 * QCubed forums.
 			 */
 			define('CODEGEN_TEMPLATE_PATH', __QCUBED_CORE__ . '/codegen/templates/');
->>>>>>> 6cd894c43552b360e277db688fe0907cafc484e4
+
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
 			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
