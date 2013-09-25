@@ -18,14 +18,15 @@
 		}
 		else {
 			// The minimal constants set to work
-			define ('__DOCROOT__', dirname(__FILE__) . '/../..');
+			define ('__DOCROOT__', dirname(__FILE__) . '/../../..');
+			define ('__PROJECT__', dirname(__FILE__) . '/../..');
 			define ('__INCLUDES__', dirname(__FILE__) . '/..');
-			define ('__QCUBED__', __INCLUDES__ . '/qcubed');
-			define ('__PLUGINS__', __QCUBED__ . '/plugins');
-			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');
+			define ('__QCUBED__', __INCLUDES__); // needs to be reconfigured
+			define ('__PLUGINS__', __PROJECT__ . '/generated/plugins');
+			define ('__QCUBED_CORE__', __DOCROOT__ . '/vendor/qcubed/framework/includes');
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 			define ('__MODEL__', __INCLUDES__ . '/model' );
-			define ('__MODEL_GEN__', __MODEL__ . '/generated' );
+			define ('__MODEL_GEN__', __PROJECT__ . '/generated/model' );
 		}
 
 
