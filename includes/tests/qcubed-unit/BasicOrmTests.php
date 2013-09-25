@@ -5,20 +5,20 @@
  * @package Tests
  */
 if(!class_exists('Person')){
-    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Person.class.php';
+    require_once __INCLUDES__ .'/model/Person.class.php';
     
 }
 if(!class_exists('Project')){
-    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Project.class.php';
+    require_once __INCLUDES__ .'/model/Project.class.php';
 }
 if(!class_exists('Login')){
-    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Login.class.php';
+    require_once __INCLUDES__ .'/model/Login.class.php';
 }
 if(!class_exists('Milestone')){
-    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Milestone.class.php';
+    require_once __INCLUDES__ .'/model/Milestone.class.php';
 }
 if(!class_exists('Address')){
-    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Address.class.php';
+    require_once __INCLUDES__ .'/model/Address.class.php';
 }
 class BasicOrmTests extends QUnitTestCaseBase {    
 	public function testSaveAndDelete() {
