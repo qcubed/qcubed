@@ -1,10 +1,4 @@
-<?php 
-
-$configPath = "includes/configuration";
-
-if (isset($__CONFIG_ONLY__) && $__CONFIG_ONLY__ == true) {
-	require_once($configPath . '/configuration.inc.php');
-} else {
-	require_once($configPath . '/prepend.inc.php');
-}
+<?php
+// expect this file to be in the vendor/qcubed/framework directory
+require_once(dirname(__FILE__).'/../../../qcubed.inc.php');
 ?>
