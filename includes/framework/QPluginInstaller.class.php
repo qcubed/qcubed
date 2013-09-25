@@ -17,7 +17,7 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 	
 	public static function installPluginFromZip($strFileName) {
 		$entropy = substr(md5(uniqid()), 0, 6);
-		$expandedDir = __INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $entropy . '/';
+		$expandedDir = self::PLUGIN_EXTRACTION_DIR . $entropy . '/';
 		$extractionResult = QArchive::extractZip($strFileName, $expandedDir);
 		if (!$extractionResult) {
 			self::$strLastError = QArchive::getLastError();
@@ -40,7 +40,7 @@ abstract class QPluginInstaller extends QPluginInstallerBase {
 	}
 	
 	private static function getExpandedPath($strExtractedFolderName) {
-		return __INCLUDES__ . self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName . '/';
+		return self::PLUGIN_EXTRACTION_DIR . $strExtractedFolderName . '/';
 	}	
 
 	public static function installFromExpanded($strExtractedFolderName) {

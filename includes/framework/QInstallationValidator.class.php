@@ -105,11 +105,11 @@ abstract class QInstallationValidator {
 		// initialize the full QCubed framework.
 		require(__CONFIGURATION__. '/prepend.inc.php');
 
-		if (!QFolder::isWritable(__INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR)) {
+		if (!QFolder::isWritable(QPluginInstaller::PLUGIN_EXTRACTION_DIR)) {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "Plugin temporary extraction directory (" .
-				__INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR . ") needs to be writable";
-			$obj->strCommandToFix = "chmod 777 " . __INCLUDES__ . QPluginInstaller::PLUGIN_EXTRACTION_DIR;
+				QPluginInstaller::PLUGIN_EXTRACTION_DIR . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . QPluginInstaller::PLUGIN_EXTRACTION_DIR;
 			$result[] = $obj;
 		}
 		
