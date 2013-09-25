@@ -20,7 +20,7 @@ require('travis/qcubed.inc.php');
 	$strCommandName = 'codegen.cli';
 
 	// Include the rest of the OS-agnostic script
-	require('includes/qcubed/_core/_devtools_cli/codegen.inc.php');
+	require('includes/_devtools_cli/codegen.inc.php');
 
 
 // not using QCubed error handler for unit tests - using the SimpleTest one instead
