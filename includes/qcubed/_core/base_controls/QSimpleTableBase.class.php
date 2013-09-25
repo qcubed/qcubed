@@ -75,9 +75,12 @@
 			$this->objColumnArray[] = $objColumn;
 		}
 
-		public function MoveColumn($strName, $intColumnIndex = -1) {
+		public function MoveColumn($strName, $intColumnIndex = -1, $strNewName = null) {
 			$col = $this->RemoveColumnByName($strName);
 			$this->AddColumnAt($intColumnIndex, $col);
+			if ($strNewName !== null) {
+				$col->Name = $strNewName;
+			}
 			return $col;
 		}
 
