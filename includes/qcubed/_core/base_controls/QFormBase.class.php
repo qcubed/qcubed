@@ -1222,7 +1222,7 @@
 
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
-				$strToReturn  .= sprintf('<style type="text/css" media="all">@import "%s";</style>', $this->GetCssFileURI($strScript));
+				$strToReturn  .= sprintf('<style type="text/css" media="all">@import "%s";</style>', $this->GetCssFileUri($strScript));
 				$strToReturn .= "\r\n";
 			}
 
@@ -1361,7 +1361,13 @@
 			return $objToReturn;
 		}
 
-		public function GetJsFileURI($strFile) {
+		/**
+		 * Gets the JS file URI, given a string input
+		 * @param string $strFile File name to be tested
+		 *
+		 * @return string the final JS file URI
+		 */
+		public function GetJsFileUri($strFile) {
 			if ((strpos($strFile, "http") === 0) || (strpos($strFile, "https") === 0))
 				return $strFile;
 			if (strpos($strFile, "/") === 0)
@@ -1369,7 +1375,13 @@
 			return __VIRTUAL_DIRECTORY__ . __JS_ASSETS__ . '/' . $strFile;
 		}
 
-		public function GetCssFileURI($strFile) {
+		/**
+		 * Gets the CSS file URI, given a string input
+		 * @param string $strFile File name to be tested
+		 *
+		 * @return string the final CSS URI
+		 */
+		public function GetCssFileUri($strFile) {
 			if ((strpos($strFile, "http") === 0) || (strpos($strFile, "https") === 0))
 				return $strFile;
 			if (strpos($strFile, "/") === 0)
@@ -1405,7 +1417,7 @@
 
 			// Include javascripts that need to be included
 			foreach ($strJavaScriptArray as $strScript) {
-				$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $this->GetJsFileURI($strScript));
+				$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $this->GetJsFileUri($strScript));
 				$strToReturn .= "\r\n";
 			}
 
