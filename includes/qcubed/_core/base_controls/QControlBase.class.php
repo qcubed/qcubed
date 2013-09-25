@@ -261,7 +261,7 @@
 		 * Returns all child controls as an array
 		 *
 		 * @param boolean $blnUseNumericIndexes
-		 * @return array an array of QControls
+		 * @return QControl[]
 		 */
 		public function GetChildControls($blnUseNumericIndexes = true) {
 			if ($blnUseNumericIndexes) {
@@ -827,14 +827,14 @@
 		 * <ul>
 		 * <li>Check for and perform attribute overrides</li>
 		 * <li>Check to see if this control is "Visible".  If it is Visible=false, then
-		 *        the renderhelper will cause the method to immedaitely return</li>
+		 *        the renderhelper will cause the method to immediately return</li>
 		 * </ul>
 		 * Proper usage within the first line of any Render() method is:
 		 *        <code>$this->RenderHelper(func_get_args(), __FUNCTION__);</code>
 		 * See {@link QControl::RenderWithName()} as example.
 		 *
-		 * @param $mixParameterArray the parameters given to the render call
-		 * @param $strRenderMethod   the method which has been used to render the
+		 * @param mixed  $mixParameterArray the parameters given to the render call
+		 * @param string $strRenderMethod   the method which has been used to render the
 		 *                           control. This is important for ajax rerendering
 		 *
 		 * @throws QCallerException
@@ -969,7 +969,6 @@
 		 * This function is never used throughout the whole framework. So it probably should be
 		 * deprecated. Only Call to this function is in QFormBase Line 1171.
 		 * @deprecated
-		 * @return unknown_type
 		 */
 		public function GetEndHtml() {}
 
@@ -1215,7 +1214,6 @@
 		 * @throws QCallerException
 		 * @return string HTML of rendered Control
 		 */
-
 		public function RenderWithName($blnDisplayOutput = true) {
 			////////////////////
 			// Call RenderHelper
@@ -1311,7 +1309,7 @@
 
 
 		// The following three methods are only intended to be called by code within the Form class.
-		// It must be declared as public so that a form object can have access ot them, but it really should never be
+		// It must be declared as public so that a form object can have access to them, but it really should never be
 		// called by user code.
 		public function ResetFlags() {
 			$this->blnRendered = false;
@@ -1386,6 +1384,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP __get magic method implementation
+		 * @param string $strName Property Name
+		 *
+		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -1474,6 +1479,16 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP __set magic method implementation
+		 * @param string $strName Property Name
+		 * @param string $mixValue Property Value
+		 *
+		 * @return mixed|void
+		 * @throws QCallerException
+		 * @throws Exception|QCallerException
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 
