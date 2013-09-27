@@ -77,7 +77,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 */
 			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
 			// The directory where the external libraries are placed, that are not in composer
-			define ('__EXTERNAL_LIBRARIES__', __INCLUDES__ . '/external_libraries');
+			define ('__EXTERNAL_LIBRARIES__', __DOCROOT__ . __SUBDIRECTORY__ . '/vendor');
 			// The application includes directory
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 

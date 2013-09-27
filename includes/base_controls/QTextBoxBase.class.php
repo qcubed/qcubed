@@ -132,7 +132,7 @@
 						break;
 					case QCrossScripting::HTMLPurifier:
 						// let HTMLPurifier do the job! User should have set it up!
-						require_once(__EXTERNAL_LIBRARIES__ . '/htmlpurifier/library/HTMLPurifier.auto.php');
+						require_once(__EXTERNAL_LIBRARIES__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
 						$objPurifier = new HTMLPurifier($this->objHTMLPurifierConfig);
 						$this->strText = $objPurifier->purify($this->strText);
 						break;
