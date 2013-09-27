@@ -14,6 +14,7 @@
 	 * Add an action to this event to get a button click.
 	 */
 	class QDialog_ButtonEvent extends QEvent {
+		/** Event Name */
 		const EventName = 'QDialog_Button';	
 	}
 
