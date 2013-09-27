@@ -5,8 +5,8 @@
 $__CONFIG_ONLY__ = true;
 require('./qcubed.inc.php');
 
-require_once(__QCUBED_CORE__ . '/tests/simpletest/unit_tester.php');
-require_once(__QCUBED_CORE__ . '/tests/simpletest/reporter.php');
+require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/unit_tester.php');
+require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/reporter.php');
 
 $__CONFIG_ONLY__ = false;
 require('./qcubed.inc.php');

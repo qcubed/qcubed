@@ -5,6 +5,9 @@ language: php
 php:
     - 5.3
 
+install:
+    - composer install --dev
+
 env:
     - DB=mysql
     - DB=pgsql
