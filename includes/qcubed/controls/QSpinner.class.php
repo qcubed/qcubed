@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * THis file contains the QSpinner class
+	 * This file contains the QSpinner class
 	 */
 	/**
 	 * Class QSpinner

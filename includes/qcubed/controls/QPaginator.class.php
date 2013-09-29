@@ -28,7 +28,7 @@
 		/**
 		 * Constructor
 		 * @param QControl|QForm $objParentObject
-		 * @param null|String    $strControlId
+		 * @param null|string    $strControlId
 		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
