@@ -307,20 +307,20 @@ class QOracleDatabase extends QDatabaseBase {
 		$this->blnConnectedFlag = false;
 	}
 
-	public function TransactionBegin() {
+	protected function ExecuteTransactionBegin() {
 		// Set to AutoCommit
 		//$this->NonQuery('SET AUTOCOMMIT OFF;');
 		$this->commitMode = true;
 	}
 
-	public function TransactionCommit() {
+	protected function ExecuteTransactionCommit() {
 		/*$this->NonQuery('COMMIT;');
 		// Set to AutoCommit
 		$this->NonQuery('SET AUTOCOMMIT OFF;');*/
 		oci_commit($this->objOracle);
 	}
 
-	public function TransactionRollback() {
+	protected function ExecuteTransactionRollBack() {
 		/*$this->NonQuery('ROLLBACK;');
 		// Set to AutoCommit
 		$this->NonQuery('SET AUTOCOMMIT OFF;');*/

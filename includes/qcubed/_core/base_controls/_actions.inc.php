@@ -1,9 +1,10 @@
 <?php
-/**
- * This file contains all basic action classes: QAction, QServerAction, QAjaxAction, etc.
- *
- * @package Actions
- */
+	/**
+	 * This file contains all basic action classes: QAction, QServerAction, QAjaxAction, etc.
+	 *
+	 * @package Actions
+	 * @filesource
+	 */
 
 	/**
 	 * Base class for all other Actions.
@@ -68,12 +69,22 @@
 								});
 								', $objControl->getJqControlId(), $strEventName,  substr($strToReturn, 1));
 
-				//return sprintf('%s="%s" ', $strEventName, substr($strToReturn, 1));
+					//return sprintf('%s="%s" ', $strEventName, substr($strToReturn, 1));
 				}
 			}
 			return null;
 		}
 
+		/**
+		 * PHP Magic function to set the property values of an object of the class
+		 * In this case, we only have 'Event' property to be set
+		 *
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws QCallerException
+		 * @return mixed|null|string
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case 'Event':
@@ -89,6 +100,14 @@
 			}
 		}
 
+		/**
+		 * PHP Magic function to get the property values of an object of the class
+		 * In this case, we only have 'Event' property to be set
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed|null|string
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Event': return $this->objEvent;
@@ -119,6 +138,13 @@
 			$this->strJsReturnParam = $strJsReturnParam;
 		}
 
+		/**
+		 * PHP Magic function to get the property values of an object of the class
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed|null|string
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'MethodName':
@@ -158,16 +184,42 @@
 	/**
 	 * Ajax actions are handled through an asynchronous HTTP request (=AJAX).
 	 * No full-page refresh happens when such an action is executing.
-	 *
+	 * @property-read $MethodName Name of the (event-handler) method to be called
+	 *              the event handler - function containing the actual code for the Ajax action
+	 * @property-read QWaitIcon $WaitIconControl the waiting icon control for this Ajax Action
+	 * @property-read mixed $CausesValidationOverride what kind of validation over-ride is to be implemented
+	 *              on this action.(See the QCausesValidation class and QFormBase class to understand in greater depth)
+	 * @property-read string JsReturnParam The line of javascript which would set the 'strParameter' value on the
+	 *              client-side when the action occurs!
+	 *              (see /assets/_core/php/examples/other_controls/js_return_param_example.php for example)
+	 * @property-read string Id The Ajax Action ID for this action.
 	 * @package Actions
 	 */
 	class QAjaxAction extends QAction {
+		/** @var string Ajax Action ID */
 		protected $strId;
+		/** @var string The event handler function name */
 		protected $strMethodName;
+		/** @var QWaitIcon Wait Icon to be used for this particular action */
 		protected $objWaitIconControl;
+		/**
+		 * @var mixed what kind of validation over-ride is to be implemented
+		 *              (See the QCausesValidation class and QFormBase class to understand in greater depth)
+		 */
 		protected $mixCausesValidationOverride;
+		/**
+		 * @var string the line of javascript which would set the 'strParameter' value on the
+		 *              client-side when the action occurs!
+		 */
 		protected $strJsReturnParam;
 
+		/**
+		 * @param string   $strMethodName Name of the event handler function to be called
+		 * @param string|QWaitIcon $objWaitIconControl Wait Icon for the action
+		 * @param null|mixed   $mixCausesValidationOverride what kind of validation over-ride is to be implemented
+		 * @param string $strJsReturnParam the line of javascript which would set the 'strParameter' value on the
+		 *              client-side when the action occurs!
+		 */
 		public function __construct($strMethodName = null, $objWaitIconControl = 'default', $mixCausesValidationOverride = null,$strJsReturnParam = "") {
 			$this->strId = NULL;
 			$this->strMethodName = $strMethodName;
@@ -175,11 +227,18 @@
 			$this->mixCausesValidationOverride = $mixCausesValidationOverride;
 			$this->strJsReturnParam = $strJsReturnParam;
 		}
-		
+
 		public function __clone() {
 			$this->strId = NULL; //we are a fresh clone, lets reset the id and get our own later (in RenderScript)
 		}
 
+		/**
+		 * PHP Magic function to get the property values of a class object
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed|null|string
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'MethodName':
@@ -202,6 +261,12 @@
 			}
 		}
 
+		/**
+		 * Returns the control's ActionParameter in string format
+		 * @param QControl $objControl
+		 *
+		 * @return string
+		 */
 		protected function getActionParameter($objControl) {
 			if ($objActionParameter = $this->strJsReturnParam)
 				return $objActionParameter;
@@ -214,12 +279,20 @@
 			return "'" . addslashes($objActionParameter) . "'";
 		}
 
+		/**
+		 * Returns the RenderScript script for the action.
+		 * The returned script is to be executed on the client side when the action is executed
+		 * (in this case qc.pA function is executed)
+		 * @param QControl $objControl
+		 *
+		 * @return string
+		 */
 		public function RenderScript(QControl $objControl) {
 			$strWaitIconControlId = null;
 			if ($this->strId == NULL) {
 				$this->strId = $objControl->Form->GenerateAjaxActionId();
 			}
-			
+
 			if ((gettype($this->objWaitIconControl) == 'string') && ($this->objWaitIconControl == 'default')) {
 				if ($objControl->Form->DefaultWaitIcon)
 					$strWaitIconControlId = $objControl->Form->DefaultWaitIcon->ControlId;
@@ -271,6 +344,13 @@
 				$this->strJavaScript = substr($this->strJavaScript, 0, strlen($this->strJavaScript) - 1);
 		}
 
+		/**
+		 * PHP Magic function to get the property values of a class object
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed|null|string
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'JavaScript':
@@ -301,6 +381,13 @@
 			$this->strMessage = $strMessage;
 		}
 
+		/**
+		 * PHP Magic function to get the property values of an object of the class
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed|null|string
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Message':
@@ -332,6 +419,13 @@
 			$this->strMessage = $strMessage;
 		}
 
+		/**
+		 * PHP Magic function to get the property values of an object of the class
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed|null|string
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Message':
@@ -467,7 +561,7 @@
 
 		public function __construct($objControl) {
 			if (!($objControl instanceof QDialogBox))
-    			throw new QCallerException('First parameter of constructor is expecting an object of type QDialogBox');
+				throw new QCallerException('First parameter of constructor is expecting an object of type QDialogBox');
 
 			$this->strControlId = $objControl->ControlId;
 			$this->strJavaScript = $objControl->GetShowDialogJavaScript();
@@ -487,7 +581,7 @@
 
 		public function __construct($objControl) {
 			if (!($objControl instanceof QDialogBox))
-    			throw new QCallerException('First parameter of constructor is expecting an object of type QDialogBox');
+				throw new QCallerException('First parameter of constructor is expecting an object of type QDialogBox');
 
 			$this->strJavaScript = $objControl->GetHideDialogJavaScript();
 		}
@@ -497,59 +591,59 @@
 		}
 	}
 
-    /**
-     *
-     * @package Actions
-     *
-     * This is the JQuery UI alternative to show dialog
-     */
-    class QShowDialog extends QAction {
-        protected $strJavaScript = null;
+	/**
+	 *
+	 * @package Actions
+	 *
+	 * This is the JQuery UI alternative to show dialog
+	 */
+	class QShowDialog extends QAction {
+		protected $strJavaScript = null;
 
-        public function __construct($objControl) {
-            if (!($objControl instanceof QDialog))
-                throw new QCallerException('First parameter of constructor is expecting an object of type QDialog');
+		public function __construct($objControl) {
+			if (!($objControl instanceof QDialog))
+				throw new QCallerException('First parameter of constructor is expecting an object of type QDialog');
 
-            $strControlId = $objControl->getJqControlId();
-            $this->strJavaScript = sprintf ('jQuery("#%s").dialog("open");', $strControlId);
-        }
+			$strControlId = $objControl->getJqControlId();
+			$this->strJavaScript = sprintf ('jQuery("#%s").dialog("open");', $strControlId);
+		}
 
-        public function RenderScript(QControl $objControl) {
-            return $this->strJavaScript;
-        }
-    }
+		public function RenderScript(QControl $objControl) {
+			return $this->strJavaScript;
+		}
+	}
 
 	/**
-     * Hiding a JQuery UI Dialog
+	 * Hiding a JQuery UI Dialog
 	 *
 	 * @package Actions
 	 */
-    class QHideDialog extends QAction {
-        protected $strJavaScript = null;
+	class QHideDialog extends QAction {
+		protected $strJavaScript = null;
 
-        public function __construct($objControl) {
-            if (!($objControl instanceof QDialog))
-                throw new QCallerException('First parameter of constructor is expecting an object of type QDialog');
+		public function __construct($objControl) {
+			if (!($objControl instanceof QDialog))
+				throw new QCallerException('First parameter of constructor is expecting an object of type QDialog');
 
-            $strControlId = $objControl->getJqControlId();
-            $this->strJavaScript = sprintf ('jQuery("#%s").dialog("close");', $strControlId);
-        }
+			$strControlId = $objControl->getJqControlId();
+			$this->strJavaScript = sprintf ('jQuery("#%s").dialog("close");', $strControlId);
+		}
 
-        public function RenderScript(QControl $objControl) {
-            return $this->strJavaScript;
-        }
-    }
+		public function RenderScript(QControl $objControl) {
+			return $this->strJavaScript;
+		}
+	}
 
-/**
- *
- * @package Actions
- */
+	/**
+	 *
+	 * @package Actions
+	 */
 	class QFocusControlAction extends QAction {
 		protected $strControlId = null;
 
 		public function __construct($objControl) {
 			if (!($objControl instanceof QControl))
-    			throw new QCallerException('First parameter of constructor is expecting an object of type QControl');
+				throw new QCallerException('First parameter of constructor is expecting an object of type QControl');
 
 			$this->strControlId = $objControl->ControlId;
 		}
@@ -568,7 +662,7 @@
 
 		public function __construct($objControl) {
 			if (!($objControl instanceof QControl))
-    			throw new QCallerException('First parameter of constructor is expecting an object of type QControl');
+				throw new QCallerException('First parameter of constructor is expecting an object of type QControl');
 
 			$this->strControlId = $objControl->ControlId;
 		}
@@ -587,7 +681,7 @@
 
 		public function __construct($objControl) {
 			if (!($objControl instanceof QTextBox ))
-    			throw new QCallerException('First parameter of constructor is expecting an object of type QTextBox');
+				throw new QCallerException('First parameter of constructor is expecting an object of type QTextBox');
 
 			$this->strControlId = $objControl->ControlId;
 		}
@@ -661,7 +755,7 @@
 
 		public function __construct($calControl) {
 			if (!($calControl instanceof QCalendar))
-    			throw new QCallerException('First parameter of constructor is expecting an object of type QCalendar');
+				throw new QCallerException('First parameter of constructor is expecting an object of type QCalendar');
 			$this->strControlId = $calControl->ControlId;
 		}
 
@@ -679,7 +773,7 @@
 
 		public function __construct($calControl) {
 			if (!($calControl instanceof QCalendar))
-    			throw new QCallerException('First parameter of constructor is expecting an object of type QCalendar');
+				throw new QCallerException('First parameter of constructor is expecting an object of type QCalendar');
 			$this->strControlId = $calControl->ControlId;
 		}
 

@@ -50,6 +50,14 @@
 		protected $strEscapeIdentifierBegin = '"';
 		protected $strEscapeIdentifierEnd = '"';
 		protected $blnOnlyFullGroupBy = false; // should be set in sub-classes as appropriate
+		
+		/**
+		 * @var int The transaction depth value.
+		 * It is incremented on a transaction begin,
+		 * decremented on a transaction commit, and reset to zero on a roll back.
+		 * It is used to implement the recursive transaction functionality.
+		 */
+		protected $intTransactionDepth = 0;
 
 		// Abstract Methods that ALL Database Adapters MUST implement
 		abstract public function Connect();
@@ -64,9 +72,59 @@
 		abstract public function GetIndexesForTable($strTableName);
 		abstract public function GetForeignKeysForTable($strTableName);
 
-		abstract public function TransactionBegin();
-		abstract public function TransactionCommit();
-		abstract public function TransactionRollBack();
+		/**
+		 * This function actually begins the database transaction.
+		 * Must be implemented in all subclasses.
+		 * The "TransactionBegin" wrapper are meant to be called by end-user code
+		 * @return void Nothing
+		 */
+		abstract protected function ExecuteTransactionBegin();
+		/**
+		 * This function actually commits the database transaction.
+		 * Must be implemented in all subclasses.
+		 * The "TransactionCommit" wrapper are meant to be called by end-user code
+		 * @return void Nothing
+		 */
+		abstract protected function ExecuteTransactionCommit();
+		/**
+		 * This function actually rolls back the database transaction.
+		 * Must be implemented in all subclasses.
+		 * The "TransactionRollBack" wrapper are meant to be called by end-user code
+		 * @return void Nothing
+		 */
+		abstract protected function ExecuteTransactionRollBack();
+
+		/**
+		 * This function begins the database transaction.
+		 * @return void Nothing
+		 */
+		public final function TransactionBegin() {
+			if (0 == $this->intTransactionDepth) {
+				$this->ExecuteTransactionBegin();
+			}
+			$this->intTransactionDepth++;
+		}
+		/**
+		 * This function commits the database transaction.
+		 * @return void Nothing
+		 */
+		public final function TransactionCommit() {
+			if (1 == $this->intTransactionDepth) {
+				$this->ExecuteTransactionCommit();
+			}
+			if ($this->intTransactionDepth <= 0) {
+				throw new QCallerException("The transaction commit call is called before the transaction begin was called.");
+			}
+			$this->intTransactionDepth--;
+		}
+		/**
+		 * This function rolls back the database transaction.
+		 * @return void Nothing
+		 */
+		public final function TransactionRollBack() {
+			$this->ExecuteTransactionRollBack();
+			$this->intTransactionDepth = 0;
+		}
 
 		abstract public function SqlLimitVariablePrefix($strLimitInfo);
 		abstract public function SqlLimitVariableSuffix($strLimitInfo);

@@ -25,6 +25,10 @@ class ExampleForm extends QForm {
 
 		if (!$objControl = $this->GetControl($objControlId)) {
 			$objControl = new QImageControl($this->dtgPersons, $objControlId);
+			
+			// And finally, let's specify a CacheFolder so that the images are cached
+			// Notice that this CacheFolder path is a complete web-accessible relative-to-docroot path
+			$objControl->CacheFolder = __VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/datagrid/cache';
 
 			$imagePath = "../images/emoticons/" . $intPersonId . ".png";
 

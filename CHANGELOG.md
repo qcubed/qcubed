@@ -1,6 +1,61 @@
 Qcubed ChangeLog
 ===================
 
+## Release 2.2.1 (bugfix release)
+
+[241](https://github.com/qcubed/framework/issues/241) qcheckboxcolumn example is broken
+
+[233](https://github.com/qcubed/framework/issues/233) testGroupBy and testHaving are broken for postgresql in CLI mode
+
+[231](https://github.com/qcubed/framework/issues/231) The testQueryCount fails for postgresql
+
+[229](https://github.com/qcubed/framework/issues/229) The example "Security: Cross-Site Scripting (XSS) Prevention" is broken
+
+[227](https://github.com/qcubed/framework/issues/227) The color of datagrid header and header on the error-dump page is out of new qcubed theme
+
+[224](https://github.com/qcubed/framework/issues/224) Examples using QImageControl are broken
+
+[222](https://github.com/qcubed/framework/issues/222) Problem in nested qdatagrid
+
+[212](https://github.com/qcubed/framework/issues/212) Some plugins, like QAnyTimeBox, looks agly
+
+[210](https://github.com/qcubed/framework/issues/210) Textual values for Maximum/Minimum properties of the QDatepickerBox are broken
+
+[208](https://github.com/qcubed/framework/issues/208) jquery width and outerWidth API does not work for hidden controls
+
+[198](https://github.com/qcubed/framework/issues/198) Problem with multiple windows: if you have two QCubed windows open, you could clobber a formstate, and get the dreaded PHP_Incomplete_Cast error
+
+[192](https://github.com/qcubed/framework/issues/192) Problem with QAutocomplete when UseWrapper is false
+
+[190](https://github.com/qcubed/framework/issues/190) The example is broken: "Dynamically Created Image Labels"
+
+[179](https://github.com/qcubed/framework/issues/179) QFormStateHandler does not work in some ajax scenarios
+
+[152](https://github.com/qcubed/framework/issues/152) QImageLabel Failing
+
+[150](https://github.com/qcubed/framework/issues/150) No straightforward way to use the _qc_packed.js file
+
+[140](https://github.com/qcubed/framework/issues/140) The _qc_packed.js file is outdated
+
+[111](https://github.com/qcubed/framework/issues/111) The jquery version used is outdated
+
+[107](https://github.com/qcubed/framework/issues/107) Codegen breaking models
+
+[100](https://github.com/qcubed/framework/issues/100) QueryCount acts differently depending on whether $objOptionalClauses is an array or a QQClause
+
+[94](https://github.com/qcubed/framework/issues/94) QQHaving test is broken for PostgreSql
+
+[92](https://github.com/qcubed/framework/issues/92) QImageControl sample is broken: assets/_core/php/examples/other_controls/image.php
+
+[80](https://github.com/qcubed/framework/issues/80) Run qcubed tests for postgresql on a travis-ci server
+
+[71](https://github.com/qcubed/framework/issues/71) CaseSensitive adapter name for QInformixPdoDatabase.class.php
+
+[141](https://github.com/qcubed/framework/issues/141) Tests for QType are fixed
+
+###For a complete list of issues fixed in this release see the [closed tickets in this milestone](https://github.com/qcubed/framework/issues?milestone=6&page=1&state=closed "Release 2.2.1 closed tickets").
+
+
 ## Release 2.2.0
 
 [88](https://github.com/qcubed/framework/issues/88) The QDbBackedSessionHandler SessionOpen method is not static

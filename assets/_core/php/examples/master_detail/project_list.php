@@ -114,25 +114,29 @@
 			$objControlId = 'btnToggleRecordsSummary' . $objProject->Id;
 			
 			if (!$objControl = $this->GetControl($objControlId)) {			
-				// If not exists create our toggle button who his parent
-				// is our master QDataGrid...
-				$objControl = new QButton($this->dtgProjects, $objControlId);
-				$objControl->Width = 20;
-				$objControl->Text = '+';
-				$objControl->CssClass = 'inputbutton';
+				// magia 2011-07  add in button info of child presence
+				$team_member = Person::LoadArrayByProjectAsTeamMember($objProject->Id);
+				if (count($team_member)> 0) {
+
+					// If not exists create our toggle button who his parent
+					// is our master QDataGrid...
+					$objControl = new QButton($this->dtgProjects, $objControlId);
+					$objControl->Width = 25;
+					$objControl->Text = '+'.count($team_member);
+					$objControl->CssClass = 'inputbutton';
 				
-				// Pass the id of the bounded item just for other process
-				// on click event
+					// Pass the id of the bounded item just for other process
+					// on click event
 				
-				$objControl->ActionParameter = $objProject->Id;
+					$objControl->ActionParameter = $objProject->Id;
 				
-				// Add event on click the toogle button
-				$objControl->AddAction(new QClickEvent(), 
-					new QAjaxAction(
-							'btnToggleRecordsSummary_Click',
-							$this->dtgProjects->WaitIcon));
+					// Add event on click the toogle button
+					$objControl->AddAction(new QClickEvent(), 
+								   new QAjaxAction(
+								   'btnToggleRecordsSummary_Click',
+								   $this->dtgProjects->WaitIcon));
+				}
 			}
-			
 			// We pass the parameter of "false" to make sure the control doesn't render
 			// itself RIGHT HERE - that it instead returns its string rendering result.
 			return $objControl->Render(false);
@@ -150,20 +154,24 @@
 			$objControlId = 'ucRecordsSummary' . $intProjectId;
 			$objControl = $this->GetControl($objControlId);
 			
-			if ($objControl) {
+			// magia 2011-07  inserito test per presenza child
+			$team_member = Person::LoadArrayByProjectAsTeamMember($intProjectId);
+			if (count($team_member)> 0) {
+				if ($objControl) {
 				// Ask if our Child DataGrid is visible...
-				if ($objControl->Visible) {
-					// Make it desapear ...
-					$objControl->Visible = false;
-					$srcControl->Text = '+';
-				} else {
-					// Or make it appear...
-					$objControl->Visible = true;
-					$srcControl->Text = '-';
+					if ($objControl->Visible) {
+						// Make it desapear ...
+						$objControl->Visible = false;
+						$srcControl->Text = '+';
+					} else {
+						// Or make it appear...
+						$objControl->Visible = true;
+						$srcControl->Text = '-';
+					}
+
+					// Important! Refresh the parent QDataGrid...
+					$this->dtgProjects->Refresh();
 				}
-			
-				// Important! Refresh the parent QDataGrid...
-				$this->dtgProjects->Refresh();
 			}
 		}
 			
@@ -177,6 +185,7 @@
 				$objControl = new RecordsSummary($this->dtgProjects, $objProject, $objControlId);
 				
 				// Put invisible at the begging, the toogle button is gonna do the job
+				// test - $objControl->Visible = true;
 				$objControl->Visible = false;
 			}
 			

@@ -1750,7 +1750,7 @@
 				throw new QCallerException('You have two different Join Conditions on the same Expanded Table: ' . $strJoinIndex . "\r\n[" . $this->strJoinConditionArray[$strJoinIndex] . ']   vs.   [' . $strConditionClause . ']');
 			}
 
-			// Create the new JoinItem in teh JoinArray
+			// Create the new JoinItem in the JoinArray
 			$this->strJoinArray[$strJoinIndex] = $strJoinItem;
 
 			// If there is a condition, record that condition against this JoinIndex

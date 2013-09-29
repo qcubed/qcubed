@@ -69,16 +69,6 @@ class ExampleForm extends QForm {
 
 		$objStyle = $this->dtgProjects->AlternateRowStyle;
 		$objStyle->BackColor = '#f6f6f6';
-
-		$objStyle = $this->dtgProjects->HeaderRowStyle;
-		$objStyle->ForeColor = 'white';
-		$objStyle->BackColor = '#780000';
-
-		// Because browsers will apply different styles/colors for LINKs
-		// We must explicitly define the ForeColor for the HeaderLink.
-		// The header row turns into links when the column can be sorted.
-		$objStyle = $this->dtgProjects->HeaderLinkStyle;
-		$objStyle->ForeColor = 'white';
 	}
 
 	protected function dtgProjects_Bind() {
@@ -112,16 +102,6 @@ class ExampleForm extends QForm {
 
 		$objStyle = $this->dtgCustom->AlternateRowStyle;
 		$objStyle->BackColor = '#f6f6f6';
-
-		$objStyle = $this->dtgCustom->HeaderRowStyle;
-		$objStyle->ForeColor = 'white';
-		$objStyle->BackColor = '#780000';
-
-		// Because browsers will apply different styles/colors for LINKs
-		// We must explicitly define the ForeColor for the HeaderLink.
-		// The header row turns into links when the column can be sorted.
-		$objStyle = $this->dtgCustom->HeaderLinkStyle;
-		$objStyle->ForeColor = 'white';
 	}
 
 	protected function dtgCustom_Bind() {
