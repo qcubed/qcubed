@@ -305,15 +305,15 @@
 			$this->blnConnectedFlag = false;
 		}
 
-		public function TransactionBegin() {
+		protected function ExecuteTransactionBegin() {
 			$this->NonQuery('BEGIN;');
 		}
 
-		public function TransactionCommit() {
+		protected function ExecuteTransactionCommit() {
 			$this->NonQuery('COMMIT;');
 		}
 
-		public function TransactionRollback() {
+		protected function ExecuteTransactionRollBack() {
 			$this->NonQuery('ROLLBACK;');
 		}
 

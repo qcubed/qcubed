@@ -47,16 +47,6 @@
 			$objStyle = $this->dtgPersons->AlternateRowStyle;
 			$objStyle->BackColor = '#f6f6f6';
 
-			$objStyle = $this->dtgPersons->HeaderRowStyle;
-			$objStyle->ForeColor = 'white';
-			$objStyle->BackColor = '#780000';
-
-			// Because browsers will apply different styles/colors for LINKs
-			// We must explicitly define the ForeColor for the HeaderLink.
-			// The header row turns into links when the column can be sorted.
-			$objStyle = $this->dtgPersons->HeaderLinkStyle;
-			$objStyle->ForeColor = 'white';
-
 			// Create the other textboxes and buttons -- make sure we specify
 			// the datagrid as the parent.  If they hit the escape key, let's perform a Cancel.
 			// Note that we need to terminate the action on the escape key event, too, b/c

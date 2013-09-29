@@ -30,27 +30,27 @@
 
 <?php foreach ($objTypeTable->NameArray as $intKey=>$strValue) { ?>
 			<?php echo $intKey  ?> => '<?php echo $strValue  ?>',
-<?php } ?><?php GO_BACK(3); ?><?php }?>);
+<?php } ?><?php GO_BACK(2); ?><?php }?>);
 
 		public static $TokenArray = array(<?php if (count($objTypeTable->TokenArray)) { ?>
 
 <?php foreach ($objTypeTable->TokenArray as $intKey=>$strValue) { ?>
 			<?php echo $intKey  ?> => '<?php echo $strValue  ?>',
-<?php } ?><?php GO_BACK(3); ?><?php }?>);
+<?php } ?><?php GO_BACK(2); ?><?php }?>);
 
 <?php if (count($objTypeTable->ExtraFieldNamesArray)) { ?>
 		public static $ExtraColumnNamesArray = array(
 <?php foreach ($objTypeTable->ExtraFieldNamesArray as $strColName) { ?>
 			'<?php echo $strColName  ?>',
-<?php } ?><?php GO_BACK(3); ?>);
+<?php } ?><?php GO_BACK(2); ?>);
 
 		public static $ExtraColumnValuesArray = array(
 <?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
 			<?php echo $intKey  ?> => array (
 <?php foreach ($arrColumns as $strColName=>$strColValue) { ?>
 						'<?php echo $strColName  ?>' => '<?php echo str_replace("'", "\\'", $strColValue)  ?>',
-<?php } ?><?php GO_BACK(3); ?>),
-<?php } ?><?php GO_BACK(3); ?>);
+<?php } ?><?php GO_BACK(2); ?>),
+<?php } ?><?php GO_BACK(2); ?>);
 
 
 <?php }?>

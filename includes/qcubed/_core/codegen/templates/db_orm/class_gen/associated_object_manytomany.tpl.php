@@ -10,12 +10,12 @@
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @return <?php echo $objManyToManyReference->VariableType  ?>[]
 		*/
-		public function Get<?php echo $objManyToManyReference->ObjectDescription  ?>Array($objOptionalClauses = null) {
+		public function Get<?php echo $objManyToManyReference->ObjectDescription  ?>Array($objOptionalClauses = null, $objClauses = null) {
 			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
 				return array();
 
 			try {
-				return <?php echo $objManyToManyReference->VariableType  ?>::LoadArrayBy<?php echo $objManyToManyReference->OppositeObjectDescription  ?>($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?>, $objOptionalClauses);
+				return <?php echo $objManyToManyReference->VariableType  ?>::LoadArrayBy<?php echo $objManyToManyReference->OppositeObjectDescription  ?>($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?>, $objClauses);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
