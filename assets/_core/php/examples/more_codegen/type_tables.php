@@ -31,9 +31,9 @@
 	has the following columns: "id", "name" (unique), "description", and "guidelines". QCubed code 
 	generator will create methods such as <strong>ProjectStatusType::ToDescription()</strong> and <strong>ProjectStatusType::ToGuidelines()</strong>
 	for you.</p>		
-	
+
 	<p>You can also use an association table with a type table to create a many-to-many relationship with a type.
-	This is similar to the SET type in MySQL, but is database independent.</p>		
+	This is similar to the SET type in MySQL, but is database independent.</p>
 
 </div>
 
@@ -60,7 +60,7 @@
 	Project ID: <?php _p($objProject->Id); ?><br/>
 	Project Name: <?php _p($objProject->Name); ?><br/>
 	Project Status: <?php _p(ProjectStatusType::ToString($objProject->ProjectStatusTypeId)); ?>
-	
+
 	<h2>List the employees and their options.</h2>
 <?php
 	// Load all the people and expand the type array associated with the person table
@@ -78,7 +78,7 @@
 		_p('<br/>', false);
 	}
 ?>
-
 </div>
+
 
 <?php require('../includes/footer.inc.php'); ?>
