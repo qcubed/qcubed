@@ -1166,14 +1166,15 @@
 			$strAssociationTableName = str_replace($this->strAssociationTableSuffix, '', $strAssociationTableName);
 
 			// Take out strTableName if applicable (both with and without underscores)
-			$strAssociationTableName = str_replace($strTableName, '', $strAssociationTableName);
+			$strAssociationTableName = str_replace($strTableName . '_', '_', $strAssociationTableName);
+			//$strAssociationTableName = str_replace($strTableName, '', $strAssociationTableName); // if table name is included in reference name, will take this out in both places
 			$strTableName = str_replace('_', '', $strTableName);
-			$strAssociationTableName = str_replace($strTableName, '', $strAssociationTableName);
+			$strAssociationTableName = str_replace($strTableName . '_', '_', $strAssociationTableName);
 
 			// Take out strReferencedTableName if applicable (both with and without underscores)
-			$strAssociationTableName = str_replace($strReferencedTableName, '', $strAssociationTableName);
+			$strAssociationTableName = str_replace('_' . $strReferencedTableName, '_', $strAssociationTableName);
 			$strReferencedTableName = str_replace('_', '', $strReferencedTableName);
-			$strAssociationTableName = str_replace($strReferencedTableName, '', $strAssociationTableName);
+			$strAssociationTableName = str_replace('_' . $strReferencedTableName, '_', $strAssociationTableName);
 
 			// Change any double "__" to single "_"
 			$strAssociationTableName = str_replace("__", "_", $strAssociationTableName);
