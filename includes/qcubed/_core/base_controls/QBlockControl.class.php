@@ -35,6 +35,7 @@
 		// APPEARANCE
 		/** @var string The text on the control */
 		protected $strText = null;
+	    	/** @var string The format specifier for rendering the control  */
 		protected $strFormat = null;
 		/** @var string Path to the HTML template (.tpl.php) file (applicable in case a template is being used for Render) */
 		protected $strTemplate = null;

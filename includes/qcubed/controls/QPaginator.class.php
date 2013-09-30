@@ -1,23 +1,46 @@
 <?php
+	/**
+	 * Contains the QPaginator Class - the paginator control for QDataGrid and QDataRepeater controls
+	 * @package Controls
+	 * @filesource
+	 */
+
+	/**
+	 * Class QPaginator - The paginator control which can be attached to a QDataRepeater or QDataGrid
+	 * This class will take care of the number of pages, current page, next/previous links and so on
+	 * automatically.
+	 */
 	class QPaginator extends QPaginatorBase {
 		// APPEARANCE
 		protected $intIndexCount = 10;
 
+		/** @var string Label for the 'Previous' link */
 		protected $strLabelForPrevious;
+		/** @var string Label for the 'Next' link */
 		protected $strLabelForNext;
 
+		/** @var string Default CSS class for the Paginator */
 		protected $strCssClass = 'paginator';
 
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Constructor
+		 * @param QControl|QForm $objParentObject
+		 * @param null|string    $strControlId
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 
 			$this->strLabelForPrevious = QApplication::Translate('Previous');
 			$this->strLabelForNext = QApplication::Translate('Next');
-		}		
-		
+		}
+
+		/**
+		 * Returns the HTML string for rendering the control
+		 * @return string
+		 */
 		public function GetControlHtml() {
 			$this->objPaginatedControl->DataBind();
 
