@@ -20,6 +20,10 @@ if(!class_exists('Milestone')){
 if(!class_exists('Address')){
     require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Address.class.php';
 }
+if(!class_exists('PersonType')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/PersonType.class.php';
+}
+
 class BasicOrmTests extends QUnitTestCaseBase {    
 	public function testSaveAndDelete() {
 		$objPerson1 = new Person();
