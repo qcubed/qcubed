@@ -114,17 +114,17 @@
 		///////////////////////////////
 
 		/**
-		 * Instantiate a <?php echo $objTable->ClassName  ?> from a Database Row. 
+		 * Instantiate a <?php echo $objTypeTable->ClassName  ?> from a Database Row. 
 		 * Simply returns the integer id corresponding to this item.
 		 * Takes in an optional strAliasPrefix, used in case another Object::InstantiateDbRow
-		 * is calling this <?php echo $objTable->ClassName  ?>::InstantiateDbRow in order to perform
+		 * is calling this <?php echo $objTypeTable->ClassName  ?>::InstantiateDbRow in order to perform
 		 * early binding on referenced objects.
 		 * @param DatabaseRowBase $objDbRow
 		 * @param string $strAliasPrefix
 		 * @param string $strExpandAsArrayNodes
 		 * @param QBaseClass $arrPreviousItem
 		 * @param string[] $strColumnAliasArray
-		 * @return <?php echo $objTable->ClassName  ?>
+		 * @return <?php echo $objTypeTable->ClassName  ?>
 
 		*/
 		public static function InstantiateDbRow($objDbRow, $strAliasPrefix = null, $strExpandAsArrayNodes = null, $arrPreviousItems = null, $strColumnAliasArray = array()) {
