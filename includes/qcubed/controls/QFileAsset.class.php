@@ -15,15 +15,16 @@
 	 * @access public
 	 */
 	class QFileAsset extends QFileAssetBase {
-	    /** @type string|'/tmp' File Path for Temporary Upload */
+	    	/** @var string Default:'/tmp' File Path for Temporary Upload */
 		protected $strTemporaryUploadPath = '/tmp';
-		
+
 		/**
 		 * QFileAsset::__construct()
-		 * 
-		 * @param mixed $objParentObject
+		 *
+		 * @param mixed  $objParentObject
 		 * @param string $strControlId
-		 * @return void
+		 *
+		 * @return \QFileAsset
 		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);

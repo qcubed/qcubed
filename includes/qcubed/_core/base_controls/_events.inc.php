@@ -1,6 +1,6 @@
 <?php
 /**
- * Classes in this file represent various "events" for QCubed. 
+ * Classes in this file represent various "events" for QCubed.
  * Programmer can "hook" into these events and write custom handlers.
  * Event-driven programming is explained in detail here: http://en.wikipedia.org/wiki/Event-driven_programming
  *
@@ -9,6 +9,7 @@
 
 	/**
 	 * Base class of all events. It's obviously abstract.
+	 * @property-read string $EventName Name of the event
 	 */
 	abstract class QEvent extends QBaseClass {
 		protected $strCondition = null;
@@ -75,7 +76,7 @@
 	}
 
 	/**
-	 * Be careful with change events for listboxes - 
+	 * Be careful with change events for listboxes -
 	 * they don't fire when the user picks a value on many browsers!
 	 */
 	class QChangeEvent extends QEvent {
@@ -108,13 +109,13 @@
 		/** Event Name */
 		const EventName = 'focus';
 	}
-	
+
 	/** added for V2 / jQuery support */
 	class QFocusInEvent extends QEvent {
 		/** Event Name */
 		const EventName = 'focusin';
 	}
-	
+
 	/** added for V2 / jQuery support */
 	class QFocusOutEvent extends QEvent {
 		/** Event Name */
@@ -236,20 +237,20 @@
 
 
 	/**
-	* 
+	*
 	* a custom event with event delegation
 	* With this event you can delegate events of child controls or any html element
 	* to a parent. By using the selector you can limit the event sources this event
 	* gets triggered from. You can use a css class (or any jquery selector) for
 	* $strSelector. Example ( new QJsDelegateEvent("click",".remove",new QAjaxControlAction( ... )); )
-	* 
+	*
 	* This event can help you reduce the produced javascript to a minimum.
 	* One positive side effect is that this event will also work for html child elements added
 	* in the future (after the event was created).
-	* 
+	*
 	* @param string $strEventName the name of the event i.e.: "click"
 	* @param string $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()...
-	* 
+	*
 	*/
 	class QOnEvent extends QEvent{
 		/** @var string Name of the event */
@@ -270,7 +271,7 @@
 				$strSelector = addslashes($strSelector);
 				$this->strEventName .= '","'.$strSelector;
 			}
-			
+
 			try {
 				parent::__construct($intDelay,$strCondition);
 			} catch (QCallerException $objExc) {
@@ -299,7 +300,7 @@
 					}
 			}
 		}
-		
+
 	}
 
 ?>

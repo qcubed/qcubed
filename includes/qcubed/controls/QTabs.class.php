@@ -1,24 +1,15 @@
 <?php
 	/**
-	 * QTabs
+	 * This file contains the QTabs class
 	 * 
 	 * Put your customizations of the standard behavior here.
 	 * 
 	 * @package Controls
-	 * @author 
-	 * @copyright 2011
-	 * @version $Id$
-	 * @access public
 	 */
      
 	/**
-	 * @package Controls
-	 * @author Qcubed
-	 * @copyright 
-	 * @version 2011
-	 * @access public
+	 * QTabs is the PHP wrapper for JQueryUI Tabs control
 	 */
-
 	class QTabs extends QTabsBase
 	{
 	}

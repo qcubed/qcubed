@@ -37,10 +37,13 @@
 	 */
 	abstract class QDatabaseBase extends QBaseClass {
 		// Must be updated for all Adapters
+		/** Adapter name */
 		const Adapter = 'Generic Database Adapter (Abstract)';
 
 		// Protected Member Variables for ALL Database Adapters
+		/** @var int Database Index according to the configuration file */
 		protected $intDatabaseIndex;
+		/** @var bool Has the profiling been enabled? */
 		protected $blnEnableProfiling;
 		protected $strProfileArray;
 
