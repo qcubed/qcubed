@@ -251,6 +251,8 @@ INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (9, 3);
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (2, 4);
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (2, 5);
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (5, 5);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (7, 2);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (7, 4);
 
 
 -- SET FOREIGN_KEY_CHECKS = 1;

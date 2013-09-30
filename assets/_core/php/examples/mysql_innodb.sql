@@ -249,5 +249,7 @@ INSERT INTO person_persontype_assn VALUES(9, 3);
 INSERT INTO person_persontype_assn VALUES(2, 4);
 INSERT INTO person_persontype_assn VALUES(2, 5);
 INSERT INTO person_persontype_assn VALUES(5, 5);
+INSERT INTO person_persontype_assn VALUES(7, 2);
+INSERT INTO person_persontype_assn VALUES(7, 4);
 
 SET FOREIGN_KEY_CHECKS = 1;
