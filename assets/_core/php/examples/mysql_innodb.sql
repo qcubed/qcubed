@@ -126,8 +126,8 @@ ALTER TABLE milestone ADD CONSTRAINT project_milestone FOREIGN KEY (project_id) 
 ALTER TABLE related_project_assn ADD CONSTRAINT related_project_assn_1 FOREIGN KEY (project_id) REFERENCES project (id);
 ALTER TABLE related_project_assn ADD CONSTRAINT related_project_assn_2 FOREIGN KEY (child_project_id) REFERENCES project (id);
 
-ALTER TABLE `person_type_assn` ADD CONSTRAINT person_type_assn_1 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
-ALTER TABLE `person_type_assn` ADD CONSTRAINT person_type_assn_2 FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_type_assn_1 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
+ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_type_assn_2 FOREIGN KEY (person_id) REFERENCES person (id);
 
 
 #========================================================================== #
