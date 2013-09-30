@@ -1165,16 +1165,21 @@
 			// Rip out trailing "_assn" if applicable
 			$strAssociationTableName = str_replace($this->strAssociationTableSuffix, '', $strAssociationTableName);
 
-			// Take out strTableName if applicable (both with and without underscores)
-			$strAssociationTableName = str_replace($strTableName, '', $strAssociationTableName);
-			$strTableName = str_replace('_', '', $strTableName);
-			$strAssociationTableName = str_replace($strTableName, '', $strAssociationTableName);
-
-			// Take out strReferencedTableName if applicable (both with and without underscores)
-			$strAssociationTableName = str_replace($strReferencedTableName, '', $strAssociationTableName);
+			// Take out strTableName. Two styles of table name are checked, one with underscores, and one without
+			$strAssociationTableName = str_replace($strTableName . '_', '_', $strAssociationTableName); // at beginning
+			$strAssociationTableName = str_replace('_' . $strTableName, '_', $strAssociationTableName); // at end
+			$strTableName = str_replace('_', '', $strTableName); // remove underscores if they are there
+			// remove table name without the underscores,
+			$strAssociationTableName = str_replace($strTableName . '_', '_', $strAssociationTableName); // at beginning
+			$strAssociationTableName = str_replace('_' . $strTableName, '_', $strAssociationTableName); // at end
+			
+			// Do the same for the referenced table name
+			$strAssociationTableName = str_replace('_' . $strReferencedTableName, '_', $strAssociationTableName);
+			$strAssociationTableName = str_replace($strReferencedTableName . '_', '_', $strAssociationTableName);
 			$strReferencedTableName = str_replace('_', '', $strReferencedTableName);
-			$strAssociationTableName = str_replace($strReferencedTableName, '', $strAssociationTableName);
-
+			$strAssociationTableName = str_replace('_' . $strReferencedTableName, '_', $strAssociationTableName);
+			$strAssociationTableName = str_replace($strReferencedTableName . '_', '_', $strAssociationTableName);
+			
 			// Change any double "__" to single "_"
 			$strAssociationTableName = str_replace("__", "_", $strAssociationTableName);
 			$strAssociationTableName = str_replace("__", "_", $strAssociationTableName);
