@@ -96,15 +96,15 @@ CREATE TABLE address (
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS person_type;
-CREATE TABLE IF NOT EXISTS person_type (
+CREATE TABLE person_type (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   name varchar(50) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY name (name)
 ) ENGINE=InnoDB ;
 
-DROP TABLE IF EXISTS person_type_assn;
-CREATE TABLE IF NOT EXISTS person_type_assn (
+DROP TABLE IF EXISTS persontype_assn;
+CREATE TABLE persontype_assn (
   person_id int(10) unsigned NOT NULL,
   person_type_id int(10) unsigned NOT NULL,
   PRIMARY KEY (person_id,person_type_id),
@@ -239,15 +239,15 @@ INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone H');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone I');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone J');
 
-INSERT INTO person_type_assn VALUES(3, 1);
-INSERT INTO person_type_assn VALUES(10, 1);
-INSERT INTO person_type_assn VALUES(1, 2);
-INSERT INTO person_type_assn VALUES(3, 2);
-INSERT INTO person_type_assn VALUES(1, 3);
-INSERT INTO person_type_assn VALUES(3, 3);
-INSERT INTO person_type_assn VALUES(9, 3);
-INSERT INTO person_type_assn VALUES(2, 4);
-INSERT INTO person_type_assn VALUES(2, 5);
-INSERT INTO person_type_assn VALUES(5, 5);
+INSERT INTO persontype_assn VALUES(3, 1);
+INSERT INTO persontype_assn VALUES(10, 1);
+INSERT INTO persontype_assn VALUES(1, 2);
+INSERT INTO persontype_assn VALUES(3, 2);
+INSERT INTO persontype_assn VALUES(1, 3);
+INSERT INTO persontype_assn VALUES(3, 3);
+INSERT INTO persontype_assn VALUES(9, 3);
+INSERT INTO persontype_assn VALUES(2, 4);
+INSERT INTO persontype_assn VALUES(2, 5);
+INSERT INTO persontype_assn VALUES(5, 5);
 
 SET FOREIGN_KEY_CHECKS = 1;
