@@ -169,7 +169,10 @@
 		 *  			and used for the HTML 'id' attribute on the control.
 		 */
 		protected $strControlId;
-		/** @var QForm The parent form of this control. May or may not be immediate parent of this control */
+		/**
+		 *
+		 * @var QForm
+		 */
 		protected $objForm = null;
 		/** @var QControl Immediate parent of this control */
 		protected $objParentControl = null;
