@@ -15,7 +15,7 @@
 	 * @package Controls
 	 * 
 	 * @property string $AccessKey allows you to specify what Alt-Letter combination will automatically focus that control on the form
-	 * @property boolean $ActionsMustTerminate
+	 * @property boolean $ActionsMustTerminate Prevent the default action from happenning upon an event trigger. See documentation for "protected $blnActionsMustTerminate" below.
 	 * @property mixed $ActionParameter This property allows you to pass your own parameters to the handlers for actions applied to this control.
 	 *			 this can be a string or an object of type QJsClosure. If you pass in a QJsClosure it is possible to return javascript objects/arrays 
 	 *			 when using an ajax or server action.
@@ -77,77 +77,152 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var string Background color for the control */
 		protected $strBackColor = null;
+		/** @var string Border color for the control */
 		protected $strBorderColor = null;
+		/** @var QBorderStyle|string The border style for the control */
 		protected $strBorderStyle = QBorderStyle::NotSet;
+		/** @var string Border width - can be specified in numbers(will add pixels for that) or a number with unit attached to it */
 		protected $strBorderWidth = null;
+		/** @var string CSS class for the control */
 		protected $strCssClass = null;
+		/** @var bool should the control be displayed? */
 		protected $blnDisplay = true;
+		/** @var QDisplayStyle|string Display style (CSS) for the control */
 		protected $strDisplayStyle = QDisplayStyle::NotSet;
+		/** @var bool Will the text font for the control be bold */
 		protected $blnFontBold = false;
+		/** @var bool Will the text font for the control be italisized */
 		protected $blnFontItalic = false;
+		/** @var string Names of the fonts to be used for the control's text */
 		protected $strFontNames = null;
+		/** @var bool Line above the text (strTextDecoration will store the value) */
 		protected $blnFontOverline = false;
+		/** @var string Font-size: Can be specified in numbers (will add 'px' for that) or a number with a unit attached with it */
 		protected $strFontSize = null;
+		/** @var bool Line over the text, striking it through (strTextDecoration will store the value) */
 		protected $blnFontStrikeout = false;
+		/** @var bool Line under the text (strTextDecoration will store the value) */
 		protected $blnFontUnderline = false;
+		/** @var string the 'color' CSS property of the control */
 		protected $strForeColor = null;
+		/** @var integer Opacity of the control. Range from 0 to 100 (is converted to float automatically) */
 		protected $intOpacity = null;
 
 		// BEHAVIOR
+		/** @var string The 'accesskey' attribute of the control */
 		protected $strAccessKey = null;
+		/** @var bool|string|QControl|array How will this control cause validations to trigger  */
 		protected $mixCausesValidation = false;
+		/** @var string Cursor that should appear when hovering on the control */
 		protected $strCursor = QCursor::NotSet;
+		/** @var bool Is the control Enabled or Disabled */
 		protected $blnEnabled = true;
+		/** @var bool Is it mandatory for the control to recive data on a POST back for the control to be called valid? */
 		protected $blnRequired = false;
+		/** @var int Tab-index */
 		protected $intTabIndex = 0;
+		/** @var string the 'title' HTML attribute for the control */
 		protected $strToolTip = null;
+		/** @var string The validation error to be shown */
 		protected $strValidationError = null;
+		/** @var bool Should the control be visible or not (it normally effects whether Render method will be called or not) */
 		protected $blnVisible = true;
+		/** @var string Preferred method to be used for rendering e.g. Render, RenderWithName, RenderWithError */
 		protected $strPreferedRenderMethod = 'Render';
 	
 		// LAYOUT
+		/** @var string Height of the control. If numeric, 'px' is attached; otherwise used as it is */
 		protected $strHeight = null;
+		/** @var string Width of the control. If numeric, 'px' is attached; otherwise used as it is */
 		protected $strWidth = null;
 
+		/** @var string HTML to rendered before the actual control */
 		protected $strHtmlBefore = null;
+		/** @var string HTML to rendered after the actual control */
 		protected $strHtmlAfter = null;
+		/** @var string the Instructions for the control (useful for controls used in data entry) */
 		protected $strInstructions = null;
+		/** @var string Same as validation error message but is supposed to contain custom messages */
 		protected $strWarning = null;
 
+		/** @var QOverflow|string Overflow property for the control */
 		protected $strOverflow = QOverflow::NotSet;
+		/** @var QPosition|string Position of the control */
 		protected $strPosition = QPosition::NotSet;
+		/** @var string|null The margin from the top for 'fixed' element. Is used only with the control's wrapper enabled */
 		protected $strTop = null;
+		/** @var string|null The margin from the left for 'fixed' element. Is used only with the control's wrapper enabled */
 		protected $strLeft = null;
 
+		/** @var QDraggable|null When initialized, it implements the jQuery UI Draggable capabilities on to this control.*/
 		protected $objDraggable = null;
+		/** @var QResizable|null When initialized, it implements the jQuery UI Resizable capabilities on to this control.*/
 		protected $objResizable = null;
+		/** @var QDroppable|null When initialized, it implements the jQuery UI Droppable capabilities on to this control.*/
 		protected $objDroppable = null;
 
 		// MISC
+		/**
+		 * @var null|string The control ID of this control. Used to represent the control internally
+		 *  			and used for the HTML 'id' attribute on the control.
+		 */
 		protected $strControlId;
+		/** @var QForm The parent form of this control. May or may not be immediate parent of this control */
 		protected $objForm = null;
+		/** @var QControl Immediate parent of this control */
 		protected $objParentControl = null;
+		/** @var QControl[] Controls which have this control as their parent */
 		protected $objChildControlArray = array();
+		/** @var string|null Name of the control - used as a lable for the control when RenderWithName is used to render */
 		protected $strName = null;
+		/** @var bool Has the control already been rendered? */
 		protected $blnRendered = false;
+		/** @var bool Is the control mid-way the process of rendering? */
 		protected $blnRendering = false;
+		/** @var bool Is the control avaialble on page? Useful when 're-rendering' a control that has children */
 		protected $blnOnPage = false;
+		/** @var bool Has the control been modified? Used mostly in Ajax or Server callbacks */
 		protected $blnModified = false;
+		/** @var bool Has the control's wrapper been modified? Used in Ajax or Server callbacks */
 		protected $blnWrapperModified = false;
+		/** @var string Render method to be used */
 		protected $strRenderMethod;
+		/** @var string|null Custom HTML attributes for the control  */
 		protected $strCustomAttributeArray = null;
+		/** @var string|null Custom CSS style attributes for the control */
 		protected $strCustomStyleArray = null;
+		/** @var array Array containing the list of actions set on the control (for different events) */
 		protected $objActionArray = array();
+		/** @var string|QJsClosure|null The action parameter (typically small amount of data) for the Ajax or Server Callback  */
 		protected $mixActionParameter = null;
+		/** @var string|null CSS class for the control's wrapper */
 		protected $strWrapperCssClass = null;
+		/** @var bool Should the wrapper be used when rendering?  */
 		protected $blnUseWrapper = true;
 
 		// SETTINGS
+		/** @var string List of JavaScript files to be attached with the control when rendering */
 		protected $strJavaScripts = null;
+		/** @var string List of CSS files to be attaches with the control when rendering */
 		protected $strStyleSheets = null;
+		/** @var string Form attributes for the control */
 		protected $strFormAttributes = null;
+		/**
+		 * @var bool Should the default action be stopped from the being triggerred when an even occurrs?
+		 *
+		 * e.g.:
+		 *
+		 * 1. When a link is clicked which has an action associated with it - the browser will try to
+		 * 	navigate to the link.
+		 * 2. When someone presses enter on a textbox - the form will try to submit.
+		 *
+		 * This variable stops the default behavior (navigation to link / form submission) when set to true.
+		 * Modification of this variable is to be done by using 'ActionMustTerminate' property exposed as a property
+		 */
 		protected $blnActionsMustTerminate = false;
+		/** @var bool Is this control a block type element? */
 		protected $blnIsBlockElement = false;
 
 		//////////
@@ -159,8 +234,8 @@
 		 * classes which extend the class.  Only the parent object parameter is required.  If the option strControlId
 		 * parameter is not used, QCubed will generate the id.
 		 *
-		 * @param QControl|QForm $objParentObject
-		 * @param string         $strControlId
+		 * @param QControl|QForm|QControlBase $objParentObject
+		 * @param string                      $strControlId
 		 *                optional id of this Control. In html, this will be set as the value of the id attribute. The id can only
 		 *                contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id
 		 *
@@ -195,7 +270,33 @@
 			}
 		}
 
+		/**
+		 * This function returns a persistent control which is supposed to be created only once for the user session
+		 * The way to call this function is shown in QCubed Examples. For brevity, here is how it is to be used:
+		 *
+		 * <code>
+		 * ProjectPickerListBox::CreatePersistent(
+		 * 	'ProjectPickerListBox', // name of the control class
+		 * 	$this, // parent - the current QForm
+		 * 	'ddnProjects' // id on the form - just your usual ControlID
+		 * );
+		 * </code>
+		 *
+		 * The above code will create the control and save it into the form and the session if it does not exist.
+		 * If it exists, the control will be retrieved out of the $_SESSION
+		 *
+		 * @param string $strClassName Name of the class whose instance is to be persisted in the $_SESSION
+		 * 			It is not necessary that this name will be the same as the current QControl using
+		 * 			which the function is being called.
+		 * @param QForm|QFormBase|QControl|QControlBase $objParentObject Parent of this control
+		 * @param string $strControlId The ControlID it will aquire when rendered on page
+		 *
+		 * @return mixed
+		 * @throws QCallerException
+		 * @throws Exception|QCallerException
+		 */
 		public static function CreatePersistent($strClassName, $objParentObject, $strControlId) {
+			// Test the validity of the Parent object recieved by the function
 			if ($objParentObject instanceof QForm) {
 				$objForm = $objParentObject;
 				$objParentControl = null;
@@ -205,12 +306,18 @@
 			} else
 				throw new QCallerException('Parent Object must be a QForm or QControl');
 
+			// Check if this persistent control already exists in the $_SESSION
 			if (array_key_exists($objForm->FormId . '_' . $strControlId, $_SESSION) && $_SESSION[$objForm->FormId . '_' . $strControlId]) {
+				// Control exists in the $_SESSION
+				// Extract it out of the session as a PHP Object
 				$objToReturn = unserialize($_SESSION[$objForm->FormId . '_' . $strControlId]);
+				// set its Parents and form
 				$objToReturn->objParentControl = $objParentControl;
 				$objToReturn->objForm = $objForm;
 				try {
+					// Add control to the Designated Form
 					$objToReturn->objForm->AddControl($objToReturn);
+					// If the parent control was a QControl, add the persistent control as a child to that QControl
 					if ($objToReturn->objParentControl)
 						$objToReturn->objParentControl->AddChildControl($objToReturn);
 				} catch (QCallerException $objExc) {
@@ -221,10 +328,15 @@
 				$objToReturn = new $strClassName($objParentObject, $strControlId);
 			}
 
+			// Save the control into the form's persistent controls array
 			$objForm->PersistControl($objToReturn);
 			return $objToReturn;
 		}
 
+		/**
+		 * This function is used to prepare the current QControl for persistence.
+		 * It acts as a helper function for the 'Persist()' function of this same class (QControlBase)
+		 */
 		protected function PersistPrepare() {
 			$this->objForm = null;
 			$this->objParentControl = null;
@@ -236,6 +348,10 @@
 			$this->blnModified = null;
 			$this->mixCausesValidation = null;
 		}
+
+		/**
+		 * Ensure that this QControl is persistent in the User $_SESSION
+		 */
 		public function Persist() {
 			$objControl = clone($this);
 			$objControl->PersistPrepare();
@@ -245,7 +361,7 @@
 		/**
 		 * Adds a control as a child of this control.
 		 *
-		 * @param QControl $objControl the control to add
+		 * @param QControl|QControlBase $objControl the control to add
 		 */
 		public function AddChildControl(QControl $objControl) {
 			$this->blnModified = true;
@@ -382,7 +498,7 @@
 		 * @param string $strEventType
 		 *  the type of the event. Be sure and use a
 		 *  QFooEvent::EventName here. (QClickEvent::EventName, for example)
-		 * @param $strActionType if given only actions of this type will be
+		 * @param string $strActionType if given only actions of this type will be
 		 *  returned
 		 * @return array
 		 */
@@ -523,6 +639,10 @@
 				throw new QCallerException(sprintf("Custom Style does not exist in Control '%s': %s", $this->strControlId, $strName));
 		}
 
+		/**
+		 * Add a JS file to this QControl. It is called/fetched by browser when the control is rendered.
+		 * @param string $strJsFileName Path to the JS file
+		 */
 		public function AddJavascriptFile($strJsFileName) {
 			if($this->strJavaScripts) {
 				$this->strJavaScripts .= ','.$strJsFileName;
@@ -531,11 +651,20 @@
 			}
 		}
 
+		/**
+		 * Add JS file for a Plugin (if there is one associated)
+		 * @param string $strPluginName Name of the plugin
+		 * @param string $strJsFileName Path to the JS file
+		 */
 		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
 			// Relative path based on the path of the core JS files
 			$this->AddJavascriptFile("../../plugins/" . $strPluginName . "/js/" . $strJsFileName);
 		}
 
+		/**
+		 * Add a CSS file to this QControl. It is called/fetched by browser when the control is rendered.
+		 * @param string $strCssFileName CSS file path
+		 */
 		public function AddCssFile($strCssFileName) {
 			if($this->strStyleSheets) {
 				$this->strStyleSheets .= ','.$strCssFileName;
@@ -544,6 +673,11 @@
 			}
 		}
 
+		/**
+		 * Add CSS file for a Plugin (if there is one associated)
+		 * @param string $strPluginName Name of the plugin
+		 * @param string $strCssFileName File path of CSS file
+		 */
 		public function AddPluginCssFile($strPluginName, $strCssFileName) {
 			// Relative path based on the path of the core JS files
 			$this->AddCssFile("../../plugins/" . $strPluginName . "/css/" . $strCssFileName);
@@ -615,8 +749,8 @@
 		 * that most subclasses will extend this method's functionality to add Control-specific HTML
 		 * attributes (e.g. textbox will likely add the maxlength html attribute, etc.)
 		 *
-		 * @param boolean $blnIncludeCustom
-		 * @param boolean $blnIncludeAction
+		 * @param boolean $blnIncludeCustom Include Custom attributes?
+		 * @param boolean $blnIncludeAction Include Action attributes?
 		 * @return string
 		 */
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
@@ -667,7 +801,7 @@
 		}
 
 		/**
-		 * Returns all action attributes
+		 * Returns all action attributes for this QControl
 		 *
 		 * @return string
 		 */
@@ -678,7 +812,12 @@
 			return $strToReturn;
 		}
 
-
+		/**
+		 * Get the JavaScript for a given Element
+		 * @param string $strEventName
+		 *
+		 * @return null|string
+		 */
 		public function GetJavaScriptForEvent($strEventName) {
 			return QAction::RenderActions($this, $strEventName, $this->objActionArray[$strEventName]);
 		}
@@ -786,7 +925,7 @@
 		/**
 		 * Returns all wrapper-style-attributes
 		 * Similar to GetStyleAttributes, but specifically for CSS name/value pairs that will render
-		 * within a wrapper's HTML "style" attribute
+		 * within a "wrapper's" HTML "style" attribute
 		 *
 		 * @param bool $blnIsBlockElement
 		 *
@@ -895,6 +1034,9 @@
 			$this->blnRendering = true;
 		}
 
+		/**
+		 * The current use of this function is unknown at the moment. Need to dig deeper.
+		 */
 		protected function GetNonWrappedHtml() {}
 
 		/**
@@ -1101,7 +1243,7 @@
 		}
 
 		/**
-		 * RenderAjax will be called during an Ajax-Rerendering of the controls do to it being modified
+		 * RenderAjax will be called during an Ajax-Rerendering of the controls due to it being modified
 		 * @param boolean $blnDisplayOutput render the control or return as string
 		 * @return string
 		 */
@@ -1116,6 +1258,8 @@
 						return $this->$strRenderMethod($blnDisplayOutput);
 				}
 			}
+			// The following line is to suppres the warning in PhpStorm
+			return '';
 		}
 
 		/**
@@ -1294,32 +1438,55 @@
 		// The following three methods are only intended to be called by code within the Form class.
 		// It must be declared as public so that a form object can have access to them, but it really should never be
 		// called by user code.
+		/**
+		 * Reset the control flags to default
+		 */
 		public function ResetFlags() {
 			$this->blnRendered = false;
 			$this->blnModified = false;
 			$this->blnWrapperModified = false;
 		}
 
+		/**
+		 * Reset the On-Page status to default (false)
+		 */
 		public function ResetOnPageStatus() {
 			$this->blnOnPage = false;
 		}
 
+		/**
+		 * Marks this control as modified
+		 */
 		public function MarkAsModified() {
 			$this->blnModified = true;
 		}
 
+		/**
+		 * Marks the wrapper of this control as modified
+		 */
 		public function MarkAsWrapperModified() {
 			$this->blnWrapperModified = true;
 		}
 
+		/**
+		 * Marks this control as Rendered
+		 */
 		public function MarkAsRendered() {
 			$this->blnRendered = true;
 		}
 
+		/**
+		 * Sets the Form of this QControl
+		 * @param QForm|QFormBase $objForm
+		 */
 		public function SetForm($objForm) {
 			$this->objForm = $objForm;
 		}
 
+		/**
+		 * Sets the parent control for this control
+		 * @param QControl|QControlBase $objControl The control which has to be set as this control's parent
+		 */
 		public function SetParentControl($objControl) {
 			// Mark this object as modified
 			$this->MarkAsModified();
@@ -1333,6 +1500,9 @@
 				$objControl->AddChildControl($this);
 		}
 
+		/**
+		 * Resets the validation state to default
+		 */
 		public function ValidationReset() {
 			if (($this->strValidationError) || ($this->strWarning))
 				$this->blnModified = true;
@@ -1340,6 +1510,12 @@
 			$this->strWarning = null;
 		}
 
+		/**
+		 * Runs var_export on this QControl
+		 * @param bool $blnReturn Does the result of var_export have to be returned?
+		 *
+		 * @return mixed
+		 */
 		public function VarExport($blnReturn = true) {
 			if ($this->objForm)
 				$this->objForm = $this->objForm->FormId;
@@ -1421,7 +1597,7 @@
 
 				case "Moveable": return $this->objDraggable && !$this->objDraggable->Disabled;
 				case "Resizable": return $this->objResizable && !$this->objResizable->Disabled;
-				case "Droppable": return $this->objDroppable && !$this->objDroppable->Disabled;;
+				case "Droppable": return $this->objDroppable && !$this->objDroppable->Disabled;
 				case "DragObj": return $this->objDraggable;
 				case "ResizeObj": return $this->objResizable;
 				case "DropObj": return $this->objDroppable;

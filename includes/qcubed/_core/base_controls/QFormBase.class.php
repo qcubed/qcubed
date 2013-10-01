@@ -26,6 +26,7 @@
 		protected $intFormStatus;
 		/** @var QControl[] Array of QControls with this form as the parent */
 		protected $objControlArray;
+		/** @var array Array of persistent controls on the Form */
 		protected $objPersistentControlArray = array();
 		protected $objGroupingArray;
 		protected $blnRenderedBodyTag = false;
@@ -36,10 +37,14 @@
 
 		protected $strFormAttributeArray = array();
 
+		/** @var array List of included JavaScript files for this QForm */
 		protected $strIncludedJavaScriptFileArray = array();
+		/** @var array List of ignored JavaScript files for this QForm */
 		protected $strIgnoreJavaScriptFileArray = array();
 
+		/** @var array List of included CSS files for this QForm */
 		protected $strIncludedStyleSheetFileArray = array();
+		/** @var array List of ignored CSS files for this QForm */
 		protected $strIgnoreStyleSheetFileArray = array();
 
 		protected $strPreviousRequestMode = false;
@@ -49,6 +54,7 @@
 		 * .tpl.php file with the same filename as the QForm in the same same directory as the QForm file.
 		 */
 		protected $strHtmlIncludeFilePath;
+		/** @var string CSS class to be set for the 'form' tag when QCubed Renders the QForm */
 		protected $strCssClass;
 
 		protected $strCustomAttributeArray = null;
@@ -735,7 +741,7 @@
 
 		/**
 		 * Add a QControl to the current QForm.
-		 * @param QControl $objControl
+		 * @param QControl|QControlBase $objControl
 		 *
 		 * @throws QCallerException
 		 */
@@ -799,6 +805,10 @@
 			return $this->objControlArray;
 		}
 
+		/**
+		 * Saves a class instance (usually a QControl[Base] instance) in the form.
+		 * @param QControl|QControlBase $objControl
+		 */
 		public function PersistControl($objControl) {
 			$this->objPersistentControlArray[$objControl->ControlId] = $objControl;
 		}
