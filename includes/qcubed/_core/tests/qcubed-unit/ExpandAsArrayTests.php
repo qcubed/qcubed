@@ -26,6 +26,10 @@ if(!class_exists('Milestone')){
 if(!class_exists('Address')){
     require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Address.class.php';
 }
+if(!class_exists('PersonType')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/PersonType.class.php';
+}
+
 class ExpandAsArrayTests extends QUnitTestCaseBase {    
 	public function testMultiLevel() {
 		$arrPeople = Person::LoadAll(
@@ -63,6 +67,24 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 			);
 		
 		$this->assertTrue(is_null($arrPeople->_ProjectAsManagerArray), "_ProjectAsManagerArray is null");
+	}
+	
+	public function testTypeExpansion() {		
+		$clauses = QQ::Clause(
+			QQ::ExpandAsArray (QQN::Person()->PersonType)
+		);
+		
+		$objPerson = 
+			Person::QuerySingle(
+				QQ::Equal (QQN::Person()->Id, 7),
+				$clauses
+			);
+		
+		$intPersonTypeArray = $objPerson->_PersonTypeArray;
+		$this->assertEqual($intPersonTypeArray, array(
+			PersonType::Manager,
+			PersonType::CompanyCar)
+		, "PersonType expansion is correct");
 	}
 
 	private static function getTestClauses() {
