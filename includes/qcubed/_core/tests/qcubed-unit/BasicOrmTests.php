@@ -202,8 +202,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 	public function testExpand() {
 		// Test intermediate nodes on expansion
 		 $clauses = QQ::Clause(
-			QQ::Expand(QQN::Milestone()->Project->ManagerPerson),
-			QQ::ExpandAsArray (QQN::Milestone()->Project->ManagerPerson->PersonType)
+			QQ::Expand(QQN::Milestone()->Project->ManagerPerson)
 		);
 		
 		$objMilestone = 
@@ -219,36 +218,64 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertTrue(!is_null($objMilestone->Project->ManagerPerson->FirstName), "Person 7 has a name");
 		$this->assertEqual($objMilestone->Project->ManagerPerson->FirstName, "Karen", "Person 7 has first name of Karen");
 		
-		$intPersonTypeArray = $objMilestone->Project->ManagerPerson->_PersonTypeArray;
+		
+		$clauses = QQ::Clause(
+			QQ::ExpandAsArray (QQN::Project()->PersonAsTeamMember),
+			QQ::OrderBy (QQN::Project()->PersonAsTeamMember->Person->LastName, QQN::Project()->PersonAsTeamMember->Person->FirstName)
+		);
+		
+		$objProject = 
+			Project::QuerySingle(
+				QQ::Equal (QQN::Project()->Id, 1),
+				$clauses
+			);
+			
+		$objPersonArray = $objProject->_PersonAsTeamMemberArray;
+		foreach ($objPersonArray as $item) {
+			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
+		}			
+		$this->assertEqual($arrNamesOnly, array(
+			"Samantha Jones",
+			"Kendall Public",
+			"Alex Smith",
+			"Wendy Smith",
+			"Karen Wolfe")
+		, "Project Team Member Expansion is correct");
+		
+		$clauses = QQ::Clause(
+			QQ::ExpandAsArray (QQN::Project()->ManagerPerson->PersonType),
+			QQ::OrderBy (QQN::Project()->ManagerPerson->LastName, QQN::Project()->ManagerPerson->FirstName)
+		);
+		
+		$objProject = 
+			Project::QuerySingle(
+				QQ::Equal (QQN::Project()->Id, 1),
+				$clauses
+			);
+		
+		$intPersonTypeArray = $objProject->ManagerPerson->_PersonTypeArray;
 		$this->assertEqual($intPersonTypeArray, array(
 			PersonType::Manager,
 			PersonType::CompanyCar)
 		, "PersonType expansion is correct");
 		
-		 $clauses = QQ::Clause(
-			QQ::Expand(QQN::Milestone()->Project->ManagerPerson),
-			QQ::ExpandAsArray (QQN::Milestone()->Project->PersonAsTeamMember),
-			QQ::OrderBy (QQN::Milestone()->Project->PersonAsTeamMember->Person->LastName, QQN::Milestone()->Project->PersonAsTeamMember->Person->FirstName)
+		$clauses = QQ::Clause(
+			QQ::ExpandAsArray (QQN::Person()->PersonType),
+			QQ::OrderBy (QQN::Person()->LastName, QQN::Person()->FirstName)
 		);
 		
-		$objMilestone = 
-			Milestone::QuerySingle(
-				QQ::Equal (QQN::Milestone()->Id, 1),
+		$objPerson = 
+			Person::QuerySingle(
+				QQ::Equal (QQN::Person()->Id, 7),
 				$clauses
 			);
-			
-		$objPersonArray = $objMilestone->Project->_PersonAsTeamMemberArray;
-		foreach ($objPersonArray as $item) {
-			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
-		}
 		
-		$this->assertEqual($arrNamesOnly, array(
-			"Kendall Public",
-			"Alex Smith",
-			"Wendy Smith",
-			"Karen Wolfe",
-			"Samantha Jones")
-		, "Project Team Member Expansion is correct");
+		$intPersonTypeArray = $objPerson->_PersonTypeArray;
+		$this->assertEqual($intPersonTypeArray, array(
+			PersonType::Manager,
+			PersonType::CompanyCar)
+		, "PersonType expansion is correct");
+		
 	}
 	
 	public function testHaving() {
