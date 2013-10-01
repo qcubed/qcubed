@@ -39,8 +39,15 @@
 
 	class QAccordionBase extends QAccordionGen
 	{
+		/** @var bool Should the children be rendered automatically? */
 		protected $blnAutoRenderChildren = true;
 
+		/**
+		 * Rendered the children of this control
+		 * @param bool $blnDisplayOutput Send the output to client?
+		 *
+		 * @return null|string
+		 */
 		protected function RenderChildren($blnDisplayOutput = true) {
 			$strToReturn = "";
 
@@ -62,6 +69,10 @@
 		
 		// These functions are used to keep track of the selected index.
 		// To query or set the selected index, use ->Active
+		/**
+		 * Returns the Javascript needed as the part of control's behavior
+		 * @return string The control's JS
+		 */
 		public function GetControlJavaScript() {
 			
 			$formId = $this->Form->FormId;
@@ -76,7 +87,14 @@ FUNC;
 			
 			return $strJS;
 		}
-				
+
+		/**
+		 * PHP __set magic method implementation
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case '_SelectedIndex': // Internal Only. Used by JS above. Do Not Call.
