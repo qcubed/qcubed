@@ -20,6 +20,10 @@ if(!class_exists('Milestone')){
 if(!class_exists('Address')){
     require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Address.class.php';
 }
+if(!class_exists('TwoKey')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/TwoKey.class.php';
+}
+
 class BasicOrmTests extends QUnitTestCaseBase {    
 	public function testSaveAndDelete() {
 		$objPerson1 = new Person();
@@ -176,6 +180,14 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		}
 	}
 	
+	public function testLoadAll() {
+		$objPersonArray = Person::LoadAll ();
+		$this->assertEqual(count($objPersonArray), 12, "12 people found.");
+		
+		$objTwoKeyArray = TwoKey::LoadAll();
+		$this->assertEqual(count($objTwoKeyArray), 6, "6 TwoKey items found.");
+	}
+	
 	public function testExpand() {
 		// Test intermediate nodes on expansion
 		 $clauses = QQ::Clause(
@@ -195,6 +207,59 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertTrue(!is_null($objMilestone->Project->ManagerPerson->FirstName), "Person 7 has a name");
 		$this->assertEqual($objMilestone->Project->ManagerPerson->FirstName, "Karen", "Person 7 has first name of Karen");
 		
+		 $clauses = QQ::Clause(
+			QQ::ExpandAsArray (QQN::Project()->PersonAsTeamMember),
+			QQ::OrderBy (QQN::Project()->PersonAsTeamMember->Person->LastName, QQN::Project()->PersonAsTeamMember->Person->FirstName)
+		);
+		
+		// short reach
+		$objProject = 
+			Project::QuerySingle(
+				QQ::Equal (QQN::Project()->Id, 1),
+				$clauses
+			);
+			
+		$objPersonArray = $objProject->_PersonAsTeamMemberArray;
+		$arrNamesOnly = array();
+		foreach ($objPersonArray as $item) {
+			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
+		}
+		
+		$this->assertEqual($arrNamesOnly, array(
+			"Samantha Jones",
+			"Kendall Public",
+			"Alex Smith",
+			"Wendy Smith",
+			"Karen Wolfe")
+				, "Project Team Member expansion is correct");
+		
+		// long reach
+		$clauses = QQ::Clause(
+			QQ::ExpandAsArray (QQN::Milestone()->Project->PersonAsTeamMember),
+			QQ::OrderBy (QQN::Milestone()->Project->PersonAsTeamMember->Person->LastName, QQN::Milestone()->Project->PersonAsTeamMember->Person->FirstName)
+		);
+		
+		
+		$objMilestone = 
+			Milestone::QuerySingle(
+				QQ::Equal (QQN::Milestone()->Id, 1),
+				$clauses
+			);
+			
+		$objPersonArray = $objMilestone->Project->_PersonAsTeamMemberArray;
+		$arrNamesOnly = array();
+		foreach ($objPersonArray as $item) {
+			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
+		}
+		
+		$this->assertEqual($arrNamesOnly, array(
+			"Samantha Jones",
+			"Kendall Public",
+			"Alex Smith",
+			"Wendy Smith",
+			"Karen Wolfe"
+			)
+		, "Long reach Milestone to Project Team Member expansion is correct");
 	}
 	
 	public function testHaving() {
