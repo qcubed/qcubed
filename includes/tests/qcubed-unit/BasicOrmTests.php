@@ -207,6 +207,16 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertEqual(count($objTwoKeyArray), 6, "6 TwoKey items found.");
 	}
 	
+	public function testQuerySelectSubsetSkipPK() {
+		$objSelect = QQ::Select(QQN::Person()->FirstName);
+		$objSelect->SetSkipPrimaryKey(true);
+		$objPersonArray = Person::LoadAll($objSelect);
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->assertNull($objPerson->Id, "Id should be null since SkipPrimaryKey is set on the Select object");
+		}
+	}
+
 	public function testExpand() {
 		// Test intermediate nodes on expansion
 		 $clauses = QQ::Clause(
