@@ -5,15 +5,22 @@
 ## Releases
 **Newest stable release: [version 2.2.1, released on May 28, 2013](https://github.com/qcubed/framework/archive/2.2.1.zip)**.
 
+**alpha-3.0 is available**
+
 Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads).
 
 ## What is QCubed?
 
-QCubed (pronounced 'Q' - cubed) is a PHP5 Model-View-Controller framework. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun.
+QCubed (pronounced 'Q' - cubed) is a PHP5 Model-View-Controller framework. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun. QCubed excels in situations where you have a large database structure that you quickly want to make available to users.
+
+## Stateful architecture
+
+With QCubed, you don't have to deal with POSTs and GETs coming from the browser. QCubed automatically handles that for you and packages the information into object oriented forms and controls. Programming with QCubed feels very much like programming a desktop application. If you are familiar with ASP, it is similar.
 
 ## The Code Generator
 
-The Code Generator creates PHP classes based on your database schema. It uses the concept of ORM, [object-relational mapping](http://en.wikipedia.org/wiki/Object-relational_mapping), to practically create your whole model layer for you.
+The Code Generator automatically creates object classes with matching forms and controls based on your database schema. It uses the concept of ORM, [object-relational mapping](http://en.wikipedia.org/wiki/Object-relational_mapping), to practically create your whole model layer for you.
+
 Codegen can take advantage of foreign key relationships and field constraints to generate ready-to-use data models complete with validation routines and powerful CRUD methods, allowing you to manipulate objects instead of constantly issuing SQL queries.
 
 More info as well as examples are available online at <http://examples.qcu.be/>
@@ -37,7 +44,7 @@ Some QControls include:
 - QTabs
 - QAccordion
 
-A full list and examples are available online at <http://examples.qcu.be/>
+The easiest way to learn QCubed is to see the examples tutorial at <http://examples.qcu.be/>
 
 ### Plugins
 
@@ -49,6 +56,12 @@ Interested? Check out [QCubed video screencasts](http://qcu.be/content/video-scr
 The [github wiki](https://github.com/qcubed/framework/wiki) will eventually supersede these.
 
 * * *
+
+## System Requirements
+* A development computer that you can set up so that the browser can write to a directory in your file system.
+* As of v3.0.0 alpha, PHP 5.0 and above are supported. However, v3.0 eventually will require PHP 5.3 or above. To do a composer install, you will need PHP 5.3.2.
+* As of v3.0.0, QCubed will generally produce XHTML 1.0 compliant code. However, v3.0 will eventually produce XHTML5 compliant code only.
+* A SQL database engine. MySQL, SqlServer, Postgres, Oracle, PDO, SqlLite, Informix adapters are included. Creating another adapter is not hard if you have a different SQL.
 
 ## Installation
 
