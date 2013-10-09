@@ -305,7 +305,6 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		
 		$var = $objItem->IsEnabled;
 
-		$this->reporter->paintMessage (var_dump ($objItem));
 		$this->assertNotNull($var, "Zero column does not return null. ");
 		$this->assertTrue($var === 0, "Zero column is zero. ");
 
