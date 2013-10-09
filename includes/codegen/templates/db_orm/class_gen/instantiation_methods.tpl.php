@@ -44,16 +44,18 @@
 					$strClassName = $objChildNode->_ClassName;
 					$blnExpanded = false;
 					$strLongAlias = $objChildNode->ExtendedAlias();
+					$blnExpandAsArray = false;
 					
 					if ($objChildNode->ExpandAsArray) {
 						$strPostfix = 'Array';
+						$blnExpandAsArray = true;
 					} else {
 						$strPostfix = '';
 					}
 					$nodeType = $objChildNode->_Type;
-					if ($nodeType == 'reverse_reference' {
+					if ($nodeType == 'reverse_reference') {
 						$strPrefix = '_obj';
-					} elseif $nodeType == 'association') {
+					} elseif ($nodeType == 'association') {
 						$objChildNode = $objChildNode->FirstChild();
 						if ($objChildNode->IsType) {
 							$strPrefix = '_int';
@@ -66,7 +68,7 @@
 					
 					$strVarName = $strPrefix . $strPropName . $strPostfix;					
 				
-					if ($objChildNode->ExpandAsArray) {				
+					if ($blnExpandAsArray) {				
 						if (null === $objPreviousItem->$strVarName) {
 							$objPreviousItem->$strVarName = array();
 						}
@@ -82,7 +84,7 @@
 								$blnExpanded = true;
 							}
 						}
-					} elseif (!objChildNode->IsType) {
+					} elseif (!$objChildNode->IsType) {
 	
 						// Follow single node if keys match						
 						if (null === $objPreviousItem->$strVarName) {
@@ -226,7 +228,7 @@
 			$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
 			$objExpansionNode = (empty($objExpansionAliasArray['<?php echo strtolower($objReference->ObjectDescription) ?>']) ? null : $objExpansionAliasArray['<?php echo strtolower($objReference->ObjectDescription) ?>']);
 			$blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
-			if ($blnExpanded && null === $objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array)
+			if ($blnExpanded && null === $objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array) {
 				$objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array = array();
 			}
 			if (!is_null($objDbRow->GetColumn($strAliasName))) {

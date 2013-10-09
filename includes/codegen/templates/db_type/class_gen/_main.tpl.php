@@ -151,6 +151,7 @@
 		protected $strTableName = '<?php echo $objTypeTable->Name  ?>';
 		protected $strPrimaryKey = 'id';
 		protected $strClassName = '<?php echo $objTypeTable->ClassName  ?>';
+		protected $blnIsType = true;
 		public function __get($strName) {
 			switch ($strName) {
 			 	case 'Id':
