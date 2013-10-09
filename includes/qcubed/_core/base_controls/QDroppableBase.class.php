@@ -53,7 +53,13 @@ FUNC;
 			return $strJS;
 		}
 
-
+		/**
+		 * PHP __set magic method implementation
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case '_DroppedId': // Internal only. Do not use. Used by JS above to track user actions.
@@ -76,7 +82,14 @@ FUNC;
 			}
 			
 		}
-		
+
+		/**
+		 * PHP __get magic method implementation
+		 * @param string $strName Property Name
+		 *
+		 * @return mixed
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'DroppedId': return $this->strDroppedId;
