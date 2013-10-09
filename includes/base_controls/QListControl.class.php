@@ -350,7 +350,7 @@
 
 				case "SelectedValue":
 					foreach ($this->objItemsArray as $objItem)
-						if ($objItem->Value == $mixValue)
+						if ($objItem->Value === $mixValue)
 							$objItem->Selected = true;
 						else
 							$objItem->Selected = false;
@@ -387,7 +387,7 @@
 					foreach ($this->objItemsArray as $objItem) {
 						$objItem->Selected = false;
 						foreach ($mixValue as $mixName) {
-							if ($objItem->Value == $mixName) {
+							if ($objItem->Value === $mixName) {
 								$objItem->Selected = true;
 								break;
 							}
