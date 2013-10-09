@@ -13,6 +13,7 @@
 	 * @property string $ItemGroup is the group (if any) in which the Item should be displayed 
 	 * @property QListItemStyle $ItemStyle is the QListItemStyle in which the Item should be rendered
 	 * @property string $Label is optional text to display in the drop down menu of a QAutocomplete instead of the Name. The Name will still be what gets filled in to the text box. 
+	 * @property-read boolean $Empty true when both $Name and $Value are null, in which case this item will be rendered with an empty value in the list control
 	 */
 	class QListItem extends QBaseClass {
 		///////////////////////////
@@ -101,6 +102,7 @@
 				case "ItemGroup": return $this->strItemGroup;
 				case "ItemStyle": return $this->objItemStyle;
 				case "Label": return $this->strLabel;
+				case "Empty": return $this->strValue == null && $this->strName == null;
 
 				default:
 					try {
