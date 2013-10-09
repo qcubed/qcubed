@@ -305,15 +305,15 @@
 			$this->blnConnectedFlag = false;
 		}
 
-		public function TransactionBegin() {
+		protected function ExecuteTransactionBegin() {
 			$this->NonQuery('BEGIN;');
 		}
 
-		public function TransactionCommit() {
+		protected function ExecuteTransactionCommit() {
 			$this->NonQuery('COMMIT;');
 		}
 
-		public function TransactionRollback() {
+		protected function ExecuteTransactionRollBack() {
 			$this->NonQuery('ROLLBACK;');
 		}
 
@@ -686,18 +686,22 @@
 			switch ($this->strType) {
 				case 'integer':
 				case 'smallint':
+				case 'bigint': // 8-byte. PHP int sizes are platform dependent. On 64-bit machines,
+							   // this is fine. On 32-bit, PHP will convert to float for numbers too big.
+							   // However, we do NOT want to return a float, as we lose the ability to 
+							   // compare against real integers. (float(0) != int(0))! Assume the developer knows what he
+							   // is doing if he uses these.
+							   // http://php.net/manual/en/language.types.integer.php
 					$this->strType = QDatabaseFieldType::Integer;
+					
 					break;
 				case 'money':
 					// NOTE: The money type is deprecated in PostgreSQL.
 					throw new QPostgreSqlDatabaseException('Unsupported Field Type: money.  Use numeric or decimal instead.', 0,null);
 					break;
-				case 'bigint':
 				case 'decimal':
 				case 'numeric':					
 				case 'real':
-					// "BIGINT" must be specified here as a float so that PHP can support it's size
-					// http://www.postgresql.org/docs/8.2/static/datatype-numeric.html
 					$this->strType = QDatabaseFieldType::Float;
 					break;					
 				case 'bit':
