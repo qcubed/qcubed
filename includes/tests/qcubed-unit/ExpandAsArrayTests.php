@@ -1,18 +1,13 @@
 <?php
-// If the test is being run in php cli mode, the autoloader does not work.
-// Check to see if the models you need exist and if not, include them here.
-if(!class_exists('Person')){
-    require_once __INCLUDES__ .'/model/Person.class.php';
-}
-
 /**
  * Tests for the ExpandAsArray functionality in QQuery
  * 
  * @package Tests
  */
+// If the test is being run in php cli mode, the autoloader does not work.
+// Check to see if the models you need exist and if not, include them here.
 if(!class_exists('Person')){
     require_once __INCLUDES__ .'/model/Person.class.php';
-    
 }
 if(!class_exists('Project')){
     require_once __INCLUDES__ .'/model/Project.class.php';
@@ -27,7 +22,16 @@ if(!class_exists('Address')){
     require_once __INCLUDES__ .'/model/Address.class.php';
 }
 if(!class_exists('PersonType')){
-    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/PersonType.class.php';
+    require_once __INCLUDES__ .'/model/PersonType.class.php';
+}
+if(!class_exists('TwoKey')){
+    require_once __INCLUDES__ .'/model/TwoKey.class.php';
+}
+if(!class_exists('ProjectStatusType')){
+    require_once __INCLUDES__ .'/model/ProjectStatusType.class.php';
+}
+if(!class_exists('Login')){
+    require_once __INCLUDES__ .'/model/Login.class.php';
 }
 
 class ExpandAsArrayTests extends QUnitTestCaseBase {    
@@ -40,6 +44,61 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		$targetPerson = $this->verifyObjectPropertyHelper($arrPeople, 'LastName', 'Wolfe');
 		
 		$this->helperVerifyKarenWolfe($targetPerson);
+		
+		$objProjectArray = $targetPerson->_ProjectAsManagerArray;
+		$this->assertEqual(sizeof($objProjectArray), 2, "2 projects found");
+		
+		foreach ($objProjectArray as $objProject) {
+			$objMilestoneArray = $objProject->_MilestoneArray;
+			
+			switch ($objProject->Id) {
+				case 1:
+					$this->assertEqual(sizeof($objMilestoneArray), 3, "3 milestones found");
+					break;
+					
+				case 4:
+					$this->assertEqual(sizeof($objMilestoneArray), 4, "4 milestones found");
+					break;
+					
+				default:
+					$this->assertTrue(false, 'Unexpected project found, id: ' . $objProject->Id);
+					break;
+			}
+		}
+		
+		// Now test a multilevel expansion where first level does not expand by array. Should get duplicate entries at that level.
+		$clauses = QQ::Clause(
+			QQ::ExpandAsArray(QQN::Person()->Address),
+			QQ::Expand(QQN::Person()->ProjectAsManager),
+			QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone)
+		);
+		
+		$targetPerson = Person::QuerySingle(
+			QQ::Equal(QQN::Person()->Id, 7),
+			$clauses
+		);
+						
+		$objProjectArray = $targetPerson->_ProjectAsManagerArray;
+		$this->assertNull($objProjectArray, "No project array found");
+
+		$objProject = $targetPerson->_ProjectAsManager;
+		$this->assertNotNull($objProject, "Project found");
+		
+		$objMilestoneArray = $objProject->_MilestoneArray;
+		// since we didn't specify the order, not sure which one we will get, so check for either
+		switch ($objProject->Id) {
+			case 1:
+				$this->assertEqual(sizeof($objMilestoneArray), 3, "3 milestones found");
+				break;
+				
+			case 4:
+				$this->assertEqual(sizeof($objMilestoneArray), 4, "4 milestones found");
+				break;
+				
+			default:
+				$this->assertTrue(false, 'Unexpected project found, id: ' . $objProject->Id);
+				break;
+		}
 	}
 	
 	public function testQuerySingle() {
@@ -49,6 +108,18 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		);
 		
 		$this->helperVerifyKarenWolfe($targetPerson);
+		
+		$objTwoKey = TwoKey::QuerySingle(
+			QQ::AndCondition (
+				QQ::Equal(QQN::TwoKey()->Server, 'google.com'),
+				QQ::Equal(QQN::TwoKey()->Directory, 'mail')
+			),
+			QQ::Clause(
+				QQ::ExpandAsArray(QQN::TwoKey()->Project->PersonAsTeamMember)
+			)
+		);
+		
+		$this->assertEqual (count($objTwoKey->Project->_PersonAsTeamMemberArray), 6, '6 team members found.');
 	}
 	
 	public function testEmptyArray() {
@@ -158,5 +229,71 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 			}
 		}
 	}
+	
+	public function testMultiLeafExpansion() {
+		$objMilestone = Milestone::QuerySingle(
+			QQ::Equal (QQN::Milestone()->Id, 1),
+			QQ::Clause(
+				QQ::ExpandAsArray(QQN::Milestone()->Project->ManagerPerson->ProjectAsTeamMember),
+				QQ::ExpandAsArray(QQN::Milestone()->Project->PersonAsTeamMember)
+			)
+		);
+		
+		$objProjectArray = $objMilestone->Project->ManagerPerson->_ProjectAsTeamMemberArray;
+		$objPeopleArray = $objMilestone->Project->_PersonAsTeamMemberArray;
+		
+		$this->assertTrue(is_array($objProjectArray), "_ProjectAsTeamMemberArray is an array");
+		$this->assertEqual(count($objProjectArray), 2, "_ProjectAsTeamMemberArray has 2 Project objects");
+		
+		$this->assertTrue(is_array($objPeopleArray), "_PersonAsTeamMemberArray is an array");
+		$this->assertEqual(count($objPeopleArray), 5, "_PersonAsTeamMemberArray has 5 People objects");
+		
+		// try through a unique relationship
+		$objLogin = Login::QuerySingle(
+			QQ::Equal (QQN::Login()->PersonId, 7),
+			QQ::Clause(
+				QQ::ExpandAsArray(QQN::Login()->Person->ProjectAsTeamMember),
+				QQ::ExpandAsArray(QQN::Login()->Person->ProjectAsManager)
+			)
+		);
+		
+		$objProjectArray = $objLogin->Person->_ProjectAsTeamMemberArray;
+		
+		$this->assertTrue(is_array($objProjectArray), "_ProjectAsTeamMemberArray is an array");
+		$this->assertEqual(count($objProjectArray), 2, "_ProjectAsTeamMemberArray has 2 Project objects");
+		
+		$objProjectArray = $objLogin->Person->_ProjectAsManagerArray;
+		
+		$this->assertTrue(is_array($objProjectArray), "_ProjectAsManagerArray is an array");
+		$this->assertEqual(count($objProjectArray), 2, "_ProjectAsManagerArray has 2 Project objects");
+				
+	}
+	
+	public function testConditionalExpansion() {
+		$clauses = QQ::Clause(
+			QQ::ExpandAsArray(QQN::Person()->Address),
+			QQ::Expand(QQN::Person()->ProjectAsManager, QQ::Equal (QQN::Person()->ProjectAsManager->ProjectStatusTypeId, ProjectStatusType::Open)),
+			QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone),
+			QQ::OrderBy(QQN::Person()->Id)
+		);
+		
+		$targetPersonArray = Person::LoadAll (
+			$clauses
+		);
+		
+		$targetPerson = reset($targetPersonArray);
+		
+		$this->assertEqual ($targetPerson->Id, 1, "Person 1 found.");
+		$this->assertNotNull ($targetPerson->_ProjectAsManager, "Person 1 has a project.");
+
+		$targetPerson = end($targetPersonArray);
+		
+		$this->assertEqual ($targetPerson->Id, 12, "Person 12 found.");
+		$this->assertNull ($targetPerson->_ProjectAsManager, "Person 12 does not have a project.");
+				
+		//TODO: Conditional Array Expansion, requires API change
+		
+	}
+	
 }
 ?>

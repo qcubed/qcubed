@@ -363,6 +363,8 @@
 					else if (gettype($obj) == 'integer') {}
 					else if (gettype($obj) == 'object')
 						$obj = 'Object';
+					else if (is_array($obj))
+						$obj = 'Array';
 					else
 						$obj = sprintf("'%s'", $obj);
 					$objBacktrace['args'][$intIndex] = $obj;
