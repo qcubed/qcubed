@@ -20,6 +20,7 @@ if(!class_exists('Milestone')){
 if(!class_exists('Address')){
     require_once __INCLUDES__ .'/model/Address.class.php';
 }
+
 class BasicOrmTests extends QUnitTestCaseBase {    
 	public function testSaveAndDelete() {
 		$objPerson1 = new Person();
@@ -159,6 +160,25 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			"Wendy Smith",
 			"Karen Wolfe")
 		, "List managed persons is correct");
+		
+		$objPersonArray = Person::QueryArray(
+			QQ::Equal(QQN::Person()->PersonType->PersonTypeId, PersonType::Inactive),
+			QQ::Clause(
+				QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
+			)
+		);
+		
+		$arrNamesOnly = array();
+		foreach ($objPersonArray as $item) {
+			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
+		}
+		
+		$this->assertEqual($arrNamesOnly, array(
+			"Linda Brady",
+			"John Doe",
+			"Ben Robinson")
+		, "Person-PersonType assn is correct");
+		
 	}
 	
 	public function testQuerySingleEmpty() {
@@ -194,7 +214,6 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertEqual($objMilestone->Project->Name, "ACME Website Redesign", "Project 1 has name of ACME Website Redesign");
 		$this->assertTrue(!is_null($objMilestone->Project->ManagerPerson->FirstName), "Person 7 has a name");
 		$this->assertEqual($objMilestone->Project->ManagerPerson->FirstName, "Karen", "Person 7 has first name of Karen");
-		
 	}
 	
 	public function testHaving() {

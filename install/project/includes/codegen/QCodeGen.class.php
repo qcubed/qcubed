@@ -25,6 +25,14 @@
 	 * @access public
 	 */
 	class QCodeGen extends QCodeGenBase {
+		
+		/**
+		 * Construct the QCodeGen object.
+		 * 
+		 * Gives you an opportunity to read your xml file and make codegen changes accordingly.
+		 */
+		public function __construct($objSettingsXml) {}
+				
 		/**
 		 * QCodeGen::Pluralize()
          * 
