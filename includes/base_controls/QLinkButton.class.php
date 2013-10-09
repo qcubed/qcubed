@@ -23,12 +23,18 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var string|null The text on the button */
 		protected $strText = null;
+		/** @var bool Should htmlentities be used on this control? */
 		protected $blnHtmlEntities = true;
 
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Function to return the formatted HTML for the control
+		 * @return string The control's HTML
+		 */
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)
@@ -48,6 +54,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * The PHP __get magic method
+		 * @param string $strName Name of the property
+		 *
+		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -66,6 +79,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * The PHP __set megic method implementation
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws Exception|QCallerException
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

@@ -26,23 +26,35 @@
 		protected $intFormStatus;
 		/** @var QControl[] Array of QControls with this form as the parent */
 		protected $objControlArray;
+		/** @var array Array of persistent controls on the Form */
 		protected $objPersistentControlArray = array();
 		protected $objGroupingArray;
 		protected $blnRenderedBodyTag = false;
 		protected $blnRenderedCheckableControlArray;
 		protected $strCallType;
+		/** @var null|QWaitIcon Default wait icon for the page/QForm  */
 		protected $objDefaultWaitIcon = null;
 
 		protected $strFormAttributeArray = array();
 
+		/** @var array List of included JavaScript files for this QForm */
 		protected $strIncludedJavaScriptFileArray = array();
+		/** @var array List of ignored JavaScript files for this QForm */
 		protected $strIgnoreJavaScriptFileArray = array();
 
+		/** @var array List of included CSS files for this QForm */
 		protected $strIncludedStyleSheetFileArray = array();
+		/** @var array List of ignored CSS files for this QForm */
 		protected $strIgnoreStyleSheetFileArray = array();
 
 		protected $strPreviousRequestMode = false;
+		/**
+		 * @var string The QForm's template file path.
+		 * When this value is not supplied, the 'Run' function will try to find and use the
+		 * .tpl.php file with the same filename as the QForm in the same same directory as the QForm file.
+		 */
 		protected $strHtmlIncludeFilePath;
+		/** @var string CSS class to be set for the 'form' tag when QCubed Renders the QForm */
 		protected $strCssClass;
 
 		protected $strCustomAttributeArray = null;
@@ -200,9 +212,33 @@
 		/////////////////////////
 		// Event Handlers
 		/////////////////////////
+		/**
+		 * Custom Form Run code.
+		 * To contain code which should be run 'AFTER' QCubed's QForm run has been completed
+		 * but 'BEFORE' the custom event handlers are called
+		 * (In case it is to be used, it should be overriden by a child class)
+		 */
 		protected function Form_Run() {}
+
+		/**
+		 * To contain the code which should be executed after the Form Run and
+		 * before the custom handlers are called
+		 * (In case it is to be used, it should be overriden by a child class)
+		 */
 		protected function Form_Load() {}
+
+		/**
+		 * To contain the code to initialize the QForm on the first call.
+		 * Once the QForm is created, the state is saved and is reused by the Run method.
+		 * In short - this function will run only once (the first time the QForm is to be created)
+		 * (In case it is to be used, it should be overriden by a child class)
+		 */
 		protected function Form_Create() {}
+
+		/**
+		 * To contain the code to be executed after Form_Run, Form_Create, Form_Load has been called
+		 * and the custom defained event handlers have been executed but actual rendering process has not begun
+		 */
 		protected function Form_PreRender() {}
 
 		/**
@@ -218,9 +254,21 @@
 		 * @return bool
 		 */
 		protected function Form_Validate() {return true;}
+
+		/**
+		 * This function is meant to be overriden by child class and is called when the Form exits
+		 * (After the form render is complete and just before the Run function completes execution)
+		 */
 		protected function Form_Exit() {}
 
 
+		/**
+		 * VarExport the Controls or var_export the current QForm
+		 * (well, be ready for huge amount of text)
+		 * @param bool $blnReturn
+		 *
+		 * @return mixed
+		 */
 		public function VarExport($blnReturn = true) {
 			if ($this->objControlArray) foreach ($this->objControlArray as $objControl)
 				$objControl->VarExport(false);
@@ -480,7 +528,14 @@
 			}
 		}
 
+		/**
+		 * Renders the AjaxHelper for the QForm
+		 * @param QControlBase $objControl
+		 *
+		 * @return string The Ajax helper string (should be JS commands)
+		 */
 		protected function RenderAjaxHelper($objControl) {
+			// $strToReturn = '';
 			if ($objControl)
 				$strToReturn = $objControl->RenderAjax(false);
 			if ($strToReturn)
@@ -624,9 +679,10 @@
 		}
 
 		/**
+		 * Saves the formstate using the 'Save' method of FormStateHandler set in configuration.inc.php
 		 * @param QForm $objForm
 		 *
-		 * @return string the Serialized Form
+		 * @return string the Serialized QForm
 		 */
 		public static function Serialize(QForm $objForm) {
 			// Get and then Update PreviousRequestMode
@@ -657,6 +713,7 @@
 		}
 
 		/**
+		 * Unserializes (extracts) the FormState using the 'Load' method of FormStateHandler set in configuration.inc.php
 		 * @param string $strPostDataState The string identifying the FormState to the loaded for Unserialization
 		 *
 		 * @internal param string $strSerializedForm
@@ -686,7 +743,7 @@
 
 		/**
 		 * Add a QControl to the current QForm.
-		 * @param QControl $objControl
+		 * @param QControl|QControlBase $objControl
 		 *
 		 * @throws QCallerException
 		 */
@@ -700,6 +757,7 @@
 		}
 
 		/**
+		 * Returns a control from the current QForm
 		 * @param string $strControlId The Control ID of the control which is needed to be fetched
 		 *               from the current QForm (should be the child of the current QForm).
 		 *
@@ -713,8 +771,8 @@
 		}
 
 		/**
-		 * Remove a QControl from the current QControl
-		 * @param $strControlId
+		 * Removes a QControl (and its children) from the current QForm
+		 * @param string $strControlId
 		 */
 		public function RemoveControl($strControlId) {
 			if (array_key_exists($strControlId, $this->objControlArray)) {
@@ -749,6 +807,10 @@
 			return $this->objControlArray;
 		}
 
+		/**
+		 * Saves a class instance (usually a QControl[Base] instance) in the form.
+		 * @param QControl|QControlBase $objControl
+		 */
 		public function PersistControl($objControl) {
 			$this->objPersistentControlArray[$objControl->ControlId] = $objControl;
 		}
@@ -777,6 +839,14 @@
 			}
 		}
 
+		/**
+		 * Returns the requested custom attribute from the form.
+		 * This attribute must have already been set.
+		 * @param string $strName Name of the Custom Attribute
+		 *
+		 * @return mixed
+		 * @throws QCallerException
+		 */
 		public function GetCustomAttribute($strName) {
 			if ((is_array($this->strCustomAttributeArray)) && (array_key_exists($strName, $this->strCustomAttributeArray)))
 				return $this->strCustomAttributeArray[$strName];
@@ -817,12 +887,20 @@
 		}
 
 		/**
+		 * Retruns the Groupings
 		 * @return mixed
 		 */
 		public function GetAllGroupings() {
 			return $this->objGroupingArray;
 		}
 
+		/**
+		 * Returns the child controls of the current QForm or a QControl object
+		 * @param QForm|QControl $objParentObject The object whose child controls are to be searched for
+		 *
+		 * @return array
+		 * @throws QCallerException
+		 */
 		public function GetChildControls($objParentObject) {
 			$objControlArrayToReturn = array();
 
@@ -851,6 +929,14 @@
 				throw new QCallerException('ParentObject must be either a QForm or QControl object');
 		}
 
+		/**
+		 * This function evaluates the QForm Template.
+		 * It will try to open the Template file specified in the call to 'Run' method for the QForm
+		 * and then execute it.
+		 * @param string $strTemplate Path to the HTML template file
+		 *
+		 * @return string The evaluated HTML string
+		 */
 		public function EvaluateTemplate($strTemplate) {
 			global $_ITEM;
 			global $_CONTROL;
@@ -893,6 +979,12 @@
 				$this->$strMethodName($this->strFormId, $strId, $strParameter);
 		}
 
+		/**
+		 * Calles 'Validate' method on a QControl recursively
+		 * @param QControl $objControl
+		 *
+		 * @return bool
+		 */
 		protected function ValidateControlAndChildren(QControl $objControl) {
 			// Initially Assume Validation is True
 			$blnToReturn = true;
@@ -1067,6 +1159,12 @@
 			require($this->HtmlIncludeFilePath);
 		}
 
+		/**
+		 * Render the children of this QForm
+		 * @param bool $blnDisplayOutput
+		 *
+		 * @return null|string Null when blnDisplayOutput is true
+		 */
 		protected function RenderChildren($blnDisplayOutput = true) {
 			$strToReturn = "";
 
@@ -1165,7 +1263,7 @@
 
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
-				$strToReturn  .= sprintf('<style type="text/css" media="all">@import "%s";</style>', $this->GetCssFileURI($strScript));
+				$strToReturn  .= sprintf('<style type="text/css" media="all">@import "%s";</style>', $this->GetCssFileUri($strScript));
 				$strToReturn .= "\r\n";
 			}
 
@@ -1304,16 +1402,28 @@
 			return $objToReturn;
 		}
 
-		public function GetJsFileURI($strFile) {
-			if (strpos($strFile, "http") === 0)
+		/**
+		 * Gets the JS file URI, given a string input
+		 * @param string $strFile File name to be tested
+		 *
+		 * @return string the final JS file URI
+		 */
+		public function GetJsFileUri($strFile) {
+			if ((strpos($strFile, "http") === 0) || (strpos($strFile, "https") === 0))
 				return $strFile;
 			if (strpos($strFile, "/") === 0)
 				return __VIRTUAL_DIRECTORY__ . $strFile;
 			return __VIRTUAL_DIRECTORY__ . __JS_ASSETS__ . '/' . $strFile;
 		}
 
-		public function GetCssFileURI($strFile) {
-			if (strpos($strFile, "http") === 0)
+		/**
+		 * Gets the CSS file URI, given a string input
+		 * @param string $strFile File name to be tested
+		 *
+		 * @return string the final CSS URI
+		 */
+		public function GetCssFileUri($strFile) {
+			if ((strpos($strFile, "http") === 0) || (strpos($strFile, "https") === 0))
 				return $strFile;
 			if (strpos($strFile, "/") === 0)
 				return __VIRTUAL_DIRECTORY__ . $strFile;
@@ -1348,7 +1458,7 @@
 
 			// Include javascripts that need to be included
 			foreach ($strJavaScriptArray as $strScript) {
-				$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $this->GetJsFileURI($strScript));
+				$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $this->GetJsFileUri($strScript));
 				$strToReturn .= "\r\n";
 			}
 

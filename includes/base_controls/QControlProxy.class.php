@@ -1,4 +1,11 @@
 <?php
+	/**
+	 * This file contains the QControlProxy class
+	 */
+
+	/**
+	 * Class QControlProxy is used to 'proxy' the actions for another control
+	 */
 	class QControlProxy extends QControl {
 		protected $strTargetControlId;
 		

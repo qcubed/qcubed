@@ -41,6 +41,7 @@
 	 * Special event to handle source ajax callbacks
 	 */
 	class QAutocomplete_SourceEvent extends QEvent {
+		/** Event Name */
 		const EventName = 'QAutocomplete_Source';
 	}
 
@@ -115,7 +116,21 @@
 		}
 
 
-		// Set up an Ajax data binder. 
+		// Set up an Ajax data binder.
+		/**
+		 * Set the data binder for ajax filtering
+		 * Call this at creation time to set the data binder of the item list you will display. The data binder
+		 * will be an AjaxAction function, and so will receive the following parameters:
+		 * - FormId
+		 * - ControlId
+		 * - Parameter
+		 * The Parameter in particular will be the term that you should use for filtering. There are situations
+		 * where the term will not be the same as the contents of the field.
+		 *
+		 * @param string         $strMethodName    Name of the method which has to be bound
+		 * @param QForm|QControl $objParentControl The parent control on which the action is to be bound
+		 * @param bool           $blnReturnTermAsParameter Return the terms as a parameter to the handler
+		 */
 		public function SetDataBinder($strMethodName, $objParentControl = null, $blnReturnTermAsParameter = false) {
 			$strJsReturnParam = '';
 			$strBody = '';
@@ -152,7 +167,10 @@
 
 		// These functions are used to keep track of the selected value, and to implement
 		// optional autocomplete functionality.
-		
+		/**
+		 * Gets the Javascript part of the control which is sent to the client side upon the completion of Render
+		 * @return string The JS string
+		 */
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
 			$strValueExpr = 'var value = jQuery(this).val();';
@@ -259,6 +277,13 @@
 		}
 
 
+		/**
+		 * PHP __set Magic method
+		 * @param string $strName Property Name
+		 * @param string $mixValue Property Value
+		 *
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case 'DataSource':
@@ -338,7 +363,14 @@
 			}
 			
 		}
-		
+
+		/**
+		 * PHP __get magic method implementation
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'SelectedId': return $this->strSelectedId;

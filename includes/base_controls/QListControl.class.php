@@ -76,12 +76,14 @@
 
 		/**
 		 * Allows you to add a ListItem at a certain index
-		 * 
 		 * Unlike AddItem, this will insert the ListItem at whatever index is passed to the function.  Additionally,
 		 * only a ListItem object can be passed (as opposed to an object or strings)
-		 * 
-		 * @param integer $intIndex index at which the item should be inserted
+		 *
+		 * @param integer   $intIndex    index at which the item should be inserted
 		 * @param QListItem $objListItem the ListItem which shall be inserted
+		 *
+		 * @throws QIndexOutOfRangeException
+		 * @throws Exception|QInvalidCastException
 		 */
 		public function AddItemAt($intIndex, QListItem $objListItem) {
 			$this->blnModified = true;
@@ -104,11 +106,13 @@
 		/**
 		 * Adds an array of items, or an array of key=>value pairs. Convenient for adding a list from a type table.
 		 * When passing key=>val pairs, mixSelectedValues can be an array, or just a single value to compare against to indicate what is selected.
-		 * 
-		 * @param array $mixItemArray Array of QListItems or key=>val pairs.
-		 * @param mixed $mixSelectedValues Array of selected values, or value of one selection
-		 * @param string $strItemGroup allows you to apply grouping (<optgroup> tag)
+		 *
+		 * @param array  $mixItemArray          Array of QListItems or key=>val pairs.
+		 * @param mixed  $mixSelectedValues     Array of selected values, or value of one selection
+		 * @param string $strItemGroup          allows you to apply grouping (<optgroup> tag)
 		 * @param string $strOverrideParameters OverrideParameters for ListItemStyle
+		 *
+		 * @throws Exception|QInvalidCastException
 		 */
 		public function AddItems(array $mixItemArray, $mixSelectedValues = null, $strItemGroup = null, $strOverrideParameters = null) {
 			$this->blnModified = true;
@@ -135,9 +139,12 @@
 
 		/**
 		 * Retrieve the ListItem at the specified index location
-		 * 
+		 *
 		 * @param integer $intIndex
-		 * @return QListItem 
+		 *
+		 * @throws QIndexOutOfRangeException
+		 * @throws Exception|QInvalidCastException
+		 * @return QListItem
 		 */
 		public function GetItem($intIndex) {
 			try {
@@ -171,11 +178,14 @@
 			$this->blnModified = true;
 			$this->objItemsArray = array();
 		}
-		
+
 		/**
 		 * Removes a ListItem at the specified index location
-		 * 
+		 *
 		 * @param integer $intIndex
+		 *
+		 * @throws QIndexOutOfRangeException
+		 * @throws Exception|QInvalidCastException
 		 */
 		public function RemoveItem($intIndex) {
 			$this->blnModified = true;
@@ -195,13 +205,15 @@
 			$this->objItemsArray[$intCount] = null;
 			unset($this->objItemsArray[$intCount]);
 		}
-		
+
 		/**
-		* Replaces a QListItem at $intIndex. This combines the RemoveItem() and AddItemAt() operations.
-		*
-		* @param integer $intIndex
-		* @param QListItem $objListItem
-		*/
+		 * Replaces a QListItem at $intIndex. This combines the RemoveItem() and AddItemAt() operations.
+		 *
+		 * @param integer   $intIndex
+		 * @param QListItem $objListItem
+		 *
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function ReplaceItem($intIndex, QListItem $objListItem) {
 			$this->blnModified = true;
 			try {
@@ -216,6 +228,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP __get magic method implementation
+		 * @param string $strName Property Name
+		 *
+		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case "ItemCount":
@@ -284,6 +303,16 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP __set magic method implementation
+		 * @param string $strName Property Name
+		 * @param string $mixValue Propety Value
+		 *
+		 * @return mixed
+		 * @throws QIndexOutOfRangeException
+		 * @throws Exception|QCallerException
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 			switch ($strName) {
