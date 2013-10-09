@@ -8,5 +8,5 @@ notation converter.
 
 Feel free to make any changes to these customizations as you wish.
 
-NOTE: the templates subdirectory is available for you to place customizations to the templates
-and subtemplates themselves.  Read the _README.txt file in templates/ to find out more.
+NOTE: the 'templates' subdirectory is available for you to place custom-made/modified templates.
+Read the _README.txt file in templates/ to find out more.
