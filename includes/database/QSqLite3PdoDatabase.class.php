@@ -337,56 +337,54 @@ class QSqLite3PdoDatabaseResult extends QPdoDatabaseResult {
  * QSqLite3PdoDatabaseRow
  */
 class QSqLite3PdoDatabaseRow extends QDatabaseRowBase {
-		protected $strColumnArray;
+	protected $strColumnArray;
 
-		public function __construct($strColumnArray) {
-				$this->strColumnArray = $strColumnArray;
+	public function __construct($strColumnArray) {
+		$this->strColumnArray = $strColumnArray;
+	}
+
+	public function GetColumn($strColumnName, $strColumnType = null) {
+		if (!isset($this->strColumnArray[$strColumnName])) {
+			return null;
 		}
+		$strColumnValue = $this->strColumnArray[$strColumnName];
 
-		public function GetColumn($strColumnName, $strColumnType = null) {
-				if (array_key_exists($strColumnName, $this->strColumnArray)) {
-					$strColumnValue = $this->strColumnArray[$strColumnName];
-					if (is_null($strColumnValue))
-								return null;
+		switch ($strColumnType) {
+			case QDatabaseFieldType::Bit:
+				if (!$strColumnValue) {
+					return false;
+				} else {
+					return ($strColumnValue) ? true : false;
+				}
 
-						switch ($strColumnType) {
-								case QDatabaseFieldType::Bit:
-										if (!$strColumnValue) {
-												return false;
-										} else {
-												return ($strColumnValue) ? true : false;
-										}
+			case QDatabaseFieldType::Blob:
+			case QDatabaseFieldType::Char:
+			case QDatabaseFieldType::VarChar:
+				return QType::Cast($strColumnValue, QType::String);
 
-								case QDatabaseFieldType::Blob:
-								case QDatabaseFieldType::Char:
-								case QDatabaseFieldType::VarChar:
-										return QType::Cast($strColumnValue, QType::String);
+			case QDatabaseFieldType::Date:
+			case QDatabaseFieldType::DateTime:
+			case QDatabaseFieldType::Time:
+				return new QDateTime($strColumnValue);
 
-								case QDatabaseFieldType::Date:
-								case QDatabaseFieldType::DateTime:
-								case QDatabaseFieldType::Time:
-										return new QDateTime($strColumnValue);
+			case QDatabaseFieldType::Float:
+				return QType::Cast($strColumnValue, QType::Float);
 
-								case QDatabaseFieldType::Float:
-										return QType::Cast($strColumnValue, QType::Float);
+			case QDatabaseFieldType::Integer:
+				return QType::Cast($strColumnValue, QType::Integer);
 
-								case QDatabaseFieldType::Integer:
-										return QType::Cast($strColumnValue, QType::Integer);
-
-								default:
-										return $strColumnValue;
-						}
-				} else
-						return null;
+			default:
+				return $strColumnValue;
 		}
+	}
 
-		public function ColumnExists($strColumnName) {
-				return array_key_exists($strColumnName, $this->strColumnArray);
-		}
-
-		public function GetColumnNameArray() {
-				return $this->strColumnArray;
-		}
+	public function ColumnExists($strColumnName) {
+		return array_key_exists($strColumnName, $this->strColumnArray);
+	}
+	
+	public function GetColumnNameArray() {
+			return $this->strColumnArray;
+	}
 }
 
 /**
