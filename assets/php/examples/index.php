@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/qcubed.inc.php');
+require_once('qcubed.inc.php');
 // show first section by default
 $intSectionToShow = (!QApplication::PathInfo(0)) ? 1 : QApplication::PathInfo(0);
 // Used to distinguish the home page in the header
