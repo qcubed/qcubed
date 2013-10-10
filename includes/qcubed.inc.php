@@ -181,6 +181,7 @@
 	QApplicationBase::$ClassFile['qnumerictextbox'] = __QCUBED_CORE__ . '/base_controls/QNumericTextBox.class.php';
 	QApplicationBase::$ClassFile['qfloattextbox'] = __QCUBED_CORE__ . '/base_controls/QFloatTextBox.class.php';
 	QApplicationBase::$ClassFile['qintegertextbox'] = __QCUBED_CORE__ . '/base_controls/QIntegerTextBox.class.php';
+	QApplicationBase::$ClassFile['qemailtextbox'] = __QCUBED_CORE__ . '/base_controls/QEmailTextBox.class.php';
 	QApplicationBase::$ClassFile['qwritebox'] = __QCUBED_CORE__ . '/base_controls/QWriteBox.class.php';
 
 	QApplicationBase::$ClassFile['qpaginatedcontrol'] = __QCUBED_CORE__ . '/base_controls/QPaginatedControl.class.php';

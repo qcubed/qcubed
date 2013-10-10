@@ -15,7 +15,6 @@
 	 * @property mixed  $Maximum         (optional) is the maximum value the integer/float can be
 	 * @property mixed  $Minimum         (optional) is the minimum value the integer/float can be
 	 * @property mixed  $Step            (optional) is the step interval for allowed values ( beginning from $Minimum if set)
-	 * @property string $LabelForInvalid Text to show when the input is invalid
 	 * @property string $LabelForGreater Text to show when the input is greater than the allowed value
 	 * @property string $LabelForLess    Text to show when the input is lesser than the minimum allowed value
 	 * @property string $LabelForNotStepAligned
@@ -38,8 +37,6 @@
 		/** @var mixed Float or Integer value, the multiple of which the input must be */
 		protected $mixStep = null;
 
-		/** @var string The text to show when the value is invalid */
-		protected $strLabelForInvalid;
 		/** @var string Text to show when the input value is less than minimum allowed value */
 		protected $strLabelForLess;
 		/** @var string Text to show when the input value is greater than the maximum allowed value */
@@ -131,8 +128,6 @@
 					return $this->mixMinimum;
 				case 'Step':
 					return $this->mixStep;
-				case 'LabelForInvalid':
-					return $this->strLabelForInvalid;
 				case 'LabelForGreater':
 					return $this->strLabelForGreater;
 				case 'LabelForLess':
@@ -185,15 +180,6 @@
 				case "Step":
 					try {
 						$this->mixStep = QType::Cast($mixValue, $this->strDataType);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case 'LabelForInvalid':
-					try {
-						$this->strLabelForInvalid = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
