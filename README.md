@@ -5,7 +5,7 @@
 ## Releases
 **Newest stable release: [version 2.2.1, released on May 28, 2013](https://github.com/qcubed/framework/archive/2.2.1.zip)**.
 
-**alpha-3.0 is available**
+**alpha-3.0 is available via composer and github**
 
 Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads).
 
@@ -65,7 +65,7 @@ The [github wiki](https://github.com/qcubed/framework/wiki) will eventually supe
 
 ## Installation
 
-The installation procedure is described in a detail here: [Installation instructions](https://github.com/qcubed/framework/blob/master/INSTALL.md "Installation instructions").
+The installation procedure is described in a detail here: [Installation instructions](https://github.com/qcubed/framework/blob/alpha-3.0/INSTALL.md "Installation instructions").
 
 * * *
 
