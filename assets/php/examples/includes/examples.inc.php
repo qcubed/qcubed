@@ -492,7 +492,7 @@
 		}
 	}
 	
-	require_once(__PLUGINS__ . "/plugin_examples.php");
+	//require_once(__PLUGINS__ . "/plugin_examples.php");
 
 	Examples::Init();
 ?>

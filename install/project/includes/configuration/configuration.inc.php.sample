@@ -100,7 +100,7 @@ if (!defined('SERVER_INSTANCE')) {
 			// The QCubed Directories
 			// Includes subdirectories for QCubed Customizations in CodeGen and QForms, i18n PO files, QCache storage, etc.
 			// Also includes the _core subdirectory for the QCubed Core
-			define ('__PLUGINS__', __PROJECT__ . '/generated/plugins');
+			define ('__PLUGINS__', __DOCROOT__ . __SUBDIRECTORY__ . '/vendor/qcubed/plugins');
 
 			define ('__TMP__', __PROJECT__  . '/tmp');
 			define ('__CACHE__', __TMP__ . '/cache');
@@ -154,7 +154,8 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__APP_CSS_ASSETS__', __PROJECT_ASSETS__ . '/css');
 			define ('__APP_IMAGE_ASSETS__', __PROJECT_ASSETS__ . '/images');
 			define ('__APP_PHP_ASSETS__', __PROJECT_ASSETS__ . '/php');
-			define ('__PLUGIN_ASSETS__', __PROJECT_ASSETS__ . '/plugins');
+			
+			define ('__PLUGIN_ASSETS__',  '/vendor/qcubed/plugins');
 
 			// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery

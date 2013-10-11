@@ -224,7 +224,7 @@
 	}
 	
 	// Includes for Plugin files
-	require(__PLUGINS__ . '/plugin_includes.php');
+	//require(__PLUGINS__ . '/plugin_includes.php');
 	
 	// Special Print Functions / Shortcuts
 	// NOTE: These are simply meant to be shortcuts to actual QCubed functional
