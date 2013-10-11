@@ -661,7 +661,7 @@
 		 */
 		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
 			// Relative path based on the path of the core JS files
-			$this->AddJavascriptFile("../../plugins/" . $strPluginName . "/js/" . $strJsFileName);
+			$this->AddJavascriptFile(__PLUGIN_ASSETS__ . '/' . $strPluginName . "/js/" . $strJsFileName);
 		}
 
 		/**
@@ -683,7 +683,7 @@
 		 */
 		public function AddPluginCssFile($strPluginName, $strCssFileName) {
 			// Relative path based on the path of the core JS files
-			$this->AddCssFile("../../plugins/" . $strPluginName . "/css/" . $strCssFileName);
+			$this->AddCssFile(__PLUGIN_ASSETS__ . '/' . $strPluginName . "/css/" . $strCssFileName);
 		}
 
 		/**
