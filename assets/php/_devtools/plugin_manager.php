@@ -100,8 +100,7 @@
 			if ($item['Examples']) {
 				$strRet = '';
 				foreach ($item['Examples'] as $strItem) {
-					$strRet .= '<a href="' .
-					__SUBDIRECTORY__ . __PLUGIN_ASSETS__ . '/' . $item['Name'] . '/examples/' . $strItem .
+					$strRet .= '<a href="' . __PLUGIN_ASSETS__ . '/' . $item['Name'] . '/examples/' . $strItem .
 					'">' . QApplication::HtmlEntities($strItem) . '</a><br />';
 				}
 				return $strRet;

@@ -660,7 +660,7 @@
 		 * @param string $strJsFileName Path to the JS file
 		 */
 		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
-			// Relative path based on the path of the core JS files
+			// Relative path based on the path of docroot
 			$this->AddJavascriptFile(__PLUGIN_ASSETS__ . '/' . $strPluginName . "/js/" . $strJsFileName);
 		}
 
@@ -682,7 +682,7 @@
 		 * @param string $strCssFileName File path of CSS file
 		 */
 		public function AddPluginCssFile($strPluginName, $strCssFileName) {
-			// Relative path based on the path of the core JS files
+			// Relative path based on the path of the docroot
 			$this->AddCssFile(__PLUGIN_ASSETS__ . '/' . $strPluginName . "/css/" . $strCssFileName);
 		}
 

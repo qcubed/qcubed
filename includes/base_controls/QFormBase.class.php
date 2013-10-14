@@ -1556,12 +1556,12 @@
 			}
 
 			// Finally, add QCubed includes path
-			$strEndScript = sprintf('qc.baseDir = "%s"; ' . "\n", __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__) . $strEndScript;
+			$strEndScript = sprintf('qc.baseDir = "%s"; ' . "\n", __VIRTUAL_DIRECTORY__) . $strEndScript;
 			$strEndScript = sprintf('qc.jsAssets = "%s"; ' . "\n", __VIRTUAL_DIRECTORY__ . __JS_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.phpAssets = "%s"; ' . "\n", __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.cssAssets = "%s"; ' . "\n", __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.imageAssets = "%s"; ' . "\n", __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) . $strEndScript;
-
+			
 			// Create Final EndScript Script
 			$strEndScript = sprintf('<script type="text/javascript">$j(document).ready(function() { %s; });</script>', $strEndScript);
 
