@@ -170,7 +170,7 @@ $j.ajaxSync.data = [];
 				switch (strType) {
 					case "checkbox":
 					case "radio":
-						if ($j(this).attr("checked")) {
+						if ($j(this).attr("checked") && $j(this).attr("name")) {
 							var strTestName;
 							var bracketIndex = $j(this).attr("name").indexOf('[');
 							
