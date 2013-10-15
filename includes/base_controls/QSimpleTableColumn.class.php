@@ -797,24 +797,25 @@
 	 */
 	class QSimpleTableCheckBoxColumn extends QAbstractSimpleTableDataColumn {
 		protected $blnHtmlEntities = false;
+		protected $checkParamCallback = null;
 		
 		public function FetchHeaderCellValue() {
 			$strToReturn = '<input type="checkbox"';
-			$aParams = $this->GetHeaderCheckboxParams($item);
+			$aParams = $this->GetHeaderCheckboxParams();
 			foreach ($aParams as $key=>$str) {
 				$strToReturn .= ' ' . $key . '="' . $str . '"';
 			}
 			
 			$strToReturn .= ' />';
 		}
-		public function GetHeaderCheckboxParams ($item) {
+		public function GetHeaderCheckboxParams () {
 			$aParams = array();
 			
-			if ($strId = $this->GetHeaderCheckId ($item)) {
+			if ($strId = $this->GetHeaderCheckId ()) {
 				$aParams['id'] = addslashes($strId);
 			}
 			
-			if ($strCheck = $this->IsHeaderChecked ($item)) {
+			if ($strCheck = $this->IsHeaderChecked ()) {
 				$aParams['checked'] = 'checked';
 			}
 			return $aParams;		
@@ -838,11 +839,18 @@
 			}
 			
 			$strToReturn .= ' />';
-			return $chkSelected->Render(false);
+			return $strToReturn;
 		}
 		
 		public function GetCheckboxParams ($item) {
 			$aParams = array();
+			
+			if ($this->checkParamCallback) {
+				$aParams = call_user_func($this->checkParamCallback, $item, 'id');
+				$aParams['id'] = addslashes($aParams['id']);
+				return $aParams;
+			}
+			
 			
 			if ($strId = $this->GetCheckId ($item)) {
 				$aParams['id'] = addslashes($strId);
@@ -854,6 +862,10 @@
 			return $aParams;		
 		}
 		
+		public function SetCheckParamCallback ($closure) {
+			$this->checkParamCallback = $closure;
+		}
+		
 		/**
 		 * Returns the id for the checkbox itself. This is used together with the check action to send the item
 		 * id to the action. This system currently supports only one checkbox column. 
@@ -861,7 +873,6 @@
 		 */
 		function GetCheckId ($item) {
 			return null;
-			//return 'colCheck' . $this->objParentTable->Id . '_' . $this->GetItemId($item);	
 		}
 		
 		function GetItemId ($item){}

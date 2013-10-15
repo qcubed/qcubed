@@ -200,6 +200,7 @@
 	QApplicationBase::$ClassFile['qsimpletablepropertycolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletableindexedcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletableclosurecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qsimpletablecheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletable'] = __QCUBED__ . '/controls/QSimpleTable.class.php';
 
 	QApplicationBase::$ClassFile['qdatarepeater'] = __QCUBED_CORE__ . '/base_controls/QDataRepeater.class.php';
