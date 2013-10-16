@@ -83,7 +83,7 @@
 		
 		// Sanitization and validating
 		/** @var bool */
-		protected $blnAutoTrim = true;
+		protected $blnAutoTrim = false;
 		/** @var int */
 		protected $intSanitizeFilter = null;
 		/** @var mixed */
