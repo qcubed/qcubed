@@ -1,0 +1,1 @@
+Put override files here for plugins that are installed by Composer. The QCubed Autoloader will look here first before looking in the plugin directory.
