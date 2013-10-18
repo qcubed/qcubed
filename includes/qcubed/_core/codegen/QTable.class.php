@@ -110,6 +110,36 @@
 			else
 				return null;
 		}
+		
+		public function HasImmediateArrayExpansions() { 
+			$intCount = count($this->objManyToManyReferenceArray);
+			foreach ($this->objReverseReferenceArray as $objReverseReference) {
+				if (!$objReverseReference->Unique) {
+					$intCount++;
+				}
+			}
+			return $intCount > 0;
+		}
+		
+		public function HasExtendedArrayExpansions($objCodeGen, $objCheckedTableArray = array()) {
+			$objCheckedTableArray[] = $this;
+			foreach ($this->ColumnArray as $objColumn) {
+				if (($objReference = $objColumn->Reference) && !$objReference->IsType) {
+					if ($objTable2 = $objCodeGen->GetTable($objReference->Table)) {
+						if ($objTable2->HasImmediateArrayExpansions()) {
+							return true;
+						}
+						if (!in_array($objTable2, $objCheckedTableArray) &&	// watch out for circular references
+								$objTable2->HasExtendedArrayExpansions($objCodeGen, $objCheckedTableArray)) {
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+		
+		
 
 
 		////////////////////
