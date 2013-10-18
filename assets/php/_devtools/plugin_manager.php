@@ -37,20 +37,50 @@
 			$this->dtgPlugins->CssClass = 'datagrid';
 			$this->dtgPlugins->AlternateRowStyle->CssClass = 'alternate';
 			
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Title',
-					'<a href="plugin_edit.php?strType=installed&strName=<?= $_ITEM->strName ?>"><?= $_ITEM->strName ?></a>', 'HtmlEntities=false'));
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Name',
+					'<?= $_ITEM["Name"] ?>'));
+					
+		/*  Get from composer's installed.json file some day
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Version',
-					'<?= $_ITEM->strVersion ?>'));
-
+					'<?= $_ITEM->strVersion ?>')); */
 
 			$this->dtgPlugins->AddColumn(new QDataGridColumn('Description',
-				'<?= $_FORM->RenderDescription($_ITEM) ?>', 'HtmlEntities=false'));	
+				'<?= $_ITEM["Description"] ?>'));	
+			
+			$this->dtgPlugins->AddColumn(new QDataGridColumn('Examples',
+				'<?= $_FORM->RenderExampleLink($_ITEM) ?>', 'HtmlEntities=false'));	
+			
 		}
 		
 		public function dtgPlugins_Bind() {			
-			$this->dtgPlugins->DataSource = QPluginConfigParser::parseInstalledPlugins();
+			$pluginDirArray = scandir ( __PLUGINS__);
+			$itemArray = array();
+			
+			foreach ($pluginDirArray as $dirItem) {
+				$strComposerFilePath = __PLUGINS__ . '/' . $dirItem . '/' .'composer.json';
+				if (file_exists($strComposerFilePath)) {
+					$composerDetails = json_decode(file_get_contents($strComposerFilePath ), true);
+
+					$arrayItem['Name'] = $dirItem;
+					$arrayItem['Description'] = '';
+					if (!empty($composerDetails['description'])) {
+						$arrayItem['Description'] = $composerDetails['description'];
+					} 
+					$arrayItem['Examples'] = null;
+					if (!empty($composerDetails['extra']['examples'])) { // embed example page name into composer file for convenience
+						foreach ($composerDetails['extra']['examples'] as $strExample) {
+							$strExamplePath = __PLUGINS__ . '/' . $dirItem . '/examples/' . $strExample;
+							if (file_exists ($strExamplePath)) {
+								$arrayItem['Examples'][] = $strExample;
+							}
+						}
+					} 
+					$itemArray[] = $arrayItem;
+				}
+			}
+			$this->dtgPlugins->DataSource = $itemArray;
 		}
-		
+		/*
 		public function RenderDescription($objItem) {
 			$exampleSnippet = "";
 			
@@ -64,6 +94,18 @@
 			}
 			
 			return $objItem->strDescription . $exampleSnippet;
+		}*/
+		
+		public function RenderExampleLink($item) {
+			if ($item['Examples']) {
+				$strRet = '';
+				foreach ($item['Examples'] as $strItem) {
+					$strRet .= '<a href="' . __PLUGIN_ASSETS__ . '/' . $item['Name'] . '/examples/' . $strItem .
+					'">' . QApplication::HtmlEntities($strItem) . '</a><br />';
+				}
+				return $strRet;
+			}
+			return null;
 		}
 		
 		private function dlgUpload_Create() {

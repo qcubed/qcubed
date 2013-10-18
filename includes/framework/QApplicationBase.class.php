@@ -473,9 +473,18 @@
 			} else if (file_exists($strFilePath = sprintf('%s/%s.class.php', __INCLUDES__, $strClassName))) {
 				require_once ($strFilePath);
 				return true;
-			 } else if (file_exists($strFilePath = sprintf('%s/controls/%s.class.php', __QCUBED__, $strClassName))) {
+			} else if (file_exists($strFilePath = sprintf('%s/controls/%s.class.php', __INCLUDES__, $strClassName))) {
 				require_once ($strFilePath);
 				return true;
+			} else if (file_exists($strFilePath = sprintf('%s/plugins/%s.php', __INCLUDES__, $strClassName))) {
+				require_once ($strFilePath);
+				return true;
+			} else if (false !== ($intStart = strpos($strClassName, 'QCubed\\Plugins\\'))) {
+                $strClassName = substr($strClassName, $intStart + 15);
+                if (file_exists($strFilePath = sprintf('%s/plugins/%s.php', __INCLUDES__, $strClassName))) {
+				    require_once ($strFilePath);
+				    return true;
+				}
 			}
 
 			return false;
