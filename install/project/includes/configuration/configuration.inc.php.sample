@@ -146,9 +146,10 @@ if (!defined('SERVER_INSTANCE')) {
 
 			// __DOCROOT__ relative location of QCubed-specific Web Assets (JavaScripts, CSS, Images, and PHP Pages/Popups)
 			// Note: These locations are for use by the framework only. You should put your own files in __APP*_ASSETS__ directories defined below
-			define ('__QCUBED_ASSETS__', __SUBDIRECTORY__ . '/vendor/qcubed/framework/assets');
 			define ('__PROJECT_ASSETS__', __SUBDIRECTORY__ . '/project/assets');
-			
+            define ('__VENDOR_ASSETS__', __SUBDIRECTORY__ . '/vendor');
+            define ('__QCUBED_ASSETS__',  __VENDOR_ASSETS__ . '/qcubed/framework/assets');
+
 			define ('__JS_ASSETS__', __QCUBED_ASSETS__ . '/js');
 			define ('__CSS_ASSETS__', __QCUBED_ASSETS__ . '/css');
 			define ('__IMAGE_ASSETS__', __QCUBED_ASSETS__ . '/images');

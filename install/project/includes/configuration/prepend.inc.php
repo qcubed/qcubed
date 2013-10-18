@@ -78,9 +78,9 @@
         if (file_exists (__QCUBED_CORE__ . '/../../../autoload.php')) {
             require __QCUBED_CORE__ . '/../../../autoload.php'; // Add the Composer autoloader if using Composer
         }
-        
-		// Register the autoloader
-		spl_autoload_register(array('QApplication', 'Autoload'));
+
+        // Register the autoloader, making sure we go BEFORE the composer autoloader
+        spl_autoload_register(array('QApplication', 'Autoload'), true, true);
 
 
 		//////////////////////////
