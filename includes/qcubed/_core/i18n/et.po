@@ -1,0 +1,154 @@
+# QCubed Distributed Language File
+# for Estonian (default)
+# Contributed by "kukrik"
+
+
+
+# For QTextBoxBase controls
+MsgId "%s on nõutav"
+MsgStr "%s on nõutav"
+
+MsgId "Required"
+MsgStr "Nõutav"
+
+MsgId "%s must have at least %s characters"
+MsgStr "%s peab olema vähemalt %s tähemärki"
+
+MsgId "%s must have at most %s characters"
+MsgStr "%s peab koosnema maksimaalselt %s tähemärki"
+
+MsgId "Must have at least %s characters" 
+MsgStr "Peab olema vähemalt %s tähemärki"
+
+MsgId "Must have at most %s characters"
+MsgStr "Peab olema maksimaalselt %s tähemärki"
+
+# For QWriteBox controls
+MsgId ""
+"Tags &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; and &lt;http://...&gt; are allowed.  "
+"Use ** at the beginning of any line for a bulleted list."
+MsgStr ""
+"Sildid &lt;b&gt; &lt;u&gt; &lt;i&gt; &lt;br&gt; &lt;code&gt; ja <http://...&gt; on lubatud. " 
+"Kasutage ** alguses igas reas täpploendit."
+
+
+# For QPaginatedControl controls
+MsgId "item"
+MsgStr "kirje"
+
+MsgId "items"
+MsgStr "kirjed"
+
+
+# For QListBox and QCalendar controls
+MsgId "Reset"
+MsgStr "Lähtesta"
+
+
+# For ListBoxes in Generated Forms
+MsgId "- Select One -"
+MsgStr "- Vali üks -"
+
+
+# For QIntegerTextBox and QFloatTextBox controls
+MsgId "Invalid Integer"
+MsgStr "Vigane täisarv"
+
+MsgId "Invalid Float"
+MsgStr "Vigane number"
+
+MsgId "Value must be less than %s"
+MsgStr "Väärtus peab olema väiksem kui %s"
+
+MsgId "Value must be greater than %s"
+MsgStr "Väärtus peab olema suurem kui %s"
+
+
+# For QDataGrid controls
+MsgId "<b>Results:</b>&nbsp;Viewing&nbsp;%s&nbsp;%s-%s&nbsp;of&nbsp;%s."
+MsgStr "<b>Tulemused:</b>&nbsp;Kuvatud&nbsp;%s&nbsp;%s-%s&nbsp;%s kirjest."
+
+MsgId "<b>Results:</b> No %s found."
+MsgStr "<b>Tulemused:</b> Otsitavat vastet ei leitud."
+
+MsgId "<b>Results:</b> 1 %s found."
+MsgId_Plural "<b>Tulemused:</b> Otsinguvasteid ei leitud."
+MsgStr[0] "<b>Results:</b> 1 %s found."
+MsgStr[1] "<b>Tulemused:</b> Otsinguvasteid ei leitud."
+
+MsgId "Filter"
+MsgStr "Filtreeri"
+
+
+# For QPaginator controls
+MsgId "Previous"
+MsgStr "Eelmine"
+
+MsgId "Next"
+MsgStr "Järgmine"
+
+
+# For the List FormDraft Include template
+MsgId "List All"
+MsgStr "Näita kõik"
+
+MsgId "Create a New"
+MsgStr "Loo"
+
+MsgId "Go to \"Form Drafts\""
+MsgStr "Tagasi mustandite nimekirja"
+
+
+# For the Edit FormBase class template
+MsgId "Create"
+MsgStr "Loo"
+
+MsgId "Edit"
+MsgStr "Redigeeri"
+
+MsgId "Save"
+MsgStr "Salvesta"
+
+MsgId "Cancel"
+MsgStr "Loobu"
+
+MsgId "Delete"
+MsgStr "Kustuta"
+
+MsgId "Are you SURE you want to DELETE this %s?"
+MsgStr "Kas oled kindel, et soovid kustutada seda kirjet - %s?"
+
+MsgId "Are you SURE you want to DELETE this"
+MsgStr "Kas oled kindel, et soovid kustutada seda kirjet?"
+
+
+# For the form_drafts/index.php page
+MsgId "List of Form Drafts"
+MsgStr "Mustandite nimekiri"
+
+MsgId "View List"
+MsgStr "Vaata nimekirja"
+
+MsgId "Create New"
+MsgStr "Loo"
+
+MsgId "?"
+MsgStr "?"
+
+MsgId "True"
+MsgStr "Tõene"
+
+MsgId "False"
+MsgStr "Väär"
+
+MsgId "Set"
+MsgStr "Seatud"
+
+MsgId "Unset"
+MsgStr "Ei ole seatud"
+
+MsgId "N/A"
+MsgStr "ei ole veel määratud"
+
+MsgId "Already in Use"
+MsgStr "See on juba kasutusel."
