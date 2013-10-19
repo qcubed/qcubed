@@ -48,7 +48,6 @@
 			$this->dlgPopup->Width = 'auto';
 			$this->dlgPopup->AutoOpen = false;
 			$this->dlgPopup->AutoRenderChildren = true;
-			$this->dlgPopup->Stack = true;
 			$this->dlgPopup->Modal = true;
 		}
 

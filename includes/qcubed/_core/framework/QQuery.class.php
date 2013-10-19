@@ -1664,6 +1664,7 @@
 
 	class QQSelect extends QQClause {
 		protected $arrNodeObj = array();
+		protected $blnSkipPrimaryKey = false;
 
 		public function __construct($arrNodeObj) {
 			$this->arrNodeObj = $arrNodeObj;
@@ -1679,8 +1680,28 @@
 		}
 
 		public function Merge(QQSelect $objSelect = null) {
-			if ($objSelect) foreach ($objSelect->arrNodeObj as $objNode)
-				array_push($this->arrNodeObj, $objNode);
+			if ($objSelect) {
+				foreach ($objSelect->arrNodeObj as $objNode) {
+					array_push($this->arrNodeObj, $objNode);
+				}
+				if ($objSelect->blnSkipPrimaryKey) {
+					$this->blnSkipPrimaryKey = true;
+				}
+			}
+		}
+
+		/**
+		 * @return boolean
+		 */
+		public function SkipPrimaryKey() {
+			return $this->blnSkipPrimaryKey;
+		}
+
+		/**
+		 * @param boolean $blnSkipPrimaryKey
+		 */
+		public function SetSkipPrimaryKey($blnSkipPrimaryKey) {
+			$this->blnSkipPrimaryKey = $blnSkipPrimaryKey;
 		}
 
 		public function __toString() {
