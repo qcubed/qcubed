@@ -105,12 +105,19 @@
 			$objDbResult = $objQueryBuilder->Database->Query($strQuery);
 
 			// Do we have to expand anything?
-			if ($objQueryBuilder->ExpandAsArrayNodes) {
+			if ($objQueryBuilder->ExpandAsArrayNode) {
 				$objToReturn = array();
+				$objPrevItemArray = array();
 				while ($objDbRow = $objDbResult->GetNextRow()) {
-					$objItem = <?php echo $objTable->ClassName  ?>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNodes, $objToReturn, $objQueryBuilder->ColumnAliasArray);
-					if ($objItem)
+					$objItem = <?php echo $objTable->ClassName  ?>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNode, $objPrevItemArray, $objQueryBuilder->ColumnAliasArray);
+					if ($objItem) {
 						$objToReturn[] = $objItem;
+<?php if ($objTable->PrimaryKeyColumnArray)  {?>
+						$objPrevItemArray[$objItem-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName ?>][] = $objItem;
+<?php } else { ?>
+						$objPrevItemArray[] = $objItem;
+<?php } ?>		
+					}
 				}
 				if (count($objToReturn)) {
 					// Since we only want the object to return, lets return the object and not the array.
@@ -146,7 +153,7 @@
 
 			// Perform the Query and Instantiate the Array Result
 			$objDbResult = $objQueryBuilder->Database->Query($strQuery);
-			return <?php echo $objTable->ClassName  ?>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNodes, $objQueryBuilder->ColumnAliasArray);
+			return <?php echo $objTable->ClassName  ?>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNode, $objQueryBuilder->ColumnAliasArray);
 		}
 
 		/**
@@ -197,10 +204,20 @@
 			// Figure out if the query is using GroupBy
 			$blnGrouped = false;
 
-			if ($objOptionalClauses) foreach ($objOptionalClauses as $objClause) {
-				if ($objClause instanceof QQGroupBy) {
-					$blnGrouped = true;
-					break;
+			if ($objOptionalClauses) {
+				if ($objOptionalClauses instanceof QQClause) {
+					if ($objOptionalClauses instanceof QQGroupBy) {
+						$blnGrouped = true;
+					}
+				} else if (is_array($objOptionalClauses)) {
+					foreach ($objOptionalClauses as $objClause) {
+						if ($objClause instanceof QQGroupBy) {
+							$blnGrouped = true;
+							break;
+						}
+					}
+				} else {
+					throw new QCallerException('Optional Clauses must be a QQClause object or an array of QQClause objects');
 				}
 			}
 
@@ -225,7 +242,7 @@
 
 			if (!$cacheData || $blnForceUpdate) {
 				$objDbResult = $objQueryBuilder->Database->Query($strQuery);
-				$arrResult = <?php echo $objTable->ClassName  ?>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNodes, $objQueryBuilder->ColumnAliasArray);
+				$arrResult = <?php echo $objTable->ClassName  ?>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNode, $objQueryBuilder->ColumnAliasArray);
 				$objCache->SaveData(serialize($arrResult));
 			} else {
 				$arrResult = unserialize($cacheData);

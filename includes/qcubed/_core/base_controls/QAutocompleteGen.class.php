@@ -28,99 +28,87 @@
 	
 	
 	/**
-	 * <div>Triggered when the field is blurred, if the value has
-	 * 		changed.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The item selected from the menu, if any. Otherwise the property is
-	 * 		<code>null</code>.</div></li></ul></li></ul>
+	 * Triggered when the field is blurred, if the value has
+	 * 		changed.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a>  <ul><li><strong>item</strong>
+	 * 		Type: <a>jQuery</a> The item selected from the menu, if any. Otherwise the
+	 * 		property is <code>null</code>.</li></ul></li></ul>
 	 */
 	class QAutocomplete_ChangeEvent extends QJqUiEvent {
 		const EventName = 'autocompletechange';
 	}
 	/**
-	 * <div>Triggered when the menu is hidden. Not every <code>close</code> event
-	 * 		will be accompanied by a <code>change</code>
-	 * 		event.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the menu is hidden. Not every <code>close</code> event will
+	 * 		be accompanied by a <code>change</code>
+	 * 		event.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QAutocomplete_CloseEvent extends QJqUiEvent {
 		const EventName = 'autocompleteclose';
 	}
 	/**
-	 * <div>Triggered when the autocomplete is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the autocomplete is created.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul>
 	 */
 	class QAutocomplete_CreateEvent extends QJqUiEvent {
 		const EventName = 'autocompletecreate';
 	}
 	/**
-	 * <div>Triggered when focus is moved to an item (not selecting). The default
+	 * Triggered when focus is moved to an item (not selecting). The default
 	 * 		action is to replace the text field's value with the value of the focused
 	 * 		item, though only if the event was triggered by a keyboard interaction.
 	 * 						<p>Canceling this event prevents the value from being updated, but does
 	 * 		not prevent the menu item from being
-	 * 		focused.</p></div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The focused item.</div></li></ul></li></ul>
+	 * 		focused.</p><ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a>  <ul><li><strong>item</strong>
+	 * 		Type: <a>jQuery</a> The focused item.</li></ul></li></ul>
 	 */
 	class QAutocomplete_FocusEvent extends QJqUiEvent {
 		const EventName = 'autocompletefocus';
 	}
 	/**
-	 * <div>Triggered when the suggestion menu is opened or
-	 * 		updated.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the suggestion menu is opened or
+	 * 		updated.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QAutocomplete_OpenEvent extends QJqUiEvent {
 		const EventName = 'autocompleteopen';
 	}
 	/**
-	 * <div>Triggered after a search completes, before the menu is shown. Useful
-	 * 		for local manipulation of suggestion data, where a custom
+	 * Triggered after a search completes, before the menu is shown. Useful for
+	 * 		local manipulation of suggestion data, where a custom
 	 * 		<a><code>source</code></a> option callback is not required. This event is
 	 * 		always triggered when a search completes, even if the menu will not be
 	 * 		shown because there are no results or the Autocomplete is
-	 * 		disabled.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>content</strong></div> <div>Type: <a>Array</a></div>
-	 * 		<div>Contains the response data and can be modified to change the results
-	 * 		that will be shown. This data is already normalized, so if you modify the
-	 * 		data, make sure to include both <code>value</code> and <code>label</code>
-	 * 		properties for each item.</div></li></ul></li></ul>
+	 * 		disabled.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>content</strong> Type: <a>Array</a> Contains the response
+	 * 		data and can be modified to change the results that will be shown. This
+	 * 		data is already normalized, so if you modify the data, make sure to include
+	 * 		both <code>value</code> and <code>label</code> properties for each
+	 * 		item.</li></ul></li></ul>
 	 */
 	class QAutocomplete_ResponseEvent extends QJqUiEvent {
 		const EventName = 'autocompleteresponse';
 	}
 	/**
-	 * <div>Triggered before a search is performed, after
-	 * 		<a><code>minLength</code></a> and <a><code>delay</code></a> are met. If
-	 * 		canceled, then no request will be started and no items
-	 * 		suggested.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered before a search is performed, after <a><code>minLength</code></a>
+	 * 		and <a><code>delay</code></a> are met. If canceled, then no request will be
+	 * 		started and no items suggested.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
 	 */
 	class QAutocomplete_SearchEvent extends QJqUiEvent {
 		const EventName = 'autocompletesearch';
 	}
 	/**
-	 * <div>Triggered when an item is selected from the menu. The default action
-	 * 		is to replace the text field's value with the value of the selected item.
+	 * Triggered when an item is selected from the menu. The default action is to
+	 * 		replace the text field's value with the value of the selected item.
 	 * 						<p>Canceling this event prevents the value from being updated, but does
-	 * 		not prevent the menu from
-	 * 		closing.</p></div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>item</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The selected item.</div></li></ul></li></ul>
+	 * 		not prevent the menu from closing.</p><ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>item</strong> Type: <a>jQuery</a> The selected
+	 * 		item.</li></ul></li></ul>
 	 */
 	class QAutocomplete_SelectEvent extends QJqUiEvent {
 		const EventName = 'autocompleteselect';
@@ -139,31 +127,33 @@
 	 * 
 	 * @see QAutocompleteBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo <div>Which element the menu should be appended to. Override this when the
-	 * 		autocomplete is inside a <code>position: fixed</code> element. Otherwise
-	 * 		the popup menu would still scroll with the page.</div>
-	 * @property boolean $AutoFocus <div>If set to <code>true</code> the first item will automatically be
-	 * 		focused when the menu is shown.</div>
-	 * @property integer $Delay <div>The delay in milliseconds between when a keystroke occurs and when a
-	 * 		search is performed. A zero-delay makes sense for local data (more
-	 * 		responsive), but can produce a lot of load for remote data, while being
-	 * 		less responsive.</div>
-	 * @property boolean $Disabled <div>Disables the autocomplete if set to <code>true</code>.</div>
-	 * @property integer $MinLength <div>The minimum number of characters a user must type before a search is
+	 * @property mixed $AppendTo Which element the menu should be appended to. When the value is
+	 * 		<code>null</code>, the parents of the input field will be checked for a
+	 * 		class of <code>ui-front</code>. If an element with the
+	 * 		<code>ui-front</code> class is found, the menu will be appended to that
+	 * 		element. Regardless of the value, if no element is found, the menu will be
+	 * 		appended to the body.
+	 * @property boolean $AutoFocus If set to <code>true</code> the first item will automatically be focused
+	 * 		when the menu is shown.
+	 * @property integer $Delay The delay in milliseconds between when a keystroke occurs and when a search
+	 * 		is performed. A zero-delay makes sense for local data (more responsive),
+	 * 		but can produce a lot of load for remote data, while being less responsive.
+	 * @property boolean $Disabled Disables the autocomplete if set to <code>true</code>.
+	 * @property integer $MinLength The minimum number of characters a user must type before a search is
 	 * 		performed. Zero is useful for local data with just a few items, but a
 	 * 		higher value should be used when a single character search could match a
-	 * 		few thousand items.</div>
-	 * @property mixed $Position <div>Identifies the position of the suggestions menu in relation to the
+	 * 		few thousand items.
+	 * @property mixed $Position Identifies the position of the suggestions menu in relation to the
 	 * 		associated input element. The <code>of</code> option defaults to the input
 	 * 		element, but you can specify another element to position against. You can
 	 * 		refer to the <a>jQuery UI Position</a> utility for more details about the
-	 * 		various options.</div>
-	 * @property mixed $Source <div>Defines the data to use, must be specified. 				<p>Independent of the
+	 * 		various options.
+	 * @property mixed $Source Defines the data to use, must be specified. 				<p>Independent of the
 	 * 		variant you use, the label is always treated as text. If you want the label
 	 * 		to be treated as html you can use <a>Scott González' html extension</a>.
 	 * 		The demos all focus on different variations of the <code>source</code>
 	 * 		option - look for one that matches your use case, and check out the
-	 * 		code.</p></div><strong>Multiple types
+	 * 		code.</p><strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Array</strong>:  					An array can be
 	 * 		used for local data. There are two supported formats: 					<ul><li>An array
 	 * 		of strings: <code>[ "Choice1", "Choice2" ]</code></li> 						<li>An array
@@ -283,61 +273,58 @@
 
 
 		/**
-		 * <div>Closes the Autocomplete menu. Useful in combination with the
-		 * <a><code>search</code></a> method, to close the open
-		 * menu.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Closes the Autocomplete menu. Useful in combination with the
+		 * <a><code>search</code></a> method, to close the open menu.<ul><li>This
+		 * method does not accept any arguments.</li></ul>
 		 */
 		public function Close() {
 			$this->CallJqUiMethod("close");
 		}
 		/**
-		 * <div>Removes the autocomplete functionality completely. This will return
-		 * the element back to its pre-init state.</div><ul><li><div>This method does
-		 * not accept any arguments.</div></li></ul>
+		 * Removes the autocomplete functionality completely. This will return the
+		 * element back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the autocomplete.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Disables the autocomplete.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the autocomplete.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Enables the autocomplete.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * autocomplete options hash.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current
+		 * autocomplete options hash.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the autocomplete option associated with the
-		 * specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the autocomplete option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -345,23 +332,21 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * autocomplete.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the
+		 * autocomplete.<ul><li><strong>options</strong> Type: <a>Object</a> A map of
+		 * option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <div>Triggers a <a><code>search</code></a> event and invokes the data
-		 * source if the event is not canceled. Can be used by a selectbox-like button
-		 * to open the suggestions when clicked. When invoked with no parameters, the
-		 * current input's value is used. Can be called with an empty string and
+		 * Triggers a <a><code>search</code></a> event and invokes the data source if
+		 * the event is not canceled. Can be used by a selectbox-like button to open
+		 * the suggestions when clicked. When invoked with no parameters, the current
+		 * input's value is used. Can be called with an empty string and
 		 * <code>minLength: 0</code> to display all
-		 * items.</div><ul><li><div><strong>value</strong></div> <div>Type:
-		 * <a>String</a></div> <div></div></li></ul>
+		 * items.<ul><li><strong>value</strong> Type: <a>String</a> </li></ul>
 		 * @param $value
 		 */
 		public function Search($value = null) {

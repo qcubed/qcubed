@@ -27,43 +27,31 @@ require('travis/qcubed.inc.php');
 restore_error_handler();
 
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
+require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QTestControl.class.php');
 
 
-class QHtmlReporter extends HtmlReporter {
-	function paintMethodStart($test_name) {
-		$tempBreadcrumb = $this->getTestList();
-		array_shift($tempBreadcrumb);
-		$breadcrumb = implode("-&gt;", $tempBreadcrumb);
-        echo "\r\n**********************************\r\n";
-		echo "{$breadcrumb} - {$test_name}\r\n";
-        echo "**********************************\r\n";
-	}
-
-	function paintMethodEnd($test_name) {
-		
-	}
-
+class QTravisReporter extends TextReporter {
+	// Do not print passed tests. For travis we want to see only failed tests
 	function paintPass($message) {
 		parent::paintPass($message);
-
-		$messageWithoutTrace = trim(substr($message, 0, strpos($message, " at [")));
-		if (strlen($messageWithoutTrace) == 0) {
-			// don't show empty messages (they appear if debugging is conditionally disabled)
-			return;
-		}
-
-		print "Pass: ";
-
-		print "{$messageWithoutTrace}\n";
 	}
 }
 
+/**
+ * @var QTravisReporter 
+ */
+$rptReporter = null;
+
 class QTestForm extends QForm {
+	public $ctlTest;
 
 	protected function Form_Create() {
+		$this->ctlTest = new QTestControl($this);
+
 		$filesToSkip = array(
 			"QUnitTestCaseBase.php"
 			, "QTestForm.tpl.php"
+			, "QTestControl.class.php"
 		);
 
 		$arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');
@@ -79,10 +67,15 @@ class QTestForm extends QForm {
 		foreach ($arrTests as $className) {
 			$suite->add(new $className($this));
 		}
-		$suite->run(new QHtmlReporter());
+		global $rptReporter;
+		$rptReporter = new QTravisReporter();
+		$suite->run($rptReporter);
 	}
 }
 
-QTestForm::Run('QTestForm', __QCUBED_CORE__ . "/tests/qcubed-unit/QTestForm.tpl.php");
+QTestForm::Run('QTestForm', __DOCROOT__ . "/travis/QTestForm.tpl.php");
+
+// Need to return value greater then zero in a case of an error.
+exit (intval($rptReporter->getFailCount() + $rptReporter->getExceptionCount()));
 
 ?>

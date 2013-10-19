@@ -154,6 +154,11 @@ if (!defined('SERVER_INSTANCE')) {
 			// define ('__JQUERY_BASE__',  'jquery/jquery.min.js');
 			// define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.min.js');
 
+			// The core qcubed javascript file to be used.
+			// In production or as a performance tweak, you may want to use the compressed "_qc_packed.js" library
+			define ('__QCUBED_JS_CORE__',  'qcubed.js');
+			//define ('__QCUBED_JS_CORE__',  '_qc_packed.js');
+
 			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-qcubed/jquery-ui.custom.css');
 
 			// Location of the QCubed-specific web-based development tools, like codegen.php
@@ -197,7 +202,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define('DB_CONNECTION_1', serialize(array(
 				'adapter' => '{db1_adapter}',
 				'server' => '{db1_serverAddress}',
-				'port' => {db1_serverport},
+				'port' => '{db1_serverport}',
 				'database' => '{db1_dbname}',
 				'username' => '{db1_username}',
 				'password' => '{db1_password}',
@@ -209,12 +214,15 @@ if (!defined('SERVER_INSTANCE')) {
 			//			define('DB_CONNECTION_3', serialize(array('adapter'=>'MySqli', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
 			//			define('DB_CONNECTION_4', serialize(array('adapter'=>'MySql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
 			//			define('DB_CONNECTION_5', serialize(array('adapter'=>'PostgreSql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-
+			//			define('DB_CONNECTION_6', serialize(array('adapter' => 'InformixPdo', 'host' => 'maxdata', 'server' => 'maxdata', 'service' => 9088, 'protocol' => 'onsoctcp', 'database' => 'qcubed', 'username' => 'root', 'password' => '', 'profiling' => false)));
 
 			// Maximum index of the DB connections defined by DB_CONNECTION_# constants above
 			// When reading the DB_CONNECTION_# constants, it will only go up to (and including) the index defined here
 			// See ApplicationBase::InitializeDatabaseConnections()
 			define ('MAX_DB_CONNECTION_INDEX', 9);
+
+			/** The value for QApplication::$EncodingType constant */
+			define('__QAPPLICATION_ENCODING_TYPE__', 'UTF-8');
 
 			// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
 			if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))

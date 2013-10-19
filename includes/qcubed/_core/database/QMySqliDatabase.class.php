@@ -142,18 +142,18 @@
 			$this->blnConnectedFlag = false;
 		}
 
-		public function TransactionBegin() {
+		protected function ExecuteTransactionBegin() {
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=0;');
 		}
 
-		public function TransactionCommit() {
+		protected function ExecuteTransactionCommit() {
 			$this->NonQuery('COMMIT;');
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=1;');
 		}
 
-		public function TransactionRollback() {
+		protected function ExecuteTransactionRollBack() {
 			$this->NonQuery('ROLLBACK;');
 			// Set to AutoCommit
 			$this->NonQuery('SET AUTOCOMMIT=1;');
@@ -397,8 +397,77 @@
 				throw new Exception("Invalid Table Description");
 		}
 
+        /**
+         * 
+         * @param string $sql
+         * @return QMySqliDatabaseResult
+         */
 		public function ExplainStatement($sql) {
-			return $this->Query("EXPLAIN " . $sql);
+            // As of MySQL 5.6.3, EXPLAIN provides information about
+            // SELECT, DELETE, INSERT, REPLACE, and UPDATE statements.
+            // Before MySQL 5.6.3, EXPLAIN provides information only about SELECT statements.
+            
+            $objDbResult = $this->Query("select version()");
+            $strDbRow = $objDbResult->FetchRow();
+            $strVersion = QType::Cast($strDbRow[0], QType::String);
+            $strVersionArray = explode('.', $strVersion);
+            $strMajorVersion = null;
+            if (count($strVersionArray) > 0) {
+                $strMajorVersion = $strVersionArray[0];
+            }
+            if (null === $strMajorVersion) {
+                return null;
+            }
+            if (intval($strMajorVersion) > 5) {
+                return $this->Query("EXPLAIN " . $sql);
+            } else if (5 == intval($strMajorVersion)) {
+                $strMinorVersion = null;
+                if (count($strVersionArray) > 1) {
+                    $strMinorVersion = $strVersionArray[1];
+                }
+                if (null === $strMinorVersion) {
+                    return null;
+                }
+                if (intval($strMinorVersion) > 6) {
+                    return $this->Query("EXPLAIN " . $sql);
+                } else if (6 == intval($strMinorVersion)) {
+                    $strSubMinorVersion = null;
+                    if (count($strVersionArray) > 2) {
+                        $strSubMinorVersion = $strVersionArray[2];
+                    }
+                    if (null === $strSubMinorVersion) {
+                        return null;
+                    }
+                    if (!is_integer($strSubMinorVersion)) {
+                        $strSubMinorVersionArray = explode("-", $strSubMinorVersion);
+                        if (count($strSubMinorVersionArray) > 1) {
+                           $strSubMinorVersion = $strSubMinorVersionArray[0];
+                           if (!is_integer($strSubMinorVersion)) {
+                               // Failed to determine the sub-minor version.
+                               return null;
+                           }
+                        } else {
+                            // Failed to determine the sub-minor version.
+                            return null;
+                        }
+                    }
+                    if (intval($strSubMinorVersion) > 2) {
+                        return $this->Query("EXPLAIN " . $sql);
+                    } else {
+                        // We have the version before 5.6.3
+                        // let's check if it is SELECT-only request
+                        if (0 == substr_count($sql, "DELETE") &&
+                            0 == substr_count($sql, "INSERT") &&
+                            0 == substr_count($sql, "REPLACE") &&
+                            0 == substr_count($sql, "UPDATE")
+                        ) {
+                            return $this->Query("EXPLAIN " . $sql);
+                        }
+                    }
+                }
+            }
+            // Return null by default
+			return null;
 		}
 	}
 
