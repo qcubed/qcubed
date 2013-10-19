@@ -108,7 +108,7 @@
 					$objControl = new QDateRangePicker($this);
 					$objControl->AutoRenderChildren = true;
 					$objControl->Input = new QTextBox($objControl);
-					$objControl->Input->CssClass = 'textbox ui-state-default ui-corner-all search_date '.$css;
+					$objControl->Input->CssClass = 'textbox ui-corner-all search_date '.$css;
 					if ($this->blnAutosSearch)
 						$objControl->AddAction(new QDateRangePicker_CloseEvent(), $action);
 					break;
@@ -124,13 +124,13 @@
 				case QType::Integer:
 				case QType::Float:
 					$objControl = new QTextBox($this);
-					$objControl->CssClass = 'textbox ui-state-default ui-corner-all search_num '.$css;
+					$objControl->CssClass = 'textbox ui-corner-all search_num '.$css;
 					if ($this->blnAutosSearch)
 						$objControl->AddAction(new QKeyUpEvent($this->intDelay), $action);
 					break;
 				default:
 					$objControl = new QTextBox($this);
-					$objControl->CssClass = 'textbox ui-state-default ui-corner-all search_txt '.$css;
+					$objControl->CssClass = 'textbox ui-corner-all search_txt '.$css;
 					if ($this->blnAutosSearch)
 						$objControl->AddAction(new QKeyUpEvent($this->intDelay), $action);
 					break;
