@@ -1,9 +1,9 @@
 # Getting started with QCubed
 
-[![Build Status](https://travis-ci.org/qcubed/framework.png?branch=rc-2.2.0)](https://travis-ci.org/qcubed/framework)
+[![Build Status](https://travis-ci.org/qcubed/framework.png?branch=master)](https://travis-ci.org/qcubed/framework)
 
 ## Releases
-**Newest stable release: [version 2.2.0, released on Feb 4, 2013](https://github.com/qcubed/framework/archive/2.2.0.zip)**.
+**Newest stable release: [version 2.2.1, released on May 28, 2013](https://github.com/qcubed/framework/archive/2.2.1.zip)**.
 
 Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads).
 
@@ -52,7 +52,7 @@ The [github wiki](https://github.com/qcubed/framework/wiki) will eventually supe
 
 ## Installation
 
-The installation procedure is described in a detail here: [Installation instructions](https://github.com/qcubed/framework/blob/rc-2.2.0/INSTALL.md "Installation instructions").
+The installation procedure is described in a detail here: [Installation instructions](https://github.com/qcubed/framework/blob/master/INSTALL.md "Installation instructions").
 
 * * *
 
@@ -68,5 +68,5 @@ QCubed was born out of QCodo, and uses jQuery UI libraries.
 
 ## Changelog
 
-The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/rc-2.2.0/CHANGELOG.md "Changelog").
+The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/rc-2.2.1/CHANGELOG.md "Changelog").
 

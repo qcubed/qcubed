@@ -36,7 +36,6 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 	<head>
 		<title>PHP <?php _p($__exc_strType); ?> - <?php _p($__exc_strMessage); ?></title>
 		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/styles.css");</style>
-		<style>header { background: #780000; color: #fff; padding: 10px; }</style>
 	</head>
 	<body>
 		<header>
@@ -120,7 +119,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 							$__exc_StrToDisplay .= sprintf("<span id=\"%s\" style='display:none'>%s</span>", $varCounter, $__exc_StrVarExport);
 							$varCounter++;
 						} catch (Exception $__exc_objExcOnVarDump) {
-							$__exc_StrToDisplay .= sprintf("Fatal error:  Nesting level too deep - recursive dependency?\n", $__exc_objExcOnVarDump->Message);
+							$__exc_StrToDisplay .= sprintf("Fatal error:  Nesting level too deep - recursive dependency?\n", $__exc_objExcOnVarDump->getMessage());
 						}
 					}
 				}

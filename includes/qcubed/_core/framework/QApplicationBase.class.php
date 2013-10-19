@@ -129,7 +129,7 @@
 		 *
 		 * @var string EncodingType
 		 */
-		public static $EncodingType = 'UTF-8';
+		public static $EncodingType = "UTF-8";
 
 		/**
 		 * An array of Database objects, as initialized by QApplication::InitializeDatabaseConnections()
@@ -218,6 +218,8 @@
 		 * @return void
 		 */
 		public static function Initialize() {
+			self::$EncodingType = defined('__QAPPLICATION_ENCODING_TYPE__') ? __QAPPLICATION_ENCODING_TYPE__ : self::$EncodingType;
+
 			$strCacheProviderClass = 'QCacheProviderNoCache';
 			if (defined('CACHE_PROVIDER_CLASS')) {
 				$strCacheProviderClass = CACHE_PROVIDER_CLASS;
@@ -850,10 +852,11 @@
 			QApplication::$JavaScriptArrayLowPriority = array();
 
 			if ($strScript) {
-				if ($blnOutput)
+				if ($blnOutput) {
 					_p($strScript, false);
-				else
+				} else {
 					return $strScript;
+				}
 			}
 			return null;
 		}

@@ -20,6 +20,10 @@ if(!class_exists('Milestone')){
 if(!class_exists('Address')){
     require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/Address.class.php';
 }
+if(!class_exists('TwoKey')){
+    require_once __DOCROOT__ . __SUBDIRECTORY__ .'/includes/model/TwoKey.class.php';
+}
+
 class BasicOrmTests extends QUnitTestCaseBase {    
 	public function testSaveAndDelete() {
 		$objPerson1 = new Person();
@@ -73,6 +77,32 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertEqual($objItems[2]->Project->Name, "State College HR System");
 	}
 	
+	public function testQueryCount() {
+		$someDate = new QDateTime();
+		$someDate->setDate(2006, 1, 1);
+		
+		$intItemCount = Milestone::QueryCount(
+			QQ::GreaterThan(QQN::Milestone()->Project->StartDate, $someDate),
+			// test for single QQClause object
+			// the subject of the https://github.com/qcubed/framework/issues/100 issue #100
+			QQ::Distinct()
+		);
+		
+		$this->assertEqual($intItemCount, 3);
+
+		$intItemCount2 = Milestone::QueryCount(
+			QQ::GreaterThan(QQN::Milestone()->Project->StartDate, $someDate),
+			// test for an array of QQClause objects
+			QQ::Clause(
+				// The QQ::Distinct is used because of the https://github.com/qcubed/framework/issues/231 issue #231
+				QQ::Distinct()
+				, QQ::Distinct()
+			)
+		);
+		
+		$this->assertEqual($intItemCount2, 3);
+	}
+	
 	public function testOrderByCondition() {
 		$objItems = Person::QueryArray(
 			QQ::All(),
@@ -94,20 +124,17 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			QQ::All(),
 			QQ::Clause(
 				QQ::GroupBy(QQN::Project()->Id),
-				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count')
+				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
+				QQ::OrderBy(QQN::Project()->Id)
 			)
 		);
 		
 		$this->assertEqual(sizeof($objItems), 4, "4 projects found");
 		
-		$this->assertEqual($objItems[0]->Name, "ACME Website Redesign", "Project " . $objItems[0]->Name . " found");
-		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 5, "5 team members found for project " . $objItems[0]->Name);
-
-		$this->assertEqual($objItems[1]->Name, "State College HR System", "Project " . $objItems[1]->Name . " found");
-		$this->assertEqual($objItems[1]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for project " . $objItems[1]->Name);	
-
-		$this->assertEqual($objItems[2]->Name, "Blueman Industrial Site Architecture", "Project " . $objItems[2]->Name . " found");
-		$this->assertEqual($objItems[2]->GetVirtualAttribute('team_member_count'), 5, "5 team members found for project " . $objItems[2]->Name);	
+		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 5, "5 team members found for the first project");
+		$this->assertEqual($objItems[1]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for the second project");
+		$this->assertEqual($objItems[2]->GetVirtualAttribute('team_member_count'), 5, "5 team members found for the third project");
+		$this->assertEqual($objItems[3]->GetVirtualAttribute('team_member_count'), 7, "7 team members found for the forth project");
 	}
 	
 	public function testAssociationTables() {
@@ -153,6 +180,14 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		}
 	}
 	
+	public function testLoadAll() {
+		$objPersonArray = Person::LoadAll ();
+		$this->assertEqual(count($objPersonArray), 12, "12 people found.");
+		
+		$objTwoKeyArray = TwoKey::LoadAll();
+		$this->assertEqual(count($objTwoKeyArray), 6, "6 TwoKey items found.");
+	}
+	
 	public function testExpand() {
 		// Test intermediate nodes on expansion
 		 $clauses = QQ::Clause(
@@ -172,6 +207,59 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertTrue(!is_null($objMilestone->Project->ManagerPerson->FirstName), "Person 7 has a name");
 		$this->assertEqual($objMilestone->Project->ManagerPerson->FirstName, "Karen", "Person 7 has first name of Karen");
 		
+		 $clauses = QQ::Clause(
+			QQ::ExpandAsArray (QQN::Project()->PersonAsTeamMember),
+			QQ::OrderBy (QQN::Project()->PersonAsTeamMember->Person->LastName, QQN::Project()->PersonAsTeamMember->Person->FirstName)
+		);
+		
+		// short reach
+		$objProject = 
+			Project::QuerySingle(
+				QQ::Equal (QQN::Project()->Id, 1),
+				$clauses
+			);
+			
+		$objPersonArray = $objProject->_PersonAsTeamMemberArray;
+		$arrNamesOnly = array();
+		foreach ($objPersonArray as $item) {
+			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
+		}
+		
+		$this->assertEqual($arrNamesOnly, array(
+			"Samantha Jones",
+			"Kendall Public",
+			"Alex Smith",
+			"Wendy Smith",
+			"Karen Wolfe")
+				, "Project Team Member expansion is correct");
+		
+		// long reach
+		$clauses = QQ::Clause(
+			QQ::ExpandAsArray (QQN::Milestone()->Project->PersonAsTeamMember),
+			QQ::OrderBy (QQN::Milestone()->Project->PersonAsTeamMember->Person->LastName, QQN::Milestone()->Project->PersonAsTeamMember->Person->FirstName)
+		);
+		
+		
+		$objMilestone = 
+			Milestone::QuerySingle(
+				QQ::Equal (QQN::Milestone()->Id, 1),
+				$clauses
+			);
+			
+		$objPersonArray = $objMilestone->Project->_PersonAsTeamMemberArray;
+		$arrNamesOnly = array();
+		foreach ($objPersonArray as $item) {
+			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
+		}
+		
+		$this->assertEqual($arrNamesOnly, array(
+			"Samantha Jones",
+			"Kendall Public",
+			"Alex Smith",
+			"Wendy Smith",
+			"Karen Wolfe"
+			)
+		, "Long reach Milestone to Project Team Member expansion is correct");
 	}
 	
 	public function testHaving() {
@@ -180,14 +268,15 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			QQ::Clause(
 				QQ::GroupBy(QQN::Project()->Id),
 				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
-				QQ::Having(QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId))
+				QQ::Having(QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId)),
+				QQ::OrderBy(QQN::Project()->Id)
 			)
 		);
 		
 		$this->assertEqual(sizeof($objItems), 2, "2 projects found");
 		
-		$this->assertEqual($objItems[0]->Name, "State College HR System", "Project " . $objItems[0]->Name . " found");
-		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for project " . $objItems[0]->Name);	
+		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for the first project");
+		$this->assertEqual($objItems[1]->GetVirtualAttribute('team_member_count'), 7, "7 team members found for the second project");
 	}
 }
 ?>

@@ -31,6 +31,14 @@
 		
 		<p>In this example, we left <strong>Width</strong> and <strong>Height</strong> unspecified, and we set the padding width
 		and height at 10.</p>
+		
+		<p>Similar to <strong>QImageControl</strong>, a <strong>CacheFolder</strong> property can be specified within
+		the docroot to store rendered images, which will be used in the future
+		if the same image file with the same specifications is rendered again.</p>
+		
+		<p><strong>Note!</strong> It is highly recommended to set the <strong>CacheFolder</strong> property,
+		otherwise, you can easily reach the filesystem maximum file name length limit for the generated image URLs.
+		The limit is set to 255 by default.</p>
 	</div>
 
 <div id="demoZone">

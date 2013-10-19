@@ -28,58 +28,49 @@
 	
 	
 	/**
-	 * <div>Triggered when the draggable is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the draggable is created.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul>
 	 */
 	class QDraggable_CreateEvent extends QJqUiEvent {
 		const EventName = 'dragcreate';
 	}
 	/**
-	 * <div>Triggered while the mouse is moved during the
-	 * 		dragging.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>helper</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the helper that's being
-	 * 		dragged.</div></li> <li><div><strong>position</strong></div> <div>Type:
-	 * 		<a>Object</a></div> <div>Current CSS position of the helper as <code>{ top,
-	 * 		left }</code> object.</div></li> <li><div><strong>offset</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>Current offset position of the helper
-	 * 		as <code>{ top, left }</code> object.</div></li></ul></li></ul>
+	 * Triggered while the mouse is moved during the
+	 * 		dragging.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the helper that's being dragged.</li>
+	 * 		<li><strong>position</strong> Type: <a>Object</a> Current CSS position of
+	 * 		the helper as <code>{ top, left }</code> object.</li>
+	 * 		<li><strong>offset</strong> Type: <a>Object</a> Current offset position of
+	 * 		the helper as <code>{ top, left }</code> object.</li></ul></li></ul>
 	 */
 	class QDraggable_DragEvent extends QJqUiEvent {
 		const EventName = 'drag';
 	}
 	/**
-	 * <div>Triggered when dragging
-	 * 		starts.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>helper</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the helper that's being
-	 * 		dragged.</div></li> <li><div><strong>position</strong></div> <div>Type:
-	 * 		<a>Object</a></div> <div>Current CSS position of the helper as <code>{ top,
-	 * 		left }</code> object.</div></li> <li><div><strong>offset</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>Current offset position of the helper
-	 * 		as <code>{ top, left }</code> object.</div></li></ul></li></ul>
+	 * Triggered when dragging starts.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the helper that's being dragged.</li>
+	 * 		<li><strong>position</strong> Type: <a>Object</a> Current CSS position of
+	 * 		the helper as <code>{ top, left }</code> object.</li>
+	 * 		<li><strong>offset</strong> Type: <a>Object</a> Current offset position of
+	 * 		the helper as <code>{ top, left }</code> object.</li></ul></li></ul>
 	 */
 	class QDraggable_StartEvent extends QJqUiEvent {
 		const EventName = 'dragstart';
 	}
 	/**
-	 * <div>Triggered when dragging
-	 * 		stops.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>helper</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the helper that's being
-	 * 		dragged.</div></li> <li><div><strong>position</strong></div> <div>Type:
-	 * 		<a>Object</a></div> <div>Current CSS position of the helper as <code>{ top,
-	 * 		left }</code> object.</div></li> <li><div><strong>offset</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>Current offset position of the helper
-	 * 		as <code>{ top, left }</code> object.</div></li></ul></li></ul>
+	 * Triggered when dragging stops.<ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the helper that's being dragged.</li>
+	 * 		<li><strong>position</strong> Type: <a>Object</a> Current CSS position of
+	 * 		the helper as <code>{ top, left }</code> object.</li>
+	 * 		<li><strong>offset</strong> Type: <a>Object</a> Current offset position of
+	 * 		the helper as <code>{ top, left }</code> object.</li></ul></li></ul>
 	 */
 	class QDraggable_StopEvent extends QJqUiEvent {
 		const EventName = 'dragstop';
@@ -98,12 +89,11 @@
 	 * 
 	 * @see QDraggableBase
 	 * @package Controls\Base
-	 * @property boolean $AddClasses <div>If set to <code>false</code>, will prevent the
-	 * 		<code>ui-draggable</code> class from being added. This may be desired as a
-	 * 		performance optimization when calling <code>.draggable()</code> on hundreds
-	 * 		of elements.</div>
-	 * @property mixed $AppendTo <div>Which element the draggable helper should be appended to while
-	 * 		dragging.</div><strong>Multiple types
+	 * @property boolean $AddClasses If set to <code>false</code>, will prevent the <code>ui-draggable</code>
+	 * 		class from being added. This may be desired as a performance optimization
+	 * 		when calling <code>.draggable()</code> on hundreds of elements.
+	 * @property mixed $AppendTo Which element the draggable helper should be appended to while
+	 * 		dragging.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>jQuery</strong>: A jQuery object
 	 * 		containing the element to append the helper to.</li>
 	 * 		<li><strong>Element</strong>: The element to append the helper to.</li>
@@ -111,16 +101,16 @@
 	 * 		append the helper to.</li> <li><strong>String</strong>: The string
 	 * 		<code>"parent"</code> will cause the helper to be a sibling of the
 	 * 		draggable.</li></ul>
-	 * @property string $Axis <div>Constrains dragging to either the horizontal (x) or vertical (y) axis.
-	 * 		Possible values: <code>"x"</code>, <code>"y"</code>.</div>
-	 * @property mixed $Cancel <div>Prevents dragging from starting on specified elements.</div>
-	 * @property mixed $ConnectToSortable <div>Allows the draggable to be dropped onto the specified sortables. If
-	 * 		this option is used, a draggable can be dropped onto a sortable list and
-	 * 		then becomes part of it. Note: The <a><code>helper</code></a> option must
-	 * 		be set to <code>"clone"</code> in order to work flawlessly. Requires the
-	 * 		<a>jQuery UI Sortable plugin</a> to be included.</div>
-	 * @property mixed $Containment <div>Constrains dragging to within the bounds of the specified element or
-	 * 		region.</div><strong>Multiple types
+	 * @property string $Axis Constrains dragging to either the horizontal (x) or vertical (y) axis.
+	 * 		Possible values: <code>"x"</code>, <code>"y"</code>.
+	 * @property mixed $Cancel Prevents dragging from starting on specified elements.
+	 * @property mixed $ConnectToSortable Allows the draggable to be dropped onto the specified sortables. If this
+	 * 		option is used, a draggable can be dropped onto a sortable list and then
+	 * 		becomes part of it. Note: The <a><code>helper</code></a> option must be set
+	 * 		to <code>"clone"</code> in order to work flawlessly. Requires the <a>jQuery
+	 * 		UI Sortable plugin</a> to be included.
+	 * @property mixed $Containment Constrains dragging to within the bounds of the specified element or
+	 * 		region.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Selector</strong>: The draggable element
 	 * 		will be contained to the bounding box of the first element found by the
 	 * 		selector. If no element is found, no containment will be set.</li>
@@ -129,78 +119,71 @@
 	 * 		Possible values: <code>"parent"</code>, <code>"document"</code>,
 	 * 		<code>"window"</code>.</li> <li><strong>Array</strong>: An array defining a
 	 * 		bounding box in the form <code>[ x1, y1, x2, y2 ]</code>.</li></ul>
-	 * @property string $Cursor <div>The CSS cursor during the drag operation.</div>
-	 * @property mixed $CursorAt <div>Sets the offset of the dragging helper relative to the mouse cursor.
+	 * @property string $Cursor The CSS cursor during the drag operation.
+	 * @property mixed $CursorAt Sets the offset of the dragging helper relative to the mouse cursor.
 	 * 		Coordinates can be given as a hash using a combination of one or two keys:
-	 * 		<code>{ top, left, right, bottom }</code>.</div>
-	 * @property integer $Delay <div>Time in milliseconds after mousedown until dragging should start. This
-	 * 		option can be used to prevent unwanted drags when clicking on an
-	 * 		element.</div>
-	 * @property boolean $Disabled <div>Disables the draggable if set to <code>true</code>.</div>
-	 * @property integer $Distance <div>Distance in pixels after mousedown the mouse must move before dragging
+	 * 		<code>{ top, left, right, bottom }</code>.
+	 * @property integer $Delay Time in milliseconds after mousedown until dragging should start. This
+	 * 		option can be used to prevent unwanted drags when clicking on an element.
+	 * @property boolean $Disabled Disables the draggable if set to <code>true</code>.
+	 * @property integer $Distance Distance in pixels after mousedown the mouse must move before dragging
 	 * 		should start. This option can be used to prevent unwanted drags when
-	 * 		clicking on an element.</div>
-	 * @property array $Grid <div>Snaps the dragging helper to a grid, every x and y pixels. The array
-	 * 		must be of the form <code>[ x, y ]</code>.</div>
-	 * @property mixed $Handle <div>If specified, restricts dragging from starting unless the mousedown
-	 * 		occurs on the specified element(s).</div>
-	 * @property mixed $Helper <div>Allows for a helper element to be used for dragging
-	 * 		display.</div><strong>Multiple types
+	 * 		clicking on an element.
+	 * @property array $Grid Snaps the dragging helper to a grid, every x and y pixels. The array must
+	 * 		be of the form <code>[ x, y ]</code>.
+	 * @property mixed $Handle If specified, restricts dragging from starting unless the mousedown occurs
+	 * 		on the specified element(s).
+	 * @property mixed $Helper Allows for a helper element to be used for dragging
+	 * 		display.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>String</strong>: If set to
 	 * 		<code>"clone"</code>, then the element will be cloned and the clone will be
 	 * 		dragged.</li> <li><strong>Function</strong>: A function that will return a
 	 * 		DOMElement to use while dragging.</li></ul>
-	 * @property mixed $IframeFix <div>Prevent iframes from capturing the mousemove events during a drag.
-	 * 		Useful in combination with the <a><code>cursorAt</code></a> option, or in
-	 * 		any case where the mouse cursor may not be over the
-	 * 		helper.</div><strong>Multiple types
+	 * @property mixed $IframeFix Prevent iframes from capturing the mousemove events during a drag. Useful
+	 * 		in combination with the <a><code>cursorAt</code></a> option, or in any case
+	 * 		where the mouse cursor may not be over the helper.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: When set to
 	 * 		<code>true</code>, transparent overlays will be placed over all iframes on
 	 * 		the page.</li> <li><strong>Selector</strong>: Any iframes matching the
 	 * 		selector will be covered by transparent overlays.</li></ul>
-	 * @property integer $Opacity <div>Opacity for the helper while being dragged.</div>
-	 * @property boolean $RefreshPositions <div>If set to <code>true</code>, all droppable positions are calculated on
+	 * @property integer $Opacity Opacity for the helper while being dragged.
+	 * @property boolean $RefreshPositions If set to <code>true</code>, all droppable positions are calculated on
 	 * 		every mousemove. 				<em>Caution: This solves issues on highly dynamic
-	 * 		pages, but dramatically decreases performance.</em></div>
-	 * @property mixed $Revert <div>Whether the element should revert to its start position when dragging
-	 * 		stops.</div><strong>Multiple types
+	 * 		pages, but dramatically decreases performance.</em>
+	 * @property mixed $Revert Whether the element should revert to its start position when dragging
+	 * 		stops.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: If set to
 	 * 		<code>true</code> the element will always revert.</li>
 	 * 		<li><strong>String</strong>: If set to <code>"invalid"</code>, revert will
 	 * 		only occur if the draggable has not been dropped on a droppable. For
 	 * 		<code>"valid"</code>, it's the other way around.</li></ul>
-	 * @property integer $RevertDuration <div>The duration of the revert animation, in milliseconds. Ignored if the
-	 * 		<a><code>revert</code></a> option is <code>false</code>.</div>
-	 * @property string $Scope <div>Used to group sets of draggable and droppable items, in addition to
+	 * @property integer $RevertDuration The duration of the revert animation, in milliseconds. Ignored if the
+	 * 		<a><code>revert</code></a> option is <code>false</code>.
+	 * @property string $Scope Used to group sets of draggable and droppable items, in addition to
 	 * 		droppable's <a><code>accept</code></a> option. A draggable with the same
-	 * 		<code>scope</code> value as a droppable will be accepted by the
-	 * 		droppable.</div>
-	 * @property boolean $Scroll <div>If set to <code>true</code>, container auto-scrolls while
-	 * 		dragging.</div>
-	 * @property integer $ScrollSensitivity <div>Distance in pixels from the edge of the viewport after which the
-	 * 		viewport should scroll. Distance is relative to pointer, not the draggable.
-	 * 		Ignored if the <a><code>scroll</code></a> option is
-	 * 		<code>false</code>.</div>
-	 * @property integer $ScrollSpeed <div>The speed at which the window should scroll once the mouse pointer
-	 * 		gets within the <a><code>scrollSensitivity</code></a> distance. Ignored if
-	 * 		the <a><code>scroll</code></a> option is <code>false</code>.</div>
-	 * @property mixed $Snap <div>Whether the element should snap to other
-	 * 		elements.</div><strong>Multiple types
+	 * 		<code>scope</code> value as a droppable will be accepted by the droppable.
+	 * @property boolean $Scroll If set to <code>true</code>, container auto-scrolls while dragging.
+	 * @property integer $ScrollSensitivity Distance in pixels from the edge of the viewport after which the viewport
+	 * 		should scroll. Distance is relative to pointer, not the draggable. Ignored
+	 * 		if the <a><code>scroll</code></a> option is <code>false</code>.
+	 * @property integer $ScrollSpeed The speed at which the window should scroll once the mouse pointer gets
+	 * 		within the <a><code>scrollSensitivity</code></a> distance. Ignored if the
+	 * 		<a><code>scroll</code></a> option is <code>false</code>.
+	 * @property mixed $Snap Whether the element should snap to other elements.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: When set to
 	 * 		<code>true</code>, the element will snap to all other draggable
 	 * 		elements.</li> <li><strong>Selector</strong>: A selector specifying which
 	 * 		elements to snap to.</li></ul>
-	 * @property string $SnapMode <div>Determines which edges of snap elements the draggable will snap to.
-	 * 		Ignored if the <a><code>snap</code></a> option is <code>false</code>.
-	 * 		Possible values: <code>"inner"</code>, <code>"outer"</code>,
-	 * 		<code>"both"</code>.</div>
-	 * @property integer $SnapTolerance <div>The distance in pixels from the snap element edges at which snapping
-	 * 		should occur. Ignored if the <a><code>snap</code></a> option is
-	 * 		<code>false</code>.</div>
-	 * @property mixed $Stack <div>Controls the z-index of the set of elements that match the selector,
-	 * 		always brings the currently dragged item to the front. Very useful in
-	 * 		things like window managers.</div>
-	 * @property integer $ZIndex <div>Z-index for the helper while being dragged.</div>
+	 * @property string $SnapMode Determines which edges of snap elements the draggable will snap to. Ignored
+	 * 		if the <a><code>snap</code></a> option is <code>false</code>. Possible
+	 * 		values: <code>"inner"</code>, <code>"outer"</code>, <code>"both"</code>.
+	 * @property integer $SnapTolerance The distance in pixels from the snap element edges at which snapping should
+	 * 		occur. Ignored if the <a><code>snap</code></a> option is
+	 * 		<code>false</code>.
+	 * @property mixed $Stack Controls the z-index of the set of elements that match the selector, always
+	 * 		brings the currently dragged item to the front. Very useful in things like
+	 * 		window managers.
+	 * @property integer $ZIndex Z-index for the helper while being dragged.
 	 */
 
 	abstract class QDraggableGen extends QControl	{
@@ -347,51 +330,50 @@
 
 
 		/**
-		 * <div>Removes the draggable functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the draggable functionality completely. This will return the
+		 * element back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod("destroy");
 		}
 		/**
-		 * <div>Disables the draggable.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Disables the draggable.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
 			$this->CallJqUiMethod("disable");
 		}
 		/**
-		 * <div>Enables the draggable.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Enables the draggable.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod("enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
 			$this->CallJqUiMethod("option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * draggable options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current
+		 * draggable options hash.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod("option");
 		}
 		/**
-		 * <div>Sets the value of the draggable option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the draggable option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -399,10 +381,8 @@
 			$this->CallJqUiMethod("option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * draggable.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the draggable.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
