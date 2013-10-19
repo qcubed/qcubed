@@ -1,7 +1,96 @@
-///////////////////////////////
+<?php 
+	// Preliminary calculations and helper routines here
+
+	$blnImmediateExpansions = $objTable->HasImmediateArrayExpansions();
+	$blnExtendedExpansions = $objTable->HasExtendedArrayExpansions($objCodeGen);
+
+	if (count($objTable->PrimaryKeyColumnArray) > 1 &&
+			$blnImmediateExpansions) {
+		throw QCallerException ("Multi-key table with array expansion not supported.");
+	}
+	
+		
+?>///////////////////////////////
 		// INSTANTIATION-RELATED METHODS
 		///////////////////////////////
 
+		/**
+		 * Do a possible array expansion on the given node. If the node is an ExpandAsArray node,
+		 * it will add to the corresponding array in the object. Otherwise, it will follow the node
+		 * so that any leaf expansions can be handled.
+		 *  
+		 * @param DatabaseRowBase $objDbRow
+		 * @param QQBaseNode $objChildNode
+		 * @param QBaseClass $objPreviousItem
+		 * @param string[] $strColumnAliasArray
+		 */
+		
+		public static function ExpandArray ($objDbRow, $strAliasPrefix, $objNode, $objPreviousItemArray, $strColumnAliasArray) {
+			if (!$objNode->ChildNodeArray) {
+				return false;
+			}
+			
+			$strAlias = $strAliasPrefix . '<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>';
+			$strColumnAlias = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			$blnExpanded = false;
+			
+			foreach ($objPreviousItemArray as $objPreviousItem) {
+				if ($objPreviousItem-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?> != $objDbRow->GetColumn($strColumnAlias, '<?php echo $objTable->PrimaryKeyColumnArray[0]->DbType  ?>')) {
+					continue;
+				}
+				
+				foreach ($objNode->ChildNodeArray as $objChildNode) {	
+					$strPropName = $objChildNode->_PropertyName;
+					$strClassName = $objChildNode->_ClassName;
+					$blnExpanded = false;
+					$strLongAlias = $objChildNode->ExtendedAlias();
+				
+					if ($objChildNode->ExpandAsArray) {
+						$strVarName = '_obj' . $strPropName . 'Array';
+						if (null === $objPreviousItem->$strVarName) {
+							$objPreviousItem->$strVarName = array();
+						}
+						if ($intPreviousChildItemCount = count($objPreviousItem->$strVarName)) {
+							$objPreviousChildItems = $objPreviousItem->$strVarName;
+							if ($objChildNode->_Type == "association") {
+								$objChildNode = $objChildNode->FirstChild();
+							}
+							$nextAlias = $objChildNode->ExtendedAlias() . '__';
+							
+							$objChildItem = call_user_func(array ($strClassName, 'InstantiateDbRow'), $objDbRow, $nextAlias, $objChildNode, $objPreviousChildItems, $strColumnAliasArray);
+							if ($objChildItem) {
+								$objPreviousItem->{$strVarName}[] = $objChildItem;
+								$blnExpanded = true;
+							} elseif ($objChildItem === false) {
+								$blnExpanded = true;
+							}
+						}
+					} else {
+	
+						// Follow single node if keys match
+						$nodeType = $objChildNode->_Type;
+						if ($nodeType == 'reverse_reference' || $nodeType == 'association') {
+							$strVarName = '_obj' . $strPropName;
+						} else {	
+							$strVarName = 'obj' . $strPropName;
+						}
+						
+						if (null === $objPreviousItem->$strVarName) {
+							return false;
+						}
+											
+						$objPreviousChildItems = array($objPreviousItem->$strVarName);
+						$blnResult = call_user_func(array ($strClassName, 'ExpandArray'), $objDbRow, $strLongAlias . '__', $objChildNode, $objPreviousChildItems, $strColumnAliasArray);
+		
+						if ($blnResult) {
+							$blnExpanded = true;
+						}		
+					}
+				}	
+			}
+			return $blnExpanded;
+		}
+		
 		/**
 		 * Instantiate a <?php echo $objTable->ClassName  ?> from a Database Row.
 		 * Takes in an optional strAliasPrefix, used in case another Object::InstantiateDbRow
@@ -9,94 +98,40 @@
 		 * early binding on referenced objects.
 		 * @param DatabaseRowBase $objDbRow
 		 * @param string $strAliasPrefix
-		 * @param string $strExpandAsArrayNodes
+		 * @param QQBaseNode $objExpandAsArrayNode
 		 * @param QBaseClass $arrPreviousItem
 		 * @param string[] $strColumnAliasArray
-		 * @return <?php echo $objTable->ClassName  ?>
-
+		 * @return mixed Either a <?php echo $objTable->ClassName  ?>, or false to indicate the dbrow was used in an expansion, or null to indicate that this leaf is a duplicate.
 		*/
-		public static function InstantiateDbRow($objDbRow, $strAliasPrefix = null, $strExpandAsArrayNodes = null, $arrPreviousItems = null, $strColumnAliasArray = array()) {
+		public static function InstantiateDbRow($objDbRow, $strAliasPrefix = null, $objExpandAsArrayNode = null, $objPreviousItemArray = null, $strColumnAliasArray = array()) {
 			// If blank row, return null
 			if (!$objDbRow) {
 				return null;
 			}
+			
+<?php if ($objTable->PrimaryKeyColumnArray)  { // Optimize top level accesses?>
+			if (empty ($strAliasPrefix) && $objPreviousItemArray) {
+				$strColumnAlias = !empty($strColumnAliasArray['<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>']) ? $strColumnAliasArray['<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>'] : '<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>';
+				$key = $objDbRow->GetColumn($strColumnAlias, '<?php echo $objTable->PrimaryKeyColumnArray[0]->DbType  ?>');
+				$objPreviousItemArray = (!empty ($objPreviousItemArray[$key]) ? $objPreviousItemArray[$key] : null);
+			}
+<?php } ?>			
+			
 <?php 
-	$intCount = count($objTable->ManyToManyReferenceArray);
-	foreach ($objTable->ReverseReferenceArray as $objReverseReference)
-		if (!$objReverseReference->Unique)
-			$intCount++;
-?><?php if ($intCount && (count($objTable->PrimaryKeyColumnArray) == 1)) { ?>
-			// See if we're doing an array expansion on the previous item
-			$strAlias = $strAliasPrefix . '<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>';
-			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			if (($strExpandAsArrayNodes) && is_array($arrPreviousItems) && count($arrPreviousItems)) {
-				foreach ($arrPreviousItems as $objPreviousItem) {
-					if ($objPreviousItem-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?> == $objDbRow->GetColumn($strAliasName, '<?php echo $objTable->PrimaryKeyColumnArray[0]->DbType  ?>')) {
-						// We are.  Now, prepare to check for ExpandAsArray clauses
-						$blnExpandedViaArray = false;
-						if (!$strAliasPrefix)
-							$strAliasPrefix = '<?php echo $objTable->Name  ?>__';
-
-<?php foreach ($objTable->ManyToManyReferenceArray as $objReference) { ?>
-						// Expanding many-to-many references: <?php echo $objReference->ObjectDescription  ?>
-
-						$strAlias = $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objReference->OppositeColumn  ?>__<?php echo $objCodeGen->GetTable($objReference->AssociatedTable)->PrimaryKeyColumnArray[0]->Name  ?>';
-						$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-<?php 
-	$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
-	$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
+	if ($blnImmediateExpansions || $blnExtendedExpansions) { 
 ?>
-						if ((array_key_exists($strAlias, $strExpandAsArrayNodes)) &&
-							(!is_null($objDbRow->GetColumn($strAliasName)))) {
-							if(null === $objPreviousItem-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array)
-								$objPreviousItem-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array = array();
-							if ($intPreviousChildItemCount = count($objPreviousItem-><?php echo  $varPrefix . $objReference->ObjectDescription  ?>Array)) {
-								$objPreviousChildItems = $objPreviousItem-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array;
-								$objChildItem = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objReference->OppositeColumn  ?>__', $strExpandAsArrayNodes, $objPreviousChildItems, $strColumnAliasArray);
-								if ($objChildItem) {
-									$objPreviousItem-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array[] = $objChildItem;
-								}
-							} else {
-								$objPreviousItem-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array[] = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objReference->OppositeColumn  ?>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-							}
-							$blnExpandedViaArray = true;
-						}
+			// See if we're doing an array expansion on the previous item
+			if ($objExpandAsArrayNode && 
+					is_array($objPreviousItemArray) && 
+					count($objPreviousItemArray)) {
 
-<?php } ?>
-
-
-<?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
-						// Expanding reverse references: <?php echo $objReference->ObjectDescription  ?>
-
-						$strAlias = $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objCodeGen->GetTable($objReference->Table)->PrimaryKeyColumnArray[0]->Name  ?>';
-						$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-						if ((array_key_exists($strAlias, $strExpandAsArrayNodes)) &&
-							(!is_null($objDbRow->GetColumn($strAliasName)))) {
-							if(null === $objPreviousItem->_obj<?php echo $objReference->ObjectDescription  ?>Array)
-								$objPreviousItem->_obj<?php echo $objReference->ObjectDescription  ?>Array = array();
-							if ($intPreviousChildItemCount = count($objPreviousItem->_obj<?php echo $objReference->ObjectDescription  ?>Array)) {
-								$objPreviousChildItems = $objPreviousItem->_obj<?php echo $objReference->ObjectDescription  ?>Array;
-								$objChildItem = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__', $strExpandAsArrayNodes, $objPreviousChildItems, $strColumnAliasArray);
-								if ($objChildItem) {
-									$objPreviousItem->_obj<?php echo $objReference->ObjectDescription  ?>Array[] = $objChildItem;
-								}
-							} else {
-								$objPreviousItem->_obj<?php echo $objReference->ObjectDescription  ?>Array[] = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-							}
-							$blnExpandedViaArray = true;
-						}
-
-<?php } ?><?php } ?>
-						// Either return false to signal array expansion, or check-to-reset the Alias prefix and move on
-						if ($blnExpandedViaArray) {
-							return false;
-						} else if ($strAliasPrefix == '<?php echo $objTable->Name  ?>__') {
-							$strAliasPrefix = null;
-						}
-					}
+				if (<?php echo $objTable->ClassName  ?>::ExpandArray ($objDbRow, $strAliasPrefix, $objExpandAsArrayNode, $objPreviousItemArray, $strColumnAliasArray)) {
+					return false; // db row was used but no new object was created
 				}
 			}
-<?php } ?>
+<?php 
+	} // if 
+?>
 
 			// Create a new instance of the <?php echo $objTable->ClassName  ?> object
 			$objToReturn = new <?php echo $objTable->ClassName  ?>();
@@ -104,51 +139,25 @@
 
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 			$strAlias = $strAliasPrefix . '<?php echo $objColumn->Name  ?>';
-			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
 			$objToReturn-><?php echo $objColumn->VariableName  ?> = $objDbRow->GetColumn($strAliasName, '<?php echo $objColumn->DbType  ?>');
 <?php if (($objColumn->PrimaryKey) && (!$objColumn->Identity)) { ?>
 			$objToReturn->__<?php echo $objColumn->VariableName  ?> = $objDbRow->GetColumn($strAliasName, '<?php echo $objColumn->DbType  ?>');
 <?php } ?>
-<?php } ?><?php GO_BACK(1); ?>
+<?php } ?>
 
-
-			if (isset($arrPreviousItems) && is_array($arrPreviousItems)) {
-				foreach ($arrPreviousItems as $objPreviousItem) {
+			if (isset($objPreviousItemArray) && is_array($objPreviousItemArray)) {
+				foreach ($objPreviousItemArray as $objPreviousItem) {
 <?php foreach ($objTable->PrimaryKeyColumnArray as $col) { ?>
 					if ($objToReturn-><?php echo $col->PropertyName  ?> != $objPreviousItem-><?php echo $col->PropertyName  ?>) {
 						continue;
 					}
-<?php foreach ($objTable->ManyToManyReferenceArray as $objReference) { ?>
-<?php 
-	$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
-	$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
-?>
-					$prevCnt = count($objPreviousItem-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array);
-					$cnt = count($objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array);
-					if ($prevCnt != $cnt)
-						continue;
-					if ($prevCnt == 0 || $cnt == 0 || !array_diff($objPreviousItem-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array, $objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array)) {
-						continue;
-					}
-
 <?php } ?>
-<?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
-					$prevCnt = count($objPreviousItem->_obj<?php echo $objReference->ObjectDescription  ?>Array);
-					$cnt = count($objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array);
-					if ($prevCnt != $cnt)
-					    continue;
-					if ($prevCnt == 0 || $cnt == 0 || !array_diff($objPreviousItem->_obj<?php echo $objReference->ObjectDescription  ?>Array, $objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array)) {
-						continue;
-					}
-
-<?php } ?><?php } ?>
-<?php } ?>
-
-					// complete match - all primary key columns are the same
-					return null;
+					// this is a duplicate leaf in a complex join
+					return null; // indicates no object created and the db row has not been used
 				}
 			}
-
+			
 			// Instantiate Virtual Attributes
 			$strVirtualPrefix = $strAliasPrefix . '__';
 			$strVirtualPrefixLength = strlen($strVirtualPrefix);
@@ -157,7 +166,14 @@
 					$objToReturn->__strVirtualAttributeArray[substr($strColumnName, $strVirtualPrefixLength)] = $mixValue;
 			}
 
+
 			// Prepare to Check for Early/Virtual Binding
+
+			$objExpansionAliasArray = array();
+			if ($objExpandAsArrayNode) {
+				$objExpansionAliasArray = $objExpandAsArrayNode->ChildNodeArray;
+			}
+
 			if (!$strAliasPrefix)
 				$strAliasPrefix = '<?php echo $objTable->Name  ?>__';
 
@@ -165,28 +181,32 @@
 <?php if ($objColumn->Reference && !$objColumn->Reference->IsType) { ?>
 			// Check for <?php echo $objColumn->Reference->PropertyName  ?> Early Binding
 			$strAlias = $strAliasPrefix . '<?php echo $objColumn->Name  ?>__<?php echo $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->Name  ?>';
-			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			if (!is_null($objDbRow->GetColumn($strAliasName)))
-				$objToReturn-><?php echo $objColumn->Reference->VariableName  ?> = <?php echo $objColumn->Reference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo $objColumn->Name  ?>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-
+			$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			if (!is_null($objDbRow->GetColumn($strAliasName))) {
+				$objExpansionNode = (empty($objExpansionAliasArray['<?php echo $objColumn->Name ?>']) ? null : $objExpansionAliasArray['<?php echo $objColumn->Name ?>']);
+				$objToReturn-><?php echo $objColumn->Reference->VariableName ?> = <?php echo $objColumn->Reference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo $objColumn->Name  ?>__', $objExpansionNode, null, $strColumnAliasArray);
+			}
 <?php } ?>
 <?php } ?>
 
 <?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if ($objReference->Unique) { ?>
 			// Check for <?php echo $objReference->ObjectDescription  ?> Unique ReverseReference Binding
 			$strAlias = $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objCodeGen->GetTable($objReference->Table)->PrimaryKeyColumnArray[0]->Name  ?>';
-			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
 			if ($objDbRow->ColumnExists($strAliasName)) {
-				if (!is_null($objDbRow->GetColumn($strAliasName)))
-					$objToReturn->obj<?php echo $objReference->ObjectDescription  ?> = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-				else
+				if (!is_null($objDbRow->GetColumn($strAliasName))) {
+					$objExpansionNode = (empty($objExpansionAliasArray['<?php echo strtolower($objReference->ObjectDescription) ?>']) ? null : $objExpansionAliasArray['<?php echo strtolower($objReference->ObjectDescription) ?>']);
+					$objToReturn->obj<?php echo $objReference->ObjectDescription  ?> = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__', $objExpansionNode, null, $strColumnAliasArray);
+				}
+				else {
 					// We ATTEMPTED to do an Early Bind but the Object Doesn't Exist
 					// Let's set to FALSE so that the object knows not to try and re-query again
 					$objToReturn->obj<?php echo $objReference->ObjectDescription  ?> = false;
+				}
 			}
 
 <?php } ?><?php } ?>
-
+				
 <?php foreach ($objTable->ManyToManyReferenceArray as $objReference) { ?>
 <?php 
 	$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
@@ -194,15 +214,18 @@
 ?>
 			// Check for <?php echo $objReference->ObjectDescription  ?> Virtual Binding
 			$strAlias = $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objReference->OppositeColumn  ?>__<?php echo $objCodeGen->GetTable($objReference->AssociatedTable)->PrimaryKeyColumnArray[0]->Name  ?>';
-			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			$blnExpanded = $strExpandAsArrayNodes && array_key_exists($strAlias, $strExpandAsArrayNodes);
-			if ($blnExpanded && null === $objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array)
-				$objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array = array();
+			$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			$objExpansionNode = (empty($objExpansionAliasArray['<?php echo strtolower($objReference->ObjectDescription) ?>']) ? null : $objExpansionAliasArray['<?php echo strtolower($objReference->ObjectDescription) ?>']);
+			$blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
+			if ($blnExpanded && null === $objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array) {
+				$objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array = array();
+			}
 			if (!is_null($objDbRow->GetColumn($strAliasName))) {
-				if ($blnExpanded)
-					$objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?>Array[] = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objReference->OppositeColumn  ?>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-				else
-					$objToReturn-><?php echo $varPrefix . $objReference->ObjectDescription  ?> = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objReference->OppositeColumn  ?>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
+				if ($blnExpanded) {
+					$objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array[] = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objReference->OppositeColumn  ?>__', $objExpansionNode, null, $strColumnAliasArray);
+				} elseif (is_null($objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>)) {
+					$objToReturn->_obj<?php echo $objReference->ObjectDescription  ?> = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objReference->OppositeColumn  ?>__', $objExpansionNode, null, $strColumnAliasArray);
+				}
 			}
 
 <?php } ?>
@@ -210,29 +233,31 @@
 <?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
 			// Check for <?php echo $objReference->ObjectDescription  ?> Virtual Binding
 			$strAlias = $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__<?php echo $objCodeGen->GetTable($objReference->Table)->PrimaryKeyColumnArray[0]->Name  ?>';
-			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			$blnExpanded = $strExpandAsArrayNodes && array_key_exists($strAlias, $strExpandAsArrayNodes);
+			$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
+			$objExpansionNode = (empty($objExpansionAliasArray['<?php echo strtolower($objReference->ObjectDescription) ?>']) ? null : $objExpansionAliasArray['<?php echo strtolower($objReference->ObjectDescription) ?>']);
+			$blnExpanded = ($objExpansionNode && $objExpansionNode->ExpandAsArray);
 			if ($blnExpanded && null === $objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array)
 				$objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array = array();
 			if (!is_null($objDbRow->GetColumn($strAliasName))) {
-				if ($blnExpanded)
-					$objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array[] = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
-				else
-					$objToReturn->_obj<?php echo $objReference->ObjectDescription  ?> = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__', $strExpandAsArrayNodes, null, $strColumnAliasArray);
+				if ($blnExpanded) {
+					$objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>Array[] = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__', $objExpansionNode, null, $strColumnAliasArray);
+				} elseif (is_null($objToReturn->_obj<?php echo $objReference->ObjectDescription  ?>)) {
+					$objToReturn->_obj<?php echo $objReference->ObjectDescription  ?> = <?php echo $objReference->VariableType  ?>::InstantiateDbRow($objDbRow, $strAliasPrefix . '<?php echo strtolower($objReference->ObjectDescription)  ?>__', $objExpansionNode, null, $strColumnAliasArray);
+				}
 			}
 
 <?php } ?><?php } ?>
 			return $objToReturn;
 		}
-
+		
 		/**
 		 * Instantiate an array of <?php echo $objTable->ClassNamePlural  ?> from a Database Result
 		 * @param DatabaseResultBase $objDbResult
-		 * @param string $strExpandAsArrayNodes
+		 * @param QQBaseNode $objExpandAsArrayNode
 		 * @param string[] $strColumnAliasArray
 		 * @return <?php echo $objTable->ClassName  ?>[]
 		 */
-		public static function InstantiateDbResult(QDatabaseResultBase $objDbResult, $strExpandAsArrayNodes = null, $strColumnAliasArray = null) {
+		public static function InstantiateDbResult(QDatabaseResultBase $objDbResult, $objExpandAsArrayNode = null, $strColumnAliasArray = null) {
 			$objToReturn = array();
 
 			if (!$strColumnAliasArray)
@@ -243,12 +268,19 @@
 				return $objToReturn;
 
 			// Load up the return array with each row
-			if ($strExpandAsArrayNodes) {
+			if ($objExpandAsArrayNode) {
 				$objToReturn = array();
+				$objPrevItemArray = array();
 				while ($objDbRow = $objDbResult->GetNextRow()) {
-					$objItem = <?php echo $objTable->ClassName  ?>::InstantiateDbRow($objDbRow, null, $strExpandAsArrayNodes, $objToReturn, $strColumnAliasArray);
+					$objItem = <?php echo $objTable->ClassName  ?>::InstantiateDbRow($objDbRow, null, $objExpandAsArrayNode, $objPrevItemArray, $strColumnAliasArray);
 					if ($objItem) {
 						$objToReturn[] = $objItem;
+<?php if ($objTable->PrimaryKeyColumnArray)  {?>
+						$objPrevItemArray[$objItem-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName ?>][] = $objItem;
+<?php } else { ?>
+						$objPrevItemArray[] = $objItem;
+		
+<?php } ?>		
 					}
 				}
 			} else {
@@ -279,9 +311,12 @@
 			$strColumnAliasArray = $objDbResult->QueryBuilder->ColumnAliasArray;
 			if (!$strColumnAliasArray) $strColumnAliasArray = array();
 
-			// Pull Expansions (if applicable)
-			$strExpandAsArrayNodes = $objDbResult->QueryBuilder->ExpandAsArrayNodes;
+			// Pull Expansions
+			$objExpandAsArrayNode = $objDbResult->QueryBuilder->ExpandAsArrayNode;
+			if (!empty ($objExpandAsArrayNode)) {
+				throw new QCallerException ("Cannot use InstantiateCursor with ExpandAsArray");
+			}
 
 			// Load up the return result with a row and return it
-			return <?php echo $objTable->ClassName  ?>::InstantiateDbRow($objDbRow, null, $strExpandAsArrayNodes, null, $strColumnAliasArray);
+			return <?php echo $objTable->ClassName  ?>::InstantiateDbRow($objDbRow, null, null, null, $strColumnAliasArray);
 		}

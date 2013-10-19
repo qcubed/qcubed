@@ -32,6 +32,10 @@
 		protected $strTableName;
 		protected $strPrimaryKey;
 		protected $strClassName;
+		
+		// used by expansion nodes
+		protected $blnExpandAsArray;
+		protected $objChildNodeArray;
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -55,6 +59,12 @@
 					return $this->strClassName;
 				case '_PrimaryKeyNode':
 					return null;
+					
+				case 'ExpandAsArray':
+					return $this->blnExpandAsArray;
+				case 'ChildNodeArray':
+					return $this->objChildNodeArray;
+					
 				default:
 					try {
 						return parent::__get($strName);
@@ -79,6 +89,15 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+					
+				case 'ExpandAsArray':
+					try {
+						return ($this->blnExpandAsArray = QType::Cast($mixValue, QType::Boolean));
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+										
 				default:
 					try {
 						return parent::__set($strName, $mixValue);
@@ -91,6 +110,61 @@
 
 		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQSelect $objSelect = null);
 		abstract public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null);
+		
+		/**
+		 * Merges a node tree into this node, building the child nodes. The node being received
+		 * is assumed to be specially built node such that only one child node exists, if any,
+		 * and the last node in the chain is designated as array expansion. The goal of all of this
+		 * is to set up a node chain where intermediate nodes can be designated as being array 
+		 * expansion nodes, as well as the leaf nodes.
+		 * 
+		 * @param QQBaseNode $objNewNode
+		 */
+		public function _MergeExpansionNode (QQBaseNode $objNewNode) {
+			if (!$objNewNode || empty($objNewNode->objChildNodeArray)) {
+				return;
+			}
+			if ($objNewNode->strName != $this->strName) {
+				throw new QCallerException('Expansion node tables must match.');
+			}
+			
+			if (!$this->objChildNodeArray) {
+				$this->objChildNodeArray = $objNewNode->objChildNodeArray;
+			} else {
+				$objChildNode = reset($objNewNode->objChildNodeArray);
+				if (isset ($this->objChildNodeArray[$objChildNode->strName])) {
+					if ($objChildNode->blnExpandAsArray) {
+						$this->objChildNodeArray[$objChildNode->strName]->blnExpandAsArray = true;
+						// assume this is a leaf node, so don't follow any more.
+					}
+					else {
+						$this->objChildNodeArray[$objChildNode->strName]->_MergeExpansionNode ($objChildNode);
+					}
+				} else {
+					$this->objChildNodeArray[$objChildNode->strName] = $objChildNode;
+				}
+			}
+		}
+		
+		public function ExtendedAlias () {
+			$strExtendedAlias = $this->strAlias;
+			$objNode = $this;
+			while ($objNode->objParentNode) {
+				$objNode = $objNode->objParentNode;
+				$strExtendedAlias = $objNode->strAlias . '__' . $strExtendedAlias;
+			}
+			return $strExtendedAlias;
+		}
+		
+		public function FirstChild() {
+			$a = $this->objChildNodeArray;
+			if ($a) {
+				return reset ($a);
+			} else {
+				return null;
+			}
+		}
+		
 	}
 
 
@@ -98,6 +172,8 @@
 		public function __construct($strName, $strPropertyName, $strType, QQBaseNode $objParentNode = null) {
 			$this->objParentNode = $objParentNode;
 			$this->strName = $strName;
+			if ($objParentNode) $objParentNode->objChildNodeArray[$strName] = $this;
+			
 			$this->strAlias = $strName;
 			$this->strPropertyName = $strPropertyName;
 			$this->strType = $strType;
@@ -368,6 +444,7 @@
 			} else
 				throw new QCallerException('ReverseReferenceNodes must have a Parent Node');
 			$this->strName = $strName;
+			$objParentNode->objChildNodeArray[$strName] = $this;
 			$this->strAlias = $strName;
 			$this->strType = $strType;
 			$this->strForeignKey = $strForeignKey;
@@ -410,6 +487,8 @@
 					$this->strRootTableName = $objParentNode->__get('_RootTableName');
 				else
 					$this->strRootTableName = $objParentNode->_RootTableName;
+					
+				$objParentNode->objChildNodeArray[$this->strName] = $this;
 			} else
 				$this->strRootTableName = $this->strName;
 			$this->strAlias = $this->strName;
@@ -1617,7 +1696,7 @@
 	 * @property QDatabaseBase $Database
 	 * @property string $RootTableName
 	 * @property string[] $ColumnAliasArray
-	 * @property string[] $ExpandAsArrayNodes
+	 * @property QQBaseNode $ExpandAsArrayNode
 	 */
 	class QQueryBuilder extends QBaseClass {
 		protected $strSelectArray;
@@ -1636,7 +1715,7 @@
 		protected $objVirtualNodeArray;
 		protected $strLimitInfo;
 		protected $blnDistinctFlag;
-		protected $strExpandAsArrayNodes;
+		protected $objExpandAsArrayNode;
 
 		protected $blnCountOnlyFlag;
 
@@ -1821,9 +1900,21 @@
 
 		public function AddExpandAsArrayNode($objNode) {
 			/** @var QQReverseReferenceNode|QQAssociationNode $objNode */
-			$this->strExpandAsArrayNodes[$objNode->GetExpandArrayAlias()] = true;
+			// build child nodes and find top node of given node
+			$objNode->ExpandAsArray = true;
+			while ($objNode->_ParentNode) {
+				$objNode = $objNode->_ParentNode;
+			}
+			
+			if (!$this->objExpandAsArrayNode) {
+				$this->objExpandAsArrayNode = $objNode;
+			}
+			else {
+				// integrate the information into current nodes
+				$this->objExpandAsArrayNode->_MergeExpansionNode ($objNode);
+			}
 		}
-
+		
 		public function __construct(QDatabaseBase $objDatabase, $strRootTableName) {
 			$this->objDatabase = $objDatabase;
 			$this->strEscapeIdentifierBegin = $objDatabase->EscapeIdentifierBegin;
@@ -1841,8 +1932,6 @@
 			$this->strGroupByArray = array();
 			$this->strHavingArray = array();
 			$this->objVirtualNodeArray = array();
-
-			$this->strExpandAsArrayNodes = array();
 		}
 		
 		public function GetStatement() {
@@ -1907,11 +1996,9 @@
 					return $this->strRootTableName;
 				case 'ColumnAliasArray':
 					return $this->strColumnAliasArray;
-				case 'ExpandAsArrayNodes':
-					if (count($this->strExpandAsArrayNodes))
-						return $this->strExpandAsArrayNodes;
-					else
-						return null;
+				case 'ExpandAsArrayNode':
+					return $this->objExpandAsArrayNode;
+						
 				default:
 					try {
 						return parent::__get($strName);

@@ -209,7 +209,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define('DB_CONNECTION_1', serialize(array(
 				'adapter' => '{db1_adapter}',
 				'server' => '{db1_serverAddress}',
-				'port' => {db1_serverport},
+				'port' => '{db1_serverport}',
 				'database' => '{db1_dbname}',
 				'username' => '{db1_username}',
 				'password' => '{db1_password}',

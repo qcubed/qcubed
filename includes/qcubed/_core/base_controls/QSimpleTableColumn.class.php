@@ -112,7 +112,7 @@
 			$strToReturn .= '>' . $cellValue . '</' . $tag . '>';
 			return $strToReturn;
 		}
-		
+
 		/**
 		 * Return a key/val array of items to insert inside the cell tag. 
 		 * 
@@ -481,8 +481,7 @@
 		 */
 		public function __construct($strName, $strProperty, $objBaseNode = null) {
 			parent::__construct($strName);
-			$this->strProperty = $strProperty;
-			$this->strPropertiesArray = explode('->', $strProperty);
+			$this->Property = $strProperty;
 
 			if ($objBaseNode != null) {
 				foreach ($this->strPropertiesArray as $strProperty) {
@@ -526,6 +525,7 @@
 				case "Property":
 					try {
 						$this->strProperty = QType::Cast($mixValue, QType::String);
+						$this->strPropertiesArray = $this->strProperty ? explode('->', $this->strProperty) : array();
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

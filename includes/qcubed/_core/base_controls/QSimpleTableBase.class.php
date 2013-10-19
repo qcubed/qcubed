@@ -107,10 +107,14 @@
 		 * Move the named column to the given position
 		 * @param string $strName column name
 		 * @param integer $intColumnIndex new position
+		 * @param string $strNewName new column name
 		 */
-		public function MoveColumn($strName, $intColumnIndex = -1) {
+		public function MoveColumn($strName, $intColumnIndex = -1, $strNewName = null) {
 			$col = $this->RemoveColumnByName($strName);
 			$this->AddColumnAt($intColumnIndex, $col);
+			if ($strNewName !== null) {
+				$col->Name = $strNewName;
+			}
 			return $col;
 		}
 

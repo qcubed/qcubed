@@ -82,6 +82,19 @@ CREATE TABLE address (
 
 CREATE INDEX IDX_address_1 ON address(person_id);
 
+DROP TABLE IF EXISTS two_key;
+CREATE TABLE two_key (
+  "server" VARCHAR(50) NOT NULL,
+  "directory" VARCHAR(50) NOT NULL,
+  file_name VARCHAR(50) NOT NULL,
+  person_id INT NOT NULL,
+  project_id INT,
+  CONSTRAINT PK_two_key PRIMARY KEY ("server", "directory")
+);
+CREATE INDEX IDX_two_key_person_id ON two_key(person_id);
+CREATE INDEX IDX_two_key_project_id ON two_key(project_id);
+
+
 ALTER TABLE login ADD CONSTRAINT person_login FOREIGN KEY (person_id) REFERENCES person (id);
 ALTER TABLE project ADD CONSTRAINT person_project FOREIGN KEY (manager_person_id) REFERENCES person (id);
 ALTER TABLE project ADD CONSTRAINT project_status_type_project FOREIGN KEY (project_status_type_id) REFERENCES project_status_type (id);
@@ -93,6 +106,8 @@ ALTER TABLE related_project_assn ADD CONSTRAINT related_project_assn_2 FOREIGN K
 
 ALTER TABLE milestone ADD CONSTRAINT project_milestone FOREIGN KEY (project_id) REFERENCES project (id);
 ALTER TABLE address ADD CONSTRAINT person_address FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE two_key ADD CONSTRAINT two_key_project FOREIGN KEY (project_id) REFERENCES project (id);
+ALTER TABLE two_key ADD CONSTRAINT two_key_person FOREIGN KEY (person_id) REFERENCES person (id);
 
 INSERT INTO project_status_type (name, description, guidelines) VALUES ('Open', 'The project is currently active', 'All projects that we are working on should be in this state');
 INSERT INTO project_status_type (name, description, guidelines) VALUES ('Cancelled', 'The project has been canned', null);
@@ -182,3 +197,10 @@ INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone G');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone H');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone I');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone J');
+
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('cnn.com', 'us', 'news', 1, 1);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'drive', '', 2, 2);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'mail', 'mail.html', 3, 2);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'news', 'news.php', 4, 3);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('mail.google.com', 'mail', 'inbox', 5, NULL);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('yahoo.com', '', '', 6, NULL);
