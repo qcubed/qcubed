@@ -40,6 +40,14 @@
 		 * @access protected
 		 */
 		protected $<?php echo $objCodeGen->FormLabelVariableNameForColumn($objColumn);  ?>;
+		
+<?php if ($objColumn->VariableType == 'QDateTime') {?>
+		/**
+		 * @var str<?php echo $objColumn->PropertyName  ?>DateTimeFormat
+		 * @access protected
+		 */
+		protected $str<?php echo $objColumn->PropertyName  ?>DateTimeFormat;
+<?php } ?>
 <?php } ?>
 <?php } ?>
 
