@@ -30,7 +30,9 @@
 	/**
 	 * Triggered when the value of the progressbar
 	 * 		changes.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QProgressbar_ChangeEvent extends QJqUiEvent {
 		const EventName = 'progressbarchange';
@@ -38,7 +40,9 @@
 	/**
 	 * Triggered when the value of the progressbar reaches the maximum
 	 * 		value.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QProgressbar_CompleteEvent extends QJqUiEvent {
 		const EventName = 'progressbarcomplete';
@@ -46,7 +50,8 @@
 	/**
 	 * Triggered when the progressbar is created.<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
-	 * 		</li></ul>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QProgressbar_CreateEvent extends QJqUiEvent {
 		const EventName = 'progressbarcreate';
@@ -67,11 +72,7 @@
 	 * @package Controls\Base
 	 * @property boolean $Disabled Disables the progressbar if set to <code>true</code>.
 	 * @property integer $Max The maximum value of the progressbar.
-	 * @property mixed $Value The value of the progressbar.<strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Number</strong>:  					A value between
-	 * 		<code>0</code> and the <a><code>max</code></a>.</li>
-	 * 		<li><strong>Boolean</strong>:  					Value can be set to <code>false</code>
-	 * 		to create an indeterminate progressbar.</li></ul>
+	 * @property integer $Value The value of the progressbar.
 	 */
 
 	class QProgressbarGen extends QPanel	{
@@ -80,9 +81,9 @@
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var integer */
-		protected $intMax = null;
-		/** @var mixed */
-		protected $mixValue;
+		protected $intMax;
+		/** @var integer */
+		protected $intValue;
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
@@ -211,8 +212,7 @@
 		}
 		/**
 		 * Sets the current value of the progressbar.<ul><li><strong>value</strong>
-		 * Type: <a>Number</a> or <a>Boolean</a> The value to set. See the
-		 * <a><code>value</code></a> option for details on valid values.</li></ul>
+		 * Type: <a>Number</a> The value to set.</li></ul>
 		 * @param $value
 		 */
 		public function Value1($value) {
@@ -224,7 +224,7 @@
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
 				case 'Max': return $this->intMax;
-				case 'Value': return $this->mixValue;
+				case 'Value': return $this->intValue;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -262,12 +262,16 @@
 					}
 
 				case 'Value':
-					$this->mixValue = $mixValue;
-				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'value', $mixValue);
+					try {
+						$this->intValue = QType::Cast($mixValue, QType::Integer);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'value', $this->intValue);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
 					}
-					break;
 
 
 				case 'Enabled':

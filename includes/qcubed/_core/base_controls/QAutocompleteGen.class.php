@@ -41,7 +41,9 @@
 	 * Triggered when the menu is hidden. Not every <code>close</code> event will
 	 * 		be accompanied by a <code>change</code>
 	 * 		event.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QAutocomplete_CloseEvent extends QJqUiEvent {
 		const EventName = 'autocompleteclose';
@@ -49,7 +51,8 @@
 	/**
 	 * Triggered when the autocomplete is created.<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
-	 * 		</li></ul>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QAutocomplete_CreateEvent extends QJqUiEvent {
 		const EventName = 'autocompletecreate';
@@ -70,7 +73,9 @@
 	/**
 	 * Triggered when the suggestion menu is opened or
 	 * 		updated.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QAutocomplete_OpenEvent extends QJqUiEvent {
 		const EventName = 'autocompleteopen';
@@ -96,7 +101,9 @@
 	 * Triggered before a search is performed, after <a><code>minLength</code></a>
 	 * 		and <a><code>delay</code></a> are met. If canceled, then no request will be
 	 * 		started and no items suggested.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QAutocomplete_SearchEvent extends QJqUiEvent {
 		const EventName = 'autocompletesearch';
@@ -127,12 +134,9 @@
 	 * 
 	 * @see QAutocompleteBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo Which element the menu should be appended to. When the value is
-	 * 		<code>null</code>, the parents of the input field will be checked for a
-	 * 		class of <code>ui-front</code>. If an element with the
-	 * 		<code>ui-front</code> class is found, the menu will be appended to that
-	 * 		element. Regardless of the value, if no element is found, the menu will be
-	 * 		appended to the body.
+	 * @property mixed $AppendTo Which element the menu should be appended to. Override this when the
+	 * 		autocomplete is inside a <code>position: fixed</code> element. Otherwise
+	 * 		the popup menu would still scroll with the page.
 	 * @property boolean $AutoFocus If set to <code>true</code> the first item will automatically be focused
 	 * 		when the menu is shown.
 	 * @property integer $Delay The delay in milliseconds between when a keystroke occurs and when a search
