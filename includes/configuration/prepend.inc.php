@@ -34,7 +34,6 @@
 		//////////////////////////////
 		require(__QCUBED_CORE__ . '/framework/DisableMagicQuotes.inc.php');
 		require(__QCUBED_CORE__ . '/qcubed.inc.php');
-		require(__APP_INCLUDES__ . '/app_includes.inc.php');
 
 		///////////////////////////////
 		// Define the Application Class
@@ -145,5 +144,6 @@
 			// QApplication::$LanguageCode = 'en';
 			// QI18n::Initialize();
 		}
+		require(__APP_INCLUDES__ . '/app_includes.inc.php');
 	}
 ?>
