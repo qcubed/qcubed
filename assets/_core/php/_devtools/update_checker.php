@@ -17,7 +17,7 @@ class UpdateCheckerForm extends QForm {
 
 	protected function Form_Create() {
 		$arrLatestVersions = self::parseResponseIntoItems(self::makeHttpRequest(self::WEB_SERVICE_PATH));
-		self::augmentWithInstalledInfo(& $arrLatestVersions);
+		self::augmentWithInstalledInfo($arrLatestVersions);
 
 		$this->dtgUpdates_Create($arrLatestVersions);
 		$this->dtgNew_Create($arrLatestVersions);
