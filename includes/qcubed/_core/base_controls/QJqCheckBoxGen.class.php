@@ -29,7 +29,9 @@
 	
 	/**
 	 * Triggered when the button is created.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QJqCheckBox_CreateEvent extends QJqUiEvent {
 		const EventName = 'buttoncreate';

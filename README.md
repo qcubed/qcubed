@@ -3,9 +3,9 @@
 [![Build Status](https://travis-ci.org/qcubed/framework.png?branch=master)](https://travis-ci.org/qcubed/framework)
 
 ## Releases
-**Newest stable release: [version 2.2.1, released on May 28, 2013](https://github.com/qcubed/framework/archive/2.2.1.zip)**.
+**Newest stable release: [version 2.2.2, released on October 23, 2013](https://github.com/qcubed/framework/archive/2.2.2.zip)**.
 
-Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads).
+Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads) and [releases archive](https://github.com/qcubed/framework/releases).
 
 ## What is QCubed?
 
@@ -68,5 +68,5 @@ QCubed was born out of QCodo, and uses jQuery UI libraries.
 
 ## Changelog
 
-The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/rc-2.2.1/CHANGELOG.md "Changelog").
+The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/master/CHANGELOG.md "Changelog").
 

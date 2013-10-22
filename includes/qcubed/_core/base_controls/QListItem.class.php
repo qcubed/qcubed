@@ -18,11 +18,17 @@
 		///////////////////////////
 		// Private Member Variables
 		///////////////////////////
+		/** @var null|string Name of the Item */
 		protected $strName = null;
+		/** @var null|string Value of the Item */
 		protected $strValue = null;
+		/** @var bool Is the item selected? */
 		protected $blnSelected = false;
+		/** @var null|string Group to which the item belongs */
 		protected $strItemGroup = null;
+		/** @var QListItemStyle Inline style of the item */
 		protected $objItemStyle;
+		/** @var string Label text for the item */
 		protected $strLabel = null;
 
 		/////////////////////////
@@ -30,13 +36,16 @@
 		/////////////////////////
 		/**
 		 * Creates a QListItem
-		 * @param string $strName is the displayed Name of the Item
-		 * @param string $strValue is any text that represents the value of the ListItem (e.g. maybe a DB Id)
-		 * @param boolean $blnSelected is a boolean of whether or not this item is selected or not (optional)
-		 * @param string $strItemGroup is the group (if any) in which the Item should be displayed
-		 * @param array $strOverrideParameters 
-		 *              allows you to override item styles.  It is either a string formatted as Property=Value 
-		 *              or an array of the format array(property => value)
+		 *
+		 * @param string  $strName      is the displayed Name of the Item
+		 * @param string  $strValue     is any text that represents the value of the ListItem (e.g. maybe a DB Id)
+		 * @param boolean $blnSelected  is a boolean of whether or not this item is selected or not (optional)
+		 * @param string  $strItemGroup is the group (if any) in which the Item should be displayed
+		 * @param array   $strOverrideParameters
+		 *                              allows you to override item styles.  It is either a string formatted as Property=Value
+		 *                              or an array of the format array(property => value)
+		 *
+		 * @throws Exception|QCallerException
 		 * @return QListItem
 		 */
 		public function __construct($strName, $strValue, $blnSelected = false, $strItemGroup = null, $strOverrideParameters = null) {

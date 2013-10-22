@@ -17,7 +17,10 @@ class QI18n extends QBaseClass {
 	/**
 	 * Initializes application translation. Creates an instance of translation and sets it
 	 * to QApplication::$LanguageObject
+	 *
 	 * @param string[optional] $strTranslationClass Translation class name
+	 *
+	 * @throws QCallerException
 	 * @return QTranslationBase
 	 */
 	public static function Initialize($strTranslationClass = null) {
@@ -29,12 +32,18 @@ class QI18n extends QBaseClass {
 		}
 		QApplication::$LanguageObject = $objQI18n;
 	}
-	
+
 	/**
-	 * Loads translation with given language and country code. 
-	 * @param string[optional] $strLanguageCode Language code
-	 * @param string[optional] $strCountryCode Country code
-	 * @param string[optional] $strTranslationClass Translation class name
+	 * Loads translation with given language and country code.
+	 *
+	 * @param null $strLanguageCode
+	 * @param null $strCountryCode
+	 * @param null $strTranslationClass
+	 *
+	 * @throws QCallerException
+	 * @internal param $string [optional] $strLanguageCode Language code
+	 * @internal param $string [optional] $strCountryCode Country code
+	 * @internal param $string [optional] $strTranslationClass Translation class name
 	 * @return QTranslationBase
 	 */
 	public static function Load($strLanguageCode = null, $strCountryCode = null, $strTranslationClass = null) {

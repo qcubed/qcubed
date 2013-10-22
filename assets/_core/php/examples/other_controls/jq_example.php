@@ -214,6 +214,7 @@
 			$this->Dialog->AddButton ('Cancel', 'cancel');
 			$this->Dialog->AddButton ('OK', 'ok');
 			$this->Dialog->AddAction (new QDialog_ButtonEvent(), new QAjaxAction ('dialog_press'));
+            $this->Dialog->AutoOpen = true;
 			
 			// Progressbar
 			$this->Progressbar = new QProgressbar($this);

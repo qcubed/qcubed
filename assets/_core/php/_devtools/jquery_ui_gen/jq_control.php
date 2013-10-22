@@ -1,7 +1,7 @@
 <?php
 include_once('simple_html_dom.php');
 require('../../qcubed.inc.php');
-require(__INCLUDES__ . '/qcubed/codegen/QCodeGen.class.php');
+require(__QCUBED_CORE__ . '/../codegen/QCodeGen.class.php');
 
 class JqAttributes {
 	public $name;
@@ -297,8 +297,8 @@ class JqControlGen extends QCodeGenBase {
 	}
 
 	public function GenerateControl($objJqDoc) {
-		$strOutDirControls = __INCLUDES__ . "/qcubed/controls";
-		$strOutDirControlsBase = __INCLUDES__ . "/qcubed/_core/base_controls";
+		$strOutDirControls = __QCUBED_CORE__ . "/../controls";
+		$strOutDirControlsBase = __QCUBED_CORE__ . "/base_controls";
 
 		$mixArgumentArray = array('objJqDoc' => $objJqDoc);
 		$strTemplate = file_get_contents('jq_control.tpl');

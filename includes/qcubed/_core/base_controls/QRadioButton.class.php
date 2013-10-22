@@ -22,19 +22,31 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var null|string the text next to the radio button  */
 		protected $strText = null;
+		/** @var string Text alignment  */
 		protected $strTextAlign = QTextAlign::Right;
-		
+
 		// BEHAVIOR
+		/**
+		 * Group to which this radio button belongs
+		 * Groups determine the 'radio' behavior wherein you can select only one option out of all buttons in that group
+		 * @var null|string Name of the group
+		 */
 		protected $strGroupName = null;
+		/** @var bool Should htmlentities be run on the contents of the control */
 		protected $blnHtmlEntities = true;
 
 		// MISC
+		/** @var bool Variable to decide whether the button checked/selected */
 		protected $blnChecked = false;
 
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Parse the data posted
+		 */
 		public function ParsePostData() {
 			if ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (QApplication::$RequestMode == QRequestMode::Ajax) {
@@ -60,6 +72,10 @@
 			}
 		}
 
+		/**
+		 * Returns the html formatted string
+		 * @return string HTML formatted string
+		 */
 		protected function GetControlHtml() {
 			if (!$this->blnEnabled)
 				$strDisabled = 'disabled="disabled" ';
@@ -85,7 +101,7 @@
 				$strAccessKey = sprintf('accesskey="%s" ', $this->strAccessKey);
 			else
 				$strAccessKey = "";
-				
+
 			if ($this->blnChecked)
 				$strChecked = 'checked="checked"';
 			else
@@ -113,20 +129,20 @@
 						$strStyle,
 						$strCustomAttributes,
 						$strDisabled,
-						
+
 						$this->strControlId,
 						($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText,
-						
+
 						$this->strControlId,
 						$strGroupName,
 						$this->strControlId,
-	
+
 						$strDisabled,
 						$strChecked,
 						$strActions,
 						$strAccessKey,
 						$strTabIndex
-					);				
+					);
 				} else {
 					$strToReturn = sprintf('<span %s%s%s%s%s><input type="radio" id="%s" name="%s" value="%s" %s%s%s%s%s /><label for="%s">%s</label></span>',
 						$strCssClass,
@@ -134,17 +150,17 @@
 						$strStyle,
 						$strCustomAttributes,
 						$strDisabled,
-	
+
 						$this->strControlId,
 						$strGroupName,
 						$this->strControlId,
-	
+
 						$strDisabled,
 						$strChecked,
 						$strActions,
 						$strAccessKey,
 						$strTabIndex,
-						
+
 						$this->strControlId,
 						($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText
 					);
@@ -184,6 +200,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP __get magic method implementation for the QRadioButton class
+		 * @param string $strName Name of the property
+		 *
+		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -212,6 +235,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP __set magic method implementation
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws Exception|QCallerException
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

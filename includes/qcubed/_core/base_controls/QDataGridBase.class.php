@@ -45,10 +45,14 @@
 	 */
 	class QDataGridRow extends QControl {
 		public function GetHtml($strColumnsHtml) {
-			$strToReturn = sprintf('<tr id="%s" %s>%s</tr>', $this->strControlId, $this->GetAttributes(), $strColumnsHtml);
+			$strStyle = $this->GetStyleAttributes();
+			if (strlen($strStyle) > 0)
+				$strStyle = sprintf(' style="%s"', $strStyle);
+
+			$strToReturn = sprintf('<tr id="%s" %s%s>%s</tr>', $this->strControlId, $this->GetAttributes(), $strStyle, $strColumnsHtml);
 			return $strToReturn;
 		}
-		
+
 		protected function GetControlHtml() { }
 		public function ParsePostData() {}
 		public function Validate() {}

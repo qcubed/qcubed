@@ -33,20 +33,30 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var string The text on the control */
 		protected $strText = null;
+	    	/** @var string The format specifier for rendering the control  */
 		protected $strFormat = null;
+		/** @var string Path to the HTML template (.tpl.php) file (applicable in case a template is being used for Render) */
 		protected $strTemplate = null;
+		/** @var bool Render the child controls of this control automatically? */
 		protected $blnAutoRenderChildren = false;
+		/** @var null|string|int Padding (CSS Style) value */
 		protected $strPadding = null;
 
+		/** @var string HTML tag to be used by the control (such as div or span) */
 		protected $strTagName = null;
+		/** @var bool Should htmlentities be used on the contents of this control? */
 		protected $blnHtmlEntities = true;
 
 		// BEHAVIOR
+		/** @var bool Is it a drop target? */
 		protected $blnDropTarget = false;
 
 		// LAYOUT
+		/** @var  string|QHorizontalAlign Horizontal alignment style */
 		protected $strHorizontalAlign = QHorizontalAlign::NotSet;
+		/** @var  string|QVerticalAlign Vertical alignment style */
 		protected $strVerticalAlign = QVerticalAlign::NotSet;
 
 		// Move Targets and Drop Zones
@@ -106,7 +116,11 @@
 			}
 			$this->objDropsControlsArray = array();
 		}
-		
+
+		/**
+		 * Returns the End Script of the Control which is sent to the client when the control's Render is complete
+		 * @return string The JS EndScript for the control
+		 */
 		public function GetEndScript() {
 			$strToReturn = parent::GetEndScript();
 			
@@ -128,6 +142,10 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns the CSS styles for the control
+		 * @return string The CSS style string
+		 */
 		public function GetStyleAttributes() {
 			$strStyle = parent::GetStyleAttributes();
 			
@@ -150,7 +168,15 @@
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Public function (to be overridden in child classes) to Parse the POST data recieved by control
+		 */
 		public function ParsePostData() {}
+
+		/**
+		 * Returns the HTML of the QControl
+		 * @return string The HTML string
+		 */
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
 
@@ -186,11 +212,27 @@
 
 			return $strToReturn;
 		}
+
+		/**
+		 * Public function to be overrriden by child classes
+		 *
+		 * It is used to determine if the input fed into the control is valid or not.
+		 * The rules are written in this function only. If the control is set for Validation,
+		 * this function is automatically called on postback.
+		 * @return bool Whether or not the input inside the control are valid
+		 */
 		public function Validate() {return true;}
 
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP __get magic method implementation
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -221,6 +263,16 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP __set magic method implementation
+		 * @param string $strName Property Name
+		 * @param string $mixValue Property Value
+		 *
+		 * @return mixed
+		 * @throws QCallerException
+		 * @throws Exception|QCallerException
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 
