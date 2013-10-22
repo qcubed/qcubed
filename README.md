@@ -68,5 +68,5 @@ QCubed was born out of QCodo, and uses jQuery UI libraries.
 
 ## Changelog
 
-The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/rc-2.2.1/CHANGELOG.md "Changelog").
+The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/master/CHANGELOG.md "Changelog").
 
