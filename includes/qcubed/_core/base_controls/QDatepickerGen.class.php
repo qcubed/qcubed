@@ -118,7 +118,7 @@
 	 * 		<a><code>altField</code></a> option. This allows one date format to be
 	 * 		shown to the user for selection purposes, while a different format is
 	 * 		actually sent behind the scenes. For a full list of the possible formats
-	 * 		see the <a><code>formatDate</code></a> function
+	 * 		see the [[UI/Datepicker/formatDate|formatDate]] function
 	 * @property string $AppendText The text to display after each date field, e.g., to show the required
 	 * 		format.
 	 * @property boolean $AutoSize Set to <code>true</code> to automatically resize the input field to
@@ -157,7 +157,8 @@
 	 * @property string $CurrentText The text to display for the current day link. Use the
 	 * 		<a><code>showButtonPanel</code></a> option to display this button.
 	 * @property string $JqDateFormat The format for parsed and displayed dates. For a full list of the possible
-	 * 		formats see the <code><a><code>formatDate</code></a></code> function.
+	 * 		formats see the <code>[[UI/Datepicker/formatDate|formatDate]]</code>
+	 * 		function.
 	 * @property array $DayNames The list of long day names, starting from Sunday, for use as requested via
 	 * 		the <a><code>dateFormat</code></a> option.
 	 * @property array $DayNamesMin The list of minimised day names, starting from Sunday, for use as column
@@ -166,18 +167,19 @@
 	 * 		requested via the <a><code>dateFormat</code></a> option.
 	 * @property mixed $DefaultDate Set the date to highlight on first opening if the field is blank. Specify
 	 * 		either an actual date via a Date object or as a string in the current
-	 * 		<a><code>dateFormat</code></a>, or a number of days from today (e.g. +7) or
-	 * 		a string of values and periods ('y' for years, 'm' for months, 'w' for
-	 * 		weeks, 'd' for days, e.g. '+1m +7d'), or null for today.<strong>Multiple
-	 * 		types supported:</strong><ul><li><strong>Date</strong>: A date object
-	 * 		containing the default date.</li> <li><strong>Number</strong>: A number of
-	 * 		days from today. For example <code>2</code> represents two days from today
-	 * 		and <code>-1</code> represents yesterday.</li> <li><strong>String</strong>:
-	 * 		A string in the format defined by the <a><code>dateFormat</code></a>
-	 * 		option, or a relative date. Relative dates must contain value and period
-	 * 		pairs; valid periods are <code>"y"</code> for years, <code>"m"</code> for
-	 * 		months, <code>"w"</code> for weeks, and <code>"d"</code> for days. For
-	 * 		example, <code>"+1m +7d"</code> represents one month and seven days from
+	 * 		<code>[[UI/Datepicker#option-dateFormat|dateFormat]]</code>, or a number of
+	 * 		days from today (e.g. +7) or a string of values and periods ('y' for years,
+	 * 		'm' for months, 'w' for weeks, 'd' for days, e.g. '+1m +7d'), or null for
+	 * 		today.<strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Date</strong>: A date object containing
+	 * 		the default date.</li> <li><strong>Number</strong>: A number of days from
+	 * 		today. For example <code>2</code> represents two days from today and
+	 * 		<code>-1</code> represents yesterday.</li> <li><strong>String</strong>: A
+	 * 		string in the format defined by the <a><code>dateFormat</code></a> option,
+	 * 		or a relative date. Relative dates must contain value and period pairs;
+	 * 		valid periods are <code>"y"</code> for years, <code>"m"</code> for months,
+	 * 		<code>"w"</code> for weeks, and <code>"d"</code> for days. For example,
+	 * 		<code>"+1m +7d"</code> represents one month and seven days from
 	 * 		today.</li></ul>
 	 * @property mixed $Duration Control the speed at which the datepicker appears, it may be a time in
 	 * 		milliseconds or a string representing one of the three predefined speeds
@@ -221,8 +223,8 @@
 	 * 		datepicker and as requested via the <a><code>dateFormat</code></a> option.
 	 * @property boolean $NavigationAsDateFormat Whether the <a><code>prevText</code></a> and <a><code>nextText</code></a>
 	 * 		options should be parsed as dates by the
-	 * 		<code><a><code>formatDate</code></a></code> function, allowing them to
-	 * 		display the target month names for example.
+	 * 		<code>[[UI/Datepicker/formatDate|formatDate]]</code> function, allowing
+	 * 		them to display the target month names for example.
 	 * @property string $NextText The text to display for the next month link. With the standard ThemeRoller
 	 * 		styling, this value is replaced by an icon.
 	 * @property mixed $NumberOfMonths The number of months to show at once.<strong>Multiple types
@@ -247,10 +249,10 @@
 	 * 		selectable. This only applies if the <a><code>showOtherMonths</code></a>
 	 * 		option is set to <code>true</code>.
 	 * @property mixed $ShortYearCutoff The cutoff year for determining the century for a date (used in conjunction
-	 * 		with <a><code>dateFormat</code></a> 'y'). Any dates entered with a year
-	 * 		value less than or equal to the cutoff year are considered to be in the
-	 * 		current century, while those greater than it are deemed to be in the
-	 * 		previous century.<strong>Multiple types
+	 * 		with <code>[[UI/Datepicker#option-dateFormat|dateFormat]]</code> 'y'). Any
+	 * 		dates entered with a year value less than or equal to the cutoff year are
+	 * 		considered to be in the current century, while those greater than it are
+	 * 		deemed to be in the previous century.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: A value between
 	 * 		<code>0</code> and <code>99</code> indicating the cutoff year.</li>
 	 * 		<li><strong>String</strong>: A relative number of years from the current

@@ -47,7 +47,8 @@
 	/**
 	 * Triggered when the droppable is created.<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
-	 * 		</li></ul>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDroppable_CreateEvent extends QJqUiEvent {
 		const EventName = 'dropcreate';
@@ -88,7 +89,8 @@
 	 * Triggered when an accepted draggable is dragged out of the droppable (based
 	 * 		on the<a><code>tolerance</code></a> option).<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
-	 * 		</li></ul>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDroppable_OutEvent extends QJqUiEvent {
 		const EventName = 'dropout';

@@ -30,7 +30,8 @@
 	/**
 	 * Triggered when the draggable is created.<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
-	 * 		</li></ul>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDraggable_CreateEvent extends QJqUiEvent {
 		const EventName = 'dragcreate';

@@ -30,21 +30,27 @@
 	/**
 	 * Triggered when a dialog is about to close. If canceled, the dialog will not
 	 * 		close.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QDialog_BeforeCloseEvent extends QJqUiEvent {
 		const EventName = 'dialogbeforeclose';
 	}
 	/**
 	 * Triggered when the dialog is closed.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDialog_CloseEvent extends QJqUiEvent {
 		const EventName = 'dialogclose';
 	}
 	/**
 	 * Triggered when the dialog is created.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDialog_CreateEvent extends QJqUiEvent {
 		const EventName = 'dialogcreate';
@@ -85,14 +91,18 @@
 	}
 	/**
 	 * Triggered when the dialog gains focus.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDialog_FocusEvent extends QJqUiEvent {
 		const EventName = 'dialogfocus';
 	}
 	/**
 	 * Triggered when the dialog is opened.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDialog_OpenEvent extends QJqUiEvent {
 		const EventName = 'dialogopen';
@@ -154,8 +164,6 @@
 	 * 
 	 * @see QDialogBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo Which element the dialog (and overlay, if <a>modal</a>) should be appended
-	 * 		to.<span>(version added: 1.10.0)</span>
 	 * @property boolean $AutoOpen If set to <code>true</code>, the dialog will automatically open upon
 	 * 		initialization. If <code>false</code>, the dialog will stay hidden until
 	 * 		the <a><code>open()</code></a> method is called.
@@ -168,13 +176,13 @@
 	 * 		an object defining the attributes, properties, and event handlers to set on
 	 * 		the button.</li></ul>
 	 * @property boolean $CloseOnEscape Specifies whether the dialog should close when it has focus and the user
-	 * 		presses the esacpe (ESC) key.
+	 * 		presses the escape (ESC) key.
 	 * @property string $CloseText Specifies the text for the close button. Note that the close text is
 	 * 		visibly hidden when using a standard theme.
 	 * @property string $DialogClass The specified class name(s) will be added to the dialog, for additional
 	 * 		theming.
 	 * @property boolean $Draggable If set to <code>true</code>, the dialog will be draggable by the title bar.
-	 * 		Requires the <a>jQuery UI Draggable widget</a> to be included.
+	 * 		Requires the <a>jQuery UI Draggable wiget</a> to be included.
 	 * @property mixed $Height The height of the dialog.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: The height in
 	 * 		pixels.</li> <li><strong>String</strong>: The only supported string value
@@ -186,14 +194,13 @@
 	 * 		duration.</li> <li><strong>String</strong>:  					The dialog will be hidden
 	 * 		using the specified jQuery UI effect. See the <a>list of effects</a> for
 	 * 		possible values.</li> <li><strong>Object</strong>: If the value is an
-	 * 		object, then <code>effect</code>, <code>delay</code>,
-	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
-	 * 		The <code>effect</code> property must be the name of a jQuery UI effect.
-	 * 		When using a jQuery UI effect that supports additional settings, you may
-	 * 		include those settings in the object and they will be passed to the effect.
-	 * 		If <code>duration</code> or <code>easing</code> is omitted, then the
-	 * 		default values will be used. If <code>delay</code> is omitted, then no
-	 * 		delay is used.</li></ul>
+	 * 		object, then <code>effect</code>, <code>duration</code>, and
+	 * 		<code>easing</code> properties may be provided. The <code>effect</code>
+	 * 		property must be the name of a jQuery UI effect. When using a jQuery UI
+	 * 		effect that supports additional settings, you may include those settings in
+	 * 		the object and they will be passed to the effect. If <code>duration</code>
+	 * 		or <code>easing</code> is omitted, then the default values will be
+	 * 		used.</li></ul>
 	 * @property integer $MaxHeight The maximum height to which the dialog can be resized, in pixels.
 	 * @property integer $MaxWidth The maximum width to which the dialog can be resized, in pixels.
 	 * @property integer $MinHeight The minimum height to which the dialog can be resized, in pixels.
@@ -201,10 +208,9 @@
 	 * @property boolean $Modal If set to <code>true</code>, the dialog will have modal behavior; other
 	 * 		items on the page will be disabled, i.e., cannot be interacted with. Modal
 	 * 		dialogs create an overlay below the dialog but above other page elements.
-	 * @property mixed $Position <p>Specifies where the dialog should be displayed. The dialog will handle
-	 * 		collisions such that as much of the dialog is visible as possible.</p>
-	 * 						<p><em>Note: The <code>String</code> and <code>Array</code> forms are
-	 * 		deprecated.</em></p><strong>Multiple types
+	 * @property mixed $Position Specifies where the dialog should be displayed. The dialog will handle
+	 * 		collisions such that as much of the dialog is visible as
+	 * 		possible.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Object</strong>: Identifies the position
 	 * 		of the dialog when opened. The <code>of</code> option defaults to the
 	 * 		window, but you can specify another element to position against. You can
@@ -223,24 +229,25 @@
 	 * 		duration.</li> <li><strong>String</strong>:  					The dialog will be shown
 	 * 		using the specified jQuery UI effect. See the <a>list of effects</a> for
 	 * 		possible values.</li> <li><strong>Object</strong>: If the value is an
-	 * 		object, then <code>effect</code>, <code>delay</code>,
-	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
-	 * 		The <code>effect</code> property must be the name of a jQuery UI effect.
-	 * 		When using a jQuery UI effect that supports additional settings, you may
-	 * 		include those settings in the object and they will be passed to the effect.
-	 * 		If <code>duration</code> or <code>easing</code> is omitted, then the
-	 * 		default values will be used. If <code>delay</code> is omitted, then no
-	 * 		delay is used.</li></ul>
-	 * @property string $Title Specifies the title of the dialog. If the value is <code>null</code>, the
-	 * 		<code>title</code> attribute on the dialog source element will be used.
+	 * 		object, then <code>effect</code>, <code>duration</code>, and
+	 * 		<code>easing</code> properties may be provided. The <code>effect</code>
+	 * 		property must be the name of a jQuery UI effect. When using a jQuery UI
+	 * 		effect that supports additional settings, you may include those settings in
+	 * 		the object and they will be passed to the effect. If <code>duration</code>
+	 * 		or <code>easing</code> is omitted, then the default values will be
+	 * 		used.</li></ul>
+	 * @property boolean $Stack Specifies whether the dialog will stack on top of other dialogs. This will
+	 * 		cause the dialog to move to the front of other dialogs when it gains focus.
+	 * @property string $Title Specifies the title of the dialog. Any valid HTML may be set as the title.
+	 * 		The title can also be specified by the <code>title</code> attribute on the
+	 * 		dialog source element.
 	 * @property integer $Width The width of the dialog, in pixels.
+	 * @property integer $ZIndex The starting z-index for the dialog.
 	 */
 
 	class QDialogGen extends QPanel	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
-		/** @var mixed */
-		protected $mixAppendTo = null;
 		/** @var boolean */
 		protected $blnAutoOpen = null;
 		/** @var mixed */
@@ -273,10 +280,14 @@
 		protected $blnResizable = null;
 		/** @var mixed */
 		protected $mixShow = null;
+		/** @var boolean */
+		protected $blnStack = null;
 		/** @var string */
 		protected $strTitle = null;
 		/** @var integer */
 		protected $intWidth = null;
+		/** @var integer */
+		protected $intZIndex = null;
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
@@ -289,7 +300,6 @@
 
 		protected function makeJqOptions() {
 			$strJqOptions = '';
-			$strJqOptions .= $this->makeJsProperty('AppendTo', 'appendTo');
 			$strJqOptions .= $this->makeJsProperty('AutoOpen', 'autoOpen');
 			$strJqOptions .= $this->makeJsProperty('Buttons', 'buttons');
 			$strJqOptions .= $this->makeJsProperty('CloseOnEscape', 'closeOnEscape');
@@ -306,8 +316,10 @@
 			$strJqOptions .= $this->makeJsProperty('Position', 'position');
 			$strJqOptions .= $this->makeJsProperty('Resizable', 'resizable');
 			$strJqOptions .= $this->makeJsProperty('Show', 'show');
+			$strJqOptions .= $this->makeJsProperty('Stack', 'stack');
 			$strJqOptions .= $this->makeJsProperty('Title', 'title');
 			$strJqOptions .= $this->makeJsProperty('Width', 'width');
+			$strJqOptions .= $this->makeJsProperty('ZIndex', 'zIndex');
 			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
 			return $strJqOptions;
 		}
@@ -428,7 +440,6 @@
 
 		public function __get($strName) {
 			switch ($strName) {
-				case 'AppendTo': return $this->mixAppendTo;
 				case 'AutoOpen': return $this->blnAutoOpen;
 				case 'Buttons': return $this->mixButtons;
 				case 'CloseOnEscape': return $this->blnCloseOnEscape;
@@ -445,8 +456,10 @@
 				case 'Position': return $this->mixPosition;
 				case 'Resizable': return $this->blnResizable;
 				case 'Show': return $this->mixShow;
+				case 'Stack': return $this->blnStack;
 				case 'Title': return $this->strTitle;
 				case 'Width': return $this->intWidth;
+				case 'ZIndex': return $this->intZIndex;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -459,14 +472,6 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case 'AppendTo':
-					$this->mixAppendTo = $mixValue;
-				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
-					}
-					break;
-
 				case 'AutoOpen':
 					try {
 						$this->blnAutoOpen = QType::Cast($mixValue, QType::Boolean);
@@ -639,6 +644,18 @@
 					}
 					break;
 
+				case 'Stack':
+					try {
+						$this->blnStack = QType::Cast($mixValue, QType::Boolean);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'stack', $this->blnStack);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				case 'Title':
 					try {
 						$this->strTitle = QType::Cast($mixValue, QType::String);
@@ -656,6 +673,18 @@
 						$this->intWidth = QType::Cast($mixValue, QType::Integer);
 						if ($this->Rendered) {
 							$this->CallJqUiMethod('option', 'width', $this->intWidth);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'ZIndex':
+					try {
+						$this->intZIndex = QType::Cast($mixValue, QType::Integer);
+						if ($this->Rendered) {
+							$this->CallJqUiMethod('option', 'zIndex', $this->intZIndex);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
