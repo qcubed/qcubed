@@ -173,10 +173,18 @@
 			return 'accordion';
 		}
 
+		/**
+		 * Returns the Javascript needed as the part of control's behavior
+		 * @return string The control's JS
+		 */
 		public function GetControlJavaScript() {
 			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
+		/**
+		 * Returns the finalized Javascript needed as the part of control's behavior
+		 * @return string The control's JS
+		 */
 		public function GetEndScript() {
 			$str = '';
 			if ($this->getJqControlId() !== $this->ControlId) {

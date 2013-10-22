@@ -13,7 +13,7 @@
 	 * @property string $Text is used to display text that is displayed next to the checkbox.  The text is rendered as an html "Label For" the checkbox.
 	 * @property string $TextAlign specifies if "Text" should be displayed to the left or to the right of the checkbox.
 	 * @property boolean $Checked specifices whether or not hte checkbox is checked
-	 * @property boolean $HtmlEntities
+	 * @property boolean $HtmlEntities specifies whether the checkbox text will have to be run through htmlentities or not.
 	 */
 	class QCheckBox extends QControl {
 		///////////////////////////
@@ -21,18 +21,26 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var string Text opposite to the checkbox */
 		protected $strText = null;
+		/** @var QTextAlign|string the alignment of the string */
 		protected $strTextAlign = QTextAlign::Right;
 		
 		// BEHAVIOR
+		/** @var bool Should the htmlentities function be run on the control's text (strText)? */
 		protected $blnHtmlEntities = true;
 
 		// MISC
+		/** @var bool Determines whether the checkbox is checked? */
 		protected $blnChecked = false;
 
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Parses the Post Data submitted for the control and sets the values
+		 * according to the data submitted
+		 */
 		public function ParsePostData() {
 			if ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (array_key_exists($this->strControlId, $_POST)) {
@@ -46,6 +54,10 @@
 			}
 		}
 
+		/**
+		 * Returns the HTML code for the control which can be sent to the client
+		 * @return string THe HTML for the control
+		 */
 		protected function GetControlHtml() {
 			if (!$this->blnEnabled)
 				$strDisabled = 'disabled="disabled" ';
@@ -138,6 +150,12 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Checks whether the post data submitted for the control is valid or not
+		 * Right now it tests whether or not the control was marked as required and then tests whether it
+		 * was checked or not
+		 * @return bool
+		 */
 		public function Validate() {
 			if ($this->blnRequired) {
 				if (!$this->blnChecked) {
@@ -156,6 +174,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP __get magic method implementation
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -180,6 +205,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP __set magic method implementation
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws QInvalidCastException|QCallerException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

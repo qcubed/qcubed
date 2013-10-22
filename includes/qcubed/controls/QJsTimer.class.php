@@ -305,6 +305,7 @@
 		 * @param string $strName Name of the property
 		 * @param string $mixValue Value of the property
 		 *
+		 * @return mixed
 		 * @throws QCallerException
 		 * @throws QInvalidCastException
 		 */

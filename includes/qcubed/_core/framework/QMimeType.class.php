@@ -72,6 +72,8 @@
 		 * else fails, it will fall back to the basic GetMimeTypeForFilename() method.
 		 *
 		 * @param string $strFilePath the absolute file path of the ACTUAL file
+		 *
+		 * @throws QCallerException
 		 * @return string
 		 */
 		public static function GetMimeTypeForFile($strFilePath) {
