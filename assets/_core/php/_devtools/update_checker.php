@@ -17,7 +17,7 @@ class UpdateCheckerForm extends QForm {
 
 	protected function Form_Create() {
 		$arrLatestVersions = self::parseResponseIntoItems(self::makeHttpRequest(self::WEB_SERVICE_PATH));
-		self::augmentWithInstalledInfo(& $arrLatestVersions);
+		self::augmentWithInstalledInfo($arrLatestVersions);
 
 		$this->dtgUpdates_Create($arrLatestVersions);
 		$this->dtgNew_Create($arrLatestVersions);
@@ -131,6 +131,14 @@ class UpdateCheckerForm extends QForm {
 
 		$ch = curl_init();
 		curl_setopt_array($ch, $defaults);
+                
+                if(__CURLOPT_PROXY__){
+                    curl_setopt($ch, CURLOPT_PROXY, __CURLOPT_PROXY__);
+                }
+                if(__CURLOPT_PROXYUSERPWD__){
+                    curl_setopt($ch, CURLOPT_PROXYUSERPWD, __CURLOPT_PROXYUSERPWD__);
+                }
+                
 		if( ! $result = curl_exec($ch)) {
 			trigger_error(curl_error($ch));
 		}
