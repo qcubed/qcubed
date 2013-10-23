@@ -141,11 +141,8 @@ ALTER TABLE related_project_assn ADD CONSTRAINT related_project_assn_2 FOREIGN K
 ALTER TABLE two_key ADD CONSTRAINT two_key_project FOREIGN KEY (project_id) REFERENCES project (id);
 ALTER TABLE two_key ADD CONSTRAINT two_key_person FOREIGN KEY (person_id) REFERENCES person (id);
 
-ALTER TABLE `person_type_assn` ADD CONSTRAINT person_type_assn_1 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
-ALTER TABLE `person_type_assn` ADD CONSTRAINT person_type_assn_2 FOREIGN KEY (person_id) REFERENCES person (id);
-
-ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_type_assn_1 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
-ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_type_assn_2 FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_persontype_assn_1 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
+ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_persontype_assn_2 FOREIGN KEY (person_id) REFERENCES person (id);
 
 
 #========================================================================== #
