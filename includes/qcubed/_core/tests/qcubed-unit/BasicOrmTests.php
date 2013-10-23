@@ -275,8 +275,20 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		
 		$this->assertEqual(sizeof($objItems), 2, "2 projects found");
 		
-		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for the first project");
-		$this->assertEqual($objItems[1]->GetVirtualAttribute('team_member_count'), 7, "7 team members found for the second project");
+		$this->assertEqual($objItems[0]->Name, "State College HR System", "Project " . $objItems[0]->Name . " found");
+		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for project " . $objItems[0]->Name);	
+	}
+	
+	public function testEmptyColumns() {
+		$objItem = Login::QuerySingle(
+			QQ::Equal(QQN::Login()->Id, 1)
+		);
+		$this->assertTrue($objItem->IsEnabled === 0, "Zero column does not return null.");
+	
+		$objItem = Project::QuerySingle(
+			QQ::Equal(QQN::Project()->Id, 2)
+		);
+		$this->assertTrue($objItem->EndDate === null, "Null date column returns a null.");
 	}
 }
 ?>
