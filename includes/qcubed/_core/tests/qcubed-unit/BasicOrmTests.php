@@ -163,6 +163,25 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			"Wendy Smith",
 			"Karen Wolfe")
 		, "List managed persons is correct");
+		
+		$objPersonArray = Person::QueryArray(
+			QQ::Equal(QQN::Person()->PersonType->PersonTypeId, PersonType::Inactive),
+			QQ::Clause(
+				QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
+			)
+		);
+		
+		$arrNamesOnly = array();
+		foreach ($objPersonArray as $item) {
+			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
+		}
+		
+		$this->assertEqual($arrNamesOnly, array(
+			"Linda Brady",
+			"John Doe",
+			"Ben Robinson")
+		, "Person-PersonType assn is correct");
+		
 	}
 	
 	public function testQuerySingleEmpty() {
