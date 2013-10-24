@@ -397,7 +397,7 @@
 				case "Wrap": return $this->blnWrap;
 
 				// FILTERING and VALIDATION
-				case "AutTrim": return $this->blnAutoTrim;
+				case "AutoTrim": return $this->blnAutoTrim;
 				case "SanitizeFilter": return $this->intSanitizeFilter;
 				case "SanitizeFilterOptions": return $this->$mixSanitizeFilterOptions;
 				case "ValidateFilter": return $this->intValidateFilter;
