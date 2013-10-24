@@ -180,6 +180,7 @@
 			$strJS = parent::GetControlJavaScript();
 			$strValueExpr = 'var value = jQuery(this).val();';
 			$strResetValue = 'var resetValue = "";';
+			$options = array();
 			if ($this->strMultipleValueDelimiter) {
 				$options['multiValDelim'] = $this->strMultipleValueDelimiter;
 			}
