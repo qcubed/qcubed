@@ -30,14 +30,18 @@
 	/**
 	 * Triggered when the value of the spinner has changed and the input is no
 	 * 		longer focused.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QSpinner_ChangeEvent extends QJqUiEvent {
 		const EventName = 'spinchange';
 	}
 	/**
 	 * Triggered when the spinner is created.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QSpinner_CreateEvent extends QJqUiEvent {
 		const EventName = 'spincreate';
@@ -56,14 +60,18 @@
 	/**
 	 * Triggered before a spin. Can be canceled, preventing the spin from
 	 * 		occurring.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QSpinner_StartEvent extends QJqUiEvent {
 		const EventName = 'spinstart';
 	}
 	/**
 	 * Triggered after a spin.<ul><li><strong>event</strong> Type: <a>Event</a>
-	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note:
+	 * 		The <code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QSpinner_StopEvent extends QJqUiEvent {
 		const EventName = 'spinstop';
@@ -279,14 +287,9 @@
 			$this->CallJqUiMethod("option", $options);
 		}
 		/**
-		 * <p>Decrements the value by the specified number of pages, as defined by the
+		 * Decrements the value by the specified number of pages, as defined by the
 		 * <a><code>page</code></a> option. Without the parameter, a single page is
-		 * decremented.</p> 				<p>If the resulting value is above the max, below the
-		 * min, or results in a step mismatch, the value will be adjusted to the
-		 * closest valid value.</p> 				<p>Invoking <code>pageDown()</code> will cause
-		 * <a><code>start</code></a>, <a><code>spin</code></a>, and
-		 * <a><code>stop</code></a> events to be
-		 * triggered.</p><ul><li><strong>pages</strong> Type: <a>Number</a> Number of
+		 * decremented.<ul><li><strong>pages</strong> Type: <a>Number</a> Number of
 		 * pages to decrement, defaults to 1.</li></ul>
 		 * @param $pages
 		 */
@@ -294,14 +297,9 @@
 			$this->CallJqUiMethod("pageDown", $pages);
 		}
 		/**
-		 * <p>Increments the value by the specified number of pages, as defined by the
+		 * Increments the value by the specified number of pages, as defined by the
 		 * <a><code>page</code></a> option. Without the parameter, a single page is
-		 * incremented.</p> 				<p>If the resulting value is above the max, below the
-		 * min, or results in a step mismatch, the value will be adjusted to the
-		 * closest valid value.</p> 				<p>Invoking <code>pageUp()</code> will cause
-		 * <a><code>start</code></a>, <a><code>spin</code></a>, and
-		 * <a><code>stop</code></a> events to be
-		 * triggered.</p><ul><li><strong>pages</strong> Type: <a>Number</a> Number of
+		 * incremented.<ul><li><strong>pages</strong> Type: <a>Number</a> Number of
 		 * pages to increment, defaults to 1.</li></ul>
 		 * @param $pages
 		 */
@@ -309,28 +307,22 @@
 			$this->CallJqUiMethod("pageUp", $pages);
 		}
 		/**
-		 * <p>Decrements the value by the specified number of steps. Without the
-		 * parameter, a single step is decremented.</p> 				<p>If the resulting value
-		 * is above the max, below the min, or results in a step mismatch, the value
-		 * will be adjusted to the closest valid value.</p> 				<p>Invoking
-		 * <code>stepDown()</code> will cause <a><code>start</code></a>,
-		 * <a><code>spin</code></a>, and <a><code>stop</code></a> events to be
-		 * triggered.</p><ul><li><strong>steps</strong> Type: <a>Number</a> Number of
-		 * steps to decrement, defaults to 1.</li></ul>
+		 * Decrements the value by the specified number of steps. Without the
+		 * parameter, a single step is decremented. 				<p>If the resulting value is
+		 * above the max, below the min, or reuslts in a step mismatch, the value will
+		 * be adjusted to the closest valid value.</p><ul><li><strong>steps</strong>
+		 * Type: <a>Number</a> Number of steps to decrement, defaults to 1.</li></ul>
 		 * @param $steps
 		 */
 		public function StepDown($steps = null) {
 			$this->CallJqUiMethod("stepDown", $steps);
 		}
 		/**
-		 * <p>Increments the value by the specified number of steps. Without the
-		 * parameter, a single step is incremented.</p> 				<p>If the resulting value
-		 * is above the max, below the min, or results in a step mismatch, the value
-		 * will be adjusted to the closest valid value.</p> 				<p>Invoking
-		 * <code>stepUp()</code> will cause <a><code>start</code></a>,
-		 * <a><code>spin</code></a>, and <a><code>stop</code></a> events to be
-		 * triggered.</p><ul><li><strong>steps</strong> Type: <a>Number</a> Number of
-		 * steps to increment, defaults to 1.</li></ul>
+		 * Increments the value by the specified number of steps. Without the
+		 * parameter, a single step is incremented. 				<p>If the resulting value is
+		 * above the max, below the min, or reuslts in a step mismatch, the value will
+		 * be adjusted to the closest valid value.</p><ul><li><strong>steps</strong>
+		 * Type: <a>Number</a> Number of steps to increment, defaults to 1.</li></ul>
 		 * @param $steps
 		 */
 		public function StepUp($steps = null) {

@@ -9,7 +9,7 @@
 	 * This class will render an HTML Textbox -- which can either be [input type="text"],
 	 * [input type="password"] or [textarea] depending on the TextMode (see below).
 	 *
-	 * @package Controls
+	 * @package Controls\Base
 	 *
 	 * @property integer $Columns is the "cols" html attribute (applicable for MultiLine textboxes)
 	 * @property string $Format
@@ -521,14 +521,24 @@
 							// We load lazy to make sure that the library is not loaded every time 'prepend.inc.php'
 							// or 'qcubed.inc.php' is inlcuded. HTMLPurifier is a HUGE and SLOW library. Lazy loading
 							// keeps it simpler.
-							require_once(__EXTERNAL_LIBRARIES__ . '/htmlpurifier/library/HTMLPurifier.auto.php');
-
+							require_once(__EXTERNAL_LIBRARIES__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
+								
 							// We configure the default set of forbidden tags (elements) and attributes here
 							// so that the rules are applicable the moment CrossScripting is set to Purify.
 							// Use the QTextBox::SetPurifierConfig method to override these settings.
 							$this->objHTMLPurifierConfig = HTMLPurifier_Config::createDefault();
 							$this->objHTMLPurifierConfig->set('HTML.ForbiddenElements', 'script,applet,embed,style,link,iframe,body,object');
 							$this->objHTMLPurifierConfig->set('HTML.ForbiddenAttributes', '*@onfocus,*@onblur,*@onkeydown,*@onkeyup,*@onkeypress,*@onmousedown,*@onmouseup,*@onmouseover,*@onmouseout,*@onmousemove,*@onclick');
+
+							if (defined('__PURIFIER_CACHE__')) {
+								if (!is_dir(__PURIFIER_CACHE__)) {
+									mkdir(__PURIFIER_CACHE__);
+								}
+							    $this->objHTMLPurifierConfig->set('Cache.SerializerPath', __PURIFIER_CACHE__);
+							} else {
+							    # Disable the cache entirely
+							    $this->objHTMLPurifierConfig->set('Cache.DefinitionImpl', null);
+							}
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

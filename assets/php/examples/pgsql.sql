@@ -98,6 +98,19 @@ CREATE TABLE address (
 );
 CREATE INDEX IDX_address_1 ON address (person_id);
 
+DROP TABLE IF EXISTS two_key;
+CREATE TABLE two_key (
+  "server" varchar(50) NOT NULL,
+  "directory" varchar(50) NOT NULL,
+  file_name varchar(50) NOT NULL,
+  person_id BIGINT NOT NULL,
+  project_id BIGINT,
+  CONSTRAINT PK_two_key PRIMARY KEY ("server", "directory")
+);
+CREATE INDEX IDX_two_key_person_id ON two_key (person_id);
+CREATE INDEX IDX_two_key_project_id ON two_key (project_id);
+
+
 DROP TABLE IF EXISTS person_type;
 CREATE TABLE person_type (
   id SERIAL,
@@ -113,18 +126,6 @@ CREATE TABLE person_persontype_assn (
     CONSTRAINT PK_person_persontype_assn PRIMARY KEY (person_id, person_type_id)
 );
 CREATE INDEX IDX_persontypeassn_2 ON person_persontype_assn (person_type_id);
-
-DROP TABLE IF EXISTS two_key;
-CREATE TABLE two_key (
-  "server" varchar(50) NOT NULL,
-  "directory" varchar(50) NOT NULL,
-  file_name varchar(50) NOT NULL,
-  person_id BIGINT NOT NULL,
-  project_id BIGINT,
-  CONSTRAINT PK_two_key PRIMARY KEY ("server", "directory")
-);
-CREATE INDEX IDX_two_key_person_id ON two_key (person_id);
-CREATE INDEX IDX_two_key_project_id ON two_key (project_id);
 
 -- ========================================================================== -- 
 --   Foreign Keys                                                             -- 
@@ -255,6 +256,13 @@ INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone H');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone I');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone J');
 
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('cnn.com', 'us', 'news', 1, 1);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'drive', '', 2, 2);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'mail', 'mail.html', 3, 2);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'news', 'news.php', 4, 3);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('mail.google.com', 'mail', 'inbox', 5, NULL);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('yahoo.com', '', '', 6, NULL);
+
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (3, 1);
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (10, 1);
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (1, 2);
@@ -267,12 +275,5 @@ INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (2, 5);
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (5, 5);
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (7, 2);
 INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (7, 4);
-
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('cnn.com', 'us', 'news', 1, 1);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'drive', '', 2, 2);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'mail', 'mail.html', 3, 2);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'news', 'news.php', 4, 3);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('mail.google.com', 'mail', 'inbox', 5, NULL);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('yahoo.com', '', '', 6, NULL);
 
 -- SET FOREIGN_KEY_CHECKS = 1;

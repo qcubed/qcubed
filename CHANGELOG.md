@@ -1,6 +1,45 @@
 Qcubed ChangeLog
 ===================
 
+## Release 2.2.2 (bugfix release)
+
+[334](https://github.com/qcubed/framework/issues/334) UpdateCheckerForm::makeHttpRequest: Inserted the possibility to configure a proxy server for the curl request. Removed pass by reference in line 20.
+
+[279](https://github.com/qcubed/framework/issues/279) Going back to jQuery UI v1.9
+
+[293](https://github.com/qcubed/framework/issues/293) Adding style to datagrid row.
+
+[330](https://github.com/qcubed/framework/issues/330) Fix app_includes bug with QApplication class for certain cases
+
+[302](https://github.com/qcubed/framework/issues/302) Missing QDateTime object for display only object.
+
+[291](https://github.com/qcubed/framework/issues/291) Typo in Codegen
+
+[320](https://github.com/qcubed/framework/issues/320) use Exeption::getMessage() instead of "Message"
+
+[305](https://github.com/qcubed/framework/issues/395) Codegen problem, ExpandAsArray backwords through many-to-one then back to many-to-many not working
+
+handle null cell values when PostMethod is specified
+
+handle empty properties as reference to the item itself
+
+[226](https://github.com/qcubed/framework/issues/226) The "Introduction to QSoapService" example is broken
+
+[255](https://github.com/qcubed/framework/issues/255) installation wizard error in my windows local wamp installation
+
+[258](https://github.com/qcubed/framework/issues/258) syntax error in configuration.inc.php issue fixed
+
+[127](https://github.com/qcubed/framework/issues/127) The recursive transaction support is added
+
+Documentation improved
+
+[266](https://github.com/qcubed/framework/issues/266) Problems with cache providers
+
+[264](https://github.com/qcubed/framework/issues/264) Validation logic is incorrect for non-english languages 
+
+###For a complete list of issues fixed in this release see the [closed issues in this milestone](https://github.com/qcubed/framework/issues?milestone=8&page=1&state=closed "Release 2.2.2 closed issues").
+
+
 ## Release 2.2.1 (bugfix release)
 
 [241](https://github.com/qcubed/framework/issues/241) qcheckboxcolumn example is broken

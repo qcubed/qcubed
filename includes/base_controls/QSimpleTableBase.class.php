@@ -102,12 +102,12 @@
 			$this->objColumnArray[] = $objColumn;
 			$objColumn->_ParentTable = $this;
 		}
-		
+
 		/**
 		 * Move the named column to the given position
 		 * @param string $strName column name
 		 * @param integer $intColumnIndex new position
-		 * @param string $strNewName new name to give moved column
+		 * @param string $strNewName new column name
 		 */
 		public function MoveColumn($strName, $intColumnIndex = -1, $strNewName = null) {
 			$col = $this->RemoveColumnByName($strName);

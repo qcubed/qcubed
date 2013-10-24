@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/qcubed/framework.png?branch=master)](https://travis-ci.org/qcubed/framework)
 
 ## Releases
-**Newest stable release: [version 2.2.1, released on May 28, 2013](https://github.com/qcubed/framework/archive/2.2.1.zip)**.
+**Newest stable release: [version 2.2.2, released on May 28, 2013](https://github.com/qcubed/framework/archive/2.2.1.zip)**.
 
 **alpha-3.0 is available via composer and github**
 
@@ -60,7 +60,7 @@ The [github wiki](https://github.com/qcubed/framework/wiki) will eventually supe
 ## System Requirements
 * A development computer that you can set up so that the browser can write to a directory in your file system.
 * As of v3.0.0 alpha, PHP 5.0 and above are supported. However, v3.0 eventually will require PHP 5.3 or above. To do a composer install, you will need PHP 5.3.2.
-* As of v3.0.0, QCubed will generally produce XHTML 1.0 compliant code. However, v3.0 will eventually produce XHTML5 compliant code only.
+* As of v3.0.0 alpha, QCubed will generally produce XHTML 1.0 compliant code. However, v3.0 will eventually produce XHTML5 compliant code only.
 * A SQL database engine. MySQL, SqlServer, Postgres, Oracle, PDO, SqlLite, Informix adapters are included. Creating another adapter is not hard if you have a different SQL.
 
 ## Installation
@@ -81,5 +81,5 @@ QCubed was born out of QCodo, and uses jQuery UI libraries.
 
 ## Changelog
 
-The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/rc-2.2.1/CHANGELOG.md "Changelog").
+The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/master/CHANGELOG.md "Changelog").
 

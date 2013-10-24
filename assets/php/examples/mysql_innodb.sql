@@ -141,8 +141,8 @@ ALTER TABLE related_project_assn ADD CONSTRAINT related_project_assn_2 FOREIGN K
 ALTER TABLE two_key ADD CONSTRAINT two_key_project FOREIGN KEY (project_id) REFERENCES project (id);
 ALTER TABLE two_key ADD CONSTRAINT two_key_person FOREIGN KEY (person_id) REFERENCES person (id);
 
-ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_type_assn_1 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
-ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_type_assn_2 FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_persontype_assn_1 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
+ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_persontype_assn_2 FOREIGN KEY (person_id) REFERENCES person (id);
 
 
 #========================================================================== #
@@ -254,6 +254,13 @@ INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone H');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone I');
 INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone J');
 
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('cnn.com', 'us', 'news', 1, 1);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'drive', '', 2, 2);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'mail', 'mail.html', 3, 2);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'news', 'news.php', 4, 3);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('mail.google.com', 'mail', 'inbox', 5, NULL);
+INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('yahoo.com', '', '', 6, NULL);
+
 INSERT INTO person_persontype_assn VALUES(3, 1);
 INSERT INTO person_persontype_assn VALUES(10, 1);
 INSERT INTO person_persontype_assn VALUES(1, 2);
@@ -266,12 +273,5 @@ INSERT INTO person_persontype_assn VALUES(2, 5);
 INSERT INTO person_persontype_assn VALUES(5, 5);
 INSERT INTO person_persontype_assn VALUES(7, 2);
 INSERT INTO person_persontype_assn VALUES(7, 4);
-
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('cnn.com', 'us', 'news', 1, 1);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'drive', '', 2, 2);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'mail', 'mail.html', 3, 2);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'news', 'news.php', 4, 3);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('mail.google.com', 'mail', 'inbox', 5, NULL);
-INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('yahoo.com', '', '', 6, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

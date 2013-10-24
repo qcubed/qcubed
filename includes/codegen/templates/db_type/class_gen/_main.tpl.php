@@ -108,13 +108,13 @@
 			    $objBuilder->AddSelectItem($strTableName, 'name', $strAliasPrefix . 'name');
             }
 		}
-		
+
 		///////////////////////////////
 		// INSTANTIATION-RELATED METHODS
 		///////////////////////////////
 
 		/**
-		 * Instantiate a <?php echo $objTypeTable->ClassName  ?> from a Database Row. 
+		 * Instantiate a <?php echo $objTypeTable->ClassName  ?> from a Database Row.
 		 * Simply returns the integer id corresponding to this item.
 		 * Takes in an optional strAliasPrefix, used in case another Object::InstantiateDbRow
 		 * is calling this <?php echo $objTypeTable->ClassName  ?>::InstantiateDbRow in order to perform
@@ -139,7 +139,7 @@
 		}
 	}
 
-	
+
     /**
      * @uses QQNode
      *

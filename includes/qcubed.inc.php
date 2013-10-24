@@ -34,7 +34,7 @@
 	define('QCUBED_VERSION_NUMBER_ONLY', '3.0.0');
 	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Alpha Release (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 	
-	define('__JQUERY_CORE_VERSION__', '1.7.2');
+	define('__JQUERY_CORE_VERSION__', '1.9.1');
 	define('__JQUERY_UI_VERSION__', '1.9.2');
 	
 

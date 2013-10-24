@@ -386,7 +386,7 @@ class QPostgreSqlPdoDatabase extends QPdoDatabase {
 				// Perform the Query
 				$objResult = $this->objPdo->query($strQuery);
 				if ($objResult === false)
-						throw new QPdoDatabaseException($this->objPdo->errorInfo(), $this->objPdo->errorCode(), $strQuery);
+						throw new QPostgreSqlPdoDatabaseException($this->objPdo->errorInfo(), $this->objPdo->errorCode(), $strQuery);
 
 				// Return the Result
 				$this->objMostRecentResult = $objResult;
@@ -570,18 +570,16 @@ class QPostgreSqlPdoDatabaseField extends QDatabaseFieldBase {
 				switch ($this->strType) {
 						case 'integer':
 						case 'smallint':
-								$this->strType = QDatabaseFieldType::Integer;
+						case 'bigint': // will work on 64-bit machines
+							$this->strType = QDatabaseFieldType::Integer;
 								break;
 						case 'money':
 						// NOTE: The money type is deprecated in PostgreSQL.
 								throw new QPostgreSqlDatabaseException('Unsupported Field Type: money.  Use numeric or decimal instead.', 0,null);
 								break;
-						case 'bigint':
 						case 'decimal':
 						case 'numeric':
 						case 'real':
-						// "BIGINT" must be specified here as a float so that PHP can support it's size
-						// http://www.postgresql.org/docs/8.2/static/datatype-numeric.html
 								$this->strType = QDatabaseFieldType::Float;
 								break;
 						case 'bit':

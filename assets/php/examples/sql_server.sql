@@ -82,6 +82,18 @@ CREATE TABLE address (
 
 CREATE INDEX IDX_address_1 ON address(person_id);
 
+DROP TABLE IF EXISTS two_key;
+CREATE TABLE two_key (
+  "server" VARCHAR(50) NOT NULL,
+  "directory" VARCHAR(50) NOT NULL,
+  file_name VARCHAR(50) NOT NULL,
+  person_id INT NOT NULL,
+  project_id INT,
+  CONSTRAINT PK_two_key PRIMARY KEY ("server", "directory")
+);
+CREATE INDEX IDX_two_key_person_id ON two_key(person_id);
+CREATE INDEX IDX_two_key_project_id ON two_key(project_id);
+
 CREATE TABLE person_type (
   id INT NOT NULL IDENTITY,
   name VARCHAR(50) NOT NULL CONSTRAINT UQ_persontype_1 UNIQUE,
@@ -96,19 +108,6 @@ CREATE TABLE IF NOT EXISTS person_persontype_assn (
 
 CREATE INDEX IX_persontype_1 ON person_persontype_assn(person_id);
 CREATE INDEX IX_persontype_2 ON person_persontype_assn(person_type_id);
-
-DROP TABLE IF EXISTS two_key;
-CREATE TABLE two_key (
-  "server" VARCHAR(50) NOT NULL,
-  "directory" VARCHAR(50) NOT NULL,
-  file_name VARCHAR(50) NOT NULL,
-  person_id INT NOT NULL,
-  project_id INT,
-  CONSTRAINT PK_two_key PRIMARY KEY ("server", "directory")
-);
-CREATE INDEX IDX_two_key_person_id ON two_key(person_id);
-CREATE INDEX IDX_two_key_project_id ON two_key(project_id);
-
 
 ALTER TABLE login ADD CONSTRAINT person_login FOREIGN KEY (person_id) REFERENCES person (id);
 ALTER TABLE project ADD CONSTRAINT person_project FOREIGN KEY (manager_person_id) REFERENCES person (id);

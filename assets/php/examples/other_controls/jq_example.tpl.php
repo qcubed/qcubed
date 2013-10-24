@@ -1,5 +1,5 @@
 <?php require('../includes/header.inc.php'); ?>
-<?php $this->RenderBegin(); ?>
+	<?php $this->RenderBegin(); ?>
 
 <div id="instructions">
 	<h1>jQuery Controls: Server-Side Wrappers</h1>
@@ -59,7 +59,8 @@
 	
 	<div class="example"><h2>Ajax Autocomplete</h2>
 		 <p>Type "s" to test</p>
-		<?php $this->AjaxAutocomplete->Render(); ?>
+			<?php $this->AjaxAutocomplete->RenderWithName(); ?>
+			<?php $this->AjaxAutocomplete2->RenderWithName(); ?>
 	</div>
 	
 	<div class="example"><h2>Buttons</h2>

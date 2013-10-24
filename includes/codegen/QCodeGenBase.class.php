@@ -174,7 +174,7 @@
 
 			// Set the Template Escaping
 			QCodeGen::$TemplateEscapeBegin = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'templateEscape', 'begin');
-			QCodeGen::$TemplateEscapeEnd = QCOdeGen::LookupSetting(QCodeGen::$SettingsXml, 'templateEscape', 'end');
+			QCodeGen::$TemplateEscapeEnd = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'templateEscape', 'end');
 			QCodeGen::$TemplateEscapeBeginLength = strlen(QCodeGen::$TemplateEscapeBegin);
 			QCodeGen::$TemplateEscapeEndLength = strlen(QCodeGen::$TemplateEscapeEnd);
 

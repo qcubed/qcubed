@@ -86,7 +86,9 @@
 	}
 	/**
 	 * Triggered when the sortable is created.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QSortable_CreateEvent extends QJqUiEvent {
 		const EventName = 'sortcreate';
@@ -111,10 +113,9 @@
 		const EventName = 'sortdeactivate';
 	}
 	/**
-	 * <p>This event is triggered when a sortable item is moved away from a
-	 * 		connected list.</p> 				<p><em>Note: This event is also triggered when a
-	 * 		sortable item is dropped.</em></p><ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * This event is triggered when a sortable item is moved away from a connected
+	 * 		list.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
 	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
@@ -292,7 +293,7 @@
 	 * 		be connected to. This is a one-way relationship, if you want the items to
 	 * 		be connected in both directions, the <code>connectWith</code> option must
 	 * 		be set on both sortable elements.
-	 * @property mixed $Containment <p>Defines a bounding box that the sortable items are constrained to while
+	 * @property mixed $Containment <p>Defines a bounding box that the sortable items are contrained to while
 	 * 		dragging.</p>  				<p>Note: The element specified for containment must have
 	 * 		a calculated width and height (though it need not be explicit). For
 	 * 		example, if you have <code>float: left</code> sortable children and specify

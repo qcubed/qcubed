@@ -296,7 +296,7 @@ class QSqLite3PdoDatabase extends QPdoDatabase {
 				// Perform the Query
 				$objResult = $this->objPdo->query($strQuery);
 				if ($objResult === false)
-						throw new QPdoDatabaseException($this->objPdo->errorInfo(), $this->objPdo->errorCode(), $strQuery);
+					throw new QSqLite3PdoDatabaseException($this->objPdo->errorInfo(), $this->objPdo->errorCode(), $strQuery);
 
 				// Return the Result
 				$this->objMostRecentResult = $objResult;

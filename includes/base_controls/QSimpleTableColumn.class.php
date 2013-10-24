@@ -112,7 +112,7 @@
 			$strToReturn .= '>' . $cellValue . '</' . $tag . '>';
 			return $strToReturn;
 		}
-		
+
 		/**
 		 * Return a key/val array of items to insert inside the cell tag. 
 		 * 
@@ -355,7 +355,7 @@
 		public function FetchCellValue($item) {
 			$cellValue = $this->FetchCellObject($item);
 						
-			if ($cellValue !== null && $this->strPostMethod) {
+			if ($this->strPostMethod) {
 				$strPostMethod = $this->strPostMethod;
 				$cellValue = $cellValue->$strPostMethod();
 			}
