@@ -269,7 +269,7 @@
 					break;
 
 				case 'MultipleValueDelimiter':
-					$a = $this->GetAllActions(QAutocomplete_SourceEvent);
+					$a = $this->GetAllActions('QAutocomplete_SourceEvent');
 					if (!empty ($a)) {
 						throw new Exception('Must set MultipleValueDelimiter BEFORE calling SetDataBinder');
 					}				
