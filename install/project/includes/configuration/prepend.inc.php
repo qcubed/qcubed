@@ -74,12 +74,13 @@
 			// TODO: Define any other custom global WebApplication functions (if any) here...
 		}
 
-		// Register the autoloader
-		spl_autoload_register(array('QApplication', 'Autoload'));
+        if (file_exists (__QCUBED_CORE__ . '/../../../autoload.php')) {
+            require __QCUBED_CORE__ . '/../../../autoload.php'; // Add the Composer autoloader if using Composer
+        }
 
-		if (file_exists (__QCUBED_CORE__ . '/../../../autoload.php')) {
-			require __QCUBED_CORE__ . '/../../../autoload.php'; // Add the Composer autoloader if using Composer
-		}
+        // Register the autoloader, making sure we go BEFORE the composer autoloader
+        spl_autoload_register(array('QApplication', 'Autoload'), true, true);
+
 
 		//////////////////////////
 		// Custom Global Functions

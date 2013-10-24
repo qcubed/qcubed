@@ -239,8 +239,8 @@
 		 *
 		 * @param QControl|QForm|QControlBase $objParentObject
 		 * @param string                      $strControlId
-		 *                optional id of this Control. In html, this will be set as the value of the id attribute. The id can only
-		 *                contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id
+		 *   optional id of this Control. In html, this will be set as the value of the id attribute. The id can only
+		 *   contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id
 		 *
 		 * @throws Exception|QCallerException
 		 */
@@ -642,31 +642,56 @@
 				throw new QCallerException(sprintf("Custom Style does not exist in Control '%s': %s", $this->strControlId, $strName));
 		}
 
-		/**
-		 * Add a JS file to this QControl. It is called/fetched by browser when the control is rendered.
-		 * @param string $strJsFileName Path to the JS file
+        /**
+         * Add javascript file to be included in the form.
+         * The  include mechanism will take care of duplicates, and also change the given URL in the following ways:
+         * 	- If the file name begins with 'http', it will use it directly as a URL
+         *  - If the file name begins with '/', the url will be relative to  __DOCROOT__ . __VIRTUAL_DIRECTORY__
+         *  - If the file name begins with anything else, the url will be relative to __JS_ASSETS__
+         *
+         * @param string $strJsFileName url, path, or file name to include
+         */
+        public function AddJavascriptFile($strJsFileName) {
+            if($this->strJavaScripts) {
+                $this->strJavaScripts .= ','.$strJsFileName;
+            } else {
+                $this->strJavaScripts = $strJsFileName;
+            }
+        }
+
+        /**
+		 * Add javascript file to be included from a plugin. Plugins should use this function instead of AddJavascriptFile.
+		 * The  include mechanism will take care of duplicates, and also change the given URL in the following ways:
+		 * 	- If the file name begins with 'http', it will use it directly as a URL
+		 *  - If the file name begins with '/', the url will be relative to the __DOCROOT__ . __VIRTUAL_DIRECTORY__ directory.
+		 *  - If the file name begins with anything else, the url will be relative to __PLUGIN_ASSETS__/pluginName/js/
+		 *  
+		 * @param string $strPluginName name of plugin
+		 * @param string $strJsFileName url, path, or file name to include
 		 */
-		public function AddJavascriptFile($strJsFileName) {
-			if($this->strJavaScripts) {
-				$this->strJavaScripts .= ','.$strJsFileName;
-			} else {
-				$this->strJavaScripts = $strJsFileName;
+		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
+			if (strpos($strJsFileName, "http") === 0) {
+				$this->AddJavascriptFile($strJsFileName);	// plugin uses js from some other website
+			}
+			else {
+				if (strpos($strJsFileName, "/") === 0) {
+					// custom location for plugin javascript, relative to virtual directory
+					$this->AddJavascriptFile($strJsFileName);
+				} else {
+					// Use the default location, relative to plugin's own directory given.
+					$this->AddJavascriptFile(__PLUGIN_ASSETS__ . '/' . $strPluginName . "/js/" . $strJsFileName);
+				}
 			}
 		}
 
 		/**
-		 * Add JS file for a Plugin (if there is one associated)
-		 * @param string $strPluginName Name of the plugin
-		 * @param string $strJsFileName Path to the JS file
-		 */
-		public function AddPluginJavascriptFile($strPluginName, $strJsFileName) {
-			// Relative path based on the path of docroot
-			$this->AddJavascriptFile(__PLUGIN_ASSETS__ . '/' . $strPluginName . "/js/" . $strJsFileName);
-		}
-
-		/**
-		 * Add a CSS file to this QControl. It is called/fetched by browser when the control is rendered.
-		 * @param string $strCssFileName CSS file path
+		 * Add style sheet file to be included in the form.
+		 * The  include mechanism will take care of duplicates, and also change the given URL in the following ways:
+		 * 	- If the file name begins with 'http', it will use it directly as a URL
+		 *  - If the file name begins with '/', the url will be relative to the ___DOCROOT__ . __VIRTUAL_DIRECTORY__
+		 *  - If the file name begins with anything else, the url will be relative to __CSS_ASSETS__
+		 *  
+		 * @param string $strCssFileName url, path, or file name to include
 		 */
 		public function AddCssFile($strCssFileName) {
 			if($this->strStyleSheets) {
@@ -677,14 +702,30 @@
 		}
 
 		/**
-		 * Add CSS file for a Plugin (if there is one associated)
-		 * @param string $strPluginName Name of the plugin
-		 * @param string $strCssFileName File path of CSS file
+		 * Add style sheet file to be included from a plugin. Plugins should use this function instead of AddCssFile.
+		 * The  include mechanism will take care of duplicates, and also change the given URL in the following ways:
+		 * 	- If the file name begins with 'http', it will use it directly as a URL
+		 *  - If the file name begins with '/', the url will be relative to the __PLUGIN_ASSETS__ directory.
+		 *  - If the file name begins with anything else, the url will be relative to __PLUGIN_ASSETS__/pluginName/css/
+		 *  
+		 * @param string $strPluginName name of plugin
+		 * @param string $strCssFileName url, path, or file name to include
 		 */
 		public function AddPluginCssFile($strPluginName, $strCssFileName) {
-			// Relative path based on the path of the docroot
-			$this->AddCssFile(__PLUGIN_ASSETS__ . '/' . $strPluginName . "/css/" . $strCssFileName);
+			if (strpos($strCssFileName, "http") === 0) {
+				$this->AddCssFile($strCssFileName);	// plugin uses style sheet from some other website
+			}
+			else {
+				if (strpos($strCssFileName, "/") === 0) {
+					// custom location for plugin javascript, relative to virtual dir
+					$this->AddCssFile($strCssFileName);
+				} else {
+					// Use the default location 
+					$this->AddCssFile(__PLUGIN_ASSETS__ . '/' . $strPluginName . "/css/" . $strCssFileName);
+				}
+			}
 		}
+
 
 		/**
 		 * This will add a CssClass name to the CssClass property (if it does not yet exist),
@@ -1131,11 +1172,11 @@
 		 * to the content buffer or simply returns it. See {@link QControlBase::RenderHelper()}.
 		 *
 		 * @param string  $strOutput
-		 *                        Your html-code which should be given out
+		 *   Your html-code which should be given out
 		 * @param boolean $blnDisplayOutput
-		 *                        should it be given out, or just be returned?
+		 *   should it be given out, or just be returned?
 		 * @param boolean $blnForceAsBlockElement
-		 *                        should it be given out as a block element, regardless of its configured tag?
+		 *   should it be given out as a block element, regardless of its configured tag?
 		 * @param string  $strWrapperAttributes
 		 *
 		 * @return string
