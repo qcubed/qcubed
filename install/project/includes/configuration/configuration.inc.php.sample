@@ -395,6 +395,9 @@ if (!defined('SERVER_INSTANCE')) {
 			//			define('ERROR_FRIENDLY_PAGE_PATH', __PHP_ASSETS__ . '/friendly_error_page.php');
 			//			define('ERROR_FRIENDLY_AJAX_MESSAGE', 'Oops!  An error has occurred.\r\n\r\nThe error was logged, and we will take a look into this right away.');
 
+			// If using HTML Purifier, the location of the writeable cache directory.
+			define ('__PURIFIER_CACHE__', __CACHE__ . '/purifier');
+
 			break;
 	}
 }
