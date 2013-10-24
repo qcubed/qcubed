@@ -29,6 +29,12 @@
 	 * @property string $TextMode can be "SingleLine", "MultiLine", and "Password".
 	 * @property boolean $ValidateTrimmed
 	 * @property boolean $Wrap is the "wrap" html attribute (applicable for MultiLine textboxes)
+	 * @property boolean $AutoTrim to automatically remove white space from beginning and end of data
+	 * @property integer $SanitizeFilter PHP filter constant to apply to incoming data
+	 * @property mixed $SanitizeFilterOptions PHP filter constants or array to apply to SanitizeFilter option
+	 * @property integer $ValidateFilter PHP filter constant to apply to validate with
+	 * @property mixed $ValidateFilterOptions PHP filter constants or array to apply to ValidateFilter option
+	 * @property mixed $LabelForInvalid PHP filter constants or array to apply to ValidateFilter option
 	 */
 	abstract class QTextBoxBase extends QControl {
 		///////////////////////////
@@ -74,6 +80,22 @@
 		protected $objHTMLPurifierConfig = null;
 		/** @var bool */
 		protected $blnValidateTrimmed = false;
+		
+		// Sanitization and validating
+		/** @var bool */
+		protected $blnAutoTrim = false;
+		/** @var int */
+		protected $intSanitizeFilter = null;
+		/** @var mixed */
+		protected $mixSanitizeFilterOptions = null;
+		/** @var int */
+		protected $intValidateFilter = null;
+		/** @var mixed */
+		protected $mixValidateFilterOptions = null;
+		/** @var string */
+		protected $strLabelForInvalid = null;
+		
+		
 
 		// LAYOUT
 		/** @var bool */
@@ -131,7 +153,9 @@
 			if (array_key_exists($this->strControlId, $_POST)) {
 				// It was -- update this Control's value with the new value passed in via the POST arguments
 				$this->strText = $_POST[$this->strControlId];
-
+				
+				$this->Sanitize();
+				
 				switch ($this->strCrossScripting) {
 					case QCrossScripting::Allow:
 						// Do Nothing, allow everything
@@ -177,6 +201,19 @@
 							(mb_strpos($strText, 'background:url', 0, QApplication::$EncodingType) !== false))
 							throw new QCrossScriptingException($this->strControlId);
 				}
+			}
+		}
+		
+		/**
+		 * Sanitizes the current value.
+		 */
+		protected function Sanitize() {
+			if ($this->blnAutoTrim) {
+				$this->strText = trim ($this->strText);
+			}
+			
+			if ($this->intSanitizeFilter) {
+				$this->strText = filter_var ($this->strText, $this->intSanitizeFilter, $this->mixSanitizeFilterOptions);
 			}
 		}
 
@@ -303,6 +340,14 @@
 					return false;
 				}
 			}
+			
+			// Check against PHP validation
+			if ($this->intValidateFilter && $this->strText) { 
+				if (!filter_var($this->strText, $this->intValidateFilter, $this->mixValidateFilterOptions)) {
+					$this->strValidationError = $this->strLabelForInvalid;
+					return false;
+				}
+			}
 
 			// If we're here, then everything is a-ok.  Return true.
 			return true;
@@ -351,6 +396,14 @@
 				// LAYOUT
 				case "Wrap": return $this->blnWrap;
 
+				// FILTERING and VALIDATION
+				case "AutoTrim": return $this->blnAutoTrim;
+				case "SanitizeFilter": return $this->intSanitizeFilter;
+				case "SanitizeFilterOptions": return $this->$mixSanitizeFilterOptions;
+				case "ValidateFilter": return $this->intValidateFilter;
+				case "ValidateFilterOptions": return $this->strLabelForInvalid;
+				case "LabelForInvalid": return $this->strLabelForInvalid;
+				
 				default:
 					try {
 						return parent::__get($strName);
@@ -540,7 +593,62 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-
+					
+				// FILTERING and VALIDATING
+				case "AutoTrim":
+					try {
+						$this->blnAutoTrim = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
+				case "SanitizeFilter":
+					try {
+						$this->intSanitizeFilter = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+						
+				case "SanitizeFilterOptions":
+					try {
+						$this->mixSanitizeFilter = $mixValue; // can be integer or array. See PHP doc.
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
+				case "ValidateFilter":
+					try {
+						$this->intValidateFilter = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+						
+				case "ValidateFilterOptions":
+					try {
+						$this->mixValidateFilter = $mixValue; // can be integer or array. See PHP doc.
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
+				case "LabelForInvalid":
+					try {
+						$this->strLabelForInvalid = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					
 				default:
 					try {
 						parent::__set($strName, $mixValue);
