@@ -865,7 +865,8 @@
 	}
 
 	/**
-	 *
+	 * @property-read int $ErrorNumber The number of error provided by the SQL server
+	 * @property-read string $Query The query caused the error
 	 * @package DatabaseAdapters
 	 */
 	abstract class QDatabaseExceptionBase extends QCallerException {
