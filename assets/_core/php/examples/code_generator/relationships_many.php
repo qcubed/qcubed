@@ -11,7 +11,7 @@
 
 	<p>QCubed allows you to define a set suffix for all <strong>Association Tables</strong> (the default is "_assn").
 		Whenever the code generator sees any table that ends in "_assn", it will mark it as a special
-		table to be used/analyzed as an <strong>Association Table</strong>, associating two objects together in a many-to-many
+		table to be used/analyzed as an <strong>Association Table</strong>, associating two tables together in a many-to-many
 		relationship.</p>
 
 	<p>With the <strong>Association Table</strong> in place, QCubed will generate five methods each for the two classes
@@ -47,9 +47,15 @@
 
 	<p>Also, similar to our previous example, note that the "AsTeamMember" token in all these methods are
 		there because we named the <strong>Association Table</strong> in the database <strong>team_member_project_assn</strong>.
-		If we simply named it <strong>person_project_assn</strong>, then
+		If we had use that actuale names of the two tables, as in <strong>person_project_assn</strong>, then
 		the methods would be named without the "AsTeamMember" token (e.g. "GetProjectArray", "AssociatePerson",
-		etc.)</p>
+		etc.).</p>
+		
+	<p>When associating two tables together that also use hyphens in their table names, the association table name can get
+	   confusing with all those hyphens. In this case, when naming the association table, remove the hyphens for the table
+	   names. For example, if you want to associate the table "project_location" with "customer_sites", you can name the
+	   association table "projectlocation_customersites_assn".</p>
+		
 </div>
 
 <div id="demoZone">

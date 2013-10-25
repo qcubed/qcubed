@@ -111,6 +111,21 @@ CREATE INDEX IDX_two_key_person_id ON two_key (person_id);
 CREATE INDEX IDX_two_key_project_id ON two_key (project_id);
 
 
+DROP TABLE IF EXISTS person_type;
+CREATE TABLE person_type (
+  id SERIAL,
+  name VARCHAR(50) NOT NULL,
+  CONSTRAINT PK_person_type PRIMARY KEY (id),
+  UNIQUE (name)
+);
+
+DROP TABLE IF EXISTS person_persontype_assn;
+CREATE TABLE person_persontype_assn (
+  person_id BIGINT NOT NULL,
+  person_type_id BIGINT NOT NULL,
+    CONSTRAINT PK_person_persontype_assn PRIMARY KEY (person_id, person_type_id)
+);
+CREATE INDEX IDX_persontypeassn_2 ON person_persontype_assn (person_type_id);
 
 -- ========================================================================== -- 
 --   Foreign Keys                                                             -- 
@@ -129,6 +144,8 @@ ALTER TABLE related_project_assn ADD CONSTRAINT related_project_assn_2 FOREIGN K
 ALTER TABLE two_key ADD CONSTRAINT two_key_project FOREIGN KEY (project_id) REFERENCES project (id);
 ALTER TABLE two_key ADD CONSTRAINT two_key_person FOREIGN KEY (person_id) REFERENCES person (id);
 
+ALTER TABLE person_persontype_assn ADD CONSTRAINT person_persontype_assn_1 FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE person_persontype_assn ADD CONSTRAINT person_persontype_assn_2 FOREIGN KEY (person_type_id) REFERENCES person_type (id);
 
 -- ========================================================================== -- 
 --   Type Data                                                                -- 
@@ -138,6 +155,11 @@ INSERT INTO project_status_type (name, description, guidelines) VALUES ('Open', 
 INSERT INTO project_status_type (name, description, guidelines) VALUES ('Cancelled', 'The project has been canned', null);
 INSERT INTO project_status_type (name, description, guidelines) VALUES ('Completed', 'The project has been completed successfully', 'Celebrate successes!');
 
+INSERT INTO person_type (name) VALUES ('Contractor');
+INSERT INTO person_type (name) VALUES ('Manager');
+INSERT INTO person_type (name) VALUES ('Inactive');
+INSERT INTO person_type (name) VALUES ('Company Car');
+INSERT INTO person_type (name) VALUES ('Works From Home');
 
 -- ========================================================================== -- 
 --   Example Data                                                             -- 
@@ -240,5 +262,18 @@ INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES
 INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('google.com', 'news', 'news.php', 4, 3);
 INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('mail.google.com', 'mail', 'inbox', 5, NULL);
 INSERT INTO two_key (server, directory, file_name, person_id, project_id) VALUES('yahoo.com', '', '', 6, NULL);
+
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (3, 1);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (10, 1);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (1, 2);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (3, 2);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (1, 3);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (3, 3);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (9, 3);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (2, 4);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (2, 5);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (5, 5);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (7, 2);
+INSERT INTO person_persontype_assn (person_id, person_type_id) VALUES (7, 4);
 
 -- SET FOREIGN_KEY_CHECKS = 1;

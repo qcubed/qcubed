@@ -7,6 +7,7 @@
 		protected $strServiceUrl;
 
 		public function __construct($objSettingsXml) {
+			parent::__construct($objSettingsXml);
 			// Lookup Instance-Specific Configuration from the SettingsXml Node
 			$this->strServiceUrl = QCodeGen::LookupSetting($objSettingsXml, null, 'serviceUrl');
 		}

@@ -1,3 +1,12 @@
+	<?php if ($objManyToManyReference->IsTypeAssociation):?>
+		protected function <?php echo $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference);  ?>_Update() {
+			if ($this-><?php echo $strControlId  ?>) {
+				$this-><?php echo $strObjectName  ?>->UnassociateAll<?php echo $objManyToManyReference->ObjectDescriptionPlural  ?>();
+				$intIdArray = $this-><?php echo $strControlId  ?>->SelectedValues;
+				$this-><?php echo $strObjectName  ?>->Associate<?php echo $objManyToManyReference->ObjectDescription  ?>($intIdArray);
+			}
+		}
+	<?php else:?>
 		protected function <?php echo $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference);  ?>_Update() {
 			if ($this-><?php echo $strControlId  ?>) {
 				$changedIds = $this->col<?php echo $objManyToManyReference->ObjectDescription  ?>Selected->GetChangedIds();
@@ -21,3 +30,4 @@
 				}
 			}
 		}
+	<?php endif;?>

@@ -107,7 +107,7 @@
 			}
 
 			$strToReturn = sprintf('<option value="%s" %s%s>%s</option>',
-				$intIndex,
+				($objItem->Empty) ? '' : $intIndex,
 				($objItem->Selected) ? 'selected="selected"' : "",
 				$objStyle->GetAttributes(),
 				QApplication::HtmlEntities($objItem->Name)

@@ -78,22 +78,28 @@
 				////////////////////////////
 
 <?php foreach ($objTable->ManyToManyReferenceArray as $objReference) { ?>
+<?php 
+	$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
+	$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
+	$varType = (is_a($objAssociatedTable, 'QTypeTable') ? 'integer' : $objReference->VariableType);
+?>
 				case '_<?php echo $objReference->ObjectDescription ?>':
 					/**
-					 * Gets the value for the private _obj<?php echo $objReference->ObjectDescription ?> (Read-Only)
+					 * Gets the value for the private <?php echo $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
 					 * if set due to an expansion on the <?php echo $objReference->Table ?> association table
-					 * @return <?php echo $objReference->VariableType  ?>
+					 * @return <?php echo $varType  ?>
 
 					 */
-					return $this->_obj<?php echo $objReference->ObjectDescription ?>;
+					return $this-><?php echo $varPrefix . $objReference->ObjectDescription ?>;
 
 				case '_<?php echo $objReference->ObjectDescription ?>Array':
 					/**
-					 * Gets the value for the private _obj<?php echo $objReference->ObjectDescription ?>Array (Read-Only)
+					 * Gets the value for the private <?php echo $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
 					 * if set due to an ExpandAsArray on the <?php echo $objReference->Table ?> association table
-					 * @return <?php echo $objReference->VariableType  ?>[]
+					 * @return <?php echo $varType ?>[]
 					 */
-					return $this->_obj<?php echo $objReference->ObjectDescription ?>Array;
+					return $this-><?php echo $varPrefix . $objReference->ObjectDescription ?>Array;
+
 
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
 				case '_<?php echo $objReference->ObjectDescription ?>':

@@ -50,8 +50,9 @@
 		 */
 		protected $strTokenArray;
 
-
-
+		protected $objKeyColumn;
+		protected $objManyToManyReferenceArray;
+		
 		/////////////////////
 		// Public Constructor
 		/////////////////////
@@ -93,6 +94,12 @@
 					return $this->arrExtraPropertyArray;
 				case 'ExtraFieldNamesArray':
 					return $this->strExtraFieldNamesArray;
+				case 'PrimaryKeyColumnArray':
+					$a[] = $this->objKeyColumn;
+					return $a;
+				case 'ManyToManyReferenceArray':
+					return (array) $this->objManyToManyReferenceArray;
+					
 				default:
 					try {
 						return parent::__get($strName);
@@ -126,6 +133,10 @@
 						return $this->arrExtraPropertyArray = QType::Cast($mixValue, QType::ArrayType);
 					case 'ExtraFieldNamesArray':
 						return $this->strExtraFieldNamesArray = QType::Cast($mixValue, QType::ArrayType);
+					case 'KeyColumn':
+						return $this->objKeyColumn = $mixValue;
+					case 'ManyToManyReferenceArray':
+						return $this->objManyToManyReferenceArray = QType::Cast($mixValue, QType::ArrayType);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

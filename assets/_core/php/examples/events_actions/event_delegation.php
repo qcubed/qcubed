@@ -89,7 +89,9 @@
 			//Highlight the datagrid rows when mousing over them using QOnEvent.
 			$this->dtgPersonsDelegated->AddAction(new QOnEvent("mouseover", "tr"), 
 					new QJavaScriptAction('$j(event.currentTarget).toggleClass("selectedStyle")'));
-			$this->dtgPersonsDelegated->AddAction(new QOnEvent("mouseout", "tr"), 
+			
+			//Standard QEvents have event delegation too, as the third item in the event parameter.
+			$this->dtgPersonsDelegated->AddAction(new QMouseOutEvent(0, null, "tr"), 
 					new QJavaScriptAction('$j(event.currentTarget).toggleClass("selectedStyle")'));
 
 				
