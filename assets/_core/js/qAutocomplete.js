@@ -90,7 +90,7 @@ function qAutocomplete (qOptions) {
 			}
 		});
 	};
-	
+	/*
 	if (qOptions['displayHtml']) {
 		jqObj.data( "autocomplete" )._renderItem = function( ul, item ) {
             return jQuery( "<li>" )
@@ -98,5 +98,5 @@ function qAutocomplete (qOptions) {
 	            .append( jQuery( "<a></a>" ).html(item.label) )
 	            .appendTo( ul );
 	    };
-	};
+	};*/
 }

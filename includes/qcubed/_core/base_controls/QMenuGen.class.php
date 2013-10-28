@@ -371,7 +371,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -383,7 +383,7 @@
 				case 'Icons':
 					$this->mixIcons = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'icons', $mixValue);
 					}
 					break;
@@ -391,7 +391,7 @@
 				case 'Menus':
 					try {
 						$this->strMenus = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'menus', $this->strMenus);
 						}
 						break;
@@ -403,7 +403,7 @@
 				case 'Position':
 					$this->mixPosition = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'position', $mixValue);
 					}
 					break;
@@ -411,7 +411,7 @@
 				case 'Role':
 					try {
 						$this->strRole = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'role', $this->strRole);
 						}
 						break;

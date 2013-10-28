@@ -386,7 +386,7 @@
 				case 'AlsoResize':
 					$this->mixAlsoResize = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'alsoResize', $mixValue);
 					}
 					break;
@@ -394,7 +394,7 @@
 				case 'Animate':
 					try {
 						$this->blnAnimate = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'animate', $this->blnAnimate);
 						}
 						break;
@@ -406,7 +406,7 @@
 				case 'AnimateDuration':
 					$this->mixAnimateDuration = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'animateDuration', $mixValue);
 					}
 					break;
@@ -414,7 +414,7 @@
 				case 'AnimateEasing':
 					try {
 						$this->strAnimateEasing = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'animateEasing', $this->strAnimateEasing);
 						}
 						break;
@@ -426,7 +426,7 @@
 				case 'AspectRatio':
 					$this->mixAspectRatio = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'aspectRatio', $mixValue);
 					}
 					break;
@@ -434,7 +434,7 @@
 				case 'AutoHide':
 					try {
 						$this->blnAutoHide = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'autoHide', $this->blnAutoHide);
 						}
 						break;
@@ -446,7 +446,7 @@
 				case 'Cancel':
 					$this->mixCancel = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'cancel', $mixValue);
 					}
 					break;
@@ -454,7 +454,7 @@
 				case 'Containment':
 					$this->mixContainment = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'containment', $mixValue);
 					}
 					break;
@@ -462,7 +462,7 @@
 				case 'Delay':
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
 						}
 						break;
@@ -474,7 +474,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -486,7 +486,7 @@
 				case 'Distance':
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'distance', $this->intDistance);
 						}
 						break;
@@ -498,7 +498,7 @@
 				case 'Ghost':
 					try {
 						$this->blnGhost = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'ghost', $this->blnGhost);
 						}
 						break;
@@ -510,7 +510,7 @@
 				case 'Grid':
 					try {
 						$this->arrGrid = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'grid', $this->arrGrid);
 						}
 						break;
@@ -522,7 +522,7 @@
 				case 'Handles':
 					$this->mixHandles = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'handles', $mixValue);
 					}
 					break;
@@ -530,7 +530,7 @@
 				case 'Helper':
 					try {
 						$this->strHelper = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'helper', $this->strHelper);
 						}
 						break;
@@ -542,7 +542,7 @@
 				case 'MaxHeight':
 					try {
 						$this->intMaxHeight = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'maxHeight', $this->intMaxHeight);
 						}
 						break;
@@ -554,7 +554,7 @@
 				case 'MaxWidth':
 					try {
 						$this->intMaxWidth = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'maxWidth', $this->intMaxWidth);
 						}
 						break;
@@ -566,7 +566,7 @@
 				case 'MinHeight':
 					try {
 						$this->intMinHeight = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'minHeight', $this->intMinHeight);
 						}
 						break;
@@ -578,7 +578,7 @@
 				case 'MinWidth':
 					try {
 						$this->intMinWidth = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'minWidth', $this->intMinWidth);
 						}
 						break;

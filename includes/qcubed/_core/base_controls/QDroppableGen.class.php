@@ -324,7 +324,7 @@
 				case 'Accept':
 					$this->mixAccept = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'accept', $mixValue);
 					}
 					break;
@@ -332,7 +332,7 @@
 				case 'ActiveClass':
 					try {
 						$this->strActiveClass = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'activeClass', $this->strActiveClass);
 						}
 						break;
@@ -344,7 +344,7 @@
 				case 'AddClasses':
 					try {
 						$this->blnAddClasses = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'addClasses', $this->blnAddClasses);
 						}
 						break;
@@ -356,7 +356,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -368,7 +368,7 @@
 				case 'Greedy':
 					try {
 						$this->blnGreedy = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'greedy', $this->blnGreedy);
 						}
 						break;
@@ -380,7 +380,7 @@
 				case 'HoverClass':
 					try {
 						$this->strHoverClass = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'hoverClass', $this->strHoverClass);
 						}
 						break;
@@ -392,7 +392,7 @@
 				case 'Scope':
 					try {
 						$this->strScope = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'scope', $this->strScope);
 						}
 						break;
@@ -404,7 +404,7 @@
 				case 'Tolerance':
 					try {
 						$this->strTolerance = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'tolerance', $this->strTolerance);
 						}
 						break;

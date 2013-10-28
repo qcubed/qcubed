@@ -349,7 +349,7 @@
 				case 'Animate':
 					$this->mixAnimate = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'animate', $mixValue);
 					}
 					break;
@@ -357,7 +357,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -369,7 +369,7 @@
 				case 'Max':
 					try {
 						$this->intMax = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'max', $this->intMax);
 						}
 						break;
@@ -381,7 +381,7 @@
 				case 'Min':
 					try {
 						$this->intMin = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'min', $this->intMin);
 						}
 						break;
@@ -393,7 +393,7 @@
 				case 'Orientation':
 					try {
 						$this->strOrientation = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'orientation', $this->strOrientation);
 						}
 						break;
@@ -405,7 +405,7 @@
 				case 'Range':
 					$this->mixRange = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'range', $mixValue);
 					}
 					break;
@@ -413,7 +413,7 @@
 				case 'Step':
 					try {
 						$this->intStep = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'step', $this->intStep);
 						}
 						break;
@@ -425,7 +425,7 @@
 				case 'Value':
 					try {
 						$this->intValue = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'value', $this->intValue);
 						}
 						break;
@@ -437,7 +437,7 @@
 				case 'Values':
 					try {
 						$this->arrValues = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'values', $this->arrValues);
 						}
 						break;

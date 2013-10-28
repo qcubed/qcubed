@@ -308,7 +308,7 @@
 				case 'AppendTo':
 					$this->mixAppendTo = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
 					}
 					break;
@@ -316,7 +316,7 @@
 				case 'AutoRefresh':
 					try {
 						$this->blnAutoRefresh = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'autoRefresh', $this->blnAutoRefresh);
 						}
 						break;
@@ -328,7 +328,7 @@
 				case 'Cancel':
 					$this->mixCancel = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'cancel', $mixValue);
 					}
 					break;
@@ -336,7 +336,7 @@
 				case 'Delay':
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
 						}
 						break;
@@ -348,7 +348,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -360,7 +360,7 @@
 				case 'Distance':
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'distance', $this->intDistance);
 						}
 						break;
@@ -372,7 +372,7 @@
 				case 'Filter':
 					$this->mixFilter = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'filter', $mixValue);
 					}
 					break;
@@ -380,7 +380,7 @@
 				case 'Tolerance':
 					try {
 						$this->strTolerance = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'tolerance', $this->strTolerance);
 						}
 						break;

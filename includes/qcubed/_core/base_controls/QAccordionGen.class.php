@@ -303,7 +303,7 @@
 				case 'Active':
 					$this->mixActive = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'active', $mixValue);
 					}
 					break;
@@ -311,7 +311,7 @@
 				case 'Animate':
 					$this->mixAnimate = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'animate', $mixValue);
 					}
 					break;
@@ -319,7 +319,7 @@
 				case 'Collapsible':
 					try {
 						$this->blnCollapsible = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'collapsible', $this->blnCollapsible);
 						}
 						break;
@@ -331,7 +331,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -343,7 +343,7 @@
 				case 'Event':
 					try {
 						$this->strEvent = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'event', $this->strEvent);
 						}
 						break;
@@ -355,7 +355,7 @@
 				case 'Header':
 					$this->mixHeader = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'header', $mixValue);
 					}
 					break;
@@ -363,7 +363,7 @@
 				case 'HeightStyle':
 					try {
 						$this->strHeightStyle = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'heightStyle', $this->strHeightStyle);
 						}
 						break;
@@ -375,7 +375,7 @@
 				case 'Icons':
 					$this->mixIcons = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'icons', $mixValue);
 					}
 					break;

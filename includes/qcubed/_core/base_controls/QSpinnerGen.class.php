@@ -374,7 +374,7 @@
 				case 'Culture':
 					try {
 						$this->strCulture = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'culture', $this->strCulture);
 						}
 						break;
@@ -386,7 +386,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -398,7 +398,7 @@
 				case 'Icons':
 					$this->mixIcons = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'icons', $mixValue);
 					}
 					break;
@@ -406,7 +406,7 @@
 				case 'Incremental':
 					$this->mixIncremental = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'incremental', $mixValue);
 					}
 					break;
@@ -414,7 +414,7 @@
 				case 'Max':
 					$this->mixMax = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'max', $mixValue);
 					}
 					break;
@@ -422,7 +422,7 @@
 				case 'Min':
 					$this->mixMin = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'min', $mixValue);
 					}
 					break;
@@ -430,7 +430,7 @@
 				case 'NumberFormat':
 					try {
 						$this->strNumberFormat = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'numberFormat', $this->strNumberFormat);
 						}
 						break;
@@ -442,7 +442,7 @@
 				case 'Page':
 					try {
 						$this->intPage = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'page', $this->intPage);
 						}
 						break;
@@ -454,7 +454,7 @@
 				case 'Step':
 					$this->mixStep = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'step', $mixValue);
 					}
 					break;

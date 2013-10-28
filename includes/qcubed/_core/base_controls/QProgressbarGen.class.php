@@ -240,7 +240,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -252,7 +252,7 @@
 				case 'Max':
 					try {
 						$this->intMax = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'max', $this->intMax);
 						}
 						break;
@@ -264,7 +264,7 @@
 				case 'Value':
 					try {
 						$this->intValue = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'value', $this->intValue);
 						}
 						break;

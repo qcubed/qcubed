@@ -655,7 +655,7 @@
 				case 'AppendTo':
 					$this->mixAppendTo = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
 					}
 					break;
@@ -663,7 +663,7 @@
 				case 'Axis':
 					try {
 						$this->strAxis = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'axis', $this->strAxis);
 						}
 						break;
@@ -675,7 +675,7 @@
 				case 'Cancel':
 					$this->mixCancel = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'cancel', $mixValue);
 					}
 					break;
@@ -683,7 +683,7 @@
 				case 'ConnectWith':
 					$this->mixConnectWith = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'connectWith', $mixValue);
 					}
 					break;
@@ -691,7 +691,7 @@
 				case 'Containment':
 					$this->mixContainment = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'containment', $mixValue);
 					}
 					break;
@@ -699,7 +699,7 @@
 				case 'Cursor':
 					try {
 						$this->strCursor = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'cursor', $this->strCursor);
 						}
 						break;
@@ -711,7 +711,7 @@
 				case 'CursorAt':
 					$this->mixCursorAt = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'cursorAt', $mixValue);
 					}
 					break;
@@ -719,7 +719,7 @@
 				case 'Delay':
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
 						}
 						break;
@@ -731,7 +731,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -743,7 +743,7 @@
 				case 'Distance':
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'distance', $this->intDistance);
 						}
 						break;
@@ -755,7 +755,7 @@
 				case 'DropOnEmpty':
 					try {
 						$this->blnDropOnEmpty = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'dropOnEmpty', $this->blnDropOnEmpty);
 						}
 						break;
@@ -767,7 +767,7 @@
 				case 'ForceHelperSize':
 					try {
 						$this->blnForceHelperSize = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'forceHelperSize', $this->blnForceHelperSize);
 						}
 						break;
@@ -779,7 +779,7 @@
 				case 'ForcePlaceholderSize':
 					try {
 						$this->blnForcePlaceholderSize = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'forcePlaceholderSize', $this->blnForcePlaceholderSize);
 						}
 						break;
@@ -791,7 +791,7 @@
 				case 'Grid':
 					try {
 						$this->arrGrid = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'grid', $this->arrGrid);
 						}
 						break;
@@ -803,7 +803,7 @@
 				case 'Handle':
 					$this->mixHandle = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'handle', $mixValue);
 					}
 					break;
@@ -811,7 +811,7 @@
 				case 'Helper':
 					$this->mixHelper = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'helper', $mixValue);
 					}
 					break;
@@ -819,7 +819,7 @@
 				case 'Items':
 					$this->mixItems = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'items', $mixValue);
 					}
 					break;
@@ -827,7 +827,7 @@
 				case 'Opacity':
 					try {
 						$this->intOpacity = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'opacity', $this->intOpacity);
 						}
 						break;
@@ -839,7 +839,7 @@
 				case 'Placeholder':
 					try {
 						$this->strPlaceholder = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'placeholder', $this->strPlaceholder);
 						}
 						break;
@@ -851,7 +851,7 @@
 				case 'Revert':
 					$this->mixRevert = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'revert', $mixValue);
 					}
 					break;
@@ -859,7 +859,7 @@
 				case 'Scroll':
 					try {
 						$this->blnScroll = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'scroll', $this->blnScroll);
 						}
 						break;
@@ -871,7 +871,7 @@
 				case 'ScrollSensitivity':
 					try {
 						$this->intScrollSensitivity = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'scrollSensitivity', $this->intScrollSensitivity);
 						}
 						break;
@@ -883,7 +883,7 @@
 				case 'ScrollSpeed':
 					try {
 						$this->intScrollSpeed = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'scrollSpeed', $this->intScrollSpeed);
 						}
 						break;
@@ -895,7 +895,7 @@
 				case 'Tolerance':
 					try {
 						$this->strTolerance = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'tolerance', $this->strTolerance);
 						}
 						break;
@@ -907,7 +907,7 @@
 				case 'ZIndex':
 					try {
 						$this->intZIndex = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'zIndex', $this->intZIndex);
 						}
 						break;

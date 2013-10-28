@@ -1113,7 +1113,7 @@
          *
          * @return null|string
          */
-        protected function RenderControlScripts()
+        public function RenderControlScripts()
         {
             if ($this->strControlScripts) {
                 $strToReturn = implode (";\n", $this->strControlScripts);
@@ -1121,7 +1121,7 @@
                 return $strToReturn;
             }
             else {
-                return null;
+                return '';
             }
         }
 

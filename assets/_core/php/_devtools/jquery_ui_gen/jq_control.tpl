@@ -192,7 +192,7 @@
 					$this-><%= $option->varName %> = $mixValue;
 	<% if (!($option instanceof Event)) { %>
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', '<%= $option->name %>', $mixValue);
 					}
 					break;
@@ -202,7 +202,7 @@
 					try {
 	<% if (!($option instanceof Event)) { %>
 						$this-><%= $option->varName %> = QType::Cast($mixValue, <%= $option->phpQType %>);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', '<%= $option->name %>', $this-><%= $option->varName %>);
 						}
 	<% } %>

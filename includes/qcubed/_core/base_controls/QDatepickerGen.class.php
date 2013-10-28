@@ -686,7 +686,7 @@
 				case 'AltField':
 					$this->mixAltField = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'altField', $mixValue);
 					}
 					break;
@@ -694,7 +694,7 @@
 				case 'AltFormat':
 					try {
 						$this->strAltFormat = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'altFormat', $this->strAltFormat);
 						}
 						break;
@@ -706,7 +706,7 @@
 				case 'AppendText':
 					try {
 						$this->strAppendText = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'appendText', $this->strAppendText);
 						}
 						break;
@@ -718,7 +718,7 @@
 				case 'AutoSize':
 					try {
 						$this->blnAutoSize = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'autoSize', $this->blnAutoSize);
 						}
 						break;
@@ -748,7 +748,7 @@
 				case 'ButtonImage':
 					try {
 						$this->strButtonImage = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'buttonImage', $this->strButtonImage);
 						}
 						break;
@@ -760,7 +760,7 @@
 				case 'ButtonImageOnly':
 					try {
 						$this->blnButtonImageOnly = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'buttonImageOnly', $this->blnButtonImageOnly);
 						}
 						break;
@@ -772,7 +772,7 @@
 				case 'ButtonText':
 					try {
 						$this->strButtonText = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'buttonText', $this->strButtonText);
 						}
 						break;
@@ -793,7 +793,7 @@
 				case 'ChangeMonth':
 					try {
 						$this->blnChangeMonth = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'changeMonth', $this->blnChangeMonth);
 						}
 						break;
@@ -805,7 +805,7 @@
 				case 'ChangeYear':
 					try {
 						$this->blnChangeYear = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'changeYear', $this->blnChangeYear);
 						}
 						break;
@@ -817,7 +817,7 @@
 				case 'CloseText':
 					try {
 						$this->strCloseText = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'closeText', $this->strCloseText);
 						}
 						break;
@@ -829,7 +829,7 @@
 				case 'ConstrainInput':
 					try {
 						$this->blnConstrainInput = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'constrainInput', $this->blnConstrainInput);
 						}
 						break;
@@ -841,7 +841,7 @@
 				case 'CurrentText':
 					try {
 						$this->strCurrentText = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'currentText', $this->strCurrentText);
 						}
 						break;
@@ -853,7 +853,7 @@
 				case 'JqDateFormat':
 					try {
 						$this->strJqDateFormat = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'dateFormat', $this->strJqDateFormat);
 						}
 						break;
@@ -865,7 +865,7 @@
 				case 'DayNames':
 					try {
 						$this->arrDayNames = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'dayNames', $this->arrDayNames);
 						}
 						break;
@@ -877,7 +877,7 @@
 				case 'DayNamesMin':
 					try {
 						$this->arrDayNamesMin = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'dayNamesMin', $this->arrDayNamesMin);
 						}
 						break;
@@ -889,7 +889,7 @@
 				case 'DayNamesShort':
 					try {
 						$this->arrDayNamesShort = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'dayNamesShort', $this->arrDayNamesShort);
 						}
 						break;
@@ -901,7 +901,7 @@
 				case 'DefaultDate':
 					$this->mixDefaultDate = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'defaultDate', $mixValue);
 					}
 					break;
@@ -909,7 +909,7 @@
 				case 'Duration':
 					$this->mixDuration = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'duration', $mixValue);
 					}
 					break;
@@ -917,7 +917,7 @@
 				case 'FirstDay':
 					try {
 						$this->intFirstDay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'firstDay', $this->intFirstDay);
 						}
 						break;
@@ -929,7 +929,7 @@
 				case 'GotoCurrent':
 					try {
 						$this->blnGotoCurrent = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'gotoCurrent', $this->blnGotoCurrent);
 						}
 						break;
@@ -941,7 +941,7 @@
 				case 'HideIfNoPrevNext':
 					try {
 						$this->blnHideIfNoPrevNext = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'hideIfNoPrevNext', $this->blnHideIfNoPrevNext);
 						}
 						break;
@@ -953,7 +953,7 @@
 				case 'IsRTL':
 					try {
 						$this->blnIsRTL = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'isRTL', $this->blnIsRTL);
 						}
 						break;
@@ -965,7 +965,7 @@
 				case 'MaxDate':
 					$this->mixMaxDate = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'maxDate', $mixValue);
 					}
 					break;
@@ -973,7 +973,7 @@
 				case 'MinDate':
 					$this->mixMinDate = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'minDate', $mixValue);
 					}
 					break;
@@ -981,7 +981,7 @@
 				case 'MonthNames':
 					try {
 						$this->arrMonthNames = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'monthNames', $this->arrMonthNames);
 						}
 						break;
@@ -993,7 +993,7 @@
 				case 'MonthNamesShort':
 					try {
 						$this->arrMonthNamesShort = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'monthNamesShort', $this->arrMonthNamesShort);
 						}
 						break;
@@ -1005,7 +1005,7 @@
 				case 'NavigationAsDateFormat':
 					try {
 						$this->blnNavigationAsDateFormat = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'navigationAsDateFormat', $this->blnNavigationAsDateFormat);
 						}
 						break;
@@ -1017,7 +1017,7 @@
 				case 'NextText':
 					try {
 						$this->strNextText = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'nextText', $this->strNextText);
 						}
 						break;
@@ -1029,7 +1029,7 @@
 				case 'NumberOfMonths':
 					$this->mixNumberOfMonths = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'numberOfMonths', $mixValue);
 					}
 					break;
@@ -1064,7 +1064,7 @@
 				case 'PrevText':
 					try {
 						$this->strPrevText = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'prevText', $this->strPrevText);
 						}
 						break;
@@ -1076,7 +1076,7 @@
 				case 'SelectOtherMonths':
 					try {
 						$this->blnSelectOtherMonths = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'selectOtherMonths', $this->blnSelectOtherMonths);
 						}
 						break;
@@ -1088,7 +1088,7 @@
 				case 'ShortYearCutoff':
 					$this->mixShortYearCutoff = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'shortYearCutoff', $mixValue);
 					}
 					break;
@@ -1096,7 +1096,7 @@
 				case 'ShowAnim':
 					try {
 						$this->strShowAnim = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'showAnim', $this->strShowAnim);
 						}
 						break;
@@ -1108,7 +1108,7 @@
 				case 'ShowButtonPanel':
 					try {
 						$this->blnShowButtonPanel = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'showButtonPanel', $this->blnShowButtonPanel);
 						}
 						break;
@@ -1120,7 +1120,7 @@
 				case 'ShowCurrentAtPos':
 					try {
 						$this->intShowCurrentAtPos = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'showCurrentAtPos', $this->intShowCurrentAtPos);
 						}
 						break;
@@ -1132,7 +1132,7 @@
 				case 'ShowMonthAfterYear':
 					try {
 						$this->blnShowMonthAfterYear = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'showMonthAfterYear', $this->blnShowMonthAfterYear);
 						}
 						break;
@@ -1144,7 +1144,7 @@
 				case 'ShowOn':
 					try {
 						$this->strShowOn = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'showOn', $this->strShowOn);
 						}
 						break;
@@ -1156,7 +1156,7 @@
 				case 'ShowOptions':
 					$this->mixShowOptions = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'showOptions', $mixValue);
 					}
 					break;
@@ -1164,7 +1164,7 @@
 				case 'ShowOtherMonths':
 					try {
 						$this->blnShowOtherMonths = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'showOtherMonths', $this->blnShowOtherMonths);
 						}
 						break;
@@ -1176,7 +1176,7 @@
 				case 'ShowWeek':
 					try {
 						$this->blnShowWeek = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'showWeek', $this->blnShowWeek);
 						}
 						break;
@@ -1188,7 +1188,7 @@
 				case 'StepMonths':
 					try {
 						$this->intStepMonths = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'stepMonths', $this->intStepMonths);
 						}
 						break;
@@ -1200,7 +1200,7 @@
 				case 'WeekHeader':
 					try {
 						$this->strWeekHeader = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'weekHeader', $this->strWeekHeader);
 						}
 						break;
@@ -1212,7 +1212,7 @@
 				case 'YearRange':
 					try {
 						$this->strYearRange = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'yearRange', $this->strYearRange);
 						}
 						break;
@@ -1224,7 +1224,7 @@
 				case 'YearSuffix':
 					try {
 						$this->strYearSuffix = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'yearSuffix', $this->strYearSuffix);
 						}
 						break;

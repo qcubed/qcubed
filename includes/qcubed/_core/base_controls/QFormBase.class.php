@@ -605,10 +605,13 @@
 			foreach ($this->GetAllControls() as $objControl) {
 				if ($objControl->Rendered) {
 					$strJavaScript = $objControl->GetEndScript();
-					if (trim($strJavaScript))
-						$strCommands .= trim($strJavaScript);
-				}
-			}
+				} else {
+                    $strJavaScript = $objControl->RenderControlScripts();
+                }
+                if ($strJavaScript = trim($strJavaScript)) {
+                    $strCommands .= $strJavaScript . ';';
+                }
+            }
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strRender = $objGrouping->Render();
 				if (trim($strRender))

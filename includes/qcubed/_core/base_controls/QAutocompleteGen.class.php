@@ -382,7 +382,7 @@
 				case 'AppendTo':
 					$this->mixAppendTo = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
 					}
 					break;
@@ -390,7 +390,7 @@
 				case 'AutoFocus':
 					try {
 						$this->blnAutoFocus = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'autoFocus', $this->blnAutoFocus);
 						}
 						break;
@@ -402,7 +402,7 @@
 				case 'Delay':
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
 						}
 						break;
@@ -414,7 +414,7 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
 						}
 						break;
@@ -426,7 +426,7 @@
 				case 'MinLength':
 					try {
 						$this->intMinLength = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
+						if ($this->OnPage) {
 							$this->CallJqUiMethod('option', 'minLength', $this->intMinLength);
 						}
 						break;
@@ -438,7 +438,7 @@
 				case 'Position':
 					$this->mixPosition = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'position', $mixValue);
 					}
 					break;
@@ -446,7 +446,7 @@
 				case 'Source':
 					$this->mixSource = $mixValue;
 				
-					if ($this->Rendered) {
+					if ($this->OnPage) {
 						$this->CallJqUiMethod('option', 'source', $mixValue);
 					}
 					break;
