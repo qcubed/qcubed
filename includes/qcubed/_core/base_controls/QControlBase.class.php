@@ -204,6 +204,8 @@
 		protected $strWrapperCssClass = null;
 		/** @var bool Should the wrapper be used when rendering?  */
 		protected $blnUseWrapper = true;
+        /** @var string  One time scripts associated with the control. */
+        protected $strControlScripts = null;
 
 		// SETTINGS
 		/** @var string List of JavaScript files to be attached with the control when rendering */
@@ -1099,9 +1101,40 @@
 				$strJavaScript = sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass);
 				$strToReturn = sprintf('%s; %s', $strJavaScript, $strToReturn);
 			}
-			
+
+            if ($strControlScript = $this->RenderControlScripts()) {
+                $strToReturn .= ";\n" . $strControlScript;
+            }
 			return $strToReturn;
 		}
+
+        /**
+         * Return one-time scripts associated with the control.
+         *
+         * @return null|string
+         */
+        protected function RenderControlScripts()
+        {
+            if ($this->strControlScripts) {
+                $strToReturn = implode (";\n", $this->strControlScripts);
+                $this->strControlScripts = null;
+                return $strToReturn;
+            }
+            else {
+                return null;
+            }
+        }
+
+        /**
+         * Executes a java script associated with the control. Makes sure the java script is executed AFTER
+         * the control is rendered.
+         *
+         * @param string $strScript
+         */
+        public function ExecuteJavaScript ($strScript)
+        {
+            $this->strControlScripts[] = $strScript;
+        }
 
 		/**
 		 * For any HTML code that needs to be rendered at the END of the QForm when this control is

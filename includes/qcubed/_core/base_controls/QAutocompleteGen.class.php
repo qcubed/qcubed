@@ -194,7 +194,6 @@
 	 * 		the built-in <code>$.ui.autocomplete.escapeRegex</code> function. It'll
 	 * 		take a single string argument and escape all regex characters, making the
 	 * 		result safe to pass to <code>new RegExp()</code>.</p></li></ul>
-	 * @package Controls\Base
 	 */
 
 	class QAutocompleteGen extends QTextBox	{
@@ -273,7 +272,7 @@
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			$this->ExecuteJavaScript($strJs);
 		}
 
 

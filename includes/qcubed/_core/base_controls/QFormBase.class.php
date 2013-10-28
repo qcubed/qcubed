@@ -1479,23 +1479,23 @@
 				if ($objControl->Rendered) {
 					$strControlScript = $objControl->GetEndScript();
 					if (strlen($strControlScript) > 0) {
-						$strEvents .= $strControlScript . ";";
+						$strEvents .= $strControlScript . ";\n";
 					}
 				}
 			}
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strGroupingScript = $objGrouping->Render();
 				if (strlen($strGroupingScript) > 0) {
-					$strEvents .= $strGroupingScript . ";";
+					$strEvents .= $strGroupingScript . ";\n";
 				}
 			}
 
 			// Run End Script Compressor
-			$strEndScriptArray = explode('; ', $strEndScript);
+			$strEndScriptArray = explode(";\n", $strEndScript);
 			$strEndScriptCommands = array();
 			foreach ($strEndScriptArray as $strEndScript)
 				$strEndScriptCommands[trim($strEndScript)] = true;
-			$strEndScript = implode('; ', array_keys($strEndScriptCommands));
+			$strEndScript = implode(";\n", array_keys($strEndScriptCommands));
 
 			// Finally, add any application level js commands
 			$strEndScript .= QApplication::RenderJavaScript(false);

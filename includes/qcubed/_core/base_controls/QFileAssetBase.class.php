@@ -74,7 +74,7 @@
 
 		protected function SetupUpdateActions() {
 			$this->btnUpload->RemoveAllActions('click');
-			$this->btnUpload->AddAction(new QClickEvent(), new QShowDialogBox($this->dlgFileAsset));
+			$this->btnUpload->AddAction(new QClickEvent(), new QShowDialog($this->dlgFileAsset));
 			$this->btnUpload->AddAction(new QClickEvent(), new QTerminateAction());
 		}
 		
@@ -139,7 +139,7 @@
 				$this->intSize = $this->dlgFileAsset->flcFileAsset->Size;
 
 				// Hide the Dialog Box
-				$this->dlgFileAsset->HideDialogBox();
+				$this->dlgFileAsset->Close();
 
 				// Refresh Thyself
 				$this->Refresh();

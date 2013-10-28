@@ -5,7 +5,7 @@
 	 * @package Controls
 	 */
 
-	class QFileAssetDialog extends QDialogBox {
+	class QFileAssetDialog extends QDialog {
 		public $lblMessage;
 		public $flcFileAsset;
 		public $lblError;
@@ -21,8 +21,9 @@
 
 			// Setup the Dialog Box, itself
 			$this->strTemplate = __DOCROOT__ . __PHP_ASSETS__ . '/QFileAssetDialog.tpl.php';
-			$this->blnDisplay = false;
-			$this->blnMatteClickable = false;
+			//$this->blnDisplay = false;
+			//$this->blnMatteClickable = false;
+            $this->AutoOpen = false;
 
 			$this->strTitle = QApplication::Translate("Upload a File");
 
@@ -46,7 +47,7 @@
 			$this->btnUpload->AddAction(new QClickEvent(), new QToggleDisplayAction($this->objSpinner));
 			$this->btnUpload->AddAction(new QClickEvent(), new QServerControlAction($this, 'btnUpload_Click'));
 
-			$this->btnCancel->AddAction(new QClickEvent(), new QHideDialogBox($this));
+			$this->btnCancel->AddAction(new QClickEvent(), new QHideDialog($this));
 		}
 
 		public function btnUpload_Click($strFormId, $strControlId, $strParameter) {

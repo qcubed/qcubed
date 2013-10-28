@@ -326,7 +326,7 @@
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			$this->ExecuteJavaScript($strJs);
 		}
 
 

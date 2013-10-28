@@ -180,6 +180,7 @@
 			$strJS = parent::GetControlJavaScript();
 			$strValueExpr = 'var value = jQuery(this).val();';
 			$strResetValue = 'var resetValue = "";';
+			$options = array();
 			if ($this->strMultipleValueDelimiter) {
 				$options['multiValDelim'] = $this->strMultipleValueDelimiter;
 			}
@@ -268,7 +269,7 @@
 					break;
 
 				case 'MultipleValueDelimiter':
-					$a = $this->GetAllActions(QAutocomplete_SourceEvent);
+					$a = $this->GetAllActions('QAutocomplete_SourceEvent');
 					if (!empty ($a)) {
 						throw new Exception('Must set MultipleValueDelimiter BEFORE calling SetDataBinder');
 					}				
