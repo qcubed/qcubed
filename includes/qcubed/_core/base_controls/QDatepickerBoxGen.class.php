@@ -477,27 +477,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . parent::GetEndScript();
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			$this->ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -507,7 +517,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Opens the datepicker in a dialog box.<ul><li><strong>date</strong> Type:
@@ -526,7 +536,7 @@
 		 * @param $pos
 		 */
 		public function Dialog($date, $onSelect = null, $settings = null, $pos = null) {
-			$this->CallJqUiMethod("dialog", $date, $onSelect, $settings, $pos);
+			$this->CallJqUiMethod(false, "dialog", $date, $onSelect, $settings, $pos);
 		}
 		/**
 		 * Returns the current date for the datepicker or <code>null</code> if no date
@@ -534,21 +544,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function GetDate() {
-			$this->CallJqUiMethod("getDate");
+			$this->CallJqUiMethod(false, "getDate");
 		}
 		/**
 		 * Close a previously opened date picker.<ul><li>This method does not accept
 		 * any arguments.</li></ul>
 		 */
 		public function Hide() {
-			$this->CallJqUiMethod("hide");
+			$this->CallJqUiMethod(false, "hide");
 		}
 		/**
 		 * Determine whether a date picker has been disabled.<ul><li>This method does
 		 * not accept any arguments.</li></ul>
 		 */
 		public function IsDisabled() {
-			$this->CallJqUiMethod("isDisabled");
+			$this->CallJqUiMethod(false, "isDisabled");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -557,7 +567,7 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -565,7 +575,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the datepicker option associated with the specified
@@ -577,7 +587,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the
@@ -586,14 +596,14 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Redraw the date picker, after having made some external
 		 * modifications.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Refresh() {
-			$this->CallJqUiMethod("refresh");
+			$this->CallJqUiMethod(false, "refresh");
 		}
 		/**
 		 * Sets the date for the datepicker. The new date may be a <code>Date</code>
@@ -607,7 +617,7 @@
 		 * @param $date
 		 */
 		public function SetDate($date) {
-			$this->CallJqUiMethod("setDate", $date);
+			$this->CallJqUiMethod(false, "setDate", $date);
 		}
 		/**
 		 * Open the date picker. If the datepicker is attached to an input, the input
@@ -615,7 +625,7 @@
 		 * accept any arguments.</li></ul>
 		 */
 		public function Show() {
-			$this->CallJqUiMethod("show");
+			$this->CallJqUiMethod(false, "show");
 		}
 
 
@@ -687,7 +697,7 @@
 					$this->mixAltField = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'altField', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'altField', $mixValue);
 					}
 					break;
 
@@ -695,7 +705,7 @@
 					try {
 						$this->strAltFormat = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'altFormat', $this->strAltFormat);
+							$this->CallJqUiMethod(true, 'option', 'altFormat', $this->strAltFormat);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -707,7 +717,7 @@
 					try {
 						$this->strAppendText = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'appendText', $this->strAppendText);
+							$this->CallJqUiMethod(true, 'option', 'appendText', $this->strAppendText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -719,7 +729,7 @@
 					try {
 						$this->blnAutoSize = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'autoSize', $this->blnAutoSize);
+							$this->CallJqUiMethod(true, 'option', 'autoSize', $this->blnAutoSize);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -749,7 +759,7 @@
 					try {
 						$this->strButtonImage = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'buttonImage', $this->strButtonImage);
+							$this->CallJqUiMethod(true, 'option', 'buttonImage', $this->strButtonImage);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -761,7 +771,7 @@
 					try {
 						$this->blnButtonImageOnly = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'buttonImageOnly', $this->blnButtonImageOnly);
+							$this->CallJqUiMethod(true, 'option', 'buttonImageOnly', $this->blnButtonImageOnly);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -773,7 +783,7 @@
 					try {
 						$this->strButtonText = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'buttonText', $this->strButtonText);
+							$this->CallJqUiMethod(true, 'option', 'buttonText', $this->strButtonText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -794,7 +804,7 @@
 					try {
 						$this->blnChangeMonth = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'changeMonth', $this->blnChangeMonth);
+							$this->CallJqUiMethod(true, 'option', 'changeMonth', $this->blnChangeMonth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -806,7 +816,7 @@
 					try {
 						$this->blnChangeYear = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'changeYear', $this->blnChangeYear);
+							$this->CallJqUiMethod(true, 'option', 'changeYear', $this->blnChangeYear);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -818,7 +828,7 @@
 					try {
 						$this->strCloseText = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'closeText', $this->strCloseText);
+							$this->CallJqUiMethod(true, 'option', 'closeText', $this->strCloseText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -830,7 +840,7 @@
 					try {
 						$this->blnConstrainInput = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'constrainInput', $this->blnConstrainInput);
+							$this->CallJqUiMethod(true, 'option', 'constrainInput', $this->blnConstrainInput);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -842,7 +852,7 @@
 					try {
 						$this->strCurrentText = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'currentText', $this->strCurrentText);
+							$this->CallJqUiMethod(true, 'option', 'currentText', $this->strCurrentText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -854,7 +864,7 @@
 					try {
 						$this->strJqDateFormat = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'dateFormat', $this->strJqDateFormat);
+							$this->CallJqUiMethod(true, 'option', 'dateFormat', $this->strJqDateFormat);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -866,7 +876,7 @@
 					try {
 						$this->arrDayNames = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'dayNames', $this->arrDayNames);
+							$this->CallJqUiMethod(true, 'option', 'dayNames', $this->arrDayNames);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -878,7 +888,7 @@
 					try {
 						$this->arrDayNamesMin = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'dayNamesMin', $this->arrDayNamesMin);
+							$this->CallJqUiMethod(true, 'option', 'dayNamesMin', $this->arrDayNamesMin);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -890,7 +900,7 @@
 					try {
 						$this->arrDayNamesShort = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'dayNamesShort', $this->arrDayNamesShort);
+							$this->CallJqUiMethod(true, 'option', 'dayNamesShort', $this->arrDayNamesShort);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -902,7 +912,7 @@
 					$this->mixDefaultDate = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'defaultDate', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'defaultDate', $mixValue);
 					}
 					break;
 
@@ -910,7 +920,7 @@
 					$this->mixDuration = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'duration', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'duration', $mixValue);
 					}
 					break;
 
@@ -918,7 +928,7 @@
 					try {
 						$this->intFirstDay = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'firstDay', $this->intFirstDay);
+							$this->CallJqUiMethod(true, 'option', 'firstDay', $this->intFirstDay);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -930,7 +940,7 @@
 					try {
 						$this->blnGotoCurrent = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'gotoCurrent', $this->blnGotoCurrent);
+							$this->CallJqUiMethod(true, 'option', 'gotoCurrent', $this->blnGotoCurrent);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -942,7 +952,7 @@
 					try {
 						$this->blnHideIfNoPrevNext = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'hideIfNoPrevNext', $this->blnHideIfNoPrevNext);
+							$this->CallJqUiMethod(true, 'option', 'hideIfNoPrevNext', $this->blnHideIfNoPrevNext);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -954,7 +964,7 @@
 					try {
 						$this->blnIsRTL = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'isRTL', $this->blnIsRTL);
+							$this->CallJqUiMethod(true, 'option', 'isRTL', $this->blnIsRTL);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -966,7 +976,7 @@
 					$this->mixMaxDate = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'maxDate', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'maxDate', $mixValue);
 					}
 					break;
 
@@ -974,7 +984,7 @@
 					$this->mixMinDate = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'minDate', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'minDate', $mixValue);
 					}
 					break;
 
@@ -982,7 +992,7 @@
 					try {
 						$this->arrMonthNames = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'monthNames', $this->arrMonthNames);
+							$this->CallJqUiMethod(true, 'option', 'monthNames', $this->arrMonthNames);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -994,7 +1004,7 @@
 					try {
 						$this->arrMonthNamesShort = QType::Cast($mixValue, QType::ArrayType);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'monthNamesShort', $this->arrMonthNamesShort);
+							$this->CallJqUiMethod(true, 'option', 'monthNamesShort', $this->arrMonthNamesShort);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1006,7 +1016,7 @@
 					try {
 						$this->blnNavigationAsDateFormat = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'navigationAsDateFormat', $this->blnNavigationAsDateFormat);
+							$this->CallJqUiMethod(true, 'option', 'navigationAsDateFormat', $this->blnNavigationAsDateFormat);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1018,7 +1028,7 @@
 					try {
 						$this->strNextText = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'nextText', $this->strNextText);
+							$this->CallJqUiMethod(true, 'option', 'nextText', $this->strNextText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1030,7 +1040,7 @@
 					$this->mixNumberOfMonths = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'numberOfMonths', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'numberOfMonths', $mixValue);
 					}
 					break;
 
@@ -1065,7 +1075,7 @@
 					try {
 						$this->strPrevText = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'prevText', $this->strPrevText);
+							$this->CallJqUiMethod(true, 'option', 'prevText', $this->strPrevText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1077,7 +1087,7 @@
 					try {
 						$this->blnSelectOtherMonths = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'selectOtherMonths', $this->blnSelectOtherMonths);
+							$this->CallJqUiMethod(true, 'option', 'selectOtherMonths', $this->blnSelectOtherMonths);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1089,7 +1099,7 @@
 					$this->mixShortYearCutoff = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'shortYearCutoff', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'shortYearCutoff', $mixValue);
 					}
 					break;
 
@@ -1097,7 +1107,7 @@
 					try {
 						$this->strShowAnim = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'showAnim', $this->strShowAnim);
+							$this->CallJqUiMethod(true, 'option', 'showAnim', $this->strShowAnim);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1109,7 +1119,7 @@
 					try {
 						$this->blnShowButtonPanel = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'showButtonPanel', $this->blnShowButtonPanel);
+							$this->CallJqUiMethod(true, 'option', 'showButtonPanel', $this->blnShowButtonPanel);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1121,7 +1131,7 @@
 					try {
 						$this->intShowCurrentAtPos = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'showCurrentAtPos', $this->intShowCurrentAtPos);
+							$this->CallJqUiMethod(true, 'option', 'showCurrentAtPos', $this->intShowCurrentAtPos);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1133,7 +1143,7 @@
 					try {
 						$this->blnShowMonthAfterYear = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'showMonthAfterYear', $this->blnShowMonthAfterYear);
+							$this->CallJqUiMethod(true, 'option', 'showMonthAfterYear', $this->blnShowMonthAfterYear);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1145,7 +1155,7 @@
 					try {
 						$this->strShowOn = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'showOn', $this->strShowOn);
+							$this->CallJqUiMethod(true, 'option', 'showOn', $this->strShowOn);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1157,7 +1167,7 @@
 					$this->mixShowOptions = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'showOptions', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'showOptions', $mixValue);
 					}
 					break;
 
@@ -1165,7 +1175,7 @@
 					try {
 						$this->blnShowOtherMonths = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'showOtherMonths', $this->blnShowOtherMonths);
+							$this->CallJqUiMethod(true, 'option', 'showOtherMonths', $this->blnShowOtherMonths);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1177,7 +1187,7 @@
 					try {
 						$this->blnShowWeek = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'showWeek', $this->blnShowWeek);
+							$this->CallJqUiMethod(true, 'option', 'showWeek', $this->blnShowWeek);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1189,7 +1199,7 @@
 					try {
 						$this->intStepMonths = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'stepMonths', $this->intStepMonths);
+							$this->CallJqUiMethod(true, 'option', 'stepMonths', $this->intStepMonths);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1201,7 +1211,7 @@
 					try {
 						$this->strWeekHeader = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'weekHeader', $this->strWeekHeader);
+							$this->CallJqUiMethod(true, 'option', 'weekHeader', $this->strWeekHeader);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1213,7 +1223,7 @@
 					try {
 						$this->strYearRange = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'yearRange', $this->strYearRange);
+							$this->CallJqUiMethod(true, 'option', 'yearRange', $this->strYearRange);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -1225,7 +1235,7 @@
 					try {
 						$this->strYearSuffix = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'yearSuffix', $this->strYearSuffix);
+							$this->CallJqUiMethod(true, 'option', 'yearSuffix', $this->strYearSuffix);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

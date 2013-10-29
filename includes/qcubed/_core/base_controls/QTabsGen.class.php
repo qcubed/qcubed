@@ -243,27 +243,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . parent::GetEndScript();
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			$this->ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -273,14 +283,14 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables all tabs.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Disables a tab. The selected tab cannot be disabled. To disable more than
@@ -291,14 +301,14 @@
 		 * @param $index
 		 */
 		public function Disable1($index) {
-			$this->CallJqUiMethod("disable", $index);
+			$this->CallJqUiMethod(false, "disable", $index);
 		}
 		/**
 		 * Enables all tabs.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Enables a tab. To enable more than one tab at once reset the disabled
@@ -308,7 +318,7 @@
 		 * @param $index
 		 */
 		public function Enable1($index) {
-			$this->CallJqUiMethod("enable", $index);
+			$this->CallJqUiMethod(false, "enable", $index);
 		}
 		/**
 		 * Loads the panel content of a remote tab.<ul><li><strong>index</strong>
@@ -316,7 +326,7 @@
 		 * @param $index
 		 */
 		public function Load($index) {
-			$this->CallJqUiMethod("load", $index);
+			$this->CallJqUiMethod(false, "load", $index);
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -325,14 +335,14 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current tabs
 		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the tabs option associated with the specified
@@ -344,7 +354,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the tabs.<ul><li><strong>options</strong>
@@ -352,7 +362,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Process any tabs that were added or removed directly in the DOM and
@@ -361,7 +371,7 @@
 		 * accept any arguments.</li></ul>
 		 */
 		public function Refresh() {
-			$this->CallJqUiMethod("refresh");
+			$this->CallJqUiMethod(false, "refresh");
 		}
 
 
@@ -390,7 +400,7 @@
 					$this->mixActive = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'active', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'active', $mixValue);
 					}
 					break;
 
@@ -398,7 +408,7 @@
 					try {
 						$this->blnCollapsible = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'collapsible', $this->blnCollapsible);
+							$this->CallJqUiMethod(true, 'option', 'collapsible', $this->blnCollapsible);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -410,7 +420,7 @@
 					$this->mixDisabled = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'disabled', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'disabled', $mixValue);
 					}
 					break;
 
@@ -418,7 +428,7 @@
 					try {
 						$this->strEvent = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'event', $this->strEvent);
+							$this->CallJqUiMethod(true, 'option', 'event', $this->strEvent);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -430,7 +440,7 @@
 					try {
 						$this->strHeightStyle = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'heightStyle', $this->strHeightStyle);
+							$this->CallJqUiMethod(true, 'option', 'heightStyle', $this->strHeightStyle);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -442,7 +452,7 @@
 					$this->mixHide = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'hide', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'hide', $mixValue);
 					}
 					break;
 
@@ -450,7 +460,7 @@
 					$this->mixShow = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'show', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'show', $mixValue);
 					}
 					break;
 

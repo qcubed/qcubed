@@ -205,7 +205,7 @@
 		/** @var bool Should the wrapper be used when rendering?  */
 		protected $blnUseWrapper = true;
         /** @var string  One time scripts associated with the control. */
-        protected $strControlScripts = null;
+        protected $strAttributeScripts = null;
 
 		// SETTINGS
 		/** @var string List of JavaScript files to be attached with the control when rendering */
@@ -1102,9 +1102,8 @@
 				$strToReturn = sprintf('%s; %s', $strJavaScript, $strToReturn);
 			}
 
-            if ($strControlScript = $this->RenderControlScripts()) {
-                $strToReturn .= ";\n" . $strControlScript;
-            }
+            $this->strAttributeScripts = null; // erase the attribute scripts, because the entire control is being drawn.
+
 			return $strToReturn;
 		}
 
@@ -1113,11 +1112,11 @@
          *
          * @return null|string
          */
-        public function RenderControlScripts()
+        public function RenderAttributeScripts()
         {
-            if ($this->strControlScripts) {
-                $strToReturn = implode (";\n", $this->strControlScripts);
-                $this->strControlScripts = null;
+            if ($this->strAttributeScripts) {
+                $strToReturn = implode (";\n", $this->strAttributeScripts);
+                $this->strAttributeScripts = null;
                 return $strToReturn;
             }
             else {
@@ -1126,14 +1125,15 @@
         }
 
         /**
-         * Executes a java script associated with the control. Makes sure the java script is executed AFTER
-         * the control is rendered.
+         * Executes a java script associated with the control. These scripts are specifically for the purpose of
+         * changing some attribute of the control that would also be taken care of during a refresh of the entire
+         * control. The script will only be executed if the entire control is not redrawn.
          *
          * @param string $strScript
          */
-        public function ExecuteJavaScript ($strScript)
+        public function AddAttributeScript ($strScript)
         {
-            $this->strControlScripts[] = $strScript;
+            $this->strAttributeScripts[] = $strScript;
         }
 
 		/**

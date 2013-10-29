@@ -119,27 +119,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . parent::GetEndScript();
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			$this->ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -164,7 +174,7 @@
 					$args[] = $optArg;
 				}
 				$strArgs = join(", ", $args); %>
-			$this->CallJqUiMethod(<%= $strArgs; %>);
+			$this->CallJqUiMethod(false, <%= $strArgs; %>);
 		}
 <% } %>
 
@@ -193,7 +203,7 @@
 	<% if (!($option instanceof Event)) { %>
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', '<%= $option->name %>', $mixValue);
+						$this->CallJqUiMethod(true, 'option', '<%= $option->name %>', $mixValue);
 					}
 					break;
 	<% } %>
@@ -203,7 +213,7 @@
 	<% if (!($option instanceof Event)) { %>
 						$this-><%= $option->varName %> = QType::Cast($mixValue, <%= $option->phpQType %>);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', '<%= $option->name %>', $this-><%= $option->varName %>);
+							$this->CallJqUiMethod(true, 'option', '<%= $option->name %>', $this-><%= $option->varName %>);
 						}
 	<% } %>
 	<% if ($option instanceof Event) { %>

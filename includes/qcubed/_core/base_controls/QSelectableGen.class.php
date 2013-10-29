@@ -187,27 +187,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . parent::GetEndScript();
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			$this->ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -217,21 +227,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables the selectable.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Enables the selectable.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -240,7 +250,7 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -248,7 +258,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the selectable option associated with the specified
@@ -260,7 +270,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the
@@ -269,7 +279,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Refresh the position and size of each selectee element. This method can be
@@ -279,7 +289,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Refresh() {
-			$this->CallJqUiMethod("refresh");
+			$this->CallJqUiMethod(false, "refresh");
 		}
 
 
@@ -309,7 +319,7 @@
 					$this->mixAppendTo = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'appendTo', $mixValue);
 					}
 					break;
 
@@ -317,7 +327,7 @@
 					try {
 						$this->blnAutoRefresh = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'autoRefresh', $this->blnAutoRefresh);
+							$this->CallJqUiMethod(true, 'option', 'autoRefresh', $this->blnAutoRefresh);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -329,7 +339,7 @@
 					$this->mixCancel = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'cancel', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'cancel', $mixValue);
 					}
 					break;
 
@@ -337,7 +347,7 @@
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
+							$this->CallJqUiMethod(true, 'option', 'delay', $this->intDelay);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -349,7 +359,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -361,7 +371,7 @@
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'distance', $this->intDistance);
+							$this->CallJqUiMethod(true, 'option', 'distance', $this->intDistance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -373,7 +383,7 @@
 					$this->mixFilter = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'filter', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'filter', $mixValue);
 					}
 					break;
 
@@ -381,7 +391,7 @@
 					try {
 						$this->strTolerance = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'tolerance', $this->strTolerance);
+							$this->CallJqUiMethod(true, 'option', 'tolerance', $this->strTolerance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

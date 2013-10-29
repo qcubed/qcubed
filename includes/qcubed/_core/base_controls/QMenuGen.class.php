@@ -145,27 +145,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . parent::GetEndScript();
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			$this->ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -176,7 +186,7 @@
 		 * @param $event
 		 */
 		public function Blur($event = null) {
-			$this->CallJqUiMethod("blur", $event);
+			$this->CallJqUiMethod(false, "blur", $event);
 		}
 		/**
 		 * Closes the currently active sub-menu.<ul><li><strong>event</strong> Type:
@@ -184,7 +194,7 @@
 		 * @param $event
 		 */
 		public function Collapse($event = null) {
-			$this->CallJqUiMethod("collapse", $event);
+			$this->CallJqUiMethod(false, "collapse", $event);
 		}
 		/**
 		 * Closes all open sub-menus.<ul><li><strong>event</strong> Type: <a>Event</a>
@@ -196,7 +206,7 @@
 		 * @param $all
 		 */
 		public function CollapseAll($event = null, $all = null) {
-			$this->CallJqUiMethod("collapseAll", $event, $all);
+			$this->CallJqUiMethod(false, "collapseAll", $event, $all);
 		}
 		/**
 		 * Removes the menu functionality completely. This will return the element
@@ -204,21 +214,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables the menu.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Enables the menu.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Opens the sub-menu below the currently active item, if one
@@ -227,7 +237,7 @@
 		 * @param $event
 		 */
 		public function Expand($event = null) {
-			$this->CallJqUiMethod("expand", $event);
+			$this->CallJqUiMethod(false, "expand", $event);
 		}
 		/**
 		 * Activates a particular menu item, begins opening any sub-menu if present
@@ -239,7 +249,7 @@
 		 * @param $event
 		 */
 		public function Focus($event = null, $item) {
-			$this->CallJqUiMethod("focus", $item, $event);
+			$this->CallJqUiMethod(false, "focus", $item, $event);
 		}
 		/**
 		 * Returns a boolean value stating whether or not the currently active item is
@@ -247,7 +257,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function IsFirstItem() {
-			$this->CallJqUiMethod("isFirstItem");
+			$this->CallJqUiMethod(false, "isFirstItem");
 		}
 		/**
 		 * Returns a boolean value stating whether or not the currently active item is
@@ -255,7 +265,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function IsLastItem() {
-			$this->CallJqUiMethod("isLastItem");
+			$this->CallJqUiMethod(false, "isLastItem");
 		}
 		/**
 		 * Moves active state to next menu item.<ul><li><strong>event</strong> Type:
@@ -263,7 +273,7 @@
 		 * @param $event
 		 */
 		public function Next($event = null) {
-			$this->CallJqUiMethod("next", $event);
+			$this->CallJqUiMethod(false, "next", $event);
 		}
 		/**
 		 * Moves active state to first menu item below the bottom of a scrollable menu
@@ -272,7 +282,7 @@
 		 * @param $event
 		 */
 		public function NextPage($event = null) {
-			$this->CallJqUiMethod("nextPage", $event);
+			$this->CallJqUiMethod(false, "nextPage", $event);
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -281,14 +291,14 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current menu
 		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the menu option associated with the specified
@@ -300,7 +310,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the menu.<ul><li><strong>options</strong>
@@ -308,7 +318,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Moves active state to previous menu item.<ul><li><strong>event</strong>
@@ -316,7 +326,7 @@
 		 * @param $event
 		 */
 		public function Previous($event = null) {
-			$this->CallJqUiMethod("previous", $event);
+			$this->CallJqUiMethod(false, "previous", $event);
 		}
 		/**
 		 * Moves active state to first menu item above the top of a scrollable menu or
@@ -325,7 +335,7 @@
 		 * @param $event
 		 */
 		public function PreviousPage($event = null) {
-			$this->CallJqUiMethod("previousPage", $event);
+			$this->CallJqUiMethod(false, "previousPage", $event);
 		}
 		/**
 		 * Initializes sub-menus and menu items that have not already been
@@ -335,7 +345,7 @@
 		 * any arguments.</li></ul>
 		 */
 		public function Refresh() {
-			$this->CallJqUiMethod("refresh");
+			$this->CallJqUiMethod(false, "refresh");
 		}
 		/**
 		 * Selects the currently active menu item, collapses all sub-menus and
@@ -345,7 +355,7 @@
 		 * @param $event
 		 */
 		public function Select($event = null) {
-			$this->CallJqUiMethod("select", $event);
+			$this->CallJqUiMethod(false, "select", $event);
 		}
 
 
@@ -372,7 +382,7 @@
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -384,7 +394,7 @@
 					$this->mixIcons = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'icons', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'icons', $mixValue);
 					}
 					break;
 
@@ -392,7 +402,7 @@
 					try {
 						$this->strMenus = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'menus', $this->strMenus);
+							$this->CallJqUiMethod(true, 'option', 'menus', $this->strMenus);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -404,7 +414,7 @@
 					$this->mixPosition = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'position', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'position', $mixValue);
 					}
 					break;
 
@@ -412,7 +422,7 @@
 					try {
 						$this->strRole = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'role', $this->strRole);
+							$this->CallJqUiMethod(true, 'option', 'role', $this->strRole);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

@@ -340,27 +340,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . parent::GetEndScript();
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			$this->ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -369,7 +379,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Close() {
-			$this->CallJqUiMethod("close");
+			$this->CallJqUiMethod(false, "close");
 		}
 		/**
 		 * Removes the dialog functionality completely. This will return the element
@@ -377,28 +387,28 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Whether the dialog is currently open.<ul><li>This method does not accept
 		 * any arguments.</li></ul>
 		 */
 		public function IsOpen() {
-			$this->CallJqUiMethod("isOpen");
+			$this->CallJqUiMethod(false, "isOpen");
 		}
 		/**
 		 * Moves the dialog to the top of the dialog stack.<ul><li>This method does
 		 * not accept any arguments.</li></ul>
 		 */
 		public function MoveToTop() {
-			$this->CallJqUiMethod("moveToTop");
+			$this->CallJqUiMethod(false, "moveToTop");
 		}
 		/**
 		 * Opens the dialog.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Open() {
-			$this->CallJqUiMethod("open");
+			$this->CallJqUiMethod(false, "open");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -407,14 +417,14 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current dialog
 		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the dialog option associated with the specified
@@ -426,7 +436,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the dialog.<ul><li><strong>options</strong>
@@ -434,7 +444,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 
 
@@ -476,7 +486,7 @@
 					try {
 						$this->blnAutoOpen = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'autoOpen', $this->blnAutoOpen);
+							$this->CallJqUiMethod(true, 'option', 'autoOpen', $this->blnAutoOpen);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -488,7 +498,7 @@
 					$this->mixButtons = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'buttons', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'buttons', $mixValue);
 					}
 					break;
 
@@ -496,7 +506,7 @@
 					try {
 						$this->blnCloseOnEscape = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'closeOnEscape', $this->blnCloseOnEscape);
+							$this->CallJqUiMethod(true, 'option', 'closeOnEscape', $this->blnCloseOnEscape);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -508,7 +518,7 @@
 					try {
 						$this->strCloseText = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'closeText', $this->strCloseText);
+							$this->CallJqUiMethod(true, 'option', 'closeText', $this->strCloseText);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -520,7 +530,7 @@
 					try {
 						$this->strDialogClass = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'dialogClass', $this->strDialogClass);
+							$this->CallJqUiMethod(true, 'option', 'dialogClass', $this->strDialogClass);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -532,7 +542,7 @@
 					try {
 						$this->blnDraggable = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'draggable', $this->blnDraggable);
+							$this->CallJqUiMethod(true, 'option', 'draggable', $this->blnDraggable);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -544,7 +554,7 @@
 					$this->mixHeight = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'height', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'height', $mixValue);
 					}
 					break;
 
@@ -552,7 +562,7 @@
 					$this->mixHide = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'hide', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'hide', $mixValue);
 					}
 					break;
 
@@ -560,7 +570,7 @@
 					try {
 						$this->intMaxHeight = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'maxHeight', $this->intMaxHeight);
+							$this->CallJqUiMethod(true, 'option', 'maxHeight', $this->intMaxHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -572,7 +582,7 @@
 					try {
 						$this->intMaxWidth = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'maxWidth', $this->intMaxWidth);
+							$this->CallJqUiMethod(true, 'option', 'maxWidth', $this->intMaxWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -584,7 +594,7 @@
 					try {
 						$this->intMinHeight = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'minHeight', $this->intMinHeight);
+							$this->CallJqUiMethod(true, 'option', 'minHeight', $this->intMinHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -596,7 +606,7 @@
 					try {
 						$this->intMinWidth = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'minWidth', $this->intMinWidth);
+							$this->CallJqUiMethod(true, 'option', 'minWidth', $this->intMinWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -608,7 +618,7 @@
 					try {
 						$this->blnModal = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'modal', $this->blnModal);
+							$this->CallJqUiMethod(true, 'option', 'modal', $this->blnModal);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -620,7 +630,7 @@
 					$this->mixPosition = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'position', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'position', $mixValue);
 					}
 					break;
 
@@ -628,7 +638,7 @@
 					try {
 						$this->blnResizable = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'resizable', $this->blnResizable);
+							$this->CallJqUiMethod(true, 'option', 'resizable', $this->blnResizable);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -640,7 +650,7 @@
 					$this->mixShow = $mixValue;
 				
 					if ($this->OnPage) {
-						$this->CallJqUiMethod('option', 'show', $mixValue);
+						$this->CallJqUiMethod(true, 'option', 'show', $mixValue);
 					}
 					break;
 
@@ -648,7 +658,7 @@
 					try {
 						$this->blnStack = QType::Cast($mixValue, QType::Boolean);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'stack', $this->blnStack);
+							$this->CallJqUiMethod(true, 'option', 'stack', $this->blnStack);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -660,7 +670,7 @@
 					try {
 						$this->strTitle = QType::Cast($mixValue, QType::String);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'title', $this->strTitle);
+							$this->CallJqUiMethod(true, 'option', 'title', $this->strTitle);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -672,7 +682,7 @@
 					try {
 						$this->intWidth = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'width', $this->intWidth);
+							$this->CallJqUiMethod(true, 'option', 'width', $this->intWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -684,7 +694,7 @@
 					try {
 						$this->intZIndex = QType::Cast($mixValue, QType::Integer);
 						if ($this->OnPage) {
-							$this->CallJqUiMethod('option', 'zIndex', $this->intZIndex);
+							$this->CallJqUiMethod(true, 'option', 'zIndex', $this->intZIndex);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
