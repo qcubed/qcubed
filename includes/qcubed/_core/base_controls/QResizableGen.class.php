@@ -267,7 +267,7 @@
 			}
 			$str .= $this->GetControlJavaScript();
 			if ($strParentScript = parent::GetEndScript()) {
-				$str .= '; ' . parent::GetEndScript();
+				$str .= '; ' . $strParentScript;
 			}
 			return $str;
 		}
