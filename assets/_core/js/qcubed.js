@@ -376,7 +376,7 @@ qcubed = {
                             $j(strControlId + '_ctl').html(strControlHtml);
                         }
                     }
-                }).find('command').each(function() {
+                }).end().find('command').each(function() {
                     strCommands.push($j(this).text());
                 });
                 /** @todo eval is evil, do no evil */
