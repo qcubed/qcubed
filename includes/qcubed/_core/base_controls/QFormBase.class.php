@@ -948,7 +948,9 @@
 				QApplication::$ProcessOutput = false;
 				// Store the Output Buffer locally
 				$strAlreadyRendered = ob_get_contents();
-				ob_clean();
+                if ($strAlreadyRendered) {
+                    ob_clean();
+                }
 
 				// Evaluate the new template
 				ob_start('__QForm_EvaluateTemplate_ObHandler');
@@ -957,7 +959,9 @@
 				ob_end_clean();
 
 				// Restore the output buffer and return evaluated template
-				print($strAlreadyRendered);
+                if ($strAlreadyRendered) {
+                    print($strAlreadyRendered);
+                }
 				QApplication::$ProcessOutput = true;
 
 				return $strTemplateEvaluated;
