@@ -97,12 +97,12 @@ $j.ajaxSync.data = [];
 /**
  * @namespace qcubed
  */
-qcubed = qc = {
+qcubed = {
     /**
-     * @param string strControlId
-     * @param string strProperty
-     * @param string strNewValue
-     * @return void
+     * @param {string} strControlId
+     * @param {string} strProperty
+     * @param {string} strNewValue
+     * @return {void}
      */
     recordControlModification: function(strControlId, strProperty, strNewValue) {
         if (!qcubed.controlModifications[strControlId]) {
@@ -112,11 +112,11 @@ qcubed = qc = {
     },
 
     /**
-     * @param string strForm
-     * @param string strControl
-     * @param string strEvent
-     * @param mixed mixParameter
-     * @return void
+     * @param {string} strForm The QForm Id, not used.
+     * @param {string} strControl The Control Id.
+     * @param {string} strEvent The Event.
+     * @param {mixed} mixParameter
+     * @return {void}
      */
     postBack: function(strForm, strControl, strEvent, mixParameter) {
         var strForm = $j("#Qform__FormId").attr("value"),
@@ -139,7 +139,7 @@ qcubed = qc = {
     },
 
     /**
-     * @return string
+     * @return {string}
      */
     formUpdates: function() {
         var strToReturn = "",
@@ -156,9 +156,9 @@ qcubed = qc = {
     },
 
     /**
-     * @param string strForm The QForm Id
-     * @param string strCallType Server or Ajax
-     * @return string
+     * @param {string} strForm The QForm Id
+     * @param {string} strCallType Server or Ajax
+     * @return {string}
      */
     formCheckableControls: function(strForm, strCallType) {
         // Select the QCubed Form
@@ -193,11 +193,12 @@ qcubed = qc = {
     },
 
     /**
-     * @param string strForm The Form Id
-     * @param string strControl The Control Id
-     * @param mixed mixParameter An array of parameters or a string value.
-     * @param string strWaitIconControlId Not used, probably legacy code.
-     * @return string Post Data
+     * @param {string} strForm The Form Id
+     * @param {string} strControl The Control Id
+     * @param {string} strEvent The Event
+     * @param {mixed} mixParameter An array of parameters or a string value.
+     * @param {string} strWaitIconControlId Not used, probably legacy code.
+     * @return {string} Post Data
      */
     getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
         var objFormElements = $j('#' + strForm).find('input,select,textarea'),
@@ -275,12 +276,12 @@ qcubed = qc = {
     },
 
     /**
-     * @param string strForm The QForm Id
-     * @param string strControl The Control Id
-     * @param string strEvent
-     * @param mixed mixParameter
-     * @param string strWaitIconControlId The id of the control's spinner.
-     * @return void
+     * @param {string} strForm The QForm Id
+     * @param {string} strControl The Control Id
+     * @param {string} strEvent
+     * @param {mixed} mixParameter
+     * @param {string} strWaitIconControlId The id of the control's spinner.
+     * @return {void}
      * @todo There is an eval() in here. We need to find a way around that.
      */
     postAjax: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
@@ -353,13 +354,12 @@ qcubed = qc = {
                     var $this = $j(this),
                         strControlId = '#' + $this.attr("id"),
                         strControlHtml = $this.text(),
-                        control,
+                        control = $j(strControlId),
                         relParent;
 
                     if (strControlId === "#Qform__FormState") {
-                        $j(strControlId).val(strControlHtml);
+                        control.val(strControlHtml);
                     } else {
-                        control = $j(strControlId);
                         if (control.length && !control.get(0).wrapper) {
                             //remove related controls (error, name ...) for wrapper-less controls
                             if ($this.attr("data-hasrel")) {
@@ -427,6 +427,8 @@ qcubed = qc = {
         /////////////////////////////
 
         this.wrappers = [];
+
+        return this;
     }
 };
 
@@ -736,7 +738,7 @@ qcubed.registerControlArray = function(mixControlArray) {
         intIndex;
 
     for (intIndex = 0; intIndex < intLength; intIndex++) {
-        qcubed.registerControl(mixControlArray[intIndex]);
+        this.registerControl(mixControlArray[intIndex]);
     }
 };
 
@@ -744,11 +746,12 @@ qcubed.registerControlArray = function(mixControlArray) {
 // QCubed Shortcuts and Initialize
 ////////////////////////////////
 
-qc.pB = qcubed.postBack;
-qc.pA = qcubed.postAjax;
-qc.getC = qcubed.getControl;
-qc.getW = qcubed.getWrapper;
-qc.regC = qcubed.registerControl;
-qc.regCA = qcubed.registerControlArray;
+qc = qcubed;
+qc.pB = qc.postBack;
+qc.pA = qc.postAjax;
+qc.getC = qc.getControl;
+qc.getW = qc.getWrapper;
+qc.regC = qc.registerControl;
+qc.regCA = qc.registerControlArray;
 
 qc.initialize();
