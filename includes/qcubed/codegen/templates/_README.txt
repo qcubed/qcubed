@@ -1,16 +1,16 @@
 This directory is for customizations and additions of the QCubed Codegen
 Templates and Subtemplates.  If there are any template files in this directory which have the
-same name as a template or subtemplate file in /includes/qcodo/codegen/templates, then the
+same name as a template or subtemplate file in /includes/qcubed/_core/codegen/templates, then the
 file in this directory will be used *instead* of the one there.
 
 If there are any template files in this directory in *addition* to the ones in
-/includes/qcodo/codegen/templates, these additional template files will be
+/includes/qcubed/_core/codegen/templates, these additional template files will be
 processed as well.
 
 Feel free to add as you wish.  Just remember the naming structure for CodeGen
 template files:
 
-/includes/qcodo/codegen/templates/[TYPE]/[MODULE]/[FILE]
+/includes/qcubed/_core/codegen/templates/[TYPE]/[MODULE]/[FILE]
 
 Where [TYPE] is the object being generated, for example:
 	* db_orm

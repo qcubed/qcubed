@@ -11,6 +11,34 @@
 		ob_start();
 		print $content_so_far;
 	}
+	
+	// returns true if $str begins with $sub
+	function beginsWith( $str, $sub ) {
+	    return ( substr( $str, 0, strlen( $sub ) ) == $sub );
+	}
+
+	// return tru if $str ends with $sub
+	function endsWith( $str, $sub ) {
+	    return ( substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub );
+	}
+	
+	// trims off x chars from the front of a string
+	// or the matching string in $off is trimmed off
+	function trimOffFront( $off, $str ) {
+	    if( is_numeric( $off ) )
+	        return substr( $str, $off );
+	    else
+	        return substr( $str, strlen( $off ) );
+	}
+	
+	// trims off x chars from the end of a string
+	// or the matching string in $off is trimmed off
+	function trimOffEnd( $off, $str ) {
+	    if( is_numeric( $off ) )
+	        return substr( $str, 0, strlen( $str ) - $off );
+	    else
+	        return substr( $str, 0, strlen( $str ) - strlen( $off ) );
+	}
 
 	/**
 	 * This is the CodeGen class which performs the code generation
@@ -1015,7 +1043,12 @@
 		}
 
 		protected function FormControlVariableNameForManyToManyReference(QManyToManyReference $objManyToManyReference) {
-			return sprintf("dtg%s", $objManyToManyReference->ObjectDescriptionPlural);
+			if ($objManyToManyReference->IsTypeAssociation) {
+				$strPre = 'lst%s';
+			} else {
+				$strPre = 'dtg%s';
+			}
+			return sprintf($strPre, $objManyToManyReference->ObjectDescriptionPlural);
 		}
 
 		protected function FormLabelVariableNameForColumn(QColumn $objColumn) {
@@ -1160,16 +1193,40 @@
 			// Rip out trailing "_assn" if applicable
 			$strAssociationTableName = str_replace($this->strAssociationTableSuffix, '', $strAssociationTableName);
 
-			// Take out strTableName if applicable (both with and without underscores)
-			$strAssociationTableName = str_replace($strTableName, '', $strAssociationTableName);
-			$strTableName = str_replace('_', '', $strTableName);
-			$strAssociationTableName = str_replace($strTableName, '', $strAssociationTableName);
-
-			// Take out strReferencedTableName if applicable (both with and without underscores)
-			$strAssociationTableName = str_replace($strReferencedTableName, '', $strAssociationTableName);
-			$strReferencedTableName = str_replace('_', '', $strReferencedTableName);
-			$strAssociationTableName = str_replace($strReferencedTableName, '', $strAssociationTableName);
-
+			// remove instances of the table names in the association table name
+			$strTableName2 = str_replace('_', '', $strTableName); // remove underscores if they are there
+			$strReferencedTableName2 = str_replace('_', '', $strReferencedTableName); // remove underscores if they are there
+			
+			if (beginsWith ($strAssociationTableName, $strTableName . '_')) {
+				$strAssociationTableName = trimOffFront ($strTableName . '_', $strAssociationTableName);
+			} elseif (beginsWith ($strAssociationTableName, $strTableName2 . '_')) {
+				$strAssociationTableName = trimOffFront ($strTableName2 . '_', $strAssociationTableName);
+			} elseif (beginsWith ($strAssociationTableName, $strReferencedTableName . '_')) {
+				$strAssociationTableName = trimOffFront ($strReferencedTableName . '_', $strAssociationTableName);
+			} elseif (beginsWith ($strAssociationTableName, $strReferencedTableName2 . '_')) {
+				$strAssociationTableName = trimOffFront ($strReferencedTableName2 . '_', $strAssociationTableName);
+			} elseif ($strAssociationTableName == $strTableName ||
+					$strAssociationTableName == $strTableName2 ||
+					$strAssociationTableName == $strReferencedTableName ||
+					$strAssociationTableName == $strReferencedTableName2) {
+				$strAssociationTableName = "";		
+			}
+			
+			if (endsWith ($strAssociationTableName,  '_' . $strTableName)) {
+				$strAssociationTableName = trimOffEnd ('_' . $strTableName, $strAssociationTableName);
+			} elseif (endsWith ($strAssociationTableName, '_' . $strTableName2)) {
+				$strAssociationTableName = trimOffEnd ('_' . $strTableName2, $strAssociationTableName);
+			} elseif (endsWith ($strAssociationTableName,  '_' . $strReferencedTableName)) {
+				$strAssociationTableName = trimOffEnd ('_' . $strReferencedTableName, $strAssociationTableName);
+			} elseif (endsWith ($strAssociationTableName, '_' . $strReferencedTableName2)) {
+				$strAssociationTableName = trimOffEnd ('_' . $strReferencedTableName2, $strAssociationTableName);
+			} elseif ($strAssociationTableName == $strTableName ||
+					$strAssociationTableName == $strTableName2 ||
+					$strAssociationTableName == $strReferencedTableName ||
+					$strAssociationTableName == $strReferencedTableName2) {
+				$strAssociationTableName = "";		
+			}
+						
 			// Change any double "__" to single "_"
 			$strAssociationTableName = str_replace("__", "_", $strAssociationTableName);
 			$strAssociationTableName = str_replace("__", "_", $strAssociationTableName);
