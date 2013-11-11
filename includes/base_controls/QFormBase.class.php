@@ -58,6 +58,8 @@
 		protected $strCssClass;
 
 		protected $strCustomAttributeArray = null;
+		/** @var bool True when css scripts get rendered on page. */
+		protected $blnStylesRendered = false;
 
 		///////////////////////////
 		// Form Status Constants
@@ -1185,6 +1187,60 @@
 		protected function __construct() {}
 
 		/**
+		 * Renders the tags to include the css style sheets. Call this in your head tag if you want to
+		 * put these there. Otherwise, the styles will automatically be included just after the form.
+		 *
+		 * @param bool $blnDisplayOutput
+		 * @return null|string
+		 */
+		public function RenderStyles($blnDisplayOutput = true) {
+			$strToReturn = '';
+			$this->strIncludedStyleSheetFileArray = array();
+
+			// Figure out initial list of StyleSheet includes
+			$strStyleSheetArray = array();
+
+			foreach ($this->GetAllControls() as $objControl) {
+				// Include any StyleSheets?  The control would have a
+				// comma-delimited list of stylesheet files to include (if applicable)
+				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
+					$strStyleSheetArray = array_merge($strStyleSheetArray, $strScriptArray);
+			}
+
+			// In order to make ui-themes workable, move the jquery.css to the end of list.
+			// It should override any rules that it can override.
+			foreach ($strStyleSheetArray as $strScript) {
+				if (__JQUERY_CSS__ == $strScript) {
+					unset($strStyleSheetArray[$strScript]);
+					$strStyleSheetArray[$strScript] = $strScript;
+					break;
+				}
+			}
+
+			// Include styles that need to be included
+			foreach ($strStyleSheetArray as $strScript) {
+				$strToReturn  .= sprintf('<style type="text/css" media="all">@import "%s";</style>', $this->GetCssFileUri($strScript));
+				$strToReturn .= "\r\n";
+			}
+
+			$this->blnStylesRendered = true;
+
+			// Return or Display
+			if ($blnDisplayOutput) {
+				if(!QApplication::$CliMode) {
+					print($strToReturn);
+				}
+				return null;
+			} else {
+				if(!QApplication::$CliMode) {
+					return $strToReturn;
+				} else {
+					return '';
+				}
+			}
+		}
+
+		/**
 		 * Initializes the QForm rendering process
 		 * @param bool $blnDisplayOutput Whether the output is to be printed (true) or simply returned (false)
 		 *
@@ -1206,20 +1262,22 @@
 
 			// Update FormStatus and Clear Included JS/CSS list
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
-			$this->strIncludedStyleSheetFileArray = array();
+			$this->blnStylesRendered = false;
+			
+			QApplicationBase::$ProcessOutput = false;
+			$strOutputtedText = trim(ob_get_contents());
+			if (strpos(strtolower($strOutputtedText), '<body') === false) {
+				$strToReturn = '<body>';
+				$this->blnRenderedBodyTag = true;
+			} else
+				$strToReturn = '';
+			QApplicationBase::$ProcessOutput = true;
 
-			// Figure out initial list of StyleSheet includes
-			$strStyleSheetArray = array();
 
 			// Iterate through the form's ControlArray to Define FormAttributes and additional JavaScriptIncludes
 			$this->strFormAttributeArray = array();
 
 			foreach ($this->GetAllControls() as $objControl) {
-				// Include any StyleSheets?  The control would have a
-				// comma-delimited list of stylesheet files to include (if applicable)
-				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
-					$strStyleSheetArray = array_merge($strStyleSheetArray, $strScriptArray);
-
 				// Form Attributes?
 				if ($objControl->FormAttributes) {
 					$this->strFormAttributeArray = array_merge($this->strFormAttributeArray, $objControl->FormAttributes);
@@ -1235,15 +1293,6 @@
 				$strFormAttributes .= sprintf(' %s="%s"', $strKey, $strValue);
 			}
 
-			QApplicationBase::$ProcessOutput = false;
-			$strOutputtedText = strtolower(trim(ob_get_contents()));
-			if (strpos($strOutputtedText, '<body') === false) {
-				$strToReturn = '<body>';
-				$this->blnRenderedBodyTag = true;
-			} else
-				$strToReturn = '';
-			QApplicationBase::$ProcessOutput = true;
-
 			if ($this->strCssClass)
 				$strFormAttributes .= ' class="' . $this->strCssClass . '"';
 
@@ -1251,20 +1300,8 @@
 			$strToReturn .= sprintf('<form method="post" id="%s" action="%s"%s>', $this->strFormId, htmlentities(QApplication::$RequestUri), $strFormAttributes);
 			$strToReturn .= "\r\n";
 			
-			// In order to make ui-themes workable, move the jquery.css to the end of list.
-			// It should override any rules that it can override.
-			foreach ($strStyleSheetArray as $strScript) {
-				if (__JQUERY_CSS__ == $strScript) {
-					unset($strStyleSheetArray[$strScript]);
-					$strStyleSheetArray[$strScript] = $strScript;
-					break;
-				}
-			}
-
-			// Include styles that need to be included
-			foreach ($strStyleSheetArray as $strScript) {
-				$strToReturn  .= sprintf('<style type="text/css" media="all">@import "%s";</style>', $this->GetCssFileUri($strScript));
-				$strToReturn .= "\r\n";
+			if (!$this->blnStylesRendered) {
+				$strToReturn .= $this->RenderStyles(false);
 			}
 
 			// Perhaps a strFormModifiers as an array to
