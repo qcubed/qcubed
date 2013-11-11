@@ -53,6 +53,12 @@
 		protected $Slider2;
 		/** @var QTabs */
 		protected $Tabs;
+        /** @var  QJqButton */
+        protected $btnShowDialog;
+        /** @var  QTextBox */
+        protected $txtDlgTitle;
+        /** @var  QTextBox */
+        protected $txtDlgText;
 
 		// Array we'll use to demonstrate the autocomplete functionality
 		static private $LANGUAGES = array("c++", "java", "php",
@@ -214,9 +220,23 @@
 			$this->Dialog->AddButton ('Cancel', 'cancel');
 			$this->Dialog->AddButton ('OK', 'ok');
 			$this->Dialog->AddAction (new QDialog_ButtonEvent(), new QAjaxAction ('dialog_press'));
-            $this->Dialog->AutoOpen = true;
-			
-			// Progressbar
+            $this->Dialog->AutoOpen = false;
+
+            $this->btnShowDialog = new QJqButton($this);
+            $this->btnShowDialog->Text = 'Show Dialog';
+            $this->btnShowDialog->AddAction (new QClickEvent(), new QShowDialog ($this->Dialog));
+
+            $this->txtDlgTitle = new QTextBox($this);
+            $this->txtDlgTitle->Name = "Set Title To:";
+            $this->txtDlgTitle->AddAction (new QKeyPressEvent(10), new QAjaxAction('dlgTitle_Change'));
+            $this->txtDlgTitle->AddAction (new QBackspaceKeyEvent(10), new QAjaxAction('dlgTitle_Change'));
+
+            $this->txtDlgText = new QTextBox($this);
+            $this->txtDlgText->Name = "Set Text To:";
+            $this->txtDlgText->AddAction (new QKeyPressEvent(10), new QAjaxAction('dlgText_Change'));
+            $this->txtDlgText->AddAction (new QBackspaceKeyEvent(10), new QAjaxAction('dlgText_Change'));
+
+            // Progressbar
 			$this->Progressbar = new QProgressbar($this);
 			$this->Progressbar->Value = 37;
 	
@@ -332,8 +352,18 @@
 		protected function accordion_change() {
 			QApplication::DisplayAlert ($this->Accordion->Active . ' selected.');
 		}
-		
-	}
+
+        protected function dlgTitle_Change($strFormId, $strControlId, $strParameter) {
+            $strNewTitle = $this->txtDlgTitle->Text;
+            $this->Dialog->Title = $strNewTitle;
+        }
+
+        protected function dlgText_Change($strFormId, $strControlId, $strParameter) {
+            $strNewText = $this->txtDlgText->Text;
+            $this->Dialog->Text = $strNewText;
+        }
+
+    }
 
     ExampleForm::Run('ExampleForm');
 ?>

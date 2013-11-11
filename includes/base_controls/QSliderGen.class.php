@@ -191,27 +191,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . $strParentScript;
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -221,21 +231,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables the slider.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Enables the slider.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -244,14 +254,14 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current slider
 		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the slider option associated with the specified
@@ -263,7 +273,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the slider.<ul><li><strong>options</strong>
@@ -271,14 +281,14 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Get the value of the slider.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Value() {
-			$this->CallJqUiMethod("value");
+			$this->CallJqUiMethod(false, "value");
 		}
 		/**
 		 * Set the value of the slider.<ul><li><strong>value</strong> Type:
@@ -286,14 +296,14 @@
 		 * @param $value
 		 */
 		public function Value1($value) {
-			$this->CallJqUiMethod("value", $value);
+			$this->CallJqUiMethod(false, "value", $value);
 		}
 		/**
 		 * Get the value for all handles.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Values() {
-			$this->CallJqUiMethod("values");
+			$this->CallJqUiMethod(false, "values");
 		}
 		/**
 		 * Get the value for the specified handle.<ul><li><strong>index</strong> Type:
@@ -301,7 +311,7 @@
 		 * @param $index
 		 */
 		public function Values1($index) {
-			$this->CallJqUiMethod("values", $index);
+			$this->CallJqUiMethod(false, "values", $index);
 		}
 		/**
 		 * Set the value for the specified handle.<ul><li><strong>index</strong> Type:
@@ -311,7 +321,7 @@
 		 * @param $value
 		 */
 		public function Values2($index, $value) {
-			$this->CallJqUiMethod("values", $index, $value);
+			$this->CallJqUiMethod(false, "values", $index, $value);
 		}
 		/**
 		 * Set the value for all handles.<ul><li><strong>values</strong> Type:
@@ -319,7 +329,7 @@
 		 * @param $values
 		 */
 		public function Values3($values) {
-			$this->CallJqUiMethod("values", $values);
+			$this->CallJqUiMethod(false, "values", $values);
 		}
 
 
@@ -349,16 +359,16 @@
 				case 'Animate':
 					$this->mixAnimate = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'animate', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'animate', $mixValue);
 					}
 					break;
 
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -369,8 +379,8 @@
 				case 'Max':
 					try {
 						$this->intMax = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'max', $this->intMax);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'max', $this->intMax);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -381,8 +391,8 @@
 				case 'Min':
 					try {
 						$this->intMin = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'min', $this->intMin);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'min', $this->intMin);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -393,8 +403,8 @@
 				case 'Orientation':
 					try {
 						$this->strOrientation = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'orientation', $this->strOrientation);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'orientation', $this->strOrientation);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -405,16 +415,16 @@
 				case 'Range':
 					$this->mixRange = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'range', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'range', $mixValue);
 					}
 					break;
 
 				case 'Step':
 					try {
 						$this->intStep = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'step', $this->intStep);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'step', $this->intStep);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -425,8 +435,8 @@
 				case 'Value':
 					try {
 						$this->intValue = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'value', $this->intValue);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'value', $this->intValue);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -437,8 +447,8 @@
 				case 'Values':
 					try {
 						$this->arrValues = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'values', $this->arrValues);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'values', $this->arrValues);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

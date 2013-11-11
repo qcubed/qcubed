@@ -204,6 +204,8 @@
 		protected $strWrapperCssClass = null;
 		/** @var bool Should the wrapper be used when rendering?  */
 		protected $blnUseWrapper = true;
+        /** @var string  One time scripts associated with the control. */
+        protected $strAttributeScripts = null;
 
 		// SETTINGS
 		/** @var string List of JavaScript files to be attached with the control when rendering */
@@ -1140,9 +1142,40 @@
 				$strJavaScript = sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass);
 				$strToReturn = sprintf('%s; %s', $strJavaScript, $strToReturn);
 			}
-			
+
+            $this->strAttributeScripts = null; // erase the attribute scripts, because the entire control is being drawn.
+
 			return $strToReturn;
 		}
+
+        /**
+         * Return one-time scripts associated with the control.
+         *
+         * @return null|string
+         */
+        public function RenderAttributeScripts()
+        {
+            if ($this->strAttributeScripts) {
+                $strToReturn = implode (";\n", $this->strAttributeScripts);
+                $this->strAttributeScripts = null;
+                return $strToReturn;
+            }
+            else {
+                return '';
+            }
+        }
+
+        /**
+         * Executes a java script associated with the control. These scripts are specifically for the purpose of
+         * changing some attribute of the control that would also be taken care of during a refresh of the entire
+         * control. The script will only be executed if the entire control is not redrawn.
+         *
+         * @param string $strScript
+         */
+        public function AddAttributeScript ($strScript)
+        {
+            $this->strAttributeScripts[] = $strScript;
+        }
 
 		/**
 		 * For any HTML code that needs to be rendered at the END of the QForm when this control is
