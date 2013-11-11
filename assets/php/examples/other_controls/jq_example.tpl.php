@@ -86,7 +86,11 @@
 	</div>
 	
 	<div class="example"><h2>Dialog box - floating..</h2>
-		<?php $this->Dialog->Render(); ?>
+        <?php $this->Dialog->Render(); ?>
+        <?php $this->btnShowDialog->Render(); ?>
+        <?php $this->txtDlgTitle->RenderWithName(); ?>
+        <?php $this->txtDlgText->RenderWithName(); ?>
+
 	</div>
 	
 	<div class="example"><h2>Progressbar</h2>

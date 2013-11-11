@@ -605,10 +605,13 @@
 			foreach ($this->GetAllControls() as $objControl) {
 				if ($objControl->Rendered) {
 					$strJavaScript = $objControl->GetEndScript();
-					if (trim($strJavaScript))
-						$strCommands .= trim($strJavaScript);
-				}
-			}
+				} else {
+                    $strJavaScript = $objControl->RenderAttributeScripts();
+                }
+                if ($strJavaScript = trim($strJavaScript)) {
+                    $strCommands .= $strJavaScript . ';';
+                }
+            }
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strRender = $objGrouping->Render();
 				if (trim($strRender))
@@ -948,7 +951,9 @@
 				QApplication::$ProcessOutput = false;
 				// Store the Output Buffer locally
 				$strAlreadyRendered = ob_get_contents();
-				ob_clean();
+                if ($strAlreadyRendered) {
+                    ob_clean();
+                }
 
 				// Evaluate the new template
 				ob_start('__QForm_EvaluateTemplate_ObHandler');
@@ -957,7 +962,9 @@
 				ob_end_clean();
 
 				// Restore the output buffer and return evaluated template
-				print($strAlreadyRendered);
+                if ($strAlreadyRendered) {
+                    print($strAlreadyRendered);
+                }
 				QApplication::$ProcessOutput = true;
 
 				return $strTemplateEvaluated;
@@ -1479,26 +1486,23 @@
 				if ($objControl->Rendered) {
 					$strControlScript = $objControl->GetEndScript();
 					if (strlen($strControlScript) > 0) {
-						$strEvents .= $strControlScript . ";";
+						$strEvents .= $strControlScript . ";\n";
 					}
 				}
 			}
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strGroupingScript = $objGrouping->Render();
 				if (strlen($strGroupingScript) > 0) {
-					$strEvents .= $strGroupingScript . ";";
+					$strEvents .= $strGroupingScript . ";\n";
 				}
 			}
 
-			// Run End Script Compressor
-			$strEndScriptArray = explode('; ', $strEndScript);
+            // Run End Script Compressor
+			$strEndScriptArray = explode(";\n", $strEndScript);
 			$strEndScriptCommands = array();
 			foreach ($strEndScriptArray as $strEndScript)
 				$strEndScriptCommands[trim($strEndScript)] = true;
-			$strEndScript = implode('; ', array_keys($strEndScriptCommands));
-
-			// Finally, add any application level js commands
-			$strEndScript .= QApplication::RenderJavaScript(false);
+			$strEndScript = implode(";\n", array_keys($strEndScriptCommands));
 
 			// Next, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			// due to dynamically created controls
@@ -1531,8 +1535,6 @@
 				}
 			}
 
-			// Finally, render the JS Commands to Execute
-
 			// First, alter any <Form> settings that need to be altered
 			foreach ($strFormAttributeToModifyArray as $strKey=>$strValue)
 				$strEndScript .= sprintf('document.getElementById("%s").%s = "%s"; ', $this->strFormId, $strKey, $strValue);
@@ -1542,11 +1544,14 @@
 				$strEndScript .= 'qc.loadStyleSheetFile("' . $strScript . '", "all"); ';
 
 			if ($strEvents) {
-				// qc.regCA first, $strEvents second.
+				// qc.regCA first, $strEvents 2nd, application scripts 3rd
 				$strEndScript = $strEndScript . ';' . $strEvents;
 			}
 
-			// Next, add any new JS files that haven't yet been included to the BEGINNING of the High Priority commands string
+            // Add any application level js commands. These might refer to previous objects.
+            $strEndScript .= QApplication::RenderJavaScript(false);
+
+            // Next, add any new JS files that haven't yet been included to the BEGINNING of the High Priority commands string
 			// (already rendered HP commands up to this point will be placed into the callback)
 			foreach (array_reverse($strJavaScriptToAddArray) as $strScript) {
 				if ($strEndScript)
@@ -1555,7 +1560,8 @@
 					$strEndScript = 'qc.loadJavaScriptFile("' . $strScript . '", null); ';
 			}
 
-			// Finally, add QCubed includes path
+
+            // Finally, add QCubed includes path
 			$strEndScript = sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ ) . $strEndScript;
 			$strEndScript = sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) . $strEndScript;
@@ -1590,7 +1596,8 @@
 			foreach ($this->GetAllControls() as $objControl)
 				if ($objControl->Rendered)
 					$strToReturn .= $objControl->GetEndHtml();
-			$strToReturn .= "\n</form>";
+
+            $strToReturn .= "\n</form>";
 
 			$strToReturn .= $strEndScript;
 

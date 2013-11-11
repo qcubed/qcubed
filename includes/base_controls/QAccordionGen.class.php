@@ -173,18 +173,10 @@
 			return 'accordion';
 		}
 
-		/**
-		 * Returns the Javascript needed as the part of control's behavior
-		 * @return string The control's JS
-		 */
 		public function GetControlJavaScript() {
 			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
-		/**
-		 * Returns the finalized Javascript needed as the part of control's behavior
-		 * @return string The control's JS
-		 */
 		public function GetEndScript() {
 			$str = '';
 			if ($this->getJqControlId() !== $this->ControlId) {
@@ -193,27 +185,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . $strParentScript;
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -223,21 +225,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables the accordion.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Enables the accordion.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -246,7 +248,7 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -254,7 +256,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the accordion option associated with the specified
@@ -266,7 +268,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the accordion.<ul><li><strong>options</strong>
@@ -274,7 +276,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Recompute the height of the accordion panels. Results depend on the content
@@ -282,7 +284,7 @@
 		 * accept any arguments.</li></ul>
 		 */
 		public function Refresh() {
-			$this->CallJqUiMethod("refresh");
+			$this->CallJqUiMethod(false, "refresh");
 		}
 
 
@@ -311,24 +313,24 @@
 				case 'Active':
 					$this->mixActive = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'active', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'active', $mixValue);
 					}
 					break;
 
 				case 'Animate':
 					$this->mixAnimate = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'animate', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'animate', $mixValue);
 					}
 					break;
 
 				case 'Collapsible':
 					try {
 						$this->blnCollapsible = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'collapsible', $this->blnCollapsible);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'collapsible', $this->blnCollapsible);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -339,8 +341,8 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -351,8 +353,8 @@
 				case 'Event':
 					try {
 						$this->strEvent = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'event', $this->strEvent);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'event', $this->strEvent);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -363,16 +365,16 @@
 				case 'Header':
 					$this->mixHeader = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'header', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'header', $mixValue);
 					}
 					break;
 
 				case 'HeightStyle':
 					try {
 						$this->strHeightStyle = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'heightStyle', $this->strHeightStyle);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'heightStyle', $this->strHeightStyle);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -383,8 +385,8 @@
 				case 'Icons':
 					$this->mixIcons = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'icons', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'icons', $mixValue);
 					}
 					break;
 

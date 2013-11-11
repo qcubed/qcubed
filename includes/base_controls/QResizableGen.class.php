@@ -265,27 +265,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . $strParentScript;
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -295,21 +305,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables the resizable.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Enables the resizable.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -318,7 +328,7 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -326,7 +336,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the resizable option associated with the specified
@@ -338,7 +348,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the resizable.<ul><li><strong>options</strong>
@@ -346,7 +356,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 
 
@@ -386,16 +396,16 @@
 				case 'AlsoResize':
 					$this->mixAlsoResize = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'alsoResize', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'alsoResize', $mixValue);
 					}
 					break;
 
 				case 'Animate':
 					try {
 						$this->blnAnimate = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'animate', $this->blnAnimate);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'animate', $this->blnAnimate);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -406,16 +416,16 @@
 				case 'AnimateDuration':
 					$this->mixAnimateDuration = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'animateDuration', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'animateDuration', $mixValue);
 					}
 					break;
 
 				case 'AnimateEasing':
 					try {
 						$this->strAnimateEasing = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'animateEasing', $this->strAnimateEasing);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'animateEasing', $this->strAnimateEasing);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -426,16 +436,16 @@
 				case 'AspectRatio':
 					$this->mixAspectRatio = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'aspectRatio', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'aspectRatio', $mixValue);
 					}
 					break;
 
 				case 'AutoHide':
 					try {
 						$this->blnAutoHide = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'autoHide', $this->blnAutoHide);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'autoHide', $this->blnAutoHide);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -446,24 +456,24 @@
 				case 'Cancel':
 					$this->mixCancel = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'cancel', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'cancel', $mixValue);
 					}
 					break;
 
 				case 'Containment':
 					$this->mixContainment = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'containment', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'containment', $mixValue);
 					}
 					break;
 
 				case 'Delay':
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'delay', $this->intDelay);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -474,8 +484,8 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -486,8 +496,8 @@
 				case 'Distance':
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'distance', $this->intDistance);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'distance', $this->intDistance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -498,8 +508,8 @@
 				case 'Ghost':
 					try {
 						$this->blnGhost = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'ghost', $this->blnGhost);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'ghost', $this->blnGhost);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -510,8 +520,8 @@
 				case 'Grid':
 					try {
 						$this->arrGrid = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'grid', $this->arrGrid);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'grid', $this->arrGrid);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -522,16 +532,16 @@
 				case 'Handles':
 					$this->mixHandles = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'handles', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'handles', $mixValue);
 					}
 					break;
 
 				case 'Helper':
 					try {
 						$this->strHelper = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'helper', $this->strHelper);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'helper', $this->strHelper);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -542,8 +552,8 @@
 				case 'MaxHeight':
 					try {
 						$this->intMaxHeight = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'maxHeight', $this->intMaxHeight);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'maxHeight', $this->intMaxHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -554,8 +564,8 @@
 				case 'MaxWidth':
 					try {
 						$this->intMaxWidth = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'maxWidth', $this->intMaxWidth);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'maxWidth', $this->intMaxWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -566,8 +576,8 @@
 				case 'MinHeight':
 					try {
 						$this->intMinHeight = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'minHeight', $this->intMinHeight);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'minHeight', $this->intMinHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -578,8 +588,8 @@
 				case 'MinWidth':
 					try {
 						$this->intMinWidth = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'minWidth', $this->intMinWidth);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'minWidth', $this->intMinWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
