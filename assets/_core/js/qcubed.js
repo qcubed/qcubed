@@ -173,9 +173,9 @@ qcubed = {
             if (((strType === "checkbox") ||
                     (strType === "radio")) &&
                     ((strCallType === "Ajax") ||
-                            (!$this.attr("disabled")))) {
+                            (!$element.attr("disabled")))) {
 
-                strControlId = $this.attr("id");
+                strControlId = $element.attr("id");
 
                 // RadioButtonList or CheckBoxList
                 if (strControlId.indexOf('_') >= 0) {
@@ -227,7 +227,7 @@ qcubed = {
                 strPostValue = $element.val();
 
             if (typeof strType === "undefined") {
-                strType = this.type;
+                strType = this.type; // This seems silly
             }
             switch (strType) {
                 case "checkbox":
