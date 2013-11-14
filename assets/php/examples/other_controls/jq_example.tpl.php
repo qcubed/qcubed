@@ -53,14 +53,13 @@
 	
 	<div class="example"><h2>Autocomplete</h2>
 		 <p>Type "c" to test</p>
-		<?php $this->Autocomplete1->RenderWithName(); ?>
-		<?php $this->Autocomplete2->RenderWithName(); ?>
+		<?php $this->Autocomplete->RenderWithName(); ?>
 	</div>
 	
 	<div class="example"><h2>Ajax Autocomplete</h2>
 		 <p>Type "s" to test</p>
 			<?php $this->AjaxAutocomplete->RenderWithName(); ?>
-			<?php $this->AjaxAutocomplete2->RenderWithName(); ?>
+		<p>See the Autocomplete2 QCubed plugin for additional extensions to the Autocomplete control. </p>
 	</div>
 	
 	<div class="example"><h2>Buttons</h2>
