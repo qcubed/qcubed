@@ -2,9 +2,23 @@
 
 ## Installation
 
+### Composer install
+
+Version 3.0 alpha is installable via composer directly from our GitHub repo. See the [Sample Composer Config](https://github.com/qcubed/framework/blob/alpha-3.0/composer.json.sample) for the configuration commands. Here are the steps:
+
+1. Go to either your docroot, or a directory under docroot on the computer where you will be doing development. 
+2. Create a composer.json file. Use the sample mentioned above to start out.
+3. Enter the composer install command. QCubed will be put in the ```/vendor/qcubed/framework/``` directory by default.
+4. After installing with composer, copy the contents of the ```/vendor/qcubed/framework/install/``` directory to the directory level above the /vendor directory. This should be the directory from where you executed the composer install command.
+5. Make modifications to the  ```/project/includes/configuration/conifguration.inc.php``` file to reflect your setup.
+6. From a web browser, navigate to the index.php file in your install directory. 
+7. Make sure the ```/project/``` directory is writable by the web server. 
+8. You should see the welcome screen if all went well.
+
+
 ### File System
 
-It begins with the extraction of the QCubed tar ball. If you have downloaded QCubed by cloning the Git Repository then it is not needed. We would recommend you to clone the Git repository (master branch) - it contains latest stable code. Copy the QCubed files to a directory within the webserver's DOCROOT (also known as DocumentRoot, webroot, wwwroot, etc., depending on which platform you are using. We will use the word 'DocumentRoot' in this document).
+It begins with the extraction of the QCubed tar ball. If you have downloaded QCubed by cloning the Git Repository then it is not needed. We would recommend that you clone the Git repository (master branch) - it contains the latest stable code. Create a /vendor/qcubed directory within the webserver's DOCROOT (also known as DocumentRoot, webroot, wwwroot, etc., depending on which platform you are using. We will use the word 'DocumentRoot' in this document). Copy the qcubed files to that directory.
 
 At a later point, you may choose to move folders around in your system, splitting them at different location etc.  QCubed offers the flexibility to have the framework files in any location. But that is a story you learn after using the framework (refer to the ```configuration.inc.php.sample``` file in ```includes/configuration``` directory).
 
@@ -36,7 +50,9 @@ Beginning Release 2.2, we have created an automated installer which will help yo
 
 To install QCubed manually in face of failure of the installer due to any reason, follow the following steps
 
-  1. Open the ```includes/configuration/configuration.inc.php.sample``` file within the *instdir* directory.
+  1. Copy all of the files in the /vendor/qcubed/install directory to your DOCROOT.
+  
+  2. Open the ```project/includes/configuration/configuration.inc.php.sample``` file within the *instdir* directory.
   2. Copy the contents of this file and paste it in a new file called ```configuration.inc.php``` in the same directory (if you want, you can rename the ```configuration.inc.php.sample``` file to ```configuration.inc.php``` as well, but we would not recommend that). Save the ```configuration.inc.php``` file.
   3. Edit the ```configuration.inc.php``` file and set the values for ```__DOCROOT__```, ```__VIRTUAL_DIRECTORY__``` and ```__SUBDIRECTORY__``` and set the correct values. You should also set the values for the definition of ```DB_CONNECTION_1``` correctly. All these variables have been explained well in the comments in the file.
   4. Save the ```configuration.inc.php``` file.
@@ -50,17 +66,17 @@ Calling ```require()``` on ```prepend.inc.php``` is necessary to include the fra
 Note that by default, this is already setup for you in most files (actually, almost every file that you get with QCubed, or the ones that QCubed generates).
 
 To change this or for any new PHP scripts you want to write, simply make sure any PHP script that wants to utilize the QCubed Framework STARTS with:
-	```require('includes/prepend.inc.php');```
+	```require('project/includes/configuration/prepend.inc.php');```
 on the very first line.
 
-NOTE that the ```includes/configuration/prepend.inc.php``` may be different -- it depends on the relative path to the ```includes/prepend.inc.php``` file.  So if you have a docroot structure like:
+NOTE that the ```project/includes/configuration/prepend.inc.php``` may be different -- it depends on the relative path to the ```project/includes/prepend.inc.php``` file.  So if you have a docroot structure like:
 ```
 	docroot/
 	docroot/pages/foo/blah.php
-	docroot/includes/configuration/prepend.inc.php
+	docroot/project/includes/configuration/prepend.inc.php
 ```
 then in blah.php, the require line will be:
-	```require('../../includes/configuration/prepend.inc.php');```
+	```require('../../project/includes/configuration/prepend.inc.php');```
 
 Note that if you move your .php script to another directory level, you may need to update the relative path to ```prepend.inc.php```
 
@@ -77,7 +93,7 @@ If you go to the ```assets``` directory inside *instdir*, then you would find a 
 
 **Moving the includes directory outside DocumentRoot**: We have already said that moving the includes directory out of the DocumentRoot is a good security practice. If you want to do the same, you have 4 steps to follow:
 
-  1. Change the ```__INCLUDES__``` directive in ```includes/configuration/configuration.inc.php``` file.
+  1. Change the ```__INCLUDES__``` directive in ```project/includes/configuration/configuration.inc.php``` file.
   2. Move the includes directory to another location.
   3. Alther the ```qcubed.inc.php``` file (inside the *instdir* ) to contain the updated location of the includes directory.
   4. Make sure that at all the php files you have written includes the ```qcubed.inc.php``` file instead of ```prepend.inc.php```.
@@ -101,9 +117,6 @@ NOTE THAT THIS STEP IS OPTIONAL!  While this adds a VERY slight benefit from a
 convenience standpoint, note that doing this will also have a slight performance cost,
 and also may cause complications if trying to integrate with other PHP frameworks.
 
-Starting with Qcodo 0.2.13, you no longer need to update the PHP include_path
-to run Qcodo.  However, you may still want to update the include_path for any
-of the following reasons:
 * All PHP scripts will only need to have "require('prepend.inc.php')" without needing
   to specify a relative path.  This makes file management slightly easier; whenever
   you want to move your files in and out of directories/subdirectories, you can do
@@ -117,7 +130,7 @@ Again, NOTE THAT THIS STEP IS OPTIONAL.
 
 If you wish to do this, then the PREFERRED way of doing this is simply edit your
 PHP.INI file, and set the include path to:
-	.;c:\path\to\DOCROOT\includes\configuration (for windows)
+	.;c:\path\to\DOCROOT\project\includes\configuration (for windows)
 		or
 	.:/path/to/DOCROOT/includes/configuration (for unix)
 (If you put QCubed into a subdirectory, then you want to make sure to specify it
@@ -137,8 +150,8 @@ pages, but if you are unable for whatever reason to set the include_path, then y
 
 IMPORTANT NOTE: Because the Code Generator can also generate some of your
 web-accessed *.php files, you will need to ALSO update the codegen template files
-	DOCROOT/includes/qcodo/_core/codegen/templates/db_orm_edit_form_draft.tpl
-	DOCROOT/includes/qcodo/_core/codegen/templates/db_orm_list_form_draft.tpl
+	DOCROOT/project/includes/codegen/templates/db_orm_edit_form_draft.tpl
+	DOCROOT/project/includes/codegen/templates/db_orm_list_form_draft.tpl
 to have the same "set_include_path" line at the top.
 
 The line to choose depends on whether you're running the PHP engine as a Plug-In/Module

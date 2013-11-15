@@ -9,8 +9,8 @@ define('__TRAVIS_DIR__', $workingDir);
 $__CONFIG_ONLY__ = true;
 require('travis/configuration.inc.php');
 
-require_once(__QCUBED_CORE__ . '/tests/simpletest/unit_tester.php');
-require_once(__QCUBED_CORE__ . '/tests/simpletest/reporter.php');
+require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/unit_tester.php');
+require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/reporter.php');
 
 $__CONFIG_ONLY__ = false;
 require('travis/qcubed.inc.php');
@@ -20,7 +20,7 @@ require('travis/qcubed.inc.php');
 	$strCommandName = 'codegen.cli';
 
 	// Include the rest of the OS-agnostic script
-	require('includes/qcubed/_core/_devtools_cli/codegen.inc.php');
+	require('includes/_devtools_cli/codegen.inc.php');
 
 
 // not using QCubed error handler for unit tests - using the SimpleTest one instead

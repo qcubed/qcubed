@@ -5,12 +5,15 @@ language: php
 php:
     - 5.3
 
+install:
+    - composer install --dev
+
 env:
     - DB=mysql
     - DB=pgsql
 
 before_script:
-    - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database qcubed;'; mysql -u root qcubed < assets/_core/php/examples/mysql_innodb.sql; fi"
-    - sh -c "if [ '$DB' = 'pgsql' ]; then createdb qcubed -U postgres; psql -d qcubed -f assets/_core/php/examples/pgsql.sql -U postgres; fi"
+    - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database qcubed;'; mysql -u root qcubed < assets/php/examples/mysql_innodb.sql; fi"
+    - sh -c "if [ '$DB' = 'pgsql' ]; then createdb qcubed -U postgres; psql -d qcubed -f assets/php/examples/pgsql.sql -U postgres; fi"
 
 script: travis/test.php
