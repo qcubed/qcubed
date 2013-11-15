@@ -332,7 +332,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * resizable options hash.<ul><li>This method does not accept any
+		 * resizable options hash.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {

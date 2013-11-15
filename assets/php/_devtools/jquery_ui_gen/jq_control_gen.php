@@ -192,7 +192,7 @@ function jq_control_gen($strUrl, $strQcClass = null, $strQcBaseClass = 'QPanel')
 			
 	
 	$aryPathsList[strtolower($objJqDoc->strQcClass)] = 
-			sprintf("__QCUBED__ . '/controls/%s.class.php'", $objJqDoc->strQcClass);
+			sprintf("__INCLUDES__ . '/controls/%s.class.php'", $objJqDoc->strQcClass);
 }
 
 // generate an include file for use by the ui classes

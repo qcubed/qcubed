@@ -51,14 +51,14 @@
 	 * @see QJqRadioButtonBase
 	 * @package Controls\Base
 	 * @property boolean $Disabled Disables the button if set to <code>true</code>.
-	 * @property mixed $Icons Icons to display, with or without text (see <a><code>text</code></a>
+	 * @property mixed $Icons <p>Icons to display, with or without text (see <a><code>text</code></a>
 	 * 		option). By default, the primary icon is displayed on the left of the label
 	 * 		text and the secondary is displayed on the right. The positioning can be
-	 * 		controlled via CSS. The value for the <code>primary</code> and
-	 * 		<code>secondary</code> properties must be a class name, e.g.,
-	 * 		<code>"ui-icon-gear"</code>. For using only one icon: <code>icons: {
+	 * 		controlled via CSS.</p>  				<p>The value for the <code>primary</code> and
+	 * 		<code>secondary</code> properties must match <a>an icon class name</a>,
+	 * 		e.g., <code>"ui-icon-gear"</code>. For using only one icon: <code>icons: {
 	 * 		primary: "ui-icon-locked" }</code>. For using two icons: <code>icons: {
-	 * 		primary: "ui-icon-gear", secondary: "ui-icon-triangle-1-s" }</code>.
+	 * 		primary: "ui-icon-gear", secondary: "ui-icon-triangle-1-s" }</code>.</p>
 	 * @property string $Label Text to show in the button. When not specified (<code>null</code>), the
 	 * 		element's HTML content is used, or its <code>value</code> attribute if the
 	 * 		element is an input element of type submit or reset, or the HTML content of
@@ -183,7 +183,8 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current button
-		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
+		 * options hash.<ul><li>This signature does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod(false, "option");

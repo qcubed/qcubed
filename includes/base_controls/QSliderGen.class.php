@@ -115,7 +115,7 @@
 	 * @property mixed $Range Whether the slider represents a range.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: If set to
 	 * 		<code>true</code>, the slider will detect if you have two handles and
-	 * 		create a stylable range element between these two.</li>
+	 * 		create a styleable range element between these two.</li>
 	 * 		<li><strong>String</strong>: Either <code>"min"</code> or
 	 * 		<code>"max"</code>. A min range goes from the slider min to one handle. A
 	 * 		max range goes from one handle to the slider max.</li></ul>
@@ -258,7 +258,8 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current slider
-		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
+		 * options hash.<ul><li>This signature does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod(false, "option");
@@ -284,7 +285,7 @@
 			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
-		 * Get the value of the slider.<ul><li>This method does not accept any
+		 * Get the value of the slider.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Value() {
@@ -299,7 +300,7 @@
 			$this->CallJqUiMethod(false, "value", $value);
 		}
 		/**
-		 * Get the value for all handles.<ul><li>This method does not accept any
+		 * Get the value for all handles.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Values() {

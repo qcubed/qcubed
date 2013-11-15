@@ -133,7 +133,8 @@
 	 * @property array $Grid Snaps the dragging helper to a grid, every x and y pixels. The array must
 	 * 		be of the form <code>[ x, y ]</code>.
 	 * @property mixed $Handle If specified, restricts dragging from starting unless the mousedown occurs
-	 * 		on the specified element(s).
+	 * 		on the specified element(s). Only elements that descend from the draggable
+	 * 		element are permitted.
 	 * @property mixed $Helper Allows for a helper element to be used for dragging
 	 * 		display.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>String</strong>: If set to
@@ -157,7 +158,10 @@
 	 * 		<code>true</code> the element will always revert.</li>
 	 * 		<li><strong>String</strong>: If set to <code>"invalid"</code>, revert will
 	 * 		only occur if the draggable has not been dropped on a droppable. For
-	 * 		<code>"valid"</code>, it's the other way around.</li></ul>
+	 * 		<code>"valid"</code>, it's the other way around.</li>
+	 * 		<li><strong>Function</strong>: A function to determine whether the element
+	 * 		should revert to its start position. The function must return
+	 * 		<code>true</code> to revert the element.</li></ul>
 	 * @property integer $RevertDuration The duration of the revert animation, in milliseconds. Ignored if the
 	 * 		<a><code>revert</code></a> option is <code>false</code>.
 	 * @property string $Scope Used to group sets of draggable and droppable items, in addition to
@@ -373,7 +377,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * draggable options hash.<ul><li>This method does not accept any
+		 * draggable options hash.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {

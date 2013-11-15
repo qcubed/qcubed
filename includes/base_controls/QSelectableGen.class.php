@@ -254,7 +254,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * selectable options hash.<ul><li>This method does not accept any
+		 * selectable options hash.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {

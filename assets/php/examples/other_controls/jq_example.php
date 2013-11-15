@@ -205,7 +205,7 @@
 			$this->Dialog->AddButton ('Cancel', 'cancel');
 			$this->Dialog->AddButton ('OK', 'ok');
 			$this->Dialog->AddAction (new QDialog_ButtonEvent(), new QAjaxAction ('dialog_press'));
-            $this->Dialog->AutoOpen = false;
+			$this->Dialog->AutoOpen = false;
 
             $this->btnShowDialog = new QJqButton($this);
             $this->btnShowDialog->Text = 'Show Dialog';

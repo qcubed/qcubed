@@ -72,7 +72,11 @@
 	 * @package Controls\Base
 	 * @property boolean $Disabled Disables the progressbar if set to <code>true</code>.
 	 * @property integer $Max The maximum value of the progressbar.
-	 * @property integer $Value The value of the progressbar.
+	 * @property mixed $Value The value of the progressbar.<strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Number</strong>:  					A value between
+	 * 		<code>0</code> and the <a><code>max</code></a>.</li>
+	 * 		<li><strong>Boolean</strong>:  					Value can be set to <code>false</code>
+	 * 		to create an indeterminate progressbar.</li></ul>
 	 */
 
 	class QProgressbarGen extends QPanel	{
@@ -81,9 +85,9 @@
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var integer */
-		protected $intMax;
-		/** @var integer */
-		protected $intValue;
+		protected $intMax = null;
+		/** @var mixed */
+		protected $mixValue;
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
@@ -186,7 +190,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * progressbar options hash.<ul><li>This method does not accept any
+		 * progressbar options hash.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
@@ -214,7 +218,7 @@
 			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
-		 * Gets the current value of the progressbar.<ul><li>This method does not
+		 * Gets the current value of the progressbar.<ul><li>This signature does not
 		 * accept any arguments.</li></ul>
 		 */
 		public function Value() {
@@ -222,7 +226,8 @@
 		}
 		/**
 		 * Sets the current value of the progressbar.<ul><li><strong>value</strong>
-		 * Type: <a>Number</a> The value to set.</li></ul>
+		 * Type: <a>Number</a> or <a>Boolean</a> The value to set. See the
+		 * <a><code>value</code></a> option for details on valid values.</li></ul>
 		 * @param $value
 		 */
 		public function Value1($value) {
@@ -234,7 +239,7 @@
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
 				case 'Max': return $this->intMax;
-				case 'Value': return $this->intValue;
+				case 'Value': return $this->mixValue;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -272,16 +277,12 @@
 					}
 
 				case 'Value':
-					try {
-						$this->intValue = QType::Cast($mixValue, QType::Integer);
-						if ($this->OnPage) {
-							$this->CallJqUiMethod(true, 'option', 'value', $this->intValue);
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
+					$this->mixValue = $mixValue;
+				
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'value', $mixValue);
 					}
+					break;
 
 
 				case 'Enabled':

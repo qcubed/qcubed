@@ -192,7 +192,7 @@
 		// Response to an ajax request for data
 		protected function prepareAjaxList($dataSource) {
 			$list = $dataSource ? JavaScriptHelper::toJsObject($dataSource) : "[]";
-			$strJS = sprintf('$j("#%s").data("autocomplete").response(%s);', $this->ControlId, $list);
+			$strJS = sprintf('$j("#%s").data("ui-autocomplete").response(%s);', $this->ControlId, $list);
 			QApplication::ExecuteJavaScript($strJS, true);
 		}
 

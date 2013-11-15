@@ -41,13 +41,14 @@
 	}
 
 	/**
-	 * <strong>Default:</strong><code>null</code>A function takes a date as a
-	 * 		parameter and must return an array with <code>[0]</code> equal to
+	 * <strong>Default:</strong><code>null</code>A function that takes a date as a
+	 * 		parameter and must return an array with: 				<ul><li><code>[0]</code>:
 	 * 		<code>true</code>/<code>false</code> indicating whether or not this date is
-	 * 		selectable, <code>[1]</code> equal to a CSS class name or <code>""</code>
-	 * 		for the default presentation, and <code>[2]</code> an optional popup
-	 * 		tooltip for this date. It is called for each day in the datepicker before
-	 * 		it is displayed.
+	 * 		selectable</li> 					<li><code>[1]</code>: a CSS class name to add to the
+	 * 		date's cell or <code>""</code> for the default presentation</li>
+	 * 							<li><code>[2]</code>: an optional popup tooltip for this
+	 * 		date</li></ul> 				The function is called for each day in the datepicker
+	 * 		before it is displayed.
 	 */
 	class QDatepicker_BeforeShowDayEvent extends QJqUiPropertyEvent {
 		const EventName = 'QDatepicker_BeforeShowDay';
@@ -118,7 +119,7 @@
 	 * 		<a><code>altField</code></a> option. This allows one date format to be
 	 * 		shown to the user for selection purposes, while a different format is
 	 * 		actually sent behind the scenes. For a full list of the possible formats
-	 * 		see the [[UI/Datepicker/formatDate|formatDate]] function
+	 * 		see the <a><code>formatDate</code></a> function
 	 * @property string $AppendText The text to display after each date field, e.g., to show the required
 	 * 		format.
 	 * @property boolean $AutoSize Set to <code>true</code> to automatically resize the input field to
@@ -127,18 +128,21 @@
 	 * 		field and current datepicker instance and returns an options object to
 	 * 		update the datepicker with. It is called just before the datepicker is
 	 * 		displayed.
-	 * @property QJsClosure $OnBeforeShowDay <strong>Default:</strong><code>null</code>A function takes a date as a
-	 * 		parameter and must return an array with <code>[0]</code> equal to
+	 * @property QJsClosure $OnBeforeShowDay <strong>Default:</strong><code>null</code>A function that takes a date as a
+	 * 		parameter and must return an array with: 				<ul><li><code>[0]</code>:
 	 * 		<code>true</code>/<code>false</code> indicating whether or not this date is
-	 * 		selectable, <code>[1]</code> equal to a CSS class name or <code>""</code>
-	 * 		for the default presentation, and <code>[2]</code> an optional popup
-	 * 		tooltip for this date. It is called for each day in the datepicker before
-	 * 		it is displayed.
-	 * @property string $ButtonImage The URL for the popup button image. If set, the
-	 * 		<a><code>buttonText</code></a> option becomes the <code>alt</code> value
-	 * 		and is not directly displayed.
+	 * 		selectable</li> 					<li><code>[1]</code>: a CSS class name to add to the
+	 * 		date's cell or <code>""</code> for the default presentation</li>
+	 * 							<li><code>[2]</code>: an optional popup tooltip for this
+	 * 		date</li></ul> 				The function is called for each day in the datepicker
+	 * 		before it is displayed.
+	 * @property string $ButtonImage A URL of an image to use to display the datepicker when the
+	 * 		<a><code>showOn</code></a> option is set to <code>"button"</code> or
+	 * 		<code>"both"</code>. If set, the <a><code>buttonText</code></a> option
+	 * 		becomes the <code>alt</code> value and is not directly displayed.
 	 * @property boolean $ButtonImageOnly Whether the button image should be rendered by itself instead of inside a
-	 * 		button element.
+	 * 		button element. This option is only relevant if the
+	 * 		<a><code>buttonImage</code></a> option has also been set.
 	 * @property string $ButtonText The text to display on the trigger button. Use in conjunction with the
 	 * 		<a><code>showOn</code></a> option set to <code>"button"</code> or
 	 * 		<code>"both"</code>.
@@ -157,8 +161,7 @@
 	 * @property string $CurrentText The text to display for the current day link. Use the
 	 * 		<a><code>showButtonPanel</code></a> option to display this button.
 	 * @property string $JqDateFormat The format for parsed and displayed dates. For a full list of the possible
-	 * 		formats see the <code>[[UI/Datepicker/formatDate|formatDate]]</code>
-	 * 		function.
+	 * 		formats see the <code><a><code>formatDate</code></a></code> function.
 	 * @property array $DayNames The list of long day names, starting from Sunday, for use as requested via
 	 * 		the <a><code>dateFormat</code></a> option.
 	 * @property array $DayNamesMin The list of minimised day names, starting from Sunday, for use as column
@@ -167,19 +170,18 @@
 	 * 		requested via the <a><code>dateFormat</code></a> option.
 	 * @property mixed $DefaultDate Set the date to highlight on first opening if the field is blank. Specify
 	 * 		either an actual date via a Date object or as a string in the current
-	 * 		<code>[[UI/Datepicker#option-dateFormat|dateFormat]]</code>, or a number of
-	 * 		days from today (e.g. +7) or a string of values and periods ('y' for years,
-	 * 		'm' for months, 'w' for weeks, 'd' for days, e.g. '+1m +7d'), or null for
-	 * 		today.<strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Date</strong>: A date object containing
-	 * 		the default date.</li> <li><strong>Number</strong>: A number of days from
-	 * 		today. For example <code>2</code> represents two days from today and
-	 * 		<code>-1</code> represents yesterday.</li> <li><strong>String</strong>: A
-	 * 		string in the format defined by the <a><code>dateFormat</code></a> option,
-	 * 		or a relative date. Relative dates must contain value and period pairs;
-	 * 		valid periods are <code>"y"</code> for years, <code>"m"</code> for months,
-	 * 		<code>"w"</code> for weeks, and <code>"d"</code> for days. For example,
-	 * 		<code>"+1m +7d"</code> represents one month and seven days from
+	 * 		<a><code>dateFormat</code></a>, or a number of days from today (e.g. +7) or
+	 * 		a string of values and periods ('y' for years, 'm' for months, 'w' for
+	 * 		weeks, 'd' for days, e.g. '+1m +7d'), or null for today.<strong>Multiple
+	 * 		types supported:</strong><ul><li><strong>Date</strong>: A date object
+	 * 		containing the default date.</li> <li><strong>Number</strong>: A number of
+	 * 		days from today. For example <code>2</code> represents two days from today
+	 * 		and <code>-1</code> represents yesterday.</li> <li><strong>String</strong>:
+	 * 		A string in the format defined by the <a><code>dateFormat</code></a>
+	 * 		option, or a relative date. Relative dates must contain value and period
+	 * 		pairs; valid periods are <code>"y"</code> for years, <code>"m"</code> for
+	 * 		months, <code>"w"</code> for weeks, and <code>"d"</code> for days. For
+	 * 		example, <code>"+1m +7d"</code> represents one month and seven days from
 	 * 		today.</li></ul>
 	 * @property mixed $Duration Control the speed at which the datepicker appears, it may be a time in
 	 * 		milliseconds or a string representing one of the three predefined speeds
@@ -223,8 +225,8 @@
 	 * 		datepicker and as requested via the <a><code>dateFormat</code></a> option.
 	 * @property boolean $NavigationAsDateFormat Whether the <a><code>prevText</code></a> and <a><code>nextText</code></a>
 	 * 		options should be parsed as dates by the
-	 * 		<code>[[UI/Datepicker/formatDate|formatDate]]</code> function, allowing
-	 * 		them to display the target month names for example.
+	 * 		<code><a><code>formatDate</code></a></code> function, allowing them to
+	 * 		display the target month names for example.
 	 * @property string $NextText The text to display for the next month link. With the standard ThemeRoller
 	 * 		styling, this value is replaced by an icon.
 	 * @property mixed $NumberOfMonths The number of months to show at once.<strong>Multiple types
@@ -249,10 +251,10 @@
 	 * 		selectable. This only applies if the <a><code>showOtherMonths</code></a>
 	 * 		option is set to <code>true</code>.
 	 * @property mixed $ShortYearCutoff The cutoff year for determining the century for a date (used in conjunction
-	 * 		with <code>[[UI/Datepicker#option-dateFormat|dateFormat]]</code> 'y'). Any
-	 * 		dates entered with a year value less than or equal to the cutoff year are
-	 * 		considered to be in the current century, while those greater than it are
-	 * 		deemed to be in the previous century.<strong>Multiple types
+	 * 		with <a><code>dateFormat</code></a> 'y'). Any dates entered with a year
+	 * 		value less than or equal to the cutoff year are considered to be in the
+	 * 		current century, while those greater than it are deemed to be in the
+	 * 		previous century.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: A value between
 	 * 		<code>0</code> and <code>99</code> indicating the cutoff year.</li>
 	 * 		<li><strong>String</strong>: A relative number of years from the current
@@ -261,7 +263,11 @@
 	 * 		<code>"show"</code> (the default), <code>"slideDown"</code>,
 	 * 		<code>"fadeIn"</code>, any of the <a>jQuery UI effects</a>. Set to an empty
 	 * 		string to disable animation.
-	 * @property boolean $ShowButtonPanel Whether to show the button panel.
+	 * @property boolean $ShowButtonPanel Whether to display a button pane underneath the calendar. The button pane
+	 * 		contains two buttons, a Today button that links to the current day, and a
+	 * 		Done button that closes the datepicker. The buttons' text can be customized
+	 * 		using the <a><code>currentText</code></a> and <a><code>closeText</code></a>
+	 * 		options respectively.
 	 * @property integer $ShowCurrentAtPos When displaying multiple months via the <a><code>numberOfMonths</code></a>
 	 * 		option, the <code>showCurrentAtPos</code> option defines which position to
 	 * 		display the current month in.
@@ -571,7 +577,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * datepicker options hash.<ul><li>This method does not accept any
+		 * datepicker options hash.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
