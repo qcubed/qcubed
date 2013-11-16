@@ -16,13 +16,9 @@
 		/** @var QAccordion */
 		protected $Accordion;
 		/** @var QAutocomplete */
-		protected $Autocomplete1;
-		/** @var QAutocomplete */
-		protected $Autocomplete2;
+		protected $Autocomplete;
 		/** @var QAutocomplete */
 		protected $AjaxAutocomplete;
-		/** @var QAutocomplete */
-		protected $AjaxAutocomplete2;
 		/** @var QJqButton */
 		protected $Button;
 		/** @var QJqCheckBox */
@@ -136,16 +132,10 @@
 			QAutocomplete::UseFilter(QAutocomplete::FILTER_STARTS_WITH);
 
 			// Client-side only autocomplete
-			$this->Autocomplete1 = new QAutocomplete($this);
-			$this->Autocomplete1->Source = self::$LANGUAGES;
-			$this->Autocomplete1->Name = "Standard Autocomplete";
+			$this->Autocomplete = new QAutocomplete($this);
+			$this->Autocomplete->Source = self::$LANGUAGES;
+			$this->Autocomplete->Name = "Standard Autocomplete";
 
-			$this->Autocomplete2 = new QAutocomplete($this);
-			$this->Autocomplete2->Source = self::$LANGUAGES;
-			$this->Autocomplete2->AutoFocus = true;
-			$this->Autocomplete2->MustMatch = true;
-			$this->Autocomplete2->Name = "AutoFocus and MustMatch";
-	
 			// Ajax Autocomplete
 			// Note: To show the little spinner while the ajax search is happening, you
 			// need to define the .ui-autocomplete-loading class in a style sheet. See
@@ -153,14 +143,9 @@
 			$this->AjaxAutocomplete = new QAutocomplete($this);
 			$this->AjaxAutocomplete->SetDataBinder("update_autocompleteList");
 			$this->AjaxAutocomplete->AddAction (new QAutocomplete_ChangeEvent(), new QAjaxAction ('ajaxautocomplete_change'));
-			$this->AjaxAutocomplete->DisplayHtml = true;
-			$this->AjaxAutocomplete->Name = 'With Html Display';
-			
-			$this->AjaxAutocomplete2 = new QAutocomplete($this);
-			$this->AjaxAutocomplete2->MultipleValueDelimiter = ',';
-			$this->AjaxAutocomplete2->SetDataBinder("update_autocompleteList");
-			$this->AjaxAutocomplete2->Name = 'Multiple selection';
-			
+			$this->AjaxAutocomplete->AutoFocus = true;
+			$this->AjaxAutocomplete->Name = 'With AutoFocus';
+
 			// Button
 			$this->Button = new QJqButton($this);
 			$this->Button->Label = "Click me";	// Label overrides Text
@@ -289,9 +274,6 @@
 			$a = array();
 			foreach ($lst as $objPerson) {
 				$item = new QListItem ($objPerson->FirstName . ' ' . $objPerson->LastName, $objPerson->Id);
-				if ($objControl->DisplayHtml) {
-					$item->Label = '<em>' . $objPerson->FirstName . ' ' . $objPerson->LastName . '</em>';
-				}
 				$a[] = $item;
 			}
 			$objControl->DataSource = $a;
