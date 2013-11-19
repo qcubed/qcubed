@@ -102,7 +102,6 @@ qcubed = {
      * @param {string} strControlId
      * @param {string} strProperty
      * @param {string} strNewValue
-     * @return {void}
      */
     recordControlModification: function(strControlId, strProperty, strNewValue) {
         if (!qcubed.controlModifications[strControlId]) {
@@ -112,18 +111,19 @@ qcubed = {
     },
 
     /**
-     * @param {string} strForm The QForm Id, not used.
+     * @param {string} strForm The QForm Id, gets overwritten.
      * @param {string} strControl The Control Id.
      * @param {string} strEvent The Event.
      * @param {mixed} mixParameter
-     * @return {void}
      */
     postBack: function(strForm, strControl, strEvent, mixParameter) {
-        var strForm = $j("#Qform__FormId").attr("value"),
-            $objForm = $j('#' + strForm);
+        var $objForm;
+
+        strForm = $j("#Qform__FormId").val();
+        $objForm = $j('#' + strForm);
 
         if (mixParameter && (typeof mixParameter !== "string")) {
-            mixParameter = $j.param({"Qform__FormParameter": mixParameter});
+            mixParameter = $j.param({Qform__FormParameter: mixParameter});
             $objForm.append('<input type="hidden" name="Qform__FormParameterType" value="obj">');
         }
 
@@ -139,7 +139,7 @@ qcubed = {
     },
 
     /**
-     * @return {string}
+     * @return {string} The form's control modifications.
      */
     formUpdates: function() {
         var strToReturn = "",
@@ -167,13 +167,13 @@ qcubed = {
 
         objFormElements.each(function(i) {
             var $element = $j(this),
-                strType = $element.attr("type"),
+                strType = $element.prop("type"),
                 strControlId;
 
             if (((strType === "checkbox") ||
                     (strType === "radio")) &&
                     ((strCallType === "Ajax") ||
-                            (!$element.attr("disabled")))) {
+                            (!$element.prop("disabled")))) {
 
                 strControlId = $element.attr("id");
 
@@ -202,13 +202,14 @@ qcubed = {
      */
     getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
         var objFormElements = $j('#' + strForm).find('input,select,textarea'),
-            strPostData = '';
+            strPostData = '',
+            formParamSelector = "#Qform__FormParameter";
 
         if (mixParameter && (typeof mixParameter !== "string")) {
-            strPostData = $j.param({"Qform__FormParameter": mixParameter});
-            objFormElements = objFormElements.not("#Qform__FormParameter");
+            strPostData = $j.param({Qform__FormParameter: mixParameter});
+            objFormElements = objFormElements.not(formParamSelector);
         } else {
-            $j('#Qform__FormParameter').val(mixParameter);
+            $j(formParamSelector).val(mixParameter);
         }
 
         $j('#Qform__FormControl').val(strControl);
@@ -219,20 +220,17 @@ qcubed = {
 
         objFormElements.each(function() {
             var $element = $j(this),
-                strType = $element.attr("type"),
+                strType = $element.prop("type"),
                 strControlId = $element.attr("id"),
                 strControlName = $element.attr("name"),
                 strTestName,
                 bracketIndex,
                 strPostValue = $element.val();
 
-            if (typeof strType === "undefined") {
-                strType = this.type; // This seems silly
-            }
             switch (strType) {
                 case "checkbox":
                 case "radio":
-                    if ($element.attr("checked")) {
+                    if ($element.is(":checked")) {
                         bracketIndex = strControlName.indexOf('[');
 
                         if (bracketIndex > 0) {
@@ -251,11 +249,8 @@ qcubed = {
                     break;
 
                 case "select-multiple":
-
-                    $element.find(':selected').each(function(i) {
-                        var $this = $j(this);
-
-                        strPostData += "&" + $this.parents("select").attr("name") + "=" + $this.val();
+                    $element.find(':selected').each(function() {
+                        strPostData += "&" + strControlName + "=" + $j(this).val();
                     });
                     break;
 
@@ -319,7 +314,7 @@ qcubed = {
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 var result = XMLHttpRequest.responseText,
                     objErrorWindow,
-                    dialog;
+                    $dialog;
 
                 if (XMLHttpRequest.status !== 0 || result.length > 0) {
                     if (result.substr(0, 6) === '<html>') {
@@ -329,7 +324,7 @@ qcubed = {
                         objErrorWindow.document.write(result);
                         return false;
                     } else {
-                        dialog = $j('<div id="Qcubed_AJAX_Error" />')
+                        $dialog = $j('<div id="Qcubed_AJAX_Error" />')
                             .html(result)
                             .dialog({
                                 modal: true,
@@ -339,7 +334,7 @@ qcubed = {
                                 title: 'An Error Occurred',
                                 buttons: {
                                     Ok: function() {
-                                        $j(this).dialog("close");
+                                        $dialog.dialog("close");
                                     }
                                 }
                             });
@@ -354,24 +349,25 @@ qcubed = {
                     var $this = $j(this),
                         strControlId = '#' + $this.attr("id"),
                         strControlHtml = $this.text(),
-                        control = $j(strControlId),
-                        relParent;
+                        $control = $j(strControlId),
+                        $relParent,
+                        relSelector = "[data-rel='" + strControlId + "']";
 
                     if (strControlId === "#Qform__FormState") {
-                        control.val(strControlHtml);
+                        $control.val(strControlHtml);
                     } else {
-                        if (control.length && !control.get(0).wrapper) {
+                        if ($control.length && !$control.get(0).wrapper) {
                             //remove related controls (error, name ...) for wrapper-less controls
-                            if ($this.attr("data-hasrel")) {
+                            if ($this.data("hasrel")) {
                                 //ensure that the control is not wrapped in an element related to it (it would be removed)
-                                relParent = control.parents("[data-rel='" + strControlId + "']").last();
-                                if (relParent.length) {
-                                    control.insertBefore(relParent);
+                                $relParent = $control.parents(relSelector).last();
+                                if ($relParent.length) {
+                                    $control.insertBefore($relParent);
                                 }
-                                $j("[data-rel='" + strControlId + "']").remove();
+                                $j(relSelector).remove();
                             }
 
-                            control.before(strControlHtml).remove();
+                            $control.before(strControlHtml).remove();
                         } else {
                             $j(strControlId + '_ctl').html(strControlHtml);
                         }
@@ -418,8 +414,10 @@ qcubed = {
             } else if (strStyleSheetFile.indexOf("http") !== 0) {
                 strStyleSheetFile = qc.cssAssets + "/" + strStyleSheetFile;
             }
-
-            $j('head').append('<link rel="stylesheet" href="' + strStyleSheetFile + '" type="text/css" />');
+            if (strMediaType){
+                strMediaType = " media="+strMediaType;
+            }
+            $j('head').append('<link rel="stylesheet"'+strMediaType+' href="' + strStyleSheetFile + '" type="text/css" />');
         };
 
         /////////////////////////////
@@ -673,30 +671,32 @@ qcubed.registerControl = function(mixControl) {
 
     // Toggle Display / Enabled
     objWrapper.toggleDisplay = function(strShowOrHide) {
+        var strDisplay = "display";
         // Toggles the display/hiding of the entire control (including any design/wrapper HTML)
         // If ShowOrHide is blank, then we toggle
         // Otherwise, we'll execute a "show" or a "hide"
         if (strShowOrHide) {
             if (strShowOrHide === "show") {
-                this.updateStyle("display", true);
+                this.updateStyle(strDisplay, true);
             } else {
-                this.updateStyle("display", false);
+                this.updateStyle(strDisplay, false);
             }
         } else
-            this.updateStyle("display", (this.style.display === "none"));
+            this.updateStyle(strDisplay, (this.style.display === "none"));
     };
 
     objWrapper.toggleEnabled = function(strEnableOrDisable) {
-        var objControl = (this.control) ? this.control : this;
+        var objControl = (this.control) ? this.control : this,
+            strEnabled = "enabled";
 
         if (strEnableOrDisable) {
             if (strEnableOrDisable === "enable") {
-                this.updateStyle("enabled", true);
+                this.updateStyle(strEnabled, true);
             } else {
-                this.updateStyle("enabled", false);
+                this.updateStyle(strEnabled, false);
             }
         } else {
-            this.updateStyle("enabled", objControl.disabled);
+            this.updateStyle(strEnabled, objControl.disabled);
         }
     };
 
@@ -716,7 +716,7 @@ qcubed.registerControl = function(mixControl) {
         };
     }
 
-    // Select All (will only work for textboxes only)
+    // Select All (will only work for textboxes)
     if (objWrapper.control) {
         objWrapper.select = function() {
             $j(this.control).select();
