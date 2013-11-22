@@ -29,6 +29,11 @@
 		protected static $BrowserType = QBrowserType::Unsupported;
 
 		/**
+		 * @var float Major version number of browser
+		 */
+		public static $BrowserVersion = null;
+
+		/**
 		 * Definition of CacheControl for the HTTP header.  In general, it is
 		 * recommended to keep this as "private".  But this can/should be overriden
 		 * for file/scripts that have special caching requirements (e.g. dynamically
@@ -294,97 +299,102 @@
 
 				QApplication::$BrowserType = 0;
 
-				// INTERNET EXPLORER (supporting versions 6.0, 7.0 and eventually 8.0)
+				// INTERNET EXPLORER (versions 6 through 10)
 				if (strpos($strUserAgent, 'msie') !== false) {
 					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::InternetExplorer;
 
-					if (strpos($strUserAgent, 'msie 6.0') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::InternetExplorer_6_0;
-					else if (strpos($strUserAgent, 'msie 7.0') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::InternetExplorer_7_0;
-					else if (strpos($strUserAgent, 'msie 8.0') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::InternetExplorer_8_0;
-					else
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Unsupported;
+					// just major version number. Will not see IE 10.6.
+					$matches = array();
+					preg_match ('#msie\s(.\d)#', $strUserAgent, $matches);
+					if ($matches) {
+						QApplication::$BrowserVersion = (int)$matches[1];
+					}
+				}
+				else if (strpos($strUserAgent, 'trident') !== false) {
+					// IE 11 significantly changes the user agent, and no longer includes 'MSIE'
+					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::InternetExplorer;
 
-				// FIREFOX (supporting versions 1.0, 1.5, 2.0 and eventually 3.0)
+					$matches = array();
+					preg_match ('/rv:(.+)\)/', $strUserAgent, $matches);
+					if ($matches) {
+						QApplication::$BrowserVersion = (float)$matches[1];
+					}
+				// FIREFOX
 				} else if ((strpos($strUserAgent, 'firefox') !== false) || (strpos($strUserAgent, 'iceweasel') !== false)) {
 					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Firefox;
 					$strUserAgent = str_replace('iceweasel/', 'firefox/', $strUserAgent);
 
-					if (strpos($strUserAgent, 'firefox/1.0') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Firefox_1_0;
-					else if (strpos($strUserAgent, 'firefox/1.5') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Firefox_1_5;
-					else if (strpos($strUserAgent, 'firefox/2.0') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Firefox_2_0;
-					else if (strpos($strUserAgent, 'firefox/3.0') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Firefox_3_0;
-					else
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Unsupported;
-
-				// SAFARI (supporting version 2.0 and eventually 3.0 and 4.0)
-				} else if (strpos($strUserAgent, 'safari') !== false) {
-					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Safari;
-
-					if (strpos($strUserAgent, 'version/4') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Safari_4_0;
-					else if (strpos($strUserAgent, 'version/3') !== false || strpos($strUserAgent, 'safari/52') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Safari_3_0;
-					else if (strpos($strUserAgent, 'version/2') !== false || strpos($strUserAgent, 'safari/41') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Safari_2_0;
-					else
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Unsupported;
-
-				// KONQUEROR (eventually supporting versions 3 and 4)
-				} else if (strpos($strUserAgent, 'konqueror') !== false) {
-					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Konqueror;
-
-					if (strpos($strUserAgent, 'konqueror/3') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Konqueror_3;
-					else if (strpos($strUserAgent, 'konqueror/4') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Konqueror_4;
-					else
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Unsupported;
+					$matches = array();
+					preg_match ('#firefox/(.+)#', $strUserAgent, $matches);
+					if ($matches) {
+						QApplication::$BrowserVersion = (float)$matches[1];
+					}
 				}
-
-				// OPERA (eventually supporting versions 7, 8 and 9)
-				if (strpos($strUserAgent, 'opera') !== false) {
-					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Opera;
-
-					if (strpos($strUserAgent, 'opera/7') !== false || strpos($strUserAgent, 'opera 7') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Opera_7;
-					else if (strpos($strUserAgent, 'opera/8') !== false || strpos($strUserAgent, 'opera 8') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Opera_8;
-					else if (strpos($strUserAgent, 'opera/9') !== false || strpos($strUserAgent, 'opera 9') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Opera_9;
-					else
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Unsupported;
-				}
-
-				// CHROME (eventually supporting versions 0 and 1)
-				if (strpos($strUserAgent, 'chrome') !== false) {
+				// CHROME, must come before safari because it also includes a safari string
+				elseif (strpos($strUserAgent, 'chrome') !== false) {
 					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Chrome;
 
-					if (strpos($strUserAgent, 'chrome/0') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Chrome_0;
-					else if (strpos($strUserAgent, 'chrome/1') !== false)
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Chrome_1;
-					else
-						QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Unsupported;
+					// find major version number only
+					$matches = array();
+					preg_match ('#chrome/(\d+)#', $strUserAgent, $matches);
+					if ($matches) {
+						QApplication::$BrowserVersion = (int)$matches[1];
+					}
+				}
+				// SAFARI
+				elseif (strpos($strUserAgent, 'safari') !== false) {
+					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Safari;
+
+					$matches = array();
+					preg_match ('#version/(.+)\s#', $strUserAgent, $matches);
+					if ($matches) {
+						QApplication::$BrowserVersion = (float)$matches[1];
+					}
+				}
+				// KONQUEROR
+				elseif (strpos($strUserAgent, 'konqueror') !== false) {
+					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Konqueror;
+
+					// only looking at major version number on this one
+					$matches = array();
+					preg_match ('#konqueror/(\d+)#', $strUserAgent, $matches);
+					if ($matches) {
+						QApplication::$BrowserVersion = (int)$matches[1];
+					}
 				}
 
-				// COMPLETELY UNSUPPORTED
+				// OPERA
+				elseif (strpos($strUserAgent, 'opera') !== false) {
+					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Opera;
+
+					// two different patterns;
+					$matches = array();
+					preg_match ('#version/(\d+)#', $strUserAgent, $matches);
+					if ($matches) {
+						QApplication::$BrowserVersion = (int)$matches[1];
+					} else {
+						preg_match ('#opera\s(.+)#', $strUserAgent, $matches);
+						if ($matches) {
+							QApplication::$BrowserVersion = (float)$matches[1];
+						}
+					}
+				}
+
+				// Unknown
 				if (QApplication::$BrowserType == 0)
 					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Unsupported;
 
 				// OS (supporting Windows, Linux and Mac)
 				if (strpos($strUserAgent, 'windows') !== false)
 					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Windows;
-				else if (strpos($strUserAgent, 'linux') !== false)
+				elseif (strpos($strUserAgent, 'linux') !== false)
 					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Linux;
-				else if (strpos($strUserAgent, 'macintosh') !== false)
+				elseif (strpos($strUserAgent, 'macintosh') !== false)
 					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Macintosh;
+
+				// Mobile version of one of the above browsers, or some other unknown browser
+				if (strpos($strUserAgent, 'mobi') !== false) // opera is just 'mobi', everyone else uses 'mobile'
+					QApplication::$BrowserType = QApplication::$BrowserType | QBrowserType::Mobile;
 			}
 
 			// Preload Class Files
@@ -967,39 +977,47 @@
 
 	class QBrowserType {
 		const InternetExplorer = 1;
+
+		/* Deprecated. See QApplication::BrowserVersion **
 		const InternetExplorer_6_0 = 2;
 		const InternetExplorer_7_0 = 4;
+		const InternetExplorer_8_0 = 8;*/
 
-		const InternetExplorer_8_0 = 8;
+		const Firefox = 	0x10;
 
-		const Firefox = 16;
-		const Firefox_1_0 = 32;
-		const Firefox_1_5 = 64;
-		const Firefox_2_0 = 128;
-		const Firefox_3_0 = 256;
+		/* Deprecated. See QApplication::BrowserVersion **
+		const Firefox_1_0 = 0x20;
+		const Firefox_1_5 = 0x40;
+		const Firefox_2_0 = 0x80;
+		const Firefox_3_0 = 0x100;*/
 
-		const Safari = 512;
-		const Safari_2_0 = 1024;
-		const Safari_3_0 = 2048;
-		const Safari_4_0 = 4096;
+		const Safari = 		0x200;
+		/* Deprecated. See QApplication::BrowserVersion **
+		const Safari_2_0 = 	0x400;
+		const Safari_3_0 = 	0x800;
+		const Safari_4_0 = 	0x1000;*/
 
-		const Opera = 8192;
-		const Opera_7 = 16384;
-		const Opera_8 = 32768;
-		const Opera_9 = 65536;
+		const Opera = 		0x2000;
+		/* Deprecated. See QApplication::BrowserVersion **
+		const Opera_7 = 	0x4000;
+		const Opera_8 = 	0x8000;
+		const Opera_9 = 	0x10000;*/
 
-		const Konqueror = 131072;
-		const Konqueror_3 = 262144;
-		const Konqueror_4 = 524288;
+		const Konqueror = 	0x20000;
+		/* Deprecated. See QApplication::BrowserVersion **
+		const Konqueror_3 = 0x40000;
+		const Konqueror_4 = 0x80000;*/
 
-		const Chrome = 1048576;
-		const Chrome_0 = 2097152;
-		const Chrome_1 = 4194304;
+		const Chrome = 		0x100000;
+		/* Deprecated. See QApplication::BrowserVersion **
+		const Chrome_0 = 	0x200000;
+		const Chrome_1 = 	0x400000;*/
 
-		const Windows = 8388608;
-		const Linux = 16777216;
-		const Macintosh = 33554432;
+		const Windows = 	0x800000;
+		const Linux = 		0x1000000;
+		const Macintosh = 	0x2000000;
+		const Mobile = 		0x4000000;	// some kind of mobile browser
 
-		const Unsupported = 67108864;
+		const Unsupported = 0x8000000;
 	}
 ?>

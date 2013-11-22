@@ -243,7 +243,7 @@
 				$strToReturn .= ' ' . $objAction->RenderScript($this);
 			}
 			if ($this->ActionsMustTerminate) {
-				if (QApplication::IsBrowser(QBrowserType::InternetExplorer_6_0)) {
+				if (QApplication::IsBrowser(QBrowserType::InternetExplorer) && QApplication::$BrowserVersion < 7) {
 					$strToReturn .= ' qc.terminateEvent(event);';
 				} else {
 					$strToReturn .= ' return false;';
