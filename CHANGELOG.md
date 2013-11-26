@@ -1,5 +1,13 @@
 Qcubed ChangeLog
 ===================
+## Release 2.2.3 (bugfix release)
+[373](https://github.com/qcubed/framework/issues/373) codegen should take mysql Default column values
+
+[369](https://github.com/qcubed/framework/issues/369) Add a Bitdeli Badge to README
+
+[367](https://github.com/qcubed/framework/issues/367) Ensures a dialog is instantiated before calling 'close'. Fixes #366
+
+###For a complete list of issues fixed in this release see the [closed issues in this milestone](https://github.com/qcubed/framework/issues?milestone=11&page=1&state=closed "Release 2.2.3 closed issues").
 
 ## Release 2.2.2 (bugfix release)
 
