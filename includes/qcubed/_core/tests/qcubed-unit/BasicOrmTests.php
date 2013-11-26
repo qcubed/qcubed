@@ -163,6 +163,25 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			"Wendy Smith",
 			"Karen Wolfe")
 		, "List managed persons is correct");
+		
+		$objPersonArray = Person::QueryArray(
+			QQ::Equal(QQN::Person()->PersonType->PersonTypeId, PersonType::Inactive),
+			QQ::Clause(
+				QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
+			)
+		);
+		
+		$arrNamesOnly = array();
+		foreach ($objPersonArray as $item) {
+			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;
+		}
+		
+		$this->assertEqual($arrNamesOnly, array(
+			"Linda Brady",
+			"John Doe",
+			"Ben Robinson")
+		, "Person-PersonType assn is correct");
+		
 	}
 	
 	public function testQuerySingleEmpty() {
@@ -188,6 +207,16 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertEqual(count($objTwoKeyArray), 6, "6 TwoKey items found.");
 	}
 	
+	public function testQuerySelectSubsetSkipPK() {
+		$objSelect = QQ::Select(QQN::Person()->FirstName);
+		$objSelect->SetSkipPrimaryKey(true);
+		$objPersonArray = Person::LoadAll($objSelect);
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->assertNull($objPerson->Id, "Id should be null since SkipPrimaryKey is set on the Select object");
+		}
+	}
+
 	public function testExpand() {
 		// Test intermediate nodes on expansion
 		 $clauses = QQ::Clause(
@@ -275,8 +304,20 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		
 		$this->assertEqual(sizeof($objItems), 2, "2 projects found");
 		
-		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for the first project");
-		$this->assertEqual($objItems[1]->GetVirtualAttribute('team_member_count'), 7, "7 team members found for the second project");
+		$this->assertEqual($objItems[0]->Name, "State College HR System", "Project " . $objItems[0]->Name . " found");
+		$this->assertEqual($objItems[0]->GetVirtualAttribute('team_member_count'), 6, "6 team members found for project " . $objItems[0]->Name);	
+	}
+	
+	public function testEmptyColumns() {
+		$objItem = Login::QuerySingle(
+			QQ::Equal(QQN::Login()->Id, 1)
+		);
+		$this->assertTrue($objItem->IsEnabled === 0, "Zero column does not return null.");
+	
+		$objItem = Project::QuerySingle(
+			QQ::Equal(QQN::Project()->Id, 2)
+		);
+		$this->assertTrue($objItem->EndDate === null, "Null date column returns a null.");
 	}
 }
 ?>

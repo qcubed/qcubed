@@ -561,44 +561,42 @@
 		}
 
 		public function GetColumn($strColumnName, $strColumnType = null) {
-			if (array_key_exists($strColumnName, $this->strColumnArray)) {
-				$strColumnValue = $this->strColumnArray[$strColumnName];
-				if (is_null($strColumnValue))
-					return null;
-
-				switch ($strColumnType) {
-					case QDatabaseFieldType::Bit:
-						// Account for single bit value
-						$chrBit = $strColumnValue;
-						if ((strlen($chrBit) == 1) && (ord($chrBit) == 0))
-							return false;
-
-						// Otherwise, use PHP conditional to determine true or false
-						return ($strColumnValue) ? true : false;
-
-					case QDatabaseFieldType::Blob:
-					case QDatabaseFieldType::Char:
-					case QDatabaseFieldType::VarChar:
-						return QType::Cast($strColumnValue, QType::String);
-
-					case QDatabaseFieldType::Date:
-						return new QDateTime($strColumnValue, null, QDateTime::DateOnlyType);
-					case QDatabaseFieldType::DateTime:
-						return new QDateTime($strColumnValue, null, QDateTime::DateAndTimeType);
-					case QDatabaseFieldType::Time:
-						return new QDateTime($strColumnValue, null, QDateTime::TimeOnlyType);
-
-					case QDatabaseFieldType::Float:
-						return QType::Cast($strColumnValue, QType::Float);
-
-					case QDatabaseFieldType::Integer:
-						return QType::Cast($strColumnValue, QType::Integer);
-
-					default:
-						return $strColumnValue;
-				}
-			} else
+			if (!isset($this->strColumnArray[$strColumnName])) {
 				return null;
+			}
+			$strColumnValue = $this->strColumnArray[$strColumnName];
+
+			switch ($strColumnType) {
+				case QDatabaseFieldType::Bit:
+					// Account for single bit value
+					$chrBit = $strColumnValue;
+					if ((strlen($chrBit) == 1) && (ord($chrBit) == 0))
+						return false;
+
+					// Otherwise, use PHP conditional to determine true or false
+					return ($strColumnValue) ? true : false;
+
+				case QDatabaseFieldType::Blob:
+				case QDatabaseFieldType::Char:
+				case QDatabaseFieldType::VarChar:
+					return QType::Cast($strColumnValue, QType::String);
+
+				case QDatabaseFieldType::Date:
+					return new QDateTime($strColumnValue, null, QDateTime::DateOnlyType);
+				case QDatabaseFieldType::DateTime:
+					return new QDateTime($strColumnValue, null, QDateTime::DateAndTimeType);
+				case QDatabaseFieldType::Time:
+					return new QDateTime($strColumnValue, null, QDateTime::TimeOnlyType);
+
+				case QDatabaseFieldType::Float:
+					return QType::Cast($strColumnValue, QType::Float);
+
+				case QDatabaseFieldType::Integer:
+					return QType::Cast($strColumnValue, QType::Integer);
+
+				default:
+					return $strColumnValue;
+			}
 		}
 
 		public function ColumnExists($strColumnName) {

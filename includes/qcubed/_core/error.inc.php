@@ -164,4 +164,21 @@
 		}
 		exit();
 	}
+
+	/**
+	 * Some errors are not caught by a php custom error handler, which can cause the system to silently fail.
+	 * This shutdown function will catch those errors.
+	 */
+	function QCubedShutdown() {
+		if ($error = error_get_last()){
+			QCodoHandleError (
+				$error['type'],
+				$error['message'],
+				$error['file'],
+				$error['line'],
+				''
+			);
+		}
+	}
+
 ?>

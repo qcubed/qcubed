@@ -54,14 +54,16 @@
 	 * you to use an array of QListItems, or an array of database objects as the source. You can also pass this array
 	 * statically in the Source parameter at creation time, or dynamically via Ajax by using SetDataBinder, and then
 	 * in your data binder function, setting the DataSource parameter.
-	 *
+	 * 
 	 * @property string $SelectedId the id of the selected item. When QAutocompleteListItem objects are used for the DataSource, this corresponds to the Value of the item
 	 * @property boolean $MustMatch if true, non matching values are not accepted by the input
 	 * @property string $MultipleValueDelimiter if set, the Autocomplete will keep appending the new selections to the previous term, delimited by this string.
 	 *    This is useful when making QAutocomplete handle multiple values (see http://jqueryui.com/demos/autocomplete/#multiple ).
-	 * @property-write array $DataSource an array of strings, QAutocompleteListItem's,
-	 * 
+	 * @property boolean $DisplayHtml if set, the Autocomplete will treat the 'label' portion of each data item as Html.
+	 * @property-write array $Source an array of strings, QListItem's, or data objects. To be used at creation time. {@inheritdoc }
+	 * @property-write array $DataSource an array of strings, QListItem's, or data objects
 	 * @link http://jqueryui.com/autocomplete/
+	 * @access private
 	 * @package Controls\Base
 	 */
 	class QAutocompleteBase extends QAutocompleteGen
@@ -76,7 +78,11 @@
 		protected $blnMustMatch = false;
 		/** @var string */
 		protected $strMultipleValueDelimiter = null;
+		/** @var boolean */
+		protected $blnDisplayHtml = false;
 
+		protected $strJavaScripts = 'qAutocomplete.js';
+		
 		
 		/**
 		 * When this filter is passed to QAutocomplete::UseFilter, only the items in the source list that contain the typed term will be shown in the drop-down
@@ -116,10 +122,10 @@
 		}
 
 
-		// Set up an Ajax data binder.
 		/**
 		 * Set the data binder for ajax filtering
-		 * Call this at creation time to set the data binder of the item list you will display. The data binder
+		 * 
+		 * Call this at creation time to set the data binder of the item list you will display. The data binder 
 		 * will be an AjaxAction function, and so will receive the following parameters:
 		 * - FormId
 		 * - ControlId
@@ -134,13 +140,12 @@
 		public function SetDataBinder($strMethodName, $objParentControl = null, $blnReturnTermAsParameter = false) {
 			$strJsReturnParam = '';
 			$strBody = '';
-			if ($blnReturnTermAsParameter) {
-				if ($this->MultipleValueDelimiter) {
-					$strJsReturnParam = 'this.element.data("splitterFunc")(this.element.get(0))';
-				} else {
-					$strJsReturnParam = 'request.term';
-				}
+			if ($this->MultipleValueDelimiter) {
+				$strJsReturnParam = 'this.element.data("curTerm")(this.element.get(0))';
+			} else {
+				$strJsReturnParam = 'request.term';
 			}
+			
 			if ($objParentControl) {
 				$objAction = new QAjaxControlAction($objParentControl, $strMethodName, 'default', null, $strJsReturnParam);
 			} else {
@@ -175,95 +180,17 @@
 			$strJS = parent::GetControlJavaScript();
 			$strValueExpr = 'var value = jQuery(this).val();';
 			$strResetValue = 'var resetValue = "";';
+			$options = array();
 			if ($this->strMultipleValueDelimiter) {
-				// don't navigate away from the field on tab when selecting an item
-				$strJS .= '.bind("keydown", function(event) {
-								if (event.keyCode === jQuery.ui.keyCode.TAB && jQuery(this).data("autocomplete").menu.active) {
-									event.preventDefault();
-								}
-							})';
-				$strEscapedDelimiter = preg_quote($this->strMultipleValueDelimiter);
-				$strSplitFunc =sprintf('
-				// splits the value in element el into terms using the delimiter
-				// finds and returns the term at the caret
-				// if the second argument is present replaces that term with val and returns the full (modified) value
-				function (el, val) {
-					var value = jQuery(el).val();
-					// get caret position
-					var caretPos = 0;
-					if (document.selection) { // IE
-						el.focus();
-						var range = document.selection.createRange();
-						range.moveStart("character", -value.length);
-						caretPos = range.text.length;
-					} else if (el.selectionStart) { // MOZ
-						caretPos = el.selectionStart;
-					}
-					// find which term the caret is in
-					var matches = value.substring(0, caretPos).match(/%s\s*/g);
-					var termIdx = matches ? matches.length : 0;
-					var terms = value.split(/%s\s*/);
-					if (termIdx >= terms.length) {
-						termIdx = terms.length;
-						terms.push("");
-					}
-					if (val !== undefined) { // setting the value
-						if (val !== null)
-							terms[termIdx] = val;
-						else
-							terms.splice(termIdx, 1);
-						if (terms.length && terms[terms.length-1]) {
-							terms.push("");
-						}
-						return terms.join("%s ");
-					}
-					return terms[termIdx];
-				}', $strEscapedDelimiter, $strEscapedDelimiter, $this->MultipleValueDelimiter);
-				$strJS .= '.data("splitterFunc", '.$strSplitFunc.')';
-				$strValueExpr = 'var splitterFunc = jQuery(this).data("splitterFunc"); var value = splitterFunc(this);';
-				$strResetValue = 'var resetValue = splitterFunc(this, null);';
-
-				$strJS .=sprintf('.on("autocompleteselect",
-				function (event, ui) {
-					var sel = ui.item ? (ui.item.value ? ui.item.value : ui.item.label) : "";
-					this.value = jQuery(this).data("splitterFunc")(this, sel);
-					return false;
-				})', preg_quote($this->strMultipleValueDelimiter), $this->strMultipleValueDelimiter);
-
-				$strJS .= '.on("autocompletefocus",
-				function () {
-					return false;
-				})';
-			} else {
-				$strJS .=sprintf('.on("autocompleteselect",
-				function (event, ui) {
-				    qcubed.recordControlModification("%s", "SelectedId", ui.item.id);
-				})', $this->ControlId);
-
-				$strJS .=sprintf('
-				.on("autocompletefocus",
-				function (event, ui) {
-					if ( /^key/.test(event.originalEvent.type) ) {
-				 		qcubed.recordControlModification("%s", "SelectedId", ui.item.id);
-					}
-				})', $this->ControlId);
+				$options['multiValDelim'] = $this->strMultipleValueDelimiter;
 			}
-
-			$strMustMatch = $this->blnMustMatch ? sprintf('// remove invalid value, as no match
-									%s
-									jQuery( this ).val(resetValue);
-									jQuery( this ).data( "autocomplete" ).term = "";
-			', $strResetValue) : '';
-
-			$strJS .=sprintf('
-			.on("autocompletechange", function( event, ui ) {
-				var toTest = ui.item ? (ui.item.value ? ui.item.value : ui.item.label) : "";
-				%s
-				if ( !ui.item || value != toTest) {
-					%s
-		 			qcubed.recordControlModification("%s", "SelectedId", "");
-				}
-			})', $strValueExpr, $strMustMatch, $this->ControlId);
+			if ($this->blnMustMatch) {
+				$options['mustMatch'] = 1;
+			}
+			if ($this->blnDisplayHtml) {
+				$options['displayHtml'] = 1;
+			}
+			$strJS .= ';qAutocomplete(' . JavaScriptHelper::toJsObject($options) . ')';
 			
 			return $strJS;
 		}
@@ -330,7 +257,7 @@
 							}
 						}
 						if ($this->MultipleValueDelimiter) {
-							$strBody = 'response(jQuery.ui.autocomplete.filter('.JavaScriptHelper::toJsObject($mixValue).', this.element.data("splitterFunc")(this.element.get(0))))';
+							$strBody = 'response(jQuery.ui.autocomplete.filter('.JavaScriptHelper::toJsObject($mixValue).', this.element.data("curTerm")(this.element.get(0))))';
 							$mixValue = new QJsClosure($strBody, array('request', 'response'));
 						}
 						// do parent action too
@@ -342,8 +269,10 @@
 					break;
 
 				case 'MultipleValueDelimiter':
-					// Set this at creation time to initialize the selected id.
-					// This is also set by the javascript above to keep track of subsequent selections made by the user.
+					$a = $this->GetAllActions('QAutocomplete_SourceEvent');
+					if (!empty ($a)) {
+						throw new Exception('Must set MultipleValueDelimiter BEFORE calling SetDataBinder');
+					}				
 					try {
 						$this->strMultipleValueDelimiter = QType::Cast($mixValue, QType::String);
 					} catch (QInvalidCastException $objExc) {
@@ -351,7 +280,16 @@
 						throw $objExc;
 					}
 					break;
-
+									
+				case 'DisplayHtml':
+					try {
+						$this->blnDisplayHtml = QType::Cast($mixValue, QType::Boolean);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+					
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -376,7 +314,8 @@
 				case 'SelectedId': return $this->strSelectedId;
 				case 'MustMatch': return $this->blnMustMatch;
 				case 'MultipleValueDelimiter': return $this->strMultipleValueDelimiter;
-
+				case 'DisplayHtml': return $this->blnDisplayHtml;
+				
 				default: 
 					try { 
 						return parent::__get($strName); 
