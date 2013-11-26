@@ -633,7 +633,8 @@
 				$objDescriptionResult = $objDb->Query(sprintf("SHOW FULL FIELDS FROM `%s`", $this->strOriginalTable));
 				while (($objRow = $objDescriptionResult->FetchArray())) {
 					if ($objRow["Field"] == $this->strOriginalName) {
-
+ 						
+ 						$this->strDefault = $objRow["Default"]; 
 						// Calculate MaxLength of this column (e.g. if it's a varchar, calculate length of varchar
 						// NOTE: $mixFieldData->max_length in the MySQL spec is **DIFFERENT**
 						$strLengthArray = explode("(", $objRow["Type"]);
