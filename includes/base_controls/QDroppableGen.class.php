@@ -140,7 +140,10 @@
 	 * @property boolean $Disabled Disables the droppable if set to <code>true</code>.
 	 * @property boolean $Greedy By default, when an element is dropped on nested droppables, each droppable
 	 * 		will receive the element. However, by setting this option to
-	 * 		<code>true</code>, any parent droppables will not receive the element.
+	 * 		<code>true</code>, any parent droppables will not receive the element. The
+	 * 		<code>drop</code> event will still bubble normally, but the
+	 * 		<code>event.target</code> can be checked to see which droppable received
+	 * 		the draggable element.
 	 * @property string $HoverClass If specified, the class will be added to the droppable while an acceptable
 	 * 		draggable is being hovered over the droppable.
 	 * @property string $Scope Used to group sets of draggable and droppable items, in addition to the
@@ -281,7 +284,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * droppable options hash.<ul><li>This method does not accept any
+		 * droppable options hash.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {

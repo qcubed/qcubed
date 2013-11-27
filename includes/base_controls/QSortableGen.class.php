@@ -32,16 +32,18 @@
 	 * 		drag start receives it.<ul><li><strong>event</strong> Type: <a>Event</a>
 	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_ActivateEvent extends QJqUiEvent {
 		const EventName = 'sortactivate';
@@ -51,16 +53,18 @@
 	 * 		is still available.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_BeforeStopEvent extends QJqUiEvent {
 		const EventName = 'sortbeforestop';
@@ -70,16 +74,18 @@
 	 * 		changed.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_ChangeEvent extends QJqUiEvent {
 		const EventName = 'sortchange';
@@ -98,54 +104,61 @@
 	 * 		possible connected lists.<ul><li><strong>event</strong> Type: <a>Event</a>
 	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_DeactivateEvent extends QJqUiEvent {
 		const EventName = 'sortdeactivate';
 	}
 	/**
-	 * This event is triggered when a sortable item is moved away from a connected
-	 * 		list.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * <p>This event is triggered when a sortable item is moved away from a
+	 * 		sortable list.</p> 				<p><em>Note: This event is also triggered when a
+	 * 		sortable item is dropped.</em></p><ul><li><strong>event</strong> Type:
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_OutEvent extends QJqUiEvent {
 		const EventName = 'sortout';
 	}
 	/**
-	 * This event is triggered when a sortable item is moved into a connected
+	 * This event is triggered when a sortable item is moved into a sortable
 	 * 		list.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_OverEvent extends QJqUiEvent {
 		const EventName = 'sortover';
@@ -155,16 +168,18 @@
 	 * 		from another list.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_ReceiveEvent extends QJqUiEvent {
 		const EventName = 'sortreceive';
@@ -174,16 +189,18 @@
 	 * 		list and into another.<ul><li><strong>event</strong> Type: <a>Event</a>
 	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_RemoveEvent extends QJqUiEvent {
 		const EventName = 'sortremove';
@@ -192,16 +209,18 @@
 	 * This event is triggered during sorting.<ul><li><strong>event</strong> Type:
 	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_SortEvent extends QJqUiEvent {
 		const EventName = 'sort';
@@ -210,16 +229,18 @@
 	 * This event is triggered when sorting starts.<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_StartEvent extends QJqUiEvent {
 		const EventName = 'sortstart';
@@ -229,16 +250,18 @@
 	 * 		stopped.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_StopEvent extends QJqUiEvent {
 		const EventName = 'sortstop';
@@ -248,16 +271,18 @@
 	 * 		has changed.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
+	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
-	 * 		element</li> <li><strong>offset</strong> Type: <a>Object</a> The current
+	 * 		element.</li> <li><strong>offset</strong> Type: <a>Object</a> The current
 	 * 		absolute position of the helper represented as <code>{ top, left
-	 * 		}</code></li> <li><strong>position</strong> Type: <a>Object</a> The current
-	 * 		position of the helper represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The original
-	 * 		position of the element represented as <code>{ top, left }</code></li>
-	 * 		<li><strong>sender</strong> Type: <a>jQuery</a> The sortable that the item
-	 * 		comes from if moving from one sortable to another</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>position</strong> Type: <a>Object</a> The
+	 * 		current position of the helper represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
+	 * 		The original position of the element represented as <code>{ top, left
+	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
+	 * 		that the item comes from if moving from one sortable to another.</li>
+	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_UpdateEvent extends QJqUiEvent {
 		const EventName = 'sortupdate';
@@ -293,7 +318,7 @@
 	 * 		be connected to. This is a one-way relationship, if you want the items to
 	 * 		be connected in both directions, the <code>connectWith</code> option must
 	 * 		be set on both sortable elements.
-	 * @property mixed $Containment <p>Defines a bounding box that the sortable items are contrained to while
+	 * @property mixed $Containment <p>Defines a bounding box that the sortable items are constrained to while
 	 * 		dragging.</p>  				<p>Note: The element specified for containment must have
 	 * 		a calculated width and height (though it need not be explicit). For
 	 * 		example, if you have <code>float: left</code> sortable children and specify
@@ -538,7 +563,8 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current sortable
-		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
+		 * options hash.<ul><li>This signature does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod(false, "option");

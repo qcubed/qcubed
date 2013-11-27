@@ -31,7 +31,7 @@
 	 * Triggered when the field is blurred, if the value has
 	 * 		changed.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a>  <ul><li><strong>item</strong>
-	 * 		Type: <a>jQuery</a> The item selected from the menu, if any. Otherwise the
+	 * 		Type: <a>Object</a> The item selected from the menu, if any. Otherwise the
 	 * 		property is <code>null</code>.</li></ul></li></ul>
 	 */
 	class QAutocomplete_ChangeEvent extends QJqUiEvent {
@@ -65,7 +65,7 @@
 	 * 		not prevent the menu item from being
 	 * 		focused.</p><ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a>  <ul><li><strong>item</strong>
-	 * 		Type: <a>jQuery</a> The focused item.</li></ul></li></ul>
+	 * 		Type: <a>Object</a> The focused item.</li></ul></li></ul>
 	 */
 	class QAutocomplete_FocusEvent extends QJqUiEvent {
 		const EventName = 'autocompletefocus';
@@ -114,8 +114,9 @@
 	 * 						<p>Canceling this event prevents the value from being updated, but does
 	 * 		not prevent the menu from closing.</p><ul><li><strong>event</strong> Type:
 	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
-	 * 		<ul><li><strong>item</strong> Type: <a>jQuery</a> The selected
-	 * 		item.</li></ul></li></ul>
+	 * 		<ul><li><strong>item</strong> Type: <a>Object</a> An Object with
+	 * 		<code>label</code> and <code>value</code> properties for the selected
+	 * 		option.</li></ul></li></ul>
 	 */
 	class QAutocomplete_SelectEvent extends QJqUiEvent {
 		const EventName = 'autocompleteselect';
@@ -134,9 +135,14 @@
 	 * 
 	 * @see QAutocompleteBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo Which element the menu should be appended to. Override this when the
-	 * 		autocomplete is inside a <code>position: fixed</code> element. Otherwise
-	 * 		the popup menu would still scroll with the page.
+	 * @property mixed $AppendTo <p>Which element the menu should be appended to. When the value is
+	 * 		<code>null</code>, the parents of the input field will be checked for a
+	 * 		class of <code>ui-front</code>. If an element with the
+	 * 		<code>ui-front</code> class is found, the menu will be appended to that
+	 * 		element. Regardless of the value, if no element is found, the menu will be
+	 * 		appended to the body.</p> 				<strong>Note:</strong> The
+	 * 		<code>appendTo</code> option should not be changed while the suggestions
+	 * 		menu is open.
 	 * @property boolean $AutoFocus If set to <code>true</code> the first item will automatically be focused
 	 * 		when the menu is shown.
 	 * @property integer $Delay The delay in milliseconds between when a keystroke occurs and when a search
@@ -327,7 +333,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * autocomplete options hash.<ul><li>This method does not accept any
+		 * autocomplete options hash.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {

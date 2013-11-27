@@ -96,9 +96,10 @@
 	 * 		the <a><code>numberFormat</code></a> option is set. Requires
 	 * 		<a>Globalize</a> to be included.
 	 * @property boolean $Disabled Disables the spinner if set to <code>true</code>.
-	 * @property mixed $Icons Icons to use for buttons, matching an icon defined by the jQuery UI CSS
-	 * 		Framework. 				<ul><li>up (string, default: "ui-icon-triangle-1-n")</li>
-	 * 							<li>down (string, default: "ui-icon-triangle-1-s")</li></ul>
+	 * @property mixed $Icons Icons to use for buttons, matching <a>an icon provided by the jQuery UI CSS
+	 * 		Framework</a>. 				<ul><li>up (string, default:
+	 * 		"ui-icon-triangle-1-n")</li> 					<li>down (string, default:
+	 * 		"ui-icon-triangle-1-s")</li></ul>
 	 * @property mixed $Incremental Controls the number of steps taken when holding down a spin
 	 * 		button.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: When set to
@@ -271,7 +272,8 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current spinner
-		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
+		 * options hash.<ul><li>This signature does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod(false, "option");
@@ -297,9 +299,14 @@
 			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
-		 * Decrements the value by the specified number of pages, as defined by the
+		 * <p>Decrements the value by the specified number of pages, as defined by the
 		 * <a><code>page</code></a> option. Without the parameter, a single page is
-		 * decremented.<ul><li><strong>pages</strong> Type: <a>Number</a> Number of
+		 * decremented.</p> 				<p>If the resulting value is above the max, below the
+		 * min, or results in a step mismatch, the value will be adjusted to the
+		 * closest valid value.</p> 				<p>Invoking <code>pageDown()</code> will cause
+		 * <a><code>start</code></a>, <a><code>spin</code></a>, and
+		 * <a><code>stop</code></a> events to be
+		 * triggered.</p><ul><li><strong>pages</strong> Type: <a>Number</a> Number of
 		 * pages to decrement, defaults to 1.</li></ul>
 		 * @param $pages
 		 */
@@ -307,9 +314,14 @@
 			$this->CallJqUiMethod(false, "pageDown", $pages);
 		}
 		/**
-		 * Increments the value by the specified number of pages, as defined by the
+		 * <p>Increments the value by the specified number of pages, as defined by the
 		 * <a><code>page</code></a> option. Without the parameter, a single page is
-		 * incremented.<ul><li><strong>pages</strong> Type: <a>Number</a> Number of
+		 * incremented.</p> 				<p>If the resulting value is above the max, below the
+		 * min, or results in a step mismatch, the value will be adjusted to the
+		 * closest valid value.</p> 				<p>Invoking <code>pageUp()</code> will cause
+		 * <a><code>start</code></a>, <a><code>spin</code></a>, and
+		 * <a><code>stop</code></a> events to be
+		 * triggered.</p><ul><li><strong>pages</strong> Type: <a>Number</a> Number of
 		 * pages to increment, defaults to 1.</li></ul>
 		 * @param $pages
 		 */
@@ -317,22 +329,28 @@
 			$this->CallJqUiMethod(false, "pageUp", $pages);
 		}
 		/**
-		 * Decrements the value by the specified number of steps. Without the
-		 * parameter, a single step is decremented. 				<p>If the resulting value is
-		 * above the max, below the min, or reuslts in a step mismatch, the value will
-		 * be adjusted to the closest valid value.</p><ul><li><strong>steps</strong>
-		 * Type: <a>Number</a> Number of steps to decrement, defaults to 1.</li></ul>
+		 * <p>Decrements the value by the specified number of steps. Without the
+		 * parameter, a single step is decremented.</p> 				<p>If the resulting value
+		 * is above the max, below the min, or results in a step mismatch, the value
+		 * will be adjusted to the closest valid value.</p> 				<p>Invoking
+		 * <code>stepDown()</code> will cause <a><code>start</code></a>,
+		 * <a><code>spin</code></a>, and <a><code>stop</code></a> events to be
+		 * triggered.</p><ul><li><strong>steps</strong> Type: <a>Number</a> Number of
+		 * steps to decrement, defaults to 1.</li></ul>
 		 * @param $steps
 		 */
 		public function StepDown($steps = null) {
 			$this->CallJqUiMethod(false, "stepDown", $steps);
 		}
 		/**
-		 * Increments the value by the specified number of steps. Without the
-		 * parameter, a single step is incremented. 				<p>If the resulting value is
-		 * above the max, below the min, or reuslts in a step mismatch, the value will
-		 * be adjusted to the closest valid value.</p><ul><li><strong>steps</strong>
-		 * Type: <a>Number</a> Number of steps to increment, defaults to 1.</li></ul>
+		 * <p>Increments the value by the specified number of steps. Without the
+		 * parameter, a single step is incremented.</p> 				<p>If the resulting value
+		 * is above the max, below the min, or results in a step mismatch, the value
+		 * will be adjusted to the closest valid value.</p> 				<p>Invoking
+		 * <code>stepUp()</code> will cause <a><code>start</code></a>,
+		 * <a><code>spin</code></a>, and <a><code>stop</code></a> events to be
+		 * triggered.</p><ul><li><strong>steps</strong> Type: <a>Number</a> Number of
+		 * steps to increment, defaults to 1.</li></ul>
 		 * @param $steps
 		 */
 		public function StepUp($steps = null) {
@@ -341,7 +359,7 @@
 		/**
 		 * Gets the current value as a number. The value is parsed based on the
 		 * <a><code>numberFormat</code></a> and <a><code>culture</code></a>
-		 * options.<ul><li>This method does not accept any arguments.</li></ul>
+		 * options.<ul><li>This signature does not accept any arguments.</li></ul>
 		 */
 		public function Value() {
 			$this->CallJqUiMethod(false, "value");

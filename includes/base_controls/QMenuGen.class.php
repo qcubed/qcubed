@@ -78,21 +78,26 @@
 	 * @see QMenuBase
 	 * @package Controls\Base
 	 * @property boolean $Disabled Disables the menu if set to <code>true</code>.
-	 * @property mixed $Icons Icons to use for submenus, matching an icon defined by the jQuery UI CSS
-	 * 		Framework. 				<ul><li>submenu (string, default:
+	 * @property mixed $Icons Icons to use for submenus, matching <a>an icon provided by the jQuery UI
+	 * 		CSS Framework</a>. 				<ul><li>submenu (string, default:
 	 * 		"ui-icon-carat-1-e")</li></ul>
-	 * @property string $Menus Selector for the elements that serve as the menu container, including
-	 * 		sub-menus.
+	 * @property string $Menus <p>Selector for the elements that serve as the menu container, including
+	 * 		sub-menus.</p> 				<strong>Note:</strong> The <code>menus</code> option
+	 * 		should not be changed after initialization. Existing submenus will not be
+	 * 		updated.
 	 * @property mixed $Position Identifies the position of submenus in relation to the associated parent
 	 * 		menu item. The <code>of</code> option defaults to the parent menu item, but
 	 * 		you can specify another element to position against. You can refer to the
 	 * 		<a>jQuery UI Position</a> utility for more details about the various
 	 * 		options.
-	 * @property string $Role Customize the ARIA roles used for the menu and menu items. The default uses
-	 * 		<code>"menuitem"</code> for items. Setting the <code>role</code> option to
-	 * 		<code>"listbox"</code> will use <code>"option"</code> for items. If set to
-	 * 		<code>null</code>, no roles will be set, which is useful if the menu is
-	 * 		being controlled by another element that is maintaining focus.
+	 * @property string $Role <p>Customize the ARIA roles used for the menu and menu items. The default
+	 * 		uses <code>"menuitem"</code> for items. Setting the <code>role</code>
+	 * 		option to <code>"listbox"</code> will use <code>"option"</code> for items.
+	 * 		If set to <code>null</code>, no roles will be set, which is useful if the
+	 * 		menu is being controlled by another element that is maintaining focus.</p>
+	 * 						<strong>Note:</strong> The <code>role</code> option should not be
+	 * 		changed after initialization. Existing (sub)menus and menu items will not
+	 * 		be updated.
 	 */
 
 	class QMenuGen extends QPanel	{
@@ -295,7 +300,8 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current menu
-		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
+		 * options hash.<ul><li>This signature does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
 			$this->CallJqUiMethod(false, "option");

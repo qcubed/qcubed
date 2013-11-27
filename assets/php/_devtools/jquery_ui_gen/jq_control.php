@@ -1,7 +1,7 @@
 <?php
 include_once('simple_html_dom.php');
 require('../../qcubed.inc.php');
-require(__QCUBED_CORE__ . '/../codegen/QCodeGen.class.php');
+require(__INCLUDES__ . '/codegen/QCodeGen.class.php');
 
 class JqAttributes {
 	public $name;
@@ -104,15 +104,20 @@ class Option extends JqAttributes {
 			$str = str_replace(']', ')', $str);
 			return $str;
 		}
+		if (substr ($jsValue, 0, 4)  == 'none') {
+			return null;
+		}
 
 		try {
 			// make sure the value is valid php code
 			//todo: find better/safer way to check for this
 			if (@eval($jsValue. ';') === false) {
-				return null;
+				//return null;
+				throw new Exception ("Parsing problem with " . $jsValue);
 			}
 		} catch (exception $ex) {
-			return null;
+			//return null;
+			throw $ex;
 		}
 		return $jsValue;
 	}
@@ -297,7 +302,7 @@ class JqControlGen extends QCodeGenBase {
 	}
 
 	public function GenerateControl($objJqDoc) {
-		$strOutDirControls = __QCUBED_CORE__ . "/../controls";
+		$strOutDirControls = __QCUBED_CORE__ . "/../install/project/includes/controls";
 		$strOutDirControlsBase = __QCUBED_CORE__ . "/base_controls";
 
 		$mixArgumentArray = array('objJqDoc' => $objJqDoc);

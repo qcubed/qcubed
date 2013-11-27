@@ -28,12 +28,16 @@
 	
 	
 	/**
-	 * Triggered after a panel has been activated (after animation completes). If
-	 * 		the accordion was previously collapsed, <code>ui.oldHeader</code> and
+	 * <p>Triggered after a panel has been activated (after animation completes).
+	 * 		If the accordion was previously collapsed, <code>ui.oldHeader</code> and
 	 * 		<code>ui.oldPanel</code> will be empty jQuery objects. If the accordion is
 	 * 		collapsing, <code>ui.newHeader</code> and <code>ui.newPanel</code> will be
-	 * 		empty jQuery objects.<ul><li><strong>event</strong> Type: <a>Event</a>
-	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		empty jQuery objects.</p> 				<strong>Note:</strong> Since the
+	 * 		<code>activate</code> event is only fired on panel activation, it is not
+	 * 		fired for the initial panel when the accordion widget is created. If you
+	 * 		need a hook for widget creation use the <a><code>create</code></a>
+	 * 		event.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>newHeader</strong> Type: <a>jQuery</a> The header that was
 	 * 		just activated.</li> <li><strong>oldHeader</strong> Type: <a>jQuery</a> The
 	 * 		header that was just deactivated.</li> <li><strong>newPanel</strong> Type:
@@ -110,20 +114,21 @@
 	 * 		active section.
 	 * @property boolean $Disabled Disables the accordion if set to <code>true</code>.
 	 * @property string $Event The event that accordion headers will react to in order to activate the
-	 * 		associated panel. Multiple events can be specificed, separated by a space.
+	 * 		associated panel. Multiple events can be specified, separated by a space.
 	 * @property mixed $Header <p>Selector for the header element, applied via <code>.find()</code> on the
-	 * 		main accordion element. Content panels must be the sibling immedately after
-	 * 		their associated headers.</p>
+	 * 		main accordion element. Content panels must be the sibling immediately
+	 * 		after their associated headers.</p>
 	 * @property string $HeightStyle <p>Controls the height of the accordion and each panel. Possible
 	 * 		values:</p> 				<ul><li><code>"auto"</code>: All panels will be set to the
 	 * 		height of the tallest panel.</li> 					<li><code>"fill"</code>: Expand to
 	 * 		the available height based on the accordion's parent height.</li>
 	 * 							<li><code>"content"</code>: Each panel will be only as tall as its
 	 * 		content.</li></ul>
-	 * @property mixed $Icons <p>Icons to use for headers, matching an icon defined by the jQuery UI CSS
-	 * 		Framework. Set to <code>false</code> to have no icons displayed.</p>
-	 * 						<ul><li>header (string, default: "ui-icon-triangle-1-e")</li>
-	 * 							<li>activeHeader (string, default: "ui-icon-triangle-1-s")</li></ul>
+	 * @property mixed $Icons <p>Icons to use for headers, matching <a>an icon provided by the jQuery UI
+	 * 		CSS Framework</a>. Set to <code>false</code> to have no icons
+	 * 		displayed.</p> 				<ul><li>header (string, default:
+	 * 		"ui-icon-triangle-1-e")</li> 					<li>activeHeader (string, default:
+	 * 		"ui-icon-triangle-1-s")</li></ul>
 	 */
 
 	class QAccordionGen extends QPanel	{
@@ -252,7 +257,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * accordion options hash.<ul><li>This method does not accept any
+		 * accordion options hash.<ul><li>This signature does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
@@ -279,9 +284,10 @@
 			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
-		 * Recompute the height of the accordion panels. Results depend on the content
-		 * and the <a><code>heightStyle</code></a> option.<ul><li>This method does not
-		 * accept any arguments.</li></ul>
+		 * Process any headers and panels that were added or removed directly in the
+		 * DOM and recompute the height of the accordion panels. Results depend on the
+		 * content and the <a><code>heightStyle</code></a> option.<ul><li>This method
+		 * does not accept any arguments.</li></ul>
 		 */
 		public function Refresh() {
 			$this->CallJqUiMethod(false, "refresh");

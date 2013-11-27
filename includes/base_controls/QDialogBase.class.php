@@ -48,8 +48,8 @@
 	 * </code>
 	 * 
 	 * 
-	 * Since QDialog is a decendant of QPanel, you can do anything you can to a normal QPanel, 
-	 * inluding add Qcontrols and use a template. When you want to hide the dialog, call <code>Close()</code>
+	 * Since QDialog is a descendant of QPanel, you can do anything you can to a normal QPanel,
+	 * including add QControls and use a template. When you want to hide the dialog, call <code>Close()</code>
 	 * 
 	 * @property boolean $HasCloseButton Disables (false) or enables (true) the close X in the upper right corner of the title. Can be set when initializing the dialog.
 	 * @property-read integer $ClickedButton Returns the id of the button most recently clicked. (read-only)
@@ -64,8 +64,6 @@
 		protected $strClickedButtonId;
         /** @var bool Should we draw a close button on the top? */
 		protected $blnHasCloseButton = true;
-        /** @var bool  */
-		protected $blnUseWrapper = true;	// fix for jQuery UI interaction problem with Ajax updated dialogs.
         /** @var bool records whether button is open */
         protected $blnIsOpen = false;
 
@@ -102,9 +100,6 @@
                 open: function(event, ui) {
                     qcubed.recordControlModification("$controlId", "_IsOpen", true);
                     $strHideCloseButtonScript
-			    },
-			    create: function() {
-			        \$j(this).parent().appendTo(\$j("form:first"));
 			    },
 			    close: function(event, ui) {
 			        qcubed.recordControlModification("$controlId", "_IsOpen", false);
