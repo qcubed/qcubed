@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/qcubed/framework.png?branch=master)](https://travis-ci.org/qcubed/framework)
 
 ## Releases
-**Newest stable release: [version 2.2.2, released on May 28, 2013](https://github.com/qcubed/framework/archive/2.2.1.zip)**.
+**Newest stable release: [version 2.2.3, released on Nov. 26, 2013](https://github.com/qcubed/framework/archive/2.2.3.zip)**.
 
 **alpha-3.0 is available via composer and github**
 
@@ -82,4 +82,8 @@ QCubed was born out of QCodo, and uses jQuery UI libraries.
 ## Changelog
 
 The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/master/CHANGELOG.md "Changelog").
+
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/qcubed/framework/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 

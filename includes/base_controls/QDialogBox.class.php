@@ -58,7 +58,7 @@
 		}
 
 		public function GetHideDialogJavaScript() {
-			return sprintf('$j(qc.getW("%s")).dialog("close");', $this->strControlId);
+			return sprintf('var $dlg = $j(qc.getW("%s")); if($dlg.is(":ui-dialog")) { $dlg.dialog("close"); }', $this->strControlId);
 		}
 
 		public function ShowDialogBox() {
