@@ -957,7 +957,7 @@
 				$strToReturn .= sprintf("overflow:%s;", $this->strOverflow);
 
 			if (!is_null($this->intOpacity)) {
-				if (QApplication::IsBrowser(QBrowserType::InternetExplorer))
+				if (QApplication::IsBrowser(QBrowserType::InternetExplorer) && QApplication::$BrowserVersion < 9)
 					$strToReturn .= sprintf('filter:alpha(opacity=%s);', $this->intOpacity);
 				else
 					$strToReturn .= sprintf('opacity:%s;', $this->intOpacity / 100.0);
