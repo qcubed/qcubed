@@ -54,7 +54,8 @@
 		protected $strRepeatDirection = QRepeatDirection::Vertical;
 		protected $objItemStyle = null;
 		protected $intButtonMode;
-
+		protected $strMaxHeight; // will create a scroll pane if height is exceeded
+		
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->objItemStyle = new QListItemStyle();
@@ -106,9 +107,16 @@
 				$strToReturn .= '<span disabled="disabled">';
 			}
 
+			$strLabelText = $objItem->Label;
+			if (empty($strLabelText)) {
+				$strLabelText = $objItem->Name;
+			}
+			if ($this->blnHtmlEntities) {
+				$strLabelText = QApplication::HtmlEntities($strLabelText);
+			}
 			$strLabel = sprintf('<label for="%s">%s</label>',
 				$strIndexedId,
-				($this->blnHtmlEntities) ? QApplication::HtmlEntities($objItem->Name) : $objItem->Name
+				$strLabelText
 			);
 
 			$strInput = sprintf('<input id="%s" name="%s" type="checkbox" %s%s%s%s%s />',
@@ -244,6 +252,16 @@
 
 			$strToReturn .= '</table>';
 
+			// wrap table in a div so that it can scroll
+			if ($this->strMaxHeight) {
+				$strVal = $this->strMaxHeight;
+				if (is_numeric($strVal)) {
+					$strVal = $strVal . 'px';
+				}
+				
+				$strToReturn = sprintf ('<div style="max-height:%s; overflow-y:scroll">%s</div>', $strVal, $strToReturn);
+			}			
+
 			return $strToReturn;
 		}
 
@@ -277,7 +295,8 @@
 				case "RepeatDirection": return $this->strRepeatDirection;
 				case "ItemStyle": return $this->objItemStyle;
 				case "ButtonMode": return $this->intButtonMode;
-
+				case "MaxHeight": return $this->strMaxHeight;
+				
 				default:
 					try {
 						return parent::__get($strName);
@@ -367,6 +386,20 @@
 					}
 					break;
 
+				case "MaxHeight":
+					try {
+						if (empty ($mixValue)) {
+							$this->strMaxHeight = null;
+						}
+						else {
+							$this->strMaxHeight = QType::Cast($mixValue, QType::String);
+						}
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+					
 				default:
 					try {
 						parent::__set($strName, $mixValue);
