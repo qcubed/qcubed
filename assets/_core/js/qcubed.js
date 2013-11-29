@@ -259,8 +259,7 @@ $j.ajaxSync.data = [];
 									.html(result)
 									.dialog({
 										modal: true,
-										height: 200,
-										width: 400,
+										width: 'auto',
 										autoOpen: true,
 										title: 'An Error Occurred',
 										buttons: {
