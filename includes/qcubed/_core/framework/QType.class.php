@@ -146,8 +146,8 @@
 						return $intItem;
 					
 					// if casting changed the value, but we have a valid integer, return with a string cast
-					if (preg_match('/^-?\d+$/',$mixItem) === 1)
-						return (string)$mixItem;
+					if (preg_match('/^-?\d+(\.\d+)?$/',$mixItem) === 1)
+						return (string)(int)$mixItem;
 					
 					// any other scenarios is an invalid cast
 					throw new QInvalidCastException(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType, $mixItem));
