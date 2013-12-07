@@ -67,6 +67,8 @@
         /** @var bool records whether button is open */
         protected $blnIsOpen = false;
 
+		protected $blnUseWrapper = true;
+
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->blnDisplay = false;
@@ -82,6 +84,7 @@
 		protected function makeJqOptions() {
 			$strOptions = parent::makeJqOptions();
             $controlId = $this->ControlId;
+			$strFormId = $this->Form->FormId;
 
             if (!$this->blnHasCloseButton) {
                 $strHideCloseButtonScript = '$j(this).parent().find(".ui-dialog-titlebar-close").hide();';
@@ -103,7 +106,8 @@
 			    },
 			    close: function(event, ui) {
 			        qcubed.recordControlModification("$controlId", "_IsOpen", false);
-			    }
+			    },
+			    appendTo: "#$strFormId"
 FUNC;
 
 			return $strOptions;
