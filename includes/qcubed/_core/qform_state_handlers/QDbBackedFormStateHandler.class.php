@@ -74,7 +74,7 @@
 	                                WHERE
                                                 ' . $objDatabase->EscapeIdentifier('save_time') . ' < ' . $objDatabase->SqlVariable(time() - 60 * 60 * 24 * self::$intGarbageCollectDaysOld);
 
-			$objDatabase->Query($query);
+			$objDatabase->NonQuery($query);
 		}
 
 		/**
@@ -99,7 +99,7 @@
                                 WHERE
                                         ' . $objDatabase->EscapeIdentifier('session_id') . ' = ' . $objDatabase->SqlVariable($strSessionId);
 
-			$result = $objDatabase->Query($query);
+			$result = $objDatabase->NonQuery($query);
 		}
 
 		/**
