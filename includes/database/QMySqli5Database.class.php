@@ -46,6 +46,10 @@
 			if ($this->objMySqli->error)
 				throw new QMySqliDatabaseException($this->objMySqli->error, $this->objMySqli->errno, $strQuery);
 
+			if (is_bool($objResult)) {
+				throw new QCallerException ("Use ExecuteNonQuery when no results are expected from a query.");
+			}
+
 			// Return the Result
 			$objMySqliDatabaseResult = new QMySqli5DatabaseResult($objResult, $this);
 			return $objMySqliDatabaseResult;
