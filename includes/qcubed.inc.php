@@ -217,7 +217,7 @@
 	QApplicationBase::$ClassFile['qjstimer'] = __QCUBED__ . '/controls/QJsTimer.class.php';
 	QApplicationBase::$ClassFile['qjstimerbase'] = __QCUBED_CORE__ . '/base_controls/QJsTimerBase.class.php';
 
-	QApplicationBase::$ClassFile['qwatcher'] = __QCUBED__ . '/framework/QWatcher.class.php';
+	QApplicationBase::$ClassFile['qwatcher'] = __QCUBED__ . '/controls/QWatcher.class.php';
 
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
