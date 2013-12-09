@@ -1646,13 +1646,28 @@
 			return $this->ControlId;
 		}
 
+		/**
+		 * Subclasses should override this to create a watcher and put it in the
+		 * objWatcher member.
+		 */
+		protected function CreateWatcher () {
 
+		}
+
+		/**
+		 * Watch a particular node in the database. Call this to trigger a redraw of the control
+		 * whenever the database table that this node points to is changed.
+		 *
+		 * @param QQNode $objNode
+		 */
 		public function Watch (QQNode $objNode)
 		{
 			if (!$this->objWatcher) {
-				$this->objWatcher = new QWatcher();
+				$this->CreateWatcher(); // only create a watcher object when needed, since it is stored in the form state
 			}
-			$this->objWatcher->Watch ($objNode);
+			if ($this->objWatcher) {
+				$this->objWatcher->Watch ($objNode);
+			}
 		}
 
 		/////////////////////////
