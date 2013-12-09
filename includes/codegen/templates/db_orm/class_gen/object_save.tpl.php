@@ -173,6 +173,10 @@
 
 			$this->DeleteCache();
 
+			if (static::$blnWatchChanges) {
+				QWatcher::MarkTableModified ('<?php echo $objTable->Name  ?>');
+			}
+
 			// Return
 			return $mixToReturn;
 		}
