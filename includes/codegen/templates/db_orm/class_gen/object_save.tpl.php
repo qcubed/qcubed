@@ -174,7 +174,7 @@
 			$this->DeleteCache();
 
 			if (static::$blnWatchChanges) {
-				QWatcher::MarkTableModified ('<?php echo $objTable->Name  ?>');
+				QWatcher::MarkTableModified ('<?php echo QApplication::$Database[$objTable->OwnerDbIndex]->Database  ?>', '<?php echo $objTable->Name  ?>');
 			}
 
 			// Return

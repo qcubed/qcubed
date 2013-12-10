@@ -24,7 +24,7 @@
 					// if dropped from cache, or not yet cached
 					apc_store ($key, $curTime, static::$ttl);
 					$time2 = $curTime;
-					apc_store (static::GetKey (static::ALL_WATCHERS), $curTime, static::$ttl);
+					apc_store (static::GetKey ('', static::$strAppKey), $curTime, static::$ttl);
 				}
 				$this->strWatchedKeys[$key] = $time2;
 			}
@@ -51,12 +51,12 @@
 		 * @param string $strTableName
 		 * @throws QCallerException
 		 */
-		static public function MarkTableModified ($strTableName) {
-			$key = static::GetKey ($strTableName);
+		static public function MarkTableModified ($strDbName, $strTableName) {
+			$key = static::GetKey ($strDbName, $strTableName);
 			$time = microtime();
 
 			apc_store ($key, $time, static::$ttl);
-			apc_store (static::GetKey (static::ALL_WATCHERS), $time, static::$ttl);
+			apc_store (static::GetKey ('', static::$strAppKey), $time, static::$ttl);
 		}
 
 		/**
@@ -66,7 +66,7 @@
 		 * @return bool
 		 */
 		static public function FormWatcherChanged (&$strFormWatcherTime) {
-			$time = apc_fetch(static::GetKey (static::ALL_WATCHERS));
+			$time = apc_fetch(static::GetKey ('', static::$strAppKey));
 
 			if ($strFormWatcherTime !== $time) {
 				$strFormWatcherTime = $time;

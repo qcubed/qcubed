@@ -30,6 +30,8 @@
 
 		public static $strTableName = __WATCHER_TABLE_NAME__;
 
+		protected static $strKeyCaches = null;
+
 		/**
 		 * Override
 		 */
@@ -77,8 +79,8 @@
 		 * @param string $strTableName
 		 * @throws QCallerException
 		 */
-		static public function MarkTableModified ($strTableName) {
-			$key = static::GetKey ($strTableName);
+		static public function MarkTableModified ($strDbName, $strTableName) {
+			$key = static::GetKey ($strDbName, $strTableName);
 			$objDatabase = QApplication::$Database[__WATCHER_DB_INDEX__];
 			$time = microtime();
 
@@ -86,7 +88,7 @@
 				array ('table_key'=>$key,
 						'time'=>$time));
 			$objDatabase->InsertOrUpdate(__WATCHER_TABLE_NAME__,
-				array ('table_key'=>static::GetKey (self::ALL_WATCHERS),
+				array ('table_key'=>static::GetKey ('', static::$strAppKey),
 					'time'=>$time));
 
 		}
@@ -101,7 +103,7 @@
 			$strSQL = sprintf ("SELECT * FROM %s WHERE %s = %s",
 				$objDatabase->EscapeIdentifier(__WATCHER_TABLE_NAME__),
 				$objDatabase->EscapeIdentifier("table_key"),
-				$objDatabase->EscapeValues(static::GetKey(self::ALL_WATCHERS)));
+				$objDatabase->EscapeValues(static::GetKey('', static::$strAppKey)));
 
 			$objDbResult = $objDatabase->Query($strSQL);
 

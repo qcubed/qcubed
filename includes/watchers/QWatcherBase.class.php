@@ -12,20 +12,32 @@
 	 */
 	
 	abstract class QWatcherBase extends QBaseClass {
-		const ALL_WATCHERS = 'QWATCH_ALL';
+
+		/**
+		 * @var string key representing all tables being watched. This is used to create a key so that we can
+		 * know if any table that other forms care about changes, and notify other windows of the change. If you have multiple
+		 * installations of QCubed running on the same machine, you should change this in the QWatcher override
+		 * and make it different for each application. However, if two QCubed installations are modifying the same tables in
+		 * the same databases, they should have the same app key
+		 */
+		protected static $strAppKey = 'QWATCH_APPKEY';
 
 		protected $strWatchedKeys = array();
 
 		/**
+		 * Returns a unique key corresponding to the given table in the given database.
 		 * Override this function to return a key value that will define a subset of the table to
 		 * watch. For example, if you have records associated with User Ids,
 		 * combine the user id with the table name, and then
 		 * only records associated with that user id will be watched.
 		 *
+		 * Also, if you have multiple instances of QCubed running on the same PHP process, with possibly the same
+		 * table names.
+		 *
 		 * @return string
 		 */
-		protected static function GetKey($strTableName) {
-			return $strTableName;
+		protected static function GetKey($strDbName, $strTableName) {
+			return $strDbName . ':' . $strTableName;
 		}
 		
 		/**
@@ -34,7 +46,12 @@
 		 * @param QQNode $objNode
 		 */
 		public function Watch(QQNode $objNode) {
-			$this->RegisterTable($objNode->_TableName);
+			$strClassName = $objNode->_ClassName;
+
+			if ($strClassName) {
+				$objDatabase = $strClassName::GetDatabase();
+				$this->RegisterTable($objDatabase->Database, $objNode->_TableName);
+			}
 			$objParentNode = $objNode->_ParentNode;
 			if ($objParentNode) {
 				$this->Watch ($objParentNode);
@@ -47,8 +64,8 @@
 		 * 
 		 * @param string $strTableName
 		 */
-		protected function RegisterTable ($strTableName) {
-			$key = static::GetKey($strTableName);
+		protected function RegisterTable ($strDbName, $strTableName) {
+			$key = static::GetKey($strDbName, $strTableName);
 			if (empty($this->strWatchedKeys[$key])) {
 				$this->strWatchedKeys[$key] =  true;
 			}
@@ -74,7 +91,7 @@
 		 * @param string $strTableName
 		 * @throws QCallerException
 		 */
-		static public function MarkTableModified ($strTableName) {}
+		static public function MarkTableModified ($strDbName, $strTableName) {}
 
 		/**
 		 * QFormBase calls this to tell if any of the watched tables have changed.
