@@ -30,7 +30,10 @@
 
 		public static $strTableName = __WATCHER_TABLE_NAME__;
 
-		protected static $strKeyCaches = null;
+		/**
+		 * @var string[] Caches results of database lookups. Will not be saved with the formstate.
+		 */
+		private static $strKeyCaches = null;
 
 		/**
 		 * Override
@@ -51,10 +54,28 @@
 		}
 
 		/**
-		 * Override
+		 * Returns true if the watcher is up to date, and false if something has
+		 * changed. Caches the results so it only hits the database minimally for each
+		 * read.
+		 *
 		 * @return bool
 		 */
 		public function IsCurrent() {
+			// check cache
+			$ret = true;
+
+			foreach ($this->strWatchedKeys as $key=>$ts) {
+				if (!isset (self::$strKeyCaches[$key])) {
+					$ret = false;
+					break;
+				}
+				if (self::$strKeyCaches[$key] !== $ts) {
+					return false;
+				}
+			}
+			if ($ret) return true; // cache had everything we were looking for
+
+			// cache did not have what we were looking for, so check database
 			$objDatabase = QApplication::$Database[__WATCHER_DB_INDEX__];
 			$strIn = implode (',', $objDatabase->EscapeValues(array_keys($this->strWatchedKeys)));
 			$strSQL = sprintf ("SELECT * FROM %s WHERE %s in (%s)",
@@ -63,14 +84,16 @@
 				$strIn);
 
 			$objDbResult = $objDatabase->Query($strSQL);
-			
+
+			// fill cache and check result
 			while ($strRow = $objDbResult->FetchRow()) {
-				if ($this->strWatchedKeys[$strRow[0]] !== $strRow[1]) {
-					return false;
+				self::$strKeyCaches[$strRow[0]] = $strRow[1];
+				if ($ret && $this->strWatchedKeys[$strRow[0]] !== $strRow[1]) {
+					$ret = false;
 				}
 			}
 			
-			return true;
+			return $ret;
 		}
 		
 		/**
