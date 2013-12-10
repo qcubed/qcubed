@@ -8,6 +8,14 @@
 	 * in your config file to tell it which tables to use:
 	 * 		__WATCHER_DB_INDEX__ - The database index to look for the table
 	 * 		__WATCHER_TABLE_NAME__ - The name of the table.
+	 *
+	 * To create the database, use the following SQL:
+	 * CREATE TABLE IF NOT EXISTS _qc_watchers (
+	 * table_key varchar(200) NOT NULL,
+	 * ts varchar(40) NOT NULL,
+	 * PRIMARY KEY (table_key)
+	 * );
+
 	 * 
 	 * Static functions handle the database updating, while member variables store the current state
 	 * of a control's watched tables.
@@ -109,10 +117,10 @@
 
 			$objDatabase->InsertOrUpdate(__WATCHER_TABLE_NAME__,
 				array ('table_key'=>$key,
-						'time'=>$time));
+						'ts'=>$time));
 			$objDatabase->InsertOrUpdate(__WATCHER_TABLE_NAME__,
 				array ('table_key'=>static::GetKey ('', static::$strAppKey),
-					'time'=>$time));
+					'ts'=>$time));
 
 		}
 
