@@ -350,10 +350,25 @@
 
 				case "SelectedValue":
 					foreach ($this->objItemsArray as $objItem)
-						if ($objItem->Value === $mixValue)
+						if (!$mixValue) {
+							if ($mixValue === null || $mixValue === '') {
+								if ($objItem->Value === null || $objItem->Value === '') {
+									$objItem->Selected = true;
+								} else {
+									$objItem->Selected = false;
+								}
+							} else {
+								if ($objItem->Value === null || $objItem->Value === '') {
+									$objItem->Selected = false;
+								} else {
+									$objItem->Selected = true;
+								}
+							}
+						} elseif ($objItem->Value == $mixValue) {
 							$objItem->Selected = true;
-						else
+						} else {
 							$objItem->Selected = false;
+						}
 					return $mixValue;
 					break;
 
@@ -379,21 +394,35 @@
 
 				case "SelectedValues":
 					try {
-						$mixValue = QType::Cast($mixValue, QType::ArrayType);
+						$mixValues = QType::Cast($mixValue, QType::ArrayType);
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
 					foreach ($this->objItemsArray as $objItem) {
 						$objItem->Selected = false;
-						foreach ($mixValue as $mixName) {
-							if ($objItem->Value === $mixName) {
+						$mixCurVal = $objItem->Value;
+						foreach ($mixValues as $mixValue) {
+							if (!$mixValue) {
+								if ($mixValue === null || $mixValue === '') {
+									if ($mixCurVal === null || $mixCurVal === '') {
+										$objItem->Selected = true;
+										break;
+									}
+								} else {
+									if (!($mixCurVal === null || $mixCurVal === '')) {
+										$objItem->Selected = true;
+										break;
+									}
+								}
+							}
+							elseif ($mixCurVal == $mixValue) {
 								$objItem->Selected = true;
 								break;
 							}
 						}
 					}
-					return $mixValue;
+					return $mixValues;
 					break;
 
 				default:
