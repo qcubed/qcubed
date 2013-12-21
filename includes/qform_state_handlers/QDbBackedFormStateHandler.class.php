@@ -178,23 +178,27 @@
                                 WHERE
                                         ' . $objDatabase->EscapeIdentifier('page_id') . ' = ' . $objDatabase->SqlVariable($strPageId);
 
+			if ($strSessionId = session_id()) {
+				$strQuery .= ' AND ' . $objDatabase->EscapeIdentifier('session_id') . ' = ' . $objDatabase->SqlVariable($strSessionId);
+			}
+
+
 			// Perform the Query
 			$objDbResult = $objDatabase->Query($strQuery);
 
 			$strFormStateRow = $objDbResult->FetchArray();
 
 			if (empty($strFormStateRow)) {
-				// The formstate with that page ID was not found
+				// The formstate with that page ID was not found, or session expired.
 				return null;
 			}
 			$strSerializedForm = $strFormStateRow['state_data'];
 			$strSerializedForm = base64_decode($strSerializedForm);
-			//* Uncompress (if available)
+
 			if (function_exists('gzcompress')) {
 
 				$strSerializedForm = gzuncompress($strSerializedForm);
 			}
-			//*/
 
 			return $strSerializedForm;
 		}
