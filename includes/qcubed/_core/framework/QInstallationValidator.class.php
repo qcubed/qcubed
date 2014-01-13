@@ -227,6 +227,14 @@ abstract class QInstallationValidator {
 			$result[] = $obj;
 		}
 		
+		if (!QFolder::isWritable(__DOCROOT__ . __APP_CSS_ASSETS__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "css assets directory (" . __DOCROOT__ . __APP_CSS_ASSETS__ . ") " .
+				"needs to be writable for the less compiler to output the generated css files there";
+			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __APP_CSS_ASSETS__;
+			$result[] = $obj;
+		}
+
 		// Database connection string checks
 		for ($i = 1; $i < 1 + sizeof(QApplication::$Database); $i++) {
 			if (!isset(QApplication::$Database[$i]))

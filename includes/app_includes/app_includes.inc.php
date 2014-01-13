@@ -1,5 +1,6 @@
 <?php
 	/*
+<<<<<<< HEAD
 	 * =============================================
 	 * AVAILING YOUR CUSTOM CLASSES FOR AUTOLOADING
 	 * =============================================
@@ -65,5 +66,22 @@
 	 *      by doing a "require_once 'my_includes.inc.php';". This will make sure that an overwrite upgrade does
 	 *      cause much trouble (all you would need to do is to add one line).
 	 * ================ [END] ================
-         */
+    */
+
+	QApplicationBase::$ClassFile['qcallback'] = __APP_INCLUDES__ . '/classes/QCallback.class.php';
+	QApplicationBase::$ClassFile['qgenericcallback'] = __APP_INCLUDES__ . '/classes/QCallback.class.php';
+	QApplicationBase::$ClassFile['qsimplecallback'] = __APP_INCLUDES__ . '/classes/QCallback.class.php';
+	QApplicationBase::$ClassFile['qlambdacallback'] = __APP_INCLUDES__ . '/classes/QCallback.class.php';
+	QApplicationBase::$ClassFile['qclosurecallback'] = __APP_INCLUDES__ . '/classes/QCallback.class.php';
+	QApplicationBase::$ClassFile['qmethodcallback'] = __APP_INCLUDES__ . '/classes/QCallback.class.php';
+	QApplicationBase::$ClassFile['dialogclosingcallback'] = __APP_INCLUDES__ . '/classes/QCallback.class.php';
+
+	QApplicationBase::$ClassFile['qdiv'] = __APP_INCLUDES__ . '/classes/QDiv.class.php';
+	QApplicationBase::$ClassFile['topmenu'] = __APP_INCLUDES__ . '/classes/TopMenu.class.php';
+
+	QApplicationBase::$ClassFile['qgenericsearchoptions'] = __APP_INCLUDES__ . '/classes/QGenericSearchOptions.class.php';
+	QApplicationBase::$ClassFile['searchterm'] = __APP_INCLUDES__ . '/classes/QGenericSearchOptions.class.php';
+
+	QApplicationBase::$ClassFile['searchcontrol'] = __APP_INCLUDES__ . '/classes/SearchPanel.class.php';
+	QApplicationBase::$ClassFile['searchpanel'] = __APP_INCLUDES__ . '/classes/SearchPanel.class.php';
 ?>

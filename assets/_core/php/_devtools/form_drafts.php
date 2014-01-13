@@ -44,6 +44,7 @@
 ?>
 		<h1>Panel Drafts &ldquo;AJAX Dashboard&rdquo;</h1>
 		<p class="create"><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __PANEL_DRAFTS__) ?>">Go to Dashboard</a></p>
+		<p class="create"><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__ . '/panel_drafts_tabs.php') ?>">Go to Tabs based Dashboard</a></p>
 	</div>
 
 <?php require (__CONFIGURATION__ . '/footer.inc.php'); ?>

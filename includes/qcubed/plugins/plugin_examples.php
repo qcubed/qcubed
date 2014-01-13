@@ -4,4 +4,20 @@
  * QCubed framework. Please do not modify.
  */
 
+//// BEGIN QJqDateTimePicker
+Examples::AddPluginExampleFile('QJqDateTimePicker', 'example/datetimepicker.php QJqDateTimePicker: Date time picker control');
+//// END QJqDateTimePicker
+
+//// BEGIN QDataTables
+Examples::AddPluginExampleFile('QDataTables', 'example/datatable.php QDataTables: table control based on jQuery DataTables plugin');
+//// END QDataTables
+
+//// BEGIN QDateRangePicker
+Examples::AddPluginExampleFile('QDateRangePicker', 'example/daterangepicker.php QDateRangePicker: Date range picker control');
+//// END QDateRangePicker
+
+//// BEGIN QDateRangePicker
+Examples::AddPluginExampleFile('QSelect2ListBox', 'example/select2listbox.php QSelect2ListBox: QSelect2ListBox: selector control based on select2 JQuery plugin');
+//// END QDateRangePicker
+
 ?>
