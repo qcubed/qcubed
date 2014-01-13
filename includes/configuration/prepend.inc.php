@@ -25,6 +25,8 @@
 			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 			define ('__MODEL__', __INCLUDES__ . '/model' );
+			define ('__META_CONTROLS__', __INCLUDES__ . '/meta_controls');
+			define ('__META_CONTROLS_GEN__', __META_CONTROLS__ . '/generated');
 			define ('__MODEL_GEN__', __MODEL__ . '/generated' );
 		}
 
