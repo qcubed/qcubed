@@ -31,7 +31,7 @@
 	 */
 
 	// Versioning Information
-	define('QCUBED_VERSION_NUMBER_ONLY', '2.2.2');
+	define('QCUBED_VERSION_NUMBER_ONLY', '2.2.3');
 	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Development Release (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
 	
 	define('__JQUERY_CORE_VERSION__', '1.9.1');
