@@ -1,4 +1,171 @@
 <?php
+	if(!class_exists('QAbstractCacheProvider')){
+		include_once __QCUBED_CORE__ . '/framework/QAbstractCacheProvider.class.php';
+	}
+	
+	/**
+	 * The interface for cache actions to be queued and replayed.
+	 */
+	interface ICacheAction {
+		/**
+		 * Executes action on the given cache object
+		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
+		 */
+		public function Execute(QAbstractCacheProvider $objCache);
+	}
+	/**
+	 * The Set cache action to be queued and replayed.
+	 */
+	class QCacheSetAction implements ICacheAction {
+		/**
+		 * @var string the key to use for the object
+		 */
+		protected $strKey;
+		/**
+		 * @var object the object to put in the cache
+		 */
+		protected $objValue;
+
+		/**
+		 * Construct the new QCacheSetAction object.
+		 * @param string $strKey the key to use for the object
+		 * @param object $objValue the object to put in the cache
+		 */
+		public function __construct($strKey, $objValue) {
+			$this->strKey = $strKey;
+			$this->objValue = $objValue;
+		}
+
+		/**
+		 * Executes action on the given cache object
+		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
+		 */
+		public function Execute(QAbstractCacheProvider $objCache) {
+			$objCache->Set($this->strKey, $this->objValue);
+		}
+	}
+	/**
+	 * The Delete cache action to be queued and replayed.
+	 */
+	class QCacheDeleteAction implements ICacheAction {
+		/**
+		 * @var string the key to use for the object
+		 */
+		protected $strKey;
+
+		/**
+		 * Construct the new QCacheDeleteAction object.
+		 * @param string $strKey the key to use for the object
+		 */
+		public function __construct($strKey) {
+			$this->strKey = $strKey;
+		}
+
+		/**
+		 * Executes action on the given cache object
+		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
+		 */
+		public function Execute(QAbstractCacheProvider $objCache) {
+			$objCache->Delete($this->strKey);
+		}
+	}
+	/**
+	 * The DeleteAll cache action to be queued and replayed.
+	 */
+	class QCacheDeleteAllAction implements ICacheAction {
+		/**
+		 * Construct the new QCacheDeleteAction object.
+		 */
+		public function __construct() {
+		}
+
+		/**
+		 * Executes action on the given cache object
+		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
+		 */
+		public function Execute(QAbstractCacheProvider $objCache) {
+			$objCache->DeleteAll();
+		}
+	}
+	/**
+	 * Cache provider that records all additions and removals from the cache,
+	 * and provides an interface to replay them on another instance of an QAbstractCacheProvider
+	 */
+	class QCacheProviderProxy extends QAbstractCacheProvider {
+		/**
+		 * @var array Additions to cache
+		 */
+		protected $arrLocalCacheAdditions;
+		/**
+		 * @var array Removals from cache
+		 */
+		protected $arrLocalCacheRemovals;
+		/**
+		 * @var QAbstractCacheProvider The super cache to query values from.
+		 */
+		protected $objSuperCache;
+
+		/**
+		 * @var ICacheAction[] The queue of actions performed on this cache. 
+		 */
+		protected $objCacheActionQueue;
+
+		/**
+		 * @param QAbstractCacheProvider $objSuperCache The super cache to query values from.
+		 */
+		public function __construct($objSuperCache) {
+			$this->objSuperCache = $objSuperCache;
+			$this->objCacheActionQueue = array();
+			$this->arrLocalCacheAdditions = array();
+			$this->arrLocalCacheRemovals = array();
+		}
+		
+		/**
+		 * Apply changes to the cache object supplyed.
+		 * @param QAbstractCacheProvider $objAbstractCacheProvider The cache object to apply changes.
+		 */
+		public function Replay($objAbstractCacheProvider) {
+			foreach ($this->objCacheActionQueue as $objCacheAction) {
+				$objCacheAction->Execute($objAbstractCacheProvider);
+			}
+			$this->objCacheActionQueue = array();
+		}
+			
+		public function Get($strKey) {
+			if (isset($this->arrLocalCacheAdditions[$strKey])) {
+				return $this->arrLocalCacheAdditions[$strKey];
+			}
+			if (!isset($this->arrLocalCacheRemovals[$strKey])) {
+				if ($this->objSuperCache) {
+					return $this->objSuperCache->Get($strKey);
+				}
+			}
+			return false;
+		}
+
+		public function Set($strKey, $objValue) {
+			$this->arrLocalCacheAdditions[$strKey] = $objValue;
+			if (isset($this->arrLocalCacheRemovals[$strKey])) {
+				unset($this->arrLocalCacheRemovals[$strKey]);
+			}
+			$this->objCacheActionQueue[] = new QCacheSetAction($strKey, $objValue);
+		}
+
+		public function Delete($strKey) {
+			if (isset($this->arrLocalCacheAdditions[$strKey])) {
+				unset($this->arrLocalCacheAdditions[$strKey]);
+			}
+			$this->arrLocalCacheRemovals[$strKey] = true;
+			$this->objCacheActionQueue[] = new QCacheDeleteAction($strKey);
+		}
+
+		public function DeleteAll() {
+			$this->arrLocalCacheAdditions = array();
+			$this->arrLocalCacheRemovals = array();
+			$this->objCacheActionQueue[] = new QCacheDeleteAllAction;
+		}
+	}
+	
 	/**
 	 * Every database adapter must implement the following 5 classes (all which are abstract):
 	 * * DatabaseBase
@@ -28,7 +195,7 @@
 	 * @property-read string $Host
 	 * @property-read string $Username
 	 * @property-read string $Password
-	 * @property-read boolean $Caching if true objects loaded from this database will be kept in cache (assuming a cache provider is also configured)
+	 * @property boolean $Caching if true objects loaded from this database will be kept in cache (assuming a cache provider is also configured)
 	 * @property-read string $DateFormat
 	 * @property-read boolean $OnlyFullGroupBy database adapter sub-classes can override and set this property to true
 	 *      to prevent the behavior of automatically adding all the columns to the select clause when the query has
@@ -37,10 +204,13 @@
 	 */
 	abstract class QDatabaseBase extends QBaseClass {
 		// Must be updated for all Adapters
+		/** Adapter name */
 		const Adapter = 'Generic Database Adapter (Abstract)';
 
 		// Protected Member Variables for ALL Database Adapters
+		/** @var int Database Index according to the configuration file */
 		protected $intDatabaseIndex;
+		/** @var bool Has the profiling been enabled? */
 		protected $blnEnableProfiling;
 		protected $strProfileArray;
 
@@ -58,6 +228,13 @@
 		 * It is used to implement the recursive transaction functionality.
 		 */
 		protected $intTransactionDepth = 0;
+		
+		/**
+		 * @var QStack The stack of cache providers.
+		 * It is populated with cache providers from different databases,
+		 * if there are transaction of one DB in the middle of the transaction of another DB.
+		 */
+		protected static $objCacheProviderStack;
 
 		// Abstract Methods that ALL Database Adapters MUST implement
 		abstract public function Connect();
@@ -101,6 +278,14 @@
 		public final function TransactionBegin() {
 			if (0 == $this->intTransactionDepth) {
 				$this->ExecuteTransactionBegin();
+				$objCacheProvider = QApplication::$objCacheProvider;
+				if ($objCacheProvider && $this->Caching && !($objCacheProvider instanceof QCacheProviderNoCache)) {
+					if (!self::$objCacheProviderStack) {
+						self::$objCacheProviderStack = new QStack;
+					}
+					self::$objCacheProviderStack->Push($objCacheProvider);
+					QApplication::$objCacheProvider = new QCacheProviderProxy($objCacheProvider);
+				}
 			}
 			$this->intTransactionDepth++;
 		}
@@ -111,6 +296,8 @@
 		public final function TransactionCommit() {
 			if (1 == $this->intTransactionDepth) {
 				$this->ExecuteTransactionCommit();
+				$this->transactionCacheFlush();
+				$this->transactionCacheRestore();
 			}
 			if ($this->intTransactionDepth <= 0) {
 				throw new QCallerException("The transaction commit call is called before the transaction begin was called.");
@@ -124,6 +311,30 @@
 		public final function TransactionRollBack() {
 			$this->ExecuteTransactionRollBack();
 			$this->intTransactionDepth = 0;
+			$this->transactionCacheRestore();
+		}
+		
+		/**
+		 * Flushes all objects from the local cache to the actual one.
+		 */
+		protected final function transactionCacheFlush() {
+			if (!self::$objCacheProviderStack || self::$objCacheProviderStack->IsEmpty()) {
+				return;
+			}
+			$objCacheProvider = self::$objCacheProviderStack->PeekLast();
+			QApplication::$objCacheProvider->Replay($objCacheProvider);
+		}
+
+		/**
+		 * Restores the actual cache to the QApplication variable.
+		 */
+		protected final function transactionCacheRestore() {
+			if (!self::$objCacheProviderStack || self::$objCacheProviderStack->IsEmpty()) {
+				return;
+			}
+			$objCacheProvider = self::$objCacheProviderStack->Pop();
+			// restore the actual cache to the QApplication variable.
+			QApplication::$objCacheProvider = $objCacheProvider;
 		}
 
 		abstract public function SqlLimitVariablePrefix($strLimitInfo);
@@ -268,9 +479,8 @@
 				
 				case 'Username':
 				case 'Password':
-					return $this->objConfigArray[strtolower($strName)];
 				case 'Caching':
-					return $this->objConfigArray['caching'];
+					return $this->objConfigArray[strtolower($strName)];
 				case 'DateFormat':
 					return (is_null($this->objConfigArray[strtolower($strName)])) ? (QDateTime::FormatIso) : ($this->objConfigArray[strtolower($strName)]);
 				case 'OnlyFullGroupBy':
@@ -279,6 +489,22 @@
 				default:
 					try {
 						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+		
+		public function __set($strName, $mixValue) {
+			switch ($strName) {
+				case 'Caching':
+					$this->objConfigArray[strtolower($strName)] = $mixValue;
+					break;
+
+				default:
+					try {
+						parent::__set($strName, $mixValue);
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -644,7 +870,8 @@
 	}
 
 	/**
-	 *
+	 * @property-read int $ErrorNumber The number of error provided by the SQL server
+	 * @property-read string $Query The query caused the error
 	 * @package DatabaseAdapters
 	 */
 	abstract class QDatabaseExceptionBase extends QCallerException {

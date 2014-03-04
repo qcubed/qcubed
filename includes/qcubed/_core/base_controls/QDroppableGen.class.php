@@ -47,7 +47,8 @@
 	/**
 	 * Triggered when the droppable is created.<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
-	 * 		</li></ul>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDroppable_CreateEvent extends QJqUiEvent {
 		const EventName = 'dropcreate';
@@ -88,7 +89,8 @@
 	 * Triggered when an accepted draggable is dragged out of the droppable (based
 	 * 		on the<a><code>tolerance</code></a> option).<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
-	 * 		</li></ul>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QDroppable_OutEvent extends QJqUiEvent {
 		const EventName = 'dropout';
@@ -212,27 +214,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . $strParentScript;
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -242,21 +254,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables the droppable.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Enables the droppable.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -265,7 +277,7 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -273,7 +285,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the droppable option associated with the specified
@@ -285,7 +297,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the droppable.<ul><li><strong>options</strong>
@@ -293,7 +305,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 
 
@@ -322,16 +334,16 @@
 				case 'Accept':
 					$this->mixAccept = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'accept', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'accept', $mixValue);
 					}
 					break;
 
 				case 'ActiveClass':
 					try {
 						$this->strActiveClass = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'activeClass', $this->strActiveClass);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'activeClass', $this->strActiveClass);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -342,8 +354,8 @@
 				case 'AddClasses':
 					try {
 						$this->blnAddClasses = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'addClasses', $this->blnAddClasses);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'addClasses', $this->blnAddClasses);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -354,8 +366,8 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -366,8 +378,8 @@
 				case 'Greedy':
 					try {
 						$this->blnGreedy = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'greedy', $this->blnGreedy);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'greedy', $this->blnGreedy);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -378,8 +390,8 @@
 				case 'HoverClass':
 					try {
 						$this->strHoverClass = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'hoverClass', $this->strHoverClass);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'hoverClass', $this->strHoverClass);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -390,8 +402,8 @@
 				case 'Scope':
 					try {
 						$this->strScope = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scope', $this->strScope);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'scope', $this->strScope);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -402,8 +414,8 @@
 				case 'Tolerance':
 					try {
 						$this->strTolerance = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'tolerance', $this->strTolerance);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'tolerance', $this->strTolerance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

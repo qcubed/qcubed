@@ -34,7 +34,7 @@
 
 		protected $objPgSql;
 		protected $objMostRecentResult;
-		protected $blnOnlyFullGroupBy = true;
+		//protected $blnOnlyFullGroupBy = true;
 
 		public function SqlVariable($mixData, $blnIncludeEquality = false, $blnReverseEquality = false) {
 			// Are we SqlVariabling a BOOLEAN value?
@@ -245,7 +245,7 @@
 		}
 
 		public function GetTables() {
-			$objResult = $this->Query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = current_schema() ORDER BY TABLE_NAME ASC");
+			$objResult = $this->Query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = current_schema() AND TABLE_TYPE = 'BASE TABLE' ORDER BY TABLE_NAME ASC");
 			$strToReturn = array();
 			while ($strRowArray = $objResult->FetchRow())
 				array_push($strToReturn, $strRowArray[0]);
@@ -550,47 +550,44 @@
 		}
 
 		public function GetColumn($strColumnName, $strColumnType = null) {
-			if (array_key_exists($strColumnName, $this->strColumnArray)) {
-				$strColumnValue = $this->strColumnArray[$strColumnName];
-				if (is_null($strColumnValue))
-					return null;
-
-				switch ($strColumnType) {
-					case QDatabaseFieldType::Bit:
-						// PostgreSQL returns 't' or 'f' for boolean fields
-						if ($strColumnValue == 'f') {
-							return false;
-						} else {
-							return ($strColumnValue) ? true : false;
-						}
-						
-					case QDatabaseFieldType::Blob:
-					case QDatabaseFieldType::Char:
-					case QDatabaseFieldType::VarChar:
-						return QType::Cast($strColumnValue, QType::String);
-
-					case QDatabaseFieldType::Date:
-					case QDatabaseFieldType::DateTime:
-					case QDatabaseFieldType::Time:
-						return new QDateTime($strColumnValue);
-
-					case QDatabaseFieldType::Float:
-						return QType::Cast($strColumnValue, QType::Float);
-
-					case QDatabaseFieldType::Integer:
-						return QType::Cast($strColumnValue, QType::Integer);
-
-					default:
-						return $strColumnValue;
-				}
-			} else
+			if (!isset($this->strColumnArray[$strColumnName])) {
 				return null;
+			}
+			$strColumnValue = $this->strColumnArray[$strColumnName];
+			switch ($strColumnType) {
+				case QDatabaseFieldType::Bit:
+					// PostgreSQL returns 't' or 'f' for boolean fields
+					if ($strColumnValue == 'f') {
+						return false;
+					} else {
+						return ($strColumnValue) ? true : false;
+					}
+					
+				case QDatabaseFieldType::Blob:
+				case QDatabaseFieldType::Char:
+				case QDatabaseFieldType::VarChar:
+					return QType::Cast($strColumnValue, QType::String);
+
+				case QDatabaseFieldType::Date:
+				case QDatabaseFieldType::DateTime:
+				case QDatabaseFieldType::Time:
+					return new QDateTime($strColumnValue);
+
+				case QDatabaseFieldType::Float:
+					return QType::Cast($strColumnValue, QType::Float);
+
+				case QDatabaseFieldType::Integer:
+					return QType::Cast($strColumnValue, QType::Integer);
+
+				default:
+					return $strColumnValue;
+			}
 		}
 
 		public function ColumnExists($strColumnName) {
 			return array_key_exists($strColumnName, $this->strColumnArray);
 		}
-
+		
 		public function GetColumnNameArray() {
 			return $this->strColumnArray;
 		}
@@ -689,18 +686,22 @@
 			switch ($this->strType) {
 				case 'integer':
 				case 'smallint':
+				case 'bigint': // 8-byte. PHP int sizes are platform dependent. On 64-bit machines,
+							   // this is fine. On 32-bit, PHP will convert to float for numbers too big.
+							   // However, we do NOT want to return a float, as we lose the ability to 
+							   // compare against real integers. (float(0) != int(0))! Assume the developer knows what he
+							   // is doing if he uses these.
+							   // http://php.net/manual/en/language.types.integer.php
 					$this->strType = QDatabaseFieldType::Integer;
+					
 					break;
 				case 'money':
 					// NOTE: The money type is deprecated in PostgreSQL.
 					throw new QPostgreSqlDatabaseException('Unsupported Field Type: money.  Use numeric or decimal instead.', 0,null);
 					break;
-				case 'bigint':
 				case 'decimal':
 				case 'numeric':					
 				case 'real':
-					// "BIGINT" must be specified here as a float so that PHP can support it's size
-					// http://www.postgresql.org/docs/8.2/static/datatype-numeric.html
 					$this->strType = QDatabaseFieldType::Float;
 					break;					
 				case 'bit':

@@ -146,10 +146,11 @@
 		/**
 		 * Sends a message out via SMTP according to the server, ip, etc. preferences
 		 * as set up on the class.  Takes in a QEmailMessage object.
-		 *
 		 * Will throw a QEmailException exception on any error.
 		 *
 		 * @param QEmailMessage $objMessage Message to Send
+		 *
+		 * @throws QEmailException
 		 * @return void
 		 */
 		public static function Send(QEmailMessage $objMessage) {

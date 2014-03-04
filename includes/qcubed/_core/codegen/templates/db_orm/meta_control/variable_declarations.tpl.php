@@ -40,6 +40,14 @@
 		 * @access protected
 		 */
 		protected $<?php echo $objCodeGen->FormLabelVariableNameForColumn($objColumn);  ?>;
+		
+<?php if ($objColumn->VariableType == 'QDateTime') {?>
+		/**
+		 * @var str<?php echo $objColumn->PropertyName  ?>DateTimeFormat
+		 * @access protected
+		 */
+		protected $str<?php echo $objColumn->PropertyName  ?>DateTimeFormat;
+<?php } ?>
 <?php } ?>
 <?php } ?>
 
@@ -56,7 +64,7 @@
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
 		protected $<?php echo $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference);  ?>;
-		protected $str<?php echo $objManyToManyReference->ObjectDescription;  ?>Glue;
+		protected $str<?php echo $objManyToManyReference->ObjectDescription;  ?>Glue = ', ';
 <?php } ?>
 
 		// QLabel Controls (if applicable) to view Unique ReverseReferences and ManyToMany References

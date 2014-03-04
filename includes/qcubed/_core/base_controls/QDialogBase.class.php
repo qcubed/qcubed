@@ -14,6 +14,7 @@
 	 * Add an action to this event to get a button click.
 	 */
 	class QDialog_ButtonEvent extends QEvent {
+		/** Event Name */
 		const EventName = 'QDialog_Button';	
 	}
 
@@ -59,9 +60,14 @@
 	
 	class QDialogBase extends QDialogGen
 	{
+        /** @var  string Id of last button clicked. */
 		protected $strClickedButtonId;
+        /** @var bool Should we draw a close button on the top? */
 		protected $blnHasCloseButton = true;
+        /** @var bool  */
 		protected $blnUseWrapper = true;	// fix for jQuery UI interaction problem with Ajax updated dialogs.
+        /** @var bool records whether button is open */
+        protected $blnIsOpen = false;
 
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
@@ -77,16 +83,34 @@
 
 		protected function makeJqOptions() {
 			$strOptions = parent::makeJqOptions();
+            $controlId = $this->ControlId;
 
+            if (!$this->blnHasCloseButton) {
+                $strHideCloseButtonScript = '$j(this).parent().find(".ui-dialog-titlebar-close").hide();';
+            }
+            else {
+                $strHideCloseButtonScript = '';
+            }
 
-			if (!$this->blnHasCloseButton) {
-				if ($strOptions) $strOptions .= ', ';
-				$strOptions .= 'open: function(event, ui) { $j(this).parent().find(".ui-dialog-titlebar-close").hide(); }';
-			}
-			
-			//move both the dialog and the matte back into the form, to ensure they continue to function
-			if ($strOptions) $strOptions .= ', ';
-			$strOptions .= 'create: function() { $j(this).parent().appendTo($j("form:first")); }';
+            if ($strOptions) {
+                $strOptions .= ', ';
+            } else {
+                $strOptions = '';
+            }
+
+            $strOptions .= <<<FUNC
+                open: function(event, ui) {
+                    qcubed.recordControlModification("$controlId", "_IsOpen", true);
+                    $strHideCloseButtonScript
+			    },
+			    create: function() {
+			        \$j(this).parent().appendTo(\$j("form:first"));
+			    },
+			    close: function(event, ui) {
+			        qcubed.recordControlModification("$controlId", "_IsOpen", false);
+			    }
+FUNC;
+
 			return $strOptions;
 		}
 	
@@ -103,10 +127,10 @@
 				$this->mixButtons = array();
 			}
 			$controlId = $this->ControlId;
-			$strJS =<<<FUNC
+			$strJS =<<<BUTTONFUNC
 			qcubed.recordControlModification("$controlId", "_ClickedButton", "$strButtonId");
 			jQuery("#$controlId").trigger("QDialog_Button");
-FUNC;
+BUTTONFUNC;
 									
 			$this->mixButtons[$strButtonName] = new QJsClosure($strJS);
 									
@@ -128,7 +152,7 @@ FUNC;
 			$this->blnWrapperModified = false;
 		}
 
-		/**
+        /**
 		 * Hide the dialog
 		 * 
 		 * @deprecated
@@ -149,8 +173,18 @@ FUNC;
 						throw $objExc;
 					}
 					break;
-					
-				// set to false to remove the close x in upper right corner and disable the
+
+                case '_IsOpen': // Internal only, to detect when dialog has been opened or closed.
+                    try {
+                        $this->blnIsOpen = QType::Cast($mixValue, QType::Boolean);
+                        $this->blnAutoOpen = $this->blnIsOpen;  // in case it gets redrawn
+                    } catch (QInvalidCastException $objExc) {
+                        $objExc->IncrementOffset();
+                        throw $objExc;
+                    }
+                    break;
+
+                // set to false to remove the close x in upper right corner and disable the
 				// escape key as well
 				case 'HasCloseButton':
 					try {

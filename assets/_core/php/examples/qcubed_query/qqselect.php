@@ -21,11 +21,13 @@
 	As shown in the second example below, it can also be passed as an argument to QQ::Expand()
 	to pick specific columns to fetch for the object to be expanded.</p>
 	
-	<p>Note, that when QQ::Select is used, the primary keys are always automatically added to the select list.
+	<p>Note, that when QQ::Select is used, by default the primary keys are automatically added to the select list.
 	This is illustrated by the first example below, where QQN::Person()->Id is not part of the QQ::Select list,
-	but $objPerson->Id is populated and used afterwards.</p>
+	but $objPerson->Id is populated and used afterwards. This behaviour can be changed by using using the <strong>SetSkipPrimaryKey()</strong>
+	method of <strong>QQSelect</strong>, as shown in the second example. This is typically useful for simple queries with the <em>distict</em>
+	clause, where the presence of the primary keys would prevent <em>distinct</em> from having the desired effect</p>
 	
-	<p>One QQ::Select() can be used to select multiple columns, as shown in the third example below:</p>
+	<p>One QQ::Select() can be used to select multiple columns, as shown in the fourth example below:</p>
 	<pre><code>QQ::Select(QQN::Person()->Address->Street, QQN::Person()->Address->City)</code></pre>
 
 	<p>The same example also shows the use of QQ::Select in QQ::ExpandAsArray.</p>
@@ -39,7 +41,7 @@
 </div>
 
 <div id="demoZone">
-	<h2>Get <em>the first names</em> of all the people</h2>
+	<h2>1. Get <em>the first names</em> of all the people</h2>
 	<ul>
 <?php
 QApplication::$Database[1]->EnableProfiling();
@@ -54,7 +56,24 @@ QApplication::$Database[1]->EnableProfiling();
 ?>
 	</ul>
 
-	<h2>Get the last names of all the people, and the amount spent on the project they manage (if any), for Projects that
+	<h2>2. Get all the distinct <em>first names</em> of all the people</h2>
+	<ul>
+<?php
+QApplication::$Database[1]->EnableProfiling();
+	$objSelect = QQ::Select(QQN::Person()->FirstName);
+	$objSelect->SetSkipPrimaryKey(true);
+	$objPersonArray = Person::LoadAll(QQ::Clause($objSelect, QQ::Distinct()));
+
+	foreach ($objPersonArray as $objPerson) {
+		printf('<li>%s</li>',
+			   QApplication::HtmlEntities($objPerson->FirstName));
+		assert(is_null($objPerson->Id));
+		assert(is_null($objPerson->LastName));
+	}
+?>
+	</ul>
+
+	<h2>3. Get the last names of all the people, and the amount spent on the project they manage (if any), for Projects that
 	have 'ACME' or 'HR' in it. Sort the result by Last Name, then First Name</h2>
 	<p><i>Notice how some people may be listed twice, if they manage more than one project.</i></p>
 	<ul>
@@ -79,7 +98,7 @@ QApplication::$Database[1]->EnableProfiling();
 	}
 ?>
 	</ul>
-	<h3>Projects and Addresses for each Person</h3>
+	<h2>4. Projects and Addresses for each Person</h2>
 	<ul>
 <?php
 	$people = Person::LoadAll(

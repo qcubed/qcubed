@@ -7,6 +7,11 @@
 	 * be called whenever an InvalidCastException is caught and rethrown).
 	 */
 	class QInvalidCastException extends QCallerException {
+		/**
+		 * Constructor
+		 * @param string $strMessage
+		 * @param int    $intOffset
+		 */
 		public function __construct($strMessage, $intOffset = 2) {
 			parent::__construct($strMessage, $intOffset);
 		}
@@ -56,7 +61,8 @@
 		 * The Type object should never be instantiated, and this constructor
 		 * override simply guarantees it.
 		 *
-		 * @return void
+		 * @throws QCallerException
+		 * @return \QType
 		 */
 		public final function __construct() {
 			throw new QCallerException('Type should never be instantiated.  All methods and variables are publically statically accessible.');

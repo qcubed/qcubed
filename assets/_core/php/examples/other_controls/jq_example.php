@@ -17,9 +17,12 @@
 		protected $Accordion;
 		/** @var QAutocomplete */
 		protected $Autocomplete1;
+		/** @var QAutocomplete */
 		protected $Autocomplete2;
 		/** @var QAutocomplete */
 		protected $AjaxAutocomplete;
+		/** @var QAutocomplete */
+		protected $AjaxAutocomplete2;
 		/** @var QJqButton */
 		protected $Button;
 		/** @var QJqCheckBox */
@@ -50,6 +53,12 @@
 		protected $Slider2;
 		/** @var QTabs */
 		protected $Tabs;
+        /** @var  QJqButton */
+        protected $btnShowDialog;
+        /** @var  QTextBox */
+        protected $txtDlgTitle;
+        /** @var  QTextBox */
+        protected $txtDlgText;
 
 		// Array we'll use to demonstrate the autocomplete functionality
 		static private $LANGUAGES = array("c++", "java", "php",
@@ -144,7 +153,14 @@
 			$this->AjaxAutocomplete = new QAutocomplete($this);
 			$this->AjaxAutocomplete->SetDataBinder("update_autocompleteList");
 			$this->AjaxAutocomplete->AddAction (new QAutocomplete_ChangeEvent(), new QAjaxAction ('ajaxautocomplete_change'));
-
+			$this->AjaxAutocomplete->DisplayHtml = true;
+			$this->AjaxAutocomplete->Name = 'With Html Display';
+			
+			$this->AjaxAutocomplete2 = new QAutocomplete($this);
+			$this->AjaxAutocomplete2->MultipleValueDelimiter = ',';
+			$this->AjaxAutocomplete2->SetDataBinder("update_autocompleteList");
+			$this->AjaxAutocomplete2->Name = 'Multiple selection';
+			
 			// Button
 			$this->Button = new QJqButton($this);
 			$this->Button->Label = "Click me";	// Label overrides Text
@@ -204,8 +220,23 @@
 			$this->Dialog->AddButton ('Cancel', 'cancel');
 			$this->Dialog->AddButton ('OK', 'ok');
 			$this->Dialog->AddAction (new QDialog_ButtonEvent(), new QAjaxAction ('dialog_press'));
-			
-			// Progressbar
+            $this->Dialog->AutoOpen = false;
+
+            $this->btnShowDialog = new QJqButton($this);
+            $this->btnShowDialog->Text = 'Show Dialog';
+            $this->btnShowDialog->AddAction (new QClickEvent(), new QShowDialog ($this->Dialog));
+
+            $this->txtDlgTitle = new QTextBox($this);
+            $this->txtDlgTitle->Name = "Set Title To:";
+            $this->txtDlgTitle->AddAction (new QKeyPressEvent(10), new QAjaxAction('dlgTitle_Change'));
+            $this->txtDlgTitle->AddAction (new QBackspaceKeyEvent(10), new QAjaxAction('dlgTitle_Change'));
+
+            $this->txtDlgText = new QTextBox($this);
+            $this->txtDlgText->Name = "Set Text To:";
+            $this->txtDlgText->AddAction (new QKeyPressEvent(10), new QAjaxAction('dlgText_Change'));
+            $this->txtDlgText->AddAction (new QBackspaceKeyEvent(10), new QAjaxAction('dlgText_Change'));
+
+            // Progressbar
 			$this->Progressbar = new QProgressbar($this);
 			$this->Progressbar->Value = 37;
 	
@@ -232,28 +263,38 @@
 			$this->Tabs->Headers = array('One', 'Two', 'Three');
 		}
 
-		protected function update_autocompleteList() {
-			$strTyped = $this->AjaxAutocomplete->Text;
+		protected function update_autocompleteList($strFormId, $strControlId, $strParameter) {
+			$strLookup = $strParameter;
+			$objControl = $this->GetControl ($strControlId);
 			
 			$cond = QQ::OrCondition (
-						QQ::Like (QQN::Person()->FirstName, '%' . $strTyped . '%'),
-						QQ::Like (QQN::Person()->LastName, '%' . $strTyped . '%')
+						QQ::Like (QQN::Person()->FirstName, '%' . $strLookup . '%'),
+						QQ::Like (QQN::Person()->LastName, '%' . $strLookup . '%')
 					);
 					
 			$clauses[] = QQ::OrderBy (QQN::Person()->LastName, QQN::Person()->FirstName);
 					
 			$lst = Person::QueryArray ($cond, $clauses);
 			
-			// If you implement Person::__toString in the model->Person.class.php file, you 
-			// could just pass the $lst to the DataSource.
-			// Instead, we will  build the list using autcomplete list items
+			/*
+			 * If you implement Person::__toString in the model->Person.class.php file, you
+			 * could just pass the $lst to the DataSource. If you want to add a 'label' item
+			 * to the display, you can override toJsObject in the People.class.php file.
+			 * 
+			 * For puposes of this example, we will build a custom list using list items below.
+			 * 
+			 */  
 			
 			//$this->AjaxAutocomplete->DataSource = $lst; 
 			$a = array();
 			foreach ($lst as $objPerson) {
-				$a[] = new QListItem ($objPerson->FirstName . ' ' . $objPerson->LastName, $objPerson->Id);
+				$item = new QListItem ($objPerson->FirstName . ' ' . $objPerson->LastName, $objPerson->Id);
+				if ($objControl->DisplayHtml) {
+					$item->Label = '<em>' . $objPerson->FirstName . ' ' . $objPerson->LastName . '</em>';
+				}
+				$a[] = $item;
 			}
-			$this->AjaxAutocomplete->DataSource = $a;
+			$objControl->DataSource = $a;
 		}
 		
 		protected function ajaxautocomplete_change() {
@@ -311,8 +352,18 @@
 		protected function accordion_change() {
 			QApplication::DisplayAlert ($this->Accordion->Active . ' selected.');
 		}
-		
-	}
+
+        protected function dlgTitle_Change($strFormId, $strControlId, $strParameter) {
+            $strNewTitle = $this->txtDlgTitle->Text;
+            $this->Dialog->Title = $strNewTitle;
+        }
+
+        protected function dlgText_Change($strFormId, $strControlId, $strParameter) {
+            $strNewText = $this->txtDlgText->Text;
+            $this->Dialog->Text = $strNewText;
+        }
+
+    }
 
     ExampleForm::Run('ExampleForm');
 ?>

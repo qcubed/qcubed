@@ -75,15 +75,14 @@
 	 * 		and <code>type</code> has been determined. The <code>beforeLoad</code>
 	 * 		event occurs at the same time, and therefore has the same restrictions, as
 	 * 		the <code>beforeSend</code> callback from
-	 * 		<a><code>jQuery.ajax()</code></a>.</em></p><ul><li><strong>event</strong>
-	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
-	 * 		<ul><li><strong>tab</strong> Type: <a>jQuery</a> The tab that is being
-	 * 		loaded.</li> <li><strong>panel</strong> Type: <a>jQuery</a> The panel which
-	 * 		will be populated by the Ajax response.</li> <li><strong>jqXHR</strong>
-	 * 		Type: <a>jqXHR</a> The <code>jqXHR</code> object that is requesting the
-	 * 		content.</li> <li><strong>ajaxSettings</strong> Type: <a>Object</a> The
-	 * 		settings that will be used by <a><code>jQuery.ajax</code></a> to request
-	 * 		the content.</li></ul></li></ul>
+	 * 		<a><code>jQuery.ajax()</code></a>.</em></p><ul><li><strong>ui</strong>
+	 * 		Type: <a>Object</a>  <ul><li><strong>tab</strong> Type: <a>jQuery</a> The
+	 * 		tab that is being loaded.</li> <li><strong>panel</strong> Type:
+	 * 		<a>jQuery</a> The panel which will be populated by the Ajax response.</li>
+	 * 		<li><strong>jqXHR</strong> Type: <a>jqXHR</a> The <code>jqXHR</code> object
+	 * 		that is requesting the content.</li> <li><strong>ajaxSettings</strong>
+	 * 		Type: <a>Object</a> The settings that will be used by
+	 * 		<a><code>jQuery.ajax</code></a> to request the content.</li></ul></li></ul>
 	 */
 	class QTabs_BeforeLoadEvent extends QJqUiEvent {
 		const EventName = 'tabsbeforeload';
@@ -152,20 +151,19 @@
 	 * 		<li><strong>Number</strong>:  			The panel will fade out with the specified
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be hidden using the specified effect. 			The value can either be
-	 * 		the name of a built-in jQuery animation method, such as
+	 * 		the name of a built-in jQuery animateion method, such as
 	 * 		<code>"slideUp"</code>, or the name of a jQuery UI effect, such as
 	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
 	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
-	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
-	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
-	 * 		If the <code>effect</code> property contains the name of a jQuery method,
-	 * 		then that method will be used; otherwise it is assumed to be the name of a
+	 * 		If the value is an object, then <code>effect</code>, <code>duration</code>,
+	 * 		and <code>easing</code> properties may be provided. If the
+	 * 		<code>effect</code> property contains the name of a jQuery method, then
+	 * 		that method will be used; otherwise it is assumed to be the name of a
 	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
 	 * 		settings, you may include those settings in the object and they will be
 	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
 	 * 		omitted, then the default values will be used. If <code>effect</code> is
-	 * 		omitted, then <code>"fadeOut"</code> will be used. If <code>delay</code> is
-	 * 		omitted, then no delay is used.</li></ul>
+	 * 		omitted, then <code>"fadeOut"</code> will be used.</li></ul>
 	 * @property mixed $Show If and how to animate the showing of the panel.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
 	 * 		<code>false</code>, no animation will be used and the panel will be shown
@@ -174,20 +172,19 @@
 	 * 		<li><strong>Number</strong>:  			The panel will fade in with the specified
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be shown using the specified effect. 			The value can either be
-	 * 		the name of a built-in jQuery animation method, such as
+	 * 		the name of a built-in jQuery animateion method, such as
 	 * 		<code>"slideDown"</code>, or the name of a jQuery UI effect, such as
 	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
 	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
-	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
-	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
-	 * 		If the <code>effect</code> property contains the name of a jQuery method,
-	 * 		then that method will be used; otherwise it is assumed to be the name of a
+	 * 		If the value is an object, then <code>effect</code>, <code>duration</code>,
+	 * 		and <code>easing</code> properties may be provided. If the
+	 * 		<code>effect</code> property contains the name of a jQuery method, then
+	 * 		that method will be used; otherwise it is assumed to be the name of a
 	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
 	 * 		settings, you may include those settings in the object and they will be
 	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
 	 * 		omitted, then the default values will be used. If <code>effect</code> is
-	 * 		omitted, then <code>"fadeIn"</code> will be used.  If <code>delay</code> is
-	 * 		omitted, then no delay is used.</li></ul>
+	 * 		omitted, then <code>"fadeIn"</code> will be used.</li></ul>
 	 */
 
 	class QTabsGen extends QPanel	{
@@ -246,27 +243,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . $strParentScript;
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -276,14 +283,14 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables all tabs.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Disables a tab. The selected tab cannot be disabled. To disable more than
@@ -294,14 +301,14 @@
 		 * @param $index
 		 */
 		public function Disable1($index) {
-			$this->CallJqUiMethod("disable", $index);
+			$this->CallJqUiMethod(false, "disable", $index);
 		}
 		/**
 		 * Enables all tabs.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Enables a tab. To enable more than one tab at once reset the disabled
@@ -311,7 +318,7 @@
 		 * @param $index
 		 */
 		public function Enable1($index) {
-			$this->CallJqUiMethod("enable", $index);
+			$this->CallJqUiMethod(false, "enable", $index);
 		}
 		/**
 		 * Loads the panel content of a remote tab.<ul><li><strong>index</strong>
@@ -319,7 +326,7 @@
 		 * @param $index
 		 */
 		public function Load($index) {
-			$this->CallJqUiMethod("load", $index);
+			$this->CallJqUiMethod(false, "load", $index);
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -328,14 +335,14 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current tabs
 		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the tabs option associated with the specified
@@ -347,7 +354,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the tabs.<ul><li><strong>options</strong>
@@ -355,7 +362,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Process any tabs that were added or removed directly in the DOM and
@@ -364,7 +371,7 @@
 		 * accept any arguments.</li></ul>
 		 */
 		public function Refresh() {
-			$this->CallJqUiMethod("refresh");
+			$this->CallJqUiMethod(false, "refresh");
 		}
 
 
@@ -392,16 +399,16 @@
 				case 'Active':
 					$this->mixActive = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'active', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'active', $mixValue);
 					}
 					break;
 
 				case 'Collapsible':
 					try {
 						$this->blnCollapsible = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'collapsible', $this->blnCollapsible);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'collapsible', $this->blnCollapsible);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -412,16 +419,16 @@
 				case 'Disabled':
 					$this->mixDisabled = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'disabled', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'disabled', $mixValue);
 					}
 					break;
 
 				case 'Event':
 					try {
 						$this->strEvent = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'event', $this->strEvent);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'event', $this->strEvent);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -432,8 +439,8 @@
 				case 'HeightStyle':
 					try {
 						$this->strHeightStyle = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'heightStyle', $this->strHeightStyle);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'heightStyle', $this->strHeightStyle);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -444,16 +451,16 @@
 				case 'Hide':
 					$this->mixHide = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'hide', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'hide', $mixValue);
 					}
 					break;
 
 				case 'Show':
 					$this->mixShow = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'show', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'show', $mixValue);
 					}
 					break;
 

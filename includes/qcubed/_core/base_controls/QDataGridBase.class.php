@@ -45,10 +45,14 @@
 	 */
 	class QDataGridRow extends QControl {
 		public function GetHtml($strColumnsHtml) {
-			$strToReturn = sprintf('<tr id="%s" %s>%s</tr>', $this->strControlId, $this->GetAttributes(), $strColumnsHtml);
+			$strStyle = $this->GetStyleAttributes();
+			if (strlen($strStyle) > 0)
+				$strStyle = sprintf(' style="%s"', $strStyle);
+
+			$strToReturn = sprintf('<tr id="%s" %s%s>%s</tr>', $this->strControlId, $this->GetAttributes(), $strStyle, $strColumnsHtml);
 			return $strToReturn;
 		}
-		
+
 		protected function GetControlHtml() { }
 		public function ParsePostData() {}
 		public function Validate() {}
@@ -625,7 +629,12 @@
 						$this->prxDatagridSorting->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_col_" . $this->strActionParameter, false),
 						$this->objHeaderLinkStyle->GetAttributes(),
 						$strName);
-				} else
+				}
+				elseif ($objColumn instanceof QCheckBoxColumn) {	
+					$strCheck = $objColumn->chkSelectAll_Render(true);
+					$strToReturn .= sprintf("    <th %s>%s</th>\r\n", $this->objHeaderRowStyle->GetAttributes(), $strCheck);
+				}
+				else
 					$strToReturn .= sprintf("    <th %s>%s</th>\r\n", $this->objHeaderRowStyle->GetAttributes(), $objColumn->Name);
 				$intColumnIndex++;
 			}

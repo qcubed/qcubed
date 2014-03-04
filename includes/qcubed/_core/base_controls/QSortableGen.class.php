@@ -86,7 +86,9 @@
 	}
 	/**
 	 * Triggered when the sortable is created.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QSortable_CreateEvent extends QJqUiEvent {
 		const EventName = 'sortcreate';
@@ -111,10 +113,9 @@
 		const EventName = 'sortdeactivate';
 	}
 	/**
-	 * <p>This event is triggered when a sortable item is moved away from a
-	 * 		connected list.</p> 				<p><em>Note: This event is also triggered when a
-	 * 		sortable item is dropped.</em></p><ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * This event is triggered when a sortable item is moved away from a connected
+	 * 		list.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
 	 * 		representing the helper being sorted</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
@@ -292,7 +293,7 @@
 	 * 		be connected to. This is a one-way relationship, if you want the items to
 	 * 		be connected in both directions, the <code>connectWith</code> option must
 	 * 		be set on both sortable elements.
-	 * @property mixed $Containment <p>Defines a bounding box that the sortable items are constrained to while
+	 * @property mixed $Containment <p>Defines a bounding box that the sortable items are contrained to while
 	 * 		dragging.</p>  				<p>Note: The element specified for containment must have
 	 * 		a calculated width and height (though it need not be explicit). For
 	 * 		example, if you have <code>float: left</code> sortable children and specify
@@ -461,27 +462,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . $strParentScript;
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -492,7 +503,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Cancel() {
-			$this->CallJqUiMethod("cancel");
+			$this->CallJqUiMethod(false, "cancel");
 		}
 		/**
 		 * Removes the sortable functionality completely. This will return the element
@@ -500,21 +511,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables the sortable.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Enables the sortable.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -523,14 +534,14 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current sortable
 		 * options hash.<ul><li>This method does not accept any arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the sortable option associated with the specified
@@ -542,7 +553,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the sortable.<ul><li><strong>options</strong>
@@ -550,7 +561,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Refresh the sortable items. Triggers the reloading of all sortable items,
@@ -558,7 +569,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Refresh() {
-			$this->CallJqUiMethod("refresh");
+			$this->CallJqUiMethod(false, "refresh");
 		}
 		/**
 		 * Refresh the cached positions of the sortable items. Calling this method
@@ -566,7 +577,7 @@
 		 * does not accept any arguments.</li></ul>
 		 */
 		public function RefreshPositions() {
-			$this->CallJqUiMethod("refreshPositions");
+			$this->CallJqUiMethod(false, "refreshPositions");
 		}
 		/**
 		 * <p>Serializes the sortable's item <code>id</code>s into a form/ajax
@@ -597,7 +608,7 @@
 		 * @param $options
 		 */
 		public function Serialize($options) {
-			$this->CallJqUiMethod("serialize", $options);
+			$this->CallJqUiMethod(false, "serialize", $options);
 		}
 		/**
 		 * Serializes the sortable's item id's into an array of
@@ -608,7 +619,7 @@
 		 * @param $options
 		 */
 		public function ToArray($options) {
-			$this->CallJqUiMethod("toArray", $options);
+			$this->CallJqUiMethod(false, "toArray", $options);
 		}
 
 
@@ -654,16 +665,16 @@
 				case 'AppendTo':
 					$this->mixAppendTo = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'appendTo', $mixValue);
 					}
 					break;
 
 				case 'Axis':
 					try {
 						$this->strAxis = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'axis', $this->strAxis);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'axis', $this->strAxis);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -674,32 +685,32 @@
 				case 'Cancel':
 					$this->mixCancel = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'cancel', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'cancel', $mixValue);
 					}
 					break;
 
 				case 'ConnectWith':
 					$this->mixConnectWith = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'connectWith', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'connectWith', $mixValue);
 					}
 					break;
 
 				case 'Containment':
 					$this->mixContainment = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'containment', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'containment', $mixValue);
 					}
 					break;
 
 				case 'Cursor':
 					try {
 						$this->strCursor = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'cursor', $this->strCursor);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'cursor', $this->strCursor);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -710,16 +721,16 @@
 				case 'CursorAt':
 					$this->mixCursorAt = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'cursorAt', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'cursorAt', $mixValue);
 					}
 					break;
 
 				case 'Delay':
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'delay', $this->intDelay);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -730,8 +741,8 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -742,8 +753,8 @@
 				case 'Distance':
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'distance', $this->intDistance);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'distance', $this->intDistance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -754,8 +765,8 @@
 				case 'DropOnEmpty':
 					try {
 						$this->blnDropOnEmpty = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'dropOnEmpty', $this->blnDropOnEmpty);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'dropOnEmpty', $this->blnDropOnEmpty);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -766,8 +777,8 @@
 				case 'ForceHelperSize':
 					try {
 						$this->blnForceHelperSize = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'forceHelperSize', $this->blnForceHelperSize);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'forceHelperSize', $this->blnForceHelperSize);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -778,8 +789,8 @@
 				case 'ForcePlaceholderSize':
 					try {
 						$this->blnForcePlaceholderSize = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'forcePlaceholderSize', $this->blnForcePlaceholderSize);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'forcePlaceholderSize', $this->blnForcePlaceholderSize);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -790,8 +801,8 @@
 				case 'Grid':
 					try {
 						$this->arrGrid = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'grid', $this->arrGrid);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'grid', $this->arrGrid);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -802,32 +813,32 @@
 				case 'Handle':
 					$this->mixHandle = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'handle', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'handle', $mixValue);
 					}
 					break;
 
 				case 'Helper':
 					$this->mixHelper = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'helper', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'helper', $mixValue);
 					}
 					break;
 
 				case 'Items':
 					$this->mixItems = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'items', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'items', $mixValue);
 					}
 					break;
 
 				case 'Opacity':
 					try {
 						$this->intOpacity = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'opacity', $this->intOpacity);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'opacity', $this->intOpacity);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -838,8 +849,8 @@
 				case 'Placeholder':
 					try {
 						$this->strPlaceholder = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'placeholder', $this->strPlaceholder);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'placeholder', $this->strPlaceholder);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -850,16 +861,16 @@
 				case 'Revert':
 					$this->mixRevert = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'revert', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'revert', $mixValue);
 					}
 					break;
 
 				case 'Scroll':
 					try {
 						$this->blnScroll = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scroll', $this->blnScroll);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'scroll', $this->blnScroll);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -870,8 +881,8 @@
 				case 'ScrollSensitivity':
 					try {
 						$this->intScrollSensitivity = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scrollSensitivity', $this->intScrollSensitivity);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'scrollSensitivity', $this->intScrollSensitivity);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -882,8 +893,8 @@
 				case 'ScrollSpeed':
 					try {
 						$this->intScrollSpeed = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'scrollSpeed', $this->intScrollSpeed);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'scrollSpeed', $this->intScrollSpeed);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -894,8 +905,8 @@
 				case 'Tolerance':
 					try {
 						$this->strTolerance = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'tolerance', $this->strTolerance);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'tolerance', $this->strTolerance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -906,8 +917,8 @@
 				case 'ZIndex':
 					try {
 						$this->intZIndex = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'zIndex', $this->intZIndex);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'zIndex', $this->intZIndex);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

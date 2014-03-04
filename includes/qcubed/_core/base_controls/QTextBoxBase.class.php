@@ -9,7 +9,7 @@
 	 * This class will render an HTML Textbox -- which can either be [input type="text"],
 	 * [input type="password"] or [textarea] depending on the TextMode (see below).
 	 *
-	 * @package Controls
+	 * @package Controls\Base
 	 *
 	 * @property integer $Columns is the "cols" html attribute (applicable for MultiLine textboxes)
 	 * @property string $Format
@@ -70,6 +70,7 @@
 		protected $strTextMode = QTextMode::SingleLine;
 		/** @var string */
 		protected $strCrossScripting;
+		/** @var null  */
 		protected $objHTMLPurifierConfig = null;
 		/** @var bool */
 		protected $blnValidateTrimmed = false;
@@ -81,6 +82,12 @@
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Constructor for the QTextBox[Base]
+		 *
+		 * @param QControl|QForm $objParentObject
+		 * @param null|string    $strControlId
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 
@@ -103,8 +110,6 @@
 		 * @param strParameter: The parameter to set for HTMLPurifier
 		 * @param mixValue: Value of the parameter.
 		 *
-		 * @return None
-		 *
 		 *  NOTE: THERE IS NO SUPPORT FOR THE DEPRECATED API OF HTMLPURIFIER, HENCE NO THIRD ARGUMENT TO THE
 		 *  	FUNCTION CAN BE PASSED.
 		 *
@@ -116,6 +121,11 @@
 			}
 		}
 
+		/**
+		 * Parse the data posted back via the control.
+		 * This function basically test for the Crossscripting rules applied to the QTextBox
+		 * @throws QCrossScriptingException
+		 */
 		public function ParsePostData() {
 			// Check to see if this Control's Value was passed in via the POST data
 			if (array_key_exists($this->strControlId, $_POST)) {
@@ -203,6 +213,10 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns the HTML formatted string for the control
+		 * @return string HTML string
+		 */
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)
@@ -241,6 +255,14 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Tests that the value given inside the textbox passes the rules set for the input
+		 * Tests it does:
+		 * (1) Checks if the textbox was empty while 'Required' property was set to true
+		 * (2) Trims input if ValidateTrimmed was set to true
+		 * (3) Checks for length contrainsts set by 'MaxLength' and 'MinLength' properties
+		 * @return bool whether or not the control is valid
+		 */
 		public function Validate() {
 			$this->strValidationError = "";
 
@@ -296,6 +318,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP __get magic method implementation
+		 * @param string $strName Name of the property
+		 *
+		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -335,6 +364,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP __set magic method implementation
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @throws Exception|QCallerException
+		 * @throws Exception|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 
@@ -516,7 +553,14 @@
 		}
 	}
 
+	/**
+	 * Class QCrossScriptingException: Called when the textbox fails CrossScripting checks
+	 */
 	class QCrossScriptingException extends QCallerException {
+		/**
+		 * Constructor
+		 * @param string $strControlId Control ID of the control for which it being called
+		 */
 		public function __construct($strControlId) {
 			parent::__construct("Cross Scripting Violation: Potential cross script injection in Control \"" .
 				$strControlId . "\"\r\nTo allow any input on this TextBox control, set CrossScripting to QCrossScripting::Allow. Also consider QCrossScripting::HTMLPurifier.", 2);

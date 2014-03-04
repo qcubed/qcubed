@@ -25,6 +25,8 @@
 			define ('__QCUBED_CORE__', __INCLUDES__ . '/qcubed/_core');
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 			define ('__MODEL__', __INCLUDES__ . '/model' );
+			define ('__META_CONTROLS__', __INCLUDES__ . '/meta_controls');
+			define ('__META_CONTROLS_GEN__', __META_CONTROLS__ . '/generated');
 			define ('__MODEL_GEN__', __MODEL__ . '/generated' );
 		}
 
@@ -34,7 +36,6 @@
 		//////////////////////////////
 		require(__QCUBED_CORE__ . '/framework/DisableMagicQuotes.inc.php');
 		require(__QCUBED_CORE__ . '/qcubed.inc.php');
-		require(__APP_INCLUDES__ . '/app_includes.inc.php');
 
 		///////////////////////////////
 		// Define the Application Class
@@ -103,6 +104,7 @@
 		if (array_key_exists('SERVER_PROTOCOL', $_SERVER)) {
 			set_error_handler('QcodoHandleError', error_reporting());
 			set_exception_handler('QcodoHandleException');
+			register_shutdown_function('QCubedShutdown');
 		}
 
 
@@ -145,5 +147,6 @@
 			// QApplication::$LanguageCode = 'en';
 			// QI18n::Initialize();
 		}
+		require(__APP_INCLUDES__ . '/app_includes.inc.php');
 	}
 ?>

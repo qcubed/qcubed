@@ -28,88 +28,73 @@
 	
 	
 	/**
-	 * <div>Triggered when the resizable is
-	 * 		created.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div></li></ul>
+	 * Triggered when the resizable is created.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QResizable_CreateEvent extends QJqUiEvent {
 		const EventName = 'resizecreate';
 	}
 	/**
-	 * <div>This event is triggered during the resize, on the drag of the resize
-	 * 		handler.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>element</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the element to be resized</div></li>
-	 * 		<li><div><strong>helper</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the helper that's being
-	 * 		resized</div></li> <li><div><strong>originalElement</strong></div>
-	 * 		<div>Type: <a>jQuery</a></div> <div>The jQuery object representing the
-	 * 		original element before it is wrapped</div></li>
-	 * 		<li><div><strong>originalPosition</strong></div> <div>Type:
-	 * 		<a>Object</a></div> <div>The position represented as <code>{ left, top
-	 * 		}</code> before the resizable is resized</div></li>
-	 * 		<li><div><strong>originalSize</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div>The size represented as <code>{ width, height }</code> before the
-	 * 		resizable is resized</div></li> <li><div><strong>position</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>The current position represented as
-	 * 		<code>{ left, top }</code></div></li> <li><div><strong>size</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>The current size represented as <code>{
-	 * 		width, height }</code></div></li></ul></li></ul>
+	 * This event is triggered during the resize, on the drag of the resize
+	 * 		handler.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>element</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element to be resized</li> <li><strong>helper</strong>
+	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that's being
+	 * 		resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a> The
+	 * 		jQuery object representing the original element before it is wrapped</li>
+	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The position
+	 * 		represented as <code>{ left, top }</code> before the resizable is
+	 * 		resized</li> <li><strong>originalSize</strong> Type: <a>Object</a> The size
+	 * 		represented as <code>{ width, height }</code> before the resizable is
+	 * 		resized</li> <li><strong>position</strong> Type: <a>Object</a> The current
+	 * 		position represented as <code>{ left, top }</code></li>
+	 * 		<li><strong>size</strong> Type: <a>Object</a> The current size represented
+	 * 		as <code>{ width, height }</code></li></ul></li></ul>
 	 */
 	class QResizable_ResizeEvent extends QJqUiEvent {
 		const EventName = 'resize';
 	}
 	/**
-	 * <div>This event is triggered at the start of a resize
-	 * 		operation.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>element</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the element to be resized</div></li>
-	 * 		<li><div><strong>helper</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the helper that's being
-	 * 		resized</div></li> <li><div><strong>originalElement</strong></div>
-	 * 		<div>Type: <a>jQuery</a></div> <div>The jQuery object representing the
-	 * 		original element before it is wrapped</div></li>
-	 * 		<li><div><strong>originalPosition</strong></div> <div>Type:
-	 * 		<a>Object</a></div> <div>The position represented as <code>{ left, top
-	 * 		}</code> before the resizable is resized</div></li>
-	 * 		<li><div><strong>originalSize</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div>The size represented as <code>{ width, height }</code> before the
-	 * 		resizable is resized</div></li> <li><div><strong>position</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>The current position represented as
-	 * 		<code>{ left, top }</code></div></li> <li><div><strong>size</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>The current size represented as <code>{
-	 * 		width, height }</code></div></li></ul></li></ul>
+	 * This event is triggered at the start of a resize
+	 * 		operation.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>element</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element to be resized</li> <li><strong>helper</strong>
+	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that's being
+	 * 		resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a> The
+	 * 		jQuery object representing the original element before it is wrapped</li>
+	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The position
+	 * 		represented as <code>{ left, top }</code> before the resizable is
+	 * 		resized</li> <li><strong>originalSize</strong> Type: <a>Object</a> The size
+	 * 		represented as <code>{ width, height }</code> before the resizable is
+	 * 		resized</li> <li><strong>position</strong> Type: <a>Object</a> The current
+	 * 		position represented as <code>{ left, top }</code></li>
+	 * 		<li><strong>size</strong> Type: <a>Object</a> The current size represented
+	 * 		as <code>{ width, height }</code></li></ul></li></ul>
 	 */
 	class QResizable_StartEvent extends QJqUiEvent {
 		const EventName = 'resizestart';
 	}
 	/**
-	 * <div>This event is triggered at the end of a resize
-	 * 		operation.</div><ul><li><div><strong>event</strong></div> <div>Type:
-	 * 		<a>Event</a></div> <div></div></li> <li><div><strong>ui</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div></div>
-	 * 		<ul><li><div><strong>element</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the element to be resized</div></li>
-	 * 		<li><div><strong>helper</strong></div> <div>Type: <a>jQuery</a></div>
-	 * 		<div>The jQuery object representing the helper that's being
-	 * 		resized</div></li> <li><div><strong>originalElement</strong></div>
-	 * 		<div>Type: <a>jQuery</a></div> <div>The jQuery object representing the
-	 * 		original element before it is wrapped</div></li>
-	 * 		<li><div><strong>originalPosition</strong></div> <div>Type:
-	 * 		<a>Object</a></div> <div>The position represented as <code>{ left, top
-	 * 		}</code> before the resizable is resized</div></li>
-	 * 		<li><div><strong>originalSize</strong></div> <div>Type: <a>Object</a></div>
-	 * 		<div>The size represented as <code>{ width, height }</code> before the
-	 * 		resizable is resized</div></li> <li><div><strong>position</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>The current position represented as
-	 * 		<code>{ left, top }</code></div></li> <li><div><strong>size</strong></div>
-	 * 		<div>Type: <a>Object</a></div> <div>The current size represented as <code>{
-	 * 		width, height }</code></div></li></ul></li></ul>
+	 * This event is triggered at the end of a resize
+	 * 		operation.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
+	 * 		<ul><li><strong>element</strong> Type: <a>jQuery</a> The jQuery object
+	 * 		representing the element to be resized</li> <li><strong>helper</strong>
+	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that's being
+	 * 		resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a> The
+	 * 		jQuery object representing the original element before it is wrapped</li>
+	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The position
+	 * 		represented as <code>{ left, top }</code> before the resizable is
+	 * 		resized</li> <li><strong>originalSize</strong> Type: <a>Object</a> The size
+	 * 		represented as <code>{ width, height }</code> before the resizable is
+	 * 		resized</li> <li><strong>position</strong> Type: <a>Object</a> The current
+	 * 		position represented as <code>{ left, top }</code></li>
+	 * 		<li><strong>size</strong> Type: <a>Object</a> The current size represented
+	 * 		as <code>{ width, height }</code></li></ul></li></ul>
 	 */
 	class QResizable_StopEvent extends QJqUiEvent {
 		const EventName = 'resizestop';
@@ -128,27 +113,26 @@
 	 * 
 	 * @see QResizableBase
 	 * @package Controls\Base
-	 * @property mixed $AlsoResize <div>One or more elements to resize synchronously with the resizable
-	 * 		element.</div>
-	 * @property boolean $Animate <div>Animates to the final size after resizing.</div>
-	 * @property mixed $AnimateDuration <div>How long to animate when using the <a><code>animate</code></a>
-	 * 		option.</div><strong>Multiple types
+	 * @property mixed $AlsoResize One or more elements to resize synchronously with the resizable element.
+	 * @property boolean $Animate Animates to the final size after resizing.
+	 * @property mixed $AnimateDuration How long to animate when using the <a><code>animate</code></a>
+	 * 		option.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: Duration in
 	 * 		milliseconds.</li> <li><strong>String</strong>: A named duration, such as
 	 * 		<code>"slow"</code> or <code>"fast"</code>.</li></ul>
-	 * @property string $AnimateEasing <div>Which <a>easing</a> to apply when using the
-	 * 		<a><code>animate</code></a> option.</div>
-	 * @property mixed $AspectRatio <div>Whether the element should be constrained to a specific aspect
-	 * 		ratio.</div><strong>Multiple types
+	 * @property string $AnimateEasing Which <a>easing</a> to apply when using the <a><code>animate</code></a>
+	 * 		option.
+	 * @property mixed $AspectRatio Whether the element should be constrained to a specific aspect
+	 * 		ratio.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: When set to
 	 * 		<code>true</code>, the element will maintain its original aspect
 	 * 		ratio.</li> <li><strong>Number</strong>: Force the element to maintain a
 	 * 		specific aspect ratio during resizing.</li></ul>
-	 * @property boolean $AutoHide <div>Whether the handles should hide when the user is not hovering over the
-	 * 		element.</div>
-	 * @property mixed $Cancel <div>Prevents resizing from starting on specified elements.</div>
-	 * @property mixed $Containment <div>Constrains resizing to within the bounds of the specified element or
-	 * 		region.</div><strong>Multiple types
+	 * @property boolean $AutoHide Whether the handles should hide when the user is not hovering over the
+	 * 		element.
+	 * @property mixed $Cancel Prevents resizing from starting on specified elements.
+	 * @property mixed $Containment Constrains resizing to within the bounds of the specified element or
+	 * 		region.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Selector</strong>: The resizable element
 	 * 		will be contained to the bounding box of the first element found by the
 	 * 		selector. If no element is found, no containment will be set.</li>
@@ -156,34 +140,37 @@
 	 * 		the bounding box of this element.</li> <li><strong>String</strong>:
 	 * 		Possible values: <code>"parent"</code> and
 	 * 		<code>"document"</code>.</li></ul>
-	 * @property integer $Delay <div>Tolerance, in milliseconds, for when resizing should start. If
-	 * 		specified, resizing will not start until after mouse is moved beyond
-	 * 		duration. This can help prevent unintended resizing when clicking on an
-	 * 		element.</div>
-	 * @property boolean $Disabled <div>Disables the resizable if set to <code>true</code>.</div>
-	 * @property integer $Distance <div>Tolerance, in pixels, for when resizing should start. If specified,
+	 * @property integer $Delay Tolerance, in milliseconds, for when resizing should start. If specified,
+	 * 		resizing will not start until after mouse is moved beyond duration. This
+	 * 		can help prevent unintended resizing when clicking on an element.
+	 * @property boolean $Disabled Disables the resizable if set to <code>true</code>.
+	 * @property integer $Distance Tolerance, in pixels, for when resizing should start. If specified,
 	 * 		resizing will not start until after mouse is moved beyond distance. This
-	 * 		can help prevent unintended resizing when clicking on an element.</div>
-	 * @property boolean $Ghost <div>If set to <code>true</code>, a semi-transparent helper element is
-	 * 		shown for resizing.</div>
-	 * @property array $Grid <div>Snaps the resizing element to a grid, every x and y pixels. Array
-	 * 		values: <code>[ x, y ]</code>.</div>
-	 * @property mixed $Handles <div>Which handles can be used for resizing.</div><strong>Multiple types
+	 * 		can help prevent unintended resizing when clicking on an element.
+	 * @property boolean $Ghost If set to <code>true</code>, a semi-transparent helper element is shown for
+	 * 		resizing.
+	 * @property array $Grid Snaps the resizing element to a grid, every x and y pixels. Array values:
+	 * 		<code>[ x, y ]</code>.
+	 * @property mixed $Handles Which handles can be used for resizing.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>String</strong>: A comma delimited list
 	 * 		of any of the following: n, e, s, w, ne, se, sw, nw, all. The necessary
 	 * 		handles will be auto-generated by the plugin.</li>
-	 * 		<li><strong>Object</strong>: The following keys are supported: { n, e, s,
-	 * 		w, ne, se, sw, nw }. The value of any specified should be a jQuery selector
-	 * 		matching the child element of the resizable to use as that handle. If the
-	 * 		handle is not a child of the resizable, you can pass in the DOMElement or a
-	 * 		valid jQuery object directly.</li></ul>
-	 * @property string $Helper <div>A class name that will be added to a proxy element to outline the
-	 * 		resize during the drag of the resize handle. Once the resize is complete,
-	 * 		the original element is sized.</div>
-	 * @property integer $MaxHeight <div>The maximum height the resizable should be allowed to resize to.</div>
-	 * @property integer $MaxWidth <div>The maximum width the resizable should be allowed to resize to.</div>
-	 * @property integer $MinHeight <div>The minimum height the resizable should be allowed to resize to.</div>
-	 * @property integer $MinWidth <div>The minimum width the resizable should be allowed to resize to.</div>
+	 * 		<li><strong>Object</strong>:  					<p>The following keys are supported: {
+	 * 		n, e, s, w, ne, se, sw, nw }. The value of any specified should be a jQuery
+	 * 		selector matching the child element of the resizable to use as that handle.
+	 * 		If the handle is not a child of the resizable, you can pass in the
+	 * 		DOMElement or a valid jQuery object directly.</p> 					<p><em>Note: When
+	 * 		generating your own handles, each handle must have the
+	 * 		<code>ui-resizable-handle</code> class, as well as the appropriate
+	 * 		<code>ui-resizable-{direction}</code> class, .e.g.,
+	 * 		<code>ui-resizable-s</code>.</em></p></li></ul>
+	 * @property string $Helper A class name that will be added to a proxy element to outline the resize
+	 * 		during the drag of the resize handle. Once the resize is complete, the
+	 * 		original element is sized.
+	 * @property integer $MaxHeight The maximum height the resizable should be allowed to resize to.
+	 * @property integer $MaxWidth The maximum width the resizable should be allowed to resize to.
+	 * @property integer $MinHeight The minimum height the resizable should be allowed to resize to.
+	 * @property integer $MinWidth The minimum width the resizable should be allowed to resize to.
 	 */
 
 	abstract class QResizableGen extends QControl	{
@@ -278,91 +265,98 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . $strParentScript;
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
 		/**
-		 * <div>Removes the resizable functionality completely. This will return the
-		 * element back to its pre-init state.</div><ul><li><div>This method does not
-		 * accept any arguments.</div></li></ul>
+		 * Removes the resizable functionality completely. This will return the
+		 * element back to its pre-init state.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
-		 * <div>Disables the resizable.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Disables the resizable.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
-		 * <div>Enables the resizable.</div><ul><li><div>This method does not accept
-		 * any arguments.</div></li></ul>
+		 * Enables the resizable.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <div>Gets the value currently associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * get.</div></li></ul>
+		 * Gets the value currently associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
-		 * <div>Gets an object containing key/value pairs representing the current
-		 * resizable options hash.</div><ul><li><div>This method does not accept any
-		 * arguments.</div></li></ul>
+		 * Gets an object containing key/value pairs representing the current
+		 * resizable options hash.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * <div>Sets the value of the resizable option associated with the specified
-		 * <code>optionName</code>.</div><ul><li><div><strong>optionName</strong></div>
-		 * <div>Type: <a>String</a></div> <div>The name of the option to
-		 * set.</div></li> <li><div><strong>value</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A value to set for the option.</div></li></ul>
+		 * Sets the value of the resizable option associated with the specified
+		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
+		 * <a>String</a> The name of the option to set.</li>
+		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
+		 * option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
-		 * <div>Sets one or more options for the
-		 * resizable.</div><ul><li><div><strong>options</strong></div> <div>Type:
-		 * <a>Object</a></div> <div>A map of option-value pairs to
-		 * set.</div></li></ul>
+		 * Sets one or more options for the resizable.<ul><li><strong>options</strong>
+		 * Type: <a>Object</a> A map of option-value pairs to set.</li></ul>
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 
 
@@ -402,16 +396,16 @@
 				case 'AlsoResize':
 					$this->mixAlsoResize = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'alsoResize', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'alsoResize', $mixValue);
 					}
 					break;
 
 				case 'Animate':
 					try {
 						$this->blnAnimate = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'animate', $this->blnAnimate);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'animate', $this->blnAnimate);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -422,16 +416,16 @@
 				case 'AnimateDuration':
 					$this->mixAnimateDuration = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'animateDuration', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'animateDuration', $mixValue);
 					}
 					break;
 
 				case 'AnimateEasing':
 					try {
 						$this->strAnimateEasing = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'animateEasing', $this->strAnimateEasing);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'animateEasing', $this->strAnimateEasing);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -442,16 +436,16 @@
 				case 'AspectRatio':
 					$this->mixAspectRatio = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'aspectRatio', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'aspectRatio', $mixValue);
 					}
 					break;
 
 				case 'AutoHide':
 					try {
 						$this->blnAutoHide = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'autoHide', $this->blnAutoHide);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'autoHide', $this->blnAutoHide);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -462,24 +456,24 @@
 				case 'Cancel':
 					$this->mixCancel = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'cancel', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'cancel', $mixValue);
 					}
 					break;
 
 				case 'Containment':
 					$this->mixContainment = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'containment', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'containment', $mixValue);
 					}
 					break;
 
 				case 'Delay':
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'delay', $this->intDelay);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -490,8 +484,8 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -502,8 +496,8 @@
 				case 'Distance':
 					try {
 						$this->intDistance = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'distance', $this->intDistance);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'distance', $this->intDistance);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -514,8 +508,8 @@
 				case 'Ghost':
 					try {
 						$this->blnGhost = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'ghost', $this->blnGhost);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'ghost', $this->blnGhost);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -526,8 +520,8 @@
 				case 'Grid':
 					try {
 						$this->arrGrid = QType::Cast($mixValue, QType::ArrayType);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'grid', $this->arrGrid);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'grid', $this->arrGrid);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -538,16 +532,16 @@
 				case 'Handles':
 					$this->mixHandles = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'handles', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'handles', $mixValue);
 					}
 					break;
 
 				case 'Helper':
 					try {
 						$this->strHelper = QType::Cast($mixValue, QType::String);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'helper', $this->strHelper);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'helper', $this->strHelper);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -558,8 +552,8 @@
 				case 'MaxHeight':
 					try {
 						$this->intMaxHeight = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'maxHeight', $this->intMaxHeight);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'maxHeight', $this->intMaxHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -570,8 +564,8 @@
 				case 'MaxWidth':
 					try {
 						$this->intMaxWidth = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'maxWidth', $this->intMaxWidth);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'maxWidth', $this->intMaxWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -582,8 +576,8 @@
 				case 'MinHeight':
 					try {
 						$this->intMinHeight = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'minHeight', $this->intMinHeight);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'minHeight', $this->intMinHeight);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -594,8 +588,8 @@
 				case 'MinWidth':
 					try {
 						$this->intMinWidth = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'minWidth', $this->intMinWidth);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'minWidth', $this->intMinWidth);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

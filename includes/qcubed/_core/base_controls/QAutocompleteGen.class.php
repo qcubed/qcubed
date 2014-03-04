@@ -41,7 +41,9 @@
 	 * Triggered when the menu is hidden. Not every <code>close</code> event will
 	 * 		be accompanied by a <code>change</code>
 	 * 		event.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QAutocomplete_CloseEvent extends QJqUiEvent {
 		const EventName = 'autocompleteclose';
@@ -49,7 +51,8 @@
 	/**
 	 * Triggered when the autocomplete is created.<ul><li><strong>event</strong>
 	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
-	 * 		</li></ul>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QAutocomplete_CreateEvent extends QJqUiEvent {
 		const EventName = 'autocompletecreate';
@@ -70,7 +73,9 @@
 	/**
 	 * Triggered when the suggestion menu is opened or
 	 * 		updated.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
-	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<li><strong>ui</strong> Type: <a>Object</a> </li></ul><p><em>Note: The
+	 * 		<code>ui</code> object is empty but included for consistency with other
+	 * 		events.</em></p>
 	 */
 	class QAutocomplete_OpenEvent extends QJqUiEvent {
 		const EventName = 'autocompleteopen';
@@ -96,7 +101,9 @@
 	 * Triggered before a search is performed, after <a><code>minLength</code></a>
 	 * 		and <a><code>delay</code></a> are met. If canceled, then no request will be
 	 * 		started and no items suggested.<ul><li><strong>event</strong> Type:
-	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> </li></ul>
+	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a>
+	 * 		</li></ul><p><em>Note: The <code>ui</code> object is empty but included for
+	 * 		consistency with other events.</em></p>
 	 */
 	class QAutocomplete_SearchEvent extends QJqUiEvent {
 		const EventName = 'autocompletesearch';
@@ -127,12 +134,9 @@
 	 * 
 	 * @see QAutocompleteBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo Which element the menu should be appended to. When the value is
-	 * 		<code>null</code>, the parents of the input field will be checked for a
-	 * 		class of <code>ui-front</code>. If an element with the
-	 * 		<code>ui-front</code> class is found, the menu will be appended to that
-	 * 		element. Regardless of the value, if no element is found, the menu will be
-	 * 		appended to the body.
+	 * @property mixed $AppendTo Which element the menu should be appended to. Override this when the
+	 * 		autocomplete is inside a <code>position: fixed</code> element. Otherwise
+	 * 		the popup menu would still scroll with the page.
 	 * @property boolean $AutoFocus If set to <code>true</code> the first item will automatically be focused
 	 * 		when the menu is shown.
 	 * @property integer $Delay The delay in milliseconds between when a keystroke occurs and when a search
@@ -248,27 +252,37 @@
 				// during the next ajax update which replaces this control.
 				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
 			}
-			return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			$str .= $this->GetControlJavaScript();
+			if ($strParentScript = parent::GetEndScript()) {
+				$str .= '; ' . $strParentScript;
+			}
+			return $str;
 		}
 		
 		/**
 		 * Call a JQuery UI Method on the object. 
 		 * 
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 * 
+		 *
+		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
 		 * @param string $strMethodName the method name to call
 		 * @internal param $mixed [optional] $mixParam1
 		 * @internal param $mixed [optional] $mixParam2
 		 */
-		protected function CallJqUiMethod($strMethodName /*, ... */) {
+		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();
+			array_shift ($args);
 
 			$strArgs = JavaScriptHelper::toJsObject($args);
 			$strJs = sprintf('jQuery("#%s").%s(%s)',
 				$this->getJqControlId(),
 				$this->getJqSetupFunction(),
 				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
+			if ($blnAttribute) {
+				$this->AddAttributeScript($strJs);
+			} else {
+				QApplication::ExecuteJavaScript($strJs);
+			}
 		}
 
 
@@ -278,7 +292,7 @@
 		 * method does not accept any arguments.</li></ul>
 		 */
 		public function Close() {
-			$this->CallJqUiMethod("close");
+			$this->CallJqUiMethod(false, "close");
 		}
 		/**
 		 * Removes the autocomplete functionality completely. This will return the
@@ -286,21 +300,21 @@
 		 * arguments.</li></ul>
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod("destroy");
+			$this->CallJqUiMethod(false, "destroy");
 		}
 		/**
 		 * Disables the autocomplete.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod("disable");
+			$this->CallJqUiMethod(false, "disable");
 		}
 		/**
 		 * Enables the autocomplete.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod("enable");
+			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
 		 * Gets the value currently associated with the specified
@@ -309,7 +323,7 @@
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
-			$this->CallJqUiMethod("option", $optionName);
+			$this->CallJqUiMethod(false, "option", $optionName);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -317,7 +331,7 @@
 		 * arguments.</li></ul>
 		 */
 		public function Option1() {
-			$this->CallJqUiMethod("option");
+			$this->CallJqUiMethod(false, "option");
 		}
 		/**
 		 * Sets the value of the autocomplete option associated with the specified
@@ -329,7 +343,7 @@
 		 * @param $value
 		 */
 		public function Option2($optionName, $value) {
-			$this->CallJqUiMethod("option", $optionName, $value);
+			$this->CallJqUiMethod(false, "option", $optionName, $value);
 		}
 		/**
 		 * Sets one or more options for the
@@ -338,7 +352,7 @@
 		 * @param $options
 		 */
 		public function Option3($options) {
-			$this->CallJqUiMethod("option", $options);
+			$this->CallJqUiMethod(false, "option", $options);
 		}
 		/**
 		 * Triggers a <a><code>search</code></a> event and invokes the data source if
@@ -350,7 +364,7 @@
 		 * @param $value
 		 */
 		public function Search($value = null) {
-			$this->CallJqUiMethod("search", $value);
+			$this->CallJqUiMethod(false, "search", $value);
 		}
 
 
@@ -378,16 +392,16 @@
 				case 'AppendTo':
 					$this->mixAppendTo = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'appendTo', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'appendTo', $mixValue);
 					}
 					break;
 
 				case 'AutoFocus':
 					try {
 						$this->blnAutoFocus = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'autoFocus', $this->blnAutoFocus);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'autoFocus', $this->blnAutoFocus);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -398,8 +412,8 @@
 				case 'Delay':
 					try {
 						$this->intDelay = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'delay', $this->intDelay);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'delay', $this->intDelay);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -410,8 +424,8 @@
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'disabled', $this->blnDisabled);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'disabled', $this->blnDisabled);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -422,8 +436,8 @@
 				case 'MinLength':
 					try {
 						$this->intMinLength = QType::Cast($mixValue, QType::Integer);
-						if ($this->Rendered) {
-							$this->CallJqUiMethod('option', 'minLength', $this->intMinLength);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'minLength', $this->intMinLength);
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -434,16 +448,16 @@
 				case 'Position':
 					$this->mixPosition = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'position', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'position', $mixValue);
 					}
 					break;
 
 				case 'Source':
 					$this->mixSource = $mixValue;
 				
-					if ($this->Rendered) {
-						$this->CallJqUiMethod('option', 'source', $mixValue);
+					if ($this->OnPage) {
+						$this->CallJqUiMethod(true, 'option', 'source', $mixValue);
 					}
 					break;
 

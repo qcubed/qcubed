@@ -8,7 +8,7 @@
 		protected $strCheckFilesArray;
 
 		/**
-		 * @param $strNamespace Note that the namespace can be recursive - use forward slashes as separators
+		 * @param string $strNamespace Note that the namespace can be recursive - use forward slashes as separators
 		 */
 		public function __construct($strNamespace, $strKey, $strExtension = 'txt', $mixCheckFiles = null) {
 			$this->strNamespace = trim(strtolower($strNamespace));

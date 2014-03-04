@@ -13,6 +13,8 @@
 		 * for CallerExceptions.
 		 *
 		 * @param string $strName Name of the property to get
+		 *
+		 * @throws QUndefinedPropertyException
 		 * @return mixed the returned property
 		 */
 		public function __get($strName) {
@@ -27,8 +29,10 @@
 		 * to calling parent::__set() in a try/catch statement catching
 		 * for CallerExceptions.
 		 *
-		 * @param string $strName Name of the property to set
+		 * @param string $strName  Name of the property to set
 		 * @param string $mixValue New value of the property
+		 *
+		 * @throws QUndefinedPropertyException
 		 * @return mixed the property that was set
 		 */
 		public function __set($strName, $mixValue) {
@@ -39,15 +43,17 @@
 		/**
 		 * This allows you to set any properties, given by a name-value pair list
 		 * in mixOverrideArray.
-		 *
 		 * Each item in mixOverrideArray needs to be either a string in the format
 		 * of Property=Value or an array in the format of array(Property => Value).
 		 * OverrideAttributes() will basically call
 		 * $this->Property = Value for each string element in the array.
-		 *
 		 * Value can be surrounded by quotes... but this is optional.
 		 *
-		 * @param mixed[] $objOverrideArray the array of name-value pair items of properties/attributes to override
+		 * @param $mixOverrideArray
+		 *
+		 * @throws QCallerException
+		 * @throws Exception|QCallerException
+		 * @internal param \mixed[] $objOverrideArray the array of name-value pair items of properties/attributes to override
 		 * @return void
 		 */
 		public final function OverrideAttributes($mixOverrideArray) {
