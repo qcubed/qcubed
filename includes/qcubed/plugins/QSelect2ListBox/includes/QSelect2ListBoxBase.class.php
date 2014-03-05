@@ -7,6 +7,10 @@
 			$this->AddJavascriptFile("../../plugins/QSelect2ListBox/select2-release-3.2/select2.min.js");
 			$this->AddCssFile("../../plugins/QSelect2ListBox/select2-release-3.2/select2.css");
 		}
+		
+		public function getJqControlId() {
+			return $this->ControlId;
+		}
 
 		protected function GetResetButtonHtml() {
 			return '';

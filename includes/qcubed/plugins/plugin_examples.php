@@ -16,8 +16,8 @@ Examples::AddPluginExampleFile('QDataTables', 'example/datatable.php QDataTables
 Examples::AddPluginExampleFile('QDateRangePicker', 'example/daterangepicker.php QDateRangePicker: Date range picker control');
 //// END QDateRangePicker
 
-//// BEGIN QDateRangePicker
+//// BEGIN QSelect2ListBox
 Examples::AddPluginExampleFile('QSelect2ListBox', 'example/select2listbox.php QSelect2ListBox: QSelect2ListBox: selector control based on select2 JQuery plugin');
-//// END QDateRangePicker
+//// END QSelect2ListBox
 
 ?>

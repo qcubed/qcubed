@@ -19,6 +19,7 @@ QApplicationBase::$ClassFile['qdatatablegen'] = __PLUGINS__ . '/QDataTables/incl
 //// BEGIN QDateRangePicker
 QApplicationBase::$ClassFile['qdaterangepicker'] = __PLUGINS__ . '/QDateRangePicker/includes/QDateRangePicker.class.php';
 QApplicationBase::$ClassFile['qdaterangepickerbase'] = __PLUGINS__ . '/QDateRangePicker/includes/QDateRangePickerBase.class.php';
+QApplicationBase::$ClassFile['qdaterangepickergen'] = __PLUGINS__ . '/QDateRangePicker/includes/QDateRangePickerGen.class.php';
 //// END QDateRangePicker
 
 //// BEGIN QSelect2ListBox
