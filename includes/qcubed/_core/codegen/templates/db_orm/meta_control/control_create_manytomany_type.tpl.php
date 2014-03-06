@@ -22,7 +22,7 @@
 		 */
 		public function <?php echo $strLabelId  ?>_Create($strControlId = null) {
 			$this-><?php echo $strLabelId  ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QConvertNotation::WordsFromCamelCase($objManyToManyReference->ObjectDescriptionPlural)  ?>');
+			$this-><?php echo $strLabelId  ?>->Name = QApplication::Translate('<?php echo QConvertNotation::WordsFromCamelCase($objManyToManyReference->ObjectDescriptionPlural)  ?>');
 			
 			$aSelection = $this-><?php echo $strObjectName?>->Get<?php echo $objManyToManyReference->ObjectDescription?>Array();
 			$this-><?php echo $strLabelId  ?>->Text = implode($this->str<?php echo $objManyToManyReference->ObjectDescription;  ?>Glue, $aSelection);
