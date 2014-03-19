@@ -504,7 +504,7 @@
 			$this->AddAttachment(new QEmailAttachment($strFilePath, $strSpecifiedMimeType, $strSpecifiedFileName));
 		}
 
-		public function RemoveAttachment($strFileName) {
+		public function RemoveAttachment($strName) {
 			if (array_key_exists($strName, $this->objFileArray))
 				unset($this->objFileArray[$strName]);
 		}
@@ -519,7 +519,7 @@
 			return null;
 		}
 
-		public function RemoveHeader($strName, $strValue) {
+		public function RemoveHeader($strName) {
 			if (array_key_exists($strName, $this->strHeaderArray))
 				unset($this->strHeaderArray[$strName]);
 		}
