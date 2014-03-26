@@ -114,8 +114,8 @@
 			$strInput = sprintf('<input id="%s" name="%s" type="checkbox" %s%s%s%s />',
 				$strIndexedId,
 				$this->strControlId . '[' . $intIndex . ']',
-				($this->blnEnabled) ? '' : 'disabled="disabled"',
-				($objItem->Selected) ? 'checked="checked"' : '',
+				($this->blnEnabled) ? '' : 'disabled="disabled" ',
+				($objItem->Selected) ? 'checked="checked" ' : '',
 				$objStyle->GetAttributes(),
 				$strTabIndex
 			);

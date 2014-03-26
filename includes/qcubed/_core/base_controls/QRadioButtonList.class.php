@@ -114,8 +114,8 @@
 				$strIndexedId,
 				$this->strControlId,
 				$intIndex,
-				($this->blnEnabled) ? '' : 'disabled="disabled"',
-				($objItem->Selected) ? 'checked="checked"' : '',
+				($this->blnEnabled) ? '' : 'disabled="disabled" ',
+				($objItem->Selected) ? 'checked="checked" ' : '',
 				$objStyle->GetAttributes(),
 				$strTabIndex
 			);
