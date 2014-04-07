@@ -220,8 +220,12 @@
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
 
 	if (defined('__MODEL_GEN__')) {
-		@include(__MODEL_GEN__ . '/_class_paths.inc.php');
-		@include(__MODEL_GEN__ . '/_type_class_paths.inc.php');
+		if (file_exists(__MODEL_GEN__ . '/_class_paths.inc.php')) {
+			@include(__MODEL_GEN__ . '/_class_paths.inc.php');
+		}
+		if (file_exists(__MODEL_GEN__ . '/_type_class_paths.inc.php')) {
+			@include(__MODEL_GEN__ . '/_type_class_paths.inc.php');
+		}
 	}
 	
 	// Includes for Plugin files
