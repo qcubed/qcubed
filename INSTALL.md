@@ -4,7 +4,7 @@
 
 ### Composer install
 
-Version 3.0 alpha is installable via composer directly from our GitHub repo. See the [Sample Composer Config](https://github.com/qcubed/framework/blob/alpha-3.0/composer.json.sample) for the configuration commands. Here are the steps:
+Version 3.0 alpha is installable via composer directly from our GitHub repo. See the [Sample Composer Config](https://github.com/qcubed/framework/blob/alpha-3.0/install/composer.json.sample) for the configuration commands. Here are the steps:
 
 1. Go to either your docroot, or a directory under docroot on the computer where you will be doing development. 
 2. Create a composer.json file. Use the sample mentioned above to start out.
