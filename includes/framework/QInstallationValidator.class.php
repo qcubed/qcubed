@@ -104,7 +104,7 @@ abstract class QInstallationValidator {
 		// Now that we know that the basic config is correct, we can actually
 		// initialize the full QCubed framework.
 		require(__CONFIGURATION__. '/prepend.inc.php');
-
+/*
 		if (!QFolder::isWritable(QPluginInstaller::PLUGIN_EXTRACTION_DIR)) {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "Plugin temporary extraction directory (" .
@@ -153,7 +153,7 @@ abstract class QInstallationValidator {
 			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __PLUGIN_ASSETS__;
 			$result[] = $obj;
 		}
-		
+		*/
 		if (!QFolder::isWritable(__CACHE__)) {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "Cache directory (" . __CACHE__ . ") needs to be writable";

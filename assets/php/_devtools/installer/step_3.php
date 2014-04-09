@@ -19,7 +19,7 @@
 
 	// let us see if there already is a configuration.inc.php file or not.
 	$blnConfigFileExists = false;
-	if(file_exists($strDocroot . $strVirtDir . $strSubDir . $strConfigSubPath . '/configuration.inc.php')) {
+	if(file_exists($strDocroot . $strVirtDir . $strSubDir . '/project' . $strConfigSubPath . '/configuration.inc.php')) {
 		$blnConfigFileExists = true;
 	}
 
@@ -31,7 +31,7 @@
 	$strDB_Username = $_POST['db_server_username'];
 	$strDB_Password = $_POST['db_server_password'];
 	// Now read the text from the configuration.inc.php.sample file
-	$strConfigSampleText = file_get_contents($strDocroot . $strVirtDir . $strSubDir . $strConfigSubPath . '/configuration.inc.php.sample');
+	$strConfigSampleText = file_get_contents($strDocroot . $strVirtDir . $strSubDir . '/project' . $strConfigSubPath . '/configuration.inc.php.sample');
 
 	if($strConfigSampleText === false) {
 		if($strError == null) {
@@ -70,7 +70,7 @@
 	$strCurrDir = dirname($strCurrentFullPath);
 
 	// get the length string after the word 'assets' in the path.
-	$intExtraLength = strlen(strstr($strCurrDir, 'assets/'));
+	$intExtraLength = strlen(strstr($strCurrDir, 'vendor/'));
 
 	// Current installation directory should be
 	$strCurrentInstallationDir = substr($strCurrDir, 0, (strlen($strCurrDir) - $intExtraLength));
@@ -80,13 +80,16 @@
 		$strCurrentInstallationDir = substr($strCurrentInstallationDir, 0, (strlen($strCurrentInstallationDir) - 1));
 	}
 	
-	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/css/styles.css');
-	$strExamplesStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/php/examples/includes/examples.css');
+	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/framework/assets/css/styles.css');
+	$strExamplesStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/framework/assets/php/examples/includes/examples.css');
 	
 	$strCurrentInstallationUrl = substr($strCurrentInstallationDir, strlen(rtrim($_SERVER['DOCUMENT_ROOT'])));
-	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/css/styles.css');
-	$strExamplesStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/php/examples/includes/examples.css');
-	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/images');
+        if ('/' != substr($strCurrentInstallationUrl, 0, 1)) {
+                $strCurrentInstallationUrl = '/' . $strCurrentInstallationUrl;
+        }
+	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/css/styles.css');
+	$strExamplesStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/php/examples/includes/examples.css');
+	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/images');
 	
 	// We will start the HTML output now.
 ?>
@@ -146,7 +149,7 @@
 				} else {
 					// The configuration file is not there. Try to create one.
 					// use the @ to prevent exception traces for special debug serever configurations, like 
-					$rscFileHandle = @fopen($strDocroot . $strVirtDir . $strSubDir . $strConfigSubPath . '/configuration.inc.php', 'w');
+					$rscFileHandle = @fopen($strDocroot . $strVirtDir . $strSubDir . '/project' . $strConfigSubPath . '/configuration.inc.php', 'w');
 					if($rscFileHandle === false) {
 						// File creation failed.
 						?>
@@ -180,7 +183,7 @@
 				switch ($strFileCreationStatus) {
 					case 'exists':
 					case 'creation_failed':
-						echo '<br/> <a href="' . $strVirtDir . $strSubDir . '/assets/_core/php/_devtools/config_checker.php">Launch the config checker</a>';
+						echo '<br/> <a href="' . $strVirtDir . $strSubDir . '/vendor/qcubed/framework/assets/php/_devtools/config_checker.php">Launch the config checker</a>';
 						break;
 					case 'created':
 						?>
@@ -188,10 +191,10 @@
 				<div id="instructions" class="full">
 					<p><strong>Configuration file was created!</strong></p>
 					<p>Make sure to revert directory permissions back for security:
-					<code>chmod 775 <?php echo $strDocroot . $strSubDir . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'configuration' ; ?></code></p>
+					<code>chmod 775 <?php echo $strDocroot . $strSubDir . DIRECTORY_SEPARATOR . 'project/includes' . DIRECTORY_SEPARATOR . 'configuration' ; ?></code></p>
 				</div>
 				<?php
-						echo '<a href="' . $strVirtDir . $strSubDir . '/assets/_core/php/_devtools/config_checker.php">Launch the config checker</a> to make sure everything went fine.';
+						echo '<a href="' . $strVirtDir . $strSubDir . '/vendor/qcubed/framework/assets/php/_devtools/config_checker.php">Launch the config checker</a> to make sure everything went fine.';
 						break;
 					default:
 						// do nothing

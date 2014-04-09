@@ -66,7 +66,7 @@
 
 	// Installation directory seems to be under document root.
 	// Try to figure out the subdirectory
-	$strSubDirectory = substr($strInstallationDir, (strlen($strServerDocumentRoot)), (strlen($strInstallationDir) - 1));
+	$strSubDirectory = substr($strInstallationDir, strlen($strServerDocumentRoot), strlen($strInstallationDir) - strlen($strServerDocumentRoot));
 	if (DIRECTORY_SEPARATOR !== mb_substr($strSubDirectory, 0, 1)) {
 		$strSubDirectory = DIRECTORY_SEPARATOR . $strSubDirectory;
 	}
@@ -97,7 +97,7 @@
 	}
 
 	// Make sure that the directory has all 3 folders inside - includes, assets and drafts
-	if(!is_dir($strInstallationDir . '/includes') || !is_dir($strInstallationDir . '/assets') || !is_dir($strInstallationDir . '/drafts')) {
+	if(!is_dir($strInstallationDir . '/project/includes') || !is_dir($strInstallationDir . '/project/assets')) {
 		// The supplied value does not contain the required folders(directories).
 		// Show error and exit coz this can't be the right path.
 		echo '
@@ -112,7 +112,7 @@
 		                QCubed Installation Wizard
 		            </h1>
 			<div style="color: #DD3333">
-			<strong>Error:</strong> Directory supplied for Installation path (' . $strInstallationDir . ') does not seem to have the directories <strong>includes</strong>, <strong>assets</strong> and <strong>drafts</strong>. Please go to <a href="step_1.php">Step 1</a> to set up the Installation path correctly.
+			<strong>Error:</strong> Directory supplied for Installation path (' . $strInstallationDir . ') does not seem to have the directories <strong>includes</strong> and <strong>assets</strong>. Please go to <a href="step_1.php">Step 1</a> to set up the Installation path correctly.
 			</div>
 		    </div>
 		</body>
@@ -136,13 +136,16 @@
 
 	// Set. Now we can create the HTML
 	$strCurrentInstallationDir = $strInstallationDir;
-	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/css/styles.css');
-	$strExamplesStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/php/examples/includes/examples.css');
+	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/framework/assets/css/styles.css');
+	$strExamplesStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/framework/assets/php/examples/includes/examples.css');
 	
 	$strCurrentInstallationUrl = substr($strCurrentInstallationDir, strlen(rtrim($_SERVER['DOCUMENT_ROOT'])));
-	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/css/styles.css');
-	$strExamplesStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/php/examples/includes/examples.css');
-	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/images');
+        if ('/' != substr($strCurrentInstallationUrl, 0, 1)) {
+                $strCurrentInstallationUrl = '/' . $strCurrentInstallationUrl;
+        }
+	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/css/styles.css');
+	$strExamplesStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/php/examples/includes/examples.css');
+	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/images');
 ?>
 
 <!DOCTYPE html>
@@ -172,7 +175,7 @@
 
 			<div id="instructions" class="full">
 				<p>Make sure that the configuration directory is writable:<br/>
-				<code>chmod 777 <?php echo $strServerDocumentRoot . $strSubDirectory . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'configuration' ; ?></code></p>
+				<code>chmod 777 <?php echo $strServerDocumentRoot . $strSubDirectory . DIRECTORY_SEPARATOR . 'project' . DIRECTORY_SEPARATOR . 'includes/configuration' ; ?></code></p>
 			</div>
 
             <form action="step_3.php" method="post">
