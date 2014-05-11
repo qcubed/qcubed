@@ -800,21 +800,23 @@
 		
 		public function FetchHeaderCellValue() {
 			$strToReturn = '<input type="checkbox"';
-			$aParams = $this->GetHeaderCheckboxParams($item);
+			$aParams = $this->GetHeaderCheckboxParams();
 			foreach ($aParams as $key=>$str) {
 				$strToReturn .= ' ' . $key . '="' . $str . '"';
 			}
 			
 			$strToReturn .= ' />';
+			return $strToReturn;
 		}
-		public function GetHeaderCheckboxParams ($item) {
+
+		public function GetHeaderCheckboxParams () {
 			$aParams = array();
 			
-			if ($strId = $this->GetHeaderCheckId ($item)) {
+			if ($strId = $this->GetHeaderCheckId ()) {
 				$aParams['id'] = addslashes($strId);
 			}
 			
-			if ($strCheck = $this->IsHeaderChecked ($item)) {
+			if ($strCheck = $this->IsHeaderChecked ()) {
 				$aParams['checked'] = 'checked';
 			}
 			return $aParams;		
@@ -829,16 +831,16 @@
 		}
 		
 		public function FetchCellObject($item) {
-			
+
 			$strToReturn = '<input type="checkbox"';
-			
+
 			$aParams = $this->GetCheckboxParams($item);
 			foreach ($aParams as $key=>$str) {
 				$strToReturn .= ' ' . $key . '="' . $str . '"';
 			}
-			
+
 			$strToReturn .= ' />';
-			return $chkSelected->Render(false);
+			return $strToReturn;
 		}
 		
 		public function GetCheckboxParams ($item) {

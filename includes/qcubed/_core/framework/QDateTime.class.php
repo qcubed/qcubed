@@ -24,6 +24,7 @@
 		const FormatDisplayDateTimeFull = 'DDDD, MMMM D, YYYY, h:mm:ss zz';
 		const FormatDisplayTime = 'hh:mm:ss zz';
 		const FormatRfc822 = 'DDD, DD MMM YYYY hhhh:mm:ss ttt';
+		const FormatRfc5322 = 'DDD, DD MMM YYYY hhhh:mm:ss ttttt';
 
 		const FormatSoap = 'YYYY-MM-DDThhhh:mm:ss';
 
@@ -419,6 +420,9 @@
 							break;
 						case 'tttt':
 							$strToReturn .= parent::format('e');
+							break;
+						case 'ttttt':
+							$strToReturn .= parent::format('O');
 							break;
 
 						default:
