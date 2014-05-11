@@ -118,12 +118,10 @@
 
 			$strCustomAttributes = $this->GetCustomAttributes();
 
-			$strActions = $this->GetActionAttributes();
-
 			if (strlen($this->strText)) {
 				$this->blnIsBlockElement = true;
 				if ($this->strTextAlign == QTextAlign::Left) {
-					$strToReturn = sprintf('<span %s%s%s%s%s><label for="%s">%s</label><input type="radio" id="%s" name="%s" value="%s" %s%s%s%s%s /></span>',
+					$strToReturn = sprintf('<span %s%s%s%s%s><label for="%s">%s</label><input type="radio" id="%s" name="%s" value="%s" %s%s%s%s /></span>',
 						$strCssClass,
 						$strToolTip,
 						$strStyle,
@@ -139,12 +137,11 @@
 
 						$strDisabled,
 						$strChecked,
-						$strActions,
 						$strAccessKey,
 						$strTabIndex
 					);
 				} else {
-					$strToReturn = sprintf('<span %s%s%s%s%s><input type="radio" id="%s" name="%s" value="%s" %s%s%s%s%s /><label for="%s">%s</label></span>',
+					$strToReturn = sprintf('<span %s%s%s%s%s><input type="radio" id="%s" name="%s" value="%s" %s%s%s%s /><label for="%s">%s</label></span>',
 						$strCssClass,
 						$strToolTip,
 						$strStyle,
@@ -157,7 +154,6 @@
 
 						$strDisabled,
 						$strChecked,
-						$strActions,
 						$strAccessKey,
 						$strTabIndex,
 
@@ -167,14 +163,13 @@
 				}
 			} else {
 				$this->blnIsBlockElement = false;
-				$strToReturn = sprintf('<input type="radio" id="%s" name="%s" value="%s" %s%s%s%s%s%s%s%s%s />',
+				$strToReturn = sprintf('<input type="radio" id="%s" name="%s" value="%s" %s%s%s%s%s%s%s%s />',
 					$this->strControlId,
 					$strGroupName,
 					$this->strControlId,
 					$strCssClass,
 					$strDisabled,
 					$strChecked,
-					$strActions,
 					$strAccessKey,
 					$strToolTip,
 					$strTabIndex,
