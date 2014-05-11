@@ -50,6 +50,11 @@
 			$this->pnlEdit = new QPanel($this, 'pnlEdit');
 			$this->pnlEdit->AutoRenderChildren = true;
 			$this->pnlEdit->Visible = false;
+			$strSelectedClass = QApplication::QueryString('class');
+			if ($strSelectedClass && array_key_exists($strSelectedClass, $strClassNameArray)) {
+				$this->lstClassNames->SelectedName = $strSelectedClass;
+				$this->lstClassNames_Change(null, null, null);
+			}
 		}
 
 		protected function lstClassNames_Change($strFormId, $strControlId, $strParameter) {
