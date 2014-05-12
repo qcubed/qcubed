@@ -65,7 +65,7 @@
 		 * @return QQOrderBy[]
 		 */
 		protected function getOrderByClausesForQuery() {
-			return $this->Clause;
+			return $this->Clauses;
 		}
 
 		/**
