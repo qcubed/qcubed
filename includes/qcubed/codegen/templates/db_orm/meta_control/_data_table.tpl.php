@@ -52,30 +52,31 @@
 			return $objCondition;
 		}
 
+		/**
+		 * get the search clauses for the total count query. Should not include any OrderBy clauses
+		 * @return QQClause[]|null
+		 */
 		protected function getSearchClausesForTotalCount() {
-			$objClauseArray = $this->Clauses;
-			$objClauseArray2 = array();
-			foreach ($objClauseArray as $objClause) {
-					if (!($objClause instanceof QQOrderBy)) {
-							$objClauseArray2[] = $objClause;
-					}
-			}
-			return $objClauseArray2;
+			return null;
 		}
 
 		/**
-		 * get the search clauses for the main query
+		 * get the OrderBy clauses for the main count query. Should only include OrderBy clauses
+		 * @return QQOrderBy[]
+		 */
+		protected function getOrderByClausesForQuery() {
+			return $this->Clauses;
+		}
+
+		/**
+		 * get the search clauses for the main query. Should not include any OrderBy clauses
 		 * @param QQClause[] $objClauses
 		 * @return boolean true if changes where made to the $objClauses array, false otherwise
 		 */
 		protected function getSearchClausesForQuery(&$objClauses) {
 			if (!$this->LimitInfo)
 				return false;
-			if ($objClauses != null) {
-				$objClauses[] = $this->LimitInfo;
-			} else {
-				$objClauses = array($this->LimitInfo);
-			}
+			$objClauses[] = $this->LimitInfo;
 			return true;
 		}
 
@@ -83,10 +84,17 @@
 			$objCondition = $this->getSearchCondition();
 			$objClauses = $this->getSearchClausesForTotalCount();
 			$this->TotalItemCount = <?php echo $objTable->ClassName ?>::QueryCount($objCondition, $objClauses);
+			if (is_null($objClauses)) {
+				$objClauses = array();
+			}
 			if ($this->getSearchClausesForQuery($objClauses)) {
 				$this->FilteredItemCount = <?php echo $objTable->ClassName ?>::QueryCount($objCondition, $objClauses);
 			} else {
 				$this->FilteredItemCount = $this->TotalItemCount;
+			}
+			$objOrderByClauses = $this->getOrderByClausesForQuery();
+			if ($objOrderByClauses) {
+				$objClauses = array_merge($objClauses, $objOrderByClauses);
 			}
 			$this->DataSource = <?php echo $objTable->ClassName ?>::QueryArray($objCondition, $objClauses);
 		}
