@@ -16,8 +16,11 @@
     /**
      * Impelements JQuery Ui Tabs
      * 
-     * Tabs are similary to an Accorion, but tabs along the top are used to switch between panels. The top
+     * Tabs are similar to an Accordion, but tabs along the top are used to switch between panels. The top
      * level html items in the panel will become the items that are switched.
+	 *
+	 * Specify the names of the tabs either in the TabHeadersArray, or assign a Name attribute to the top
+	 * level child controls and those names will be used as the tab names.
      * 
 	 * @property-write array $Headers
 	 *
@@ -29,8 +32,11 @@
 		protected $objTabHeadersArray = array();
 		protected $blnAutoRenderChildren = true;
 		protected $intSelected = 0;
-		//protected $blnValidateBeforeActivate = true;
 
+		/**
+		 * Return the javascript associated with the control.
+		 * @return string
+		 */
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
 			$strJS .= sprintf('; $j("#%s").on("tabsselect", function(event, ui) {$j("#%s").val(ui.index);})',
@@ -39,10 +45,17 @@
 			return $strJS;
 		}
 
+		/**
+		 * Return the id of the selection
+		 * @return string
+		 */
 		protected function getSelectedInputId() {
 			return $this->ControlId.'_selected';
 		}
 
+		/**
+		 * Records the current selection based on the selected item the user clicked.
+		 */
 		public function ParsePostData() {
 			$strSelectedInputId = $this->getSelectedInputId();
 			if (array_key_exists($strSelectedInputId, $_POST)) {
@@ -50,6 +63,11 @@
 			}
 		}
 
+		/**
+		 * Renders child controls as divs so that they become tabs.
+		 * @param bool $blnDisplayOutput
+		 * @return null|string
+		 */
 		protected function RenderChildren($blnDisplayOutput = true) {
 			$strToReturn = $this->GetTabHeaderHtml();
 
@@ -69,6 +87,12 @@
 				return $strToReturn;
 		}
 
+		/**
+		 * Returns the HTML for the tab header. This includes the names and the control logic to record what the
+		 * user clicked.
+		 *
+		 * @return string
+		 */
 		protected function GetTabHeaderHtml() {
 			$strResult = sprintf('<input id="%s" type="hidden" value="%d"/>', $this->getSelectedInputId(), $this->intSelected);
 			$strResult .= '<ul>';
@@ -147,6 +171,7 @@
 		/**
 		 * Given a tab name or index, returns its index. If invalid, return false;
 		 * @param string|integer $mixTab
+		 * @return bool|int
 		 */
 		protected function FindTabIndex ($mixTab) {
 			$count = 0;
