@@ -13,7 +13,7 @@
 	$strCurrDir = dirname($strCurrentFullPath);
 
 	// get the length string after the word 'assets' in the path.
-	$intExtraLength = strlen(strstr($strCurrDir, 'assets/'));
+	$intExtraLength = strlen(strstr($strCurrDir, 'vendor/'));
 
 	// Current installation directory should be
 	$strCurrentInstallationDir = substr($strCurrDir, 0, (strlen($strCurrDir) - $intExtraLength));
@@ -23,11 +23,14 @@
 		$strCurrentInstallationDir = substr($strCurrentInstallationDir, 0, (strlen($strCurrentInstallationDir) - 1));
 	}
 	
-	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/assets/_core/css/styles.css');
+	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/framework/assets/css/styles.css');
 	
 	$strCurrentInstallationUrl = substr($strCurrentInstallationDir, strlen(rtrim($_SERVER['DOCUMENT_ROOT'])));
-	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/css/styles.css');
-	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/assets/_core/images');
+	if ('/' != substr($strCurrentInstallationUrl, 0, 1)) {
+		$strCurrentInstallationUrl = '/' . $strCurrentInstallationUrl;
+	}
+	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/css/styles.css');
+	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/images');
 ?>
 <!DOCTYPE html>
 <html>

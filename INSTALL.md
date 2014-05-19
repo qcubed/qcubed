@@ -4,12 +4,12 @@
 
 ### Composer install
 
-Version 3.0 alpha is installable via composer directly from our GitHub repo. See the [Sample Composer Config](https://github.com/qcubed/framework/blob/alpha-3.0/composer.json.sample) for the configuration commands. Here are the steps:
+Version 3.0 alpha is installable via composer directly from our GitHub repo. See the [Sample Composer Config](https://github.com/qcubed/framework/blob/alpha-3.0/install/composer.json.sample) for the configuration commands. Here are the steps:
 
 1. Go to either your docroot, or a directory under docroot on the computer where you will be doing development. 
-2. Create a composer.json file. Use the sample mentioned above to start out.
-3. Enter the composer install command. QCubed will be put in the ```/vendor/qcubed/framework/``` directory by default.
-4. After installing with composer, copy the contents of the ```/vendor/qcubed/framework/install/``` directory to the directory level above the /vendor directory. This should be the directory from where you executed the composer install command.
+2. Create a `composer.json` file. Use the sample mentioned above to start out.
+3. Enter the `composer install` command. QCubed will be put in the ```/vendor/qcubed/framework/``` directory by default.
+4. After installing with composer, copy the contents of the ```/vendor/qcubed/framework/install/``` directory to the directory level above the /vendor directory. This should be the directory from where you executed the composer install command: ```cp -r vendor/qcubed/framework/install/* .```
 5. Make modifications to the  ```/project/includes/configuration/conifguration.inc.php``` file to reflect your setup.
 6. From a web browser, navigate to the index.php file in your install directory. 
 7. Make sure the ```/project/``` directory is writable by the web server. 
