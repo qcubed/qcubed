@@ -48,6 +48,9 @@
 	 * @property string $ForeColor
 	 * @property string $Height
 	 * @property string $Width
+	 * @property array $Padding
+	 * @property array $Margin
+	 * @property array $Data
 	 */
 	class QListItemStyle extends QBaseClass {
 		
@@ -66,6 +69,9 @@
 		protected $strForeColor = null;
 		protected $strHeight = null;
 		protected $strWidth = null;
+		protected $aryPadding = null;
+		protected $aryMargin = null;
+		protected $aryData = null;
 
 		public function ApplyOverride(QListItemStyle $objOverrideStyle) {
 			$objNewStyle = clone $this;
@@ -75,6 +81,8 @@
 
 			if ($objOverrideStyle->CssClass)
 				$objNewStyle->CssClass = $objOverrideStyle->CssClass;
+			if ($objOverrideStyle->Data)
+				$objNewStyle->Data = $objOverrideStyle->Data;
 
 			if ($objOverrideStyle->ForeColor)
 				$objNewStyle->ForeColor = $objOverrideStyle->ForeColor;
@@ -103,6 +111,11 @@
 				$objNewStyle->FontOverline = true;
 			if ($objOverrideStyle->FontStrikeout)
 				$objNewStyle->FontStrikeout = true;
+			if ($objOverrideStyle->Padding)
+				$objNewStyle->Padding = $objOverrideStyle->Padding;
+			if ($objOverrideStyle->Margin)
+				$objNewStyle->Margin = $objOverrideStyle->Margin;
+
 
 			return $objNewStyle;
 		}
@@ -112,6 +125,12 @@
 
 			if ($this->strCssClass)
 				$strToReturn .= sprintf('class="%s" ', $this->strCssClass);
+			if ($this->aryData) {
+				foreach ($this->aryData as $key=>$val) {
+					$strToReturn .= sprintf ('data-%s="%s" ', $key, $val);
+				}
+			}
+
 
 			$strStyle = "";			
 			
@@ -155,11 +174,40 @@
 				$strTextDecoration = trim($strTextDecoration);
 				$strStyle .= sprintf("text-decoration:%s;", $strTextDecoration);
 			}
-			
+			if ($this->aryPadding) {
+				$strStyle .= self::boxArrayToCss($this->aryPadding, 'padding');
+			}
+			if ($this->aryMargin) {
+				$strStyle .= self::boxArrayToCss($this->aryMargin, 'margin');
+			}
 			if ($strStyle)
 				$strToReturn .= sprintf('style="%s" ', $strStyle);
 			
 			return $strToReturn;
+		}
+
+		protected static function boxArrayToCss ($a, $strPrefix) {
+			$strStyle = '';
+			$strStyle .= self::boxValue ($a, $strPrefix, 'left');
+			$strStyle .= self::boxValue ($a, $strPrefix, 'top');
+			$strStyle .= self::boxValue ($a, $strPrefix, 'right');
+			$strStyle .= self::boxValue ($a, $strPrefix, 'bottom');
+			return $strStyle;
+		}
+
+		protected static function boxValue ($a, $strPrefix, $strSide) {
+			if (isset($a[$strSide])) {
+				$strValue = $a[$strSide];
+				if (is_numeric($strValue)) {
+					$strValue .= 'px';
+				}
+				return $strPrefix . '-' . $strSide . ':' . $strValue . ';';
+			}
+			return '';
+		}
+
+		public function AddData ($strKey, $strVal) {
+			$this->aryData[$strKey] =  $strVal;
 		}
 
 		/////////////////////////
@@ -182,6 +230,9 @@
 				case "ForeColor": return $this->strForeColor;
 				case "Height": return $this->strHeight;
 				case "Width": return $this->strWidth;
+				case "Padding": return $this->aryPadding;
+				case "Margin": return $this->aryMargin;
+				case "Data": return $this->aryData;
 
 				default:
 					try {
@@ -317,7 +368,31 @@
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
-					}					
+					}
+				case "Padding":
+					try {
+						$this->aryPadding = QType::Cast($mixValue, QType::ArrayType);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case "Margin":
+					try {
+						$this->aryMargin = QType::Cast($mixValue, QType::ArrayType);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case "Data":
+					try {
+						$this->aryData = QType::Cast($mixValue, QType::ArrayType);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				default:
 					try {
