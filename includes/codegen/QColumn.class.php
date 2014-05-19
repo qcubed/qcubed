@@ -114,6 +114,12 @@
 		 */
 		protected $strComment;
 
+		/**
+		 * Various overrides and options embedded in the comment for the column as a json object.
+		 * @var array Overrides
+		 */
+		protected $options;
+
 
 
 
@@ -164,6 +170,8 @@
 					return $this->objReference;
 				case 'Comment':
 					return $this->strComment;
+				case 'Options':
+					return $this->options;
 				default:
 					try {
 						return parent::__get($strName);
@@ -228,6 +236,8 @@
 						return $this->objReference = QType::Cast($mixValue, 'QReference');
 					case 'Comment':
 						return $this->strComment = QType::Cast($mixValue, QType::String);
+					case 'Options':
+						return $this->options = QType::Cast($mixValue, QType::ArrayType);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

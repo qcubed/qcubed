@@ -669,6 +669,111 @@
 					break;
 			}
 		}
+
+		/**** Codegen Helpers, used during the Codegen process only. ****/
+
+
+		public static function Codegen_VarName($strPropName) {
+			return 'txt' . $strPropName;
+		}
+
+		/**
+		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
+		 * This is called during the codegen process.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strClassName = $objTable->ClassName;
+			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+
+			// Read the control type in case we are generating code for a subclass of QTextBox
+			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+
+			$strRet = <<<TMPL
+		/**
+		 * Create and setup a $strControlType $strControlVarName
+		 * @param string \$strControlId optional ControlId to use
+		 * @return $strControlType
+		 */
+		public function {$strControlVarName}_Create(\$strControlId = null) {
+			\$this->{$strControlVarName} = new $strControlType(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
+
+TMPL;
+			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
+
+			if ($objColumn->NotNull) {
+				$strRet .=<<<TMPL
+			\$this->{$strControlVarName}->Required = true;
+
+TMPL;
+			}
+
+			if ($objColumn->DbType == QDatabaseFieldType::Blob) {
+				$strRet .=<<<TMPL
+			\$this->{$strControlVarName}->TextMode = QTextMode::MultiLine;
+
+TMPL;
+			}
+
+			if (($objColumn->VariableType == QType::String) && (is_numeric($objColumn->Length))) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->MaxLength = {$strClassName}::{$objColumn->PropertyName}MaxLength;
+
+TMPL;
+			}
+
+			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+
+			$strRet .= <<<TMPL
+			return \$this->{$strControlVarName};
+		}
+
+
+TMPL;
+
+			return $strRet;
+
+		}
+
+		/**
+		 * Generate code to reload data from the MetaControl into this control.
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
+		 * @return string
+		 */
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strControlVarName = static::Codegen_VarName($strPropName);
+
+			if ($blnInit) {
+				$strRet = "\t\t\t\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName};";
+			} else {
+				$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName};";
+			}
+			return $strRet . "\n";
+		}
+
+
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strControlVarName = static::Codegen_VarName($strPropName);
+			$strRet = <<<TMPL
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->Text;
+
+TMPL;
+			return $strRet;
+		}
 	}
 
 	/**

@@ -26,7 +26,7 @@
 
 		// Controls for <?php echo $objTable->ClassName  ?>'s Data Fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-		/** @var <?php echo $objCodeGen->FormControlVariableDataTypeForColumn($objColumn);  ?>  */
+		/** @var <?php echo $objCodeGen->FormControlClassForColumn($objColumn);  ?>  */
 		public $<?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>;
 <?php } ?>
 

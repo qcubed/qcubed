@@ -1,3 +1,5 @@
+
+
 			if ($this-><?php echo $strControlId  ?>) {
 					$this-><?php echo $strControlId  ?>->RemoveAllItems();
 <?php if ($objColumn->NotNull) { ?>
