@@ -141,6 +141,7 @@
 	QApplicationBase::$ClassFile['qblockcontrol'] = __QCUBED_CORE__ . '/base_controls/QBlockControl.class.php';
 	QApplicationBase::$ClassFile['qlabel'] = __QCUBED_CORE__ . '/base_controls/QLabel.class.php';
 	QApplicationBase::$ClassFile['qpanel'] = __QCUBED_CORE__ . '/base_controls/QPanel.class.php';
+	QApplicationBase::$ClassFile['qfieldset'] = __QCUBED_CORE__ . '/base_controls/QFieldset.class.php';
 	QApplicationBase::$ClassFile['qcontrolproxy'] = __QCUBED_CORE__ . '/base_controls/QControlProxy.class.php';
 	QApplicationBase::$ClassFile['qdialogbox'] = __QCUBED_CORE__ . '/base_controls/QDialogBox.class.php';
 		
@@ -182,6 +183,7 @@
 	QApplicationBase::$ClassFile['qfloattextbox'] = __QCUBED_CORE__ . '/base_controls/QFloatTextBox.class.php';
 	QApplicationBase::$ClassFile['qintegertextbox'] = __QCUBED_CORE__ . '/base_controls/QIntegerTextBox.class.php';
 	QApplicationBase::$ClassFile['qemailtextbox'] = __QCUBED_CORE__ . '/base_controls/QEmailTextBox.class.php';
+	QApplicationBase::$ClassFile['qurltextbox'] = __QCUBED_CORE__ . '/base_controls/QUrlTextBox.class.php';
 	QApplicationBase::$ClassFile['qwritebox'] = __QCUBED_CORE__ . '/base_controls/QWriteBox.class.php';
 
 	QApplicationBase::$ClassFile['qpaginatedcontrol'] = __QCUBED_CORE__ . '/base_controls/QPaginatedControl.class.php';
