@@ -1,6 +1,16 @@
+<?php
+$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+$objReflection = new ReflectionClass ($strControlType);
+$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaRefresh');
+
+if ($blnHasMethod) {
+	echo $strControlType::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn);
+} else {
+
+?>
 
 
-			if ($this-><?php echo $strControlId  ?>) {
+if ($this-><?php echo $strControlId  ?>) {
 					$this-><?php echo $strControlId  ?>->RemoveAllItems();
 <?php if ($objColumn->NotNull) { ?>
 				if (!$this->blnEditMode)
@@ -15,5 +25,6 @@
 						$objListItem->Selected = true;
 					$this-><?php echo $strControlId  ?>->AddItem($objListItem);
 				}
-			}
+			} 
 			if ($this-><?php echo $strLabelId  ?>) $this-><?php echo $strLabelId  ?>->Text = ($this-><?php echo $strObjectName  ?>-><?php echo $objColumn->Reference->PropertyName  ?>) ? $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->Reference->PropertyName  ?>->__toString() : null;
+<?php }?>

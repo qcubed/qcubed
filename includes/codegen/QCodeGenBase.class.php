@@ -949,23 +949,15 @@
 		}
 
 		public function FormControlVariableNameForColumn(QColumn $objColumn) {
-			if ($objColumn->Identity)
-				return sprintf('lbl%s', $objColumn->PropertyName);
-
-			if ($objColumn->Timestamp)
-				return sprintf('lbl%s', $objColumn->PropertyName);
-
-			if ($objColumn->Reference)
-				return sprintf('lst%s', $objColumn->Reference->PropertyName);
-
-			switch ($objColumn->VariableType) {
-				case QType::Boolean:
-					return sprintf('chk%s', $objColumn->PropertyName);
-				case QType::DateTime:
-					return sprintf('cal%s', $objColumn->PropertyName);
-				default:
-					return sprintf('txt%s', $objColumn->PropertyName);
+			if ($objColumn->Reference) {
+				$strPropName = $objColumn->Reference->PropertyName;
+			} else {
+				$strPropName = $objColumn->PropertyName;
 			}
+
+			$strClassName = $this->FormControlClassForColumn($objColumn);
+
+			return $strClassName::Codegen_VarName ($strPropName);
 		}
 
 		/**
@@ -1021,9 +1013,13 @@
 		}
 
 		public function FormLabelVariableNameForColumn(QColumn $objColumn) {
-			return 'lbl' . $objColumn->PropertyName;
+			if ($objColumn->Reference) {
+				$strPropName = $objColumn->Reference->PropertyName;
+			} else {
+				$strPropName = $objColumn->PropertyName;
+			}
+			return QLabel::Codegen_VarName($strPropName);
 		}
-
 
 		protected function FormLabelVariableNameForUniqueReverseReference(QReverseReference $objReverseReference) {
 			if ($objReverseReference->Unique) {

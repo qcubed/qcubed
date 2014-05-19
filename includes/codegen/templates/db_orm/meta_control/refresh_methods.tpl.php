@@ -10,30 +10,25 @@
 <?php
 
 			foreach ($objTable->ColumnArray as $objColumn) {
-				// Use the "control_refresh_" subtemplates to generate the code
-				// required to create/setup the control.
-				$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-				$strClassName = $objTable->ClassName;
-				$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-				$strLabelId = $objCodeGen->FormLabelVariableNameForColumn($objColumn);
+				if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none') continue;
 
-				// Figure out WHICH "control_refresh_" to use
-				if ($objColumn->Identity) {
-					$strTemplateFilename = 'identity';
-				} else if ($objColumn->Timestamp) {
-					$strTemplateFilename = 'identity';
-				} else if ($objColumn->Reference) {
-					if ($objColumn->Reference->IsType)
-						$strTemplateFilename = 'type';
-					else
-						$strTemplateFilename = 'reference';
-				} else {
-					$strTemplateFilename = $objColumn->VariableType;
+				$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+				if ($strControlType == 'QLabel'  ||
+						!isset($objColumn->Options['FormGen']) ||
+						$objColumn->Options['FormGen'] != 'label') {
+
+					$objReflection = new ReflectionClass ($strControlType);
+					$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaRefresh');
+					if ($blnHasMethod) {
+						echo $strControlType::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn);
+					} else {
+						throw new QCallerException ('Can\'t find Codegen_MetaRefresh for ' . $strControlType);
+					}
 				}
-
-				// Get the subtemplate and evaluate
-				include(sprintf('control_refresh_%s.tpl.php', $strTemplateFilename));
-				echo "\n\n";
+				if ($strControlType != 'QLabel') {
+					// also generate a QLabel for each control that is not defaulted as a label already
+					echo QLabel::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn);
+				}
 			}
 			foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
 				if ($objReverseReference->Unique) {
@@ -61,3 +56,26 @@
 			}
 ?>
 		}
+		
+		/**
+		 * Load this MetaControl with a new <?php echo $objTable->ClassName ?> object.
+		 * @param boolean $blnReload reload <?php echo $objTable->ClassName ?> from the database
+		 * @return void
+		 */
+		 <?php 
+		 	foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { 
+		 		$aStrs[] = '$' . $objColumn->VariableName . ' = null';
+		 	}
+		?>		 
+		 public function Load(<?php echo implode (',', $aStrs) ?>) {
+			if (<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>strlen($<?php echo $objColumn->VariableName  ?>) && <?php } ?><?php GO_BACK(4); ?>) {
+				$this-><?php echo $objCodeGen->VariableNameFromTable($objTable->Name);  ?> = <?php echo $objTable->ClassName  ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?php echo $objColumn->VariableName  ?>, <?php } ?><?php GO_BACK(2); ?>);
+				$this->blnEditMode = true;
+			}
+			else {
+				$this-><?php echo $objCodeGen->VariableNameFromTable($objTable->Name);  ?> = new <?php echo $objTable->ClassName  ?>();
+				$this->blnEditMode = false;
+			}
+			$this->Refresh ();
+		}
+		 
