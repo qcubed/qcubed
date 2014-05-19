@@ -23,6 +23,10 @@
 	 *
 	 */
 	class QSliderBase extends QSliderGen	{
+
+		const Vertical = 'vertical';
+		const Horizontal = 'horizontal';
+
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
 			
