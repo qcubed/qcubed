@@ -15,7 +15,9 @@
 	 */
 	class QDialog_ButtonEvent extends QEvent {
 		/** Event Name */
-		const EventName = 'QDialog_Button';	
+		const EventName = 'QDialog_Button';
+		const JsReturnParam = 'ui'; // ends up being the button id
+
 	}
 
 
@@ -60,6 +62,8 @@
 	
 	class QDialogBase extends QDialogGen
 	{
+		/** @var bool default to auto open being false, since this would be a rare need, and dialogs are auto-rendered. */
+		protected $blnAutoOpen = false;
         /** @var  string Id of last button clicked. */
 		protected $strClickedButtonId;
         /** @var bool Should we draw a close button on the top? */
@@ -72,6 +76,7 @@
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->blnDisplay = false;
+			$this->AddAction(new QDialog_ButtonEvent(), new QAjaxControlAction($this, 'ButtonClick'));
 		}
 		
 		public function getJqControlId() {
@@ -112,27 +117,40 @@ FUNC;
 
 			return $strOptions;
 		}
+
+		/**
+		 * Override to process button clicks. $mixParam is the id of the clicked button.
+		 *
+		 * @param $strFormId
+		 * @param $strControlId
+		 * @param $mixParam
+		 */
+		public function ButtonClick ($strFormId, $strControlId, $mixParam) {
+			$this->strClickedButtonId = $mixParam;
+		}
 	
 		/**
 		 * Add a button to the dialog.
 		 * 
-		 * Use this override to add buttons BEFORE bringing up the dialog
-		 * Attach actions to the QDialog_ButtonEvent event, and then call
-		 * $dlg->ClickedButton to see which button was clicked.
+		 * Use this to add buttons BEFORE bringing up the dialog
+		 * Override ButtonClick to detect a button click.
+		 *
+		 * @param $strButtonName
+		 * @param $strButtonId	Must be unique on the form. Remember, a dialog is not a form, so all dialogs on the form should have unique button ids.
 		 */
-		
+
 		public function AddButton ($strButtonName, $strButtonId) {
 			if (!$this->mixButtons) {
 				$this->mixButtons = array();
 			}
 			$controlId = $this->ControlId;
-			$strJS =<<<BUTTONFUNC
-			qcubed.recordControlModification("$controlId", "_ClickedButton", "$strButtonId");
-			jQuery("#$controlId").trigger("QDialog_Button");
-BUTTONFUNC;
-									
-			$this->mixButtons[$strButtonName] = new QJsClosure($strJS);
-									
+			$strJS = sprintf('jQuery("#%s").trigger("QDialog_Button", event.currentTarget.id)', $this->ControlId);
+
+			//	$this->mixButtons[$strButtonName] = new QJsClosure($strJS);
+			$this->mixButtons[] = array ('text'=>$strButtonName,
+				'click'=>new QJsClosure($strJS),
+				'id'=>$strButtonId);
+
 			$this->blnModified = true;
 		}
 		
@@ -164,14 +182,6 @@ BUTTONFUNC;
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case '_ClickedButton': // Internal only. Do not use. Used by JS above to keep track of clicked button.
-					try {
-						$this->strClickedButtonId = QType::Cast($mixValue, QType::String);
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-					break;
 
                 case '_IsOpen': // Internal only, to detect when dialog has been opened or closed.
                     try {
