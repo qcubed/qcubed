@@ -1,8 +1,8 @@
 <?php
 	/**
-	 * QWatcher is a helper class that allows controls to watch database tables
+	 * QWatcher is a helper class that allows controls and forms to watch database tables
 	 * and automatically redraw when changes are detected. It works together with the codegened
-	 * model classes, the controls, and the QForm class to draw when needed.
+	 * model classes, the controls, and the QForm class to draw or refresh when needed.
 	 * 
 	 * Static functions handle the database updating, while member variables store the current state
 	 * of a control's watched tables.
@@ -103,4 +103,3 @@
 		static public function FormWatcherChanged (&$strFormWatcherTime) { return false;}
 	}
 ?>
-	
