@@ -1660,6 +1660,16 @@
 			$this->objWatcher->Watch ($objNode);
 		}
 
+		/**
+		 * Make this control current as of the latest changes so that it will not refresh on the next draw.
+		 */
+		public function MakeCurrent() {
+			if ($this->objWatcher) {
+				$this->objWatcher->MakeCurrent();
+			}
+		}
+
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
