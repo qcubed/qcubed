@@ -1,1 +1,1 @@
-A convenient place to put files that you add to your project. Only the Plugins directory is required if you have installed plugins. Be sure to make the Plugins directory writable by the browser when installing plugins.
+A convenient place to put utility files that need to be accessed directly by the browser.
