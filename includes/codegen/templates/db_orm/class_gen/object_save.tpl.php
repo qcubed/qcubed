@@ -51,7 +51,7 @@
 			$mixToReturn = null;
 
 			try {
-				if ((!$this->__blnRestored) || ($blnForceInsert)) {
+				if ((!$this->__blnRestored && !$blnForceUpdate) || ($blnForceInsert)) {
 					// Perform an INSERT query
 					$objDatabase->NonQuery('
 						INSERT INTO <?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?><?php echo $strCols; echo $strValues; ?>
