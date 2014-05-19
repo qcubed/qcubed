@@ -163,6 +163,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__APP_PHP_ASSETS__', __PROJECT_ASSETS__ . '/php');
 			
 			define ('__PLUGIN_ASSETS__',  __SUBDIRECTORY__ . '/vendor/qcubed/plugin');
+			define ('__IMAGE_CACHE__', __APP_IMAGE_ASSETS__ . '/cache');
 
 			// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery
