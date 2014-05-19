@@ -81,7 +81,7 @@
 		//protected $blnDisplayHtml = false;
 
 		public function __construct($objParentObject, $strControlId = null) {
-			parent::__construct ($objParentObject, $strControlId = null);
+			parent::__construct ($objParentObject, $strControlId);
 			$this->AddJavascriptFile('qcubed.autocomplete.js');
 		}
 
@@ -196,6 +196,13 @@
 			QApplication::ExecuteJavaScript($strJS, true);
 		}
 
+		/**
+		 *
+		 */
+		public function SetEmpty() {
+			$this->Text = '';
+			$this->SelectedId = null;
+		}
 
 		/**
 		 * PHP __set Magic method
@@ -217,11 +224,16 @@
 					}
 					break;
 					
-				case 'SelectedId': 
+				case "SelectedValue":	// mirror list control
+				case 'SelectedId':
 					// Set this at creation time to initialize the selected id. 
 					// This is also set by the javascript above to keep track of subsequent selections made by the user.
 					try {
-						$this->strSelectedId = QType::Cast($mixValue, QType::String);
+						if ($mixValue == 'null') {
+							$this->strSelectedId = null;
+						} else {
+							$this->strSelectedId = QType::Cast($mixValue, QType::String);
+						}
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -267,6 +279,7 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
+				case "SelectedValue":	// mirror list control
 				case 'SelectedId': return $this->strSelectedId;
 
 				default: 
