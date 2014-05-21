@@ -968,7 +968,7 @@
 		 * @return string
 		 */
 
-		protected function FormControlClassForColumn(QColumn $objColumn) {
+		public function FormControlClassForColumn(QColumn $objColumn) {
 			if (($o = $objColumn->Options) && isset($o['ControlClass'])) {
 				return $o['ControlClass'];
 			}
