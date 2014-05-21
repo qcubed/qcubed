@@ -1457,6 +1457,25 @@
 		}
 
 		/**
+		 * Get high level form javascript files to be included. Default here includes all
+		 * javascripts needed to run qcubed.
+		 * Override and add to this list and include
+		 * javascript and jQuery files and libraries needed for your application.
+		 * Javascript files included before __QCUBED_JS_CORE__ can refer to jQuery as $.
+		 * After qcubed.js, $ becomes $j, so add other libraries that need
+		 * $ in a different context after qcubed.js, and insert jQuery libraries and  plugins that
+		 * refer to $ before qcubed.js file.
+		 *
+		 * @return array
+		 */
+		protected function GetFormJavaScripts() {
+			return array (__JQUERY_BASE__,
+				__JQUERY_EFFECTS__,
+				'jquery/jquery.ajaxq-0.0.1.js',
+				__QCUBED_JS_CORE__);
+		}
+
+		/**
 		 * @param bool $blnDisplayOutput should the output be returned or directly printed to screen.
 		 *
 		 * @return null|string
