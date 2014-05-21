@@ -39,6 +39,7 @@ $j.ajaxQueue = function(o) {
  * synced requests have been completed.
  * @param object o Options.
  * @return object The callback.
+ * @deprecacted Core no longer uses this. Uses ajaxq instead.
  */
 $j.ajaxSync = function(o) {
     var fn = $j.ajaxSync.fn,
@@ -344,6 +345,8 @@ qcubed = {
             success: function(xml) {
                 var strCommands = [];
 
+                qcubed._prevUpdateTime = new Date().getTime();
+
                 $j(xml).find('control').each(function() {
                     var $this = $j(this),
                         strControlId = '#' + $this.attr("id"),
@@ -371,6 +374,10 @@ qcubed = {
                             $j(strControlId + '_ctl').html(strControlHtml);
                         }
                     }
+                }).end().find('watcher').each(function() {
+                    if (qFormParams.control) {
+                        qcubed.broadcastChange();
+                    }
                 }).end().find('command').each(function() {
                     strCommands.push($j(this).text());
                 });
@@ -379,6 +386,7 @@ qcubed = {
                 if (qcubed.objAjaxWaitIcon) {
                     $j(qcubed.objAjaxWaitIcon).hide();
                 }
+
             }
         });
 
@@ -425,6 +433,14 @@ qcubed = {
 
         this.wrappers = [];
 
+        if ('localStorage' in window && window['localStorage'] !== null) {
+            $j(window).on ("storage", function (o) {
+                if (o.originalEvent.key == "qcubed.broadcast") {
+                    qcubed.updateForm();
+                }
+            });
+        }
+
         return this;
     }
 };
@@ -446,6 +462,36 @@ qcubed.setTimeout = function(strTimerId, strAction, intDelay) {
     qcubed.clearTimeout(strTimerId);
     qcubed._objTimers[strTimerId] = setTimeout(strAction, intDelay);
 };
+
+///////////////////////////////
+// QWatcher support
+///////////////////////////////
+qcubed._prevUpdateTime = 0;
+qcubed.minUpdateInterval = 1000; // milliseconds to limit broadcast updates. Feel free to change this.
+qcubed.broadcastChange = function () {
+    if ('localStorage' in window && window['localStorage'] !== null) {
+        var newTime = new Date().getTime();
+        localStorage.setItem("qcubed.broadcast", newTime); // must change value to induce storage event in other windows
+    }
+};
+
+qcubed.updateForm = function() {
+    // call this whenever you generally just need the form to update without a specific action.
+    var newTime = new Date().getTime();
+
+    // the following code prevents too many updates from happening in a short amount of time.
+    // the default will update no faster than once per second.
+    if (newTime - qcubed._prevUpdateTime >= qcubed.minUpdateInterval) {
+        //refresh immediately
+        var strForm = $j('#Qform__FormId').val();
+        qcubed.postAjax (strForm, '', '', '', '');
+        qcubed.clearTimeout ('qcubed.update');
+    } else if (!qcubed._objTimers['qcubed.update']) {
+        // delay to let multiple fast actions only trigger periodic refreshes
+        qcubed.setTimeout ('qcubed.update', 'qcubed.updateForm', qcubed.minUpdateInterval);
+    }
+}
+
 
 /////////////////////////////////////
 // Event Object-related functionality
