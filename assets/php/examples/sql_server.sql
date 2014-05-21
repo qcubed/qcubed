@@ -109,6 +109,14 @@ CREATE TABLE IF NOT EXISTS person_persontype_assn (
 CREATE INDEX IX_persontype_1 ON person_persontype_assn(person_id);
 CREATE INDEX IX_persontype_2 ON person_persontype_assn(person_type_id);
 
+DROP TABLE IF EXISTS _qc_watchers;
+CREATE TABLE IF NOT EXISTS _qc_watchers (
+  table_key varchar(200) NOT NULL,
+  ts varchar(40) NOT NULL,
+  CONSTRAINT PK_qc_watchers PRIMARY KEY (table_key)
+);
+
+
 ALTER TABLE login ADD CONSTRAINT person_login FOREIGN KEY (person_id) REFERENCES person (id);
 ALTER TABLE project ADD CONSTRAINT person_project FOREIGN KEY (manager_person_id) REFERENCES person (id);
 ALTER TABLE project ADD CONSTRAINT project_status_type_project FOREIGN KEY (project_status_type_id) REFERENCES project_status_type (id);
