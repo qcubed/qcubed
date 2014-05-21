@@ -230,6 +230,8 @@
 		protected $blnActionsMustTerminate = false;
 		/** @var bool Is this control a block type element? */
 		protected $blnIsBlockElement = false;
+		/** @var QWatcher Stores information about watched tables. */
+		protected $objWatcher = null;
 
 		//////////
 		// Methods
@@ -1001,7 +1003,7 @@
 
 		/**
 		 * RenderHelper should be called from all "Render" functions FIRST in order to check for and
-		 * perform attribute overides (if any).
+		 * perform attribute overrides (if any).
 		 * All render methods should take in an optional first boolean parameter blnDisplayOutput
 		 * (default to true), and then any number of attribute overrides.
 		 * Any "Render" method (e.g. Render, RenderWithName, RenderWithError) should call the
@@ -1287,6 +1289,11 @@
 					break;
 			}
 
+			// Update watcher
+			if ($this->objWatcher) {
+				$this->objWatcher->MakeCurrent();
+			}
+
 			// Output or Return
 			if ($blnDisplayOutput)
 				print($strOutput);
@@ -1340,7 +1347,7 @@
 		 */
 		public function RenderAjax($blnDisplayOutput = true) {
 			// Only render if this control has been modified at all
-			if ($this->blnModified) {
+			if ($this->IsModified()) {
 
 				// Render if (1) object has no parent or (2) parent was not rendered nor currently being rendered
 				if ((!$this->objParentControl) || ((!$this->objParentControl->Rendered) && (!$this->objParentControl->Rendering))) {
@@ -1351,6 +1358,15 @@
 			}
 			// The following line is to suppres the warning in PhpStorm
 			return '';
+		}
+
+		/**
+		 * Returns true if the control should be redrawn.
+		 * @return bool
+		 */
+		protected function IsModified() {
+			return ($this->blnModified ||
+				($this->objWatcher && !$this->objWatcher->IsCurrent()));
 		}
 
 		/**
@@ -1660,6 +1676,30 @@
 			return $this->ControlId;
 		}
 
+		/**
+		 * Watch a particular node in the database. Call this to trigger a redraw of the control
+		 * whenever the database table that this node points to is changed.
+		 *
+		 * @param QQNode $objNode
+		 */
+		public function Watch (QQNode $objNode)
+		{
+			if (!$this->objWatcher) {
+				$this->objWatcher = new QWatcher(); // only create a watcher object when needed, since it is stored in the form state
+			}
+			$this->objWatcher->Watch ($objNode);
+		}
+
+		/**
+		 * Make this control current as of the latest changes so that it will not refresh on the next draw.
+		 */
+		public function MakeCurrent() {
+			if ($this->objWatcher) {
+				$this->objWatcher->MakeCurrent();
+			}
+		}
+
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -1732,7 +1772,6 @@
 				case "Rendering": return $this->blnRendering;
 				case "OnPage": return $this->blnOnPage;
 				case "RenderMethod": return $this->strRenderMethod;
-				case "Modified": return $this->blnModified;
 				case "WrapperModified": return $this->blnWrapperModified;
 				case "strActionParameter": //for backward compatibility	
 				case "ActionParameter": return $this->mixActionParameter;
@@ -1744,6 +1783,9 @@
 				case "JavaScripts": return $this->strJavaScripts;
 				case "StyleSheets": return $this->strStyleSheets;
 				case "FormAttributes": return (array) $this->strFormAttributes;
+
+				case "Modified": return $this->IsModified();
+
 
 				default:
 					try {

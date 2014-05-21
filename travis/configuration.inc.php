@@ -58,9 +58,11 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ is defined as '/qcubed'
 			 *      /var/www/qcubed/wwwroot
 			 */
-			define ('__DOCROOT__', __TRAVIS_DIR__);
+			define ('__DOCROOT__', __WORKING_DIR__);
 			define ('__VIRTUAL_DIRECTORY__', '');
-			define ('__SUBDIRECTORY__', '');
+			if (!defined ('__SUBDIRECTORY__')) {
+				define ('__SUBDIRECTORY__', '');
+			}
 
 			/*
 			 * The project directory is where your editable project files go. These include files
@@ -77,7 +79,7 @@ if (!defined('SERVER_INSTANCE')) {
 			 */
 			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
 			// The directory where the external libraries are placed, that are not in composer
-			define ('__EXTERNAL_LIBRARIES__', __DOCROOT__ . __SUBDIRECTORY__ . '/vendor');
+			define ('__EXTERNAL_LIBRARIES__', __DOCROOT__ . '/vendor');
 			// The application includes directory
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 

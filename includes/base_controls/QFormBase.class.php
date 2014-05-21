@@ -61,6 +61,8 @@
 		/** @var bool True when css scripts get rendered on page. */
 		protected $blnStylesRendered = false;
 
+		protected $strWatcherTime;
+
 		///////////////////////////
 		// Form Status Constants
 		///////////////////////////
@@ -552,8 +554,15 @@
 			// Update the Status
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 
+			$strToReturn = '';
+
+			// watcher collection
+			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+				$strToReturn = '<watcher></watcher>';
+			}
+
 			// Create the Control collection
-			$strToReturn = '<controls>';
+			$strToReturn .= '<controls>';
 
 			// Include each control (if applicable) that has been changed/modified
 			foreach ($this->GetAllControls() as $objControl) {
@@ -1147,6 +1156,10 @@
 		}
 
 		protected function Render() {
+			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+				QApplication::ExecuteJavaScript('qcubed.broadcastChange()');
+			}
+
 			require($this->HtmlIncludeFilePath);
 		}
 
@@ -1312,32 +1325,36 @@
 		}
 
 		/**
-		 * Primarily used by RenderBegin and by RenderAjax
-		 * Given a comma-delimited list of javascript files, this will return an array of file that NEED to still
+		 * Internal helper function used by RenderBegin and by RenderAjax
+		 * Given a comma-delimited list of javascript files, this will return an array of files that NEED to still
 		 * be included because (1) it hasn't yet been included and (2) it hasn't been specified to be "ignored".
 		 *
 		 * This WILL update the internal $strIncludedJavaScriptFileArray array.
 		 *
-		 * @param string $strJavaScriptFileList
+		 * @param string | array $strJavaScriptFileList
 		 * @return string[] array of script files to include or NULL if none
 		 */
-		protected function ProcessJavaScriptList($strJavaScriptFileList) {
+		protected function ProcessJavaScriptList($strJavaScriptFileList)  {
+
+			if (empty($strJavaScriptFileList)) return null;
+
 			$strArrayToReturn = array();
 
-			// Is there a comma-delimited list of javascript files to include?
-			if ($strJavaScriptFileList = trim($strJavaScriptFileList)) {
-				$strScriptArray = explode(',', $strJavaScriptFileList);
+			if (!is_array($strJavaScriptFileList)) {
+				$strJavaScriptFileList = explode(',', $strJavaScriptFileList);
+			}
 
-				// Iterate through the list of JavaScriptFiles to Include...
-				foreach ($strScriptArray as $strScript)
-					if ($strScript = trim($strScript))
+			// Iterate through the list of JavaScriptFiles to Include...
+			foreach ($strJavaScriptFileList as $strScript) {
+				if ($strScript = trim($strScript)) {
 
-						// Include it if we're NOT ignoring it and it has NOT already been included
-						if ((array_search($strScript, $this->strIgnoreJavaScriptFileArray) === false) &&
-							!array_key_exists($strScript, $this->strIncludedJavaScriptFileArray)) {
-							$strArrayToReturn[$strScript] = $strScript;
-							$this->strIncludedJavaScriptFileArray[$strScript] = true;
-						}
+					// Include it if we're NOT ignoring it and it has NOT already been included
+					if ((array_search($strScript, $this->strIgnoreJavaScriptFileArray) === false) &&
+						!array_key_exists($strScript, $this->strIncludedJavaScriptFileArray)) {
+						$strArrayToReturn[$strScript] = $strScript;
+						$this->strIncludedJavaScriptFileArray[$strScript] = true;
+					}
+				}
 			}
 
 			if (count($strArrayToReturn))
