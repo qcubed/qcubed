@@ -61,6 +61,8 @@
 		/** @var bool True when css scripts get rendered on page. */
 		protected $blnStylesRendered = false;
 
+		protected $strWatcherTime;
+
 		///////////////////////////
 		// Form Status Constants
 		///////////////////////////
@@ -552,13 +554,20 @@
 			// Update the Status
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 
+			$strToReturn = '';
+
+			// watcher collection
+			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+				$strToReturn = '<watcher></watcher>';
+			}
+
 			// Create the Control collection
-			$strToReturn = '<controls>';
+			$strToReturn .= '<controls>';
 
 			// Include each control (if applicable) that has been changed/modified
 			foreach ($this->GetAllControls() as $objControl)
 				if (!$objControl->ParentControl)
-//					$strToReturn .= $objControl->RenderAjax(false) . "\r\n";
+//					$strToReturn .= $objControl->RenderRender()(false) . "\r\n";
 					$strToReturn .= $this->RenderAjaxHelper($objControl);
 
 			// First, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
@@ -1024,11 +1033,10 @@
 				} else {
 					$strId = $_POST['Qform__FormControl'];
 				}
-				$strEvent = $_POST['Qform__FormEvent'];
-
-				$strAjaxActionId = NULL;
-
 				if ($strId != '') {
+					$strEvent = $_POST['Qform__FormEvent'];
+					$strAjaxActionId = NULL;
+
 					// Does this Control which performed the action exist?
 					if (array_key_exists($strId, $this->objControlArray)) {
 						// Get the ActionControl as well as the Actions to Perform
@@ -1165,6 +1173,10 @@
 		}
 
 		protected function Render() {
+			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+				QApplication::ExecuteJavaScript('qcubed.broadcastChange()');
+			}
+
 			require($this->HtmlIncludeFilePath);
 		}
 
@@ -1330,32 +1342,36 @@
 		}
 
 		/**
-		 * Primarily used by RenderBegin and by RenderAjax
-		 * Given a comma-delimited list of javascript files, this will return an array of file that NEED to still
+		 * Internal helper function used by RenderBegin and by RenderAjax
+		 * Given a comma-delimited list of javascript files, this will return an array of files that NEED to still
 		 * be included because (1) it hasn't yet been included and (2) it hasn't been specified to be "ignored".
 		 *
 		 * This WILL update the internal $strIncludedJavaScriptFileArray array.
 		 *
-		 * @param string $strJavaScriptFileList
+		 * @param string | array $strJavaScriptFileList
 		 * @return string[] array of script files to include or NULL if none
 		 */
-		protected function ProcessJavaScriptList($strJavaScriptFileList) {
+		protected function ProcessJavaScriptList($strJavaScriptFileList)  {
+
+			if (empty($strJavaScriptFileList)) return null;
+
 			$strArrayToReturn = array();
 
-			// Is there a comma-delimited list of javascript files to include?
-			if ($strJavaScriptFileList = trim($strJavaScriptFileList)) {
-				$strScriptArray = explode(',', $strJavaScriptFileList);
+			if (!is_array($strJavaScriptFileList)) {
+				$strJavaScriptFileList = explode(',', $strJavaScriptFileList);
+			}
 
-				// Iterate through the list of JavaScriptFiles to Include...
-				foreach ($strScriptArray as $strScript)
-					if ($strScript = trim($strScript))
+			// Iterate through the list of JavaScriptFiles to Include...
+			foreach ($strJavaScriptFileList as $strScript) {
+				if ($strScript = trim($strScript)) {
 
-						// Include it if we're NOT ignoring it and it has NOT already been included
-						if ((array_search($strScript, $this->strIgnoreJavaScriptFileArray) === false) &&
-							!array_key_exists($strScript, $this->strIncludedJavaScriptFileArray)) {
-							$strArrayToReturn[$strScript] = $strScript;
-							$this->strIncludedJavaScriptFileArray[$strScript] = true;
-						}
+					// Include it if we're NOT ignoring it and it has NOT already been included
+					if ((array_search($strScript, $this->strIgnoreJavaScriptFileArray) === false) &&
+						!array_key_exists($strScript, $this->strIncludedJavaScriptFileArray)) {
+						$strArrayToReturn[$strScript] = $strScript;
+						$this->strIncludedJavaScriptFileArray[$strScript] = true;
+					}
+				}
 			}
 
 			if (count($strArrayToReturn))
@@ -1475,6 +1491,25 @@
 		}
 
 		/**
+		 * Get high level form javascript files to be included. Default here includes all
+		 * javascripts needed to run qcubed.
+		 * Override and add to this list and include
+		 * javascript and jQuery files and libraries needed for your application.
+		 * Javascript files included before __QCUBED_JS_CORE__ can refer to jQuery as $.
+		 * After qcubed.js, $ becomes $j, so add other libraries that need
+		 * $ in a different context after qcubed.js, and insert jQuery libraries and  plugins that
+		 * refer to $ before qcubed.js file.
+		 *
+		 * @return array
+		 */
+		protected function GetFormJavaScripts() {
+			return array (__JQUERY_BASE__,
+				__JQUERY_EFFECTS__,
+				'jquery/jquery.ajaxq-0.0.1.js',
+				__QCUBED_JS_CORE__);
+		}
+
+		/**
 		 * @param bool $blnDisplayOutput should the output be returned or directly printed to screen.
 		 *
 		 * @return null|string
@@ -1493,10 +1528,12 @@
 				default:
 					throw new QCallerException('FormStatus is in an unknown status');
 			}
+
 			//Clear included javascript array
 			$this->strIncludedJavaScriptFileArray = array();
-			// Figure out initial list of JavaScriptIncludes
-			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',jquery/jquery.ajaxq-0.0.1.js,' . __QCUBED_JS_CORE__);
+			// Add form level javascripts and libraries
+			$strJavaScriptArray = $this->ProcessJavaScriptList($this->GetFormJavaScripts());
+
 			// Setup IncludeJs
 			$strToReturn = "\r\n";
 

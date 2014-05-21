@@ -22,6 +22,8 @@
 	 */
 	class <?php echo $objTable->ClassName  ?>Gen extends QBaseClass implements IteratorAggregate {
 
+		public static $blnWatchChanges = false; // Set to true to watch changes at the table level
+
 		<?php include("protected_member_variables.tpl.php"); ?>
 
 

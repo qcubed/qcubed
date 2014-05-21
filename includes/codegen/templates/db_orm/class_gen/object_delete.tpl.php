@@ -54,6 +54,10 @@
 <?php } ?><?php GO_BACK(5); ?>');
 
 			$this->DeleteCache();
+			if (static::$blnWatchChanges) {
+				QWatcher::MarkTableModified ('<?php echo QApplication::$Database[$objTable->OwnerDbIndex]->Database  ?>', '<?php echo $objTable->Name  ?>');
+			}
+
 		}
 
         /**
@@ -83,6 +87,10 @@
 
 			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
 				QApplication::$objCacheProvider->DeleteAll();
+			}
+
+			if (static::$blnWatchChanges) {
+				QWatcher::MarkTableModified ('<?php echo QApplication::$Database[$objTable->OwnerDbIndex]->Database  ?>', '<?php echo $objTable->Name  ?>');
 			}
 		}
 

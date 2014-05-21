@@ -173,6 +173,10 @@
 
 			$this->DeleteCache();
 
+			if (static::$blnWatchChanges) {
+				QWatcher::MarkTableModified ('<?php echo QApplication::$Database[$objTable->OwnerDbIndex]->Database  ?>', '<?php echo $objTable->Name  ?>');
+			}
+
 			// Return
 			return $mixToReturn;
 		}

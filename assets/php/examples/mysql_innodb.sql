@@ -123,6 +123,13 @@ CREATE TABLE two_key (
   KEY project_id (project_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS _qc_watchers;
+CREATE TABLE IF NOT EXISTS _qc_watchers (
+  table_key varchar(200) NOT NULL,
+  ts varchar(40) NOT NULL,
+  PRIMARY KEY (table_key)
+);
+
 
 #========================================================================== #
 #  Foreign Keys                                                             #
