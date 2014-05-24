@@ -175,6 +175,8 @@
 	QApplicationBase::$ClassFile['qradiobuttonlist'] = __QCUBED_CORE__ . '/base_controls/QRadioButtonList.class.php';
 	QApplicationBase::$ClassFile['qtreenav'] = __QCUBED_CORE__ . '/base_controls/QTreeNav.class.php';
 	QApplicationBase::$ClassFile['qtreenavitem'] = __QCUBED_CORE__ . '/base_controls/QTreeNavItem.class.php';
+	QApplicationBase::$ClassFile['qhtmllist'] = __QCUBED_CORE__ . '/base_controls/QHtmlList.class.php';
+	QApplicationBase::$ClassFile['qhtmllistitem'] = __QCUBED_CORE__ . '/base_controls/QHtmlList.class.php';
 
 	QApplicationBase::$ClassFile['qtextboxbase'] = __QCUBED_CORE__ . '/base_controls/QTextBoxBase.class.php';
 	QApplicationBase::$ClassFile['qtextbox'] = __QCUBED__ . '/controls/QTextBox.class.php';
