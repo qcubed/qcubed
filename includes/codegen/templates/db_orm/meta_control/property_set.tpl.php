@@ -9,14 +9,18 @@
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
+					case Parent:
+						$this->objParentObject = $mixValue;
+						break;
+
 					// Controls that point to <?php echo $objTable->ClassName  ?> fields
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?><?php 
+<?php foreach ($objTable->ColumnArray as $objColumn) {
+	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 	$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
 	$strPropertyName = $objColumn->PropertyName . 'Control';
 	$strClassName = $objCodeGen->FormControlTypeForColumn($objColumn);
-?><?php include("property_set_case.tpl.php"); ?>
-
-<?php } ?>
+	include("property_set_case.tpl.php");
+} ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?><?php if ($objReverseReference->Unique) { ?><?php 
 		$strControlId = $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference);
 		$strPropertyName = $objReverseReference->ObjectDescription . 'Control';

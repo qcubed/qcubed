@@ -1,11 +1,12 @@
+<?php $controlType = $this->FormControlClassForColumn ($objColumn);?>
 		/**
-		 * Create and setup QCheckBox <?php echo $strControlId  ?>
+		 * Create and setup <?php echo $controlType ?> <?php echo $strControlId  ?>
 
 		 * @param string $strControlId optional ControlId to use
-		 * @return QCheckBox
+		 * @return <?php echo $controlType ?>
 		 */
 		public function <?php echo $strControlId  ?>_Create($strControlId = null) {
-			$this-><?php echo $strControlId  ?> = new QCheckBox($this->objParentObject, $strControlId);
+			$this-><?php echo $strControlId  ?> = new <?php echo $controlType?>($this->objParentObject, $strControlId);
 			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QCodeGen::MetaControlLabelNameFromColumn($objColumn)  ?>');
 			$this-><?php echo $strControlId  ?>->Checked = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
 			return $this-><?php echo $strControlId  ?>;

@@ -1,0 +1,60 @@
+Codegen Notes
+
+QCubed is set up to generate a default set of objects and forms to get you started with your application. This is called “codgen”. The notes below will help you understand the process and how to customize it to your needs. Ideally, you should customize the codegen process first before starting to write you application code, but we know that development does not go always as planned, and the whole system is set up so that you can separate out your hand written code from the generated code, and continue to tweak the codegen process at re-generate code at any time.
+
+The codegen process starts at the QCUbed start screen by clicking on the codegen link. PHP is executed to generate the files. Therefore, the target directories for codegen will need to be writable by the web server process, so codegen is just for a development system.
+
+The codegen process works by instantiating a QCodeGen object. This object then looks in the template directories and begins to include the php files there that start with an underscore (_). These templates then include other files, which in turn may include other template files. This combination will eventually generate the forms, meta controls, and data table interface classes that you will base your application on.
+
+
+Meta Controls
+Meta controls are helper classes that have methods which connect form controls with columns in data tables. Each column in the data table corresponds with a control that is generated in a meta control. Your form object calls methods in the meta control to get the controls and place them in the form.
+
+To customize the generated controls, you have the following choices:
+- Create your own code generating templates and place them in your project/includes/codegen/templates directory. Its best to do this by copying the corresponding file in the qcubed/framework/includes/codegen/templates directory and then editing the file and placing it in the corresponding location in the above project directory. The project directory files will override the files in the vendor directory.
+- Override the generated code by editing the meta controls in your project/includes/meta_conrols directory.
+
+
+Version 3 
+QCubed Version 3 introduces the concept of having the controls themselves create the code to interact with the database for the metacontrol, rather than the templates. Coupled with this is the ability to embed additional meta control parameters into the "Comments" part of a database column. Oracle, Sybase, Postgres, and MySQL all support column Comments. 
+
+These new features give the developer the ability to do the following:
+- Override the default control type to specify a particular control type in the comment field of a table column
+- Allow custom controls and plugins to generate their own meta control code and have that code automatically be used instead of the default code just by specifying that control in the comments of a column.
+- Allow subclasses of standard controls to override the code generation methods to generate different code.
+- Specify additional overrides to control many aspects of control creation in the generated meta control.
+
+Specifying Options in the database columns
+To specify options in a column, you simply put a JSON formatted object into the Comments of a column. The object will automatically be extracted from the column. You can put other text in a comment as well, and it will be ignored provided it is not within opening and closing braces. For example, consider this text in a comment:
+
+This is simply going to be a label for a field {"ControlClass":"QLabel", "Name":"My Label", "Overrides":{"Format":"prefix_%s"}}
+
+The text before the opening brace will be ignored. The rest indicates the following:
+- This column should be mapped to a QLabel control
+- The Name parameter should be set to "My Label" rather than the default.
+- Additionally, set the "Format" parameter of the QLabel to the text "prefix_%s".
+
+Note on JSON Format
+Strings will be enclosed in single quotes in PHP, but the string also is read in PHP. If you want to enclose a single quote (') in a string in the JSON code, you must put two backslashes (\\) in front of the quote.
+
+Notes on Particular Options
+
+FormGen: Can turn off or limit the generation of form objects for this column. Options are:
+ 'none'  - generate no form elements to edit this item
+ 'label' - generate only read-only elements
+ 'meta'  - generate normal meta-control controls and data columns, but do not initialize the controls in the forms.
+ default - generate read and write elements in the meta control.
+
+ControlClass: Specifies the actual class to declare for the column. The class definition of this file must include static methods to create the various meta control code. See below for particular method names that need to be implemented. Make sure your control type can handle the data type of the column. QLabel and other QBlockControl types should be able to handle any data type.
+
+Name: The name to give the object. Normally the name is taken from the column name, but this will override the default name generated.
+
+Overrides: This is an object that will generate lines to set additional options for the control. Specify whatever the control understands, like Width, Height, AutoRenderChildren, etc. Booleans and numbers should not be in quotes, but strings should be in quotes.
+
+Notes for Upgrading from version 2
+Many of the problems that caused programmers to create their own templates are now solvable through the new Options feature available through Comments. However, you are still free to override the templates as needed. In fact, this new feature is implemented entirely through the templates, so if you want to keep your old templates, simply replace the new templates with the old ones from version 2.
+
+QLabel no longer accepts a strFormat parameter at create time. You can always set it using the ->Format parameter after creating the control, or specify this in an override in a Comment option.
+
+QLabel controls are no longer created for every column. If you want to use a QLabel for a particular control, you must set the ControlClass in the Comments.
+

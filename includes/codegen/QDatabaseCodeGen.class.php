@@ -1041,7 +1041,23 @@
 
 			$objColumn->VariableName = $this->VariableNameFromColumn($objColumn);
 			$objColumn->PropertyName = $this->PropertyNameFromColumn($objColumn);
-			$objColumn->Comment = $objField->Comment;
+
+			// separate overrides embedded in the comment
+
+			if (($strComment = $objField->Comment) &&
+				($pos1 = strpos ($strComment, '{')) !== false &&
+				($pos2 = strrpos ($strComment, '}', $pos1))) {
+
+				$strJson = substr ($strComment, $pos1, $pos2 - $pos1 + 1);
+				$a = json_decode($strJson, true);
+
+				if ($a) {
+					$objColumn->Options = $a;
+					$objColumn->Comment = substr ($strComment, 0, $pos1) . substr ($strComment, $pos2 + 1); // return comment without options
+				} else {
+					$objColumn->Comment = $strComment;
+				}
+			}
 
 			return $objColumn;
 		}

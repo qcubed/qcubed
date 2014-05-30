@@ -21,35 +21,30 @@
 		 */
 		protected $blnEditMode;
 
-		// Controls that allow the editing of <?php echo $objTable->ClassName  ?>'s individual data fields
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-		/**
-		 * @var <?php echo $objCodeGen->FormControlClassForColumn($objColumn);  ?> <?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>
+		// Controls that correspond to <?php echo $objTable->ClassName  ?>'s individual data fields
+<?php foreach ($objTable->ColumnArray as $objColumn) {
+	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 
-		 * @access protected
-		 */
-		protected $<?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>;
-<?php } ?>
+	$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+	if ($strControlType == 'QLabel'  ||
+			!isset($objColumn->Options['FormGen']) ||
+			$objColumn->Options['FormGen'] != 'label') {
 
-		// Controls that allow the viewing of <?php echo $objTable->ClassName  ?>'s individual data fields
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php if (!$objColumn->Identity && !$objColumn->Timestamp) { ?>
-		/**
-		 * @var QLabel <?php echo $objCodeGen->FormLabelVariableNameForColumn($objColumn);  ?>
+		$objReflection = new ReflectionClass ($strControlType);
+		$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaVariableDeclaration');
+		if ($blnHasMethod) {
+			echo $strControlType::Codegen_MetaVariableDeclaration($objCodeGen, $objColumn);
+		} else {
+			throw new QCallerException ('Can\'t find Codegen_MetaVariableDeclaration for ' . $strControlType);
+		}
+	}
 
-		 * @access protected
-		 */
-		protected $<?php echo $objCodeGen->FormLabelVariableNameForColumn($objColumn);  ?>;
-		
-<?php if ($objColumn->VariableType == 'QDateTime') {?>
-		/**
-		 * @var str<?php echo $objColumn->PropertyName  ?>DateTimeFormat
-		 * @access protected
-		 */
-		protected $str<?php echo $objColumn->PropertyName  ?>DateTimeFormat;
-<?php } ?>
-<?php } ?>
-<?php } ?>
+	if ($strControlType != 'QLabel') {
+		// also generate a QLabel for each control that is not defaulted as a label already
+		echo QLabel::Codegen_MetaVariableDeclaration($objCodeGen, $objColumn);
+	}
+}
+?>
 
 		// QListBox Controls (if applicable) to edit Unique ReverseReferences and ManyToMany References
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>

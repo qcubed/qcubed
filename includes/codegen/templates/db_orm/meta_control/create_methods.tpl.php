@@ -1,30 +1,26 @@
 <?php
 	foreach ($objTable->ColumnArray as $objColumn) {
-		// Use the "control_create_" subtemplates to generate the code
-		// required to create/setup the control.
-		$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-		$strClassName = $objTable->ClassName;
-		$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-		$strLabelId = $objCodeGen->FormLabelVariableNameForColumn($objColumn);
+		if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none') continue;
+		$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+		if ($strControlType == 'QLabel'  ||
+				!isset($objColumn->Options['FormGen']) ||
+				$objColumn->Options['FormGen'] != 'label') {
 
-		// Figure out WHICH "control_create_" to use
-		if ($objColumn->Identity) {
-			$strTemplateFilename = 'identity';
-		} else if ($objColumn->Timestamp) {
-			$strTemplateFilename = 'identity';
-		} else if ($objColumn->Reference) {
-			if ($objColumn->Reference->IsType)
-				$strTemplateFilename = 'type';
-			else
-				$strTemplateFilename = 'reference';
-		} else {
-			$strTemplateFilename = $objColumn->VariableType;
+			$objReflection = new ReflectionClass ($strControlType);
+			$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaCreate');
+			if ($blnHasMethod) {
+				echo $strControlType::Codegen_MetaCreate($objCodeGen, $objTable, $objColumn);
+			} else {
+				throw new QCallerException ('Can\'t find Codegen_MetaCreate for ' . $strControlType);
+			}
 		}
 
-		// Get the subtemplate and evaluate
-		include(sprintf('control_create_%s.tpl.php', $strTemplateFilename));
-		echo "\n\n";
+		if ($strControlType != 'QLabel') {
+			// also generate a QLabel for each control that is not defaulted as a label already
+			echo QLabel::Codegen_MetaCreate($objCodeGen, $objTable, $objColumn);
+		}
 	}
+
 
 	foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
 		if ($objReverseReference->Unique) {
