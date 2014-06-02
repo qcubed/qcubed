@@ -40,14 +40,16 @@ Strings will be enclosed in single quotes in PHP, but the string also is read in
 Notes on Particular Options
 
 FormGen: Can turn off or limit the generation of form objects for this column. Options are:
- 'none'  - generate no form elements to edit this item
- 'label' - generate only read-only elements
- 'meta'  - generate normal meta-control controls and data columns, but do not initialize the controls in the forms.
- default - generate read and write elements in the meta control.
+ 'none'  - generate no form element to edit this item
+ 'label' - generate only a read-only element (QLabel in most cases)
+ 'meta'  - generate a normal meta-control control and data column, but do not initialize the control in the form.
+ default - generate a normal form element for this item.
 
 ControlClass: Specifies the actual class to declare for the column. The class definition of this file must include static methods to create the various meta control code. See below for particular method names that need to be implemented. Make sure your control type can handle the data type of the column. QLabel and other QBlockControl types should be able to handle any data type.
 
 Name: The name to give the object. Normally the name is taken from the column name, but this will override the default name generated.
+
+NoAutoLoad: true/false Turns off the automatic list loader for list controls and autocomplete controls.
 
 Overrides: This is an object that will generate lines to set additional options for the control. Specify whatever the control understands, like Width, Height, AutoRenderChildren, etc. Booleans and numbers should not be in quotes, but strings should be in quotes.
 
@@ -56,5 +58,5 @@ Many of the problems that caused programmers to create their own templates are n
 
 QLabel no longer accepts a strFormat parameter at create time. You can always set it using the ->Format parameter after creating the control, or specify this in an override in a Comment option.
 
-QLabel controls are no longer created for every column. If you want to use a QLabel for a particular control, you must set the ControlClass in the Comments.
+QLabel controls are no longer created for every column. If you want to use a QLabel for a particular control, you must set the ControlClass or specify a FormGen value of 'label' in the Comments.
 
