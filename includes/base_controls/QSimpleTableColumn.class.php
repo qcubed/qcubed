@@ -67,10 +67,11 @@
 		public function FetchHeaderCellValue() {
 			return $this->strName;
 		}
-		
+
 		/**
 		 * Returns an array of key/value pairs to insert as parameters in the header cell. Override and add
 		 * more if you need them.
+		 * @return array
 		 */
 		public function GetHeaderCellParams () {
 			$aParams = array();
@@ -184,7 +185,7 @@
 
 		/**
 		 * Return a key/value array of parameters to put in the col tag.
-		 * Override to add parameters, like class, etc.
+		 * Override to add parameters.
 		 */
 		protected function GetColParams () {
 			$aParams = array();
@@ -194,7 +195,10 @@
 			if ($this->strId) {
 				$aParams['id'] = addslashes($this->strId);
 			}
-			
+			if ($this->strCssClass) {
+				$aParams['class'] = addslashes($this->strCssClass);
+			}
+
 			return $aParams;		
 		}
 		
@@ -621,24 +625,32 @@
 	class QSimpleTableClosureColumn extends QAbstractSimpleTableDataColumn implements Serializable {
 		/** @var callback */
 		protected $objClosure;
+		/** @var array extra parameters passed to closure */
+		protected $mixParams;
 
 		/**
 		 * @param string $strName name of the column
 		 * @param callback $objClosure a callable object (e.g. Closure). It should take a single argument, and it
+		 * @param mixed $mixParams extra parameters to pass to the closure callback.
 		 * will be called with the row of the DataSource as that single argument.
 		 *
 		 * @throws InvalidArgumentException
 		 */
-		public function __construct($strName, $objClosure) {
+		public function __construct($strName, $objClosure, $mixParams = null) {
 			parent::__construct($strName);
 			if (!is_callable($objClosure)) {
 				throw new InvalidArgumentException();
 			}
 			$this->objClosure = $objClosure;
+			$this->mixParams = $mixParams;
 		}
 
 		public function FetchCellObject($item) {
-			return call_user_func($this->objClosure, $item);
+			if ($this->mixParams) {
+				return call_user_func($this->objClosure, $item, $this->mixParams);
+			} else {
+				return call_user_func($this->objClosure, $item);
+			}
 		}
 
 		/**
@@ -660,6 +672,7 @@
 			// this code can be removed when Closures become serializable in PHP
 			if (version_compare(PHP_VERSION, '5.3.0', '<') || (!$this->objClosure instanceof Closure)) {
 				$vars[] = $this->objClosure;
+				$vars[] = $this->mixParams;
 			}
 			return serialize($vars);
 		}
@@ -694,6 +707,16 @@
 						$this->objReverseOrderByClause,
 						$this->objClosure
 						) = $vars;
+			} else if ($cnt == 8) {
+				list($this->strName,
+					$this->strCssClass,
+					$this->strHeaderCssClass,
+					$this->blnHtmlEntities,
+					$this->objOrderByClause,
+					$this->objReverseOrderByClause,
+					$this->objClosure,
+					$this->mixParams
+					) = $vars;
 			} else {
 				throw new RuntimeException("wrong number of variables when unserializing QSimpleTableClosureColumn");
 			}

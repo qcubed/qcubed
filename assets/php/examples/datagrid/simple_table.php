@@ -1,6 +1,41 @@
 <?php
 require_once('../qcubed.inc.php');
 
+class ComplexColumn extends QSimpleTableIndexedColumn {
+	public function RenderHeaderCell() {
+		if ($this->objParentTable->CurrentHeaderRowIndex == 0 &&
+				$this->Index > 1) {
+		return null; // don't draw, first col is a span
+	} else {
+			return parent::RenderHeaderCell ();
+		}
+	}
+
+	public function FetchHeaderCellValue() {
+		if ($this->objParentTable->CurrentHeaderRowIndex == 0 &&
+				$this->Index == 1) {
+			return 'Year';
+		}
+		return parent::FetchHeaderCellValue();
+	}
+
+
+	public function GetHeaderCellParams() {
+		$a = parent::GetHeaderCellParams();
+		if ($this->Index == 0) {
+			//make background white
+			$a['style'] = 'background-color: white';
+		}
+		if ($this->ParentTable->CurrentHeaderRowIndex == 0) {
+			if ($this->Index == 1) {
+				$a['colspan'] = 3;
+			}
+		}
+		return $a;
+	}
+}
+
+
 class ExampleForm extends QForm {
 
 	/** @var QSimpleTable */
@@ -8,6 +43,9 @@ class ExampleForm extends QForm {
 
 	/** @var QSimpleTable */
 	protected $tblReport;
+
+	/** @var QSimpleTable */
+	protected $tblComplex;
 
 	protected function Form_Create() {
 		// Define the DataGrid
@@ -41,22 +79,37 @@ class ExampleForm extends QForm {
 		$this->tblPersons->SetDataBinder('tblPersons_Bind');
 
 		$this->tblReport = new QSimpleTable($this);
-		$tbl = $this->tblReport;
-		$tbl->CssClass = 'simple_table';
-		$tbl->RowCssClass = 'odd_row';
-		$tbl->AlternateRowCssClass = 'even_row';
-		$tbl->HeaderRowCssClass = 'header_row';
+		$this->tblReport->CssClass = 'simple_table';
+		$this->tblReport->RowCssClass = 'odd_row';
+		$this->tblReport->AlternateRowCssClass = 'even_row';
+		$this->tblReport->HeaderRowCssClass = 'header_row';
 
 		// "named" index columns
-		$tbl->CreateIndexedColumn("Year", 0);
-		$tbl->CreateIndexedColumn("Model", 1);
+		$this->tblReport->CreateIndexedColumn("Year", 0);
+		$this->tblReport->CreateIndexedColumn("Model", 1);
 		// "unnamed" index columns
-		$tbl->CreateIndexedColumn();
-		$tbl->CreateIndexedColumn();
+		$this->tblReport->CreateIndexedColumn();
+		$this->tblReport->CreateIndexedColumn();
 		// index columns for associative arrays
-		$tbl->CreateIndexedColumn("Count", "#count");
+		$this->tblReport->CreateIndexedColumn("Count", "#count");
 
-		$tbl->SetDataBinder('tblReport_Bind');
+		$this->tblReport->SetDataBinder('tblReport_Bind');
+
+		$this->tblComplex = new QSimpleTable($this);
+		$this->tblComplex->CssClass = 'simple_table';
+		$this->tblComplex->RowCssClass = 'odd_row';
+		$this->tblComplex->AlternateRowCssClass = 'even_row';
+		$this->tblComplex->HeaderRowCssClass = 'header_row';
+
+		// "named" index columns
+		$col = $this->tblComplex->AddColumn (new ComplexColumn("", "Name"));
+		$col->RenderAsHeader = true;
+		$this->tblComplex->AddColumn (new ComplexColumn("2000", 1));
+		$this->tblComplex->AddColumn (new ComplexColumn("2001", 2));
+		$this->tblComplex->AddColumn (new ComplexColumn("2002", 3));
+		$this->tblComplex->HeaderRowCount = 2;
+
+		$this->tblComplex->SetDataBinder('tblComplex_Bind');
 	}
 
 	protected function tblPersons_Bind() {
@@ -81,6 +134,14 @@ class ExampleForm extends QForm {
 		}
 		$this->tblReport->DataSource = $data;
 	}
+	protected function tblComplex_Bind() {
+		$a[] = array ('Name' => 'Income', 1=>1000, 2=>2000, 3=>1500);
+		$a[] = array ('Name' => 'Expense', 1=>500, 2=>700, 3=>2100);
+		$a[] = array ('Name' => 'Net', 1=>1000-500, 2=>2000-700, 3=>1500-2100);
+
+		$this->tblComplex->DataSource = $a;
+	}
+
 }
 
 ExampleForm::Run('ExampleForm');
