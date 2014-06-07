@@ -76,10 +76,10 @@ class QHtmlList extends QControl {
 
 	/**
 	 * Finds the list item that corresponds to the given id.
-	 * @param $strId
-	 * @return null
+	 * @param $strId Id of the list item to find
+	 * @return null|QHtmlListItem
 	 */
-	public function FindListItem ($strId) {
+	public function FindListItemById ($strId) {
         if ($this->objListItems) {
             foreach ($this->objListItems as $objListItem) {
                 if ($objListItem->Id == $strId) {
