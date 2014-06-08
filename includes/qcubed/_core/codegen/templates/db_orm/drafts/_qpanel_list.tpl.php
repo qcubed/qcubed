@@ -1,4 +1,15 @@
-<template OverwriteFlag="true" DocrootFlag="true" DirectorySuffix="" TargetDirectory="<?php echo __PANEL_DRAFTS__  ?>" TargetFileName="<?php echo $objTable->ClassName  ?>ListPanel.class.php"/>
+<?php
+	/** @var QTable $objTable */
+	/** @var QDatabaseCodeGen $objCodeGen */
+	global $_TEMPLATE_SETTINGS;
+	$_TEMPLATE_SETTINGS = array(
+		'OverwriteFlag' => true,
+		'DocrootFlag' => true,
+		'DirectorySuffix' => '',
+		'TargetDirectory' => __PANEL_DRAFTS__,
+		'TargetFileName' => $objTable->ClassName . 'ListPanel.class.php'
+	);
+?>
 <?php print("<?php\n"); ?>
 	/**
 	 * This is the abstract Panel class for the List All functionality

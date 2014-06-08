@@ -1,4 +1,15 @@
-<template OverwriteFlag="true" DocrootFlag="true" DirectorySuffix="" TargetDirectory="<?php echo __PANEL_DRAFTS__  ?>" TargetFileName="<?php echo $objTable->ClassName ?>EditPanel.tpl.php"/>
+<?php
+	/** @var QTable $objTable */
+	/** @var QDatabaseCodeGen $objCodeGen */
+	global $_TEMPLATE_SETTINGS;
+	$_TEMPLATE_SETTINGS = array(
+		'OverwriteFlag' => true,
+		'DocrootFlag' => true,
+		'DirectorySuffix' => '',
+		'TargetDirectory' => __PANEL_DRAFTS__,
+		'TargetFileName' => $objTable->ClassName . 'EditPanel.tpl.php'
+	);
+?>
 <?php print("<?php\n"); ?>
 	// This is the HTML template include file (.tpl.php) for <?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName)  ?>EditPanel.
 	// Remember that this is a DRAFT.  It is MEANT to be altered/modified.
