@@ -2,7 +2,11 @@
 /**
  * Encapsulates a fieldset, which has a legend that acts as a label. HTML5 defines a new Name element, which
  * is not yet supported in IE of this writing, but other browsers support it. So, if its defined, we will output
- * it.
+ * it in the html, but it will not affect what appears on the screen unless you draw the Name too.
+ *
+ * @package Controls\Base
+ *
+ * @property string $Legend is the legend that will be output for the fieldset.
  */
 
 class QFieldset extends QBlockControl {

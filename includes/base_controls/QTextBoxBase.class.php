@@ -638,7 +638,7 @@
 						
 				case "SanitizeFilterOptions":
 					try {
-						$this->mixSanitizeFilter = $mixValue; // can be integer or array. See PHP doc.
+						$this->mixSanitizeFilterOptions = $mixValue; // can be integer or array. See PHP doc.
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -656,7 +656,7 @@
 						
 				case "ValidateFilterOptions":
 					try {
-						$this->mixValidateFilter = $mixValue; // can be integer or array. See PHP doc.
+						$this->mixValidateFilterOptions = $mixValue; // can be integer or array. See PHP doc.
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
