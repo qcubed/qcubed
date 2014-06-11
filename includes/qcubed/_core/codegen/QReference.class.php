@@ -3,6 +3,14 @@
 	 * Used by the QCubed Code Generator to describe a column reference
 	 * (aka a Foreign Key)
 	 * @package Codegen
+	 *
+	 * @property string $KeyName
+	 * @property string $Table
+	 * @property string $Column
+	 * @property string $PropertyName
+	 * @property string $VariableName
+	 * @property string $VariableType
+	 * @property boolean $IsType
 	 */
 	class QReference extends QBaseClass {
 
@@ -69,6 +77,8 @@
 		 * This will get the value of $strName
 		 *
 		 * @param string $strName Name of the property to get
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __get($strName) {
@@ -103,6 +113,8 @@
 		 *
 		 * @param string $strName Name of the property to set
 		 * @param string $mixValue New value of the property
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {
