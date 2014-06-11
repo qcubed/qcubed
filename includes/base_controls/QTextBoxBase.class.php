@@ -123,6 +123,38 @@
 			$this->strLabelForTooLongUnnamed = QApplication::Translate('Must have at most %s characters');
 
 			$this->strCrossScripting = QApplication::$DefaultCrossScriptingMode;
+
+			if ($this->strCrossScripting == QCrossScripting::HTMLPurifier) {
+				$this->InitHtmlPurifier();
+			}
+		}
+
+		/**
+		 * Initializee the HtmlPurifier library.
+		 */
+		protected function InitHtmlPurifier() {
+			// If we are purifying using HTMLPurify, we will need the autoloader to be included.
+			// We load lazy to make sure that the library is not loaded every time 'prepend.inc.php'
+			// or 'qcubed.inc.php' is inlcuded. HTMLPurifier is a HUGE and SLOW library. Lazy loading
+			// keeps it simpler.
+			require_once(__VENDOR__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
+
+			// We configure the default set of forbidden tags (elements) and attributes here
+			// so that the rules are applicable the moment CrossScripting is set to Purify.
+			// Use the QTextBox::SetPurifierConfig method to override these settings.
+			$this->objHTMLPurifierConfig = HTMLPurifier_Config::createDefault();
+			$this->objHTMLPurifierConfig->set('HTML.ForbiddenElements', 'script,applet,embed,style,link,iframe,body,object');
+			$this->objHTMLPurifierConfig->set('HTML.ForbiddenAttributes', '*@onfocus,*@onblur,*@onkeydown,*@onkeyup,*@onkeypress,*@onmousedown,*@onmouseup,*@onmouseover,*@onmouseout,*@onmousemove,*@onclick');
+
+			if (defined('__PURIFIER_CACHE__')) {
+				if (!is_dir(__PURIFIER_CACHE__)) {
+					mkdir(__PURIFIER_CACHE__);
+				}
+				$this->objHTMLPurifierConfig->set('Cache.SerializerPath', __PURIFIER_CACHE__);
+			} else {
+				# Disable the cache entirely
+				$this->objHTMLPurifierConfig->set('Cache.DefinitionImpl', null);
+			}
 		}
 
 		/**
@@ -166,9 +198,11 @@
 						break;
 					case QCrossScripting::HTMLPurifier:
 						// let HTMLPurifier do the job! User should have set it up!
-						require_once(__EXTERNAL_LIBRARIES__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
+					//	require_once(__VENDOR__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
 						$objPurifier = new HTMLPurifier($this->objHTMLPurifierConfig);
-						$this->strText = $objPurifier->purify($this->strText);
+
+						// HTML Purifier does an html_encode, which is not what we usually want.
+						$this->strText = html_entity_decode($objPurifier->purify($this->strText)); // don't save data as html entities! Encode at display time.
 						break;
 					// The use of the modes below is not recommended; they're there only for legacy
 					// purposes. If you need to check for cross-site scripting violations, use QCrossScripting::Purify
@@ -517,28 +551,7 @@
 						$this->strCrossScripting = QType::Cast($mixValue, QType::String);
 						// Protect from XSS to the best we can do with HTMLPurifier.
 						if ($this->strCrossScripting == QCrossScripting::HTMLPurifier) {
-							// If we are purifying using HTMLPurify, we will need the autoloader be included.
-							// We load lazy to make sure that the library is not loaded every time 'prepend.inc.php'
-							// or 'qcubed.inc.php' is inlcuded. HTMLPurifier is a HUGE and SLOW library. Lazy loading
-							// keeps it simpler.
-							require_once(__EXTERNAL_LIBRARIES__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
-								
-							// We configure the default set of forbidden tags (elements) and attributes here
-							// so that the rules are applicable the moment CrossScripting is set to Purify.
-							// Use the QTextBox::SetPurifierConfig method to override these settings.
-							$this->objHTMLPurifierConfig = HTMLPurifier_Config::createDefault();
-							$this->objHTMLPurifierConfig->set('HTML.ForbiddenElements', 'script,applet,embed,style,link,iframe,body,object');
-							$this->objHTMLPurifierConfig->set('HTML.ForbiddenAttributes', '*@onfocus,*@onblur,*@onkeydown,*@onkeyup,*@onkeypress,*@onmousedown,*@onmouseup,*@onmouseover,*@onmouseout,*@onmousemove,*@onclick');
-
-							if (defined('__PURIFIER_CACHE__')) {
-								if (!is_dir(__PURIFIER_CACHE__)) {
-									mkdir(__PURIFIER_CACHE__);
-								}
-							    $this->objHTMLPurifierConfig->set('Cache.SerializerPath', __PURIFIER_CACHE__);
-							} else {
-							    # Disable the cache entirely
-							    $this->objHTMLPurifierConfig->set('Cache.DefinitionImpl', null);
-							}
+							$this->InitHtmlPurifier();
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -625,7 +638,7 @@
 						
 				case "SanitizeFilterOptions":
 					try {
-						$this->mixSanitizeFilter = $mixValue; // can be integer or array. See PHP doc.
+						$this->mixSanitizeFilterOptions = $mixValue; // can be integer or array. See PHP doc.
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -643,7 +656,7 @@
 						
 				case "ValidateFilterOptions":
 					try {
-						$this->mixValidateFilter = $mixValue; // can be integer or array. See PHP doc.
+						$this->mixValidateFilterOptions = $mixValue; // can be integer or array. See PHP doc.
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
