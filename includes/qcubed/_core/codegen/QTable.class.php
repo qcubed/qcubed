@@ -2,6 +2,17 @@
 	/**
 	 * Used by the QCubed Code Generator to describe a database Table
 	 * @package Codegen
+	 *
+	 * @property int $OwnerDbIndex
+	 * @property string $Name
+	 * @property string $ClassNamePlural
+	 * @property string $ClassName
+	 * @property QColumn[] $ColumnArray
+	 * @property QColumn[] $PrimaryKeyColumnArray
+	 * @property QReverseReference[] $ReverseReferenceArray
+	 * @property QManyToManyReference[] $ManyToManyReferenceArray
+	 * @property QIndex[] $IndexArray
+	 * @property-read int $ReferenceCount
 	 */
 	class QTable extends QBaseClass {
 
@@ -34,25 +45,25 @@
 
 		/**
 		 * Array of Column objects (as indexed by Column name)
-		 * @var Column[] ColumnArray
+		 * @var QColumn[] ColumnArray
 		 */
 		protected $objColumnArray;
 
 		/**
 		 * Array of ReverseReverence objects (indexed numerically)
-		 * @var ReverseReference[] ReverseReferenceArray
+		 * @var QReverseReference[] ReverseReferenceArray
 		 */
 		protected $objReverseReferenceArray;
 
 		/**
 		 * Array of ManyToManyReference objects (indexed numerically)
-		 * @var ManyToManyReference[] ManyToManyReferenceArray
+		 * @var QManyToManyReference[] ManyToManyReferenceArray
 		 */
 		protected $objManyToManyReferenceArray;
 
 		/**
 		 * Array of Index objects (indexed numerically)
-		 * @var Index[] IndexArray
+		 * @var QIndex[] IndexArray
 		 */
 		protected $objIndexArray;
 
@@ -65,8 +76,7 @@
 		/**
 		 * Default Constructor.  Simply sets up the TableName and ensures that ReverseReferenceArray is a blank array.
 		 *
-		 * @param string strName Name of the Table
-		 * @return TypeTable
+		 * @param string $strName Name of the Table
 		 */
 		public function __construct($strName) {
 			$this->strName = $strName;
@@ -79,6 +89,7 @@
 
 		/**
 		 * return the QColumn object related to that column name
+		 * @param string $strColumnName Name of the column
 		 * @return QColumn
 		 */
 		public function GetColumnByName($strColumnName) {
@@ -93,6 +104,7 @@
 
 		/**
 		 * Search within the table's columns for the given column
+		 * @param string $strColumnName Name of the column
 		 * @return boolean
 		 */
 		public function HasColumn($strColumnName){
@@ -101,6 +113,7 @@
 
 		/**
 		 * Return the property name for a given column name (false if it doesn't exists)
+		 * @param string $strColumnName name of the column
 		 * @return string
 		 */
 		public function LookupColumnPropertyName($strColumnName){
@@ -121,7 +134,7 @@
 			return $intCount > 0;
 		}
 		
-		public function HasExtendedArrayExpansions($objCodeGen, $objCheckedTableArray = array()) {
+		public function HasExtendedArrayExpansions(QDatabaseCodeGen $objCodeGen, $objCheckedTableArray = array()) {
 			$objCheckedTableArray[] = $this;
 			foreach ($this->ColumnArray as $objColumn) {
 				if (($objReference = $objColumn->Reference) && !$objReference->IsType) {
@@ -150,7 +163,9 @@
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
 		 *
-		 * @param string strName Name of the property to get
+		 * @param string $strName Name of the property to get
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __get($strName) {
@@ -200,8 +215,10 @@
 		 * Override method to perform a property "Set"
 		 * This will set the property $strName to be $mixValue
 		 *
-		 * @param string strName Name of the property to set
-		 * @param string mixValue New value of the property
+		 * @param string $strName Name of the property to set
+		 * @param string $mixValue New value of the property
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {
