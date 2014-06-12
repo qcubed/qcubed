@@ -14,3 +14,4 @@ before_script:
     - sh -c "if [ '$DB' = 'pgsql' ]; then createdb qcubed -U postgres; psql -d qcubed -f assets/_core/php/examples/pgsql.sql -U postgres; fi"
 
 script: travis/test.php
+
