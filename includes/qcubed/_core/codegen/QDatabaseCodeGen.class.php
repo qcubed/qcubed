@@ -924,6 +924,7 @@
 //								$objReferencedTable = $this->objTableArray[strtolower($objReference->Table)];
 								$objReferencedTable = $this->GetTable($objReference->Table);
 								$objReverseReference = new QReverseReference();
+								$objReverseReference->Reference = $objReference;
 								$objReverseReference->KeyName = $objReference->KeyName;
 								$objReverseReference->Table = $strTableName;
 								$objReverseReference->Column = $strColumnName;

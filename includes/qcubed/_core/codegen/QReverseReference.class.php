@@ -4,6 +4,7 @@
 	 * the table's perspective (aka a Foreign Key from the referenced Table's point of view)
 	 * @package Codegen
 	 *
+	 * @property QReference $Reference
 	 * @property string $KeyName
 	 * @property string $Table
 	 * @property string $Column
@@ -22,6 +23,12 @@
 		/////////////////////////////
 		// Protected Member Variables
 		/////////////////////////////
+
+		/**
+		 * The peer QReference object for which this object is the reverse reference of
+		 * @var QReference KeyName
+		 */
+		protected $objReference;
 
 		/**
 		 * Name of the foreign key object itself, as defined in the database or create script
@@ -123,6 +130,8 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
+				case 'Reference':
+					return $this->objReference;
 				case 'KeyName':
 					return $this->strKeyName;
 				case 'Table':
@@ -170,6 +179,8 @@
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
+					case 'Reference':
+						return $this->objReference = QType::Cast($mixValue, 'QReference');
 					case 'KeyName':
 						return $this->strKeyName = QType::Cast($mixValue, QType::String);
 					case 'Table':
