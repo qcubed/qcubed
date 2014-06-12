@@ -28,9 +28,9 @@ class QHtmlList extends QControl {
     }
 
 	/**
-	 * Removes all the menus.
+	 * Removes all the list items.
 	 */
-	public function RemoveAllMenus () {
+	public function RemoveAllListItems () {
         $this->objListItems = array();
     }
 
@@ -53,7 +53,7 @@ class QHtmlList extends QControl {
      */
     public function GetControlHtml() {
         if ($this->mixDataBinder) {
-            $this->RemoveAllMenus();
+            $this->RemoveAllListItems();
             call_user_func($this->mixDataBinder, $this);
         }
         if ($this->objListItems) {
