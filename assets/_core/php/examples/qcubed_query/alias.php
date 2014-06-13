@@ -87,6 +87,28 @@
 		_p($objManager->FirstName.' '.$objManager->LastName. " (" . $objManager->GetVirtualAttribute('min_voyel').', '. $objManager->GetVirtualAttribute('min_conson'). ")");
 		_p('<br/>', false);
 	}
+?>
+
+	<h2>Example 4: Projects with, for each one, the "min" city from the addresses containing 'r' and the "min" city from the addresses NOT containing 'r' </h2>
+<?php
+	$nWithR = QQ::Alias(QQN::Project()->PersonAsTeamMember->Person->Address, 'with_r');
+	$nWithoutR = QQ::Alias(QQN::Project()->PersonAsTeamMember->Person->Address, 'without_r');
+	$objProjectArray = Project::QueryArray(
+		QQ::All(),
+		QQ::Clause(
+			QQ::Expand($nWithR, QQ::Like($nWithR->Street, '%r%')),
+			QQ::Expand($nWithoutR, QQ::NotLike($nWithoutR->Street, '%r%')),
+			QQ::GroupBy(QQN::Project()->Id),
+			QQ::Minimum($nWithR->City, 'min_city_r'),
+			QQ::Minimum($nWithoutR->City, 'min_city_wor')
+		)
+	);
+
+	foreach ($objProjectArray as $objProject){
+		_p($objProject->Name . " (" . $objProject->GetVirtualAttribute('min_city_r').', '. $objProject->GetVirtualAttribute('min_city_wor'). ")");
+		_p('<br/>', false);
+	}
+
 
 	QApplication::$Database[1]->OutputProfiling();
 ?>
