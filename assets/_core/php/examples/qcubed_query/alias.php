@@ -53,6 +53,41 @@
 		_p($objProject->Name . " (" . $objProject->Description . ")");
 		_p('<br/>', false);
 	}
+?>
+
+	<h2>Example 3: Managers having one least a project with a conson milestone, and for each manager, the first voyel milestone and the first conson one</h2>
+<?php
+	$emptySelect = QQ::Select();
+	$emptySelect->SetSkipPrimaryKey(true);
+	$nVoyel = QQ::Alias(QQN::Person()->ProjectAsManager->Milestone, 'voyel');
+	$nConson = QQ::Alias(QQN::Person()->ProjectAsManager->Milestone, 'conson');
+	$objPersonArray = Person::QueryArray(
+		QQ::IsNotNull($nConson->Id),
+		QQ::Clause(
+			QQ::Expand(QQN::Person()->ProjectAsManager, null, $emptySelect),
+			QQ::Expand($nVoyel, QQ::In($nVoyel->Name, array('Milestone A', 'Milestone E', 'Milestone I')), $emptySelect),
+			QQ::Expand($nConson, QQ::NotIn($nConson->Name, array('Milestone A', 'Milestone E', 'Milestone I')), $emptySelect),
+			QQ::GroupBy(QQN::Person()->Id),
+			QQ::Minimum($nVoyel->Name, 'min_voyel'),
+			QQ::Minimum($nConson->Name, 'min_conson'),
+			//*** only needed in PG-SQL.
+			// Even with an empty select, id is selected;
+			// Happily, PG doesn't complain if both id and MIN(id) are selected
+			QQ::Expand(QQN::Person()->ProjectAsManager, null, $emptySelect),
+			QQ::Minimum(QQN::Person()->ProjectAsManager->Id, 'dummy'),
+			//***
+			QQ::Select(
+				QQN::Person()->FirstName,
+				QQN::Person()->LastName
+			)
+		)
+	);
+
+	foreach ($objPersonArray as $objManager){
+		_p($objManager->FirstName.' '.$objManager->LastName. " (" . $objManager->GetVirtualAttribute('min_voyel').', '. $objManager->GetVirtualAttribute('min_conson'). ")");
+		_p('<br/>', false);
+	}
+
 	QApplication::$Database[1]->OutputProfiling();
 ?>
 </div>
