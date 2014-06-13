@@ -1,4 +1,15 @@
-<template OverwriteFlag="true" DocrootFlag="true" DirectorySuffix="" TargetDirectory="<?php echo __PANEL_DRAFTS__  ?>" TargetFileName="<?php echo $objTable->ClassName  ?>EditPanel.class.php"/>
+<?php
+	/** @var QTable $objTable */
+	/** @var QDatabaseCodeGen $objCodeGen */
+	global $_TEMPLATE_SETTINGS;
+	$_TEMPLATE_SETTINGS = array(
+		'OverwriteFlag' => true,
+		'DocrootFlag' => true,
+		'DirectorySuffix' => '',
+		'TargetDirectory' => __PANEL_DRAFTS__,
+		'TargetFileName' => $objTable->ClassName . 'EditPanel.class.php'
+	);
+?>
 <?php print("<?php\n"); ?>
 	/**
 	 * This is a quick-and-dirty draft QPanel object to do Create, Edit, and Delete functionality
