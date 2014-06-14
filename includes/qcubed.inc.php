@@ -124,6 +124,7 @@
 	QApplicationBase::$ClassFile['qcacheprovidermemcache'] = __QCUBED_CORE__ . '/framework/QCacheProviderMemcache.class.php';
 	QApplicationBase::$ClassFile['qcacheproviderlocalmemory'] = __QCUBED_CORE__ . '/framework/QCacheProviderLocalMemory.class.php';
 	QApplicationBase::$ClassFile['qcacheprovidernocache'] = __QCUBED_CORE__ . '/framework/QCacheProviderNoCache.class.php';
+	QApplicationBase::$ClassFile['qcacheproviderapc'] = __QCUBED_CORE__ . '/framework/QCacheProviderAPC.class.php';
 	QApplicationBase::$ClassFile['qmultilevelcacheprovider'] = __QCUBED_CORE__ . '/framework/QMultiLevelCacheProvider.class.php';
 	QApplicationBase::$ClassFile['qdbbackedsessionhandler'] = __QCUBED_CORE__ . '/framework/QDbBackedSessionHandler.class.php';
 

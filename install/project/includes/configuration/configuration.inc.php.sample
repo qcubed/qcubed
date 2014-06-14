@@ -270,6 +270,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 * "QCacheProviderLocalMemory": a local memory cache provider with a lifespan of the request
 			 *   or session (if KeepInSession is configured).
 			 *
+			 * "QCacheProviderAPC": supports the APC interface. To use it, use PECL to install either
+			 * APC or APCu.
+			 *
 			 * "QCacheProviderNoCahce": provider which does no caching at all
 			 *
 			 * "QMultiLevelCacheProvider": a provider that can combine multiple providers into one.
