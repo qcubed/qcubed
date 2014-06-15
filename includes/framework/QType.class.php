@@ -200,11 +200,12 @@
 					
 					// Has it?
 					$blnSame = true; 
-					if ($strOriginalType == QType::Float) { 
+					if ($strOriginalType == QType::Float) {
 						// type conversion from float to string affects precision and can throw off the comparison 
 						// so we need to use a comparison check using an epsilon value instead 
-						$epsilon = 1.0e-14; 
-						$diff = abs($mixItem - $mixTest); 
+						//$epsilon = 1.0e-14; too small
+						$epsilon = 1.0e-11;
+						$diff = abs($mixItem - $mixTest);
 						if ($diff > $epsilon) { 
 							$blnSame = false; 
 						} 

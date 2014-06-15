@@ -88,6 +88,15 @@
 
 	<p>Of course in a real world case, these two types of columns will not be mixed - one would either use a simple
 		indexed array, or a fully associative array.</p>
+
+	<h2>Third Example</h2>
+
+	<p>This example demonstrates how to override a column to create a complex header. SimpleTableColumn and its subclasses have
+		a variety of hooks to return ids, classes and other attributes for whole rows, columns or individual cells.</p>
+
+	<p>This example creates a colspan for the top header row of the 2nd column to span the rest of the columns.</p>
+
+
 </div>
 
 <div id="demoZone">
@@ -95,12 +104,15 @@
 	<div style="margin-left: 100px">
 		<?php $this->tblPersons->Render(); ?>
 	</div>
-</div>
 
-<div id="demoZone">
 	<h2>Example Two</h2>
 	<div style="margin-left: 100px">
 		<?php $this->tblReport->Render(); ?>
+	</div>
+
+	<h2>Example Three</h2>
+	<div style="margin-left: 100px">
+		<?php $this->tblComplex->Render(); ?>
 	</div>
 <div>
 

@@ -1,11 +1,22 @@
+<?php
+	$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+	$objReflection = new ReflectionClass ($strControlType);
+	$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaCreate');
+
+	if ($blnHasMethod) {
+		echo $strControlType::Codegen_MetaCreate($objCodeGen, $objTable, $objColumn);
+	} else {
+
+?>
+
 		/**
-		 * Create and setup QTextBox <?php echo $strControlId  ?>
+		 * Create and setup a <?= $strControlType?> <?php echo $strControlId  ?>
 
 		 * @param string $strControlId optional ControlId to use
-		 * @return QTextBox
+		 * @return <?= $strControlType?>
 		 */
 		public function <?php echo $strControlId  ?>_Create($strControlId = null) {
-			$this-><?php echo $strControlId  ?> = new QTextBox($this->objParentObject, $strControlId);
+			$this-><?php echo $strControlId  ?> = new <?= $strControlType?>($this->objParentObject, $strControlId);
 			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QCodeGen::MetaControlLabelNameFromColumn($objColumn)  ?>');
 			$this-><?php echo $strControlId  ?>->Text = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
 <?php if ($objColumn->NotNull) { ?>
@@ -35,3 +46,5 @@
 <?php } ?>
 			return $this-><?php echo $strLabelId  ?>;
 		}
+
+<?php } ?>

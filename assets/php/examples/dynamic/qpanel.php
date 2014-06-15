@@ -8,6 +8,8 @@
 		// through using AutoRenderChildren
 		protected $pnlPanel;
 
+		protected $pnlFieldset;
+
 		// For this example, show how the panel can display this strMessage
 		protected $strMessage = 'Hello, world!';
 
@@ -23,6 +25,7 @@
 			$this->pnlPanel->Text = 'Text Here Goes First';
 			$this->pnlPanel->Template = 'pnl_panel.tpl.php';
 
+
 			// Let's have the pnlPanel auto render any and all child controls
 			$this->pnlPanel->AutoRenderChildren = true;
 
@@ -34,6 +37,23 @@
 				$txtTextbox->Text = sprintf('Textbox #%s', $intIndex);
 				$txtTextbox->Width = 250;
 			}
+
+			$this->pnlFieldset = new QFieldset ($this);
+			$this->pnlFieldset->Legend = 'Fieldset Example';
+			$this->pnlFieldset->AutoRenderChildren = true;
+			$this->pnlFieldset->Width = 300;
+			$this->pnlFieldset->Padding = '10px 10px';
+
+			// Define a bunch of checkboxes, and put it into the fieldset. Fieldsets can encapsulate any form element.
+			for ($intIndex = 1; $intIndex <= 5; $intIndex++) {
+				// The parent must be the fields, because the fieldset is going to be responsible
+				// for rendering it.
+				$chkCheckbox = new QCheckBox($this->pnlFieldset);
+				$chkCheckbox->Text = sprintf('Checkbox #%s', $intIndex);
+				$chkCheckbox->Width = 250;
+			}
+
+
 		}
 	}
 

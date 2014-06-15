@@ -39,6 +39,10 @@
 		protected $blnShowFooter = false;
 		protected $blnRenderColumnTags = false;
 		protected $strCaption = null;
+		/** @var integer */
+		protected $intHeaderRowCount = 1;
+		/** @var  integer Used during rendering to report which header row is being drawn in a multi-row header. */
+		protected $intCurrentHeaderRowIndex;
 
 		public function __construct($objParentObject, $strControlId = null)	{
 			try {
@@ -96,11 +100,14 @@
 
 		/**
 		 * Add a column to the end of the column array.
+		 * @param QAbstractSimpleTableColumn $objColumn
+		 * @return QAbstractSimpleTableColumn
 		 */
 		public function AddColumn(QAbstractSimpleTableColumn $objColumn) {
 			$this->blnModified = true;
 			$this->objColumnArray[] = $objColumn;
 			$objColumn->_ParentTable = $this;
+			return $objColumn;
 		}
 
 		/**
@@ -295,24 +302,29 @@
 		 * Returns the HTML for the header row, including the <<tr>> and <</tr>> tags
 		 */
 		protected function GetHeaderRowHtml() {
-			$strToReturn = '<tr';
-			$strParamArray = $this->GetHeaderRowParams();
-			foreach ($strParamArray as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
+			$strToReturn = '';
+			for ($i = 0; $i < $this->intHeaderRowCount; $i++) {
+				$this->intCurrentHeaderRowIndex = $i;
+				$strToReturn .= '<tr';
+				$strParamArray = $this->GetHeaderRowParams();
+				foreach ($strParamArray as $key=>$str) {
+					$strToReturn .= ' ' . $key . '="' . $str . '"';
+				}
+				$strToReturn .= '>';
+
+				if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn) {
+					$strToReturn .= $objColumn->RenderHeaderCell();
+				}
+				$strToReturn .= "  </tr>\r\n";
 			}
-			$strToReturn .= '>';
-			
-			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn) {
-				$strToReturn .= $objColumn->RenderHeaderCell();
-			}
-			$strToReturn .= "  </tr>\r\n";
 
 			return $strToReturn;
 		}
-		
+
 		/**
-		 * 
 		 * Returns a key=>val array of parameters to insert inside of the header row's <<tr>> tag.
+		 *
+		 * @return array
 		 */
 		protected function GetHeaderRowParams () {
 			$strParamArray = array();
@@ -501,7 +513,11 @@
 					return $this->blnRenderColumnTags;
 				case 'Caption':
 					return $this->strCaption;
-					
+				case 'HeaderRowCount':
+					return $this->intHeaderRowCount;
+				case 'CurrentHeaderRowIndex':
+					return $this->intCurrentHeaderRowIndex;
+
 				default:
 					try {
 						return parent::__get($strName);
@@ -571,6 +587,15 @@
 				case "Caption":
 					try {
 						$this->strCaption = QType::Cast($mixValue, QType::String);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "HeaderRowCount":
+					try {
+						$this->intHeaderRowCount = QType::Cast($mixValue, QType::Integer);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

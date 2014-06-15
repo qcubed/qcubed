@@ -834,10 +834,7 @@
 		}
 
 		/**
-		 * The function determines whether there is a comment on the column or not.
-		 * If yes, and the settings for the database has the option for using comments for Meta Control label names turned on
-		 * along with a preferred delimiter supplied, then the function will return the computed meta control label name. Otherwise it
-		 * just returns the PropertyName of the column.
+		 * Returns the label name for the meta control. Can be overridden in the comment for the column.
 		 *
 		 * @param QColumn $objColumn
 		 *
@@ -845,23 +842,11 @@
 		 * @return string
 		 */
 		public static function MetaControlLabelNameFromColumn (QColumn $objColumn) {
-			$strDelimiter = null;
-			$objTable = $objColumn->OwnerTable;
-			$objDbIndex = $objTable->OwnerDbIndex;
-
-			foreach (QCodeGen::$CodeGenArray as $DatabaseCodeGen) {
-				if (($DatabaseCodeGen instanceof QDatabaseCodeGen) && ($DatabaseCodeGen->DatabaseIndex == $objDbIndex)) {
-					$strDelimiter = $DatabaseCodeGen->CommentMetaControlLabelDelimiter;
-					break;
-				}
+			if (($o = $objColumn->Options) && isset ($o['Name'])) {
+				return $o['Name'];
 			}
-
-			if (trim($strDelimiter) == '') {
-				$strDelimiter = null;
-			}
-
-			if ($strDelimiter && $objColumn->Comment && ($strLabelText = strstr($objColumn->Comment, $strDelimiter, true))) {
-				return str_replace("'", "\\'", $strLabelText);
+			if ($objColumn->Reference) {
+				return QConvertNotation::WordsFromCamelCase($objColumn->Reference->PropertyName);
 			}
             return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
 		}
@@ -907,7 +892,7 @@
 			return QConvertNotation::CamelCaseFromUnderscore($strColumnName);
 		}
 
-		protected function VariableNameFromTable($strTableName) {
+		public function VariableNameFromTable($strTableName) {
 			$strTableName = $this->StripPrefixFromTable($strTableName);
 			return QConvertNotation::PrefixFromType(QType::Object) .
 				QConvertNotation::CamelCaseFromUnderscore($strTableName);
@@ -963,24 +948,16 @@
 			return $strToReturn;
 		}
 
-		protected function FormControlVariableNameForColumn(QColumn $objColumn) {
-			if ($objColumn->Identity)
-				return sprintf('lbl%s', $objColumn->PropertyName);
-
-			if ($objColumn->Timestamp)
-				return sprintf('lbl%s', $objColumn->PropertyName);
-
-			if ($objColumn->Reference)
-				return sprintf('lst%s', $objColumn->Reference->PropertyName);
-
-			switch ($objColumn->VariableType) {
-				case QType::Boolean:
-					return sprintf('chk%s', $objColumn->PropertyName);
-				case QType::DateTime:
-					return sprintf('cal%s', $objColumn->PropertyName);
-				default:
-					return sprintf('txt%s', $objColumn->PropertyName);
+		public function FormControlVariableNameForColumn(QColumn $objColumn) {
+			if ($objColumn->Reference) {
+				$strPropName = $objColumn->Reference->PropertyName;
+			} else {
+				$strPropName = $objColumn->PropertyName;
 			}
+
+			$strClassName = $this->FormControlClassForColumn($objColumn);
+
+			return $strClassName::Codegen_VarName ($strPropName);
 		}
 
 		/**
@@ -990,28 +967,12 @@
 		 *
 		 * @return string
 		 */
-		protected function FormControlVariableDataTypeForColumn(QColumn $objColumn) {
-			if ($objColumn->Identity || $objColumn->Timestamp)
-				return 'QLabel';
 
-			if ($objColumn->Reference)
-				return 'QListBox';
-
-			switch ($objColumn->VariableType) {
-				case QType::Boolean:
-					return 'QCheckBox';
-				case QType::DateTime:
-					return 'QDateTime';
-				case QType::Integer:
-					return 'QIntegerTextBox';
-				case QType::Float:
-					return 'QFloatTextBox';
-				default:
-					return 'QTextBox';
+		public function FormControlClassForColumn(QColumn $objColumn) {
+			if (($o = $objColumn->Options) && isset($o['ControlClass'])) {
+				return $o['ControlClass'];
 			}
-		}
 
-		protected function FormControlClassForColumn(QColumn $objColumn) {
 			if ($objColumn->Identity)
 				return 'QLabel';
 
@@ -1051,10 +1012,14 @@
 			return sprintf($strPre, $objManyToManyReference->ObjectDescriptionPlural);
 		}
 
-		protected function FormLabelVariableNameForColumn(QColumn $objColumn) {
-			return 'lbl' . $objColumn->PropertyName;
+		public function FormLabelVariableNameForColumn(QColumn $objColumn) {
+			if ($objColumn->Reference) {
+				$strPropName = $objColumn->Reference->PropertyName;
+			} else {
+				$strPropName = $objColumn->PropertyName;
+			}
+			return QLabel::Codegen_VarName($strPropName);
 		}
-
 
 		protected function FormLabelVariableNameForUniqueReverseReference(QReverseReference $objReverseReference) {
 			if ($objReverseReference->Unique) {

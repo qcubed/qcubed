@@ -264,5 +264,77 @@
 					}
 			}
 		}
+
+		/**** Codegen Helpers, used during the Codegen process only. ****/
+
+		public static function Codegen_VarName($strPropName) {
+			return 'chk' . $strPropName;
+		}
+
+		/**
+		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
+		 * This is called during the codegen process.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+
+			// Read the control type in case we are generating code for a subclass
+			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+
+			$strRet = <<<TMPL
+		/**
+		 * Create and setup a $strControlType $strControlId
+		 * @param string \$strControlId optional ControlId to use
+		 * @return $strControlType
+		 */
+		public function {$strControlId}_Create(\$strControlId = null) {
+			\$this->{$strControlId} = new $strControlType(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlId}->Name = QApplication::Translate('$strLabelName');
+			\$this->{$strControlId}->Checked = \$this->{$strObjectName}->{$objColumn->PropertyName};
+
+TMPL;
+
+			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+
+			$strRet .= <<<TMPL
+			return \$this->{$strControlId};
+		}
+
+
+TMPL;
+
+			return $strRet;
+
+		}
+
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strControlVarName = static::Codegen_VarName($strPropName);
+
+			$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->Checked = \$this->{$strObjectName}->{$strPropName};";
+			return $strRet . "\n";
+		}
+
+
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strControlVarName = static::Codegen_VarName($strPropName);
+			$strRet = <<<TMPL
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->Checked;
+
+TMPL;
+			return $strRet;
+		}
+
+
 	}
 ?>

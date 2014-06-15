@@ -6,7 +6,7 @@
 		 */
 		public function <?php echo $strControlId  ?>_Create($strControlId = null) {
 			$this-><?php echo $strControlId  ?> = new QListBox($this->objParentObject, $strControlId);
-			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QConvertNotation::WordsFromCamelCase($objColumn->Reference->PropertyName)  ?>');
+			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QCodeGen::MetaControlLabelNameFromColumn($objColumn)  ?>');
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?php echo $strControlId  ?>->Required = true;
 <?php } ?><?php if (!$objColumn->NotNull) { ?>
@@ -25,7 +25,7 @@
 		 */
 		public function <?php echo $strLabelId  ?>_Create($strControlId = null) {
 			$this-><?php echo $strLabelId  ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?php echo $strLabelId  ?>->Name = QApplication::Translate('<?php echo QConvertNotation::WordsFromCamelCase($objColumn->Reference->PropertyName)  ?>');
+			$this-><?php echo $strLabelId  ?>->Name = QApplication::Translate('<?php echo QCodeGen::MetaControlLabelNameFromColumn($objColumn)  ?>');
 			$this-><?php echo $strLabelId  ?>->Text = ($this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>) ? <?php echo $objColumn->Reference->VariableType  ?>::$NameArray[$this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>] : null;
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?php echo $strLabelId  ?>->Required = true;

@@ -154,5 +154,13 @@
 					break;
 			}
 		}
+
+		/**** Codegen Helpers, used during the Codegen process only. ****/
+
+		public static function Codegen_VarName($strPropName) {
+			return 'cal' . $strPropName;
+		}
+
+
 	}
 ?>

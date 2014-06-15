@@ -445,5 +445,91 @@
 					}
 			}
 		}
+
+		/**** Codegen Helpers, used during the Codegen process only. ****/
+
+		public static function Codegen_VarName($strPropName) {
+			return 'cal' . $strPropName;
+		}
+
+		/**
+		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
+		 * This is called during the codegen process.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+
+			// Read the control type in case we are generating code for a subclass
+			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+
+			$strRet = <<<TMPL
+		/**
+		 * Create and setup a $strControlType $strControlId
+		 * @param string \$strControlId optional ControlId to use
+		 * @return $strControlType
+		 */
+		public function {$strControlId}_Create(\$strControlId = null) {
+			\$this->{$strControlId} = new $strControlType(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlId}->Name = QApplication::Translate('$strLabelName');
+			\$this->{$strControlId}->DateTime = \$this->{$strObjectName}->{$objColumn->PropertyName};
+
+TMPL;
+			switch ($objColumn->DbType) {
+				case QDatabaseFieldType::DateTime:
+					$strRet .= "\t\t\t\$this->{$strControlId}->DateTimePickerType = QDateTimePickerType::DateTime;\n";
+					break;
+
+				case QDatabaseFieldType::Time:
+					$strRet .= "\t\t\t\$this->{$strControlId}->DateTimePickerType = QDateTimePickerType::Time;\n";
+					break;
+
+				default:
+					$strRet .= "\t\t\t\$this->{$strControlId}->DateTimePickerType = QDateTimePickerType::Date;\n";
+			}
+
+			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+
+			$strRet .= <<<TMPL
+			return \$this->{$strControlId};
+		}
+
+
+TMPL;
+
+			return $strRet;
+
+		}
+
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strControlVarName = static::Codegen_VarName($strPropName);
+
+			if ($blnInit) {
+				$strRet = "\t\t\t\$this->{$strControlVarName}->DateTime = \$this->{$strObjectName}->{$strPropName};";
+			} else {
+				$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->DateTime = \$this->{$strObjectName}->{$strPropName};";
+			}
+			return $strRet . "\n";
+		}
+
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strControlVarName = static::Codegen_VarName($strPropName);
+			$strRet = <<<TMPL
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->DateTime;
+
+TMPL;
+			return $strRet;
+		}
+
 	}
 ?>

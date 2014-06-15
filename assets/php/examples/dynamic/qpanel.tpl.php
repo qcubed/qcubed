@@ -37,9 +37,17 @@
 
 	<p>Note that even though 10 textboxes are being rendered, we never explicitly code a <strong>QTextBox->Render</strong>
 	call <em>anywhere</em> in our code.</p>
+
+	<p>Another type of block control to mention here is the  <strong>QFieldset</strong>
+		which draws a panel as an html fieldset, and has a legend. Otherwise, it is the same as a QPanel.</p>
+
+
 </div>
 
-<div id="demoZone"><?php $this->pnlPanel->Render(); ?></div>
+<div id="demoZone">
+	<?php $this->pnlPanel->Render(); ?>
+	<?php $this->pnlFieldset->Render(); ?>
+</div>
 
 <?php $this->RenderEnd(); ?>
 <?php require('../includes/footer.inc.php'); ?>

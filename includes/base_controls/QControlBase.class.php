@@ -2207,5 +2207,54 @@
 					}
 			}
 		}
+
+
+		/**** Codegen Helpers, used during the Codegen process only. ****/
+
+		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
+			$strClassName = $objCodeGen->FormControlClassForColumn($objColumn);
+			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+
+			$strRet = <<<TMPL
+		/**
+		 * @var {$strClassName} {$strControlVarName}
+
+		 * @access protected
+		 */
+		protected \${$strControlVarName};
+
+
+TMPL;
+			return $strRet;
+		}
+
+		public static function Codegen_MetaCreateOptions (QColumn $objColumn) {
+			$strRet = '';
+			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strControlVarName = static::Codegen_VarName($strPropName);
+
+			if (($options = $objColumn->Options) &&
+				isset ($options['Overrides'])) {
+
+				foreach ($options['Overrides'] as $name=>$val) {
+					$strVal = var_export($val, true);
+					if (is_string ($val)) {
+						if (strpos ($val, '::') !== false &&
+							strpos ($val, ' ') === false) {
+							// looks like a constant
+							$strVal = $val;
+						} else {
+							$strVal = 'QApplication::Translate(' . $strVal . ')';
+						}
+					}
+					$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->{$name} = {$strVal};
+
+TMPL;
+				}
+			}
+			return $strRet;
+		}
+
 	}
 ?>
