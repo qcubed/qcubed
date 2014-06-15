@@ -294,6 +294,16 @@ if (!defined('SERVER_INSTANCE')) {
 				)
 			) );
 
+			/*
+			 * Support for Watchers and automated updating of objects that display the results of table queries.
+			 *
+			 * The preferred way to setup your watcher is to make changes to the
+			 * public/includes/controls/QWatcher.class.php file. However, you can also set up your watcher here
+			 * using the following define. The main purpose of the define is to help with automated testing
+			 * and the examples site.
+			 */
+			//define ('WATCHER_CLASS', 'QWatcherDB');
+
 			/* Form State Handler. Determines which class is used to serialize the form in-between Ajax callbacks.
 			 *
 			 * Possible values are:

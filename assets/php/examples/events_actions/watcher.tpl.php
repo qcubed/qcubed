@@ -27,6 +27,12 @@
 		</li>
 		</ul></p>
 
+	<p>To make this example work, you must load the examples database, and set the WATCHER_CLASS define in
+		your configuration.inc.php file to be "QWatcherDB". For purposes of your own code, you should edit
+		the project/includes/controls/QWatcher.class.php file so that the QWatcher class inherits from
+		the watcher type you want. Available types currently let you use a database to track changes, or
+		use a QCacheProvider subclass.</p>
+
 	<p>This is another QDatagrid example with a couple of fields to add a new person.
 		Whenever you add a person, the person will appear in the datagrid immediately.
 		It also has a timer to generate periodic events that will check whether another user has changed the database.

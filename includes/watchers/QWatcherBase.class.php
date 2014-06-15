@@ -20,7 +20,7 @@
 		 * and make it different for each application. However, if two QCubed installations are modifying the same tables in
 		 * the same databases, they should have the same app key
 		 */
-		protected static $strAppKey = 'QWATCH_APPKEY';
+		public static $strAppKey = 'QWATCH_APPKEY';
 
 		protected $strWatchedKeys = array();
 
@@ -31,7 +31,7 @@
 		 * combine the user id with the table name, and then
 		 * only records associated with that user id will be watched.
 		 *
-		 * Also, if you have multiple instances of QCubed running on the same PHP process, with possibly the same
+		 * Also, override this if you have multiple instances of QCubed running on the same PHP process, with possibly the same
 		 * table names.
 		 *
 		 * @return string
