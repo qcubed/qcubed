@@ -223,6 +223,9 @@
 	QApplicationBase::$ClassFile['qjstimerbase'] = __QCUBED_CORE__ . '/base_controls/QJsTimerBase.class.php';
 
 	QApplicationBase::$ClassFile['qwatcher'] = __QCUBED__ . '/controls/QWatcher.class.php';
+	QApplicationBase::$ClassFile['qwatcherdb'] = __QCUBED_CORE__ . '/watchers/QWatcherDB.class.php';
+	QApplicationBase::$ClassFile['qwatchercache'] = __QCUBED_CORE__ . '/watchers/QWatcherCache.class.php';
+	QApplicationBase::$ClassFile['qwatchernone'] = __QCUBED_CORE__ . '/watchers/QWatcherNone.class.php';
 
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
