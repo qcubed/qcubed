@@ -35,7 +35,7 @@
 				you should set an excludeTables pattern to exclude all, or "[0-9a-zA-Z_]*".
 				And then you should set an includeTables pattern of "^qc_[0-9a-zA-Z_]*".
 			-->
-			<excludeTables pattern="" list=""/>
+			<excludeTables pattern="" list="qc_watchers"/>
 			<includeTables pattern="" list=""/>
 
 			<!-- Support for "Beta 2" version of Manual Queries and Hard Coded Column Names -->

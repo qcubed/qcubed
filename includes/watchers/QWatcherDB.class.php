@@ -22,7 +22,7 @@
 	 */
 
 	if (!defined('__WATCHER_DB_INDEX__')) define ('__WATCHER_DB_INDEX__', 1);
-	if (!defined('__WATCHER_TABLE_NAME__')) define ('__WATCHER_TABLE_NAME__', '_qc_watchers');
+	if (!defined('__WATCHER_TABLE_NAME__')) define ('__WATCHER_TABLE_NAME__', 'qc_watchers');
 
 	include ('QWatcherBase.class.php');
 

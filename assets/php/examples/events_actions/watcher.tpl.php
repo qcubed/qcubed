@@ -18,8 +18,7 @@
 		<li>
 			Set up a QJsTimer to generate periodic events. See the QJsTimer example page for help. In that
 			example page, it discusses adding actions to the timer. For purposes of generating opportunities for
-			the QWatcher to look at the database, you do not need to add any actions to the timer for it to
-			detect a change in the database.
+			the QWatcher to look at the database, you will add a null ajax action to the timer.
 		</li>
 		<li>
 			The other option, which is currently not implemented in QCubed, is create a direct connection between the
@@ -28,10 +27,13 @@
 		</li>
 		</ul></p>
 
-	<p>This example is another example of the QDatagrid example with a coupld of fields to add a new person.
-		Whenever you add a person, the person will appear in the datagrid. Try opening the page in another browser
-		on your computer to simulate a multi-user environment. Whenever you add data to one browser, it will
-		appear in the other browser.</p>
+	<p>This is another QDatagrid example with a couple of fields to add a new person.
+		Whenever you add a person, the person will appear in the datagrid immediately.
+		It also has a timer to generate periodic events that will check whether another user has changed the database.
+		Try opening the page in another browser on your computer to simulate a multi-user environment.
+		Whenever you add data to one browser, it will appear in the other browser.</p>
+
+
 
 </div>
 

@@ -8,6 +8,9 @@ class ExampleForm extends QForm {
 	protected $txtFirstName;
 	protected $txtLastName;
 	protected $btnNew;
+	protected $timer;
+	/** @var  QControlProxy */
+	protected $pxyDelete;
 
 	protected function Form_Create() {
 		// Define the DataGrid
@@ -16,28 +19,26 @@ class ExampleForm extends QForm {
 		$this->dtgPersons->CellSpacing = 0;
 
 		// Define Columns
-		// Note that for the HTML, you can specify the PHP interpreter to kick in to interpret objects, methods,
-		// call functions, etc.  Simply use "<?= =>" tags to specify what needs to be interpreted.  Note that
-		// the use of the <?= short tag is *NOT* a function of PHP short tag support, but more a standard
-		// delimeter that QCubed happens to use to specify when PHP interpretation should begin and end.
-		// Note that you can use Attribute Overriding here define styles for specific columns (e.g. the last name
-		// is always in bold)
-		$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', 'First Name is "<?= $_ITEM->FirstName ?>"', 'Width=200'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>', 'FontBold=true'));
+		$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>'));
+		$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>'));
 
 		// Specify the local Method which will actually bind the data source to the datagrid.
-		// In order to not over-bloat the form state, the datagrid will use the data source only when rendering itself,
-		// and then it will proceed to remove the data source from memory.  Because of this, you will need to define
-		// a "data binding" method which will set the datagrid's data source.  You specify the name of the method
-		// here.  The framework will be responsible for calling your data binding method whenever the datagrid wants
-		// to render itself.
 		$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
 
+		// By default, the examples database uses the qc_watchers table to record when a something in the database has changed.
+		// To configure this, including changing the table name, or even using a shared caching mechanism like
+		// APC or Memcached, modify the QWatcher class in project/includes/controls
+		
+		// Tell the datagrid to watch the Person table.
+		$this->dtgPersons->Watch(QQN::Person());
+
+		// Create a timer to periodically check whether another user has changed the database. Depending on your
+		// application, you might not need to do this, as any activity the user does to a control will also check.
+
+		$this->timer = new QJsTimer($this, 500, true);
+		$this->timer->AddAction(new QTimerExpiredEvent(), new QAjaxAction());
+
 		// Update the styles of all the rows, or for just specific rows
-		// (e.g. you can specify a specific style for the header row or for alternating rows)
-		// Note that styles are hierarchical and inherit from each other.  For example, the default RowStyle
-		// sets the FontSize as 12px, and because that attribute is not overridden in AlternateRowStyle
-		// or HeaderRowStyle, both those styles will use the 12px Font Size.
 		$objStyle = $this->dtgPersons->RowStyle;
 		$objStyle->BackColor = '#efefff';
 		$objStyle->FontSize = 12;
@@ -54,13 +55,17 @@ class ExampleForm extends QForm {
 		$this->btnNew = new QButton($this);
 		$this->btnNew->Text = 'Add';
 		$this->btnNew->AddAction (new QClickEvent(), new QAjaxAction('btnNew_Click'));
+
+		// Create a proxy control to handle clicking for a delete
+		$this->pxyDelete = new QControlProxy($this);
+		$this->pxyDelete->AddAction (new QClickEvent(), new QAjaxAction ('delete_Click'));
 	}
 
 	protected function dtgPersons_Bind() {
 		// We load the data source, and set it to the datagrid's DataSource parameter
 		$this->dtgPersons->DataSource = Person::LoadAll();
 	}
-	protected function btnNew_Click() {
+	protected function btnNew_Click($strFormId, $strControlId, $strParameter) {
 		$objPerson = new Person();
 		$objPerson->FirstName = $this->txtFirstName->Text;
 		$objPerson->LastName = $this->txtLastName->Text;
