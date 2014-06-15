@@ -35,4 +35,3 @@
 	class QWatcher extends QWatcherNone {
 	}
 ?>
-	
