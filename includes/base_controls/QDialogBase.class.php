@@ -12,6 +12,7 @@
 	 * Special event to handle button clicks. 
 	 * 
 	 * Add an action to this event to get a button click.
+	 * The action parameter will be the id of the button that was clicked.
 	 */
 	class QDialog_ButtonEvent extends QEvent {
 		/** Event Name */
@@ -76,7 +77,6 @@
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->blnDisplay = false;
-			$this->AddAction(new QDialog_ButtonEvent(), new QAjaxControlAction($this, 'ButtonClick'));
 		}
 		
 		public function getJqControlId() {
@@ -119,17 +119,6 @@ FUNC;
 		}
 
 		/**
-		 * Override to process button clicks. $mixParam is the id of the clicked button.
-		 *
-		 * @param $strFormId
-		 * @param $strControlId
-		 * @param $mixParam
-		 */
-		public function ButtonClick ($strFormId, $strControlId, $mixParam) {
-			$this->strClickedButtonId = $mixParam;
-		}
-	
-		/**
 		 * Add a button to the dialog.
 		 * 
 		 * Use this to add buttons BEFORE bringing up the dialog
@@ -144,7 +133,7 @@ FUNC;
 				$this->mixButtons = array();
 			}
 			$controlId = $this->ControlId;
-			$strJS = sprintf('jQuery("#%s").trigger("QDialog_Button", event.currentTarget.id)', $this->ControlId);
+			$strJS = sprintf('jQuery("#%s").trigger("QDialog_Button", event.currentTarget.id); qcubed.recordControlModification("%s", "_ClickedButton", "%s");', $controlId, $controlId, $strButtonId);
 
 			//	$this->mixButtons[$strButtonName] = new QJsClosure($strJS);
 			$this->mixButtons[] = array ('text'=>$strButtonName,
@@ -182,8 +171,16 @@ FUNC;
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
+				case '_ClickedButton': // Internal only. Do not use. Used by JS above to keep track of clicked button.
+					try {
+						$this->strClickedButtonId = QType::Cast($mixValue, QType::String);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
 
-                case '_IsOpen': // Internal only, to detect when dialog has been opened or closed.
+				case '_IsOpen': // Internal only, to detect when dialog has been opened or closed.
                     try {
                         $this->blnIsOpen = QType::Cast($mixValue, QType::Boolean);
                         $this->blnAutoOpen = $this->blnIsOpen;  // in case it gets redrawn

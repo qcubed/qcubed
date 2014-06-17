@@ -1513,7 +1513,13 @@
 			}
 
 			$strToReturn = '';
-			// Auto-render all dialogs included at the form level
+
+			/*
+			 * Render any dialog that is not yet rendered. Now that we are using JQuery UI's dialog,
+			 * it is important to have the dialogs render as the last thing on the form. The dialog needs this
+			 * to render its overlay correctly. Also, this saves the developer from having to explicitly render
+			 * each dialog.
+			 */
 			foreach ($this->GetAllControls() as $objControl) {
 				if ($objControl instanceof QDialog &&
 						!$objControl->Rendered) {
