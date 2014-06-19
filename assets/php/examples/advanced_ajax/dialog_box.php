@@ -17,6 +17,11 @@
 		protected $pnlAnswer;
 		protected $btnDisplayYesNo;
 
+		protected $dlgValidation;
+		protected $btnValidation;
+		protected $txtFloat;
+
+
 		// Initialize our Controls during the Form Creation process
 		protected function Form_Create() {
 			// Define the Simple Message Dialog Box
@@ -65,6 +70,7 @@
 			
 			
 			// Define the CalculatorWidget example. passing in the Method Callback for whenever the Calculator is Closed
+			// This is  example uses QButton's instead of the JQuery UI buttons
 			$this->dlgCalculatorWidget = new CalculatorWidget('btnCalculator_Close', $this);
 			$this->dlgCalculatorWidget->Title = "Calculator Widget";
 			$this->dlgCalculatorWidget->AutoOpen = false;
@@ -76,6 +82,23 @@
 			$this->btnCalculator = new QButton($this);
 			$this->btnCalculator->Text = 'Show Calculator Widget';
 			$this->btnCalculator->AddAction(new QClickEvent(), new QAjaxAction('btnCalculator_Click'));
+
+			// Validate on JQuery UI buttons
+			$this->dlgValidation = new QDialog($this);
+			$this->dlgValidation->AddButton ('OK', 'ok', true); // specify that this button causes validation
+			$this->dlgValidation->AddButton ('Cancel', 'cancel');
+			$this->dlgValidation->AddAction (new QDialog_ButtonEvent(), new QAjaxAction('dlgValidate_Click'));
+			$this->dlgValidation->Title = 'Enter a number';
+
+			// Set up a field to be auto rendered, so no template is needed
+			$this->dlgValidation->AutoRenderChildren = true;
+			$this->txtFloat = new QFloatTextBox($this->dlgValidation);
+			$this->txtFloat->Placeholder = 'Float only';
+			$this->txtFloat->PreferedRenderMethod = 'RenderWithError'; // Tell the panel to use this method when rendering
+
+			$this->btnValidation = new QButton($this);
+			$this->btnValidation->Text = 'Show Validation Example';
+			$this->btnValidation->AddAction(new QClickEvent(), new QShowDialog($this->dlgValidation));
 		}
 
 		protected function btnDisplaySimpleMessage_Click($strFormId, $strControlId, $strParameter) {
@@ -84,8 +107,7 @@
 		}
 		
 		protected function dlgYesNo_Button($strFormId, $strControlId, $strParameter) {
-			// "Show" the Dialog Box using the Open() method
-			if ($this->dlgYesNo->ClickedButton == 'yesBtnId') {
+			if ($strParameter == 'yesBtnId') {
 				$this->pnlAnswer->Text = 'They love me.';
 			} else {
 				$this->pnlAnswer->Text = 'They love me not.';
@@ -101,8 +123,16 @@
 			$this->dlgCalculatorWidget->Open();
 			//$this->dlgCalculatorWidget->ShowDialogBox();
 		}
-		
-		// Setup the "Callback" function for when the calculator closes
+
+		public function dlgValidate_Click($strFormId, $strControlId, $strParameter) {
+			if ($strParameter == 'cancel') {
+				$this->txtFloat->Text = '';
+			}
+			$this->dlgValidation->Close();
+		}
+
+
+			// Setup the "Callback" function for when the calculator closes
 		// This needs to be a public method
 		public function btnCalculator_Close() {
 			$this->txtValue->Text = $this->dlgCalculatorWidget->Value;

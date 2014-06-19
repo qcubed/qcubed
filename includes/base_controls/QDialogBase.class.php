@@ -69,16 +69,32 @@
 		protected $strClickedButtonId;
         /** @var bool Should we draw a close button on the top? */
 		protected $blnHasCloseButton = true;
-        /** @var bool records whether button is open */
+        /** @var bool records whether dialog is open */
         protected $blnIsOpen = false;
+		/** @var array whether a button causes validation */
+		protected $blnValidationArray = array();
 
 		protected $blnUseWrapper = true;
 
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->blnDisplay = false;
+			$this->mixCausesValidation = $this;
 		}
-		
+
+		/**
+		 * Validate the child items if the dialog is visible and the clicked button requires validation.
+		 * @return bool
+		 */
+		public function ValidateControlAndChildren() {
+			if ($this->blnIsOpen &&
+					!empty ($this->blnValidationArray[$this->strClickedButtonId])) {
+				return parent::ValidateControlAndChildren();
+			}
+			return true;
+		}
+
+
 		public function getJqControlId() {
 			if ($this->blnUseWrapper) {
 				return $this->ControlId . '_ctl';
@@ -128,22 +144,34 @@ FUNC;
 		 * @param $strButtonId	Must be unique on the form. Remember, a dialog is not a form, so all dialogs on the form should have unique button ids.
 		 */
 
-		public function AddButton ($strButtonName, $strButtonId) {
+		public function AddButton ($strButtonName, $strButtonId, $blnCausesValidation = false) {
 			if (!$this->mixButtons) {
 				$this->mixButtons = array();
 			}
 			$controlId = $this->ControlId;
-			$strJS = sprintf('jQuery("#%s").trigger("QDialog_Button", event.currentTarget.id); qcubed.recordControlModification("%s", "_ClickedButton", "%s");', $controlId, $controlId, $strButtonId);
+			$strJS = sprintf('qcubed.recordControlModification("%s", "_ClickedButton", "%s");jQuery("#%s").trigger("QDialog_Button", event.currentTarget.id);', $controlId, $strButtonId, $controlId);
 
 			//	$this->mixButtons[$strButtonName] = new QJsClosure($strJS);
 			$this->mixButtons[] = array ('text'=>$strButtonName,
 				'click'=>new QJsClosure($strJS),
 				'id'=>$strButtonId);
 
+			$this->blnValidationArray[$strButtonId] = $blnCausesValidation;
+
 			$this->blnModified = true;
 		}
-		
-		
+
+		public function RemoveButton ($strButtonId) {
+			if (!empty($this->mixButtons)) {
+				$this->mixButtons = array_filter ($this->mixButtons, function ($a) use ($strButtonId) {return $a['id'] == $strButtonId;});
+			}
+
+			unset ($this->blnValidationArray[$strButtonId]);
+
+			$this->blnModified = true;
+		}
+
+
 		/**
 		 * Show the dialog.
 		 * 
