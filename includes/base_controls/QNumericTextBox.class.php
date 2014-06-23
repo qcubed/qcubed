@@ -71,11 +71,13 @@
 						$this->strText = QType::Cast($this->strText, $this->strDataType);
 					} catch (QInvalidCastException $objExc) {
 						$this->strValidationError = $this->strLabelForInvalid;
+						$this->MarkAsModified();
 						return false;
 					}
 
 					if (!is_numeric($this->strText)) {
 						$this->strValidationError = $this->strLabelForInvalid;
+						$this->MarkAsModified();
 						return false;
 					}
 
@@ -85,6 +87,7 @@
 						if ($newVal != $this->strText) {
 							if ($this->strLabelForNotStepAligned) {
 								$this->strValidationError = sprintf($this->strLabelForNotStepAligned, $this->mixStep);
+								$this->MarkAsModified();
 								return false;
 							}
 							$this->strText = $newVal;
@@ -94,11 +97,13 @@
 
 					if ((!is_null($this->mixMinimum)) && ($this->strText < $this->mixMinimum)) {
 						$this->strValidationError = sprintf($this->strLabelForGreater, $this->mixMinimum);
+						$this->MarkAsModified();
 						return false;
 					}
 
 					if ((!is_null($this->mixMaximum)) && ($this->strText > $this->mixMaximum)) {
 						$this->strValidationError = sprintf($this->strLabelForLess, $this->mixMaximum);
+						$this->MarkAsModified();
 						return false;
 					}
 				}

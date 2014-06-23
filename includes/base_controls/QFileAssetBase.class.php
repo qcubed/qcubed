@@ -58,7 +58,7 @@
 			
 			// And finally, let's specify a CacheFolder so that the images are cached
 			// Notice that this CacheFolder path is a complete web-accessible relative-to-docroot path
-			$this->imgFileIcon->CacheFolder = __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__ . '/cache';
+			$this->imgFileIcon->CacheFolder = __IMAGE_CACHE__;
 
 			// Setup Controls
 			$this->btnUpload = new QLinkButton($this);

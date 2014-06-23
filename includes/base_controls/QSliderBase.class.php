@@ -23,6 +23,11 @@
 	 *
 	 */
 	class QSliderBase extends QSliderGen	{
+
+		/** Constants to use for setting Orientation */
+		const Vertical = 'vertical';
+		const Horizontal = 'horizontal';
+
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
 			

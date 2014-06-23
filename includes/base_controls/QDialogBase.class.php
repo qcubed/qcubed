@@ -12,10 +12,13 @@
 	 * Special event to handle button clicks. 
 	 * 
 	 * Add an action to this event to get a button click.
+	 * The action parameter will be the id of the button that was clicked.
 	 */
 	class QDialog_ButtonEvent extends QEvent {
 		/** Event Name */
-		const EventName = 'QDialog_Button';	
+		const EventName = 'QDialog_Button';
+		const JsReturnParam = 'ui'; // ends up being the button id
+
 	}
 
 
@@ -60,20 +63,38 @@
 	
 	class QDialogBase extends QDialogGen
 	{
+		/** @var bool default to auto open being false, since this would be a rare need, and dialogs are auto-rendered. */
+		protected $blnAutoOpen = false;
         /** @var  string Id of last button clicked. */
 		protected $strClickedButtonId;
         /** @var bool Should we draw a close button on the top? */
 		protected $blnHasCloseButton = true;
-        /** @var bool records whether button is open */
+        /** @var bool records whether dialog is open */
         protected $blnIsOpen = false;
+		/** @var array whether a button causes validation */
+		protected $blnValidationArray = array();
 
 		protected $blnUseWrapper = true;
 
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->blnDisplay = false;
+			$this->mixCausesValidation = $this;
 		}
-		
+
+		/**
+		 * Validate the child items if the dialog is visible and the clicked button requires validation.
+		 * @return bool
+		 */
+		public function ValidateControlAndChildren() {
+			if ($this->blnIsOpen &&
+					!empty ($this->blnValidationArray[$this->strClickedButtonId])) {
+				return parent::ValidateControlAndChildren();
+			}
+			return true;
+		}
+
+
 		public function getJqControlId() {
 			if ($this->blnUseWrapper) {
 				return $this->ControlId . '_ctl';
@@ -112,31 +133,45 @@ FUNC;
 
 			return $strOptions;
 		}
-	
+
 		/**
 		 * Add a button to the dialog.
 		 * 
-		 * Use this override to add buttons BEFORE bringing up the dialog
-		 * Attach actions to the QDialog_ButtonEvent event, and then call
-		 * $dlg->ClickedButton to see which button was clicked.
+		 * Use this to add buttons BEFORE bringing up the dialog
+		 * Override ButtonClick to detect a button click.
+		 *
+		 * @param $strButtonName
+		 * @param $strButtonId	Must be unique on the form. Remember, a dialog is not a form, so all dialogs on the form should have unique button ids.
 		 */
-		
-		public function AddButton ($strButtonName, $strButtonId) {
+
+		public function AddButton ($strButtonName, $strButtonId, $blnCausesValidation = false) {
 			if (!$this->mixButtons) {
 				$this->mixButtons = array();
 			}
 			$controlId = $this->ControlId;
-			$strJS =<<<BUTTONFUNC
-			qcubed.recordControlModification("$controlId", "_ClickedButton", "$strButtonId");
-			jQuery("#$controlId").trigger("QDialog_Button");
-BUTTONFUNC;
-									
-			$this->mixButtons[$strButtonName] = new QJsClosure($strJS);
-									
+			$strJS = sprintf('qcubed.recordControlModification("%s", "_ClickedButton", "%s");jQuery("#%s").trigger("QDialog_Button", event.currentTarget.id);', $controlId, $strButtonId, $controlId);
+
+			//	$this->mixButtons[$strButtonName] = new QJsClosure($strJS);
+			$this->mixButtons[] = array ('text'=>$strButtonName,
+				'click'=>new QJsClosure($strJS),
+				'id'=>$strButtonId);
+
+			$this->blnValidationArray[$strButtonId] = $blnCausesValidation;
+
 			$this->blnModified = true;
 		}
-		
-		
+
+		public function RemoveButton ($strButtonId) {
+			if (!empty($this->mixButtons)) {
+				$this->mixButtons = array_filter ($this->mixButtons, function ($a) use ($strButtonId) {return $a['id'] == $strButtonId;});
+			}
+
+			unset ($this->blnValidationArray[$strButtonId]);
+
+			$this->blnModified = true;
+		}
+
+
 		/**
 		 * Show the dialog.
 		 * 
@@ -173,7 +208,7 @@ BUTTONFUNC;
 					}
 					break;
 
-                case '_IsOpen': // Internal only, to detect when dialog has been opened or closed.
+				case '_IsOpen': // Internal only, to detect when dialog has been opened or closed.
                     try {
                         $this->blnIsOpen = QType::Cast($mixValue, QType::Boolean);
                         $this->blnAutoOpen = $this->blnIsOpen;  // in case it gets redrawn

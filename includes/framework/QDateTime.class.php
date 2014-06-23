@@ -256,25 +256,10 @@
 		}
 
 		/**
-		 * @deprecated since PHP 5.3
-		 * DEPRECATED - DO NOT USE. For PHP 5.3 compatability, this method should not be called with parameters.
-		 * In previous versions of QCubed and QCodo, the way to format a date was to call 
-		 * __toString(), passing the format as a parameter. PHP 5.3 no longer supports this construct. 
-		 * To format a date, call $myDateTimeObject->qFormat($strParameters).
-		 *
-		 * For compatibility with old apps, this method is preserved - and passing parameters to it is
-		 * allowed, through a horrible hack. Please DO NOT use in applications that were written past the
-		 * release of PHP 5.3.
+		 * Formats a date as a string  using the default format type.
 		 */
 		public function __toString() {
-			$strArgumentArray = func_get_args();
-			
-			if (count($strArgumentArray) >= 1) {
-				$strFormat = $strArgumentArray[0];
-			} else {
-				$strFormat = null;
-			}
-			return $this->qFormat($strFormat);
+			return $this->qFormat();
 		}
 
 		/**
@@ -318,8 +303,13 @@
 		 * @return string the formatted date as a string
 		 */
 		public function qFormat($strFormat = null) {
-			if (is_null($strFormat))
-				$strFormat = QDateTime::$DefaultFormat;
+			if (is_null($strFormat)) {
+				if ($this->blnDateNull && !$this->blnTimeNull) {
+					$strFormat = QDateTime::$DefaultTimeFormat;
+				} else {
+					$strFormat = QDateTime::$DefaultFormat;
+				}
+			}
 
 			/*
 				(?(?=D)([D]+)|

@@ -58,6 +58,7 @@
 	 * @property-read boolean $Rendered
 	 * @property-read boolean $Rendering
 	 * @property-read string $RenderMethod carries the name of the function, which were initially used for rendering
+	 * @property string $PreferedRenderMethod carries the name of the function, which were initially used for rendering
 	 * @property boolean $Required specifies whether or not this is required (will cause a validation error if the form is trying to be validated and this control is left blank)
 	 * @property-read string $StyleSheets
 	 * @property integer $TabIndex specifies the index/tab order on a form
@@ -1538,6 +1539,35 @@
 		 * @return boolean
 		 */
 		abstract public function Validate();
+
+		/**
+		 * Validate self + child controls. Controls must mark themselves modified, or somehow redraw themselves
+		 * if by failing the validation, they change their visual look in some way (like by adding warning text, turning
+		 * red, etc.)
+		 *
+		 * @return bool
+		 */
+		public function ValidateControlAndChildren() {
+			// Initially Assume Validation is True
+			$blnToReturn = true;
+
+			// Check the Control Itself
+			if (!$this->Validate()) {
+				$blnToReturn = false;
+			}
+
+			// Recursive call on Child Controls
+			foreach ($this->GetChildControls() as $objChildControl) {
+				// Only Enabled and Visible and Rendered controls should be validated
+				if (($objChildControl->Visible) && ($objChildControl->Enabled) && ($objChildControl->RenderMethod) && ($objChildControl->OnPage)) {
+					if (!$objChildControl->ValidateControlAndChildren()) {
+						$blnToReturn = false;
+					}
+				}
+			}
+
+			return $blnToReturn;
+		}
 
 
 

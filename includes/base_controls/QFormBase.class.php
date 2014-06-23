@@ -332,7 +332,7 @@
 			if ($objClass) {
 				// Globalize
 				$_FORM = $objClass;
-			
+
 				$objClass->strCallType = $_POST['Qform__FormCallType'];
 				$objClass->intFormStatus = QFormBase::FormStatusUnrendered;
 
@@ -565,10 +565,11 @@
 			$strToReturn .= '<controls>';
 
 			// Include each control (if applicable) that has been changed/modified
-			foreach ($this->GetAllControls() as $objControl)
-				if (!$objControl->ParentControl)
-//					$strToReturn .= $objControl->RenderRender()(false) . "\r\n";
+			foreach ($this->GetAllControls() as $objControl) {
+				if (!$objControl->ParentControl) {
 					$strToReturn .= $this->RenderAjaxHelper($objControl);
+				}
+			}
 
 			// First, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			$strJavaScriptToAddArray = array();
@@ -1004,26 +1005,7 @@
 		 * @return bool
 		 */
 		protected function ValidateControlAndChildren(QControl $objControl) {
-			// Initially Assume Validation is True
-			$blnToReturn = true;
-
-			// Check the Control Itself
-			if (!$objControl->Validate()) {
-				$objControl->MarkAsModified();
-				$blnToReturn = false;
-			}
-
-			// Recursive call on Child Controls
-			foreach ($objControl->GetChildControls() as $objChildControl) {
-				// Only Enabled and Visible and Rendered controls should be validated
-				if (($objChildControl->Visible) && ($objChildControl->Enabled) && ($objChildControl->RenderMethod) && ($objChildControl->OnPage)) {
-					if (!$this->ValidateControlAndChildren($objChildControl)) {
-						$blnToReturn = false;
-					}
-				}
-			}
-
-			return $blnToReturn;
+			return $objControl->ValidateControlAndChildren();
 		}
 
 		protected function TriggerActions($strControlIdOverride = null) {
@@ -1164,7 +1146,8 @@
 						// Nope -- Throw an exception
 						throw new Exception(sprintf('Control passed by Qform__FormControl does not exist: %s', $strId));
 					}
-				}/* else {
+				}
+				/* else {
 					// TODO: Code to automatically execute any PrimaryButton's onclick action, if applicable
 					// Difficult b/c of all the QCubed hidden parameters that need to be set to get the action to work properly
 					// Javascript interaction of PrimaryButton works fine in Firefox... currently doens't work in IE 6.
@@ -1529,13 +1512,29 @@
 					throw new QCallerException('FormStatus is in an unknown status');
 			}
 
+			$strToReturn = '';
+
+			/*
+			 * Render any dialog that is not yet rendered. Now that we are using JQuery UI's dialog,
+			 * it is important to have the dialogs render as the last thing on the form. The dialog needs this
+			 * to render its overlay correctly. Also, this saves the developer from having to explicitly render
+			 * each dialog.
+			 */
+			foreach ($this->GetAllControls() as $objControl) {
+				if ($objControl instanceof QDialog &&
+						!$objControl->Rendered) {
+					$strToReturn .= $objControl->Render(false) . "\r\n";
+
+				}
+			}
+
 			//Clear included javascript array
 			$this->strIncludedJavaScriptFileArray = array();
 			// Add form level javascripts and libraries
 			$strJavaScriptArray = $this->ProcessJavaScriptList($this->GetFormJavaScripts());
 
 			// Setup IncludeJs
-			$strToReturn = "\r\n";
+			$strToReturn .= "\r\n";
 
 			// Include javascripts that need to be included
 			foreach ($strJavaScriptArray as $strScript) {
@@ -1627,15 +1626,15 @@
 
             // Next, add any new JS files that haven't yet been included to the BEGINNING of the High Priority commands string
 			// (already rendered HP commands up to this point will be placed into the callback)
-			foreach (array_reverse($strJavaScriptToAddArray) as $strScript) {
-				if ($strEndScript)
-					$strEndScript = 'qc.loadJavaScriptFile("' . $strScript . '", function() {' . $strEndScript . '}); ';
-				else
-					$strEndScript = 'qc.loadJavaScriptFile("' . $strScript . '", null); ';
+			foreach ($strJavaScriptToAddArray as $strScript) {
+				$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $this->GetJsFileUri($strScript));
+				$strToReturn .= "\r\n";
 			}
 
 
-            // Finally, add QCubed includes path
+
+
+				// Finally, add QCubed includes path
 			$strEndScript = sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ ) . $strEndScript;
 			$strEndScript = sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) . $strEndScript;

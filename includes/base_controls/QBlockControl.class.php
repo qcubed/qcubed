@@ -384,7 +384,9 @@
 					break;
 			}
 		}
+
 	}
-	
+
 	$_CONTROL = null;
+
 ?>
