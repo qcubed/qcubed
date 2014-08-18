@@ -20,6 +20,12 @@
 		protected static $strTableName;
 
 		/**
+		 * @var string The session name to be used for saving sessions.
+		 */
+		protected static $strSessionName = '';
+
+
+		/**
 		 * @static
 		 * @param int $intDbIndex The index in the database array
 		 * @param string $strTableName The table name to be used for saving sessions.
@@ -56,6 +62,7 @@
 		}
 
 		public static function SessionOpen($save_path, $session_name) {
+			self::$strSessionName = $session_name;
 			// Nothing to do
 			return true;
 		}
@@ -66,6 +73,7 @@
 		}
 
 		public static function SessionRead($id) {
+			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			$query = '
 				SELECT
@@ -91,6 +99,7 @@
 		}
 
 		public static function SessionExists($id) {
+			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			$query = '
 				SELECT 1
@@ -114,6 +123,7 @@
 			// Also, if you are using the QSessionFormStateHandler, compression of FormState converts the data to binary format
 			// thus making it unfit to be saved to the database.
 			// Base 64 encoding ensures that the data can be safely saved into the database as text.
+			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			$objDatabase->InsertOrUpdate(
 				self::$strTableName,
@@ -127,6 +137,7 @@
 		}
 
 		public static function SessionDestroy($id) {
+			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			$query = '
 				DELETE FROM
