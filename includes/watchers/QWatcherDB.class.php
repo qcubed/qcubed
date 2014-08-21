@@ -10,7 +10,7 @@
 	 * 		__WATCHER_TABLE_NAME__ - The name of the table.
 	 *
 	 * To create the database, use the following SQL:
-	 * CREATE TABLE IF NOT EXISTS _qc_watchers (
+	 * CREATE TABLE IF NOT EXISTS qc_watchers (
 	 * table_key varchar(200) NOT NULL,
 	 * ts varchar(40) NOT NULL,
 	 * PRIMARY KEY (table_key)
@@ -22,7 +22,7 @@
 	 */
 
 	if (!defined('__WATCHER_DB_INDEX__')) define ('__WATCHER_DB_INDEX__', 1);
-	if (!defined('__WATCHER_TABLE_NAME__')) define ('__WATCHER_TABLE_NAME__', '_qc_watchers');
+	if (!defined('__WATCHER_TABLE_NAME__')) define ('__WATCHER_TABLE_NAME__', 'qc_watchers');
 
 	include ('QWatcherBase.class.php');
 

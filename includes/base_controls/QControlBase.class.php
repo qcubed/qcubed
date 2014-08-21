@@ -1685,7 +1685,12 @@
 		public function Watch (QQNode $objNode)
 		{
 			if (!$this->objWatcher) {
-				$this->objWatcher = new QWatcher(); // only create a watcher object when needed, since it is stored in the form state
+				if (defined('WATCHER_CLASS')) {
+					$class = WATCHER_CLASS;
+					$this->objWatcher = new $class(); // only create a watcher object when needed, since it is stored in the form state
+				} else {
+					$this->objWatcher = new QWatcher(); // only create a watcher object when needed, since it is stored in the form state
+				}
 			}
 			$this->objWatcher->Watch ($objNode);
 		}

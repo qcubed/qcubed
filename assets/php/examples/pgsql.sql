@@ -127,8 +127,8 @@ CREATE TABLE person_persontype_assn (
 );
 CREATE INDEX IDX_persontypeassn_2 ON person_persontype_assn (person_type_id);
 
-DROP TABLE IF EXISTS _qc_watchers;
-CREATE TABLE _qc_watchers (
+DROP TABLE IF EXISTS qc_watchers;
+CREATE TABLE qc_watchers (
   table_key VARCHAR(200) NOT NULL,
   ts varchar(40) NOT NULL,
   CONSTRAINT PK_qc_watchers PRIMARY KEY (table_key)

@@ -271,6 +271,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 * "QCacheProviderLocalMemory": a local memory cache provider with a lifespan of the request
 			 *   or session (if KeepInSession is configured).
 			 *
+			 * "QCacheProviderAPC": supports the APC interface. To use it, use PECL to install either
+			 * APC or APCu.
+			 *
 			 * "QCacheProviderNoCahce": provider which does no caching at all
 			 *
 			 * "QMultiLevelCacheProvider": a provider that can combine multiple providers into one.
@@ -291,6 +294,16 @@ if (!defined('SERVER_INSTANCE')) {
 					 //array('host' => '10.0.2.2', 'port' => 11211, ), // adds a second server
 				)
 			) );
+
+			/*
+			 * Support for Watchers and automated updating of objects that display the results of table queries.
+			 *
+			 * The preferred way to setup your watcher is to make changes to the
+			 * public/includes/controls/QWatcher.class.php file. However, you can also set up your watcher here
+			 * using the following define. The main purpose of the define is to help with automated testing
+			 * and the examples site.
+			 */
+			//define ('WATCHER_CLASS', 'QWatcherDB');
 
 			/* Form State Handler. Determines which class is used to serialize the form in-between Ajax callbacks.
 			 *

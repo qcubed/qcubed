@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS person_persontype_assn (
 CREATE INDEX IX_persontype_1 ON person_persontype_assn(person_id);
 CREATE INDEX IX_persontype_2 ON person_persontype_assn(person_type_id);
 
-DROP TABLE IF EXISTS _qc_watchers;
-CREATE TABLE IF NOT EXISTS _qc_watchers (
+DROP TABLE IF EXISTS qc_watchers;
+CREATE TABLE IF NOT EXISTS qc_watchers (
   table_key varchar(200) NOT NULL,
   ts varchar(40) NOT NULL,
   CONSTRAINT PK_qc_watchers PRIMARY KEY (table_key)

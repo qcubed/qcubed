@@ -26,11 +26,7 @@
 	 * of QCubed.
 	 */
 
-	//include (__QCUBED_CORE__ . '/watchers/QWatcherAPC.class.php');
-	include (__QCUBED_CORE__ . '/watchers/QWatcherDB.class.php');
-
-	//class QWatcher extends QWatcherAPC {
-	class QWatcher extends QWatcherDB {
-	}
+	//class QWatcher extends QWatcherCache {}
+	//class QWatcher extends QWatcherDB {}
+	class QWatcher extends QWatcherNone {}
 ?>
-	

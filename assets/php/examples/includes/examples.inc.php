@@ -89,6 +89,7 @@
 			self::AddCoreExampleFile($intIndex, '/events_actions/event_propagation.php Controlling Event Bubbling');
 			self::AddCoreExampleFile($intIndex, '/events_actions/event_delegation.php Event Delegation with QOnEvent');
 			self::AddCoreExampleFile($intIndex, '/events_actions/low_priority_js.php JavaScript priorities');
+			self::AddCoreExampleFile($intIndex, '/events_actions/watcher.php Automatic Refreshing of Controls');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();

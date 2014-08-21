@@ -124,6 +124,7 @@
 	QApplicationBase::$ClassFile['qcacheprovidermemcache'] = __QCUBED_CORE__ . '/framework/QCacheProviderMemcache.class.php';
 	QApplicationBase::$ClassFile['qcacheproviderlocalmemory'] = __QCUBED_CORE__ . '/framework/QCacheProviderLocalMemory.class.php';
 	QApplicationBase::$ClassFile['qcacheprovidernocache'] = __QCUBED_CORE__ . '/framework/QCacheProviderNoCache.class.php';
+	QApplicationBase::$ClassFile['qcacheproviderapc'] = __QCUBED_CORE__ . '/framework/QCacheProviderAPC.class.php';
 	QApplicationBase::$ClassFile['qmultilevelcacheprovider'] = __QCUBED_CORE__ . '/framework/QMultiLevelCacheProvider.class.php';
 	QApplicationBase::$ClassFile['qdbbackedsessionhandler'] = __QCUBED_CORE__ . '/framework/QDbBackedSessionHandler.class.php';
 
@@ -222,6 +223,9 @@
 	QApplicationBase::$ClassFile['qjstimerbase'] = __QCUBED_CORE__ . '/base_controls/QJsTimerBase.class.php';
 
 	QApplicationBase::$ClassFile['qwatcher'] = __QCUBED__ . '/controls/QWatcher.class.php';
+	QApplicationBase::$ClassFile['qwatcherdb'] = __QCUBED_CORE__ . '/watchers/QWatcherDB.class.php';
+	QApplicationBase::$ClassFile['qwatchercache'] = __QCUBED_CORE__ . '/watchers/QWatcherCache.class.php';
+	QApplicationBase::$ClassFile['qwatchernone'] = __QCUBED_CORE__ . '/watchers/QWatcherNone.class.php';
 
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
