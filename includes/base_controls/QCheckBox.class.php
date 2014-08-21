@@ -95,43 +95,28 @@
 
 			$strCustomAttributes = $this->GetCustomAttributes();
 
-			$strActions = $this->GetActionAttributes();
-
 			if (strlen($this->strText)) {
 				$this->blnIsBlockElement = true;
+				$strCheckHtml = sprintf('<input type="checkbox" id="%s" name="%s" %s%s%s%s />',
+					$this->strControlId,
+					$this->strControlId,
+					$strDisabled,
+					$strChecked,
+					$strAccessKey,
+					$strTabIndex);
+
+				$strLabelHtml = sprintf ('<label for="%s">%s</label>',
+					$this->strControlId,
+					($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText);
 				if ($this->strTextAlign == QTextAlign::Left) {
-					$strToReturn = sprintf('<table cellspacing="0" cellpadding="0" border="0"><tr><td %s%s%s%s%s><label for="%s">%s</label><input type="checkbox" id="%s" name="%s" %s%s%s%s /></td></tr></table>',
-						$strCssClass,
-						$strToolTip,
-						$strStyle,
-						$strCustomAttributes,
-						$strDisabled,
-						$this->strControlId,
-						($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText,
-						$this->strControlId,
-						$this->strControlId,
-						$strDisabled,
-						$strChecked,
-						$strAccessKey,
-						$strTabIndex
-					);				
+					$strCombined = $strLabelHtml .  $strCheckHtml;
 				} else {
-					$strToReturn = sprintf('<table cellspacing="0" cellpadding="0" border="0"><tr><td><input type="checkbox" id="%s" name="%s" %s%s%s%s /></td><td %s%s%s%s%s><label for="%s">%s</label></td></tr></table>',
-						$this->strControlId,
-						$this->strControlId,
-						$strDisabled,
-						$strChecked,
-						$strAccessKey,
-						$strTabIndex,
-						$strCssClass,
-						$strToolTip,
-						$strStyle,
-						$strCustomAttributes,
-						$strDisabled,
-						$this->strControlId,
-						($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText
-					);
+					$strCombined = $strCheckHtml . $strLabelHtml;
 				}
+
+				$strToReturn = sprintf('<div %s%s%s%s%s>%s</div>',
+					$strCssClass, $strToolTip, $strStyle, $strCustomAttributes, $strDisabled, $strCombined);
+
 			} else {
 				$this->blnIsBlockElement = false;
 				$strToReturn = sprintf('<input type="checkbox" id="%s" name="%s" %s%s%s%s%s%s%s%s />',
