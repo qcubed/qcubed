@@ -8,12 +8,19 @@
 	 *
 	 */
 
+	class QTabs_BeforeActivateEventExt extends QJqUiEvent {
+		const EventName = 'tabsbeforeactivate';
+
+	}
 
     /**
      * Impelements JQuery Ui Tabs
      * 
-     * Tabs are similary to an Accorion, but tabs along the top are used to switch between panels. The top
+     * Tabs are similar to an Accordion, but tabs along the top are used to switch between panels. The top
      * level html items in the panel will become the items that are switched.
+	 *
+	 * Specify the names of the tabs either in the TabHeadersArray, or assign a Name attribute to the top
+	 * level child controls and those names will be used as the tab names.
      * 
 	 * @property-write array $Headers
 	 *
@@ -26,6 +33,10 @@
 		protected $blnAutoRenderChildren = true;
 		protected $intSelected = 0;
 
+		/**
+		 * Return the javascript associated with the control.
+		 * @return string
+		 */
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
 			$strJS .= sprintf('; $j("#%s").on("tabsselect", function(event, ui) {$j("#%s").val(ui.index);})',
@@ -34,10 +45,17 @@
 			return $strJS;
 		}
 
+		/**
+		 * Return the id of the selection
+		 * @return string
+		 */
 		protected function getSelectedInputId() {
 			return $this->ControlId.'_selected';
 		}
 
+		/**
+		 * Records the current selection based on the selected item the user clicked.
+		 */
 		public function ParsePostData() {
 			$strSelectedInputId = $this->getSelectedInputId();
 			if (array_key_exists($strSelectedInputId, $_POST)) {
@@ -45,6 +63,11 @@
 			}
 		}
 
+		/**
+		 * Renders child controls as divs so that they become tabs.
+		 * @param bool $blnDisplayOutput
+		 * @return null|string
+		 */
 		protected function RenderChildren($blnDisplayOutput = true) {
 			$strToReturn = $this->GetTabHeaderHtml();
 
@@ -64,6 +87,12 @@
 				return $strToReturn;
 		}
 
+		/**
+		 * Returns the HTML for the tab header. This includes the names and the control logic to record what the
+		 * user clicked.
+		 *
+		 * @return string
+		 */
 		protected function GetTabHeaderHtml() {
 			$strResult = sprintf('<input id="%s" type="hidden" value="%d"/>', $this->getSelectedInputId(), $this->intSelected);
 			$strResult .= '<ul>';
@@ -79,7 +108,11 @@
 					} else {
 						$strResult .= (string)$objHeader;
 					}
-				} else {
+				}
+				elseif ($strName = $childControls[$i]->Name) {
+					$strResult .= $strName;
+				}
+				else {
 					$strResult .= 'Tab '. ($i+1);
 				}
 				$strResult .= '</a></li>';
@@ -104,6 +137,113 @@
 			$key = ($mixHeaderIndicator instanceof QControl) ? $mixHeaderIndicator->ControlId : $mixHeaderIndicator;
 			$this->objTabHeadersArray[$key] = $mixHeader;
 		}
+
+		/**
+		 * Overrides default so that if a tab does not pass validation, it will be visible.
+		 * @return bool
+		 */
+		public function ValidateControlAndChildren() {
+			// Initially Assume Validation is True
+			$blnToReturn = true;
+
+			// Check the Control Itself
+			if (!$this->Validate()) {
+				$blnToReturn = false;
+			}
+
+			// Recursive call on Child Controls
+			$intControlNum = 0;
+
+			foreach ($this->GetChildControls() as $objChildControl) {
+				// Only Enabled and Visible and Rendered controls should be validated
+				if (($objChildControl->Visible) && ($objChildControl->Enabled) && ($objChildControl->RenderMethod) && ($objChildControl->OnPage)) {
+					if (!$objChildControl->ValidateControlAndChildren()) {
+						$this->CallJqUiMethod(false, "option", 'active', $intControlNum);
+						$blnToReturn = false;
+					}
+				}
+				$intControlNum++;
+			}
+
+			return $blnToReturn;
+		}
+
+		/**
+		 * Given a tab name or index, returns its index. If invalid, return false;
+		 * @param string|integer $mixTab
+		 * @return bool|int
+		 */
+		protected function FindTabIndex ($mixTab) {
+			$count = 0;
+
+			if ($this->objTabHeadersArray) {
+				$count = count($this->objTabHeadersArray);
+			}
+			else {
+				$childControls = $this->GetChildControls();
+				$count = count ($childControls);
+			}
+			if (is_numeric($mixTab)) {
+				if ($mixTab < $count) {
+					return $mixTab;
+				}
+			}
+
+			if ($this->objTabHeadersArray) {
+				for ($i = 0, $cnt = $count; $i < $cnt; ++$i) {
+					if ($this->objTabHeadersArray[$i] == $mixTab) {
+						return $i;
+					}
+				}
+			}
+			else {
+				for ($i = 0, $cnt = $count; $i < $cnt; ++$i) {
+					if ($mixTab == $childControls[$i]->Name) {
+						return $i;
+					}
+				}
+
+			}
+			return false;
+		}
+
+		/**
+		 * Activate the tab with the given name or number.
+		 *
+		 * @param string|integer $mixTab
+		 */
+		public function ActivateTab ($mixTab) {
+			if (false !== ($i = $this->FindTabIndex($mixTab))) {
+				parent::Option2('active', $i);
+			}
+		}
+
+		/**
+		 * Enable or disable a tab, or all tabs.
+		 *
+		 * @param null|string|integer $mixTab  If null, enables or disables all tabs. Otherwise, the name or index of a tab.
+		 * @param bool $blnEnable True to enable tabs. False to disable.
+		 */
+		public function EnableTab ($mixTab = null, $blnEnable = true) {
+
+			if (is_null($mixTab)) {
+				if ($blnEnable) {
+					parent::Enable();
+				} else {
+					parent::Disable();
+				}
+				return;
+			}
+			if (false !== ($i = $this->FindTabIndex($mixTab))) {
+				if ($blnEnable) {
+					parent::Enable1($i);
+				} else {
+					parent::Disable1($i);
+				}
+
+			}
+		}
+
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
