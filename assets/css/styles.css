@@ -97,3 +97,12 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
 .success { color: green; }
 
 .link-list li { margin-top: 7px; }
+
+/* Modification to jquery ui dialog styling that allows for left/right buttons */
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    float: none !important;
+    text-align: right;
+}
+.ui-button-left {
+    float: left;
+}
