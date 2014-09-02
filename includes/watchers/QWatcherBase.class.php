@@ -48,6 +48,10 @@
 		public function Watch(QQNode $objNode) {
 			$strClassName = $objNode->_ClassName;
 
+			if (!$strClassName::$blnWatchChanges) {
+				throw new QCallerException ($strClassName . ':$blnWatchChanges is false. To be able to watch this table, you should set it to true in your ' . $strClassName . '.class.php file.');
+			}
+
 			if ($strClassName) {
 				$objDatabase = $strClassName::GetDatabase();
 				$this->RegisterTable($objDatabase->Database, $objNode->_TableName);
