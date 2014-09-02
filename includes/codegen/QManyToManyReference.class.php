@@ -3,6 +3,22 @@
 	 * Used by the QCubed Code Generator to describe a column reference from
 	 * the table's perspective (aka a Foreign Key from the referenced Table's point of view)
 	 * @package Codegen
+	 *
+	 * @property string $KeyName
+	 * @property string $Table
+	 * @property string $Column
+	 * @property string $OppositeColumn
+	 * @property string $OppositeVariableType
+	 * @property string $OppositeVariableName
+	 * @property string $OppositePropertyName
+	 * @property string $OppositeObjectDescription
+	 * @property string $AssociatedTable
+	 * @property string $VariableName
+	 * @property string $VariableType
+	 * @property string $ObjectDescription
+	 * @property string $ObjectDescriptionPlural
+	 * @property QColumn[] $ColumnArray
+	 * @property boolean $IsTypeAssociation
 	 */
 	class QManyToManyReference extends QBaseClass {
 
@@ -103,7 +119,7 @@
 
 		/**
 		 * Array of non-FK Column objects (as indexed by Column name)
-		 * @var Column[] ColumnArray
+		 * @var QColumn[] ColumnArray
 		 */
 		protected $objColumnArray;
 		/**
@@ -124,7 +140,9 @@
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
 		 *
-		 * @param string strName Name of the property to get
+		 * @param string $strName Name of the property to get
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __get($strName) {
@@ -174,8 +192,10 @@
 		 * Override method to perform a property "Set"
 		 * This will set the property $strName to be $mixValue
 		 *
-		 * @param string strName Name of the property to set
-		 * @param string mixValue New value of the property
+		 * @param string $strName Name of the property to set
+		 * @param string $mixValue New value of the property
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {

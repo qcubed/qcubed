@@ -3,7 +3,6 @@
 	* @package Codegen
 	*/
 
-	// NOTATIONS: http://www.cob.sjsu.edu/johnson_f/notation.htm
 	abstract class QConvertNotationBase {
 		public static function PrefixFromType($strType) {
 			switch ($strType) {

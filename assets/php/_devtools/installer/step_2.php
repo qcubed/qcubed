@@ -70,6 +70,10 @@
 	if (DIRECTORY_SEPARATOR !== mb_substr($strSubDirectory, 0, 1)) {
 		$strSubDirectory = DIRECTORY_SEPARATOR . $strSubDirectory;
 	}
+	
+	if ($strSubDirectory == DIRECTORY_SEPARATOR) {
+		$strSubDirectory = '';
+	}
 
 	// Make sure the installation directory supplied exists
 	if(!is_dir($strInstallationDir)) {
@@ -140,8 +144,8 @@
 	$strExamplesStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/framework/assets/php/examples/includes/examples.css');
 	
 	$strCurrentInstallationUrl = substr($strCurrentInstallationDir, strlen(rtrim($_SERVER['DOCUMENT_ROOT'])));
-        if ('/' != substr($strCurrentInstallationUrl, 0, 1)) {
-                $strCurrentInstallationUrl = '/' . $strCurrentInstallationUrl;
+        if (DIRECTORY_SEPARATOR != substr($strCurrentInstallationUrl, 0, 1)) {
+                $strCurrentInstallationUrl = DIRECTORY_SEPARATOR . $strCurrentInstallationUrl;
         }
 	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/css/styles.css');
 	$strExamplesStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/php/examples/includes/examples.css');

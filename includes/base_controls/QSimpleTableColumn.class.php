@@ -359,7 +359,7 @@
 		public function FetchCellValue($item) {
 			$cellValue = $this->FetchCellObject($item);
 						
-			if ($this->strPostMethod) {
+			if ($cellValue !== null && $this->strPostMethod) {
 				$strPostMethod = $this->strPostMethod;
 				$cellValue = $cellValue->$strPostMethod();
 			}
@@ -830,7 +830,9 @@
 			}
 			
 			$strToReturn .= ' />';
+			return $strToReturn;
 		}
+
 		public function GetHeaderCheckboxParams () {
 			$aParams = array();
 			
@@ -853,14 +855,14 @@
 		}
 		
 		public function FetchCellObject($item) {
-			
+
 			$strToReturn = '<input type="checkbox"';
-			
+
 			$aParams = $this->GetCheckboxParams($item);
 			foreach ($aParams as $key=>$str) {
 				$strToReturn .= ' ' . $key . '="' . $str . '"';
 			}
-			
+
 			$strToReturn .= ' />';
 			return $strToReturn;
 		}

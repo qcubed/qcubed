@@ -3,12 +3,32 @@
 	 * Used by the QCubed Code Generator to describe a column reference from
 	 * the table's perspective (aka a Foreign Key from the referenced Table's point of view)
 	 * @package Codegen
+	 *
+	 * @property QReference $Reference
+	 * @property string $KeyName
+	 * @property string $Table
+	 * @property string $Column
+	 * @property boolean $NotNull
+	 * @property boolean $Unique
+	 * @property string $VariableName
+	 * @property string $VariableType
+	 * @property string $PropertyName
+	 * @property string $ObjectDescription
+	 * @property string $ObjectDescriptionPlural
+	 * @property string $ObjectMemberVariable
+	 * @property string $ObjectPropertyName
 	 */
 	class QReverseReference extends QBaseClass {
 
 		/////////////////////////////
 		// Protected Member Variables
 		/////////////////////////////
+
+		/**
+		 * The peer QReference object for which this object is the reverse reference of
+		 * @var QReference KeyName
+		 */
+		protected $objReference;
 
 		/**
 		 * Name of the foreign key object itself, as defined in the database or create script
@@ -103,11 +123,15 @@
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
 		 *
-		 * @param string strName Name of the property to get
+		 * @param string $strName Name of the property to get
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __get($strName) {
 			switch ($strName) {
+				case 'Reference':
+					return $this->objReference;
 				case 'KeyName':
 					return $this->strKeyName;
 				case 'Table':
@@ -146,13 +170,17 @@
 		 * Override method to perform a property "Set"
 		 * This will set the property $strName to be $mixValue
 		 *
-		 * @param string strName Name of the property to set
-		 * @param string mixValue New value of the property
+		 * @param string $strName Name of the property to set
+		 * @param string $mixValue New value of the property
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
+					case 'Reference':
+						return $this->objReference = QType::Cast($mixValue, 'QReference');
 					case 'KeyName':
 						return $this->strKeyName = QType::Cast($mixValue, QType::String);
 					case 'Table':

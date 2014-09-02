@@ -129,16 +129,30 @@
 		/**
 		 * Encodes given 8 bit string to a quoted-printable string,
 		 * @param string $strString
+		 * @param boolean $blnSubject
 		 * @return encoded string
 		 */
-		private static function QuotedPrintableEncode($strString) {
+		private static function QuotedPrintableEncode($strString, $blnSubject = false) {
 			if ( function_exists('quoted_printable_encode') )
 				$strText = quoted_printable_encode($strString);
-			else
+			else {
 				$strText = preg_replace( '/[^\x21-\x3C\x3E-\x7E\x09\x20]/e', 'sprintf( "=%02X", ord ( "$0" ) ) ;', $strString );
+				preg_match_all( '/.{1,73}([^=]{0,2})?/', $strText, $arrMatch );
+				$strText = implode( '=' . "\r\n", $arrMatch[0] );
+			}
+            
+			if ($blnSubject) {
+				// Replace spaces with undercores, see RFC 1342
+				$strText = str_replace("_", "=5F", $strText);
+				$strText = str_replace(" ", "_", $strText);
 
-			preg_match_all( '/.{1,73}([^=]{0,2})?/', $strText, $arrMatch );
-			$strText = implode( '=' . "\r\n", $arrMatch[0] );
+				// Remove newlines
+				$strText = str_replace("=\r\n", "", $strText);
+			} else {
+				// Escape leading dots with another dot
+				$strText = str_replace("\n.", "\n..", $strText);
+			}
+            
 			return $strText;
 		}
 
@@ -301,17 +315,23 @@
 			}
 
 			// Send: Required Headers
-			fwrite($objResource, sprintf("Date: %s\r\n", QDateTime::NowToString(QDateTime::FormatRfc822)));
+			fwrite($objResource, sprintf("Date: %s\r\n", QDateTime::NowToString(QDateTime::FormatRfc5322)));
 			fwrite($objResource, sprintf("To: %s\r\n", $objMessage->To));
 			fwrite($objResource, sprintf("From: %s\r\n", $objMessage->From));
-
+			if($objMessage->ReplyTo) {
+				fwrite($objResource, sprintf("Reply-To: %s\r\n", $objMessage->ReplyTo));
+			}
+			if($objMessage->Sender) {
+				fwrite($objResource, sprintf("Sender: %s\r\n", $objMessage->Sender));
+			}
+			
 			// Setup Encoding Type (use QEmailServer if specified, otherwise default to QApplication's)
 			if (!($strEncodingType = QEmailServer::$EncodingType))
 				$strEncodingType = QApplication::$EncodingType;
 
 			// Send: Optional Headers
 			if ($objMessage->Subject)
-				fwrite($objResource, sprintf("Subject: =?%s?Q?%s?=\r\n", $strEncodingType, self::QuotedPrintableEncode($objMessage->Subject)));
+				fwrite($objResource, sprintf("Subject: =?%s?Q?%s?=\r\n", $strEncodingType, self::QuotedPrintableEncode($objMessage->Subject, true)));
 			if ($objMessage->Cc)
 				fwrite($objResource, sprintf("Cc: %s\r\n", $objMessage->Cc));
 
@@ -484,8 +504,21 @@
 		}
 	}
 
+	/**
+	 * @property string $From
+	 * @property string $ReplyTo
+	 * @property string $Sender
+	 * @property string $To
+	 * @property string $Cc
+	 * @property string $Bcc
+	 * @property string $Subject
+	 * @property string $Body
+	 * @property string $HtmlBody
+	 */
 	class QEmailMessage extends QBaseClass {
 		protected $strFrom;
+		protected $strReplyTo;
+		protected $strSender;
 		protected $strTo;
 		protected $strSubject;
 		protected $strBody;
@@ -504,7 +537,7 @@
 			$this->AddAttachment(new QEmailAttachment($strFilePath, $strSpecifiedMimeType, $strSpecifiedFileName));
 		}
 
-		public function RemoveAttachment($strFileName) {
+		public function RemoveAttachment($strName) {
 			if (array_key_exists($strName, $this->objFileArray))
 				unset($this->objFileArray[$strName]);
 		}
@@ -519,7 +552,7 @@
 			return null;
 		}
 
-		public function RemoveHeader($strName, $strValue) {
+		public function RemoveHeader($strName) {
 			if (array_key_exists($strName, $this->strHeaderArray))
 				unset($this->strHeaderArray[$strName]);
 		}
@@ -535,8 +568,10 @@
 
 		public function __get($strName) {
 			switch ($strName) {
-				case 'From': return $this->strFrom;
-				case 'To': return $this->strTo;
+				case 'From'		: return $this->strFrom;
+				case 'ReplyTo'		: return $this->strReplyTo;
+				case 'Sender'		: return $this->strSender;
+				case 'To'		: return $this->strTo;
 				case 'Subject': return $this->strSubject;
 				case 'Body': return $this->strBody;
 				case 'HtmlBody': return $this->strHtmlBody;
@@ -561,7 +596,9 @@
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
-					case 'From': return ($this->strFrom = QType::Cast($mixValue, QType::String));
+					case 'From'	: return ($this->strFrom = QType::Cast($mixValue, QType::String));
+					case 'ReplyTo'	: return ($this->strReplyTo = QType::Cast($mixValue, QType::String));
+					case 'Sender'	: return ($this->strSender = QType::Cast($mixValue, QType::String));
 					case 'To': return ($this->strTo = QType::Cast($mixValue, QType::String));
 					case 'Subject':
 						$strSubject = trim(QType::Cast($mixValue, QType::String));

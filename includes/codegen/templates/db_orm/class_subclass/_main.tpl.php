@@ -1,4 +1,15 @@
-<template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __MODEL__  ?>" TargetFileName="<?php echo $objTable->ClassName  ?>.class.php"/>
+<?php
+	/** @var QTable $objTable */
+	/** @var QDatabaseCodeGen $objCodeGen */
+	global $_TEMPLATE_SETTINGS;
+	$_TEMPLATE_SETTINGS = array(
+		'OverwriteFlag' => false,
+		'DocrootFlag' => false,
+		'DirectorySuffix' => '',
+		'TargetDirectory' => __MODEL__,
+		'TargetFileName' => $objTable->ClassName . '.class.php'
+	);
+?>
 <?php print("<?php\n"); ?>
 	require(__MODEL_GEN__ . '/<?php echo $objTable->ClassName  ?>Gen.class.php');
 

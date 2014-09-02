@@ -4,6 +4,16 @@
 	 * "Type" tables must be defined with at least two columns, the first one being an integer-based primary key,
 	 * and the second one being the name of the type.
 	 * @package Codegen
+	 *
+	 * @property string $Name
+	 * @property string $ClassName
+	 * @property string[] $NameArray
+	 * @property string[] $TokenArray
+	 * @property array $ExtraPropertyArray
+	 * @property string[] $ExtraFieldNamesArray
+	 * @property-read QColumn[] $PrimaryKeyColumnArray
+	 * @property-write QColumn $KeyColumn
+	 * @property QManyToManyReference[] $ManyToManyReferenceArray
 	 */
 	class QTypeTable extends QBaseClass {
 
@@ -60,8 +70,8 @@
 		/**
 		 * Default Constructor.  Simply sets up the TableName.
 		 *
-		 * @param string strName Name of the Table
-		 * @return TypeTable
+		 * @param string $strName Name of the Table
+		 * @return QTypeTable
 		 */
 		public function __construct($strName) {
 			$this->strName = $strName;
@@ -77,7 +87,9 @@
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
 		 *
-		 * @param string strName Name of the property to get
+		 * @param string $strName Name of the property to get
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __get($strName) {
@@ -114,8 +126,10 @@
 		 * Override method to perform a property "Set"
 		 * This will set the property $strName to be $mixValue
 		 *
-		 * @param string strName Name of the property to set
-		 * @param string mixValue New value of the property
+		 * @param string $strName Name of the property to set
+		 * @param string $mixValue New value of the property
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {

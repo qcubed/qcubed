@@ -95,8 +95,6 @@
 
 			$strCustomAttributes = $this->GetCustomAttributes();
 
-			$strActions = $this->GetActionAttributes();
-
 			if (strlen($this->strText)) {
 				$this->blnIsBlockElement = true;
 				if ($this->strTextAlign == QTextAlign::Left) {

@@ -1,4 +1,15 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __FORMBASE_CLASSES__  ?>" TargetFileName="<?php echo $objTable->ClassName  ?>ListFormBase.class.php"/>
+<?php
+	/** @var QTable $objTable */
+	/** @var QDatabaseCodeGen $objCodeGen */
+	global $_TEMPLATE_SETTINGS;
+	$_TEMPLATE_SETTINGS = array(
+		'OverwriteFlag' => true,
+		'DocrootFlag' => false,
+		'DirectorySuffix' => '',
+		'TargetDirectory' => __FORMBASE_CLASSES__,
+		'TargetFileName' => $objTable->ClassName . 'ListFormBase.class.php'
+	);
+?>
 <?php print("<?php\n"); ?>
 	/**
 	 * This is a quick-and-dirty draft QForm object to do the List All functionality

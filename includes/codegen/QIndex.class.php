@@ -2,6 +2,11 @@
 	/**
 	 * Used by the QCubed Code Generator to describe a table Index
 	 * @package Codegen
+	 *
+	 * @property string $KeyName
+	 * @property boolean $Unique
+	 * @property boolean $PrimaryKey
+	 * @property string[] $ColumnNameArray
 	 */
 	class QIndex extends QBaseClass {
 
@@ -45,7 +50,9 @@
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
 		 *
-		 * @param string strName Name of the property to get
+		 * @param string $strName Name of the property to get
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __get($strName) {
@@ -72,8 +79,10 @@
 		 * Override method to perform a property "Set"
 		 * This will set the property $strName to be $mixValue
 		 *
-		 * @param string strName Name of the property to set
-		 * @param string mixValue New value of the property
+		 * @param string $strName Name of the property to set
+		 * @param string $mixValue New value of the property
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {
