@@ -269,7 +269,7 @@
 					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
 
 					if ($this->strTableName) {
-						$strJoinTableAlias = $strParentAlias . '__' . $this->strName;
+						$strJoinTableAlias = $strParentAlias . '__' . ($this->strAlias ? $this->strAlias : $this->strName);
 						// Next, Join the Appropriate Table
 						$this->addJoinTable($objBuilder, $strJoinTableAlias, $strParentAlias, $objJoinCondition);
 

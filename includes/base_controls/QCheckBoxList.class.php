@@ -92,7 +92,7 @@
 			return $strScript;
 		}
 
-		protected function GetItemHtml($objItem, $intIndex, $strActions, $strTabIndex) {
+		protected function GetItemHtml($objItem, $intIndex, $strTabIndex) {
 			// The Default Item Style
 			$objStyle = $this->objItemStyle;
 
@@ -119,13 +119,12 @@
 				$strLabelText
 			);
 
-			$strInput = sprintf('<input id="%s" name="%s" type="checkbox" %s%s%s%s%s />',
+			$strInput = sprintf('<input id="%s" name="%s" type="checkbox" %s%s%s%s />',
 				$strIndexedId,
 				$this->strControlId . '[' . $intIndex . ']',
-				($this->blnEnabled) ? '' : 'disabled="disabled"',
-				($objItem->Selected) ? 'checked="checked"' : '',
+				($this->blnEnabled) ? '' : 'disabled="disabled" ',
+				($objItem->Selected) ? 'checked="checked" ' : '',
 				$objStyle->GetAttributes(),
-				$strActions,
 				$strTabIndex
 			);
 
@@ -174,8 +173,6 @@
 
 			$strCustomAttributes = $this->GetCustomAttributes();
 
-			$strActions = $this->GetActionAttributes();
-
 			if ($this->intCellPadding >= 0)
 				$strCellPadding = sprintf('cellpadding="%s" ', $this->intCellPadding);
 			else
@@ -197,7 +194,7 @@
 					
 				$count = $this->ItemCount;
 				for ($intIndex = 0; $intIndex < $count; $intIndex++) {
-					$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strActions, $strTabIndex) . "\n";
+					$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strTabIndex) . "\n";
 				}
 				$strToReturn .= '</div>';
 				return $strToReturn;
@@ -242,7 +239,7 @@
 								+ $intRowIndex;
 
 						$strToReturn .= '<td>';
-						$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strActions, $strTabIndex);
+						$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strTabIndex);
 						$strToReturn .= '</td>';
                     }
 					

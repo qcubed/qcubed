@@ -670,7 +670,9 @@
 		}
 
 		public function RenderScript(QControl $objControl) {
-			return sprintf("qc.getW('%s').focus();", $this->strControlId);
+			// for firefox focus is special when in a blur or in a focusout event
+			// http://stackoverflow.com/questions/7046798/jquery-focus-fails-on-firefox/7046837#7046837
+			return sprintf("setTimeout(function(){qc.getW('%s').focus();},0);", $this->strControlId);
 		}
 	}
 

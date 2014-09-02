@@ -245,7 +245,7 @@
 		}
 
 		public function GetTables() {
-			$objResult = $this->Query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = current_schema() ORDER BY TABLE_NAME ASC");
+			$objResult = $this->Query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = current_schema() AND TABLE_TYPE = 'BASE TABLE' ORDER BY TABLE_NAME ASC");
 			$strToReturn = array();
 			while ($strRowArray = $objResult->FetchRow())
 				array_push($strToReturn, $strRowArray[0]);

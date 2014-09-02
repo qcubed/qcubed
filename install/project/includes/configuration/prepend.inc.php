@@ -26,7 +26,9 @@
 			define ('__QCUBED_CORE__', __DOCROOT__ . '/vendor/qcubed/framework/includes');
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 			define ('__MODEL__', __INCLUDES__ . '/model' );
-			define ('__MODEL_GEN__', __PROJECT__ . '/generated/model' );
+			define ('__META_CONTROLS__', __INCLUDES__ . '/meta_controls');
+			define ('__META_CONTROLS_GEN__', __PROJECT__ . '/generated/meta_base');
+			define ('__MODEL_GEN__', __PROJECT__ . '/generated/model_base' );
 		}
 
 

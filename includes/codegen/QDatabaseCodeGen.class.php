@@ -63,6 +63,11 @@
 		protected $strPatternColumnName = '[[:alpha:]_][[:alnum:]_]*';
 		protected $strPatternKeyName = '[[:alpha:]_][[:alnum:]_]*';
 
+		/**
+		 * @param $strTableName
+		 * @return QTable|QTypeTable
+		 * @throws QCallerException
+		 */
 		public function GetTable($strTableName) {
 			$strTableName = strtolower($strTableName);
 			if (array_key_exists($strTableName, $this->objTableArray))
@@ -919,6 +924,7 @@
 //								$objReferencedTable = $this->objTableArray[strtolower($objReference->Table)];
 								$objReferencedTable = $this->GetTable($objReference->Table);
 								$objReverseReference = new QReverseReference();
+								$objReverseReference->Reference = $objReference;
 								$objReverseReference->KeyName = $objReference->KeyName;
 								$objReverseReference->Table = $strTableName;
 								$objReverseReference->Column = $strColumnName;

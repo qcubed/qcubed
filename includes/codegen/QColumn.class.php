@@ -2,6 +2,24 @@
 	/**
 	 * Used by the QCubed Code Generator to describe a table's column
 	 * @package Codegen
+	 *
+	 * @property QTable|QTypeTable $OwnerTable
+	 * @property boolean $PrimaryKey
+	 * @property string $Name
+	 * @property string $PropertyName
+	 * @property string $VariableName
+	 * @property string $VariableType
+	 * @property string $VariableTypeAsConstant
+	 * @property string $DbType
+	 * @property int $Length
+	 * @property mixed $Default
+	 * @property boolean $NotNull
+	 * @property boolean $Identity
+	 * @property boolean $Indexed
+	 * @property boolean $Unique
+	 * @property boolean $Timestamp
+	 * @property QReference $Reference
+	 * @property string $Comment
 	 */
 	class QColumn extends QBaseClass {
 
@@ -104,7 +122,7 @@
 		/**
 		 * If the table column is foreign keyed off another column, then this
 		 * Column instance would be a reference to another object
-		 * @var Reference Reference
+		 * @var QReference Reference
 		 */
 		protected $objReference;
 
@@ -131,7 +149,9 @@
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
 		 *
-		 * @param string strName Name of the property to get
+		 * @param string $strName Name of the property to get
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __get($strName) {
@@ -186,8 +206,10 @@
 		 * Override method to perform a property "Set"
 		 * This will set the property $strName to be $mixValue
 		 *
-		 * @param string strName Name of the property to set
-		 * @param string mixValue New value of the property
+		 * @param string $strName Name of the property to set
+		 * @param string $mixValue New value of the property
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {
