@@ -239,7 +239,7 @@ FUNC;
 	 *  	array('class'=>'ui-button-left') to create a button on the left side.
 	 *  	array('class'=>'ui-priority-primary') to style a button as important or primary.
 	 */
-	public function AddButton ($strButtonName, $strButtonId, $blnCausesValidation = false, $blnIsPrimary = false, $strConfirmation = null, $options = null) {
+	public function AddButton ($strButtonName, $strButtonId = null, $blnCausesValidation = false, $blnIsPrimary = false, $strConfirmation = null, $options = null) {
 		if (!$this->mixButtons) {
 			$this->mixButtons = array();
 		}
@@ -249,6 +249,11 @@ FUNC;
 		}
 
 		$controlId = $this->ControlId;
+
+		if (!$strButtonId) {
+			$strButtonId = $strButtonName;
+		}
+
 		$strJS .= sprintf('
 			{
 				qcubed.recordControlModification("%s", "_ClickedButton", "%s");
