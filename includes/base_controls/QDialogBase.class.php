@@ -57,6 +57,7 @@ class QDialog_ButtonEvent extends QEvent {
  * @property boolean $HasCloseButton Disables (false) or enables (true) the close X in the upper right corner of the title.
  * 	Can be set when initializing the dialog. Also enables or disables the ability to close the box by pressing the ESC key.
  * @property-read integer $ClickedButton Returns the id of the button most recently clicked. (read-only)
+ * @property-write string $DialogState Set whether this dialog is in an error or highlight (info) state. (write-only)
  *
  * @link http://jqueryui.com/dialog/
  * @package Controls\Base
