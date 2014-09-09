@@ -58,8 +58,9 @@
 
 					 */
 					try {
-						if ($this-><?php echo $objReverseReference->ObjectMemberVariable  ?> === false)
-							// We've attempted early binding -- and the reverse reference object does not exist
+						if (!$this->__blnRestored ||
+								$this-><?php echo $objReverseReference->ObjectMemberVariable  ?> === false)
+							// Either this is a new object, or we've attempted early binding -- and the reverse reference object does not exist
 							return null;
 						if (!$this-><?php echo $objReverseReference->ObjectMemberVariable  ?>)
 							$this-><?php echo $objReverseReference->ObjectMemberVariable  ?> = <?php echo $objReverseReference->VariableType  ?>::LoadBy<?php echo $objReverseReferenceColumn->PropertyName  ?>(<?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>);
