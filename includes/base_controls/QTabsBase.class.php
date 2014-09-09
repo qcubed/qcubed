@@ -139,6 +139,16 @@
 		}
 
 		/**
+		 * Generated method overrides the built-in QControl method, causing it to not redraw completely. We restore
+		 * its functionality here.
+		 */
+		public function Refresh() {
+			$this->CallJqUiMethod(false, "refresh");
+			QControl::Refresh();
+		}
+
+
+		/**
 		 * Overrides default so that if a tab does not pass validation, it will be visible.
 		 * @return bool
 		 */
