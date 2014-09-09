@@ -169,7 +169,7 @@ class QDialogBase extends QDialogGen
 					$strIcon = 'info';
 					break;
 			}
-			$strIconJs = sprintf('<span class="ui-icon ui-icon-%s" style="float: left; margin-right: .3em;"></span>', $strIcon);
+			$strIconJs = sprintf('<span class="ui-icon ui-icon-%s" ></span>', $strIcon);
 
 			$strJs .= sprintf (
 				'$j("#%s").prev().addClass("%s").prepend(\'%s\');
@@ -339,7 +339,7 @@ FUNC;
 
 	/**
 	 * Adds a close button that just closes the dialog without firing the QDialogButton event. You can
-	 * trap this by adding an action to the QDialog_ButtonEvent.
+	 * trap this by adding an action to the QDialog_CloseEvent.
 	 *
 	 * @param $strButtonName
 	 */
@@ -350,7 +350,7 @@ FUNC;
 
 	/**
 	 * Create a message dialog. Automatically adds an OK button that closes the dialog. To detect the close,
-	 * add an action on the QDialog_CloseEvent. To set the message, use the return value and set ->Text.
+	 * add an action on the QDialog_CloseEvent. To change the message, use the return value and set ->Text.
 	 *
 	 * @param string $strMessage
 	 * @param QForm | QControl $parent
@@ -361,8 +361,8 @@ FUNC;
 		$dlg = new QDialog($parent, $strControlId);
 		$dlg->Modal = true;
 		$dlg->Resizable = false;
-		$dlg->AddCloseButton ('OK');
 		$dlg->Text = $strMessage;
+		$dlg->Height = 100; // fix problem with jquery ui dialog making space for buttons that don't exist
 		return $dlg;
 	}
 
