@@ -37,8 +37,11 @@
 		protected $mct<?php echo $objTable->ClassName  ?>;
 
 		// Controls for <?php echo $objTable->ClassName  ?>'s Data Fields
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
+<?php foreach ($objTable->ColumnArray as $objColumn) {
+		if (!isset ($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] == 'meta') {
+?>
 		protected $<?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>;
+<?php } ?>
 <?php } ?>
 
 		// Other ListBoxes (if applicable) via Unique ReverseReferences and ManyToMany References
@@ -84,8 +87,9 @@
 
 			// Call MetaControl's methods to create qcontrols based on <?php echo $objTable->ClassName  ?>'s data fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-	<?php	if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none' || $objColumn->Options['FormGen'] == 'meta') continue; ?>
+	<?php	if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none') continue; ?>
 			$this-><?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?> = $this->mct<?php echo $objTable->ClassName  ?>-><?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>_Create();
+<?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>

@@ -27,7 +27,9 @@
 	<div class="form-controls">
 <?php
 	foreach ($objTable->ColumnArray as $objColumn) {
-		print('<?php $this->'.$objCodeGen->FormControlVariableNameForColumn($objColumn).'->RenderWithName(); ?>');
+		if (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] == 'meta') {
+			print('<?php $this->'.$objCodeGen->FormControlVariableNameForColumn($objColumn).'->RenderWithName(); ?>');
+		}
 	}
 	foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
 		if ($objReverseReference->Unique) {

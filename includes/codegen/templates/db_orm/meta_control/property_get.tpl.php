@@ -14,7 +14,7 @@
 
 				// Controls that point to <?php echo $objTable->ClassName  ?> fields -- will be created dynamically if not yet created
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?><?php
-	if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none') continue;
+	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 	$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
 	$strLabelId = $objCodeGen->FormLabelVariableNameForColumn($objColumn);
 	$strPropertyName = $objColumn->PropertyName;

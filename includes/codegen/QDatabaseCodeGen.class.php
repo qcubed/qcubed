@@ -6,6 +6,7 @@
 	require(__QCUBED_CORE__ . '/codegen/QReverseReference.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QTable.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QTypeTable.class.php');
+	require(__QCUBED_CORE__ . '/codegen/QMetacontrolOptions.class.php');
 
 	/**
 	 * @package Codegen
@@ -62,6 +63,9 @@
 		protected $strPatternTableName = '[[:alpha:]_][[:alnum:]_]*';
 		protected $strPatternColumnName = '[[:alpha:]_][[:alnum:]_]*';
 		protected $strPatternKeyName = '[[:alpha:]_][[:alnum:]_]*';
+
+		protected $blnGenerateControlId;
+		protected $objMetacontrolOptions;
 
 		/**
 		 * @param $strTableName
@@ -370,6 +374,9 @@
 					}
 				}
 			}
+
+			$this->blnGenerateControlId = QCodeGen::LookupSetting($objSettingsXml, 'generateControlId', 'support', QType::Boolean);
+			$this->objMetacontrolOptions = new QMetacontrolOptions();
 
 			if ($this->strErrors)
 				return;
@@ -1050,20 +1057,8 @@
 
 			// separate overrides embedded in the comment
 
-			if (($strComment = $objField->Comment) &&
-				($pos1 = strpos ($strComment, '{')) !== false &&
-				($pos2 = strrpos ($strComment, '}', $pos1))) {
-
-				$strJson = substr ($strComment, $pos1, $pos2 - $pos1 + 1);
-				$a = json_decode($strJson, true);
-
-				if ($a) {
-					$objColumn->Options = $a;
-					$objColumn->Comment = substr ($strComment, 0, $pos1) . substr ($strComment, $pos2 + 1); // return comment without options
-				} else {
-					$objColumn->Comment = $strComment;
-				}
-			}
+			$objColumn->Comment = $objField->Comment;
+			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->Name, $objField->Name);
 
 			return $objColumn;
 		}
@@ -1234,6 +1229,24 @@
 
 			return $objForeignKeyArray;
 		}
+
+		public function GenerateControlId($objTable, $objColumn) {
+			$strControlId = null;
+			if (isset($objColumn->Options['ControlId'])) {
+				$strControlId = $objColumn->Options['ControlId'];
+			} elseif ($this->blnGenerateControlId) {
+				$strObjectName = $this->VariableNameFromTable($objTable->Name);
+				$strClassName = $objTable->ClassName;
+				$strControlVarName = $this->FormControlVariableNameForColumn($objColumn);
+				$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+
+				$strControlId = $strControlVarName . $strClassName;
+
+			}
+			return $strControlId;
+		}
+
+
 
 
 		////////////////////

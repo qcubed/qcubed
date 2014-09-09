@@ -227,6 +227,9 @@
 	QApplicationBase::$ClassFile['qwatchercache'] = __QCUBED_CORE__ . '/watchers/QWatcherCache.class.php';
 	QApplicationBase::$ClassFile['qwatchernone'] = __QCUBED_CORE__ . '/watchers/QWatcherNone.class.php';
 
+	QApplicationBase::$ClassFile['qcontrolcodegendlg'] = __QCUBED_CORE__ .'/codegen/QControlCodegenDlg.class.php';
+
+
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
 

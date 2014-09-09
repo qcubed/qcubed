@@ -1,10 +1,10 @@
 <?php
 	foreach ($objTable->ColumnArray as $objColumn) {
-		if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none') continue;
+		if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 		$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
 		if ($strControlType == 'QLabel'  ||
 				!isset($objColumn->Options['FormGen']) ||
-				$objColumn->Options['FormGen'] != 'label') {
+			$objColumn->Options['FormGen'] != 'label') {
 
 			$objReflection = new ReflectionClass ($strControlType);
 			$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaCreate');

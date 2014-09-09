@@ -1298,7 +1298,6 @@
 			return $strName . "s";
 		}
 
-
 		////////////////////
 		// Public Overriders
 		////////////////////

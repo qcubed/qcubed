@@ -350,6 +350,19 @@ TMPL;
 		 */
 
 		public function {$strControlId}_Create(\$strControlId = null) {
+
+TMPL;
+				$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+				if ($strControlIdOverride) {
+					$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+				}
+				$strRet .= <<<TMPL
 			\$this->{$strControlId} = new {$strControlType}(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlId}->Name = QApplication::Translate('{$strLabelName}');
 
@@ -509,6 +522,23 @@ TMPL;
 
 TMPL;
 			return $strRet;
+		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return array
+		 */
+		public static function GetMetaControlParams() {
+			return array(
+				new QControlParamEditor ('Rows', 'Height of field for multirow field', QType::Integer),
+				new QControlParamEditor ('SelectionMode', 'Single or multiple selections', QType::ArrayType,
+					array (null=>'Default',
+						'QSelectionMode::None'=>'None',
+						'QSelectionMode::Single'=>'Single',
+						'QSelectionMode::Multiple'=>'Multiple'
+					))
+			);
 		}
 
 	}

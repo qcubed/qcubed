@@ -293,6 +293,19 @@
 		 * @return $strControlType
 		 */
 		public function {$strControlId}_Create(\$strControlId = null) {
+
+TMPL;
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+			$strRet .= <<<TMPL
 			\$this->{$strControlId} = new $strControlType(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlId}->Name = QApplication::Translate('$strLabelName');
 			\$this->{$strControlId}->Checked = \$this->{$strObjectName}->{$objColumn->PropertyName};

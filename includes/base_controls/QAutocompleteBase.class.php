@@ -341,7 +341,7 @@ TMPL;
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
 			$strClassName = $objTable->ClassName;
-			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
 			$strLabelId = $objCodeGen->FormLabelVariableNameForColumn($objColumn);
 			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
@@ -351,23 +351,37 @@ TMPL;
 
 			$strRet = <<<TMPL
 		/**
-		 * Create and setup {$strControlType} {$strControlId}
+		 * Create and setup {$strControlType} {$strControlVarName}
 		 * @param string \$strControlId optional ControlId to use
 		 * @param boolean \$blnAutoLoad true if you want to use the default meta control data loader. Set to false if using your own custom loader.
 		 * @param QQCondition \$objConditions override the default condition of QQ::All() to the query, itself
 		 * @param QQClause[] \$objClauses additional optional QQClause object or array of QQClause objects for the query
 		 * @return {$strControlType}
 		 */
-		public function {$strControlId}_Create(\$strControlId = null, QQCondition \$objCondition = null, \$objClauses = null) {
+		public function {$strControlVarName}_Create(\$strControlId = null, QQCondition \$objCondition = null, \$objClauses = null) {
+
+TMPL;
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+			$strRet .= <<<TMPL
+
 			\$this->obj{$strPropName}Condition = \$objCondition;
 			\$this->obj{$strPropName}Clauses = \$objClauses;
-			\$this->{$strControlId} = new {$strControlType}(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlId}->Name = QApplication::Translate('{$strLabelName}');
+			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 
 TMPL;
 			if ($objColumn->NotNull) {
 				$strRet .= <<<TMPL
-			\$this->{$strControlId}->Required = true;
+			\$this->{$strControlVarName}->Required = true;
 
 TMPL;
 			}
@@ -375,7 +389,7 @@ TMPL;
 			$options = $objColumn->Options;
 			if (!$options || !isset ($options['NoAutoLoad'])) {
 				$strRet .= <<<TMPL
-			\$this->Source = \$this->{$strControlId}_GetItems();
+			\$this->Source = \$this->{$strControlVarName}_GetItems();
 
 TMPL;
 			}
@@ -383,18 +397,18 @@ TMPL;
 			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
 
 			$strRet .= <<<TMPL
-			return \$this->{$strControlId};
+			return \$this->{$strControlVarName};
 		}
 
 TMPL;
 			$strRet .= <<<TMPL
 
 		/**
-		 *	Create item list for use by {$strControlId}. This method of list generating will filter
+		 *	Create item list for use by {$strControlVarName}. This method of list generating will filter
 		 *	using javascript, which works OK for a small list. If tied to a big list, use a data binder
 		 *  instead to filter using ajax.
 		 */
-		 public function {$strControlId}_GetItems() {
+		 public function {$strControlVarName}_GetItems() {
 			\$a = array();
 			\$objCondition = \$this->obj{$strPropName}Condition;
 			if (is_null(\$objCondition)) \$objCondition = QQ::All();
@@ -425,27 +439,27 @@ TMPL;
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
 			$strPrimaryKey = $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName;
-			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
 
 			$strRet = <<<TMPL
-			if (\$this->{$strControlId}) {
+			if (\$this->{$strControlVarName}) {
 
 TMPL;
 			$options = $objColumn->Options;
 			if (!$options || !isset ($options['NoAutoLoad'])) {
 				$strRet .= <<<TMPL
-			\$this->Source = \$this->{$strControlId}_GetItems();
+			\$this->Source = \$this->{$strControlVarName}_GetItems();
 
 TMPL;
 			}
 			$strRet .= <<<TMPL
 				if (\$this->{$strObjectName}->{$objColumn->Reference->PropertyName}) {
-					\$this->{$strControlId}->Text = \$this->{$strObjectName}->{$objColumn->Reference->PropertyName}->__toString();
-					\$this->{$strControlId}->SelectedValue = \$this->{$strObjectName}->{$objColumn->Reference->PropertyName}->{$strPrimaryKey};
+					\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$objColumn->Reference->PropertyName}->__toString();
+					\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->Reference->PropertyName}->{$strPrimaryKey};
 				}
 				else {
-					\$this->{$strControlId}->Text = '';
-					\$this->{$strControlId}->SelectedValue = null;
+					\$this->{$strControlVarName}->Text = '';
+					\$this->{$strControlVarName}->SelectedValue = null;
 				}
 			}
 
@@ -463,6 +477,18 @@ TMPL;
 
 TMPL;
 			return $strRet;
+		}
+
+		/**
+		 * Returns a description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return array
+		 */
+		public static function GetMetaControlParams() {
+			return array(
+				new QControlParamEditor ('MinLength', 'Number of characters typed before lookup starts', QType::Integer),
+				new QControlParamEditor ('AutoFocus', 'Should field auto select as typing occurs.', QType::Boolean)
+			);
 		}
 
 

@@ -715,6 +715,19 @@
 		 * @return $strControlType
 		 */
 		public function {$strControlVarName}_Create(\$strControlId = null) {
+
+TMPL;
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+			$strRet .= <<<TMPL
 			\$this->{$strControlVarName} = new $strControlType(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
 
@@ -786,6 +799,28 @@ TMPL;
 
 TMPL;
 			return $strRet;
+		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return array
+		 */
+		public static function GetMetaControlParams() {
+			return array(
+				new QControlParamEditor ('Columns', 'Width of field', QType::Integer),
+				new QControlParamEditor ('Rows', 'Height of field for multirow field', QType::Integer),
+				new QControlParamEditor ('Format', 'printf format string to use', QType::String),
+				new QControlParamEditor ('Placeholder', 'HTML5 Placeholder attribute', QType::String),
+				new QControlParamEditor ('ReadOnly', 'Editable or not', QType::Boolean),
+				new QControlParamEditor ('TextMode', 'Field type', QType::ArrayType,
+					array (null=>'-',
+						'QTextMode::Search'=>'Search',
+						'QTextMode::Multiline'=>'Multiline',
+						'QTextMode::Password'=>'Password',
+						'QTextMode::SingleLine'=>'SingleLine'
+					))
+			);
 		}
 	}
 

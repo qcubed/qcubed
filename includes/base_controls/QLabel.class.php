@@ -79,6 +79,19 @@ TMPL;
 		 */
 
 		public function {$strControlVarName}_Create(\$strControlId = null{$strDateTimeExtra}) {
+
+TMPL;
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+			$strRet .= <<<TMPL
 			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 

@@ -407,5 +407,34 @@
 					}
 			}
 		}
+
+		/**
+		 * Returns a description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return array
+		 */
+		public static function GetMetaControlParams() {
+			return array(
+				new QControlParamEditor ('TextAlign', '', QType::ArrayType,
+					array (null=>'Default',
+						'QTextAlign::Left'=>'Left',
+						'QTextAlign::Right'=>'Right'
+					)),
+				new QControlParamEditor ('HtmlEntities', 'Set to false to have the browser interpret the labels as HTML', QType::Boolean),
+				new QControlParamEditor ('RepeatColumns', 'The number of columns of checkboxes to display', QType::Integer),
+				new QControlParamEditor ('RepeatDirection', 'Whether to repeat horizontally or vertically', QType::ArrayType,
+					array (null=>'Default',
+						'QRepeatDirection::Horizontal'=>'Horizontal',
+						'QRepeatDirection::Vertical'=>'Vertical'
+					)),
+				new QControlParamEditor ('ButtonMode', 'How to display the buttons', QType::ArrayType,
+					array (null=>'Default',
+						'QCheckBoxList::ButtonModeJq'=>'JQuery UI Buttons',
+						'QCheckBoxList::ButtonModeSet'=>'JQuery UI Buttonset'
+					)),
+				new QControlParamEditor ('MaxHeight', 'If set, will wrap it in a scrollable pane with the given max height', QType::Integer)
+			);
+		}
+
 	}
 ?>

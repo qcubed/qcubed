@@ -207,6 +207,11 @@
 		const EventName = 'select';
 	}
 
+	/** Override right clicks */
+	class QContextMenuEvent extends QEvent {
+		const EventName = 'contextmenu';
+	}
+
 	/** When enter key is pressed while the control is in focus */
 	class QEnterKeyEvent extends QKeyDownEvent {
 		/** @var string Condition JS */
@@ -238,9 +243,10 @@
 	class QBackspaceKeyEvent extends QKeyDownEvent {
 		protected $strCondition = 'event.keyCode == 8';
 	}
-	
-	
-	abstract class QJqUiEvent extends QEvent {
+
+
+
+abstract class QJqUiEvent extends QEvent {
 		// be sure to subclass your events from this class if they are JqUiEvents
 	}
 

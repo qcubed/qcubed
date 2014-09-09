@@ -19,15 +19,17 @@
 	<div class="form-controls">
 <?php
 foreach ($objTable->ColumnArray as $objColumn) {
-	print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForColumn($objColumn).'->RenderWithName(); ?>');
+    if (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] == 'meta') {
+		print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForColumn($objColumn).'->RenderWithName(); ?>' . "\n");
+	}
 }
 foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
 	if ($objReverseReference->Unique) {
-		print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference).'->RenderWithName(); ?>');
+		print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference).'->RenderWithName(); ?>' . "\n");
 	}
 }
 foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) {
-	print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference).'->RenderWithName(true); ?>');
+	print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference).'->RenderWithName(true); ?>' . "\n");
 }
 ?>
 	</div>
