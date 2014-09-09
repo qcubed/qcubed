@@ -9,6 +9,10 @@
 	 * @property string $HeaderCssClass css class of the column when it's rendered in a table header
 	 * @property boolean $HtmlEntities if true, cell values will be converted using htmlentities()
 	 * @property boolean $RenderAsHeader if true, all cells in the column will be rendered with a <<th>> tag instead of <<td>>
+	 * @property integer $Id HTML id attribute to put in the col tag
+	 * @property integer $Span HTML span attribute to put in the col tag
+	 * @property-read QSimpleTableBase $ParentTable parent table of the column
+	 * @property boolean $Visible Whether the column will be drawn. Defaults to true.
 	 */
 	abstract class QAbstractSimpleTableColumn extends QBaseClass {
 		/** @var string */
@@ -27,6 +31,8 @@
 		protected $intSpan = 1;
 		/** @var string optional id for column tag rendering and datatables*/
 		protected $strId = null;
+		/** @var bool Easy way to hide a column without removing the column. */
+		protected $blnVisible = true;
 		
 		/**
 		 * @param string $strName Name of the column
@@ -44,6 +50,8 @@
 		 * 
 		 */
 		public function RenderHeaderCell() {
+			if (!$this->blnVisible) return '';
+
 			$cellValue = $this->FetchHeaderCellValue();
 			if ($this->blnHtmlEntities)
 				$cellValue = QApplication::HtmlEntities($cellValue);
@@ -91,6 +99,8 @@
 		 * @param boolean $blnAsHeader
 		 */
 		public function RenderCell($item, $blnAsHeader = false) {
+			if (!$this->blnVisible) return '';
+
 			$cellValue = $this->FetchCellValue($item);
 			if ($this->blnHtmlEntities)
 				$cellValue = QApplication::HtmlEntities($cellValue);
@@ -220,6 +230,8 @@
 					return $this->intSpan;
 				case 'Id':
 					return $this->strId;
+				case 'Visible':
+					return $this->blnVisible;
 					
 				default:
 					try {
@@ -289,7 +301,7 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					
+
 				case "Id":
 					try {
 						$this->strId = QType::Cast($mixValue, QType::String);
@@ -298,7 +310,16 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					
+
+				case "Visible":
+					try {
+						$this->blnVisible = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				case "_ParentTable":
 					try {
 						$this->objParentTable = QType::Cast($mixValue, 'QSimpleTableBase');
