@@ -1014,14 +1014,14 @@
 			}
 		}
 
-		protected function FormControlVariableNameForUniqueReverseReference(QReverseReference $objReverseReference) {
+		public function FormControlVariableNameForUniqueReverseReference(QReverseReference $objReverseReference) {
 			if ($objReverseReference->Unique) {
 				return sprintf("lst%s", $objReverseReference->ObjectDescription);
 			} else
 				throw new Exception('FormControlVariableNameForUniqueReverseReference requires ReverseReference to be unique');
 		}
 
-		protected function FormControlVariableNameForManyToManyReference(QManyToManyReference $objManyToManyReference) {
+		public function FormControlVariableNameForManyToManyReference(QManyToManyReference $objManyToManyReference) {
 			if ($objManyToManyReference->IsTypeAssociation) {
 				$strPre = 'lst%s';
 			} else {

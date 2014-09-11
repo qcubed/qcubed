@@ -90,7 +90,6 @@
 	<?php	if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none') continue; ?>
 			$this-><?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?> = $this->mct<?php echo $objTable->ClassName  ?>-><?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>_Create();
 <?php } ?>
-<?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
 			$this-><?php echo $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference);  ?> = $this->mct<?php echo $objTable->ClassName  ?>-><?php echo $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference);  ?>_Create();
