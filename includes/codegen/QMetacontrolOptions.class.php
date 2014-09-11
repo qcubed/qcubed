@@ -16,10 +16,12 @@ class QMetacontrolOptions extends QBaseClass {
 	protected $blnChanged = false;
 
 	public function __construct() {
-		$strContent = file_get_contents(__CONFIGURATION__ . '/codegen_options.json');
+		if (file_exists(__CONFIGURATION__ . '/codegen_options.json')) {
+			$strContent = file_get_contents(__CONFIGURATION__ . '/codegen_options.json');
 
-		if ($strContent) {
-			$this->options = json_decode($strContent, true);
+			if ($strContent) {
+				$this->options = json_decode($strContent, true);
+			}
 		}
 
 		// TODO: Analyze the result for changes and make a guess as to whether a table name or field name was changed
