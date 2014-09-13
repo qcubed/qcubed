@@ -232,6 +232,8 @@
 		protected $blnIsBlockElement = false;
 		/** @var QWatcher Stores information about watched tables. */
 		protected $objWatcher = null;
+		/** @var  QNode  Used by designer to associate a db node with this control */
+		protected $objLinkedNode;
 
 		//////////
 		// Methods
@@ -1704,6 +1706,23 @@
 			}
 		}
 
+		/**
+		 * Returns true if the given control is anywhere in the parent hierarchy of this control.
+		 *
+		 * @param $objControl
+		 * @return bool
+		 */
+		public function IsDescendantOf ($objControl) {
+			$objParent = $this->objParentControl;
+			while ($objParent) {
+				if ($objParent == $objControl) {
+					return true;
+				}
+				$objParent = $objParent->objParentControl;
+			}
+			return false;
+		}
+
 
 		/////////////////////////
 		// Public Properties: GET
@@ -1790,6 +1809,7 @@
 				case "FormAttributes": return (array) $this->strFormAttributes;
 
 				case "Modified": return $this->IsModified();
+				case "LinkedNode": return $this->objLinkedNode;
 
 
 				default:
@@ -2232,6 +2252,15 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+				case "LinkedNode":
+					try {
+						$this->objLinkedNode = QType::Cast($mixValue, 'QQNode');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -2267,6 +2296,14 @@ TMPL;
 			$strRet = '';
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
+			$strClass = $objColumn->OwnerTable->ClassName;
+
+			if (defined('__DESIGN_MODE__')) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->LinkedNode = QQN::{$strClass}()->{$strPropName};
+
+TMPL;
+			}
 
 			if (($options = $objColumn->Options) &&
 				isset ($options['Overrides'])) {

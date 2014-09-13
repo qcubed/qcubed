@@ -417,6 +417,8 @@
 				case "LabelForTooLong": return $this->strLabelForTooLong;
 				case "LabelForTooLongUnnamed": return $this->strLabelForTooLongUnnamed;
 				case "Placeholder": return $this->strPlaceholder;
+				case 'Value': return empty($this->strText) ? null : $this->strText;
+
 
 				// BEHAVIOR
 				case "CrossScripting": return $this->strCrossScripting;
@@ -481,6 +483,7 @@
 						throw $objExc;
 					}
 				case "Text":
+				case "Value":
 					try {
 						$this->strText = QType::Cast($mixValue, QType::String);
 						break;
@@ -806,14 +809,14 @@ TMPL;
 		 *
 		 * @return array
 		 */
-		public static function GetMetaControlParams() {
+		public static function GetMetaParams() {
 			return array(
-				new QControlParamEditor ('Columns', 'Width of field', QType::Integer),
-				new QControlParamEditor ('Rows', 'Height of field for multirow field', QType::Integer),
-				new QControlParamEditor ('Format', 'printf format string to use', QType::String),
-				new QControlParamEditor ('Placeholder', 'HTML5 Placeholder attribute', QType::String),
-				new QControlParamEditor ('ReadOnly', 'Editable or not', QType::Boolean),
-				new QControlParamEditor ('TextMode', 'Field type', QType::ArrayType,
+				new QMetaParam ('Columns', 'Width of field', QType::Integer),
+				new QMetaParam ('Rows', 'Height of field for multirow field', QType::Integer),
+				new QMetaParam ('Format', 'printf format string to use', QType::String),
+				new QMetaParam ('Placeholder', 'HTML5 Placeholder attribute', QType::String),
+				new QMetaParam ('ReadOnly', 'Editable or not', QType::Boolean),
+				new QMetaParam ('TextMode', 'Field type', QType::ArrayType,
 					array (null=>'-',
 						'QTextMode::Search'=>'Search',
 						'QTextMode::Multiline'=>'Multiline',

@@ -255,6 +255,7 @@
 					}
 					return null;
 				case "SelectedValue":
+				case "Value":
 					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
 						if ($this->objItemsArray[$intIndex]->Selected)
 							return $this->objItemsArray[$intIndex]->Value;
@@ -349,6 +350,7 @@
 					break;
 
 				case "SelectedValue":
+				case "Value": // most common situation
 					foreach ($this->objItemsArray as $objItem)
 						if (!$mixValue) {
 							if ($mixValue === null || $mixValue === '') {

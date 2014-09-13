@@ -484,10 +484,10 @@ TMPL;
 		 *
 		 * @return array
 		 */
-		public static function GetMetaControlParams() {
+		public static function GetMetaParams() {
 			return array(
-				new QControlParamEditor ('MinLength', 'Number of characters typed before lookup starts', QType::Integer),
-				new QControlParamEditor ('AutoFocus', 'Should field auto select as typing occurs.', QType::Boolean)
+				new QMetaParam ('MinLength', 'Number of characters typed before lookup starts', QType::Integer),
+				new QMetaParam ('AutoFocus', 'Should field auto select as typing occurs.', QType::Boolean)
 			);
 		}
 

@@ -450,11 +450,11 @@
 				$objClass->Form_Create();
 
 				if (defined ('__DESIGN_MODE__')) {
-					$dlg = new QControlCodegenDlg ($objClass, 'qcodegendlg');
+					$dlg = new QMetaEditDlg ($objClass, 'qmetaeditdlg');
 					$objControls = $objClass->GetAllControls();
 					foreach ($objControls as $objControl) {
 						if ($objControl != $dlg &&
-							!$objControl->IsChildOf($dlg)) {
+							!$objControl->IsDescendantOf($dlg)) {
 							$objControl->AddAction (new QContextMenuEvent(), new QAjaxAction ('ctlDesigner_Click'));
 							$objControl->AddAction (new QContextMenuEvent(), new QTerminateAction());
 						}
@@ -507,7 +507,7 @@
 
 		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
 			$objControl = $this->GetControl($strControlId);
-			$dlg = $this->GetControl ('qcodegendlg');
+			$dlg = $this->GetControl ('qmetaeditdlg');
 			$dlg->EditControl ($objControl);
 		}
 

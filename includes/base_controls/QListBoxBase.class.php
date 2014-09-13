@@ -529,10 +529,10 @@ TMPL;
 		 *
 		 * @return array
 		 */
-		public static function GetMetaControlParams() {
+		public static function GetMetaParams() {
 			return array(
-				new QControlParamEditor ('Rows', 'Height of field for multirow field', QType::Integer),
-				new QControlParamEditor ('SelectionMode', 'Single or multiple selections', QType::ArrayType,
+				new QMetaParam ('Rows', 'Height of field for multirow field', QType::Integer),
+				new QMetaParam ('SelectionMode', 'Single or multiple selections', QType::ArrayType,
 					array (null=>'Default',
 						'QSelectionMode::None'=>'None',
 						'QSelectionMode::Single'=>'Single',
