@@ -1,7 +1,7 @@
 <?php
 /**
  * Interface to the Metacontrol options that let you specify various options per field to be placed in the codegened
- * MetacontorlGen classes.
+ * MetacontrolGen classes.
  *
  * Note that this ties table and field names in the database to options in the metacontrol. If the table or field name
  * changes in the database, the options will be lost. We can try to guess as to whether changes were made based upon
@@ -27,6 +27,9 @@ class QMetacontrolOptions extends QBaseClass {
 		// TODO: Analyze the result for changes and make a guess as to whether a table name or field name was changed
 	}
 
+	/**
+	 * Save the current configuration into the options file.
+	 */
 	function Save() {
 		if (!$this->blnChanged) {
 			return;
@@ -41,16 +44,34 @@ class QMetacontrolOptions extends QBaseClass {
 		$this->blnChanged = false;
 	}
 
+	/**
+	 * Makes sure save is the final step.
+	 */
 	function __destruct() {
 		$this->Save();
 	}
 
 
+	/**
+	 * Set an option for a widget associated with the given table and field.
+	 *
+	 * @param $strTableName
+	 * @param $strFieldName
+	 * @param $strOptionName
+	 * @param $mixValue
+	 */
 	public function SetOption ($strTableName, $strFieldName, $strOptionName, $mixValue) {
 		$this->options[$strTableName][$strFieldName][$strOptionName] = $mixValue;
 		$this->blnChanged = true;
 	}
 
+	/**
+	 * Bulk option setting.
+	 *
+	 * @param $strTableName
+	 * @param $strFieldName
+	 * @param $mixValue
+	 */
 	public function SetOptions ($strTableName, $strFieldName, $mixValue) {
 		if (empty ($mixValue)) {
 			unset($this->options[$strTableName][$strFieldName]);
@@ -61,12 +82,26 @@ class QMetacontrolOptions extends QBaseClass {
 		$this->blnChanged = true;
 	}
 
-
+	/**
+	 * Remove the option
+	 *
+	 * @param $strTableName
+	 * @param $strFieldName
+	 * @param $strOptionName
+	 */
 	public function UnsetOption ($strTableName, $strFieldName, $strOptionName) {
 		unset ($this->options[$strTableName][$strFieldName][$strOptionName]);
 		$this->blnChanged = true;
 	}
 
+	/**
+	 * Lookup an option.
+	 *
+	 * @param $strTableName
+	 * @param $strFieldName
+	 * @param $strOptionName
+	 * @return mixed
+	 */
 	public function GetOption ($strTableName, $strFieldName, $strOptionName) {
 		if (isset ($this->options[$strTableName][$strFieldName][$strOptionName])) {
 			return $this->options[$strTableName][$strFieldName][$strOptionName];
@@ -75,6 +110,12 @@ class QMetacontrolOptions extends QBaseClass {
 		}
 	}
 
+	/**
+	 * Return all the options associated with the given table and field.
+	 * @param $strTableName
+	 * @param $strFieldName
+	 * @return mixed
+	 */
 	public function GetOptions ($strTableName, $strFieldName) {
 		if (isset($this->options[$strTableName][$strFieldName])) {
 			return $this->options[$strTableName][$strFieldName];

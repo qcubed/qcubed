@@ -227,7 +227,9 @@
 	QApplicationBase::$ClassFile['qwatchercache'] = __QCUBED_CORE__ . '/watchers/QWatcherCache.class.php';
 	QApplicationBase::$ClassFile['qwatchernone'] = __QCUBED_CORE__ . '/watchers/QWatcherNone.class.php';
 
-	QApplicationBase::$ClassFile['qcontrolcodegendlg'] = __QCUBED_CORE__ .'/codegen/QControlCodegenDlg.class.php';
+	QApplicationBase::$ClassFile['qmetaeditdlg'] = __QCUBED_CORE__ .'/codegen/QMetaEditDlg.class.php';
+	QApplicationBase::$ClassFile['qmetaparam'] = __QCUBED_CORE__ .'/codegen/QMetaParam.class.php';
+	QApplicationBase::$ClassFile['qmetacontroloptions'] = __QCUBED_CORE__ .'/codegen/QMetacontrolOptions.class.php';
 
 
 	// jQuery controls
