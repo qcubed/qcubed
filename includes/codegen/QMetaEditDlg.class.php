@@ -208,7 +208,7 @@ class QMetaEditDlg extends QDialog {
 		}
 
 		$objParams = $this->specificOverrides;
-		foreach ($objParams as $objParam) {
+		if ($objParams) foreach ($objParams as $objParam) {
 			$objControl = $objParam->GetControl ($this->dtgSpecificOverrides);
 			$strName = $objControl->Name;
 			$value = $objControl->Value;

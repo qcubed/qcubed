@@ -2294,13 +2294,14 @@ TMPL;
 
 		public static function Codegen_MetaCreateOptions (QColumn $objColumn) {
 			$strRet = '';
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strPropName = ($objColumn->Reference) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strPropName2 = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strClass = $objColumn->OwnerTable->ClassName;
 
 			if (defined('__DESIGN_MODE__')) {
 				$strRet .= <<<TMPL
-			\$this->{$strControlVarName}->LinkedNode = QQN::{$strClass}()->{$strPropName};
+			\$this->{$strControlVarName}->LinkedNode = QQN::{$strClass}()->{$strPropName2};
 
 TMPL;
 			}
