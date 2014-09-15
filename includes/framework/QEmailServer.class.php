@@ -511,6 +511,8 @@
 	}
 
 	/**
+	 * An email message that you can send with QEmailServer
+	 *
 	 * @property string $From
 	 * @property string $ReplyTo
 	 * @property string $Sender
@@ -520,6 +522,7 @@
 	 * @property string $Subject
 	 * @property string $Body
 	 * @property string $HtmlBody
+	 * @property boolean $EncodeSubject  Whether to encode the subject of the email using UTF-8. Default is true. You might want to turn this off if sending to text message portals (i.e. 123-4567@sprint.message.com)
 	 */
 	class QEmailMessage extends QBaseClass {
 		protected $strFrom;
