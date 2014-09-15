@@ -96,6 +96,7 @@
 			// This next button demonstrates a confirmation button that is styled to the left side of the dialog box.
 			// This is a QCubed addition to the jquery ui functionality
 			$this->dlgValidation->AddButton ('Confirm', 'confirm', true, false, 'Are you sure?', array('class'=>'ui-button-left'));
+			$this->dlgValidation->Width = 400; // Need extra room for buttons
 
 			$this->dlgValidation->AddAction (new QDialog_ButtonEvent(), new QAjaxAction('dlgValidate_Click'));
 			$this->dlgValidation->Title = 'Enter a number';
