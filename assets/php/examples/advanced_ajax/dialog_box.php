@@ -21,6 +21,11 @@
 		protected $btnValidation;
 		protected $txtFloat;
 
+		protected $dlgErrorMessage;
+		protected $btnErrorMessage;
+		protected $dlgInfoMessage;
+		protected $btnInfoMessage;
+
 
 		// Initialize our Controls during the Form Creation process
 		protected function Form_Create() {
@@ -52,8 +57,8 @@
 			// Define a Yes/No modal dialog box
 			$this->dlgYesNo = new QDialog($this);
 			$this->dlgYesNo->Text = "Do you like QCubed?";
-			$this->dlgYesNo->AddButton ('Yes', 'yesBtnId');
-			$this->dlgYesNo->AddButton ('No', 'noBtnId');
+			$this->dlgYesNo->AddButton ('Yes');
+			$this->dlgYesNo->AddButton ('No');
 			$this->dlgYesNo->AddAction (new QDialog_ButtonEvent(), new QHideDialog ($this->dlgYesNo));
 			$this->dlgYesNo->AddAction (new QDialog_ButtonEvent(), new QAjaxAction ('dlgYesNo_Button'));
 			$this->dlgYesNo->AutoOpen = false;
@@ -85,8 +90,13 @@
 
 			// Validate on JQuery UI buttons
 			$this->dlgValidation = new QDialog($this);
-			$this->dlgValidation->AddButton ('OK', 'ok', true); // specify that this button causes validation
+			$this->dlgValidation->AddButton ('OK', 'ok', true, true); // specify that this button causes validation and is the default button
 			$this->dlgValidation->AddButton ('Cancel', 'cancel');
+
+			// This next button demonstrates a confirmation button that is styled to the left side of the dialog box.
+			// This is a QCubed addition to the jquery ui functionality
+			$this->dlgValidation->AddButton ('Confirm', 'confirm', true, false, 'Are you sure?', array('class'=>'ui-button-left'));
+
 			$this->dlgValidation->AddAction (new QDialog_ButtonEvent(), new QAjaxAction('dlgValidate_Click'));
 			$this->dlgValidation->Title = 'Enter a number';
 
@@ -99,6 +109,21 @@
 			$this->btnValidation = new QButton($this);
 			$this->btnValidation->Text = 'Show Validation Example';
 			$this->btnValidation->AddAction(new QClickEvent(), new QShowDialog($this->dlgValidation));
+
+			// Message examples
+			$this->dlgErrorMessage = QDialog::Message("Don't do that!", $this);
+			$this->dlgErrorMessage->DialogState = QDialog::StateError;
+			$this->dlgErrorMessage->Title = 'Alert';
+			$this->btnErrorMessage = new QButton($this);
+			$this->btnErrorMessage->Text = 'Show Error';
+			$this->btnErrorMessage->AddAction(new QClickEvent(), new QShowDialog($this->dlgErrorMessage));
+
+			$this->dlgInfoMessage = QDialog::Message("You did it.", $this);
+			$this->dlgInfoMessage->DialogState = QDialog::StateHighlight;
+			$this->dlgInfoMessage->Title = 'Status';
+			$this->btnInfoMessage = new QButton($this);
+			$this->btnInfoMessage->Text = 'Show Info';
+			$this->btnInfoMessage->AddAction(new QClickEvent(), new QShowDialog($this->dlgInfoMessage));
 		}
 
 		protected function btnDisplaySimpleMessage_Click($strFormId, $strControlId, $strParameter) {
@@ -107,7 +132,7 @@
 		}
 		
 		protected function dlgYesNo_Button($strFormId, $strControlId, $strParameter) {
-			if ($strParameter == 'yesBtnId') {
+			if ($strParameter == 'Yes') {
 				$this->pnlAnswer->Text = 'They love me.';
 			} else {
 				$this->pnlAnswer->Text = 'They love me not.';

@@ -31,13 +31,16 @@
 
 	<p>The four examples show:
 		<ol>
-		<li>a simple "display only" dialog box,</li>
-		<li>a modal dialog that asks for user input,</li>
-		<li>a more complex dialog box that is meant to be a
+		<li>A simple "display only" dialog box.</li>
+		<li>A modal dialog that asks for user input.</li>
+		<li>A more complex dialog box that is meant to be a
 		"calculator widget" with intra-control communication, where the contents of the calculator in the dialog box
-		can be copied into a textbox on the main form,</li>
-		<li>and a dialog that demonstrates how to specify validation
-		with the AddButton method.</li></ol></p>
+		can be copied into a textbox on the main form.</li>
+		<li>A dialog that demonstrates how to specify validation, confirmation and additional styling
+		with the AddButton method.</li>
+		<li>A simple message dialog that can be styled as an alert or info message using the
+			Themeroller styles provided with JQueryUI.</li>
+	</ol></p>
 
 	<p>Note that <strong>QDialog</strong>s are rendered automatically once they are attached to a form. You should not
 		call Render on the dialog instance.</p>
@@ -71,6 +74,14 @@
 	<fieldset style="width: 400px;">
 		<legend>Validation Example</legend>
 		<p><?php $this->btnValidation->Render(); ?></p>
+	</fieldset>
+
+	<fieldset style="width: 400px;">
+		<legend>Message Examples</legend>
+		<p>
+			<?php $this->btnErrorMessage->Render(); ?>
+			<?php $this->btnInfoMessage->Render(); ?>
+		</p>
 	</fieldset>
 
 </div>
