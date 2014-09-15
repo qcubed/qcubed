@@ -322,6 +322,12 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			QQ::Equal(QQN::Project()->Id, 2)
 		);
 		$this->assertTrue($objItem->EndDate === null, "Null date column returns a null.");
+
+		// Testing unique reverse reference on null
+		$objPerson = new Person();
+		$objLogin = $objPerson->Login;
+
+		$this->assertNull($objLogin, "New record should not be associated with null PK.");
 	}
 
 }
