@@ -67,9 +67,11 @@
 	{
 		// enumerations
 
-		// For DialogState option
+		/** Default dialog state */
 		const StateNone = '';
+		/** Display using the Themeroller error state */
 		const StateError = 'ui-state-error';
+		/** Display using the Themeroller highlight state */
 		const StateHighlight = 'ui-state-highlight';
 
 		/** @var bool default to auto open being false, since this would be a rare need, and dialogs are auto-rendered. */
