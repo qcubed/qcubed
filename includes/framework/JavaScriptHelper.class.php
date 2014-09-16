@@ -1,8 +1,27 @@
 <?php
+
+	/**
+	 * Class QJsClosure
+	 *
+	 * An object which represents a javascript closure (annonymous function). Use this to embed a
+	 * function into a PHP array or object that eventually will get turned into javascript.
+	 *
+	 * @property-read boolean $RawArrayKey If this closure is part of an array, this will determine whether
+	 * 	the key for the array gets processed using toJsObject() (which for a string, will put quotes around it),
+	 *  or the key will get output a raw text. As of JQuery 1.8, there are situations where quoted keys
+	 *  are treated as properties, and non-quoted keys are treated as function names.
+	 */
 	class QJsClosure {
+		/** @var  string The js code for the function. */
 		protected $strBody;
+		/** @var array parameter names for the function call that get passed into the function. */
 		protected $strParamsArray;
-		
+
+		/**
+		 * @param string $strBody	The function body
+		 * @param array|null $strParamsArray	The names of the parameters passed in the function call
+		 * @param bool $blnRawArrayKey Whether to quote the associated key if this closure is in an array.
+		 */
 		public function __construct($strBody, $strParamsArray = null) {
 			$this->strBody = $strBody;
 			$this->strParamsArray = $strParamsArray;
@@ -11,6 +30,29 @@
 		public function toJsObject() {
 			$strParams = $this->strParamsArray ? implode(', ', $this->strParamsArray) : '';
 			return 'function('.$strParams.') {'.$this->strBody.'}';
+		}
+	}
+
+	/**
+	 * Wrapper class for arrays to control whether the key in the array is quoted.
+	 * In some situations, a quoted key has a different meaning from a non-quoted key.
+	 * For example, when making a list of parameters to pass when calling the jQuery $() command,
+	 * (i.e. $j(selector, params)), quoted words are turned into parameters, and nonquoted words
+	 * are turned into functions. For example, "size" will set the size attribute of the object, and
+	 * sixe (no quotes), will call the size() function on the object.
+	 *
+	 * To use it, simply wrap the value part of the array with this class.
+	 * @usage: $a = array ("click", new QJsNoQuoteKey (new QJsClosure('alert ("I was clicked")')));
+	 */
+	class QJsNoQuoteKey {
+		protected $mixContent;
+
+		public function __construct ($mixContent) {
+			$this->mixContent = $mixContent;
+		}
+
+		public function toJsObject() {
+			return JavaScriptHelper::toJsObject($this->mixContent);
 		}
 	}
 
@@ -100,7 +142,11 @@
 						$strHash = '';
 						foreach ($array as $objKey => $objItem) {
 							if ($strHash) $strHash .= ',';
-							$strHash .= self::toJsObject($objKey).': '.self::toJsObject($objItem);
+							if ($objItem instanceof QJsNoQuoteKey) {
+								$strHash .= $objKey.': '.self::toJsObject($objItem);
+							} else {
+								$strHash .= self::toJsObject($objKey).': '.self::toJsObject($objItem);
+							}
 						}
 						return '{'.$strHash.'}';
 					}

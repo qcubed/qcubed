@@ -1104,7 +1104,7 @@
 							// CausesValidation specifed by QCausesValidation directive
 						} else if ($mixCausesValidation == QCausesValidation::SiblingsAndChildren) {
 							// Get only the Siblings of the ActionControl's ParentControl
-							// If not ParentControl, tyhen the parent is the form itself
+							// If not ParentControl, then the parent is the form itself
 							if (!($objParentObject = $objActionControl->ParentControl)) {
 								$objParentObject = $this;
 							}

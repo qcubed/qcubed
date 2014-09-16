@@ -330,8 +330,14 @@
 				$strEncodingType = QApplication::$EncodingType;
 
 			// Send: Optional Headers
-			if ($objMessage->Subject)
-				fwrite($objResource, sprintf("Subject: =?%s?Q?%s?=\r\n", $strEncodingType, self::QuotedPrintableEncode($objMessage->Subject, true)));
+			if ($objMessage->Subject) {
+				if ($objMessage->EncodeSubject) {
+					fwrite($objResource, sprintf("Subject: =?%s?Q?%s?=\r\n", $strEncodingType, self::QuotedPrintableEncode($objMessage->Subject, true)));
+				} else {
+					fwrite($objResource, sprintf("Subject: %s\r\n", $objMessage->Subject));
+				}
+			}
+
 			if ($objMessage->Cc)
 				fwrite($objResource, sprintf("Cc: %s\r\n", $objMessage->Cc));
 
@@ -505,6 +511,8 @@
 	}
 
 	/**
+	 * An email message that you can send with QEmailServer
+	 *
 	 * @property string $From
 	 * @property string $ReplyTo
 	 * @property string $Sender
@@ -514,6 +522,7 @@
 	 * @property string $Subject
 	 * @property string $Body
 	 * @property string $HtmlBody
+	 * @property boolean $EncodeSubject  Whether to encode the subject of the email using UTF-8. Default is true. You might want to turn this off if sending to text message portals (i.e. 123-4567@sprint.message.com)
 	 */
 	class QEmailMessage extends QBaseClass {
 		protected $strFrom;
@@ -528,6 +537,8 @@
 		protected $strBcc;
 		protected $strHeaderArray = array();
 		protected $objFileArray = array();
+
+		protected $blnEncodeSubject = true;	// useful for sending to text message hubs, they don't like charset declaractions
 
 		public function AddAttachment(QEmailAttachment $objFile) {						
 			$this->objFileArray[$objFile->FileName] = $objFile;
@@ -582,6 +593,7 @@
 				case 'HeaderArray': return $this->strHeaderArray;
 				case 'FileArray': return $this->objFileArray;
 				case 'HasFiles': return (count($this->objFileArray) > 0) ? true : false;
+				case 'EncodeSubject': return $this->blnEncodeSubject;
 
 				default:
 					try {
@@ -620,6 +632,7 @@
 
 					case 'Cc': return ($this->strCc = QType::Cast($mixValue, QType::String));
 					case 'Bcc': return ($this->strBcc = QType::Cast($mixValue, QType::String));
+					case 'EncodeSubject': return ($this->blnEncodeSubject = QType::Cast($mixValue, QType::Boolean));
 
 					default: return (parent::__set($strName, $mixValue));
 				}

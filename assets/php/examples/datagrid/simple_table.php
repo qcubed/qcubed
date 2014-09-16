@@ -56,15 +56,10 @@ class ExampleForm extends QForm {
 		$this->tblPersons->HeaderRowCssClass = 'header_row';
 
 		// Define Columns
-		// The first column demonstrates the use of Closures (for PHP 5.3+), or user defined function (for PHP 5.2 and below)
-		if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-			$objColumn = new QSimpleTableClosureColumn('Full Name',
+		$objColumn = new QSimpleTableClosureColumn('Full Name',
 							function($item) {
 								return 'Full Name is "' . $item->FirstName . ' ' . $item->LastName . '"';
 							});
-		} else {
-			$objColumn = new QSimpleTableClosureColumn('Full Name', 'ExampleForm::getFullName');
-		}
 		$this->tblPersons->AddColumn($objColumn);
 
 		// The second column demonstrates using a property name for fetching the data

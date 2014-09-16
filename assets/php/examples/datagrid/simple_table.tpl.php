@@ -71,7 +71,7 @@
 
 	<p>The first example demonstrates how to use property and closure based columns when the DataSource is an array of objects.</p>
 
-	<p>The first column is using a Closure (for PHP 5.3 and later) or a user defined function (for PHP 5.2 and earlier), to
+	<p>The first column is using a Closure, to
 		compute the value of the cells.</p>
 
 	<p>The second column uses the "LastName" property to get the value of the cells.</p>

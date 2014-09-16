@@ -16,7 +16,7 @@ CREATE INDEX IDX_person_1 ON person (last_name);
 DROP TABLE IF EXISTS login;
 CREATE TABLE login (
     id SERIAL,
-    person_id BIGINT NOT NULL,
+    person_id BIGINT,
     username VARCHAR(20) NOT NULL,
     password VARCHAR(20),
     is_enabled BIGINT NOT NULL,
@@ -203,6 +203,7 @@ INSERT INTO login(person_id, username, password, is_enabled) VALUES (1, 'jdoe', 
 INSERT INTO login(person_id, username, password, is_enabled) VALUES (3, 'brobinson', 'p@$$.w0rd', 1);
 INSERT INTO login(person_id, username, password, is_enabled) VALUES (4, 'mho', 'p@$$.w0rd', 1);
 INSERT INTO login(person_id, username, password, is_enabled) VALUES (7, 'kwolfe', 'p@$$.w0rd', 0);
+INSERT INTO login(person_id, username, password, is_enabled) VALUES (NULL, 'system', 'p@$$.w0rd', 1);
 
 INSERT INTO project(project_status_type_id, manager_person_id, name, description, start_date, end_date, budget, spent) VALUES
   (3, 7, 'ACME Website Redesign', 'The redesign of the main website for ACME Incorporated', '2004-03-01', '2004-07-01', '9560.25', '10250.75');
