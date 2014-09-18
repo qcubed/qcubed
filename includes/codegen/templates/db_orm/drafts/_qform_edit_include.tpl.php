@@ -27,7 +27,7 @@
 	<div class="form-controls">
 <?php
 	foreach ($objTable->ColumnArray as $objColumn) {
-		if (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] == 'meta') {
+		if (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != 'none') {
 			print('<?php $this->'.$objCodeGen->FormControlVariableNameForColumn($objColumn).'->RenderWithName(); ?>');
 		}
 	}

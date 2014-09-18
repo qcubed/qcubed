@@ -58,7 +58,7 @@ TMPL;
 		 * @param QColumn $objColumn
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
 			$strControlType = 'QLabel';
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);

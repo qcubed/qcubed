@@ -268,7 +268,7 @@
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
 			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
 
 			// Read the control type in case we are generating code for a subclass
 			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);

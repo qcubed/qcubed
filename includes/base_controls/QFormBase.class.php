@@ -456,6 +456,7 @@
 						if ($objControl != $dlg &&
 							!$objControl->IsDescendantOf($dlg)) {
 							$objControl->AddAction (new QContextMenuEvent(), new QAjaxAction ('ctlDesigner_Click'));
+							$objControl->AddAction (new QContextMenuEvent(), new QStopPropagationAction());
 							$objControl->AddAction (new QContextMenuEvent(), new QTerminateAction());
 						}
 					}

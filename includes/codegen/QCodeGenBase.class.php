@@ -987,8 +987,15 @@
 		 */
 
 		public function FormControlClassForColumn(QColumn $objColumn) {
-			if (($o = $objColumn->Options) && isset($o['ControlClass'])) {
-				return $o['ControlClass'];
+
+			// overrides
+			if ($o = $objColumn->Options) {
+				if (isset ($o['FormGen']) && $o['FormGen'] == 'label') {
+					return 'QLabel';
+				}
+				if (isset($o['ControlClass'])) {
+					return $o['ControlClass'];
+				}
 			}
 
 			if ($objColumn->Identity)

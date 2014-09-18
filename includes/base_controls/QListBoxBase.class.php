@@ -335,7 +335,7 @@ TMPL;
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
 			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 
 			// Read the control type in case we are generating code for a similar class
@@ -503,7 +503,12 @@ TMPL;
 
 TMPL;
 			}
-			$strRet .= $strTabs . "\$a = \$this->{$strControlVarName}_GetItems();\n";
+
+			$options = $objColumn->Options;
+			if (!$options || !isset ($options['NoAutoLoad'])) {
+				$strRet .= $strTabs . "\$a = \$this->{$strControlVarName}_GetItems();\n";
+			}
+
 			$strRet .= $strTabs . $strSelectOne . "\n";
 			$strRet .= $strTabs . "\$this->{$strControlVarName}->AddItems(\$a);\n";
 

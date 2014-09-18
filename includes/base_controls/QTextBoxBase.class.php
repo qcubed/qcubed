@@ -706,7 +706,7 @@
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
 			$strClassName = $objTable->ClassName;
 			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
 
 			// Read the control type in case we are generating code for a subclass of QTextBox
 			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
@@ -819,7 +819,7 @@ TMPL;
 				new QMetaParam ('TextMode', 'Field type', QType::ArrayType,
 					array (null=>'-',
 						'QTextMode::Search'=>'Search',
-						'QTextMode::Multiline'=>'Multiline',
+						'QTextMode::MultiLine'=>'MultiLine',
 						'QTextMode::Password'=>'Password',
 						'QTextMode::SingleLine'=>'SingleLine'
 					))

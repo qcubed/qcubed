@@ -49,7 +49,7 @@ class QMetaEditDlg extends QDialog {
 
 		$this->objMetacontrolOptions = new QMetacontrolOptions();
 
-		$this->tabs = new QTabs ($this, "tabPanel");
+		$this->tabs = new QTabs ($this);
 		$this->tabs->HeightStyle = "auto";
 
 		//$panel = new QPanel ($this->tabs, 'panel');
@@ -70,7 +70,8 @@ class QMetaEditDlg extends QDialog {
 				array (null=>'Both', 'none'=>'None', 'meta'=>'Meta', 'label'=>'Label'),
 				QMetaParam::Quote),
 			new QMetaParam ('Name', 'Control\'s Name', QType::String),
-			new QMetaParam ('ControlClass', 'Override of the PHP type for the control', QType::String)
+			new QMetaParam ('ControlClass', 'Override of the PHP type for the control', QType::String),
+			new QMetaParam ('NoAutoLoad', 'Prevent automatically populating a list type control. Set this if you are doing more complex list loading.', QType::Boolean)
 		);
 
 		// General overrides coming from QControl

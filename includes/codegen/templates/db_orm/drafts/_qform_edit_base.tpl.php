@@ -38,7 +38,7 @@
 
 		// Controls for <?php echo $objTable->ClassName  ?>'s Data Fields
 <?php foreach ($objTable->ColumnArray as $objColumn) {
-		if (!isset ($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] == 'meta') {
+		if (!isset ($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != 'none') {
 ?>
 		protected $<?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>;
 <?php } ?>
@@ -87,7 +87,7 @@
 
 			// Call MetaControl's methods to create qcontrols based on <?php echo $objTable->ClassName  ?>'s data fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-	<?php	if ($objColumn->Options && isset ($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue; ?>
+<?php	if (isset ($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue; ?>
 			$this-><?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?> = $this->mct<?php echo $objTable->ClassName  ?>-><?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>_Create();
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>

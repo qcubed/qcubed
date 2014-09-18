@@ -2310,15 +2310,21 @@ TMPL;
 				isset ($options['Overrides'])) {
 
 				foreach ($options['Overrides'] as $name=>$val) {
-					$strVal = var_export($val, true);
-					if (is_string ($val)) {
+					if (is_numeric($val)) {
+						// looks like a number
+						$strVal = $val;
+					}
+					elseif (is_string ($val)) {
 						if (strpos ($val, '::') !== false &&
-							strpos ($val, ' ') === false) {
+								strpos ($val, ' ') === false) {
 							// looks like a constant
 							$strVal = $val;
 						} else {
+							$strVal = var_export($val, true);
 							$strVal = 'QApplication::Translate(' . $strVal . ')';
 						}
+					} else {
+						$strVal = var_export($val, true);
 					}
 					$strRet .= <<<TMPL
 			\$this->{$strControlVarName}->{$name} = {$strVal};

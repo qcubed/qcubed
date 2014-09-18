@@ -343,7 +343,7 @@ TMPL;
 			$strClassName = $objTable->ClassName;
 			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
 			$strLabelId = $objCodeGen->FormLabelVariableNameForColumn($objColumn);
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 
 			// Read the control type in case we are generating code for a similar class
@@ -389,7 +389,7 @@ TMPL;
 			$options = $objColumn->Options;
 			if (!$options || !isset ($options['NoAutoLoad'])) {
 				$strRet .= <<<TMPL
-			\$this->Source = \$this->{$strControlVarName}_GetItems();
+			\$this->{$strControlVarName}->Source = \$this->{$strControlVarName}_GetItems();
 
 TMPL;
 			}
@@ -481,6 +481,8 @@ TMPL;
 
 		/**
 		 * Returns a description of the options available to modify by the designer for the code generator.
+		 *
+		 * This is temporary until we implement in jquery ui gen
 		 *
 		 * @return array
 		 */
