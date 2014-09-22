@@ -74,6 +74,7 @@
 		<?php $this->CheckList2->RenderWithName(); ?>
 		<?php $this->RadioList1->RenderWithName(); ?>
 		<?php $this->RadioList2->RenderWithName(); ?>
+		<?php $this->SelectMenu->RenderWithName(); ?>
 	</div>
 	
 	<div class="example"><h2>Datepicker</h2>

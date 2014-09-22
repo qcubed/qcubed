@@ -193,19 +193,28 @@
 	 * 		is <code>"auto"</code> which will allow the dialog height to adjust based
 	 * 		on its content.</li></ul>
 	 * @property mixed $Hide If and how to animate the hiding of the dialog.<strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Number</strong>:  					The dialog will
-	 * 		fade out while animating the height and width for the specified
-	 * 		duration.</li> <li><strong>String</strong>:  					The dialog will be hidden
-	 * 		using the specified jQuery UI effect. See the <a>list of effects</a> for
-	 * 		possible values.</li> <li><strong>Object</strong>: If the value is an
-	 * 		object, then <code>effect</code>, <code>delay</code>,
-	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
-	 * 		The <code>effect</code> property must be the name of a jQuery UI effect.
-	 * 		When using a jQuery UI effect that supports additional settings, you may
-	 * 		include those settings in the object and they will be passed to the effect.
-	 * 		If <code>duration</code> or <code>easing</code> is omitted, then the
-	 * 		default values will be used. If <code>delay</code> is omitted, then no
-	 * 		delay is used.</li></ul>
+	 * 		supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
+	 * 		<code>false</code>, no animation will be used and the dialog will be hidden
+	 * 		immediately. 			When set to <code>true</code>, the dialog will fade out
+	 * 		with the default duration and the default easing.</li>
+	 * 		<li><strong>Number</strong>:  			The dialog will fade out with the
+	 * 		specified duration and the default easing.</li>
+	 * 		<li><strong>String</strong>:  			The dialog will be hidden using the
+	 * 		specified effect. 			The value can either be the name of a built-in jQuery
+	 * 		animation method, such as <code>"slideUp"</code>, or the name of a
+	 * 		<a>jQuery UI effect</a>, such as <code>"fold"</code>. 			In either case the
+	 * 		effect will be used with the default duration and the default easing.</li>
+	 * 		<li><strong>Object</strong>: If the value is an object, then
+	 * 		<code>effect</code>, <code>delay</code>, <code>duration</code>, and
+	 * 		<code>easing</code> properties may be provided. If the <code>effect</code>
+	 * 		property contains the name of a jQuery method, then that method will be
+	 * 		used; otherwise it is assumed to be the name of a jQuery UI effect. When
+	 * 		using a jQuery UI effect that supports additional settings, you may include
+	 * 		those settings in the object and they will be passed to the effect. If
+	 * 		<code>duration</code> or <code>easing</code> is omitted, then the default
+	 * 		values will be used. If <code>effect</code> is omitted, then
+	 * 		<code>"fadeOut"</code> will be used. If <code>delay</code> is omitted, then
+	 * 		no delay is used.</li></ul>
 	 * @property integer $MaxHeight The maximum height to which the dialog can be resized, in pixels.
 	 * @property integer $MaxWidth The maximum width to which the dialog can be resized, in pixels.
 	 * @property integer $MinHeight The minimum height to which the dialog can be resized, in pixels.
@@ -213,36 +222,36 @@
 	 * @property boolean $Modal If set to <code>true</code>, the dialog will have modal behavior; other
 	 * 		items on the page will be disabled, i.e., cannot be interacted with. Modal
 	 * 		dialogs create an overlay below the dialog but above other page elements.
-	 * @property mixed $Position <p>Specifies where the dialog should be displayed. The dialog will handle
-	 * 		collisions such that as much of the dialog is visible as possible.</p>
-	 * 						<p><em>Note: The <code>String</code> and <code>Array</code> forms are
-	 * 		deprecated.</em></p><strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Object</strong>: Identifies the position
-	 * 		of the dialog when opened. The <code>of</code> option defaults to the
-	 * 		window, but you can specify another element to position against. You can
-	 * 		refer to the <a>jQuery UI Position</a> utility for more details about the
-	 * 		various options.</li> <li><strong>String</strong>: A string representing
-	 * 		the position within the viewport. Possible values: <code>"center"</code>,
-	 * 		<code>"left"</code>, <code>"right"</code>, <code>"top"</code>,
-	 * 		<code>"bottom"</code>.</li> <li><strong>Array</strong>: An array containing
-	 * 		an <em>x, y</em> coordinate pair in pixel offset from the top left corner
-	 * 		of the viewport or the name of a possible string value.</li></ul>
+	 * @property mixed $Position <p>Specifies where the dialog should be displayed when opened. The dialog
+	 * 		will handle collisions such that as much of the dialog is visible as
+	 * 		possible.</p> 				<p>The <code>of</code> property defaults to the window,
+	 * 		but you can specify another element to position against. You can refer to
+	 * 		the <a>jQuery UI Position</a> utility for more details about the available
+	 * 		properties.</p>
 	 * @property boolean $Resizable If set to <code>true</code>, the dialog will be resizable. Requires the
 	 * 		<a>jQuery UI Resizable widget</a> to be included.
 	 * @property mixed $Show If and how to animate the showing of the dialog.<strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Number</strong>:  					The dialog will
-	 * 		fade in while animating the height and width for the specified
-	 * 		duration.</li> <li><strong>String</strong>:  					The dialog will be shown
-	 * 		using the specified jQuery UI effect. See the <a>list of effects</a> for
-	 * 		possible values.</li> <li><strong>Object</strong>: If the value is an
-	 * 		object, then <code>effect</code>, <code>delay</code>,
+	 * 		supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
+	 * 		<code>false</code>, no animation will be used and the dialog will be shown
+	 * 		immediately. 			When set to <code>true</code>, the dialog will fade in with
+	 * 		the default duration and the default easing.</li>
+	 * 		<li><strong>Number</strong>:  			The dialog will fade in with the specified
+	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
+	 * 		dialog will be shown using the specified effect. 			The value can either be
+	 * 		the name of a built-in jQuery animation method, such as
+	 * 		<code>"slideDown"</code>, or the name of a <a>jQuery UI effect</a>, such as
+	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
+	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
+	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
 	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
-	 * 		The <code>effect</code> property must be the name of a jQuery UI effect.
-	 * 		When using a jQuery UI effect that supports additional settings, you may
-	 * 		include those settings in the object and they will be passed to the effect.
-	 * 		If <code>duration</code> or <code>easing</code> is omitted, then the
-	 * 		default values will be used. If <code>delay</code> is omitted, then no
-	 * 		delay is used.</li></ul>
+	 * 		If the <code>effect</code> property contains the name of a jQuery method,
+	 * 		then that method will be used; otherwise it is assumed to be the name of a
+	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
+	 * 		settings, you may include those settings in the object and they will be
+	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
+	 * 		omitted, then the default values will be used. If <code>effect</code> is
+	 * 		omitted, then <code>"fadeIn"</code> will be used.  If <code>delay</code> is
+	 * 		omitted, then no delay is used.</li></ul>
 	 * @property string $Title Specifies the title of the dialog. If the value is <code>null</code>, the
 	 * 		<code>title</code> attribute on the dialog source element will be used.
 	 * @property integer $Width The width of the dialog, in pixels.
@@ -388,6 +397,16 @@
 		 */
 		public function Destroy() {
 			$this->CallJqUiMethod(false, "destroy");
+		}
+		/**
+		 * <p>Retrieves the dialog's instance object. If the element does not have an
+		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
+		 * other widget methods, <code>instance()</code> is safe to call on any
+		 * element after the dialog plugin has loaded.</p><ul><li>This method does not
+		 * accept any arguments.</li></ul>
+		 */
+		public function Instance() {
+			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
 		 * Whether the dialog is currently open.<ul><li>This method does not accept

@@ -35,7 +35,9 @@
 		protected $RadioList1;
 		/** @var QRadioButtonList */
 		protected $RadioList2;
-		
+		/** @var QSelectMenu */
+		protected $SelectMenu;
+
 		/** @var QDatepicker */
 		protected $Datepicker;
 		/** @var QDatepickerBox */
@@ -192,7 +194,15 @@
 			}
 			$this->RadioList2->ButtonMode = QCheckBoxList::ButtonModeJq;
 			$this->RadioList2->RepeatColumns = 4;
-			
+
+			$this->SelectMenu = new QSelectMenu($this);
+			$this->SelectMenu->Name = "SelectMenu";
+			$this->SelectMenu->Width = 200;
+			foreach (self::$LANGUAGES as $strLang) {
+				$this->SelectMenu->AddItem ($strLang);
+			}
+
+
 			// Datepicker
 			$this->Datepicker = new QDatepicker($this);
 	

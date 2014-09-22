@@ -157,7 +157,7 @@
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be hidden using the specified effect. 			The value can either be
 	 * 		the name of a built-in jQuery animation method, such as
-	 * 		<code>"slideUp"</code>, or the name of a jQuery UI effect, such as
+	 * 		<code>"slideUp"</code>, or the name of a <a>jQuery UI effect</a>, such as
 	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
 	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
 	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
@@ -179,7 +179,7 @@
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be shown using the specified effect. 			The value can either be
 	 * 		the name of a built-in jQuery animation method, such as
-	 * 		<code>"slideDown"</code>, or the name of a jQuery UI effect, such as
+	 * 		<code>"slideDown"</code>, or the name of a <a>jQuery UI effect</a>, such as
 	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
 	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
 	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
@@ -303,12 +303,21 @@
 		 * Disables a tab. The selected tab cannot be disabled. To disable more than
 		 * one tab at once, set the <a><code>disabled</code></a> option: <code>$(
 		 * "#tabs" ).tabs( "option", "disabled", [ 1, 2, 3 ]
-		 * )</code>.<ul><li><strong>index</strong> Type: <a>Number</a> or
-		 * <a>String</a> Which tab to disable.</li></ul>
+		 * )</code>.<ul><li><strong>index</strong> Type: <a>Number</a> The zero-based
+		 * index of the tab to disable.</li></ul>
 		 * @param $index
 		 */
 		public function Disable1($index) {
 			$this->CallJqUiMethod(false, "disable", $index);
+		}
+		/**
+		 * Disables a tab. The selected tab cannot be
+		 * disabled.<ul><li><strong>href</strong> Type: <a>String</a> The
+		 * <code>href</code> of the tab to disable.</li></ul>
+		 * @param $href
+		 */
+		public function Disable2($href) {
+			$this->CallJqUiMethod(false, "disable", $href);
 		}
 		/**
 		 * Enables all tabs.<ul><li>This signature does not accept any
@@ -320,20 +329,46 @@
 		/**
 		 * Enables a tab. To enable more than one tab at once reset the disabled
 		 * property like: <code>$( "#example" ).tabs( "option", "disabled", []
-		 * );</code>.<ul><li><strong>index</strong> Type: <a>Number</a> or
-		 * <a>String</a> Which tab to enable.</li></ul>
+		 * );</code>.<ul><li><strong>index</strong> Type: <a>Number</a> The zero-based
+		 * index of the tab to enable.</li></ul>
 		 * @param $index
 		 */
 		public function Enable1($index) {
 			$this->CallJqUiMethod(false, "enable", $index);
 		}
 		/**
+		 * Enables a tab.<ul><li><strong>href</strong> Type: <a>String</a> The
+		 * <code>href</code> of the tab to enable.</li></ul>
+		 * @param $href
+		 */
+		public function Enable2($href) {
+			$this->CallJqUiMethod(false, "enable", $href);
+		}
+		/**
+		 * <p>Retrieves the tabs's instance object. If the element does not have an
+		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
+		 * other widget methods, <code>instance()</code> is safe to call on any
+		 * element after the tabs plugin has loaded.</p><ul><li>This method does not
+		 * accept any arguments.</li></ul>
+		 */
+		public function Instance() {
+			$this->CallJqUiMethod(false, "instance");
+		}
+		/**
 		 * Loads the panel content of a remote tab.<ul><li><strong>index</strong>
-		 * Type: <a>Number</a> or <a>String</a> Which tab to load.</li></ul>
+		 * Type: <a>Number</a> The zero-based index of the tab to load.</li></ul>
 		 * @param $index
 		 */
 		public function Load($index) {
 			$this->CallJqUiMethod(false, "load", $index);
+		}
+		/**
+		 * Loads the panel content of a remote tab.<ul><li><strong>href</strong> Type:
+		 * <a>String</a> The <code>href</code> of the tab to load.</li></ul>
+		 * @param $href
+		 */
+		public function Load1($href) {
+			$this->CallJqUiMethod(false, "load", $href);
 		}
 		/**
 		 * Gets the value currently associated with the specified
