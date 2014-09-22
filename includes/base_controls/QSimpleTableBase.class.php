@@ -25,6 +25,7 @@
 	 * @property boolean $ShowHeader true to show the header row
 	 * @property boolean $ShowFooter true to show the footer row
 	 * @property boolean $RenderColumnTags true to include col tags in the table output
+	 * @property boolean $HideIfEmpty true to completely hide the table if there is no data, vs. drawing the table with no rows.
 	 * @throws QCallerException
 	 *
 	 */
@@ -39,6 +40,8 @@
 		protected $blnShowFooter = false;
 		protected $blnRenderColumnTags = false;
 		protected $strCaption = null;
+		protected $blnHideIfEmpty = false;
+
 		/** @var integer */
 		protected $intHeaderRowCount = 1;
 		/** @var  integer Used during rendering to report which header row is being drawn in a multi-row header. */
@@ -456,6 +459,11 @@
 		protected function GetControlHtml() {
 			$this->DataBind();
 
+			if (empty ($this->objDataSource) && $this->blnHideIfEmpty) {
+				$this->objDataSource = null;
+				return '';
+			}
+
 			// Table Tag
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)
@@ -517,6 +525,8 @@
 					return $this->intHeaderRowCount;
 				case 'CurrentHeaderRowIndex':
 					return $this->intCurrentHeaderRowIndex;
+				case 'HideIfEmpty':
+					return $this->blnHideIfEmpty;
 
 				default:
 					try {
@@ -601,6 +611,16 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case "HideIfEmpty":
+					try {
+						$this->blnHideIfEmpty = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 
 				default:
 					try {
