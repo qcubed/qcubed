@@ -758,6 +758,13 @@ TMPL;
 TMPL;
 			}
 
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
+
+TMPL;
+			}
+
 			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
 
 			$strRet .= <<<TMPL
@@ -810,20 +817,20 @@ TMPL;
 		 * @return array
 		 */
 		public static function GetMetaParams() {
-			return array(
-				new QMetaParam ('Columns', 'Width of field', QType::Integer),
-				new QMetaParam ('Rows', 'Height of field for multirow field', QType::Integer),
-				new QMetaParam ('Format', 'printf format string to use', QType::String),
-				new QMetaParam ('Placeholder', 'HTML5 Placeholder attribute', QType::String),
-				new QMetaParam ('ReadOnly', 'Editable or not', QType::Boolean),
-				new QMetaParam ('TextMode', 'Field type', QType::ArrayType,
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Columns', 'Width of field', QType::Integer),
+				new QMetaParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
+				new QMetaParam (get_called_class(), 'Format', 'printf format string to use', QType::String),
+				new QMetaParam (get_called_class(), 'Placeholder', 'HTML5 Placeholder attribute', QType::String),
+				new QMetaParam (get_called_class(), 'ReadOnly', 'Editable or not', QType::Boolean),
+				new QMetaParam (get_called_class(), 'TextMode', 'Field type', QType::ArrayType,
 					array (null=>'-',
 						'QTextMode::Search'=>'Search',
 						'QTextMode::MultiLine'=>'MultiLine',
 						'QTextMode::Password'=>'Password',
 						'QTextMode::SingleLine'=>'SingleLine'
 					))
-			);
+			));
 		}
 	}
 

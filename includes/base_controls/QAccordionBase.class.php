@@ -53,7 +53,7 @@
 
 			foreach ($this->GetChildControls() as $objControl) {
 				if (!$objControl->Rendered) {
-					$renderMethod = $objControl->strPreferedRenderMethod;
+					$renderMethod = $objControl->strPreferredRenderMethod;
 					$strToReturn .= '<div>';
 					$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
 					$strToReturn .= '</div>';

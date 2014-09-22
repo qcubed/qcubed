@@ -334,7 +334,7 @@ TMPL;
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
 			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 
@@ -344,12 +344,12 @@ TMPL;
 			if ($objColumn->Reference->IsType) {
 				$strRet=<<<TMPL
 		/**
-		 * Create and setup {$strControlType} {$strControlId}
+		 * Create and setup {$strControlType} {$strControlVarName}
 		 * @param string \$strControlId optional ControlId to use
 		 * @return QListBox
 		 */
 
-		public function {$strControlId}_Create(\$strControlId = null) {
+		public function {$strControlVarName}_Create(\$strControlId = null) {
 
 TMPL;
 				$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
@@ -363,33 +363,40 @@ TMPL;
 TMPL;
 				}
 				$strRet .= <<<TMPL
-			\$this->{$strControlId} = new {$strControlType}(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlId}->Name = QApplication::Translate('{$strLabelName}');
+			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 
 TMPL;
 			} else {
 
 				$strRet = <<<TMPL
 		/**
-		 * Create and setup {$strControlType} {$strControlId}
+		 * Create and setup {$strControlType} {$strControlVarName}
 		 * @param string \$strControlId optional ControlId to use
 		 * @param QQCondition \$objConditions override the default condition of QQ::All() to the query, itself
 		 * @param QQClause[] \$objClauses additional QQClause object or array of QQClause objects for the query
 		 * @return QListBox
 		 */
 
-		public function {$strControlId}_Create(\$strControlId = null, QQCondition \$objCondition = null, \$objClauses = null) {
+		public function {$strControlVarName}_Create(\$strControlId = null, QQCondition \$objCondition = null, \$objClauses = null) {
 			\$this->obj{$strPropName}Condition = \$objCondition;
 			\$this->obj{$strPropName}Clauses = \$objClauses;
-			\$this->{$strControlId} = new {$strControlType}(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlId}->Name = QApplication::Translate('{$strLabelName}');
+			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 
 TMPL;
 			}
 
 			if ($objColumn->NotNull) {
 				$strRet .= <<<TMPL
-			\$this->{$strControlId}->Required = true;
+			\$this->{$strControlVarName}->Required = true;
+
+TMPL;
+			}
+
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
 
 TMPL;
 			}
@@ -399,7 +406,7 @@ TMPL;
 			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
 
 			$strRet .= <<<TMPL
-			return \$this->{$strControlId};
+			return \$this->{$strControlVarName};
 		}
 
 TMPL;
@@ -408,9 +415,9 @@ TMPL;
 				$strRet .= <<<TMPL
 
 		/**
-		 *	Create item list for use by {$strControlId}
+		 *	Create item list for use by {$strControlVarName}
 		 */
-		public function {$strControlId}_GetItems() {
+		public function {$strControlVarName}_GetItems() {
 			\$a = array();
 			foreach ({$objColumn->Reference->VariableType}::\$NameArray as \$intId => \$strValue) {
 				\$a[] = new QListItem(\$strValue, \$intId, \$this->{$strObjectName}->{$objColumn->PropertyName} == \$intId);
@@ -424,9 +431,9 @@ TMPL;
 				$strRet .= <<<TMPL
 
 		/**
-		 *	Create item list for use by {$strControlId}
+		 *	Create item list for use by {$strControlVarName}
 		 */
-		 public function {$strControlId}_GetItems() {
+		 public function {$strControlVarName}_GetItems() {
 			\$a = array();
 			\$objCondition = \$this->obj{$strPropName}Condition;
 			if (is_null(\$objCondition)) \$objCondition = QQ::All();
@@ -535,15 +542,15 @@ TMPL;
 		 * @return array
 		 */
 		public static function GetMetaParams() {
-			return array(
-				new QMetaParam ('Rows', 'Height of field for multirow field', QType::Integer),
-				new QMetaParam ('SelectionMode', 'Single or multiple selections', QType::ArrayType,
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
+				new QMetaParam (get_called_class(), 'SelectionMode', 'Single or multiple selections', QType::ArrayType,
 					array (null=>'Default',
 						'QSelectionMode::None'=>'None',
 						'QSelectionMode::Single'=>'Single',
 						'QSelectionMode::Multiple'=>'Multiple'
 					))
-			);
+			));
 		}
 
 	}

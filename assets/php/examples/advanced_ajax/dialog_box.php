@@ -105,7 +105,7 @@
 			$this->dlgValidation->AutoRenderChildren = true;
 			$this->txtFloat = new QFloatTextBox($this->dlgValidation);
 			$this->txtFloat->Placeholder = 'Float only';
-			$this->txtFloat->PreferedRenderMethod = 'RenderWithError'; // Tell the panel to use this method when rendering
+			$this->txtFloat->PreferredRenderMethod = 'RenderWithError'; // Tell the panel to use this method when rendering
 
 			$this->btnValidation = new QButton($this);
 			$this->btnValidation->Text = 'Show Validation Example';

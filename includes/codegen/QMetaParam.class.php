@@ -9,37 +9,57 @@
  * name of a control using a text box, or the visibility state of a control using boolean selector.
  *
  * You can currently specify a boolean value, a text value, an integer value, or a list of options.
+ *
+ * @property-read string $Category
+ * @property-read string $Name
  */
 
 class QMetaParam extends QBaseClass {
+	protected $strCategory;
 	protected $strName;
 	protected $strDescription;
 	protected $controlType;
 	protected $options;
-	protected $blnQuoteValue;
 
-	const Quote = true;
-
+	/** @var  QControl caching the created control */
 	protected $objControl;
 
-	public function __construct($strName, $strDescription, $controlType, $options = null, $blnQuoteValue = false) {
-		$this->strName  = $strName;
-		$this->strDescription = $strDescription;
+	public function __construct($strCategory, $strName, $strDescription, $controlType, $options = null) {
+		$this->strCategory = QApplication::Translate($strCategory);
+		$this->strName  = QApplication::Translate($strName);
+		$this->strDescription = QApplication::Translate($strDescription);
 		$this->controlType = $controlType;
+
 		$this->options = $options;
-		$this->blnQuoteValue = $blnQuoteValue;
 	}
 
-	public function GetControl ($objParent) {
+	/**
+	 * Called by the QMetaEditDlg dialog. Creates a control that will allow the user to edit the value
+	 * associated with this parameter, and caches that control so that its easy to get to.
+	 *
+	 * @param QControl $objParent
+	 * @return null|QControl|QIntegerTextBox|QListBox|QRadioButtonList|QTextBox
+	 */
+	public function GetControl (QControl $objParent) {
 		if ($this->objControl) {
+			if ($objParent) {
+				$this->objControl->SetParentControl($objParent);
+			}
 			return $this->objControl;
-		} else {
+		} elseif ($objParent) {
 			$this->objControl = $this->CreateControl($objParent);
 			return $this->objControl;
 		}
+		return null;
 	}
 
-	protected function CreateControl($objParent) {
+	/**
+	 * Creates the actual control that will edit the value.
+	 *
+	 * @param QControl $objParent
+	 * @return QIntegerTextBox|QListBox|QRadioButtonList|QTextBox
+	 */
+	protected function CreateControl(QControl $objParent) {
 		switch ($this->controlType) {
 			case QType::Boolean:
 				$ctl = new QRadioButtonList($objParent);
@@ -75,6 +95,10 @@ class QMetaParam extends QBaseClass {
 		switch ($strName) {
 			case 'Name':
 				return $this->strName;
+				break;
+
+			case 'Category':
+				return $this->strCategory;
 				break;
 
 			default:

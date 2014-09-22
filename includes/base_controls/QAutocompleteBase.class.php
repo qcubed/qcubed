@@ -394,6 +394,12 @@ TMPL;
 TMPL;
 			}
 
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
+
+TMPL;
+			}
 			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
 
 			$strRet .= <<<TMPL
@@ -448,7 +454,7 @@ TMPL;
 			$options = $objColumn->Options;
 			if (!$options || !isset ($options['NoAutoLoad'])) {
 				$strRet .= <<<TMPL
-			\$this->Source = \$this->{$strControlVarName}_GetItems();
+			\$this->{$strControlVarName}->Source = \$this->{$strControlVarName}_GetItems();
 
 TMPL;
 			}
@@ -487,10 +493,11 @@ TMPL;
 		 * @return array
 		 */
 		public static function GetMetaParams() {
-			return array(
-				new QMetaParam ('MinLength', 'Number of characters typed before lookup starts', QType::Integer),
-				new QMetaParam ('AutoFocus', 'Should field auto select as typing occurs.', QType::Boolean)
-			);
+
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'MinLength', 'Number of characters typed before lookup starts', QType::Integer),
+				new QMetaParam (get_called_class(), 'AutoFocus', 'Should field auto select as typing occurs.', QType::Boolean)
+			));
 		}
 
 

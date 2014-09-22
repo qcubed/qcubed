@@ -102,6 +102,14 @@ TMPL;
 
 TMPL;
 			}
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+			$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
+
+TMPL;
+			}
+
+
 			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);

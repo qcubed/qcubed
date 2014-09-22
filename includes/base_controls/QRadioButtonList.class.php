@@ -381,26 +381,26 @@
 		 * @return array
 		 */
 		public static function GetMetaParams() {
-			return array(
-				new QMetaParam ('TextAlign', '', QType::ArrayType,
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'TextAlign', '', QType::ArrayType,
 					array (null=>'Default',
 						'QTextAlign::Left'=>'Left',
 						'QTextAlign::Right'=>'Right'
 					)),
-				new QMetaParam ('HtmlEntities', 'Set to false to have the browser interpret the labels as HTML', QType::Boolean),
-				new QMetaParam ('RepeatColumns', 'The number of columns of checkboxes to display', QType::Integer),
-				new QMetaParam ('RepeatDirection', 'Whether to repeat horizontally or vertically', QType::ArrayType,
+				new QMetaParam (get_called_class(), 'HtmlEntities', 'Set to false to have the browser interpret the labels as HTML', QType::Boolean),
+				new QMetaParam (get_called_class(), 'RepeatColumns', 'The number of columns of checkboxes to display', QType::Integer),
+				new QMetaParam (get_called_class(), 'RepeatDirection', 'Whether to repeat horizontally or vertically', QType::ArrayType,
 					array (null=>'Default',
 						'QRepeatDirection::Horizontal'=>'Horizontal',
 						'QRepeatDirection::Vertical'=>'Vertical'
 					)),
-				new QMetaParam ('ButtonMode', 'How to display the buttons', QType::ArrayType,
+				new QMetaParam (get_called_class(), 'ButtonMode', 'How to display the buttons', QType::ArrayType,
 					array (null=>'Default',
 						'QRadioButtonList::ButtonModeJq'=>'JQuery UI Buttons',
 						'QRadioButtonList::ButtonModeSet'=>'JQuery UI Buttonset'
 					)),
-				new QMetaParam ('MaxHeight', 'If set, will wrap it in a scrollable pane with the given max height', QType::Integer)
-			);
+				new QMetaParam (get_called_class(), 'MaxHeight', 'If set, will wrap it in a scrollable pane with the given max height', QType::Integer)
+			));
 		}
 
 	}

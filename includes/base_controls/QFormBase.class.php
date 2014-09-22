@@ -508,8 +508,10 @@
 
 		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
 			$objControl = $this->GetControl($strControlId);
-			$dlg = $this->GetControl ('qmetaeditdlg');
-			$dlg->EditControl ($objControl);
+			if ($objControl->LinkedNode) {
+				$dlg = $this->GetControl ('qmetaeditdlg');
+				$dlg->EditControl ($objControl);
+			}
 		}
 
 		/**

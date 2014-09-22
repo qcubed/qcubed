@@ -463,7 +463,7 @@
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
 			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
 
 			// Read the control type in case we are generating code for a subclass
@@ -471,11 +471,11 @@
 
 			$strRet = <<<TMPL
 		/**
-		 * Create and setup a $strControlType $strControlId
+		 * Create and setup a $strControlType $strControlVarName
 		 * @param string \$strControlId optional ControlId to use
 		 * @return $strControlType
 		 */
-		public function {$strControlId}_Create(\$strControlId = null) {
+		public function {$strControlVarName}_Create(\$strControlId = null) {
 
 TMPL;
 			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
@@ -489,28 +489,35 @@ TMPL;
 TMPL;
 			}
 			$strRet .= <<<TMPL
-			\$this->{$strControlId} = new $strControlType(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlId}->Name = QApplication::Translate('$strLabelName');
-			\$this->{$strControlId}->DateTime = \$this->{$strObjectName}->{$objColumn->PropertyName};
+			\$this->{$strControlVarName} = new $strControlType(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
+			\$this->{$strControlVarName}->DateTime = \$this->{$strObjectName}->{$objColumn->PropertyName};
 
 TMPL;
 			switch ($objColumn->DbType) {
 				case QDatabaseFieldType::DateTime:
-					$strRet .= "\t\t\t\$this->{$strControlId}->DateTimePickerType = QDateTimePickerType::DateTime;\n";
+					$strRet .= "\t\t\t\$this->{$strControlVarName}->DateTimePickerType = QDateTimePickerType::DateTime;\n";
 					break;
 
 				case QDatabaseFieldType::Time:
-					$strRet .= "\t\t\t\$this->{$strControlId}->DateTimePickerType = QDateTimePickerType::Time;\n";
+					$strRet .= "\t\t\t\$this->{$strControlVarName}->DateTimePickerType = QDateTimePickerType::Time;\n";
 					break;
 
 				default:
-					$strRet .= "\t\t\t\$this->{$strControlId}->DateTimePickerType = QDateTimePickerType::Date;\n";
+					$strRet .= "\t\t\t\$this->{$strControlVarName}->DateTimePickerType = QDateTimePickerType::Date;\n";
+			}
+
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
+
+TMPL;
 			}
 
 			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
 
 			$strRet .= <<<TMPL
-			return \$this->{$strControlId};
+			return \$this->{$strControlVarName};
 		}
 
 
