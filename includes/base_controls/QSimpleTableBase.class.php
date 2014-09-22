@@ -102,6 +102,20 @@
 		}
 
 		/**
+		 * Add a virtual attribute column.
+		 *
+		 * @param $strName
+		 * @param $strAttribute
+		 * @param $intColumnIndex
+		 * @return QVirtualAttributeColumn
+		 */
+		public function CreateVirtualAttributeColumn ($strName, $strAttribute, $intColumnIndex = -1) {
+			$objColumn = new QVirtualAttributeColumn($strName, $strAttribute);
+			$this->AddColumnAt($intColumnIndex, $objColumn);
+			return $objColumn;
+		}
+
+		/**
 		 * Add a column to the end of the column array.
 		 * @param QAbstractSimpleTableColumn $objColumn
 		 * @return QAbstractSimpleTableColumn
