@@ -108,6 +108,13 @@
 		protected static $ApplicationName;
 
 		/**
+		 * Preferred Render Method (from CodeGen Settings)
+		 *
+		 * @var string $PreferredRenderMethod
+		 */
+		public static $PreferredRenderMethod;
+
+		/**
 		 * Template Escape Begin (from CodeGen Settings)
 		 *
 		 * @var string $TemplateEscapeBegin
@@ -137,6 +144,7 @@
 			$strToReturn = sprintf('<codegen>%s', $strCrLf);
 			$strToReturn .= sprintf('	<name application="%s"/>%s', QCodeGen::$ApplicationName, $strCrLf);
 			$strToReturn .= sprintf('	<templateEscape begin="%s" end="%s"/>%s', QCodeGen::$TemplateEscapeBegin, QCodeGen::$TemplateEscapeEnd, $strCrLf);
+			$strToReturn .= sprintf('	<render preferredRenderMethod="%s"/>%s', QCodeGen::$PreferredRenderMethod, $strCrLf);
 			$strToReturn .= sprintf('	<dataSources>%s', $strCrLf);
 			foreach (QCodeGen::$CodeGenArray as $objCodeGen)
 				$strToReturn .= $strCrLf . $objCodeGen->GetConfigXml();
@@ -185,6 +193,9 @@
 
 			// Application Name
 			QCodeGen::$ApplicationName = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'name', 'application');
+
+			// Render Defaults
+			QCodeGen::$PreferredRenderMethod = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'render', 'preferredRenderMethod');
 
 			// Iterate Through DataSources
 			if (QCodeGen::$SettingsXml->dataSources->asXML())
