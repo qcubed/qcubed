@@ -9,7 +9,7 @@
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
-					case Parent:
+					case 'Parent':
 						$this->objParentObject = $mixValue;
 						break;
 
