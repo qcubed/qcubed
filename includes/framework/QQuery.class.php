@@ -367,6 +367,7 @@
 			}
 			// Complex N-Step Node
 			else {
+				$strProp = $objNodeArray[1]->strPropertyName;
 				$strNodeLabelArray[0] = '$_ITEM->' . $objNodeArray[1]->strPropertyName;
 				for ($intIndex = 2; $intIndex < count($objNodeArray); $intIndex++) {
 					$strNodeLabelArray[$intIndex - 1] = $strNodeLabelArray[$intIndex - 2] . '->' . $objNodeArray[$intIndex]->strPropertyName;
