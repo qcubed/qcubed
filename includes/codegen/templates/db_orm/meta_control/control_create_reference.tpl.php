@@ -71,7 +71,7 @@ if ($blnHasMethod) {
 			$this-><?php echo $strControlId  ?>->AutoFocus = $mustMatch;
 
 			if ($aryItems) {
-				$this->Source = $aryItems;
+				$this-><?php echo $strControlId  ?>->Source = $aryItems;
 			}
 			// Return the QAutocomplete
 			return $this-><?php echo $strControlId  ?>;

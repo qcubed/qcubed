@@ -3,7 +3,7 @@
 	/** @var QDatabaseCodeGen $objCodeGen */
 	global $_TEMPLATE_SETTINGS;
 	$_TEMPLATE_SETTINGS = array(
-		'OverwriteFlag' => false,
+		'OverwriteFlag' => true,
 		'DocrootFlag' => true,
 		'DirectorySuffix' => '',
 		'TargetDirectory' => __FORM_DRAFTS__,
