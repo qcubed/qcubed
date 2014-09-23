@@ -342,12 +342,6 @@
 		//////////////////
 		// Helpers for Orm-generated DataGrids
 		//////////////////
-		protected function GetDataGridHtmlHelper($strNodeLabelArray, $intIndex) {
-			if (($intIndex + 1) == count($strNodeLabelArray))
-				return $strNodeLabelArray[$intIndex];
-			else
-				return sprintf('(%s ? %s : null)', $strNodeLabelArray[$intIndex], $this->GetDataGridHtmlHelper($strNodeLabelArray, $intIndex + 1));
-		}
 		public function GetDataGridHtml() {
 			// Array-ify Node Hierarchy
 			$objNodeArray = array();
@@ -365,17 +359,36 @@
 				throw new Exception('Invalid QQNode to GetDataGridHtml on');
 
 			// Simple Two-Step Node
-			else if (count($objNodeArray) == 2)
+			else if (count($objNodeArray) == 2) {
 				$strToReturn = '$_ITEM->' . $objNodeArray[1]->strPropertyName;
-
+				if (class_exists($this->strClassName)) {
+					$strToReturn = sprintf('(%s) ? %s->__toString() : null;', $strToReturn, $strToReturn);
+				}
+			}
 			// Complex N-Step Node
 			else {
+				$strProp = $objNodeArray[1]->strPropertyName;
 				$strNodeLabelArray[0] = '$_ITEM->' . $objNodeArray[1]->strPropertyName;
 				for ($intIndex = 2; $intIndex < count($objNodeArray); $intIndex++) {
 					$strNodeLabelArray[$intIndex - 1] = $strNodeLabelArray[$intIndex - 2] . '->' . $objNodeArray[$intIndex]->strPropertyName;
 				}
 
-				$strToReturn = $this->GetDataGridHtmlHelper($strNodeLabelArray, 0);
+				$slice_count = count ($objNodeArray) - 2;
+				$blnIsClass = class_exists($this->strClassName);
+
+				if ($blnIsClass) {
+					$slice_count++;
+				}
+
+				$aTest = array_slice ($strNodeLabelArray, 0, $slice_count);
+				$strTest = implode (' && ', $aTest);
+				$strLastNode = $strNodeLabelArray[count($strNodeLabelArray) - 1];
+
+				if ($blnIsClass) {
+					return sprintf ('(%s) ? %s->__toString() : null', $strTest, $strLastNode);
+				} else {
+					$strToReturn = sprintf ('(%s) ? %s : null', $strTest, $strLastNode);
+				}
 			}
 
 			if($this->strType == QDatabaseFieldType::Time)
@@ -384,8 +397,6 @@
 			if ($this->strType == QDatabaseFieldType::Bit)
 				return sprintf('(null === %s)? "" : ((%s)? "%s" : "%s")', $strToReturn, $strToReturn, QApplication::Translate('True'), QApplication::Translate('False'));
 
-			if (class_exists($this->strClassName))
-				return sprintf('(%s) ? %s->__toString() : null;', $strToReturn, $strToReturn);
 
 			return $strToReturn;
 		}

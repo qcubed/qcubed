@@ -294,6 +294,22 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		//TODO: Conditional Array Expansion, requires API change
 		
 	}
+
+	public function testDataGridHtml() {
+		$objMilestone = Milestone::QuerySingle(
+			QQ::Equal (QQN::Milestone()->Id, 1),
+			QQ::Clause(
+				QQ::Expand(QQN::Milestone()->Project->ManagerPerson)
+			)
+		);
+
+		$_ITEM =$objMilestone;
+		$node = QQN::Milestone()->Project->ManagerPerson;
+
+		$html = $node->GetDataGridHtml();
+		$val = eval(sprintf('return %s;', $html));
+		$this->assertEqual ($val, "Person Object 7");
+	}
 	
 }
 ?>
