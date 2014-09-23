@@ -84,7 +84,8 @@
 	$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
 	$varType = (is_a($objAssociatedTable, 'QTypeTable') ? 'integer' : $objReference->VariableType);
 ?>
-				case '_<?php echo $objReference->ObjectDescription ?>':
+				case '<?php echo $objReference->ObjectDescription ?>':
+				case '_<?php echo $objReference->ObjectDescription ?>': // for backwards compatibility
 					/**
 					 * Gets the value for the private <?php echo $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
 					 * if set due to an expansion on the <?php echo $objReference->Table ?> association table
@@ -93,7 +94,8 @@
 					 */
 					return $this-><?php echo $varPrefix . $objReference->ObjectDescription ?>;
 
-				case '_<?php echo $objReference->ObjectDescription ?>Array':
+				case '<?php echo $objReference->ObjectDescription ?>Array':
+				case '_<?php echo $objReference->ObjectDescription ?>Array': // for backwards compatibility
 					/**
 					 * Gets the value for the private <?php echo $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
 					 * if set due to an ExpandAsArray on the <?php echo $objReference->Table ?> association table
@@ -103,6 +105,7 @@
 
 
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
+				case '<?php echo $objReference->ObjectDescription ?>':
 				case '_<?php echo $objReference->ObjectDescription ?>':
 					/**
 					 * Gets the value for the private _obj<?php echo $objReference->ObjectDescription ?> (Read-Only)
@@ -112,6 +115,7 @@
 					 */
 					return $this->_obj<?php echo $objReference->ObjectDescription ?>;
 
+				case '<?php echo $objReference->ObjectDescription ?>Array':
 				case '_<?php echo $objReference->ObjectDescription ?>Array':
 					/**
 					 * Gets the value for the private _obj<?php echo $objReference->ObjectDescription ?>Array (Read-Only)

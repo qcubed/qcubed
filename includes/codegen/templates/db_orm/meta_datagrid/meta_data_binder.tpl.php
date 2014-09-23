@@ -18,7 +18,7 @@
 
 			// Remember!  We need to first set the TotalItemCount, which will affect the calcuation of LimitClause below
 			if ($this->Paginator) {
-				$this->TotalItemCount = <?php echo $objTable->ClassName  ?>::QueryCount($objConditions);
+				$this->TotalItemCount = <?php echo $objTable->ClassName  ?>::QueryCount($objConditions, $objClauses);
 			}
 
 			// If a column is selected to be sorted, and if that column has a OrderByClause set on it, then let's add
