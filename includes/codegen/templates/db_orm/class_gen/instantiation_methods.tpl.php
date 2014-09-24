@@ -27,12 +27,12 @@
 		
 		public static function ExpandArray ($objDbRow, $strAliasPrefix, $objNode, $objPreviousItemArray, $strColumnAliasArray) {
 			if (!$objNode->ChildNodeArray) {
-				return false;
+				return null;
 			}
 			
 			$strAlias = $strAliasPrefix . '<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>';
 			$strColumnAlias = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			$blnExpanded = false;
+			$blnExpanded = null;
 			
 			foreach ($objPreviousItemArray as $objPreviousItem) {
 				if ($objPreviousItem-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?> != $objDbRow->GetColumn($strColumnAlias, '<?php echo $objTable->PrimaryKeyColumnArray[0]->DbType  ?>')) {
@@ -42,7 +42,6 @@
 				foreach ($objNode->ChildNodeArray as $objChildNode) {	
 					$strPropName = $objChildNode->_PropertyName;
 					$strClassName = $objChildNode->_ClassName;
-					$blnExpanded = false;
 					$strLongAlias = $objChildNode->ExtendedAlias();
 					$blnExpandAsArray = false;
 					
@@ -76,7 +75,7 @@
 							$objPreviousChildItems = $objPreviousItem->$strVarName;
 							$nextAlias = $objChildNode->ExtendedAlias() . '__';
 							
-							$objChildItem = call_user_func(array ($strClassName, 'InstantiateDbRow'), $objDbRow, $nextAlias, $objChildNode, $objPreviousChildItems, $strColumnAliasArray);
+							$objChildItem = call_user_func(array ($strClassName, 'InstantiateDbRow'), $objDbRow, $nextAlias, $objChildNode, $objPreviousChildItems, $strColumnAliasArray, true);
 							if ($objChildItem) {
 								$objPreviousItem->{$strVarName}[] = $objChildItem;
 								$blnExpanded = true;
@@ -92,10 +91,10 @@
 						}
 						$objPreviousChildItems = array($objPreviousItem->$strVarName);
 						$blnResult = call_user_func(array ($strClassName, 'ExpandArray'), $objDbRow, $strLongAlias . '__', $objChildNode, $objPreviousChildItems, $strColumnAliasArray);
-		
+
 						if ($blnResult) {
 							$blnExpanded = true;
-						}		
+						}
 					}
 				}	
 			}
@@ -112,14 +111,15 @@
 		 * @param QQBaseNode $objExpandAsArrayNode
 		 * @param QBaseClass $arrPreviousItem
 		 * @param string[] $strColumnAliasArray
+		 * @param boolean $blnCheckDuplicate Used by ExpandArray to indicate we should not create a new object if this is a duplicate of a previoius object
 		 * @return mixed Either a <?php echo $objTable->ClassName  ?>, or false to indicate the dbrow was used in an expansion, or null to indicate that this leaf is a duplicate.
 		*/
-		public static function InstantiateDbRow($objDbRow, $strAliasPrefix = null, $objExpandAsArrayNode = null, $objPreviousItemArray = null, $strColumnAliasArray = array()) {
+		public static function InstantiateDbRow($objDbRow, $strAliasPrefix = null, $objExpandAsArrayNode = null, $objPreviousItemArray = null, $strColumnAliasArray = array(), $blnCheckDuplicate = false) {
 			// If blank row, return null
 			if (!$objDbRow) {
 				return null;
 			}
-			
+
 <?php if ($objTable->PrimaryKeyColumnArray)  { // Optimize top level accesses?>
 			if (empty ($strAliasPrefix) && $objPreviousItemArray) {
 				$strColumnAlias = !empty($strColumnAliasArray['<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>']) ? $strColumnAliasArray['<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>'] : '<?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?>';
@@ -136,8 +136,11 @@
 					is_array($objPreviousItemArray) && 
 					count($objPreviousItemArray)) {
 
-				if (<?php echo $objTable->ClassName  ?>::ExpandArray ($objDbRow, $strAliasPrefix, $objExpandAsArrayNode, $objPreviousItemArray, $strColumnAliasArray)) {
+				$expansionStatus = <?php echo $objTable->ClassName  ?>::ExpandArray ($objDbRow, $strAliasPrefix, $objExpandAsArrayNode, $objPreviousItemArray, $strColumnAliasArray);
+				if ($expansionStatus) {
 					return false; // db row was used but no new object was created
+				} elseif ($expansionStatus === null) {
+					$blnCheckDuplicate = true;
 				}
 			}
 <?php 
@@ -157,14 +160,14 @@
 <?php } ?>
 <?php } ?>
 
-			if (isset($objPreviousItemArray) && is_array($objPreviousItemArray)) {
+			if (isset($objPreviousItemArray) && is_array($objPreviousItemArray) && $blnCheckDuplicate) {
 				foreach ($objPreviousItemArray as $objPreviousItem) {
 <?php foreach ($objTable->PrimaryKeyColumnArray as $col) { ?>
 					if ($objToReturn-><?php echo $col->PropertyName  ?> != $objPreviousItem-><?php echo $col->PropertyName  ?>) {
 						continue;
 					}
 <?php } ?>
-					// this is a duplicate leaf in a complex join
+					// this is a duplicate in a complex join
 					return null; // indicates no object created and the db row has not been used
 				}
 			}
