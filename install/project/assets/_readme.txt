@@ -1,0 +1,1 @@
+A convenient place to put utility files that need to be accessed directly by the browser.
