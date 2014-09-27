@@ -93,8 +93,10 @@
 	 * @property boolean $AddClasses If set to <code>false</code>, will prevent the <code>ui-draggable</code>
 	 * 		class from being added. This may be desired as a performance optimization
 	 * 		when calling <code>.draggable()</code> on hundreds of elements.
-	 * @property mixed $AppendTo Which element the draggable helper should be appended to while
-	 * 		dragging.<strong>Multiple types
+	 * @property mixed $AppendTo <p>Which element the draggable helper should be appended to while
+	 * 		dragging.</p> 				<strong>Note:</strong> The <code>appendTo</code> option
+	 * 		only works when the <a><code>helper</code></a> option is set to not use the
+	 * 		original element.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>jQuery</strong>: A jQuery object
 	 * 		containing the element to append the helper to.</li>
 	 * 		<li><strong>Element</strong>: The element to append the helper to.</li>
@@ -365,6 +367,16 @@
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod(false, "enable");
+		}
+		/**
+		 * <p>Retrieves the draggable's instance object. If the element does not have
+		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
+		 * on any element after the draggable plugin has loaded.</p><ul><li>This
+		 * method does not accept any arguments.</li></ul>
+		 */
+		public function Instance() {
+			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
 		 * Gets the value currently associated with the specified

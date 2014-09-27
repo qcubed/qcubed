@@ -81,6 +81,9 @@
 	 * @property mixed $Icons Icons to use for submenus, matching <a>an icon provided by the jQuery UI
 	 * 		CSS Framework</a>. 				<ul><li>submenu (string, default:
 	 * 		"ui-icon-carat-1-e")</li></ul>
+	 * @property string $Items <p>Selector for the elements that serve as the menu items.</p>
+	 * 						<strong>Note:</strong> The <code>items</code> option should not be
+	 * 		changed after initialization. 			<span>(version added: 1.11.0)</span>
 	 * @property string $Menus <p>Selector for the elements that serve as the menu container, including
 	 * 		sub-menus.</p> 				<strong>Note:</strong> The <code>menus</code> option
 	 * 		should not be changed after initialization. Existing submenus will not be
@@ -108,6 +111,8 @@
 		/** @var mixed */
 		protected $mixIcons = null;
 		/** @var string */
+		protected $strItems = null;
+		/** @var string */
 		protected $strMenus = null;
 		/** @var mixed */
 		protected $mixPosition = null;
@@ -127,6 +132,7 @@
 			$strJqOptions = '';
 			$strJqOptions .= $this->makeJsProperty('Disabled', 'disabled');
 			$strJqOptions .= $this->makeJsProperty('Icons', 'icons');
+			$strJqOptions .= $this->makeJsProperty('Items', 'items');
 			$strJqOptions .= $this->makeJsProperty('Menus', 'menus');
 			$strJqOptions .= $this->makeJsProperty('Position', 'position');
 			$strJqOptions .= $this->makeJsProperty('Role', 'role');
@@ -257,6 +263,16 @@
 			$this->CallJqUiMethod(false, "focus", $item, $event);
 		}
 		/**
+		 * <p>Retrieves the menu's instance object. If the element does not have an
+		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
+		 * other widget methods, <code>instance()</code> is safe to call on any
+		 * element after the menu plugin has loaded.</p><ul><li>This method does not
+		 * accept any arguments.</li></ul>
+		 */
+		public function Instance() {
+			$this->CallJqUiMethod(false, "instance");
+		}
+		/**
 		 * Returns a boolean value stating whether or not the currently active item is
 		 * the first item in the menu.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
@@ -369,6 +385,7 @@
 			switch ($strName) {
 				case 'Disabled': return $this->blnDisabled;
 				case 'Icons': return $this->mixIcons;
+				case 'Items': return $this->strItems;
 				case 'Menus': return $this->strMenus;
 				case 'Position': return $this->mixPosition;
 				case 'Role': return $this->strRole;
@@ -403,6 +420,18 @@
 						$this->CallJqUiMethod(true, 'option', 'icons', $mixValue);
 					}
 					break;
+
+				case 'Items':
+					try {
+						$this->strItems = QType::Cast($mixValue, QType::String);
+						if ($this->OnPage) {
+							$this->CallJqUiMethod(true, 'option', 'items', $this->strItems);
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				case 'Menus':
 					try {

@@ -164,8 +164,9 @@
 		const EventName = 'sortover';
 	}
 	/**
-	 * This event is triggered when a connected sortable list has received an item
-	 * 		from another list.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
+	 * This event is triggered when an item from a connected sortable list has
+	 * 		been dropped into another list. The latter is the event
+	 * 		target.<ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
 	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
@@ -185,9 +186,9 @@
 		const EventName = 'sortreceive';
 	}
 	/**
-	 * This event is triggered when a sortable item has been dragged out from the
-	 * 		list and into another.<ul><li><strong>event</strong> Type: <a>Event</a>
-	 * 		</li> <li><strong>ui</strong> Type: <a>Object</a> 
+	 * This event is triggered when a sortable item from the list has been dropped
+	 * 		into another. The former is the event target.<ul><li><strong>event</strong>
+	 * 		Type: <a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>helper</strong> Type: <a>jQuery</a> The jQuery object
 	 * 		representing the helper being sorted.</li> <li><strong>item</strong> Type:
 	 * 		<a>jQuery</a> The jQuery object representing the current dragged
@@ -197,10 +198,9 @@
 	 * 		current position of the helper represented as <code>{ top, left
 	 * 		}</code>.</li> <li><strong>originalPosition</strong> Type: <a>Object</a>
 	 * 		The original position of the element represented as <code>{ top, left
-	 * 		}</code>.</li> <li><strong>sender</strong> Type: <a>jQuery</a> The sortable
-	 * 		that the item comes from if moving from one sortable to another.</li>
-	 * 		<li><strong>placeholder</strong> Type: <a>jQuery</a> The jQuery object
-	 * 		representing the element being used as a placeholder.</li></ul></li></ul>
+	 * 		}</code>.</li> <li><strong>placeholder</strong> Type: <a>jQuery</a> The
+	 * 		jQuery object representing the element being used as a
+	 * 		placeholder.</li></ul></li></ul>
 	 */
 	class QSortable_RemoveEvent extends QJqUiEvent {
 		const EventName = 'sortremove';
@@ -551,6 +551,16 @@
 		 */
 		public function Enable() {
 			$this->CallJqUiMethod(false, "enable");
+		}
+		/**
+		 * <p>Retrieves the sortable's instance object. If the element does not have
+		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
+		 * on any element after the sortable plugin has loaded.</p><ul><li>This method
+		 * does not accept any arguments.</li></ul>
+		 */
+		public function Instance() {
+			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
 		 * Gets the value currently associated with the specified

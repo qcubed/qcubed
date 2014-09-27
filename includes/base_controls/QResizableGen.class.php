@@ -322,6 +322,16 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
+		 * <p>Retrieves the resizable's instance object. If the element does not have
+		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
+		 * on any element after the resizable plugin has loaded.</p><ul><li>This
+		 * method does not accept any arguments.</li></ul>
+		 */
+		public function Instance() {
+			$this->CallJqUiMethod(false, "instance");
+		}
+		/**
 		 * Gets the value currently associated with the specified
 		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
 		 * <a>String</a> The name of the option to get.</li></ul>

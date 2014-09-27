@@ -48,7 +48,7 @@ FUNC;
 			switch ($strName) {
 				case '_Value':	// Internal Only. Used by JS above. Do Not Call.
 					try {
-						$this->intValue = QType::Cast($mixValue, QType::Integer);
+						$this->Value = QType::Cast($mixValue, QType::Integer);
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
