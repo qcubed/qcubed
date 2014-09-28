@@ -15,6 +15,17 @@
 	 * Inherits from the php DateTime object, and the built-in methods are available for you to call
 	 * as well. In particular, note that the built-in format, and the qFormat routines here take different
 	 * specifiers. Feel free to use either.
+	 *
+	 * @property null|integer $Month
+	 * @property null|integer $Day
+	 * @property null|integer $Year
+	 * @property null|integer $Hour
+	 * @property null|integer $Minute
+	 * @property null|integer $Second
+	 * @property integer $Timestamp
+	 * @property-read string $Age A string representation of the age relative to now.
+	 * @property-read QDateTime $LastDayOfTheMonth A new QDateTime representing the last day of this date's month.
+	 * @property-read QDateTime $FirstDayOfTheMonth A new QDateTime representing the first day of this date's month.
 	 */
 	class QDateTime extends DateTime {
 		const Now = 'now';
@@ -810,16 +821,16 @@
 					
 					// It's in the future ('about 2 hours from now')
 					if ($dtsFromCurrent->IsPositive())
-						return $dtsFromCurrent->SimpleDisplay() . ' from now';
+						return $dtsFromCurrent->SimpleDisplay() . QApplication::Translate(' from now');
 
 					// It's in the past ('about 5 hours ago')
 					else if ($dtsFromCurrent->IsNegative()) {
 						$dtsFromCurrent->Seconds = abs($dtsFromCurrent->Seconds);
-						return $dtsFromCurrent->SimpleDisplay() . ' ago';
+						return $dtsFromCurrent->SimpleDisplay() . QApplication::Translate(' ago');
 
 					// It's current
 					} else
-						return 'right now';
+						return QApplication::Translate('right now');
 
 				case 'LastDayOfTheMonth':
 					return self::LastDayOfTheMonth($this->Month, $this->Year);
