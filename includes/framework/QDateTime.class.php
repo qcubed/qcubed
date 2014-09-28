@@ -54,7 +54,7 @@
 		public static $DefaultTimeFormat = QDateTime::FormatDisplayTime;
 
 		/**
-		 * The "Default" Display Format for Times
+		 * The "Default" Display Format for Dates with null times
 		 * @var string $DefaultTimeFormat
 		 */
 		public static $DefaultDateOnlyFormat = QDateTime::FormatDisplayDate;
@@ -243,7 +243,8 @@
 		}
 
 		/**
-		 * Formats a date as a string  using the default format type.
+		 * Formats a date as a string using the default format type.
+		 * @return string
 		 */
 		public function __toString() {
 			return $this->qFormat();
@@ -664,8 +665,8 @@
 		/**
 		 * Add a datespan or interval to the current date.
 		 *
-		 * @param DateInterval $dtsSpan
-		 * @return $this|DateTime
+		 * @param DateInterval|QDateTimeSpan $dtsSpan
+		 * @return QDateTime
 		 * @throws QCallerException
 		 */
 		public function Add($dtsSpan){
@@ -684,36 +685,79 @@
 			return $this;
 		}
 
+		/**
+		 * Add a number of seconds. Use negative value to go earlier in time.
+		 *
+		 * @param integer $intSeconds
+		 * @return QDateTime
+		 */
 		public function AddSeconds($intSeconds){
 			$this->Second += $intSeconds;
 			return $this;
 		}
 
+		/**
+		 * Add minutes to the time.
+		 *
+		 * @param integer $intMinutes
+		 * @return QDateTime
+		 */
 		public function AddMinutes($intMinutes){
 			$this->Minute += $intMinutes;
 			return $this;
 		}
 
+		/**
+		 * Add hours to the time.
+		 *
+		 * @param integer $intHours
+		 * @return QDateTime
+		 */
 		public function AddHours($intHours){
 			$this->Hour += $intHours;
 			return $this;
 		}
 
+		/**
+		 * Add days to the time.
+		 *
+		 * @param integer $intDays
+		 * @return QDateTIme
+		 */
 		public function AddDays($intDays){
 			$this->Day += $intDays;
 			return $this;
 		}
 
+		/**
+		 * Add months to the time.
+		 *
+		 * @param integer $intMonths
+		 * @return QDateTime
+		 */
 		public function AddMonths($intMonths){
 			$this->Month += $intMonths;
 			return $this;
 		}
 
+		/**
+		 * Add years to the time.
+		 *
+		 * @param integer $intYears
+		 * @return QDateTime
+		 */
 		public function AddYears($intYears){
 			$this->Year += $intYears;
 			return $this;
 		}
-		
+
+		/**
+		 * Modifies the date or time based on values found int a string.
+		 *
+		 * @see DateTime::modify()
+		 * @param string $mixValue
+		 * @return QDateTime
+		 */
 		public function Modify($mixValue) {
 			parent::modify($mixValue);
 			return $this;
