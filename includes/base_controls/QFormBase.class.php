@@ -1123,7 +1123,7 @@
 
 
 						// Run Form-Specific Validation (if any)
-						if ($mixCausesValidation) {
+						if ($mixCausesValidation && !($mixCausesValidation instanceof QDialog)) {
 							if (!$this->Form_Validate()) {
 								$blnValid = false;
 							}
