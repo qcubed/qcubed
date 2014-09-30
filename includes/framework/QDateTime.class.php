@@ -66,7 +66,7 @@
 
 		/**
 		 * The "Default" Display Format for Dates with null times
-		 * @var string $DefaultTimeFormat
+		 * @var string $DefaultDateOnlyFormat
 		 */
 		public static $DefaultDateOnlyFormat = QDateTime::FormatDisplayDate;
 
