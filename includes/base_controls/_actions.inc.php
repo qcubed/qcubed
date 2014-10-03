@@ -45,7 +45,7 @@
 				if (strpos ($strScript, '__PARAM__')) {
 					// a script that uses an action parameter.
 					$strActionParam = $objAction->getActionParameter($objControl);
-					if (!$strActionParam) {
+					if ($strActionParam === null || $strActionParam === '') {
 						$strActionParam = "''"; // empty string to be inserted into javascript
 					}
 					if ($objAction->objEvent->Delay > 0) {
