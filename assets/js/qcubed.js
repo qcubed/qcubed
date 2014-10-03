@@ -179,13 +179,15 @@ qcubed = {
                 strControlId = $element.attr("id");
 
                 // RadioButtonList or CheckBoxList
-                if (strControlId.indexOf('_') >= 0) {
-                    if (strControlId.indexOf('_0') >= 0) {
-                        strToReturn += " " + strControlId.substring(0, strControlId.length - 2);
+                if (strControlId) {
+                    if (strControlId.indexOf('_') >= 0) {
+                        if (strControlId.indexOf('_0') >= 0) {
+                            strToReturn += " " + strControlId.substring(0, strControlId.length - 2);
+                        }
+                        // Standard Radio or Checkbox
+                    } else {
+                        strToReturn += " " + strControlId;
                     }
-                    // Standard Radio or Checkbox
-                } else {
-                    strToReturn += " " + strControlId;
                 }
             }
         });
