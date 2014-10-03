@@ -268,7 +268,7 @@
 		protected $strSerializedTZ;
 		public function __sleep() {
 			$tz = $this->getTimezone();
-			if ($tz && strpos ($tz->getName(), '/') !== false) {
+			if ($tz && in_array ($tz->getName(), timezone_identifiers_list())) {
 				// valid relative timezone name found
 				$this->strSerializedData = parent::format('Y-m-d H:i:s');
 				$this->strSerializedTZ = $tz->getName();
@@ -475,7 +475,7 @@
 				}
 				// normalize the timezones
 				$tz = $this->getTimezone();
-				if ($tz && strpos ($tz->getName(), '/') !== false) {
+				if ($tz && in_array ($tz->getName(), timezone_identifiers_list())) {
 					// php limits you to ID only timezones here, so make sure we have one of those
 					$mixValue->setTimezone ($tz);
 				}
