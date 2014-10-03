@@ -409,6 +409,50 @@
 		}
 
 		/**
+		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
+		 * This is called during the codegen process.
+		 *
+		 * This particular version creates code to manipulate a many to many reference to a type table.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaCreate_ManyManyType(QCodeGen $objCodeGen, QTable $objTable, QManyToManyReference $objManyToManyReference) {
+			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strControlVarName = $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference);
+			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
+			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+
+			// Read the control type in case we are generating code for a similar class
+			$strControlType = get_class();
+
+			$strRet=<<<TMPL
+
+		/**
+		 * Create and setup {$strControlType} {$strControlVarName}
+		 * @param string \$strControlId optional ControlId to use
+		 * @return QListBox
+		 */
+
+		public function {$strControlVarName}_Create(\$strControlId = null) {
+
+TMPL;
+				$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+				if ($strControlIdOverride) {
+					$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+
+				}
+			}
+		}
+		/**
 		 * Returns a description of the options available to modify by the designer for the code generator.
 		 *
 		 * @return array

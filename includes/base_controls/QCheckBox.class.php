@@ -267,7 +267,7 @@
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
 			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
 
 			// Read the control type in case we are generating code for a subclass
@@ -275,11 +275,11 @@
 
 			$strRet = <<<TMPL
 		/**
-		 * Create and setup a $strControlType $strControlId
+		 * Create and setup a $strControlType $strControlVarName
 		 * @param string \$strControlId optional ControlId to use
 		 * @return $strControlType
 		 */
-		public function {$strControlId}_Create(\$strControlId = null) {
+		public function {$strControlVarName}_Create(\$strControlId = null) {
 
 TMPL;
 			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
@@ -293,22 +293,22 @@ TMPL;
 TMPL;
 			}
 			$strRet .= <<<TMPL
-			\$this->{$strControlId} = new $strControlType(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlId}->Name = QApplication::Translate('$strLabelName');
-			\$this->{$strControlId}->Checked = \$this->{$strObjectName}->{$objColumn->PropertyName};
+			\$this->{$strControlVarName} = new $strControlType(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
+			\$this->{$strControlVarName}->Checked = \$this->{$strObjectName}->{$objColumn->PropertyName};
 
 TMPL;
 
 			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
 				$strRet .= <<<TMPL
-			\$this->{$strControlId}->PreferredRenderMethod = '$strMethod';
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
 
 TMPL;
 			}
-			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+			$strRet .= static::Codegen_MetaCreateOptions ($objColumn, $strControlVarName);
 
 			$strRet .= <<<TMPL
-			return \$this->{$strControlId};
+			return \$this->{$strControlVarName};
 		}
 
 

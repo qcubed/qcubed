@@ -2292,19 +2292,17 @@ TMPL;
 			return $strRet;
 		}
 
-		public static function Codegen_MetaCreateOptions (QColumn $objColumn) {
+		public static function Codegen_MetaCreateOptions (QColumn $objColumn, $strControlVarName) {
 			$strRet = '';
-			$strPropName = ($objColumn->Reference) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
-			$strPropName2 = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
-			$strControlVarName = static::Codegen_VarName($strPropName);
+			$strPropName = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strClass = $objColumn->OwnerTable->ClassName;
 
-			if (defined('__DESIGN_MODE__')) {
+			//if (defined('__DESIGN_MODE__')) {
 				$strRet .= <<<TMPL
-			\$this->{$strControlVarName}->LinkedNode = QQN::{$strClass}()->{$strPropName2};
+			\$this->{$strControlVarName}->LinkedNode = QQN::{$strClass}()->{$strPropName};
 
 TMPL;
-			}
+			//}
 
 			if (($options = $objColumn->Options) &&
 				isset ($options['Overrides'])) {

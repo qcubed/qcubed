@@ -11,6 +11,8 @@
 				$this-><?php echo $strControlId  ?>->AddItem(new QListItem($strValue, $intId));
 			$this-><?php echo $strControlId  ?>->SelectedValues = array_keys($this-><?php echo $strObjectName?>->Get<?php echo $objManyToManyReference->ObjectDescription?>Array());
 
+			<?php // echo QControl::Codegen_MetaCreateOptions ($objColumn, $strControlId)  Need to fix this to not require an objColumn?>
+
 			return $this-><?php echo $strControlId  ?>;
 		}
 

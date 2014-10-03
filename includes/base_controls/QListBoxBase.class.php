@@ -403,7 +403,7 @@ TMPL;
 
 			$strRet .= static::Codegen_MetaRefresh ($objCodeGen, $objTable, $objColumn, true);
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+			$strRet .= static::Codegen_MetaCreateOptions ($objColumn, $strControlVarName);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};

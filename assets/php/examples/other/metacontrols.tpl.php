@@ -39,8 +39,9 @@
 
 <div id="demoZone">
 	<p>Click on any label to edit:</p>
-	<?php $this->lblFirstName->RenderWithName(); ?><?php $this->txtFirstName->RenderWithName(); ?>
-	<?php $this->lblLastName->RenderWithName(); ?><?php $this->txtLastName->RenderWithName(); ?>
+	<?php $this->txtFirstName->RenderWithName(); ?>
+	<?php $this->txtLastName->RenderWithName(); ?>
+	<?php $this->lstPersonTypes->RenderWithName(); ?>
 
 	<p>
 		<?php $this->btnSave->Render(); ?>
