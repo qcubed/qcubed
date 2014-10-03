@@ -41,13 +41,37 @@
 					$strJqUiProperty = $objAction->objEvent->JqProperty;
 				}
 
-				if ($objAction->objEvent->Delay > 0) {
-					$strCode = sprintf(" qcubed.setTimeout('%s', '%s', %s);",
-						$objControl->ControlId,
-						addslashes($objAction->RenderScript($objControl)),
-						$objAction->objEvent->Delay);
-				} else {
-					$strCode = ' ' . $objAction->RenderScript($objControl);
+				$strScript = $objAction->RenderScript($objControl);
+				if (strpos ($strScript, '__PARAM__')) {
+					// a script that uses an action parameter.
+					$strActionParam = $objAction->getActionParameter($objControl);
+					if (!$strActionParam) {
+						$strActionParam = "''"; // empty string to be inserted into javascript
+					}
+					if ($objAction->objEvent->Delay > 0) {
+						// If the action parameter is javascript that returns a value related to 'this', we need to execute that
+						// script before the timeout to get the value of the parameter at call time, because after the timeout, 'this' will
+						// not be around.
+						$strCode = sprintf("  var p = %s; qcubed.setTimeout('%s', '%s'.replace ('__PARAM__', '\\'' + p + '\\''), %s); ",
+							$strActionParam,
+							$objControl->ControlId,
+							addslashes($strScript),
+							$objAction->objEvent->Delay);
+
+					} else {
+						// Safe to include the action parameter javascript as part of the call.
+						$strScript = str_replace ('__PARAM__', $strActionParam, $strScript);
+						$strCode = ' ' . $strScript;
+					}
+				} else { // no action parameter
+					if ($objAction->objEvent->Delay > 0) {
+							$strCode = sprintf(" qcubed.setTimeout('%s', '%s', %s);",
+								$objControl->ControlId,
+								addslashes($strScript),
+								$objAction->objEvent->Delay);
+					} else {
+						$strCode = ' ' . $strScript;
+					}
 				}
 
 				// Add Condition (if applicable)
@@ -183,9 +207,16 @@
 			return "'" . addslashes($objActionParameter) . "'";
 		}
 
+		/**
+		 * Render the script, returning the javascript to post the ajax command.
+		 * __PARAM__ will be substituted with the action parameter when the script is executed.
+		 *
+		 * @param QControl $objControl
+		 * @return string
+		 */
 		public function RenderScript(QControl $objControl) {
-			return sprintf("qc.pB('%s', '%s', '%s', %s);",
-				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), $this->getActionParameter($objControl));
+			return sprintf("qc.pB('%s', '%s', '%s', __PARAM__);",
+				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent));
 		}
 	}
 
@@ -308,8 +339,8 @@
 				$strWaitIconControlId = $this->objWaitIconControl->ControlId;
 			}
 
-			return sprintf("qc.pA('%s', '%s', '%s#%s', %s, '%s');",
-				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), $this->strId, $this->getActionParameter($objControl), $strWaitIconControlId);
+			return sprintf("qc.pA('%s', '%s', '%s#%s', __PARAM__, '%s');",
+				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), $this->strId, $strWaitIconControlId);
 		}
 	}
 
