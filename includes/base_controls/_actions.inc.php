@@ -42,9 +42,9 @@
 				}
 
 				if ($objAction->objEvent->Delay > 0) {
-					$strCode = sprintf(" qcubed.setTimeout('%s', '%s', %s);",
+					$strCode = sprintf(" qcubed.setTimeout('%s', \$j.proxy(function(){%s},this), %s);",
 						$objControl->ControlId,
-						addslashes($objAction->RenderScript($objControl)),
+						$objAction->RenderScript($objControl),
 						$objAction->objEvent->Delay);
 				} else {
 					$strCode = ' ' . $objAction->RenderScript($objControl);
