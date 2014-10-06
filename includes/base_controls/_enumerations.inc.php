@@ -75,17 +75,25 @@
 	}
 
 	/**
-	 * The type of textboxes you can create.
+	 * The type of textboxes you can create. Most correspond to the input "type" attribute.
 	 */
 	abstract class QTextMode {
 		/** Single line text inputs INPUT type="text" boxes */
-		const SingleLine = 'SingleLine';
+		const SingleLine = 'text';
 		/** Textareas */
 		const MultiLine = 'MultiLine';
 		/** Single line password inputs INPUT type="password" boxes */
-		const Password = 'Password';
+		const Password = 'password';
 		/** HTML5 Search box */
-		const Search = 'Search';	// HTML5
+		const Search = 'search';
+		/** HTML5 Number box */
+		const Number = 'number';
+		/** HTML5 email box.  */
+		const Email = 'email';
+		/** HTML5 telephone box.  */
+		const Tel = 'tel';
+		/** HTML5 url box.  */
+		const Url = 'url';
 	}
 
 	abstract class QHorizontalAlign {
