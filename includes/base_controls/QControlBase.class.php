@@ -367,6 +367,19 @@
 		}
 
 		/**
+		 * Used by the QForm engine to call the method in the control, allowing the method to be a protected method.
+		 *
+		 * @param QControl $objControl
+		 * @param $strMethodName
+		 * @param $strFormId
+		 * @param $strId
+		 * @param $strParameter
+		 */
+		public static function CallActionMethod(QControl $objControl, $strMethodName, $strFormId, $strId, $strParameter) {
+			$objControl->$strMethodName($strFormId, $strId, $strParameter);
+		}
+
+		/**
 		 * Adds a control as a child of this control.
 		 *
 		 * @param QControl|QControlBase $objControl the control to add

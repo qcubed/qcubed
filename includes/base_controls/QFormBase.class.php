@@ -993,7 +993,7 @@
 				$strMethodName = substr($strMethodName, $intPosition + 1);
 
 				$objControl = $this->objControlArray[$strControlName];
-				$objControl->$strMethodName($this->strFormId, $strId, $strParameter);
+				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strId, $strParameter);
 			} else
 				$this->$strMethodName($this->strFormId, $strId, $strParameter);
 		}
