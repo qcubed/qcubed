@@ -1362,7 +1362,7 @@
 
 		/**
 		 * Returns true if the control should be redrawn.
-		 * @return bool
+		 * @return boolean
 		 */
 		protected function IsModified() {
 			return ($this->blnModified ||

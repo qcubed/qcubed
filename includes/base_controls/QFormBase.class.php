@@ -291,6 +291,22 @@
 		}
 
 		/**
+		 * Helper function for below GetModifiedControls
+		 * @param $objControl
+		 * @return boolean
+		 */
+		protected static function IsControlModified ($objControl) {
+			return $objControl->IsModified();
+		}
+		/**
+		 * Return only the controls that have been modified
+		 */
+		public function GetModifiedControls() {
+			$ret = array_filter ($this->objControlArray, 'QForm::IsControlModified');
+			return $ret;
+		}
+
+		/**
 		 * This method initializes the actual layout of the form
 		 * It runs in all cases including initial form (the time when Form_Create is run) as well as on
 		 * trigger actions (QServerAction, QAjaxAction, QServerControlAction and QAjaxControlAction)
@@ -396,6 +412,7 @@
 				}
 
 				// Iterate through all the controls
+/*
 				foreach ($objClass->objControlArray as $objControl) {
 					// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
 					if (($objControl->Visible) &&
@@ -409,7 +426,27 @@
 					// in ALL controls
 					$objControl->ResetFlags();
 					$objControl->ValidationReset();
+				}*/
+
+				foreach ($_POST as $key=>$val) {
+					if ($objControl = $objClass->GetControl($key)) {
+						// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
+						if (($objControl->Visible) &&
+							(($objClass->strCallType == QCallType::Ajax) || ($objControl->Enabled)) &&
+							($objControl->RenderMethod)) {
+							// Call each control's ParsePostData()
+							$objControl->ParsePostData();
+						}
+
+						// Reset the modified/rendered flags and the validation
+						// in ALL controls
+						$objControl->ResetFlags();
+						$objControl->ValidationReset();
+
+					}
 				}
+
+
 
 				// Trigger Run Event (if applicable)
 				$objClass->Form_Run();
@@ -565,7 +602,7 @@
 			$strToReturn .= '<controls>';
 
 			// Include each control (if applicable) that has been changed/modified
-			foreach ($this->GetAllControls() as $objControl) {
+			foreach ($this->GetModifiedControls() as $objControl) {
 				if (!$objControl->ParentControl) {
 					$strToReturn .= $this->RenderAjaxHelper($objControl);
 				}
@@ -576,7 +613,7 @@
 			$strStyleSheetToAddArray = array();
 			$strFormAttributeToModifyArray = array();
 
-			foreach ($this->GetAllControls() as $objControl) {
+			foreach ($this->GetModifiedControls() as $objControl) {
 				// Include any JavaScripts?  The control would have a
 				// comma-delimited list of javascript files to include (if applicable)
 				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts))
@@ -623,6 +660,7 @@
                 if ($strJavaScript = trim($strJavaScript)) {
                     $strCommands .= $strJavaScript . ';';
                 }
+				$objControl->ResetFlags();
             }
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strRender = $objGrouping->Render();
@@ -779,10 +817,12 @@
 		 * @return null|QControl
 		 */
 		public function GetControl($strControlId) {
-			if (array_key_exists($strControlId, $this->objControlArray))
+			if (isset($this->objControlArray[$strControlId])) {
 				return $this->objControlArray[$strControlId];
-			else
+			}
+			else {
 				return null;
+			}
 		}
 
 		/**
@@ -1641,6 +1681,8 @@
 			$strEndScript = sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) . $strEndScript;
 
+			$strEndScript .= sprintf('qc.initForm("%s"); ', $this->strFormId);
+
 			// Create Final EndScript Script
 			$strEndScript = sprintf('<script type="text/javascript">$j(document).ready(function() { %s; });</script>', $strEndScript);
 
@@ -1653,7 +1695,6 @@
 
 			// Render HTML
 			$strToReturn .= "\r\n<div style=\"display: none;\">\r\n\t";
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormState" id="Qform__FormState" value="%s" />', QForm::Serialize($objForm));
 
 			$strToReturn .= "\r\n\t";
 			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId);
@@ -1666,11 +1707,15 @@
 			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormUpdates" id="Qform__FormUpdates" value="" />');
 			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCheckableControls" id="Qform__FormCheckableControls" value="" />');
 
-			foreach ($this->GetAllControls() as $objControl)
-				if ($objControl->Rendered)
+			foreach ($this->GetAllControls() as $objControl) {
+				if ($objControl->Rendered) {
 					$strToReturn .= $objControl->GetEndHtml();
+				}
+				$objControl->ResetFlags(); // Make sure controls are serialized in a reset state
+			}
 
-            $strToReturn .= "\n</form>";
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormState" id="Qform__FormState" value="%s" />', QForm::Serialize($objForm));
+			$strToReturn .= "\n</form>";
 
 			$strToReturn .= $strEndScript;
 

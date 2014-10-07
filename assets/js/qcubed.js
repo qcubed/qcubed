@@ -110,6 +110,24 @@ qcubed = {
         }
         qcubed.controlModifications[strControlId][strProperty] = strNewValue;
     },
+    formObjChanged: function (event) {
+        var ctl = event.target;
+        var id = $j(ctl).attr('id');
+        if (id) {
+            qcubed.formObjsModified[id] = true;
+        }
+    },
+    /**
+     * Initialize form related scripts
+     * @param strFormId
+     */
+    initForm: function (strFormId) {
+        $j('#' + strFormId).on ('input', 'input,textarea', this.formObjChanged);
+        $j('#' + strFormId).on ('change', 'select,keygen', this.formObjChanged);
+
+        // for ie
+        $j('#' + strFormId).on ('keydown', 'input,textarea', this.formObjChanged);
+    },
 
     /**
      * @param {string} strForm The QForm Id, gets overwritten.
@@ -229,47 +247,54 @@ qcubed = {
                 strTestName,
                 bracketIndex,
                 strPostValue = $element.val();
+            if (qcubed.ajaxError // Ajax error would mean that formObjsModified is invalid. We need to submit everything.
+                    || qcubed.formObjsModified[strControlId]
+                   /*|| strControlId.substr(0, 6) == 'Qform_'*/
+                || strType == 'hidden') {
+                switch (strType) {
+                    case "checkbox":
+                    case "radio":
+                        if ($element.is(":checked") && strControlName) {
+                            bracketIndex = strControlName.indexOf('[');
 
-            switch (strType) {
-                case "checkbox":
-                case "radio":
-                    if ($element.is(":checked") && strControlName) {
-                        bracketIndex = strControlName.indexOf('[');
+                            if (bracketIndex > 0) {
+                                strTestName = strControlName.substring(0, bracketIndex) + '_';
+                            } else {
+                                strTestName = strControlName + "_";
+                            }
 
-                        if (bracketIndex > 0) {
-                            strTestName = strControlName.substring(0, bracketIndex) + '_';
-                        } else {
-                            strTestName = strControlName + "_";
+                            if (strControlId.substring(0, strTestName.length) === strTestName) {
+                                // CheckboxList or RadioButtonList
+                                strPostData += "&" + strControlName + "=" + strControlId.substring(strTestName.length);
+                            } else {
+                                strPostData += "&" + strControlId + "=" + strPostValue;
+                            }
                         }
+                        break;
 
-                        if (strControlId.substring(0, strTestName.length) === strTestName) {
-                            // CheckboxList or RadioButtonList
-                            strPostData += "&" + strControlName + "=" + strControlId.substring(strTestName.length);
-                        } else {
-                            strPostData += "&" + strControlId + "=" + strPostValue;
+                    case "select-multiple":
+                        $element.find(':selected').each(function() {
+                            strPostData += "&" + strControlName + "=" + $j(this).val();
+                        });
+                        break;
+
+                    default:
+                        strPostData += "&" + strControlId + "=";
+
+                        // For Internationalization -- we must escape the element's value properly
+                        if (strPostValue) {
+                            strPostValue = strPostValue.replace(/\%/g, "%25");
+                            strPostValue = strPostValue.replace(/&/g, encodeURIComponent('&'));
+                            strPostValue = strPostValue.replace(/\+/g, "%2B");
                         }
-                    }
-                    break;
-
-                case "select-multiple":
-                    $element.find(':selected').each(function() {
-                        strPostData += "&" + strControlName + "=" + $j(this).val();
-                    });
-                    break;
-
-                default:
-                    strPostData += "&" + strControlId + "=";
-
-                    // For Internationalization -- we must escape the element's value properly
-                    if (strPostValue) {
-                        strPostValue = strPostValue.replace(/\%/g, "%25");
-                        strPostValue = strPostValue.replace(/&/g, escape('&'));
-                        strPostValue = strPostValue.replace(/\+/g, "%2B");
-                    }
-                    strPostData += strPostValue;
-                    break;
+                        strPostData += strPostValue;
+                        break;
+                }
             }
         });
+        qcubed.ajaxError = false;
+        qcubed.formObjsModified = {};
+
         return strPostData;
     },
 
@@ -319,6 +344,7 @@ qcubed = {
                     objErrorWindow,
                     $dialog;
 
+                qcubed.ajaxError = true;
                 if (XMLHttpRequest.status !== 0 || result.length > 0) {
                     if (result.substr(0, 6) === '<html>') {
                         alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
@@ -558,6 +584,8 @@ qcubed.getWrapper = function(mixControl) {
 
 qcubed.controlModifications = {};
 qcubed.javascriptStyleToQcodo = {};
+qcubed.formObjsModified = {};
+qcubed.ajaxError = false;
 qcubed.javascriptStyleToQcodo.backgroundColor = "BackColor";
 qcubed.javascriptStyleToQcodo.borderColor = "BorderColor";
 qcubed.javascriptStyleToQcodo.borderStyle = "BorderStyle";
@@ -571,12 +599,13 @@ qcubed.javascriptWrapperStyleToQcodo.position = "Position";
 qcubed.javascriptWrapperStyleToQcodo.top = "Top";
 qcubed.javascriptWrapperStyleToQcodo.left = "Left";
 
+/*
 qcubed.recordControlModification = function(strControlId, strProperty, strNewValue) {
     if (!qcubed.controlModifications[strControlId]) {
         qcubed.controlModifications[strControlId] = {};
     }
     qcubed.controlModifications[strControlId][strProperty] = strNewValue;
-};
+};*/
 
 qcubed.registerControl = function(mixControl) {
     var objControl = qcubed.getControl(mixControl),
