@@ -802,6 +802,7 @@
 		 */
 		public function AddControl(QControl $objControl) {
 			$strControlId = $objControl->ControlId;
+			$objControl->MarkAsModified(); // make sure new controls get drawn
 			if (array_key_exists($strControlId, $this->objControlArray))
 				throw new QCallerException(sprintf('A control already exists in the form with the ID: %s', $strControlId));
 			if (array_key_exists($strControlId, $this->objGroupingArray))
