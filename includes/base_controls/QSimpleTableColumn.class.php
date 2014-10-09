@@ -684,8 +684,8 @@
 		 * @param string $strName name of the column
 		 * @param callback $objClosure a callable object. It should take a single argument, the item
 		 *   of the array. Do NOT pass an actual Closure object, as they are not serializable. However,
-		 *   you can pass a callable, like ($this, 'method'), or an object that has the __invoke method defined,
-		 *   as long as its serializable. You can also pass static methods as a string, as in "Class:method"
+		 *   you can pass a callable, like array($this, 'method'), or an object that has the __invoke method defined,
+		 *   as long as its serializable. You can also pass static methods as a string, as in "Class::method"
 		 * @param mixed $mixParams extra parameters to pass to the closure callback.
 		 * will be called with the row of the DataSource as that single argument.
 		 *
