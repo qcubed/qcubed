@@ -52,13 +52,25 @@
 			$this->prxDatagridSorting = new QControlProxy($this);
 		}
 
-		// This overriding function ensures that DataSource is set to null
-		// before serializing the object to the __formstate
-		// (Due to the potentially humungous size of some datasets, it is more efficient
-		// to requery than to serialize and put as a hidden form element)
-		public function __serialize() {
+		/**
+		 * Check the binder for a reference to the form.
+		 */
+		public function PreSerialize() {
+			// This overriding function ensures that DataSource is set to null
+			// before serializing the object to the __formstate
+			// (Due to the potentially humungous size of some datasets, it is more efficient
+			// to requery than to serialize and put as a hidden form element)
+
 			$this->objDataSource = null;
+			$this->objDataBindControl = QControl::PreSerializeHelper ($this->objDataBindControl);
+			parent::PreSerialize();
 		}
+
+		public function PostSerialize(QForm $objForm) {
+			parent::PostSerialize($objForm);
+			$this->objDataBindControl = QControl::PostSerializeHelper ($objForm, $this->objDataBindControl);
+		}
+
 
 		// PaginatedControls should (in general) never have anything that ever needs to be validated -- so this always
 		// returns true.

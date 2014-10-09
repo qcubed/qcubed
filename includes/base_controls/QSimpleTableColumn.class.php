@@ -211,7 +211,21 @@
 
 			return $aParams;		
 		}
-		
+
+		/**
+		 * Prepare to serialize references to the form.
+		 */
+		public function PreSerialize() {
+		}
+
+		/**
+		 * The object has been unserialized, so fix up pointers to embedded objects.
+		 * @param QForm $objForm
+		 */
+		public function PostSerialize(QForm $objForm) {
+		}
+
+
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Name':
@@ -408,6 +422,23 @@
 		 * @param mixed $item
 		 */
 		abstract public function FetchCellObject($item);
+
+		/**
+		 * Fix up possible embedded reference to the form.
+		 */
+		public function PreSerialize() {
+			$this->objPostCallback = QControl::PreSerializeHelper($this->objPostCallback);
+			parent::PreSerialize();
+		}
+
+		/**
+		 * The object has been unserialized, so fix up pointers to embedded objects.
+		 * @param QForm $objForm
+		 */
+		public function PostSerialize(QForm $objForm) {
+			parent::PostSerialize($objForm);
+			$this->objPostCallback = QControl::PostSerializeHelper($objForm, $this->objPostCallback);
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -643,7 +674,7 @@
 	 * @property int|string $Index the index or key to use when accessing the arrays in the DataSource array
 	 *
 	 */
-	class QSimpleTableClosureColumn extends QAbstractSimpleTableDataColumn implements Serializable {
+	class QSimpleTableClosureColumn extends QAbstractSimpleTableDataColumn {
 		/** @var callback */
 		protected $objClosure;
 		/** @var array extra parameters passed to closure */
@@ -651,7 +682,10 @@
 
 		/**
 		 * @param string $strName name of the column
-		 * @param callback $objClosure a callable object (e.g. Closure). It should take a single argument, and it
+		 * @param callback $objClosure a callable object. It should take a single argument, the item
+		 *   of the array. Do NOT pass an actual Closure object, as they are not serializable. However,
+		 *   you can pass a callable, like ($this, 'method'), or an object that has the __invoke method defined,
+		 *   as long as its serializable. You can also pass static methods as a string, as in "Class:method"
 		 * @param mixed $mixParams extra parameters to pass to the closure callback.
 		 * will be called with the row of the DataSource as that single argument.
 		 *
@@ -675,72 +709,20 @@
 		}
 
 		/**
-		 * (PHP 5 &gt;= 5.1.0)<br/>
-		 * String representation of object
-		 * @link http://php.net/manual/en/serializable.serialize.php
-		 * @return string the string representation of the object or &null;
+		 * Fix up possible embedded reference to the the form.
 		 */
-		public function serialize() {
-			$vars = array(
-				$this->strName,
-				$this->strCssClass,
-				$this->strHeaderCssClass,
-				$this->blnHtmlEntities,
-				$this->objOrderByClause,
-				$this->objReverseOrderByClause);
-			// Closure is a feature of PHP 5.3
-			// unfortunately, as of PHP 5.3.6 Closure is not serializable
-			// this code can be removed when Closures become serializable in PHP
-			if (version_compare(PHP_VERSION, '5.3.0', '<') || (!$this->objClosure instanceof Closure)) {
-				$vars[] = $this->objClosure;
-				$vars[] = $this->mixParams;
-			}
-			return serialize($vars);
+		public function PreSerialize() {
+			$this->objClosure = QControl::PreSerializeHelper($this->objClosure);
+			parent::PreSerialize();
 		}
 
 		/**
-		 * (PHP 5 &gt;= 5.1.0)<br/>
-		 * Constructs the object
-		 * @link http://php.net/manual/en/serializable.unserialize.php
-		 * @param string $serialized <p>
-		 * The string representation of the object.
-		 * </p>
-		 * @throws RuntimeException
-		 * @return mixed the original value unserialized.
+		 * Restore serialized references.
+		 * @param QForm $objForm
 		 */
-		public function unserialize($serialized) {
-			$vars = unserialize($serialized);
-			$cnt = count($vars);
-			if ($cnt == 6) {
-				list($this->strName,
-						$this->strCssClass,
-						$this->strHeaderCssClass,
-						$this->blnHtmlEntities,
-						$this->objOrderByClause,
-						$this->objReverseOrderByClause
-						) = $vars;
-			} else if ($cnt == 7) {
-				list($this->strName,
-						$this->strCssClass,
-						$this->strHeaderCssClass,
-						$this->blnHtmlEntities,
-						$this->objOrderByClause,
-						$this->objReverseOrderByClause,
-						$this->objClosure
-						) = $vars;
-			} else if ($cnt == 8) {
-				list($this->strName,
-					$this->strCssClass,
-					$this->strHeaderCssClass,
-					$this->blnHtmlEntities,
-					$this->objOrderByClause,
-					$this->objReverseOrderByClause,
-					$this->objClosure,
-					$this->mixParams
-					) = $vars;
-			} else {
-				throw new RuntimeException("wrong number of variables when unserializing QSimpleTableClosureColumn");
-			}
+		public function PostSerialize(QForm $objForm) {
+			parent::PostSerialize($objForm);
+			$this->objClosure = QControl::PostSerializeHelper($objForm, $this->objClosure);
 		}
 
 		public function __get($strName) {
@@ -926,6 +908,25 @@
 		function IsChecked ($item) {
 			return false;
 		}
+
+		/**
+		 * Fix up possible embedded reference to the the form.
+		 */
+		public function PreSerialize() {
+			$this->checkParamCallback = QControl::PreSerializeHelper($this->checkParamCallback);
+			parent::PreSerialize();
+		}
+
+		/**
+		 * Restore embedded objects.
+		 * 
+		 * @param QForm $objForm
+		 */
+		public function PostSerialize(QForm $objForm) {
+			parent::PostSerialize($objForm);
+			$this->checkParamCallback = QControl::PostSerializeHelper($objForm, $this->checkParamCallback);
+		}
+
 	}
 	
 

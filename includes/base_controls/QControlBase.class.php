@@ -266,7 +266,7 @@
 				if (ctype_alnum($strControlId))
 					$this->strControlId = $strControlId;
 				else
-					throw new QCallerException('ControlIDs must be only alphanumeric chacters: ' . $strControlId);
+					throw new QCallerException('ControlIDs must be only alphanumeric characters: ' . $strControlId);
 			}
 			try {
 				$this->objForm->AddControl($this);
@@ -377,6 +377,77 @@
 		 */
 		public static function CallActionMethod(QControl $objControl, $strMethodName, $strFormId, $strId, $strParameter) {
 			$objControl->$strMethodName($strFormId, $strId, $strParameter);
+		}
+
+		/**
+		 * Prepare the control for serialization. All pointers to forms and form objects should be
+		 * converted to something that can be restored using PostSerialize().
+		 *
+		 * The main problem we are resolving is that the PHP serialization process will convert an internal reference
+		 * to the object being serialized into a copy of the object. After deserialization, you would have the form,
+		 * and then somewhere inside the form, a separate copy of the form.
+		 */
+		public function PreSerialize() {
+			$this->objForm = null;
+		}
+
+		/**
+		 * The object has been unserialized, so fix up pointers to embedded forms.
+		 * @param QForm $objForm
+		 */
+		public function PostSerialize(QForm $objForm) {
+			$this->objForm = $objForm;
+		}
+
+		/**
+		 * A helper function to fix up a 'callable', a formObj, or any other object that we would like to represent
+		 * in the serialized stream differently than the default. If a QControl, make sure this isn't the only
+		 * instance of the control in the stream, or have some other way to serialize the control.
+		 *
+		 * @param $callable
+		 * @return mixed
+		 */
+		public static function PreSerializeHelper($obj) {
+			if ($obj instanceof QForm) {
+				// assume its THE form
+				return '**QF;';
+			}
+			elseif ($obj instanceof QControl) {
+				return '**QC;' . $obj->strControlId;
+			}
+			elseif (is_array ($obj)) {
+				$ret = array();
+				foreach ($obj as $key=>$val) {
+					$ret[$key] = self::PreSerializeHelper($val);
+				}
+				return $ret;
+			}
+			return $obj;
+		}
+
+		/**
+		 * A helper function to restore something possibly serialized with PreSerializeHelper.
+		 *
+		 * @param $callable
+		 * @return mixed
+		 */
+
+		public static function PostSerializeHelper($objForm, $obj) {
+			if (is_array ($obj)) {
+				$ret = array();
+				foreach ($obj as $key=>$val) {
+					$ret[$key] = self::PostSerializeHelper($objForm, $val);
+				}
+				return $ret;
+			} elseif (is_string ($obj)) {
+				if (substr($obj, 0, 5) == '**QF;') {
+					return $objForm;
+				}
+				elseif (substr($obj, 0, 5) == '**QC;') {
+					return $objForm->GetControl(substr($obj, 5));
+				}
+			}
+			return $obj;
 		}
 
 		/**
