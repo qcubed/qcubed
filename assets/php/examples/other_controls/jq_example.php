@@ -205,9 +205,14 @@
 
 			// Datepicker
 			$this->Datepicker = new QDatepicker($this);
+			$this->Datepicker->AddAction (new QDatepicker_SelectEvent2(), new QAjaxAction('setDate'));
+			$this->Datepicker->ActionParameter = 'Datepicker';
 	
 			// DatepickerBox
 			$this->DatepickerBox = new QDatepickerBox($this);
+			$this->DatepickerBox->AddAction(new QChangeEvent(), new QAjaxAction('setDate'));
+			$this->DatepickerBox->ActionParameter = 'DatepickerBox';
+
 
 			// Dialog
 			$this->Dialog = new QDialog($this);
@@ -355,7 +360,13 @@
             $this->Dialog->Text = $strNewText;
         }
 
-    }
-
+		protected function setDate($strFormId, $strControlId, $strParameter) {
+			if ($strParameter == 'Datepicker') {
+				$this->DatepickerBox->DateTime = $this->Datepicker->DateTime;
+			} else {
+				$this->Datepicker->DateTime = $this->DatepickerBox->DateTime;
+			}
+		}
+	}
     ExampleForm::Run('ExampleForm');
 ?>

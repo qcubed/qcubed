@@ -34,34 +34,38 @@
 			// Check to see if this Control's Value was passed in via the POST data
 			if (array_key_exists($this->strControlId, $_POST)) {
 				parent::ParsePostData();
-				$this->dttDateTime = new QDateTime($this->strText);
+				$this->dttDateTime = new QDateTime($this->strText, null, QDateTime::DateOnlyType);
 				if ($this->dttDateTime->IsNull()) {
 					$this->dttDateTime = null;
 				}
 			}
 		}
 
+		/**
+		 * Validate the control.
+		 * @return bool
+		 */
 		public function Validate() {
 			if (!parent::Validate()) {
 				return false;
 			}
 
 			if ($this->strText != '') {
-				$dttDateTime = new QDateTime($this->strText);
+				$dttDateTime = new QDateTime($this->strText, null, QDateTime::DateOnlyType);
 				if ($dttDateTime->IsDateNull()) {
-					$this->strValidationError = QApplication::Translate("invalid date");
+					$this->strValidationError = QApplication::Translate("Invalid date");
 					return false;
 				}
 				if (!is_null($this->Minimum)) {
 					if ($dttDateTime->IsEarlierThan($this->Minimum)) {
-						$this->strValidationError = QApplication::Translate("date is earlier than minimum allowed");
+						$this->strValidationError = QApplication::Translate("Date is earlier than minimum allowed");
 						return false;
 					}
 				}
 
 				if (!is_null($this->Maximum)) {
 					if ($dttDateTime->IsLaterThan($this->Maximum)) {
-						$this->strValidationError = QApplication::Translate("date is later than maximum allowed");
+						$this->strValidationError = QApplication::Translate("Date is later than maximum allowed");
 						return false;
 					}
 				}
@@ -85,7 +89,7 @@
 				case 'DateFormat':
 					return $this->strDateTimeFormat;
 				case 'DateTime':
-					return $this->dttDateTime;
+					return $this->dttDateTime ? clone($this->dttDateTime) : null;
 
 				default:
 					try {
@@ -110,9 +114,8 @@
 								parent::__set($strName, $mixValue);
 								break;
 							}
-							$mixValue = new QDateTime($mixValue);
 						}
-						parent::__set('MaxDate', QType::Cast($mixValue, QType::DateTime));
+						parent::__set('MaxDate', new QDateTime ($mixValue, null, QDateTime::DateOnlyType));
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -127,9 +130,8 @@
 								parent::__set($strName, $mixValue);
 								break;
 							}
-							$mixValue = new QDateTime($mixValue);
 						}
-						parent::__set('MinDate', QType::Cast($mixValue, QType::DateTime));
+						parent::__set('MinDate', new QDateTime ($mixValue, null, QDateTime::DateOnlyType));
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -138,7 +140,7 @@
 
 				case 'DateTime':
 					try {
-						$this->dttDateTime = QType::Cast($mixValue, QType::DateTime);
+						$this->dttDateTime = new QDateTime($mixValue, null, QDateTime::DateOnlyType);
 						if ($this->dttDateTime && $this->dttDateTime->IsNull()) {
 							$this->dttDateTime = null;
 							$this->blnModified = true;
@@ -181,7 +183,7 @@
 					
 				case 'Text':
 					parent::__set($strName, $mixValue);
-					$this->dttDateTime = new QDateTime($this->strText);
+					$this->dttDateTime = new QDateTime($this->strText, null, QDateTime::DateOnlyType);
 					break;
 
 				default:
