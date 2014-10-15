@@ -307,11 +307,8 @@
 		 * @throws Exception
 		 */
 		public static function Run($strFormId, $strAlternateHtmlFile = null) {
-			// Ensure strFormId is a class
-			$objClass = new $strFormId();
-
 			// Ensure strFormId is a subclass of QForm
-			if (!($objClass instanceof QForm))
+			if (!(is_subclass_of($strFormId, 'QForm')))
 				throw new QCallerException('Object must be a subclass of QForm: ' . $strFormId);
 
 			// See if we can get a Form Class out of PostData
