@@ -2,21 +2,21 @@
 <?php $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
 
 
-		// Related Objects' Methods for <?php echo $objReverseReference->ObjectDescription  ?>
+		// Related Objects' Methods for <?= $objReverseReference->ObjectDescription ?>
 
 		//-------------------------------------------------------------------
 
 		/**
-		 * Gets all associated <?php echo $objReverseReference->ObjectDescriptionPlural  ?> as an array of <?php echo $objReverseReference->VariableType  ?> objects
+		 * Gets all associated <?= $objReverseReference->ObjectDescriptionPlural ?> as an array of <?= $objReverseReference->VariableType ?> objects
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
-		 * @return <?php echo $objReverseReference->VariableType  ?>[]
+		 * @return <?= $objReverseReference->VariableType ?>[]
 		*/
-		public function Get<?php echo $objReverseReference->ObjectDescription  ?>Array($objOptionalClauses = null) {
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
+		public function Get<?= $objReverseReference->ObjectDescription ?>Array($objOptionalClauses = null) {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
 				return array();
 
 			try {
-				return <?php echo $objReverseReference->VariableType  ?>::LoadArrayBy<?php echo $objReverseReferenceColumn->PropertyName  ?>(<?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>, $objOptionalClauses);
+				return <?= $objReverseReference->VariableType ?>::LoadArrayBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>, $objOptionalClauses);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -24,155 +24,155 @@
 		}
 
 		/**
-		 * Counts all associated <?php echo $objReverseReference->ObjectDescriptionPlural  ?>
+		 * Counts all associated <?= $objReverseReference->ObjectDescriptionPlural ?>
 
 		 * @return int
 		*/
-		public function Count<?php echo $objReverseReference->ObjectDescriptionPlural  ?>() {
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
+		public function Count<?= $objReverseReference->ObjectDescriptionPlural ?>() {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
 				return 0;
 
-			return <?php echo $objReverseReference->VariableType  ?>::CountBy<?php echo $objReverseReferenceColumn->PropertyName  ?>(<?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>);
+			return <?= $objReverseReference->VariableType ?>::CountBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>);
 		}
 
 		/**
-		 * Associates a <?php echo $objReverseReference->ObjectDescription  ?>
+		 * Associates a <?= $objReverseReference->ObjectDescription ?>
 
-		 * @param <?php echo $objReverseReference->VariableType  ?> $<?php echo $objReverseReference->VariableName  ?>
+		 * @param <?= $objReverseReference->VariableType ?> $<?= $objReverseReference->VariableName ?>
 
 		 * @return void
 		*/
-		public function Associate<?php echo $objReverseReference->ObjectDescription  ?>(<?php echo $objReverseReference->VariableType  ?> $<?php echo $objReverseReference->VariableName  ?>) {
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Unable to call Associate<?php echo $objReverseReference->ObjectDescription  ?> on this unsaved <?php echo $objTable->ClassName  ?>.');
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($' . $objReverseReference->VariableName . '->', '))', 'PropertyName', $objReverseReferenceTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Unable to call Associate<?php echo $objReverseReference->ObjectDescription  ?> on this <?php echo $objTable->ClassName  ?> with an unsaved <?php echo $objReverseReferenceTable->ClassName  ?>.');
+		public function Associate<?= $objReverseReference->ObjectDescription ?>(<?= $objReverseReference->VariableType ?> $<?= $objReverseReference->VariableName ?>) {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Associate<?= $objReverseReference->ObjectDescription ?> on this unsaved <?= $objTable->ClassName ?>.');
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($' . $objReverseReference->VariableName . '->', '))', 'PropertyName', $objReverseReferenceTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Associate<?= $objReverseReference->ObjectDescription ?> on this <?= $objTable->ClassName ?> with an unsaved <?= $objReverseReferenceTable->ClassName ?>.');
 
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			// Perform the SQL Query
 			$objDatabase->NonQuery('
 				UPDATE
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Table  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Table ?><?= $strEscapeIdentifierEnd ?>
 
 				SET
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?>) . '
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Column ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>) . '
 				WHERE
 <?php foreach ($objReverseReferenceTable->ColumnArray as $objColumn) { ?>
 <?php if ($objColumn->PrimaryKey) { ?>
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($<?php echo $objReverseReference->VariableName  ?>-><?php echo $objColumn->PropertyName  ?>) . ' AND
+					<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($<?= $objReverseReference->VariableName ?>-><?= $objColumn->PropertyName ?>) . ' AND
 <?php } ?><?php } ?><?php GO_BACK(5); ?>
 
 			');
 		}
 
 		/**
-		 * Unassociates a <?php echo $objReverseReference->ObjectDescription  ?>
+		 * Unassociates a <?= $objReverseReference->ObjectDescription ?>
 
-		 * @param <?php echo $objReverseReference->VariableType  ?> $<?php echo $objReverseReference->VariableName  ?>
+		 * @param <?= $objReverseReference->VariableType ?> $<?= $objReverseReference->VariableName ?>
 
 		 * @return void
 		*/
-		public function Unassociate<?php echo $objReverseReference->ObjectDescription  ?>(<?php echo $objReverseReference->VariableType  ?> $<?php echo $objReverseReference->VariableName  ?>) {
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?php echo $objReverseReference->ObjectDescription  ?> on this unsaved <?php echo $objTable->ClassName  ?>.');
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($' . $objReverseReference->VariableName . '->', '))', 'PropertyName', $objReverseReferenceTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?php echo $objReverseReference->ObjectDescription  ?> on this <?php echo $objTable->ClassName  ?> with an unsaved <?php echo $objReverseReferenceTable->ClassName  ?>.');
+		public function Unassociate<?= $objReverseReference->ObjectDescription ?>(<?= $objReverseReference->VariableType ?> $<?= $objReverseReference->VariableName ?>) {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?= $objReverseReference->ObjectDescription ?> on this unsaved <?= $objTable->ClassName ?>.');
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($' . $objReverseReference->VariableName . '->', '))', 'PropertyName', $objReverseReferenceTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?= $objReverseReference->ObjectDescription ?> on this <?= $objTable->ClassName ?> with an unsaved <?= $objReverseReferenceTable->ClassName ?>.');
 
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			// Perform the SQL Query
 			$objDatabase->NonQuery('
 				UPDATE
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Table  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Table ?><?= $strEscapeIdentifierEnd ?>
 
 				SET
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = null
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Column ?><?= $strEscapeIdentifierEnd ?> = null
 				WHERE
 <?php foreach ($objReverseReferenceTable->ColumnArray as $objColumn) { ?>
 <?php if ($objColumn->PrimaryKey) { ?>
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($<?php echo $objReverseReference->VariableName  ?>-><?php echo $objColumn->PropertyName  ?>) . ' AND
+					<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($<?= $objReverseReference->VariableName ?>-><?= $objColumn->PropertyName ?>) . ' AND
 <?php } ?><?php } ?><?php GO_BACK(1); ?>
 
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?>) . '
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Column ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>) . '
 			');
 		}
 
 		/**
-		 * Unassociates all <?php echo $objReverseReference->ObjectDescriptionPlural  ?>
+		 * Unassociates all <?= $objReverseReference->ObjectDescriptionPlural ?>
 
 		 * @return void
 		*/
-		public function UnassociateAll<?php echo $objReverseReference->ObjectDescriptionPlural  ?>() {
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?php echo $objReverseReference->ObjectDescription  ?> on this unsaved <?php echo $objTable->ClassName  ?>.');
+		public function UnassociateAll<?= $objReverseReference->ObjectDescriptionPlural ?>() {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?= $objReverseReference->ObjectDescription ?> on this unsaved <?= $objTable->ClassName ?>.');
 
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			// Perform the SQL Query
 			$objDatabase->NonQuery('
 				UPDATE
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Table  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Table ?><?= $strEscapeIdentifierEnd ?>
 
 				SET
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = null
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Column ?><?= $strEscapeIdentifierEnd ?> = null
 				WHERE
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?>) . '
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Column ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>) . '
 			');
 		}
 
 		/**
-		 * Deletes an associated <?php echo $objReverseReference->ObjectDescription  ?>
+		 * Deletes an associated <?= $objReverseReference->ObjectDescription ?>
 
-		 * @param <?php echo $objReverseReference->VariableType  ?> $<?php echo $objReverseReference->VariableName  ?>
+		 * @param <?= $objReverseReference->VariableType ?> $<?= $objReverseReference->VariableName ?>
 
 		 * @return void
 		*/
-		public function DeleteAssociated<?php echo $objReverseReference->ObjectDescription  ?>(<?php echo $objReverseReference->VariableType  ?> $<?php echo $objReverseReference->VariableName  ?>) {
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?php echo $objReverseReference->ObjectDescription  ?> on this unsaved <?php echo $objTable->ClassName  ?>.');
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($' . $objReverseReference->VariableName . '->', '))', 'PropertyName', $objReverseReferenceTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?php echo $objReverseReference->ObjectDescription  ?> on this <?php echo $objTable->ClassName  ?> with an unsaved <?php echo $objReverseReferenceTable->ClassName  ?>.');
+		public function DeleteAssociated<?= $objReverseReference->ObjectDescription ?>(<?= $objReverseReference->VariableType ?> $<?= $objReverseReference->VariableName ?>) {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?= $objReverseReference->ObjectDescription ?> on this unsaved <?= $objTable->ClassName ?>.');
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($' . $objReverseReference->VariableName . '->', '))', 'PropertyName', $objReverseReferenceTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?= $objReverseReference->ObjectDescription ?> on this <?= $objTable->ClassName ?> with an unsaved <?= $objReverseReferenceTable->ClassName ?>.');
 
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			// Perform the SQL Query
 			$objDatabase->NonQuery('
 				DELETE FROM
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Table  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Table ?><?= $strEscapeIdentifierEnd ?>
 
 				WHERE
 <?php foreach ($objReverseReferenceTable->ColumnArray as $objColumn) { ?>
 <?php if ($objColumn->PrimaryKey) { ?>
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($<?php echo $objReverseReference->VariableName  ?>-><?php echo $objColumn->PropertyName  ?>) . ' AND
+					<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($<?= $objReverseReference->VariableName ?>-><?= $objColumn->PropertyName ?>) . ' AND
 <?php } ?><?php } ?><?php GO_BACK(1); ?>
 
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?>) . '
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Column ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>) . '
 			');
 		}
 
 		/**
-		 * Deletes all associated <?php echo $objReverseReference->ObjectDescriptionPlural  ?>
+		 * Deletes all associated <?= $objReverseReference->ObjectDescriptionPlural ?>
 
 		 * @return void
 		*/
-		public function DeleteAll<?php echo $objReverseReference->ObjectDescriptionPlural  ?>() {
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?php echo $objReverseReference->ObjectDescription  ?> on this unsaved <?php echo $objTable->ClassName  ?>.');
+		public function DeleteAll<?= $objReverseReference->ObjectDescriptionPlural ?>() {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?= $objReverseReference->ObjectDescription ?> on this unsaved <?= $objTable->ClassName ?>.');
 
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			// Perform the SQL Query
 			$objDatabase->NonQuery('
 				DELETE FROM
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Table  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Table ?><?= $strEscapeIdentifierEnd ?>
 
 				WHERE
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objReverseReference->Column  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?>) . '
+					<?= $strEscapeIdentifierBegin ?><?= $objReverseReference->Column ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>) . '
 			');
 		}

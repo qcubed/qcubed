@@ -14,10 +14,10 @@
 		 */
 		protected static function BuildQueryStatement(&$objQueryBuilder, QQCondition $objConditions, $objOptionalClauses, $mixParameterArray, $blnCountOnly) {
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
-			// Create/Build out the QueryBuilder object with <?php echo $objTable->ClassName  ?>-specific SELET and FROM fields
-			$objQueryBuilder = new QQueryBuilder($objDatabase, '<?php echo $objTable->Name  ?>');
+			// Create/Build out the QueryBuilder object with <?= $objTable->ClassName ?>-specific SELET and FROM fields
+			$objQueryBuilder = new QQueryBuilder($objDatabase, '<?= $objTable->Name ?>');
 
 			$blnAddAllFieldsToSelect = true;
 			if ($objDatabase->OnlyFullGroupBy) {
@@ -36,9 +36,9 @@
 				}
 			}
 			if ($blnAddAllFieldsToSelect) {
-				<?php echo $objTable->ClassName  ?>::GetSelectFields($objQueryBuilder, null, QQuery::extractSelectClause($objOptionalClauses));
+				<?= $objTable->ClassName ?>::GetSelectFields($objQueryBuilder, null, QQuery::extractSelectClause($objOptionalClauses));
 			}
-			$objQueryBuilder->AddFromItem('<?php echo $objTable->Name  ?>');
+			$objQueryBuilder->AddFromItem('<?= $objTable->Name ?>');
 
 			// Set "CountOnly" option (if applicable)
 			if ($blnCountOnly)
@@ -85,23 +85,23 @@
 		}
 
 		/**
-		 * Static Qcubed Query method to query for a single <?php echo $objTable->ClassName  ?> object.
+		 * Static Qcubed Query method to query for a single <?= $objTable->ClassName ?> object.
 		 * Uses BuildQueryStatment to perform most of the work.
 		 * @param QQCondition $objConditions any conditions on the query, itself
 		 * @param QQClause[] $objOptionalClausees additional optional QQClause objects for this query
 		 * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with
-		 * @return <?php echo $objTable->ClassName  ?> the queried object
+		 * @return <?= $objTable->ClassName ?> the queried object
 		 */
 		public static function QuerySingle(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 			// Get the Query Statement
 			try {
-				$strQuery = <?php echo $objTable->ClassName  ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
+				$strQuery = <?= $objTable->ClassName ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
 
-			// Perform the Query, Get the First Row, and Instantiate a new <?php echo $objTable->ClassName  ?> object
+			// Perform the Query, Get the First Row, and Instantiate a new <?= $objTable->ClassName ?> object
 			$objDbResult = $objQueryBuilder->Database->Query($strQuery);
 
 			// Do we have to expand anything?
@@ -109,11 +109,11 @@
 				$objToReturn = array();
 				$objPrevItemArray = array();
 				while ($objDbRow = $objDbResult->GetNextRow()) {
-					$objItem = <?php echo $objTable->ClassName  ?>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNode, $objPrevItemArray, $objQueryBuilder->ColumnAliasArray);
+					$objItem = <?= $objTable->ClassName ?>::InstantiateDbRow($objDbRow, null, $objQueryBuilder->ExpandAsArrayNode, $objPrevItemArray, $objQueryBuilder->ColumnAliasArray);
 					if ($objItem) {
 						$objToReturn[] = $objItem;
 <?php if ($objTable->PrimaryKeyColumnArray)  {?>
-						$objPrevItemArray[$objItem-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName ?>][] = $objItem;
+						$objPrevItemArray[$objItem-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>][] = $objItem;
 <?php } else { ?>
 						$objPrevItemArray[] = $objItem;
 <?php } ?>		
@@ -130,22 +130,22 @@
 				$objDbRow = $objDbResult->GetNextRow();
 				if(null === $objDbRow)
 					return null;
-				return <?php echo $objTable->ClassName  ?>::InstantiateDbRow($objDbRow, null, null, null, $objQueryBuilder->ColumnAliasArray);
+				return <?= $objTable->ClassName ?>::InstantiateDbRow($objDbRow, null, null, null, $objQueryBuilder->ColumnAliasArray);
 			}
 		}
 
 		/**
-		 * Static Qcubed Query method to query for an array of <?php echo $objTable->ClassName  ?> objects.
+		 * Static Qcubed Query method to query for an array of <?= $objTable->ClassName ?> objects.
 		 * Uses BuildQueryStatment to perform most of the work.
 		 * @param QQCondition $objConditions any conditions on the query, itself
 		 * @param QQClause[] $objOptionalClausees additional optional QQClause objects for this query
 		 * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with
-		 * @return <?php echo $objTable->ClassName  ?>[] the queried objects as an array
+		 * @return <?= $objTable->ClassName ?>[] the queried objects as an array
 		 */
 		public static function QueryArray(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 			// Get the Query Statement
 			try {
-				$strQuery = <?php echo $objTable->ClassName  ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
+				$strQuery = <?= $objTable->ClassName ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -153,7 +153,7 @@
 
 			// Perform the Query and Instantiate the Array Result
 			$objDbResult = $objQueryBuilder->Database->Query($strQuery);
-			return <?php echo $objTable->ClassName  ?>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNode, $objQueryBuilder->ColumnAliasArray);
+			return <?= $objTable->ClassName ?>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNode, $objQueryBuilder->ColumnAliasArray);
 		}
 
 		/**
@@ -167,7 +167,7 @@
 		public static function QueryCursor(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 			// Get the query statement
 			try {
-				$strQuery = <?php echo $objTable->ClassName  ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
+				$strQuery = <?= $objTable->ClassName ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -182,7 +182,7 @@
 		}
 
 		/**
-		 * Static Qcubed Query method to query for a count of <?php echo $objTable->ClassName  ?> objects.
+		 * Static Qcubed Query method to query for a count of <?= $objTable->ClassName ?> objects.
 		 * Uses BuildQueryStatment to perform most of the work.
 		 * @param QQCondition $objConditions any conditions on the query, itself
 		 * @param QQClause[] $objOptionalClausees additional optional QQClause objects for this query
@@ -192,7 +192,7 @@
 		public static function QueryCount(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 			// Get the Query Statement
 			try {
-				$strQuery = <?php echo $objTable->ClassName  ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, true);
+				$strQuery = <?= $objTable->ClassName ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, true);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -233,16 +233,16 @@
 
 		public static function QueryArrayCached(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null, $blnForceUpdate = false) {
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
-			$strQuery = <?php echo $objTable->ClassName  ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
+			$strQuery = <?= $objTable->ClassName ?>::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 
-			$objCache = new QCache('qquery/<?php echo strtolower($objTable->ClassName)  ?>', $strQuery);
+			$objCache = new QCache('qquery/<?= strtolower($objTable->ClassName) ?>', $strQuery);
 			$cacheData = $objCache->GetData();
 
 			if (!$cacheData || $blnForceUpdate) {
 				$objDbResult = $objQueryBuilder->Database->Query($strQuery);
-				$arrResult = <?php echo $objTable->ClassName  ?>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNode, $objQueryBuilder->ColumnAliasArray);
+				$arrResult = <?= $objTable->ClassName ?>::InstantiateDbResult($objDbResult, $objQueryBuilder->ExpandAsArrayNode, $objQueryBuilder->ColumnAliasArray);
 				$objCache->SaveData(serialize($arrResult));
 			} else {
 				$arrResult = unserialize($cacheData);
@@ -252,7 +252,7 @@
 		}
 
 		/**
-		 * Updates a QQueryBuilder with the SELECT fields for this <?php echo $objTable->ClassName  ?>
+		 * Updates a QQueryBuilder with the SELECT fields for this <?= $objTable->ClassName ?>
 
 		 * @param QQueryBuilder $objBuilder the Query Builder object to update
 		 * @param string $strPrefix optional prefix to add to the SELECT fields
@@ -262,20 +262,20 @@
 				$strTableName = $strPrefix;
 				$strAliasPrefix = $strPrefix . '__';
 			} else {
-				$strTableName = '<?php echo $objTable->Name;  ?>';
+				$strTableName = '<?= $objTable->Name; ?>';
 				$strAliasPrefix = '';
 			}
 
 			if ($objSelect) {
 				if (!$objSelect->SkipPrimaryKey()) {
 <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
-					$objBuilder->AddSelectItem($strTableName, '<?php echo $objColumn->Name  ?>', $strAliasPrefix . '<?php echo $objColumn->Name  ?>');
+					$objBuilder->AddSelectItem($strTableName, '<?= $objColumn->Name ?>', $strAliasPrefix . '<?= $objColumn->Name ?>');
 <?php } ?>
 				}
                 $objSelect->AddSelectItems($objBuilder, $strTableName, $strAliasPrefix);
 			} else {
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-				$objBuilder->AddSelectItem($strTableName, '<?php echo $objColumn->Name  ?>', $strAliasPrefix . '<?php echo $objColumn->Name  ?>');
+				$objBuilder->AddSelectItem($strTableName, '<?= $objColumn->Name ?>', $strAliasPrefix . '<?= $objColumn->Name ?>');
 <?php } ?>
 			}
 		}

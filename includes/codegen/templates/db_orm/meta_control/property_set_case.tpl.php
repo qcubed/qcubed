@@ -1,2 +1,2 @@
-					case '<?php echo $strPropertyName  ?>':
-						return ($this-><?php echo $strControlId  ?> = QType::Cast($mixValue, 'QControl'));
+					case '<?= $strPropertyName ?>':
+						return ($this-><?= $strControlId ?> = QType::Cast($mixValue, 'QControl'));

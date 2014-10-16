@@ -2,38 +2,38 @@
 	// associated_object_type_manytomany.tpl
 	$objManyToManyReferenceTable = $objCodeGen->TypeTableArray[strtolower($objManyToManyReference->AssociatedTable)];
 ?>   
-        // Related Many-to-Many Object Methods for <?php echo $objManyToManyReference->ObjectDescription; ?>
+        // Related Many-to-Many Object Methods for <?= $objManyToManyReference->ObjectDescription; ?>
         
         //-------------------------------------------------------------------
   
         /**
-         * Gets all many-to-many associated <?php echo $objManyToManyReference->ObjectDescriptionPlural; ?> as an array of id=>name pairs.
+         * Gets all many-to-many associated <?= $objManyToManyReference->ObjectDescriptionPlural; ?> as an array of id=>name pairs.
          * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
          * @return array
          */ 
-        public function Get<?php echo $objManyToManyReference->ObjectDescription; ?>Array($objOptionalClauses = null) {        
-            if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
+        public function Get<?= $objManyToManyReference->ObjectDescription; ?>Array($objOptionalClauses = null) {
+            if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
                 return array();        
                 
             if($objOptionalClauses) 
-                throw new QException('Unable to call Get<?php echo $objManyToManyReference->ObjectDescription; ?>Array with parameters.'); 
+                throw new QException('Unable to call Get<?= $objManyToManyReference->ObjectDescription; ?>Array with parameters.');
                 
             $rowArray = array();
                 
             // Get the Database Object for this Class
-            $objDatabase = <?php echo $objTable->ClassName; ?>::GetDatabase();
+            $objDatabase = <?= $objTable->ClassName; ?>::GetDatabase();
                 
-            $strQuery = sprintf("SELECT <?php echo $objManyToManyReference->OppositeColumn; ?> FROM <?php echo $objManyToManyReference->Table; ?> WHERE <?php echo $objManyToManyReference->Column; ?> = %s", $this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>);            
+            $strQuery = sprintf("SELECT <?= $objManyToManyReference->OppositeColumn; ?> FROM <?= $objManyToManyReference->Table; ?> WHERE <?= $objManyToManyReference->Column; ?> = %s", $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>);
             
             // Perform the Query
             $objDbResult = $objDatabase->Query($strQuery);
             
             while ($mixRow = $objDbResult->FetchArray()) {                                   
-                $rowArray[$mixRow['<?php echo $objManyToManyReference->OppositeColumn; ?>']] =   <?php echo $objManyToManyReference->VariableType; ?>::ToString($mixRow['<?php echo $objManyToManyReference->OppositeColumn; ?>']);
+                $rowArray[$mixRow['<?= $objManyToManyReference->OppositeColumn; ?>']] =   <?= $objManyToManyReference->VariableType; ?>::ToString($mixRow['<?= $objManyToManyReference->OppositeColumn; ?>']);
             }
 
             try {
-                //return <?php echo $objManyToManyReference->VariableType; ?>::LoadArrayBy<?php echo $objManyToManyReference->OppositeObjectDescription; ?>($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>, $objOptionalClauses);
+                //return <?= $objManyToManyReference->VariableType; ?>::LoadArrayBy<?= $objManyToManyReference->OppositeObjectDescription; ?>($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>, $objOptionalClauses);
                 return $rowArray;
             } catch (QCallerException $objExc) {
                 $objExc->IncrementOffset();
@@ -42,18 +42,18 @@
         }        
         
         /**
-         * Counts all many-to-many associated <?php echo $objManyToManyReference->ObjectDescriptionPlural; ?>
+         * Counts all many-to-many associated <?= $objManyToManyReference->ObjectDescriptionPlural; ?>
          
          * @return int
          */ 
-        public function Count<?php echo $objManyToManyReference->ObjectDescriptionPlural; ?>() {
-            if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
+        public function Count<?= $objManyToManyReference->ObjectDescriptionPlural; ?>() {
+            if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
                 return 0;                 
 
             // Get the Database Object for this Class
-            $objDatabase = <?php echo $objTable->ClassName; ?>::GetDatabase();
+            $objDatabase = <?= $objTable->ClassName; ?>::GetDatabase();
             
-            $strQuery = sprintf("SELECT count(*) as total_count FROM <?php echo $objManyToManyReference->Table; ?> WHERE <?php echo $objManyToManyReference->Column; ?> = %s", $this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>);            
+            $strQuery = sprintf("SELECT count(*) as total_count FROM <?= $objManyToManyReference->Table; ?> WHERE <?= $objManyToManyReference->Column; ?> = %s", $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>);
             
             // Perform the Query
             $objDbResult = $objDatabase->Query($strQuery);                            
@@ -62,21 +62,21 @@
         }        
         
         /**
-         * Checks to see if an association exists with a specific <?php echo $objManyToManyReference->ObjectDescription; ?>
+         * Checks to see if an association exists with a specific <?= $objManyToManyReference->ObjectDescription; ?>
          
-         * @param <?php echo $objManyToManyReference->VariableType; ?> $<?php echo $objManyToManyReference->VariableName; ?>
+         * @param <?= $objManyToManyReference->VariableType; ?> $<?= $objManyToManyReference->VariableName; ?>
          
          * @return bool
          */
-        public function Is<?php echo $objManyToManyReference->ObjectDescription; ?>Associated($intId) {
-            if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
-                throw new QUndefinedPrimaryKeyException('Unable to call Is<?php echo $objManyToManyReference->ObjectDescription; ?>Associated on this unsaved <?php echo $objTable->ClassName; ?>.');
+        public function Is<?= $objManyToManyReference->ObjectDescription; ?>Associated($intId) {
+            if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
+                throw new QUndefinedPrimaryKeyException('Unable to call Is<?= $objManyToManyReference->ObjectDescription; ?>Associated on this unsaved <?= $objTable->ClassName; ?>.');
                         
 
-            $intRowCount = <?php echo $objTable->ClassName; ?>::QueryCount(
+            $intRowCount = <?= $objTable->ClassName; ?>::QueryCount(
                 QQ::AndCondition(
-                    QQ::Equal(QQN::<?php echo $objTable->ClassName; ?>()-><?php echo $objTable->PrimaryKeyColumnArray[0]->PropertyName; ?>, $this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>),
-                    QQ::Equal(QQN::<?php echo $objTable->ClassName; ?>()-><?php echo $objManyToManyReference->ObjectDescription; ?>-><?php echo $objManyToManyReference->OppositePropertyName; ?>, $intId )
+                    QQ::Equal(QQN::<?= $objTable->ClassName; ?>()-><?= $objTable->PrimaryKeyColumnArray[0]->PropertyName; ?>, $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>),
+                    QQ::Equal(QQN::<?= $objTable->ClassName; ?>()-><?= $objManyToManyReference->ObjectDescription; ?>-><?= $objManyToManyReference->OppositePropertyName; ?>, $intId )
                 )
             );
 
@@ -84,19 +84,19 @@
         }    
         
         /**
-         * Associates a <?php echo $objManyToManyReference->ObjectDescription; ?>
+         * Associates a <?= $objManyToManyReference->ObjectDescription; ?>
          
          * @param mixed $mixId	id or array of ids.
          * @return void
          */ 
-        public function Associate<?php echo $objManyToManyReference->ObjectDescription; ?>($mixId) {
+        public function Associate<?= $objManyToManyReference->ObjectDescription; ?>($mixId) {
         
-            if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
-                throw new QUndefinedPrimaryKeyException('Unable to call Associate<?php echo $objManyToManyReference->ObjectDescription; ?> on this unsaved <?php echo $objTable->ClassName; ?>.');
+            if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
+                throw new QUndefinedPrimaryKeyException('Unable to call Associate<?= $objManyToManyReference->ObjectDescription; ?> on this unsaved <?= $objTable->ClassName; ?>.');
             
 
             // Get the Database Object for this Class
-            $objDatabase = <?php echo $objTable->ClassName; ?>::GetDatabase();
+            $objDatabase = <?= $objTable->ClassName; ?>::GetDatabase();
 
 			if(!is_array($mixId)) {
 				$mixId = array($mixId);
@@ -104,11 +104,11 @@
 			foreach ($mixId as $intId) {
 	            // Perform the SQL Query
 	            $objDatabase->NonQuery('
-	                INSERT INTO <?php echo $strEscapeIdentifierBegin; ?><?php echo $objManyToManyReference->Table; ?><?php echo $strEscapeIdentifierEnd; ?> (
-	                    <?php echo $strEscapeIdentifierBegin; ?><?php echo $objManyToManyReference->Column; ?><?php echo $strEscapeIdentifierEnd; ?>,
-	                    <?php echo $strEscapeIdentifierBegin; ?><?php echo $objManyToManyReference->OppositeColumn; ?><?php echo $strEscapeIdentifierEnd; ?>
+	                INSERT INTO <?= $strEscapeIdentifierBegin; ?><?= $objManyToManyReference->Table; ?><?= $strEscapeIdentifierEnd; ?> (
+	                    <?= $strEscapeIdentifierBegin; ?><?= $objManyToManyReference->Column; ?><?= $strEscapeIdentifierEnd; ?>,
+	                    <?= $strEscapeIdentifierBegin; ?><?= $objManyToManyReference->OppositeColumn; ?><?= $strEscapeIdentifierEnd; ?>
 	                ) VALUES (
-	                    ' . $objDatabase->SqlVariable($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>) . ',
+	                    ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>) . ',
 	                    ' . $objDatabase->SqlVariable($intId) . '
 	                )
 	            ');
@@ -116,17 +116,17 @@
         }
         
         /**
-         * Unassociates a <?php echo $objManyToManyReference->ObjectDescription; ?>
+         * Unassociates a <?= $objManyToManyReference->ObjectDescription; ?>
          
          * @param mixed $mixId	id or array of ids
          * @return void
          */ 
-        public function Unassociate<?php echo $objManyToManyReference->ObjectDescription; ?>($mixId) {
-            if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
-                throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?php echo $objManyToManyReference->ObjectDescription; ?> on this unsaved <?php echo $objTable->ClassName; ?>.');
+        public function Unassociate<?= $objManyToManyReference->ObjectDescription; ?>($mixId) {
+            if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
+                throw new QUndefinedPrimaryKeyException('Unable to call Unassociate<?= $objManyToManyReference->ObjectDescription; ?> on this unsaved <?= $objTable->ClassName; ?>.');
 
             // Get the Database Object for this Class
-            $objDatabase = <?php echo $objTable->ClassName; ?>::GetDatabase();
+            $objDatabase = <?= $objTable->ClassName; ?>::GetDatabase();
 
  			if(!is_array($mixId)) {
 				$mixId = array($mixId);
@@ -135,32 +135,32 @@
 	            // Perform the SQL Query
 	            $objDatabase->NonQuery('
 					DELETE FROM
-						<?php echo $strEscapeIdentifierBegin; ?><?php echo $objManyToManyReference->Table; ?><?php echo $strEscapeIdentifierEnd; ?>
+						<?= $strEscapeIdentifierBegin; ?><?= $objManyToManyReference->Table; ?><?= $strEscapeIdentifierEnd; ?>
 	                WHERE
-	                    <?php echo $strEscapeIdentifierBegin; ?><?php echo $objManyToManyReference->Column; ?><?php echo $strEscapeIdentifierEnd; ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>) . ' AND
-	                    <?php echo $strEscapeIdentifierBegin; ?><?php echo $objManyToManyReference->OppositeColumn; ?><?php echo $strEscapeIdentifierEnd; ?> = ' . $objDatabase->SqlVariable($intId) . '
+	                    <?= $strEscapeIdentifierBegin; ?><?= $objManyToManyReference->Column; ?><?= $strEscapeIdentifierEnd; ?> = ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>) . ' AND
+	                    <?= $strEscapeIdentifierBegin; ?><?= $objManyToManyReference->OppositeColumn; ?><?= $strEscapeIdentifierEnd; ?> = ' . $objDatabase->SqlVariable($intId) . '
 	            ');
 			}
         }        
         
         /**
-         * Unassociates all <?php echo $objManyToManyReference->ObjectDescriptionPlural; ?>
+         * Unassociates all <?= $objManyToManyReference->ObjectDescriptionPlural; ?>
          
          * @return void
          */ 
-        public function UnassociateAll<?php echo $objManyToManyReference->ObjectDescriptionPlural; ?>() {
-            if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
-                throw new QUndefinedPrimaryKeyException('Unable to call UnassociateAll<?php echo $objManyToManyReference->ObjectDescription; ?>Array on this unsaved <?php echo $objTable->ClassName; ?>.');
+        public function UnassociateAll<?= $objManyToManyReference->ObjectDescriptionPlural; ?>() {
+            if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>)
+                throw new QUndefinedPrimaryKeyException('Unable to call UnassociateAll<?= $objManyToManyReference->ObjectDescription; ?>Array on this unsaved <?= $objTable->ClassName; ?>.');
 
             // Get the Database Object for this Class
-            $objDatabase = <?php echo $objTable->ClassName; ?>::GetDatabase();
+            $objDatabase = <?= $objTable->ClassName; ?>::GetDatabase();
 
             // Perform the SQL Query
             $objDatabase->NonQuery('
                 DELETE FROM
-                    <?php echo $strEscapeIdentifierBegin; ?><?php echo $objManyToManyReference->Table; ?><?php echo $strEscapeIdentifierEnd; ?>
+                    <?= $strEscapeIdentifierBegin; ?><?= $objManyToManyReference->Table; ?><?= $strEscapeIdentifierEnd; ?>
                 WHERE
-                    <?php echo $strEscapeIdentifierBegin; ?><?php echo $objManyToManyReference->Column; ?><?php echo $strEscapeIdentifierEnd; ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>) . '
+                    <?= $strEscapeIdentifierBegin; ?><?= $objManyToManyReference->Column; ?><?= $strEscapeIdentifierEnd; ?> = ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>) . '
             ');
         }        
 

@@ -9,7 +9,7 @@
 		 */
 		protected static function QueryHelper(&$objDatabase) {
 			// Get the Database
-			$objDatabase = QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex;  ?>];
+			$objDatabase = QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>];
 		}
 
 
@@ -30,7 +30,7 @@
 		 */
 		protected static function ArrayQueryHelper(&$strOrderBy, $strLimit, &$strLimitPrefix, &$strLimitSuffix, &$strExpandSelect, &$strExpandFrom, $objExpansionMap, &$objDatabase) {
 			// Get the Database
-			$objDatabase = QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex;  ?>];
+			$objDatabase = QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>];
 
 			// Setup OrderBy and Limit Information (if applicable)
 			$strOrderBy = $objDatabase->SqlSortByVariable($strOrderBy);
@@ -39,7 +39,7 @@
 
 			// Setup QueryExpansion (if applicable)
 			if ($objExpansionMap) {
-				$objQueryExpansion = new QQueryExpansion('<?php echo $objTable->ClassName  ?>', '<?php echo $objTable->Name  ?>', $objExpansionMap);
+				$objQueryExpansion = new QQueryExpansion('<?= $objTable->ClassName ?>', '<?= $objTable->Name ?>', $objExpansionMap);
 				$strExpandSelect = $objQueryExpansion->GetSelectSql();
 				$strExpandFrom = $objQueryExpansion->GetFromSql();
 			} else {
@@ -60,10 +60,10 @@
 		 */
 		public static function ExpandQuery($strParentAlias, $strAlias, $objExpansionMap, QQueryExpansion $objQueryExpansion) {
 			if ($strAlias) {
-				$objQueryExpansion->AddFromItem(sprintf('LEFT JOIN <?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?> AS <?php echo $strEscapeIdentifierBegin  ?>%s__%s<?php echo $strEscapeIdentifierEnd  ?> ON <?php echo $strEscapeIdentifierBegin  ?>%s<?php echo $strEscapeIdentifierEnd  ?>.<?php echo $strEscapeIdentifierBegin  ?>%s<?php echo $strEscapeIdentifierEnd  ?> = <?php echo $strEscapeIdentifierBegin  ?>%s__%s<?php echo $strEscapeIdentifierEnd  ?>.<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->PrimaryKeyColumnArray[0]->Name  ?><?php echo $strEscapeIdentifierEnd  ?>', $strParentAlias, $strAlias, $strParentAlias, $strAlias, $strParentAlias, $strAlias));
+				$objQueryExpansion->AddFromItem(sprintf('LEFT JOIN <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?> AS <?= $strEscapeIdentifierBegin ?>%s__%s<?= $strEscapeIdentifierEnd ?> ON <?= $strEscapeIdentifierBegin ?>%s<?= $strEscapeIdentifierEnd ?>.<?= $strEscapeIdentifierBegin ?>%s<?= $strEscapeIdentifierEnd ?> = <?= $strEscapeIdentifierBegin ?>%s__%s<?= $strEscapeIdentifierEnd ?>.<?= $strEscapeIdentifierBegin ?><?= $objTable->PrimaryKeyColumnArray[0]->Name ?><?= $strEscapeIdentifierEnd ?>', $strParentAlias, $strAlias, $strParentAlias, $strAlias, $strParentAlias, $strAlias));
 
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-				$objQueryExpansion->AddSelectItem(sprintf('<?php echo $strEscapeIdentifierBegin  ?>%s__%s<?php echo $strEscapeIdentifierEnd  ?>.<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> AS <?php echo $strEscapeIdentifierBegin  ?>%s__%s__<?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?>', $strParentAlias, $strAlias, $strParentAlias, $strAlias));
+				$objQueryExpansion->AddSelectItem(sprintf('<?= $strEscapeIdentifierBegin ?>%s__%s<?= $strEscapeIdentifierEnd ?>.<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?> AS <?= $strEscapeIdentifierBegin ?>%s__%s__<?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?>', $strParentAlias, $strAlias, $strParentAlias, $strAlias));
 <?php } ?>
 
 				$strParentAlias = $strParentAlias . '__' . $strAlias;
@@ -74,9 +74,9 @@
 					switch ($strKey) {
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if ($objColumn->Reference && (!$objColumn->Reference->IsType)) { ?>
-						case '<?php echo $objColumn->Name  ?>':
+						case '<?= $objColumn->Name ?>':
 							try {
-								<?php echo $objColumn->Reference->VariableType  ?>::ExpandQuery($strParentAlias, $strKey, $objValue, $objQueryExpansion);
+								<?= $objColumn->Reference->VariableType ?>::ExpandQuery($strParentAlias, $strKey, $objValue, $objQueryExpansion);
 								break;
 							} catch (QCallerException $objExc) {
 								$objExc->IncrementOffset();
@@ -98,6 +98,6 @@
 		////////////////////////////////////////
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if ($objColumn->Reference && (!$objColumn->Reference->IsType)) { ?>
-		const Expand<?php echo $objColumn->Reference->PropertyName  ?> = '<?php echo $objColumn->Name  ?>';
+		const Expand<?= $objColumn->Reference->PropertyName ?> = '<?= $objColumn->Name ?>';
 <?php } ?>
 <?php } ?>
