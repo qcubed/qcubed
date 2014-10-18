@@ -1,17 +1,17 @@
 		/**
-		 * Load an array of <?php echo $objManyToManyReference->VariableType  ?> objects for a given <?php echo $objManyToManyReference->ObjectDescription  ?>
+		 * Load an array of <?= $objManyToManyReference->VariableType ?> objects for a given <?= $objManyToManyReference->ObjectDescription ?>
 
-		 * via the <?php echo $objManyToManyReference->Table  ?> table
-		 * @param <?php echo $objManyToManyReference->OppositeVariableType  ?> $<?php echo $objManyToManyReference->OppositeVariableName  ?>
+		 * via the <?= $objManyToManyReference->Table ?> table
+		 * @param <?= $objManyToManyReference->OppositeVariableType ?> $<?= $objManyToManyReference->OppositeVariableName ?>
 
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
-		 * @return <?php echo $objTable->ClassName  ?>[]
+		 * @return <?= $objTable->ClassName ?>[]
 		*/
-		public static function LoadArrayBy<?php echo $objManyToManyReference->ObjectDescription  ?>($<?php echo $objManyToManyReference->OppositeVariableName  ?>, $objOptionalClauses = null, $objClauses = null) {
-			// Call <?php echo $objTable->ClassName  ?>::QueryArray to perform the LoadArrayBy<?php echo $objManyToManyReference->ObjectDescription  ?> query
+		public static function LoadArrayBy<?= $objManyToManyReference->ObjectDescription ?>($<?= $objManyToManyReference->OppositeVariableName ?>, $objOptionalClauses = null, $objClauses = null) {
+			// Call <?= $objTable->ClassName ?>::QueryArray to perform the LoadArrayBy<?= $objManyToManyReference->ObjectDescription ?> query
 			try {
-				return <?php echo $objTable->ClassName;  ?>::QueryArray(
-					QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()-><?php echo $objManyToManyReference->ObjectDescription  ?>-><?php echo $objManyToManyReference->OppositePropertyName  ?>, $<?php echo $objManyToManyReference->OppositeVariableName  ?>),
+				return <?= $objTable->ClassName; ?>::QueryArray(
+					QQ::Equal(QQN::<?= $objTable->ClassName ?>()-><?= $objManyToManyReference->ObjectDescription ?>-><?= $objManyToManyReference->OppositePropertyName ?>, $<?= $objManyToManyReference->OppositeVariableName ?>),
 					$objOptionalClauses, $objClauses 
 				);
 			} catch (QCallerException $objExc) {
@@ -21,15 +21,15 @@
 		}
 
 		/**
-		 * Count <?php echo $objTable->ClassNamePlural  ?> for a given <?php echo $objManyToManyReference->ObjectDescription  ?>
+		 * Count <?= $objTable->ClassNamePlural ?> for a given <?= $objManyToManyReference->ObjectDescription ?>
 
-		 * via the <?php echo $objManyToManyReference->Table  ?> table
-		 * @param <?php echo $objManyToManyReference->OppositeVariableType  ?> $<?php echo $objManyToManyReference->OppositeVariableName  ?>
+		 * via the <?= $objManyToManyReference->Table ?> table
+		 * @param <?= $objManyToManyReference->OppositeVariableType ?> $<?= $objManyToManyReference->OppositeVariableName ?>
 
 		 * @return int
 		*/
-		public static function CountBy<?php echo $objManyToManyReference->ObjectDescription  ?>($<?php echo $objManyToManyReference->OppositeVariableName  ?>) {
-			return <?php echo $objTable->ClassName  ?>::QueryCount(
-				QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()-><?php echo $objManyToManyReference->ObjectDescription  ?>-><?php echo $objManyToManyReference->OppositePropertyName  ?>, $<?php echo $objManyToManyReference->OppositeVariableName  ?>)
+		public static function CountBy<?= $objManyToManyReference->ObjectDescription ?>($<?= $objManyToManyReference->OppositeVariableName ?>) {
+			return <?= $objTable->ClassName ?>::QueryCount(
+				QQ::Equal(QQN::<?= $objTable->ClassName ?>()-><?= $objManyToManyReference->ObjectDescription ?>-><?= $objManyToManyReference->OppositePropertyName ?>, $<?= $objManyToManyReference->OppositeVariableName ?>)
 			);
 		}

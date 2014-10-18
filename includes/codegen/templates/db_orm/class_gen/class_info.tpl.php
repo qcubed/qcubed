@@ -13,7 +13,7 @@
 		 * @return string Name of the table from which this class has been created.
 		 */
 		public static function GetTableName() {
-			return "<?php echo $objTable->Name;  ?>";
+			return "<?= $objTable->Name; ?>";
 		}
 
 		/**
@@ -21,7 +21,7 @@
 		 * @return string Name of the table from which this class has been created.
 		 */
 		public static function GetDatabaseName() {
-			return QApplication::$Database[<?php echo $objTable->ClassName; ?>::GetDatabaseIndex()]->Database;
+			return QApplication::$Database[<?= $objTable->ClassName; ?>::GetDatabaseIndex()]->Database;
 		}
 
 		/**
@@ -32,5 +32,5 @@
 		 * @return int position or index of the database in the config file.
 		 */
 		public static function GetDatabaseIndex() {
-			return <?php echo $objCodeGen->DatabaseIndex;  ?>;
+			return <?= $objCodeGen->DatabaseIndex; ?>;
 		}

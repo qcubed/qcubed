@@ -191,7 +191,7 @@
 				<div id="instructions" class="full">
 					<p><strong>Configuration file was created!</strong></p>
 					<p>Make sure to revert directory permissions back for security:
-					<code>chmod 775 <?php echo $strDocroot . $strSubDir . DIRECTORY_SEPARATOR . 'project/includes' . DIRECTORY_SEPARATOR . 'configuration' ; ?></code></p>
+					<code>chmod 775 <?= $strDocroot . $strSubDir . DIRECTORY_SEPARATOR . 'project/includes' . DIRECTORY_SEPARATOR . 'configuration' ; ?></code></p>
 				</div>
 				<?php
 						echo '<a href="' . $strVirtDir . $strSubDir . '/vendor/qcubed/framework/assets/php/_devtools/config_checker.php">Launch the config checker</a> to make sure everything went fine.';

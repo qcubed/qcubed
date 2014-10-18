@@ -3,33 +3,33 @@
 		// but feel free to use these as a starting point)
 /*
 		public static function LoadArrayBySample($strParam1, $intParam2, $objOptionalClauses = null) {
-			// This will return an array of <?php echo $objTable->ClassName  ?> objects
-			return <?php echo $objTable->ClassName  ?>::QueryArray(
+			// This will return an array of <?= $objTable->ClassName ?> objects
+			return <?= $objTable->ClassName ?>::QueryArray(
 				QQ::AndCondition(
-					QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()->Param1, $strParam1),
-					QQ::GreaterThan(QQN::<?php echo $objTable->ClassName  ?>()->Param2, $intParam2)
+					QQ::Equal(QQN::<?= $objTable->ClassName ?>()->Param1, $strParam1),
+					QQ::GreaterThan(QQN::<?= $objTable->ClassName ?>()->Param2, $intParam2)
 				),
 				$objOptionalClauses
 			);
 		}
 
 		public static function LoadBySample($strParam1, $intParam2, $objOptionalClauses = null) {
-			// This will return a single <?php echo $objTable->ClassName  ?> object
-			return <?php echo $objTable->ClassName  ?>::QuerySingle(
+			// This will return a single <?= $objTable->ClassName ?> object
+			return <?= $objTable->ClassName ?>::QuerySingle(
 				QQ::AndCondition(
-					QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()->Param1, $strParam1),
-					QQ::GreaterThan(QQN::<?php echo $objTable->ClassName  ?>()->Param2, $intParam2)
+					QQ::Equal(QQN::<?= $objTable->ClassName ?>()->Param1, $strParam1),
+					QQ::GreaterThan(QQN::<?= $objTable->ClassName ?>()->Param2, $intParam2)
 				),
 				$objOptionalClauses
 			);
 		}
 
 		public static function CountBySample($strParam1, $intParam2, $objOptionalClauses = null) {
-			// This will return a count of <?php echo $objTable->ClassName  ?> objects
-			return <?php echo $objTable->ClassName  ?>::QueryCount(
+			// This will return a count of <?= $objTable->ClassName ?> objects
+			return <?= $objTable->ClassName ?>::QueryCount(
 				QQ::AndCondition(
-					QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()->Param1, $strParam1),
-					QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()->Param2, $intParam2)
+					QQ::Equal(QQN::<?= $objTable->ClassName ?>()->Param1, $strParam1),
+					QQ::Equal(QQN::<?= $objTable->ClassName ?>()->Param2, $intParam2)
 				),
 				$objOptionalClauses
 			);
@@ -39,7 +39,7 @@
 			// Performing the load manually (instead of using QCubed Query)
 
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			// Properly Escape All Input Parameters using Database->SqlVariable()
 			$strParam1 = $objDatabase->SqlVariable($strParam1);
@@ -48,9 +48,9 @@
 			// Setup the SQL Query
 			$strQuery = sprintf('
 				SELECT
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>.*
+					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>.*
 				FROM
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?> AS <?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?> AS <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
 
 				WHERE
 					param_1 = %s AND
@@ -59,6 +59,6 @@
 
 			// Perform the Query and Instantiate the Result
 			$objDbResult = $objDatabase->Query($strQuery);
-			return <?php echo $objTable->ClassName  ?>::InstantiateDbResult($objDbResult);
+			return <?= $objTable->ClassName ?>::InstantiateDbResult($objDbResult);
 		}
 */

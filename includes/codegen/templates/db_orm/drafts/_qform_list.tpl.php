@@ -14,26 +14,26 @@
 	// Load the QCubed Development Framework
 	require('../qcubed.inc.php');
 
-	require(__FORMBASE_CLASSES__ . '/<?php echo $objTable->ClassName  ?>ListFormBase.class.php');
+	require(__FORMBASE_CLASSES__ . '/<?= $objTable->ClassName ?>ListFormBase.class.php');
 
 	/**
 	 * This is a quick-and-dirty draft QForm object to do the List All functionality
-	 * of the <?php echo $objTable->ClassName  ?> class.  It uses the code-generated
-	 * <?php echo $objTable->ClassName  ?>DataGrid control which has meta-methods to help with
-	 * easily creating/defining <?php echo $objTable->ClassName  ?> columns.
+	 * of the <?= $objTable->ClassName ?> class.  It uses the code-generated
+	 * <?= $objTable->ClassName ?>DataGrid control which has meta-methods to help with
+	 * easily creating/defining <?= $objTable->ClassName ?> columns.
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
 	 * here by overriding existing or implementing new methods, properties and variables.
 	 * 
 	 * NOTE: This file is overwritten on any code regenerations.  If you want to make
-	 * permanent changes, it is STRONGLY RECOMMENDED to move both <?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName)  ?>_list.php AND
-	 * <?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName)  ?>_list.tpl.php out of this Form Drafts directory.
+	 * permanent changes, it is STRONGLY RECOMMENDED to move both <?= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_list.php AND
+	 * <?= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_list.tpl.php out of this Form Drafts directory.
 	 *
-	 * @package <?php echo QCodeGen::$ApplicationName;  ?>
+	 * @package <?= QCodeGen::$ApplicationName; ?>
 
 	 * @subpackage Drafts
 	 */
-	class <?php echo $objTable->ClassName  ?>ListForm extends <?php echo $objTable->ClassName  ?>ListFormBase {
+	class <?= $objTable->ClassName ?>ListForm extends <?= $objTable->ClassName ?>ListFormBase {
 		// Override Form Event Handlers as Needed
 		protected function Form_Run() {
 			parent::Form_Run();
@@ -49,6 +49,6 @@
 	}
 
 	// Go ahead and run this form object to generate the page and event handlers, implicitly using
-	// <?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName)  ?>_list.tpl.php as the included HTML template file
-	<?php echo $objTable->ClassName  ?>ListForm::Run('<?php echo $objTable->ClassName  ?>ListForm');
+	// <?= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_list.tpl.php as the included HTML template file
+	<?= $objTable->ClassName ?>ListForm::Run('<?= $objTable->ClassName ?>ListForm');
 ?>
