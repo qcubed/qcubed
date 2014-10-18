@@ -261,6 +261,7 @@
 			$tab3 = new QPanel($this->Tabs);
 			$tab3->Text = 'Tab 3';
 			$this->Tabs->Headers = array('One', 'Two', 'Three');
+			$this->Tabs->AddAction (new QTabs_ActivateEvent(), new QAjaxAction('tabs_change'));
 		}
 
 		protected function update_autocompleteList($strFormId, $strControlId, $strParameter) {
@@ -367,6 +368,14 @@
 				$this->Datepicker->DateTime = $this->DatepickerBox->DateTime;
 			}
 		}
+
+		protected function tabs_change($strFormId, $strControlId, $strParameter) {
+			$index = $this->Tabs->Active;
+			$id = $this->Tabs->SelectedId;
+			$strItems = $index . ', ' . $id;
+			QApplication::DisplayAlert ($strItems);
+		}
+
 	}
     ExampleForm::Run('ExampleForm');
 ?>
