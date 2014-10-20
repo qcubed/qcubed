@@ -55,20 +55,20 @@
 		/**
 		 * Check the binder for a reference to the form.
 		 */
-		public function PreSerialize() {
+		public function Sleep() {
 			// This overriding function ensures that DataSource is set to null
 			// before serializing the object to the __formstate
 			// (Due to the potentially humungous size of some datasets, it is more efficient
 			// to requery than to serialize and put as a hidden form element)
 
 			$this->objDataSource = null;
-			$this->objDataBindControl = QControl::PreSerializeHelper ($this->objDataBindControl);
-			parent::PreSerialize();
+			$this->objDataBindControl = QControl::SleepHelper ($this->objDataBindControl);
+			parent::Sleep();
 		}
 
-		public function PostSerialize(QForm $objForm) {
-			parent::PostSerialize($objForm);
-			$this->objDataBindControl = QControl::PostSerializeHelper ($objForm, $this->objDataBindControl);
+		public function Wakeup(QForm $objForm) {
+			parent::Wakeup($objForm);
+			$this->objDataBindControl = QControl::WakeupHelper ($objForm, $this->objDataBindControl);
 		}
 
 

@@ -381,21 +381,21 @@
 
 		/**
 		 * Prepare the control for serialization. All pointers to forms and form objects should be
-		 * converted to something that can be restored using PostSerialize().
+		 * converted to something that can be restored using Wakeup().
 		 *
 		 * The main problem we are resolving is that the PHP serialization process will convert an internal reference
 		 * to the object being serialized into a copy of the object. After deserialization, you would have the form,
-		 * and then somewhere inside the form, a separate copy of the form.
+		 * and then somewhere inside the form, a separate copy of the form. This is a long-standing bug in PHP.
 		 */
-		public function PreSerialize() {
+		public function Sleep() {
 			$this->objForm = null;
 		}
 
 		/**
-		 * The object has been unserialized, so fix up pointers to embedded forms.
+		 * The object has just been unserialized, so fix up pointers to embedded forms.
 		 * @param QForm $objForm
 		 */
-		public function PostSerialize(QForm $objForm) {
+		public function Wakeup(QForm $objForm) {
 			$this->objForm = $objForm;
 		}
 
@@ -407,7 +407,7 @@
 		 * @param $callable
 		 * @return mixed
 		 */
-		public static function PreSerializeHelper($obj) {
+		public static function SleepHelper($obj) {
 			if ($obj instanceof QForm) {
 				// assume its THE form
 				return '**QF;';
@@ -418,7 +418,7 @@
 			elseif (is_array ($obj)) {
 				$ret = array();
 				foreach ($obj as $key=>$val) {
-					$ret[$key] = self::PreSerializeHelper($val);
+					$ret[$key] = self::SleepHelper($val);
 				}
 				return $ret;
 			}
@@ -426,17 +426,17 @@
 		}
 
 		/**
-		 * A helper function to restore something possibly serialized with PreSerializeHelper.
+		 * A helper function to restore something possibly serialized with SleepHelper.
 		 *
 		 * @param $callable
 		 * @return mixed
 		 */
 
-		public static function PostSerializeHelper($objForm, $obj) {
+		public static function WakeupHelper($objForm, $obj) {
 			if (is_array ($obj)) {
 				$ret = array();
 				foreach ($obj as $key=>$val) {
-					$ret[$key] = self::PostSerializeHelper($objForm, $val);
+					$ret[$key] = self::WakeupHelper($objForm, $val);
 				}
 				return $ret;
 			} elseif (is_string ($obj)) {

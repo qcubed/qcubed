@@ -215,14 +215,14 @@
 		/**
 		 * Prepare to serialize references to the form.
 		 */
-		public function PreSerialize() {
+		public function Sleep() {
 		}
 
 		/**
 		 * The object has been unserialized, so fix up pointers to embedded objects.
 		 * @param QForm $objForm
 		 */
-		public function PostSerialize(QForm $objForm) {
+		public function Wakeup(QForm $objForm) {
 		}
 
 
@@ -426,18 +426,18 @@
 		/**
 		 * Fix up possible embedded reference to the form.
 		 */
-		public function PreSerialize() {
-			$this->objPostCallback = QControl::PreSerializeHelper($this->objPostCallback);
-			parent::PreSerialize();
+		public function Sleep() {
+			$this->objPostCallback = QControl::SleepHelper($this->objPostCallback);
+			parent::Sleep();
 		}
 
 		/**
 		 * The object has been unserialized, so fix up pointers to embedded objects.
 		 * @param QForm $objForm
 		 */
-		public function PostSerialize(QForm $objForm) {
-			parent::PostSerialize($objForm);
-			$this->objPostCallback = QControl::PostSerializeHelper($objForm, $this->objPostCallback);
+		public function Wakeup(QForm $objForm) {
+			parent::Wakeup($objForm);
+			$this->objPostCallback = QControl::WakeupHelper($objForm, $this->objPostCallback);
 		}
 
 		public function __get($strName) {
@@ -711,18 +711,18 @@
 		/**
 		 * Fix up possible embedded reference to the the form.
 		 */
-		public function PreSerialize() {
-			$this->objClosure = QControl::PreSerializeHelper($this->objClosure);
-			parent::PreSerialize();
+		public function Sleep() {
+			$this->objClosure = QControl::SleepHelper($this->objClosure);
+			parent::Sleep();
 		}
 
 		/**
 		 * Restore serialized references.
 		 * @param QForm $objForm
 		 */
-		public function PostSerialize(QForm $objForm) {
-			parent::PostSerialize($objForm);
-			$this->objClosure = QControl::PostSerializeHelper($objForm, $this->objClosure);
+		public function Wakeup(QForm $objForm) {
+			parent::Wakeup($objForm);
+			$this->objClosure = QControl::WakeupHelper($objForm, $this->objClosure);
 		}
 
 		public function __get($strName) {
@@ -912,9 +912,9 @@
 		/**
 		 * Fix up possible embedded reference to the the form.
 		 */
-		public function PreSerialize() {
-			$this->checkParamCallback = QControl::PreSerializeHelper($this->checkParamCallback);
-			parent::PreSerialize();
+		public function Sleep() {
+			$this->checkParamCallback = QControl::SleepHelper($this->checkParamCallback);
+			parent::Sleep();
 		}
 
 		/**
@@ -922,9 +922,9 @@
 		 * 
 		 * @param QForm $objForm
 		 */
-		public function PostSerialize(QForm $objForm) {
-			parent::PostSerialize($objForm);
-			$this->checkParamCallback = QControl::PostSerializeHelper($objForm, $this->checkParamCallback);
+		public function Wakeup(QForm $objForm) {
+			parent::Wakeup($objForm);
+			$this->checkParamCallback = QControl::WakeupHelper($objForm, $this->checkParamCallback);
 		}
 
 	}

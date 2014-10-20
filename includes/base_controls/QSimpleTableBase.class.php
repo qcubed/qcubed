@@ -522,11 +522,11 @@
 		/**
 		 * Preserialize the columns, since some columns might have references to the form.
 		 */
-		public function PreSerialize() {
+		public function Sleep() {
 			foreach ($this->objColumnArray as $objColumn) {
-				$objColumn->PreSerialize();
+				$objColumn->Sleep();
 			}
-			parent::PreSerialize();
+			parent::Sleep();
 		}
 
 		/**
@@ -534,10 +534,10 @@
 		 *
 		 * @param QForm $objForm
 		 */
-		public function PostSerialize(QForm $objForm) {
-			parent::PostSerialize($objForm);
+		public function Wakeup(QForm $objForm) {
+			parent::Wakeup($objForm);
 			foreach ($this->objColumnArray as $objColumn) {
-				$objColumn->PostSerialize($objForm);
+				$objColumn->Wakeup($objForm);
 			}
 		}
 

@@ -718,7 +718,7 @@
 
 			// Cleanup internal links between controls and the form
 			if ($objForm->objControlArray) foreach ($objForm->objControlArray as $objControl) {
-				$objControl->PreSerialize();
+				$objControl->Sleep();
 			}
 
 			// Use PHP "serialize" to serialize the form
@@ -755,7 +755,7 @@
 				if ($objForm->objControlArray) foreach ($objForm->objControlArray as $objControl) {
 					// If you are having trouble with a __PHP_Incomplete_Class here, it means you are not including the definitions
 					// of your own controls in the form.
-					$objControl->PostSerialize($objForm);
+					$objControl->Wakeup($objForm);
 				}
 
 				// Return the Form
