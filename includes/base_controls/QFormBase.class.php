@@ -753,6 +753,8 @@
 
 				// Reset the links from Control->Form
 				if ($objForm->objControlArray) foreach ($objForm->objControlArray as $objControl) {
+					// If you are having trouble with a __PHP_Incomplete_Class here, it means you are not including the definitions
+					// of your own controls in the form.
 					$objControl->PostSerialize($objForm);
 				}
 
