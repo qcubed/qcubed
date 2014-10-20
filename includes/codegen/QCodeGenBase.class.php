@@ -1,4 +1,11 @@
 <?php
+
+	/** Define the template paths for backwards compatibility. */
+	if (!defined ('__TEMPLATES_PATH_CORE__')) define ('__TEMPLATES_PATH_CORE__', __QCUBED_CORE__ . '/codegen/templates/');
+	if (!defined ('__TEMPLATES_PATH_PLUGIN__')) define ('__TEMPLATES_PATH_PLUGIN__', '');
+	if (!defined ('__TEMPLATES_PATH_PROJECT__')) define ('__TEMPLATES_PATH_PROJECT__', __QCUBED__ . '/codegen/templates/');
+
+
 	function QcodoHandleCodeGenParseError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline) {
 		$strErrorString = str_replace("SimpleXMLElement::__construct() [<a href='function.SimpleXMLElement---construct'>function.SimpleXMLElement---construct</a>]: ", '', $__exc_errstr);
 		QCodeGen::$RootErrors .= sprintf("%s\r\n", $strErrorString);
@@ -61,18 +68,14 @@
 		//please refer to : http://php.net/manual/en/reserved.php
 		const PhpReservedWords = 'new, null, break, return, switch, self, case, const, clone, continue, declare, default, echo, else, elseif, empty, exit, eval, if, try, throw, catch, public, private, protected, function, extends, foreach, for, while, do, var, class, static, abstract, isset, unset, implements, interface, instanceof, include, include_once, require, require_once, abstract, and, or, xor, array, list, false, true, global, parent, print, exception, namespace, goto, final, endif, endswitch, enddeclare, endwhile, use, as, endfor, endforeach, this';
 
-		// Relative Paths (from __QCUBED_CORE__) to the CORE Template and Subtemplate Directories
-		const TemplatesPath = '/codegen/templates/';
-//		const SubTemplatesPath = '/codegen/subtemplates/';
-
-		// Relative Paths (from __QCUBED__) to the CUSTOM Template and Subtemplate Directories
-		const TemplatesPathCustom = '/codegen/templates/';
-//		const SubTemplatesPathCustom = '/codegen/subtemplates/';
+		const TemplatesPathCore = __TEMPLATES_PATH_CORE__;
+		const TemplatesPathPlugin = __TEMPLATES_PATH_PLUGIN__;
+		const TemplatesPathProject = __TEMPLATES_PATH_PROJECT__;
 
 		// DebugMode -- for Template Developers
 		// This will output the current evaluated template/statement to the screen
 		// On "eval" errors, you can click on the "View Rendered Page" to see what currently
-		// is being evalled or evaluated, which should hopefully aid in template debugging.
+		// is being evaluated, which should hopefully aid in template debugging.
 		const DebugMode = false;
 
 		/**
@@ -281,15 +284,22 @@
 		 * @return boolean success/failure on whether or not all the files generated successfully
 		 */
 		public function GenerateFiles($strTemplatePrefix, $mixArgumentArray) {
-			// Make sure both our Template and TemplateCustom paths are valid
-			$strTemplatePath = sprintf('%s%s%s', __QCUBED_CORE__ , QCodeGen::TemplatesPath, $strTemplatePrefix);
-			if (!is_dir($strTemplatePath))
-				throw new Exception(sprintf("QCodeGen::TemplatesPath does not appear to be a valid directory:\r\n%s", $strTemplatePath));
+			$strTemplatePathCore = sprintf('%s%s', QCodeGen::TemplatesPathCore, $strTemplatePrefix);
+			if (!is_dir($strTemplatePathCore))
+				throw new Exception(sprintf("__TEMPLATES_PATH_CORE__ does not appear to be a valid directory:\r\n%s", $strTemplatePathCore));
 
-			$strTemplatePathCustom = sprintf('%s%s', __QCUBED__, QCodeGen::TemplatesPathCustom);
-			if (!is_dir($strTemplatePathCustom))
-				throw new Exception(sprintf("QCodeGen::TemplatesPathCustom does not appear to be a valid directory:\r\n%s", $strTemplatePathCustom));
-			$strTemplatePathCustom .= $strTemplatePrefix;
+			$strTemplatePathPlugin = '';
+			if (QCodeGen::TemplatesPathPlugin) {
+				$strTemplatePathPlugin = QCodeGen::TemplatesPathCustom;
+				if (!is_dir($strTemplatePathPlugin))
+					throw new Exception(sprintf("__TEMPLATES_PATH_PLUGIN__ does not appear to be a valid directory:\r\n%s", $strTemplatePathPlugin));
+				$strTemplatePathPlugin .= $strTemplatePrefix;
+			}
+
+			$strTemplatePathProject = QCodeGen::TemplatesPathProject;
+			if (!is_dir($strTemplatePathProject))
+				throw new Exception(sprintf("__TEMPLATES_PATH_PROJECT__ does not appear to be a valid directory:\r\n%s", $strTemplatePathProject));
+			$strTemplatePathProject .= $strTemplatePrefix;
 
 			// Create an array of arrays of standard templates and custom (override) templates to process
 			// Index by [module_name][filename] => true/false where
@@ -298,50 +308,45 @@
 			// true = override (use custom) and false = do not override (use standard)
 			$strTemplateArray = array();
 
-			// Go through standard templates first
-			$objDirectory = opendir($strTemplatePath);
-			while ($strModuleName = readdir($objDirectory)) {
-				if (!in_array(strtolower($strModuleName), QCodeGen::$DirectoriesToExcludeArray) &&
-					is_dir($strTemplatePath . '/' . $strModuleName)) {
+			// Go through standard templates first, then override in order
+			$this->buildTemplateArray($strTemplatePathCore, $strTemplateArray);
+			$this->buildTemplateArray($strTemplatePathPlugin, $strTemplateArray);
+			$this->buildTemplateArray($strTemplatePathProject, $strTemplateArray);
 
-					// We're in a valid Module -- look for any _*.tpl template files
-					$objModuleDirectory = opendir($strTemplatePath . '/' . $strModuleName);
-					while ($strFilename = readdir($objModuleDirectory))
-						if ((QString::FirstCharacter($strFilename) == '_') &&
-							(
-								(substr($strFilename, strlen($strFilename) - 4) == '.tpl') ||
-								(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
-							)
-							$strTemplateArray[$strModuleName][$strFilename] = false;
-				}
-			}
-
-			// Go through and create or override with any custom templates
-			if (is_dir($strTemplatePathCustom)) {
-				$objDirectory = opendir($strTemplatePathCustom);
-				while ($strModuleName = readdir($objDirectory)) {
-					if (!in_array(strtolower($strModuleName), QCodeGen::$DirectoriesToExcludeArray) &&
-						is_dir($strTemplatePathCustom . '/' . $strModuleName)) {
-						$objModuleDirectory = opendir($strTemplatePathCustom . '/' . $strModuleName);
-						while ($strFilename = readdir($objModuleDirectory))
-							if ((QString::FirstCharacter($strFilename) == '_') &&
-								(
-									(substr($strFilename, strlen($strFilename) - 4) == '.tpl') ||
-									(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php'))
-								)
-								$strTemplateArray[$strModuleName][$strFilename] = true;
+			// Finally, iterate through all the TemplateFiles and call GenerateFile to Evaluate/Generate/Save them
+			$blnSuccess = true;
+			foreach ($strTemplateArray as $strModuleName => $strFileArray) {
+				foreach ($strFileArray as $strFilename => $strPath) {
+					if (!$this->GenerateFile($strModuleName, $strPath, $mixArgumentArray)) {
+						$blnSuccess = false;
 					}
 				}
 			}
 
-			// Finally, iterate through all the TempalteFiles and call GenerateFile to Evaluate/Generate/Save them
-			$blnSuccess = true;
-			foreach ($strTemplateArray as $strModuleName => $strFileArray)
-				foreach ($strFileArray as $strFilename => $blnOverrideFlag)
-					if (!$this->GenerateFile($strTemplatePrefix . '/' . $strModuleName, $strFilename, $blnOverrideFlag, $mixArgumentArray))
-						$blnSuccess = false;
-
 			return $blnSuccess;
+		}
+
+		protected function buildTemplateArray ($strTemplateFilePath, &$strTemplateArray) {
+			if (!$strTemplateFilePath) return;
+			if (substr( $strTemplateFilePath, -1 ) != '/') {
+				$strTemplateFilePath .= '/';
+			}
+			if (is_dir($strTemplateFilePath)) {
+				$objDirectory = opendir($strTemplateFilePath);
+				while ($strModuleName = readdir($objDirectory)) {
+					if (!in_array(strtolower($strModuleName), QCodeGen::$DirectoriesToExcludeArray) &&
+							is_dir($strTemplateFilePath . $strModuleName)) {
+						$objModuleDirectory = opendir($strTemplateFilePath . $strModuleName);
+						while ($strFilename = readdir($objModuleDirectory)) {
+							if ((QString::FirstCharacter($strFilename) == '_') &&
+								(substr($strFilename, strlen($strFilename) - 8) == '.tpl.php')
+							) {
+								$strTemplateArray[$strModuleName][$strFilename] = $strTemplateFilePath . $strModuleName . '/' . $strFilename;
+							}
+						}
+					}
+				}
+			}
 		}
 
 		protected function getTemplateSettings($strTemplateFilePath, $strTemplate = null) {
@@ -379,13 +384,7 @@
 		 * @throws Exception
 		 * @return mixed returns the evaluated template or boolean save success.
 		 */
-		public function GenerateFile($strModuleName, $strFilename, $blnOverrideFlag, $mixArgumentArray, $blnSave = true) {
-			// Figure out the actual TemplateFilePath
-			if ($blnOverrideFlag)
-				$strTemplateFilePath = __QCUBED__ . QCodeGen::TemplatesPathCustom . $strModuleName . '/' . $strFilename;
-			else
-				$strTemplateFilePath = __QCUBED_CORE__ . QCodeGen::TemplatesPath . $strModuleName . '/' . $strFilename;
-
+		public function GenerateFile($strModuleName, $strTemplateFilePath, $mixArgumentArray, $blnSave = true) {
 			// Setup Debug/Exception Message
 			if (QCodeGen::DebugMode) _p("Evaluating $strTemplateFilePath<br/>", false);
 
@@ -394,26 +393,22 @@
 				throw new QCallerException('Template File Not Found: ' . $strTemplateFilePath);
 
 			// Evaluate the Template
-			if (substr($strFilename, strlen($strFilename) - 8) == '.tpl.php')  {
-				// make sure paths are set up to pick up included files from both the override directory and _core directory
-				$strSearchPath = __QCUBED__ . QCodeGen::TemplatesPathCustom . $strModuleName . PATH_SEPARATOR .
-						__QCUBED_CORE__ . QCodeGen::TemplatesPath . $strModuleName . PATH_SEPARATOR .
-						get_include_path();
-				set_include_path ($strSearchPath);
-				if ($strSearchPath != get_include_path()) {
-					throw new QCallerException ('Can\'t override include path. Make sure your apache or server settings allow include paths to be overridden. ' );
-				}
-				$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $strModuleName, $mixArgumentArray, $templateSettings);
-				restore_include_path();
-				if (!isset($templateSettings) || !$templateSettings) {
-					// check if we have old style <template .../> settings
-					$templateSettings = $this->getTemplateSettings($strTemplateFilePath, $strTemplate);
-				}
-			} else {
-				$strTemplate = file_get_contents($strTemplateFilePath);
-				$strTemplate = $this->EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray);
-				$templateSettings = $this->getTemplateSettings($strTemplateFilePath, $strTemplate);
+			// make sure paths are set up to pick up included files from the various directories
+			$a[] = QCodeGen::TemplatesPathCore . $strModuleName;
+			if (QCodeGen::TemplatesPathPlugin) {
+				array_unshift ($a, QCodeGen::TemplatesPathPlugin . $strModuleName);
 			}
+			if (QCodeGen::TemplatesPathProject) {
+				array_unshift ($a, QCodeGen::TemplatesPathProject . $strModuleName);
+			}
+			$strSearchPath = implode (PATH_SEPARATOR, $a) . PATH_SEPARATOR . get_include_path();
+			$strOldIncludePath = set_include_path ($strSearchPath);
+			if ($strSearchPath != get_include_path()) {
+				throw new QCallerException ('Can\'t override include path. Make sure your apache or server settings allow include paths to be overridden. ' );
+			}
+
+			$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $strModuleName, $mixArgumentArray, $templateSettings);
+			set_include_path($strOldIncludePath);
 
 			$blnOverwriteFlag = QType::Cast($templateSettings['OverwriteFlag'], QType::Boolean);
 			$blnDocrootFlag = QType::Cast($templateSettings['DocrootFlag'], QType::Boolean);
@@ -503,336 +498,6 @@
 			$strTemplate = str_replace("\r", '', $strTemplate);
 			return $strTemplate;
 		}
-
-		protected function EvaluateSubTemplate($strSubTemplateFilename, $strModuleName, $mixArgumentArray) {
-			if (QCodeGen::DebugMode) _p("Evaluating $strSubTemplateFilename<br/>", false);
-
-			// Try the Custom SubTemplate Path (PHP template version)
-			$strFilename = sprintf('%s%s%s/%s.php', __QCUBED__, QCodeGen::TemplatesPathCustom, $strModuleName, $strSubTemplateFilename);
-			if (file_exists($strFilename))
-				return $this->EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray);
-
-			// Try the Custom SubTemplate Path
-			$strFilename = sprintf('%s%s%s/%s', __QCUBED__, QCodeGen::TemplatesPathCustom, $strModuleName, $strSubTemplateFilename);
-			if (file_exists($strFilename))
-				return $this->EvaluateTemplate(file_get_contents($strFilename), $strModuleName, $mixArgumentArray);
-
-			// Try the Standard SubTemplate Path
-			$strFilename = sprintf('%s%s%s/%s', __QCUBED_CORE__, QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename);
-			if (file_exists($strFilename))
-				return $this->EvaluateTemplate(file_get_contents($strFilename), $strModuleName, $mixArgumentArray);
-
-			// Try the Standard SubTemplate Path (PHP template version)
-			$strFilename = sprintf('%s%s%s/%s.php', __QCUBED_CORE__, QCodeGen::TemplatesPath, $strModuleName, $strSubTemplateFilename);
-			if (file_exists($strFilename))
-				return $this->EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray);
-
-			// SubTemplate Does Not Exist
-			throw new QCallerException('CodeGen SubTemplate Does Not Exist within the "' . $strModuleName . '" module: ' . $strSubTemplateFilename);
-		}
-
-		protected function EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray) {
-			// First remove all \r from the template (for Win/*nix compatibility)
-			$strTemplate = str_replace("\r", '', $strTemplate);
-
-			// Get all the arguments and set them locally
-			if ($mixArgumentArray) foreach ($mixArgumentArray as $strName=>$mixValue) {
-				$$strName = $mixValue;
-			}
-
-			// Of course, we also need to locally allow "objCodeGen"
-			$objCodeGen = $this;
-
-			// Look for the Escape Begin
-			$intPosition = strpos($strTemplate, QCodeGen::$TemplateEscapeBegin);
-
-			// Get Database Escape Identifiers
-			$strEscapeIdentifierBegin = QApplication::$Database[$this->intDatabaseIndex]->EscapeIdentifierBegin;
-			$strEscapeIdentifierEnd = QApplication::$Database[$this->intDatabaseIndex]->EscapeIdentifierEnd;
-
-			// Evaluate All Escaped Clauses
-			while ($intPosition !== false) {
-				$intPositionEnd = strpos($strTemplate, QCodeGen::$TemplateEscapeEnd, $intPosition);
-
-				// Get and cleanup the Eval Statement
-				$strStatement = substr($strTemplate, $intPosition + QCodeGen::$TemplateEscapeBeginLength,
-										$intPositionEnd - $intPosition - QCodeGen::$TemplateEscapeEndLength);
-				$strStatement = trim($strStatement);
-
-				if (substr($strStatement, 0, 1) == '=') {
-					// Remove Trailing ';' if applicable
-					if (substr($strStatement, strlen($strStatement) - 1) == ';')
-						$strStatement = trim(substr($strStatement, 0, strlen($strStatement) - 1));
-
-					// Remove Head '='
-					$strStatement = trim(substr($strStatement, 1));
-
-					// Add 'return' eval
-					$strStatement = sprintf('return (%s);', $strStatement);
-				} else if (substr($strStatement, 0, 1) == '@') {
-					// Remove Trailing ';' if applicable
-					if (substr($strStatement, strlen($strStatement) - 1) == ';')
-						$strStatement = trim(substr($strStatement, 0, strlen($strStatement) - 1));
-
-					// Remove Head '@'
-					$strStatement = trim(substr($strStatement, 1));
-
-					// Calculate Template Filename
-					$intVariablePosition = strpos($strStatement, '(');
-
-					if ($intVariablePosition === false)
-						throw new Exception('Invalid include subtemplate Command: ' . $strStatement);
-					$strTemplateFile = substr($strStatement, 0, $intVariablePosition);
-
-					$strVariableList = substr($strStatement, $intVariablePosition + 1);
-					// Remove trailing ')'
-					$strVariableList = trim(substr($strVariableList, 0, strlen($strVariableList) - 1));
-
-					$strVariableArray = explode(',', $strVariableList);
-
-					// Clean Each Variable
-					for ($intIndex = 0; $intIndex < count($strVariableArray); $intIndex++) {
-						// Trim
-						$strVariableArray[$intIndex] = trim($strVariableArray[$intIndex]);
-
-						// Remove trailing and head "'"
-						$strVariableArray[$intIndex] = substr($strVariableArray[$intIndex], 1, strlen($strVariableArray[$intIndex]) - 2);
-
-						// Trim Again
-						$strVariableArray[$intIndex] = trim($strVariableArray[$intIndex]);
-					}
-
-					// Ensure each variable exists!
-					foreach ($strVariableArray as $strVariable)
-						if(!isset($$strVariable))
-							throw new Exception(sprintf('Invalid Variable %s in include subtemplate command: %s', $strVariable, $strStatement));
-
-					// Setup the ArgumentArray for this subtemplate
-					$mixTemplateArgumentArray = array();
-					foreach ($strVariableArray as $strVariable)
-						$mixTemplateArgumentArray[$strVariable] = $$strVariable;
-
-					// Get the Evaluated Template!
-					$strEvaledStatement = $this->EvaluateSubTemplate($strTemplateFile . '.tpl', $strModuleName, $mixTemplateArgumentArray);
-
-					// Set Statement to NULL so that the method knows to that the statement we're replacing
-					// has already been eval'ed
-					$strStatement = null;
-				}
-
-				if (substr($strStatement, 0, 1) == '-') {
-					// Backup a number of characters
-					$intPosition = $intPosition - strlen($strStatement);
-					$strStatement = '';
-
-
-				// Check if we're starting an open-ended statemen
-				} else if (substr($strStatement, strlen($strStatement) - 1) == '{') {
-					// We ARE in an open-ended statement
-
-					// SubTemplate is the contents of this open-ended template
-					$strSubTemplate = substr($strTemplate, $intPositionEnd + QCodeGen::$TemplateEscapeEndLength);
-
-					// Parse through the rest of the template, and pull the correct SubTemplate,
-					// Keeping in account nested open-ended statements
-					$intLevel = 1;
-
-					$intSubPosition = strpos($strSubTemplate, QCodeGen::$TemplateEscapeBegin);
-					while (($intLevel > 0) && ($intSubPosition !== false)) {
-						$intSubPositionEnd = strpos($strSubTemplate, QCodeGen::$TemplateEscapeEnd, $intSubPosition);
-						$strFragment = substr($strSubTemplate, $intSubPosition + QCodeGen::$TemplateEscapeEndLength,
-							$intSubPositionEnd - $intSubPosition - QCodeGen::$TemplateEscapeEndLength);
-						$strFragment = trim($strFragment);
-
-						$strFragmentLastCharacter = substr($strFragment, strlen($strFragment) - 1);
-
-						if ($strFragmentLastCharacter == '{') {
-							$intLevel++;
-						} else if ($strFragmentLastCharacter == '}') {
-							$intLevel--;
-						}
-
-						if ($intLevel)
-							$intSubPosition = strpos($strSubTemplate, QCodeGen::$TemplateEscapeBegin, $intSubPositionEnd);
-					}
-					if ($intLevel != 0)
-						throw new Exception("Improperly Terminated OpenEnded Command following; $strStatement");
-
-					$strSubTemplate = substr($strSubTemplate, 0, $intSubPosition);
-
-					// Remove First Carriage Return (if applicable)
-					$intCrPosition = strpos($strSubTemplate, "\n");
-					if ($intCrPosition !== false) {
-						$strFragment = substr($strSubTemplate, 0, $intCrPosition + 1);
-						if (trim($strFragment) == '') {
-							// Nothing exists before the first CR
-							// Go ahead and chop it off
-							$strSubTemplate = substr($strSubTemplate, $intCrPosition + 1);
-						}
-					}
-
-					// Remove blank space after the last carriage return (if applicable)
-					$intCrPosition = strrpos($strSubTemplate, "\n");
-					if ($intCrPosition !== false) {
-						$strFragment = substr($strSubTemplate, $intCrPosition + 1);
-						if (trim($strFragment) == '') {
-							// Nothing exists after the last CR
-							// Go ahead and chop it off
-							$strSubTemplate = substr($strSubTemplate, 0, $intCrPosition + 1);
-						}
-					}
-
-					// Figure out the Command and calculate SubTemplate
-					$strCommand = substr($strStatement, 0, strpos($strStatement, ' '));
-					switch ($strCommand) {
-						case 'foreach':
-							$strFullStatement = $strStatement;
-
-							// Remove leading 'foreach' and trailing '{'
-							$strStatement = substr($strStatement, strlen('foreach'));
-							$strStatement = substr($strStatement, 0, strlen($strStatement) - 1);
-							$strStatement = trim($strStatement);
-
-							// Ensure that we've got a "(" and a ")"
-							if ((QString::FirstCharacter($strStatement) != '(') ||
-								(QString::LastCharacter($strStatement) != ')'))
-								throw new Exception("Improperly Formatted foreach: $strFullStatement");
-							$strStatement = trim(substr($strStatement, 1, strlen($strStatement) - 2));
-
-							// Pull out the two sides of the "as" clause
-							$strStatement = explode(' as ', $strStatement);
-							if (count($strStatement) != 2)
-								throw new Exception("Improperly Formatted foreach: $strFullStatement");
-
-							$objArray = eval(sprintf('return %s;', trim($strStatement[0])));
-							$strSingleObjectName = trim($strStatement[1]);
-							$strNameKeyPair = explode('=>', $strSingleObjectName);
-
-							$mixArgumentArray['_INDEX'] = 0;
-							if (count($strNameKeyPair) == 2) {
-								$strSingleObjectKey = trim($strNameKeyPair[0]);
-								$strSingleObjectValue = trim($strNameKeyPair[1]);
-
-								// Remove leading '$'
-								$strSingleObjectKey = substr($strSingleObjectKey, 1);
-								$strSingleObjectValue = substr($strSingleObjectValue, 1);
-
-								// Iterate to setup strStatement
-								$strStatement = '';
-								if ($objArray) foreach ($objArray as $$strSingleObjectKey => $$strSingleObjectValue) {
-									$mixArgumentArray[$strSingleObjectKey] = $$strSingleObjectKey;
-									$mixArgumentArray[$strSingleObjectValue] = $$strSingleObjectValue;
-
-									$strStatement .= $this->EvaluateTemplate($strSubTemplate, $strModuleName, $mixArgumentArray);
-									$mixArgumentArray['_INDEX']++;
-								}
-							} else {
-								// Remove leading '$'
-								$strSingleObjectName = substr($strSingleObjectName, 1);
-
-								// Iterate to setup strStatement
-								$strStatement = '';
-								if ($objArray) foreach ($objArray as $$strSingleObjectName) {
-									$mixArgumentArray[$strSingleObjectName] = $$strSingleObjectName;
-
-									$strStatement .= $this->EvaluateTemplate($strSubTemplate, $strModuleName, $mixArgumentArray);
-									$mixArgumentArray['_INDEX']++;
-								}
-							}
-
-							break;
-
-						case 'if':
-							$strFullStatement = $strStatement;
-
-							// Remove leading 'if' and trailing '{'
-							$strStatement = substr($strStatement, strlen('if'));
-							$strStatement = substr($strStatement, 0, strlen($strStatement) - 1);
-							$strStatement = trim($strStatement);
-
-
-							if (eval(sprintf('return (%s);', $strStatement))) {
-								$strStatement = $this->EvaluateTemplate($strSubTemplate, $strModuleName, $mixArgumentArray);
-							} else
-								$strStatement = '';
-
-							break;
-						default:
-							throw new Exception("Invalid OpenEnded Command: $strStatement");
-					}
-
-					// Reclculate intPositionEnd
-					$intPositionEnd = $intPositionEnd + QCodeGen::$TemplateEscapeEndLength + $intSubPositionEnd;
-
-					// If nothing but whitespace between $intPositionEnd and the next CR, then remove the CR
-					$intCrPosition = strpos($strTemplate, "\n", $intPositionEnd + QCodeGen::$TemplateEscapeEndLength);
-					if ($intCrPosition !== false) {
-						$strFragment = substr($strTemplate, $intPositionEnd + QCodeGen::$TemplateEscapeEndLength, $intCrPosition - ($intPositionEnd + QCodeGen::$TemplateEscapeEndLength));
-						if (trim($strFragment == '')) {
-							// Nothing exists after the escapeend and the next CR
-							// Go ahead and chop it off
-							$intPositionEnd = $intCrPosition - QCodeGen::$TemplateEscapeEndLength + 1;
-						}
-					} else {
-						$strFragment = substr($strTemplate, $intPositionEnd + QCodeGen::$TemplateEscapeEndLength);
-						if (trim($strFragment == '')) {
-							// Nothing exists after the escapeend and the end
-							// Go ahead and chop it off
-							$intPositionEnd = strlen($strTemplate);
-						}
-					}
-
-
-
-					// Recalcualte intPosition
-					// If nothing but whitespace between $intPosition and the previous CR, then remove the Whitespace (keep the CR)
-					$strFragment = substr($strTemplate, 0, $intPosition);
-					$intCrPosition = strrpos($strFragment, "\n");
-
-
-					if ($intCrPosition !== false) {
-						$intLfLength = 1;
-					} else {
-						$intLfLength = 0;
-						$intCrPosition = 0;
-					}
-
-					// Inlcude the previous "\r" if applicable
-					if (($intCrPosition > 1) && (substr($strTemplate, $intCrPosition - 1, 1) == "\r")) {
-						$intCrLength = 1;
-						$intCrPosition--;
-					} else
-						$intCrLength = 0;
-					$strFragment = substr($strTemplate, $intCrPosition, $intPosition - $intCrPosition);
-
-					if (trim($strFragment) == '') {
-						// Nothing exists before the escapebegin and the previous CR
-						// Go ahead and chop it off (but not the CR or CR/LF)
-						$intPosition = $intCrPosition + $intLfLength + $intCrLength;
-					}
-				} else {
-					if (is_null($strStatement))
-						$strStatement = $strEvaledStatement;
-					else {
-						if (QCodeGen::DebugMode) _p("Evalling: $strStatement<br/>", false);
-						// Perform the Eval
-						$strStatement = eval($strStatement);
-					}
-				}
-
-				// Do the Replace
-				$strTemplate = substr($strTemplate, 0, $intPosition) . $strStatement . substr($strTemplate, $intPositionEnd + QCodeGen::$TemplateEscapeEndLength);
-
-				// GO to the next Escape Marker (if applicable)
-				$intPosition = strpos($strTemplate, QCodeGen::$TemplateEscapeBegin);
-			}
-			return $strTemplate;
-		}
-
-
-
-
-
 
 		///////////////////////
 		// COMMONLY OVERRIDDEN CONVERSION FUNCTIONS

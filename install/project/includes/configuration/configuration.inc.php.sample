@@ -413,7 +413,12 @@ if (!defined('SERVER_INSTANCE')) {
 			// If using HTML Purifier, the location of the writeable cache directory.
 			define ('__PURIFIER_CACHE__', __CACHE__ . '/purifier');
 
-			break;
+			define ('__TEMPLATES_PATH_CORE__', __QCUBED_CORE__ . '/codegen/templates/'); // path to your local overrides
+			define ('__TEMPLATES_PATH_PLUGIN__', '');	// if using a plugin template, path to that template
+			define ('__TEMPLATES_PATH_PROJECT__', __QCUBED__ . '/codegen/templates/');	// path to the core base templates
+
+
+		break;
 	}
 }
 ?>
