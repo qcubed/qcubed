@@ -54,11 +54,11 @@
 			<p>
 				Enter the path where you have copied the framework files. The path would ideally contain the directories
 				<em>assets</em>, <em>drafts</em> and <em>includes</em> along with a few other files.<br>
-				<strong>Most likely value</strong>: <code><?php echo $strCurrentInstallationDir; ?></code>
+				<strong>Most likely value</strong>: <code><?= $strCurrentInstallationDir; ?></code>
 			</p>
 			<label for="installation_path">Enter installation directory: </label>
 			<input type="text" size="40" id="installation_path" name="installation_path"
-				   value="<?php echo $strCurrentInstallationDir; ?>"/>
+				   value="<?= $strCurrentInstallationDir; ?>"/>
 			<input type="submit" value="Next">
 		</form>
 
@@ -67,11 +67,11 @@
 		<ol>
 			<li>
 				Open the installation directory where you have extracted/copied the QCubed installation files. It
-				appears you have copied QCubed to <code><?php echo $strCurrentInstallationDir; ?></code>
+				appears you have copied QCubed to <code><?= $strCurrentInstallationDir; ?></code>
 			</li>
 			<li>
 				Go to the <em>includes</em> directory within the installation directory. The full path should be
-				<code><?php echo $strCurrentInstallationDir; ?>/includes</code>.
+				<code><?= $strCurrentInstallationDir; ?>/includes</code>.
 			</li>
 			<li>
 				See if a file named <code>configuration.inc.php</code> already exists.
