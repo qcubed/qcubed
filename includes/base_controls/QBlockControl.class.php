@@ -174,6 +174,47 @@
 		public function ParsePostData() {}
 
 		/**
+		 * This function evaluates the QBlockControl Template. It is similar to the function found in the
+		 * QForm, but recreated here so that the "$this" in the template will be the control, instead of the form,
+		 * and the protected members of the control are available to draw directly.
+		 * @param string $strTemplate Path to the HTML template file
+		 *
+		 * @return string The evaluated HTML string
+		 */
+		public function EvaluateTemplate($strTemplate) {
+			global $_ITEM;
+			global $_CONTROL;
+			global $_FORM;
+
+			$_FORM = $this->Form;
+
+			if ($strTemplate) {
+				QApplication::$ProcessOutput = false;
+				// Store the Output Buffer locally
+				$strAlreadyRendered = ob_get_contents();
+				if ($strAlreadyRendered) {
+					ob_clean();
+				}
+
+				// Evaluate the new template
+				ob_start('__QForm_EvaluateTemplate_ObHandler');
+				require($strTemplate);
+				$strTemplateEvaluated = ob_get_contents();
+				ob_end_clean();
+
+				// Restore the output buffer and return evaluated template
+				if ($strAlreadyRendered) {
+					print($strAlreadyRendered);
+				}
+				QApplication::$ProcessOutput = true;
+
+				return $strTemplateEvaluated;
+			} else
+				return null;
+		}
+
+
+		/**
 		 * Returns the HTML of the QControl
 		 * @return string The HTML string
 		 */
@@ -193,7 +234,7 @@
 				global $_CONTROL;
 				$objCurrentControl = $_CONTROL;
 				$_CONTROL = $this;
-				$strTemplateEvaluated = $this->objForm->EvaluateTemplate($this->strTemplate);
+				$strTemplateEvaluated = $this->EvaluateTemplate($this->strTemplate);
 				$_CONTROL = $objCurrentControl;
 			}
 
