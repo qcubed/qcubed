@@ -3,7 +3,7 @@
 	foreach ($objTable->ColumnArray as $objColumn) {
 		if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue; 
 		if (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != 'label') { ?>
-	 * @property <?php echo $objCodeGen->FormControlClassForColumn($objColumn);  ?> $<?php echo $objColumn->PropertyName  ?>Control
+	 * @property <?= $objCodeGen->FormControlClassForColumn($objColumn); ?> $<?= $objColumn->PropertyName ?>Control
 <?php 	} ?>
 	 * @property-read QLabel $<?= $objColumn->PropertyName ?>Label
 <?php } ?>
