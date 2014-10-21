@@ -130,6 +130,14 @@ CREATE TABLE qc_watchers (
   PRIMARY KEY (table_key)
 );
 
+DROP TABLE IF EXISTS type_test;
+CREATE TABLE type_test (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  date date DEFAULT NULL,
+  time time DEFAULT NULL,
+  date_time datetime DEFAULT NULL,
+  PRIMARY KEY (id)
+);
 
 #========================================================================== #
 #  Foreign Keys                                                             #
