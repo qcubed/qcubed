@@ -12,26 +12,26 @@
 ?>
 <?php print("<?php\n"); ?>
 	/**
-	 * The abstract <?php echo $objTable->ClassName  ?>Gen class defined here is
+	 * The abstract <?= $objTable->ClassName ?>Gen class defined here is
 	 * code-generated and contains all the basic CRUD-type functionality as well as
 	 * basic methods to handle relationships and index-based loading.
 	 *
-	 * To use, you should use the <?php echo $objTable->ClassName  ?> subclass which
-	 * extends this <?php echo $objTable->ClassName  ?>Gen class.
+	 * To use, you should use the <?= $objTable->ClassName ?> subclass which
+	 * extends this <?= $objTable->ClassName ?>Gen class.
 	 *
 	 * Because subsequent re-code generations will overwrite any changes to this
 	 * file, you should leave this file unaltered to prevent yourself from losing
 	 * any information or code changes.  All customizations should be done by
 	 * overriding existing or implementing new methods, properties and variables
-	 * in the <?php echo $objTable->ClassName  ?> class.
+	 * in the <?= $objTable->ClassName ?> class.
 	 *
-	 * @package <?php echo QCodeGen::$ApplicationName;  ?>
+	 * @package <?= QCodeGen::$ApplicationName; ?>
 
 	 * @subpackage GeneratedDataObjects
 <?php include("property_comments.tpl.php"); ?>
 
 	 */
-	class <?php echo $objTable->ClassName  ?>Gen extends QBaseClass implements IteratorAggregate {
+	class <?= $objTable->ClassName ?>Gen extends QBaseClass implements IteratorAggregate {
 
 		public static $blnWatchChanges = false; // Set to true to watch changes at the table level
 

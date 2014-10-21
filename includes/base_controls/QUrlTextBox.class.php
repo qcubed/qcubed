@@ -17,6 +17,7 @@
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->strLabelForInvalid = QApplication::Translate('Invalid Web Address');
+			$this->strTextMode = QTextMode::Url;
 		}
 	}
 

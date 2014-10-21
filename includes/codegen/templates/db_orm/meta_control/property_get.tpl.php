@@ -8,11 +8,11 @@
 		public function __get($strName) {
 			switch ($strName) {
 				// General MetaControlVariables
-				case '<?php echo $objTable->ClassName  ?>': return $this-><?php echo $objCodeGen->VariableNameFromTable($objTable->Name);  ?>;
+				case '<?= $objTable->ClassName ?>': return $this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>;
 				case 'TitleVerb': return $this->strTitleVerb;
 				case 'EditMode': return $this->blnEditMode;
 
-				// Controls that point to <?php echo $objTable->ClassName  ?> fields -- will be created dynamically if not yet created
+				// Controls that point to <?= $objTable->ClassName ?> fields -- will be created dynamically if not yet created
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?><?php
 	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 	$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);

@@ -1,26 +1,26 @@
 <?php $controlType = $this->FormControlClassForColumn ($objColumn);?>
 		/**
-		 * Create and setup <?php echo $controlType ?> <?php echo $strControlId  ?>
+		 * Create and setup <?= $controlType ?> <?= $strControlId ?>
 
 		 * @param string $strControlId optional ControlId to use
-		 * @return <?php echo $controlType ?>
+		 * @return <?= $controlType ?>
 		 */
-		public function <?php echo $strControlId  ?>_Create($strControlId = null) {
-			$this-><?php echo $strControlId  ?> = new <?php echo $controlType?>($this->objParentObject, $strControlId);
-			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QCodeGen::MetaControlLabelNameFromColumn($objColumn)  ?>');
-			$this-><?php echo $strControlId  ?>->Checked = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
-			return $this-><?php echo $strControlId  ?>;
+		public function <?= $strControlId ?>_Create($strControlId = null) {
+			$this-><?= $strControlId ?> = new <?= $controlType?>($this->objParentObject, $strControlId);
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strControlId ?>->Checked = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;
+			return $this-><?= $strControlId ?>;
 		}
 
 		/**
-		 * Create and setup QLabel <?php echo $strLabelId  ?>
+		 * Create and setup QLabel <?= $strLabelId ?>
 
 		 * @param string $strControlId optional ControlId to use
 		 * @return QLabel
 		 */
-		public function <?php echo $strLabelId  ?>_Create($strControlId = null) {
-			$this-><?php echo $strLabelId  ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?php echo $strLabelId  ?>->Name = QApplication::Translate('<?php echo QCodeGen::MetaControlLabelNameFromColumn($objColumn)  ?>');
-			$this-><?php echo $strLabelId  ?>->Text = ($this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>) ? QApplication::Translate('Yes') : QApplication::Translate('No');
-			return $this-><?php echo $strLabelId  ?>;
+		public function <?= $strLabelId ?>_Create($strControlId = null) {
+			$this-><?= $strLabelId ?> = new QLabel($this->objParentObject, $strControlId);
+			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strLabelId ?>->Text = ($this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>) ? QApplication::Translate('Yes') : QApplication::Translate('No');
+			return $this-><?= $strLabelId ?>;
 		}

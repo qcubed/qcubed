@@ -13,9 +13,9 @@
 <?php print("<?php\n"); ?>
 	/**
 	 * This is the "Meta" DataGrid class for the List functionality
-	 * of the <?php echo $objTable->ClassName  ?> class.  This code-generated class
+	 * of the <?= $objTable->ClassName ?> class.  This code-generated class
 	 * contains a QDataGrid class which can be used by any QForm or QPanel,
-	 * listing a collection of <?php echo $objTable->ClassName  ?> objects.  It includes
+	 * listing a collection of <?= $objTable->ClassName ?> objects.  It includes
 	 * functionality to perform pagination and sorting on columns.
 	 *
 	 * To take advantage of some (or all) of these control objects, you
@@ -24,14 +24,14 @@
 	 * Any and all changes to this file will be overwritten with any subsequent re-
 	 * code generation.
 	 *
-	 * @package <?php echo QCodeGen::$ApplicationName;  ?>
+	 * @package <?= QCodeGen::$ApplicationName; ?>
 
 	 * @property QQCondition $AdditionalConditions Any conditions to use during binding
 	 * @property QQClause $AdditionalClauses Any clauses to use during binding
 	 * @subpackage MetaControls
 	 *
 	 */
-	class <?php echo $objTable->ClassName  ?>DataGridGen extends QDataGrid {
+	class <?= $objTable->ClassName ?>DataGridGen extends QDataGrid {
 		protected $conAdditionalConditions;
 		protected $clsAdditionalClauses;
 

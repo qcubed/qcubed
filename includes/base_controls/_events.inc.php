@@ -244,9 +244,19 @@
 		protected $strCondition = 'event.keyCode == 8';
 	}
 
+	/**
+	 * Detects changes to textboxes and other input elements. Responds to cut/paste, search cancel, etc.
+	 * Ignores arrow keys, etc.
+	 * Not in IE8 or below. Buggy in IE9. Full support in IE10 and above.
+	 * No support in Safari 5 and below for textarea elements.
+	 */
+	class QInputEvent extends QEvent {
+		/** Event Name */
+		const EventName = 'input';
+	}
 
 
-abstract class QJqUiEvent extends QEvent {
+	abstract class QJqUiEvent extends QEvent {
 		// be sure to subclass your events from this class if they are JqUiEvents
 	}
 
