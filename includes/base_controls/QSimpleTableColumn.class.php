@@ -709,7 +709,7 @@
 		}
 
 		/**
-		 * Fix up possible embedded reference to the the form.
+		 * Fix up possible embedded reference to the form.
 		 */
 		public function Sleep() {
 			$this->objClosure = QControl::SleepHelper($this->objClosure);
@@ -910,7 +910,7 @@
 		}
 
 		/**
-		 * Fix up possible embedded reference to the the form.
+		 * Fix up possible embedded reference to the form.
 		 */
 		public function Sleep() {
 			$this->checkParamCallback = QControl::SleepHelper($this->checkParamCallback);
