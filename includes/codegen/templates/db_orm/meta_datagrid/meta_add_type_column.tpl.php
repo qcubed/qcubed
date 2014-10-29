@@ -4,7 +4,7 @@
 		 *
 		 * Also, $mixContent cannot be an array.  Only a single field can be specified.
 		 *
-		 * @param mixed $mixContent string or QQNode from <?php echo $objTable->ClassName  ?>
+		 * @param mixed $mixContent string or QQNode from <?= $objTable->ClassName ?>
 
 		 * @param string $strTypeClassName the name of the TypeClass to use $NameArray against
 		 * @param mixed $objOverrideParameters

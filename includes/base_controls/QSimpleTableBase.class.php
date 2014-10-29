@@ -25,6 +25,7 @@
 	 * @property boolean $ShowHeader true to show the header row
 	 * @property boolean $ShowFooter true to show the footer row
 	 * @property boolean $RenderColumnTags true to include col tags in the table output
+	 * @property boolean $HideIfEmpty true to completely hide the table if there is no data, vs. drawing the table with no rows.
 	 * @throws QCallerException
 	 *
 	 */
@@ -39,6 +40,8 @@
 		protected $blnShowFooter = false;
 		protected $blnRenderColumnTags = false;
 		protected $strCaption = null;
+		protected $blnHideIfEmpty = false;
+
 		/** @var integer */
 		protected $intHeaderRowCount = 1;
 		/** @var  integer Used during rendering to report which header row is being drawn in a multi-row header. */
@@ -94,6 +97,20 @@
 		 */
 		public function CreateClosureColumn($strName, $objClosure, $intColumnIndex = -1) {
 			$objColumn = new QSimpleTableClosureColumn($strName, $objClosure);
+			$this->AddColumnAt($intColumnIndex, $objColumn);
+			return $objColumn;
+		}
+
+		/**
+		 * Add a virtual attribute column.
+		 *
+		 * @param $strName
+		 * @param $strAttribute
+		 * @param $intColumnIndex
+		 * @return QVirtualAttributeColumn
+		 */
+		public function CreateVirtualAttributeColumn ($strName, $strAttribute, $intColumnIndex = -1) {
+			$objColumn = new QVirtualAttributeColumn($strName, $strAttribute);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
@@ -456,6 +473,11 @@
 		protected function GetControlHtml() {
 			$this->DataBind();
 
+			if (empty ($this->objDataSource) && $this->blnHideIfEmpty) {
+				$this->objDataSource = null;
+				return '';
+			}
+
 			// Table Tag
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)
@@ -497,6 +519,29 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Preserialize the columns, since some columns might have references to the form.
+		 */
+		public function Sleep() {
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Sleep();
+			}
+			parent::Sleep();
+		}
+
+		/**
+		 * Restore references.
+		 *
+		 * @param QForm $objForm
+		 */
+		public function Wakeup(QForm $objForm) {
+			parent::Wakeup($objForm);
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Wakeup($objForm);
+			}
+		}
+
+
 		public function __get($strName) {
 			switch ($strName) {
 				case 'RowCssClass':
@@ -517,6 +562,8 @@
 					return $this->intHeaderRowCount;
 				case 'CurrentHeaderRowIndex':
 					return $this->intCurrentHeaderRowIndex;
+				case 'HideIfEmpty':
+					return $this->blnHideIfEmpty;
 
 				default:
 					try {
@@ -601,6 +648,16 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case "HideIfEmpty":
+					try {
+						$this->blnHideIfEmpty = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 
 				default:
 					try {

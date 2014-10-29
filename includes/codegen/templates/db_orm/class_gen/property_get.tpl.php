@@ -11,14 +11,14 @@
 				// Member Variables
 				///////////////////
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-				case '<?php echo $objColumn->PropertyName  ?>':
+				case '<?= $objColumn->PropertyName ?>':
 					/**
-					 * Gets the value for <?php echo $objColumn->VariableName  ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Timestamp) print '(Read-Only Timestamp)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+					 * Gets the value for <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Timestamp) print '(Read-Only Timestamp)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
-					 * @return <?php echo $objColumn->VariableType  ?>
+					 * @return <?= $objColumn->VariableType ?>
 
 					 */
-					return $this-><?php echo $objColumn->VariableName  ?>;
+					return $this-><?= $objColumn->VariableName ?>;
 
 <?php } ?>
 
@@ -27,17 +27,17 @@
 				///////////////////
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
-				case '<?php echo $objColumn->Reference->PropertyName  ?>':
+				case '<?= $objColumn->Reference->PropertyName ?>':
 					/**
-					 * Gets the value for the <?php echo $objColumn->Reference->VariableType  ?> object referenced by <?php echo $objColumn->VariableName  ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+					 * Gets the value for the <?= $objColumn->Reference->VariableType ?> object referenced by <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
-					 * @return <?php echo $objColumn->Reference->VariableType  ?>
+					 * @return <?= $objColumn->Reference->VariableType ?>
 
 					 */
 					try {
-						if ((!$this-><?php echo $objColumn->Reference->VariableName  ?>) && (!is_null($this-><?php echo $objColumn->VariableName  ?>)))
-							$this-><?php echo $objColumn->Reference->VariableName  ?> = <?php echo $objColumn->Reference->VariableType  ?>::Load($this-><?php echo $objColumn->VariableName  ?>);
-						return $this-><?php echo $objColumn->Reference->VariableName  ?>;
+						if ((!$this-><?= $objColumn->Reference->VariableName ?>) && (!is_null($this-><?= $objColumn->VariableName ?>)))
+							$this-><?= $objColumn->Reference->VariableName ?> = <?= $objColumn->Reference->VariableType ?>::Load($this-><?= $objColumn->VariableName ?>);
+						return $this-><?= $objColumn->Reference->VariableName ?>;
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -49,22 +49,22 @@
 <?php if ($objReverseReference->Unique) { ?>
 <?php $objReverseReferenceTable = $objCodeGen->TableArray[strtolower($objReverseReference->Table)]; ?>
 <?php $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
-				case '<?php echo $objReverseReference->ObjectPropertyName  ?>':
+				case '<?= $objReverseReference->ObjectPropertyName ?>':
 					/**
-					 * Gets the value for the <?php echo $objReverseReference->VariableType  ?> object that uniquely references this <?php echo $objTable->ClassName  ?>
+					 * Gets the value for the <?= $objReverseReference->VariableType ?> object that uniquely references this <?= $objTable->ClassName ?>
 
-					 * by <?php echo $objReverseReference->ObjectMemberVariable  ?> (Unique)
-					 * @return <?php echo $objReverseReference->VariableType  ?>
+					 * by <?= $objReverseReference->ObjectMemberVariable ?> (Unique)
+					 * @return <?= $objReverseReference->VariableType ?>
 
 					 */
 					try {
 						if (!$this->__blnRestored ||
-								$this-><?php echo $objReverseReference->ObjectMemberVariable  ?> === false)
+								$this-><?= $objReverseReference->ObjectMemberVariable ?> === false)
 							// Either this is a new object, or we've attempted early binding -- and the reverse reference object does not exist
 							return null;
-						if (!$this-><?php echo $objReverseReference->ObjectMemberVariable  ?>)
-							$this-><?php echo $objReverseReference->ObjectMemberVariable  ?> = <?php echo $objReverseReference->VariableType  ?>::LoadBy<?php echo $objReverseReferenceColumn->PropertyName  ?>(<?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>);
-						return $this-><?php echo $objReverseReference->ObjectMemberVariable  ?>;
+						if (!$this-><?= $objReverseReference->ObjectMemberVariable ?>)
+							$this-><?= $objReverseReference->ObjectMemberVariable ?> = <?= $objReverseReference->VariableType ?>::LoadBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>);
+						return $this-><?= $objReverseReference->ObjectMemberVariable ?>;
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -84,45 +84,45 @@
 	$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
 	$varType = (is_a($objAssociatedTable, 'QTypeTable') ? 'integer' : $objReference->VariableType);
 ?>
-				case '<?php echo $objReference->ObjectDescription ?>':
-				case '_<?php echo $objReference->ObjectDescription ?>': // for backwards compatibility
+				case '<?= $objReference->ObjectDescription ?>':
+				case '_<?= $objReference->ObjectDescription ?>': // for backwards compatibility
 					/**
-					 * Gets the value for the private <?php echo $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
-					 * if set due to an expansion on the <?php echo $objReference->Table ?> association table
-					 * @return <?php echo $varType  ?>
+					 * Gets the value for the private <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
+					 * if set due to an expansion on the <?= $objReference->Table ?> association table
+					 * @return <?= $varType ?>
 
 					 */
-					return $this-><?php echo $varPrefix . $objReference->ObjectDescription ?>;
+					return $this-><?= $varPrefix . $objReference->ObjectDescription ?>;
 
-				case '<?php echo $objReference->ObjectDescription ?>Array':
-				case '_<?php echo $objReference->ObjectDescription ?>Array': // for backwards compatibility
+				case '<?= $objReference->ObjectDescription ?>Array':
+				case '_<?= $objReference->ObjectDescription ?>Array': // for backwards compatibility
 					/**
-					 * Gets the value for the private <?php echo $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
-					 * if set due to an ExpandAsArray on the <?php echo $objReference->Table ?> association table
-					 * @return <?php echo $varType ?>[]
+					 * Gets the value for the private <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
+					 * if set due to an ExpandAsArray on the <?= $objReference->Table ?> association table
+					 * @return <?= $varType ?>[]
 					 */
-					return $this-><?php echo $varPrefix . $objReference->ObjectDescription ?>Array;
+					return $this-><?= $varPrefix . $objReference->ObjectDescription ?>Array;
 
 
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
-				case '<?php echo $objReference->ObjectDescription ?>':
-				case '_<?php echo $objReference->ObjectDescription ?>':
+				case '<?= $objReference->ObjectDescription ?>':
+				case '_<?= $objReference->ObjectDescription ?>':
 					/**
-					 * Gets the value for the private _obj<?php echo $objReference->ObjectDescription ?> (Read-Only)
-					 * if set due to an expansion on the <?php echo $objReference->Table ?>.<?php echo $objReference->Column ?> reverse relationship
-					 * @return <?php echo $objReference->VariableType  ?>
+					 * Gets the value for the private _obj<?= $objReference->ObjectDescription ?> (Read-Only)
+					 * if set due to an expansion on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
+					 * @return <?= $objReference->VariableType ?>
 
 					 */
-					return $this->_obj<?php echo $objReference->ObjectDescription ?>;
+					return $this->_obj<?= $objReference->ObjectDescription ?>;
 
-				case '<?php echo $objReference->ObjectDescription ?>Array':
-				case '_<?php echo $objReference->ObjectDescription ?>Array':
+				case '<?= $objReference->ObjectDescription ?>Array':
+				case '_<?= $objReference->ObjectDescription ?>Array':
 					/**
-					 * Gets the value for the private _obj<?php echo $objReference->ObjectDescription ?>Array (Read-Only)
-					 * if set due to an ExpandAsArray on the <?php echo $objReference->Table ?>.<?php echo $objReference->Column ?> reverse relationship
-					 * @return <?php echo $objReference->VariableType  ?>[]
+					 * Gets the value for the private _obj<?= $objReference->ObjectDescription ?>Array (Read-Only)
+					 * if set due to an ExpandAsArray on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
+					 * @return <?= $objReference->VariableType ?>[]
 					 */
-					return $this->_obj<?php echo $objReference->ObjectDescription ?>Array;
+					return $this->_obj<?= $objReference->ObjectDescription ?>Array;
 
 <?php } ?><?php } ?>
 

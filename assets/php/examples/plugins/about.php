@@ -30,7 +30,7 @@
 		component that lists out the plugins you have installed, and lets you
 		install new ones. You can get the list of plugins that are currently
 		available from the <a target="_blank"
-							  href=" <?php echo QPluginInstaller::ONLINE_PLUGIN_REPOSITORY; ?>">online repository</a>.
+							  href=" <?= QPluginInstaller::ONLINE_PLUGIN_REPOSITORY; ?>">online repository</a>.
 		Just download a plugin .zip file, then navigate to the Plugin Manager
 		and press <strong>Install a new Plugin</strong>. Then pick the file you just downloaded.
 		Review the plugin details screen to confirm that this is the plugin that

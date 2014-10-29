@@ -35,7 +35,9 @@
 		protected $RadioList1;
 		/** @var QRadioButtonList */
 		protected $RadioList2;
-		
+		/** @var QSelectMenu */
+		protected $SelectMenu;
+
 		/** @var QDatepicker */
 		protected $Datepicker;
 		/** @var QDatepickerBox */
@@ -192,12 +194,25 @@
 			}
 			$this->RadioList2->ButtonMode = QCheckBoxList::ButtonModeJq;
 			$this->RadioList2->RepeatColumns = 4;
-			
+
+			$this->SelectMenu = new QSelectMenu($this);
+			$this->SelectMenu->Name = "SelectMenu";
+			$this->SelectMenu->Width = 200;
+			foreach (self::$LANGUAGES as $strLang) {
+				$this->SelectMenu->AddItem ($strLang);
+			}
+
+
 			// Datepicker
 			$this->Datepicker = new QDatepicker($this);
+			$this->Datepicker->AddAction (new QDatepicker_SelectEvent2(), new QAjaxAction('setDate'));
+			$this->Datepicker->ActionParameter = 'Datepicker';
 	
 			// DatepickerBox
 			$this->DatepickerBox = new QDatepickerBox($this);
+			$this->DatepickerBox->AddAction(new QChangeEvent(), new QAjaxAction('setDate'));
+			$this->DatepickerBox->ActionParameter = 'DatepickerBox';
+
 
 			// Dialog
 			$this->Dialog = new QDialog($this);
@@ -246,6 +261,7 @@
 			$tab3 = new QPanel($this->Tabs);
 			$tab3->Text = 'Tab 3';
 			$this->Tabs->Headers = array('One', 'Two', 'Three');
+			$this->Tabs->AddAction (new QTabs_ActivateEvent(), new QAjaxAction('tabs_change'));
 		}
 
 		protected function update_autocompleteList($strFormId, $strControlId, $strParameter) {
@@ -345,7 +361,21 @@
             $this->Dialog->Text = $strNewText;
         }
 
-    }
+		protected function setDate($strFormId, $strControlId, $strParameter) {
+			if ($strParameter == 'Datepicker') {
+				$this->DatepickerBox->DateTime = $this->Datepicker->DateTime;
+			} else {
+				$this->Datepicker->DateTime = $this->DatepickerBox->DateTime;
+			}
+		}
 
+		protected function tabs_change($strFormId, $strControlId, $strParameter) {
+			$index = $this->Tabs->Active;
+			$id = $this->Tabs->SelectedId;
+			$strItems = $index . ', ' . $id;
+			QApplication::DisplayAlert ($strItems);
+		}
+
+	}
     ExampleForm::Run('ExampleForm');
 ?>

@@ -1,2 +1,2 @@
-			if ($this-><?php echo $strControlId  ?>) $this-><?php echo $strControlId  ?>->Text = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
-			if ($this-><?php echo $strLabelId  ?>) $this-><?php echo $strLabelId  ?>->Text = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
+			if ($this-><?= $strControlId ?>) $this-><?= $strControlId ?>->Text = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;
+			if ($this-><?= $strLabelId ?>) $this-><?= $strLabelId ?>->Text = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;

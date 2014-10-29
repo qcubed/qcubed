@@ -14,26 +14,26 @@
 	// Load the QCubed Development Framework
 	require('../qcubed.inc.php');
 
-	require(__FORMBASE_CLASSES__ . '/<?php echo $objTable->ClassName  ?>EditFormBase.class.php');
+	require(__FORMBASE_CLASSES__ . '/<?= $objTable->ClassName ?>EditFormBase.class.php');
 
 	/**
 	 * This is a quick-and-dirty draft QForm object to do Create, Edit, and Delete functionality
-	 * of the <?php echo $objTable->ClassName  ?> class.  It uses the code-generated
-	 * <?php echo $objTable->ClassName  ?>MetaControl class, which has meta-methods to help with
-	 * easily creating/defining controls to modify the fields of a <?php echo $objTable->ClassName  ?> columns.
+	 * of the <?= $objTable->ClassName ?> class.  It uses the code-generated
+	 * <?= $objTable->ClassName ?>MetaControl class, which has meta-methods to help with
+	 * easily creating/defining controls to modify the fields of a <?= $objTable->ClassName ?> columns.
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
 	 * here by overriding existing or implementing new methods, properties and variables.
 	 * 
 	 * NOTE: This file is overwritten on any code regenerations.  If you want to make
-	 * permanent changes, it is STRONGLY RECOMMENDED to move both <?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName)  ?>_edit.php AND
-	 * <?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName)  ?>_edit.tpl.php out of this Form Drafts directory.
+	 * permanent changes, it is STRONGLY RECOMMENDED to move both <?= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_edit.php AND
+	 * <?= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_edit.tpl.php out of this Form Drafts directory.
 	 *
-	 * @package <?php echo QCodeGen::$ApplicationName;  ?>
+	 * @package <?= QCodeGen::$ApplicationName; ?>
 
 	 * @subpackage Drafts
 	 */
-	class <?php echo $objTable->ClassName  ?>EditForm extends <?php echo $objTable->ClassName  ?>EditFormBase {
+	class <?= $objTable->ClassName ?>EditForm extends <?= $objTable->ClassName ?>EditFormBase {
 		// Override Form Event Handlers as Needed
 		protected function Form_Run() {
 			parent::Form_Run();
@@ -49,6 +49,6 @@
 	}
 
 	// Go ahead and run this form object to render the page and its event handlers, implicitly using
-	// <?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName)  ?>_edit.tpl.php as the included HTML template file
-	<?php echo $objTable->ClassName  ?>EditForm::Run('<?php echo $objTable->ClassName  ?>EditForm');
+	// <?= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_edit.tpl.php as the included HTML template file
+	<?= $objTable->ClassName ?>EditForm::Run('<?= $objTable->ClassName ?>EditForm');
 ?>

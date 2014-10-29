@@ -72,12 +72,15 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 			QQ::Expand(QQN::Person()->ProjectAsManager),
 			QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone)
 		);
-		
-		$targetPerson = Person::QuerySingle(
-			QQ::Equal(QQN::Person()->Id, 7),
+
+		$arrPeople = Person::LoadAll(
 			$clauses
 		);
-						
+
+		// Karen Wolfe should duplicate, since she is managing two projects
+		$this->assertEqual(sizeof($arrPeople), 13, "13 Person objects found");
+		$targetPerson = $this->verifyObjectPropertyHelper($arrPeople, 'LastName', 'Wolfe');
+
 		$objProjectArray = $targetPerson->_ProjectAsManagerArray;
 		$this->assertNull($objProjectArray, "No project array found");
 
@@ -268,7 +271,7 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		$this->assertEqual(count($objProjectArray), 2, "_ProjectAsManagerArray has 2 Project objects");
 				
 	}
-	
+
 	public function testConditionalExpansion() {
 		$clauses = QQ::Clause(
 			QQ::ExpandAsArray(QQN::Person()->Address),
@@ -293,6 +296,22 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 				
 		//TODO: Conditional Array Expansion, requires API change
 		
+	}
+
+	public function testDataGridHtml() {
+		$objMilestone = Milestone::QuerySingle(
+			QQ::Equal (QQN::Milestone()->Id, 1),
+			QQ::Clause(
+				QQ::Expand(QQN::Milestone()->Project->ManagerPerson)
+			)
+		);
+
+		$_ITEM =$objMilestone;
+		$node = QQN::Milestone()->Project->ManagerPerson;
+
+		$html = $node->GetDataGridHtml();
+		$val = eval(sprintf('return %s;', $html));
+		$this->assertEqual ($val, "Person Object 7");
 	}
 	
 }

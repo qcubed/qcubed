@@ -5,14 +5,27 @@
 	function QDateTimeErrorHandler() {}
 
 	/**
-	 * QDateTime (Standard)
-	 * REQUIRES: PHP >= 5.2.0
+	 * QDateTime
 	 * 
-	 * This DateTime class manages datetimes for the entire system.  It basically
-	 * provides a nice wrapper around the PHP DateTime class, which is included with
-	 * all versions of PHP >= 5.2.0.
-	 * 
-	 * For legacy PHP users (PHP < 5.2.0), please refer to QDateTime.legacy
+	 * This DateTime class provides a nice wrapper around the PHP DateTime class,
+	 * which is included with all versions of PHP >= 5.2.0. It includes many enhancements,
+	 * including the ability to specify a null date or time portion to represent a date only or
+	 * time only object.
+	 *
+	 * Inherits from the php DateTime object, and the built-in methods are available for you to call
+	 * as well. In particular, note that the built-in format, and the qFormat routines here take different
+	 * specifiers. Feel free to use either.
+	 *
+	 * @property null|integer $Month
+	 * @property null|integer $Day
+	 * @property null|integer $Year
+	 * @property null|integer $Hour
+	 * @property null|integer $Minute
+	 * @property null|integer $Second
+	 * @property integer $Timestamp
+	 * @property-read string $Age A string representation of the age relative to now.
+	 * @property-read QDateTime $LastDayOfTheMonth A new QDateTime representing the last day of this date's month.
+	 * @property-read QDateTime $FirstDayOfTheMonth A new QDateTime representing the first day of this date's month.
 	 */
 	class QDateTime extends DateTime {
 		const Now = 'now';
@@ -33,18 +46,31 @@
 		const TimeOnlyType = 2;
 		const DateAndTimeType = 3;
 
+		/** @var bool true if date is null */
+		protected $blnDateNull = true;
+		/** @var bool  true if time is null, rather than just zero (beginning of day) */
+		protected $blnTimeNull = true;
+
+
 		/**
 		 * The "Default" Display Format
 		 * @var string $DefaultFormat
 		 */
-		public static $DefaultFormat = QDateTime::FormatDisplayDate;
+		public static $DefaultFormat = QDateTime::FormatDisplayDateTime;
 		
 		/**
 		 * The "Default" Display Format for Times
 		 * @var string $DefaultTimeFormat
 		 */
 		public static $DefaultTimeFormat = QDateTime::FormatDisplayTime;
-	
+
+		/**
+		 * The "Default" Display Format for Dates with null times
+		 * @var string $DefaultDateOnlyFormat
+		 */
+		public static $DefaultDateOnlyFormat = QDateTime::FormatDisplayDate;
+
+
 		/**
 		 * Returns a new QDateTime object that's set to "Now"
 		 * Set blnTimeValue to true (default) for a DateTime, and set blnTimeValue to false for just a Date
@@ -61,26 +87,50 @@
 			return $dttToReturn;
 		}
 
-		protected $blnDateNull = true;
-		protected $blnTimeNull = true;
-
+		/**
+		 * Return Now as a string. Uses the default datetime format if none speicifed.
+		 * @param string|null $strFormat
+		 * @return string
+		 */
 		public static function NowToString($strFormat = null) {
 			$dttNow = new QDateTime(QDateTime::Now);
 			return $dttNow->qFormat($strFormat);
 		}
+
+		/**
+		 * @return bool
+		 */
 		public function IsDateNull() {
 			return $this->blnDateNull;
 		}
+
+		/**
+		 * @return bool
+		 */
 		public function IsNull() {
 			return ($this->blnDateNull && $this->blnTimeNull);
 		}
+
+		/**
+		 * @return bool
+		 */
 		public function IsTimeNull() {
 			return $this->blnTimeNull;
 		}
+
+		/**
+		 * @param $strFormat
+		 * @return string
+		 */
 		public function PhpDate($strFormat) {
 			// This just makes a call to format
 			return parent::format($strFormat);
 		}
+
+		/**
+		 * @param $dttArray
+		 * @return array|null
+		 */
 		public function GetSoapDateTimeArray($dttArray) {
 			if (!$dttArray)
 				return null;
@@ -92,6 +142,10 @@
 		}
 
 		/**
+		 * Create from a unix timestamp. Improves over php by taking into consideration the
+		 * timezone, so that the internal format is automatically converted to the internal timezone,
+		 * or the default timezone.
+		 *
 		 * @param integer $intTimestamp
 		 * @param DateTimeZone $objTimeZone
 		 * @return QDateTime
@@ -100,126 +154,79 @@
 			return new QDateTime(date('Y-m-d H:i:s', $intTimestamp), $objTimeZone);
 		}
 
+		/**
+		 * Construct a QDateTime. Does a few things differently than the php version:
+		 * - Always stores timestamps in local or given timezone, so time extraction is easy
+		 * - Has settings to determine if you want a date only or time only type
+		 * - Will NOT throw exceptions. Errors simply result in a null datetime.
+		 *
+		 * @param null|integer|string|QDateTime|DateTime $mixValue
+		 * @param DateTimeZone $objTimeZone
+		 * @param int $intType
+		 */
 		public function __construct($mixValue = null, DateTimeZone $objTimeZone = null, $intType = QDateTime::UnknownType) {
-			switch ($intType) {
-				case QDateTime::DateOnlyType:
-					if ($objTimeZone) {
-						parent::__construct($mixValue, $objTimeZone);
-					} else {
-						parent::__construct($mixValue);
-					}
-					$this->blnTimeNull = true;
-					$this->blnDateNull = false;
-					$this->ReinforceNullProperties();
-					return;
-				case QDateTime::TimeOnlyType:
-					if ($objTimeZone) {
-						parent::__construct($mixValue, $objTimeZone);
-					} else {
-						parent::__construct($mixValue);
-					}
-					$this->blnTimeNull = false;
-					$this->blnDateNull = true;
-					$this->ReinforceNullProperties();
-					return;
-				case QDateTime::DateAndTimeType:
-					if ($objTimeZone) {
-						parent::__construct($mixValue, $objTimeZone);
-					} else {
-						parent::__construct($mixValue);
-					}
-					$this->blnTimeNull = false;
-					$this->blnDateNull = false;
-					return;
-				default:
-					break;
-			}
-			// Cloning from another QDateTime object
 			if ($mixValue instanceof QDateTime) {
+				// Cloning from another QDateTime object
 				if ($objTimeZone)
 					throw new QCallerException('QDateTime cloning cannot take in a DateTimeZone parameter');
-				if ($mixValue->GetTimeZone()->GetName() == date_default_timezone_get())
-					parent::__construct($mixValue->format('Y-m-d H:i:s'));
-				else
-					parent::__construct($mixValue->format(DateTime::ISO8601));
+				parent::__construct($mixValue->format('Y-m-d H:i:s'), $mixValue->GetTimeZone());
 				$this->blnDateNull = $mixValue->IsDateNull();
 				$this->blnTimeNull = $mixValue->IsTimeNull();
+				$this->ReinforceNullProperties();
 
-			// Subclassing from a PHP DateTime object
 			} else if ($mixValue instanceof DateTime) {
+				// Subclassing from a PHP DateTime object
 				if ($objTimeZone)
 					throw new QCallerException('QDateTime subclassing of a DateTime object cannot take in a DateTimeZone parameter');
-				parent::__construct($mixValue->format(DateTime::ISO8601));
+				parent::__construct($mixValue->format('Y-m-d H:i:s'), $mixValue->getTimezone());
 
 				// By definition, a DateTime object doesn't have anything nulled
 				$this->blnDateNull = false;
 				$this->blnTimeNull = false;
-
-			// Using "Now" constant
-			} else if (strtolower($mixValue) == QDateTime::Now) {
-				if ($objTimeZone)
-					parent::__construct('now', $objTimeZone);
-				else
-					parent::__construct('now');
-				$this->blnDateNull = false;
-				$this->blnTimeNull = false;
-
-			// Null or No Value
 			} else if (!$mixValue) {
 				// Set to "null date"
 				// And Do Nothing Else -- Default Values are already set to Nulled out
-				if ($objTimeZone)
-					parent::__construct('2000-01-01 00:00:00', $objTimeZone);
-				else
-					parent::__construct('2000-01-01 00:00:00');
-
-			// Parse the Value string
-			} else {
-				$strTimeISO8601 = null;
-				$blnValid = false;
-				QApplication::SetErrorHandler('QDateTimeErrorHandler');
-				try {
-					if ($objTimeZone)
-						$blnValid = parent::__construct($mixValue, $objTimeZone);
-					else
-						$blnValid = parent::__construct($mixValue);
-				} catch (Exception $objExc) {}
-				if ($blnValid !== false)
-					$strTimeISO8601 = parent::format(DateTime::ISO8601);
-				QApplication::RestoreErrorHandler();
-
-				// Valid Value String
-				if ($strTimeISO8601) {
-					// To deal with "Tues" and date skipping bug in PHP 5.2
-					if ($strTimeISO8601 != $mixValue)
-						parent::__construct($strTimeISO8601);
-
-					// Set DateNull and TimeNull according to the value of $mixValue
-					$objDateTime = (object)date_parse($mixValue); 
-					$this->blnDateNull = !$objDateTime->year && !$objDateTime->month && !$objDateTime->day;
-					$this->blnTimeNull = ($objDateTime->hour === false) || ($objDateTime->minute === false) || ($objDateTime->second === false);
-
-				// Timestamp-based Value string
-				} else if (is_numeric($mixValue)) {
-					if ($objTimeZone)
-						parent::__construct(date('Y-m-d H:i:s', $mixValue), $objTimeZone);
-					else
-						parent::__construct(date('Y-m-d H:i:s', $mixValue));
-
-					$this->blnTimeNull = false;
-					$this->blnDateNull = false;
-
-				// Null Date
-				} else {
-					// Set to "null date"
-					// And Do Nothing Else -- Default Values are already set to Nulled out
-					if ($objTimeZone)
-						parent::__construct('2000-01-01 00:00:00', $objTimeZone);
-					else
-						parent::__construct('2000-01-01 00:00:00');
-				}
+				parent::__construct('2000-01-01 00:00:00', $objTimeZone);
+			} else if (strtolower($mixValue) == QDateTime::Now) {
+				// very common, so quickly deal with now string
+				parent::__construct('now', $objTimeZone);
+				$this->blnDateNull = false;
+				$this->blnTimeNull = false;
+			} else if (substr($mixValue, 0, 1) == '@') {
+				// unix timestamp. PHP superclass will always store ts in UTC. Our class will store in given timezone, or local tz
+				parent::__construct(date('Y-m-d H:i:s', substr($mixValue, 1)), $objTimeZone);
+				$this->blnDateNull = false;
+				$this->blnTimeNull = false;
 			}
-			$this->ReinforceNullProperties();
+			else {
+				// string relative date or time
+				try {
+					parent::__construct($mixValue, $objTimeZone);
+					$this->blnDateNull = false;
+					$this->blnTimeNull = false;
+				} catch (Exception $objExc) {}
+
+				$this->ReinforceNullProperties(); // in case error occurred, will set everything to null
+			}
+
+			// User is requesting to force a particular type.
+			switch ($intType) {
+				case QDateTime::DateOnlyType:
+					$this->blnDateNull = false;
+					$this->blnTimeNull = true;
+					$this->ReinforceNullProperties();
+					return;
+				case QDateTime::TimeOnlyType:
+					$this->blnDateNull = true;
+					$this->blnTimeNull = false;
+					$this->ReinforceNullProperties();
+					return;
+				case QDateTime::DateAndTimeType:
+					$this->blnDateNull = false;
+					$this->blnTimeNull = false;
+				default:
+					break;
+			}
 		}
 		
 		/**
@@ -246,26 +253,46 @@
 			return new QDateTime($temp);
 		}
 
-		/* The Following Methods are in place because of a bug in PHP 5.2.0 */
-		protected $strSerializedData;
-		public function __sleep() {
-			$this->strSerializedData = parent::format(DateTime::ISO8601);
-			return array('blnDateNull', 'blnTimeNull', 'strSerializedData');
-		}
-		public function __wakeup() {
-			parent::__construct($this->strSerializedData);
-		}
-
 		/**
-		 * Formats a date as a string  using the default format type.
+		 * Formats a date as a string using the default format type.
+		 * @return string
 		 */
 		public function __toString() {
 			return $this->qFormat();
 		}
 
 		/**
-		 * Outputs the date as a string given the format strFormat.  By default,
-		 * it will return as QDateTime::FormatDisplayDate "MMM DD YYYY", e.g. Mar 20 1977.
+		 * The following code is a workaround for a PHP bug in 5.2 and greater (at least to 5.4).
+		 */
+		protected $strSerializedData;
+		protected $strSerializedTZ;
+		public function __sleep() {
+			$tz = $this->getTimezone();
+			if ($tz && in_array ($tz->getName(), timezone_identifiers_list())) {
+				// valid relative timezone name found
+				$this->strSerializedData = parent::format('Y-m-d H:i:s');
+				$this->strSerializedTZ = $tz->getName();
+				return array('blnDateNull', 'blnTimeNull', 'strSerializedData', 'strSerializedTZ');
+			} else {
+				// absolute timezone, which can't be sent into the constructor of DateTimeZone
+				$this->strSerializedData = parent::format (DateTime::ISO8601);
+				return array('blnDateNull', 'blnTimeNull', 'strSerializedData');
+			}
+		}
+		public function __wakeup() {
+			$tz = null;
+			if ($this->strSerializedTZ) {
+				$tz = new DateTimeZone($this->strSerializedTZ);
+			}
+			parent::__construct($this->strSerializedData, $tz);
+			$this->strSerializedData = null;
+			$this->strSerializedTZ = null;
+		}
+
+
+		/**
+		 * Outputs the date as a string given the format strFormat.  Will use
+		 * the static defaults if none given.
 		 *
 		 * Properties of strFormat are (using Sunday, March 2, 1977 at 1:15:35 pm
 		 * in the following examples):
@@ -307,6 +334,8 @@
 			if (is_null($strFormat)) {
 				if ($this->blnDateNull && !$this->blnTimeNull) {
 					$strFormat = QDateTime::$DefaultTimeFormat;
+				} elseif (!$this->blnDateNull && $this->blnTimeNull) {
+					$strFormat = QDateTime::$DefaultDateOnlyFormat;
 				} else {
 					$strFormat = QDateTime::$DefaultFormat;
 				}
@@ -427,7 +456,35 @@
 			return $strToReturn;
 		}
 
-		public function setTime($intHour, $intMinute = null, $intSecond = null) {
+		/**
+		 * Sets the time portion to the given time. If a QDateTime is given, will use the time portion of that object.
+		 * Works around a problem in php that if you set the time across a daylight savings time boundary, the timezone
+		 * does not advance. This version will detect that and advance the timezone.
+		 *
+		 * @param int|QDateTime $mixValue
+		 * @param int|null $intMinute
+		 * @param int|null $intSecond
+		 * @return QDateTime
+		 */
+		public function setTime($mixValue, $intMinute = null, $intSecond = null) {
+			if ($mixValue instanceof QDateTime) {
+				if ($mixValue->IsTimeNull()) {
+					$this->blnTimeNull = true;
+					$this->ReinforceNullProperties();
+					return $this;
+				}
+				// normalize the timezones
+				$tz = $this->getTimezone();
+				if ($tz && in_array ($tz->getName(), timezone_identifiers_list())) {
+					// php limits you to ID only timezones here, so make sure we have one of those
+					$mixValue->setTimezone ($tz);
+				}
+				$intHour = $mixValue->Hour;
+				$intMinute = $mixValue->Minute;
+				$intSecond = $mixValue->Second;
+			} else {
+				$intHour = $mixValue;
+			}
 			// If HOUR or MINUTE is NULL...
 			if (is_null($intHour) || is_null($intMinute)) {
 				parent::setTime($intHour, $intMinute, $intSecond);
@@ -440,10 +497,30 @@
 			$intMinute = QType::Cast($intMinute, QType::Integer);
 			$intSecond = QType::Cast($intSecond, QType::Integer);
 			$this->blnTimeNull = false;
+
+			/*
+			// Possible fix for a PHP problem. Can't reproduce, so leaving code here just in case it comes back.
+			// The problem is with setting times across dst barriers
+			if ($this->Hour == 0 && preg_match('/[0-9]+/', $this->getTimezone()->getName())) {
+				// fix a php problem with GMT and relative timezones
+				$s = 'PT' . $intHour . 'H' . $intMinute . 'M' . $intSecond . 'S';
+				$this->add (new DateInterval ($s));
+				// will continue and set again to make sure, because boundary crossing will change the time
+			}*/
+
 			parent::setTime($intHour, $intMinute, $intSecond);
+
 			return $this;
 		}
 
+		/**
+		 * Set the date.
+		 *
+		 * @param int $intYear
+		 * @param int $intMonth
+		 * @param int $intDay
+		 * @return $this|DateTime
+		 */
 		public function setDate($intYear, $intMonth, $intDay) {
 			$intYear = QType::Cast($intYear, QType::Integer);
 			$intMonth = QType::Cast($intMonth, QType::Integer);
@@ -456,8 +533,10 @@
 		protected function ReinforceNullProperties() {
 			if ($this->blnDateNull)
 				parent::setDate(2000, 1, 1);
-			if ($this->blnTimeNull)
+			if ($this->blnTimeNull) {
 				parent::setTime(0, 0, 0);
+			}
+
 		}
 		
 		/**
@@ -479,8 +558,14 @@
 				$dtzNewTimezone = new DateTimeZone($strTimezoneIdentifier);
 				$this->SetTimezone($dtzNewTimezone);
 			} catch (Exception $objExc) {}
-		}		
+		}
 
+		/**
+		 * Returns true if give QDateTime is the same.
+		 *
+		 * @param QDateTime $dttCompare
+		 * @return bool
+		 */
 		public function IsEqualTo(QDateTime $dttCompare) {
 			// All comparison operations MUST have operands with matching Date Nullstates
 			if ($this->blnDateNull != $dttCompare->blnDateNull)
@@ -502,6 +587,11 @@
 			}
 		}
 
+		/**
+		 * Returns true if current date time is earlier than the given one.
+		 * @param QDateTime $dttCompare
+		 * @return bool
+		 */
 		public function IsEarlierThan(QDateTime $dttCompare) {
 			// All comparison operations MUST have operands with matching Date Nullstates
 			if ($this->blnDateNull != $dttCompare->blnDateNull)
@@ -523,6 +613,11 @@
 			}
 		}
 
+		/**
+		 * Returns true if current date time is earlier than the given one.
+		 * @param QDateTime $dttCompare
+		 * @return bool
+		 */
 		public function IsEarlierOrEqualTo(QDateTime $dttCompare) {
 			// All comparison operations MUST have operands with matching Date Nullstates
 			if ($this->blnDateNull != $dttCompare->blnDateNull)
@@ -544,6 +639,11 @@
 			}
 		}
 
+		/**
+		 * Returns true if current date time is later than the given one.
+		 * @param QDateTime $dttCompare
+		 * @return bool
+		 */
 		public function IsLaterThan(QDateTime $dttCompare) {
 			// All comparison operations MUST have operands with matching Date Nullstates
 			if ($this->blnDateNull != $dttCompare->blnDateNull)
@@ -565,6 +665,11 @@
 			}
 		}
 
+		/**
+		 * Returns true if current date time is later than or equal to the given one.
+		 * @param QDateTime $dttCompare
+		 * @return bool
+		 */
 		public function IsLaterOrEqualTo(QDateTime $dttCompare) {
 			// All comparison operations MUST have operands with matching Date Nullstates
 			if ($this->blnDateNull != $dttCompare->blnDateNull)
@@ -586,14 +691,32 @@
 			}
 		}
 
+		/**
+		 * Returns the difference as a QDateSpan, which is easier to work with and more full featured than
+		 * the php DateTimeInterval class.
+		 *
+		 * @param QDateTime $dttDateTime
+		 * @return QDateTimeSpan
+		 */
 		public function Difference(QDateTime $dttDateTime) {
 			$intDifference = $this->Timestamp - $dttDateTime->Timestamp;
 			return new QDateTimeSpan($intDifference);
 		}
 
+		/**
+		 * Add a datespan or interval to the current date.
+		 *
+		 * @param DateInterval|QDateTimeSpan $dtsSpan
+		 * @return QDateTime
+		 * @throws QCallerException
+		 */
 		public function Add($dtsSpan){
-			if (!$dtsSpan instanceof QDateTimeSpan) {
-				throw new QCallerException("Can only add QDateTimeSpan objects");
+			if ($dtsSpan instanceof DateInterval) {
+				parent::add($dtsSpan);
+				return $this;
+			}
+			elseif (!$dtsSpan instanceof QDateTimeSpan) {
+				throw new QCallerException("Can only add DateTimeInterval or QDateTimeSpan objects");
 			}
 			// Get this DateTime timestamp
 			$intTimestamp = $this->Timestamp;
@@ -603,36 +726,79 @@
 			return $this;
 		}
 
+		/**
+		 * Add a number of seconds. Use negative value to go earlier in time.
+		 *
+		 * @param integer $intSeconds
+		 * @return QDateTime
+		 */
 		public function AddSeconds($intSeconds){
 			$this->Second += $intSeconds;
 			return $this;
 		}
 
+		/**
+		 * Add minutes to the time.
+		 *
+		 * @param integer $intMinutes
+		 * @return QDateTime
+		 */
 		public function AddMinutes($intMinutes){
 			$this->Minute += $intMinutes;
 			return $this;
 		}
 
+		/**
+		 * Add hours to the time.
+		 *
+		 * @param integer $intHours
+		 * @return QDateTime
+		 */
 		public function AddHours($intHours){
 			$this->Hour += $intHours;
 			return $this;
 		}
 
+		/**
+		 * Add days to the time.
+		 *
+		 * @param integer $intDays
+		 * @return QDateTIme
+		 */
 		public function AddDays($intDays){
 			$this->Day += $intDays;
 			return $this;
 		}
 
+		/**
+		 * Add months to the time.
+		 *
+		 * @param integer $intMonths
+		 * @return QDateTime
+		 */
 		public function AddMonths($intMonths){
 			$this->Month += $intMonths;
 			return $this;
 		}
 
+		/**
+		 * Add years to the time.
+		 *
+		 * @param integer $intYears
+		 * @return QDateTime
+		 */
 		public function AddYears($intYears){
 			$this->Year += $intYears;
 			return $this;
 		}
-		
+
+		/**
+		 * Modifies the date or time based on values found int a string.
+		 *
+		 * @see DateTime::modify()
+		 * @param string $mixValue
+		 * @return QDateTime
+		 */
 		public function Modify($mixValue) {
 			parent::modify($mixValue);
 			return $this;
@@ -677,9 +843,7 @@
 						return (int) parent::format('s');
 
 				case 'Timestamp':
-					// Until PHP fixes a bug where lowest int is int(-2147483648) but lowest float/double is (-2147529600)
-					// We return as a "double"
-					return (double) parent::format('U');
+					return (int) parent::format('U'); // range depends on the platform's max and min integer values
 
 				case 'Age':
 					// Figure out the Difference from "Now"
@@ -687,16 +851,16 @@
 					
 					// It's in the future ('about 2 hours from now')
 					if ($dtsFromCurrent->IsPositive())
-						return $dtsFromCurrent->SimpleDisplay() . ' from now';
+						return $dtsFromCurrent->SimpleDisplay() . QApplication::Translate(' from now');
 
 					// It's in the past ('about 5 hours ago')
 					else if ($dtsFromCurrent->IsNegative()) {
 						$dtsFromCurrent->Seconds = abs($dtsFromCurrent->Seconds);
-						return $dtsFromCurrent->SimpleDisplay() . ' ago';
+						return $dtsFromCurrent->SimpleDisplay() . QApplication::Translate(' ago');
 
 					// It's current
 					} else
-						return 'right now';
+						return QApplication::Translate('right now');
 
 				case 'LastDayOfTheMonth':
 					return self::LastDayOfTheMonth($this->Month, $this->Year);
@@ -784,11 +948,9 @@
 
 					case 'Timestamp':
 						$mixValue = QType::Cast($mixValue, QType::Integer);
+						$this->setTimestamp($mixValue);
 						$this->blnDateNull = false;
 						$this->blnTimeNull = false;
-
-						$this->SetDate(date('Y', $mixValue), date('m', $mixValue), date('d', $mixValue));
-						$this->SetTime(date('H', $mixValue), date('i', $mixValue), date('s', $mixValue));
 						return $mixValue;
 
 					default:

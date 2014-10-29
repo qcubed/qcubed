@@ -16,7 +16,7 @@
 					if (arguments.length == 3) {
 						fileNameSection = "/" + strFilename;
 					}
-					objWindow = window.open("<?php echo __VIRTUAL_DIRECTORY__ . __EXAMPLES__ ?>/view_source.php/<?php _p(Examples::GetCategoryId()."/".Examples::GetExampleId()); ?>" + fileNameSection, "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
+					objWindow = window.open("<?= __VIRTUAL_DIRECTORY__ . __EXAMPLES__ ?>/view_source.php/<?php _p(Examples::GetCategoryId()."/".Examples::GetExampleId()); ?>" + fileNameSection, "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
 					objWindow.focus();
 					return false;
 				};

@@ -18,7 +18,7 @@
 
 			// Remember!  We need to first set the TotalItemCount, which will affect the calcuation of LimitClause below
 			if ($this->Paginator) {
-				$this->TotalItemCount = <?php echo $objTable->ClassName  ?>::QueryCount($objConditions, $objClauses);
+				$this->TotalItemCount = <?= $objTable->ClassName ?>::QueryCount($objConditions, $objClauses);
 			}
 
 			// If a column is selected to be sorted, and if that column has a OrderByClause set on it, then let's add
@@ -30,6 +30,6 @@
 			if ($objClause = $this->LimitClause)
 				array_push($objClauses, $objClause);
 
-			// Set the DataSource to be a Query result from <?php echo $objTable->ClassName  ?>, given the clauses above
-			$this->DataSource = <?php echo $objTable->ClassName  ?>::QueryArray($objConditions, $objClauses);
+			// Set the DataSource to be a Query result from <?= $objTable->ClassName ?>, given the clauses above
+			$this->DataSource = <?= $objTable->ClassName ?>::QueryArray($objConditions, $objClauses);
 		}
