@@ -1191,7 +1191,11 @@
 		}
 
 		static public function Select(/* array and/or parameterized list of QQNode objects*/) {
-			return new QQSelect(func_get_args());
+			if (func_num_args() == 1 && is_array($a = func_get_arg(0))) {
+				return new QQSelect($a);
+			} else {
+				return new QQSelect(func_get_args());
+			}
 		}
 
 		static public function LimitInfo($intMaxRowCount, $intOffset = 0) {
