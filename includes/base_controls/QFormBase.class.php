@@ -404,35 +404,23 @@
 				}
 
 				// Clear the RenderedCheckableControlArray
-				$objClass->blnRenderedCheckableControlArray = array();
-				$strCheckableControlList = trim($_POST['Qform__FormCheckableControls']);
-				$strCheckableControlArray = explode(' ', $strCheckableControlList);
-				foreach ($strCheckableControlArray as $strCheckableControl) {
-					$objClass->blnRenderedCheckableControlArray[trim($strCheckableControl)] = true;
+				if (!empty($_POST['Qform__FormCheckableControls'])) {
+					$objClass->blnRenderedCheckableControlArray = array();
+					$strCheckableControlList = trim($_POST['Qform__FormCheckableControls']);
+					$strCheckableControlArray = explode(' ', $strCheckableControlList);
+					foreach ($strCheckableControlArray as $strCheckableControl) {
+						$objClass->blnRenderedCheckableControlArray[trim($strCheckableControl)] = true;
+					}
 				}
 
 				// Iterate through all the controls
-/*
-				foreach ($objClass->objControlArray as $objControl) {
-					// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
-					if (($objControl->Visible) &&
-						(($objClass->strCallType == QCallType::Ajax) || ($objControl->Enabled)) &&
-						($objControl->RenderMethod)) {
-						// Call each control's ParsePostData()
-						$objControl->ParsePostData();
-					}
 
-					// Reset the modified/rendered flags and the validation
-					// in ALL controls
-					$objControl->ResetFlags();
-					$objControl->ValidationReset();
-				}*/
-
-				foreach ($_POST as $key=>$val) {
-					if ($objControl = $objClass->GetControl($key)) {
+				// This is original code. In an effort to minimize changes, we aren't going to touch the server calls for now
+				if ($objClass->strCallType != QCallType::Ajax) {
+					foreach ($objClass->objControlArray as $objControl) {
 						// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
 						if (($objControl->Visible) &&
-							(($objClass->strCallType == QCallType::Ajax) || ($objControl->Enabled)) &&
+							($objControl->Enabled) &&
 							($objControl->RenderMethod)) {
 							// Call each control's ParsePostData()
 							$objControl->ParsePostData();
@@ -442,7 +430,25 @@
 						// in ALL controls
 						$objControl->ResetFlags();
 						$objControl->ValidationReset();
+					}
+				}
+				else {
+					// Ajax post. Only send data to controls specified in the post to save time.
+					foreach ($_POST as $key=>$val) {
+						if ($objControl = $objClass->GetControl($key)) {
+							// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
+							if (($objControl->Visible) &&
+								($objControl->RenderMethod)) {
+								// Call each control's ParsePostData()
+								$objControl->ParsePostData();
+							}
 
+							// Reset the modified/rendered flags and the validation
+							// in controls we have touched
+							$objControl->ResetFlags();
+							$objControl->ValidationReset();
+
+						}
 					}
 				}
 

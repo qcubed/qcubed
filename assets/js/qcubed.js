@@ -113,7 +113,15 @@ qcubed = {
     formObjChanged: function (event) {
         var ctl = event.target;
         var id = $j(ctl).attr('id');
+        var strType = $j(ctl).prop("type");
+
         if (id) {
+            var indexOffset;
+
+            if (((strType === 'checkbox') || (strType === 'radio')) &&
+                        ((indexOffset = strControlId.indexOf('_')) >= 0)) { // a member of a control list
+                id = id.substr(0, indexOffset);
+            }
             qcubed.formObjsModified[id] = true;
         }
     },
@@ -124,9 +132,6 @@ qcubed = {
     initForm: function (strFormId) {
         $j('#' + strFormId).on ('input', 'input,textarea', this.formObjChanged);
         $j('#' + strFormId).on ('change', 'select,keygen', this.formObjChanged);
-
-        // for ie
-        $j('#' + strFormId).on ('keydown', 'input,textarea', this.formObjChanged);
     },
 
     /**
@@ -158,6 +163,8 @@ qcubed = {
     },
 
     /**
+     * Return the updates to properties in form objects. Note that once you call this, you MUST post the data returned, as this
+     * code has the side effect of resetting the update cache.
      * @return {string} The form's control modifications.
      */
     formUpdates: function() {
@@ -181,7 +188,7 @@ qcubed = {
      */
     formCheckableControls: function(strForm, strCallType) {
         // Select the QCubed Form
-        var objFormElements = $j('#' + strForm).find('input,select,textarea'),
+        var objFormElements = $j('#' + strForm).find('input'),
             strToReturn = "";
 
         objFormElements.each(function(i) {
@@ -189,10 +196,8 @@ qcubed = {
                 strType = $element.prop("type"),
                 strControlId;
 
-            if (((strType === "checkbox") ||
-                    (strType === "radio")) &&
-                    ((strCallType === "Ajax") ||
-                            (!$element.prop("disabled")))) {
+            if (((strType === "checkbox") || (strType === "radio")) &&
+                    ((strCallType === "Ajax") || (!$element.prop("disabled")))) {
 
                 strControlId = $element.attr("id");
 
@@ -214,6 +219,9 @@ qcubed = {
     },
 
     /**
+     * Gets the data to be sent to an ajax call as post data. Note that once you call this, you MUST post this data, as
+     * it has the side effect of resetting the cache of changed objects.
+     *
      * @param {string} strForm The Form Id
      * @param {string} strControl The Control Id
      * @param {string} strEvent The Event
@@ -237,7 +245,7 @@ qcubed = {
         $j('#Qform__FormEvent').val(strEvent);
         $j('#Qform__FormCallType').val("Ajax");
         $j('#Qform__FormUpdates').val(this.formUpdates());
-        $j('#Qform__FormCheckableControls').val(this.formCheckableControls(strForm, "Ajax"));
+        //$j('#Qform__FormCheckableControls').val(this.formCheckableControls(strForm, "Ajax"));
 
         objFormElements.each(function() {
             var $element = $j(this),
@@ -247,14 +255,15 @@ qcubed = {
                 strTestName,
                 bracketIndex,
                 strPostValue = $element.val();
-            if (qcubed.ajaxError // Ajax error would mean that formObjsModified is invalid. We need to submit everything.
-                    || qcubed.formObjsModified[strControlId]
-                   /*|| strControlId.substr(0, 6) == 'Qform_'*/
-                || strType == 'hidden') {
+            if (!qcubed.inputSupport || // if not oninput support, then post all the controls, rather than just the modified ones
+                    qcubed.ajaxError || // Ajax error would mean that formObjsModified is invalid. We need to submit everything.
+                    qcubed.formObjsModified[strControlId] ||
+                   strControlId.substr(0, 7) == 'Qform__'   // all controls with this at the beginning of the id are always posted
+               /* || strType == 'hidden'*/) {
                 switch (strType) {
                     case "checkbox":
                     case "radio":
-                        if ($element.is(":checked") && strControlName) {
+                        if (strControlName) {
                             bracketIndex = strControlName.indexOf('[');
 
                             if (bracketIndex > 0) {
@@ -265,7 +274,9 @@ qcubed = {
 
                             if (strControlId.substring(0, strTestName.length) === strTestName) {
                                 // CheckboxList or RadioButtonList
-                                strPostData += "&" + strControlName + "=" + strControlId.substring(strTestName.length);
+                                if ($element.is(":checked")) {
+                                    strPostData += "&" + strControlName + "=" + strControlId.substring(strTestName.length);
+                                }
                             } else {
                                 strPostData += "&" + strControlId + "=" + strPostValue;
                             }
@@ -467,6 +478,19 @@ qcubed = {
                     qcubed.updateForm();
                 }
             });
+        }
+
+        this.inputSupport = 'oninput' in document;
+
+        // Detect browsers that do not support the oninput event
+        var ua = window.navigator.userAgent;
+        var intIeOffset = ua.indexOf ('MSIE');
+        if (intIeOffset > -1) {
+            var intOffset2 = ua.indexOf ('.', intIeOffset + 5);
+            var strVersion = ua.substr (intIeOffset + 5, intOffset2 );
+            if (strVersion < 10) {
+                this.inputSupport = false;
+            }
         }
 
         return this;

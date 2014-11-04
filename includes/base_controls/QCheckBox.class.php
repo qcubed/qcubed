@@ -42,7 +42,10 @@
 		 * according to the data submitted
 		 */
 		public function ParsePostData() {
-			if ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
+			if ($this->Form->strCallType == QCallType::Ajax) {
+				$this->blnChecked = $_POST[$this->strControlId];
+			}
+			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (array_key_exists($this->strControlId, $_POST)) {
 					if ($_POST[$this->strControlId])
 						$this->blnChecked = true;

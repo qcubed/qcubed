@@ -48,26 +48,22 @@
 		 * Parse the data posted
 		 */
 		public function ParsePostData() {
-			if ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
-				if (QApplication::$RequestMode == QRequestMode::Ajax) {
-					if ((array_key_exists($this->strControlId, $_POST)) && ($_POST[$this->strControlId]))
+			if ($this->Form->strCallType == QCallType::Ajax) {
+				$this->blnChecked = $_POST[$this->strControlId];
+			}
+			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
+				if ($this->strGroupName)
+					$strName = $this->strGroupName;
+				else
+					$strName = $this->strControlId;
+
+				if (array_key_exists($strName, $_POST)) {
+					if ($_POST[$strName] == $this->strControlId)
 						$this->blnChecked = true;
 					else
 						$this->blnChecked = false;
 				} else {
-					if ($this->strGroupName)
-						$strName = $this->strGroupName;
-					else
-						$strName = $this->strControlId;
-
-					if (array_key_exists($strName, $_POST)) {
-						if ($_POST[$strName] == $this->strControlId)
-							$this->blnChecked = true;
-						else
-							$this->blnChecked = false;
-					} else {
-						$this->blnChecked = false;
-					}
+					$this->blnChecked = false;
 				}
 			}
 		}

@@ -64,8 +64,20 @@
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Parses the post data. Many different scenarios are covered. See below.
+		 */
 		public function ParsePostData() {
-			if ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
+			if ($this->Form->strCallType == QCallType::Ajax) {
+				// Ajax will only send information about controls that are on the screen, so we know they are rendered
+				for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
+					if (!empty($_POST[$this->strControlId][$intIndex]))
+						$this->objItemsArray[$intIndex]->Selected = true;
+					else
+						$this->objItemsArray[$intIndex]->Selected = false;
+				}
+			}
+			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if ((array_key_exists($this->strControlId, $_POST)) && (is_array($_POST[$this->strControlId]))) {
 					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
 						if (array_key_exists($intIndex, $_POST[$this->strControlId]))
