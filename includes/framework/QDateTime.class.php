@@ -262,6 +262,35 @@
 		}
 
 		/**
+		 * The following code is a workaround for a PHP bug in 5.2 and greater (at least to 5.4).
+		 */
+		protected $strSerializedData;
+		protected $strSerializedTZ;
+		public function __sleep() {
+			$tz = $this->getTimezone();
+			if ($tz && in_array ($tz->getName(), timezone_identifiers_list())) {
+				// valid relative timezone name found
+				$this->strSerializedData = parent::format('Y-m-d H:i:s');
+				$this->strSerializedTZ = $tz->getName();
+				return array('blnDateNull', 'blnTimeNull', 'strSerializedData', 'strSerializedTZ');
+			} else {
+				// absolute timezone, which can't be sent into the constructor of DateTimeZone
+				$this->strSerializedData = parent::format (DateTime::ISO8601);
+				return array('blnDateNull', 'blnTimeNull', 'strSerializedData');
+			}
+		}
+		public function __wakeup() {
+			$tz = null;
+			if ($this->strSerializedTZ) {
+				$tz = new DateTimeZone($this->strSerializedTZ);
+			}
+			parent::__construct($this->strSerializedData, $tz);
+			$this->strSerializedData = null;
+			$this->strSerializedTZ = null;
+		}
+
+
+		/**
 		 * Outputs the date as a string given the format strFormat.  Will use
 		 * the static defaults if none given.
 		 *
@@ -302,6 +331,10 @@
 		 * @return string the formatted date as a string
 		 */
 		public function qFormat($strFormat = null) {
+			if ($this->blnDateNull && $this->blnTimeNull) {
+				return '';
+			}
+
 			if (is_null($strFormat)) {
 				if ($this->blnDateNull && !$this->blnTimeNull) {
 					$strFormat = QDateTime::$DefaultTimeFormat;
@@ -446,10 +479,9 @@
 				}
 				// normalize the timezones
 				$tz = $this->getTimezone();
-				$name = $tz->getName();
-				if (!preg_match('/[0-9]+/', $name)) {
-					// php limits you to ID only timezones here, so make sure we have a timezone without numbers in it
-					$mixValue->setTimezone ($this->getTimezone());
+				if ($tz && in_array ($tz->getName(), timezone_identifiers_list())) {
+					// php limits you to ID only timezones here, so make sure we have one of those
+					$mixValue->setTimezone ($tz);
 				}
 				$intHour = $mixValue->Hour;
 				$intMinute = $mixValue->Minute;
@@ -505,8 +537,10 @@
 		protected function ReinforceNullProperties() {
 			if ($this->blnDateNull)
 				parent::setDate(2000, 1, 1);
-			if ($this->blnTimeNull)
+			if ($this->blnTimeNull) {
 				parent::setTime(0, 0, 0);
+			}
+
 		}
 		
 		/**

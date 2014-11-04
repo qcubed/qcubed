@@ -1,5 +1,5 @@
 /**
-		 * Save this <?php echo $objTable->ClassName  ?>
+		 * Save this <?= $objTable->ClassName ?>
 
 		 * @param bool $blnForceInsert
 		 * @param bool $blnForceUpdate
@@ -25,6 +25,16 @@
 			$strValue = '\' . $objDatabase->SqlVariable($this->'.$objColumn->VariableName.') . \'';
 			$strValues .= '							' . $strValue;
 			$strColUpdates .= $strCol .' = '.$strValue;
+		} elseif ($objColumn->Timestamp && $objColumn->AutoUpdate) {
+			if ($strCols) $strCols .= ",\n";
+			if ($strValues) $strValues .= ",\n";
+			if ($strColUpdates) $strColUpdates .= ",\n";
+			$strCol = '							' . $strEscapeIdentifierBegin.$objColumn->Name.$strEscapeIdentifierEnd;
+			$strCols .= $strCol;
+			$strValue = '\' . $objDatabase->SqlVariable(QDateTime::NowToString(QDateTime::FormatIso)) . \'';
+			$strValues .= '							' . $strValue;
+			$strColUpdates .= $strCol .' = '.$strValue;
+
 		}
 	}
 	if ($strValues) {
@@ -46,7 +56,7 @@
 		 */
 		public function Save($blnForceInsert = false, $blnForceUpdate = false) {
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			$mixToReturn = null;
 
@@ -54,7 +64,7 @@
 				if ((!$this->__blnRestored && !$blnForceUpdate) || ($blnForceInsert)) {
 					// Perform an INSERT query
 					$objDatabase->NonQuery('
-						INSERT INTO <?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?><?php echo $strCols; echo $strValues; ?>
+						INSERT INTO <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?><?= $strCols; echo $strValues; ?>
 					');
 
 <?php 
@@ -77,19 +87,19 @@
 						// Perform the Optimistic Locking check
 						$objResult = $objDatabase->Query('
 							SELECT
-								<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
+								<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?>
 
 							FROM
-								<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
+								<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
 
 							WHERE
-<?php echo $strIds; ?>
+<?= $strIds; ?>
 
 						');
 
 						$objRow = $objResult->FetchArray();
-						if ($objRow[0] != $this-><?php echo $objColumn->VariableName  ?>)
-							throw new QOptimisticLockingException('<?php echo $objTable->ClassName  ?>');
+						if ($objRow[0] != $this-><?= $objColumn->VariableName ?>)
+							throw new QOptimisticLockingException('<?= $objTable->ClassName ?>');
 					}
 <?php } ?>
 <?php } ?>
@@ -98,13 +108,13 @@
 <?php if ($strColUpdates) { ?>
 					$objDatabase->NonQuery('
 						UPDATE
-							<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
+							<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
 
 						SET
-<?php echo $strColUpdates; ?>
+<?= $strColUpdates; ?>
 
 						WHERE
-<?php echo $strIds; ?>
+<?= $strIds; ?>
 
 					');
 <?php } else { ?>
@@ -118,23 +128,23 @@
 <?php $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
 
 
-				// Update the adjoined <?php echo $objReverseReference->ObjectDescription  ?> object (if applicable)
+				// Update the adjoined <?= $objReverseReference->ObjectDescription ?> object (if applicable)
 				// TODO: Make this into hard-coded SQL queries
-				if ($this->blnDirty<?php echo $objReverseReference->ObjectPropertyName  ?>) {
+				if ($this->blnDirty<?= $objReverseReference->ObjectPropertyName ?>) {
 					// Unassociate the old one (if applicable)
-					if ($objAssociated = <?php echo $objReverseReference->VariableType  ?>::LoadBy<?php echo $objReverseReferenceColumn->PropertyName  ?>(<?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)) {
-						$objAssociated-><?php echo $objReverseReferenceColumn->PropertyName  ?> = null;
+					if ($objAssociated = <?= $objReverseReference->VariableType ?>::LoadBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)) {
+						$objAssociated-><?= $objReverseReferenceColumn->PropertyName ?> = null;
 						$objAssociated->Save();
 					}
 
 					// Associate the new one (if applicable)
-					if ($this-><?php echo $objReverseReference->ObjectMemberVariable  ?>) {
-						$this-><?php echo $objReverseReference->ObjectMemberVariable  ?>-><?php echo $objReverseReferenceColumn->PropertyName  ?> = $this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?>;
-						$this-><?php echo $objReverseReference->ObjectMemberVariable  ?>->Save();
+					if ($this-><?= $objReverseReference->ObjectMemberVariable ?>) {
+						$this-><?= $objReverseReference->ObjectMemberVariable ?>-><?= $objReverseReferenceColumn->PropertyName ?> = $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>;
+						$this-><?= $objReverseReference->ObjectMemberVariable ?>->Save();
 					}
 
 					// Reset the "Dirty" flag
-					$this->blnDirty<?php echo $objReverseReference->ObjectPropertyName  ?> = false;
+					$this->blnDirty<?= $objReverseReference->ObjectPropertyName ?> = false;
 				}
 <?php } ?>
 <?php } ?>
@@ -147,7 +157,7 @@
 			$this->__blnRestored = true;
 <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
 <?php if ((!$objColumn->Identity) && ($objColumn->PrimaryKey)) { ?>
-			$this->__<?php echo $objColumn->VariableName  ?> = $this-><?php echo $objColumn->VariableName  ?>;
+			$this->__<?= $objColumn->VariableName ?> = $this-><?= $objColumn->VariableName ?>;
 <?php } ?>
 <?php } ?>
 
@@ -156,25 +166,25 @@
 			// Update Local Timestamp
 			$objResult = $objDatabase->Query('
 				SELECT
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?>
 
 				FROM
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
 
 				WHERE
-<?php echo $strIds; ?>
+<?= $strIds; ?>
 
 			');
 
 			$objRow = $objResult->FetchArray();
-			$this-><?php echo $objColumn->VariableName  ?> = $objRow[0];
+			$this-><?= $objColumn->VariableName ?> = $objRow[0];
 <?php } ?>
 <?php } ?>
 
 			$this->DeleteCache();
 
 			if (static::$blnWatchChanges) {
-				QWatcher::MarkTableModified ('<?php echo QApplication::$Database[$objTable->OwnerDbIndex]->Database  ?>', '<?php echo $objTable->Name  ?>');
+				QWatcher::MarkTableModified ('<?= QApplication::$Database[$objTable->OwnerDbIndex]->Database ?>', '<?= $objTable->Name ?>');
 			}
 
 			// Return

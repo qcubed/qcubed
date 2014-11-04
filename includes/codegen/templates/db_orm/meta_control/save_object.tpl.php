@@ -1,12 +1,12 @@
 /**
-		* This will update this object's <?php echo $objTable->ClassName; ?> instance,
+		* This will update this object's <?= $objTable->ClassName; ?> instance,
 		* updating only the fields which have had a control created for it.
 		*/
-		public function Update<?php echo $objTable->ClassName; ?>() {
+		public function Update<?= $objTable->ClassName; ?>() {
 			try {
 				// Update any fields for controls that have been created
 			<?php foreach ($objTable->ColumnArray as $objColumn) {
-				if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none') continue;
+				if ($objColumn->Options && isset ($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 				$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
 				if ($strControlType == 'QLabel'  ||
 						!isset($objColumn->Options['FormGen']) ||
@@ -46,19 +46,19 @@
 
 
 /**
-		 * This will save this object's <?php echo $objTable->ClassName; ?> instance,
+		 * This will save this object's <?= $objTable->ClassName; ?> instance,
 		 * updating only the fields which have had a control created for it.
 		 */
-		public function Save<?php echo $objTable->ClassName; ?>() {
+		public function Save<?= $objTable->ClassName; ?>() {
 			try {
-				$this->Update<?php echo $objTable->ClassName; ?>();
+				$this->Update<?= $objTable->ClassName; ?>();
 
-				// Save the <?php echo $objTable->ClassName; ?> object
-				$id = $this-><?php echo $objCodeGen->VariableNameFromTable($objTable->Name); ?>->Save();
+				// Save the <?= $objTable->ClassName; ?> object
+				$id = $this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>->Save();
 
 				// Finally, update any ManyToManyReferences (if any)
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-				$this-><?php echo $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?>_Update();
+				$this-><?= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?>_Update();
 <?php } ?>
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();

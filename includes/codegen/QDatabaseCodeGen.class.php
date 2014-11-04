@@ -1060,6 +1060,12 @@
 				if ($a) {
 					$objColumn->Options = $a;
 					$objColumn->Comment = substr ($strComment, 0, $pos1) . substr ($strComment, $pos2 + 1); // return comment without options
+					if (!empty ($a['Timestamp'])) {
+						$objColumn->Timestamp = true;	// alternate way to specify that a column is a self-updating timestamp
+					}
+					if ($objColumn->Timestamp && !empty($a['AutoUpdate'])) {
+						$objColumn->AutoUpdate = true;
+					}
 				} else {
 					$objColumn->Comment = $strComment;
 				}

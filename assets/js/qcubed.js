@@ -510,9 +510,9 @@ qcubed.clearTimeout = function(strTimerId) {
     }
 };
 
-qcubed.setTimeout = function(strTimerId, strAction, intDelay) {
+qcubed.setTimeout = function(strTimerId, action, intDelay) {
     qcubed.clearTimeout(strTimerId);
-    qcubed._objTimers[strTimerId] = setTimeout(strAction, intDelay);
+    qcubed._objTimers[strTimerId] = setTimeout(action, intDelay);
 };
 
 ///////////////////////////////

@@ -132,10 +132,10 @@ class UpdateCheckerForm extends QForm {
 		$ch = curl_init();
 		curl_setopt_array($ch, $defaults);
                 
-                if(__CURLOPT_PROXY__){
+                if(@__CURLOPT_PROXY__ != '__CURLOPT_PROXY__'){
                     curl_setopt($ch, CURLOPT_PROXY, __CURLOPT_PROXY__);
                 }
-                if(__CURLOPT_PROXYUSERPWD__){
+                if(@__CURLOPT_PROXYUSERPWD__ != '__CURLOPT_PROXYUSERPWD__'){
                     curl_setopt($ch, CURLOPT_PROXYUSERPWD, __CURLOPT_PROXYUSERPWD__);
                 }
                 

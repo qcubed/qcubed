@@ -1,14 +1,14 @@
 /**
-		 * Delete this <?php echo $objTable->ClassName  ?>
+		 * Delete this <?= $objTable->ClassName ?>
 
 		 * @return void
 		 */
 		public function Delete() {
-			if (<?php echo $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)
-				throw new QUndefinedPrimaryKeyException('Cannot delete this <?php echo $objTable->ClassName  ?> with an unset primary key.');
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Cannot delete this <?= $objTable->ClassName ?> with an unset primary key.');
 
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
@@ -17,12 +17,12 @@
 <?php $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
 
 
-			// Update the adjoined <?php echo $objReverseReference->ObjectDescription  ?> object (if applicable) and perform the unassociation
+			// Update the adjoined <?= $objReverseReference->ObjectDescription ?> object (if applicable) and perform the unassociation
 
 			// Optional -- if you **KNOW** that you do not want to EVER run any level of business logic on the disassocation,
 			// you *could* override Delete() so that this step can be a single hard coded query to optimize performance.
-			if ($objAssociated = <?php echo $objReverseReference->VariableType  ?>::LoadBy<?php echo $objReverseReferenceColumn->PropertyName  ?>(<?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)) {
-				$objAssociated-><?php echo $objReverseReferenceColumn->PropertyName  ?> = null;
+			if ($objAssociated = <?= $objReverseReference->VariableType ?>::LoadBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)) {
+				$objAssociated-><?= $objReverseReferenceColumn->PropertyName ?> = null;
 				$objAssociated->Save();
 			}
 <?php } ?><?php if ($objReverseReference->NotNull) { ?>
@@ -30,11 +30,11 @@
 <?php $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
 
 		
-			// Update the adjoined <?php echo $objReverseReference->ObjectDescription  ?> object (if applicable) and perform a delete
+			// Update the adjoined <?= $objReverseReference->ObjectDescription ?> object (if applicable) and perform a delete
 
 			// Optional -- if you **KNOW** that you do not want to EVER run any level of business logic on the disassocation,
 			// you *could* override Delete() so that this step can be a single hard coded query to optimize performance.
-			if ($objAssociated = <?php echo $objReverseReference->VariableType  ?>::LoadBy<?php echo $objReverseReferenceColumn->PropertyName  ?>(<?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray)  ?>)) {
+			if ($objAssociated = <?= $objReverseReference->VariableType ?>::LoadBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)) {
 				$objAssociated->Delete();
 			}
 <?php } ?>
@@ -44,69 +44,69 @@
 			// Perform the SQL Query
 			$objDatabase->NonQuery('
 				DELETE FROM
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>
+					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
 
 				WHERE
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if ($objColumn->PrimaryKey) { ?>
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objColumn->Name  ?><?php echo $strEscapeIdentifierEnd  ?> = ' . $objDatabase->SqlVariable($this-><?php echo $objColumn->VariableName  ?>) . ' AND
+					<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($this-><?= $objColumn->VariableName ?>) . ' AND
 <?php } ?>
 <?php } ?><?php GO_BACK(5); ?>');
 
 			$this->DeleteCache();
 			if (static::$blnWatchChanges) {
-				QWatcher::MarkTableModified ('<?php echo QApplication::$Database[$objTable->OwnerDbIndex]->Database  ?>', '<?php echo $objTable->Name  ?>');
+				QWatcher::MarkTableModified ('<?= QApplication::$Database[$objTable->OwnerDbIndex]->Database ?>', '<?= $objTable->Name ?>');
 			}
 
 		}
 
         /**
- 	     * Delete this <?php echo $objTable->ClassName ?> ONLY from the cache
+ 	     * Delete this <?= $objTable->ClassName ?> ONLY from the cache
  		 * @return void
 		 */
 		public function DeleteCache() {
-			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
-				$strCacheKey = QApplication::$objCacheProvider->CreateKey(QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Database, '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>);
+			if (QApplication::$objCacheProvider && QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Caching) {
+				$strCacheKey = QApplication::$objCacheProvider->CreateKey(QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Database, '<?= $objTable->ClassName ?>', <?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>);
 				QApplication::$objCacheProvider->Delete($strCacheKey);
 			}
 		}
 
 		/**
-		 * Delete all <?php echo $objTable->ClassNamePlural  ?>
+		 * Delete all <?= $objTable->ClassNamePlural ?>
 
 		 * @return void
 		 */
 		public static function DeleteAll() {
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			// Perform the Query
 			$objDatabase->NonQuery('
 				DELETE FROM
-					<?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>');
+					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>');
 
-			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
+			if (QApplication::$objCacheProvider && QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Caching) {
 				QApplication::$objCacheProvider->DeleteAll();
 			}
 
 			if (static::$blnWatchChanges) {
-				QWatcher::MarkTableModified ('<?php echo QApplication::$Database[$objTable->OwnerDbIndex]->Database  ?>', '<?php echo $objTable->Name  ?>');
+				QWatcher::MarkTableModified ('<?= QApplication::$Database[$objTable->OwnerDbIndex]->Database ?>', '<?= $objTable->Name ?>');
 			}
 		}
 
 		/**
-		 * Truncate <?php echo $objTable->Name  ?> table
+		 * Truncate <?= $objTable->Name ?> table
 		 * @return void
 		 */
 		public static function Truncate() {
 			// Get the Database Object for this Class
-			$objDatabase = <?php echo $objTable->ClassName  ?>::GetDatabase();
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
 
 			// Perform the Query
 			$objDatabase->NonQuery('
-				TRUNCATE <?php echo $strEscapeIdentifierBegin  ?><?php echo $objTable->Name  ?><?php echo $strEscapeIdentifierEnd  ?>');
+				TRUNCATE <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>');
 
-			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
+			if (QApplication::$objCacheProvider && QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Caching) {
 				QApplication::$objCacheProvider->DeleteAll();
 			}
 		}

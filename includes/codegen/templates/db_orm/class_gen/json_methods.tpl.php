@@ -9,7 +9,7 @@
 			// Member Variables
 			///////////////////
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-			$iArray['<?php echo $objColumn->PropertyName  ?>'] = $this-><?php echo $objColumn->VariableName  ?>;
+			$iArray['<?= $objColumn->PropertyName ?>'] = $this-><?= $objColumn->VariableName ?>;
 <?php } ?>
 			return new ArrayIterator($iArray);
 		}
@@ -32,6 +32,6 @@
 		 * @return an array that specifies how to display the object
 		 */
 		public function toJsObject () {
-			return JavaScriptHelper::toJsObject(array('value' => $this->__toString(), 'id' => <?php if ( count($objTable->PrimaryKeyColumnArray) == 1 ) { ?> $this-><?php echo $objTable->PrimaryKeyColumnArray[0]->VariableName  ?> <?php } ?><?php if ( count($objTable->PrimaryKeyColumnArray) > 1 ) { ?> array(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?> $this-><?php echo $objColumn->VariableName  ?>, <?php } ?><?php GO_BACK(2); ?>) <?php } ?>));
+			return JavaScriptHelper::toJsObject(array('value' => $this->__toString(), 'id' => <?php if ( count($objTable->PrimaryKeyColumnArray) == 1 ) { ?> $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?> <?php } ?><?php if ( count($objTable->PrimaryKeyColumnArray) > 1 ) { ?> array(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?> $this-><?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>) <?php } ?>));
 		}
 

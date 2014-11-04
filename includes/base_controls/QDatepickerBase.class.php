@@ -1,4 +1,15 @@
 <?php
+
+	/**
+	 * Class QDatepicker_SelectEvent2
+	 * Use this class instead of the QDatepicker_SelectEvent. The QDatepicker_SelectEvent will cause the
+	 * datepicker to not function correctly. The problem is related to how the datepicker is implemented on the
+	 * JQueryUI end. They have been meaning to do a rewrite for quite some time, but have not gotten to that.
+	 */
+	class QDatepicker_SelectEvent2 extends QEvent {
+		const EventName = 'QDatepicker_Select2';
+	}
+
 	/**
 	 * Datepicker Base File
 	 * 
@@ -33,15 +44,15 @@
 			
 			parent::__set ('OnSelect', $this->OnSelectJs());	// setup a way to detect a selection
 		}
-		
 
-
-		// The datebpicker will not send its results to us by default
+		/**
+		 * Output JS that will record changes to the datepicker and fire our own select event.
+		 */
 		protected function OnSelectJs () {
-			$strJS = 'qcubed.recordControlModification("' . $this->getJqControlId() . '", "_Text", dateText)';
+			$strId = $this->getJqControlId();
+			$strJS = sprintf ('qcubed.recordControlModification("%s", "_Text", dateText); $j("#%s").trigger("QDatepicker_Select2")', $strId, $strId);
 			return $strJS;
 		}
-		
 
 		/////////////////////////
 		// Public Properties: GET
@@ -53,7 +64,7 @@
 				case "Minimum": return $this->MinDate;
 				case 'DateTimeFormat':
 				case 'DateFormat': return $this->strDateTimeFormat;
-				case 'DateTime': return $this->dttDateTime;
+				case 'DateTime': return $this->dttDateTime ? clone($this->dttDateTime) : null;
 
 				default:
 					try {
@@ -95,8 +106,8 @@
 
 				case 'DateTime':
 					try {
-						$this->dttDateTime = QType::Cast($mixValue, QType::DateTime);
-						$this->blnModified = true;
+						$this->dttDateTime = new QDateTime($mixValue, null, QDateTime::DateOnlyType);
+						parent::SetDate($this->dttDateTime);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -129,8 +140,7 @@
 					}
 
 				case 'Text':	// Set the selected date with a text value
-					$this->dttDateTime = new QDateTime($mixValue);
-					$this->blnModified = true;
+					$this->DateTime = $mixValue;
 					break;
 
 				case '_Text':	// Internal only. Do not use. Called by JS above to keep track of user selection.
@@ -138,7 +148,7 @@
 					break;
 					
 				case 'OnSelect':
-					// Since we are using the OnSelect event alreay, and Datepicker doesn't allow binding, so there can be
+					// Since we are using the OnSelect event already, and Datepicker doesn't allow binding, so there can be
 					// only one event, we will make sure our js is part of any new OnSelect js.
 					$mixValue = $this->OnSelectJs() . ';' . $mixValue;
 					parent::__set('OnSelect', $mixValue);

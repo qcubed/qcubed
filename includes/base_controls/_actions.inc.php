@@ -42,9 +42,9 @@
 				}
 
 				if ($objAction->objEvent->Delay > 0) {
-					$strCode = sprintf(" qcubed.setTimeout('%s', '%s', %s);",
+					$strCode = sprintf(" qcubed.setTimeout('%s', \$j.proxy(function(){%s},this), %s);",
 						$objControl->ControlId,
-						addslashes($objAction->RenderScript($objControl)),
+						$objAction->RenderScript($objControl),
 						$objAction->objEvent->Delay);
 				} else {
 					$strCode = ' ' . $objAction->RenderScript($objControl);
@@ -349,7 +349,52 @@
 			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride, $strJsReturnParam);
 		}
 	}
+	/**
+	 * Client-side action - no postbacks of any kind are performed.
+	 * All handling activity happens in Javascript.
+	 *
+	 * @package Actions
+	 */
+	class QRedirectAction extends QAction {
+		protected $strJavaScript;
 
+		/**
+		 * possible values:
+		 * http://google.com
+		 * index.php?page=view
+		 * /foo/bar/woot.html
+		 * 
+		 * @param string $strUrl
+		 */
+		public function __construct($strUrl) {
+			$this->strJavaScript = sprintf("document.location.href ='%s'", trim($strUrl));
+		}
+
+		/**
+		 * PHP Magic function to get the property values of a class object
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed|null|string
+		 * @throws QCallerException
+		 */
+		public function __get($strName) {
+			switch ($strName) {
+				case 'JavaScript':
+					return $this->strJavaScript;
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+
+		public function RenderScript(QControl $objControl) {
+			return sprintf('%s;', $this->strJavaScript);
+		}
+	}
 	/**
 	 * Client-side action - no postbacks of any kind are performed.
 	 * All handling activity happens in Javascript.

@@ -3,10 +3,10 @@
 		!isset($objColumn->Options['FormGen']) ||
 		$objColumn->Options['FormGen'] != 'label') {
 ?>
-				case '<?php echo $strPropertyName  ?>Control':
-					if (!$this-><?php echo $strControlId  ?>) return $this-><?php echo $strControlId  ?>_Create();
-					return $this-><?php echo $strControlId  ?>;
+				case '<?= $strPropertyName ?>Control':
+					if (!$this-><?= $strControlId ?>) return $this-><?= $strControlId ?>_Create();
+					return $this-><?= $strControlId ?>;
 <?php } ?>
-				case '<?php echo $strPropertyName  ?>Label':
-					if (!$this-><?php echo $strLabelId  ?>) return $this-><?php echo $strLabelId  ?>_Create();
-					return $this-><?php echo $strLabelId  ?>;
+				case '<?= $strPropertyName ?>Label':
+					if (!$this-><?= $strLabelId ?>) return $this-><?= $strLabelId ?>_Create();
+					return $this-><?= $strLabelId ?>;

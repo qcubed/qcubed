@@ -11,7 +11,7 @@
 	<p>You should now have a plugin configuration file, as all the relevant PHP,
 		JavaScript, CSS, images, and other files under the root of your plugin. Now,
 		package your plugin as a regular ZIP archive - the only restriction here is
-		that the configuration file <strong><?php echo QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE ?></strong> should be at the root
+		that the configuration file <strong><?= QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE ?></strong> should be at the root
 		of the ZIP archive.</p>
 
 	<p>If you're like me, and you make subtle little mistakes that make you
@@ -24,7 +24,7 @@
 			href="http://trac.qcu.be/projects/qcubed/browser/plugins/QAutoCompleteTextBox">sample</a>):</p>
 	<ul>
 		<li>releases <- this is where the resulting ZIP will be placed</li>
-		<li>source <- this is the root of your plugin, with <?php echo QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE; ?> underneath it</li>
+		<li>source <- this is the root of your plugin, with <?= QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE; ?> underneath it</li>
 		<li>tools <- this is where the batch script goes
 	</ul>
 	<p>Note that you don't have to use this script at all - you can use your own.
@@ -53,7 +53,7 @@
 		plugin, and you're good to go.</p>
 
 	<p>Now, go to the <a target="_blank"
-						 href="<?php echo QPluginInstaller::ONLINE_PLUGIN_REPOSITORY ?>">
+						 href="<?= QPluginInstaller::ONLINE_PLUGIN_REPOSITORY ?>">
 		QCubed online plugin repository</a> and edit it to add the info on your plugin. You can link
 		to your plugin ZIP directly at the QCubed SVN if you're using it! You
 		may also want to post an announcement to the <a

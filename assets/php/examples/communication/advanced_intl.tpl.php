@@ -48,8 +48,8 @@
     <h3><strong>Spanish</strong></h3>
     <?php $i18n = QI18n::Load('es'); ?>
     <ul>
-        <li>Required -> <?php echo $i18n->TranslateToken('Required'); ?></li>
-        <li>Optional -> <?php echo $i18n->TranslateToken('Optional'); ?></li>
+        <li>Required -> <?= $i18n->TranslateToken('Required'); ?></li>
+        <li>Optional -> <?= $i18n->TranslateToken('Optional'); ?></li>
     </ul>
 </div>
 

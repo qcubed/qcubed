@@ -138,6 +138,12 @@
 		 */
 		protected $options;
 
+		/**
+		 * For Timestamp columns, will add to the sql code to set this field to NOW whenever there is a save
+		 * @var boolean
+		 */
+		protected $blnAutoUpdate;
+
 
 
 
@@ -192,6 +198,8 @@
 					return $this->strComment;
 				case 'Options':
 					return $this->options;
+				case 'AutoUpdate':
+					return $this->blnAutoUpdate;
 				default:
 					try {
 						return parent::__get($strName);
@@ -260,6 +268,8 @@
 						return $this->strComment = QType::Cast($mixValue, QType::String);
 					case 'Options':
 						return $this->options = QType::Cast($mixValue, QType::ArrayType);
+					case 'AutoUpdate':
+						return $this->blnAutoUpdate = QType::Cast($mixValue, QType::Boolean);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

@@ -746,7 +746,7 @@
 						$this->strType = QDatabaseFieldType::Time;
 						break;
 					case 'timestamp':
-						// System-generated Timestamp values need to be treated as plain text
+						// System-generated Timestamp values need to be treated as plain text. They are NOT actual times, but just counters.
 						$this->strType = QDatabaseFieldType::VarChar;
 						$this->blnTimestamp = true;
 						break;

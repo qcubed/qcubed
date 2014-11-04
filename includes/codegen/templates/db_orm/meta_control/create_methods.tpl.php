@@ -1,6 +1,6 @@
 <?php
 	foreach ($objTable->ColumnArray as $objColumn) {
-		if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none') continue;
+		if ($objColumn->Options && isset ($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 		$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
 		if ($strControlType == 'QLabel'  ||
 				!isset($objColumn->Options['FormGen']) ||

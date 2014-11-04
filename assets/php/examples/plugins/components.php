@@ -17,7 +17,7 @@
 
 	<p>If you're ready to get started with your own plugin, create a
 		directory somewhere on your computer; we'll refer to that directory as
-		the "root" of your plugin. Add one file to the root: <strong><?php echo
+		the "root" of your plugin. Add one file to the root: <strong><?=
 QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE
 ?></strong>. That
 		configuration file will describe the steps that QCubed needs to take
@@ -31,7 +31,7 @@ QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE
 
 	<p>A plugin is described through a <strong>QPlugin</strong> object - you can see all the
 		properties of that object by inspecting the
-		<strong><?php echo substr(__QCUBED_CORE__, strlen(__DOCROOT__)) ?>/framework/QPluginInterface.class.php</strong>
+		<strong><?= substr(__QCUBED_CORE__, strlen(__DOCROOT__)) ?>/framework/QPluginInterface.class.php</strong>
 		file. <a href="javascript:ViewSource(<?php _p(Examples::GetCategoryId() . ',' . Examples::GetExampleId() . ',"__CORE_FRAMEWORK__QPluginInterface.class.php"'); ?>);">Take a look </a>at it now.</p>
 
 	<p>To define the QPlugin object, we'll first set simple metadata on it:</p>

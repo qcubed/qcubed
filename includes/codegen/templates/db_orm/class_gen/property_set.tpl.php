@@ -13,19 +13,19 @@
 				///////////////////
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) { ?>
-				case '<?php echo $objColumn->PropertyName  ?>':
+				case '<?= $objColumn->PropertyName ?>':
 					/**
-					 * Sets the value for <?php echo $objColumn->VariableName  ?> <?php if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+					 * Sets the value for <?= $objColumn->VariableName ?> <?php if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
-					 * @param <?php echo $objColumn->VariableType  ?> $mixValue
-					 * @return <?php echo $objColumn->VariableType  ?>
+					 * @param <?= $objColumn->VariableType ?> $mixValue
+					 * @return <?= $objColumn->VariableType ?>
 
 					 */
 					try {
 <?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
-						$this-><?php echo $objColumn->Reference->VariableName  ?> = null;
+						$this-><?= $objColumn->Reference->VariableName ?> = null;
 <?php } ?>
-						return ($this-><?php echo $objColumn->VariableName  ?> = QType::Cast($mixValue, <?php echo $objColumn->VariableTypeAsConstant  ?>));
+						return ($this-><?= $objColumn->VariableName ?> = QType::Cast($mixValue, <?= $objColumn->VariableTypeAsConstant ?>));
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -39,34 +39,34 @@
 				///////////////////
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
-				case '<?php echo $objColumn->Reference->PropertyName  ?>':
+				case '<?= $objColumn->Reference->PropertyName ?>':
 					/**
-					 * Sets the value for the <?php echo $objColumn->Reference->VariableType  ?> object referenced by <?php echo $objColumn->VariableName  ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+					 * Sets the value for the <?= $objColumn->Reference->VariableType ?> object referenced by <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
-					 * @param <?php echo $objColumn->Reference->VariableType  ?> $mixValue
-					 * @return <?php echo $objColumn->Reference->VariableType  ?>
+					 * @param <?= $objColumn->Reference->VariableType ?> $mixValue
+					 * @return <?= $objColumn->Reference->VariableType ?>
 
 					 */
 					if (is_null($mixValue)) {
-						$this-><?php echo $objColumn->VariableName  ?> = null;
-						$this-><?php echo $objColumn->Reference->VariableName  ?> = null;
+						$this-><?= $objColumn->VariableName ?> = null;
+						$this-><?= $objColumn->Reference->VariableName ?> = null;
 						return null;
 					} else {
-						// Make sure $mixValue actually is a <?php echo $objColumn->Reference->VariableType  ?> object
+						// Make sure $mixValue actually is a <?= $objColumn->Reference->VariableType ?> object
 						try {
-							$mixValue = QType::Cast($mixValue, '<?php echo $objColumn->Reference->VariableType  ?>');
+							$mixValue = QType::Cast($mixValue, '<?= $objColumn->Reference->VariableType ?>');
 						} catch (QInvalidCastException $objExc) {
 							$objExc->IncrementOffset();
 							throw $objExc;
 						}
 
-						// Make sure $mixValue is a SAVED <?php echo $objColumn->Reference->VariableType  ?> object
-						if (is_null($mixValue-><?php echo $objCodeGen->TableArray[strtolower($objColumn->Reference->Table)]->ColumnArray[strtolower($objColumn->Reference->Column)]->PropertyName  ?>))
-							throw new QCallerException('Unable to set an unsaved <?php echo $objColumn->Reference->PropertyName  ?> for this <?php echo $objTable->ClassName  ?>');
+						// Make sure $mixValue is a SAVED <?= $objColumn->Reference->VariableType ?> object
+						if (is_null($mixValue-><?= $objCodeGen->TableArray[strtolower($objColumn->Reference->Table)]->ColumnArray[strtolower($objColumn->Reference->Column)]->PropertyName ?>))
+							throw new QCallerException('Unable to set an unsaved <?= $objColumn->Reference->PropertyName ?> for this <?= $objTable->ClassName ?>');
 
 						// Update Local Member Variables
-						$this-><?php echo $objColumn->Reference->VariableName  ?> = $mixValue;
-						$this-><?php echo $objColumn->VariableName  ?> = $mixValue-><?php echo $objCodeGen->TableArray[strtolower($objColumn->Reference->Table)]->ColumnArray[strtolower($objColumn->Reference->Column)]->PropertyName  ?>;
+						$this-><?= $objColumn->Reference->VariableName ?> = $mixValue;
+						$this-><?= $objColumn->VariableName ?> = $mixValue-><?= $objCodeGen->TableArray[strtolower($objColumn->Reference->Table)]->ColumnArray[strtolower($objColumn->Reference->Column)]->PropertyName ?>;
 
 						// Return $mixValue
 						return $mixValue;
@@ -77,37 +77,37 @@
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
-				case '<?php echo $objReverseReference->ObjectPropertyName  ?>':
+				case '<?= $objReverseReference->ObjectPropertyName ?>':
 					/**
-					 * Sets the value for the <?php echo $objReverseReference->VariableType  ?> object referenced by <?php echo $objReverseReference->ObjectMemberVariable  ?> (Unique)
-					 * @param <?php echo $objReverseReference->VariableType  ?> $mixValue
-					 * @return <?php echo $objReverseReference->VariableType  ?>
+					 * Sets the value for the <?= $objReverseReference->VariableType ?> object referenced by <?= $objReverseReference->ObjectMemberVariable ?> (Unique)
+					 * @param <?= $objReverseReference->VariableType ?> $mixValue
+					 * @return <?= $objReverseReference->VariableType ?>
 
 					 */
 					if (is_null($mixValue)) {
-						$this-><?php echo $objReverseReference->ObjectMemberVariable  ?> = null;
+						$this-><?= $objReverseReference->ObjectMemberVariable ?> = null;
 
-						// Make sure we update the adjoined <?php echo $objReverseReference->VariableType  ?> object the next time we call Save()
-						$this->blnDirty<?php echo $objReverseReference->ObjectPropertyName  ?> = true;
+						// Make sure we update the adjoined <?= $objReverseReference->VariableType ?> object the next time we call Save()
+						$this->blnDirty<?= $objReverseReference->ObjectPropertyName ?> = true;
 
 						return null;
 					} else {
-						// Make sure $mixValue actually is a <?php echo $objReverseReference->VariableType  ?> object
+						// Make sure $mixValue actually is a <?= $objReverseReference->VariableType ?> object
 						try {
-							$mixValue = QType::Cast($mixValue, '<?php echo $objReverseReference->VariableType  ?>');
+							$mixValue = QType::Cast($mixValue, '<?= $objReverseReference->VariableType ?>');
 						} catch (QInvalidCastException $objExc) {
 							$objExc->IncrementOffset();
 							throw $objExc;
 						}
 
-						// Are we setting <?php echo $objReverseReference->ObjectMemberVariable  ?> to a DIFFERENT $mixValue?
-						if ((!$this-><?php echo $objReverseReference->ObjectPropertyName  ?>) || ($this-><?php echo $objReverseReference->ObjectPropertyName  ?>-><?php echo $objCodeGen->GetTable($objReverseReference->Table)->PrimaryKeyColumnArray[0]->PropertyName  ?> != $mixValue-><?php echo $objCodeGen->GetTable($objReverseReference->Table)->PrimaryKeyColumnArray[0]->PropertyName  ?>)) {
+						// Are we setting <?= $objReverseReference->ObjectMemberVariable ?> to a DIFFERENT $mixValue?
+						if ((!$this-><?= $objReverseReference->ObjectPropertyName ?>) || ($this-><?= $objReverseReference->ObjectPropertyName ?>-><?= $objCodeGen->GetTable($objReverseReference->Table)->PrimaryKeyColumnArray[0]->PropertyName ?> != $mixValue-><?= $objCodeGen->GetTable($objReverseReference->Table)->PrimaryKeyColumnArray[0]->PropertyName ?>)) {
 							// Yes -- therefore, set the "Dirty" flag to true
-							// to make sure we update the adjoined <?php echo $objReverseReference->VariableType  ?> object the next time we call Save()
-							$this->blnDirty<?php echo $objReverseReference->ObjectPropertyName  ?> = true;
+							// to make sure we update the adjoined <?= $objReverseReference->VariableType ?> object the next time we call Save()
+							$this->blnDirty<?= $objReverseReference->ObjectPropertyName ?> = true;
 
 							// Update Local Member Variable
-							$this-><?php echo $objReverseReference->ObjectMemberVariable  ?> = $mixValue;
+							$this-><?= $objReverseReference->ObjectMemberVariable ?> = $mixValue;
 						} else {
 							// Nope -- therefore, make no changes
 						}

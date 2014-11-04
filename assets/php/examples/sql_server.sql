@@ -116,6 +116,16 @@ CREATE TABLE IF NOT EXISTS qc_watchers (
   CONSTRAINT PK_qc_watchers PRIMARY KEY (table_key)
 );
 
+DROP TABLE IF EXISTS type_test;
+CREATE TABLE type_test (
+  id INT NOT NULL IDENTITY,
+  date date,
+  time time,
+  date_time datetime,
+  PRIMARY KEY (id)
+);
+
+
 
 ALTER TABLE login ADD CONSTRAINT person_login FOREIGN KEY (person_id) REFERENCES person (id);
 ALTER TABLE project ADD CONSTRAINT person_project FOREIGN KEY (manager_person_id) REFERENCES person (id);

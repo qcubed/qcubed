@@ -1,23 +1,23 @@
 <?php $objColumnArray = $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray); ?>
 		/**
-		 * Load an array of <?php echo $objTable->ClassName  ?> objects,
-		 * by <?php echo $objCodeGen->ImplodeObjectArray(', ', '', '', 'PropertyName', $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray))  ?> Index(es)
+		 * Load an array of <?= $objTable->ClassName ?> objects,
+		 * by <?= $objCodeGen->ImplodeObjectArray(', ', '', '', 'PropertyName', $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray)) ?> Index(es)
 <?php foreach ($objColumnArray as $objColumn) { ?>
-		 * @param <?php echo $objColumn->VariableType  ?> $<?php echo $objColumn->VariableName  ?>
+		 * @param <?= $objColumn->VariableType ?> $<?= $objColumn->VariableName ?>
 
 <?php } ?>
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
-		 * @return <?php echo $objTable->ClassName  ?>[]
+		 * @return <?= $objTable->ClassName ?>[]
 		*/
-		public static function LoadArrayBy<?php echo $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);  ?>(<?php echo $objCodeGen->ParameterListFromColumnArray($objColumnArray);  ?>, $objOptionalClauses = null) {
-			// Call <?php echo $objTable->ClassName  ?>::QueryArray to perform the LoadArrayBy<?php echo $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);  ?> query
+		public static function LoadArrayBy<?= $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray); ?>(<?= $objCodeGen->ParameterListFromColumnArray($objColumnArray); ?>, $objOptionalClauses = null) {
+			// Call <?= $objTable->ClassName ?>::QueryArray to perform the LoadArrayBy<?= $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray); ?> query
 			try {
-				return <?php echo $objTable->ClassName;  ?>::QueryArray(
+				return <?= $objTable->ClassName; ?>::QueryArray(
 <?php if (count($objColumnArray) > 1) { ?>
 					QQ::AndCondition(
 <?php } ?>
 <?php foreach ($objColumnArray as $objColumn) { ?>
-					QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()-><?php echo $objColumn->PropertyName  ?>, $<?php echo $objColumn->VariableName  ?>),
+					QQ::Equal(QQN::<?= $objTable->ClassName ?>()-><?= $objColumn->PropertyName ?>, $<?= $objColumn->VariableName ?>),
 <?php } ?><?php GO_BACK(2); ?>
 <?php if (count($objColumnArray) > 1) { ?>
 					)
@@ -30,23 +30,23 @@
 		}
 
 		/**
-		 * Count <?php echo $objTable->ClassNamePlural  ?>
+		 * Count <?= $objTable->ClassNamePlural ?>
 
-		 * by <?php echo $objCodeGen->ImplodeObjectArray(', ', '', '', 'PropertyName', $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray))  ?> Index(es)
+		 * by <?= $objCodeGen->ImplodeObjectArray(', ', '', '', 'PropertyName', $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray)) ?> Index(es)
 <?php foreach ($objColumnArray as $objColumn) { ?>
-		 * @param <?php echo $objColumn->VariableType  ?> $<?php echo $objColumn->VariableName  ?>
+		 * @param <?= $objColumn->VariableType ?> $<?= $objColumn->VariableName ?>
 
 <?php } ?>
 		 * @return int
 		*/
-		public static function CountBy<?php echo $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);  ?>(<?php echo $objCodeGen->ParameterListFromColumnArray($objColumnArray);  ?>) {
-			// Call <?php echo $objTable->ClassName  ?>::QueryCount to perform the CountBy<?php echo $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);  ?> query
-			return <?php echo $objTable->ClassName  ?>::QueryCount(
+		public static function CountBy<?= $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray); ?>(<?= $objCodeGen->ParameterListFromColumnArray($objColumnArray); ?>) {
+			// Call <?= $objTable->ClassName ?>::QueryCount to perform the CountBy<?= $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray); ?> query
+			return <?= $objTable->ClassName ?>::QueryCount(
 <?php if (count($objColumnArray) > 1) { ?>
 				QQ::AndCondition(
 <?php } ?>
 <?php foreach ($objColumnArray as $objColumn) { ?>
-				QQ::Equal(QQN::<?php echo $objTable->ClassName  ?>()-><?php echo $objColumn->PropertyName  ?>, $<?php echo $objColumn->VariableName  ?>),
+				QQ::Equal(QQN::<?= $objTable->ClassName ?>()-><?= $objColumn->PropertyName ?>, $<?= $objColumn->VariableName ?>),
 <?php } ?><?php GO_BACK(2); ?>
 <?php if (count($objColumnArray) > 1) { ?>
 				)
