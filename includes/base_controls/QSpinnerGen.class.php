@@ -262,6 +262,25 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
+		 * <p>Retrieves the spinner's instance object. If the element does not have an
+		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
+		 * other widget methods, <code>instance()</code> is safe to call on any
+		 * element after the spinner plugin has loaded.</p><ul><li>This method does
+		 * not accept any arguments.</li></ul>
+		 */
+		public function Instance() {
+			$this->CallJqUiMethod(false, "instance");
+		}
+		/**
+		 * Returns whether the Spinner's value is valid given its
+		 * <a><code>min</code></a>, <a><code>max</code></a>, and
+		 * <a><code>step</code></a>.<ul><li>This method does not accept any
+		 * arguments.</li></ul>
+		 */
+		public function IsValid() {
+			$this->CallJqUiMethod(false, "isValid");
+		}
+		/**
 		 * Gets the value currently associated with the specified
 		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
 		 * <a>String</a> The name of the option to get.</li></ul>

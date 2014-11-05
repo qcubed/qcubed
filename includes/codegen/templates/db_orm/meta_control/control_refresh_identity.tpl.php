@@ -1,1 +1,1 @@
-			if ($this-><?php echo $strControlId  ?>) if ($this->blnEditMode) $this-><?php echo $strControlId  ?>->Text = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
+			if ($this-><?= $strControlId ?>) if ($this->blnEditMode) $this-><?= $strControlId ?>->Text = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;

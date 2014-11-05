@@ -9,11 +9,11 @@
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {
-					case Parent:
+					case 'Parent':
 						$this->objParentObject = $mixValue;
 						break;
 
-					// Controls that point to <?php echo $objTable->ClassName  ?> fields
+					// Controls that point to <?= $objTable->ClassName ?> fields
 <?php foreach ($objTable->ColumnArray as $objColumn) {
 	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 	$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);

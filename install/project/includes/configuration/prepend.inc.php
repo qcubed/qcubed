@@ -152,6 +152,11 @@
 			// QApplication::$CountryCode = 'us';
 			// QApplication::$LanguageCode = 'en';
 			// QI18n::Initialize();
+			//
+			// QDateTime::$DefaultFormat = 'M/D/YY h:mm z';
+			// QDateTime::$DefaultDateOnlyFormat = 'M/D/YY';
+			// QDateTime::$DefaultTimeFormat = 'h:mm z';
+
 		}
 		require(__APP_INCLUDES__ . '/app_includes.inc.php');
 	}

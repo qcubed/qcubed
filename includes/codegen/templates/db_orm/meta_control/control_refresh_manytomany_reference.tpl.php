@@ -1,32 +1,32 @@
 		<?php if ($objManyToManyReference->IsTypeAssociation):?>
-			if ($this-><?php echo $strControlId  ?>) {
-				$strAssociatedArray = $this-><?php echo $strObjectName  ?>->Get<?php echo $objManyToManyReference->ObjectDescription;  ?>Array();
-				$this-><?php echo $strControlId  ?>->SelectedValues = array_keys($strAssociatedArray);
+			if ($this-><?= $strControlId ?>) {
+				$strAssociatedArray = $this-><?= $strObjectName ?>->Get<?= $objManyToManyReference->ObjectDescription; ?>Array();
+				$this-><?= $strControlId ?>->SelectedValues = array_keys($strAssociatedArray);
 			}
-			if ($this-><?php echo $strLabelId  ?>) {
-				$strAssociatedArray = $this-><?php echo $strObjectName  ?>->Get<?php echo $objManyToManyReference->ObjectDescription;  ?>Array();
-				$this-><?php echo $strLabelId  ?>->Text = implode($this->str<?php echo $objManyToManyReference->ObjectDescription;  ?>Glue, $strAssociatedArray);
+			if ($this-><?= $strLabelId ?>) {
+				$strAssociatedArray = $this-><?= $strObjectName ?>->Get<?= $objManyToManyReference->ObjectDescription; ?>Array();
+				$this-><?= $strLabelId ?>->Text = implode($this->str<?= $objManyToManyReference->ObjectDescription; ?>Glue, $strAssociatedArray);
 			}
 			
 		<?php else:?>
-			if ($this-><?php echo $strControlId  ?>) {
-				$this-><?php echo $strControlId  ?>->RemoveAllItems();
-				$objAssociatedArray = $this-><?php echo $strObjectName  ?>->Get<?php echo $objManyToManyReference->ObjectDescription;  ?>Array();
-				$<?php echo $objManyToManyReference->VariableName  ?>Array = <?php echo $objManyToManyReference->VariableType  ?>::LoadAll();
-				if ($<?php echo $objManyToManyReference->VariableName  ?>Array) foreach ($<?php echo $objManyToManyReference->VariableName  ?>Array as $<?php echo $objManyToManyReference->VariableName  ?>) {
-					$objListItem = new QListItem($<?php echo $objManyToManyReference->VariableName  ?>->__toString(), $<?php echo $objManyToManyReference->VariableName  ?>-><?php echo $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName  ?>);
+			if ($this-><?= $strControlId ?>) {
+				$this-><?= $strControlId ?>->RemoveAllItems();
+				$objAssociatedArray = $this-><?= $strObjectName ?>->Get<?= $objManyToManyReference->ObjectDescription; ?>Array();
+				$<?= $objManyToManyReference->VariableName ?>Array = <?= $objManyToManyReference->VariableType ?>::LoadAll();
+				if ($<?= $objManyToManyReference->VariableName ?>Array) foreach ($<?= $objManyToManyReference->VariableName ?>Array as $<?= $objManyToManyReference->VariableName ?>) {
+					$objListItem = new QListItem($<?= $objManyToManyReference->VariableName ?>->__toString(), $<?= $objManyToManyReference->VariableName ?>-><?= $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName ?>);
 					foreach ($objAssociatedArray as $objAssociated) {
-						if ($objAssociated-><?php echo $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName  ?> == $<?php echo $objManyToManyReference->VariableName  ?>-><?php echo $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName  ?>)
+						if ($objAssociated-><?= $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName ?> == $<?= $objManyToManyReference->VariableName ?>-><?= $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName ?>)
 							$objListItem->Selected = true;
 					}
-					$this-><?php echo $strControlId  ?>->AddItem($objListItem);
+					$this-><?= $strControlId ?>->AddItem($objListItem);
 				}
 			}
-			if ($this-><?php echo $strLabelId  ?>) {
-				$objAssociatedArray = $this-><?php echo $strObjectName  ?>->Get<?php echo $objManyToManyReference->ObjectDescription;  ?>Array();
+			if ($this-><?= $strLabelId ?>) {
+				$objAssociatedArray = $this-><?= $strObjectName ?>->Get<?= $objManyToManyReference->ObjectDescription; ?>Array();
 				$strItems = array();
 				foreach ($objAssociatedArray as $objAssociated)
 					$strItems[] = $objAssociated->__toString();
-				$this-><?php echo $strLabelId  ?>->Text = implode($this->str<?php echo $objManyToManyReference->ObjectDescription;  ?>Glue, $strItems);
+				$this-><?= $strLabelId ?>->Text = implode($this->str<?= $objManyToManyReference->ObjectDescription; ?>Glue, $strItems);
 			}
 		<?php endif;?>

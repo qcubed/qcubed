@@ -10,21 +10,21 @@ if ($blnHasMethod) {
 ?>
 
 
-if ($this-><?php echo $strControlId  ?>) {
-					$this-><?php echo $strControlId  ?>->RemoveAllItems();
+if ($this-><?= $strControlId ?>) {
+					$this-><?= $strControlId ?>->RemoveAllItems();
 <?php if ($objColumn->NotNull) { ?>
 				if (!$this->blnEditMode)
-					$this-><?php echo $strControlId  ?>->AddItem(QApplication::Translate('- Select One -'), null);
+					$this-><?= $strControlId ?>->AddItem(QApplication::Translate('- Select One -'), null);
 <?php } ?><?php if (!$objColumn->NotNull) { ?>
-				$this-><?php echo $strControlId  ?>->AddItem(QApplication::Translate('- Select One -'), null);
+				$this-><?= $strControlId ?>->AddItem(QApplication::Translate('- Select One -'), null);
 <?php } ?>
-				$<?php echo $objColumn->Reference->VariableName  ?>Array = <?php echo $objColumn->Reference->VariableType  ?>::LoadAll();
-				if ($<?php echo $objColumn->Reference->VariableName  ?>Array) foreach ($<?php echo $objColumn->Reference->VariableName  ?>Array as $<?php echo $objColumn->Reference->VariableName  ?>) {
-					$objListItem = new QListItem($<?php echo $objColumn->Reference->VariableName  ?>->__toString(), $<?php echo $objColumn->Reference->VariableName  ?>-><?php echo $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName  ?>);
-					if (($this-><?php echo $strObjectName  ?>-><?php echo $objColumn->Reference->PropertyName  ?>) && ($this-><?php echo $strObjectName  ?>-><?php echo $objColumn->Reference->PropertyName  ?>-><?php echo $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName  ?> == $<?php echo $objColumn->Reference->VariableName  ?>-><?php echo $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName  ?>))
+				$<?= $objColumn->Reference->VariableName ?>Array = <?= $objColumn->Reference->VariableType ?>::LoadAll();
+				if ($<?= $objColumn->Reference->VariableName ?>Array) foreach ($<?= $objColumn->Reference->VariableName ?>Array as $<?= $objColumn->Reference->VariableName ?>) {
+					$objListItem = new QListItem($<?= $objColumn->Reference->VariableName ?>->__toString(), $<?= $objColumn->Reference->VariableName ?>-><?= $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName ?>);
+					if (($this-><?= $strObjectName ?>-><?= $objColumn->Reference->PropertyName ?>) && ($this-><?= $strObjectName ?>-><?= $objColumn->Reference->PropertyName ?>-><?= $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName ?> == $<?= $objColumn->Reference->VariableName ?>-><?= $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName ?>))
 						$objListItem->Selected = true;
-					$this-><?php echo $strControlId  ?>->AddItem($objListItem);
+					$this-><?= $strControlId ?>->AddItem($objListItem);
 				}
 			} 
-			if ($this-><?php echo $strLabelId  ?>) $this-><?php echo $strLabelId  ?>->Text = ($this-><?php echo $strObjectName  ?>-><?php echo $objColumn->Reference->PropertyName  ?>) ? $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->Reference->PropertyName  ?>->__toString() : null;
+			if ($this-><?= $strLabelId ?>) $this-><?= $strLabelId ?>->Text = ($this-><?= $strObjectName ?>-><?= $objColumn->Reference->PropertyName ?>) ? $this-><?= $strObjectName ?>-><?= $objColumn->Reference->PropertyName ?>->__toString() : null;
 <?php }?>

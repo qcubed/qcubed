@@ -179,7 +179,7 @@
 
 			<div id="instructions" class="full">
 				<p>Make sure that the configuration directory is writable:<br/>
-				<code>chmod 777 <?php echo $strServerDocumentRoot . $strSubDirectory . DIRECTORY_SEPARATOR . 'project' . DIRECTORY_SEPARATOR . 'includes/configuration' ; ?></code></p>
+				<code>chmod 777 <?= $strServerDocumentRoot . $strSubDirectory . DIRECTORY_SEPARATOR . 'project' . DIRECTORY_SEPARATOR . 'includes/configuration' ; ?></code></p>
 			</div>
 
             <form action="step_3.php" method="post">
@@ -194,7 +194,7 @@
 
 				<div id="demoZone" class="full">
 					<label for="docroot">__DOCROOT__</label>
-					<input type="text" id="docroot" name="docroot" value="<?php echo $strServerDocumentRoot; ?>"/>
+					<input type="text" id="docroot" name="docroot" value="<?= $strServerDocumentRoot; ?>"/>
 				</div>
 
                 <div id="instructions" class="full">
@@ -220,7 +220,7 @@
 
 				<div id="demoZone" class="full">
 					<label for="subdir">__SUBDIRECTORY__</label>
-					<input type="text" id="subdir" name="subdir" value="<?php echo $strSubDirectory; ?>"/>
+					<input type="text" id="subdir" name="subdir" value="<?= $strSubDirectory; ?>"/>
 				</div>
 
                 <div id="instructions" class="full">

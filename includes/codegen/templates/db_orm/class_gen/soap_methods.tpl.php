@@ -3,12 +3,12 @@
 		////////////////////////////////////////
 
 		public static function GetSoapComplexTypeXml() {
-			$strToReturn = '<complexType name="<?php echo $objTable->ClassName  ?>"><sequence>';
+			$strToReturn = '<complexType name="<?= $objTable->ClassName ?>"><sequence>';
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if (!$objColumn->Reference || $objColumn->Reference->IsType) { ?>
-			$strToReturn .= '<element name="<?php echo $objColumn->PropertyName  ?>" type="xsd:<?php echo QType::SoapType($objColumn->VariableType)  ?>"/>';
+			$strToReturn .= '<element name="<?= $objColumn->PropertyName ?>" type="xsd:<?= QType::SoapType($objColumn->VariableType) ?>"/>';
 <?php } ?><?php if ($objColumn->Reference && (!$objColumn->Reference->IsType)) { ?>
-			$strToReturn .= '<element name="<?php echo $objColumn->Reference->PropertyName  ?>" type="xsd1:<?php echo $objColumn->Reference->VariableType  ?>"/>';
+			$strToReturn .= '<element name="<?= $objColumn->Reference->PropertyName ?>" type="xsd1:<?= $objColumn->Reference->VariableType ?>"/>';
 <?php } ?>
 <?php } ?>
 			$strToReturn .= '<element name="__blnRestored" type="xsd:boolean"/>';
@@ -17,11 +17,11 @@
 		}
 
 		public static function AlterSoapComplexTypeArray(&$strComplexTypeArray) {
-			if (!array_key_exists('<?php echo $objTable->ClassName  ?>', $strComplexTypeArray)) {
-				$strComplexTypeArray['<?php echo $objTable->ClassName  ?>'] = <?php echo $objTable->ClassName  ?>::GetSoapComplexTypeXml();
+			if (!array_key_exists('<?= $objTable->ClassName ?>', $strComplexTypeArray)) {
+				$strComplexTypeArray['<?= $objTable->ClassName ?>'] = <?= $objTable->ClassName ?>::GetSoapComplexTypeXml();
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if ($objColumn->Reference && (!$objColumn->Reference->IsType)) { ?>
-				<?php echo $objColumn->Reference->VariableType ?>::AlterSoapComplexTypeArray($strComplexTypeArray);
+				<?= $objColumn->Reference->VariableType ?>::AlterSoapComplexTypeArray($strComplexTypeArray);
 <?php } ?>
 <?php } ?>
 			}
@@ -31,25 +31,25 @@
 			$objArrayToReturn = array();
 
 			foreach ($objSoapArray as $objSoapObject)
-				array_push($objArrayToReturn, <?php echo $objTable->ClassName  ?>::GetObjectFromSoapObject($objSoapObject));
+				array_push($objArrayToReturn, <?= $objTable->ClassName ?>::GetObjectFromSoapObject($objSoapObject));
 
 			return $objArrayToReturn;
 		}
 
 		public static function GetObjectFromSoapObject($objSoapObject) {
-			$objToReturn = new <?php echo $objTable->ClassName  ?>();
+			$objToReturn = new <?= $objTable->ClassName ?>();
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if (!$objColumn->Reference || $objColumn->Reference->IsType) { ?>
-			if (property_exists($objSoapObject, '<?php echo $objColumn->PropertyName  ?>'))
+			if (property_exists($objSoapObject, '<?= $objColumn->PropertyName ?>'))
 <?php if ($objColumn->VariableType != QType::DateTime) { ?>
-				$objToReturn-><?php echo $objColumn->VariableName  ?> = $objSoapObject-><?php echo $objColumn->PropertyName  ?>;
+				$objToReturn-><?= $objColumn->VariableName ?> = $objSoapObject-><?= $objColumn->PropertyName ?>;
 <?php } ?><?php if ($objColumn->VariableType == QType::DateTime) { ?>
-				$objToReturn-><?php echo $objColumn->VariableName  ?> = new QDateTime($objSoapObject-><?php echo $objColumn->PropertyName  ?>);
+				$objToReturn-><?= $objColumn->VariableName ?> = new QDateTime($objSoapObject-><?= $objColumn->PropertyName ?>);
 <?php } ?>
 <?php } ?><?php if ($objColumn->Reference && (!$objColumn->Reference->IsType)) { ?>
-			if ((property_exists($objSoapObject, '<?php echo $objColumn->Reference->PropertyName  ?>')) &&
-				($objSoapObject-><?php echo $objColumn->Reference->PropertyName  ?>))
-				$objToReturn-><?php echo $objColumn->Reference->PropertyName  ?> = <?php echo $objColumn->Reference->VariableType  ?>::GetObjectFromSoapObject($objSoapObject-><?php echo $objColumn->Reference->PropertyName  ?>);
+			if ((property_exists($objSoapObject, '<?= $objColumn->Reference->PropertyName ?>')) &&
+				($objSoapObject-><?= $objColumn->Reference->PropertyName ?>))
+				$objToReturn-><?= $objColumn->Reference->PropertyName ?> = <?= $objColumn->Reference->VariableType ?>::GetObjectFromSoapObject($objSoapObject-><?= $objColumn->Reference->PropertyName ?>);
 <?php } ?>
 <?php } ?>
 			if (property_exists($objSoapObject, '__blnRestored'))
@@ -64,7 +64,7 @@
 			$objArrayToReturn = array();
 
 			foreach ($objArray as $objObject)
-				array_push($objArrayToReturn, <?php echo $objTable->ClassName  ?>::GetSoapObjectFromObject($objObject, true));
+				array_push($objArrayToReturn, <?= $objTable->ClassName ?>::GetSoapObjectFromObject($objObject, true));
 
 			return unserialize(serialize($objArrayToReturn));
 		}
@@ -72,13 +72,13 @@
 		public static function GetSoapObjectFromObject($objObject, $blnBindRelatedObjects) {
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if ($objColumn->VariableType == QType::DateTime) { ?>
-			if ($objObject-><?php echo $objColumn->VariableName  ?>)
-				$objObject-><?php echo $objColumn->VariableName  ?> = $objObject-><?php echo $objColumn->VariableName  ?>->qFormat(QDateTime::FormatSoap);
+			if ($objObject-><?= $objColumn->VariableName ?>)
+				$objObject-><?= $objColumn->VariableName ?> = $objObject-><?= $objColumn->VariableName ?>->qFormat(QDateTime::FormatSoap);
 <?php } ?><?php if ($objColumn->Reference && (!$objColumn->Reference->IsType)) { ?>
-			if ($objObject-><?php echo $objColumn->Reference->VariableName  ?>)
-				$objObject-><?php echo $objColumn->Reference->VariableName  ?> = <?php echo $objColumn->Reference->VariableType  ?>::GetSoapObjectFromObject($objObject-><?php echo $objColumn->Reference->VariableName  ?>, false);
+			if ($objObject-><?= $objColumn->Reference->VariableName ?>)
+				$objObject-><?= $objColumn->Reference->VariableName ?> = <?= $objColumn->Reference->VariableType ?>::GetSoapObjectFromObject($objObject-><?= $objColumn->Reference->VariableName ?>, false);
 			else if (!$blnBindRelatedObjects)
-				$objObject-><?php echo $objColumn->VariableName  ?> = null;
+				$objObject-><?= $objColumn->VariableName ?> = null;
 <?php } ?>
 <?php } ?>
 			return $objObject;

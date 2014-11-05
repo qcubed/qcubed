@@ -290,8 +290,9 @@
 		 */
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle)
+			if ($strStyle) {
 				$strStyle = sprintf('style="%s"', $strStyle);
+			}
 
 			switch ($this->strTextMode) {
 				case QTextMode::MultiLine:
@@ -302,18 +303,9 @@
 						$strStyle,
 						QApplication::HtmlEntities($this->strText));
 					break;
-				case QTextMode::Password:
-					$strToReturn = sprintf('<input type="password" name="%s" id="%s" value="' . $this->strFormat . '" %s%s />',
-						$this->strControlId,
-						$this->strControlId,
-						QApplication::HtmlEntities($this->strText),
-						$this->GetAttributes(),
-						$strStyle);
-					break;
-				case QTextMode::SingleLine:
-				case QTextMode::Search:
+
 				default:
-					$typeStr = $this->strTextMode == QTextMode::Search ? 'search' : 'text';
+					$typeStr = $this->strTextMode ? $this->strTextMode : 'text';
 					$strToReturn = sprintf('<input type="%s" name="%s" id="%s" value="' . $this->strFormat . '" %s%s />',
 						$typeStr,
 						$this->strControlId,

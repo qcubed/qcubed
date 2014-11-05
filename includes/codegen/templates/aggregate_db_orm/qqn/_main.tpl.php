@@ -14,11 +14,11 @@
 	class QQN {
 <?php foreach ($objTableArray as $objTable) { ?>
 		/**
-		 * @return QQNode<?php echo $objTable->ClassName  ?>
+		 * @return QQNode<?= $objTable->ClassName ?>
 
 		 */
-		static public function <?php echo $objTable->ClassName  ?>() {
-			return new QQNode<?php echo $objTable->ClassName  ?>('<?php echo $objTable->Name  ?>', null, null);
+		static public function <?= $objTable->ClassName ?>() {
+			return new QQNode<?= $objTable->ClassName ?>('<?= $objTable->Name ?>', null, null);
 		}
 <?php } ?>
 	}

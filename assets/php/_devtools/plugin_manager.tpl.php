@@ -12,7 +12,7 @@
 	
 	<hr />
 	
-	<p><a target="_blank" href="<?php echo QPluginInstaller::ONLINE_PLUGIN_REPOSITORY ?>">
+	<p><a target="_blank" href="<?= QPluginInstaller::ONLINE_PLUGIN_REPOSITORY ?>">
 	Online repository of QCubed plugins</a></p>
 	
 	<?php $this->dlgUpload->Render(); ?>
