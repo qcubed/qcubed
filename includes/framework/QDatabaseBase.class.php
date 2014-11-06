@@ -752,41 +752,6 @@
 		public function ExplainStatement($sql) {
 			return null;
 		}
-
-
-		/**
-		 * Utility function to extract the json embedded options structure from the comments.
-		 *
-		 * Usage:
-		 * <code>
-		 * 	list($strComment, $options) = QDatabaseFieldBase::ExtractCommentOptions($strComment);
-		 * </code>
-		 *
-		 * @param string $strComment	The comment to analyze
-		 * @return array A two item array, with first item the comment with the options removed, and 2nd item the options array.
-		 *
-		 */
-		public static function ExtractCommentOptions($strComment) {
-			$ret[0] = null; // comment string without options
-			$ret[1] = null; // the options array
-			if (($strComment) &&
-				($pos1 = strpos ($strComment, '{')) !== false &&
-				($pos2 = strrpos ($strComment, '}', $pos1))) {
-
-				$strJson = substr ($strComment, $pos1, $pos2 - $pos1 + 1);
-				$a = json_decode($strJson, true);
-
-				if ($a) {
-					$ret[0] = substr ($strComment, 0, $pos1) . substr ($strComment, $pos2 + 1); // return comment without options
-					$ret[1] = $a;
-				} else {
-					$ret[0] = $strComment;
-				}
-			}
-
-			return $ret;
-		}
-
 	}
 
 	abstract class QDatabaseFieldBase extends QBaseClass {
