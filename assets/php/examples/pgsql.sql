@@ -11,12 +11,12 @@ DROP TABLE IF EXISTS project_status_type cascade;
 DROP TABLE IF EXISTS team_member_project_assn cascade;
 DROP TABLE IF EXISTS person_with_lock cascade;
 DROP TABLE IF EXISTS related_project_assn cascade;
-DROP TABLE IF EXISTS address;
+DROP TABLE IF EXISTS address cascade;
 DROP TABLE IF EXISTS milestone cascade;
 DROP TABLE IF EXISTS two_key cascade;
-DROP TABLE IF EXISTS person_type;
+DROP TABLE IF EXISTS person_type cascade;
 DROP TABLE IF EXISTS person_persontype_assn cascade;
-DROP TABLE IF EXISTS qc_watchers;
+DROP TABLE IF EXISTS qc_watchers cascade;
 DROP TABLE IF EXISTS type_test;
 
 CREATE TABLE person (
@@ -79,6 +79,7 @@ CREATE TABLE person_with_lock (
     sys_timestamp TIMESTAMP,
     CONSTRAINT PK_person_with_lock PRIMARY KEY (id)
 );
+COMMENT ON COLUMN person_with_lock.sys_timestamp is '{"Timestamp": 1, "AutoUpdate": 1}';
 
 CREATE TABLE related_project_assn (
   project_id BIGINT NOT NULL,

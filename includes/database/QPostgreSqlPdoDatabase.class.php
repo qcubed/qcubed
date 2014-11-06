@@ -619,9 +619,7 @@ class QPostgreSqlPdoDatabaseField extends QDatabaseFieldBase {
 								break;
 						case 'timestamp':
 						case 'timestamp without time zone':
-						// System-generated Timestamp values need to be treated as plain text
 								$this->strType = QDatabaseFieldType::DateTime;
-								//$this->blnTimestamp = true; only system generated if default is current_timestamp
 								break;
 						case 'date':
 								$this->strType = QDatabaseFieldType::Date;

@@ -4,8 +4,8 @@
 <div id="instructions">
 	<h1>Optimistic Locking and TIMESTAMP Columns</h1>
 
-	<p>If you are generating any table that has a TIMESTAMP column, then QCubed will automatically
-	generate the functionality to perform <strong>Optimistic Locking</strong> for that object. In this example,
+	<p>By including a self-updating TIMESTAMP column in your table, QCubed can automatically
+	generate the functionality to perform <strong>Optimistic Locking</strong> for that database object. In this example,
 	the <strong>person_with_lock</strong> table is defined with a TIMESTAMP column so that we can demonstrate
 	<strong>Optimistic Locking</strong>.</p>
 
@@ -16,8 +16,7 @@
 	able to save that stale object. (Note that this is sometimes also called a
 	"mid-air collision".)</p>
 
-	<p>Programatically, this is done via TIMESTAMP columns.  Remember that TIMESTAMP columns are updated
-	by the database on every UPDATE.</p>
+	<p>Programatically, this is done via TIMESTAMP columns that are set up to update whenever they are saved.</p>
 
 	<p>So whenever you <strong>Load</strong> an object, you also get the latest TIMESTAMP information.  On
 	<strong>Save</strong>, the TIMESTAMP in your object will be checked against the TIMESTAMP in the database.
@@ -27,6 +26,22 @@
 
 	<p>Note that the <strong>Optimistic Locking</strong> constraint can be overridden at any time by simply
 	passing in the optional <strong>$blnForceUpdate</strong> as true when calling <strong>Save</strong>.</p>
+
+	<p>How you create your TIMESTAMP column will depend on the database you are using. MySQL TIMESTAMP columns by
+	default will have the current time inserted into them, and be automatically updated, provided there are no other
+	timestamp columns in that table. QCubed will automatically detect a column set up this way.</p>
+
+	<p>However, other databases, like PostgresSQL, require you to set up a trigger to auto-update a TIMESTAMP
+	column, which QCubed cannot detect. You can work around these limitations by specifying in a comment on the
+	column in the database that you would like a column to be considered a Timestamp for purposes of
+	<strong>Optimistic Locking</strong>. You can also tell QCubed to automatically update such a column with
+	the current timestamp. To do this, you enter a JSON expression into the comments field that sets the Timestamp, and/or
+	the AutoUpdate values to 1. You can find an example of how to do this in the <strong>pgsql.sql</strong> file for the
+	examples database. Essentially, you want your comment to contain this:
+	<code>
+		{"Timestamp": 1, "AutoUpdate": 1}
+	</code></p>
+
 </div>
 
 <div id="demoZone">
