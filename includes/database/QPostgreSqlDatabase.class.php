@@ -99,10 +99,17 @@
 
 			// Check for DATE Value
 			if ($mixData instanceof QDateTime) {
-				if ($mixData->IsTimeNull())
-					return $strToReturn . sprintf("'%s'", $mixData->qFormat('YYYY-MM-DD'));
-				else
-					return $strToReturn . sprintf("'%s'", $mixData->qFormat(QDateTime::FormatIso));
+				if ($mixData->IsTimeNull()) {
+					if ($mixData->IsDateNull()) {
+						return $strToReturn . 'NULL'; // null date and time is a null value
+					}
+					return  $strToReturn . sprintf("'%s'", $mixData->qFormat('YYYY-MM-DD'));
+				} elseif ($mixData->IsDateNull()) {
+					return  $strToReturn . sprintf("'%s'", $mixData->qFormat('hhhh:mm:ss'));
+				} else {
+					return  $strToReturn . sprintf("'%s'", $mixData->qFormat(QDateTime::FormatIso));
+				}
+				return $strToReturn . $s;
 			}
 
 			// Assume it's some kind of string value
@@ -732,8 +739,8 @@
 					// this data type is not heavily used but is important to be included to avoid errors when code generating.
 				case 'timestamp without time zone':
 					// System-generated Timestamp values need to be treated as plain text
-					$this->strType = QDatabaseFieldType::VarChar;
-					$this->blnTimestamp = true;
+					$this->strType = QDatabaseFieldType::DateTime; // PostgreSql treats timestamp as a datetime
+					//$this->blnTimestamp = true;
 					break;
 				case 'date':
 					$this->strType = QDatabaseFieldType::Date;

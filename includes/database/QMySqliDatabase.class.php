@@ -665,6 +665,13 @@
 			$this->blnUnique = ($mixFieldData->flags & MYSQLI_UNIQUE_KEY_FLAG) ? true : false;
 			
 			$this->SetFieldType($mixFieldData->type);
+
+			// Special situation that we take advantage of to automatically implement optimistic locking
+			if ($mixFieldData->type == MYSQLI_TYPE_TIMESTAMP &&
+					$mixFieldData->flags & MYSQLI_ON_UPDATE_NOW_FLAG) {
+				$this->strType = QDatabaseFieldType::VarChar;
+				$this->blnTimestamp = true;
+			}
 		}
 
 		protected function SetFieldType($intMySqlFieldType) {
@@ -693,17 +700,13 @@
 					//    not be able to use a QFloatTextBox -- only a regular QTextBox)
 					$this->strType = QDatabaseFieldType::VarChar;
 					break;
-				case MYSQLI_TYPE_TIMESTAMP:
-					// System-generated Timestamp values need to be treated as plain text
-					$this->strType = QDatabaseFieldType::VarChar;
-					$this->blnTimestamp = true;
-					break;
 				case MYSQLI_TYPE_DATE:
 					$this->strType = QDatabaseFieldType::Date;
 					break;
 				case MYSQLI_TYPE_TIME:
 					$this->strType = QDatabaseFieldType::Time;
 					break;
+				case MYSQLI_TYPE_TIMESTAMP:
 				case MYSQLI_TYPE_DATETIME:
 					$this->strType = QDatabaseFieldType::DateTime;
 					break;
