@@ -136,7 +136,7 @@
 			<div id="headerBorder">
 				<div id="header">
 					<div id="hleft">
-						<span class="hsmall">QCubed Development Framework <?php echo QCUBED_VERSION_NUMBER_ONLY ?></span><br/>
+						<span class="hsmall">QCubed Development Framework <?= QCUBED_VERSION_NUMBER_ONLY ?></span><br/>
 						<span class="hbig">Database Profiling Tool</span>
 					</div>
 					<div id="hright">
@@ -209,7 +209,7 @@
 			<?php } ?>
 			
 			<pre id="query<?php _p($intIndex); ?>" style="display: none" class="querySection"><code><?php _p($strQuery); ?></code></pre>
-			<div id="explain<?php _p($intIndex); ?>" style="display: none" class="explainSection"><?php echo $explainStatement; ?></div>				
+			<div id="explain<?php _p($intIndex); ?>" style="display: none" class="explainSection"><?= $explainStatement; ?></div>
 <?php			
 			echo '</div>';
 ?>

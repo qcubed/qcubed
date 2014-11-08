@@ -10,41 +10,41 @@
 ?>
 
 		/**
-		 * Create and setup a <?= $strControlType?> <?php echo $strControlId  ?>
+		 * Create and setup a <?= $strControlType?> <?= $strControlId ?>
 
 		 * @param string $strControlId optional ControlId to use
 		 * @return <?= $strControlType?>
 		 */
-		public function <?php echo $strControlId  ?>_Create($strControlId = null) {
-			$this-><?php echo $strControlId  ?> = new <?= $strControlType?>($this->objParentObject, $strControlId);
-			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QCodeGen::MetaControlLabelNameFromColumn($objColumn)  ?>');
-			$this-><?php echo $strControlId  ?>->Text = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
+		public function <?= $strControlId ?>_Create($strControlId = null) {
+			$this-><?= $strControlId ?> = new <?= $strControlType?>($this->objParentObject, $strControlId);
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strControlId ?>->Text = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;
 <?php if ($objColumn->NotNull) { ?>
-			$this-><?php echo $strControlId  ?>->Required = true;
+			$this-><?= $strControlId ?>->Required = true;
 <?php } ?>
 <?php if ($objColumn->DbType == QDatabaseFieldType::Blob) { ?>
-			$this-><?php echo $strControlId  ?>->TextMode = QTextMode::MultiLine;
+			$this-><?= $strControlId ?>->TextMode = QTextMode::MultiLine;
 <?php } ?>
 <?php if (($objColumn->VariableType == QType::String) && (is_numeric($objColumn->Length))) { ?>
-			$this-><?php echo $strControlId  ?>->MaxLength = <?php echo $strClassName  ?>::<?php echo $objColumn->PropertyName  ?>MaxLength;
+			$this-><?= $strControlId ?>->MaxLength = <?= $strClassName ?>::<?= $objColumn->PropertyName ?>MaxLength;
 <?php } ?>
-			return $this-><?php echo $strControlId  ?>;
+			return $this-><?= $strControlId ?>;
 		}
 
 		/**
-		 * Create and setup QLabel <?php echo $strLabelId  ?>
+		 * Create and setup QLabel <?= $strLabelId ?>
 
 		 * @param string $strControlId optional ControlId to use
 		 * @return QLabel
 		 */
-		public function <?php echo $strLabelId  ?>_Create($strControlId = null) {
-			$this-><?php echo $strLabelId  ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?php echo $strLabelId  ?>->Name = QApplication::Translate('<?php echo QCodeGen::MetaControlLabelNameFromColumn($objColumn)  ?>');
-			$this-><?php echo $strLabelId  ?>->Text = $this-><?php echo $strObjectName  ?>-><?php echo $objColumn->PropertyName  ?>;
+		public function <?= $strLabelId ?>_Create($strControlId = null) {
+			$this-><?= $strLabelId ?> = new QLabel($this->objParentObject, $strControlId);
+			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strLabelId ?>->Text = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;
 <?php if ($objColumn->NotNull) { ?>
-			$this-><?php echo $strLabelId  ?>->Required = true;
+			$this-><?= $strLabelId ?>->Required = true;
 <?php } ?>
-			return $this-><?php echo $strLabelId  ?>;
+			return $this-><?= $strLabelId ?>;
 		}
 
 <?php } ?>

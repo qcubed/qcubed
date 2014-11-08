@@ -1,11 +1,11 @@
 		/**
-		 * Refresh this MetaControl with Data from the local <?php echo $objTable->ClassName ?> object.
-		 * @param boolean $blnReload reload <?php echo $objTable->ClassName ?> from the database
+		 * Refresh this MetaControl with Data from the local <?= $objTable->ClassName ?> object.
+		 * @param boolean $blnReload reload <?= $objTable->ClassName ?> from the database
 		 * @return void
 		 */
 		public function Refresh($blnReload = false) {
 			if ($blnReload)
-				$this-><?php echo $objCodeGen->VariableNameFromTable($objTable->Name); ?>->Reload();
+				$this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>->Reload();
 
 <?php
 
@@ -58,8 +58,8 @@
 		}
 		
 		/**
-		 * Load this MetaControl with a new <?php echo $objTable->ClassName ?> object.
-		 * @param boolean $blnReload reload <?php echo $objTable->ClassName ?> from the database
+		 * Load this MetaControl with a new <?= $objTable->ClassName ?> object.
+		 * @param boolean $blnReload reload <?= $objTable->ClassName ?> from the database
 		 * @return void
 		 */
 		 <?php 
@@ -67,13 +67,13 @@
 		 		$aStrs[] = '$' . $objColumn->VariableName . ' = null';
 		 	}
 		?>		 
-		 public function Load(<?php echo implode (',', $aStrs) ?>) {
-			if (<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>strlen($<?php echo $objColumn->VariableName  ?>) && <?php } ?><?php GO_BACK(4); ?>) {
-				$this-><?php echo $objCodeGen->VariableNameFromTable($objTable->Name);  ?> = <?php echo $objTable->ClassName  ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?php echo $objColumn->VariableName  ?>, <?php } ?><?php GO_BACK(2); ?>);
+		 public function Load(<?= implode (',', $aStrs) ?>) {
+			if (<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>strlen($<?= $objColumn->VariableName ?>) && <?php } ?><?php GO_BACK(4); ?>) {
+				$this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?> = <?= $objTable->ClassName ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>);
 				$this->blnEditMode = true;
 			}
 			else {
-				$this-><?php echo $objCodeGen->VariableNameFromTable($objTable->Name);  ?> = new <?php echo $objTable->ClassName  ?>();
+				$this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?> = new <?= $objTable->ClassName ?>();
 				$this->blnEditMode = false;
 			}
 			$this->Refresh ();

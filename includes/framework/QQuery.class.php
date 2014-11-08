@@ -342,12 +342,6 @@
 		//////////////////
 		// Helpers for Orm-generated DataGrids
 		//////////////////
-		protected function GetDataGridHtmlHelper($strNodeLabelArray, $intIndex) {
-			if (($intIndex + 1) == count($strNodeLabelArray))
-				return $strNodeLabelArray[$intIndex];
-			else
-				return sprintf('(%s ? %s : null)', $strNodeLabelArray[$intIndex], $this->GetDataGridHtmlHelper($strNodeLabelArray, $intIndex + 1));
-		}
 		public function GetDataGridHtml() {
 			// Array-ify Node Hierarchy
 			$objNodeArray = array();
@@ -365,9 +359,12 @@
 				throw new Exception('Invalid QQNode to GetDataGridHtml on');
 
 			// Simple Two-Step Node
-			else if (count($objNodeArray) == 2)
+			else if (count($objNodeArray) == 2) {
 				$strToReturn = '$_ITEM->' . $objNodeArray[1]->strPropertyName;
-
+				if (class_exists($this->strClassName)) {
+					$strToReturn = sprintf('(%s) ? %s->__toString() : null;', $strToReturn, $strToReturn);
+				}
+			}
 			// Complex N-Step Node
 			else {
 				$strNodeLabelArray[0] = '$_ITEM->' . $objNodeArray[1]->strPropertyName;
@@ -375,7 +372,22 @@
 					$strNodeLabelArray[$intIndex - 1] = $strNodeLabelArray[$intIndex - 2] . '->' . $objNodeArray[$intIndex]->strPropertyName;
 				}
 
-				$strToReturn = $this->GetDataGridHtmlHelper($strNodeLabelArray, 0);
+				$slice_count = count ($objNodeArray) - 2;
+				$blnIsClass = class_exists($this->strClassName);
+
+				if ($blnIsClass) {
+					$slice_count++;
+				}
+
+				$aTest = array_slice ($strNodeLabelArray, 0, $slice_count);
+				$strTest = implode (' && ', $aTest);
+				$strLastNode = $strNodeLabelArray[count($strNodeLabelArray) - 1];
+
+				if ($blnIsClass) {
+					return sprintf ('(%s) ? %s->__toString() : null', $strTest, $strLastNode);
+				} else {
+					$strToReturn = sprintf ('(%s) ? %s : null', $strTest, $strLastNode);
+				}
 			}
 
 			if($this->strType == QDatabaseFieldType::Time)
@@ -384,8 +396,6 @@
 			if ($this->strType == QDatabaseFieldType::Bit)
 				return sprintf('(null === %s)? "" : ((%s)? "%s" : "%s")', $strToReturn, $strToReturn, QApplication::Translate('True'), QApplication::Translate('False'));
 
-			if (class_exists($this->strClassName))
-				return sprintf('(%s) ? %s->__toString() : null;', $strToReturn, $strToReturn);
 
 			return $strToReturn;
 		}
@@ -1181,7 +1191,11 @@
 		}
 
 		static public function Select(/* array and/or parameterized list of QQNode objects*/) {
-			return new QQSelect(func_get_args());
+			if (func_num_args() == 1 && is_array($a = func_get_arg(0))) {
+				return new QQSelect($a);
+			} else {
+				return new QQSelect(func_get_args());
+			}
 		}
 
 		static public function LimitInfo($intMaxRowCount, $intOffset = 0) {

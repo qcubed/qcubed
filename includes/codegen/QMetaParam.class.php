@@ -37,10 +37,10 @@ class QMetaParam extends QBaseClass {
 	 * Called by the QMetaEditDlg dialog. Creates a control that will allow the user to edit the value
 	 * associated with this parameter, and caches that control so that its easy to get to.
 	 *
-	 * @param QControl $objParent
+	 * @param QControl|null $objParent
 	 * @return null|QControl|QIntegerTextBox|QListBox|QRadioButtonList|QTextBox
 	 */
-	public function GetControl (QControl $objParent) {
+	public function GetControl ($objParent = null) {
 		if ($this->objControl) {
 			if ($objParent) {
 				$this->objControl->SetParentControl($objParent);

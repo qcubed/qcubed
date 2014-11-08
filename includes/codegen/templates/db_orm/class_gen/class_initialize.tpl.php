@@ -4,7 +4,7 @@
 		public function Initialize()
 		{
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-			$this-><?php echo $objColumn->VariableName  ?> = <?php 
+			$this-><?= $objColumn->VariableName ?> = <?php
 			$defaultVarName = $objTable->ClassName . '::' . $objColumn->PropertyName . 'Default';
 			if ($objColumn->VariableType != QType::DateTime)
 				print ($defaultVarName);

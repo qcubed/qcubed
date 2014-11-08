@@ -307,11 +307,8 @@
 		 * @throws Exception
 		 */
 		public static function Run($strFormId, $strAlternateHtmlFile = null) {
-			// Ensure strFormId is a class
-			$objClass = new $strFormId();
-
 			// Ensure strFormId is a subclass of QForm
-			if (!($objClass instanceof QForm))
+			if (!(is_subclass_of($strFormId, 'QForm')))
 				throw new QCallerException('Object must be a subclass of QForm: ' . $strFormId);
 
 			// See if we can get a Form Class out of PostData
@@ -545,10 +542,14 @@
 		
 		public function CallDataBinder($strMethodName, QPaginatedControl $objPaginatedControl, $objParentControl = null) {
 			try {
-				if ($objParentControl)
+				if (is_array($strMethodName)) {
+					call_user_func($strMethodName, $objPaginatedControl);
+				}
+				elseif ($objParentControl) {
 					$objParentControl->$strMethodName($objPaginatedControl);
-				else
+				} else {
 					$this->$strMethodName($objPaginatedControl);
+				}
 			} catch (QCallerException $objExc) {
 				throw new QDataBindException($objExc);
 			}
@@ -734,9 +735,10 @@
 			// Create a Clone of the Form to Serialize
 			$objForm = clone($objForm);
 
-			// Cleanup Reverse Control->Form links
-			if ($objForm->objControlArray) foreach ($objForm->objControlArray as $objControl)
-				$objControl->SetForm(null);
+			// Cleanup internal links between controls and the form
+			if ($objForm->objControlArray) foreach ($objForm->objControlArray as $objControl) {
+				$objControl->Sleep();
+			}
 
 			// Use PHP "serialize" to serialize the form
 			$strSerializedForm = serialize($objForm);
@@ -769,8 +771,11 @@
 				$objForm = QType::Cast($objForm, 'QForm');
 
 				// Reset the links from Control->Form
-				if ($objForm->objControlArray) foreach ($objForm->objControlArray as $objControl)
-					$objControl->SetForm($objForm);
+				if ($objForm->objControlArray) foreach ($objForm->objControlArray as $objControl) {
+					// If you are having trouble with a __PHP_Incomplete_Class here, it means you are not including the definitions
+					// of your own controls in the form.
+					$objControl->Wakeup($objForm);
+				}
 
 				// Return the Form
 				return $objForm;
@@ -1015,7 +1020,7 @@
 				$strMethodName = substr($strMethodName, $intPosition + 1);
 
 				$objControl = $this->objControlArray[$strControlName];
-				$objControl->$strMethodName($this->strFormId, $strId, $strParameter);
+				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strId, $strParameter);
 			} else
 				$this->$strMethodName($this->strFormId, $strId, $strParameter);
 		}
@@ -1145,7 +1150,7 @@
 
 
 						// Run Form-Specific Validation (if any)
-						if ($mixCausesValidation) {
+						if ($mixCausesValidation && !($mixCausesValidation instanceof QDialog)) {
 							if (!$this->Form_Validate()) {
 								$blnValid = false;
 							}

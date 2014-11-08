@@ -1,32 +1,30 @@
 		/**
-		 * Create and setup QCheckBoxList <?php echo $strControlId  ?>
+		 * Create and setup QCheckBoxList <?= $strControlId ?>
 
 		 * @param string $strControlId optional ControlId to use
 		 * @return QCheckBoxList
 		 */
-		public function <?php echo $strControlId  ?>_Create($strControlId = null) {
-			$this-><?php echo $strControlId  ?> = new QCheckBoxList($this->objParentObject, $strControlId);
-			$this-><?php echo $strControlId  ?>->Name = QApplication::Translate('<?php echo QConvertNotation::WordsFromCamelCase($objManyToManyReference->ObjectDescriptionPlural)  ?>');
-			foreach (<?php echo $objManyToManyReference->VariableType  ?>::$NameArray as $intId => $strValue)
-				$this-><?php echo $strControlId  ?>->AddItem(new QListItem($strValue, $intId));
-			$this-><?php echo $strControlId  ?>->SelectedValues = array_keys($this-><?php echo $strObjectName?>->Get<?php echo $objManyToManyReference->ObjectDescription?>Array());
+		public function <?= $strControlId ?>_Create($strControlId = null) {
+			$this-><?= $strControlId ?> = new QCheckBoxList($this->objParentObject, $strControlId);
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QConvertNotation::WordsFromCamelCase($objManyToManyReference->ObjectDescriptionPlural) ?>');
+			foreach (<?= $objManyToManyReference->VariableType ?>::$NameArray as $intId => $strValue)
+				$this-><?= $strControlId ?>->AddItem(new QListItem($strValue, $intId));
+			$this-><?= $strControlId ?>->SelectedValues = array_keys($this-><?= $strObjectName?>->Get<?= $objManyToManyReference->ObjectDescription?>Array());
 
-			<?php // echo QControl::Codegen_MetaCreateOptions ($objColumn, $strControlId)  Need to fix this to not require an objColumn?>
-
-			return $this-><?php echo $strControlId  ?>;
+			return $this-><?= $strControlId ?>;
 		}
 
 		/**
-		 * Create and setup QLabel <?php echo $strLabelId  ?>
+		 * Create and setup QLabel <?= $strLabelId ?>
 
 		 * @param string $strControlId optional ControlId to use
 		 * @return QLabel
 		 */
-		public function <?php echo $strLabelId  ?>_Create($strControlId = null) {
-			$this-><?php echo $strLabelId  ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?php echo $strLabelId  ?>->Name = QApplication::Translate('<?php echo QConvertNotation::WordsFromCamelCase($objManyToManyReference->ObjectDescriptionPlural)  ?>');
+		public function <?= $strLabelId ?>_Create($strControlId = null) {
+			$this-><?= $strLabelId ?> = new QLabel($this->objParentObject, $strControlId);
+			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QConvertNotation::WordsFromCamelCase($objManyToManyReference->ObjectDescriptionPlural) ?>');
 			
-			$aSelection = $this-><?php echo $strObjectName?>->Get<?php echo $objManyToManyReference->ObjectDescription?>Array();
-			$this-><?php echo $strLabelId  ?>->Text = implode($this->str<?php echo $objManyToManyReference->ObjectDescription;  ?>Glue, $aSelection);
-			return $this-><?php echo $strLabelId  ?>;
+			$aSelection = $this-><?= $strObjectName?>->Get<?= $objManyToManyReference->ObjectDescription?>Array();
+			$this-><?= $strLabelId ?>->Text = implode($this->str<?= $objManyToManyReference->ObjectDescription; ?>Glue, $aSelection);
+			return $this-><?= $strLabelId ?>;
 		}

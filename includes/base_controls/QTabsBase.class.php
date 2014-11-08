@@ -8,30 +8,29 @@
 	 *
 	 */
 
-	class QTabs_BeforeActivateEventExt extends QJqUiEvent {
-		const EventName = 'tabsbeforeactivate';
-
-	}
-
     /**
-     * Impelements JQuery Ui Tabs
+     * Implements JQuery Ui Tabs
      * 
      * Tabs are similar to an Accordion, but tabs along the top are used to switch between panels. The top
      * level html items in the panel will become the items that are switched.
 	 *
 	 * Specify the names of the tabs either in the TabHeadersArray, or assign a Name attribute to the top
 	 * level child controls and those names will be used as the tab names.
-     * 
-	 * @property-write array $Headers
+     *
+	 * @property-write array $Headers	Array of names for the tabs. You can also specify by assigning the Name attribute of each pane.
+	 * @property-read array $SelectedId	Control Id of the selected pane. Use ->Active to get the zero-based index of the selected pane.
 	 *
 	 * @link http://jqueryui.com/tabs/
 	 * @package Controls\Base
 	 */
 	class QTabsBase extends QTabsGen
 	{
+		/** @var array Names of tabs. Can also specify with Name attribute of child controls. */
 		protected $objTabHeadersArray = array();
+		/** @var bool Automatically render the children by default, since these are the tabs. */
 		protected $blnAutoRenderChildren = true;
-		protected $intSelected = 0;
+		/** @var string ControlId of currently selected child item. Use ->Active to get the index of the current selection. */
+		protected $strSelectedId = null;
 
 		/**
 		 * Return the javascript associated with the control.
@@ -39,28 +38,14 @@
 		 */
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
-			$strJS .= sprintf('; $j("#%s").on("tabsselect", function(event, ui) {$j("#%s").val(ui.index);})',
-					$this->ControlId,
-					$this->getSelectedInputId());
+			// The below keeps our own copy of the active index synchronized with jQuery UI's copy.
+			$strJS .= sprintf(';$j("#%s").on("tabsactivate", function(event, ui) {
+						var i = $j(this).tabs( "option", "active" );
+						var id = ui.newPanel ? ui.newPanel.attr("id") : null;
+						qcubed.recordControlModification(this.id, "_active", [i,id]);
+					})',
+					$this->ControlId);
 			return $strJS;
-		}
-
-		/**
-		 * Return the id of the selection
-		 * @return string
-		 */
-		protected function getSelectedInputId() {
-			return $this->ControlId.'_selected';
-		}
-
-		/**
-		 * Records the current selection based on the selected item the user clicked.
-		 */
-		public function ParsePostData() {
-			$strSelectedInputId = $this->getSelectedInputId();
-			if (array_key_exists($strSelectedInputId, $_POST)) {
-				$this->intSelected = $_POST[$strSelectedInputId];
-			}
 		}
 
 		/**
@@ -94,8 +79,7 @@
 		 * @return string
 		 */
 		protected function GetTabHeaderHtml() {
-			$strResult = sprintf('<input id="%s" type="hidden" value="%d"/>', $this->getSelectedInputId(), $this->intSelected);
-			$strResult .= '<ul>';
+			$strResult = '<ul>';
 			$childControls = $this->GetChildControls();
 			for ($i = 0, $cnt = count($childControls); $i < $cnt; ++$i) {
 				$strControlId = $childControls[$i]->ControlId;
@@ -179,12 +163,12 @@
 		}
 
 		/**
-		 * Given a tab name or index, returns its index. If invalid, return false;
+		 * Given a tab name, index or control ID, returns its index. If invalid, returns false;
 		 * @param string|integer $mixTab
 		 * @return bool|int
 		 */
 		protected function FindTabIndex ($mixTab) {
-			$count = 0;
+			if ($mixTab === null) return false;
 
 			if ($this->objTabHeadersArray) {
 				$count = count($this->objTabHeadersArray);
@@ -193,12 +177,14 @@
 				$childControls = $this->GetChildControls();
 				$count = count ($childControls);
 			}
+
 			if (is_numeric($mixTab)) {
 				if ($mixTab < $count) {
-					return $mixTab;
+					return $mixTab; // assume numbers less than the index are index numbers
 				}
 			}
 
+			// If there is a headers array, check for a name in there
 			if ($this->objTabHeadersArray) {
 				for ($i = 0, $cnt = $count; $i < $cnt; ++$i) {
 					if ($this->objTabHeadersArray[$i] == $mixTab) {
@@ -206,21 +192,23 @@
 					}
 				}
 			}
-			else {
-				for ($i = 0, $cnt = $count; $i < $cnt; ++$i) {
-					if ($mixTab == $childControls[$i]->Name) {
-						return $i;
-					}
-				}
 
+			for ($i = 0, $cnt = $count; $i < $cnt; ++$i) {
+				$objControl = $childControls[$i];
+				if ($mixTab == $objControl->Name) {
+					return $i;
+				}
+				elseif ($mixTab == $objControl->ControlId) {
+					return $i;
+				}
 			}
 			return false;
 		}
 
 		/**
-		 * Activate the tab with the given name or number.
+		 * Activate the tab with the given name, number or controlId.
 		 *
-		 * @param string|integer $mixTab
+		 * @param string|integer $mixTab The tab name, tab index number or control ID
 		 */
 		public function ActivateTab ($mixTab) {
 			if (false !== ($i = $this->FindTabIndex($mixTab))) {
@@ -254,6 +242,31 @@
 			}
 		}
 
+		/**
+		 * Overriding to keep info in sync.
+		 * @param QControl $objControl
+		 */
+		public function AddChildControl(QControl $objControl) {
+			parent::AddChildControl($objControl);
+			if (count ($this->objChildControlArray) == 1) {
+				$this->strSelectedId = $objControl->strControlId;	// default to first item added being selected
+				$this->mixActive = 0;
+			}
+		}
+
+		public function __get($strName) {
+			switch ($strName) {
+				case "SelectedId": return $this->strSelectedId;
+
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
@@ -266,6 +279,12 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case '_active': // private method to synchronize with jQuery UI
+					$a = explode (',', $mixValue);
+					$this->mixActive = $a[0];
+					$this->strSelectedId = $a[1];
+					break;
 
 				default:
 					try {

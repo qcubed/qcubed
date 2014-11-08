@@ -146,6 +146,15 @@ QApplicationBase::$ClassFile['qspinner_stopevent'] = __QCUBED_CORE__ . '/base_co
 QApplicationBase::$ClassFile['qspinnergen'] = __QCUBED_CORE__ . '/base_controls/QSpinnerGen.class.php';
 QApplicationBase::$ClassFile['qspinnerbase'] = __QCUBED_CORE__ . '/base_controls/QSpinnerBase.class.php';
 QApplicationBase::$ClassFile['qspinner'] = __INCLUDES__ . '/controls/QSpinner.class.php';
+QApplicationBase::$ClassFile['qselectmenu_changeevent'] = __QCUBED_CORE__ . '/base_controls/QSelectMenuGen.class.php';
+QApplicationBase::$ClassFile['qselectmenu_closeevent'] = __QCUBED_CORE__ . '/base_controls/QSelectMenuGen.class.php';
+QApplicationBase::$ClassFile['qselectmenu_createevent'] = __QCUBED_CORE__ . '/base_controls/QSelectMenuGen.class.php';
+QApplicationBase::$ClassFile['qselectmenu_focusevent'] = __QCUBED_CORE__ . '/base_controls/QSelectMenuGen.class.php';
+QApplicationBase::$ClassFile['qselectmenu_openevent'] = __QCUBED_CORE__ . '/base_controls/QSelectMenuGen.class.php';
+QApplicationBase::$ClassFile['qselectmenu_selectevent'] = __QCUBED_CORE__ . '/base_controls/QSelectMenuGen.class.php';
+QApplicationBase::$ClassFile['qselectmenugen'] = __QCUBED_CORE__ . '/base_controls/QSelectMenuGen.class.php';
+QApplicationBase::$ClassFile['qselectmenubase'] = __QCUBED_CORE__ . '/base_controls/QSelectMenuBase.class.php';
+QApplicationBase::$ClassFile['qselectmenu'] = __INCLUDES__ . '/controls/QSelectMenu.class.php';
 QApplicationBase::$ClassFile['qautocompletelistitem'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
 QApplicationBase::$ClassFile['jqicon'] = __QCUBED_CORE__ . '/base_controls/_jq_ui.inc.php';
 
