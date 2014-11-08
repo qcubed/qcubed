@@ -1057,8 +1057,30 @@
 
 			// separate overrides embedded in the comment
 
-			$objColumn->Comment = $objField->Comment;
-			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->Name, $objField->Name);
+			// extract options embedded in the comment field
+			if (($strComment = $objField->Comment) &&
+				($pos1 = strpos ($strComment, '{')) !== false &&
+				($pos2 = strrpos ($strComment, '}', $pos1))) {
+
+				$strJson = substr ($strComment, $pos1, $pos2 - $pos1 + 1);
+				$a = json_decode($strJson, true);
+
+				if ($a) {
+					$objColumn->Options = $a;
+					$objColumn->Comment = substr ($strComment, 0, $pos1) . substr ($strComment, $pos2 + 1); // return comment without options
+					if (!empty ($a['Timestamp'])) {
+						$objColumn->Timestamp = true;	// alternate way to specify that a column is a self-updating timestamp
+					}
+					if ($objColumn->Timestamp && !empty($a['AutoUpdate'])) {
+						$objColumn->AutoUpdate = true;
+					}
+				} else {
+					$objColumn->Comment = $strComment;
+				}
+			}
+
+			// merge with options found in the design editor, letting editor take precedence
+			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->Name, $objField->Name) + $objColumn->Options;
 
 			return $objColumn;
 		}

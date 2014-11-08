@@ -519,6 +519,29 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Preserialize the columns, since some columns might have references to the form.
+		 */
+		public function Sleep() {
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Sleep();
+			}
+			parent::Sleep();
+		}
+
+		/**
+		 * Restore references.
+		 *
+		 * @param QForm $objForm
+		 */
+		public function Wakeup(QForm $objForm) {
+			parent::Wakeup($objForm);
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Wakeup($objForm);
+			}
+		}
+
+
 		public function __get($strName) {
 			switch ($strName) {
 				case 'RowCssClass':

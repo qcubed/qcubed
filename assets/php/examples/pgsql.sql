@@ -4,7 +4,21 @@
 
 -- SET FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS person;
+DROP TABLE IF EXISTS person cascade;
+DROP TABLE IF EXISTS login cascade;
+DROP TABLE IF EXISTS project cascade;
+DROP TABLE IF EXISTS project_status_type cascade;
+DROP TABLE IF EXISTS team_member_project_assn cascade;
+DROP TABLE IF EXISTS person_with_lock cascade;
+DROP TABLE IF EXISTS related_project_assn cascade;
+DROP TABLE IF EXISTS address cascade;
+DROP TABLE IF EXISTS milestone cascade;
+DROP TABLE IF EXISTS two_key cascade;
+DROP TABLE IF EXISTS person_type cascade;
+DROP TABLE IF EXISTS person_persontype_assn cascade;
+DROP TABLE IF EXISTS qc_watchers cascade;
+DROP TABLE IF EXISTS type_test;
+
 CREATE TABLE person (
     id SERIAL,
     first_name VARCHAR(50) NOT NULL,
@@ -13,7 +27,6 @@ CREATE TABLE person (
 );
 CREATE INDEX IDX_person_1 ON person (last_name);
 
-DROP TABLE IF EXISTS login;
 CREATE TABLE login (
     id SERIAL,
     person_id BIGINT,
@@ -27,7 +40,6 @@ CREATE TABLE login (
 --CREATE UNIQUE INDEX IDX_login_1 ON login (person_id);
 --CREATE UNIQUE INDEX IDX_login_2 ON login (username);
 
-DROP TABLE IF EXISTS project;
 CREATE TABLE project (
     id SERIAL,
     project_status_type_id BIGINT NOT NULL,
@@ -43,7 +55,6 @@ CREATE TABLE project (
 CREATE INDEX IDX_project_1 ON project (project_status_type_id);
 CREATE INDEX IDX_project_2 ON project (manager_person_id);
 
-DROP TABLE IF EXISTS team_member_project_assn;
 CREATE TABLE team_member_project_assn (
     person_id BIGINT NOT NULL,
     project_id BIGINT NOT NULL,
@@ -51,7 +62,6 @@ CREATE TABLE team_member_project_assn (
 );
 CREATE INDEX IDX_teammemberprojectassn_2 ON team_member_project_assn (project_id);
 
-DROP TABLE IF EXISTS project_status_type;
 CREATE TABLE project_status_type (
     id SERIAL,
     name VARCHAR(50) NOT NULL,
@@ -62,7 +72,6 @@ CREATE TABLE project_status_type (
 );
 --CREATE UNIQUE INDEX IDX_projectstatustype_1 ON project_status_type (name);
 
-DROP TABLE IF EXISTS person_with_lock;
 CREATE TABLE person_with_lock (
     id SERIAL,
     first_name VARCHAR(50) NOT NULL,
@@ -70,8 +79,8 @@ CREATE TABLE person_with_lock (
     sys_timestamp TIMESTAMP,
     CONSTRAINT PK_person_with_lock PRIMARY KEY (id)
 );
+COMMENT ON COLUMN person_with_lock.sys_timestamp is '{"Timestamp": 1, "AutoUpdate": 1}';
 
-DROP TABLE IF EXISTS related_project_assn;
 CREATE TABLE related_project_assn (
   project_id BIGINT NOT NULL,
   child_project_id BIGINT NOT NULL,
@@ -79,7 +88,6 @@ CREATE TABLE related_project_assn (
 );
 CREATE INDEX IDX_relatedprojectassn_2 ON related_project_assn (child_project_id);
 
-DROP TABLE IF EXISTS milestone;
 CREATE TABLE milestone (
   id SERIAL,
   project_id BIGINT NOT NULL,
@@ -88,7 +96,6 @@ CREATE TABLE milestone (
 );
 CREATE INDEX IDX_milestoneproj_1 ON milestone (project_id);
 
-DROP TABLE IF EXISTS address;
 CREATE TABLE address (
     id SERIAL,
     person_id BIGINT,
@@ -98,7 +105,6 @@ CREATE TABLE address (
 );
 CREATE INDEX IDX_address_1 ON address (person_id);
 
-DROP TABLE IF EXISTS two_key;
 CREATE TABLE two_key (
   "server" varchar(50) NOT NULL,
   "directory" varchar(50) NOT NULL,
@@ -111,7 +117,6 @@ CREATE INDEX IDX_two_key_person_id ON two_key (person_id);
 CREATE INDEX IDX_two_key_project_id ON two_key (project_id);
 
 
-DROP TABLE IF EXISTS person_type;
 CREATE TABLE person_type (
   id SERIAL,
   name VARCHAR(50) NOT NULL,
@@ -119,7 +124,6 @@ CREATE TABLE person_type (
   UNIQUE (name)
 );
 
-DROP TABLE IF EXISTS person_persontype_assn;
 CREATE TABLE person_persontype_assn (
   person_id BIGINT NOT NULL,
   person_type_id BIGINT NOT NULL,
@@ -127,11 +131,18 @@ CREATE TABLE person_persontype_assn (
 );
 CREATE INDEX IDX_persontypeassn_2 ON person_persontype_assn (person_type_id);
 
-DROP TABLE IF EXISTS qc_watchers;
 CREATE TABLE qc_watchers (
   table_key VARCHAR(200) NOT NULL,
   ts varchar(40) NOT NULL,
   CONSTRAINT PK_qc_watchers PRIMARY KEY (table_key)
+);
+
+CREATE TABLE type_test (
+  id SERIAL,
+  date date,
+  time time,
+  date_time timestamp,
+  CONSTRAINT PK_type_test PRIMARY KEY (id)
 );
 
 

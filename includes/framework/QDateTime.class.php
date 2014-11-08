@@ -331,6 +331,10 @@
 		 * @return string the formatted date as a string
 		 */
 		public function qFormat($strFormat = null) {
+			if ($this->blnDateNull && $this->blnTimeNull) {
+				return '';
+			}
+
 			if (is_null($strFormat)) {
 				if ($this->blnDateNull && !$this->blnTimeNull) {
 					$strFormat = QDateTime::$DefaultTimeFormat;

@@ -478,17 +478,13 @@ class QSqLite3PdoDatabaseField extends QDatabaseFieldBase {
 				//    not be able to use a QFloatTextBox -- only a regular QTextBox)
 				$this->strType = QDatabaseFieldType::VarChar;
 				break;
-			case 'TIMESTAMP':
-				// System-generated Timestamp values need to be treated as plain text
-				$this->strType = QDatabaseFieldType::VarChar;
-				$this->blnTimestamp = true;
-				break;
 			case 'DATE':
 				$this->strType = QDatabaseFieldType::Date;
 				break;
 			case 'TIME':
 				$this->strType = QDatabaseFieldType::Time;
 				break;
+			case 'TIMESTAMP':	// Timestamps do not exist
 			case 'DATETIME':
 				$this->strType = QDatabaseFieldType::DateTime;
 				break;
