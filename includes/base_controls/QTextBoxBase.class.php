@@ -386,6 +386,21 @@
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").select();', $this->strControlId));
 		}
 
+		/**
+		 * Attaches an oninput handler to detect changes. Must be attached before other scripts are attached so that it.
+		 * The "change" handler is a little redundant, but many javascript widgets that change the text (autocomplete, datepicker)
+		 * do not send the input event correctly, but they DO send the change event.
+		 * goes first.
+		 *
+		 * @return string
+		 */
+		public function GetEndScript() {
+			$str = parent::GetEndScript();
+			$str = sprintf ('$j("#%s").on ("input", qc.formObjChanged).change (qc.formObjChanged);', $this->ControlId) . $str;
+			return $str;
+		}
+
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -452,6 +467,27 @@
 		 * @throws Exception|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
+			// Setters that do not cause a complete redraw
+			switch ($strName) {
+				case "Text":
+				case "Value":
+					try {
+						$val = QType::Cast($mixValue, QType::String);
+						if ($val !== $this->strText) {
+							$this->strText = $val;
+							if ($this->OnPage) {
+								QApplication::ExecuteJavaScript(sprintf ('$j("#%s").val(%s)', $this->strControlId, JavaScriptHelper::toJsObject($this->strText)));
+							} else {
+								$this->blnModified = true;
+							}
+						}
+						return $this->strText;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+
 			$this->blnModified = true;
 
 			switch ($strName) {

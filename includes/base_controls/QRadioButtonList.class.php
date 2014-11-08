@@ -64,14 +64,8 @@
 		// Methods
 		//////////
 		public function ParsePostData() {
-			if ($this->Form->strCallType == QCallType::Ajax) {
-				// Ajax will only send information about controls that are on the screen, so we know they are rendered
-				for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
-					if (!empty($_POST[$this->strControlId][$intIndex]))
-						$this->objItemsArray[$intIndex]->Selected = true;
-					else
-						$this->objItemsArray[$intIndex]->Selected = false;
-				}
+			if (QApplication::$RequestMode == QRequestMode::Ajax) {
+				$this->SelectedIndex = $_POST[$this->strControlId];
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (array_key_exists($this->strControlId, $_POST)) {
@@ -89,14 +83,15 @@
 		}
 
 		public function GetEndScript() {
-			$strScript = parent::GetEndScript();
-			
+			$strScript = sprintf ('$j("#%s").on("change", "input", qc.formObjChanged);', $this->ControlId); // detect change for framework
+
 			$ctrlId = $this->ControlId;
 			if ($this->intButtonMode == self::ButtonModeSet) {
-				$strScript = sprintf ('jQuery("#%s").buttonset();', $ctrlId) . "\n" . $strScript;
+				$strScript .= sprintf ('jQuery("#%s").buttonset();', $ctrlId) . "\n";
 			} elseif ($this->intButtonMode == self::ButtonModeJq) {
-				$strScript = sprintf ('jQuery("input:radio", "#%s").button();', $ctrlId) . "\n" . $strScript;
+				$strScript .= sprintf ('jQuery("input:radio", "#%s").button();', $ctrlId) . "\n";
 			}
+			$strScript .= parent::GetEndScript();
 			return $strScript;
 		}
 		

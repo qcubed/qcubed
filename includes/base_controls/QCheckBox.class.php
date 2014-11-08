@@ -42,8 +42,8 @@
 		 * according to the data submitted
 		 */
 		public function ParsePostData() {
-			if ($this->Form->strCallType == QCallType::Ajax) {
-				$this->blnChecked = $_POST[$this->strControlId];
+			if (QApplication::$RequestMode == QRequestMode::Ajax) {
+				$this->blnChecked = QType::Cast ($_POST[$this->strControlId], QType::Boolean);
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (array_key_exists($this->strControlId, $_POST)) {
@@ -136,6 +136,16 @@
 			}
 
 			return $strToReturn;
+		}
+
+		/**
+		 * Send end script to detect the change on the control before other actions.
+		 * @return string
+		 */
+		public function GetEndScript() {
+			$str = parent::GetEndScript();
+			$str = sprintf ('$j("#%s").change(qc.formObjChanged);', $this->ControlId) . $str;
+			return $str;
 		}
 
 		/**

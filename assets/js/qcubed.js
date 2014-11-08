@@ -110,18 +110,49 @@ qcubed = {
         }
         qcubed.controlModifications[strControlId][strProperty] = strNewValue;
     },
-    formObjChanged: function (event) {
-        var ctl = event.target;
+    /**
+     * Given a control, returns the correct index to use in the formObjsModified array.
+     * @param ctl
+     * @private
+     */
+    _formObjChangeIndex: function (ctl) {
         var id = $j(ctl).attr('id');
         var strType = $j(ctl).prop("type");
+        var name = $j(ctl).attr("name");
+        var ret;
 
-        if (id) {
-            var indexOffset;
+        if (((strType === 'checkbox') || (strType === 'radio')) &&
+            ((indexOffset = id.indexOf('_')) >= 0)) { // a member of a control list
+            return id.substr(0, indexOffset); // use the id of the group
+        }
+        else if (strType === 'radio' && name !== id) { // a radio button with a group name
+            return id; // these buttons are changed individually
+        }
+        else if (strType === 'hidden' && name) { // a hidden field, possibly associated with a custom widget
+            return name;
+        }
+        return id;
+    },
+    /**
+     * Records that a control has changed in order to synchronize the control with
+     * the php version on the next request.
+     * @param event
+     */
+    formObjChanged: function (event) {
+        var ctl = event.target;
+        var id = qc._formObjChangeIndex(ctl);
+        var strType = $j(ctl).prop("type");
+        var name = $j(ctl).attr("name");
 
-            if (((strType === 'checkbox') || (strType === 'radio')) &&
-                        ((indexOffset = strControlId.indexOf('_')) >= 0)) { // a member of a control list
-                id = id.substr(0, indexOffset);
-            }
+        if (strType === 'radio' && name !== id) { // a radio button with a group name
+            // since html does not submit a changed event on the deselected radio, we are going to invalidate all the controls in the group
+            var group = $j('input[name=' + name + ']');
+            group.each(function () {
+                id = $j(this).attr('id');
+                qcubed.formObjsModified[id] = true;
+            });
+        }
+        else {
             qcubed.formObjsModified[id] = true;
         }
     },
@@ -130,8 +161,9 @@ qcubed = {
      * @param strFormId
      */
     initForm: function (strFormId) {
-        $j('#' + strFormId).on ('input', 'input,textarea', this.formObjChanged);
-        $j('#' + strFormId).on ('change', 'select,keygen', this.formObjChanged);
+        // Allow any control to trigger a change and post of its data.
+        // Particularly useful for custom controls that use hidden inputs to transfer data
+        $j('#' + strFormId).on ('qformObjChanged', this.formObjChanged);
     },
 
     /**
@@ -197,7 +229,7 @@ qcubed = {
                 strControlId;
 
             if (((strType === "checkbox") || (strType === "radio")) &&
-                    ((strCallType === "Ajax") || (!$element.prop("disabled")))) {
+                ((strCallType === "Ajax") || (!$element.prop("disabled")))) {
 
                 strControlId = $element.attr("id");
 
@@ -252,34 +284,44 @@ qcubed = {
                 strType = $element.prop("type"),
                 strControlId = $element.attr("id"),
                 strControlName = $element.attr("name"),
-                strTestName,
-                bracketIndex,
+                objChangeIndex = qc._formObjChangeIndex($element),
+                blnQform,
+                index = -1,
+                offset,
                 strPostValue = $element.val();
+
+            blnQform = (strControlId.substr(0, 7) == 'Qform__');
+
+            if ((strType === 'checkbox' || strType === 'radio') &&
+                (offset = strControlId.indexOf('_')) != -1) {
+                // A control group
+                index = strControlId.substr (offset + 1);
+                strControlId = strControlId.substr (0, offset);
+            }
             if (!qcubed.inputSupport || // if not oninput support, then post all the controls, rather than just the modified ones
-                    qcubed.ajaxError || // Ajax error would mean that formObjsModified is invalid. We need to submit everything.
-                    qcubed.formObjsModified[strControlId] ||
-                   strControlId.substr(0, 7) == 'Qform__'   // all controls with this at the beginning of the id are always posted
-               /* || strType == 'hidden'*/) {
+                qcubed.ajaxError || // Ajax error would mean that formObjsModified is invalid. We need to submit everything.
+                qcubed.formObjsModified[objChangeIndex] ||
+                blnQform   // all controls with Qform__ at the beginning of the id are always posted
+            /* || strType == 'hidden'*/) {
                 switch (strType) {
                     case "checkbox":
+                        if (index >= 0) {
+                            if ($element.is(":checked")) {
+                                strPostData += "&" + strControlName + "=" + $element.is(":checked");
+                            }
+                        } else {
+                            strPostData += "&" + strControlName + "=" + $element.is(":checked");
+                        }
+                        break;
+
                     case "radio":
-                        if (strControlName) {
-                            bracketIndex = strControlName.indexOf('[');
-
-                            if (bracketIndex > 0) {
-                                strTestName = strControlName.substring(0, bracketIndex) + '_';
-                            } else {
-                                strTestName = strControlName + "_";
+                        if (index >= 0) {
+                            if ($element.is(":checked")) {
+                                strPostData += "&" + strControlName + "=" + index;
                             }
-
-                            if (strControlId.substring(0, strTestName.length) === strTestName) {
-                                // CheckboxList or RadioButtonList
-                                if ($element.is(":checked")) {
-                                    strPostData += "&" + strControlName + "=" + strControlId.substring(strTestName.length);
-                                }
-                            } else {
-                                strPostData += "&" + strControlId + "=" + strPostValue;
-                            }
+                        } else {
+                            // control name MIGHT be a group name, which we don't want here, so we use control id instead
+                            strPostData += "&" + strControlId + "=" + $element.is(":checked");
                         }
                         break;
 
@@ -290,7 +332,11 @@ qcubed = {
                         break;
 
                     default:
-                        strPostData += "&" + strControlId + "=";
+                        if (strControlName) {   // this is what gets posted on a server post
+                            strPostData += "&" + strControlName + "=";
+                        } else {
+                            strPostData += "&" + strControlId + "=";
+                        }
 
                         // For Internationalization -- we must escape the element's value properly
                         if (strPostValue) {
@@ -368,7 +414,7 @@ qcubed = {
                             .html(result)
                             .dialog({
                                 modal: true,
-								width: 'auto',
+                                width: 'auto',
                                 autoOpen: true,
                                 title: 'An Error Occurred',
                                 buttons: {
@@ -482,12 +528,13 @@ qcubed = {
 
         this.inputSupport = 'oninput' in document;
 
-        // Detect browsers that do not support the oninput event
+        // Detect browsers that do not correctly support the oninput event, even though they say they do.
+        // IE 9 in particular has a major bug
         var ua = window.navigator.userAgent;
         var intIeOffset = ua.indexOf ('MSIE');
         if (intIeOffset > -1) {
             var intOffset2 = ua.indexOf ('.', intIeOffset + 5);
-            var strVersion = ua.substr (intIeOffset + 5, intOffset2 );
+            var strVersion = ua.substr (intIeOffset + 5, intOffset2 - intIeOffset - 5);
             if (strVersion < 10) {
                 this.inputSupport = false;
             }
@@ -624,12 +671,12 @@ qcubed.javascriptWrapperStyleToQcodo.top = "Top";
 qcubed.javascriptWrapperStyleToQcodo.left = "Left";
 
 /*
-qcubed.recordControlModification = function(strControlId, strProperty, strNewValue) {
-    if (!qcubed.controlModifications[strControlId]) {
-        qcubed.controlModifications[strControlId] = {};
-    }
-    qcubed.controlModifications[strControlId][strProperty] = strNewValue;
-};*/
+ qcubed.recordControlModification = function(strControlId, strProperty, strNewValue) {
+ if (!qcubed.controlModifications[strControlId]) {
+ qcubed.controlModifications[strControlId] = {};
+ }
+ qcubed.controlModifications[strControlId][strProperty] = strNewValue;
+ };*/
 
 qcubed.registerControl = function(mixControl) {
     var objControl = qcubed.getControl(mixControl),
@@ -853,5 +900,6 @@ qc.getC = qc.getControl;
 qc.getW = qc.getWrapper;
 qc.regC = qc.registerControl;
 qc.regCA = qc.registerControlArray;
+qc.recCM = qc.recordControlModification;
 
 qc.initialize();

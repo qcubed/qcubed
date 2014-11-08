@@ -1448,7 +1448,7 @@
 		 * Returns true if the control should be redrawn.
 		 * @return boolean
 		 */
-		protected function IsModified() {
+		public function IsModified() {
 			return ($this->blnModified ||
 				($this->objWatcher && !$this->objWatcher->IsCurrent()));
 		}

@@ -30,7 +30,7 @@
 		protected $objPersistentControlArray = array();
 		protected $objGroupingArray;
 		protected $blnRenderedBodyTag = false;
-		protected $blnRenderedCheckableControlArray;
+		protected $blnRenderedCheckableControlArray = array();
 		protected $strCallType;
 		/** @var null|QWaitIcon Default wait icon for the page/QForm  */
 		protected $objDefaultWaitIcon = null;
@@ -608,26 +608,25 @@
 			// Create the Control collection
 			$strToReturn .= '<controls>';
 
-			// Include each control (if applicable) that has been changed/modified
-			foreach ($this->GetModifiedControls() as $objControl) {
+			// Recursively render changed controls, starting with all top-level controls
+			foreach ($this->GetAllControls() as $objControl) {
 				if (!$objControl->ParentControl) {
 					$strToReturn .= $this->RenderAjaxHelper($objControl);
 				}
 			}
 
-			// First, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
+			// Go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			$strJavaScriptToAddArray = array();
 			$strStyleSheetToAddArray = array();
 			$strFormAttributeToModifyArray = array();
 
-			foreach ($this->GetModifiedControls() as $objControl) {
-				// Include any JavaScripts?  The control would have a
-				// comma-delimited list of javascript files to include (if applicable)
+			foreach ($this->GetAllControls() as $objControl) {
+				// Include any javascript files that were added by the control
+				// Note: current implementation does not handle removal of javascript files
 				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts))
 					$strJavaScriptToAddArray = array_merge($strJavaScriptToAddArray, $strScriptArray);
 
-				// Include any StyleSheets?  The control would have a
-				// comma-delimited list of stylesheet files to include (if applicable)
+				// Include any new stylesheets
 				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
 					$strStyleSheetToAddArray = array_merge($strStyleSheetToAddArray, $strScriptArray);
 
@@ -649,26 +648,26 @@
 			// Render the JS Commands to Execute
 			$strCommands = '';
 
-			// First, get all controls that need to run regC
 			$strControlIdToRegister = array();
-			foreach ($this->GetAllControls() as $objControl)
-				if ($objControl->Rendered)
-					array_push($strControlIdToRegister, '"' . $objControl->ControlId . '"');
-			if (count($strControlIdToRegister))
-				$strCommands .= sprintf('qc.regCA(new Array(%s)); ', implode(',', $strControlIdToRegister));
-
-			// Next, go through all controls and groupings for their GetEndScripts
+			$strJavaScript = '';
 			foreach ($this->GetAllControls() as $objControl) {
-				if ($objControl->Rendered) {
-					$strJavaScript = $objControl->GetEndScript();
+				if ($objControl->Rendered) { // whole control was rendered during this event
+					$strScript = trim ($objControl->GetEndScript());
+					$strControlIdToRegister[] = '"' . $objControl->ControlId . '"';
 				} else {
-                    $strJavaScript = $objControl->RenderAttributeScripts();
+                    $strScript = trim($objControl->RenderAttributeScripts()); // render one-time attribute commands only
                 }
-                if ($strJavaScript = trim($strJavaScript)) {
-                    $strCommands .= $strJavaScript . ';';
-                }
+				if ($strScript) {
+					$strJavaScript .= $strScript . ';';
+				}
 				$objControl->ResetFlags();
             }
+			if (count($strControlIdToRegister)) {
+				$strCommands .= sprintf('qc.regCA(new Array(%s)); ', implode(',', $strControlIdToRegister));
+			}
+			$strCommands .= $strJavaScript;
+
+
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strRender = $objGrouping->Render();
 				if (trim($strRender))
@@ -766,8 +765,8 @@
 			$strSerializedForm = serialize($objForm);
 
 			// Setup and Call the FormStateHandler to retrieve the PostDataState to return
-			$strSaveCommand = array(QForm::$FormStateHandler, 'Save');
-			$strPostDataState = call_user_func_array($strSaveCommand, array($strSerializedForm, $blnBackButtonFlag));
+			$strFormStateHandler = QForm::$FormStateHandler;
+			$strPostDataState = $strFormStateHandler::Save ($strSerializedForm, $blnBackButtonFlag);
 
 			// Return the PostDataState
 			return $strPostDataState;
@@ -782,8 +781,8 @@
 		 */
 		public static function Unserialize($strPostDataState) {
 			// Setup and Call the FormStateHandler to retrieve the Serialized Form
-			$strLoadCommand = array(QForm::$FormStateHandler, 'Load');
-			$strSerializedForm = call_user_func($strLoadCommand, $strPostDataState);
+			$strFormStateHandler = QForm::$FormStateHandler;
+			$strSerializedForm = $strFormStateHandler::Load ($strPostDataState);
 
 			if ($strSerializedForm) {
 				// Unserialize and Cast the Form
@@ -1685,6 +1684,7 @@
 
 
 
+			$strEndScript = sprintf('qc.initForm("%s"); ', $this->strFormId)  . $strEndScript; // must come before control scripts
 
 				// Finally, add QCubed includes path
 			$strEndScript = sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ ) . $strEndScript;
@@ -1692,8 +1692,6 @@
 			$strEndScript = sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__) . $strEndScript;
 			$strEndScript = sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) . $strEndScript;
-
-			$strEndScript .= sprintf('qc.initForm("%s"); ', $this->strFormId);
 
 			// Create Final EndScript Script
 			$strEndScript = sprintf('<script type="text/javascript">$j(document).ready(function() { %s; });</script>', $strEndScript);
