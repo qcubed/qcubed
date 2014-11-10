@@ -2360,8 +2360,8 @@
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
 		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
-			$strClassName = $objCodeGen->FormControlClassForColumn($objColumn);
-			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 
 			$strRet = <<<TMPL
 		/**
@@ -2376,19 +2376,32 @@ TMPL;
 			return $strRet;
 		}
 
-		public static function Codegen_MetaCreateOptions (QColumn $objColumn, $strControlVarName) {
+		/**
+		 * Reads the options from the special data file, and possibly the column
+		 * @param $objColumn
+		 * @param $strControlVarName
+		 * @return string
+		 */
+		public static function Codegen_MetaCreateOptions ($objTable, $objReference, $strControlVarName) {
 			$strRet = '';
-			$strPropName = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
-			$strClass = $objColumn->OwnerTable->ClassName;
 
-			//if (defined('__DESIGN_MODE__')) {
-				$strRet .= <<<TMPL
+			if ($objReference instanceof QColumn) {
+				$objColumn = $objReference;
+				$strPropName = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+				$strClass = $objTable->ClassName;
+			}
+			elseif ($objReference instanceof QManyToManyReference ||
+					$objReference instanceof QReverseReference) {
+				$strPropName = $objReference->ObjectDescription;
+				$strClass = $objTable->ClassName;
+			}
+
+			$strRet .= <<<TMPL
 			\$this->{$strControlVarName}->LinkedNode = QQN::{$strClass}()->{$strPropName};
 
 TMPL;
-			//}
 
-			if (($options = $objColumn->Options) &&
+			if (($options = $objReference->Options) &&
 				isset ($options['Overrides'])) {
 
 				foreach ($options['Overrides'] as $name=>$val) {
@@ -2398,7 +2411,7 @@ TMPL;
 					}
 					elseif (is_string ($val)) {
 						if (strpos ($val, '::') !== false &&
-								strpos ($val, ' ') === false) {
+							strpos ($val, ' ') === false) {
 							// looks like a constant
 							$strVal = $val;
 						} else {
@@ -2409,7 +2422,7 @@ TMPL;
 						$strVal = var_export($val, true);
 					}
 					$strRet .= <<<TMPL
-			\$this->{$strControlVarName}->{$name} = {$strVal};
+		\$this->{$strControlVarName}->{$name} = {$strVal};
 
 TMPL;
 				}

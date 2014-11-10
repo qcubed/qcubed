@@ -300,7 +300,7 @@
 		}
 
 		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
-			$strClassName = $objCodeGen->FormControlClassForColumn($objColumn);
+			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
@@ -339,15 +339,13 @@ TMPL;
 		 * @return string
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-			$strClassName = $objTable->ClassName;
-			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-			$strLabelId = $objCodeGen->FormLabelVariableNameForColumn($objColumn);
-			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 
 			// Read the control type in case we are generating code for a similar class
-			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+			$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 
 			$strRet = <<<TMPL
 		/**
@@ -400,7 +398,7 @@ TMPL;
 
 TMPL;
 			}
-			$strRet .= static::Codegen_MetaCreateOptions ($objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objColumn, $strControlVarName);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -443,9 +441,9 @@ TMPL;
 		 * @param QColumn $objColumn
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPrimaryKey = $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName;
-			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 
 			$strRet = <<<TMPL
 			if (\$this->{$strControlVarName}) {
@@ -475,7 +473,7 @@ TMPL;
 		}
 
 		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strRet = <<<TMPL

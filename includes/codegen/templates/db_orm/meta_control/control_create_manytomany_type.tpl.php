@@ -1,4 +1,14 @@
-		/**
+<?php
+//$strControlType = $objCodeGen->MetaControlControlClass($objManyToManyReference->Column);
+//$objReflection = new ReflectionClass ($strControlType);
+//$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaCreate');
+
+//if ($blnHasMethod) {
+//	echo $strControlType::Codegen_MetaCreate($objCodeGen, $objTable, $objColumn);
+//} else {
+?>
+
+/**
 		 * Create and setup QCheckBoxList <?= $strControlId ?>
 
 		 * @param string $strControlId optional ControlId to use
@@ -28,3 +38,6 @@
 			$this-><?= $strLabelId ?>->Text = implode($this->str<?= $objManyToManyReference->ObjectDescription; ?>Glue, $aSelection);
 			return $this-><?= $strLabelId ?>;
 		}
+<?php
+// }
+?>

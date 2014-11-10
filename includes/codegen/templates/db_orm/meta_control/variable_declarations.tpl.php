@@ -1,10 +1,10 @@
 // General Variables
 		/**
-		 * @var <?= $objTable->ClassName; ?> <?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>
+		 * @var <?= $objTable->ClassName; ?> <?= $objCodeGen->ModelVariableName($objTable->Name); ?>
 
 		 * @access protected
 		 */
-		protected $<?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>;
+		protected $<?= $objCodeGen->ModelVariableName($objTable->Name); ?>;
 		/**
 		 * @var QForm|QControl objParentObject
 		 * @access protected
@@ -25,7 +25,7 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) {
 	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
 
-	$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+	$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 	if ($strControlType == 'QLabel'  ||
 			!isset($objColumn->Options['FormGen']) ||
 			$objColumn->Options['FormGen'] != 'label') {
@@ -50,15 +50,15 @@
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
 		/**
-		 * @var QListBox <?= $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference); ?>
+		 * @var QListBox <?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>
 
 		 * @access protected
 		 */
-		protected $<?= $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference); ?>;
+		protected $<?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>;
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-		protected $<?= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?>;
+		protected $<?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>;
 		protected $str<?= $objManyToManyReference->ObjectDescription; ?>Glue = ', ';
 <?php } ?>
 
@@ -66,13 +66,13 @@
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
 		/**
-		 * @var QLabel <?= $objCodeGen->FormLabelVariableNameForUniqueReverseReference($objReverseReference); ?>
+		 * @var QLabel <?= $objCodeGen->MetaControlLabelVariableName($objReverseReference); ?>
 
 		 * @access protected
 		 */
-		protected $<?= $objCodeGen->FormLabelVariableNameForUniqueReverseReference($objReverseReference); ?>;
+		protected $<?= $objCodeGen->MetaControlLabelVariableName($objReverseReference); ?>;
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-		protected $<?= $objCodeGen->FormLabelVariableNameForManyToManyReference($objManyToManyReference); ?>;
+		protected $<?= $objCodeGen->MetaControlLabelVariableName($objManyToManyReference); ?>;
 <?php } ?>

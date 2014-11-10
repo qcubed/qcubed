@@ -1,5 +1,5 @@
 <?php
-$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 $objReflection = new ReflectionClass ($strControlType);
 $blnHasMethod = $objReflection->hasMethod ('Codegen_MetaCreate');
 
@@ -18,7 +18,7 @@ if ($blnHasMethod) {
 		 */
 		public function <?= $strControlId ?>_Create($strControlId = null, QQCondition $objCondition = null, $objOptionalClauses = null) {
 			$this-><?= $strControlId ?> = new QListBox($this->objParentObject, $strControlId);
-			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?= $strControlId ?>->Required = true;
 			if (!$this->blnEditMode)
@@ -62,7 +62,7 @@ if ($blnHasMethod) {
 		 */
 		public function <?= $strControlId ?>AutoComplete_Create($strControlId = null, $mustMatch = true, $aryItems = null) {
 			$this-><?= $strControlId ?> = new QAutocomplete($this->objParentObject, $strControlId);
-			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?= $strControlId ?>->Required = true;
 <?php } ?>
@@ -85,7 +85,7 @@ if ($blnHasMethod) {
 		 */
 		public function <?= $strLabelId ?>_Create($strControlId = null) {
 			$this-><?= $strLabelId ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 			$this-><?= $strLabelId ?>->Text = ($this-><?= $strObjectName ?>-><?= $objColumn->Reference->PropertyName ?>) ? $this-><?= $strObjectName ?>-><?= $objColumn->Reference->PropertyName ?>->__toString() : null;
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?= $strLabelId ?>->Required = true;

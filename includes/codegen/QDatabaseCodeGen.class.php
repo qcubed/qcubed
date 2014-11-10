@@ -547,7 +547,7 @@
 
 			if ((!$objFieldArray[0]->NotNull) ||
 				(!$objFieldArray[1]->NotNull)) {
-				$this->strErrors .= sprintf("AssociationTable %s's two columns must both be not null or a composite Primary Key",
+				$this->strErrors .= sprintf("AssociationTable %s's two columns must both be not null",
 					$strTableName);
 				return;
 			}
@@ -617,18 +617,20 @@
 				$objTable = $this->GetTable($objManyToManyReference->AssociatedTable);
 				$objOppositeColumn = clone($objTable->PrimaryKeyColumnArray[0]);
 				$objOppositeColumn->Name = $objManyToManyReference->OppositeColumn;
-				$objManyToManyReference->OppositeVariableName = $this->VariableNameFromColumn($objOppositeColumn);
-				$objManyToManyReference->OppositePropertyName = $this->PropertyNameFromColumn($objOppositeColumn);
+				$objManyToManyReference->OppositeVariableName = $this->ModelColumnVariableName($objOppositeColumn);
+				$objManyToManyReference->OppositePropertyName = $this->ModelColumnPropertyName($objOppositeColumn->Name);
 				$objManyToManyReference->OppositeVariableType = $objOppositeColumn->VariableType;
 
-				$objManyToManyReference->VariableName = $this->ReverseReferenceVariableNameFromTable($objOppositeForeignKey->ReferenceTableName);
-				$objManyToManyReference->VariableType = $this->ReverseReferenceVariableTypeFromTable($objOppositeForeignKey->ReferenceTableName);
+				$objManyToManyReference->VariableName = $this->ModelReverseReferenceVariableName($objOppositeForeignKey->ReferenceTableName);
+				$objManyToManyReference->VariableType = $this->ModelReverseReferenceVariableType($objOppositeForeignKey->ReferenceTableName);
 
 				$objManyToManyReference->ObjectDescription = $strGraphPrefixArray[$intIndex] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objForeignKey->ReferenceTableName, $objOppositeForeignKey->ReferenceTableName, false);
 				$objManyToManyReference->ObjectDescriptionPlural = $strGraphPrefixArray[$intIndex] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objForeignKey->ReferenceTableName, $objOppositeForeignKey->ReferenceTableName, true);
 
 				$objManyToManyReference->OppositeObjectDescription = $strGraphPrefixArray[($intIndex == 0) ? 1 : 0] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objOppositeForeignKey->ReferenceTableName, $objForeignKey->ReferenceTableName, false);
 				$objManyToManyReference->IsTypeAssociation = ($objTable instanceof QTypeTable);
+				$objManyToManyReference->Options = $this->objMetacontrolOptions->GetOptions($strTableName, $objManyToManyReference->AssociatedTable);
+
 			}
 
 
@@ -667,7 +669,7 @@
 
 			// Setup the Type Table Object
 			$strTableName = $objTypeTable->Name;
-			$objTypeTable->ClassName = $this->ClassNameFromTableName($strTableName);
+			$objTypeTable->ClassName = $this->ModelClassName($strTableName);
 
 			// Ensure that there are only 2 fields, an integer PK field (can be named anything) and a unique varchar field
 			$objFieldArray = $this->objDb->GetFieldsForTable($strTableName);
@@ -698,7 +700,7 @@
 				if (sizeof($objRow) > 2) { // there are extra columns to process
 					$strExtraPropertyArray[$objRow[0]] = array();
 					for ($i = 2; $i < sizeof($objRow); $i++) {
-						$strFieldName = QCodeGen::TypeNameFromColumnName($objFieldArray[$i]->Name);
+						$strFieldName = QCodeGen::TypeColumnPropertyName($objFieldArray[$i]->Name);
 						$strExtraFields[$i - 2] = $strFieldName;
 						$strExtraPropertyArray[$objRow[0]][$strFieldName] = $objRow[$i];
 					}
@@ -731,7 +733,7 @@
 			// Setup the Table Object
 			$objTable->OwnerDbIndex = $this->intDatabaseIndex;
 			$strTableName = $objTable->Name;
-			$objTable->ClassName = $this->ClassNameFromTableName($strTableName);
+			$objTable->ClassName = $this->ModelClassName($strTableName);
 			$objTable->ClassNamePlural = $this->Pluralize($objTable->ClassName);
 
 
@@ -914,11 +916,11 @@
 							$objReference->Column = $objForeignKey->ReferenceColumnNameArray[0];
 
 							// Setup VariableType
-							$objReference->VariableType = $this->ClassNameFromTableName($strReferencedTableName);
+							$objReference->VariableType = $this->ModelClassName($strReferencedTableName);
 
 							// Setup PropertyName and VariableName
-							$objReference->PropertyName = $this->ReferencePropertyNameFromColumn($objColumn);
-							$objReference->VariableName = $this->ReferenceVariableNameFromColumn($objColumn);
+							$objReference->PropertyName = $this->ModelReferencePropertyName($objColumn->Name);
+							$objReference->VariableName = $this->ModelReferenceVariableName($objColumn->Name);
 
 							// Add this reference to the column
 							$objColumn->Reference = $objReference;
@@ -937,12 +939,12 @@
 								$objReverseReference->Column = $strColumnName;
 								$objReverseReference->NotNull = $objColumn->NotNull;
 								$objReverseReference->Unique = $objColumn->Unique;
-								$objReverseReference->PropertyName = $this->PropertyNameFromColumn($this->GetColumn($strTableName, $strColumnName));
+								$objReverseReference->PropertyName = $this->ModelColumnPropertyName($strColumnName);
 
 								$objReverseReference->ObjectDescription = $this->CalculateObjectDescription($strTableName, $strColumnName, $strReferencedTableName, false);
 								$objReverseReference->ObjectDescriptionPlural = $this->CalculateObjectDescription($strTableName, $strColumnName, $strReferencedTableName, true);
-								$objReverseReference->VariableName = $this->ReverseReferenceVariableNameFromTable($objTable->Name);
-								$objReverseReference->VariableType = $this->ReverseReferenceVariableTypeFromTable($objTable->Name);
+								$objReverseReference->VariableName = $this->ModelReverseReferenceVariableName($objTable->Name);
+								$objReverseReference->VariableType = $this->ModelReverseReferenceVariableType($objTable->Name);
 
 								// For Special Case ReverseReferences, calculate Associated MemberVariableName and PropertyName...
 
@@ -1052,8 +1054,8 @@
 				$objColumn->Unique = true;
 			$objColumn->Timestamp = $objField->Timestamp;
 
-			$objColumn->VariableName = $this->VariableNameFromColumn($objColumn);
-			$objColumn->PropertyName = $this->PropertyNameFromColumn($objColumn);
+			$objColumn->VariableName = $this->ModelColumnVariableName($objColumn);
+			$objColumn->PropertyName = $this->ModelColumnPropertyName($objColumn->Name);
 
 			// separate overrides embedded in the comment
 
@@ -1257,10 +1259,10 @@
 			if (isset($objColumn->Options['ControlId'])) {
 				$strControlId = $objColumn->Options['ControlId'];
 			} elseif ($this->blnGenerateControlId) {
-				$strObjectName = $this->VariableNameFromTable($objTable->Name);
+				$strObjectName = $this->ModelVariableName($objTable->Name);
 				$strClassName = $objTable->ClassName;
-				$strControlVarName = $this->FormControlVariableNameForColumn($objColumn);
-				$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+				$strControlVarName = $this->MetaControlVariableName($objColumn);
+				$strLabelName = QCodeGen::MetaControlControlName($objColumn);
 
 				$strControlId = $strControlVarName . $strClassName;
 

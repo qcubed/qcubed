@@ -1,5 +1,5 @@
 <?php
-	$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+	$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 	$objReflection = new ReflectionClass ($strControlType);
 	$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaCreate');
 
@@ -17,7 +17,7 @@
 		 */
 		public function <?= $strControlId ?>_Create($strControlId = null) {
 			$this-><?= $strControlId ?> = new <?= $strControlType?>($this->objParentObject, $strControlId);
-			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 			$this-><?= $strControlId ?>->Text = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?= $strControlId ?>->Required = true;
@@ -39,7 +39,7 @@
 		 */
 		public function <?= $strLabelId ?>_Create($strControlId = null) {
 			$this-><?= $strLabelId ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 			$this-><?= $strLabelId ?>->Text = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?= $strLabelId ?>->Required = true;

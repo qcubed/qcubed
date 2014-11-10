@@ -6,7 +6,7 @@
 		 */
 		public function <?= $strControlId ?>_Create($strControlId = null) {
 			$this-><?= $strControlId ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 			if ($this->blnEditMode)
 				$this-><?= $strControlId ?>->Text = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;
 			else

@@ -7,7 +7,7 @@
 				// Update any fields for controls that have been created
 			<?php foreach ($objTable->ColumnArray as $objColumn) {
 				if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
-				$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+				$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 				if ($strControlType == 'QLabel'  ||
 						!isset($objColumn->Options['FormGen']) ||
 						$objColumn->Options['FormGen'] != 'label') {
@@ -27,9 +27,9 @@
 				if ($objReverseReference->Unique) {
 					// Use the "control_update_unique_reversereference" subtemplate to generate the code
 					// required to create/setup the control.
-					$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+					$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 					$strClassName = $objTable->ClassName;
-					$strControlId = $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference);
+					$strControlId = $objCodeGen->MetaControlVariableName($objReverseReference);
 
 					// Get the subtemplate and evaluate
 					include('control_update_unique_reversereference.tpl.php');
@@ -54,11 +54,11 @@
 				$this->Update<?= $objTable->ClassName; ?>();
 
 				// Save the <?= $objTable->ClassName; ?> object
-				$id = $this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>->Save();
+				$id = $this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>->Save();
 
 				// Finally, update any ManyToManyReferences (if any)
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-				$this-><?= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?>_Update();
+				$this-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>_Update();
 <?php } ?>
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();

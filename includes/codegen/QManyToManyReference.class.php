@@ -127,6 +127,12 @@
 		 * @var boolean IsTypeAssociation
 		 */
 		protected $blnIsTypeAssociation;
+
+		/**
+		 * Array of overrides read from the override file
+		 * @var array Overrides
+		 */
+		protected $options;
 		
 
 
@@ -177,7 +183,9 @@
 					return $this->objColumnArray;
 				case 'IsTypeAssociation':
 					return $this->blnIsTypeAssociation;
-					
+				case 'Options':
+					return $this->options;
+
 				default:
 					try {
 						return parent::__get($strName);
@@ -230,7 +238,9 @@
 					case 'ColumnArray':
 						return $this->objColumnArray = QType::Cast($mixValue, QType::ArrayType);						
 					case 'IsTypeAssociation':
-						return $this->blnIsTypeAssociation = QType::Cast($mixValue, QType::Boolean);						
+						return $this->blnIsTypeAssociation = QType::Cast($mixValue, QType::Boolean);
+					case 'Options':
+						return $this->options = QType::Cast($mixValue, QType::ArrayType);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

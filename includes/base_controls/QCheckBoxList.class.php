@@ -419,16 +419,16 @@
 		 * @param QColumn $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate_ManyManyType(QCodeGen $objCodeGen, QTable $objTable, QManyToManyReference $objManyToManyReference) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-			$strControlVarName = $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference);
-			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 
-			// Read the control type in case we are generating code for a similar class
-			$strControlType = get_class();
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objReference) {
+			if ($objReference instanceof QManyToManyReference && $objReference->IsTypeAssociation) {
+				$strControlVarName = $objCodeGen->MetaControlVariableName($objReference);
+				$strLabelName = addslashes(QCodeGen::MetaControlControlName($objReference));
 
-			$strRet=<<<TMPL
+				// Read the control type in case we are generating code for a similar class
+				$strControlType = get_class();
+
+				$strRet=<<<TMPL
 
 		/**
 		 * Create and setup {$strControlType} {$strControlVarName}
@@ -436,22 +436,74 @@
 		 * @return QListBox
 		 */
 
+
 		public function {$strControlVarName}_Create(\$strControlId = null) {
-
+			\$this->{$strControlVarName} = new QCheckBoxList(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
+			\$this->{$strControlVarName}->AddItems({$objReference->VariableType}::\$NameArray);
 TMPL;
-				$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+				$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objReference, true);
 
-				if ($strControlIdOverride) {
+				if ($strMethod = QCodeGen::$PreferredRenderMethod) {
 					$strRet .= <<<TMPL
-			if (!\$strControlId) {
-				\$strControlId = '$strControlIdOverride';
-			}
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
 
 TMPL;
+				}
 
+				$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objReference, $strControlVarName);
+
+				$strRet .= <<<TMPL
+			return \$this->{$strControlVarName};
+		}
+
+
+TMPL;
+			}
+			return $strRet . "\n";
+		}
+
+		/**
+		 * Generate code to reload data from the Model into this control.
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
+		 * @return string
+		 */
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objReference, $blnInit = false) {
+			if ($objReference instanceof QManyToManyReference) {
+				if ($objReference->IsTypeAssociation) {
+					$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+					$strPropName = $objReference->ObjectDescription;
+					$strControlVarName = $objCodeGen->MetaControlVariableName($objReference);
+
+					if ($blnInit) {
+						$strRet = "\t\t\t\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get<?= $objReference->ObjectDescription?>Array())";
+					} else {
+						$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get<?= $objReference->ObjectDescription?>Array())";
+					}
+					return $strRet . "\n";
 				}
 			}
 		}
+
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QManyToManyReference $objManyToManyReference) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strPropName = $objManyToManyReference->ObjectDescription;
+			$strPropNames = $objManyToManyReference->ObjectDescriptionPlural;
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objManyToManyReference);
+
+			$strRet = <<<TMPL
+				if (\$this->{$strControlVarName}) {
+					\$this->{$strObjectName}->UnassociateAll{$strPropNames}();
+					\$this->{$strObjectName}->Associate{$strPropName}(\$this->{$strControlVarName}->SelectedValues);
+				}
+TMPL;
+			return $strRet;
+		}
+
+
 		/**
 		 * Returns a description of the options available to modify by the designer for the code generator.
 		 *

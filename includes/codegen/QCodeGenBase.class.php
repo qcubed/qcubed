@@ -849,7 +849,13 @@
 		// COMMONLY OVERRIDDEN CONVERSION FUNCTIONS
 		///////////////////////
 
-		protected function ClassNameFromTableName($strTableName) {
+		/**
+		 * Given a table name, returns the name of the class for the corresponding model object.
+		 *
+		 * @param $strTableName
+		 * @return string
+		 */
+		protected function ModelClassName($strTableName) {
 			$strTableName = $this->StripPrefixFromTable($strTableName);
 			return sprintf('%s%s%s',
 				$this->strClassPrefix,
@@ -857,39 +863,82 @@
 				$this->strClassSuffix);
 		}
 
-		protected function VariableNameFromColumn(QColumn $objColumn) {
+		/**
+		 * Given a table name, returns a variable name that will be used to reprsent the corresponding model object.
+		 * @param $strTableName
+		 * @return string
+		 */
+		public function ModelVariableName($strTableName) {
+			$strTableName = $this->StripPrefixFromTable($strTableName);
+			return QConvertNotation::PrefixFromType(QType::Object) .
+			QConvertNotation::CamelCaseFromUnderscore($strTableName);
+		}
+
+		/**
+		 * Given a table name, returns the variable name that will be used to refer to the object in a
+		 * reverse reference context (many-to-one).
+		 * @param string $strTableName
+		 * @return string
+		 */
+		protected function ModelReverseReferenceVariableName($strTableName) {
+			$strTableName = $this->StripPrefixFromTable($strTableName);
+			return $this->ModelVariableName($strTableName);
+		}
+
+		/**
+		 * Given a table name, returns the variable type of the object in a
+		 * reverse reference context (many-to-one).
+		 * @param $strTableName
+		 * @return string
+		 */
+		protected function ModelReverseReferenceVariableType($strTableName) {
+			$strTableName = $this->StripPrefixFromTable($strTableName);
+			return $this->ModelClassName($strTableName);
+		}
+
+
+		/**
+		 * Given a column, returns the name of the variable used to represent the column's value inside
+		 * the model object.
+		 *
+		 * @param QColumn $objColumn
+		 * @return string
+		 */
+		protected function ModelColumnVariableName(QColumn $objColumn) {
 			return QConvertNotation::PrefixFromType($objColumn->VariableType) .
 				QConvertNotation::CamelCaseFromUnderscore($objColumn->Name);
 		}
 
 		/**
-		 * Returns the label name for the meta control. Can be overridden in the comment for the column.
-		 *
-		 * @param QColumn $objColumn
-		 *
-		 * @internal param string $strDelimiter
+		 * Return the name of the property corresponding to the given column name as used in the getter and setter of
+		 * the model object.
+		 * @param string $strColumnName
 		 * @return string
 		 */
-		public static function MetaControlLabelNameFromColumn (QColumn $objColumn) {
-			if (($o = $objColumn->Options) && isset ($o['Name'])) {
-				return $o['Name'];
-			}
-			if ($objColumn->Reference) {
-				return QConvertNotation::WordsFromCamelCase($objColumn->Reference->PropertyName);
-			}
-            return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
+		protected function ModelColumnPropertyName($strColumnName) {
+			return QConvertNotation::CamelCaseFromUnderscore($strColumnName);
 		}
 
-		protected function PropertyNameFromColumn(QColumn $objColumn) {
-			return QConvertNotation::CamelCaseFromUnderscore($objColumn->Name);
+		/**
+		 * Return the name of the property corresponding to the given column name as used in the getter and setter of
+		 * a Type object.
+		 * @param $strName
+		 * @return string
+		 */
+		protected function TypeColumnPropertyName($strColumnName) {
+			return QConvertNotation::CamelCaseFromUnderscore($strColumnName);
 		}
 
-		protected function TypeNameFromColumnName($strName) {
-			return QConvertNotation::CamelCaseFromUnderscore($strName);
-		}
-
-		protected function ReferenceColumnNameFromColumn(QColumn $objColumn) {
-			$strColumnName = $objColumn->Name;
+		/**
+		 * Given the name of a column that is a foreign key to another table, returns a kind of
+		 * virtual column name that would refer to the object pointed to. This new name is not actually used, but derivatives
+		 * of this name are used to represent a variable and property name that refers to this object that will get stored
+		 * in the model.
+		 *
+		 * @param string $strColumnName
+		 * @return string
+		 */
+		protected function ModelReferenceColumnName($strColumnName) {
 			$intNameLength = strlen($strColumnName);
 
 			// Does the column name for this reference column end in "_id"?
@@ -910,31 +959,29 @@
 			return $strColumnName;
 		}
 
-		protected function ReferenceVariableNameFromColumn(QColumn $objColumn) {
-			$strColumnName = $this->ReferenceColumnNameFromColumn($objColumn);
+		/**
+		 * Given a column name to a foreign key, returns the name of the variable that will represent the foreign object
+		 * stored in the model.
+		 *
+		 * @param string $strColumnName
+		 * @return string
+		 */
+		protected function ModelReferenceVariableName($strColumnName) {
+			$strColumnName = $this->ModelReferenceColumnName($strColumnName);
 			return QConvertNotation::PrefixFromType(QType::Object) .
 				QConvertNotation::CamelCaseFromUnderscore($strColumnName);
 		}
 
-		protected function ReferencePropertyNameFromColumn(QColumn $objColumn) {
-			$strColumnName = $this->ReferenceColumnNameFromColumn($objColumn);
+		/**
+		 * Given a column name to a foreign key, returns the name of the property that will be used in the getter and setter
+		 * to represent the foreign object stored in the model.
+		 *
+		 * @param string strColumnName
+		 * @return string
+		 */
+		protected function ModelReferencePropertyName($strColumnName) {
+			$strColumnName = $this->ModelReferenceColumnName($strColumnName);
 			return QConvertNotation::CamelCaseFromUnderscore($strColumnName);
-		}
-
-		public function VariableNameFromTable($strTableName) {
-			$strTableName = $this->StripPrefixFromTable($strTableName);
-			return QConvertNotation::PrefixFromType(QType::Object) .
-				QConvertNotation::CamelCaseFromUnderscore($strTableName);
-		}
-
-		protected function ReverseReferenceVariableNameFromTable($strTableName) {
-			$strTableName = $this->StripPrefixFromTable($strTableName);
-			return $this->VariableNameFromTable($strTableName);
-		}
-
-		protected function ReverseReferenceVariableTypeFromTable($strTableName) {
-			$strTableName = $this->StripPrefixFromTable($strTableName);
-			return $this->ClassNameFromTableName($strTableName);
 		}
 
 		protected function ParameterCleanupFromColumn(QColumn $objColumn, $blnIncludeEquality = false) {
@@ -977,29 +1024,98 @@
 			return $strToReturn;
 		}
 
-		public function FormControlVariableNameForColumn(QColumn $objColumn) {
-			if ($objColumn->Reference) {
-				$strPropName = $objColumn->Reference->PropertyName;
-			} else {
-				$strPropName = $objColumn->PropertyName;
+		/**
+		 * Returns the control label name as used in the meta control corresponding to this column.
+		 * Can be overridden in the comment for the column.
+		 *
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @internal param string $strDelimiter
+		 * @return string
+		 */
+		public static function MetaControlControlName ($objColumn) {
+			if (($o = $objColumn->Options) && isset ($o['Name'])) {
+				return $o['Name'];
+			}
+			if ($objColumn instanceof QColumn) {
+				if ($objColumn->Reference) {
+					return QConvertNotation::WordsFromCamelCase($objColumn->Reference->PropertyName);
+				}
+				return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
+			}
+			elseif ($objColumn instanceof QManyToManyReference) {
+				return QConvertNotation::WordsFromCamelCase($objColumn->ObjectDescriptionPlural);
+			}
+			elseif ($objColumn instanceof QReverseReference) {
+				// TODO:
+			}
+		}
+
+		/**
+		 * The property name used in the meta control for the given column or virtual column
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+
+		public function MetaControlPropertyName ($objColumn) {
+			if ($objColumn instanceof QColumn) {
+				if ($objColumn->Reference) {
+					return $objColumn->Reference->PropertyName;
+				} else {
+					return $objColumn->PropertyName;
+				}
+			}
+			elseif ($objColumn instanceof QReverseReference) {
+				if ($objColumn->Unique) {
+					return ($objColumn->ObjectDescription);
+				}
+				else {
+					return ($objColumn->ObjectDescriptionPlural);
+				}
+			}
+			elseif ($objColumn instanceof QManyToManyReference) {
+				return $objColumn->ObjectDescriptionPlural;
+			}
+			else {
+				throw new Exception ('Unknown column type.');
 			}
 
-			$strClassName = $this->FormControlClassForColumn($objColumn);
 
+		}
+
+		/**
+		 * Return a variable name corresponding to the given column, including virtual columns like
+		 * QReverseReference and QManyToMany references.
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public function MetaControlVariableName($objColumn) {
+			$strPropName = $this->MetaControlPropertyName($objColumn);
+			$strClassName = $this->MetaControlControlClass($objColumn);
 			return $strClassName::Codegen_VarName ($strPropName);
 		}
 
 		/**
-		 * This function returns the data type for table column
-		 * NOTE: The data type is not the PHP data type, but classes used by QCubed
-		 * @param QColumn $objColumn
-		 *
+		 * Returns a variable name for the "label" version of a control, which would be the read-only version
+		 * of viewing the data in the column.
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public function MetaControlLabelVariableName(QColumn $objColumn) {
+			$strPropName = $this->MetaControlPropertyName($objColumn);
+			return QLabel::Codegen_VarName($strPropName);
+		}
+
+		/**
+		 * Returns the class for the control that will be created to edit the given column,
+		 * including the 'virtual' columns of reverse references (many to one) and many-to-many references.
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
 
-		public function FormControlClassForColumn(QColumn $objColumn) {
+		public function MetaControlControlClass($objColumn) {
 
-			// overrides
+			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {
 				if (isset ($o['FormGen']) && $o['FormGen'] == 'label') {
 					return 'QLabel';
@@ -1009,89 +1125,41 @@
 				}
 			}
 
-			if ($objColumn->Identity)
-				return 'QLabel';
+			// otherwise, return the default class based on the column
+			if ($objColumn instanceof QColumn) {
+				if ($objColumn->Identity)
+					return 'QLabel';
 
-			if ($objColumn->Timestamp)
-				return 'QLabel';
+				if ($objColumn->Timestamp)
+					return 'QLabel';
 
-			if ($objColumn->Reference)
-				return 'QListBox';
+				if ($objColumn->Reference)
+					return 'QListBox';
 
-			switch ($objColumn->VariableType) {
-				case QType::Boolean:
-					return 'QCheckBox';
-				case QType::DateTime:
-					return 'QDateTimePicker';
-				case QType::Integer:
-					return 'QIntegerTextBox';
-				case QType::Float:
-					return 'QFloatTextBox';
-				default:
-					return 'QTextBox';
+				switch ($objColumn->VariableType) {
+					case QType::Boolean:
+						return 'QCheckBox';
+					case QType::DateTime:
+						return 'QDateTimePicker';
+					case QType::Integer:
+						return 'QIntegerTextBox';
+					case QType::Float:
+						return 'QFloatTextBox';
+					default:
+						return 'QTextBox';
+				}
 			}
-		}
-
-		public function FormControlVariableNameForUniqueReverseReference(QReverseReference $objReverseReference) {
-			if ($objReverseReference->Unique) {
-				return sprintf("lst%s", $objReverseReference->ObjectDescription);
-			} else
-				throw new Exception('FormControlVariableNameForUniqueReverseReference requires ReverseReference to be unique');
-		}
-
-		public function FormControlVariableNameForManyToManyReference(QManyToManyReference $objManyToManyReference) {
-			if ($objManyToManyReference->IsTypeAssociation) {
-				$strPre = 'lst%s';
-			} else {
-				$strPre = 'dtg%s';
+			elseif ($objColumn instanceof QReverseReference) {
+				if ($objColumn->Unique) {
+					return 'QListBox';
+				} else {
+					return 'QCheckBoxList';	// for multi-selection
+				}
 			}
-			return sprintf($strPre, $objManyToManyReference->ObjectDescriptionPlural);
-		}
-
-		public function FormLabelVariableNameForColumn(QColumn $objColumn) {
-			if ($objColumn->Reference) {
-				$strPropName = $objColumn->Reference->PropertyName;
-			} else {
-				$strPropName = $objColumn->PropertyName;
+			elseif ($objColumn instanceof QManyToManyReference) {
+				return 'QCheckBoxList';	// for multi-selection
 			}
-			return QLabel::Codegen_VarName($strPropName);
-		}
-
-		protected function FormLabelVariableNameForUniqueReverseReference(QReverseReference $objReverseReference) {
-			if ($objReverseReference->Unique) {
-				return sprintf("lbl%s", $objReverseReference->ObjectDescription);
-			} else
-				throw new Exception('FormControlVariableNameForUniqueReverseReference requires ReverseReference to be unique');
-		}
-
-		protected function FormLabelVariableNameForManyToManyReference(QManyToManyReference $objManyToManyReference) {
-			return sprintf("lbl%s", $objManyToManyReference->ObjectDescriptionPlural);
-		}
-
-		protected function FormControlTypeForColumn(QColumn $objColumn) {
-			if ($objColumn->Identity)
-				return 'QLabel';
-
-			if ($objColumn->Timestamp)
-				return 'QLabel';
-
-			if ($objColumn->Reference)
-				return 'QListBox';
-
-			switch ($objColumn->VariableType) {
-				case QType::Boolean:
-					return 'QCheckBox';
-				case QType::DateTime:
-					return 'QCalendar';
-				case QType::Float:
-					return 'QFloatTextBox';
-				case QType::Integer:
-					return 'QIntegerTextBox';
-				case QType::String:
-					return 'QTextBox';
-				default:
-					throw new Exception('Unknown type for Column: %s' . $objColumn->VariableType);
-			}
+			throw new Exception('Unknown column type.');
 		}
 
 		protected function CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName) {
@@ -1268,6 +1336,12 @@
 			return $strGraphPrefixArray;
 		}
 
+		/**
+		 * Returns the variable type corresponding to the database column type
+		 * @param $strDbType
+		 * @return string
+		 * @throws Exception
+		 */
 		protected function VariableTypeFromDbType($strDbType) {
 			switch ($strDbType) {
 				case QDatabaseFieldType::Bit:
@@ -1292,6 +1366,13 @@
 			}
 		}
 
+		/**
+		 * Return the plural of the given name. Override this and return the plural version of particular names
+		 * if this generic version isn't working for you.
+		 *
+		 * @param $strName
+		 * @return string
+		 */
 		protected function Pluralize($strName) {
 			// Special Rules go Here
 			switch (true) {

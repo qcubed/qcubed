@@ -6,7 +6,7 @@
 		 */
 		public function <?= $strControlId ?>_Create($strControlId = null) {
 			$this-><?= $strControlId ?> = new QListBox($this->objParentObject, $strControlId);
-			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?= $strControlId ?>->Required = true;
 <?php } ?><?php if (!$objColumn->NotNull) { ?>
@@ -25,7 +25,7 @@
 		 */
 		public function <?= $strLabelId ?>_Create($strControlId = null) {
 			$this-><?= $strLabelId ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 			$this-><?= $strLabelId ?>->Text = ($this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>) ? <?= $objColumn->Reference->VariableType ?>::$NameArray[$this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>] : null;
 <?php if ($objColumn->NotNull) { ?>
 			$this-><?= $strLabelId ?>->Required = true;

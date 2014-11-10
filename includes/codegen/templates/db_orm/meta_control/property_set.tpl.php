@@ -16,20 +16,20 @@
 					// Controls that point to <?= $objTable->ClassName ?> fields
 <?php foreach ($objTable->ColumnArray as $objColumn) {
 	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue;
-	$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+	$strControlId = $objCodeGen->MetaControlVariableName($objColumn);
 	$strPropertyName = $objColumn->PropertyName . 'Control';
-	$strClassName = $objCodeGen->FormControlTypeForColumn($objColumn);
+	$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
 	include("property_set_case.tpl.php");
 } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?><?php if ($objReverseReference->Unique) { ?><?php 
-		$strControlId = $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference);
+		$strControlId = $objCodeGen->MetaControlVariableName($objReverseReference);
 		$strPropertyName = $objReverseReference->ObjectDescription . 'Control';
 		$strClassName = 'QListBox';
 ?><?php include("property_set_case.tpl.php"); ?>
 
 <?php } ?><?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?><?php 
-	$strControlId = $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference);
+	$strControlId = $objCodeGen->MetaControlVariableName($objManyToManyReference);
 	$strPropertyName = $objManyToManyReference->ObjectDescription . 'Control';
 	$strClassName = 'QListBox';
 ?><?php include("property_set_case.tpl.php"); ?>

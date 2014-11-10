@@ -22,7 +22,7 @@
 		}
 
 		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
-			$strClassName = $objCodeGen->FormControlClassForColumn($objColumn);
+			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
@@ -55,12 +55,14 @@ TMPL;
 		 *
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objReference) {
+			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 			$strControlType = 'QLabel';
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+
+			$strPropName = QCodeGen::PropertyNameFromReference($objReference);
+			//$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			$strDateTimeExtra = '';
@@ -112,7 +114,7 @@ TMPL;
 
 			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objColumn, $strControlVarName);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -132,7 +134,7 @@ TMPL;
 		 * @param boolean $blnInit	Generate initialization code instead of reload
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 

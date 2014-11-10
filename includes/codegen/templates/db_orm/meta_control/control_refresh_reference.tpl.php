@@ -1,5 +1,5 @@
 <?php
-$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 $objReflection = new ReflectionClass ($strControlType);
 $blnHasMethod = $objReflection->hasMethod ('Codegen_MetaRefresh');
 

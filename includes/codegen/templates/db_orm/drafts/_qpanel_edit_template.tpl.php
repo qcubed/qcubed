@@ -20,16 +20,16 @@
 <?php
 foreach ($objTable->ColumnArray as $objColumn) {
     if (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != 'none') {
-		print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForColumn($objColumn).'->RenderWithName(); ?>' . "\n");
+		print('<?php $_CONTROL->'.$objCodeGen->MetaControlVariableName($objColumn).'->RenderWithName(); ?>' . "\n");
 	}
 }
 foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
 	if ($objReverseReference->Unique) {
-		print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference).'->RenderWithName(); ?>' . "\n");
+		print('<?php $_CONTROL->'.$objCodeGen->MetaControlVariableName($objReverseReference).'->RenderWithName(); ?>' . "\n");
 	}
 }
 foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) {
-	print('<?php $_CONTROL->'.$objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference).'->RenderWithName(true); ?>' . "\n");
+	print('<?php $_CONTROL->'.$objCodeGen->MetaControlVariableName($objManyToManyReference).'->RenderWithName(true); ?>' . "\n");
 }
 ?>
 	</div>

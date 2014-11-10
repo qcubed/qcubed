@@ -1,5 +1,5 @@
 	<?php if ($objManyToManyReference->IsTypeAssociation):?>
-		protected function <?= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?>_Update() {
+		protected function <?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>_Update() {
 			if ($this-><?= $strControlId ?>) {
 				$this-><?= $strObjectName ?>->UnassociateAll<?= $objManyToManyReference->ObjectDescriptionPlural ?>();
 				$intIdArray = $this-><?= $strControlId ?>->SelectedValues;
@@ -7,7 +7,7 @@
 			}
 		}
 	<?php else:?>
-		protected function <?= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?>_Update() {
+		protected function <?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>_Update() {
 			if ($this-><?= $strControlId ?>) {
 				$changedIds = $this->col<?= $objManyToManyReference->ObjectDescription ?>Selected->GetChangedIds();
 				$temp = <?= $objManyToManyReference->VariableType ?>::QueryArray(QQ::In(QQN::<?= $objManyToManyReference->VariableType ?>()-><?= $objCodeGen->GetTable($objManyToManyReference->AssociatedTable)->PrimaryKeyColumnArray[0]->PropertyName ?>, array_keys($changedIds)));

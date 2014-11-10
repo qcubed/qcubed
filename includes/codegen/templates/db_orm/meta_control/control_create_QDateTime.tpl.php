@@ -6,7 +6,7 @@
 		 */
 		public function <?= $strControlId ?>_Create($strControlId = null) {
 			$this-><?= $strControlId ?> = new QDateTimePicker($this->objParentObject, $strControlId);
-			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strControlId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 			$this-><?= $strControlId ?>->DateTime = $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>;
 			$this-><?= $strControlId ?>->DateTimePickerType = QDateTimePickerType::<?php
 	switch ($objColumn->DbType) {
@@ -36,7 +36,7 @@
 		 */
 		public function <?= $strLabelId ?>_Create($strControlId = null, $strDateTimeFormat = null) {
 			$this-><?= $strLabelId ?> = new QLabel($this->objParentObject, $strControlId);
-			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlLabelNameFromColumn($objColumn) ?>');
+			$this-><?= $strLabelId ?>->Name = QApplication::Translate('<?= QCodeGen::MetaControlControlName($objColumn) ?>');
 			$this->str<?= $objColumn->PropertyName ?>DateTimeFormat = $strDateTimeFormat;
 			$this-><?= $strLabelId ?>->Text = sprintf($this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>) ? $this-><?= $strObjectName ?>-><?= $objColumn->PropertyName ?>->qFormat($this->str<?= $objColumn->PropertyName ?>DateTimeFormat) : null;
 <?php if ($objColumn->NotNull) { ?>

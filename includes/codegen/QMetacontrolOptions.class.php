@@ -120,7 +120,7 @@ class QMetacontrolOptions extends QBaseClass {
 		if (isset($this->options[$strTableName][$strFieldName])) {
 			return $this->options[$strTableName][$strFieldName];
 		} else {
-			return null;
+			return array();
 		}
 	}
 
