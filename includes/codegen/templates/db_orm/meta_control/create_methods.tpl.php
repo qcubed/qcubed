@@ -47,7 +47,7 @@
 				$objReflection = new ReflectionClass ($strControlType);
 				$blnHasMethod = $objReflection->hasMethod ('Codegen_MetaRefresh');
 				if ($blnHasMethod) {
-					echo $strControlType::Codegen_MetaCreate($objCodeGen, $objTable, $objColumn);
+					echo $strControlType::Codegen_MetaCreate($objCodeGen, $objTable, $objManyToManyReference);
 				} else {
 					throw new QCallerException ('Can\'t find Codegen_MetaCreate for ' . $strControlType);
 				}

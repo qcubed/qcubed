@@ -416,16 +416,16 @@
 		 *
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
 
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objReference) {
-			if ($objReference instanceof QManyToManyReference && $objReference->IsTypeAssociation) {
-				$strControlVarName = $objCodeGen->MetaControlVariableName($objReference);
-				$strLabelName = addslashes(QCodeGen::MetaControlControlName($objReference));
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			if ($objColumn instanceof QManyToManyReference && $objColumn->IsTypeAssociation) {
+				$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+				$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 
-				// Read the control type in case we are generating code for a similar class
+				// Read the control type in case we are generating code for a derived class
 				$strControlType = get_class();
 
 				$strRet=<<<TMPL
@@ -433,16 +433,16 @@
 		/**
 		 * Create and setup {$strControlType} {$strControlVarName}
 		 * @param string \$strControlId optional ControlId to use
-		 * @return QListBox
+		 * @return {$strControlType}
 		 */
 
 
 		public function {$strControlVarName}_Create(\$strControlId = null) {
-			\$this->{$strControlVarName} = new QCheckBoxList(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
-			\$this->{$strControlVarName}->AddItems({$objReference->VariableType}::\$NameArray);
+			\$this->{$strControlVarName}->AddItems({$objColumn->VariableType}::\$NameArray);
 TMPL;
-				$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objReference, true);
+				$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 				if ($strMethod = QCodeGen::$PreferredRenderMethod) {
 					$strRet .= <<<TMPL
@@ -451,7 +451,7 @@ TMPL;
 TMPL;
 				}
 
-				$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objReference, $strControlVarName);
+				$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objColumn, $strControlVarName);
 
 				$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -467,32 +467,38 @@ TMPL;
 		 * Generate code to reload data from the Model into this control.
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
 		 * @return string
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objReference, $blnInit = false) {
-			if ($objReference instanceof QManyToManyReference) {
-				if ($objReference->IsTypeAssociation) {
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+			if ($objColumn instanceof QManyToManyReference) {
+				if ($objColumn->IsTypeAssociation) {
 					$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-					$strPropName = $objReference->ObjectDescription;
-					$strControlVarName = $objCodeGen->MetaControlVariableName($objReference);
+					$strPropName = $objColumn->ObjectDescription;
+					$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 
 					if ($blnInit) {
-						$strRet = "\t\t\t\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get<?= $objReference->ObjectDescription?>Array())";
+						$strRet = "\t\t\t\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get<?= $objColumn->ObjectDescription?>Array())";
 					} else {
-						$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get<?= $objReference->ObjectDescription?>Array())";
+						$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get<?= $objColumn->ObjectDescription?>Array())";
 					}
 					return $strRet . "\n";
 				}
 			}
 		}
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QManyToManyReference $objManyToManyReference) {
+		/**
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-			$strPropName = $objManyToManyReference->ObjectDescription;
-			$strPropNames = $objManyToManyReference->ObjectDescriptionPlural;
-			$strControlVarName = $objCodeGen->MetaControlVariableName($objManyToManyReference);
+			$strPropName = $objColumn->ObjectDescription;
+			$strPropNames = $objColumn->ObjectDescriptionPlural;
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 
 			$strRet = <<<TMPL
 				if (\$this->{$strControlVarName}) {

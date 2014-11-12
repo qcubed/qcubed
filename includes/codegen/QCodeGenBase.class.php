@@ -1026,7 +1026,6 @@
 
 		/**
 		 * Returns the control label name as used in the meta control corresponding to this column.
-		 * Can be overridden in the comment for the column.
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
@@ -1034,21 +1033,10 @@
 		 * @return string
 		 */
 		public static function MetaControlControlName ($objColumn) {
-			if (($o = $objColumn->Options) && isset ($o['Name'])) {
+			if (($o = $objColumn->Options) && isset ($o['Name'])) { // Did developer default?
 				return $o['Name'];
 			}
-			if ($objColumn instanceof QColumn) {
-				if ($objColumn->Reference) {
-					return QConvertNotation::WordsFromCamelCase($objColumn->Reference->PropertyName);
-				}
-				return QConvertNotation::WordsFromCamelCase($objColumn->PropertyName);
-			}
-			elseif ($objColumn instanceof QManyToManyReference) {
-				return QConvertNotation::WordsFromCamelCase($objColumn->ObjectDescriptionPlural);
-			}
-			elseif ($objColumn instanceof QReverseReference) {
-				// TODO:
-			}
+			return QConvertNotation::WordsFromCamelCase(QCodeGen::MetaControlPropertyName($objColumn));
 		}
 
 		/**
@@ -1057,7 +1045,7 @@
 		 * @return string
 		 */
 
-		public function MetaControlPropertyName ($objColumn) {
+		public static function MetaControlPropertyName ($objColumn) {
 			if ($objColumn instanceof QColumn) {
 				if ($objColumn->Reference) {
 					return $objColumn->Reference->PropertyName;
@@ -1101,7 +1089,7 @@
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
-		public function MetaControlLabelVariableName(QColumn $objColumn) {
+		public function MetaControlLabelVariableName($objColumn) {
 			$strPropName = $this->MetaControlPropertyName($objColumn);
 			return QLabel::Codegen_VarName($strPropName);
 		}

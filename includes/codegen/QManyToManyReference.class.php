@@ -19,6 +19,7 @@
 	 * @property string $ObjectDescriptionPlural
 	 * @property QColumn[] $ColumnArray
 	 * @property boolean $IsTypeAssociation
+	 * @property array $Options
 	 */
 	class QManyToManyReference extends QBaseClass {
 
@@ -129,7 +130,7 @@
 		protected $blnIsTypeAssociation;
 
 		/**
-		 * Array of overrides read from the override file
+		 * Keyed array of overrides read from the override file
 		 * @var array Overrides
 		 */
 		protected $options;

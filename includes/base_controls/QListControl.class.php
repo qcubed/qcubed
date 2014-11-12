@@ -437,5 +437,53 @@
 					}
 			}
 		}
+
+		/**** Codegen Helpers, used during the Codegen process only. ****/
+
+		public static function Codegen_VarName($strPropName) {
+			return 'lst' . $strPropName;
+		}
+
+		/**
+		 * @param QCodeGen $objCodeGen
+		 * @param QColumn|QManyToManyReference|QReverseReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
+			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
+			$strPropName = QCodeGen::MetaControlPropertyName ($objColumn);
+			$strControlVarName = static::Codegen_VarName($strPropName);
+
+			$strRet = <<<TMPL
+		/**
+		 * @var {$strClassName} {$strControlVarName}
+		 * @access protected
+		 */
+		protected \${$strControlVarName};
+
+
+TMPL;
+
+			if (($objColumn instanceof QColumn && !$objColumn->Reference->IsType) ||
+				($objColumn instanceof QManyToManyReference && !$objColumn->IsTypeAssociation) ||
+				($objColumn instanceof QReverseReference)) {
+				$strRet .= <<<TMPL
+		/**
+		* @var obj{$strPropName}Condition
+		* @access protected
+		*/
+		protected \$obj{$strPropName}Condition;
+
+		/**
+		* @var obj{$strPropName}Clauses
+		* @access protected
+		*/
+		protected \$obj{$strPropName}Clauses;
+
+TMPL;
+			}
+			return $strRet;
+		}
+
 	}
 ?>

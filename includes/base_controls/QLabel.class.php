@@ -57,12 +57,11 @@ TMPL;
 		 * @param QTable $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objReference) {
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 			$strControlType = 'QLabel';
 
-			$strPropName = QCodeGen::PropertyNameFromReference($objReference);
-			//$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			$strDateTimeExtra = '';
@@ -130,43 +129,62 @@ TMPL;
 		 *
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param boolean $blnInit	Generate initialization code instead of reload
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
-			$strIfTest = '';
+			$strRet = '';
+
+			// Preamble with an if test if not initializing
 			if (!$blnInit) {
-				$strIfTest = "if (\$this->{$strControlVarName}) ";
+				$strRet = "\t\t\tif (\$this->{$strControlVarName}) ";
 			}
 
-			if ($objColumn->Identity ||
+			if ($objColumn instanceof QColumn){
+				if ($objColumn->Identity ||
 					$objColumn->Timestamp) {
-				$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text =  \$this->blnEditMode ? \$this->{$strObjectName}->{$strPropName} : QApplication::Translate('N\\A');";
-			}
-			else if ($objColumn->Reference) {
-				if ($objColumn->Reference->IsType) {
-					$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$objColumn->PropertyName} ? {$objColumn->Reference->VariableType}::\$NameArray[\$this->{$strObjectName}->{$objColumn->PropertyName}] : null;";
-				} else {
-					$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? \$this->{$strObjectName}->{$strPropName}->__toString() : null;";
+					$strRet = "\t\t\t\$this->{$strControlVarName}->Text =  \$this->blnEditMode ? \$this->{$strObjectName}->{$strPropName} : QApplication::Translate('N\\A');";
 				}
+				else if ($objColumn->Reference) {
+					if ($objColumn->Reference->IsType) {
+						$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$objColumn->PropertyName} ? {$objColumn->Reference->VariableType}::\$NameArray[\$this->{$strObjectName}->{$objColumn->PropertyName}] : null;";
+					} else {
+						$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? \$this->{$strObjectName}->{$strPropName}->__toString() : null;";
+					}
+				}
+				else {
+					switch ($objColumn->VariableType) {
+						case "boolean":
+							$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? QApplication::Translate('Yes') : QApplication::Translate('No');";
+							break;
+
+						case "QDateTime":
+							$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? \$this->{$strObjectName}->{$strPropName}->qFormat(\$this->str{$strPropName}DateTimeFormat) : null;";
+							break;
+
+						default:
+							$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName};";
+					}
+				}
+			}
+			elseif ($objColumn instanceof QReverseReference) {
+
+			}
+			elseif ($objColumn instanceof QManyToManyReference) {
+				if ($objColumn->IsTypeAssociation) {
+
+				}
+				else {
+
+				}
+
 			}
 			else {
-				switch ($objColumn->VariableType) {
-					case "boolean":
-						$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? QApplication::Translate('Yes') : QApplication::Translate('No');";
-						break;
-
-					case "QDateTime":
-						$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? \$this->{$strObjectName}->{$strPropName}->qFormat(\$this->str{$strPropName}DateTimeFormat) : null;";
-						break;
-
-					default:
-						$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName};";
-				}
+				throw new Exception ('Unknown column type.');
 			}
 			return $strRet . "\n";
 		}
