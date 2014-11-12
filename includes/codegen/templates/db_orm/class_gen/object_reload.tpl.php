@@ -7,7 +7,7 @@
 			if (!$this->__blnRestored)
 				throw new QCallerException('Cannot call Reload() on a new, unsaved <?= $objTable->ClassName ?> object.');
 
-			$this->DeleteCache();
+			$this->DeleteFromCache();
 
 			// Reload the Object
 			$objReloaded = <?= $objTable->ClassName ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$this-><?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>);

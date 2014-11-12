@@ -145,6 +145,38 @@
 		protected $blnAutoUpdate;
 
 
+		/**
+		 * Returns a string that will cast a variable coming from the database into a php type.
+		 * Doing this in the template saves significant amounts of time over using QType::Cast().
+		 */
+		public function GetCastString () {
+			switch ($this->DbType) {
+				case QDatabaseFieldType::Bit:
+					return ('$mixVal = ($mixVal === null ? null : (bool)$mixVal);');
+
+				case QDatabaseFieldType::Blob:
+				case QDatabaseFieldType::Char:
+				case QDatabaseFieldType::VarChar:
+					return ''; // no need to cast, since its already a string or a null
+
+				case QDatabaseFieldType::Date:
+					return ('$mixVal = ($mixVal === null ? null : new QDateTime($mixVal, null, QDateTime::DateOnlyType));');
+
+				case QDatabaseFieldType::DateTime:
+					return ('$mixVal = ($mixVal === null ? null : new QDateTime($mixVal));');
+
+				case QDatabaseFieldType::Time:
+					return ('$mixVal = ($mixVal === null ? null : new QDateTime($mixVal, null, QDateTime::TimeOnlyType));');
+
+				case QDatabaseFieldType::Float:
+				case QDatabaseFieldType::Integer:
+					return ('$mixVal = ($mixVal === null ? null : (' . $this->VariableType . ')$mixVal);');
+
+				default:
+					throw new Exception ('Invalid database field type');
+					exit;
+			}
+		}
 
 
 		////////////////////
