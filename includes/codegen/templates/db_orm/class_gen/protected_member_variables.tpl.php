@@ -18,10 +18,14 @@
 		const <?= $objColumn->PropertyName ?>Default = <?php
 	if (is_null($objColumn->Default))
 		print 'null';
-	else if (is_numeric($objColumn->Default))
+	elseif (is_numeric($objColumn->Default))
 		print $objColumn->Default;
-	else
+	elseif ($objColumn->Default == 'CURRENT_TIMESTAMP') {
+		print 'QDateTime::Now';
+	}
+	else {
 		print "'" . addslashes($objColumn->Default) . "'";
+	}
 ?>;
 
 <?php if ((!$objColumn->Identity) && ($objColumn->PrimaryKey)) { ?>
