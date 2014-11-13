@@ -408,8 +408,11 @@ abstract class QModelBase extends QBaseClass {
 	 */
 	public static function GetFromCache($key) {
 		if ($key===null) return null;
-		if (QApplication::$blnLocalCache && !empty(static::$objCacheArray[$key])) {
+		if (QApplication::$blnLocalCache === true && !empty(static::$objCacheArray[$key])) {
 			return clone(static::$objCacheArray[$key]);
+		}
+		elseif (QApplication::$blnLocalCache instanceof QAbstractCacheProvider) {
+			return QApplication::$blnLocalCache->Get(QApplication::$blnLocalCache->CreateKey(static::GetTableName(), $key));
 		}
 		return null;
 	}
@@ -420,7 +423,10 @@ abstract class QModelBase extends QBaseClass {
 	public function WriteToCache() {
 		$key = $this->PrimaryKey();
 		if ($key === null) return;
-		if (QApplication::$blnLocalCache) static::$objCacheArray[$key] = clone($this);
+		if (QApplication::$blnLocalCache === true) static::$objCacheArray[$key] = clone($this);
+		if (QApplication::$blnLocalCache instanceof QAbstractCacheProvider) {
+			QApplication::$blnLocalCache->Set(QApplication::$blnLocalCache->CreateKey(static::GetTableName(), $key), $this);
+		}
 	}
 
 	/**
@@ -431,6 +437,10 @@ abstract class QModelBase extends QBaseClass {
 		$key = $this->PrimaryKey();
 		if ($key === null) return;
 		unset (static::$objCacheArray[$key]);
+		if (QApplication::$blnLocalCache instanceof QAbstractCacheProvider) {
+			QApplication::$blnLocalCache->Delete(QApplication::$blnLocalCache->CreateKey(static::GetTableName(), $key));
+		}
+
 	}
 
 
@@ -439,6 +449,9 @@ abstract class QModelBase extends QBaseClass {
 	 */
 	public static function ClearCache() {
 		static::$objCacheArray = array();
+		if (QApplication::$blnLocalCache instanceof QAbstractCacheProvider) {
+			QApplication::$blnLocalCache->DeleteAll();
+		}
 	}
 
 } 
