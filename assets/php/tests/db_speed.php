@@ -69,9 +69,22 @@
 			$a = Person::LoadAll(); // cached loads
 			$timeLoad2Cached += microtime(true);
 
-			$this->pnlTiny->Text = sprintf ("Load No Cache: %f \n", $timeNoCache) .
-				sprintf ("Populate Cache: %f \n", $timeLoad1Cached) .
-				sprintf ("Load With Cache: %f \n", $timeLoad2Cached);
+			QApplication::$blnLocalCache = new QCacheProviderLocalMemory(array());
+
+			$timeLoad3Cached = -microtime(true);
+			$a = Person::LoadAll(); // noncached loads
+			$timeLoad3Cached += microtime(true);
+			$timeLoad4Cached = -microtime(true);
+			$a = Person::LoadAll(); // cached loads
+			$timeLoad4Cached += microtime(true);
+
+
+			$this->pnlTiny->Text = sprintf ("Load No Cache: %2.1f%% \n", 100 * $timeNoCache/ $timeNoCache) .
+				sprintf ("Populate Cache: %2.1f%% \n", 100 * $timeLoad1Cached / $timeNoCache) .
+				sprintf ("Load With Cache: %2.1f%% \n", 100 * $timeLoad2Cached / $timeNoCache) .
+				sprintf ("Populate LocalCacheProvider: %2.1f%% \n", 100 * $timeLoad3Cached / $timeNoCache) .
+				sprintf ("Load LocalCacheProvider: %2.1f%% \n", 100 * $timeLoad4Cached / $timeNoCache)
+			;
 
 			$cond = QQ::Equal (QQN::Project()->ProjectStatusTypeId, ProjectStatusType::Open);
 			$clauses[] = QQ::Expand (QQN::Project()->ManagerPerson);
@@ -94,9 +107,23 @@
 			$a = Project::QueryArray($cond, $clauses); // cached loads
 			$timeLoad2Cached += microtime(true);
 
-			$this->pnlBig->Text = sprintf ("Load No Cache: %f \n", $timeNoCache) .
-				sprintf ("Populate Cache: %f \n", $timeLoad1Cached) .
-				sprintf ("Load With Cache: %f \n", $timeLoad2Cached);
+			QApplication::$blnLocalCache = new QCacheProviderLocalMemory(array());
+
+			$timeLoad3Cached = -microtime(true);
+			$a = Project::QueryArray($cond, $clauses); // noncached loads
+			$timeLoad3Cached += microtime(true);
+			$timeLoad4Cached = -microtime(true);
+			$a = Project::QueryArray($cond, $clauses); // cached loads
+			$timeLoad4Cached += microtime(true);
+
+
+			$this->pnlBig->Text = sprintf ("Load No Cache: %2.1f%% \n", 100 * $timeNoCache / $timeNoCache) .
+				sprintf ("Populate Cache: %2.1f%% \n", 100 * $timeLoad1Cached / $timeNoCache) .
+				sprintf ("Load With Cache: %2.1f%% \n", 100 * $timeLoad2Cached / $timeNoCache) .
+				sprintf ("Populate LocalCacheProvider: %2.1f%% \n", 100 * $timeLoad3Cached / $timeNoCache) .
+				sprintf ("Load LocalCacheProvider: %2.1f%% \n", 100 * $timeLoad4Cached / $timeNoCache)
+			;
+
 		}
 
 	}
