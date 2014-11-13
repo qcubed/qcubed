@@ -478,10 +478,12 @@ TMPL;
 					$strPropName = $objColumn->ObjectDescription;
 					$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 
+					$strRet = "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$strPropName}Array());";
+
 					if ($blnInit) {
-						$strRet = "\t\t\t\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get<?= $objColumn->ObjectDescription?>Array())";
+						$strRet = "\t\t\t" . $strRet;
 					} else {
-						$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get<?= $objColumn->ObjectDescription?>Array())";
+						$strRet = "\t\t\tif (\$this->{$strControlVarName}) " . $strRet;
 					}
 					return $strRet . "\n";
 				}

@@ -2359,7 +2359,7 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
-		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
+		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
 			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
 			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 

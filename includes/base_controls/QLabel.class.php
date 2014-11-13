@@ -21,7 +21,7 @@
 			return 'lbl' . $strPropName;
 		}
 
-		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
+		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
 			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
@@ -171,18 +171,14 @@ TMPL;
 				}
 			}
 			elseif ($objColumn instanceof QManyToManyReference) {
-				$strRet = <<<TMPL
-			\$strAssociatedArray = \$this->{$strObjectName}->Get<{$objColumn->ObjectDescription}Array();
-			\$this->{$strControlVarName}->Text = implode(\$this->str{$objColumn->ObjectDescription}Glue, \$strAssociatedArray);
-
-TMPL;
+				$strRet = "\$this->{$strControlVarName}->Text = implode(\$this->str{$objColumn->ObjectDescription}Glue, \$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Array());";
 			}
 			else {
 				throw new Exception ('Unknown column type.');
 			}
 
 			if (!$blnInit) {
-				$strRet = "\t\t\tif (\$this->{$strControlVarName}) {" . $strRet . "}";
+				$strRet = "\t\t\tif (\$this->{$strControlVarName}) " . $strRet;
 			} else {
 				$strRet = "\t\t\t" . $strRet;
 			}

@@ -48,6 +48,8 @@
 	 * @package Codegen
 	 */
 	abstract class QCodeGenBase extends QBaseClass {
+
+
 		// Class Name Suffix/Prefix
 		protected $strClassPrefix;
 		protected $strClassSuffix;
