@@ -38,13 +38,13 @@
 
 		// Controls for <?= $objTable->ClassName ?>'s Data Fields
 <?php foreach ($objTable->ColumnArray as $objColumn) {
-		if (!isset ($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != 'none') {
+		if (!isset ($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != QFormGen::None) {
 ?>
 		protected $<?= $objCodeGen->MetaControlVariableName($objColumn); ?>;
 <?php } ?>
 <?php } ?>
 
-		// Other ListBoxes (if applicable) via Unique ReverseReferences and ManyToMany References
+		// Other Controls (if applicable) via Unique ReverseReferences and ManyToMany References
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
 		protected $<?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>;
@@ -87,15 +87,17 @@
 
 			// Call MetaControl's methods to create qcontrols based on <?= $objTable->ClassName ?>'s data fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php	if (isset ($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == 'none') continue; ?>
+<?php	if (isset ($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue; ?>
 			$this-><?= $objCodeGen->MetaControlVariableName($objColumn); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objColumn); ?>_Create();
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
+<?php	if (isset ($objReverseReference->Options['FormGen']) && $objReverseReference->Options['FormGen'] == QFormGen::None) continue; ?>
 			$this-><?= $objCodeGen->MetaControlVariableName($objReverseReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>_Create();
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
+<?php	if (isset ($objManyToManyReference->Options['FormGen']) && $objManyToManyReference->Options['FormGen'] == QFormGen::None) continue; ?>
 			$this-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>_Create();
 <?php } ?>
 

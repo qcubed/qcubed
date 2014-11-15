@@ -71,9 +71,9 @@ class QMetaEditDlg extends QDialog {
 
 		$this->generalOptions = array (
 			new QMetaParam ('General', 'FormGen',
-				'Whether or not to generate this object, just a label for the object, just the metacontrol, or both the control and label',
+				'Whether or not to generate this object, just a label for the object, just the control, or both the control and label',
 				QType::ArrayType,
-				array (null=>'Both', 'none'=>'None', 'meta'=>'Meta', 'label'=>'Label')),
+				array (QFormGen::Both=>'Both', QFormGen::None=>'None', QFormGen::ControlOnly=>'Control', QFormGen::LabelOnly=>'Label')),
 			new QMetaParam ('General', 'Name', 'Control\'s Name', QType::String),
 			new QMetaParam ('General', 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QType::String),
 			new QMetaParam ('General', 'NoAutoLoad', 'Prevent automatically populating a list type control. Set this if you are doing more complex list loading.', QType::Boolean)

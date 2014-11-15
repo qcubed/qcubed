@@ -409,58 +409,20 @@
 		}
 
 		/**
-		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
-		 * This is called during the codegen process.
-		 *
-		 * This particular version creates code to manipulate a many to many reference to a type table.
-		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @return string
+		 * Override to insert additional create options pertinent to the control.
+		 * @param $objTable
+		 * @param $objColumn
+		 * @param $strControlVarName
+		 * @return string|void
 		 */
+		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
+			$strRet = parent::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
-			if ($objColumn instanceof QManyToManyReference && $objColumn->IsTypeAssociation) {
-				$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
-				$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
-
-				// Read the control type in case we are generating code for a derived class
-				$strControlType = get_class();
-
-				$strRet=<<<TMPL
-
-		/**
-		 * Create and setup {$strControlType} {$strControlVarName}
-		 * @param string \$strControlId optional ControlId to use
-		 * @return {$strControlType}
-		 */
-
-
-		public function {$strControlVarName}_Create(\$strControlId = null) {
-			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
-			\$this->{$strControlVarName}->AddItems({$objColumn->VariableType}::\$NameArray);
-TMPL;
-				$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
-
-				if ($strMethod = QCodeGen::$PreferredRenderMethod) {
-					$strRet .= <<<TMPL
-			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
-
-TMPL;
-				}
-
-				$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objColumn, $strControlVarName);
-
-				$strRet .= <<<TMPL
-			return \$this->{$strControlVarName};
-		}
-
-
-TMPL;
+			if (!$objColumn instanceof QManyToManyReference) {
+				$objCodeGen->ReportError($objTable->Name . ':' . $objColumn->Name . ' is not compatible with a QCheckBoxList.');
 			}
-			return $strRet . "\n";
+
+			return $strRet;
 		}
 
 		/**
@@ -473,24 +435,23 @@ TMPL;
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			if ($objColumn instanceof QManyToManyReference) {
-				if ($objColumn->IsTypeAssociation) {
-					$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-					$strPropName = $objColumn->ObjectDescription;
-					$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+				$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+				$strPropName = $objColumn->ObjectDescription;
+				$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 
-					$strRet = "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$strPropName}Array());";
+				$strRet = "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$strPropName}Array());";
 
-					if ($blnInit) {
-						$strRet = "\t\t\t" . $strRet;
-					} else {
-						$strRet = "\t\t\tif (\$this->{$strControlVarName}) " . $strRet;
-					}
-					return $strRet . "\n";
+				if ($blnInit) {
+					$strRet = "\t\t\t" . $strRet;
+				} else {
+					$strRet = "\t\t\tif (\$this->{$strControlVarName}) " . $strRet;
 				}
+				return $strRet . "\n";
 			}
 		}
 
 		/**
+		 * Since this is designed to edit a many-to-many relationship, creates a separate function for updating
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
@@ -503,10 +464,14 @@ TMPL;
 			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 
 			$strRet = <<<TMPL
-				if (\$this->{$strControlVarName}) {
-					\$this->{$strObjectName}->UnassociateAll{$strPropNames}();
-					\$this->{$strObjectName}->Associate{$strPropName}(\$this->{$strControlVarName}->SelectedValues);
-				}
+		protected function {$strControlVarName}_Update() {
+			if (\$this->{$strControlVarName}) {
+				\$this->{$strObjectName}->UnassociateAll{$strPropNames}();
+				\$this->{$strObjectName}->Associate{$strPropName}(\$this->{$strControlVarName}->SelectedValues);
+			}
+		}
+
+
 TMPL;
 			return $strRet;
 		}

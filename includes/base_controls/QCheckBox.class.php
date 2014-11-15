@@ -305,7 +305,7 @@ TMPL;
 
 TMPL;
 			}
-			$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};

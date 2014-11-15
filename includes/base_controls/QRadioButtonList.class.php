@@ -376,6 +376,24 @@
 		}
 
 		/**
+		 * Override to insert additional create options pertinent to the control.
+		 * @param $objTable
+		 * @param $objColumn
+		 * @param $strControlVarName
+		 * @return string|void
+		 */
+		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
+			$strRet = parent::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+
+			if ($objColumn instanceof QManyToManyReference) {
+				$objCodeGen->ReportError($objTable->Name . ':' . $objColumn->Name . ' is not compatible with a QRadioButtonList.');
+			}
+
+			return $strRet;
+		}
+
+
+		/**
 		 * Returns an description of the options available to modify by the designer for the code generator.
 		 *
 		 * @return array

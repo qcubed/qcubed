@@ -22,13 +22,12 @@
 		}
 
 		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
-			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			$strRet = <<<TMPL
 		/**
-		 * @var {$strClassName} {$strControlVarName}
+		 * @var QLabel {$strControlVarName}
 		 * @access protected
 		 */
 		protected \${$strControlVarName};
@@ -78,7 +77,6 @@ TMPL;
 		 * @param string \$strControlId optional ControlId to use{$strDateTimeParamExtra}
 		 * @return $strControlType
 		 */
-
 		public function {$strControlVarName}_Create(\$strControlId = null{$strDateTimeExtra}) {
 
 TMPL;
@@ -113,7 +111,7 @@ TMPL;
 
 			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -186,7 +184,15 @@ TMPL;
 			return $strRet . "\n";
 		}
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		/**
+		 * Return blank string since labels do not send data to the database.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			return '';
 		}
 }

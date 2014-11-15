@@ -1107,7 +1107,7 @@
 
 			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {
-				if (isset ($o['FormGen']) && $o['FormGen'] == 'label') {
+				if (isset ($o['FormGen']) && $o['FormGen'] == QFormGen::LabelOnly) {
 					return 'QLabel';
 				}
 				if (isset($o['ControlClass'])) {
@@ -1385,6 +1385,10 @@
 				return $strName . "es";
 
 			return $strName . "s";
+		}
+
+		public function ReportError ($strError) {
+			$this->strErrors .= $strError . "\r\n";
 		}
 
 		////////////////////

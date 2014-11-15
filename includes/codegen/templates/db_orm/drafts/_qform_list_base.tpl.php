@@ -71,7 +71,7 @@
 			// Create the Other Columns (note that you can use strings for <?= $objTable->Name ?>'s properties, or you
 			// can traverse down QQN::<?= $objTable->Name ?>() to display fields that are down the hierarchy)
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php	if (isset($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == 'none' || $objColumn->Options['FormGen'] == 'meta')) continue; ?>
+<?php	if (isset($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None || $objColumn->Options['FormGen'] == QFormGen::ControlOnly)) continue; ?>
 <?php if (!$objColumn->Reference) { ?>
 			$this->dtg<?= $objTable->ClassNamePlural ?>->MetaAddColumn('<?= $objColumn->PropertyName ?>');
 <?php } ?>

@@ -351,7 +351,6 @@ TMPL;
 		/**
 		 * Create and setup {$strControlType} {$strControlVarName}
 		 * @param string \$strControlId optional ControlId to use
-		 * @param boolean \$blnAutoLoad true if you want to use the default meta control data loader. Set to false if using your own custom loader.
 		 * @param QQCondition \$objConditions override the default condition of QQ::All() to the query, itself
 		 * @param QQClause[] \$objClauses additional optional QQClause object or array of QQClause objects for the query
 		 * @return {$strControlType}
@@ -398,7 +397,7 @@ TMPL;
 
 TMPL;
 			}
-			$strRet .= static::Codegen_MetaCreateOptions ($objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -408,9 +407,7 @@ TMPL;
 			$strRet .= <<<TMPL
 
 		/**
-		 *	Create item list for use by {$strControlVarName}. This method of list generating will filter
-		 *	using javascript, which works OK for a small list. If tied to a big list, use a data binder
-		 *  instead to filter using ajax.
+		 *	Create item list for use by {$strControlVarName}.
 		 */
 		 public function {$strControlVarName}_GetItems() {
 			\$a = array();

@@ -1,7 +1,7 @@
 <?php
 require_once('../qcubed.inc.php');
 
-define ('__DESIGN_MODE__', 1); // normally, you would define this in your config file
+if (!defined('__DESIGN_MODE__')) define ('__DESIGN_MODE__', 1); // normally, you would define this in your config file
 
 // Define the Qform with all our Qcontrols
 class ExamplesForm extends QForm {

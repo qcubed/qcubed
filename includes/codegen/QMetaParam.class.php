@@ -6,11 +6,11 @@
  */
 abstract class QFormGen {
 	/** Generate both a control and a label */
-	const Both = null;
+	const Both = 'both';
 	/** Generate only a label */
-	const Label = 'label';
+	const LabelOnly = 'label';
 	/** Generate only a control */
-	const Control = 'control';
+	const ControlOnly = 'meta';
 	/** Do not generate anything for this database object */
 	const None = 'none';
 }

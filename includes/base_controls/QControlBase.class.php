@@ -2338,7 +2338,7 @@
 					}
 				case "LinkedNode":
 					try {
-						$this->objLinkedNode = QType::Cast($mixValue, 'QQNode');
+						$this->objLinkedNode = QType::Cast($mixValue, 'QQBaseNode');
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2378,21 +2378,22 @@ TMPL;
 
 		/**
 		 * Reads the options from the special data file, and possibly the column
-		 * @param $objColumn
-		 * @param $strControlVarName
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param string $strControlVarName
 		 * @return string
 		 */
-		public static function Codegen_MetaCreateOptions ($objTable, $objReference, $strControlVarName) {
+		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
 			$strRet = '';
 
-			if ($objReference instanceof QColumn) {
-				$objColumn = $objReference;
+			if ($objColumn instanceof QColumn) {
 				$strPropName = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 				$strClass = $objTable->ClassName;
 			}
-			elseif ($objReference instanceof QManyToManyReference ||
-					$objReference instanceof QReverseReference) {
-				$strPropName = $objReference->ObjectDescription;
+			elseif ($objColumn instanceof QManyToManyReference ||
+				$objColumn instanceof QReverseReference) {
+				$strPropName = $objColumn->ObjectDescription;
 				$strClass = $objTable->ClassName;
 			}
 
@@ -2401,7 +2402,7 @@ TMPL;
 
 TMPL;
 
-			if (($options = $objReference->Options) &&
+			if (($options = $objColumn->Options) &&
 				isset ($options['Overrides'])) {
 
 				foreach ($options['Overrides'] as $name=>$val) {
