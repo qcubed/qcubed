@@ -425,30 +425,6 @@
 			return $strRet;
 		}
 
-		/**
-		 * Generate code to reload data from the Model into this control.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
-		 * @return string
-		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
-			if ($objColumn instanceof QManyToManyReference) {
-				$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-				$strPropName = $objColumn->ObjectDescription;
-				$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
-
-				$strRet = "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$strPropName}Array());";
-
-				if ($blnInit) {
-					$strRet = "\t\t\t" . $strRet;
-				} else {
-					$strRet = "\t\t\tif (\$this->{$strControlVarName}) " . $strRet;
-				}
-				return $strRet . "\n";
-			}
-		}
 
 		/**
 		 * Since this is designed to edit a many-to-many relationship, creates a separate function for updating

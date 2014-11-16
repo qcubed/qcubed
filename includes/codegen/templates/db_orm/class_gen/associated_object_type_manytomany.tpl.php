@@ -32,14 +32,8 @@
                 $rowArray[$mixRow['<?= $objManyToManyReference->OppositeColumn; ?>']] =   <?= $objManyToManyReference->VariableType; ?>::ToString($mixRow['<?= $objManyToManyReference->OppositeColumn; ?>']);
             }
 
-            try {
-                //return <?= $objManyToManyReference->VariableType; ?>::LoadArrayBy<?= $objManyToManyReference->OppositeObjectDescription; ?>($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName; ?>, $objOptionalClauses);
-                return $rowArray;
-            } catch (QCallerException $objExc) {
-                $objExc->IncrementOffset();
-                throw $objExc;
-            }                
-        }        
+            return $rowArray;
+        }
         
         /**
          * Counts all many-to-many associated <?= $objManyToManyReference->ObjectDescriptionPlural; ?>

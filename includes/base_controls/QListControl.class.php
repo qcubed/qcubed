@@ -677,7 +677,11 @@ TMPL;
 				$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->PropertyName};\n";
 			}
 			elseif ($objColumn instanceof QManyToManyReference) {
-				$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Array());\n";
+				if ($objColumn->IsTypeAssociation) {
+					$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Array());\n";
+				} else {
+					$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValues = \$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Keys();\n";
+				}
 			}
 			if (!$blnInit) {
 				$strRet = "\t\t\tif (\$this->{$strControlVarName}) { \n" . $strRet . "\t\t\t}\n";
@@ -696,15 +700,10 @@ TMPL;
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
+			$strRet = '';
 			if ($objColumn instanceof QColumn) {
 				$strRet = <<<TMPL
 				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->SelectedValue;
-
-TMPL;
-			}
-			elseif ($objColumn instanceof QManyToManyReference) {
-				$strRet = <<<TMPL
-				\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Array());
 
 TMPL;
 			}
@@ -717,5 +716,48 @@ TMPL;
 			return $strRet;
 		}
 
+		/**
+		 * Generate helper functions for the update process.
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdateMethod(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
+			$strControlVarName = static::Codegen_VarName($strPropName);
+			$strRet = <<<TMPL
+		protected function {$strControlVarName}_Update() {
+			if (\$this->{$strControlVarName}) {
+
+TMPL;
+
+			if ($objColumn instanceof QManyToManyReference) {
+				if ($objColumn->IsTypeAssociation) {
+					$strRet .= <<<TMPL
+				\$this->{$strObjectName}->UnassociateAll{$objColumn->ObjectDescriptionPlural}();
+				\$this->{$strObjectName}->Associate{$objColumn->ObjectDescription}(\$this->{$strControlVarName}->SelectedValues);
+
+TMPL;
+				} else {
+					$strRet .= <<<TMPL
+				\$this->{$strObjectName}->UnassociateAll{$objColumn->ObjectDescriptionPlural}();
+				foreach(\$this->{$strControlVarName}->SelectedValues as \$id) {
+					\$this->{$strObjectName}->Associate{$objColumn->ObjectDescription}ByKey(\$id);
+				}
+
+TMPL;
+				}
+			}
+
+			$strRet .= <<<TMPL
+			}
+		}
+
+TMPL;
+
+			return $strRet;
+		}
 	}
 ?>
