@@ -76,11 +76,12 @@
 		 * @param <?= $objColumn->VariableType ?> $<?= $objColumn->VariableName ?>
 <?php } ?>
 
+		 * @param $objClauses
 		 * @return void
 		 */
-		 public function Load(<?= implode (',', $aStrs) ?>) {
+		 public function Load(<?= implode (',', $aStrs) ?>, $objClauses = null) {
 			if (<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>strlen($<?= $objColumn->VariableName  ?>) && <?php } ?><?php GO_BACK(4); ?>) {
-				$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?> = <?= $objTable->ClassName ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>);
+				$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?> = <?= $objTable->ClassName ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>, $objClauses);
 				$this->blnEditMode = true;
 			}
 			else {

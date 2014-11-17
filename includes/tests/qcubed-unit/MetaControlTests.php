@@ -59,10 +59,16 @@ class MetaControlTests extends QUnitTestCaseBase {
 		$this->assertTrue ($lstControl instanceof QListControl);
 		$this->assertEqual ($lstControl->SelectedValue, 4);
 		$this->assertEqual ($mctPerson->Person->Login->Username, 'kwolfe');
+
+		// test refresh
+		$mctPerson->Load(3);
+		$this->assertEqual ($lstControl->SelectedValue, 2);
+		$this->assertEqual ($mctPerson->Person->Login->Username, 'brobinson');
 	}
 
 	public function testManyToMany() {
-		$objPerson = Person::Load (2, array(QQ::ExpandAsArray(QQN::Person()->ProjectAsTeamMember)));
+		$clauses = array(QQ::ExpandAsArray(QQN::Person()->ProjectAsTeamMember));
+		$objPerson = Person::Load (2, $clauses);
 		$mctPerson = new PersonMetaControl ($this->frmTest, $objPerson);
 		$lstControl = $mctPerson->ProjectAsTeamMemberControl;
 		$this->assertTrue ($lstControl instanceof QListControl);
@@ -70,6 +76,12 @@ class MetaControlTests extends QUnitTestCaseBase {
 		$this->assertEqual ($values[0], 1);
 		$this->assertEqual ($values[1], 2);
 		$this->assertEqual ($values[2], 4);
+
+		// test refresh
+		$mctPerson->Load (3, $clauses);
+		$values = $lstControl->SelectedValues;
+		$this->assertEqual ($values[0], 4);
+		$this->assertEqual (count($values), 1);
 	}
 
 }

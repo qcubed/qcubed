@@ -615,11 +615,12 @@ TMPL;
 			\$a = array();
 			\$objCondition = \$this->obj{$strPropName}Condition;
 			if (is_null(\$objCondition)) \$objCondition = QQ::All();
+			\$objClauses = \$this->obj{$strPropName}Clauses;
 
-			\$this->obj{$strPropName}Clauses[] =
+			\$objClauses[] =
 				QQ::Expand(QQN::{$strVarType}()->{$strRefPropName}->{$objTable->ClassName}, QQ::Equal(QQN::{$strVarType}()->{$strRefPropName}->{$objColumn->PropertyName}, \$this->{$strObjectName}->{$strRefPK}));
 
-			\$obj{$strVarType}Cursor = Project::QueryCursor(\$objCondition, \$this->obj{$strPropName}Clauses);
+			\$obj{$strVarType}Cursor = Project::QueryCursor(\$objCondition, \$objClauses);
 
 			// Iterate through the Cursor
 			while (\${$strRefVarName} = {$strVarType}::InstantiateCursor(\$obj{$strVarType}Cursor)) {
