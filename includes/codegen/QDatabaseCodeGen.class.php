@@ -606,6 +606,7 @@
 				$objManyToManyReference->KeyName = $objForeignKey->KeyName;
 				$objManyToManyReference->Table = $strTableName;
 				$objManyToManyReference->Column = $objForeignKey->ColumnNameArray[0];
+				$objManyToManyReference->PropertyName = $this->ModelColumnPropertyName($objManyToManyReference->Column);
 				$objManyToManyReference->OppositeColumn = $objOppositeForeignKey->ColumnNameArray[0];
 				$objManyToManyReference->AssociatedTable = $objOppositeForeignKey->ReferenceTableName;
 

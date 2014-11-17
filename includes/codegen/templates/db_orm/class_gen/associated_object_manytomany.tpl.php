@@ -10,7 +10,7 @@
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @return <?= $objManyToManyReference->VariableType ?>[]
 		*/
-		public function Get<?= $objManyToManyReference->ObjectDescription ?>Array($objOptionalClauses = null, $objClauses = null) {
+		public function Get<?= $objManyToManyReference->ObjectDescription ?>Array($objClauses = null) {
 			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
 				return array();
 
@@ -39,7 +39,7 @@
 			');
 
 			$keys = array();
-			while ($row = $objResult->GetNextRow()) {
+			while ($row = $objResult->FetchRow()) {
 				$keys[] = $row[0];
 			}
 			return $keys;

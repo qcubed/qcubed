@@ -7,6 +7,7 @@
 	 * @property string $KeyName
 	 * @property string $Table
 	 * @property string $Column
+	 * @property string $PropertyName
 	 * @property string $OppositeColumn
 	 * @property string $OppositeVariableType
 	 * @property string $OppositeVariableName
@@ -47,8 +48,14 @@
 		protected $strColumn;
 
 		/**
+		 * Name of property corresponding to this column as used in the node.
+		 * @var string PropertyName
+		 */
+		protected $strPropertyName;
+
+		/**
 		 * Name of the opposite column (the column that owns the foreign key to the related table)
-		 * @var string Column
+		 * @var string OppositeColumn
 		 */
 		protected $strOppositeColumn;
 
@@ -160,6 +167,8 @@
 					return $this->strTable;
 				case 'Column':
 					return $this->strColumn;
+				case 'PropertyName':
+					return $this->strPropertyName;
 				case 'OppositeColumn':
 					return $this->strOppositeColumn;
 				case 'OppositeVariableType':
@@ -216,6 +225,8 @@
 						return $this->strTable = QType::Cast($mixValue, QType::String);
 					case 'Column':
 						return $this->strColumn = QType::Cast($mixValue, QType::String);
+					case 'PropertyName':
+						return $this->strPropertyName = QType::Cast($mixValue, QType::String);
 					case 'OppositeColumn':
 						return $this->strOppositeColumn = QType::Cast($mixValue, QType::String);
 					case 'OppositeVariableType':

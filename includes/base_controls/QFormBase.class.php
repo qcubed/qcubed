@@ -451,7 +451,8 @@
 					$objControls = $objClass->GetAllControls();
 					foreach ($objControls as $objControl) {
 						if ($objControl != $dlg &&
-							!$objControl->IsDescendantOf($dlg)) {
+								!$objControl->IsDescendantOf($dlg) &&
+								!$objControl instanceof QJsTimer) {
 							$objControl->AddAction (new QContextMenuEvent(), new QAjaxAction ('ctlDesigner_Click'));
 							$objControl->AddAction (new QContextMenuEvent(), new QStopPropagationAction());
 							$objControl->AddAction (new QContextMenuEvent(), new QTerminateAction());

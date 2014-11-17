@@ -585,7 +585,7 @@ TMPL;
 				if ($objColumn instanceof QColumn) {
 					$strVarType = $objColumn->Reference->VariableType;
 				} else {
-					$strVarType = $objColumn->OppositeVariableType;
+					$strVarType = $objColumn->OppositeObjectDescription;
 				}
 				$strRet .= <<<TMPL
 
@@ -598,7 +598,40 @@ TMPL;
 
 
 TMPL;
-			} else {
+			}
+			elseif ($objColumn instanceof QManyToManyReference) {
+				$strRefVarName = $objColumn->VariableName;
+				$strVarType = $objColumn->VariableType;
+				$strRefTable = $objColumn->AssociatedTable;
+				$strRefPropName = $objColumn->OppositeObjectDescription;
+				$strRefPK = $objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName;
+				$strPK = $objTable->PrimaryKeyColumnArray[0]->PropertyName;
+
+				$strRet .= <<<TMPL
+		/**
+		 *	Create item list for use by {$strControlVarName}
+		 */
+		public function {$strControlVarName}_GetItems() {
+			\$a = array();
+			\$objCondition = \$this->obj{$strPropName}Condition;
+			if (is_null(\$objCondition)) \$objCondition = QQ::All();
+
+			\$this->obj{$strPropName}Clauses[] =
+				QQ::Expand(QQN::{$strVarType}()->{$strRefPropName}->{$objTable->ClassName}, QQ::Equal(QQN::{$strVarType}()->{$strRefPropName}->{$objColumn->PropertyName}, \$this->{$strObjectName}->{$strRefPK}));
+
+			\$obj{$strVarType}Cursor = Project::QueryCursor(\$objCondition, \$this->obj{$strPropName}Clauses);
+
+			// Iterate through the Cursor
+			while (\${$strRefVarName} = {$strVarType}::InstantiateCursor(\$obj{$strVarType}Cursor)) {
+				\$objListItem = new QListItem(\${$strRefVarName}->__toString(), \${$strRefVarName}->{$strRefPK}, \${$strRefVarName}->_{$strRefPropName} !== null);
+				\$a[] = \$objListItem;
+			}
+			return \$a;
+		}
+
+TMPL;
+			}
+			else {
 				if ($objColumn instanceof QColumn) {
 					$strRefVarType = $objColumn->Reference->VariableType;
 					$strRefVarName = $objColumn->Reference->VariableName;
@@ -610,13 +643,6 @@ TMPL;
 					$strRefVarName = $objColumn->VariableName;
 					$strRefPropName = $objColumn->PropertyName;
 					$strRefTable = $objColumn->Table;
-				}
-				elseif ($objColumn instanceof QManyToManyReference) {
-
-					$strRefVarType = $objColumn->OppositeVariableType;
-					$strRefVarName = $objColumn->OppositeVariableName;
-					$strRefPropName = $objColumn->OppositePropertyName;
-					$strRefTable = $objColumn->AssociatedTable;
 				}
 				$strRet .= <<<TMPL
 
@@ -632,7 +658,7 @@ TMPL;
 			// Iterate through the Cursor
 			while (\${$strRefVarName} = {$strRefVarType}::InstantiateCursor(\${$strRefVarName}Cursor)) {
 				\$objListItem = new QListItem(\${$strRefVarName}->__toString(), \${$strRefVarName}->{$objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName});
-				if ((\$this->{$strObjectName}->{$strRefPropName}) && (\$this->{$strObjectName}->{$strRefPropName}->{$objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName} == \${$strRefVarName}->{$objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName}))
+				if ((\$this->{$strObjectName}->{$strPropName}) && (\$this->{$strObjectName}->{$strPropName}->{$objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName} == \${$strRefVarName}->{$objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName}))
 					\$objListItem->Selected = true;
 				\$a[] = \$objListItem;
 			}
@@ -673,14 +699,18 @@ TMPL;
 				$strRet .= $strTabs . "\$this->{$strControlVarName}->AddItems(\$this->{$strControlVarName}_GetItems());\n";
 			}
 
-			if ($objColumn instanceof QColumn || ($objColumn instanceof QReverseReference && $objColumn->Unique)) {
+			if ($objColumn instanceof QColumn) {
 				$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->PropertyName};\n";
+			}
+			elseif ($objColumn instanceof QReverseReference && $objColumn->Unique) {
+				$strRet .= $strTabs . "if (\$this->{$strObjectName}->{$objColumn->ObjectPropertyName})\n";
+				$strRet .= $strTabs . "\t\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->ObjectPropertyName}->{$objCodeGen->GetTable($objColumn->Table)->PrimaryKeyColumnArray[0]->PropertyName};\n";
 			}
 			elseif ($objColumn instanceof QManyToManyReference) {
 				if ($objColumn->IsTypeAssociation) {
 					$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Array());\n";
 				} else {
-					$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValues = \$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Keys();\n";
+					//$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValues = \$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Keys();\n";
 				}
 			}
 			if (!$blnInit) {
