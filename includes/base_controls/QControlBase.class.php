@@ -2423,7 +2423,7 @@ TMPL;
 						$strVal = var_export($val, true);
 					}
 					$strRet .= <<<TMPL
-		\$this->{$strControlVarName}->{$name} = {$strVal};
+			\$this->{$strControlVarName}->{$name} = {$strVal};
 
 TMPL;
 				}

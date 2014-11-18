@@ -27,7 +27,7 @@
 	 * @property string $Text is used to display text that is displayed next to the checkbox.  The text is rendered as an html "Label For" the checkbox.
 	 * @property integer $CellPadding specified the HTML Table's CellPadding
 	 * @property integer $CellSpacing specified the HTML Table's CellSpacing
-	 * @property integer $RepeatColumn specifies how many columns should be rendered in the HTML Table
+	 * @property integer $RepeatColumns specifies how many columns should be rendered in the HTML Table
 	 * @property string $RepeatDirection pecifies which direction should the list go first...
 	 * @property boolean $HtmlEntities
 	 */

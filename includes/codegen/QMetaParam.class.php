@@ -1,22 +1,6 @@
 <?php
 
 /**
- * Class QFormGen
- * For specifying the FormGen param value. Declares what to generate for the given database object.
- */
-abstract class QFormGen {
-	/** Generate both a control and a label */
-	const Both = 'both';
-	/** Generate only a label */
-	const LabelOnly = 'label';
-	/** Generate only a control */
-	const ControlOnly = 'meta';
-	/** Do not generate anything for this database object */
-	const None = 'none';
-}
-
-
-/**
  * Class QMetaParam
  *
  * Encapsulates a description of an editable meta parameter.

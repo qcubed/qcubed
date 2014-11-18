@@ -58,6 +58,7 @@ class QMetaEditDlg extends QDialog {
 	 * Recreate the tabs in the dialog
 	 */
 	protected function SetupTabs() {
+		$controlArray = $this->CreateControlArray();
 		$this->tabs->RemoveChildControls(true);
 		$this->categories = array();
 
@@ -75,7 +76,7 @@ class QMetaEditDlg extends QDialog {
 				QType::ArrayType,
 				array (QFormGen::Both=>'Both', QFormGen::None=>'None', QFormGen::ControlOnly=>'Control', QFormGen::LabelOnly=>'Label')),
 			new QMetaParam ('General', 'Name', 'Control\'s Name', QType::String),
-			new QMetaParam ('General', 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QType::String),
+			new QMetaParam ('General', 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QType::ArrayType, $controlArray),
 			new QMetaParam ('General', 'NoAutoLoad', 'Prevent automatically populating a list type control. Set this if you are doing more complex list loading.', QType::Boolean)
 		);
 
@@ -249,7 +250,7 @@ class QMetaEditDlg extends QDialog {
 	protected function WriteParams() {
 		$node = $this->objCurrentControl->LinkedNode;
 		$strTable = $node->_ParentNode->_TableName;
-		$this->objMetacontrolOptions->SetOptions ($strTable, $node->_Name, $this->params);
+		$this->objMetacontrolOptions->SetOptions ($strTable, $node->_PropertyName, $this->params);
 		$this->objMetacontrolOptions->Save();
 	}
 
@@ -260,8 +261,58 @@ class QMetaEditDlg extends QDialog {
 		$node = $this->objCurrentControl->LinkedNode;
 		if ($node) {
 			$strTable = $node->_ParentNode->_TableName;
-			$this->params = $this->objMetacontrolOptions->GetOptions ($strTable, $node->_Name);
+			$this->params = $this->objMetacontrolOptions->GetOptions ($strTable, $node->_PropertyName);
 		}
+	}
+
+	protected function CreateControlArray() {
+		// create the control array
+		$controls = array();
+		include (__QCUBED_CORE__ . '/control_registry.inc.php');
+
+		if (file_exists(__APP_INCLUDES__ . '/control_registry.inc.php')) {
+			include (__APP_INCLUDES__ . '/control_registry.inc.php');
+		}
+
+		if (defined ('__PLUGINS__') &&
+				is_dir(__PLUGINS__)) {
+			$plugins = scandir(__PLUGINS__);
+			foreach ($plugins as $dirName) {
+				if ($dirName != '.' && $dirName != '..') {
+					if (file_exists(__PLUGINS__ . '/' . $dirName . '/control_registry.inc.php')) {
+						include (__PLUGINS__ . '/' . $dirName . '/control_registry.inc.php');
+					}
+				}
+			}
+		}
+
+		// $controls is now an array indexed by QType, with each entry a QControl type name
+
+		// Figure out what type of control we are looking for
+		$node = $this->objCurrentControl->LinkedNode;
+		$type = $node->_Type;
+		if ($node->_Type == QType::ReverseReference) {
+			$type = QType::ArrayType;
+		}
+		elseif ($node->_TableName) { // indicates a reference to another table
+			$type = QType::ArrayType;
+		}
+		elseif ($type == QDatabaseFieldType::VarChar ||
+				$type == QDatabaseFieldType::Blob ||
+				$type == QDatabaseFieldType::Char) {
+			$type = QType::String;
+		}
+
+		if (isset ($controls[$type])) {
+			foreach ($controls[$type] as $strType) {
+				$a[$strType] = $strType;
+			}
+
+			return $a;
+		} else {
+			return null;
+		}
+
 	}
 
 }

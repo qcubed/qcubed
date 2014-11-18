@@ -570,9 +570,8 @@ TMPL;
 TMPL;
 			}
 
-			$strRet .= static::Codegen_MetaRefresh ($objCodeGen, $objTable, $objColumn, true);
-
 			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaRefresh ($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -585,7 +584,7 @@ TMPL;
 				if ($objColumn instanceof QColumn) {
 					$strVarType = $objColumn->Reference->VariableType;
 				} else {
-					$strVarType = $objColumn->OppositeObjectDescription;
+					$strVarType = $objColumn->ObjectDescription;
 				}
 				$strRet .= <<<TMPL
 
@@ -620,7 +619,7 @@ TMPL;
 			\$objClauses[] =
 				QQ::Expand(QQN::{$strVarType}()->{$strRefPropName}->{$objTable->ClassName}, QQ::Equal(QQN::{$strVarType}()->{$strRefPropName}->{$objColumn->PropertyName}, \$this->{$strObjectName}->{$strRefPK}));
 
-			\$obj{$strVarType}Cursor = Project::QueryCursor(\$objCondition, \$objClauses);
+			\$obj{$strVarType}Cursor = {$strVarType}::QueryCursor(\$objCondition, \$objClauses);
 
 			// Iterate through the Cursor
 			while (\${$strRefVarName} = {$strVarType}::InstantiateCursor(\$obj{$strVarType}Cursor)) {

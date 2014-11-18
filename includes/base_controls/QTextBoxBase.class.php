@@ -727,7 +727,6 @@ TMPL;
 			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
 
 TMPL;
-			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			if ($objColumn->NotNull) {
 				$strRet .=<<<TMPL
@@ -758,6 +757,7 @@ TMPL;
 			}
 
 			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};

@@ -485,7 +485,7 @@
 			if ($this->strAssociationTableNameArray) foreach ($this->strAssociationTableNameArray as $strAssociationTableName)
 				$this->AnalyzeAssociationTable($strAssociationTableName);
 
-			// Finall, for each Relationship in all Tables, Warn on Non Single Column PK based FK:
+			// Finally, for each Relationship in all Tables, Warn on Non Single Column PK based FK:
 			if ($this->objTableArray) foreach ($this->objTableArray as $objTable)
 				if ($objTable->ColumnArray) foreach ($objTable->ColumnArray as $objColumn)
 					if ($objColumn->Reference && !$objColumn->Reference->IsType) {
@@ -630,7 +630,7 @@
 
 				$objManyToManyReference->OppositeObjectDescription = $strGraphPrefixArray[($intIndex == 0) ? 1 : 0] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objOppositeForeignKey->ReferenceTableName, $objForeignKey->ReferenceTableName, false);
 				$objManyToManyReference->IsTypeAssociation = ($objTable instanceof QTypeTable);
-				$objManyToManyReference->Options = $this->objMetacontrolOptions->GetOptions($strTableName, $objManyToManyReference->AssociatedTable);
+				$objManyToManyReference->Options = $this->objMetacontrolOptions->GetOptions($objForeignKey->ReferenceTableName, $objManyToManyReference->ObjectDescription);
 
 			}
 
@@ -960,7 +960,11 @@
 								} else if ($objColumn->Unique) {
 									$objReverseReference->ObjectMemberVariable = $this->CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName);
 									$objReverseReference->ObjectPropertyName = $this->CalculateObjectPropertyName($strTableName, $strColumnName, $strReferencedTableName);
+									// get override options for codegen
+									$objReverseReference->Options = $this->objMetacontrolOptions->GetOptions($objReference->Table, $objReverseReference->ObjectDescription);
 								}
+
+
 
 								// Add this ReverseReference to the referenced table's ReverseReferenceArray
 								$objArray = $objReferencedTable->ReverseReferenceArray;
@@ -1083,7 +1087,7 @@
 			}
 
 			// merge with options found in the design editor, letting editor take precedence
-			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->Name, $objField->Name) + $objColumn->Options;
+			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->Name, $objColumn->PropertyName) + $objColumn->Options;
 
 			return $objColumn;
 		}

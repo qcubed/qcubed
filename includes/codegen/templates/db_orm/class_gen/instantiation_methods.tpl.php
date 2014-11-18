@@ -52,9 +52,9 @@
 						$strPostfix = '';
 					}
 					$nodeType = $objChildNode->_Type;
-					if ($nodeType == 'reverse_reference') {
+					if ($nodeType == QType::ReverseReference) {
 						$strPrefix = '_obj';
-					} elseif ($nodeType == 'association') {
+					} elseif ($nodeType == QType::Association) {
 						$objChildNode = $objChildNode->FirstChild();
 						if ($objChildNode->IsType) {
 							$strPrefix = '_int';
