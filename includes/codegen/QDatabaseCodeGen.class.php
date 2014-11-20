@@ -630,7 +630,7 @@
 
 				$objManyToManyReference->OppositeObjectDescription = $strGraphPrefixArray[($intIndex == 0) ? 1 : 0] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objOppositeForeignKey->ReferenceTableName, $objForeignKey->ReferenceTableName, false);
 				$objManyToManyReference->IsTypeAssociation = ($objTable instanceof QTypeTable);
-				$objManyToManyReference->Options = $this->objMetacontrolOptions->GetOptions($objForeignKey->ReferenceTableName, $objManyToManyReference->ObjectDescription);
+				$objManyToManyReference->Options = $this->objMetacontrolOptions->GetOptions($this->ModelClassName($objForeignKey->ReferenceTableName), $objManyToManyReference->ObjectDescription);
 
 			}
 
@@ -961,7 +961,7 @@
 									$objReverseReference->ObjectMemberVariable = $this->CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName);
 									$objReverseReference->ObjectPropertyName = $this->CalculateObjectPropertyName($strTableName, $strColumnName, $strReferencedTableName);
 									// get override options for codegen
-									$objReverseReference->Options = $this->objMetacontrolOptions->GetOptions($objReference->Table, $objReverseReference->ObjectDescription);
+									$objReverseReference->Options = $this->objMetacontrolOptions->GetOptions($objReference->VariableType, $objReverseReference->ObjectDescription);
 								}
 
 
