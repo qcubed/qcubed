@@ -249,8 +249,8 @@ class QMetaEditDlg extends QDialog {
 	 */
 	protected function WriteParams() {
 		$node = $this->objCurrentControl->LinkedNode;
-		$strTable = $node->_ParentNode->_TableName;
-		$this->objMetacontrolOptions->SetOptions ($strTable, $node->_PropertyName, $this->params);
+		$strClassName = $node->_ParentNode->_ClassName;
+		$this->objMetacontrolOptions->SetOptions ($strClassName, $node->_PropertyName, $this->params);
 		$this->objMetacontrolOptions->Save();
 	}
 
@@ -260,8 +260,8 @@ class QMetaEditDlg extends QDialog {
 	protected function ReadParams() {
 		$node = $this->objCurrentControl->LinkedNode;
 		if ($node) {
-			$strTable = $node->_ParentNode->_TableName;
-			$this->params = $this->objMetacontrolOptions->GetOptions ($strTable, $node->_PropertyName);
+			$strClassName = $node->_ParentNode->_ClassName;
+			$this->params = $this->objMetacontrolOptions->GetOptions ($strClassName, $node->_PropertyName);
 		}
 	}
 

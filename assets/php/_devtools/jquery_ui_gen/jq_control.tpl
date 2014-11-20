@@ -245,6 +245,15 @@
 					}
 			}
 		}
+
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+<% foreach ($objJqDoc->options as $option) { %>
+				new QMetaParam (get_called_class(), '<%= $option->propName %>', '<%= trim($option->description) %>', <%= $option->phpQType %>),
+<% }; GO_BACK(1); %>
+
+			));
+		}
 	}
 
 ?>

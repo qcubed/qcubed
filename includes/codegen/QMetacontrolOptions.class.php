@@ -68,16 +68,16 @@ class QMetacontrolOptions extends QBaseClass {
 	/**
 	 * Bulk option setting.
 	 *
-	 * @param $strTableName
+	 * @param $strClassName
 	 * @param $strFieldName
 	 * @param $mixValue
 	 */
-	public function SetOptions ($strTableName, $strFieldName, $mixValue) {
+	public function SetOptions ($strClassName, $strFieldName, $mixValue) {
 		if (empty ($mixValue)) {
-			unset($this->options[$strTableName][$strFieldName]);
+			unset($this->options[$strClassName][$strFieldName]);
 		}
 		else {
-			$this->options[$strTableName][$strFieldName] = $mixValue;
+			$this->options[$strClassName][$strFieldName] = $mixValue;
 		}
 		$this->blnChanged = true;
 	}
@@ -85,26 +85,26 @@ class QMetacontrolOptions extends QBaseClass {
 	/**
 	 * Remove the option
 	 *
-	 * @param $strTableName
+	 * @param $strClassName
 	 * @param $strFieldName
 	 * @param $strOptionName
 	 */
-	public function UnsetOption ($strTableName, $strFieldName, $strOptionName) {
-		unset ($this->options[$strTableName][$strFieldName][$strOptionName]);
+	public function UnsetOption ($strClassName, $strFieldName, $strOptionName) {
+		unset ($this->options[$strClassName][$strFieldName][$strOptionName]);
 		$this->blnChanged = true;
 	}
 
 	/**
 	 * Lookup an option.
 	 *
-	 * @param $strTableName
+	 * @param $strClassName
 	 * @param $strFieldName
 	 * @param $strOptionName
 	 * @return mixed
 	 */
-	public function GetOption ($strTableName, $strFieldName, $strOptionName) {
-		if (isset ($this->options[$strTableName][$strFieldName][$strOptionName])) {
-			return $this->options[$strTableName][$strFieldName][$strOptionName];
+	public function GetOption ($strClassName, $strFieldName, $strOptionName) {
+		if (isset ($this->options[$strClassName][$strFieldName][$strOptionName])) {
+			return $this->options[$strClassName][$strFieldName][$strOptionName];
 		} else {
 			return null;
 		}
@@ -112,13 +112,13 @@ class QMetacontrolOptions extends QBaseClass {
 
 	/**
 	 * Return all the options associated with the given table and field.
-	 * @param $strTableName
+	 * @param $strClassName
 	 * @param $strFieldName
 	 * @return mixed
 	 */
-	public function GetOptions ($strTableName, $strFieldName) {
-		if (isset($this->options[$strTableName][$strFieldName])) {
-			return $this->options[$strTableName][$strFieldName];
+	public function GetOptions ($strClassName, $strFieldName) {
+		if (isset($this->options[$strClassName][$strFieldName])) {
+			return $this->options[$strClassName][$strFieldName];
 		} else {
 			return array();
 		}

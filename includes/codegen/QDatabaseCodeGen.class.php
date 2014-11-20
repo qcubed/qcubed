@@ -1087,7 +1087,7 @@
 			}
 
 			// merge with options found in the design editor, letting editor take precedence
-			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->Name, $objColumn->PropertyName) + $objColumn->Options;
+			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->ClassName, $objColumn->PropertyName) + $objColumn->Options;
 
 			return $objColumn;
 		}
