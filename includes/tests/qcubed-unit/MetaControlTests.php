@@ -1,8 +1,13 @@
 <?php
 /**
- * 
+ * MetaControl tests
  * @package Tests
  */
+
+if(!class_exists('Person')){
+	require_once __INCLUDES__ .'/meta_controls/TypeTestMetaControl.class.php';
+}
+
 class MetaControlTests extends QUnitTestCaseBase {
 	protected $frmTest;
 
@@ -128,7 +133,7 @@ class MetaControlTests extends QUnitTestCaseBase {
 
 	}
 
-	public function testTypeMult() {
+	public function testTypeMulti() {
 		$mctPerson = PersonMetaControl::Create ($this->frmTest, 3);
 		$values = $mctPerson->PersonTypeControl->SelectedValues;
 		$this->assertEqual(count ($values), 3);
