@@ -1,0 +1,50 @@
+{
+    "Project": {
+        "PersonAsTeamMember": {
+            "FormGen": "both",
+            "Overrides": {
+                "RepeatColumns": "3"
+            },
+            "Name": "Team Members"
+        }
+    },
+    "Login": {
+        "Password": {
+            "FormGen": "both",
+            "Overrides": {
+                "TextMode": "QTextMode::Password"
+            }
+        },
+        "IsEnabled": {
+            "FormGen": "both",
+            "ControlClass": "QCheckBox"
+        }
+    },
+    "Address": {
+        "City": {
+            "FormGen": "both",
+            "Overrides": {
+                "Width": "100"
+            }
+        },
+        "Id": {
+            "FormGen": "none"
+        },
+        "Street": {
+            "FormGen": "meta",
+            "ControlClass": "QTextBox"
+        }
+    },
+    "Person": {
+        "Login": {
+            "FormGen": "both",
+            "Overrides": {
+                "Required": true
+            }
+        },
+        "FirstName": {
+            "FormGen": "both",
+            "ControlClass": "QEmailTextBox"
+        }
+    }
+}
