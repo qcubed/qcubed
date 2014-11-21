@@ -6,7 +6,7 @@ you will need to:
 'sql_server.sql' to set up the examples database, depending on the type of database
 you are using.
 
-2. Edit yuor configuration.inc.php file to point to the new database.
+2. Edit your configuration.inc.php file to point to the examples database.
 
 3. Copy the codegen_options.json file to your configuration directory.
 

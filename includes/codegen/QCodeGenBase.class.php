@@ -475,9 +475,9 @@
 			// CHMOD to full read/write permissions (applicable only to nonwindows)
 			// Need to ignore error handling for this call just in case
 			if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-				QApplication::SetErrorHandler(null);
+				//QApplication::SetErrorHandler(null);
 				chmod($strFilePath, 0666);
-				QApplication::RestoreErrorHandler();
+				//QApplication::RestoreErrorHandler();
 			}
 		}
 
