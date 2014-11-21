@@ -278,7 +278,7 @@
 			}
 
 			if(strlen($this->strPlaceholder) > 0) {
-				$strToReturn .= sprintf('placeholder="%s" ', $this->strPlaceholder);
+				$strToReturn .= sprintf('placeholder="%s" ', QApplication::HtmlEntities($this->strPlaceholder));
 			}
 
 			return $strToReturn;
@@ -694,7 +694,7 @@
 		 * @param QColumn $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strClassName = $objTable->ClassName;
 			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
@@ -778,7 +778,7 @@ TMPL;
 		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
 		 * @return string
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
@@ -792,7 +792,15 @@ TMPL;
 		}
 
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		/**
+		 * Return code to update the Model object with the contents of the control.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);

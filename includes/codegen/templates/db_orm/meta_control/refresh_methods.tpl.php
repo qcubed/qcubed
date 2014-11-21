@@ -4,9 +4,9 @@
 		 * @return void
 		 */
 		public function Refresh($blnReload = false) {
-			if ($blnReload)
+			if ($blnReload) {
 				$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>->Reload();
-
+			}
 <?php
 
 			foreach ($objTable->ColumnArray as $objColumn) {

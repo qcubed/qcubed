@@ -384,8 +384,6 @@ TMPL;
 		public function {$strControlVarName}_Create(\$strControlId = null, QQCondition \$objCondition = null, \$objClauses = null) {
 			\$this->obj{$strPropName}Condition = \$objCondition;
 			\$this->obj{$strPropName}Clauses = \$objClauses;
-			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 
 TMPL;
 			}
@@ -411,14 +409,6 @@ TMPL;
 			if ($objColumn instanceof QColumn && $objColumn->NotNull) {
 				$strRet .= <<<TMPL
 			\$this->{$strControlVarName}->Required = true;
-
-TMPL;
-			}
-
-			$options = $objColumn->Options;
-			if (!$options || !isset ($options['NoAutoLoad'])) {
-				$strRet .= <<<TMPL
-			\$this->{$strControlVarName}->Source = \$this->{$strControlVarName}_GetItems();
 
 TMPL;
 			}
@@ -503,43 +493,46 @@ TMPL;
 		 *
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QColumn|QReverseReference $objColumn
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strPrimaryKey = $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName;
 			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strRet = '';
 
 			if (!$blnInit) {
+				$t = "\t";	// inserts an extra tab below
 				$strRet = <<<TMPL
 			if (\$this->{$strControlVarName}) {
 
 TMPL;
+			} else {
+				$t = '';
 			}
 
 			$options = $objColumn->Options;
 			if (!$options || !isset ($options['NoAutoLoad'])) {
 				$strRet .= <<<TMPL
-			\$this->{$strControlVarName}->Source = \$this->{$strControlVarName}_GetItems();
+$t			\$this->{$strControlVarName}->Source = \$this->{$strControlVarName}_GetItems();
 
 TMPL;
 			}
 			$strRet .= <<<TMPL
-			if (\$this->{$strObjectName}->{$strPropName}) {
-				\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName}->__toString();
-				\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$strPropName}->{$strPrimaryKey};
-			}
-			else {
-				\$this->{$strControlVarName}->Text = '';
-				\$this->{$strControlVarName}->SelectedValue = null;
-			}
+$t			if (\$this->{$strObjectName}->{$strPropName}) {
+$t				\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName}->__toString();
+$t				\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$strPropName}->{$strPrimaryKey};
+$t			}
+$t			else {
+$t				\$this->{$strControlVarName}->Text = '';
+$t				\$this->{$strControlVarName}->SelectedValue = null;
+$t			}
 
 TMPL;
 
 			if (!$blnInit) {
-				$strRet = <<<TMPL
-
+				$strRet .= <<<TMPL
 			}
 
 TMPL;
@@ -548,7 +541,13 @@ TMPL;
 
 		}
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		/**
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
@@ -557,13 +556,13 @@ TMPL;
 			if ($objColumn instanceof QColumn) {
 
 				$strRet = <<<TMPL
-				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$strPropName} = \$this->{$strControlVarName}->SelectedValue;
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->SelectedValue;
 
 TMPL;
 			}
 			elseif ($objColumn instanceof QReverseReference) {
 				$strRet = <<<TMPL
-				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$strPropName} = {$objColumn->VariableType}::Load(\$this->{$strControlVarName}->SelectedValue);
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->ObjectPropertyName} = {$objColumn->VariableType}::Load(\$this->{$strControlVarName}->SelectedValue);
 
 TMPL;
 			}

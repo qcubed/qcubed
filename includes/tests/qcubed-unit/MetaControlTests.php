@@ -44,9 +44,29 @@ class MetaControlTests extends QUnitTestCaseBase {
 	}
 
 	public function testReference() {
+		// test through list control
+		$mctProject = ProjectMetaControl::Create ($this->frmTest, 1);
+		$lstControl = $mctProject->ManagerPersonIdControl;
+		$this->assertTrue ($lstControl instanceof QListBox);
+		$this->assertTrue ($lstControl->SelectedValue, 7, "Read manager as person value.");
+		$lstControl->SelectedValue = 6;
+		$mctProject->SaveProject();
+
+		$mctProject2 = ProjectMetaControl::Create ($this->frmTest, 1);
+		$objPerson = $mctProject2->Project->ManagerPerson;
+		$this->assertEqual($objPerson->Id, 6, "Forward reference saved correctly through meta control.");
+		$mctProject2->Project->ManagerPersonId = 7;
+		$mctProject2->Project->Save();	// restore value
+
+		// test refresh
+		$mctProject->Load (2);
+		$this->assertEqual($mctProject->ManagerPersonIdControl->SelectedValue, 4, "Reloaded forward reference meta control");
+
+
+		// test through auto complete
 		$mctAddress = AddressMetaControl::Create ($this->frmTest);
 		$lstControl = $mctAddress->PersonIdControl;
-		$this->assertTrue ($lstControl instanceof QListControl);
+		$this->assertTrue ($lstControl instanceof QAutocomplete);
 		$lstControl->SelectedValue = 2;
 		$mctAddress->StreetControl->Text = 'Test Street';
 		$mctAddress->CityControl->Text = 'Test City';

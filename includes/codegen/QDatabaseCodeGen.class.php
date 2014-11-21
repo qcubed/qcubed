@@ -926,6 +926,9 @@
 							// Add this reference to the column
 							$objColumn->Reference = $objReference;
 
+							// References will not have been correctly read earlier, so try again with the reference name
+							$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->ClassName, $objReference->PropertyName) + $objColumn->Options;
+
 
 
 							// STEP 2: Setup the REVERSE Reference for Non Type-based References
