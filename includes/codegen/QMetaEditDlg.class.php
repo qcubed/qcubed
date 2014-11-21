@@ -297,11 +297,6 @@ class QMetaEditDlg extends QDialog {
 		elseif ($node->_TableName) { // indicates a reference to another table
 			$type = QType::ArrayType;
 		}
-		elseif ($type == QDatabaseFieldType::VarChar ||
-				$type == QDatabaseFieldType::Blob ||
-				$type == QDatabaseFieldType::Char) {
-			$type = QType::String;
-		}
 
 		if (isset ($controls[$type])) {
 			foreach ($controls[$type] as $strType) {

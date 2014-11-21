@@ -79,6 +79,7 @@ class QMetaParam extends QBaseClass {
 
 			case QType::ArrayType:
 				$ctl = new QListBox($objParent);
+
 				foreach ($this->options as $key=>$val) {
 					$ctl->AddItem ($val, $key === '' ? null : $key); // allow null item keys
 				}
