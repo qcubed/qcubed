@@ -33,6 +33,13 @@
         "Street": {
             "FormGen": "meta",
             "ControlClass": "QTextBox"
+        },
+        "Person": {
+            "FormGen": "both",
+            "ControlClass": "QAutocomplete",
+            "Overrides": {
+                "Placeholder": "Type a \"p\""
+            }
         }
     },
     "Person": {
