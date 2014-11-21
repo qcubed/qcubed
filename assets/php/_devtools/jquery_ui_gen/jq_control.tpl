@@ -246,13 +246,17 @@
 			}
 		}
 
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
 <% foreach ($objJqDoc->options as $option) { %>
-				new QMetaParam (get_called_class(), '<%= $option->propName %>', '<%= trim($option->description) %>', <%= $option->phpQType %>),
-<% }; GO_BACK(1); %>
-
-			));
+	<% if ($option->phpQType) { %>
+				new QMetaParam (get_called_class(), '<%= $option->propName %>', '<%= addslashes(trim($option->description)) %>', <%= $option->phpQType %>),
+	<% } %>
+<% } %>			));
 		}
 	}
 

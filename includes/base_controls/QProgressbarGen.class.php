@@ -310,6 +310,17 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the progressbar if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Max', 'The maximum value of the progressbar.', QType::Integer),
+			));
+		}
 	}
 
 ?>

@@ -425,6 +425,20 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'AutoRefresh', 'This determines whether to refresh (recalculate) the position and size of each selectee at the beginning of each select operation. If you have many items, you may want to set this to false and call the <a><code>refresh()</code></a> method manually.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Delay', 'Time in milliseconds to define when the selecting should start. This helps prevent unwanted selections when clicking on an element.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the selectable if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when selecting should start. If specified, selecting will not start until the mouse has been dragged beyond the specified distance.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Tolerance', 'Specifies which mode to use for testing whether the lasso should select an item. Possible values: 				<ul><li><code>\"fit\"</code>: Lasso overlaps the item entirely.</li> 					<li><code>\"touch\"</code>: Lasso overlaps the item by any amount.</li></ul>', QType::String),
+			));
+		}
 	}
 
 ?>

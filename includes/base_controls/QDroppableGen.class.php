@@ -452,6 +452,22 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'ActiveClass', 'If specified, the class will be added to the droppable while an acceptable draggable is being dragged.', QType::String),
+				new QMetaParam (get_called_class(), 'AddClasses', 'If set to <code>false</code>, will prevent the <code>ui-droppable</code> class from being added. This may be desired as a performance optimization when calling <code>.droppable()</code> init on hundreds of elements.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the droppable if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Greedy', 'By default, when an element is dropped on nested droppables, each droppable will receive the element. However, by setting this option to <code>true</code>, any parent droppables will not receive the element. The <code>drop</code> event will still bubble normally, but the <code>event.target</code> can be checked to see which droppable received the draggable element.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'HoverClass', 'If specified, the class will be added to the droppable while an acceptable draggable is being hovered over the droppable.', QType::String),
+				new QMetaParam (get_called_class(), 'Scope', 'Used to group sets of draggable and droppable items, in addition to the <a><code>accept</code></a> option. A draggable with the same scope value as a droppable will be accepted.', QType::String),
+				new QMetaParam (get_called_class(), 'Tolerance', 'Specifies which mode to use for testing whether a draggable is hovering over a droppable. Possible values: 				<ul><li><code>\"fit\"</code>: Draggable overlaps the droppable entirely.</li> 					<li><code>\"intersect\"</code>: Draggable overlaps the droppable at least 50% in both directions.</li> 					<li><code>\"pointer\"</code>: Mouse pointer overlaps the droppable.</li> 					<li><code>\"touch\"</code>: Draggable overlaps the droppable any amount.</li></ul>', QType::String),
+			));
+		}
 	}
 
 ?>

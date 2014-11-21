@@ -523,6 +523,18 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Collapsible', 'When set to <code>true</code>, the active panel can be closed.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Event', 'The type of event that the tabs should react to in order to activate the tab. To activate on hover, use <code>\"mouseover\"</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'HeightStyle', 'Controls the height of the tabs widget and each panel. Possible values: 				<ul><li><code>\"auto\"</code>: All panels will be set to the height of the tallest panel.</li> 					<li><code>\"fill\"</code>: Expand to the available height based on the tabs\' parent height.</li> 					<li><code>\"content\"</code>: Each panel will be only as tall as its content.</li></ul>', QType::String),
+			));
+		}
 	}
 
 ?>

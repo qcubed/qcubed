@@ -716,6 +716,28 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'AutoOpen', 'If set to <code>true</code>, the dialog will automatically open upon initialization. If <code>false</code>, the dialog will stay hidden until the <a><code>open()</code></a> method is called.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'CloseOnEscape', 'Specifies whether the dialog should close when it has focus and the user presses the escape (ESC) key.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'CloseText', 'Specifies the text for the close button. Note that the close text is visibly hidden when using a standard theme.', QType::String),
+				new QMetaParam (get_called_class(), 'DialogClass', 'The specified class name(s) will be added to the dialog, for additional theming.', QType::String),
+				new QMetaParam (get_called_class(), 'Draggable', 'If set to <code>true</code>, the dialog will be draggable by the title bar. Requires the <a>jQuery UI Draggable widget</a> to be included.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'MaxHeight', 'The maximum height to which the dialog can be resized, in pixels.', QType::Integer),
+				new QMetaParam (get_called_class(), 'MaxWidth', 'The maximum width to which the dialog can be resized, in pixels.', QType::Integer),
+				new QMetaParam (get_called_class(), 'MinHeight', 'The minimum height to which the dialog can be resized, in pixels.', QType::Integer),
+				new QMetaParam (get_called_class(), 'MinWidth', 'The minimum width to which the dialog can be resized, in pixels.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Modal', 'If set to <code>true</code>, the dialog will have modal behavior; other items on the page will be disabled, i.e., cannot be interacted with. Modal dialogs create an overlay below the dialog but above other page elements.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Resizable', 'If set to <code>true</code>, the dialog will be resizable. Requires the <a>jQuery UI Resizable widget</a> to be included.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Title', 'Specifies the title of the dialog. If the value is <code>null</code>, the <code>title</code> attribute on the dialog source element will be used.', QType::String),
+				new QMetaParam (get_called_class(), 'Width', 'The width of the dialog, in pixels.', QType::Integer),
+			));
+		}
 	}
 
 ?>

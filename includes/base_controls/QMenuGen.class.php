@@ -481,6 +481,19 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the menu if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Items', '<p>Selector for the elements that serve as the menu items.</p> 				<strong>Note:</strong> The <code>items</code> option should not be changed after initialization. 			<span>(version added: 1.11.0)</span>', QType::String),
+				new QMetaParam (get_called_class(), 'Menus', '<p>Selector for the elements that serve as the menu container, including sub-menus.</p> 				<strong>Note:</strong> The <code>menus</code> option should not be changed after initialization. Existing submenus will not be updated.', QType::String),
+				new QMetaParam (get_called_class(), 'Role', '<p>Customize the ARIA roles used for the menu and menu items. The default uses <code>\"menuitem\"</code> for items. Setting the <code>role</code> option to <code>\"listbox\"</code> will use <code>\"option\"</code> for items. If set to <code>null</code>, no roles will be set, which is useful if the menu is being controlled by another element that is maintaining focus.</p> 				<strong>Note:</strong> The <code>role</code> option should not be changed after initialization. Existing (sub)menus and menu items will not be updated.', QType::String),
+			));
+		}
 	}
 
 ?>

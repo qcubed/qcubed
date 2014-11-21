@@ -978,6 +978,31 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Axis', 'If defined, the items can be dragged only horizontally or vertically. Possible values: <code>\"x\"</code>, <code>\"y\"</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'Cursor', 'Defines the cursor that is being shown while sorting.', QType::String),
+				new QMetaParam (get_called_class(), 'Delay', 'Time in milliseconds to define when the sorting should start. Adding a delay helps preventing unwanted drags when clicking on an element.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the sortable if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when sorting should start. If specified, sorting will not start until after mouse is dragged beyond distance. Can be used to allow for clicks on elements within a handle.', QType::Integer),
+				new QMetaParam (get_called_class(), 'DropOnEmpty', 'If <code>false</code>, items from this sortable can\'t be dropped on an empty connect sortable (see the <a><code>connectWith</code></a> option.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ForceHelperSize', 'If <code>true</code>, forces the helper to have a size.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ForcePlaceholderSize', 'If true, forces the placeholder to have a size.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Grid', 'Snaps the sorting element or helper to a grid, every x and y pixels. Array values: <code>[ x, y ]</code>.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'Opacity', 'Defines the opacity of the helper while sorting. From <code>0.01</code> to <code>1</code>.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Placeholder', 'A class name that gets applied to the otherwise white space.', QType::String),
+				new QMetaParam (get_called_class(), 'Scroll', 'If set to true, the page scrolls when coming to an edge.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ScrollSensitivity', 'Defines how near the mouse must be to an edge to start scrolling.', QType::Integer),
+				new QMetaParam (get_called_class(), 'ScrollSpeed', 'The speed at which the window should scroll once the mouse pointer gets within the <a><code>scrollSensitivity</code></a> distance.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Tolerance', 'Specifies which mode to use for testing whether the item being moved is hovering over another item. Possible values: 				<ul><li><code>\"intersect\"</code>: The item overlaps the other item by at least 50%.</li> 					<li><code>\"pointer\"</code>: The mouse pointer overlaps the other item.</li></ul>', QType::String),
+				new QMetaParam (get_called_class(), 'ZIndex', 'Z-index for element/helper while being sorted.', QType::Integer),
+			));
+		}
 	}
 
 ?>

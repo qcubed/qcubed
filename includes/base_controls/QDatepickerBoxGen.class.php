@@ -1260,6 +1260,57 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'AltFormat', 'The <a><code>dateFormat</code></a> to be used for the <a><code>altField</code></a> option. This allows one date format to be shown to the user for selection purposes, while a different format is actually sent behind the scenes. For a full list of the possible formats see the <a><code>formatDate</code></a> function', QType::String),
+				new QMetaParam (get_called_class(), 'AppendText', 'The text to display after each date field, e.g., to show the required format.', QType::String),
+				new QMetaParam (get_called_class(), 'AutoSize', 'Set to <code>true</code> to automatically resize the input field to accommodate dates in the current <a><code>dateFormat</code></a>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'OnBeforeShow', '<strong>Default:</strong><code>null</code>A function that takes an input field and current datepicker instance and returns an options object to update the datepicker with. It is called just before the datepicker is displayed.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'OnBeforeShowDay', '<strong>Default:</strong><code>null</code>A function that takes a date as a parameter and must return an array with: 				<ul><li><code>[0]</code>: <code>true</code>/<code>false</code> indicating whether or not this date is selectable</li> 					<li><code>[1]</code>: a CSS class name to add to the date\'s cell or <code>\"\"</code> for the default presentation</li> 					<li><code>[2]</code>: an optional popup tooltip for this date</li></ul> 				The function is called for each day in the datepicker before it is displayed.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'ButtonImage', 'A URL of an image to use to display the datepicker when the <a><code>showOn</code></a> option is set to <code>\"button\"</code> or <code>\"both\"</code>. If set, the <a><code>buttonText</code></a> option becomes the <code>alt</code> value and is not directly displayed.', QType::String),
+				new QMetaParam (get_called_class(), 'ButtonImageOnly', 'Whether the button image should be rendered by itself instead of inside a button element. This option is only relevant if the <a><code>buttonImage</code></a> option has also been set.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ButtonText', 'The text to display on the trigger button. Use in conjunction with the <a><code>showOn</code></a> option set to <code>\"button\"</code> or <code>\"both\"</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'OnCalculateWeek', '<strong>Default:</strong><code>jQuery.datepicker.iso8601Week</code>A function to calculate the week of the year for a given date. The default implementation uses the ISO 8601 definition: weeks start on a Monday; the first week of the year contains the first Thursday of the year.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'ChangeMonth', 'Whether the month should be rendered as a dropdown instead of text.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ChangeYear', 'Whether the year should be rendered as a dropdown instead of text. Use the <a><code>yearRange</code></a> option to control which years are made available for selection.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'CloseText', 'The text to display for the close link. Use the <a><code>showButtonPanel</code></a> option to display this button.', QType::String),
+				new QMetaParam (get_called_class(), 'ConstrainInput', 'When <code>true</code>, entry in the input field is constrained to those characters allowed by the current <a><code>dateFormat</code></a> option.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'CurrentText', 'The text to display for the current day link. Use the <a><code>showButtonPanel</code></a> option to display this button.', QType::String),
+				new QMetaParam (get_called_class(), 'JqDateFormat', 'The format for parsed and displayed dates. For a full list of the possible formats see the <code><a><code>formatDate</code></a></code> function.', QType::String),
+				new QMetaParam (get_called_class(), 'DayNames', 'The list of long day names, starting from Sunday, for use as requested via the <a><code>dateFormat</code></a> option.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'DayNamesMin', 'The list of minimised day names, starting from Sunday, for use as column headers within the datepicker.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'DayNamesShort', 'The list of abbreviated day names, starting from Sunday, for use as requested via the <a><code>dateFormat</code></a> option.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'FirstDay', 'Set the first day of the week: Sunday is <code>0</code>, Monday is <code>1</code>, etc.', QType::Integer),
+				new QMetaParam (get_called_class(), 'GotoCurrent', 'When <code>true</code>, the current day link moves to the currently selected date instead of today.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'HideIfNoPrevNext', 'Normally the previous and next links are disabled when not applicable (see the <a><code>minDate</code></a> and <a><code>maxDate</code></a> options). You can hide them altogether by setting this attribute to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'IsRTL', 'Whether the current language is drawn from right to left.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'MonthNames', 'The list of full month names, for use as requested via the <a><code>dateFormat</code></a> option.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'MonthNamesShort', 'The list of abbreviated month names, as used in the month header on each datepicker and as requested via the <a><code>dateFormat</code></a> option.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'NavigationAsDateFormat', 'Whether the <a><code>prevText</code></a> and <a><code>nextText</code></a> options should be parsed as dates by the <code><a><code>formatDate</code></a></code> function, allowing them to display the target month names for example.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'NextText', 'The text to display for the next month link. With the standard ThemeRoller styling, this value is replaced by an icon.', QType::String),
+				new QMetaParam (get_called_class(), 'OnChangeMonthYear', '<strong>Default:</strong><code>null</code>Called when the datepicker moves to a new month and/or year. The function receives the selected year, month (1-12), and the datepicker instance as parameters. <code>this</code> refers to the associated input field.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'OnClose', '<strong>Default:</strong><code>null</code>Called when the datepicker is closed, whether or not a date is selected. The function receives the selected date as text (<code>\"\"</code> if none) and the datepicker instance as parameters. <code>this</code> refers to the associated input field.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'OnSelect', '<strong>Default:</strong><code>null</code>Called when the datepicker is selected. The function receives the selected date as text and the datepicker instance as parameters. <code>this</code> refers to the associated input field.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'PrevText', 'The text to display for the previous month link. With the standard ThemeRoller styling, this value is replaced by an icon.', QType::String),
+				new QMetaParam (get_called_class(), 'SelectOtherMonths', 'Whether days in other months shown before or after the current month are selectable. This only applies if the <a><code>showOtherMonths</code></a> option is set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowAnim', 'The name of the animation used to show and hide the datepicker. Use <code>\"show\"</code> (the default), <code>\"slideDown\"</code>, <code>\"fadeIn\"</code>, any of the <a>jQuery UI effects</a>. Set to an empty string to disable animation.', QType::String),
+				new QMetaParam (get_called_class(), 'ShowButtonPanel', 'Whether to display a button pane underneath the calendar. The button pane contains two buttons, a Today button that links to the current day, and a Done button that closes the datepicker. The buttons\' text can be customized using the <a><code>currentText</code></a> and <a><code>closeText</code></a> options respectively.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowCurrentAtPos', 'When displaying multiple months via the <a><code>numberOfMonths</code></a> option, the <code>showCurrentAtPos</code> option defines which position to display the current month in.', QType::Integer),
+				new QMetaParam (get_called_class(), 'ShowMonthAfterYear', 'Whether to show the month after the year in the header.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowOn', 'When the datepicker should appear. The datepicker can appear when the field receives focus (<code>\"focus\"</code>), when a button is clicked (<code>\"button\"</code>), or when either event occurs (<code>\"both\"</code>).', QType::String),
+				new QMetaParam (get_called_class(), 'ShowOtherMonths', 'Whether to display dates in other months (non-selectable) at the start or end of the current month. To make these days selectable use the <a><code>selectOtherMonths</code></a> option.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowWeek', 'When <code>true</code>, a column is added to show the week of the year. The <a><code>calculateWeek</code></a> option determines how the week of the year is calculated. You may also want to change the <a><code>firstDay</code></a> option.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'StepMonths', 'Set how many months to move when clicking the previous/next links.', QType::Integer),
+				new QMetaParam (get_called_class(), 'WeekHeader', 'The text to display for the week of the year column heading. Use the <a><code>showWeek</code></a> option to display this column.', QType::String),
+				new QMetaParam (get_called_class(), 'YearRange', 'The range of years displayed in the year drop-down: either relative to today\'s year (<code>\"-nn:+nn\"</code>), relative to the currently selected year (<code>\"c-nn:c+nn\"</code>), absolute (<code>\"nnnn:nnnn\"</code>), or combinations of these formats (<code>\"nnnn:-nn\"</code>). Note that this option only affects what appears in the drop-down, to restrict which dates may be selected use the <a><code>minDate</code></a> and/or <a><code>maxDate</code></a> options.', QType::String),
+				new QMetaParam (get_called_class(), 'YearSuffix', 'Additional text to display after the year in the month headers.', QType::String),
+			));
+		}
 	}
 
 ?>

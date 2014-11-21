@@ -308,6 +308,18 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the button if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Label', 'Text to show in the button. When not specified (<code>null</code>), the element\'s HTML content is used, or its <code>value</code> attribute if the element is an input element of type submit or reset, or the HTML content of the associated label element if the element is an input of type radio or checkbox.', QType::String),
+				new QMetaParam (get_called_class(), 'JqText', 'Whether to show the label. When set to <code>false</code> no text will be displayed, but the <a><code>icons</code></a> option must be enabled, otherwise the <code>text</code> option will be ignored.', QType::Boolean),
+			));
+		}
 	}
 
 ?>

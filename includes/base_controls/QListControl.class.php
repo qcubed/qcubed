@@ -519,23 +519,7 @@ TMPL;
 		public function {$strControlVarName}_Create(\$strControlId = null) {
 
 TMPL;
-				// Allow the codegen process to either create custom ids based on the field/table names, or to be
-				// Specified by the developer.
-				$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
 
-				if ($strControlIdOverride) {
-					$strRet .= <<<TMPL
-			if (!\$strControlId) {
-				\$strControlId = '$strControlIdOverride';
-			}
-
-TMPL;
-				}
-				$strRet .= <<<TMPL
-			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
-
-TMPL;
 			} else {	// Create a control that presents a list taken from the database
 
 				$strRet = <<<TMPL
@@ -550,11 +534,28 @@ TMPL;
 		public function {$strControlVarName}_Create(\$strControlId = null, QQCondition \$objCondition = null, \$objClauses = null) {
 			\$this->obj{$strPropName}Condition = \$objCondition;
 			\$this->obj{$strPropName}Clauses = \$objClauses;
+
+TMPL;
+
+			}
+			// Allow the codegen process to either create custom ids based on the field/table names, or to be
+			// Specified by the developer.
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+
+			$strRet .= <<<TMPL
 			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 
 TMPL;
-			}
 
 			if ($objColumn instanceof QColumn && $objColumn->NotNull) {
 				$strRet .= <<<TMPL

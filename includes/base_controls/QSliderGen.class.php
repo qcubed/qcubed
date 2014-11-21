@@ -483,6 +483,22 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the slider if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Max', 'The maximum value of the slider.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Min', 'The minimum value of the slider.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Orientation', 'Determines whether the slider handles move horizontally (min on left, max on right) or vertically (min on bottom, max on top). Possible values: <code>\"horizontal\"</code>, <code>\"vertical\"</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'Step', 'Determines the size or amount of each interval or step the slider takes between the min and max. The full specified value range of the slider (max - min) should be evenly divisible by the step.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Value', 'Determines the value of the slider, if there\'s only one handle. If there is more than one handle, determines the value of the first handle.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Values', 'This option can be used to specify multiple handles. If the <a><code>range</code></a> option is set to <code>true</code>, the length of <code>values</code> should be 2.', QType::ArrayType),
+			));
+		}
 	}
 
 ?>

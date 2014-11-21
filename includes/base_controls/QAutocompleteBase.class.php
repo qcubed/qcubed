@@ -299,9 +299,14 @@
 			return 'lst' . $strPropName;
 		}
 
-		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
+		/**
+		 * @param QCodeGen $objCodeGen
+		 * @param QColumn|QReverseReference| QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
 			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			$strRet = <<<TMPL
@@ -331,33 +336,62 @@ TMPL;
 
 		/**
 		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
-		 * This is called during the codegen process.
+		 * This is called during the codegen process. This is very similar to the QListControl code, but there are
+		 * some differences. In particular, this control does not support ManyToMany references.
 		 *
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QColumn|QReverseReference $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+
+			if ($objColumn instanceof QManyToManyReference) {
+				throw new Exception ("Autocomplete does not support many-to-many references.");
+			}
+
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strPropName = QCodeGen::MetaControlPropertyName ($objColumn);
 
 			// Read the control type in case we are generating code for a similar class
 			$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 
-			$strRet = <<<TMPL
+			// Create a control designed just for selecting from a type table
+			if ($objColumn instanceof QColumn && $objColumn->Reference->IsType) {
+				$strRet=<<<TMPL
+		/**
+		 * Create and setup {$strControlType} {$strControlVarName}
+		 * @param string \$strControlId optional ControlId to use
+		 * @return {$strControlType}
+		 */
+
+		public function {$strControlVarName}_Create(\$strControlId = null) {
+
+TMPL;
+			} else {	// Create a control that presents a list taken from the database
+
+					$strRet = <<<TMPL
 		/**
 		 * Create and setup {$strControlType} {$strControlVarName}
 		 * @param string \$strControlId optional ControlId to use
 		 * @param QQCondition \$objConditions override the default condition of QQ::All() to the query, itself
-		 * @param QQClause[] \$objClauses additional optional QQClause object or array of QQClause objects for the query
-		 * @return {$strControlType}
+		 * @param QQClause[] \$objClauses additional QQClause object or array of QQClause objects for the query
+		 * @return QListBox
 		 */
+
 		public function {$strControlVarName}_Create(\$strControlId = null, QQCondition \$objCondition = null, \$objClauses = null) {
+			\$this->obj{$strPropName}Condition = \$objCondition;
+			\$this->obj{$strPropName}Clauses = \$objClauses;
+			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 
 TMPL;
+			}
+
+			// Allow the codegen process to either create custom ids based on the field/table names, or to be
+			// Specified by the developer.
 			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
 
 			if ($strControlIdOverride) {
@@ -368,15 +402,13 @@ TMPL;
 
 TMPL;
 			}
-			$strRet .= <<<TMPL
 
-			\$this->obj{$strPropName}Condition = \$objCondition;
-			\$this->obj{$strPropName}Clauses = \$objClauses;
+			$strRet .= <<<TMPL
 			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 
 TMPL;
-			if ($objColumn->NotNull) {
+			if ($objColumn instanceof QColumn && $objColumn->NotNull) {
 				$strRet .= <<<TMPL
 			\$this->{$strControlVarName}->Required = true;
 
@@ -398,34 +430,70 @@ TMPL;
 TMPL;
 			}
 			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaRefresh ($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
 		}
 
 TMPL;
-			$strRet .= <<<TMPL
+
+			if ($objColumn instanceof QColumn && $objColumn->Reference->IsType) {
+				if ($objColumn instanceof QColumn) {
+					$strVarType = $objColumn->Reference->VariableType;
+				} else {
+					$strVarType = $objColumn->ObjectDescription;
+				}
+				$strRet .= <<<TMPL
 
 		/**
-		 *	Create item list for use by {$strControlVarName}.
+		 *	Create item list for use by {$strControlVarName}
+		 */
+		public function {$strControlVarName}_GetItems() {
+			return {$strVarType}::\$NameArray;
+		}
+
+
+TMPL;
+			}
+			else {
+				if ($objColumn instanceof QColumn) {
+					$strRefVarType = $objColumn->Reference->VariableType;
+					$strRefVarName = $objColumn->Reference->VariableName;
+					$strRefPropName = $objColumn->Reference->PropertyName;
+					$strRefTable = $objColumn->Reference->Table;
+				}
+				elseif ($objColumn instanceof QReverseReference) {
+					$strRefVarType = $objColumn->VariableType;
+					$strRefVarName = $objColumn->VariableName;
+					$strRefPropName = $objColumn->PropertyName;
+					$strRefTable = $objColumn->Table;
+				}
+
+				$strRet .= <<<TMPL
+
+		/**
+		 *	Create item list for use by {$strControlVarName}
 		 */
 		 public function {$strControlVarName}_GetItems() {
 			\$a = array();
 			\$objCondition = \$this->obj{$strPropName}Condition;
 			if (is_null(\$objCondition)) \$objCondition = QQ::All();
-			\${$objColumn->Reference->VariableName}Cursor = {$objColumn->Reference->VariableType}::QueryCursor(\$objCondition, \$this->obj{$strPropName}Clauses);
+			\${$strRefVarName}Cursor = {$strRefVarType}::QueryCursor(\$objCondition, \$this->obj{$strPropName}Clauses);
 
 			// Iterate through the Cursor
-			while (\${$objColumn->Reference->VariableName} = {$objColumn->Reference->VariableType}::InstantiateCursor(\${$objColumn->Reference->VariableName}Cursor)) {
-				\$objListItem = new QListItem(\${$objColumn->Reference->VariableName}->__toString(), \${$objColumn->Reference->VariableName}->{$objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName});
-				if ((\$this->{$strObjectName}->{$objColumn->Reference->PropertyName}) && (\$this->{$strObjectName}->{$objColumn->Reference->PropertyName}->{$objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName} == \${$objColumn->Reference->VariableName}->{$objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName}))
+			while (\${$strRefVarName} = {$strRefVarType}::InstantiateCursor(\${$strRefVarName}Cursor)) {
+				\$objListItem = new QListItem(\${$strRefVarName}->__toString(), \${$strRefVarName}->{$objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName});
+				if ((\$this->{$strObjectName}->{$strPropName}) && (\$this->{$strObjectName}->{$strPropName}->{$objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName} == \${$strRefVarName}->{$objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName}))
 					\$objListItem->Selected = true;
 				\$a[] = \$objListItem;
 			}
 			return \$a;
 		 }
 
+
 TMPL;
+			}
 			return $strRet;
 
 		}
@@ -438,14 +506,18 @@ TMPL;
 		 * @param QColumn $objColumn
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPrimaryKey = $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName;
-			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
+			$strControlVarName = static::Codegen_VarName($strPropName);
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 
-			$strRet = <<<TMPL
+			if (!$blnInit) {
+				$strRet = <<<TMPL
 			if (\$this->{$strControlVarName}) {
 
 TMPL;
+			}
+
 			$options = $objColumn->Options;
 			if (!$options || !isset ($options['NoAutoLoad'])) {
 				$strRet .= <<<TMPL
@@ -454,47 +526,48 @@ TMPL;
 TMPL;
 			}
 			$strRet .= <<<TMPL
-				if (\$this->{$strObjectName}->{$objColumn->Reference->PropertyName}) {
-					\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$objColumn->Reference->PropertyName}->__toString();
-					\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->Reference->PropertyName}->{$strPrimaryKey};
-				}
-				else {
-					\$this->{$strControlVarName}->Text = '';
-					\$this->{$strControlVarName}->SelectedValue = null;
-				}
+			if (\$this->{$strObjectName}->{$strPropName}) {
+				\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName}->__toString();
+				\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$strPropName}->{$strPrimaryKey};
+			}
+			else {
+				\$this->{$strControlVarName}->Text = '';
+				\$this->{$strControlVarName}->SelectedValue = null;
 			}
 
 TMPL;
+
+			if (!$blnInit) {
+				$strRet = <<<TMPL
+
+			}
+
+TMPL;
+			}
 			return $strRet;
 
 		}
 
 		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
-			$strRet = <<<TMPL
-				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->SelectedValue;
+
+			$strRet = '';
+			if ($objColumn instanceof QColumn) {
+
+				$strRet = <<<TMPL
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$strPropName} = \$this->{$strControlVarName}->SelectedValue;
 
 TMPL;
+			}
+			elseif ($objColumn instanceof QReverseReference) {
+				$strRet = <<<TMPL
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$strPropName} = {$objColumn->VariableType}::Load(\$this->{$strControlVarName}->SelectedValue);
+
+TMPL;
+			}
 			return $strRet;
 		}
-
-		/**
-		 * Returns a description of the options available to modify by the designer for the code generator.
-		 *
-		 * This is temporary until we implement in jquery ui gen
-		 *
-		 * @return array
-		 */
-		public static function GetMetaParams() {
-
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'MinLength', 'Number of characters typed before lookup starts', QType::Integer),
-				new QMetaParam (get_called_class(), 'AutoFocus', 'Should field auto select as typing occurs.', QType::Boolean)
-			));
-		}
-
-
 	}
 ?>

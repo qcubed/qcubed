@@ -522,6 +522,19 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Culture', 'Sets the culture to use for parsing and formatting the value. If <code>null</code>, the currently set culture in <code>Globalize</code> is used, see <a>Globalize docs</a> for available cultures. Only relevant if the <a><code>numberFormat</code></a> option is set. Requires <a>Globalize</a> to be included.', QType::String),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the spinner if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'NumberFormat', 'Format of numbers passed to  <a><code>Globalize</code></a>, if available. Most common are <code>\"n\"</code> for a decimal number and <code>\"C\"</code> for a currency value. Also see the <a><code>culture</code></a> option.', QType::String),
+				new QMetaParam (get_called_class(), 'Page', 'The number of steps to take when paging via the <a><code>pageUp</code></a>/<a><code>pageDown</code></a> methods.', QType::Integer),
+			));
+		}
 	}
 
 ?>

@@ -493,6 +493,19 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'AutoFocus', 'If set to <code>true</code> the first item will automatically be focused when the menu is shown.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Delay', 'The delay in milliseconds between when a keystroke occurs and when a search is performed. A zero-delay makes sense for local data (more responsive), but can produce a lot of load for remote data, while being less responsive.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the autocomplete if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'MinLength', 'The minimum number of characters a user must type before a search is performed. Zero is useful for local data with just a few items, but a higher value should be used when a single character search could match a few thousand items.', QType::Integer),
+			));
+		}
 	}
 
 ?>

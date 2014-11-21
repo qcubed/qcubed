@@ -422,6 +422,19 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Collapsible', 'Whether all the sections can be closed at once. Allows collapsing the active section.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the accordion if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Event', 'The event that accordion headers will react to in order to activate the associated panel. Multiple events can be specified, separated by a space.', QType::String),
+				new QMetaParam (get_called_class(), 'HeightStyle', '<p>Controls the height of the accordion and each panel. Possible values:</p> 				<ul><li><code>\"auto\"</code>: All panels will be set to the height of the tallest panel.</li> 					<li><code>\"fill\"</code>: Expand to the available height based on the accordion\'s parent height.</li> 					<li><code>\"content\"</code>: Each panel will be only as tall as its content.</li></ul>', QType::String),
+			));
+		}
 	}
 
 ?>

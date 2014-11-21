@@ -767,6 +767,32 @@
 					}
 			}
 		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'AddClasses', 'If set to <code>false</code>, will prevent the <code>ui-draggable</code> class from being added. This may be desired as a performance optimization when calling <code>.draggable()</code> on hundreds of elements.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Axis', 'Constrains dragging to either the horizontal (x) or vertical (y) axis. Possible values: <code>\"x\"</code>, <code>\"y\"</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'Cursor', 'The CSS cursor during the drag operation.', QType::String),
+				new QMetaParam (get_called_class(), 'Delay', 'Time in milliseconds after mousedown until dragging should start. This option can be used to prevent unwanted drags when clicking on an element.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the draggable if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Distance', 'Distance in pixels after mousedown the mouse must move before dragging should start. This option can be used to prevent unwanted drags when clicking on an element.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Grid', 'Snaps the dragging helper to a grid, every x and y pixels. The array must be of the form <code>[ x, y ]</code>.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'Opacity', 'Opacity for the helper while being dragged.', QType::Integer),
+				new QMetaParam (get_called_class(), 'RefreshPositions', 'If set to <code>true</code>, all droppable positions are calculated on every mousemove. 				<em>Caution: This solves issues on highly dynamic pages, but dramatically decreases performance.</em>', QType::Boolean),
+				new QMetaParam (get_called_class(), 'RevertDuration', 'The duration of the revert animation, in milliseconds. Ignored if the <a><code>revert</code></a> option is <code>false</code>.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Scope', 'Used to group sets of draggable and droppable items, in addition to droppable\'s <a><code>accept</code></a> option. A draggable with the same <code>scope</code> value as a droppable will be accepted by the droppable.', QType::String),
+				new QMetaParam (get_called_class(), 'Scroll', 'If set to <code>true</code>, container auto-scrolls while dragging.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ScrollSensitivity', 'Distance in pixels from the edge of the viewport after which the viewport should scroll. Distance is relative to pointer, not the draggable. Ignored if the <a><code>scroll</code></a> option is <code>false</code>.', QType::Integer),
+				new QMetaParam (get_called_class(), 'ScrollSpeed', 'The speed at which the window should scroll once the mouse pointer gets within the <a><code>scrollSensitivity</code></a> distance. Ignored if the <a><code>scroll</code></a> option is <code>false</code>.', QType::Integer),
+				new QMetaParam (get_called_class(), 'SnapMode', 'Determines which edges of snap elements the draggable will snap to. Ignored if the <a><code>snap</code></a> option is <code>false</code>. Possible values: <code>\"inner\"</code>, <code>\"outer\"</code>, <code>\"both\"</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'SnapTolerance', 'The distance in pixels from the snap element edges at which snapping should occur. Ignored if the <a><code>snap</code></a> option is <code>false</code>.', QType::Integer),
+				new QMetaParam (get_called_class(), 'ZIndex', 'Z-index for the helper while being dragged.', QType::Integer),
+			));
+		}
 	}
 
 ?>
