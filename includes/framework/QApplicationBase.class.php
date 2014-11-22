@@ -543,9 +543,10 @@
 		 * can be an entire URL.
 		 *
 		 * @param string $strLocation target patch
+		 * @param bool   $blnPermanent Permanent redirection or temporary?
 		 * @return void
 		 */
-		public static function Redirect($strLocation) {
+		public static function Redirect($strLocation, $blnPermanent = false) {
 			// Clear the output buffer (if any)
 			ob_clean();
 
@@ -567,6 +568,11 @@
 				if (array_key_exists('DOCUMENT_ROOT', $_SERVER) && ($_SERVER['DOCUMENT_ROOT'])) {
 					// If so, we're likley using PHP as a Plugin/Module
 					// Use 'header' to redirect
+					if($blnPermanent == false){
+						header('HTTP/1.1 302 Found');
+					} else {
+						header('HTTP/1.1 301 Moved Permanently');
+					}
 					header(sprintf('Location: %s', $strLocation));
 				} else {
 					// We're likely using this as a CGI
