@@ -22,17 +22,13 @@
     },
     "Address": {
         "City": {
-            "FormGen": "both",
             "Overrides": {
                 "Width": "100"
-            }
+            },
+            "ControlClass": "QTextBox"
         },
         "Id": {
             "FormGen": "none"
-        },
-        "Street": {
-            "FormGen": "meta",
-            "ControlClass": "QTextBox"
         },
         "Person": {
             "FormGen": "both",
@@ -40,6 +36,10 @@
             "Overrides": {
                 "Placeholder": "Type a \"p\""
             }
+        },
+        "Street": {
+            "FormGen": "control",
+            "ControlClass": "QTextBox"
         }
     },
     "Person": {

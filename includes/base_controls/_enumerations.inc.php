@@ -328,7 +328,7 @@
 		/** Generate only a label */
 		const LabelOnly = 'label';
 		/** Generate only a control */
-		const ControlOnly = 'meta';
+		const ControlOnly = 'control';
 		/** Do not generate anything for this database object */
 		const None = 'none';
 	}
