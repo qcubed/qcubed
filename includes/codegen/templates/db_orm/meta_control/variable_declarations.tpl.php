@@ -46,7 +46,7 @@
 		if ($objReverseReference->Unique) $blnHasUnique = true;
 	}
 ?>
-<? if (isset($blnHasUnique) || count($objTable->ManyToManyReferenceArray)) {?>
+<?php if (isset($blnHasUnique) || count($objTable->ManyToManyReferenceArray)) {?>
 
 		// Controls to edit Unique ReverseReferences and ManyToMany References
 
