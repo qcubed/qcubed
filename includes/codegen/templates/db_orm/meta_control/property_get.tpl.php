@@ -14,7 +14,7 @@
 
 				// Controls that point to <?= $objTable->ClassName ?> fields -- will be created dynamically if not yet created
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?><?php
-	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
+	if ($objColumn->Options && isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
 	$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 	$strLabelVarName = $objCodeGen->MetaControlLabelVariableName($objColumn);
 	$strPropertyName = $objColumn->PropertyName;

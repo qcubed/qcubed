@@ -1,6 +1,6 @@
 <?php
 	foreach ($objTable->ColumnArray as $objColumn) {
-		if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
+		if ($objColumn->Options && isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
 
 		$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 		$objReflection = new ReflectionClass ($strControlType);

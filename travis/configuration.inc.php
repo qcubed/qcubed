@@ -1,4 +1,7 @@
 <?php
+
+// Config file for travis build
+
 if (!defined('SERVER_INSTANCE')) {
 	// The Server Instance constant is used to help ease web applications with multiple environments.
 	// Feel free to use, change or ignore.
@@ -77,7 +80,8 @@ if (!defined('SERVER_INSTANCE')) {
 			/*
 			 * These definitions will hardly change, but you may change them based on your setup
 			 */
-			define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
+			// Will be defined in the test.php file
+			//define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
 			// The directory where the external libraries are placed, that are not in composer
 			define ('__EXTERNAL_LIBRARIES__', __DOCROOT__ . '/vendor');
 			// The application includes directory
@@ -104,7 +108,7 @@ if (!defined('SERVER_INSTANCE')) {
 			// The QCubed Directories
 			// Includes subdirectories for QCubed Customizations in CodeGen and QForms, i18n PO files, QCache storage, etc.
 			// Also includes the _core subdirectory for the QCubed Core
-			define ('__PLUGINS__', __PROJECT__ . '/generated/plugins');
+			define ('__PLUGINS__', __DOCROOT__ . __SUBDIRECTORY__ . '/vendor/qcubed/plugin');
 
 			define ('__TMP__', __PROJECT__  . '/tmp');
 			define ('__CACHE__', __TMP__ . '/cache');
@@ -158,7 +162,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__APP_CSS_ASSETS__', __PROJECT_ASSETS__ . '/css');
 			define ('__APP_IMAGE_ASSETS__', __PROJECT_ASSETS__ . '/images');
 			define ('__APP_PHP_ASSETS__', __PROJECT_ASSETS__ . '/php');
-			define ('__PLUGIN_ASSETS__', __PROJECT_ASSETS__ . '/plugins');
+			define ('__PLUGIN_ASSETS__',  __SUBDIRECTORY__ . '/vendor/qcubed/plugin');
 			define ('__IMAGE_CACHE__', __APP_IMAGE_ASSETS__ . '/cache');
 
 			// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
@@ -250,6 +254,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 * "QCacheProviderLocalMemory": a local memory cache provider with a lifespan of the request
 			 *   or session (if KeepInSession is configured).
 			 *
+			 * "QCacheProviderAPC": supports the APC interface. To use it, use PECL to install either
+			 * APC or APCu.
+			 *
 			 * "QCacheProviderNoCahce": provider which does no caching at all
 			 *
 			 * "QMultiLevelCacheProvider": a provider that can combine multiple providers into one.
@@ -270,6 +277,16 @@ if (!defined('SERVER_INSTANCE')) {
 					 //array('host' => '10.0.2.2', 'port' => 11211, ), // adds a second server
 				)
 			) );
+
+			/*
+			 * Support for Watchers and automated updating of objects that display the results of table queries.
+			 *
+			 * The preferred way to setup your watcher is to make changes to the
+			 * public/includes/controls/QWatcher.class.php file. However, you can also set up your watcher here
+			 * using the following define. The main purpose of the define is to help with automated testing
+			 * and the examples site.
+			 */
+			//define ('WATCHER_CLASS', 'QWatcherDB');
 
 			/* Form State Handler. Determines which class is used to serialize the form in-between Ajax callbacks.
 			 *
@@ -317,7 +334,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define('__FORM_STATE_HANDLER__', 'QFormStateHandler');
 				
 			// If using the QFileFormStateHandler, specify the path where QCubed will save the session state files (has to be writeable!)
-			define('__FILE_FORM_STATE_HANDLER_PATH__', __INCLUDES__ . '/tmp');
+			define('__FILE_FORM_STATE_HANDLER_PATH__', __PROJECT__ . '/tmp');
 
 			// If using the QDbBackedSessionHandler, define the DB index where the table to store the formstates is present
 			define('__DB_BACKED_FORM_STATE_HANDLER_DB_INDEX__', 1);
@@ -367,7 +384,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define('ERROR_PAGE_PATH', __PHP_ASSETS__ . '/error_page.php');
 
 			// Define the Filepath for any logged errors
-			define('ERROR_LOG_PATH', __INCLUDES__ . '/error_log');
+			define('ERROR_LOG_PATH', __TMP__ . '/error_log');
 
 			// To Log ALL errors that have occurred, set flag to true
 			//			define('ERROR_LOG_FLAG', true);
@@ -375,6 +392,9 @@ if (!defined('SERVER_INSTANCE')) {
 			// To enable the display of "Friendly" error pages and messages, define them here (path MUST be relative from the DOCROOT)
 			//			define('ERROR_FRIENDLY_PAGE_PATH', __PHP_ASSETS__ . '/friendly_error_page.php');
 			//			define('ERROR_FRIENDLY_AJAX_MESSAGE', 'Oops!  An error has occurred.\r\n\r\nThe error was logged, and we will take a look into this right away.');
+
+			// If using HTML Purifier, the location of the writeable cache directory.
+			//define ('__PURIFIER_CACHE__', __CACHE__ . '/purifier');
 
 			break;
 	}
