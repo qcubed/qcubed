@@ -53,5 +53,11 @@
             "FormGen": "both",
             "ControlClass": "QEmailTextBox"
         }
+    },
+    "TypeTest": {
+        "TestInt": {
+            "FormGen": "both",
+            "ControlClass": "QSlider"
+        }
     }
 }
