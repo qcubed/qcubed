@@ -32,7 +32,7 @@ CREATE TABLE login (
     person_id BIGINT,
     username VARCHAR(20) NOT NULL,
     password VARCHAR(20),
-    is_enabled BIGINT NOT NULL,
+    is_enabled BOOLEAN NOT NULL,
     CONSTRAINT PK_login PRIMARY KEY (id),
     UNIQUE (person_id),
     UNIQUE (username)
@@ -142,6 +142,11 @@ CREATE TABLE type_test (
   date date,
   time time,
   date_time timestamp,
+  test_int BIGINT,
+  test_float float,
+  test_text text,
+  test_bit boolean,
+  test_varchar VARCHAR(10),
   CONSTRAINT PK_type_test PRIMARY KEY (id)
 );
 
