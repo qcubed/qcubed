@@ -113,6 +113,7 @@ class MetaControlTests extends QUnitTestCaseBase {
 		$lstControl = $mctPerson->ProjectAsTeamMemberControl;
 		$this->assertTrue ($lstControl instanceof QListControl);
 		$values = $lstControl->SelectedValues;
+		sort ($values);
 		$this->assertEqual ($values[0], 1);
 		$this->assertEqual ($values[1], 2);
 		$this->assertEqual ($values[2], 4);
@@ -120,6 +121,7 @@ class MetaControlTests extends QUnitTestCaseBase {
 		// test refresh
 		$mctPerson->Load (3, $clauses);
 		$values = $lstControl->SelectedValues;
+		sort ($values);
 		$this->assertEqual ($values[0], 4);
 		$this->assertEqual (count($values), 1);
 
