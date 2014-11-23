@@ -460,19 +460,19 @@ TMPL;
 		 */
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'TextAlign', '', QType::ArrayType,
+				new QMetaParam (get_called_class(), 'TextAlign', '', QMetaParam::SelectionList,
 					array (null=>'Default',
 						'QTextAlign::Left'=>'Left',
 						'QTextAlign::Right'=>'Right'
 					)),
 				new QMetaParam (get_called_class(), 'HtmlEntities', 'Set to false to have the browser interpret the labels as HTML', QType::Boolean),
 				new QMetaParam (get_called_class(), 'RepeatColumns', 'The number of columns of checkboxes to display', QType::Integer),
-				new QMetaParam (get_called_class(), 'RepeatDirection', 'Whether to repeat horizontally or vertically', QType::ArrayType,
+				new QMetaParam (get_called_class(), 'RepeatDirection', 'Whether to repeat horizontally or vertically', QMetaParam::SelectionList,
 					array (null=>'Default',
 						'QRepeatDirection::Horizontal'=>'Horizontal',
 						'QRepeatDirection::Vertical'=>'Vertical'
 					)),
-				new QMetaParam (get_called_class(), 'ButtonMode', 'How to display the buttons', QType::ArrayType,
+				new QMetaParam (get_called_class(), 'ButtonMode', 'How to display the buttons', QMetaParam::SelectionList,
 					array (null=>'Default',
 						'QCheckBoxList::ButtonModeJq'=>'JQuery UI Buttons',
 						'QCheckBoxList::ButtonModeSet'=>'JQuery UI Buttonset'

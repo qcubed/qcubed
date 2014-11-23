@@ -15,6 +15,9 @@
  */
 
 class QMetaParam extends QBaseClass {
+	/** Specifies a list of items to present to the user to select from. */
+	const SelectionList = 'list';
+
 	protected $strCategory;
 	protected $strName;
 	protected $strDescription;
@@ -31,6 +34,11 @@ class QMetaParam extends QBaseClass {
 		$this->controlType = $controlType;
 
 		$this->options = $options;
+
+		if ($controlType == QMetaParam::SelectionList && !$options) {
+			throw new QCallerException ('Selection list without a list of items to select.');
+		}
+
 	}
 
 	/**
@@ -77,13 +85,22 @@ class QMetaParam extends QBaseClass {
 				$ctl = new QIntegerTextBox($objParent);
 				break;
 
-			case QType::ArrayType:
+			case QType::ArrayType:	// an array the user will specify in a comma separated list
+				$ctl = new QTextBox($objParent);
+				break;
+
+			case QMetaParam::SelectionList: // a specific set of choices to present to the user
 				$ctl = new QListBox($objParent);
 
 				foreach ($this->options as $key=>$val) {
 					$ctl->AddItem ($val, $key === '' ? null : $key); // allow null item keys
 				}
 				break;
+
+			default: // i.e. QJsClosure, or other random items. Probably codegened, and not used much.
+				$ctl = new QTextBox($objParent);
+				break;
+
 		}
 
 		$ctl->Name = $this->strName;

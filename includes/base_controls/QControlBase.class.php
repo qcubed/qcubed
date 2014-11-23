@@ -2440,7 +2440,7 @@ TMPL;
 			return array(
 				new QMetaParam ('QControl', 'CssClass', 'Css Class assigned to the control', QType::String),
 				new QMetaParam ('QControl', 'AccessKey', 'Access Key to focus control', QType::String),
-				new QMetaParam ('QControl', 'CausesValidation', 'How and what to validate. Can also be set to a control.', QType::ArrayType,
+				new QMetaParam ('QControl', 'CausesValidation', 'How and what to validate. Can also be set to a control.', QMetaParam::SelectionList,
 					array(
 						null=>'None',
 						'QCausesValidation::AllControls'=>'All Controls',

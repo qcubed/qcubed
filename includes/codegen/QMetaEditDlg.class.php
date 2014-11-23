@@ -58,7 +58,7 @@ class QMetaEditDlg extends QDialog {
 	 * Recreate the tabs in the dialog
 	 */
 	protected function SetupTabs() {
-		$controlArray = $this->CreateControlArray();
+		$strClassNames = $this->CreateClassNameArray();
 		$this->tabs->RemoveChildControls(true);
 		$this->categories = array();
 
@@ -76,7 +76,7 @@ class QMetaEditDlg extends QDialog {
 				QType::ArrayType,
 				array (QFormGen::Both=>'Both', QFormGen::None=>'None', QFormGen::ControlOnly=>'Control', QFormGen::LabelOnly=>'Label')),
 			new QMetaParam ('General', 'Name', 'Control\'s Name', QType::String),
-			new QMetaParam ('General', 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QType::ArrayType, $controlArray),
+			new QMetaParam ('General', 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QMetaParam::SelectionList, $strClassNames),
 			new QMetaParam ('General', 'NoAutoLoad', 'Prevent automatically populating a list type control. Set this if you are doing more complex list loading.', QType::Boolean)
 		);
 
@@ -265,7 +265,12 @@ class QMetaEditDlg extends QDialog {
 		}
 	}
 
-	protected function CreateControlArray() {
+	/**
+	 * Returns an array of class names that can be used to edit the current control's data type.
+	 *
+	 * @return array
+	 */
+	protected function CreateClassNameArray() {
 		// create the control array
 		$controls = array();
 		include (__QCUBED_CORE__ . '/control_registry.inc.php');
@@ -299,8 +304,8 @@ class QMetaEditDlg extends QDialog {
 		}
 
 		if (isset ($controls[$type])) {
-			foreach ($controls[$type] as $strType) {
-				$a[$strType] = $strType;
+			foreach ($controls[$type] as $strClassName) {
+				$a[$strClassName] = $strClassName;	// remove duplicates
 			}
 
 			return $a;

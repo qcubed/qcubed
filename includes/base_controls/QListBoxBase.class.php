@@ -310,7 +310,7 @@ TMPL;
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
 				new QMetaParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
-				new QMetaParam (get_called_class(), 'SelectionMode', 'Single or multiple selections', QType::ArrayType,
+				new QMetaParam (get_called_class(), 'SelectionMode', 'Single or multiple selections', QMetaParam::SelectionList,
 					array (null=>'Default',
 						'QSelectionMode::None'=>'None',
 						'QSelectionMode::Single'=>'Single',

@@ -823,7 +823,7 @@ TMPL;
 				new QMetaParam (get_called_class(), 'Format', 'printf format string to use', QType::String),
 				new QMetaParam (get_called_class(), 'Placeholder', 'HTML5 Placeholder attribute', QType::String),
 				new QMetaParam (get_called_class(), 'ReadOnly', 'Editable or not', QType::Boolean),
-				new QMetaParam (get_called_class(), 'TextMode', 'Field type', QType::ArrayType,
+				new QMetaParam (get_called_class(), 'TextMode', 'Field type', QMetaParam::SelectionList,
 					array (null=>'-',
 						'QTextMode::Search'=>'Search',
 						'QTextMode::MultiLine'=>'MultiLine',
