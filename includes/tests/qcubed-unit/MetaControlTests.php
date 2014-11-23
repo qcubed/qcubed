@@ -4,9 +4,8 @@
  * @package Tests
  */
 
-if(!class_exists('Person')){
-	require_once __INCLUDES__ .'/meta_controls/TypeTestMetaControl.class.php';
-}
+require_once (__INCLUDES__ .'/meta_controls/TypeTestMetaControl.class.php');
+
 
 class MetaControlTests extends QUnitTestCaseBase {
 	protected $frmTest;
