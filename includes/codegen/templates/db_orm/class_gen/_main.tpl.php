@@ -31,34 +31,29 @@
 <?php include("property_comments.tpl.php"); ?>
 
 	 */
-	class <?= $objTable->ClassName ?>Gen extends QBaseClass implements IteratorAggregate {
+	class <?= $objTable->ClassName ?>Gen extends QModelBase implements IteratorAggregate {
+		/** @var boolean Set to true in superclass to be able to watch changes to this class. */
+		public static $blnWatchChanges = false;
 
-		public static $blnWatchChanges = false; // Set to true to watch changes at the table level
+<?php if ($objTable->PrimaryKeyColumnArray)  { ?>
+		/** @var <?= $objTable->ClassName ?>[] Short term cached <?= $objTable->ClassName ?> objects */
+		protected static $objCacheArray = array();
+<?php } ?>
 
-		<?php include("protected_member_variables.tpl.php"); ?>
-
-
-
+	<?php include("protected_member_variables.tpl.php"); ?>
 
 		<?php include("protected_member_objects.tpl.php"); ?>
 
-
 		<?php include("class_initialize.tpl.php"); ?>
 
+		<?php include("pk_support.tpl.php"); ?>
 
 		<?php include("class_load_and_count_methods.tpl.php"); ?>
-
-
-
 
 		<?php include("qcubed_query_methods.tpl.php"); ?>
 
 
-
-
 		<?php include("instantiation_methods.tpl.php"); ?>
-
-
 
 
 		<?php include("index_load_methods.tpl.php"); ?>
@@ -125,5 +120,4 @@
 
 
 	<?php include("qcubed_query_classes.tpl.php"); ?>
-
 ?>

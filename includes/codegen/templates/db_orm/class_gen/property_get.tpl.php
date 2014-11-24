@@ -86,7 +86,7 @@
 ?>
 				case '_<?= $objReference->ObjectDescription ?>':
 					/**
-					 * Gets the value for the private <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
+					 * Gets the value for the protected <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
 					 * if set due to an expansion on the <?= $objReference->Table ?> association table
 					 * @return <?= $varType ?>
 
@@ -95,7 +95,7 @@
 
 				case '_<?= $objReference->ObjectDescription ?>Array':
 					/**
-					 * Gets the value for the private <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
+					 * Gets the value for the protected <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
 					 * if set due to an ExpandAsArray on the <?= $objReference->Table ?> association table
 					 * @return <?= $varType ?>[]
 					 */
@@ -105,7 +105,7 @@
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
 				case '_<?= $objReference->ObjectDescription ?>':
 					/**
-					 * Gets the value for the private _obj<?= $objReference->ObjectDescription ?> (Read-Only)
+					 * Gets the value for the protected _obj<?= $objReference->ObjectDescription ?> (Read-Only)
 					 * if set due to an expansion on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
 					 * @return <?= $objReference->VariableType ?>
 
@@ -114,7 +114,7 @@
 
 				case '_<?= $objReference->ObjectDescription ?>Array':
 					/**
-					 * Gets the value for the private _obj<?= $objReference->ObjectDescription ?>Array (Read-Only)
+					 * Gets the value for the protected _obj<?= $objReference->ObjectDescription ?>Array (Read-Only)
 					 * if set due to an ExpandAsArray on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
 					 * @return <?= $objReference->VariableType ?>[]
 					 */

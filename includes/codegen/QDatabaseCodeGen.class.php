@@ -1242,6 +1242,44 @@
 		}
 
 
+		/**
+		 * Returns a string that will cast a variable coming from the database into a php type.
+		 * Doing this in the template saves significant amounts of time over using QType::Cast() or GetColumn.
+		 * @param QColumn $objColumn
+		 * @return string
+		 * @throws Exception
+		 */
+		public function GetCastString (QColumn $objColumn) {
+			switch ($objColumn->DbType) {
+				case QDatabaseFieldType::Bit:
+					return ('$mixVal = (bool)$mixVal;');
+
+				case QDatabaseFieldType::Blob:
+				case QDatabaseFieldType::Char:
+				case QDatabaseFieldType::VarChar:
+					return ''; // no need to cast, since its already a string or a null
+
+				case QDatabaseFieldType::Date:
+					return ('$mixVal = new QDateTime($mixVal, null, QDateTime::DateOnlyType);');
+
+				case QDatabaseFieldType::DateTime:
+					return ('$mixVal = new QDateTime($mixVal);');
+
+				case QDatabaseFieldType::Time:
+					return ('$mixVal = new QDateTime($mixVal, null, QDateTime::TimeOnlyType);');
+
+				case QDatabaseFieldType::Float:
+				case QDatabaseFieldType::Integer:
+					return ('$mixVal = (' . $objColumn->VariableType . ')$mixVal;');
+
+				default:
+					throw new Exception ('Invalid database field type');
+					exit;
+			}
+		}
+
+
+
 		////////////////////
 		// Public Overriders
 		////////////////////

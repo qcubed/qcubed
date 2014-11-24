@@ -73,6 +73,7 @@
 	QApplicationBase::$PreloadedClassFile['_effect_actions'] = __QCUBED_CORE__ . '/base_controls/_effect_actions.inc.php';
 	QApplicationBase::$PreloadedClassFile['_events'] = __QCUBED_CORE__ . '/base_controls/_events.inc.php';
 	QApplicationBase::$PreloadedClassFile['qq'] = __QCUBED_CORE__ . '/framework/QQuery.class.php';
+	QApplicationBase::$PreloadedClassFile['qmodelbase'] = __QCUBED_CORE__ . '/framework/QModelBase.class.php';
 
 	// Define ClassFile Locations for FormState Handlers
 	QApplicationBase::$ClassFile['qformstatehandler'] = __QCUBED_CORE__ . '/qform_state_handlers/QFormStateHandler.class.php';

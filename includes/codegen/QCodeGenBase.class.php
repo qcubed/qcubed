@@ -281,6 +281,9 @@
 		 * @return boolean success/failure on whether or not all the files generated successfully
 		 */
 		public function GenerateFiles($strTemplatePrefix, $mixArgumentArray) {
+			// If you are editing core templates, and getting EOF errors only on the travis build, this may be your problem. Scan your files and remove short tags.
+			if (QCodeGen::DebugMode && ini_get ('short_open_tag')) _p("Warning: PHP directive short_open_tag is on. Using short tags will cause unexpected EOF on travis build.\n", false);
+
 			// Make sure both our Template and TemplateCustom paths are valid
 			$strTemplatePath = sprintf('%s%s%s', __QCUBED_CORE__ , QCodeGen::TemplatesPath, $strTemplatePrefix);
 			if (!is_dir($strTemplatePath))
