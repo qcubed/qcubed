@@ -118,7 +118,7 @@
 				$strFormState = gzcompress($strFormState, 9);
 			}
 
-			if ($_POST['Qform__FormState'] && !$blnBackButtonFlag) {
+			if (!empty($_POST['Qform__FormState']) && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// update the current form state if possible
 				$strPageId = $_POST['Qform__FormState'];
 
@@ -129,11 +129,10 @@
                                         ' . $objDatabase->EscapeIdentifier('save_time') . ' = ' . $objDatabase->SqlVariable(time()) . ',
                                         ' . $objDatabase->EscapeIdentifier('state_data') . ' = ' . $objDatabase->SqlVariable(base64_encode($strFormState)) . '
                                 WHERE
-                                        ' . $objDatabase->EscapeIdentifier('page_id') . ' = ' . $strPageId;
+                                        ' . $objDatabase->EscapeIdentifier('page_id') . ' = ' . $objDatabase->SqlVariable($strPageId);
 
-				$result = $objDatabase->NonQuery($strQuery);
-
-				if ($result && $objDatabase->AffectedRows > 0) {
+				$objDatabase->NonQuery($strQuery);
+				if ($objDatabase->AffectedRows > 0) {
 					return $strPageId;	// successfully updated the current record. No need to create a new one.
 				}
 			}
