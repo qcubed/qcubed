@@ -10,7 +10,7 @@
 	<body>
 		<header>
 			<div class="breadcrumb">
-<?php		if(!isset($mainPage) && Examples::GetCategoryId()) { ?>
+<?php		if(!isset($mainPage) && is_numeric(Examples::GetCategoryId())) { ?>
 				<span class="category-name"><?php _p((Examples::GetCategoryId() + 1) . '. ' . Examples::$Categories[Examples::GetCategoryId()]['name'], false); ?></span> / 
 <?php		} ?>
 				<strong class="page-name"><?php _p(Examples::PageName(), false); ?></strong>
