@@ -8,15 +8,19 @@
 
 	$strReference = Examples::GetExampleScriptPath($intCategoryId, $intExampleId);
 	$strName = Examples::GetExampleName($intCategoryId, $intExampleId);
-	if (!$strScript)
-		QApplication::Redirect(QApplication::$RequestUri . substr($strReference, strrpos($strReference, '/')));
+
+	if (!$strScript) {
+		$strUrl = QApplication::$RequestUri . substr($strReference, strrpos($strReference, '/'));
+		QApplication::Redirect($strUrl);
+	}
+
 ?>
 <html>
 	<head>
 		<meta charset="<?php _p(QApplication::$EncodingType); ?>" />
 		<title>QCubed PHP 5 Development Framework - View Source</title>
-		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/styles.css'); ?>"></link>
-		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/includes/examples.css'); ?>"></link>
+		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/styles.css'); ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/includes/examples.css'); ?>" />
 	</head>
 	<body>
 		<div id="closeWindow"><a href="javascript:window.close()" class="close-window">Close this Window</a></div>
