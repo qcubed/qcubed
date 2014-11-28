@@ -36,7 +36,7 @@
 	 */
 	class QDatepickerBase extends QDatepickerGen
 	{
-		protected $strDateTimeFormat = "MM/DD/YY";	// same as default for JQuery UI control
+		protected $strDateTimeFormat = "MM/DD/YYYY";	// same as default for JQuery UI control
 		protected $dttDateTime;	// default to no selection
 		
 		public function __construct($objParentObject, $strControlId = null) {
