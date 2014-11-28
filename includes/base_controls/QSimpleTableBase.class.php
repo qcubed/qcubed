@@ -14,8 +14,7 @@
 	 * fetched from the datasource.</p>
 	 *
 	 * <p><i>NOTE</i>: Unlike QDataGrid, this class does not use eval() for evaluating the cell values. Instead, a variety of
-	 * methods can be used to fetch the data for cells, including callable objects such as
-	 * closures (introduced in PHP 5,3).</p>
+	 * methods can be used to fetch the data for cells, including callable objects.</p>
 	 *
 	 * @package Controls
 	 *
@@ -89,14 +88,14 @@
 		}
 
 		/**
-		 * Add a closure column and return it.
+		 * Add a callable column and return it.
 		 * 
 		 * @param string $strName column name
-		 * @param object $objClosure a closure object. Note that this can be an array.
+		 * @param object $objCallable a callable object. Note that this can be an array.
 		 * @param integer $intColumnIndex column position
 		 */
-		public function CreateClosureColumn($strName, $objClosure, $intColumnIndex = -1) {
-			$objColumn = new QSimpleTableClosureColumn($strName, $objClosure);
+		public function CreateCallableColumn($strName, $objCallable, $intColumnIndex = -1) {
+			$objColumn = new QSimpleTableCallableColumn($strName, $objCallable);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}

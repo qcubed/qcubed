@@ -28,7 +28,7 @@
 
 		protected $metaAddress;
 		protected $lblId;
-		protected $lblPersonId;
+		protected $lblPerson;
 		protected $txtStreet;
 		protected $txtCity;
 
@@ -103,9 +103,9 @@
 			$this->lblId->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
 			$this->lblId->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
 
-			$this->lblPersonId = $this->metaAddress->lblPersonId_Create();
-			$this->lblPersonId->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
-			$this->lblPersonId->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
+			$this->lblPerson = $this->metaAddress->lblPerson_Create();
+			$this->lblPerson->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
+			$this->lblPerson->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
 
 			$this->txtStreet = $this->metaAddress->txtStreet_Create();
 			$this->txtStreet->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
@@ -157,7 +157,7 @@
 		 public function render_PersonIdColumn($parControl, Address $objRecord) {
 			if (($objRecord->Id == $this->intEditAddressId) ||
 					(($this->intEditAddressId == -1) && (!$objRecord->Id))) {
-				return $this->lblPersonId->RenderWithError(false);
+				return $this->lblPerson->RenderWithError(false);
 			} else {
 				return QApplication::HtmlEntities($objRecord->PersonId);
 			}
