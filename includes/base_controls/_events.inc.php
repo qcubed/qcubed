@@ -1,26 +1,28 @@
 <?php
-/**
- * Classes in this file represent various "events" for QCubed.
- * Programmer can "hook" into these events and write custom handlers.
- * Event-driven programming is explained in detail here: http://en.wikipedia.org/wiki/Event-driven_programming
- *
- * @package Events
- */
+	/**
+	 * Classes in this file represent various "events" for QCubed.
+	 * Programmer can "hook" into these events and write custom handlers.
+	 * Event-driven programming is explained in detail here: http://en.wikipedia.org/wiki/Event-driven_programming
+	 *
+	 * @package Events
+	 */
 
 	/**
 	 * Base class of QEvents.
-	 * Events are used in conjunction with actions to respond to user actions, like clicking, typing, etc., 
+	 * Events are used in conjunction with actions to respond to user actions, like clicking, typing, etc.,
 	 * or even programmable timer events.
 	 * @property-read string $EventName the javascript event name that will be fired
 	 * @property-read string $Condition a javascript condition that is tested before the event is sent
 	 * @property-read integer $Delay ms delay before action is fired
 	 * @property-read string $JsReturnParam the javascript used to create the strParameter that gets sent to the event handler registered with the event.
 	 * @property-read string $Selector a jquery selector, causes the event to apply to child items matching the selector, and then get sent up the chain to this object
-	 * 
+	 *
 	 *
 	 */
 	abstract class QEvent extends QBaseClass {
+		/** @var string|null The JS condition in which an event would fire  */
 		protected $strCondition = null;
+		/** @var int|mixed The number of second after which the event has to be fired */
 		protected $intDelay = 0;
 		protected $strSelector = null;
 
@@ -74,7 +76,7 @@
 					return defined($strConst) ? constant($strConst) : '';
 				case 'Selector':
 					return $this->strSelector;
-					
+
 				default:
 					try {
 						return parent::__get($strName);
@@ -209,6 +211,7 @@
 
 	/** Override right clicks */
 	class QContextMenuEvent extends QEvent {
+		/** Event Name */
 		const EventName = 'contextmenu';
 	}
 
@@ -236,11 +239,15 @@
 		protected $strCondition = 'event.keyCode == 40';
 	}
 
+	/** When the Tab key is pressed with element in focus */
 	class QTabKeyEvent extends QKeyDownEvent {
+		/** @var string Condition JS with keycode for tab key */
 		protected $strCondition = 'event.keyCode == 9';
 	}
 
+	/** When the Backspace key is pressed with element in focus */
 	class QBackspaceKeyEvent extends QKeyDownEvent {
+		/** @var string Condition JS with keycode for escape key */
 		protected $strCondition = 'event.keyCode == 8';
 	}
 
@@ -255,15 +262,32 @@
 		const EventName = 'input';
 	}
 
-
+	/**
+	 * Class QJqUiEvent: When an event is triggered by jQuery-UI (drag, drop, resize etc.)
+	 * @abstract Implementation in children class
+	 */
 	abstract class QJqUiEvent extends QEvent {
 		// be sure to subclass your events from this class if they are JqUiEvents
 	}
 
+	/**
+	 * Class QJqUiPropertyEvent: When properties of a jQuery-UI widget change
+	 * Currently, Date-Time related jQuery-UI controls are derived from this one
+	 *
+	 * @property-read string $JqProperty The property string
+	 */
 	abstract class QJqUiPropertyEvent extends QEvent {
 		// be sure to subclass your events from this class if they are JqUiEvents
+		/** @var string The property JS string */
 		protected $strJqProperty = '';
 
+		/**
+		 * PHP Magic method to get properties from this class
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'JqProperty':
@@ -281,21 +305,21 @@
 
 
 	/**
-	*
-	* a custom event with event delegation
-	* With this event you can delegate any jquery event of child controls or any html element
-	* to a parent. By using the selector you can limit the event sources this event
-	* gets triggered from. You can use a css class (or any jquery selector) for
-	* $strSelector. Example ( new QJsDelegateEvent("click",".remove",new QAjaxControlAction( ... )); )
-	*
-	* This event can help you reduce the produced javascript to a minimum.
-	* One positive side effect is that this event will also work for html child elements added
-	* in the future (after the event was created).
-	*
-	* @param string $strEventName the name of the event i.e.: "click"
-	* @param string $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()...
-	*
-	*/
+	 *
+	 * a custom event with event delegation
+	 * With this event you can delegate any jquery event of child controls or any html element
+	 * to a parent. By using the selector you can limit the event sources this event
+	 * gets triggered from. You can use a css class (or any jquery selector) for
+	 * $strSelector. Example ( new QJsDelegateEvent("click",".remove",new QAjaxControlAction( ... )); )
+	 *
+	 * This event can help you reduce the produced javascript to a minimum.
+	 * One positive side effect is that this event will also work for html child elements added
+	 * in the future (after the event was created).
+	 *
+	 * @param string $strEventName the name of the event i.e.: "click"
+	 * @param string $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()...
+	 *
+	 */
 	class QOnEvent extends QEvent{
 		/** @var string Name of the event */
 		protected $strEventName;

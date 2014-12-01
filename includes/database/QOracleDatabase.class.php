@@ -580,6 +580,9 @@ class QOracleDatabaseException extends QDatabaseExceptionBase {
 	}
 }
 
+/**
+ * Class to handle results sent by database upon querying
+ */
 class QOracleDatabaseResult extends QDatabaseResultBase {
 	protected $objOracleResult;
 	protected $objDb;
@@ -649,6 +652,14 @@ class QOracleDatabaseRow extends QDatabaseRowBase {
 		$this->strColumnArray = $strColumnArray;
 	}
 
+	/**
+	 * Gets the value of a column from a result row returned by the database
+	 *
+	 * @param string                  $strColumnName Name of te column
+	 * @param null|QDatabaseFieldType $strColumnType Data type
+	 *
+	 * @return mixed
+	 */
 	public function GetColumn($strColumnName, $strColumnType = null) {
 		if (!isset($this->strColumnArray[$strColumnName])) {
 			return null;
@@ -687,6 +698,13 @@ class QOracleDatabaseRow extends QDatabaseRowBase {
 		}
 	}
 
+	/**
+	 * Tells whether a particular column exists in a returned database row
+	 *
+	 * @param string $strColumnName Name of te column
+	 *
+	 * @return bool
+	 */
 	public function ColumnExists($strColumnName) {
 		return array_key_exists($strColumnName, $this->strColumnArray);
 	}
