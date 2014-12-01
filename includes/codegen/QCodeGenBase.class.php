@@ -18,7 +18,7 @@
 		ob_start();
 		print $content_so_far;
 	}
-	
+
 	// returns true if $str begins with $sub
 	function beginsWith( $str, $sub ) {
 	    return ( substr( $str, 0, strlen( $sub ) ) == $sub );
@@ -28,7 +28,7 @@
 	function endsWith( $str, $sub ) {
 	    return ( substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub );
 	}
-	
+
 	// trims off x chars from the front of a string
 	// or the matching string in $off is trimmed off
 	function trimOffFront( $off, $str ) {
@@ -37,7 +37,7 @@
 	    else
 	        return substr( $str, strlen( $off ) );
 	}
-	
+
 	// trims off x chars from the end of a string
 	// or the matching string in $off is trimmed off
 	function trimOffEnd( $off, $str ) {
@@ -56,26 +56,34 @@
 	 */
 	abstract class QCodeGenBase extends QBaseClass {
 		// Class Name Suffix/Prefix
+		/** @var string Class Prefix, as specified in the codegen_settings.xml file */
 		protected $strClassPrefix;
+		/** @var string Class suffix, as specified in the codegen_settings.xml file */
 		protected $strClassSuffix;
 
-		// Errors and Warnings
+		/** string Errors and Warnings collected during the process of codegen **/
 		protected $strErrors;
 
-		// PHP Reserved Words.  They make up:
-		// Invalid Type names -- these are reserved words which cannot be Type names in any user type table
-		// Invalid Table names -- these are reserved words which cannot be used as any table name
-		//please refer to : http://php.net/manual/en/reserved.php
+		/**
+		 * PHP Reserved Words.  They make up:
+		 * Invalid Type names -- these are reserved words which cannot be Type names in any user type table
+		 * Invalid Table names -- these are reserved words which cannot be used as any table name
+		 * Please refer to : http://php.net/manual/en/reserved.php
+		 */
 		const PhpReservedWords = 'new, null, break, return, switch, self, case, const, clone, continue, declare, default, echo, else, elseif, empty, exit, eval, if, try, throw, catch, public, private, protected, function, extends, foreach, for, while, do, var, class, static, abstract, isset, unset, implements, interface, instanceof, include, include_once, require, require_once, abstract, and, or, xor, array, list, false, true, global, parent, print, exception, namespace, goto, final, endif, endswitch, enddeclare, endwhile, use, as, endfor, endforeach, this';
 
+		/** Core templates path */
 		const TemplatesPathCore = __TEMPLATES_PATH_CORE__;
+		/** Plugins templates path */
 		const TemplatesPathPlugin = __TEMPLATES_PATH_PLUGIN__;
 		const TemplatesPathProject = __TEMPLATES_PATH_PROJECT__;
 
-		// DebugMode -- for Template Developers
-		// This will output the current evaluated template/statement to the screen
-		// On "eval" errors, you can click on the "View Rendered Page" to see what currently
-		// is being evaluated, which should hopefully aid in template debugging.
+		/**
+		 * DebugMode -- for Template Developers
+		 * This will output the current evaluated template/statement to the screen
+		 * On "eval" errors, you can click on the "View Rendered Page" to see what currently
+		 * is being evaluated, which should hopefully aid in template debugging.
+		 */
 		const DebugMode = false;
 
 		/**
@@ -134,6 +142,10 @@
 		 */
 		protected static $DirectoriesToExcludeArray = array('.','..','.svn','svn','cvs','.git');
 
+		/**
+		 * Gets the settings in codegen_settings.xml file and returns its text without comments
+		 * @return string
+		 */
 		public static function GetSettingsXml() {
 			$strCrLf = "\r\n";
 
@@ -149,6 +161,11 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * The function which actually performs the steps for code generation
+		 * Code generation begins here.
+		 * @param string $strSettingsXmlFilePath Path to the settings file
+		 */
 		public static function Run($strSettingsXmlFilePath) {
 			QCodeGen::$CodeGenArray = array();
 			QCodeGen::$SettingsFilePath = $strSettingsXmlFilePath;
@@ -274,13 +291,17 @@
 
 		/**
 		 * Given a template prefix (e.g. db_orm_, db_type_, rest_, soap_, etc.), pull
-		 * all the _*.tpl templates from any subfolders of the template prefix in QCodeGen::TemplatesPath and QCodeGen::TemplatesPathCustom,
+		 * all the _*.tpl templates from any subfolders of the template prefix
+		 * in QCodeGen::TemplatesPath and QCodeGen::TemplatesPathCustom,
 		 * and call GenerateFile() on each one.  If there are any template files that reside
 		 * in BOTH TemplatesPath AND TemplatesPathCustom, then only use the TemplatesPathCustom one (which
-		 * in essence overrides the one in TemplatesPath).
+		 * in essence overrides the one in TemplatesPath)
 		 *
-		 * @param string $strTemplatePrefix the prefix of the templates you want to generate against
-		 * @param mixed[] $mixArgumentArray array of arguments to send to EvaluateTemplate
+		 * @param string  $strTemplatePrefix the prefix of the templates you want to generate against
+		 * @param mixed[] $mixArgumentArray  array of arguments to send to EvaluateTemplate
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
 		 * @return boolean success/failure on whether or not all the files generated successfully
 		 */
 		public function GenerateFiles($strTemplatePrefix, $mixArgumentArray) {
@@ -349,6 +370,15 @@
 			}
 		}
 
+		/**
+		 * Returns the settings of the template file as SimpleXMLElement object
+		 *
+		 * @param null|string $strTemplateFilePath Path to the file
+		 * @param null|string $strTemplate         Text of the template (if $strTemplateFilePath is null, this field must be string)
+		 *
+		 * @return SimpleXMLElement
+		 * @throws Exception
+		 */
 		protected function getTemplateSettings($strTemplateFilePath, $strTemplate = null) {
 			if ($strTemplate === null)
 				$strTemplate = file_get_contents($strTemplateFilePath);
@@ -375,11 +405,11 @@
 		/**
 		 * Generates a php code using a template file
 		 *
-		 * @param string $strModuleName
-		 * @param string $strFilename
-		 * @param boolean $blnOverrideFlag whether we are using the _core template, or using a custom one
+		 * @param string  $strModuleName
+		 * @param string  $strTemplateFilePath Path to the template file
 		 * @param mixed[] $mixArgumentArray
-		 * @param boolean $blnSave whether or not to actually perform the save
+		 * @param boolean $blnSave             whether or not to actually perform the save
+		 *
 		 * @throws QCallerException
 		 * @throws Exception
 		 * @return mixed returns the evaluated template or boolean save success.
@@ -453,6 +483,12 @@
 			return $strTemplate;
 		}
 
+		/**
+		 * Sets the file permissions (Linux only) for a file generated by the Code Generator
+		 * @param $strFilePath Path of the generated file
+		 *
+		 * @throws QCallerException
+		 */
 		protected function setGeneratedFilePermissions($strFilePath) {
 			// CHMOD to full read/write permissions (applicable only to nonwindows)
 			// Need to ignore error handling for this call just in case
@@ -503,6 +539,12 @@
 		// COMMONLY OVERRIDDEN CONVERSION FUNCTIONS
 		///////////////////////
 
+		/**
+		 * Given name of a table, will return the class name (according to the settings in codegen_settings.xml)
+		 * @param string $strTableName Name of the table
+		 *
+		 * @return string
+		 */
 		protected function ClassNameFromTableName($strTableName) {
 			$strTableName = $this->StripPrefixFromTable($strTableName);
 			return sprintf('%s%s%s',
@@ -511,6 +553,12 @@
 				$this->strClassSuffix);
 		}
 
+		/**
+		 * Given a column name of a table, it will return the variable name for a column
+		 * @param QColumn $objColumn
+		 *
+		 * @return string
+		 */
 		protected function VariableNameFromColumn(QColumn $objColumn) {
 			return QConvertNotation::PrefixFromType($objColumn->VariableType) .
 				QConvertNotation::CamelCaseFromUnderscore($objColumn->Name);
@@ -715,6 +763,14 @@
 			return sprintf("lbl%s", $objManyToManyReference->ObjectDescriptionPlural);
 		}
 
+		/**
+		 * Given a column of a table, returns the name of QControl class which should be used to input data
+		 * into the table. (QLable for Identity columns)
+		 *
+		 * @param QColumn $objColumn
+		 *
+		 * @throws Exception
+		 */
 		protected function FormControlTypeForColumn(QColumn $objColumn) {
 			if ($objColumn->Identity)
 				return 'QLabel';
@@ -844,7 +900,7 @@
 			// remove instances of the table names in the association table name
 			$strTableName2 = str_replace('_', '', $strTableName); // remove underscores if they are there
 			$strReferencedTableName2 = str_replace('_', '', $strReferencedTableName); // remove underscores if they are there
-			
+
 			if (beginsWith ($strAssociationTableName, $strTableName . '_')) {
 				$strAssociationTableName = trimOffFront ($strTableName . '_', $strAssociationTableName);
 			} elseif (beginsWith ($strAssociationTableName, $strTableName2 . '_')) {
@@ -857,9 +913,9 @@
 					$strAssociationTableName == $strTableName2 ||
 					$strAssociationTableName == $strReferencedTableName ||
 					$strAssociationTableName == $strReferencedTableName2) {
-				$strAssociationTableName = "";		
+				$strAssociationTableName = "";
 			}
-			
+
 			if (endsWith ($strAssociationTableName,  '_' . $strTableName)) {
 				$strAssociationTableName = trimOffEnd ('_' . $strTableName, $strAssociationTableName);
 			} elseif (endsWith ($strAssociationTableName, '_' . $strTableName2)) {
@@ -872,9 +928,9 @@
 					$strAssociationTableName == $strTableName2 ||
 					$strAssociationTableName == $strReferencedTableName ||
 					$strAssociationTableName == $strReferencedTableName2) {
-				$strAssociationTableName = "";		
+				$strAssociationTableName = "";
 			}
-						
+
 			// Change any double "__" to single "_"
 			$strAssociationTableName = str_replace("__", "_", $strAssociationTableName);
 			$strAssociationTableName = str_replace("__", "_", $strAssociationTableName);
@@ -915,6 +971,13 @@
 			return $strGraphPrefixArray;
 		}
 
+		/**
+		 * Given a database field type, returns the data type which QCubed will use to treat that field
+		 * @param string $strDbType
+		 *
+		 * @return string
+		 * @throws Exception
+		 */
 		protected function VariableTypeFromDbType($strDbType) {
 			switch ($strDbType) {
 				case QDatabaseFieldType::Bit:
@@ -935,10 +998,18 @@
 					return QType::DateTime;
 				case QDatabaseFieldType::VarChar:
 					return QType::String;
-				throw new Exception("Invalid Db Type to Convert: $strDbType");
+				default:
+					throw new Exception("Invalid Db Type to Convert: $strDbType");
 			}
 		}
 
+		/**
+		 * Given a word, returns the plural form of that word
+		 * Used to convert words at certain places in generated drafts
+		 * @param string $strName
+		 *
+		 * @return string
+		 */
 		protected function Pluralize($strName) {
 			// Special Rules go Here
 			switch (true) {
@@ -972,7 +1043,9 @@
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
 		 *
-		 * @param string strName Name of the property to get
+		 * @param string $strName
+		 *
+		 * @throws Exception|QCallerException
 		 * @return mixed
 		 */
 		public function __get($strName) {
@@ -989,6 +1062,13 @@
 			}
 		}
 
+		/**
+		 * PHP magic method to set class properties
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 */
 		public function __set($strName, $mixValue) {
 			try {
 				switch($strName) {

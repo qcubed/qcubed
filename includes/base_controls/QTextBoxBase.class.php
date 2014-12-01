@@ -445,11 +445,12 @@
 		/////////////////////////
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Name of the property
+		 *
+		 * @param string $strName  Name of the property
 		 * @param string $mixValue Value of the property
 		 *
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
@@ -677,7 +678,12 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
-
+		/**
+		 * Returns the name of the property for Code Generator
+		 * @param $strPropName
+		 *
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'txt' . $strPropName;
 		}

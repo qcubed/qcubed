@@ -28,7 +28,13 @@
 		protected $objControlArray;
 		/** @var array Array of persistent controls on the Form */
 		protected $objPersistentControlArray = array();
+		/**
+		 * @var QControlGrouping List of Groupings in the form (for old drag and drop)
+		 * Use of this is deprecated in favor of jQueryUI drag and drop, but code remains in case we need it again.
+		 * @deprecated
+		 */
 		protected $objGroupingArray;
+		/** @var bool Has the body tag already been rendered? */
 		protected $blnRenderedBodyTag = false;
 		protected $blnRenderedCheckableControlArray;
 		protected $strCallType;
@@ -821,7 +827,7 @@
 
 		/**
 		 * Returns all controls belonging to the Form as an array.
-		 * @return mixed
+		 * @return mixed|QControl[]
 		 */
 		public function GetAllControls() {
 			return $this->objControlArray;
@@ -916,10 +922,11 @@
 
 		/**
 		 * Returns the child controls of the current QForm or a QControl object
-		 * @param QForm|QControl $objParentObject The object whose child controls are to be searched for
 		 *
-		 * @return array
+		 * @param QForm|QControl|QFormBase $objParentObject The object whose child controls are to be searched for
+		 *
 		 * @throws QCallerException
+		 * @return QControl[]
 		 */
 		public function GetChildControls($objParentObject) {
 			$objControlArrayToReturn = array();
@@ -989,7 +996,14 @@
 				return null;
 		}
 
-		public function TriggerMethod($strId, $strMethodName) {
+		/**
+		 * Triggers an event handler method for a given control ID
+		 * NOTE: Parameters must be already validated.
+		 *
+		 * @param string $strControlId  Control ID for which the method has to be triggered
+		 * @param string $strMethodName Method name which has to be fired
+		 */
+		protected function TriggerMethod($strControlId, $strMethodName) {
 			$strParameter = $_POST['Qform__FormParameter'];
 
 			$intPosition = strpos($strMethodName, ':');
@@ -998,9 +1012,9 @@
 				$strMethodName = substr($strMethodName, $intPosition + 1);
 
 				$objControl = $this->objControlArray[$strControlName];
-				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strId, $strParameter);
+				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strControlId, $strParameter);
 			} else
-				$this->$strMethodName($this->strFormId, $strId, $strParameter);
+				$this->$strMethodName($this->strFormId, $strControlId, $strParameter);
 		}
 
 		/**
@@ -1013,6 +1027,15 @@
 			return $objControl->ValidateControlAndChildren();
 		}
 
+		/**
+		 * Runs/Triggers any and all event handling functions for the control on which an event took place
+		 * Depending on the control's CausesValidation value, it also calls for validation of the control or
+		 * control and children or entire QForm.
+		 *
+		 * @param null|string $strControlIdOverride If supplied, the control with the supplied ID is selected
+		 *
+		 * @throws Exception|QCallerException
+		 */
 		protected function TriggerActions($strControlIdOverride = null) {
 			if (array_key_exists('Qform__FormControl', $_POST)) {
 				if ($strControlIdOverride) {
@@ -1020,6 +1043,8 @@
 				} else {
 					$strId = $_POST['Qform__FormControl'];
 				}
+
+				// Control ID determined
 				if ($strId != '') {
 					$strEvent = $_POST['Qform__FormEvent'];
 					$strAjaxActionId = NULL;
@@ -1160,6 +1185,9 @@
 			}
 		}
 
+		/**
+		 * Begins rendering the page
+		 */
 		protected function Render() {
 			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
 				QApplication::ExecuteJavaScript('qcubed.broadcastChange()');
