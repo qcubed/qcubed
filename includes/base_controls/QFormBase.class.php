@@ -28,7 +28,11 @@
 		protected $objControlArray;
 		/** @var array Array of persistent controls on the Form */
 		protected $objPersistentControlArray = array();
-		/** @var QControlGrouping List of Groupings in the form */
+		/**
+		 * @var QControlGrouping List of Groupings in the form (for old drag and drop)
+		 * Use of this is deprecated in favor of jQueryUI drag and drop, but code remains in case we need it again.
+		 * @deprecated
+		 */
 		protected $objGroupingArray;
 		/** @var bool Has the body tag already been rendered? */
 		protected $blnRenderedBodyTag = false;
@@ -996,10 +1000,10 @@
 		 * Triggers an event handler method for a given control ID
 		 * NOTE: Parameters must be already validated.
 		 *
-		 * @param string $strId Control ID for which the method has to be triggered
+		 * @param string $strControlId  Control ID for which the method has to be triggered
 		 * @param string $strMethodName Method name which has to be fired
 		 */
-		public function TriggerMethod($strId, $strMethodName) {
+		protected function TriggerMethod($strControlId, $strMethodName) {
 			$strParameter = $_POST['Qform__FormParameter'];
 
 			$intPosition = strpos($strMethodName, ':');
@@ -1008,9 +1012,9 @@
 				$strMethodName = substr($strMethodName, $intPosition + 1);
 
 				$objControl = $this->objControlArray[$strControlName];
-				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strId, $strParameter);
+				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strControlId, $strParameter);
 			} else
-				$this->$strMethodName($this->strFormId, $strId, $strParameter);
+				$this->$strMethodName($this->strFormId, $strControlId, $strParameter);
 		}
 
 		/**
