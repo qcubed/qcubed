@@ -425,9 +425,9 @@
 				// FILTERING and VALIDATION
 				case "AutoTrim": return $this->blnAutoTrim;
 				case "SanitizeFilter": return $this->intSanitizeFilter;
-				case "SanitizeFilterOptions": return $this->$mixSanitizeFilterOptions;
+				case "SanitizeFilterOptions": return $this->mixSanitizeFilterOptions;
 				case "ValidateFilter": return $this->intValidateFilter;
-				case "ValidateFilterOptions": return $this->strLabelForInvalid;
+				case "ValidateFilterOptions": return $this->mixValidateFilterOptions;
 				case "LabelForInvalid": return $this->strLabelForInvalid;
 				
 				default:

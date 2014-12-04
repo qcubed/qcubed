@@ -8,13 +8,12 @@
 
 	/**
 	 * @package Controls
-	 *
-	 * @property-read string $FormId Form ID of the QForm
-	 * @property-read string $CallType Type of call (useful when the QForm submits due to user action)
-	 * @property-read string $DefaultWaitIcon Defaul Ajax wait icon control
-	 * @property-read integer $FormStatus Status of form (pre-render stage, rendering stage of already rendered stage)
-	 * @property string $HtmlIncludeFilePath (Alternate) path to the template file to be used
-	 * @property string $CssClass Form CSS class.
+	 * @property-read string  $FormId              Form ID of the QForm
+	 * @property-read string  $CallType            Type of call (useful when the QForm submits due to user action)
+	 * @property-read string  $DefaultWaitIcon     Default Ajax wait icon control
+	 * @property-read integer $FormStatus          Status of form (pre-render stage, rendering stage of already rendered stage)
+	 * @property string       $HtmlIncludeFilePath (Alternate) path to the template file to be used
+	 * @property string       $CssClass            Form CSS class.
 	 */
 	abstract class QFormBase extends QBaseClass {
 		///////////////////////////
@@ -37,6 +36,7 @@
 		/** @var bool Has the body tag already been rendered? */
 		protected $blnRenderedBodyTag = false;
 		protected $blnRenderedCheckableControlArray;
+		/** @var string The type of call made to the QForm (Ajax, Server or Fresh GET request) */
 		protected $strCallType;
 		/** @var null|QWaitIcon Default wait icon for the page/QForm  */
 		protected $objDefaultWaitIcon = null;
