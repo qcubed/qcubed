@@ -220,7 +220,7 @@
 			self::AddCoreExampleFile($intIndex, '/plugins/about.php Plugin Ecosystem: Introduction');
 			self::AddCoreExampleFile($intIndex, '/plugins/components.php Writing your own plugins, Part 1: components of a plugin');
 			self::AddCoreExampleFile($intIndex, '/plugins/packaging.php Writing your own plugins, Part 2: packaging a plugin');
-			self::AddCoreExampleFile($intIndex, '/plugins/unattended.php Automatic Installation of Plugins');
+			//self::AddCoreExampleFile($intIndex, '/plugins/unattended.php Automatic Installation of Plugins');
 			self::AddCoreReferencedFile('/plugins/components.php', '__CORE_FRAMEWORK__QPluginInterface.class.php');
 
 			// Scan plugin folders for examples to include
