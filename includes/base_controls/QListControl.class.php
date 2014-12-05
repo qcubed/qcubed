@@ -440,6 +440,10 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
+		/**
+		 * @param string $strPropName
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'lst' . $strPropName;
 		}

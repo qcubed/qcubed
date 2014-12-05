@@ -448,6 +448,10 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
+		/**
+		 * @param string $strPropName
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'cal' . $strPropName;
 		}
@@ -527,6 +531,14 @@ TMPL;
 
 		}
 
+		/**
+		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @param boolean $blnInit	Generate initialization code instead of reload
+		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
@@ -540,6 +552,13 @@ TMPL;
 			return $strRet . "\n";
 		}
 
+		/**
+		 * Generate the code to move data from the control to the database.
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @return string
+		 */
 		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;

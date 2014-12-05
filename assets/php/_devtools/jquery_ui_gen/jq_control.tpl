@@ -249,6 +249,7 @@
 		/**
 		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
 		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
 		**/
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(

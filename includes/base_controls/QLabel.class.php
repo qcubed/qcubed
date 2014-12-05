@@ -17,10 +17,20 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
+		/**
+		 * @param string $strPropName
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'lbl' . $strPropName;
 		}
 
+		/**
+		 * Outputs the code at the top of the metacontrol to declare the variable that will hold the control.
+		 * @param QCodeGen $objCodeGen
+		 * @param $objColumn
+		 * @return string
+		 */
 		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
 			$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);

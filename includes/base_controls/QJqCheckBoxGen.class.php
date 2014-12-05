@@ -56,14 +56,15 @@
 	 * 		text and the secondary is displayed on the right. The positioning can be
 	 * 		controlled via CSS.</p>  				<p>The value for the <code>primary</code> and
 	 * 		<code>secondary</code> properties must match <a>an icon class name</a>,
-	 * 		e.g., <code>"ui-icon-gear"</code>. For using only one icon: <code>icons: {
-	 * 		primary: "ui-icon-locked" }</code>. For using two icons: <code>icons: {
-	 * 		primary: "ui-icon-gear", secondary: "ui-icon-triangle-1-s" }</code>.</p>
+	 * 		e.g., <code>&quot;ui-icon-gear&quot;</code>. For using only one icon:
+	 * 		<code>icons: { primary: &quot;ui-icon-locked&quot; }</code>. For using two
+	 * 		icons: <code>icons: { primary: &quot;ui-icon-gear&quot;, secondary:
+	 * 		&quot;ui-icon-triangle-1-s&quot; }</code>.</p>
 	 * @property string $Label Text to show in the button. When not specified (<code>null</code>), the
-	 * 		element's HTML content is used, or its <code>value</code> attribute if the
-	 * 		element is an input element of type submit or reset, or the HTML content of
-	 * 		the associated label element if the element is an input of type radio or
-	 * 		checkbox.
+	 * 		element&apos;s HTML content is used, or its <code>value</code> attribute if
+	 * 		the element is an input element of type submit or reset, or the HTML
+	 * 		content of the associated label element if the element is an input of type
+	 * 		radio or checkbox.
 	 * @property boolean $JqText Whether to show the label. When set to <code>false</code> no text will be
 	 * 		displayed, but the <a><code>icons</code></a> option must be enabled,
 	 * 		otherwise the <code>text</code> option will be ignored.
@@ -173,19 +174,23 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <p>Retrieves the button's instance object. If the element does not have an
-		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
-		 * other widget methods, <code>instance()</code> is safe to call on any
-		 * element after the button plugin has loaded.</p><ul><li>This method does not
-		 * accept any arguments.</li></ul>
+		 * <p>Retrieves the button&apos;s instance object. If the element does not
+		 * have an associated instance, <code>undefined</code> is returned.</p> 
+		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
+		 * on any element after the button plugin has loaded.</p><ul><li>This method
+		 * does not accept any arguments.</li></ul>
 		 */
 		public function Instance() {
 			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -200,11 +205,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the button option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the button option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -221,7 +230,7 @@
 		}
 		/**
 		 * Refreshes the visual state of the button. Useful for updating button state
-		 * after the native element's checked or disabled state is changed
+		 * after the native element&apos;s checked or disabled state is changed
 		 * programmatically.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
 		 */
@@ -312,11 +321,12 @@
 		/**
 		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
 		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
 		**/
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
 				new QMetaParam (get_called_class(), 'Disabled', 'Disables the button if set to <code>true</code>.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Label', 'Text to show in the button. When not specified (<code>null</code>), the element\'s HTML content is used, or its <code>value</code> attribute if the element is an input element of type submit or reset, or the HTML content of the associated label element if the element is an input of type radio or checkbox.', QType::String),
+				new QMetaParam (get_called_class(), 'Label', 'Text to show in the button. When not specified (<code>null</code>), the element&apos;s HTML content is used, or its <code>value</code> attribute if the element is an input element of type submit or reset, or the HTML content of the associated label element if the element is an input of type radio or checkbox.', QType::String),
 				new QMetaParam (get_called_class(), 'JqText', 'Whether to show the label. When set to <code>false</code> no text will be displayed, but the <a><code>icons</code></a> option must be enabled, otherwise the <code>text</code> option will be ignored.', QType::Boolean),
 			));
 		}

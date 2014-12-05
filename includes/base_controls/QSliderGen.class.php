@@ -103,7 +103,7 @@
 	 * 		types supported:</strong><ul><li><strong>Boolean</strong>: When set to
 	 * 		<code>true</code>, the handle will animate with the default duration.</li>
 	 * 		<li><strong>String</strong>: The name of a speed, such as
-	 * 		<code>"fast"</code> or <code>"slow"</code>.</li>
+	 * 		<code>&quot;fast&quot;</code> or <code>&quot;slow&quot;</code>.</li>
 	 * 		<li><strong>Number</strong>: The duration of the animation, in
 	 * 		milliseconds.</li></ul>
 	 * @property boolean $Disabled Disables the slider if set to <code>true</code>.
@@ -111,19 +111,19 @@
 	 * @property integer $Min The minimum value of the slider.
 	 * @property string $Orientation Determines whether the slider handles move horizontally (min on left, max
 	 * 		on right) or vertically (min on bottom, max on top). Possible values:
-	 * 		<code>"horizontal"</code>, <code>"vertical"</code>.
+	 * 		<code>&quot;horizontal&quot;</code>, <code>&quot;vertical&quot;</code>.
 	 * @property mixed $Range Whether the slider represents a range.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: If set to
 	 * 		<code>true</code>, the slider will detect if you have two handles and
 	 * 		create a styleable range element between these two.</li>
-	 * 		<li><strong>String</strong>: Either <code>"min"</code> or
-	 * 		<code>"max"</code>. A min range goes from the slider min to one handle. A
-	 * 		max range goes from one handle to the slider max.</li></ul>
+	 * 		<li><strong>String</strong>: Either <code>&quot;min&quot;</code> or
+	 * 		<code>&quot;max&quot;</code>. A min range goes from the slider min to one
+	 * 		handle. A max range goes from one handle to the slider max.</li></ul>
 	 * @property integer $Step Determines the size or amount of each interval or step the slider takes
 	 * 		between the min and max. The full specified value range of the slider (max
 	 * 		- min) should be evenly divisible by the step.
-	 * @property integer $Value Determines the value of the slider, if there's only one handle. If there is
-	 * 		more than one handle, determines the value of the first handle.
+	 * @property integer $Value Determines the value of the slider, if there&apos;s only one handle. If
+	 * 		there is more than one handle, determines the value of the first handle.
 	 * @property array $Values This option can be used to specify multiple handles. If the
 	 * 		<a><code>range</code></a> option is set to <code>true</code>, the length of
 	 * 		<code>values</code> should be 2.
@@ -248,19 +248,23 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <p>Retrieves the slider's instance object. If the element does not have an
-		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
-		 * other widget methods, <code>instance()</code> is safe to call on any
-		 * element after the slider plugin has loaded.</p><ul><li>This method does not
-		 * accept any arguments.</li></ul>
+		 * <p>Retrieves the slider&apos;s instance object. If the element does not
+		 * have an associated instance, <code>undefined</code> is returned.</p> 
+		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
+		 * on any element after the slider plugin has loaded.</p><ul><li>This method
+		 * does not accept any arguments.</li></ul>
 		 */
 		public function Instance() {
 			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -275,11 +279,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the slider option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the slider option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -487,15 +495,16 @@
 		/**
 		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
 		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
 		**/
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
 				new QMetaParam (get_called_class(), 'Disabled', 'Disables the slider if set to <code>true</code>.', QType::Boolean),
 				new QMetaParam (get_called_class(), 'Max', 'The maximum value of the slider.', QType::Integer),
 				new QMetaParam (get_called_class(), 'Min', 'The minimum value of the slider.', QType::Integer),
-				new QMetaParam (get_called_class(), 'Orientation', 'Determines whether the slider handles move horizontally (min on left, max on right) or vertically (min on bottom, max on top). Possible values: <code>\"horizontal\"</code>, <code>\"vertical\"</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'Orientation', 'Determines whether the slider handles move horizontally (min on left, max on right) or vertically (min on bottom, max on top). Possible values: <code>&quot;horizontal&quot;</code>, <code>&quot;vertical&quot;</code>.', QType::String),
 				new QMetaParam (get_called_class(), 'Step', 'Determines the size or amount of each interval or step the slider takes between the min and max. The full specified value range of the slider (max - min) should be evenly divisible by the step.', QType::Integer),
-				new QMetaParam (get_called_class(), 'Value', 'Determines the value of the slider, if there\'s only one handle. If there is more than one handle, determines the value of the first handle.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Value', 'Determines the value of the slider, if there&apos;s only one handle. If there is more than one handle, determines the value of the first handle.', QType::Integer),
 				new QMetaParam (get_called_class(), 'Values', 'This option can be used to specify multiple handles. If the <a><code>range</code></a> option is set to <code>true</code>, the length of <code>values</code> should be 2.', QType::ArrayType),
 			));
 		}

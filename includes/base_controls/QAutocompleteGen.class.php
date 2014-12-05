@@ -59,10 +59,10 @@
 	}
 	/**
 	 * Triggered when focus is moved to an item (not selecting). The default
-	 * 		action is to replace the text field's value with the value of the focused
-	 * 		item, though only if the event was triggered by a keyboard interaction.
-	 * 						<p>Canceling this event prevents the value from being updated, but does
-	 * 		not prevent the menu item from being
+	 * 		action is to replace the text field&apos;s value with the value of the
+	 * 		focused item, though only if the event was triggered by a keyboard
+	 * 		interaction. 				<p>Canceling this event prevents the value from being
+	 * 		updated, but does not prevent the menu item from being
 	 * 		focused.</p><ul><li><strong>event</strong> Type: <a>Event</a> </li>
 	 * 		<li><strong>ui</strong> Type: <a>Object</a>  <ul><li><strong>item</strong>
 	 * 		Type: <a>Object</a> The focused item.</li></ul></li></ul>
@@ -110,7 +110,7 @@
 	}
 	/**
 	 * Triggered when an item is selected from the menu. The default action is to
-	 * 		replace the text field's value with the value of the selected item.
+	 * 		replace the text field&apos;s value with the value of the selected item.
 	 * 						<p>Canceling this event prevents the value from being updated, but does
 	 * 		not prevent the menu from closing.</p><ul><li><strong>event</strong> Type:
 	 * 		<a>Event</a> </li> <li><strong>ui</strong> Type: <a>Object</a> 
@@ -160,27 +160,28 @@
 	 * 		various options.
 	 * @property mixed $Source Defines the data to use, must be specified. 				<p>Independent of the
 	 * 		variant you use, the label is always treated as text. If you want the label
-	 * 		to be treated as html you can use <a>Scott González' html extension</a>.
-	 * 		The demos all focus on different variations of the <code>source</code>
-	 * 		option - look for one that matches your use case, and check out the
-	 * 		code.</p><strong>Multiple types
+	 * 		to be treated as html you can use <a>Scott Gonz&#xE1;lez&apos; html
+	 * 		extension</a>. The demos all focus on different variations of the
+	 * 		<code>source</code> option - look for one that matches your use case, and
+	 * 		check out the code.</p><strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Array</strong>:  					An array can be
 	 * 		used for local data. There are two supported formats: 					<ul><li>An array
-	 * 		of strings: <code>[ "Choice1", "Choice2" ]</code></li> 						<li>An array
-	 * 		of objects with <code>label</code> and <code>value</code> properties:
-	 * 		<code>[ { label: "Choice1", value: "value1" }, ... ]</code></li></ul>
-	 * 							The label property is displayed in the suggestion menu. The value will
-	 * 		be inserted into the input element when a user selects an item. If just one
-	 * 		property is specified, it will be used for both, e.g., if you provide only
-	 * 		<code>value</code> properties, the value will also be used as the
-	 * 		label.</li> <li><strong>String</strong>: When a string is used, the
-	 * 		Autocomplete plugin expects that string to point to a URL resource that
-	 * 		will return JSON data. It can be on the same host or on a different one
-	 * 		(must provide JSONP). The Autocomplete plugin does not filter the results,
-	 * 		instead a query string is added with a <code>term</code> field, which the
-	 * 		server-side script should use for filtering the results. For example, if
-	 * 		the <code>source</code> option is set to <code>"http://example.com"</code>
-	 * 		and the user types <code>foo</code>, a GET request would be made to
+	 * 		of strings: <code>[ &quot;Choice1&quot;, &quot;Choice2&quot; ]</code></li>
+	 * 								<li>An array of objects with <code>label</code> and
+	 * 		<code>value</code> properties: <code>[ { label: &quot;Choice1&quot;, value:
+	 * 		&quot;value1&quot; }, ... ]</code></li></ul> 					The label property is
+	 * 		displayed in the suggestion menu. The value will be inserted into the input
+	 * 		element when a user selects an item. If just one property is specified, it
+	 * 		will be used for both, e.g., if you provide only <code>value</code>
+	 * 		properties, the value will also be used as the label.</li>
+	 * 		<li><strong>String</strong>: When a string is used, the Autocomplete plugin
+	 * 		expects that string to point to a URL resource that will return JSON data.
+	 * 		It can be on the same host or on a different one (must provide JSONP). The
+	 * 		Autocomplete plugin does not filter the results, instead a query string is
+	 * 		added with a <code>term</code> field, which the server-side script should
+	 * 		use for filtering the results. For example, if the <code>source</code>
+	 * 		option is set to <code>&quot;http://example.com&quot;</code> and the user
+	 * 		types <code>foo</code>, a GET request would be made to
 	 * 		<code>http://example.com?term=foo</code>. The data itself can be in the
 	 * 		same format as the local data described above.</li>
 	 * 		<li><strong>Function</strong>:  					The third variation, a callback,
@@ -188,18 +189,19 @@
 	 * 		Autocomplete. The callback gets two arguments: 					<ul><li>A
 	 * 		<code>request</code> object, with a single <code>term</code> property,
 	 * 		which refers to the value currently in the text input. For example, if the
-	 * 		user enters <code>"new yo"</code> in a city field, the Autocomplete term
-	 * 		will equal <code>"new yo"</code>.</li> 						<li>A <code>response</code>
-	 * 		callback, which expects a single argument: the data to suggest to the user.
-	 * 		This data should be filtered based on the provided term, and can be in any
-	 * 		of the formats described above for simple local data. It's important when
-	 * 		providing a custom source callback to handle errors during the request. You
-	 * 		must always call the <code>response</code> callback even if you encounter
-	 * 		an error. This ensures that the widget always has the correct
-	 * 		state.</li></ul> 					<p>When filtering data locally, you can make use of
-	 * 		the built-in <code>$.ui.autocomplete.escapeRegex</code> function. It'll
-	 * 		take a single string argument and escape all regex characters, making the
-	 * 		result safe to pass to <code>new RegExp()</code>.</p></li></ul>
+	 * 		user enters <code>&quot;new yo&quot;</code> in a city field, the
+	 * 		Autocomplete term will equal <code>&quot;new yo&quot;</code>.</li>
+	 * 								<li>A <code>response</code> callback, which expects a single
+	 * 		argument: the data to suggest to the user. This data should be filtered
+	 * 		based on the provided term, and can be in any of the formats described
+	 * 		above for simple local data. It&apos;s important when providing a custom
+	 * 		source callback to handle errors during the request. You must always call
+	 * 		the <code>response</code> callback even if you encounter an error. This
+	 * 		ensures that the widget always has the correct state.</li></ul>
+	 * 							<p>When filtering data locally, you can make use of the built-in
+	 * 		<code>$.ui.autocomplete.escapeRegex</code> function. It&apos;ll take a
+	 * 		single string argument and escape all regex characters, making the result
+	 * 		safe to pass to <code>new RegExp()</code>.</p></li></ul>
 	 */
 
 	class QAutocompleteGen extends QTextBox	{
@@ -323,8 +325,8 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <p>Retrieves the autocomplete's instance object. If the element does not
-		 * have an associated instance, <code>undefined</code> is returned.</p> 
+		 * <p>Retrieves the autocomplete&apos;s instance object. If the element does
+		 * not have an associated instance, <code>undefined</code> is returned.</p> 
 		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
 		 * on any element after the autocomplete plugin has loaded.</p><ul><li>This
 		 * method does not accept any arguments.</li></ul>
@@ -333,9 +335,13 @@
 			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -350,11 +356,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the autocomplete option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the autocomplete option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -374,7 +384,7 @@
 		 * Triggers a <a><code>search</code></a> event and invokes the data source if
 		 * the event is not canceled. Can be used by a selectbox-like button to open
 		 * the suggestions when clicked. When invoked with no parameters, the current
-		 * input's value is used. Can be called with an empty string and
+		 * input&apos;s value is used. Can be called with an empty string and
 		 * <code>minLength: 0</code> to display all
 		 * items.<ul><li><strong>value</strong> Type: <a>String</a> </li></ul>
 		 * @param $value
@@ -497,6 +507,7 @@
 		/**
 		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
 		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
 		**/
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(

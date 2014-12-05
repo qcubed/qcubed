@@ -42,11 +42,11 @@
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>element</strong> Type: <a>jQuery</a> The jQuery object
 	 * 		representing the element to be resized</li> <li><strong>helper</strong>
-	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that's being
-	 * 		resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a> The
-	 * 		jQuery object representing the original element before it is wrapped</li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The position
-	 * 		represented as <code>{ left, top }</code> before the resizable is
+	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that&apos;s
+	 * 		being resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a>
+	 * 		The jQuery object representing the original element before it is
+	 * 		wrapped</li> <li><strong>originalPosition</strong> Type: <a>Object</a> The
+	 * 		position represented as <code>{ left, top }</code> before the resizable is
 	 * 		resized</li> <li><strong>originalSize</strong> Type: <a>Object</a> The size
 	 * 		represented as <code>{ width, height }</code> before the resizable is
 	 * 		resized</li> <li><strong>position</strong> Type: <a>Object</a> The current
@@ -63,11 +63,11 @@
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>element</strong> Type: <a>jQuery</a> The jQuery object
 	 * 		representing the element to be resized</li> <li><strong>helper</strong>
-	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that's being
-	 * 		resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a> The
-	 * 		jQuery object representing the original element before it is wrapped</li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The position
-	 * 		represented as <code>{ left, top }</code> before the resizable is
+	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that&apos;s
+	 * 		being resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a>
+	 * 		The jQuery object representing the original element before it is
+	 * 		wrapped</li> <li><strong>originalPosition</strong> Type: <a>Object</a> The
+	 * 		position represented as <code>{ left, top }</code> before the resizable is
 	 * 		resized</li> <li><strong>originalSize</strong> Type: <a>Object</a> The size
 	 * 		represented as <code>{ width, height }</code> before the resizable is
 	 * 		resized</li> <li><strong>position</strong> Type: <a>Object</a> The current
@@ -84,11 +84,11 @@
 	 * 		<li><strong>ui</strong> Type: <a>Object</a> 
 	 * 		<ul><li><strong>element</strong> Type: <a>jQuery</a> The jQuery object
 	 * 		representing the element to be resized</li> <li><strong>helper</strong>
-	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that's being
-	 * 		resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a> The
-	 * 		jQuery object representing the original element before it is wrapped</li>
-	 * 		<li><strong>originalPosition</strong> Type: <a>Object</a> The position
-	 * 		represented as <code>{ left, top }</code> before the resizable is
+	 * 		Type: <a>jQuery</a> The jQuery object representing the helper that&apos;s
+	 * 		being resized</li> <li><strong>originalElement</strong> Type: <a>jQuery</a>
+	 * 		The jQuery object representing the original element before it is
+	 * 		wrapped</li> <li><strong>originalPosition</strong> Type: <a>Object</a> The
+	 * 		position represented as <code>{ left, top }</code> before the resizable is
 	 * 		resized</li> <li><strong>originalSize</strong> Type: <a>Object</a> The size
 	 * 		represented as <code>{ width, height }</code> before the resizable is
 	 * 		resized</li> <li><strong>position</strong> Type: <a>Object</a> The current
@@ -119,7 +119,7 @@
 	 * 		option.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: Duration in
 	 * 		milliseconds.</li> <li><strong>String</strong>: A named duration, such as
-	 * 		<code>"slow"</code> or <code>"fast"</code>.</li></ul>
+	 * 		<code>&quot;slow&quot;</code> or <code>&quot;fast&quot;</code>.</li></ul>
 	 * @property string $AnimateEasing Which <a>easing</a> to apply when using the <a><code>animate</code></a>
 	 * 		option.
 	 * @property mixed $AspectRatio Whether the element should be constrained to a specific aspect
@@ -138,8 +138,8 @@
 	 * 		selector. If no element is found, no containment will be set.</li>
 	 * 		<li><strong>Element</strong>: The resizable element will be contained to
 	 * 		the bounding box of this element.</li> <li><strong>String</strong>:
-	 * 		Possible values: <code>"parent"</code> and
-	 * 		<code>"document"</code>.</li></ul>
+	 * 		Possible values: <code>&quot;parent&quot;</code> and
+	 * 		<code>&quot;document&quot;</code>.</li></ul>
 	 * @property integer $Delay Tolerance, in milliseconds, for when resizing should start. If specified,
 	 * 		resizing will not start until after mouse is moved beyond duration. This
 	 * 		can help prevent unintended resizing when clicking on an element.
@@ -322,8 +322,8 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <p>Retrieves the resizable's instance object. If the element does not have
-		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * <p>Retrieves the resizable&apos;s instance object. If the element does not
+		 * have an associated instance, <code>undefined</code> is returned.</p> 
 		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
 		 * on any element after the resizable plugin has loaded.</p><ul><li>This
 		 * method does not accept any arguments.</li></ul>
@@ -332,9 +332,13 @@
 			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -349,11 +353,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the resizable option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the resizable option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -627,6 +635,7 @@
 		/**
 		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
 		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
 		**/
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(

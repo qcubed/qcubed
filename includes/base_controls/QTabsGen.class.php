@@ -141,13 +141,13 @@
 	 * 		indexes of the tabs that should be disabled, e.g., <code>[ 0, 2 ]</code>
 	 * 		would disable the first and third tab.</li></ul>
 	 * @property string $Event The type of event that the tabs should react to in order to activate the
-	 * 		tab. To activate on hover, use <code>"mouseover"</code>.
+	 * 		tab. To activate on hover, use <code>&quot;mouseover&quot;</code>.
 	 * @property string $HeightStyle Controls the height of the tabs widget and each panel. Possible values:
-	 * 						<ul><li><code>"auto"</code>: All panels will be set to the height of
-	 * 		the tallest panel.</li> 					<li><code>"fill"</code>: Expand to the
-	 * 		available height based on the tabs' parent height.</li>
-	 * 							<li><code>"content"</code>: Each panel will be only as tall as its
-	 * 		content.</li></ul>
+	 * 						<ul><li><code>&quot;auto&quot;</code>: All panels will be set to the
+	 * 		height of the tallest panel.</li> 					<li><code>&quot;fill&quot;</code>:
+	 * 		Expand to the available height based on the tabs&apos; parent height.</li>
+	 * 							<li><code>&quot;content&quot;</code>: Each panel will be only as tall
+	 * 		as its content.</li></ul>
 	 * @property mixed $Hide If and how to animate the hiding of the panel.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
 	 * 		<code>false</code>, no animation will be used and the panel will be hidden
@@ -157,18 +157,19 @@
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be hidden using the specified effect. 			The value can either be
 	 * 		the name of a built-in jQuery animation method, such as
-	 * 		<code>"slideUp"</code>, or the name of a <a>jQuery UI effect</a>, such as
-	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
-	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
-	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
-	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
-	 * 		If the <code>effect</code> property contains the name of a jQuery method,
-	 * 		then that method will be used; otherwise it is assumed to be the name of a
-	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
-	 * 		settings, you may include those settings in the object and they will be
-	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
-	 * 		omitted, then the default values will be used. If <code>effect</code> is
-	 * 		omitted, then <code>"fadeOut"</code> will be used. If <code>delay</code> is
+	 * 		<code>&quot;slideUp&quot;</code>, or the name of a <a>jQuery UI effect</a>,
+	 * 		such as <code>&quot;fold&quot;</code>. 			In either case the effect will be
+	 * 		used with the default duration and the default easing.</li>
+	 * 		<li><strong>Object</strong>: If the value is an object, then
+	 * 		<code>effect</code>, <code>delay</code>, <code>duration</code>, and
+	 * 		<code>easing</code> properties may be provided. If the <code>effect</code>
+	 * 		property contains the name of a jQuery method, then that method will be
+	 * 		used; otherwise it is assumed to be the name of a jQuery UI effect. When
+	 * 		using a jQuery UI effect that supports additional settings, you may include
+	 * 		those settings in the object and they will be passed to the effect. If
+	 * 		<code>duration</code> or <code>easing</code> is omitted, then the default
+	 * 		values will be used. If <code>effect</code> is omitted, then
+	 * 		<code>&quot;fadeOut&quot;</code> will be used. If <code>delay</code> is
 	 * 		omitted, then no delay is used.</li></ul>
 	 * @property mixed $Show If and how to animate the showing of the panel.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>:  			When set to
@@ -179,18 +180,19 @@
 	 * 		duration and the default easing.</li> <li><strong>String</strong>:  			The
 	 * 		panel will be shown using the specified effect. 			The value can either be
 	 * 		the name of a built-in jQuery animation method, such as
-	 * 		<code>"slideDown"</code>, or the name of a <a>jQuery UI effect</a>, such as
-	 * 		<code>"fold"</code>. 			In either case the effect will be used with the
-	 * 		default duration and the default easing.</li> <li><strong>Object</strong>:
-	 * 		If the value is an object, then <code>effect</code>, <code>delay</code>,
-	 * 		<code>duration</code>, and <code>easing</code> properties may be provided.
-	 * 		If the <code>effect</code> property contains the name of a jQuery method,
-	 * 		then that method will be used; otherwise it is assumed to be the name of a
-	 * 		jQuery UI effect. When using a jQuery UI effect that supports additional
-	 * 		settings, you may include those settings in the object and they will be
-	 * 		passed to the effect. If <code>duration</code> or <code>easing</code> is
-	 * 		omitted, then the default values will be used. If <code>effect</code> is
-	 * 		omitted, then <code>"fadeIn"</code> will be used.  If <code>delay</code> is
+	 * 		<code>&quot;slideDown&quot;</code>, or the name of a <a>jQuery UI
+	 * 		effect</a>, such as <code>&quot;fold&quot;</code>. 			In either case the
+	 * 		effect will be used with the default duration and the default easing.</li>
+	 * 		<li><strong>Object</strong>: If the value is an object, then
+	 * 		<code>effect</code>, <code>delay</code>, <code>duration</code>, and
+	 * 		<code>easing</code> properties may be provided. If the <code>effect</code>
+	 * 		property contains the name of a jQuery method, then that method will be
+	 * 		used; otherwise it is assumed to be the name of a jQuery UI effect. When
+	 * 		using a jQuery UI effect that supports additional settings, you may include
+	 * 		those settings in the object and they will be passed to the effect. If
+	 * 		<code>duration</code> or <code>easing</code> is omitted, then the default
+	 * 		values will be used. If <code>effect</code> is omitted, then
+	 * 		<code>&quot;fadeIn&quot;</code> will be used.  If <code>delay</code> is
 	 * 		omitted, then no delay is used.</li></ul>
 	 */
 
@@ -302,9 +304,9 @@
 		/**
 		 * Disables a tab. The selected tab cannot be disabled. To disable more than
 		 * one tab at once, set the <a><code>disabled</code></a> option: <code>$(
-		 * "#tabs" ).tabs( "option", "disabled", [ 1, 2, 3 ]
-		 * )</code>.<ul><li><strong>index</strong> Type: <a>Number</a> The zero-based
-		 * index of the tab to disable.</li></ul>
+		 * &quot;#tabs&quot; ).tabs( &quot;option&quot;, &quot;disabled&quot;, [ 1, 2,
+		 * 3 ] )</code>.<ul><li><strong>index</strong> Type: <a>Number</a> The
+		 * zero-based index of the tab to disable.</li></ul>
 		 * @param $index
 		 */
 		public function Disable1($index) {
@@ -328,9 +330,9 @@
 		}
 		/**
 		 * Enables a tab. To enable more than one tab at once reset the disabled
-		 * property like: <code>$( "#example" ).tabs( "option", "disabled", []
-		 * );</code>.<ul><li><strong>index</strong> Type: <a>Number</a> The zero-based
-		 * index of the tab to enable.</li></ul>
+		 * property like: <code>$( &quot;#example&quot; ).tabs( &quot;option&quot;,
+		 * &quot;disabled&quot;, [] );</code>.<ul><li><strong>index</strong> Type:
+		 * <a>Number</a> The zero-based index of the tab to enable.</li></ul>
 		 * @param $index
 		 */
 		public function Enable1($index) {
@@ -345,11 +347,11 @@
 			$this->CallJqUiMethod(false, "enable", $href);
 		}
 		/**
-		 * <p>Retrieves the tabs's instance object. If the element does not have an
-		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
-		 * other widget methods, <code>instance()</code> is safe to call on any
-		 * element after the tabs plugin has loaded.</p><ul><li>This method does not
-		 * accept any arguments.</li></ul>
+		 * <p>Retrieves the tabs&apos;s instance object. If the element does not have
+		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
+		 * on any element after the tabs plugin has loaded.</p><ul><li>This method
+		 * does not accept any arguments.</li></ul>
 		 */
 		public function Instance() {
 			$this->CallJqUiMethod(false, "instance");
@@ -371,9 +373,13 @@
 			$this->CallJqUiMethod(false, "load", $href);
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -388,11 +394,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the tabs option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the tabs option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -527,12 +537,13 @@
 		/**
 		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
 		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
 		**/
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
 				new QMetaParam (get_called_class(), 'Collapsible', 'When set to <code>true</code>, the active panel can be closed.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Event', 'The type of event that the tabs should react to in order to activate the tab. To activate on hover, use <code>\"mouseover\"</code>.', QType::String),
-				new QMetaParam (get_called_class(), 'HeightStyle', 'Controls the height of the tabs widget and each panel. Possible values: 				<ul><li><code>\"auto\"</code>: All panels will be set to the height of the tallest panel.</li> 					<li><code>\"fill\"</code>: Expand to the available height based on the tabs\' parent height.</li> 					<li><code>\"content\"</code>: Each panel will be only as tall as its content.</li></ul>', QType::String),
+				new QMetaParam (get_called_class(), 'Event', 'The type of event that the tabs should react to in order to activate the tab. To activate on hover, use <code>&quot;mouseover&quot;</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'HeightStyle', 'Controls the height of the tabs widget and each panel. Possible values: 				<ul><li><code>&quot;auto&quot;</code>: All panels will be set to the height of the tallest panel.</li> 					<li><code>&quot;fill&quot;</code>: Expand to the available height based on the tabs&apos; parent height.</li> 					<li><code>&quot;content&quot;</code>: Each panel will be only as tall as its content.</li></ul>', QType::String),
 			));
 		}
 	}

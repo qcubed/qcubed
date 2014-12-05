@@ -107,8 +107,8 @@
 	 * 		default duration.</li> <li><strong>Object</strong>: Animation settings with
 	 * 		<code>easing</code> and <code>duration</code> properties. 					<ul><li>Can
 	 * 		also contain a <code>down</code> property with any of the above
-	 * 		options.</li> 						<li>"Down" animations occur when the panel being
-	 * 		activated has a lower index than the currently active
+	 * 		options.</li> 						<li>&quot;Down&quot; animations occur when the panel
+	 * 		being activated has a lower index than the currently active
 	 * 		panel.</li></ul></li></ul>
 	 * @property boolean $Collapsible Whether all the sections can be closed at once. Allows collapsing the
 	 * 		active section.
@@ -119,16 +119,17 @@
 	 * 		main accordion element. Content panels must be the sibling immediately
 	 * 		after their associated headers.</p>
 	 * @property string $HeightStyle <p>Controls the height of the accordion and each panel. Possible
-	 * 		values:</p> 				<ul><li><code>"auto"</code>: All panels will be set to the
-	 * 		height of the tallest panel.</li> 					<li><code>"fill"</code>: Expand to
-	 * 		the available height based on the accordion's parent height.</li>
-	 * 							<li><code>"content"</code>: Each panel will be only as tall as its
-	 * 		content.</li></ul>
+	 * 		values:</p> 				<ul><li><code>&quot;auto&quot;</code>: All panels will be
+	 * 		set to the height of the tallest panel.</li>
+	 * 							<li><code>&quot;fill&quot;</code>: Expand to the available height
+	 * 		based on the accordion&apos;s parent height.</li>
+	 * 							<li><code>&quot;content&quot;</code>: Each panel will be only as tall
+	 * 		as its content.</li></ul>
 	 * @property mixed $Icons <p>Icons to use for headers, matching <a>an icon provided by the jQuery UI
 	 * 		CSS Framework</a>. Set to <code>false</code> to have no icons
 	 * 		displayed.</p> 				<ul><li>header (string, default:
-	 * 		"ui-icon-triangle-1-e")</li> 					<li>activeHeader (string, default:
-	 * 		"ui-icon-triangle-1-s")</li></ul>
+	 * 		&quot;ui-icon-triangle-1-e&quot;)</li> 					<li>activeHeader (string,
+	 * 		default: &quot;ui-icon-triangle-1-s&quot;)</li></ul>
 	 */
 
 	class QAccordionGen extends QPanel	{
@@ -247,8 +248,8 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <p>Retrieves the accordion's instance object. If the element does not have
-		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * <p>Retrieves the accordion&apos;s instance object. If the element does not
+		 * have an associated instance, <code>undefined</code> is returned.</p> 
 		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
 		 * on any element after the accordion plugin has loaded.</p><ul><li>This
 		 * method does not accept any arguments.</li></ul>
@@ -257,9 +258,13 @@
 			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -274,11 +279,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the accordion option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the accordion option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -426,13 +435,14 @@
 		/**
 		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
 		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
 		**/
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
 				new QMetaParam (get_called_class(), 'Collapsible', 'Whether all the sections can be closed at once. Allows collapsing the active section.', QType::Boolean),
 				new QMetaParam (get_called_class(), 'Disabled', 'Disables the accordion if set to <code>true</code>.', QType::Boolean),
 				new QMetaParam (get_called_class(), 'Event', 'The event that accordion headers will react to in order to activate the associated panel. Multiple events can be specified, separated by a space.', QType::String),
-				new QMetaParam (get_called_class(), 'HeightStyle', '<p>Controls the height of the accordion and each panel. Possible values:</p> 				<ul><li><code>\"auto\"</code>: All panels will be set to the height of the tallest panel.</li> 					<li><code>\"fill\"</code>: Expand to the available height based on the accordion\'s parent height.</li> 					<li><code>\"content\"</code>: Each panel will be only as tall as its content.</li></ul>', QType::String),
+				new QMetaParam (get_called_class(), 'HeightStyle', '<p>Controls the height of the accordion and each panel. Possible values:</p> 				<ul><li><code>&quot;auto&quot;</code>: All panels will be set to the height of the tallest panel.</li> 					<li><code>&quot;fill&quot;</code>: Expand to the available height based on the accordion&apos;s parent height.</li> 					<li><code>&quot;content&quot;</code>: Each panel will be only as tall as its content.</li></ul>', QType::String),
 			));
 		}
 	}

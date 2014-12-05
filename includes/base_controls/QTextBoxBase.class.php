@@ -680,7 +680,10 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
-
+		/**
+		 * @param string $strPropName
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'txt' . $strPropName;
 		}
@@ -814,7 +817,7 @@ TMPL;
 		/**
 		 * Returns an description of the options available to modify by the designer for the code generator.
 		 *
-		 * @return array
+		 * @return QMetaParam[]
 		 */
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(

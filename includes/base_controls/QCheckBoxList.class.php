@@ -456,7 +456,7 @@ TMPL;
 		/**
 		 * Returns a description of the options available to modify by the designer for the code generator.
 		 *
-		 * @return array
+		 * @return QMetaParam[]
 		 */
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
