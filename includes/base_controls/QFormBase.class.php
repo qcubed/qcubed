@@ -432,7 +432,13 @@
 				else {
 					// Ajax post. Only send data to controls specified in the post to save time.
 					foreach ($_POST as $key=>$val) {
-						if ($objControl = $objClass->GetControl($key)) {
+						$strControlId = $key;
+						if (($intOffset = strrpos ($strControlId, '_')) !== false) {
+							$strControlId = substr ($strControlId, 0, $intOffset);
+						}
+						$previouslyFoundArray = array();
+						if (($objControl = $objClass->GetControl($strControlId)) &&
+								!isset($previouslyFoundArray[$strControlId])) {
 							// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
 							if (($objControl->Visible) &&
 								($objControl->RenderMethod)) {
@@ -444,7 +450,7 @@
 							// in controls we have touched
 							$objControl->ResetFlags();
 							$objControl->ValidationReset();
-
+							$previouslyFoundArray[$strControlId] = true;
 						}
 					}
 				}

@@ -14,6 +14,7 @@
 	<?php $this->rdoRadio3->RenderWithName(); ?>
 
 </fieldset>
+<?php $this->btnImage->RenderWithName(); ?>
 <?php $this->btnServer->Render(); ?>
 <?php $this->btnAjax->Render(); ?>
 <?php $this->RenderEnd(); ?>

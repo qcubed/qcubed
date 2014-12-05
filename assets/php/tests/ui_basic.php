@@ -13,6 +13,9 @@
 		protected $rdoRadio2;
 		protected $rdoRadio3;
 
+		/** @var  QImageButton */
+		protected $btnImage;
+
 		protected $btnServer;
 		protected $btnAjax;
 
@@ -63,6 +66,10 @@
 			$this->rdoRadio3->Name = 'Item 3';
 			$this->rdoRadio3->GroupName = 'MyGroup';
 
+			$this->btnImage = new QImageButton($this);
+			$this->btnImage->Name = 'Image Button';
+			$this->btnImage->ImageUrl = __PHP_ASSETS__ . '/examples/images/data_model_thumbnail.png';
+			$this->btnImage->AddAction (new QClickEvent(), new QRegisterClickPositionAction());
 
 			$this->btnServer = new QButton ($this);
 			$this->btnServer->Text = 'Server Submit';
@@ -86,6 +93,7 @@
 			$this->rdoRadio1->Warning = 'Value = ' . $this->rdoRadio1->Checked;
 			$this->rdoRadio2->Warning = 'Value = ' . $this->rdoRadio2->Checked;
 			$this->rdoRadio3->Warning = 'Value = ' . $this->rdoRadio3->Checked;
+			$this->btnImage->Warning = 'X = ' . $this->btnImage->ClickX . '; Y = ' . $this->btnImage->ClickY;
 		}
 		
 	}

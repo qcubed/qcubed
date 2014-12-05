@@ -122,13 +122,16 @@ qcubed = {
         var ret;
 
         if (((strType === 'checkbox') || (strType === 'radio')) &&
-            ((indexOffset = id.indexOf('_')) >= 0)) { // a member of a control list
+            ((indexOffset = id.lastIndexOf('_')) >= 0)) { // a member of a control list
             return id.substr(0, indexOffset); // use the id of the group
         }
         else if (strType === 'radio' && name !== id) { // a radio button with a group name
             return id; // these buttons are changed individually
         }
-        else if (strType === 'hidden' && name) { // a hidden field, possibly associated with a custom widget
+        else if (strType === 'hidden') { // a hidden field, possibly associated with a different widget
+            if ((indexOffset = id.lastIndexOf('_')) >= 0) {
+                return id.substr(0, indexOffset); // use the id of the parent control
+            }
             return name;
         }
         return id;
@@ -235,8 +238,8 @@ qcubed = {
 
                 // RadioButtonList or CheckBoxList
                 if (strControlId) {
-                    if (strControlId.indexOf('_') >= 0) {
-                        if (strControlId.indexOf('_0') >= 0) {
+                    if (strControlId.lastIndexOf('_') >= 0) {
+                        if (strControlId.lastIndexOf('_0') >= 0) {
                             strToReturn += " " + strControlId.substring(0, strControlId.length - 2);
                         }
                         // Standard Radio or Checkbox
@@ -293,7 +296,7 @@ qcubed = {
             blnQform = (strControlId.substr(0, 7) == 'Qform__');
 
             if ((strType === 'checkbox' || strType === 'radio') &&
-                (offset = strControlId.indexOf('_')) != -1) {
+                (offset = strControlId.lastIndexOf('_')) != -1) {
                 // A control group
                 index = strControlId.substr (offset + 1);
                 strControlId = strControlId.substr (0, offset);
@@ -854,6 +857,7 @@ qcubed.registerControl = function(mixControl) {
 
         $j('#' + objControl.id + "_x").val(intX);
         $j('#' + objControl.id + "_y").val(intY);
+        $j(objControl).trigger('qformObjChanged');
     };
 
     // Focus
