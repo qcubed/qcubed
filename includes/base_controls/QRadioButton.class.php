@@ -10,7 +10,7 @@
 	 *
 	 * @package Controls
 	 *
-	 * @property string $Text is used to display text that is displayed next to the radio.  The text is rendered as an html "Label For" the radio
+	 * @property string $Text is used to display text that is displayed next to the radio. The text is rendered as an html "Label For" the radio
 	 * @property string $TextAlign specifies if "Text" should be displayed to the left or to the right of the radio.
 	 * @property string $GroupName assigns the radio button into a radio button group (optional) so that no more than one radio in that group may be selected at a time.
 	 * @property boolean $HtmlEntities
@@ -180,6 +180,10 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Tells whether or not the control is valid or not (runs only if validation was requested)
+		 * @return bool
+		 */
 		public function Validate() {
 			if ($this->blnRequired) {
 				if (!$this->blnChecked) {
@@ -232,11 +236,12 @@
 		/////////////////////////
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Name of the property
+		 *
+		 * @param string $strName  Name of the property
 		 * @param string $mixValue Value of the property
 		 *
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;

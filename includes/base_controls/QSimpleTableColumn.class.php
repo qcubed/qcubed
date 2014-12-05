@@ -668,21 +668,21 @@
 	}
 
 	/**
-	 * A type of column based on a user specified function (Closure) that can be used when a complex logic is required
-	 * to fetch the cell data from the DataSource items
+	 * A type of column that lets you use a PHP 'callable'. However, you CANNOT send a PHP closure to this,
+	 * since closures are not serializable. You CAN do things like array($this, 'method'), or 'Class::StaticMethod'.
 	 *
 	 * @property int|string $Index the index or key to use when accessing the arrays in the DataSource array
 	 *
 	 */
-	class QSimpleTableClosureColumn extends QAbstractSimpleTableDataColumn {
+	class QSimpleTableCallableColumn extends QAbstractSimpleTableDataColumn {
 		/** @var callback */
-		protected $objClosure;
+		protected $objCallable;
 		/** @var array extra parameters passed to closure */
 		protected $mixParams;
 
 		/**
 		 * @param string $strName name of the column
-		 * @param callback $objClosure a callable object. It should take a single argument, the item
+		 * @param callback $objCallable a callable object. It should take a single argument, the item
 		 *   of the array. Do NOT pass an actual Closure object, as they are not serializable. However,
 		 *   you can pass a callable, like array($this, 'method'), or an object that has the __invoke method defined,
 		 *   as long as its serializable. You can also pass static methods as a string, as in "Class::method"
@@ -691,20 +691,23 @@
 		 *
 		 * @throws InvalidArgumentException
 		 */
-		public function __construct($strName, $objClosure, $mixParams = null) {
+		public function __construct($strName, $objCallable, $mixParams = null) {
 			parent::__construct($strName);
-			if (!is_callable($objClosure)) {
-				throw new InvalidArgumentException();
+			if (!is_callable($objCallable)) {
+				throw new InvalidArgumentException('Must be callable.');
 			}
-			$this->objClosure = $objClosure;
+			if ($objCallable instanceof Closure) {
+				throw new InvalidArgumentException('Cannot be a Closure.');
+			}
+			$this->objCallable = $objCallable;
 			$this->mixParams = $mixParams;
 		}
 
 		public function FetchCellObject($item) {
 			if ($this->mixParams) {
-				return call_user_func($this->objClosure, $item, $this->mixParams);
+				return call_user_func($this->objCallable, $item, $this->mixParams);
 			} else {
-				return call_user_func($this->objClosure, $item);
+				return call_user_func($this->objCallable, $item);
 			}
 		}
 
@@ -712,7 +715,7 @@
 		 * Fix up possible embedded reference to the form.
 		 */
 		public function Sleep() {
-			$this->objClosure = QControl::SleepHelper($this->objClosure);
+			$this->objCallable = QControl::SleepHelper($this->objCallable);
 			parent::Sleep();
 		}
 
@@ -722,13 +725,13 @@
 		 */
 		public function Wakeup(QForm $objForm) {
 			parent::Wakeup($objForm);
-			$this->objClosure = QControl::WakeupHelper($objForm, $this->objClosure);
+			$this->objCallable = QControl::WakeupHelper($objForm, $this->objCallable);
 		}
 
 		public function __get($strName) {
 			switch ($strName) {
-				case 'Closure':
-					return $this->objClosure;
+				case 'Callable':
+					return $this->objCallable;
 				default:
 					try {
 						return parent::__get($strName);
@@ -741,11 +744,11 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case "Closure":
+				case "Callable":
 					if (!is_callable($mixValue)) {
-						throw new QInvalidCastException("Closure must be a callable object");
+						throw new QInvalidCastException("Callable must be a callable object");
 					}
-					$this->objClosure = $mixValue;
+					$this->objCallable = $mixValue;
 					break;
 
 				default:
@@ -890,8 +893,8 @@
 			return $aParams;		
 		}
 		
-		public function SetCheckParamCallback ($closure) {
-			$this->checkParamCallback = $closure;
+		public function SetCheckParamCallback ($callable) {
+			$this->checkParamCallback = $callable;
 		}
 		
 		/**

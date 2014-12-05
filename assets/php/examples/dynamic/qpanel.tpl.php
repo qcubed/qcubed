@@ -38,6 +38,9 @@
 	<p>Note that even though 10 textboxes are being rendered, we never explicitly code a <strong>QTextBox->Render</strong>
 	call <em>anywhere</em> in our code.</p>
 
+	<p>Within the template file, the <em>$this</em> variable refers to the control being rendered.</em></p>
+
+
 	<p>Another type of block control to mention here is the  <strong>QFieldset</strong>
 		which draws a panel as an html fieldset, and has a legend. Otherwise, it is the same as a QPanel.</p>
 

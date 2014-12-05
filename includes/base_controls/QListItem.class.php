@@ -73,12 +73,23 @@
 				}
 			}
 		}
-		
+
+		/**
+		 * Returns the css style of the list item
+		 * @param bool $blnIncludeCustom [Currently Unused]
+		 * @param bool $blnIncludeAction [Currently Unused]
+		 *
+		 * @return string
+		 */
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
 			$strToReturn = $this->objItemStyle->GetAttributes();
 			return $strToReturn;
 		}
-		
+
+		/**
+		 * Returns the details of the control as JSON string
+		 * @return string
+		 */
 		public function toJsObject() {
 			$a = array('value' => $this->strName, 'id' => $this->strValue);
 			if ($this->strLabel) {
@@ -94,6 +105,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case "Name": return $this->strName;
@@ -117,6 +135,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "Name":

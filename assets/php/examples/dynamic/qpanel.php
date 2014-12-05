@@ -11,7 +11,7 @@
 		protected $pnlFieldset;
 
 		// For this example, show how the panel can display this strMessage
-		protected $strMessage = 'Hello, world!';
+		public $strMessage = 'Hello, world!';
 
 		protected function Form_Create() {
 			// Define the Panel

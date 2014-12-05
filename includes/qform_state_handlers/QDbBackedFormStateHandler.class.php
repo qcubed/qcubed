@@ -111,15 +111,35 @@
 		 * @return string
 		 */
 		public static function Save($strFormState, $blnBackButtonFlag) {
-			// First see if we need to perform garbage collection
-			// Decide for garbage collection
-			if ((self::$intGarbageCollectOnHitCount > 0) && (rand(1, self::$intGarbageCollectOnHitCount) == 1)) {
-				self::GarbageCollect();
-			}
+			$objDatabase = QApplication::$Database[self::$intDbIndex];
 
 			// compress (if available)
 			if (function_exists('gzcompress')) {
 				$strFormState = gzcompress($strFormState, 9);
+			}
+
+			if (!empty($_POST['Qform__FormState']) && QApplication::$RequestMode == QRequestMode::Ajax) {
+				// update the current form state if possible
+				$strPageId = $_POST['Qform__FormState'];
+
+				$strQuery = '
+                                UPDATE
+                                        ' . $objDatabase->EscapeIdentifier(self::$strTableName) . '
+                                SET
+                                        ' . $objDatabase->EscapeIdentifier('save_time') . ' = ' . $objDatabase->SqlVariable(time()) . ',
+                                        ' . $objDatabase->EscapeIdentifier('state_data') . ' = ' . $objDatabase->SqlVariable(base64_encode($strFormState)) . '
+                                WHERE
+                                        ' . $objDatabase->EscapeIdentifier('page_id') . ' = ' . $objDatabase->SqlVariable($strPageId);
+
+				$objDatabase->NonQuery($strQuery);
+				if ($objDatabase->AffectedRows > 0) {
+					return $strPageId;	// successfully updated the current record. No need to create a new one.
+				}
+			}
+			// First see if we need to perform garbage collection
+			// Decide for garbage collection
+			if ((self::$intGarbageCollectOnHitCount > 0) && (rand(1, self::$intGarbageCollectOnHitCount) == 1)) {
+				self::GarbageCollect();
 			}
 
 			//*/
@@ -137,7 +157,6 @@
 
 			// Save THIS formstate to the database
 			//Get database
-			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			// Create the query
 			$strQuery = '
                                 INSERT INTO

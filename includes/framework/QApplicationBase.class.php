@@ -220,6 +220,7 @@
 		 * The application object also has static methods that are miscellaneous web
 		 * development utilities, etc.
 		 *
+		 * @throws Exception
 		 * @return void
 		 */
 		public static function Initialize() {
@@ -417,6 +418,7 @@
 		 * the constants DB_CONNECTION_X, where "X" is the index number of a
 		 * particular database connection.
 		 *
+		 * @throws Exception
 		 * @return void
 		 */
 		public static function InitializeDatabaseConnections() {
@@ -504,8 +506,10 @@
 		 * Temprorarily overrides the default error handling mechanism.  Remember to call
 		 * RestoreErrorHandler to restore the error handler back to the default.
 		 *
-		 * @param string $strName the name of the new error handler function, or NULL if none
+		 * @param string  $strName  the name of the new error handler function, or NULL if none
 		 * @param integer $intLevel if a error handler function is defined, then the new error reporting level (if any)
+		 *
+		 * @throws QCallerException
 		 */
 		public static function SetErrorHandler($strName, $intLevel = null) {
 			if (!is_null(QApplicationBase::$intStoredErrorLevel))
@@ -531,8 +535,18 @@
 			restore_error_handler();
 			QApplicationBase::$intStoredErrorLevel = null;
 		}
+
+		/** @var null|int Stored Error Level (used for Settings and Restoring error handler) */
 		private static $intStoredErrorLevel = null;
 
+		/**
+		 * Create a directory on file system
+		 *
+		 * @param string   $strPath Path of the directory to be created
+		 * @param null|int $intMode Octal representation of permissions ('0755' style)
+		 *
+		 * @return bool
+		 */
 		public static function MakeDirectory($strPath, $intMode = null) {
 			return QFolder::MakeDirectory($strPath, $intMode);
 		}
@@ -638,6 +652,13 @@
 				return '';
 		}
 
+		/**
+		 * Generates part of query string (helps in generating the complete query string)
+		 * @param string $strKey Key for the query string
+		 * @param string|integer|array $mixValue Value we have to put as the value of the key
+		 *
+		 * @return null|string
+		 */
 		protected static function GenerateQueryStringHelper($strKey, $mixValue) {
 			if (is_array($mixValue)) {
 				$strToReturn = null;
@@ -655,7 +676,9 @@
 		 * then anyone can access the page.  If disabled, only "localhost" can access the page.
 		 * If you want to run a script that should be accessible regardless of
 		 * ALLOW_REMOTE_ADMIN, simply remove the CheckRemoteAdmin() method call from that script.
-		 * @return
+		 *
+		 * @throws QRemoteAdminDeniedException
+		 * @return void
 		 */
 		public static function CheckRemoteAdmin() {
 			if (!QApplication::IsRemoteAdminSession()) {
@@ -765,14 +788,23 @@
 			else
 				return null;
 		}
-		
+
+		/** @var array List of alert messages we have to show via JS */
 		public static $AlertMessageArray = array();
+		/** @var array List of JS commands (normal priority) */
 		public static $JavaScriptArray = array();
+		/** @var array List of JS commands (high priority) */
 		public static $JavaScriptArrayHighPriority = array();
+		/** @var array List of JS commands (low priority) */
 		public static $JavaScriptArrayLowPriority = array();
 
+		/** @var bool Used to determine if an error has occurred */
 		public static $ErrorFlag = false;
-		
+
+		/**
+		 * Causes the browser to display a JavaScript alert() box with supplied message
+		 * @param string $strMessage Message to be displayed
+		 */
 		public static function DisplayAlert($strMessage) {
 			array_push(QApplication::$AlertMessageArray, $strMessage);
 		}
@@ -806,6 +838,12 @@
 			}
 		}
 
+		/**
+		 * Outputs the current page with the buffer data
+		 * @param string $strBuffer Buffer data
+		 *
+		 * @return string
+		 */
 		public static function OutputPage($strBuffer) {
 			// If the ProcessOutput flag is set to false, simply return the buffer
 			// without processing anything.
@@ -962,8 +1000,11 @@
 	 * Class for enumerating Javascript priority.
 	 */
 	class QJsPriority {
+		/** Standard Priority */
 		const Standard = 0;
+		/** High prioriy JS */
 		const High = 1;
+		/** Low Priority JS */
 		const Low = -1;
 	}
 
@@ -971,11 +1012,17 @@
 	 * This is an enumerator class for listing Request Modes
 	 */
 	class QRequestMode {
+		/** Normal request (initial request) */
 		const Standard = 'Standard';
+		/** Ajax Request (mostly calls triggered by events) */
 		const Ajax = 'Ajax';
 	}
 
+	/**
+	 * Class QBrowserType: Type of browsers we can identify
+	 */
 	class QBrowserType {
+		/** IE */
 		const InternetExplorer = 1;
 
 		/* Deprecated. See QApplication::BrowserVersion **
@@ -983,6 +1030,7 @@
 		const InternetExplorer_7_0 = 4;
 		const InternetExplorer_8_0 = 8;*/
 
+		/** Firefox  */
 		const Firefox = 	0x10;
 
 		/* Deprecated. See QApplication::BrowserVersion **
@@ -991,33 +1039,42 @@
 		const Firefox_2_0 = 0x80;
 		const Firefox_3_0 = 0x100;*/
 
+		/** Apple's Safari */
 		const Safari = 		0x200;
 		/* Deprecated. See QApplication::BrowserVersion **
 		const Safari_2_0 = 	0x400;
 		const Safari_3_0 = 	0x800;
 		const Safari_4_0 = 	0x1000;*/
 
+		/** Browser */
 		const Opera = 		0x2000;
 		/* Deprecated. See QApplication::BrowserVersion **
 		const Opera_7 = 	0x4000;
 		const Opera_8 = 	0x8000;
 		const Opera_9 = 	0x10000;*/
 
+		/** KDE's failed rocket that never took off */
 		const Konqueror = 	0x20000;
 		/* Deprecated. See QApplication::BrowserVersion **
 		const Konqueror_3 = 0x40000;
 		const Konqueror_4 = 0x80000;*/
 
+		/** Google Chrome (and chromium) */
 		const Chrome = 		0x100000;
 		/* Deprecated. See QApplication::BrowserVersion **
 		const Chrome_0 = 	0x200000;
 		const Chrome_1 = 	0x400000;*/
 
+		/** Windows OS */
 		const Windows = 	0x800000;
+		/** Linux based OS */
 		const Linux = 		0x1000000;
+		/** Apple's OS X */
 		const Macintosh = 	0x2000000;
+		/** Some kind of Mobile browser */
 		const Mobile = 		0x4000000;	// some kind of mobile browser
 
+		/** We don't know this gentleman...err...gentlebrowser */
 		const Unsupported = 0x8000000;
 	}
 ?>

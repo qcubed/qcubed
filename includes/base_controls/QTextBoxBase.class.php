@@ -137,7 +137,7 @@
 			// We load lazy to make sure that the library is not loaded every time 'prepend.inc.php'
 			// or 'qcubed.inc.php' is inlcuded. HTMLPurifier is a HUGE and SLOW library. Lazy loading
 			// keeps it simpler.
-			require_once(__VENDOR__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
+			require_once(__DOCROOT__ . __VENDOR_ASSETS__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
 
 			// We configure the default set of forbidden tags (elements) and attributes here
 			// so that the rules are applicable the moment CrossScripting is set to Purify.
@@ -427,9 +427,9 @@
 				// FILTERING and VALIDATION
 				case "AutoTrim": return $this->blnAutoTrim;
 				case "SanitizeFilter": return $this->intSanitizeFilter;
-				case "SanitizeFilterOptions": return $this->$mixSanitizeFilterOptions;
+				case "SanitizeFilterOptions": return $this->mixSanitizeFilterOptions;
 				case "ValidateFilter": return $this->intValidateFilter;
-				case "ValidateFilterOptions": return $this->strLabelForInvalid;
+				case "ValidateFilterOptions": return $this->mixValidateFilterOptions;
 				case "LabelForInvalid": return $this->strLabelForInvalid;
 				
 				default:
@@ -447,11 +447,12 @@
 		/////////////////////////
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Name of the property
+		 *
+		 * @param string $strName  Name of the property
 		 * @param string $mixValue Value of the property
 		 *
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
@@ -681,7 +682,9 @@
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
 		/**
+		 * Returns the name of the property for Code Generator
 		 * @param string $strPropName
+		 *
 		 * @return string
 		 */
 		public static function Codegen_VarName($strPropName) {

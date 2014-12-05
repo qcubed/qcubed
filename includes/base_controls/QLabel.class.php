@@ -65,6 +65,7 @@ TMPL;
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string The function definition
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
@@ -139,6 +140,8 @@ TMPL;
 		 * @param QTable $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param boolean $blnInit	Generate initialization code instead of reload
+		 *
+		 * @return string Function definition
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);

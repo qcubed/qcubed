@@ -64,7 +64,7 @@ abstract class QPdoDatabase extends QDatabaseBase {
 
 }
 /**
- * QPdoDatabaseResult
+ * Class QPdoDatabaseResult: Class to handle results sent by database upon querying
  *
  * @abstract
  */
