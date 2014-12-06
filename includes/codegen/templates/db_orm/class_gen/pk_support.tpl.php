@@ -29,7 +29,13 @@
 <?php 	} ?>
 		}
 
-<?php	// Does not support multiple keys ?>
+		/**
+		* Returns the primary key directly from a database row.
+		* @param DatabaseRowBase $objDbRow
+		* @param string $strAliasPrefix
+		* @param string[] $strColumnAliasArray
+		* @return int|null
+		**/
 		protected static function GetRowPrimaryKey($objDbRow, $strAliasPrefix, $strColumnAliasArray) {
 <?php 	if (count ($objTable->PrimaryKeyColumnArray) == 1) { ?>
 			$strAlias = $strAliasPrefix . '<?= $objTable->PrimaryKeyColumnArray[0]->Name ?>';

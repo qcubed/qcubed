@@ -1,13 +1,26 @@
 <?php
 
-abstract class QModelBase extends QBaseClass {
+/**
+ * Class QModelTrait
+ *
+ * This trait class is a mixin helper for all the generated Model classes. It works together with the code generator
+ * to create particular functions that are common to all the classes. For historical reasons, and to prevent problems
+ * with polymorhpism, this is a trait and not a base class.
+ */
+trait QModelTrait {
+
+	/*** Requirements of Model classes ***/
+
+	/*
+	 * The generated model classes must implement the following functions and members.
+	 */
 
 	/**
 	 * Returns the value of the primary key for this object. If a composite primary key, this should return a string representation
 	 * of the combined keys such that the combination will be unique.
 	 * @return integer|string
 	 */
-	abstract protected function PrimaryKey();
+	// protected function PrimaryKey();
 
 	/**
 	 * A helper function to get the primary key associated with this object type from a query result row.
@@ -17,21 +30,21 @@ abstract class QModelBase extends QBaseClass {
 	 * @param string[] $strColumnAliasArray Array of column aliases associateing our column names with the minimized names in the query.
 	 * @return mixed The primary key found in the row
 	 */
-	protected static function GetRowPrimaryKey($objDbRow, $strAliasPrefix, $strColumnAliasArray){}
+	// protected static function GetRowPrimaryKey($objDbRow, $strAliasPrefix, $strColumnAliasArray){}
 
 	/**
 	 * Return the database object associated with this object.
 	 *
 	 * @return QDatabaseBase
 	 */
-	public static function GetDatabase(){}
+	// public static function GetDatabase(){}
 
 	/**
 	 * Return the name of the database table associated with this object.
 	 *
 	 * @return string
 	 */
-	public static function GetTableName(){}
+	// public static function GetTableName(){}
 
 	/**
 	 * Add select fields to the query as part of the query building process. The superclass should override this to add the necessary fields
@@ -41,7 +54,10 @@ abstract class QModelBase extends QBaseClass {
 	 * @param string|null $strPrefix	optional prefix to be used if this is an extended query (as in, a join)
 	 * @param QQSelect|null $objSelect optional QQSelect clause to select specific fields, rather than the entire set of fields in the object
 	 */
-	public static function GetSelectFields(QQueryBuilder $objBuilder, $strPrefix = null, QQSelect $objSelect = null){}
+	//public static function GetSelectFields(QQueryBuilder $objBuilder, $strPrefix = null, QQSelect $objSelect = null){}
+
+
+	/***  Implementation ***/
 
 	/**
 	 * Takes a query builder object and outputs the sql query that corresponds to its structure and the given parameters.

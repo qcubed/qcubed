@@ -31,7 +31,10 @@
 <?php include("property_comments.tpl.php"); ?>
 
 	 */
-	class <?= $objTable->ClassName ?>Gen extends QModelBase implements IteratorAggregate {
+	class <?= $objTable->ClassName ?>Gen extends QBaseClass implements IteratorAggregate {
+
+		use QModelTrait;
+
 		/** @var boolean Set to true in superclass to be able to watch changes to this class. */
 		public static $blnWatchChanges = false;
 
