@@ -33,32 +33,30 @@
 	 */
 	class <?= $objTable->ClassName ?>Gen extends QBaseClass implements IteratorAggregate {
 
-		public static $blnWatchChanges = false; // Set to true to watch changes at the table level
+		use QModelTrait;
 
-		<?php include("protected_member_variables.tpl.php"); ?>
+		/** @var boolean Set to true in superclass to be able to watch changes to this class. */
+		public static $blnWatchChanges = false;
 
+<?php if ($objTable->PrimaryKeyColumnArray)  { ?>
+		/** @var <?= $objTable->ClassName ?>[] Short term cached <?= $objTable->ClassName ?> objects */
+		protected static $objCacheArray = array();
+<?php } ?>
 
-
+	<?php include("protected_member_variables.tpl.php"); ?>
 
 		<?php include("protected_member_objects.tpl.php"); ?>
 
-
 		<?php include("class_initialize.tpl.php"); ?>
 
+		<?php include("pk_support.tpl.php"); ?>
 
 		<?php include("class_load_and_count_methods.tpl.php"); ?>
-
-
-
 
 		<?php include("qcubed_query_methods.tpl.php"); ?>
 
 
-
-
 		<?php include("instantiation_methods.tpl.php"); ?>
-
-
 
 
 		<?php include("index_load_methods.tpl.php"); ?>
@@ -125,5 +123,4 @@
 
 
 	<?php include("qcubed_query_classes.tpl.php"); ?>
-
 ?>
