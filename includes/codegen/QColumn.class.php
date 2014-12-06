@@ -145,8 +145,6 @@
 		protected $blnAutoUpdate;
 
 
-
-
 		////////////////////
 		// Public Overriders
 		////////////////////

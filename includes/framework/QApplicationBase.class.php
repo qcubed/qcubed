@@ -21,6 +21,13 @@
 		public static $objCacheProvider = null;
 
 		/**
+		 * @var bool Set to true to turn on short-term caching. This is an in-memory cache that caches database
+		 * objects only for as long as a single http request lasts. Depending on your application, this may speed
+		 * up your database accesses. It DOES increase the amount of memory used in a request.
+		 * */
+		public static $blnLocalCache = false;
+
+		/**
 		 * Internal bitmask signifying which BrowserType the user is using
 		 * Use the QApplication::IsBrowser() method to do browser checking
 		 *

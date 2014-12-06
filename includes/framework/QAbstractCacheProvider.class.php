@@ -55,6 +55,11 @@
 			return implode(":", $objArgsArray);
 			//return implode(":", func_get_args());
 		}
+
+		public function CreateKeyArray($a) {
+			return implode(":", $a);
+		}
+
 	}
 
 ?>
