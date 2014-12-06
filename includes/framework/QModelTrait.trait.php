@@ -427,8 +427,9 @@ trait QModelTrait {
 		if (QApplication::$blnLocalCache === true && !empty(static::$objCacheArray[$key])) {
 			return clone(static::$objCacheArray[$key]);
 		}
-		elseif (QApplication::$blnLocalCache instanceof QAbstractCacheProvider) {
-			return QApplication::$blnLocalCache->Get(QApplication::$blnLocalCache->CreateKeyArray(array(static::GetTableName(), $key)));
+		elseif (QApplication::$objCacheProvider) {
+			$strCacheKey = QApplication::$objCacheProvider->CreateKey(static::GetDatabase()->Database, __CLASS__, $key);
+			return QApplication::$objCacheProvider->Get($strCacheKey);
 		}
 		return null;
 	}
@@ -439,9 +440,11 @@ trait QModelTrait {
 	public function WriteToCache() {
 		$key = $this->PrimaryKey();
 		if ($key === null) return;
-		if (QApplication::$blnLocalCache === true) static::$objCacheArray[$key] = clone($this);
-		if (QApplication::$blnLocalCache instanceof QAbstractCacheProvider) {
-			QApplication::$blnLocalCache->Set(QApplication::$blnLocalCache->CreateKeyArray(array(static::GetTableName(), $key)), $this);
+		$obj = clone($this);
+		if (QApplication::$blnLocalCache === true) static::$objCacheArray[$key] = $obj;
+		if (QApplication::$objCacheProvider) {
+			$strCacheKey = QApplication::$objCacheProvider->CreateKey(static::GetDatabase()->Database, __CLASS__, $key);
+			QApplication::$objCacheProvider->Set($strCacheKey, $obj);
 		}
 	}
 
@@ -453,10 +456,10 @@ trait QModelTrait {
 		$key = $this->PrimaryKey();
 		if ($key === null) return;
 		unset (static::$objCacheArray[$key]);
-		if (QApplication::$blnLocalCache instanceof QAbstractCacheProvider) {
-			QApplication::$blnLocalCache->Delete(QApplication::$blnLocalCache->CreateKeyArray(array(static::GetTableName(), $key)));
+		if (QApplication::$objCacheProvider) {
+			$strCacheKey = QApplication::$objCacheProvider->CreateKey(static::GetDatabase()->Database, __CLASS__, $key);
+			QApplication::$blnLocalCache->Delete($strCacheKey);
 		}
-
 	}
 
 
@@ -465,8 +468,8 @@ trait QModelTrait {
 	 */
 	public static function ClearCache() {
 		static::$objCacheArray = array();
-		if (QApplication::$blnLocalCache instanceof QAbstractCacheProvider) {
-			QApplication::$blnLocalCache->DeleteAll();
+		if (QApplication::$objCacheProvider) {
+			QApplication::$objCacheProvider->DeleteAll();
 		}
 	}
 

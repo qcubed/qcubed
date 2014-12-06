@@ -51,6 +51,7 @@
 			return $objToReturn;
 		}
 
+
 		/**
 		 * Load all <?= $objTable->ClassNamePlural ?>
 
