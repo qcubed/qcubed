@@ -5,60 +5,19 @@
 	<h1>Make Your Own Plugin, Part 2: Packaging and Distributing</h1>
 
 	<p>Now that you <a href="components.php">know</a> how to create a plugin
-		configuration file, all that's left before you can share your plugin is to
+		control, all that's left before you can share your plugin is to
 		package it nicely, test it, and you're good to go!</p>
-
-	<p>You should now have a plugin configuration file, as all the relevant PHP,
-		JavaScript, CSS, images, and other files under the root of your plugin. Now,
-		package your plugin as a regular ZIP archive - the only restriction here is
-		that the configuration file <strong><?= QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE ?></strong> should be at the root
-		of the ZIP archive.</p>
-
-	<p>If you're like me, and you make subtle little mistakes that make you
-		re-generate that ZIP archive a bunch of times - and you're developing under
-		Windows, download and use the following
-		<a href="http://trac.qcu.be/projects/qcubed/browser/plugins/QAutoCompleteTextBox/tools/make_package.bat">DOS batch script</a>
-		that takes care of cleaning up any SVN relics from the
-		distribution, and packages stuff up as a ZIP archive. For this script
-		to work, you need to have the following folder hierarchy (<a
-			href="http://trac.qcu.be/projects/qcubed/browser/plugins/QAutoCompleteTextBox">sample</a>):</p>
+	<p>See other plugins for examples of the directory structure required. The directory structure can be very flexible, but generally you will want the following directories in your plugin root directory:</p>
 	<ul>
-		<li>releases <- this is where the resulting ZIP will be placed</li>
-		<li>source <- this is the root of your plugin, with <?= QPluginInstaller::PLUGIN_CONFIG_GENERATION_FILE; ?> underneath it</li>
-		<li>tools <- this is where the batch script goes
-	</ul>
-	<p>Note that you don't have to use this script at all - you can use your own.
-		If you happen to write a script that does the same thing under Linux / MacOS,
-		please <a href="http://qcu.be">share it with the community</a>!</p>
-
-	<p>After you're done, test the plugin on your own installation - navigate to
-		the <a href="../../_devtools/plugin_manager.php">Plugin Manager</a> and
-		try uploading your resulting ZIP archive. You should see all the metadata
-		you've put in when you defined your plugin; if all is well, press the
-		<strong>Install</strong> button and carefully inspect the installation log. Were all
-		the files copied appropriately, as you'd expect them to? Are all the class
-		files included? Are all the examples hooked up? If so, press <strong>Continue</strong>
-		and put your plugin to a real test - run one of the examples that you've
-		thoughtfully included for the community. Do they work? Cool!</p>
-
-	<p>Now, the last test: try uninstalling the plugin through the Plugin Manager.
-		Were all the files deleted appropriately? Great. Now install it again, for
-		the last time, as the last precaution. Still works? You're ready to share
-		your plugin with the community!</p>
-
-	<p>Put your plugin ZIP file - and, ideally, the source code - somewhere
-		where the community can download it. A great place is the <a
-			href="http://trac.qcu.be/projects/qcubed/wiki/SvnRepository">QCubed
-			Subversion</a> /plugins directory. Just create a folder for your own
-		plugin, and you're good to go.</p>
-
-	<p>Now, go to the <a target="_blank"
-						 href="<?= QPluginInstaller::ONLINE_PLUGIN_REPOSITORY ?>">
-		QCubed online plugin repository</a> and edit it to add the info on your plugin. You can link
-		to your plugin ZIP directly at the QCubed SVN if you're using it! You
-		may also want to post an announcement to the <a
-		href="http://qcu.be/forum">QCubed forums</a> and let the community know
-		about your contribution.</p>
+	  <li><strong>js</strong> - The location of your javascript files, including the javascript widget and any additional javascript files you need. Add these files to your output by using the <strong>AddPluginJavascriptFile</strong> method.</li>
+	  <li><strong>includes</strong> - The PHP files you want to make available to your project. Composer will use its autoloader to make these files available upon request, if you correctly set up the composer.json file (see below).</li>
+	  <li><strong>css </strong>- Any css files that go with your plugin. Include these by calling AddPluginCssFile from your constructor.</li>
+	  <li><strong>examples</strong> - Example files that demonstrate the use of the plugin. This is also a great way to document  your plugin.</li>
+    </ul>
+	<p>If your control edits a basic data type, be sure to include a <strong>control_registry.inc.php</strong> file as described in the previous example page.</p>
+	<p>Include a <strong>composer.json</strong> file in the root directory of your control. Its probably easiest to copy one from a current plugin and edit it.</p>
+	<p>Create a new repository in your own GitHub account, and upload your directory to the repository. Point to your repository from your main qcubed <strong>composer.json</strong> file, and try a Composer Install command to see if your control will install. It should appear in the <strong>vendor/qcubed/plugin</strong> directory if all goes well. Try it out in your project and see if you can use it.</p>
+	<p>Once you are ready to give it to the community, post an issue in the <a href="https://github.com/qcubed/framework">QCubed Github website</a>. One of the core developers will take a look, and add it as a qcubed repository if everything looks good.</p>
 </div>
 
 <style>#viewSource { display: none; }</style>

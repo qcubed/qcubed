@@ -409,7 +409,7 @@ class QPostgreSqlPdoDatabase extends QPdoDatabase {
 
 }
 /**
- * QPostgreSqlPdoDatabaseResult
+ * QPostgreSqlPdoDatabaseResult: Class to handle results sent by database upon querying
  */
 class QPostgreSqlPdoDatabaseResult extends QPdoDatabaseResult {
 
@@ -446,6 +446,14 @@ class QPostgreSqlPdoDatabaseRow extends QDatabaseRowBase {
 			$this->strColumnArray = $strColumnArray;
 		}
 
+		/**
+		 * Gets the value of a column from a result row returned by the database
+		 *
+		 * @param string                  $strColumnName Name of te column
+		 * @param null|QDatabaseFieldType $strColumnType Data type
+		 *
+		 * @return mixed
+		 */
 		public function GetColumn($strColumnName, $strColumnType = null) {
 			if (!isset($this->strColumnArray[$strColumnName])) {
 				return null;
@@ -482,6 +490,13 @@ class QPostgreSqlPdoDatabaseRow extends QDatabaseRowBase {
 			}
 		}
 
+		/**
+		 * Tells whether a particular column exists in a returned database row
+		 *
+		 * @param string $strColumnName Name of te column
+		 *
+		 * @return bool
+		 */
 		public function ColumnExists($strColumnName) {
 			return array_key_exists($strColumnName, $this->strColumnArray);
 		}

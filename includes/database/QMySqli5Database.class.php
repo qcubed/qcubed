@@ -83,7 +83,7 @@
 	}
 
 	/**
-	 *
+	 * Class to handle results sent by database upon querying
 	 * @package DatabaseAdapters
 	 */	
 	class QMySqli5DatabaseResult extends QMySqliDatabaseResult {

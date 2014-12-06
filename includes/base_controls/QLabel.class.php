@@ -56,6 +56,8 @@ TMPL;
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn $objColumn
+		 *
+		 * @return string The function definition
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
@@ -109,6 +111,8 @@ TMPL;
 		 * @param QTable $objTable
 		 * @param QColumn $objColumn
 		 * @param boolean $blnInit	Generate initialization code instead of reload
+		 *
+		 * @return string Function definition
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);

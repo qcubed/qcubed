@@ -43,7 +43,13 @@ class QHtmlList extends QControl {
         $this->mixDataBinder = $mixDataBinder;
     }
 
+
     public function ParsePostData() {}
+
+	/**
+	 * Validate the submitted data
+	 * @return bool
+	 */
     public function Validate() {return true;}
 
     /**
@@ -215,6 +221,13 @@ class QHtmlListItem extends QBaseClass {
         }
     }
 
+	/**
+	 * PHP Magic function to get properties
+	 * @param string $strText
+	 *
+	 * @return mixed
+	 * @throws Exception|QCallerException
+	 */
     public function __get($strText) {
         switch ($strText) {
             case "SubTag": return $this->strSubTag;
@@ -232,6 +245,14 @@ class QHtmlListItem extends QBaseClass {
         }
     }
 
+	/**
+	 * PHP Magic function to set class properties
+	 * @param string $strText
+	 * @param string $mixValue
+	 *
+	 * @return mixed
+	 * @throws Exception|QCallerException|QInvalidCastException
+	 */
     public function __set($strText, $mixValue) {
         switch ($strText) {
 			case "Text":
