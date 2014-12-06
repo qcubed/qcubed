@@ -969,6 +969,17 @@
 		 */
 		abstract public function ColumnExists($strColumnName);
 		abstract public function GetColumnNameArray();
+
+		/**
+		 * Returns the boolean value corresponding to whatever a boolean column returns. Some database types
+		 * return strings that represent the boolean values. Default is to use a PHP cast.
+		 * @param $mixValue Value of the BIT column
+		 * @return bool
+		 */
+		public function ResolveBooleanValue ($mixValue) {
+			return ((bool)$mixValue);
+		}
+
 	}
 
 	/**
