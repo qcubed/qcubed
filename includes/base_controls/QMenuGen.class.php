@@ -80,7 +80,7 @@
 	 * @property boolean $Disabled Disables the menu if set to <code>true</code>.
 	 * @property mixed $Icons Icons to use for submenus, matching <a>an icon provided by the jQuery UI
 	 * 		CSS Framework</a>. 				<ul><li>submenu (string, default:
-	 * 		"ui-icon-carat-1-e")</li></ul>
+	 * 		&quot;ui-icon-carat-1-e&quot;)</li></ul>
 	 * @property string $Items <p>Selector for the elements that serve as the menu items.</p>
 	 * 						<strong>Note:</strong> The <code>items</code> option should not be
 	 * 		changed after initialization. 			<span>(version added: 1.11.0)</span>
@@ -94,13 +94,13 @@
 	 * 		<a>jQuery UI Position</a> utility for more details about the various
 	 * 		options.
 	 * @property string $Role <p>Customize the ARIA roles used for the menu and menu items. The default
-	 * 		uses <code>"menuitem"</code> for items. Setting the <code>role</code>
-	 * 		option to <code>"listbox"</code> will use <code>"option"</code> for items.
-	 * 		If set to <code>null</code>, no roles will be set, which is useful if the
-	 * 		menu is being controlled by another element that is maintaining focus.</p>
-	 * 						<strong>Note:</strong> The <code>role</code> option should not be
-	 * 		changed after initialization. Existing (sub)menus and menu items will not
-	 * 		be updated.
+	 * 		uses <code>&quot;menuitem&quot;</code> for items. Setting the
+	 * 		<code>role</code> option to <code>&quot;listbox&quot;</code> will use
+	 * 		<code>&quot;option&quot;</code> for items. If set to <code>null</code>, no
+	 * 		roles will be set, which is useful if the menu is being controlled by
+	 * 		another element that is maintaining focus.</p> 				<strong>Note:</strong>
+	 * 		The <code>role</code> option should not be changed after initialization.
+	 * 		Existing (sub)menus and menu items will not be updated.
 	 */
 
 	class QMenuGen extends QPanel	{
@@ -192,8 +192,9 @@
 
 		/**
 		 * Removes focus from a menu, resets any active element styles and triggers
-		 * the menu's <a><code>blur</code></a> event.<ul><li><strong>event</strong>
-		 * Type: <a>Event</a> What triggered the menu to blur.</li></ul>
+		 * the menu&apos;s <a><code>blur</code></a>
+		 * event.<ul><li><strong>event</strong> Type: <a>Event</a> What triggered the
+		 * menu to blur.</li></ul>
 		 * @param $event
 		 */
 		public function Blur($event = null) {
@@ -252,7 +253,7 @@
 		}
 		/**
 		 * Activates a particular menu item, begins opening any sub-menu if present
-		 * and triggers the menu's <a><code>focus</code></a>
+		 * and triggers the menu&apos;s <a><code>focus</code></a>
 		 * event.<ul><li><strong>event</strong> Type: <a>Event</a> What triggered the
 		 * menu item to gain focus.</li> <li><strong>item</strong> Type: <a>jQuery</a>
 		 * The menu item to focus/activate.</li></ul>
@@ -263,11 +264,11 @@
 			$this->CallJqUiMethod(false, "focus", $item, $event);
 		}
 		/**
-		 * <p>Retrieves the menu's instance object. If the element does not have an
-		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
-		 * other widget methods, <code>instance()</code> is safe to call on any
-		 * element after the menu plugin has loaded.</p><ul><li>This method does not
-		 * accept any arguments.</li></ul>
+		 * <p>Retrieves the menu&apos;s instance object. If the element does not have
+		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
+		 * on any element after the menu plugin has loaded.</p><ul><li>This method
+		 * does not accept any arguments.</li></ul>
 		 */
 		public function Instance() {
 			$this->CallJqUiMethod(false, "instance");
@@ -306,9 +307,13 @@
 			$this->CallJqUiMethod(false, "nextPage", $event);
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -323,11 +328,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the menu option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the menu option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -371,7 +380,7 @@
 		}
 		/**
 		 * Selects the currently active menu item, collapses all sub-menus and
-		 * triggers the menu's <a><code>select</code></a>
+		 * triggers the menu&apos;s <a><code>select</code></a>
 		 * event.<ul><li><strong>event</strong> Type: <a>Event</a> What triggered the
 		 * selection.</li></ul>
 		 * @param $event
@@ -480,6 +489,20 @@
 						throw $objExc;
 					}
 			}
+		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the menu if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Items', '<p>Selector for the elements that serve as the menu items.</p> 				<strong>Note:</strong> The <code>items</code> option should not be changed after initialization. 			<span>(version added: 1.11.0)</span>', QType::String),
+				new QMetaParam (get_called_class(), 'Menus', '<p>Selector for the elements that serve as the menu container, including sub-menus.</p> 				<strong>Note:</strong> The <code>menus</code> option should not be changed after initialization. Existing submenus will not be updated.', QType::String),
+				new QMetaParam (get_called_class(), 'Role', '<p>Customize the ARIA roles used for the menu and menu items. The default uses <code>&quot;menuitem&quot;</code> for items. Setting the <code>role</code> option to <code>&quot;listbox&quot;</code> will use <code>&quot;option&quot;</code> for items. If set to <code>null</code>, no roles will be set, which is useful if the menu is being controlled by another element that is maintaining focus.</p> 				<strong>Note:</strong> The <code>role</code> option should not be changed after initialization. Existing (sub)menus and menu items will not be updated.', QType::String),
+			));
 		}
 	}
 

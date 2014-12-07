@@ -137,7 +137,7 @@
 			// We load lazy to make sure that the library is not loaded every time 'prepend.inc.php'
 			// or 'qcubed.inc.php' is inlcuded. HTMLPurifier is a HUGE and SLOW library. Lazy loading
 			// keeps it simpler.
-			require_once(__VENDOR__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
+			require_once(__DOCROOT__ . __VENDOR_ASSETS__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
 
 			// We configure the default set of forbidden tags (elements) and attributes here
 			// so that the rules are applicable the moment CrossScripting is set to Purify.
@@ -278,7 +278,7 @@
 			}
 
 			if(strlen($this->strPlaceholder) > 0) {
-				$strToReturn .= sprintf('placeholder="%s" ', $this->strPlaceholder);
+				$strToReturn .= sprintf('placeholder="%s" ', QApplication::HtmlEntities($this->strPlaceholder));
 			}
 
 			return $strToReturn;
@@ -424,6 +424,8 @@
 				case "LabelForTooLong": return $this->strLabelForTooLong;
 				case "LabelForTooLongUnnamed": return $this->strLabelForTooLongUnnamed;
 				case "Placeholder": return $this->strPlaceholder;
+				case 'Value': return empty($this->strText) ? null : $this->strText;
+
 
 				// BEHAVIOR
 				case "CrossScripting": return $this->strCrossScripting;
@@ -440,9 +442,9 @@
 				// FILTERING and VALIDATION
 				case "AutoTrim": return $this->blnAutoTrim;
 				case "SanitizeFilter": return $this->intSanitizeFilter;
-				case "SanitizeFilterOptions": return $this->$mixSanitizeFilterOptions;
+				case "SanitizeFilterOptions": return $this->mixSanitizeFilterOptions;
 				case "ValidateFilter": return $this->intValidateFilter;
-				case "ValidateFilterOptions": return $this->strLabelForInvalid;
+				case "ValidateFilterOptions": return $this->mixValidateFilterOptions;
 				case "LabelForInvalid": return $this->strLabelForInvalid;
 				
 				default:
@@ -460,11 +462,12 @@
 		/////////////////////////
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Name of the property
+		 *
+		 * @param string $strName  Name of the property
 		 * @param string $mixValue Value of the property
 		 *
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
 			// Setters that do not cause a complete redraw
@@ -509,6 +512,7 @@
 						throw $objExc;
 					}
 				case "Text":
+				case "Value":
 					try {
 						$this->strText = QType::Cast($mixValue, QType::String);
 						break;
@@ -713,7 +717,12 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
-
+		/**
+		 * Returns the name of the property for Code Generator
+		 * @param string $strPropName
+		 *
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'txt' . $strPropName;
 		}
@@ -727,14 +736,14 @@
 		 * @param QColumn $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strClassName = $objTable->ClassName;
-			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 
 			// Read the control type in case we are generating code for a subclass of QTextBox
-			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+			$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 
 			$strRet = <<<TMPL
 		/**
@@ -743,11 +752,23 @@
 		 * @return $strControlType
 		 */
 		public function {$strControlVarName}_Create(\$strControlId = null) {
+
+TMPL;
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+			$strRet .= <<<TMPL
 			\$this->{$strControlVarName} = new $strControlType(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
 
 TMPL;
-			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			if ($objColumn->NotNull) {
 				$strRet .=<<<TMPL
@@ -770,7 +791,15 @@ TMPL;
 TMPL;
 			}
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
+
+TMPL;
+			}
+
+			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -784,15 +813,15 @@ TMPL;
 		}
 
 		/**
-		 * Generate code to reload data from the MetaControl into this control.
+		 * Generate code to reload data from the Model into this control.
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn $objColumn
 		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
 		 * @return string
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
@@ -805,15 +834,45 @@ TMPL;
 		}
 
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		/**
+		 * Return code to update the Model object with the contents of the control.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strRet = <<<TMPL
-				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->Text;
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$strPropName} = \$this->{$strControlVarName}->Text;
 
 TMPL;
 			return $strRet;
+		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QMetaParam[]
+		 */
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Columns', 'Width of field', QType::Integer),
+				new QMetaParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
+				new QMetaParam (get_called_class(), 'Format', 'printf format string to use', QType::String),
+				new QMetaParam (get_called_class(), 'Placeholder', 'HTML5 Placeholder attribute', QType::String),
+				new QMetaParam (get_called_class(), 'ReadOnly', 'Editable or not', QType::Boolean),
+				new QMetaParam (get_called_class(), 'TextMode', 'Field type', QMetaParam::SelectionList,
+					array (null=>'-',
+						'QTextMode::Search'=>'Search',
+						'QTextMode::MultiLine'=>'MultiLine',
+						'QTextMode::Password'=>'Password',
+						'QTextMode::SingleLine'=>'SingleLine'
+					))
+			));
 		}
 	}
 

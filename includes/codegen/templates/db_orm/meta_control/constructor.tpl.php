@@ -8,17 +8,17 @@
 		 * create methods below can be used to construct based off of individual PK ID(s).
 		 *
 		 * @param mixed $objParentObject QForm or QPanel which will be using this <?= $objTable->ClassName ?>MetaControl
-		 * @param <?= $objTable->ClassName ?> $<?= $objCodeGen->VariableNameFromTable($objTable->Name); ?> new or existing <?= $objTable->ClassName ?> object
+		 * @param <?= $objTable->ClassName ?> $<?= $objCodeGen->ModelVariableName($objTable->Name); ?> new or existing <?= $objTable->ClassName ?> object
 		 */
-		 public function __construct($objParentObject, <?= $objTable->ClassName ?> $<?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>) {
+		 public function __construct($objParentObject, <?= $objTable->ClassName ?> $<?= $objCodeGen->ModelVariableName($objTable->Name); ?>) {
 			// Setup Parent Object (e.g. QForm or QPanel which will be using this <?= $objTable->ClassName ?>MetaControl)
 			$this->objParentObject = $objParentObject;
 
 			// Setup linked <?= $objTable->ClassName ?> object
-			$this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?> = $<?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>;
+			$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?> = $<?= $objCodeGen->ModelVariableName($objTable->Name); ?>;
 
 			// Figure out if we're Editing or Creating New
-			if ($this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>->__Restored) {
+			if ($this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>->__Restored) {
 				$this->strTitleVerb = QApplication::Translate('Edit');
 				$this->blnEditMode = true;
 			} else {
@@ -44,11 +44,11 @@
 		public static function Create($objParentObject, <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?= $objColumn->VariableName ?> = null, <?php } ?>$intCreateType = QMetaControlCreateType::CreateOrEdit) {
 			// Attempt to Load from PK Arguments
 			if (<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>strlen($<?= $objColumn->VariableName ?>) && <?php } ?><?php GO_BACK(4); ?>) {
-				$<?= $objCodeGen->VariableNameFromTable($objTable->Name); ?> = <?= $objTable->ClassName ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>);
+				$<?= $objCodeGen->ModelVariableName($objTable->Name); ?> = <?= $objTable->ClassName ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>);
 
 				// <?= $objTable->ClassName ?> was found -- return it!
-				if ($<?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>)
-					return new <?= $objTable->ClassName ?>MetaControl($objParentObject, $<?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>);
+				if ($<?= $objCodeGen->ModelVariableName($objTable->Name); ?>)
+					return new <?= $objTable->ClassName ?>MetaControl($objParentObject, $<?= $objCodeGen->ModelVariableName($objTable->Name); ?>);
 
 				// If CreateOnRecordNotFound not specified, throw an exception
 				else if ($intCreateType != QMetaControlCreateType::CreateOnRecordNotFound)

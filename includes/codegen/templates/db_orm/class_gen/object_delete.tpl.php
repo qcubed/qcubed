@@ -53,22 +53,11 @@
 <?php } ?>
 <?php } ?><?php GO_BACK(5); ?>');
 
-			$this->DeleteCache();
+			$this->DeleteFromCache();
 			if (static::$blnWatchChanges) {
 				QWatcher::MarkTableModified ('<?= QApplication::$Database[$objTable->OwnerDbIndex]->Database ?>', '<?= $objTable->Name ?>');
 			}
 
-		}
-
-        /**
- 	     * Delete this <?= $objTable->ClassName ?> ONLY from the cache
- 		 * @return void
-		 */
-		public function DeleteCache() {
-			if (QApplication::$objCacheProvider && QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Caching) {
-				$strCacheKey = QApplication::$objCacheProvider->CreateKey(QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Database, '<?= $objTable->ClassName ?>', <?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>);
-				QApplication::$objCacheProvider->Delete($strCacheKey);
-			}
 		}
 
 		/**
@@ -85,9 +74,7 @@
 				DELETE FROM
 					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>');
 
-			if (QApplication::$objCacheProvider && QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Caching) {
-				QApplication::$objCacheProvider->DeleteAll();
-			}
+			static::ClearCache();
 
 			if (static::$blnWatchChanges) {
 				QWatcher::MarkTableModified ('<?= QApplication::$Database[$objTable->OwnerDbIndex]->Database ?>', '<?= $objTable->Name ?>');
@@ -106,7 +93,5 @@
 			$objDatabase->NonQuery('
 				TRUNCATE <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>');
 
-			if (QApplication::$objCacheProvider && QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Caching) {
-				QApplication::$objCacheProvider->DeleteAll();
-			}
+			static::ClearCache();
 		}

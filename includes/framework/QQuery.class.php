@@ -114,7 +114,7 @@
 			}
 		}
 
-		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQSelect $objSelect = null);
+		abstract public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQCondition $objJoinCondition = null, QQSelect $objSelect = null);
 		abstract public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null);
 		
 		/**
@@ -266,7 +266,7 @@
 			} else {
 				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
 				try {
-					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
+					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objJoinCondition, $objSelect ? QQ::Select() : null);
 
 					if ($this->strTableName) {
 						$strJoinTableAlias = $strParentAlias . '__' . ($this->strAlias ? $this->strAlias : $this->strName);
@@ -310,7 +310,7 @@
 				$strParentAlias, $this->strName, $this->strPrimaryKey, $objJoinCondition);
 		}
 
-		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQSelect $objSelect = null) {
+		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 			// Are we at the Parent Node?
 			if (is_null($this->objParentNode))
 				// Yep -- Simply return the Parent Node Name
@@ -318,7 +318,7 @@
 			else {
 				try {
 					// No -- First get the Parent Alias
-					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
+					$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objJoinCondition, $objSelect ? QQ::Select() : null);
 
 					$strJoinTableAlias = $strParentAlias . '__' . $this->strAlias;
 					// Next, Join the Appropriate Table
@@ -526,7 +526,7 @@
 					$strBegin, $this->strName, $strEnd);
 			else {
 				// Use the Helper to Iterate Through the Parent Chain and get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
+				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objJoinCondition, $objSelect ? QQ::Select() : null);
 
 				if ($this->strTableName) {
 					// Next, Join the Appropriate Table
@@ -544,18 +544,18 @@
 			}
 		}
 		
-		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQSelect $objSelect = null) {
+		public function GetColumnAliasHelper(QQueryBuilder $objBuilder, $blnExpandSelection, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 			// Are we at the Parent Node?
 			if (is_null($this->objParentNode))
 				// Yep -- Simply return the Parent Node Name
 				return $this->strName;
 			else {
 				// No -- First get the Parent Alias
-				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objSelect ? QQ::Select() : null);
+				$strParentAlias = $this->objParentNode->GetColumnAliasHelper($objBuilder, $blnExpandSelection, $objJoinCondition, $objSelect ? QQ::Select() : null);
 
 				// Next, Join the Appropriate Table
 					$objBuilder->AddJoinItem($this->strTableName, $strParentAlias . '__' . $this->strAlias,
-						$strParentAlias, $this->objParentNode->_PrimaryKey, $this->strPrimaryKey);
+						$strParentAlias, $this->objParentNode->_PrimaryKey, $this->strPrimaryKey, $objJoinCondition);
 
 				// Next, Expand the Selection Fields for this Table (if applicable)
 				// TODO: If/when we add assn-based attributes, possibly add selectionfields addition here?

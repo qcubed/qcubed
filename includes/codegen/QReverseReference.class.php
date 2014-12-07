@@ -17,6 +17,7 @@
 	 * @property string $ObjectDescriptionPlural
 	 * @property string $ObjectMemberVariable
 	 * @property string $ObjectPropertyName
+	 * @property array $Options
 	 */
 	class QReverseReference extends QBaseClass {
 
@@ -112,6 +113,13 @@
 		 */
 		protected $strObjectPropertyName;
 
+		/**
+		 * Keyed array of overrides read from the override file
+		 * @var array Overrides
+		 */
+		protected $options;
+
+
 
 
 
@@ -156,6 +164,9 @@
 					return $this->strObjectMemberVariable;
 				case 'ObjectPropertyName':
 					return $this->strObjectPropertyName;
+				case 'Options':
+					return $this->options;
+
 				default:
 					try {
 						return parent::__get($strName);
@@ -205,6 +216,8 @@
 						return $this->strObjectMemberVariable = QType::Cast($mixValue, QType::String);
 					case 'ObjectPropertyName':
 						return $this->strObjectPropertyName = QType::Cast($mixValue, QType::String);
+					case 'Options':
+						return $this->options = QType::Cast($mixValue, QType::ArrayType);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

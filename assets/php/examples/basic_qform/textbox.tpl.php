@@ -18,6 +18,7 @@
 		<p>Basic (limited to 5 chars): <?php $this->txtBasic->RenderWithError(); ?></p>
 		<p>Integer (max value of 10): <?php $this->txtInt->RenderWithError(); ?></p>
 		<p>Float: <?php $this->txtFlt->RenderWithError(); ?></p>
+		<p>List (2 - 5 comma-separated items): <?php $this->txtList->RenderWithError(); ?></p>
 		<p>Email: <?php $this->txtEmail->RenderWithError(); ?></p>
 		<p>Url: <?php $this->txtUrl->RenderWithError(); ?></p>
 		<p>Custom (Only hex): <?php $this->txtCustom->RenderWithError(); ?></p>

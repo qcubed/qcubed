@@ -309,10 +309,10 @@
 	 * 		<li><strong>Element</strong>: The element to append the helper to.</li>
 	 * 		<li><strong>Selector</strong>: A selector specifying which element to
 	 * 		append the helper to.</li> <li><strong>String</strong>: The string
-	 * 		<code>"parent"</code> will cause the helper to be a sibling of the sortable
-	 * 		item.</li></ul>
+	 * 		<code>&quot;parent&quot;</code> will cause the helper to be a sibling of
+	 * 		the sortable item.</li></ul>
 	 * @property string $Axis If defined, the items can be dragged only horizontally or vertically.
-	 * 		Possible values: <code>"x"</code>, <code>"y"</code>.
+	 * 		Possible values: <code>&quot;x&quot;</code>, <code>&quot;y&quot;</code>.
 	 * @property mixed $Cancel Prevents sorting if you start on elements matching the selector.
 	 * @property mixed $ConnectWith A selector of other sortable elements that the items from this list should
 	 * 		be connected to. This is a one-way relationship, if you want the items to
@@ -322,15 +322,16 @@
 	 * 		dragging.</p>  				<p>Note: The element specified for containment must have
 	 * 		a calculated width and height (though it need not be explicit). For
 	 * 		example, if you have <code>float: left</code> sortable children and specify
-	 * 		<code>containment: "parent"</code> be sure to have <code>float: left</code>
-	 * 		on the sortable/parent container as well or it will have <code>height:
-	 * 		0</code>, causing undefined behavior.</p><strong>Multiple types
-	 * 		supported:</strong><ul><li><strong>Element</strong>: An element to use as
-	 * 		the container.</li> <li><strong>Selector</strong>: A selector specifying an
-	 * 		element to use as the container.</li> <li><strong>String</strong>: A string
-	 * 		identifying an element to use as the container. Possible values:
-	 * 		<code>"parent"</code>, <code>"document"</code>,
-	 * 		<code>"window"</code>.</li></ul>
+	 * 		<code>containment: &quot;parent&quot;</code> be sure to have <code>float:
+	 * 		left</code> on the sortable/parent container as well or it will have
+	 * 		<code>height: 0</code>, causing undefined behavior.</p><strong>Multiple
+	 * 		types supported:</strong><ul><li><strong>Element</strong>: An element to
+	 * 		use as the container.</li> <li><strong>Selector</strong>: A selector
+	 * 		specifying an element to use as the container.</li>
+	 * 		<li><strong>String</strong>: A string identifying an element to use as the
+	 * 		container. Possible values: <code>&quot;parent&quot;</code>,
+	 * 		<code>&quot;document&quot;</code>,
+	 * 		<code>&quot;window&quot;</code>.</li></ul>
 	 * @property string $Cursor Defines the cursor that is being shown while sorting.
 	 * @property mixed $CursorAt Moves the sorting element or helper so the cursor always appears to drag
 	 * 		from the same position. Coordinates can be given as a hash using a
@@ -341,7 +342,7 @@
 	 * @property integer $Distance Tolerance, in pixels, for when sorting should start. If specified, sorting
 	 * 		will not start until after mouse is dragged beyond distance. Can be used to
 	 * 		allow for clicks on elements within a handle.
-	 * @property boolean $DropOnEmpty If <code>false</code>, items from this sortable can't be dropped on an
+	 * @property boolean $DropOnEmpty If <code>false</code>, items from this sortable can&apos;t be dropped on an
 	 * 		empty connect sortable (see the <a><code>connectWith</code></a> option.
 	 * @property boolean $ForceHelperSize If <code>true</code>, forces the helper to have a size.
 	 * @property boolean $ForcePlaceholderSize If true, forces the placeholder to have a size.
@@ -351,10 +352,10 @@
 	 * @property mixed $Helper Allows for a helper element to be used for dragging
 	 * 		display.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>String</strong>: If set to
-	 * 		<code>"clone"</code>, then the element will be cloned and the clone will be
-	 * 		dragged.</li> <li><strong>Function</strong>: A function that will return a
-	 * 		DOMElement to use while dragging. The function receives the event and the
-	 * 		element being sorted.</li></ul>
+	 * 		<code>&quot;clone&quot;</code>, then the element will be cloned and the
+	 * 		clone will be dragged.</li> <li><strong>Function</strong>: A function that
+	 * 		will return a DOMElement to use while dragging. The function receives the
+	 * 		event and the element being sorted.</li></ul>
 	 * @property mixed $Items Specifies which items inside the element should be sortable.
 	 * @property integer $Opacity Defines the opacity of the helper while sorting. From <code>0.01</code> to
 	 * 		<code>1</code>.
@@ -371,9 +372,9 @@
 	 * 		within the <a><code>scrollSensitivity</code></a> distance.
 	 * @property string $Tolerance Specifies which mode to use for testing whether the item being moved is
 	 * 		hovering over another item. Possible values:
-	 * 						<ul><li><code>"intersect"</code>: The item overlaps the other item by
-	 * 		at least 50%.</li> 					<li><code>"pointer"</code>: The mouse pointer
-	 * 		overlaps the other item.</li></ul>
+	 * 						<ul><li><code>&quot;intersect&quot;</code>: The item overlaps the other
+	 * 		item by at least 50%.</li> 					<li><code>&quot;pointer&quot;</code>: The
+	 * 		mouse pointer overlaps the other item.</li></ul>
 	 * @property integer $ZIndex Z-index for element/helper while being sorted.
 	 */
 
@@ -553,8 +554,8 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <p>Retrieves the sortable's instance object. If the element does not have
-		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * <p>Retrieves the sortable&apos;s instance object. If the element does not
+		 * have an associated instance, <code>undefined</code> is returned.</p> 
 		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
 		 * on any element after the sortable plugin has loaded.</p><ul><li>This method
 		 * does not accept any arguments.</li></ul>
@@ -563,9 +564,13 @@
 			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -580,11 +585,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the sortable option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the sortable option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -616,27 +625,28 @@
 			$this->CallJqUiMethod(false, "refreshPositions");
 		}
 		/**
-		 * <p>Serializes the sortable's item <code>id</code>s into a form/ajax
+		 * <p>Serializes the sortable&apos;s item <code>id</code>s into a form/ajax
 		 * submittable string. Calling this method produces a hash that can be
 		 * appended to any url to easily submit a new item order back to the
 		 * server.</p>  				<p>It works by default by looking at the <code>id</code>
-		 * of each item in the format <code>"setname_number"</code>, and it spits out
-		 * a hash like <code>"setname[]=number&amp;setname[]=number"</code>.</p> 
+		 * of each item in the format <code>&quot;setname_number&quot;</code>, and it
+		 * spits out a hash like
+		 * <code>&quot;setname[]=number&amp;setname[]=number&quot;</code>.</p> 
 		 * 				<p><em>Note: If serialize returns an empty string, make sure the
 		 * <code>id</code> attributes include an underscore.  They must be in the
-		 * form: <code>"set_number"</code> For example, a 3 element list with
-		 * <code>id</code> attributes <code>"foo_1"</code>, <code>"foo_5"</code>,
-		 * <code>"foo_2"</code> will serialize to
-		 * <code>"foo[]=1&amp;foo[]=5&amp;foo[]=2"</code>. You can use an underscore,
-		 * equal sign or hyphen to separate the set and number. For example
-		 * <code>"foo=1"</code>, <code>"foo-1"</code>, and <code>"foo_1"</code> all
-		 * serialize to
-		 * <code>"foo[]=1"</code>.</em></p><ul><li><strong>options</strong> Type:
-		 * <a>Object</a> Options to customize the serialization.
+		 * form: <code>&quot;set_number&quot;</code> For example, a 3 element list
+		 * with <code>id</code> attributes <code>&quot;foo_1&quot;</code>,
+		 * <code>&quot;foo_5&quot;</code>, <code>&quot;foo_2&quot;</code> will
+		 * serialize to <code>&quot;foo[]=1&amp;foo[]=5&amp;foo[]=2&quot;</code>. You
+		 * can use an underscore, equal sign or hyphen to separate the set and number.
+		 * For example <code>&quot;foo=1&quot;</code>, <code>&quot;foo-1&quot;</code>,
+		 * and <code>&quot;foo_1&quot;</code> all serialize to
+		 * <code>&quot;foo[]=1&quot;</code>.</em></p><ul><li><strong>options</strong>
+		 * Type: <a>Object</a> Options to customize the serialization.
 		 * <ul><li><strong>key</strong> (default: <code>the part of the attribute in
 		 * front of the separator</code>) Type: <a>String</a> Replaces
 		 * <code>part1[]</code> with the specified value.</li>
-		 * <li><strong>attribute</strong> (default: <code>"id"</code>) Type:
+		 * <li><strong>attribute</strong> (default: <code>&quot;id&quot;</code>) Type:
 		 * <a>String</a> The name of the attribute to use for the values.</li>
 		 * <li><strong>expression</strong> (default: <code>/(.+)[-=_](.+)/</code>)
 		 * Type: <a>RegExp</a> A regular expression used to split the attribute value
@@ -647,11 +657,11 @@
 			$this->CallJqUiMethod(false, "serialize", $options);
 		}
 		/**
-		 * Serializes the sortable's item id's into an array of
+		 * Serializes the sortable&apos;s item id&apos;s into an array of
 		 * string.<ul><li><strong>options</strong> Type: <a>Object</a> Options to
 		 * customize the serialization. <ul><li><strong>attribute</strong> (default:
-		 * <code>"id"</code>) Type: <a>String</a> The name of the attribute to use for
-		 * the values.</li></ul></li></ul>
+		 * <code>&quot;id&quot;</code>) Type: <a>String</a> The name of the attribute
+		 * to use for the values.</li></ul></li></ul>
 		 * @param $options
 		 */
 		public function ToArray($options) {
@@ -977,6 +987,32 @@
 						throw $objExc;
 					}
 			}
+		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Axis', 'If defined, the items can be dragged only horizontally or vertically. Possible values: <code>&quot;x&quot;</code>, <code>&quot;y&quot;</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'Cursor', 'Defines the cursor that is being shown while sorting.', QType::String),
+				new QMetaParam (get_called_class(), 'Delay', 'Time in milliseconds to define when the sorting should start. Adding a delay helps preventing unwanted drags when clicking on an element.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the sortable if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when sorting should start. If specified, sorting will not start until after mouse is dragged beyond distance. Can be used to allow for clicks on elements within a handle.', QType::Integer),
+				new QMetaParam (get_called_class(), 'DropOnEmpty', 'If <code>false</code>, items from this sortable can&apos;t be dropped on an empty connect sortable (see the <a><code>connectWith</code></a> option.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ForceHelperSize', 'If <code>true</code>, forces the helper to have a size.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ForcePlaceholderSize', 'If true, forces the placeholder to have a size.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Grid', 'Snaps the sorting element or helper to a grid, every x and y pixels. Array values: <code>[ x, y ]</code>.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'Opacity', 'Defines the opacity of the helper while sorting. From <code>0.01</code> to <code>1</code>.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Placeholder', 'A class name that gets applied to the otherwise white space.', QType::String),
+				new QMetaParam (get_called_class(), 'Scroll', 'If set to true, the page scrolls when coming to an edge.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ScrollSensitivity', 'Defines how near the mouse must be to an edge to start scrolling.', QType::Integer),
+				new QMetaParam (get_called_class(), 'ScrollSpeed', 'The speed at which the window should scroll once the mouse pointer gets within the <a><code>scrollSensitivity</code></a> distance.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Tolerance', 'Specifies which mode to use for testing whether the item being moved is hovering over another item. Possible values: 				<ul><li><code>&quot;intersect&quot;</code>: The item overlaps the other item by at least 50%.</li> 					<li><code>&quot;pointer&quot;</code>: The mouse pointer overlaps the other item.</li></ul>', QType::String),
+				new QMetaParam (get_called_class(), 'ZIndex', 'Z-index for element/helper while being sorted.', QType::Integer),
+			));
 		}
 	}
 

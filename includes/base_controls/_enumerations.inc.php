@@ -50,15 +50,27 @@
 		const Right = 'right';
 	}
 
+	/**
+	 * Class QRepeatDirection: Set the direction in which QRadioButtonList and QCheckBoxList will be repeated
+	 */
 	abstract class QRepeatDirection {
+		/** Repeat Horizontally */
 		const Horizontal = 'Horizontal';
+		/** Repeat Vertically */
 		const Vertical = 'Vertical';
 	}
 
+	/**
+	 * Class QGridLines: Set the gridlines which have to be rendered for a QDataGrid
+	 */
 	abstract class QGridLines {
+		/** No gridlines to be rendered */
 		const None = 'none';
+		/** Horizontal gridlines but not vertical gridlines should be renderd */
 		const Horizontal = 'horizontal';
+		/** Vertical gridlines should be rendered but not horizontal ones */
 		const Vertical = 'vertical';
+		/** Both horizontal and verical gridlines have to be rendered */
 		const Both = 'both';
 	}
 
@@ -96,24 +108,45 @@
 		const Url = 'url';
 	}
 
+	/**
+	 * Class QHorizontalAlign: Horizontal alignment of a QControl (mostly the text of the control)
+	 */
 	abstract class QHorizontalAlign {
+		/** Not set */
 		const NotSet = 'NotSet';
+		/** Left align */
 		const Left = 'left';
+		/** Center align */
 		const Center = 'center';
+		/** Right align */
 		const Right = 'right';
+		/** Justify alignment for text */
 		const Justify = 'justify';
 	}
 
+	/**
+	 * Class QVerticalAlign: Vertical alignment of a QControl
+	 */
 	abstract class QVerticalAlign {
+		/** Not set */
 		const NotSet = 'NotSet';
+		/** Pull to top (top alignment) */
 		const Top = 'top';
+		/** Center vertically */
 		const Middle = 'middle';
+		/** Push to bottom (bottom alignment) */
 		const Bottom = 'bottom';
 	}
 
+	/**
+	 * Class QBorderCollapse: css "border-collapse" property for QDataGrid
+	 */
 	abstract class QBorderCollapse {
+		/** Not set */
 		const NotSet = 'NotSet';
+		/** Borders are not collapsed */
 		const Separate = 'Separate';
+		/** Collapse the borders */
 		const Collapse = 'Collapse';
 	}
 
@@ -121,27 +154,43 @@
 	 * Contains the display options for the QDateTimePicker control
 	 */
 	abstract class QDateTimePickerType {
+		/** Show only date */
 		const Date = 'Date';
+		/** Show date and time */
 		const DateTime = 'DateTime';
+		/** Show date and time with seconds */
 		const DateTimeSeconds = 'DateTimeSeconds';
+		/** Show only time (not the date) */
 		const Time = 'Time';
+		/** Show time with seconds (but not the date) */
 		const TimeSeconds = 'TimeSeconds';
 	}
 
+	/**
+	 * Class QCalendarType: [Currently unused]
+	 */
 	abstract class QCalendarType {
+		/** Date only */
 		const DateOnly = 'DateOnly';
+		/** Date and time */
 		const DateTime = 'DateTime';
+		/** Date and time with seconds */
 		const DateTimeSeconds = 'DateTimeSeconds';
+		/** Time only */
 		const TimeOnly = 'TimeOnly';
+		/** Time with seconds */
 		const TimeSecondsOnly = 'TimeSecondsOnly';
 	}
 
 	/**
-	 * Formats accepted by the QDateTimePicker Qcontrol
+	 * Order in which the listboxes of QDateTimePicker are shown/rendered
 	 */
 	abstract class QDateTimePickerFormat {
+		/** Render Month, then Day, then Year */
 		const MonthDayYear = 'MonthDayYear';
+		/** Render Day first, then Month, then Year */
 		const DayMonthYear = 'DayMonthYear';
+		/** Render Year, then Month and then Day */
 		const YearMonthDay = 'YearMonthDay';
 	}
 
@@ -186,9 +235,14 @@
 		/** Will result in 'static' positioning. Is default */
 		const NotSet = 'NotSet';
 	}
-	
+
+	/**
+	 * Class QResizeHandleDirection: [Currently Unused]
+	 */
 	abstract class QResizeHandleDirection {
+		/** vertical resize */
 		const Vertical = 'Vertical';
+		/** horizontal resize */
 		const Horizontal = 'Horizontal';
 	}
 
@@ -316,5 +370,21 @@
 		const QueryString = 2;
 		/** Via Post Data (not in use currently) */
 		const PostData = 3;
-	}	
+	}
+
+	/**
+	 * Class QFormGen
+	 * For specifying the FormGen param value. Declares what to generate for the given database object.
+	 */
+	abstract class QFormGen {
+		/** Generate both a control and a label */
+		const Both = 'both';
+		/** Generate only a label */
+		const LabelOnly = 'label';
+		/** Generate only a control */
+		const ControlOnly = 'control';
+		/** Do not generate anything for this database object */
+		const None = 'none';
+	}
+
 ?>

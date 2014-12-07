@@ -74,10 +74,12 @@
 		const Boolean = 'boolean';
 		const Object = 'object';
 		const ArrayType = 'array';
-
 		const DateTime = 'QDateTime';
-		
 		const Resource = 'resource';
+
+		// Virtual types
+		const Association = 'association';
+		const ReverseReference = 'reverse_reference';
 
 		const NoOp = 1;
 		const CheckOnly = 2;

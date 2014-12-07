@@ -19,10 +19,10 @@
 	$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
 	$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
 ?>
-	 * @property-read <?= $objReference->VariableType ?> $_<?= $objReference->ObjectDescription ?> the value for the private <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only) if set due to an expansion on the <?= $objReference->Table ?> association table
-	 * @property-read <?= $objReference->VariableType ?>[] $_<?= $objReference->ObjectDescription ?>Array the value for the private <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only) if set due to an ExpandAsArray on the <?= $objReference->Table ?> association table
+	 * @property-read <?= $objReference->VariableType ?> $_<?= $objReference->ObjectDescription ?> the value for the protected <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only) if set due to an expansion on the <?= $objReference->Table ?> association table
+	 * @property-read <?= $objReference->VariableType ?>[] $_<?= $objReference->ObjectDescription ?>Array the value for the protected <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only) if set due to an ExpandAsArray on the <?= $objReference->Table ?> association table
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
-	 * @property-read <?= $objReference->VariableType ?> $_<?= $objReference->ObjectDescription ?> the value for the private _obj<?= $objReference->ObjectDescription ?> (Read-Only) if set due to an expansion on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
-	 * @property-read <?= $objReference->VariableType ?>[] $_<?= $objReference->ObjectDescription ?>Array the value for the private _obj<?= $objReference->ObjectDescription ?>Array (Read-Only) if set due to an ExpandAsArray on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
+	 * @property-read <?= $objReference->VariableType ?> $_<?= $objReference->ObjectDescription ?> the value for the protected _obj<?= $objReference->ObjectDescription ?> (Read-Only) if set due to an expansion on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
+	 * @property-read <?= $objReference->VariableType ?>[] $_<?= $objReference->ObjectDescription ?>Array the value for the protected _obj<?= $objReference->ObjectDescription ?>Array (Read-Only) if set due to an ExpandAsArray on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
 <?php } ?><?php } ?>
 	 * @property-read boolean $__Restored whether or not this object was restored from the database (as opposed to created new)

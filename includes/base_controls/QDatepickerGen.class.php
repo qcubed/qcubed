@@ -45,10 +45,10 @@
 	 * 		parameter and must return an array with: 				<ul><li><code>[0]</code>:
 	 * 		<code>true</code>/<code>false</code> indicating whether or not this date is
 	 * 		selectable</li> 					<li><code>[1]</code>: a CSS class name to add to the
-	 * 		date's cell or <code>""</code> for the default presentation</li>
-	 * 							<li><code>[2]</code>: an optional popup tooltip for this
-	 * 		date</li></ul> 				The function is called for each day in the datepicker
-	 * 		before it is displayed.
+	 * 		date&apos;s cell or <code>&quot;&quot;</code> for the default
+	 * 		presentation</li> 					<li><code>[2]</code>: an optional popup tooltip for
+	 * 		this date</li></ul> 				The function is called for each day in the
+	 * 		datepicker before it is displayed.
 	 */
 	class QDatepicker_BeforeShowDayEvent extends QJqUiPropertyEvent {
 		const EventName = 'QDatepicker_BeforeShowDay';
@@ -80,8 +80,9 @@
 	/**
 	 * <strong>Default:</strong><code>null</code>Called when the datepicker is
 	 * 		closed, whether or not a date is selected. The function receives the
-	 * 		selected date as text (<code>""</code> if none) and the datepicker instance
-	 * 		as parameters. <code>this</code> refers to the associated input field.
+	 * 		selected date as text (<code>&quot;&quot;</code> if none) and the
+	 * 		datepicker instance as parameters. <code>this</code> refers to the
+	 * 		associated input field.
 	 */
 	class QDatepicker_CloseEvent extends QJqUiPropertyEvent {
 		const EventName = 'QDatepicker_Close';
@@ -132,20 +133,21 @@
 	 * 		parameter and must return an array with: 				<ul><li><code>[0]</code>:
 	 * 		<code>true</code>/<code>false</code> indicating whether or not this date is
 	 * 		selectable</li> 					<li><code>[1]</code>: a CSS class name to add to the
-	 * 		date's cell or <code>""</code> for the default presentation</li>
-	 * 							<li><code>[2]</code>: an optional popup tooltip for this
-	 * 		date</li></ul> 				The function is called for each day in the datepicker
-	 * 		before it is displayed.
+	 * 		date&apos;s cell or <code>&quot;&quot;</code> for the default
+	 * 		presentation</li> 					<li><code>[2]</code>: an optional popup tooltip for
+	 * 		this date</li></ul> 				The function is called for each day in the
+	 * 		datepicker before it is displayed.
 	 * @property string $ButtonImage A URL of an image to use to display the datepicker when the
-	 * 		<a><code>showOn</code></a> option is set to <code>"button"</code> or
-	 * 		<code>"both"</code>. If set, the <a><code>buttonText</code></a> option
-	 * 		becomes the <code>alt</code> value and is not directly displayed.
+	 * 		<a><code>showOn</code></a> option is set to <code>&quot;button&quot;</code>
+	 * 		or <code>&quot;both&quot;</code>. If set, the
+	 * 		<a><code>buttonText</code></a> option becomes the <code>alt</code> value
+	 * 		and is not directly displayed.
 	 * @property boolean $ButtonImageOnly Whether the button image should be rendered by itself instead of inside a
 	 * 		button element. This option is only relevant if the
 	 * 		<a><code>buttonImage</code></a> option has also been set.
 	 * @property string $ButtonText The text to display on the trigger button. Use in conjunction with the
-	 * 		<a><code>showOn</code></a> option set to <code>"button"</code> or
-	 * 		<code>"both"</code>.
+	 * 		<a><code>showOn</code></a> option set to <code>&quot;button&quot;</code> or
+	 * 		<code>&quot;both&quot;</code>.
 	 * @property QJsClosure $OnCalculateWeek <strong>Default:</strong><code>jQuery.datepicker.iso8601Week</code>A
 	 * 		function to calculate the week of the year for a given date. The default
 	 * 		implementation uses the ISO 8601 definition: weeks start on a Monday; the
@@ -171,21 +173,23 @@
 	 * @property mixed $DefaultDate Set the date to highlight on first opening if the field is blank. Specify
 	 * 		either an actual date via a Date object or as a string in the current
 	 * 		<a><code>dateFormat</code></a>, or a number of days from today (e.g. +7) or
-	 * 		a string of values and periods ('y' for years, 'm' for months, 'w' for
-	 * 		weeks, 'd' for days, e.g. '+1m +7d'), or null for today.<strong>Multiple
-	 * 		types supported:</strong><ul><li><strong>Date</strong>: A date object
-	 * 		containing the default date.</li> <li><strong>Number</strong>: A number of
-	 * 		days from today. For example <code>2</code> represents two days from today
-	 * 		and <code>-1</code> represents yesterday.</li> <li><strong>String</strong>:
-	 * 		A string in the format defined by the <a><code>dateFormat</code></a>
-	 * 		option, or a relative date. Relative dates must contain value and period
-	 * 		pairs; valid periods are <code>"y"</code> for years, <code>"m"</code> for
-	 * 		months, <code>"w"</code> for weeks, and <code>"d"</code> for days. For
-	 * 		example, <code>"+1m +7d"</code> represents one month and seven days from
+	 * 		a string of values and periods (&apos;y&apos; for years, &apos;m&apos; for
+	 * 		months, &apos;w&apos; for weeks, &apos;d&apos; for days, e.g. &apos;+1m
+	 * 		+7d&apos;), or null for today.<strong>Multiple types
+	 * 		supported:</strong><ul><li><strong>Date</strong>: A date object containing
+	 * 		the default date.</li> <li><strong>Number</strong>: A number of days from
+	 * 		today. For example <code>2</code> represents two days from today and
+	 * 		<code>-1</code> represents yesterday.</li> <li><strong>String</strong>: A
+	 * 		string in the format defined by the <a><code>dateFormat</code></a> option,
+	 * 		or a relative date. Relative dates must contain value and period pairs;
+	 * 		valid periods are <code>&quot;y&quot;</code> for years,
+	 * 		<code>&quot;m&quot;</code> for months, <code>&quot;w&quot;</code> for
+	 * 		weeks, and <code>&quot;d&quot;</code> for days. For example,
+	 * 		<code>&quot;+1m +7d&quot;</code> represents one month and seven days from
 	 * 		today.</li></ul>
 	 * @property mixed $Duration Control the speed at which the datepicker appears, it may be a time in
 	 * 		milliseconds or a string representing one of the three predefined speeds
-	 * 		("slow", "normal", "fast").
+	 * 		(&quot;slow&quot;, &quot;normal&quot;, &quot;fast&quot;).
 	 * @property integer $FirstDay Set the first day of the week: Sunday is <code>0</code>, Monday is
 	 * 		<code>1</code>, etc.
 	 * @property boolean $GotoCurrent When <code>true</code>, the current day link moves to the currently
@@ -203,9 +207,10 @@
 	 * 		<code>-1</code> represents yesterday.</li> <li><strong>String</strong>: A
 	 * 		string in the format defined by the <a><code>dateFormat</code></a> option,
 	 * 		or a relative date. Relative dates must contain value and period pairs;
-	 * 		valid periods are <code>"y"</code> for years, <code>"m"</code> for months,
-	 * 		<code>"w"</code> for weeks, and <code>"d"</code> for days. For example,
-	 * 		<code>"+1m +7d"</code> represents one month and seven days from
+	 * 		valid periods are <code>&quot;y&quot;</code> for years,
+	 * 		<code>&quot;m&quot;</code> for months, <code>&quot;w&quot;</code> for
+	 * 		weeks, and <code>&quot;d&quot;</code> for days. For example,
+	 * 		<code>&quot;+1m +7d&quot;</code> represents one month and seven days from
 	 * 		today.</li></ul>
 	 * @property mixed $MinDate The minimum selectable date. When set to <code>null</code>, there is no
 	 * 		minimum.<strong>Multiple types
@@ -215,9 +220,10 @@
 	 * 		<code>-1</code> represents yesterday.</li> <li><strong>String</strong>: A
 	 * 		string in the format defined by the <a><code>dateFormat</code></a> option,
 	 * 		or a relative date. Relative dates must contain value and period pairs;
-	 * 		valid periods are <code>"y"</code> for years, <code>"m"</code> for months,
-	 * 		<code>"w"</code> for weeks, and <code>"d"</code> for days. For example,
-	 * 		<code>"+1m +7d"</code> represents one month and seven days from
+	 * 		valid periods are <code>&quot;y&quot;</code> for years,
+	 * 		<code>&quot;m&quot;</code> for months, <code>&quot;w&quot;</code> for
+	 * 		weeks, and <code>&quot;d&quot;</code> for days. For example,
+	 * 		<code>&quot;+1m +7d&quot;</code> represents one month and seven days from
 	 * 		today.</li></ul>
 	 * @property array $MonthNames The list of full month names, for use as requested via the
 	 * 		<a><code>dateFormat</code></a> option.
@@ -239,8 +245,9 @@
 	 * 		to the associated input field.
 	 * @property QJsClosure $OnClose <strong>Default:</strong><code>null</code>Called when the datepicker is
 	 * 		closed, whether or not a date is selected. The function receives the
-	 * 		selected date as text (<code>""</code> if none) and the datepicker instance
-	 * 		as parameters. <code>this</code> refers to the associated input field.
+	 * 		selected date as text (<code>&quot;&quot;</code> if none) and the
+	 * 		datepicker instance as parameters. <code>this</code> refers to the
+	 * 		associated input field.
 	 * @property QJsClosure $OnSelect <strong>Default:</strong><code>null</code>Called when the datepicker is
 	 * 		selected. The function receives the selected date as text and the
 	 * 		datepicker instance as parameters. <code>this</code> refers to the
@@ -251,30 +258,32 @@
 	 * 		selectable. This only applies if the <a><code>showOtherMonths</code></a>
 	 * 		option is set to <code>true</code>.
 	 * @property mixed $ShortYearCutoff The cutoff year for determining the century for a date (used in conjunction
-	 * 		with <a><code>dateFormat</code></a> 'y'). Any dates entered with a year
-	 * 		value less than or equal to the cutoff year are considered to be in the
-	 * 		current century, while those greater than it are deemed to be in the
+	 * 		with <a><code>dateFormat</code></a> &apos;y&apos;). Any dates entered with
+	 * 		a year value less than or equal to the cutoff year are considered to be in
+	 * 		the current century, while those greater than it are deemed to be in the
 	 * 		previous century.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: A value between
 	 * 		<code>0</code> and <code>99</code> indicating the cutoff year.</li>
 	 * 		<li><strong>String</strong>: A relative number of years from the current
-	 * 		year, e.g., <code>"+3"</code> or <code>"-5"</code>.</li></ul>
+	 * 		year, e.g., <code>&quot;+3&quot;</code> or
+	 * 		<code>&quot;-5&quot;</code>.</li></ul>
 	 * @property string $ShowAnim The name of the animation used to show and hide the datepicker. Use
-	 * 		<code>"show"</code> (the default), <code>"slideDown"</code>,
-	 * 		<code>"fadeIn"</code>, any of the <a>jQuery UI effects</a>. Set to an empty
-	 * 		string to disable animation.
+	 * 		<code>&quot;show&quot;</code> (the default),
+	 * 		<code>&quot;slideDown&quot;</code>, <code>&quot;fadeIn&quot;</code>, any of
+	 * 		the <a>jQuery UI effects</a>. Set to an empty string to disable animation.
 	 * @property boolean $ShowButtonPanel Whether to display a button pane underneath the calendar. The button pane
 	 * 		contains two buttons, a Today button that links to the current day, and a
-	 * 		Done button that closes the datepicker. The buttons' text can be customized
-	 * 		using the <a><code>currentText</code></a> and <a><code>closeText</code></a>
-	 * 		options respectively.
+	 * 		Done button that closes the datepicker. The buttons&apos; text can be
+	 * 		customized using the <a><code>currentText</code></a> and
+	 * 		<a><code>closeText</code></a> options respectively.
 	 * @property integer $ShowCurrentAtPos When displaying multiple months via the <a><code>numberOfMonths</code></a>
 	 * 		option, the <code>showCurrentAtPos</code> option defines which position to
 	 * 		display the current month in.
 	 * @property boolean $ShowMonthAfterYear Whether to show the month after the year in the header.
 	 * @property string $ShowOn When the datepicker should appear. The datepicker can appear when the field
-	 * 		receives focus (<code>"focus"</code>), when a button is clicked
-	 * 		(<code>"button"</code>), or when either event occurs (<code>"both"</code>).
+	 * 		receives focus (<code>&quot;focus&quot;</code>), when a button is clicked
+	 * 		(<code>&quot;button&quot;</code>), or when either event occurs
+	 * 		(<code>&quot;both&quot;</code>).
 	 * @property mixed $ShowOptions If using one of the jQuery UI effects for the <a><code>showAnim</code></a>
 	 * 		option, you can provide additional settings for that animation via this
 	 * 		option.
@@ -289,12 +298,12 @@
 	 * @property string $WeekHeader The text to display for the week of the year column heading. Use the
 	 * 		<a><code>showWeek</code></a> option to display this column.
 	 * @property string $YearRange The range of years displayed in the year drop-down: either relative to
-	 * 		today's year (<code>"-nn:+nn"</code>), relative to the currently selected
-	 * 		year (<code>"c-nn:c+nn"</code>), absolute (<code>"nnnn:nnnn"</code>), or
-	 * 		combinations of these formats (<code>"nnnn:-nn"</code>). Note that this
-	 * 		option only affects what appears in the drop-down, to restrict which dates
-	 * 		may be selected use the <a><code>minDate</code></a> and/or
-	 * 		<a><code>maxDate</code></a> options.
+	 * 		today&apos;s year (<code>&quot;-nn:+nn&quot;</code>), relative to the
+	 * 		currently selected year (<code>&quot;c-nn:c+nn&quot;</code>), absolute
+	 * 		(<code>&quot;nnnn:nnnn&quot;</code>), or combinations of these formats
+	 * 		(<code>&quot;nnnn:-nn&quot;</code>). Note that this option only affects
+	 * 		what appears in the drop-down, to restrict which dates may be selected use
+	 * 		the <a><code>minDate</code></a> and/or <a><code>maxDate</code></a> options.
 	 * @property string $YearSuffix Additional text to display after the year in the month headers.
 	 */
 
@@ -567,9 +576,13 @@
 			$this->CallJqUiMethod(false, "isDisabled");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -584,11 +597,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the datepicker option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the datepicker option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -614,12 +631,13 @@
 		/**
 		 * Sets the date for the datepicker. The new date may be a <code>Date</code>
 		 * object or a string in the current <a>date format</a> (e.g.,
-		 * <code>"01/26/2009"</code>), a number of days from today (e.g.,
-		 * <code>+7</code>) or a string of values and periods (<code>"y"</code> for
-		 * years, <code>"m"</code> for months, <code>"w"</code> for weeks,
-		 * <code>"d"</code> for days, e.g., <code>"+1m +7d"</code>), or
-		 * <code>null</code> to clear the selected date.<ul><li><strong>date</strong>
-		 * Type: <a>String</a> or <a>Date</a> The new date.</li></ul>
+		 * <code>&quot;01/26/2009&quot;</code>), a number of days from today (e.g.,
+		 * <code>+7</code>) or a string of values and periods
+		 * (<code>&quot;y&quot;</code> for years, <code>&quot;m&quot;</code> for
+		 * months, <code>&quot;w&quot;</code> for weeks, <code>&quot;d&quot;</code>
+		 * for days, e.g., <code>&quot;+1m +7d&quot;</code>), or <code>null</code> to
+		 * clear the selected date.<ul><li><strong>date</strong> Type: <a>String</a>
+		 * or <a>Date</a> The new date.</li></ul>
 		 * @param $date
 		 */
 		public function SetDate($date) {
@@ -1259,6 +1277,58 @@
 						throw $objExc;
 					}
 			}
+		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'AltFormat', 'The <a><code>dateFormat</code></a> to be used for the <a><code>altField</code></a> option. This allows one date format to be shown to the user for selection purposes, while a different format is actually sent behind the scenes. For a full list of the possible formats see the <a><code>formatDate</code></a> function', QType::String),
+				new QMetaParam (get_called_class(), 'AppendText', 'The text to display after each date field, e.g., to show the required format.', QType::String),
+				new QMetaParam (get_called_class(), 'AutoSize', 'Set to <code>true</code> to automatically resize the input field to accommodate dates in the current <a><code>dateFormat</code></a>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'OnBeforeShow', '<strong>Default:</strong><code>null</code>A function that takes an input field and current datepicker instance and returns an options object to update the datepicker with. It is called just before the datepicker is displayed.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'OnBeforeShowDay', '<strong>Default:</strong><code>null</code>A function that takes a date as a parameter and must return an array with: 				<ul><li><code>[0]</code>: <code>true</code>/<code>false</code> indicating whether or not this date is selectable</li> 					<li><code>[1]</code>: a CSS class name to add to the date&apos;s cell or <code>&quot;&quot;</code> for the default presentation</li> 					<li><code>[2]</code>: an optional popup tooltip for this date</li></ul> 				The function is called for each day in the datepicker before it is displayed.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'ButtonImage', 'A URL of an image to use to display the datepicker when the <a><code>showOn</code></a> option is set to <code>&quot;button&quot;</code> or <code>&quot;both&quot;</code>. If set, the <a><code>buttonText</code></a> option becomes the <code>alt</code> value and is not directly displayed.', QType::String),
+				new QMetaParam (get_called_class(), 'ButtonImageOnly', 'Whether the button image should be rendered by itself instead of inside a button element. This option is only relevant if the <a><code>buttonImage</code></a> option has also been set.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ButtonText', 'The text to display on the trigger button. Use in conjunction with the <a><code>showOn</code></a> option set to <code>&quot;button&quot;</code> or <code>&quot;both&quot;</code>.', QType::String),
+				new QMetaParam (get_called_class(), 'OnCalculateWeek', '<strong>Default:</strong><code>jQuery.datepicker.iso8601Week</code>A function to calculate the week of the year for a given date. The default implementation uses the ISO 8601 definition: weeks start on a Monday; the first week of the year contains the first Thursday of the year.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'ChangeMonth', 'Whether the month should be rendered as a dropdown instead of text.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ChangeYear', 'Whether the year should be rendered as a dropdown instead of text. Use the <a><code>yearRange</code></a> option to control which years are made available for selection.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'CloseText', 'The text to display for the close link. Use the <a><code>showButtonPanel</code></a> option to display this button.', QType::String),
+				new QMetaParam (get_called_class(), 'ConstrainInput', 'When <code>true</code>, entry in the input field is constrained to those characters allowed by the current <a><code>dateFormat</code></a> option.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'CurrentText', 'The text to display for the current day link. Use the <a><code>showButtonPanel</code></a> option to display this button.', QType::String),
+				new QMetaParam (get_called_class(), 'JqDateFormat', 'The format for parsed and displayed dates. For a full list of the possible formats see the <code><a><code>formatDate</code></a></code> function.', QType::String),
+				new QMetaParam (get_called_class(), 'DayNames', 'The list of long day names, starting from Sunday, for use as requested via the <a><code>dateFormat</code></a> option.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'DayNamesMin', 'The list of minimised day names, starting from Sunday, for use as column headers within the datepicker.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'DayNamesShort', 'The list of abbreviated day names, starting from Sunday, for use as requested via the <a><code>dateFormat</code></a> option.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'FirstDay', 'Set the first day of the week: Sunday is <code>0</code>, Monday is <code>1</code>, etc.', QType::Integer),
+				new QMetaParam (get_called_class(), 'GotoCurrent', 'When <code>true</code>, the current day link moves to the currently selected date instead of today.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'HideIfNoPrevNext', 'Normally the previous and next links are disabled when not applicable (see the <a><code>minDate</code></a> and <a><code>maxDate</code></a> options). You can hide them altogether by setting this attribute to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'IsRTL', 'Whether the current language is drawn from right to left.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'MonthNames', 'The list of full month names, for use as requested via the <a><code>dateFormat</code></a> option.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'MonthNamesShort', 'The list of abbreviated month names, as used in the month header on each datepicker and as requested via the <a><code>dateFormat</code></a> option.', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'NavigationAsDateFormat', 'Whether the <a><code>prevText</code></a> and <a><code>nextText</code></a> options should be parsed as dates by the <code><a><code>formatDate</code></a></code> function, allowing them to display the target month names for example.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'NextText', 'The text to display for the next month link. With the standard ThemeRoller styling, this value is replaced by an icon.', QType::String),
+				new QMetaParam (get_called_class(), 'OnChangeMonthYear', '<strong>Default:</strong><code>null</code>Called when the datepicker moves to a new month and/or year. The function receives the selected year, month (1-12), and the datepicker instance as parameters. <code>this</code> refers to the associated input field.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'OnClose', '<strong>Default:</strong><code>null</code>Called when the datepicker is closed, whether or not a date is selected. The function receives the selected date as text (<code>&quot;&quot;</code> if none) and the datepicker instance as parameters. <code>this</code> refers to the associated input field.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'OnSelect', '<strong>Default:</strong><code>null</code>Called when the datepicker is selected. The function receives the selected date as text and the datepicker instance as parameters. <code>this</code> refers to the associated input field.', 'QJsClosure'),
+				new QMetaParam (get_called_class(), 'PrevText', 'The text to display for the previous month link. With the standard ThemeRoller styling, this value is replaced by an icon.', QType::String),
+				new QMetaParam (get_called_class(), 'SelectOtherMonths', 'Whether days in other months shown before or after the current month are selectable. This only applies if the <a><code>showOtherMonths</code></a> option is set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowAnim', 'The name of the animation used to show and hide the datepicker. Use <code>&quot;show&quot;</code> (the default), <code>&quot;slideDown&quot;</code>, <code>&quot;fadeIn&quot;</code>, any of the <a>jQuery UI effects</a>. Set to an empty string to disable animation.', QType::String),
+				new QMetaParam (get_called_class(), 'ShowButtonPanel', 'Whether to display a button pane underneath the calendar. The button pane contains two buttons, a Today button that links to the current day, and a Done button that closes the datepicker. The buttons&apos; text can be customized using the <a><code>currentText</code></a> and <a><code>closeText</code></a> options respectively.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowCurrentAtPos', 'When displaying multiple months via the <a><code>numberOfMonths</code></a> option, the <code>showCurrentAtPos</code> option defines which position to display the current month in.', QType::Integer),
+				new QMetaParam (get_called_class(), 'ShowMonthAfterYear', 'Whether to show the month after the year in the header.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowOn', 'When the datepicker should appear. The datepicker can appear when the field receives focus (<code>&quot;focus&quot;</code>), when a button is clicked (<code>&quot;button&quot;</code>), or when either event occurs (<code>&quot;both&quot;</code>).', QType::String),
+				new QMetaParam (get_called_class(), 'ShowOtherMonths', 'Whether to display dates in other months (non-selectable) at the start or end of the current month. To make these days selectable use the <a><code>selectOtherMonths</code></a> option.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowWeek', 'When <code>true</code>, a column is added to show the week of the year. The <a><code>calculateWeek</code></a> option determines how the week of the year is calculated. You may also want to change the <a><code>firstDay</code></a> option.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'StepMonths', 'Set how many months to move when clicking the previous/next links.', QType::Integer),
+				new QMetaParam (get_called_class(), 'WeekHeader', 'The text to display for the week of the year column heading. Use the <a><code>showWeek</code></a> option to display this column.', QType::String),
+				new QMetaParam (get_called_class(), 'YearRange', 'The range of years displayed in the year drop-down: either relative to today&apos;s year (<code>&quot;-nn:+nn&quot;</code>), relative to the currently selected year (<code>&quot;c-nn:c+nn&quot;</code>), absolute (<code>&quot;nnnn:nnnn&quot;</code>), or combinations of these formats (<code>&quot;nnnn:-nn&quot;</code>). Note that this option only affects what appears in the drop-down, to restrict which dates may be selected use the <a><code>minDate</code></a> and/or <a><code>maxDate</code></a> options.', QType::String),
+				new QMetaParam (get_called_class(), 'YearSuffix', 'Additional text to display after the year in the month headers.', QType::String),
+			));
 		}
 	}
 

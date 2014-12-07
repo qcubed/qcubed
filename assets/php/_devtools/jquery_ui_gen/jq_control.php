@@ -301,6 +301,11 @@ class JqControlGen extends QCodeGenBase {
 		QCodeGen::$TemplateEscapeEndLength = strlen(QCodeGen::$TemplateEscapeEnd);
 	}
 
+	/**
+	 * Main entry point to generate the files for a particular control.
+	 *
+	 * @param $objJqDoc
+	 */
 	public function GenerateControl($objJqDoc) {
 		$strOutDirControls = __QCUBED_CORE__ . "/../install/project/includes/controls";
 		$strOutDirControlsBase = __QCUBED_CORE__ . "/base_controls";

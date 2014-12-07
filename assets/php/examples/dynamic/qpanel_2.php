@@ -16,9 +16,11 @@
 			// Define the Panels
 			$this->pnlLeft = new QPanel($this);
 			$this->pnlLeft->CssClass = 'textbox_panel';
+			$this->pnlLeft->Width = 250;
 
 			$this->pnlRight = new QPanel($this);
 			$this->pnlRight->CssClass = 'textbox_panel';
+			$this->pnlRight->Width = 250;
 
 			// Let's have the panels auto render any and all child controls
 			$this->pnlLeft->AutoRenderChildren = true;

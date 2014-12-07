@@ -27,15 +27,19 @@
 	<div class="form-controls">
 <?php
 	foreach ($objTable->ColumnArray as $objColumn) {
-		print('<?php $this->'.$objCodeGen->FormControlVariableNameForColumn($objColumn).'->RenderWithName(); ?>');
+		if (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != QFormGen::None) {
+			print('<?php $this->'.$objCodeGen->MetaControlVariableName($objColumn)."->RenderWithName(); ?>\n");
+		}
 	}
 	foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
-		if ($objReverseReference->Unique) {
-			print('<?php $this->'.$objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference).'->RenderWithName(); ?>');
+		if ($objReverseReference->Unique && (!isset($objReverseReference->Options['FormGen']) || $objReverseReference->Options['FormGen'] != QFormGen::None)) {
+			print('<?php $this->'.$objCodeGen->MetaControlVariableName($objReverseReference)."->RenderWithName(); ?>\n");
 		}
 	}
 	foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) {
-		print('<?php $this->'.$objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference).'->RenderWithName(true); ?>');
+		if (!isset($objManyToManyReference->Options['FormGen']) || $objManyToManyReference->Options['FormGen'] != QFormGen::None) {
+			print('<?php $this->'.$objCodeGen->MetaControlVariableName($objManyToManyReference)."->RenderWithName(true); ?>\n");
+		}
 	}
 ?>
 	</div>

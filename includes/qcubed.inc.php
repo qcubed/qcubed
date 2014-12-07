@@ -73,6 +73,7 @@
 	QApplicationBase::$PreloadedClassFile['_effect_actions'] = __QCUBED_CORE__ . '/base_controls/_effect_actions.inc.php';
 	QApplicationBase::$PreloadedClassFile['_events'] = __QCUBED_CORE__ . '/base_controls/_events.inc.php';
 	QApplicationBase::$PreloadedClassFile['qq'] = __QCUBED_CORE__ . '/framework/QQuery.class.php';
+	QApplicationBase::$PreloadedClassFile['qmodeltrait'] = __QCUBED_CORE__ . '/framework/QModelTrait.trait.php';
 
 	// Define ClassFile Locations for FormState Handlers
 	QApplicationBase::$ClassFile['qformstatehandler'] = __QCUBED_CORE__ . '/qform_state_handlers/QFormStateHandler.class.php';
@@ -188,6 +189,7 @@
 	QApplicationBase::$ClassFile['qemailtextbox'] = __QCUBED_CORE__ . '/base_controls/QEmailTextBox.class.php';
 	QApplicationBase::$ClassFile['qurltextbox'] = __QCUBED_CORE__ . '/base_controls/QUrlTextBox.class.php';
 	QApplicationBase::$ClassFile['qwritebox'] = __QCUBED_CORE__ . '/base_controls/QWriteBox.class.php';
+	QApplicationBase::$ClassFile['qcsvtextbox'] = __QCUBED_CORE__ . '/base_controls/QCsvTextBox.class.php';
 
 	QApplicationBase::$ClassFile['qpaginatedcontrol'] = __QCUBED_CORE__ . '/base_controls/QPaginatedControl.class.php';
 	QApplicationBase::$ClassFile['qpaginatorbase'] = __QCUBED_CORE__ . '/base_controls/QPaginatorBase.class.php';
@@ -204,7 +206,7 @@
 	QApplicationBase::$ClassFile['qabstractsimpletabledatacolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletablepropertycolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletableindexedcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletableclosurecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qsimpletablecallablecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletablecheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletable'] = __QCUBED__ . '/controls/QSimpleTable.class.php';
 
@@ -227,6 +229,11 @@
 	QApplicationBase::$ClassFile['qwatcherdb'] = __QCUBED_CORE__ . '/watchers/QWatcherDB.class.php';
 	QApplicationBase::$ClassFile['qwatchercache'] = __QCUBED_CORE__ . '/watchers/QWatcherCache.class.php';
 	QApplicationBase::$ClassFile['qwatchernone'] = __QCUBED_CORE__ . '/watchers/QWatcherNone.class.php';
+
+	QApplicationBase::$ClassFile['qmetaeditdlg'] = __QCUBED_CORE__ .'/codegen/QMetaEditDlg.class.php';
+	QApplicationBase::$ClassFile['qmetaparam'] = __QCUBED_CORE__ .'/codegen/QMetaParam.class.php';
+	QApplicationBase::$ClassFile['qmetacontroloptions'] = __QCUBED_CORE__ .'/codegen/QMetacontrolOptions.class.php';
+
 
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');

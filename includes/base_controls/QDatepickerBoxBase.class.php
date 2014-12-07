@@ -199,12 +199,25 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
+		/**
+		 * Return a variable name given a property name.
+		 * @param $strPropName
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'cal' . $strPropName;
 		}
 
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		/**
+		 * Return code that will update the control with data from the database.
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param bool $blnInit
+		 * @return string
+		 */
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
@@ -217,8 +230,15 @@
 		}
 
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		/**
+		 * Return code that will update the database with info from the control.
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strRet = <<<TMPL
@@ -226,6 +246,15 @@
 
 TMPL;
 			return $strRet;
+		}
+
+		/**
+		 * @return QMetaParam[]
+		 */
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'DateFormat', 'How to format the date. Default: MM/DD/YY', QType::String)
+			));
 		}
 
 	}

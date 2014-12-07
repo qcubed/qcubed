@@ -4,7 +4,7 @@
 		 */
 		public function Delete<?= $objTable->ClassName; ?>() {
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-			$this-><?= $objCodeGen->VariableNameFromTable($objTable->Name) ?>->UnassociateAll<?= $objManyToManyReference->ObjectDescriptionPlural ?>();
+			$this-><?= $objCodeGen->ModelVariableName($objTable->Name) ?>->UnassociateAll<?= $objManyToManyReference->ObjectDescriptionPlural ?>();
 <?php } ?>
-			$this-><?= $objCodeGen->VariableNameFromTable($objTable->Name); ?>->Delete();
+			$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>->Delete();
 		}

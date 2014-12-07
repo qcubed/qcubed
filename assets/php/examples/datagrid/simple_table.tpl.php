@@ -36,11 +36,13 @@
 
 	<p>Also, similar to QDataGrid, you must define a new column object for each column in your table.
 		And this is where the differences with QDataGrid begin. While QDataGrid uses a string with php code in special tags
-		to specify how the values for each cell have to be fetched from the DataSource object rows, QSimpleTable uses user
-		specified functions (or <a href="http://php.net/manual/en/functions.anonymous.php">PHP 5.3 Closures</a>). This means that
+		to specify how the values for each cell have to be fetched from the DataSource object rows, QSimpleTable uses
+		<a href="http://php.net/manual/en/language.types.callable.php">user specified callback functions</a>). This means that
 		unlike QDataGrid, QSimpleTable <strong>does not</strong> use the PHP eval() function to calculate the cell values.
 		PHP's eval(), while a very powerful tool, has many drawbacks such as potential security risks and difficulties it
-		creates for optimizing compilers.</p>
+		creates for optimizing compilers. The one caveat is that you cannot use PHP <strong>Closures</strong>strong> as
+		functions, because QCubed needs to serialize everything in the form to preserve its state, and closures cannot
+		be serialized.</p>
 
 	<p>The column objects for QSimpleTable must be of type <strong>QAbstractSimpleTableColumn</strong>. There are three such built in
 		classes:</p>
@@ -50,12 +52,12 @@
 			property on the items in the DataSource array.</li>
 		<li><strong>QSimpleTableIndexedColumn</strong>: this is useful when the DataSource items are arrays and the cell
 			values are the elements of those arrays.</li>
-		<li><strong>QSimpleTableClosureColumn</strong>: this is the most powerful of the tree and is useful when fetching the cell
+		<li><strong>QSimpleTableCallableColumn</strong>: this is useful when fetching the cell
 			data requires complex application logic.</li>
 	</ul>
 
 	<p>These columns can be created and added to the table using the QSimpleTable::CreatePropertyColumn(),
-		QSimpleTable::CreateIndexedColumn() and QSimpleTable::CreateClosureColumn() methods respectively. Of course they can also be
+		QSimpleTable::CreateIndexedColumn() and QSimpleTable::CreateCallableColumn() methods respectively. Of course they can also be
 		constructed directly, and added using QSimpleTable::AddColumn methods.</p>
 
 	<p>Note, that as the name indicates, QSimpleTable is very simple, it does not provide several of the features that are
@@ -69,9 +71,9 @@
 
 	<h2>First Example</h2>
 
-	<p>The first example demonstrates how to use property and closure based columns when the DataSource is an array of objects.</p>
+	<p>The first example demonstrates how to use property and callable based columns when the DataSource is an array of objects.</p>
 
-	<p>The first column is using a Closure, to
+	<p>The first column is using a Callable, to
 		compute the value of the cells.</p>
 
 	<p>The second column uses the "LastName" property to get the value of the cells.</p>
