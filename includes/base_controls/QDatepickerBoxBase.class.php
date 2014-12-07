@@ -26,7 +26,7 @@
 	 * @package Controls\Base
 	 */
 	class QDatepickerBoxBase extends QDatepickerBoxGen {
-		protected $strDateTimeFormat = "MM/DD/YY"; // matches default of JQuery UI control
+		protected $strDateTimeFormat = "MM/DD/YYYY"; // matches default of JQuery UI control
 		/** @var QDateTime */
 		protected $dttDateTime;
 
