@@ -122,10 +122,10 @@ qcubed = {
         var ret;
 
         if (((strType === 'checkbox') || (strType === 'radio')) &&
-            ((indexOffset = id.lastIndexOf('_')) >= 0)) { // a member of a control list
+           id && ((indexOffset = id.lastIndexOf('_')) >= 0)) { // a member of a control list
             return id.substr(0, indexOffset); // use the id of the group
         }
-        else if (strType === 'radio' && name !== id) { // a radio button with a group name
+        else if (id && strType === 'radio' && name !== id) { // a radio button with a group name
             return id; // these buttons are changed individually
         }
         else if (strType === 'hidden') { // a hidden field, possibly associated with a different widget
@@ -293,17 +293,19 @@ qcubed = {
                 offset,
                 strPostValue = $element.val();
 
-            blnQform = (strControlId.substr(0, 7) == 'Qform__');
+            blnQform = (strControlId && (strControlId.substr(0, 7) == 'Qform__'));
 
-            if ((strType === 'checkbox' || strType === 'radio') &&
+            if (strControlId &&
+                (strType === 'checkbox' || strType === 'radio') &&
                 (offset = strControlId.lastIndexOf('_')) != -1) {
                 // A control group
                 index = strControlId.substr (offset + 1);
                 strControlId = strControlId.substr (0, offset);
             }
+
             if (!qcubed.inputSupport || // if not oninput support, then post all the controls, rather than just the modified ones
                 qcubed.ajaxError || // Ajax error would mean that formObjsModified is invalid. We need to submit everything.
-                qcubed.formObjsModified[objChangeIndex] ||
+                (objChangeIndex && qcubed.formObjsModified[objChangeIndex]) ||
                 blnQform   // all controls with Qform__ at the beginning of the id are always posted
             /* || strType == 'hidden'*/) {
                 switch (strType) {
