@@ -458,7 +458,7 @@ trait QModelTrait {
 		unset (static::$objCacheArray[$key]);
 		if (QApplication::$objCacheProvider) {
 			$strCacheKey = QApplication::$objCacheProvider->CreateKey(static::GetDatabase()->Database, __CLASS__, $key);
-			QApplication::$blnLocalCache->Delete($strCacheKey);
+			QApplication::$objCacheProvider->Delete($strCacheKey);
 		}
 	}
 

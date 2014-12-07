@@ -354,7 +354,7 @@
 			$blnSuccess = true;
 			foreach ($strTemplateArray as $strModuleName => $strFileArray) {
 				foreach ($strFileArray as $strFilename => $strPath) {
-					if (!$this->GenerateFile($strModuleName, $strPath, $mixArgumentArray)) {
+					if (!$this->GenerateFile($strTemplatePrefix . '/' . $strModuleName, $strPath, $mixArgumentArray)) {
 						$blnSuccess = false;
 					}
 				}
@@ -421,7 +421,7 @@
 		/**
 		 * Generates a php code using a template file
 		 *
-		 * @param string  $strModuleName
+		 * @param string  $strModuleSubPath
 		 * @param string  $strTemplateFilePath Path to the template file
 		 * @param mixed[] $mixArgumentArray
 		 * @param boolean $blnSave             whether or not to actually perform the save
@@ -430,7 +430,7 @@
 		 * @throws Exception
 		 * @return mixed returns the evaluated template or boolean save success.
 		 */
-		public function GenerateFile($strModuleName, $strTemplateFilePath, $mixArgumentArray, $blnSave = true) {
+		public function GenerateFile($strModuleSubPath, $strTemplateFilePath, $mixArgumentArray, $blnSave = true) {
 			// Setup Debug/Exception Message
 			if (QCodeGen::DebugMode) _p("Evaluating $strTemplateFilePath<br/>", false);
 
@@ -440,12 +440,12 @@
 
 			// Evaluate the Template
 			// make sure paths are set up to pick up included files from the various directories
-			$a[] = QCodeGen::TemplatesPathCore . $strModuleName;
+			$a[] = QCodeGen::TemplatesPathCore . $strModuleSubPath;
 			if (QCodeGen::TemplatesPathPlugin) {
-				array_unshift ($a, QCodeGen::TemplatesPathPlugin . $strModuleName);
+				array_unshift ($a, QCodeGen::TemplatesPathPlugin . $strModuleSubPath);
 			}
 			if (QCodeGen::TemplatesPathProject) {
-				array_unshift ($a, QCodeGen::TemplatesPathProject . $strModuleName);
+				array_unshift ($a, QCodeGen::TemplatesPathProject . $strModuleSubPath);
 			}
 			$strSearchPath = implode (PATH_SEPARATOR, $a) . PATH_SEPARATOR . get_include_path();
 			$strOldIncludePath = set_include_path ($strSearchPath);
@@ -453,7 +453,7 @@
 				throw new QCallerException ('Can\'t override include path. Make sure your apache or server settings allow include paths to be overridden. ' );
 			}
 
-			$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $strModuleName, $mixArgumentArray, $templateSettings);
+			$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $mixArgumentArray, $templateSettings);
 			set_include_path($strOldIncludePath);
 
 			$blnOverwriteFlag = QType::Cast($templateSettings['OverwriteFlag'], QType::Boolean);
@@ -515,7 +515,15 @@
 			}
 		}
 
-		protected function EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray, &$templateSettings = null)  {
+		/**
+		 * Returns the evaluated PHP
+		 *
+		 * @param $strFilename
+		 * @param $mixArgumentArray
+		 * @param null $templateSettings
+		 * @return mixed|string
+		 */
+		protected function EvaluatePHP($strFilename, $mixArgumentArray, &$templateSettings = null)  {
 			// Get all the arguments and set them locally
 			if ($mixArgumentArray) foreach ($mixArgumentArray as $strName=>$mixValue) {
 				$$strName = $mixValue;
