@@ -116,7 +116,18 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns the html for the entire control.
+		 * @return string
+		 */
 		protected function GetControlHtml() {
+			// If no selection is specified, we select the first item, because once we draw this, that is what the browser will consider select on the screen.
+			// We need to make sure that what we draw is mirrored in our current state
+			if ($this->SelectionMode == QSelectionMode::Single &&
+					$this->SelectedIndex == -1 &&
+					$this->ItemCount > 0) {
+				$this->SelectedIndex = 0;
+			}
 			$strStyle = $this->GetStyleAttributes();
 			if ($strStyle)
 				$strStyle = sprintf('style="%s"', $strStyle);
@@ -167,6 +178,17 @@
 
 			return $strToReturn;
 		}
+
+		/**
+		 * End script to support the detection of changes before other change scripts are called.
+		 * @return string
+		 */
+		public function GetEndScript() {
+			$str = parent::GetEndScript();
+			$str = sprintf ('$j("#%s").change(qc.formObjChanged);', $this->ControlId) . $str;
+			return $str;
+		}
+
 
 		// For multiple-select based listboxes, you must define the way a "Reset" button should look
 		abstract protected function GetResetButtonHtml();

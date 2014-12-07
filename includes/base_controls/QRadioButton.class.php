@@ -48,26 +48,22 @@
 		 * Parse the data posted
 		 */
 		public function ParsePostData() {
-			if ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
-				if (QApplication::$RequestMode == QRequestMode::Ajax) {
-					if ((array_key_exists($this->strControlId, $_POST)) && ($_POST[$this->strControlId]))
+			if (QApplication::$RequestMode == QRequestMode::Ajax) {
+				$this->blnChecked = QType::Cast ($_POST[$this->strControlId], QType::Boolean);
+			}
+			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
+				if ($this->strGroupName)
+					$strName = $this->strGroupName;
+				else
+					$strName = $this->strControlId;
+
+				if (array_key_exists($strName, $_POST)) {
+					if ($_POST[$strName] == $this->strControlId)
 						$this->blnChecked = true;
 					else
 						$this->blnChecked = false;
 				} else {
-					if ($this->strGroupName)
-						$strName = $this->strGroupName;
-					else
-						$strName = $this->strControlId;
-
-					if (array_key_exists($strName, $_POST)) {
-						if ($_POST[$strName] == $this->strControlId)
-							$this->blnChecked = true;
-						else
-							$this->blnChecked = false;
-					} else {
-						$this->blnChecked = false;
-					}
+					$this->blnChecked = false;
 				}
 			}
 		}
@@ -181,6 +177,16 @@
 		}
 
 		/**
+		 * Send end script to detect the change on the control before other actions.
+		 * @return string
+		 */
+		public function GetEndScript() {
+			$str = parent::GetEndScript();
+			$str = sprintf ('$j("#%s").change(qc.formObjChanged);', $this->ControlId) . $str;
+			return $str;
+		}
+
+
 		 * Tells whether or not the control is valid or not (runs only if validation was requested)
 		 * @return bool
 		 */

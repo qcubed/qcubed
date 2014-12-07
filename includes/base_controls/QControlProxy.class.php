@@ -32,9 +32,9 @@
 				return "";				
 		}
 
-		public function RenderAsHref($strActionParameter = null, $blnDisplayOutput = true, $strTargetControlId = null, $blnRenderControlId = true) {
+		public function RenderAsHref($strActionParameter = null, $blnDisplayOutput = true, $strTargetControlId = null) {
 			if ($strTargetControlId)
-				$this->strTargetControlId = $strFormId;
+				$this->strTargetControlId = $strTargetControlId;
 			else
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 			
@@ -48,9 +48,13 @@
 			else
 				$strToReturn = 'javascript: return false;';
 
+			/* target id needs to be rendered outside the href
 			if ($blnRenderControlId && $blnDisplayOutput)
 				echo sprintf("id='%s'", $this->strTargetControlId);
-				
+			*/
+
+			//$this->blnModified = false;
+
 				// Output or Display
 			if ($blnDisplayOutput)
 				print($strToReturn);
