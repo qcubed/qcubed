@@ -762,6 +762,13 @@
 					//    not be able to use a QFloatTextBox -- only a regular QTextBox)
 					$this->strType = QDatabaseFieldType::VarChar;
 					break;
+				case 'tsvector':
+					// this is the TSVector data type in PostgreSQL used for full text search systems.
+					// It can safely be used as a text type for displaying the data.
+					// NOTE: It must be handled via custom queries.
+					// NOTE: It is added here to avoid code generator halting after error because of unrecognized type
+					$this->strType = QDatabaseFieldType::VarChar;
+					break;
 				case 'text':
 					$this->strType = QDatabaseFieldType::Blob;
 					break;
