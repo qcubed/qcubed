@@ -316,7 +316,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$var = $objItem->IsEnabled;
 
 		$this->assertNotNull($var, "Zero column does not return null. ");
-		$this->assertTrue($var === 0, "Zero column is zero. ");
+		$this->assertTrue($var == 0, "Zero boolean column is false or zero. ");
 
 		$objItem = Project::QuerySingle(
 			QQ::Equal(QQN::Project()->Id, 2)

@@ -98,8 +98,8 @@
 	 * @property boolean $Disabled Disables the spinner if set to <code>true</code>.
 	 * @property mixed $Icons Icons to use for buttons, matching <a>an icon provided by the jQuery UI CSS
 	 * 		Framework</a>. 				<ul><li>up (string, default:
-	 * 		"ui-icon-triangle-1-n")</li> 					<li>down (string, default:
-	 * 		"ui-icon-triangle-1-s")</li></ul>
+	 * 		&quot;ui-icon-triangle-1-n&quot;)</li> 					<li>down (string, default:
+	 * 		&quot;ui-icon-triangle-1-s&quot;)</li></ul>
 	 * @property mixed $Incremental Controls the number of steps taken when holding down a spin
 	 * 		button.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Boolean</strong>: When set to
@@ -108,18 +108,18 @@
 	 * 		<a><code>step</code></a> option).</li> <li><strong>Function</strong>:
 	 * 		Receives one parameter: the number of spins that have occurred. Must return
 	 * 		the number of steps that should occur for the current spin.</li></ul>
-	 * @property mixed $Max The maximum allowed value. The element's <code>max</code> attribute is used
-	 * 		if it exists and the option is not explicitly set. If <code>null</code>,
-	 * 		there is no maximum enforced.<strong>Multiple types
+	 * @property mixed $Max The maximum allowed value. The element&apos;s <code>max</code> attribute is
+	 * 		used if it exists and the option is not explicitly set. If
+	 * 		<code>null</code>, there is no maximum enforced.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: The maximum value.</li>
 	 * 		<li><strong>String</strong>: If <a>Globalize</a> is included, the
 	 * 		<code>max</code> option can be passed as a string which will be parsed
 	 * 		based on the <a><code>numberFormat</code></a> and
 	 * 		<a><code>culture</code></a> options; otherwise it will fall back to the
 	 * 		native <code>parseFloat()</code> method.</li></ul>
-	 * @property mixed $Min The minimum allowed value. The element's <code>min</code> attribute is used
-	 * 		if it exists and the option is not explicitly set. If <code>null</code>,
-	 * 		there is no minimum enforced.<strong>Multiple types
+	 * @property mixed $Min The minimum allowed value. The element&apos;s <code>min</code> attribute is
+	 * 		used if it exists and the option is not explicitly set. If
+	 * 		<code>null</code>, there is no minimum enforced.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: The minimum value.</li>
 	 * 		<li><strong>String</strong>: If <a>Globalize</a> is included, the
 	 * 		<code>min</code> option can be passed as a string which will be parsed
@@ -127,14 +127,15 @@
 	 * 		<a><code>culture</code></a> options; otherwise it will fall back to the
 	 * 		native <code>parseFloat()</code> method.</li></ul>
 	 * @property string $NumberFormat Format of numbers passed to  <a><code>Globalize</code></a>, if available.
-	 * 		Most common are <code>"n"</code> for a decimal number and <code>"C"</code>
-	 * 		for a currency value. Also see the <a><code>culture</code></a> option.
+	 * 		Most common are <code>&quot;n&quot;</code> for a decimal number and
+	 * 		<code>&quot;C&quot;</code> for a currency value. Also see the
+	 * 		<a><code>culture</code></a> option.
 	 * @property integer $Page The number of steps to take when paging via the
 	 * 		<a><code>pageUp</code></a>/<a><code>pageDown</code></a> methods.
 	 * @property mixed $Step The size of the step to take when spinning via buttons or via the
 	 * 		<a><code>stepUp()</code></a>/<a><code>stepDown()</code></a> methods. The
-	 * 		element's <code>step</code> attribute is used if it exists and the option
-	 * 		is not explicitly set.<strong>Multiple types
+	 * 		element&apos;s <code>step</code> attribute is used if it exists and the
+	 * 		option is not explicitly set.<strong>Multiple types
 	 * 		supported:</strong><ul><li><strong>Number</strong>: The size of the
 	 * 		step.</li> <li><strong>String</strong>: If <a>Globalize</a> is included,
 	 * 		the <code>step</code> option can be passed as a string which will be parsed
@@ -262,17 +263,17 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <p>Retrieves the spinner's instance object. If the element does not have an
-		 * associated instance, <code>undefined</code> is returned.</p>  		<p>Unlike
-		 * other widget methods, <code>instance()</code> is safe to call on any
-		 * element after the spinner plugin has loaded.</p><ul><li>This method does
-		 * not accept any arguments.</li></ul>
+		 * <p>Retrieves the spinner&apos;s instance object. If the element does not
+		 * have an associated instance, <code>undefined</code> is returned.</p> 
+		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
+		 * on any element after the spinner plugin has loaded.</p><ul><li>This method
+		 * does not accept any arguments.</li></ul>
 		 */
 		public function Instance() {
 			$this->CallJqUiMethod(false, "instance");
 		}
 		/**
-		 * Returns whether the Spinner's value is valid given its
+		 * Returns whether the Spinner&apos;s value is valid given its
 		 * <a><code>min</code></a>, <a><code>max</code></a>, and
 		 * <a><code>step</code></a>.<ul><li>This method does not accept any
 		 * arguments.</li></ul>
@@ -281,9 +282,13 @@
 			$this->CallJqUiMethod(false, "isValid");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -298,11 +303,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the spinner option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the spinner option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -521,6 +530,20 @@
 						throw $objExc;
 					}
 			}
+		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Culture', 'Sets the culture to use for parsing and formatting the value. If <code>null</code>, the currently set culture in <code>Globalize</code> is used, see <a>Globalize docs</a> for available cultures. Only relevant if the <a><code>numberFormat</code></a> option is set. Requires <a>Globalize</a> to be included.', QType::String),
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the spinner if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'NumberFormat', 'Format of numbers passed to  <a><code>Globalize</code></a>, if available. Most common are <code>&quot;n&quot;</code> for a decimal number and <code>&quot;C&quot;</code> for a currency value. Also see the <a><code>culture</code></a> option.', QType::String),
+				new QMetaParam (get_called_class(), 'Page', 'The number of steps to take when paging via the <a><code>pageUp</code></a>/<a><code>pageDown</code></a> methods.', QType::Integer),
+			));
 		}
 	}
 

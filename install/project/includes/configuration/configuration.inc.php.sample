@@ -6,6 +6,8 @@ if (!defined('SERVER_INSTANCE')) {
 
 	switch (SERVER_INSTANCE) {
 		case 'dev':
+			define ('__DESIGN_MODE__', 1);
+
 		case 'test':
 		case 'stage':
 		case 'prod':

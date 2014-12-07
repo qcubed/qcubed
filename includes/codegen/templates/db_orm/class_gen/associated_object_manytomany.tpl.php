@@ -10,7 +10,7 @@
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 		 * @return <?= $objManyToManyReference->VariableType ?>[]
 		*/
-		public function Get<?= $objManyToManyReference->ObjectDescription ?>Array($objOptionalClauses = null, $objClauses = null) {
+		public function Get<?= $objManyToManyReference->ObjectDescription ?>Array($objClauses = null) {
 			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
 				return array();
 
@@ -21,6 +21,30 @@
 				throw $objExc;
 			}
 		}
+
+		public function Get<?= $objManyToManyReference->ObjectDescription ?>Keys() {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Get<?= $objManyToManyReference->ObjectDescription ?>Ids on this unsaved <?= $objTable->ClassName ?>.');
+
+			// Get the Database Object for this Class
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
+
+			// Perform the SQL Query
+			$objResult = $objDatabase->Query('
+				SELECT <?= $strEscapeIdentifierBegin ?><?= $objManyToManyReference->OppositeColumn ?><?= $strEscapeIdentifierEnd ?>
+
+				FROM <?= $strEscapeIdentifierBegin ?><?= $objManyToManyReference->Table ?><?= $strEscapeIdentifierEnd ?>
+
+				WHERE <?= $strEscapeIdentifierBegin ?><?= $objManyToManyReference->Column ?><?= $strEscapeIdentifierEnd ?> = ' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>) . '
+			');
+
+			$keys = array();
+			while ($row = $objResult->FetchRow()) {
+				$keys[] = $row[0];
+			}
+			return $keys;
+		}
+
 
 		/**
 		 * Counts all many-to-many associated <?= $objManyToManyReference->ObjectDescriptionPlural ?>
@@ -85,6 +109,34 @@
 				)
 			');
 		}
+
+		/**
+		 * Associates a <?= $objManyToManyReference->ObjectDescription ?> by its primary key.
+
+		 * @param <?= $objManyToManyReference->OppositeVariableType ?> $<?= $objManyToManyReference->OppositeVariableName ?>
+
+		 * @return void
+		*/
+		public function Associate<?= $objManyToManyReference->ObjectDescription ?>ByKey($<?= $objManyToManyReference->OppositeVariableName ?>) {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Associate<?= $objManyToManyReference->ObjectDescription ?> on this unsaved <?= $objTable->ClassName ?>.');
+
+			// Get the Database Object for this Class
+			$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
+
+			// Perform the SQL Query
+			$objDatabase->NonQuery('
+				INSERT INTO <?= $strEscapeIdentifierBegin ?><?= $objManyToManyReference->Table ?><?= $strEscapeIdentifierEnd ?> (
+					<?= $strEscapeIdentifierBegin ?><?= $objManyToManyReference->Column ?><?= $strEscapeIdentifierEnd ?>,
+					<?= $strEscapeIdentifierBegin ?><?= $objManyToManyReference->OppositeColumn ?><?= $strEscapeIdentifierEnd ?>
+
+				) VALUES (
+					' . $objDatabase->SqlVariable($this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>) . ',
+					' . $objDatabase->SqlVariable($<?= $objManyToManyReference->OppositeVariableName ?>) . '
+				)
+			');
+		}
+
 
 		/**
 		 * Unassociates a <?= $objManyToManyReference->ObjectDescription ?>

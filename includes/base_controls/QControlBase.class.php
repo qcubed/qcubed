@@ -58,7 +58,7 @@
 	 * @property-read boolean $Rendered
 	 * @property-read boolean $Rendering
 	 * @property-read string $RenderMethod carries the name of the function, which were initially used for rendering
-	 * @property string $PreferedRenderMethod carries the name of the function, which were initially used for rendering
+	 * @property string $PreferredRenderMethod carries the name of the function, which were initially used for rendering
 	 * @property boolean $Required specifies whether or not this is required (will cause a validation error if the form is trying to be validated and this control is left blank)
 	 * @property-read string $StyleSheets
 	 * @property integer $TabIndex specifies the index/tab order on a form
@@ -131,7 +131,7 @@
 		/** @var bool Should the control be visible or not (it normally effects whether Render method will be called or not) */
 		protected $blnVisible = true;
 		/** @var string Preferred method to be used for rendering e.g. Render, RenderWithName, RenderWithError */
-		protected $strPreferedRenderMethod = 'Render';
+		protected $strPreferredRenderMethod = 'Render';
 	
 		// LAYOUT
 		/** @var string Height of the control. If numeric, 'px' is attached; otherwise used as it is */
@@ -232,6 +232,8 @@
 		protected $blnIsBlockElement = false;
 		/** @var QWatcher Stores information about watched tables. */
 		protected $objWatcher = null;
+		/** @var  QNode  Used by designer to associate a db node with this control */
+		protected $objLinkedNode;
 
 		//////////
 		// Methods
@@ -1463,7 +1465,7 @@
 
 			foreach ($this->GetChildControls() as $objControl) {
 				if (!$objControl->Rendered) {
-					$renderMethod = $objControl->strPreferedRenderMethod;
+					$renderMethod = $objControl->strPreferredRenderMethod;
 					$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
 				}
 			}
@@ -1788,6 +1790,23 @@
 			}
 		}
 
+		/**
+		 * Returns true if the given control is anywhere in the parent hierarchy of this control.
+		 *
+		 * @param $objControl
+		 * @return bool
+		 */
+		public function IsDescendantOf ($objControl) {
+			$objParent = $this->objParentControl;
+			while ($objParent) {
+				if ($objParent == $objControl) {
+					return true;
+				}
+				$objParent = $objParent->objParentControl;
+			}
+			return false;
+		}
+
 
 		/////////////////////////
 		// Public Properties: GET
@@ -1829,7 +1848,7 @@
 				case "ToolTip": return $this->strToolTip;
 				case "ValidationError": return $this->strValidationError;
 				case "Visible": return $this->blnVisible;
-				case "PreferedRenderMethod": return $this->strPreferedRenderMethod;
+				case "PreferredRenderMethod": return $this->strPreferredRenderMethod;
 
 				// LAYOUT
 				case "Height": return $this->strHeight;
@@ -1874,6 +1893,7 @@
 				case "FormAttributes": return (array) $this->strFormAttributes;
 
 				case "Modified": return $this->IsModified();
+				case "LinkedNode": return $this->objLinkedNode;
 
 
 				default:
@@ -2107,9 +2127,9 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "PreferedRenderMethod":
+				case "PreferredRenderMethod":
 					try {
-						$this->strPreferedRenderMethod = QType::Cast($mixValue, QType::String);
+						$this->strPreferredRenderMethod = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2316,6 +2336,15 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+				case "LinkedNode":
+					try {
+						$this->objLinkedNode = QType::Cast($mixValue, 'QQBaseNode');
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -2330,9 +2359,9 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
-		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
-			$strClassName = $objCodeGen->FormControlClassForColumn($objColumn);
-			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
+		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
+			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 
 			$strRet = <<<TMPL
 		/**
@@ -2347,24 +2376,51 @@ TMPL;
 			return $strRet;
 		}
 
-		public static function Codegen_MetaCreateOptions (QColumn $objColumn) {
+		/**
+		 * Reads the options from the special data file, and possibly the column
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param string $strControlVarName
+		 * @return string
+		 */
+		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
 			$strRet = '';
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
-			$strControlVarName = static::Codegen_VarName($strPropName);
+
+			if ($objColumn instanceof QColumn) {
+				$strPropName = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+				$strClass = $objTable->ClassName;
+			}
+			elseif ($objColumn instanceof QManyToManyReference ||
+				$objColumn instanceof QReverseReference) {
+				$strPropName = $objColumn->ObjectDescription;
+				$strClass = $objTable->ClassName;
+			}
+
+			$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->LinkedNode = QQN::{$strClass}()->{$strPropName};
+
+TMPL;
 
 			if (($options = $objColumn->Options) &&
 				isset ($options['Overrides'])) {
 
 				foreach ($options['Overrides'] as $name=>$val) {
-					$strVal = var_export($val, true);
-					if (is_string ($val)) {
+					if (is_numeric($val)) {
+						// looks like a number
+						$strVal = $val;
+					}
+					elseif (is_string ($val)) {
 						if (strpos ($val, '::') !== false &&
 							strpos ($val, ' ') === false) {
 							// looks like a constant
 							$strVal = $val;
 						} else {
+							$strVal = var_export($val, true);
 							$strVal = 'QApplication::Translate(' . $strVal . ')';
 						}
+					} else {
+						$strVal = var_export($val, true);
 					}
 					$strRet .= <<<TMPL
 			\$this->{$strControlVarName}->{$name} = {$strVal};
@@ -2374,6 +2430,41 @@ TMPL;
 			}
 			return $strRet;
 		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QMetaParam[]
+		 */
+		public static function GetMetaParams() {
+			return array(
+				new QMetaParam ('QControl', 'CssClass', 'Css Class assigned to the control', QType::String),
+				new QMetaParam ('QControl', 'AccessKey', 'Access Key to focus control', QType::String),
+				new QMetaParam ('QControl', 'CausesValidation', 'How and what to validate. Can also be set to a control.', QMetaParam::SelectionList,
+					array(
+						null=>'None',
+						'QCausesValidation::AllControls'=>'All Controls',
+						'QCausesValidation::SiblingsAndChildren'=>'Siblings And Children',
+						'QCausesValidation::SiblingsOnly'=>'Siblings Only'
+					)
+				),
+				new QMetaParam ('QControl', 'Enabled', 'Will it start as enabled (default true)?', QType::Boolean),
+				new QMetaParam ('QControl', 'Required', 'Will it fail validation if nothing is entered (default depends on data definition, if NULL is allowed.)?', QType::Boolean),
+				new QMetaParam ('QControl', 'TabIndex', '', QType::Integer),
+				new QMetaParam ('QControl', 'ToolTip', '', QType::String),
+				new QMetaParam ('QControl', 'Visible', '', QType::Boolean),
+				new QMetaParam ('QControl', 'Height', 'Height in pixels. However, you can specify a different unit (e.g. 3.0 em).', QType::String),
+				new QMetaParam ('QControl', 'Width', 'Width in pixels. However, you can specify a different unit (e.g. 3.0 em).', QType::String),
+				new QMetaParam ('QControl', 'Instructions', 'Additional help for user.', QType::String),
+				new QMetaParam ('QControl', 'Moveable', '', QType::Boolean),
+				new QMetaParam ('QControl', 'Resizable', '', QType::Boolean),
+				new QMetaParam ('QControl', 'Droppable', '', QType::Boolean),
+				new QMetaParam ('QControl', 'UseWrapper', 'Control will be forced to be wrapped with a div', QType::Boolean),
+				new QMetaParam ('QControl', 'WrapperCssClass', '', QType::String)
+			);
+
+		}
+
 
 	}
 ?>

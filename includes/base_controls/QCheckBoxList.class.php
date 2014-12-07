@@ -27,7 +27,7 @@
 	 * @property string $Text is used to display text that is displayed next to the checkbox.  The text is rendered as an html "Label For" the checkbox.
 	 * @property integer $CellPadding specified the HTML Table's CellPadding
 	 * @property integer $CellSpacing specified the HTML Table's CellSpacing
-	 * @property integer $RepeatColumn specifies how many columns should be rendered in the HTML Table
+	 * @property integer $RepeatColumns specifies how many columns should be rendered in the HTML Table
 	 * @property string $RepeatDirection pecifies which direction should the list go first...
 	 * @property boolean $HtmlEntities
 	 */
@@ -407,5 +407,79 @@
 					}
 			}
 		}
+
+		/**
+		 * Override to insert additional create options pertinent to the control.
+		 * @param $objTable
+		 * @param $objColumn
+		 * @param $strControlVarName
+		 * @return string|void
+		 */
+		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
+			$strRet = parent::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+
+			if (!$objColumn instanceof QManyToManyReference) {
+				$objCodeGen->ReportError($objTable->Name . ':' . $objColumn->Name . ' is not compatible with a QCheckBoxList.');
+			}
+
+			return $strRet;
+		}
+
+
+		/**
+		 * Since this is designed to edit a many-to-many relationship, creates a separate function for updating
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strPropName = $objColumn->ObjectDescription;
+			$strPropNames = $objColumn->ObjectDescriptionPlural;
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+
+			$strRet = <<<TMPL
+		protected function {$strControlVarName}_Update() {
+			if (\$this->{$strControlVarName}) {
+				\$this->{$strObjectName}->UnassociateAll{$strPropNames}();
+				\$this->{$strObjectName}->Associate{$strPropName}(\$this->{$strControlVarName}->SelectedValues);
+			}
+		}
+
+
+TMPL;
+			return $strRet;
+		}
+
+
+		/**
+		 * Returns a description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QMetaParam[]
+		 */
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'TextAlign', '', QMetaParam::SelectionList,
+					array (null=>'Default',
+						'QTextAlign::Left'=>'Left',
+						'QTextAlign::Right'=>'Right'
+					)),
+				new QMetaParam (get_called_class(), 'HtmlEntities', 'Set to false to have the browser interpret the labels as HTML', QType::Boolean),
+				new QMetaParam (get_called_class(), 'RepeatColumns', 'The number of columns of checkboxes to display', QType::Integer),
+				new QMetaParam (get_called_class(), 'RepeatDirection', 'Whether to repeat horizontally or vertically', QMetaParam::SelectionList,
+					array (null=>'Default',
+						'QRepeatDirection::Horizontal'=>'Horizontal',
+						'QRepeatDirection::Vertical'=>'Vertical'
+					)),
+				new QMetaParam (get_called_class(), 'ButtonMode', 'How to display the buttons', QMetaParam::SelectionList,
+					array (null=>'Default',
+						'QCheckBoxList::ButtonModeJq'=>'JQuery UI Buttons',
+						'QCheckBoxList::ButtonModeSet'=>'JQuery UI Buttonset'
+					)),
+				new QMetaParam (get_called_class(), 'MaxHeight', 'If set, will wrap it in a scrollable pane with the given max height', QType::Integer)
+			));
+		}
+
 	}
 ?>

@@ -102,7 +102,7 @@
 	 * @property boolean $Disabled Disables the selectmenu if set to <code>true</code>.
 	 * @property mixed $Icons Icons to use for the button, matching <a>an icon defined by the jQuery UI
 	 * 		CSS Framework</a>. 				<ul><li>button (string, default:
-	 * 		"ui-icon-triangle-1-s")</li></ul>
+	 * 		&quot;ui-icon-triangle-1-s&quot;)</li></ul>
 	 * @property mixed $Position Identifies the position of the menu in relation to the associated button
 	 * 		element. You can refer to the <a>jQuery UI Position</a> utility for more
 	 * 		details about the various options.
@@ -224,8 +224,8 @@
 			$this->CallJqUiMethod(false, "enable");
 		}
 		/**
-		 * <p>Retrieves the selectmenu's instance object. If the element does not have
-		 * an associated instance, <code>undefined</code> is returned.</p> 
+		 * <p>Retrieves the selectmenu&apos;s instance object. If the element does not
+		 * have an associated instance, <code>undefined</code> is returned.</p> 
 		 * 		<p>Unlike other widget methods, <code>instance()</code> is safe to call
 		 * on any element after the selectmenu plugin has loaded.</p><ul><li>This
 		 * method does not accept any arguments.</li></ul>
@@ -247,9 +247,13 @@
 			$this->CallJqUiMethod(false, "open");
 		}
 		/**
-		 * Gets the value currently associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to get.</li></ul>
+		 * <p>Gets the value currently associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can get the value of a specific key by
+		 * using dot notation. For example, <code>&quot;foo.bar&quot;</code> would get
+		 * the value of the <code>bar</code> property on the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to get.</li></ul>
 		 * @param $optionName
 		 */
 		public function Option($optionName) {
@@ -264,11 +268,15 @@
 			$this->CallJqUiMethod(false, "option");
 		}
 		/**
-		 * Sets the value of the selectmenu option associated with the specified
-		 * <code>optionName</code>.<ul><li><strong>optionName</strong> Type:
-		 * <a>String</a> The name of the option to set.</li>
-		 * <li><strong>value</strong> Type: <a>Object</a> A value to set for the
-		 * option.</li></ul>
+		 * <p>Sets the value of the selectmenu option associated with the specified
+		 * <code>optionName</code>.</p> 			<p><strong>Note:</strong> For options that
+		 * have objects as their value, you can set the value of just one property by
+		 * using dot notation for <code>optionName</code>. For example,
+		 * <code>&quot;foo.bar&quot;</code> would update only the <code>bar</code>
+		 * property of the <code>foo</code>
+		 * option.</p><ul><li><strong>optionName</strong> Type: <a>String</a> The name
+		 * of the option to set.</li> <li><strong>value</strong> Type: <a>Object</a> A
+		 * value to set for the option.</li></ul>
 		 * @param $optionName
 		 * @param $value
 		 */
@@ -377,6 +385,18 @@
 						throw $objExc;
 					}
 			}
+		}
+
+		/**
+		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
+		* used by the metacontrol designer dialog to display a list of options for the control.
+		* @return QMetaParam[]
+		**/
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Disabled', 'Disables the selectmenu if set to <code>true</code>.', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Width', 'The width of the menu, in pixels. When the value is <code>null</code>, the width of the native select is used.', QType::Integer),
+			));
 		}
 	}
 

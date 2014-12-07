@@ -1,0 +1,63 @@
+{
+    "Project": {
+        "PersonAsTeamMember": {
+            "FormGen": "both",
+            "Overrides": {
+                "RepeatColumns": "3"
+            },
+            "Name": "Team Members"
+        }
+    },
+    "Login": {
+        "Password": {
+            "FormGen": "both",
+            "Overrides": {
+                "TextMode": "QTextMode::Password"
+            }
+        },
+        "IsEnabled": {
+            "FormGen": "both",
+            "ControlClass": "QCheckBox"
+        }
+    },
+    "Address": {
+        "City": {
+            "Overrides": {
+                "Width": "100"
+            },
+            "ControlClass": "QTextBox"
+        },
+        "Id": {
+            "FormGen": "none"
+        },
+        "Person": {
+            "FormGen": "both",
+            "ControlClass": "QAutocomplete",
+            "Overrides": {
+                "Placeholder": "Type a \"p\""
+            }
+        },
+        "Street": {
+            "FormGen": "control",
+            "ControlClass": "QTextBox"
+        }
+    },
+    "Person": {
+        "Login": {
+            "FormGen": "both",
+            "Overrides": {
+                "Required": true
+            }
+        },
+        "FirstName": {
+            "FormGen": "both",
+            "ControlClass": "QEmailTextBox"
+        }
+    },
+    "TypeTest": {
+        "TestInt": {
+            "FormGen": "both",
+            "ControlClass": "QSlider"
+        }
+    }
+}

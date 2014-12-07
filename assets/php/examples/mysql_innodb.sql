@@ -133,9 +133,14 @@ CREATE TABLE qc_watchers (
 DROP TABLE IF EXISTS type_test;
 CREATE TABLE type_test (
   id int(11) NOT NULL AUTO_INCREMENT,
-  date date DEFAULT NULL,
-  time time DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
   date_time datetime DEFAULT NULL,
+  test_int int(11) DEFAULT NULL,
+  test_float float DEFAULT NULL,
+  test_text text,
+  test_bit tinyint(1) DEFAULT NULL,
+  test_varchar varchar(10) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 

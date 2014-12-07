@@ -1,6 +1,12 @@
 <?php
+
+/**
+ * This script generates the Jq*Gen classes by scraping the JQueryUI documentation web site.
+ * Current version: JQueryUI 1.11
+ */
+
 require('jq_control.php');
-	require('qcubed.inc.php');
+require('qcubed.inc.php');
 
 class HtmlJqDoc extends JqDoc {
 

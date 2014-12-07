@@ -76,9 +76,15 @@
 				$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
 				if (isset ($strColumns[$strAliasName])) {
 					$mixVal = $strColumns[$strAliasName];
-					<?php if ($s = QDatabaseCodeGen::GetCastString($objColumn)) echo $s; ?>
+<?php if ($objColumn->VariableType == QType::Boolean) { ?>
+					$objToReturn-><?= $objColumn->VariableName ?> = $objDbRow->ResolveBooleanValue($mixVal);
+<?php } else { ?>
+<?php 	if ($s = QDatabaseCodeGen::GetCastString($objColumn)) { ?>
+					<?= $s ?>
 
+<?php 	} ?>
 					$objToReturn-><?= $objColumn->VariableName ?> = $mixVal;
+<?php } ?>
 <?php if (($objColumn->PrimaryKey) && (!$objColumn->Identity)) { ?>
 					$objToReturn->__<?= $objColumn->VariableName ?> = $mixVal;
 <?php } ?>

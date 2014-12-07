@@ -136,7 +136,7 @@
 		 * Various overrides and options embedded in the comment for the column as a json object.
 		 * @var array Overrides
 		 */
-		protected $options;
+		protected $options = array();
 
 		/**
 		 * For Timestamp columns, will add to the sql code to set this field to NOW whenever there is a save

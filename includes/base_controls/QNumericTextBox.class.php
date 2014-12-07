@@ -229,6 +229,23 @@
 					break;
 			}
 		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return array
+		 */
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Maximum', 'Meximum value allowed', QType::String),// float or integer
+				new QMetaParam (get_called_class(), 'Minimum', 'Meximum value allowed', QType::String),
+				new QMetaParam (get_called_class(), 'Step', 'If value must be aligned on a step, the step amount', QType::String),
+				new QMetaParam (get_called_class(), 'LabelForLess', 'If value is too small, override the default error message', QType::String),
+				new QMetaParam (get_called_class(), 'LabelForGreater', 'If value is too big, override the default error message', QType::String),
+				new QMetaParam (get_called_class(), 'LabelForNotStepAligned', 'If value is not step aligned, override the default error message', QType::String)
+			));
+		}
+
 	}
 
 ?>

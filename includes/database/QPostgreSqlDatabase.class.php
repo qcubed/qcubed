@@ -613,6 +613,22 @@
 		public function GetColumnNameArray() {
 			return $this->strColumnArray;
 		}
+
+		/**
+		 * Returns the boolean value corresponding to whatever a bit column returns. Postgres
+		 * returns a 't' or 'f' (or null).
+		 * @param $mixValue Value of the BIT column
+		 * @return bool
+		 */
+		public function ResolveBooleanValue ($mixValue) {
+			if ($mixValue == 'f') {
+				return false;
+			} elseif ($mixValue == 't') {
+				return true;
+			}
+			else
+				return null;
+		}
 	}
 
 	/**

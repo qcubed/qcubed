@@ -189,6 +189,7 @@
 	QApplicationBase::$ClassFile['qemailtextbox'] = __QCUBED_CORE__ . '/base_controls/QEmailTextBox.class.php';
 	QApplicationBase::$ClassFile['qurltextbox'] = __QCUBED_CORE__ . '/base_controls/QUrlTextBox.class.php';
 	QApplicationBase::$ClassFile['qwritebox'] = __QCUBED_CORE__ . '/base_controls/QWriteBox.class.php';
+	QApplicationBase::$ClassFile['qcsvtextbox'] = __QCUBED_CORE__ . '/base_controls/QCsvTextBox.class.php';
 
 	QApplicationBase::$ClassFile['qpaginatedcontrol'] = __QCUBED_CORE__ . '/base_controls/QPaginatedControl.class.php';
 	QApplicationBase::$ClassFile['qpaginatorbase'] = __QCUBED_CORE__ . '/base_controls/QPaginatorBase.class.php';
@@ -228,6 +229,11 @@
 	QApplicationBase::$ClassFile['qwatcherdb'] = __QCUBED_CORE__ . '/watchers/QWatcherDB.class.php';
 	QApplicationBase::$ClassFile['qwatchercache'] = __QCUBED_CORE__ . '/watchers/QWatcherCache.class.php';
 	QApplicationBase::$ClassFile['qwatchernone'] = __QCUBED_CORE__ . '/watchers/QWatcherNone.class.php';
+
+	QApplicationBase::$ClassFile['qmetaeditdlg'] = __QCUBED_CORE__ .'/codegen/QMetaEditDlg.class.php';
+	QApplicationBase::$ClassFile['qmetaparam'] = __QCUBED_CORE__ .'/codegen/QMetaParam.class.php';
+	QApplicationBase::$ClassFile['qmetacontroloptions'] = __QCUBED_CORE__ .'/codegen/QMetacontrolOptions.class.php';
+
 
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');

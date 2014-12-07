@@ -451,6 +451,21 @@
 
 				// Trigger Create Event (if applicable)
 				$objClass->Form_Create();
+
+				if (defined ('__DESIGN_MODE__')) {
+					$dlg = new QMetaEditDlg ($objClass, 'qmetaeditdlg');
+					$objControls = $objClass->GetAllControls();
+					foreach ($objControls as $objControl) {
+						if ($objControl != $dlg &&
+								!$objControl->IsDescendantOf($dlg) &&
+								!$objControl instanceof QJsTimer) {
+							$objControl->AddAction (new QContextMenuEvent(), new QAjaxAction ('ctlDesigner_Click'));
+							$objControl->AddAction (new QContextMenuEvent(), new QStopPropagationAction());
+							$objControl->AddAction (new QContextMenuEvent(), new QTerminateAction());
+						}
+					}
+				}
+
 			}
 
 			// Trigger PreRender Event (if applicable)
@@ -493,6 +508,14 @@
 
 			// Tigger Exit Event (if applicable)
 			$objClass->Form_Exit();
+		}
+
+		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
+			$objControl = $this->GetControl($strControlId);
+			if ($objControl->LinkedNode) {
+				$dlg = $this->GetControl ('qmetaeditdlg');
+				$dlg->EditControl ($objControl);
+			}
 		}
 
 		/**

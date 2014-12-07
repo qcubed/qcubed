@@ -370,5 +370,21 @@
 		const QueryString = 2;
 		/** Via Post Data (not in use currently) */
 		const PostData = 3;
-	}	
+	}
+
+	/**
+	 * Class QFormGen
+	 * For specifying the FormGen param value. Declares what to generate for the given database object.
+	 */
+	abstract class QFormGen {
+		/** Generate both a control and a label */
+		const Both = 'both';
+		/** Generate only a label */
+		const LabelOnly = 'label';
+		/** Generate only a control */
+		const ControlOnly = 'control';
+		/** Do not generate anything for this database object */
+		const None = 'none';
+	}
+
 ?>
