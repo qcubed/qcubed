@@ -254,38 +254,73 @@
 		const NotSet = 'NotSet';
 		/** Auto */
 		const Auto = 'auto';
+		/** Cell selection cursor (like one used in MS Excel) */
+		const Cell = 'cell';
+		/** Right click context menu icon */
+		const ContextMenu = 'context-menu';
+		/** The cursor indicates that the column can be resized horizontally */
+		const ColResize = 'col-resize';
+		/** Indicates something is going to be copied */
+		const Copy = 'copy';
 		/** Frag the damn enemy! */
 		const CrossHair = 'crosshair';
 		/** Whatever the browser wants to */
 		const CursorDefault = 'default';
+		/** Indicating that something can be grabbed (like hand control when reading a PDF) */
+		const Grab = 'grab';
+		/** Indicating that something is being grabbed (closed hand control when you drag a page in a PDF reader) */
+		const Grabbing = 'grabbing';
+		/** When you feel like running for your life! (the cursor usually is a '?' symbol) */
+		const Help = 'help';
+		/** When a dragged element cannot be dropped */
+		const NoDrop = 'no-drop';
+		/** No cursor at all - cursor gets invisible */
+		const None = 'none';
+		/** When an action is not allowed (can appear on disabled controls) */
+		const NotAllowed = 'not-allowed';
 		/** For links (usually creates the 'hand') */
 		const Pointer = 'pointer';
+		/** Indicates an event in progress */
+		const Progress = 'progress';
 		/** The icon to move things across */
 		const Move = 'move';
+		/** Creates the 'I' cursor usually seen over editable controls */
+		const Text = 'text';
+		/** The text editing (I) cursor rotated 90 degrees for editing vertically written text */
+		const VerticalText = 'vertical-text';
+		/** Hourglass */
+		const Wait = 'wait';
+		/** Magnification glass style zoom in (+) cursor */
+		const ZoomIn = 'zoom-in';
+		/** Magnification glass style zoom out (-) cursor */
+		const ZoomOut = 'zoom-out';
+		// Resize cursors
 		/** Right edge resize */
 		const EResize = 'e-resize';
-		/** Top-right resize */
-		const NEResize = 'ne-resize';
-		/** Top-left resize */
-		const NWResize = 'nw-resize';
+		/** Horizontal bi-directional resize cursor */
+		const EWResize = 'ew-resize';
 		/** Top edge resize */
 		const NResize = 'n-resize';
+		/** Top-right resize */
+		const NEResize = 'ne-resize';
+		/** Bidirectional North-East or South-West resize */
+		const NESWResize = 'nesw-resize';
+		/** Bidirectional vertical resize cursor */
+		const NSResize = 'ns-resize';
+		/** Top-left resize */
+		const NWResize = 'nw-resize';
+		/** Bidirectional North-West or South-East resize cursor */
+		const NWSEResize = 'nwse-resize';
+		/** Row can be resized (you might see it when trying to alter height of a row in MS Excel) */
+		const RowResize = 'row-resize';
+		/** Bottom edge resize */
+		const SResize = 's-resize';
 		/** Bottom-right resize */
 		const SEResize = 'se-resize';
 		/** Bottom-left resize */
 		const SWResize = 'sw-resize';
-		/** Bottom edge resize */
-		const SResize = 's-resize';
 		/** Left edge resize */
 		const WResize = 'w-resize';
-		/** Creates the 'I' cursor usually seen over editable controls */
-		const Text = 'text';
-		/** Hourglass */
-		const Wait = 'wait';
-		/** When you feel like running for your life! (the cursor usually is a '?' symbol) */
-		const Help = 'help';
-		/** Progress curson */
-		const Progress = 'progress';
 	}
 
 	/**
