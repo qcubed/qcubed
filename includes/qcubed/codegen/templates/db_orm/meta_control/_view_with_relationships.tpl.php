@@ -78,10 +78,10 @@
 			$objReference = $objColumn->Reference;
 			$objReferencedTable = $this->GetTable($objReference->Table);
 ?>
-			if ($obj<?php echo $objTable->ClassName ?> && $obj<?php echo $objTable->ClassName ?>-><?php echo $objColumn->Reference->PropertyName ?> && $obj<?php echo $objTable->ClassName ?>-><?php echo $objColumn->Reference->PropertyName ?>->__Restored) {
-				$this->pnl<?php echo $objReference->PropertyName ?>View = new <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar($this->tabs, $obj<?php echo $objTable->ClassName ?>-><?php echo $objColumn->Reference->PropertyName ?>, false, true, false, false);
+			if ($obj<?php echo $objTable->ClassName ?> && $obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?> && $obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?>->__Restored) {
+				$this->pnl<?php echo $objReference->PropertyName ?>View = new <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar($this->tabs, $obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?>, false, true, false, false);
 				$this->int<?php echo $objReference->PropertyName ?>TabIdx = count($headers);
-				$headers[] = QApplication::Translate('<?php echo $objReference->PropertyName ?>');
+				$headers[] = QApplication::Translate('<?php echo preg_replace('/Object$/', '', $objReference->PropertyName) ?>');
 			}
 <?php
 		}
