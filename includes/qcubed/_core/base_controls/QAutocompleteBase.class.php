@@ -178,9 +178,7 @@
 		 */
 		public function GetControlJavaScript() {
 			$strJS = parent::GetControlJavaScript();
-			$strValueExpr = 'var value = jQuery(this).val();';
-			$strResetValue = 'var resetValue = "";';
-			$options = array();
+			$options = array('controlId' => $this->ControlId);
 			if ($this->strMultipleValueDelimiter) {
 				$options['multiValDelim'] = $this->strMultipleValueDelimiter;
 			}
