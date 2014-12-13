@@ -79,6 +79,24 @@
 		}
 	}
 
+	class QMultiCallback extends QCallback {
+		/** @var QCallback[] */
+		protected $callbacks;
+
+		public function __construct(QCallback $callback1, QCallback $callback2 /*, callback3, ... */) {
+			$this->callbacks = func_get_args();
+		}
+
+		public function Call(/* $arg1, $arg2, ...*/) {
+			$args = func_get_args();
+			foreach ($this->callbacks as $callback) {
+				if ($callback) {
+					call_user_func_array(array($callback, 'Call'), $args);
+				}
+			}
+		}
+	}
+
 	class DialogClosingCallback extends QProxyCallback {
 		/** @var \QDialog */
 		protected $objDialog;
