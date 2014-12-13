@@ -12,6 +12,7 @@
 	 * @property-write string $EditTemplate
 	 * @property-write string $ViewTemplate
 	 * @property-write string $CreateTemplate
+	 * @property-read QDialog $PopupDialog
 	 */
 	class <?php echo $objTable->ClassName ?>PopupGen extends QPanel {
 		/** @var QDialog */
@@ -156,6 +157,20 @@
 		public function CloseEditPopup($blnChangesMade, $blnDeleted = false) {
 			$this->dlgPopup->RemoveChildControls(true);
 			$this->dlgPopup->HideDialogBox();
+		}
+
+		public function __get($strName) {
+			switch ($strName) {
+				case "PopupDialog": return $this->dlgPopup;
+
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
 		}
 
 		public function __set($strName, $mixValue) {
