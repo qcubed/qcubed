@@ -349,7 +349,52 @@
 			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride, $strJsReturnParam);
 		}
 	}
+	/**
+	 * Client-side action - no postbacks of any kind are performed.
+	 * All handling activity happens in Javascript.
+	 *
+	 * @package Actions
+	 */
+	class QRedirectAction extends QAction {
+		protected $strJavaScript;
 
+		/**
+		 * possible values:
+		 * http://google.com
+		 * index.php?page=view
+		 * /foo/bar/woot.html
+		 * 
+		 * @param string $strUrl
+		 */
+		public function __construct($strUrl) {
+			$this->strJavaScript = sprintf("document.location.href ='%s'", trim($strUrl));
+		}
+
+		/**
+		 * PHP Magic function to get the property values of a class object
+		 * @param string $strName Name of the property
+		 *
+		 * @return mixed|null|string
+		 * @throws QCallerException
+		 */
+		public function __get($strName) {
+			switch ($strName) {
+				case 'JavaScript':
+					return $this->strJavaScript;
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+
+		public function RenderScript(QControl $objControl) {
+			return sprintf('%s;', $this->strJavaScript);
+		}
+	}
 	/**
 	 * Client-side action - no postbacks of any kind are performed.
 	 * All handling activity happens in Javascript.
@@ -670,7 +715,9 @@
 		}
 
 		public function RenderScript(QControl $objControl) {
-			return sprintf("qc.getW('%s').focus();", $this->strControlId);
+			// for firefox focus is special when in a blur or in a focusout event
+			// http://stackoverflow.com/questions/7046798/jquery-focus-fails-on-firefox/7046837#7046837
+			return sprintf("setTimeout(function(){qc.getW('%s').focus();},0);", $this->strControlId);
 		}
 	}
 

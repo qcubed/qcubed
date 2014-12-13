@@ -344,14 +344,40 @@
 			return $blnSuccess;
 		}
 
+		protected function getTemplateSettings($strTemplateFilePath, &$strTemplate = null) {
+			if ($strTemplate === null)
+				$strTemplate = file_get_contents($strTemplateFilePath);
+			$strError = 'Template\'s first line must be <template OverwriteFlag="boolean" DocrootFlag="boolean" TargetDirectory="string" DirectorySuffix="string" TargetFileName="string"/>: ' . $strTemplateFilePath;
+			// Parse out the first line (which contains path and overwriting information)
+			$intPosition = strpos($strTemplate, "\n");
+			if ($intPosition === false) {
+				throw new Exception($strError);
+			}
+
+			$strFirstLine = trim(substr($strTemplate, 0, $intPosition));
+
+			$objTemplateXml = null;
+			// Attempt to Parse the First Line as XML
+			try {
+				@$objTemplateXml = new SimpleXMLElement($strFirstLine);
+			} catch (Exception $objExc) {}
+
+			if (is_null($objTemplateXml) || (!($objTemplateXml instanceof SimpleXMLElement)))
+				throw new Exception($strError);
+			$strTemplate = substr($strTemplate, $intPosition + 1);
+			return $objTemplateXml;
+		}
+
 		/**
-		 * Enter description here...
+		 * Generates a php code using a template file
 		 *
 		 * @param string $strModuleName
 		 * @param string $strFilename
 		 * @param boolean $blnOverrideFlag whether we are using the _core template, or using a custom one
 		 * @param mixed[] $mixArgumentArray
-		 * @param boolean $blnSave wheather or not to actually perform the save
+		 * @param boolean $blnSave whether or not to actually perform the save
+		 * @throws QCallerException
+		 * @throws Exception
 		 * @return mixed returns the evaluated template or boolean save success.
 		 */
 		public function GenerateFile($strModuleName, $strFilename, $blnOverrideFlag, $mixArgumentArray, $blnSave = true) {
@@ -363,12 +389,10 @@
 
 			// Setup Debug/Exception Message
 			if (QCodeGen::DebugMode) _p("Evaluating $strTemplateFilePath<br/>", false);
-			$strError = 'Template\'s first line must be <template OverwriteFlag="boolean" DocrootFlag="boolean" TargetDirectory="string" DirectorySuffix="string" TargetFileName="string"/>: ' . $strTemplateFilePath;
 
 			// Check to see if the template file exists, and if it does, Load It
 			if (!file_exists($strTemplateFilePath))
 				throw new QCallerException('Template File Not Found: ' . $strTemplateFilePath);
-			$strTemplate = file_get_contents($strTemplateFilePath);
 
 			// Evaluate the Template
 			if (substr($strFilename, strlen($strFilename) - 8) == '.tpl.php')  {
@@ -378,39 +402,28 @@
 						get_include_path();
 				set_include_path ($strSearchPath);
 				if ($strSearchPath != get_include_path()) {
-					throw new QCallerException ('Can\'t override include path. Make sure your apache or server settings allow include paths to be overriden. ' );
+					throw new QCallerException ('Can\'t override include path. Make sure your apache or server settings allow include paths to be overridden. ' );
 				}
-				$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $strModuleName, $mixArgumentArray);
+				$strTemplate = $this->EvaluatePHP($strTemplateFilePath, $strModuleName, $mixArgumentArray, $templateSettings);
 				restore_include_path();
+				if (!isset($templateSettings) || !$templateSettings) {
+					// check if we have old style <template .../> settings
+					$templateSettings = $this->getTemplateSettings($strTemplateFilePath, $strTemplate);
+				}
 			} else {
+				$strTemplate = file_get_contents($strTemplateFilePath);
 				$strTemplate = $this->EvaluateTemplate($strTemplate, $strModuleName, $mixArgumentArray);
+				$templateSettings = $this->getTemplateSettings($strTemplateFilePath, $strTemplate);
 			}
-			
-			// Parse out the first line (which contains path and overwriting information)
-			$intPosition = strpos($strTemplate, "\n");
-			if ($intPosition === false)
-				throw new Exception($strError);
 
-			$strFirstLine = trim(substr($strTemplate, 0, $intPosition));
-			$strTemplate = substr($strTemplate, $intPosition + 1);
-
-			$objTemplateXml = null;
-			// Attempt to Parse the First Line as XML
-			try {
-				@$objTemplateXml = new SimpleXMLElement($strFirstLine);
-			} catch (Exception $objExc) {}
-
-			if (is_null($objTemplateXml) || (!($objTemplateXml instanceof SimpleXMLElement)))
-				throw new Exception($strError);
-
-			$blnOverwriteFlag = QType::Cast($objTemplateXml['OverwriteFlag'], QType::Boolean);
-			$blnDocrootFlag = QType::Cast($objTemplateXml['DocrootFlag'], QType::Boolean);
-			$strTargetDirectory = QType::Cast($objTemplateXml['TargetDirectory'], QType::String);
-			$strDirectorySuffix = QType::Cast($objTemplateXml['DirectorySuffix'], QType::String);
-			$strTargetFileName = QType::Cast($objTemplateXml['TargetFileName'], QType::String);
+			$blnOverwriteFlag = QType::Cast($templateSettings['OverwriteFlag'], QType::Boolean);
+			$blnDocrootFlag = QType::Cast($templateSettings['DocrootFlag'], QType::Boolean);
+			$strTargetDirectory = QType::Cast($templateSettings['TargetDirectory'], QType::String);
+			$strDirectorySuffix = QType::Cast($templateSettings['DirectorySuffix'], QType::String);
+			$strTargetFileName = QType::Cast($templateSettings['TargetFileName'], QType::String);
 
 			if (is_null($blnOverwriteFlag) || is_null($strTargetFileName) || is_null($strTargetDirectory) || is_null($strDirectorySuffix) || is_null($blnDocrootFlag))
-				throw new Exception($strError);
+				throw new Exception('the template settings cannot be null');
 
 			if ($blnSave && $strTargetDirectory) {
 				// Figure out the REAL target directory
@@ -437,13 +450,13 @@
 			}
 
 			// Why Did We Not Save?
-			if ($blnSave)
+			if ($blnSave) {
 				// We WANT to Save, but QCubed Configuration says that this functionality/feature should no longer be generated
 				// By definition, we should return "true"
 				return true;
-			else
-				// Running GenerateFile() specifically asking it not to save -- so return the evaluated template instead
-				return $strTemplate;
+			}
+			// Running GenerateFile() specifically asking it not to save -- so return the evaluated template instead
+			return $strTemplate;
 		}
 
 		protected function setGeneratedFilePermissions($strFilePath) {
@@ -456,11 +469,14 @@
 			}
 		}
 
-		protected function EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray)  {
+		protected function EvaluatePHP($strFilename, $strModuleName, $mixArgumentArray, &$templateSettings = null)  {
 			// Get all the arguments and set them locally
 			if ($mixArgumentArray) foreach ($mixArgumentArray as $strName=>$mixValue) {
 				$$strName = $mixValue;
 			}
+			global $_TEMPLATE_SETTINGS;
+			unset($_TEMPLATE_SETTINGS);
+			$_TEMPLATE_SETTINGS = null;
 
 			// Of course, we also need to locally allow "objCodeGen"
 			$objCodeGen = $this;
@@ -477,6 +493,9 @@
 			include($strFilename);
 			$strTemplate = ob_get_contents();
 			ob_end_clean();
+
+			$templateSettings = $_TEMPLATE_SETTINGS;
+			unset($_TEMPLATE_SETTINGS);
 
 			// Restore the output buffer and return evaluated template
 			print($strAlreadyRendered);

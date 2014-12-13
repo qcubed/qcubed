@@ -129,16 +129,30 @@
 		/**
 		 * Encodes given 8 bit string to a quoted-printable string,
 		 * @param string $strString
+		 * @param boolean $blnSubject
 		 * @return encoded string
 		 */
-		private static function QuotedPrintableEncode($strString) {
+		private static function QuotedPrintableEncode($strString, $blnSubject = false) {
 			if ( function_exists('quoted_printable_encode') )
 				$strText = quoted_printable_encode($strString);
-			else
+			else {
 				$strText = preg_replace( '/[^\x21-\x3C\x3E-\x7E\x09\x20]/e', 'sprintf( "=%02X", ord ( "$0" ) ) ;', $strString );
+				preg_match_all( '/.{1,73}([^=]{0,2})?/', $strText, $arrMatch );
+				$strText = implode( '=' . "\r\n", $arrMatch[0] );
+			}
+            
+			if ($blnSubject) {
+				// Replace spaces with undercores, see RFC 1342
+				$strText = str_replace("_", "=5F", $strText);
+				$strText = str_replace(" ", "_", $strText);
 
-			preg_match_all( '/.{1,73}([^=]{0,2})?/', $strText, $arrMatch );
-			$strText = implode( '=' . "\r\n", $arrMatch[0] );
+				// Remove newlines
+				$strText = str_replace("=\r\n", "", $strText);
+			} else {
+				// Escape leading dots with another dot
+				$strText = str_replace("\n.", "\n..", $strText);
+			}
+            
 			return $strText;
 		}
 
@@ -317,7 +331,7 @@
 
 			// Send: Optional Headers
 			if ($objMessage->Subject)
-				fwrite($objResource, sprintf("Subject: =?%s?Q?%s?=\r\n", $strEncodingType, self::QuotedPrintableEncode($objMessage->Subject)));
+				fwrite($objResource, sprintf("Subject: =?%s?Q?%s?=\r\n", $strEncodingType, self::QuotedPrintableEncode($objMessage->Subject, true)));
 			if ($objMessage->Cc)
 				fwrite($objResource, sprintf("Cc: %s\r\n", $objMessage->Cc));
 

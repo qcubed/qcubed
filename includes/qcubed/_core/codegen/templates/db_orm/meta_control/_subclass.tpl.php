@@ -1,4 +1,15 @@
-<template OverwriteFlag="false" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __META_CONTROLS__  ?>" TargetFileName="<?php echo $objTable->ClassName  ?>MetaControl.class.php"/>
+<?php
+	/** @var QTable $objTable */
+	/** @var QDatabaseCodeGen $objCodeGen */
+	global $_TEMPLATE_SETTINGS;
+	$_TEMPLATE_SETTINGS = array(
+		'OverwriteFlag' => false,
+		'DocrootFlag' => false,
+		'DirectorySuffix' => '',
+		'TargetDirectory' => __META_CONTROLS__,
+		'TargetFileName' => $objTable->ClassName . 'MetaControl.class.php'
+	);
+?>
 <?php print("<?php\n"); ?>
 	require(__META_CONTROLS_GEN__ . '/<?php echo $objTable->ClassName  ?>MetaControlGen.class.php');
 
