@@ -93,7 +93,8 @@
 	 *       </dl>
 	 *       The value of this option can also be an associative array, where the key is the property and the value is the comparison mode.
 	 *       Default: QDateComparisonMode::withinDay.</dd>
-	 * @property string[] $ExcludeProperties an array of property names to be excluded from the search. Default: []
+	 * @property string[] $ExcludeProperties an array of property names to be excluded from the search. Setting this property to 'all' will exclude all the properties. Default: []
+	 * @property string[] $ExtraProperties an associative array (property name to type) of properties to be included in the search (even when $ExcludeProperties is set to 'all'. Default: []
 	 */
 	class QGenericSearchOptions {
 		public $defaultSkipTypeCast = false;
@@ -193,6 +194,8 @@
 		 * @return bool
 		 */
 		public function IsPropertyExcluded($strProperty, $strType) {
+			if ($this->ExcludeProperties === 'all')
+				return true;
 			if ($this->ExcludeProperties && in_array($strProperty, $this->ExcludeProperties))
 				return true;
 			if ($strType == QType::Boolean) {
@@ -209,6 +212,8 @@
 		 * @param string $strProperty name of property
 		 */
 		public function ExcludeProperty($strProperty) {
+			if ($this->ExcludeProperties === 'all')
+				return;
 			if (is_null($this->ExcludeProperties))
 				$this->ExcludeProperties = array();
 			$this->ExcludeProperties[] = $strProperty;
@@ -270,7 +275,7 @@
 			$propTypes = array_merge($propTypes, $this->GetExtraProperties());
 			$nodes = array();
 			foreach ($propTypes as $strProp => $strType) {
-				if ($this->IsPropertyExcluded($strProp, $strType))
+				if ($this->IsPropertyExcluded($strProp, $strType) && !array_key_exists($strProp, $this->GetExtraProperties()))
 					continue;
 				$nodes[$strProp] = SearchTerm::GetNestedNode($objBaseNode, explode('->', $strProp));
 			}
