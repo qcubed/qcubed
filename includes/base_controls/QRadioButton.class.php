@@ -186,7 +186,7 @@
 			return $str;
 		}
 
-
+		/**
 		 * Tells whether or not the control is valid or not (runs only if validation was requested)
 		 * @return bool
 		 */
