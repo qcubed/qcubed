@@ -32,10 +32,12 @@
 	abstract class QDisplayStyle {
 		/** Hide the control */
 		const None = 'none';
-		/** Treat as a block-control */
+		/** Treat as a block element */
 		const Block = 'block';
-		/** Treat as an inline-control */
+		/** Treat as an inline element */
 		const Inline = 'inline';
+		/** Treat as an inline-block element */
+		const InlineBlock = 'inline-block';
 		/** Display style not set. Browser will take care */
 		const NotSet = 'NotSet';
 	}
