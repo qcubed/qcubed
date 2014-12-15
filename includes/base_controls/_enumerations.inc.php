@@ -84,7 +84,7 @@
 		const Single = 'Single';
 		/** Can select more than one */
 		const Multiple = 'Multiple';
-		/** Cannot select any item */
+		/** Selection mode not specified */
 		const None = 'None';
 	}
 

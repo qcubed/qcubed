@@ -28,7 +28,7 @@
 
 		/**
 		 * @access protected
-		 * @var object
+		 * @var QListItem[]|array
 		 */
 		protected $objItemsArray = array();
 
@@ -232,7 +232,7 @@
 		 * PHP __get magic method implementation
 		 * @param string $strName Property Name
 		 *
-		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @return mixed
 		 * @throws Exception|QCallerException
 		 */
 		public function __get($strName) {
@@ -306,13 +306,12 @@
 		/////////////////////////
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Property Name
+		 *
+		 * @param string $strName  Property Name
 		 * @param string $mixValue Propety Value
 		 *
 		 * @return mixed
-		 * @throws QIndexOutOfRangeException
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @throws QIndexOutOfRangeException|Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
@@ -442,6 +441,7 @@
 
 		/**
 		 * @param string $strPropName
+		 *
 		 * @return string
 		 */
 		public static function Codegen_VarName($strPropName) {
@@ -449,8 +449,9 @@
 		}
 
 		/**
-		 * @param QCodeGen $objCodeGen
+		 * @param QCodeGen                                       $objCodeGen
 		 * @param QColumn|QManyToManyReference|QReverseReference $objColumn
+		 *
 		 * @return string
 		 */
 		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
@@ -496,9 +497,10 @@ TMPL;
 		 * generate QListControl derivatives, but with a few places to insert customization depending on the actual
 		 * control being generated.
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
 		 * @return string
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
@@ -680,10 +682,12 @@ TMPL;
 		/**
 		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @param boolean $blnInit	Generate initialization code instead of reload
+		 * @param boolean                                        $blnInit Generate initialization code instead of reload
+		 *
+		 * @return string
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
@@ -726,9 +730,11 @@ TMPL;
 
 		/**
 		 * Generate the code to move data from the control to the database.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 *
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
 		 * @return string
 		 */
 		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
@@ -753,9 +759,11 @@ TMPL;
 
 		/**
 		 * Generate helper functions for the update process.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 *
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
 		 * @return string
 		 */
 		public static function Codegen_MetaUpdateMethod(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
