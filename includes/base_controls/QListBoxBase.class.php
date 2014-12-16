@@ -79,6 +79,13 @@
 			}
 		}
 
+		/**
+		 * Returns the HTML attributes to be used on the HTML to be rendered for the element.
+		 * @param bool $blnIncludeCustom
+		 * @param bool $blnIncludeAction
+		 *
+		 * @return string
+		 */
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
 			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
 
@@ -90,6 +97,7 @@
 			return $strToReturn;
 
 		}
+
 		/**
 		 * Returns the HTML-Code for a single Item
 		 * 
@@ -193,6 +201,10 @@
 		// For multiple-select based listboxes, you must define the way a "Reset" button should look
 		abstract protected function GetResetButtonHtml();
 
+		/**
+		 * Determines whether the supplied input data is valid or not.
+		 * @return bool
+		 */
 		public function Validate() {
 			if ($this->blnRequired) {
 				if ($this->SelectedIndex == -1) {
@@ -219,6 +231,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic function
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -243,6 +262,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 
