@@ -9,7 +9,7 @@
 		 * The String object should never be instantiated, and this constructor
 		 * override simply guarantees it.
 		 *
-		 * @return void
+		 * @throws QCallerException
 		 */
 		public final function __construct() {
 			throw new QCallerException('String should never be instantiated.  All methods and variables are publically statically accessible.');
@@ -43,8 +43,32 @@
 		}
 
 		/**
+		 * Checks whether a given string starts with another (sub)string
+		 * @param string $strHaystack
+		 * @param string $strNeedle
+		 *
+		 * @return bool
+		 */
+		public final static function StartsWith($strHaystack, $strNeedle) {
+			// search backwards starting from haystack length characters from the end
+			return $strNeedle === "" || strrpos($strHaystack, $strNeedle, -strlen($strHaystack)) !== FALSE;
+		}
+
+		/**
+		 * Checks whether a given string ends with another (sub)string
+		 * @param string $strHaystack
+		 * @param string $strNeedle
+		 *
+		 * @return bool
+		 */
+		public final static function EndsWith($strHaystack, $strNeedle) {
+			// search forward starting from end minus needle length characters
+			return $strNeedle === "" || strpos($strHaystack, $strNeedle, strlen($strHaystack) - strlen($strNeedle)) !== FALSE;
+		}
+
+		/**
 		 * Truncates the string to a given length, adding elipses (if needed).
-		 * @param string $strString string to truncate
+		 * @param string $strText string to truncate
 		 * @param integer $intMaxLength the maximum possible length of the string to return (including length of the elipse)
 		 * @return string the full string or the truncated string with eplise
 		 */
@@ -69,7 +93,14 @@
 
 			return $strString;
 		}
-		
+
+		/**
+		 * Finds longest substring which is common among two strings
+		 * @param string $str1
+		 * @param string $str2
+		 *
+		 * @return string
+		 */
 		// Implementation from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
 		public final static function LongestCommonSubsequence($str1, $str2) {
 			$str1Len = mb_strlen($str1, __QAPPLICATION_ENCODING_TYPE__);
