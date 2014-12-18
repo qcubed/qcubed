@@ -322,13 +322,14 @@
 		// Public Properties: SET
 		/////////////////////////
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				// APPEARANCE
 				case "TextAlign":
 					try {
-						$this->strTextAlign = QType::Cast($mixValue, QType::String);
+						if ($this->strTextAlign !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strTextAlign = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -337,7 +338,10 @@
 
 				case "HtmlEntities":
 					try {
-						$this->blnHtmlEntities = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnHtmlEntities !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnHtmlEntities = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -347,7 +351,10 @@
 				// LAYOUT
 				case "CellPadding":
 					try {
-						$this->intCellPadding = QType::Cast($mixValue, QType::Integer);
+						if ($this->intCellPadding !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intCellPadding = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -355,7 +362,10 @@
 					}
 				case "CellSpacing":
 					try {
-						$this->intCellSpacing = QType::Cast($mixValue, QType::Integer);
+						if ($this->intCellSpacing !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intCellSpacing = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -363,7 +373,10 @@
 					}
 				case "RepeatColumns":
 					try {
-						$this->intRepeatColumns = QType::Cast($mixValue, QType::Integer);
+						if ($this->intRepeatColumns !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intRepeatColumns = $mixValue;
+						}
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -373,7 +386,10 @@
 					break;
 				case "RepeatDirection":
 					try {
-						$this->strRepeatDirection = QType::Cast($mixValue, QType::String);
+						if ($this->strRepeatDirection !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strRepeatDirection = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -381,6 +397,7 @@
 					}
 				case "ItemStyle":
 					try {
+						$this->blnModified = true;
 						$this->objItemStyle = QType::Cast($mixValue, "QListItemStyle");
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -390,7 +407,10 @@
 
 				case "ButtonMode":
 					try {
-						$this->intButtonMode = QType::Cast($mixValue, QType::Integer);
+						if ($this->intButtonMode !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intButtonMode = $mixValue;
+						}
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -405,6 +425,7 @@
 						else {
 							$this->strMaxHeight = QType::Cast($mixValue, QType::String);
 						}
+						$this->blnModified = true;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;

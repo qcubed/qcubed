@@ -315,13 +315,14 @@
 		 * @throws Exception|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				// APPEARANCE
 				case "Text":
 					try {
-						$this->strText = QType::Cast($mixValue, QType::String);
+						if ($this->strText !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strText = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -330,7 +331,10 @@
 
 				case "Format":
 					try {
-						$this->strFormat = QType::Cast($mixValue, QType::String);
+						if ($this->strFormat !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strFormat = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -339,6 +343,7 @@
 
 				case "Template":
 					try {
+						$this->blnModified = true;
 						if ($mixValue) {
 							if (file_exists($mixValue))
 								$this->strTemplate = QType::Cast($mixValue, QType::String);
@@ -354,7 +359,10 @@
 
 				case "AutoRenderChildren":
 					try {
-						$this->blnAutoRenderChildren = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnAutoRenderChildren !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnAutoRenderChildren = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -363,7 +371,10 @@
 
 				case "TagName":
 					try {
-						$this->strTagName = QType::Cast($mixValue, QType::String);
+						if ($this->strTagName !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strTagName = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -372,7 +383,10 @@
 
 				case "HtmlEntities":
 					try {
-						$this->blnHtmlEntities = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnHtmlEntities !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnHtmlEntities = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -381,7 +395,10 @@
 
 				case "Padding":
 					try {
-						$this->strPadding = QType::Cast($mixValue, QType::String);
+						if ($this->strPadding !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strPadding = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -390,7 +407,10 @@
 
 				case "DropTarget":
 					try {
-						$this->blnDropTarget = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnDropTarget !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnDropTarget = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -399,7 +419,10 @@
 
 				case "HorizontalAlign":
 					try {
-						$this->strHorizontalAlign = QType::Cast($mixValue, QType::String);
+						if ($this->strHorizontalAlign !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strHorizontalAlign = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -408,7 +431,10 @@
 
 				case "VerticalAlign":
 					try {
-						$this->strVerticalAlign = QType::Cast($mixValue, QType::String);
+						if ($this->strVerticalAlign !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strVerticalAlign = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
