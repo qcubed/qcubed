@@ -1688,6 +1688,7 @@
 		 */
 		public function MarkAsWrapperModified() {
 			$this->blnWrapperModified = true;
+			$this->blnModified = true;
 		}
 
 		/**
@@ -1807,7 +1808,6 @@
 			return false;
 		}
 
-
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -1920,13 +1920,14 @@
 		 * @throws Exception|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				// APPEARANCE
 				case "BackColor":
 					try {
-						$this->strBackColor = QType::Cast($mixValue, QType::String);
+						if ($this->strBackColor !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strBackColor = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1934,7 +1935,10 @@
 					}
 				case "BorderColor":
 					try {
-						$this->strBorderColor = QType::Cast($mixValue, QType::String);
+						if ($this->strBorderColor !== ($mixValue = QType::Cast($mixValue, QType::String))){
+							$this->blnModified = true;
+							$this->strBorderColor = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1942,7 +1946,10 @@
 					}
 				case "BorderStyle":
 					try {
-						$this->strBorderStyle = QType::Cast($mixValue, QType::String);
+						if ($this->strBorderStyle !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strBorderStyle = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1950,7 +1957,10 @@
 					}
 				case "BorderWidth":
 					try {
-						$this->strBorderWidth = QType::Cast($mixValue, QType::String);
+						if ($this->strBorderWidth !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strBorderWidth = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1958,7 +1968,10 @@
 					}
 				case "CssClass":
 					try {
-						$this->strCssClass = QType::Cast($mixValue, QType::String);
+						if ($this->strCssClass !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strCssClass = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1978,10 +1991,13 @@
 					}
 				case "DisplayStyle":
 					try {
-						$this->strDisplayStyle = QType::Cast($mixValue, QType::String);
-						if (($this->strDisplayStyle == QDisplayStyle::Block) ||
-							($this->strDisplayStyle == QDisplayStyle::Inline))
-							$this->strDisplayStyle = $this->strDisplayStyle;
+						if ($this->strDisplayStyle !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strDisplayStyle = $mixValue;
+							if ($this->strDisplayStyle != QDisplayStyle::None) {
+								$this->blnDisplay = true;
+							}
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1989,7 +2005,10 @@
 					}
 				case "FontBold":
 					try {
-						$this->blnFontBold = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnFontBold !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnFontBold = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1997,7 +2016,10 @@
 					}
 				case "FontItalic":
 					try {
-						$this->blnFontItalic = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnFontItalic !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnFontItalic = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2005,7 +2027,10 @@
 					}
 				case "FontNames":
 					try {
-						$this->strFontNames = QType::Cast($mixValue, QType::String);
+						if ($this->strFontNames !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strFontNames = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2013,7 +2038,10 @@
 					}
 				case "FontOverline":
 					try {
-						$this->blnFontOverline = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnFontOverline !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnFontOverline = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2021,7 +2049,10 @@
 					}
 				case "FontSize":
 					try {
-						$this->strFontSize = QType::Cast($mixValue, QType::String);
+						if ($this->strFontSize !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strFontSize = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2029,7 +2060,10 @@
 					}
 				case "FontStrikeout":
 					try {
-						$this->blnFontStrikeout = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnFontStrikeout !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnFontStrikeout = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2037,7 +2071,10 @@
 					}
 				case "FontUnderline":
 					try {
-						$this->blnFontUnderline = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnFontUnderline !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnFontUnderline = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2045,7 +2082,10 @@
 					}
 				case "ForeColor":
 					try {
-						$this->strForeColor = QType::Cast($mixValue, QType::String);
+						if ($this->strForeColor !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strForeColor = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2053,9 +2093,12 @@
 					}
 				case "Opacity":
 					try {
-						$this->intOpacity = QType::Cast($mixValue, QType::Integer);
-						if (($this->intOpacity < 0) || ($this->intOpacity > 100))
-							throw new QCallerException('Opacity must be an integer value between 0 and 100');
+						if ($this->intOpacity !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							if (($this->intOpacity < 0) || ($this->intOpacity > 100))
+								throw new QCallerException('Opacity must be an integer value between 0 and 100');
+							$this->blnModified = true;
+							$this->intOpacity = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2065,7 +2108,10 @@
 				// BEHAVIOR
 				case "AccessKey":
 					try {
-						$this->strAccessKey = QType::Cast($mixValue, QType::String);
+						if ($this->strAccessKey !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strAccessKey = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2074,6 +2120,7 @@
 				case "CausesValidation":
 					try {
 						$this->mixCausesValidation = $mixValue;
+						// This would not need to cause a redraw
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2081,7 +2128,10 @@
 					}
 				case "Cursor":
 					try {
-						$this->strCursor = QType::Cast($mixValue, QType::String);
+						if ($this->strCursor !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strCursor = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2089,7 +2139,10 @@
 					}
 				case "Enabled":
 					try {
-						$this->blnEnabled = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnEnabled !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnEnabled = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2105,7 +2158,10 @@
 					}
 				case "TabIndex":
 					try {
-						$this->intTabIndex = QType::Cast($mixValue, QType::Integer);
+						if ($this->intTabIndex !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intTabIndex = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2113,7 +2169,10 @@
 					}
 				case "ToolTip":
 					try {
-						$this->strToolTip = QType::Cast($mixValue, QType::String);
+						if ($this->strToolTip !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strToolTip = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2121,7 +2180,10 @@
 					}
 				case "Visible":
 					try {
-						$this->blnVisible = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnVisible !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnVisible = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2129,7 +2191,10 @@
 					}
 				case "PreferredRenderMethod":
 					try {
-						$this->strPreferredRenderMethod = QType::Cast($mixValue, QType::String);
+						if ($this->strPreferredRenderMethod !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strPreferredRenderMethod = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2139,7 +2204,10 @@
 				// LAYOUT
 				case "Height":
 					try {
-						$this->strHeight = QType::Cast($mixValue, QType::String);
+						if ($this->strHeight !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strHeight = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2147,7 +2215,10 @@
 					}
 				case "Width":
 					try {
-						$this->strWidth = QType::Cast($mixValue, QType::String);
+						if ($this->strWidth !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strWidth = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2155,7 +2226,10 @@
 					}
 				case "HtmlBefore":
 					try {
-						$this->strHtmlBefore = QType::Cast($mixValue, QType::String);
+						if ($this->strHtmlBefore !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strHtmlBefore = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2163,7 +2237,10 @@
 					}
 				case "HtmlAfter":
 					try {
-						$this->strHtmlAfter = QType::Cast($mixValue, QType::String);
+						if ($this->strHtmlAfter !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strHtmlAfter = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2171,7 +2248,10 @@
 					}
 				case "Instructions":
 					try {
-						$this->strInstructions = QType::Cast($mixValue, QType::String);
+						if ($this->strInstructions !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strInstructions = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2180,6 +2260,7 @@
 				case "Warning":
 					try {
 						$this->strWarning = QType::Cast($mixValue, QType::String);
+						$this->blnModified = true;	// always modify, since it will get reset on subsequent drawing
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2188,7 +2269,10 @@
 
 				case "Overflow":
 					try {
-						$this->strOverflow = QType::Cast($mixValue, QType::String);
+						if ($this->strOverflow !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strOverflow = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2233,6 +2317,7 @@
 
 				case "Moveable":
 					try {
+						$this->MarkAsWrapperModified();
 						if (QType::Cast($mixValue, QType::Boolean)) {
 							if (!$this->objDraggable) {
 								$this->objDraggable = new QDraggable($this);
@@ -2253,6 +2338,7 @@
 
 				case "Resizable":
 					try {
+						$this->MarkAsWrapperModified();
 						if (QType::Cast($mixValue, QType::Boolean)) {
 							if (!$this->objResizable) {
 								$this->objResizable = new QResizable($this);
@@ -2273,6 +2359,7 @@
 
 				case "Droppable":
 					try {
+						$this->MarkAsWrapperModified();
 						if (QType::Cast($mixValue, QType::Boolean)) {
 							if (!$this->objDroppable) {
 								$this->objDroppable = new QDroppable($this);
@@ -2294,7 +2381,10 @@
 				// MISC
 				case "Name":
 					try {
-						$this->strName = QType::Cast($mixValue, QType::String);
+						if ($this->strName !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strName = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2304,6 +2394,7 @@
 				case "ActionParameter":
 					try {
 						$this->mixActionParameter = ($mixValue instanceof QJsClosure) ? $mixValue : QType::Cast($mixValue, QType::String);
+						$this->blnModified = true;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2336,6 +2427,8 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				// CODEGEN
 				case "LinkedNode":
 					try {
 						$this->objLinkedNode = QType::Cast($mixValue, 'QQBaseNode');

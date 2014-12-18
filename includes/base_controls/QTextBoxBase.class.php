@@ -489,15 +489,14 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-			}
 
-			$this->blnModified = true;
-
-			switch ($strName) {
 				// APPEARANCE
 				case "Columns":
 					try {
-						$this->intColumns = QType::Cast($mixValue, QType::Integer);
+						if ($this->intColumns !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intColumns = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -505,16 +504,10 @@
 					}
 				case "Format":
 					try {
-						$this->strFormat = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Text":
-				case "Value":
-					try {
-						$this->strText = QType::Cast($mixValue, QType::String);
+						if ($this->strFormat !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strFormat = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -522,6 +515,7 @@
 					}
 				case "LabelForRequired":
 					try {
+						// no redraw needed
 						$this->strLabelForRequired = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -570,7 +564,10 @@
 					}
 				case "Placeholder":
 					try {
-						$this->strPlaceholder = QType::Cast($mixValue, QType::String);
+						if ($this->strPlaceholder !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strPlaceholder = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -592,7 +589,10 @@
 					}
 				case "MaxLength":
 					try {
-						$this->intMaxLength = QType::Cast($mixValue, QType::Integer);
+						if ($this->intMaxLength !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intMaxLength = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -600,7 +600,10 @@
 					}
 				case "MinLength":
 					try {
-						$this->intMinLength = QType::Cast($mixValue, QType::Integer);
+						if ($this->intMinLength !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intMinLength = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -608,7 +611,10 @@
 					}
 				case "ReadOnly":
 					try {
-						$this->blnReadOnly = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnReadOnly !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnReadOnly = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -616,7 +622,10 @@
 					}
 				case "Rows":
 					try {
-						$this->intRows = QType::Cast($mixValue, QType::Integer);
+						if ($this->intRows !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intRows = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -624,7 +633,10 @@
 					}
 				case "TextMode":
 					try {
-						$this->strTextMode = QType::Cast($mixValue, QType::String);
+						if ($this->strTextMode !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strTextMode = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -642,14 +654,17 @@
 				// LAYOUT
 				case "Wrap":
 					try {
-						$this->blnWrap = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnWrap !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnWrap = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
 					
-				// FILTERING and VALIDATING
+				// FILTERING and VALIDATING, no redraw needed
 				case "AutoTrim":
 					try {
 						$this->blnAutoTrim = QType::Cast($mixValue, QType::Boolean);

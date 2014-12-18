@@ -244,13 +244,14 @@
 		// Public Properties: SET
 		/////////////////////////
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				// APPEARANCE
 				case "Rows":
 					try {
-						$this->intRows = QType::Cast($mixValue, QType::Integer);
+						if ($this->intRows !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intRows = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -276,7 +277,10 @@
 				// BEHAVIOR
 				case "SelectionMode":
 					try {
-						$this->strSelectionMode = QType::Cast($mixValue, QType::String);
+						if ($this->strSelectionMode !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strSelectionMode = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -285,6 +289,7 @@
 				
 				case "ItemStyle":
 					try {
+						$this->blnModified = true;
 						$this->objItemStyle = QType::Cast($mixValue, "QListItemStyle");
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

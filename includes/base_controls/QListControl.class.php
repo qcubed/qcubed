@@ -315,7 +315,6 @@
 		 * @throws Exception|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
 			switch ($strName) {
 				case "SelectedIndex":
 					try {
@@ -324,6 +323,8 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+					$this->blnModified = true;
 
 					// Special Case
 					if ($mixValue == -1)
@@ -341,6 +342,7 @@
 					break;
 
 				case "SelectedName":
+					$this->blnModified = true;
 					foreach ($this->objItemsArray as $objItem)
 						if ($objItem->Name == $mixValue)
 							$objItem->Selected = true;
@@ -351,6 +353,7 @@
 
 				case "SelectedValue":
 				case "Value": // most common situation
+					$this->blnModified = true;
 					foreach ($this->objItemsArray as $objItem)
 						if (!$mixValue) {
 							if ($mixValue === null || $mixValue === '') {
@@ -382,6 +385,7 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+					$this->blnModified = true;
 					foreach ($this->objItemsArray as $objItem) {
 						$objItem->Selected = false;
 						foreach ($mixValue as $mixName) {
@@ -401,6 +405,7 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+					$this->blnModified = true;
 					foreach ($this->objItemsArray as $objItem) {
 						$objItem->Selected = false;
 						$mixCurVal = $objItem->Value;
