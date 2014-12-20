@@ -17,7 +17,9 @@ class QStringTests extends QUnitTestCaseBase {
 		$this->lcsCheckValueHelper("aa", "", null);
 		$this->lcsCheckValueHelper("", null, null);
 		$this->lcsCheckValueHelper(null, null, null);
+	}
 
+	public function testEndsWithStartsWith() {
 		$this->assetEqual(QString::StartsWith("This is a test", "This"), true);
 		$this->assetEqual(QString::StartsWith("This is a test", "this"), false);
 		$this->assetEqual(QString::StartsWith("This is a test", "Thi"), true);
