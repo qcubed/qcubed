@@ -20,19 +20,19 @@ class QStringTests extends QUnitTestCaseBase {
 	}
 
 	public function testEndsWithStartsWith() {
-		$this->assetEqual(QString::StartsWith("This is a test", "This"), true);
-		$this->assetEqual(QString::StartsWith("This is a test", "this"), false);
-		$this->assetEqual(QString::StartsWith("This is a test", "Thi"), true);
-		$this->assetEqual(QString::StartsWith("This is a test", "is a"), false);
-		$this->assetEqual(QString::StartsWith("This is a test", "X"), false);
-		$this->assetEqual(QString::StartsWith("This is a test", ""), true);
+		$this->assertEqual(QString::StartsWith("This is a test", "This"), true);
+		$this->assertEqual(QString::StartsWith("This is a test", "this"), false);
+		$this->assertEqual(QString::StartsWith("This is a test", "Thi"), true);
+		$this->assertEqual(QString::StartsWith("This is a test", "is a"), false);
+		$this->assertEqual(QString::StartsWith("This is a test", "X"), false);
+		$this->assertEqual(QString::StartsWith("This is a test", ""), true);
 
-		$this->assetEqual(QString::EndsWith("This is a test", "test"), true);
-		$this->assetEqual(QString::EndsWith("This is a test", "Test"), false);
-		$this->assetEqual(QString::EndsWith("This is a test", "est"), true);
-		$this->assetEqual(QString::EndsWith("This is a test", "is a"), false);
-		$this->assetEqual(QString::EndsWith("This is a test", "X"), false);
-		$this->assetEqual(QString::EndsWith("This is a test", ""), true);
+		$this->assertEqual(QString::EndsWith("This is a test", "test"), true);
+		$this->assertEqual(QString::EndsWith("This is a test", "Test"), false);
+		$this->assertEqual(QString::EndsWith("This is a test", "est"), true);
+		$this->assertEqual(QString::EndsWith("This is a test", "is a"), false);
+		$this->assertEqual(QString::EndsWith("This is a test", "X"), false);
+		$this->assertEqual(QString::EndsWith("This is a test", ""), true);
 	}
 
 	private function lcsCheckValueHelper($str1, $str2, $strExpectedResult) {
