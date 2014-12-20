@@ -23,12 +23,14 @@ class QStringTests extends QUnitTestCaseBase {
 		$this->assetEqual(QString::StartsWith("This is a test", "This"), true);
 		$this->assetEqual(QString::StartsWith("This is a test", "this"), false);
 		$this->assetEqual(QString::StartsWith("This is a test", "Thi"), true);
+		$this->assetEqual(QString::StartsWith("This is a test", "is a"), false);
 		$this->assetEqual(QString::StartsWith("This is a test", "X"), false);
 		$this->assetEqual(QString::StartsWith("This is a test", ""), true);
 
 		$this->assetEqual(QString::EndsWith("This is a test", "test"), true);
 		$this->assetEqual(QString::EndsWith("This is a test", "Test"), false);
 		$this->assetEqual(QString::EndsWith("This is a test", "est"), true);
+		$this->assetEqual(QString::EndsWith("This is a test", "is a"), false);
 		$this->assetEqual(QString::EndsWith("This is a test", "X"), false);
 		$this->assetEqual(QString::EndsWith("This is a test", ""), true);
 	}
