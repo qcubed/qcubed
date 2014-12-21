@@ -3,8 +3,23 @@
 <?php 	if ($objColumn->Reference && !$objColumn->Reference->IsType) { ?>
 	 * @property <?php echo $objCodeGen->TableArray[strtolower($objColumn->Reference->Table)]->ClassName ?>ObjectSelector $<?php echo $objColumn->PropertyName  ?>Control
 	 * @property-read QLabel $<?php echo $objColumn->PropertyName  ?>Label
-<?php 	} else {?>
-	 * @property <?php echo $objCodeGen->FormControlClassForColumn($objColumn);  ?> $<?php echo $objColumn->PropertyName  ?>Control
+<?php 	} else {
+			switch ($objColumn->DbType) {
+				case QDatabaseFieldType::DateTime:
+					$strPropertyType = 'QJqDateTimePicker';
+					break;
+				case QDatabaseFieldType::Time:
+					$strPropertyType = 'QDateTimePicker';
+					break;
+				case QDatabaseFieldType::Date:
+					$strPropertyType = 'QDatePickerBox';
+					break;
+				default:
+					$strPropertyType = $objCodeGen->FormControlClassForColumn($objColumn);
+					break;
+			}
+?>
+	 * @property <?php echo $strPropertyType;  ?> $<?php echo $objColumn->PropertyName  ?>Control
 	 * @property-read QLabel $<?php echo $objColumn->PropertyName  ?>Label
 <?php 	} ?>
 <?php } ?>

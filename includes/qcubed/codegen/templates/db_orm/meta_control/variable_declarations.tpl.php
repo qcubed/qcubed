@@ -30,9 +30,25 @@
 		 * @access protected
 		 */
 		protected $<?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>;
-<?php 	} else {?>
+<?php 	} else {
+			switch ($objColumn->DbType) {
+				case QDatabaseFieldType::DateTime:
+					$strPropertyType = 'QJqDateTimePicker';
+					break;
+				case QDatabaseFieldType::Time:
+					$strPropertyType = 'QDateTimePicker';
+					break;
+				case QDatabaseFieldType::Date:
+					$strPropertyType = 'QDatePickerBox';
+					break;
+				default:
+					$strPropertyType = $objCodeGen->FormControlClassForColumn($objColumn);
+					break;
+			}
+
+?>
 		/**
-		 * @var <?php echo $objCodeGen->FormControlClassForColumn($objColumn);  ?> <?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>
+		 * @var <?php echo $strPropertyType;  ?> <?php echo $objCodeGen->FormControlVariableNameForColumn($objColumn);  ?>
 
 		 * @access protected
 		 */

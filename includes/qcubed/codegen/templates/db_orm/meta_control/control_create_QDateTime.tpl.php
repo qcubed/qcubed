@@ -2,7 +2,25 @@
 		 * Create and setup QDateTimePicker <?php echo $strControlId  ?>
 
 		 * @param string $strControlId optional ControlId to use
+<?php
+switch ($objColumn->DbType) {
+	case QDatabaseFieldType::DateTime:
+?>
+		 * @return QJqDateTimePicker
+<?php
+		break;
+	case QDatabaseFieldType::Time:
+?>
 		 * @return QDateTimePicker
+<?php
+		break;
+	default:
+?>
+		 * @return QDatePickerBox
+<?php
+		break;
+}
+?>
 		 */
 		public function <?php echo $strControlId  ?>_Create($strControlId = null) {
 <?php
