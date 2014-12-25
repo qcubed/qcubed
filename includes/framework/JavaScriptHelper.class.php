@@ -81,8 +81,6 @@
 		 * Returns javascript that on execution will insert the value $strValue into the DOM element corresponding to
 		 * the $objControl using the key $strKey
 		 *
-		 * NOTE: Currently unused in QCubed
-		 *
 		 * @static
 		 * @param QControl $objControl
 		 * @param string $strKey
@@ -96,8 +94,6 @@
 		/**
 		 * Returns javascript that on execution will retrieve the value from the DOM element corresponding to
 		 * the $objControl using the key $strKey and assign it to the variable $strValue.
-		 *
-		 * Note: Currently unused in QCubed
 		 *
 		 * @static
 		 * @param QControl $objControl
