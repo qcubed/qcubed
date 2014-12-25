@@ -209,8 +209,10 @@
 
 		/**
 		 * Encrypt a file (depends on the value of class memebers)
+		 *
 		 * @param string $strFile Path of the file to be encrypted
 		 *
+		 * @return mixed|string
 		 * @throws QCallerException|QCryptographyException
 		 */
 		public function EncryptFile($strFile) {
@@ -225,8 +227,10 @@
 
 		/**
 		 * Decrypt a file (depends on the value of class memebers)
+		 *
 		 * @param string $strFile File to be decrypted
 		 *
+		 * @return string
 		 * @throws QCallerException|QCryptographyException
 		 */
 		public function DecryptFile($strFile) {

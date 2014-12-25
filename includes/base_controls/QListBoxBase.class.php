@@ -3,19 +3,19 @@
 	 * contains QListBoxBase class
 	 * @package Controls
 	 */
+
 	/**
 	 * QListBoxBase will render an HTML DropDown or MultiSelect box [SELECT] element.
-	 * 
 	 * It extends {@link QListControl}.  By default, the number of visible rows is set to 1 and
 	 * the selection mode is set to single, creating a dropdown select box.
 	 *
-	 * @property integer $Rows specifies how many rows you want to have shown.
-	 * @property string $LabelForRequired 
-	 * @property string $LabelForRequiredUnnamed
-	 * @property string $ItemStyle {@link QListItemStyle} 
-	 * @property string $SelectionMode {@link QSelectionMode} specifies if this is a "Single" or "Multiple" select control.
-	 * @see QListItemStyle
-	 * @see QSelectionMode
+	 * @property integer $Rows          specifies how many rows you want to have shown.
+	 * @property string  $LabelForRequired
+	 * @property string  $LabelForRequiredUnnamed
+	 * @property string  $ItemStyle     {@link QListItemStyle}
+	 * @property string  $SelectionMode {@link QSelectionMode} specifies if this is a "Single" or "Multiple" select control.
+	 * @see     QListItemStyle
+	 * @see     QSelectionMode
 	 * @package Controls
 	 */
 	abstract class QListBoxBase extends QListControl {
@@ -24,12 +24,17 @@
 		///////////////////////////
 		
 		// APPEARANCE
+		/** @var int Number of rows to be shown for the select box */
 		private $intRows = 1;
+		/** @var string Error to be shown if the box is empty, has a name and is marked as required */
 		protected $strLabelForRequired;
+		/** @var string Error to be shown If the box is empty, doesn't have a name and is marked as required */
 		protected $strLabelForRequiredUnnamed;
+		/** @var null|QListItemStyle The style for each element to be displayed */
 		protected $objItemStyle = null;
 
 		// BEHAVIOR
+		/** @var string Selection mode for the listbox (single or multiple element selection) */
 		protected $strSelectionMode = QSelectionMode::Single;
 
 		//////////
@@ -49,7 +54,9 @@
 			$this->objItemStyle = new QListItemStyle();
 		}
 
-
+		/**
+		 * Prases the data recieved back from the client/browser
+		 */
 		public function ParsePostData() {
 			if (array_key_exists($this->strControlId, $_POST)) {
 				if (is_array($_POST[$this->strControlId])) {
