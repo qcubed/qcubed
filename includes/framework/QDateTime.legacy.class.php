@@ -10,6 +10,8 @@
 	 * 
 	 * All new QDateTime functionality will be added to the QDateTime (standard) which uses PHP DateTime,
 	 * which is included in all versions of >= PHP 5.2.0
+	 *
+	 * @deprecated This class is deprecated in favor of the new QDateTime class.
 	 */
 	class QDateTime extends QBaseClass {
 		/**

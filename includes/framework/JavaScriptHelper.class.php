@@ -18,9 +18,8 @@
 		protected $strParamsArray;
 
 		/**
-		 * @param string $strBody	The function body
-		 * @param array|null $strParamsArray	The names of the parameters passed in the function call
-		 * @param bool $blnRawArrayKey Whether to quote the associated key if this closure is in an array.
+		 * @param string     $strBody        The function body
+		 * @param array|null $strParamsArray The names of the parameters passed in the function call
 		 */
 		public function __construct($strBody, $strParamsArray = null) {
 			$this->strBody = $strBody;
@@ -74,10 +73,14 @@
 		}
 	}
 
+	/**
+	 * Class JavaScriptHelper: used to help around with some JS code creation when rendering controls
+	 */
 	abstract class JavaScriptHelper {
 		/**
 		 * Returns javascript that on execution will insert the value $strValue into the DOM element corresponding to
 		 * the $objControl using the key $strKey
+		 *
 		 * @static
 		 * @param QControl $objControl
 		 * @param string $strKey
@@ -91,6 +94,7 @@
 		/**
 		 * Returns javascript that on execution will retrieve the value from the DOM element corresponding to
 		 * the $objControl using the key $strKey and assign it to the variable $strValue.
+		 *
 		 * @static
 		 * @param QControl $objControl
 		 * @param string $strKey

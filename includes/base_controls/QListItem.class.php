@@ -3,17 +3,18 @@
 	 * QListItem.class.php contains the QListItem class
 	 * @package Controls
 	 */
-	 
+
 	/**
 	 * Utilized by the {@link QListControl} class which contains a private array of ListItems.
+	 *
 	 * @package Controls
-	 * @property string $Name is what gets displayed
-	 * @property string $Value is any text that represents the value of the ListItem (e.g. maybe a DB Id)
-	 * @property boolean $Selected is a boolean of whether or not this item is selected or not (do only! use during initialization, otherwise this should be set by the {@link QListControl}!)
-	 * @property string $ItemGroup is the group (if any) in which the Item should be displayed 
+	 * @property string         $Name      is what gets displayed
+	 * @property string         $Value     is any text that represents the value of the ListItem (e.g. maybe a DB Id)
+	 * @property boolean        $Selected  is a boolean of whether or not this item is selected or not (do only! use during initialization, otherwise this should be set by the {@link QListControl}!)
+	 * @property string         $ItemGroup is the group (if any) in which the Item should be displayed
 	 * @property QListItemStyle $ItemStyle is the QListItemStyle in which the Item should be rendered
-	 * @property string $Label is optional text to display in the drop down menu of a QAutocomplete instead of the Name. The Name will still be what gets filled in to the text box. 
-	 * @property-read boolean $Empty true when both $Name and $Value are null, in which case this item will be rendered with an empty value in the list control
+	 * @property string         $Label     is optional text to display in the drop down menu of a QAutocomplete instead of the Name. The Name will still be what gets filled in to the text box.
+	 * @property-read boolean   $Empty     true when both $Name and $Value are null, in which case this item will be rendered with an empty value in the list control
 	 */
 	class QListItem extends QBaseClass {
 		///////////////////////////

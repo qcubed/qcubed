@@ -1,5 +1,17 @@
 <?php
+
+	/**
+	 * Class QDateTimeSpan: This class is used to calculate the time difference between two dates (including time)
+	 *
+	 * @property-read int $Years   Years in the calculated timespan
+	 * @property-read int $Months  Months in the calculated timespan
+	 * @property-read int $Days    Days in the calculated timespan
+	 * @property-read int $Hours   Hours in the calculated timespan
+	 * @property-read int $Minutes Minutes in the calculated timespan
+	 * @property int      $Seconds Number seconds which correspond to the time difference
+	 */
 	class QDateTimeSpan extends QBaseClass{
+		/** @var int Seconds variable which will be used to calculate the timespan */
 		protected $intSeconds;
 
 		/* From: http://tycho.usno.navy.mil/leapsec.html:
@@ -9,14 +21,24 @@
 			Ephemeris Time (ET) was defined as the measure of time that brings the observed positions of the celestial
 			bodies into accord with the Newtonian dynamical theory of motion.
 		*/
+		/** Number of seconds in an year */
  		const SecondsPerYear	= 31556926;
  		
 		// Assume 30 Days per Month
+		/** Number of seconds in a month (assuming 30 days in a month) */
  		const SecondsPerMonth 	= 2592000;
+		/** Number of seconds per day */
 		const SecondsPerDay 	= 86400;
+		/** Number of seconds in an hour */
 		const SecondsPerHour 	= 3600;
+		/** Number of seconds per minute */
 		const SecondsPerMinute 	= 60;
 
+		/**
+		 * Constructor for the QDateTimeSpan class
+		 *
+		 * @param int $intSeconds Number of seconds to set for this QDateTimeSpan
+		 */
 		public function __construct($intSeconds = 0) {
 			$this->intSeconds = $intSeconds;
 		}
@@ -214,6 +236,14 @@
 			$this->intSeconds = $this->intSeconds - $dtsSpan->Seconds;
 		}
 
+		/**
+		 * Returns the time difference in approximate duration
+		 * e.g. "about 4 months" or "4 minutes"
+		 *
+		 * The QDateTime class uses this function in its 'Age' property accessor
+		 *
+		 * @return null|string
+		 */
 		public function SimpleDisplay(){
 			$arrTimearray = $this->GetTimearray();
 			$strToReturn = null;
@@ -249,17 +279,10 @@
 		
 		/**
 		 * Return an array of timeunints
-		 * 
 		 *
 		 * @return array of timeunits
 		 */
 		protected function GetTimearray(){
-			$intSecondsPerYear = ($this->IsPositive()) ? QDateTimeSpan::SecondsPerYear : ((-1) * QDateTimeSpan::SecondsPerYear);
-			$intSecondsPerMonth = ($this->IsPositive()) ? QDateTimeSpan::SecondsPerMonth : ((-1) * QDateTimeSpan::SecondsPerMonth);
-			$intSecondsPerDay = ($this->IsPositive()) ? QDateTimeSpan::SecondsPerDay : ((-1) * QDateTimeSpan::SecondsPerDay);
-			$intSecondsPerHour = ($this->IsPositive()) ? QDateTimeSpan::SecondsPerHour : ((-1) * QDateTimeSpan::SecondsPerHour);
-			$intSecondsPerMinute = ($this->IsPositive()) ? QDateTimeSpan::SecondsPerMinute : ((-1) * QDateTimeSpan::SecondsPerMinute);
-			
 			$intSeconds = abs($this->intSeconds);
 
 			$intYears = floor($intSeconds / QDateTimeSpan::SecondsPerYear);
@@ -277,8 +300,6 @@
 			$intMinutes = floor($intSeconds / QDateTimeSpan::SecondsPerMinute);
 			$intSeconds = $intSeconds - ($intMinutes * QDateTimeSpan::SecondsPerMinute);
 
-			$intSeconds = $intSeconds;
-
 			if($this->IsNegative()){
  				// Turn values to negative
 				$intYears = ((-1) * $intYears);
@@ -295,9 +316,12 @@
 		/**
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
+		 * PHP magic method
 		 *
 		 * @param string $strName Name of the property to get
+		 *
 		 * @return mixed the returned property
+		 * @throws Exception|QCallerException
 		 */
 		
 		public function __get($strName) {
@@ -323,10 +347,13 @@
 		/**
 		 * Override method to perform a property "Set"
 		 * This will set the property $strName to be $mixValue
+		 * PHP magic method
 		 *
-		 * @param string $strName Name of the property to set
+		 * @param string $strName  Name of the property to set
 		 * @param string $mixValue New value of the property
+		 *
 		 * @return mixed the property that was set
+		 * @throws Exception|QCallerException
 		 */
 	
 		public function __set($strName, $mixValue) {
@@ -342,8 +369,5 @@
 				throw $objExc;
 			}
 		}
-		
-		
 	}
-
 ?>

@@ -28,29 +28,27 @@
 	/**
 	 * This defines the style for an Item for a ListBox
 	 * All the appearance properties should be self-explanatory.
-	 *
 	 * For more information about ListItem appearance, please see QListItem.class.php
 	 *
 	 * @package Controls
-	 *
-	 * @property string $BackColor
-	 * @property string $BorderColor
-	 * @property string $BorderStyle
-	 * @property string $BorderWidth
-	 * @property string $CssClass
+	 * @property string  $BackColor
+	 * @property string  $BorderColor
+	 * @property string  $BorderStyle
+	 * @property string  $BorderWidth
+	 * @property string  $CssClass
 	 * @property boolean $FontBold
 	 * @property boolean $FontItalic
-	 * @property string $FontNames
+	 * @property string  $FontNames
 	 * @property boolean $FontOverline
-	 * @property string $FontSize
+	 * @property string  $FontSize
 	 * @property boolean $FontStrikeout
 	 * @property boolean $FontUnderline
-	 * @property string $ForeColor
-	 * @property string $Height
-	 * @property string $Width
-	 * @property array $Padding
-	 * @property array $Margin
-	 * @property array $Data
+	 * @property string  $ForeColor
+	 * @property string  $Height
+	 * @property string  $Width
+	 * @property array   $Padding
+	 * @property array   $Margin
+	 * @property array   $Data
 	 */
 	class QListItemStyle extends QBaseClass {
 		
