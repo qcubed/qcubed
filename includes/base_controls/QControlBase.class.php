@@ -232,7 +232,7 @@
 		protected $blnIsBlockElement = false;
 		/** @var QWatcher Stores information about watched tables. */
 		protected $objWatcher = null;
-		/** @var  QNode  Used by designer to associate a db node with this control */
+		/** @var QQNode  Used by designer to associate a db node with this control */
 		protected $objLinkedNode;
 
 		//////////
@@ -406,7 +406,7 @@
 		 * in the serialized stream differently than the default. If a QControl, make sure this isn't the only
 		 * instance of the control in the stream, or have some other way to serialize the control.
 		 *
-		 * @param $callable
+		 * @param QForm|QControl|array $obj
 		 * @return mixed
 		 */
 		public static function SleepHelper($obj) {
@@ -430,10 +430,11 @@
 		/**
 		 * A helper function to restore something possibly serialized with SleepHelper.
 		 *
-		 * @param $callable
+		 * @param QForm|QFormBase $objForm
+		 * @param array|string    $obj
+		 *
 		 * @return mixed
 		 */
-
 		public static function WakeupHelper($objForm, $obj) {
 			if (is_array ($obj)) {
 				$ret = array();
