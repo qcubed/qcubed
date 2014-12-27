@@ -7,7 +7,6 @@
  * @copyright ICOM Productions 2010
  * @license MIT
  * @name QCheckBoxColumn
- * 
  */
 
 class QCheckBoxColumn extends QDataGridColumn
@@ -19,15 +18,13 @@ class QCheckBoxColumn extends QDataGridColumn
 	protected $objCheckboxCallback = null;
 	protected $strCheckboxCallbackFunc = null;
 	protected $strPrimaryKey = 'Id';
-	
+
 	/**
 	 * Creates a QDataGridColumn of checkboxes
 	 *
-	 * @param string $strName The header to give the column, shown as the label for the Select All checkbox
-	 * @param QDataGrid $dataGrid The parent DataGrid. This does not add the column to that datagrid
-	 * @param mixed $objOverrideParameters Same as QDataGrid
-	 * @return void 
-	 *
+	 * @param string    $strName               The header to give the column, shown as the label for the Select All checkbox
+	 * @param QDataGrid $dataGrid              The parent DataGrid. This does not add the column to that datagrid
+	 * @param mixed     $objOverrideParameters Same as QDataGrid
 	 */
 	public function __construct($strName = '', QDataGrid $dataGrid, $objOverrideParameters = null)
 	{
@@ -137,10 +134,13 @@ class QCheckBoxColumn extends QDataGridColumn
 		}
 		return $chkSelected->Render(false);
 	}
-	
+
 	/**
 	 * Convert a checkbox id to its corresponding item id
-	 * @param string $chkId
+	 *
+	 * @param $strCheckId
+	 *
+	 * @return string
 	 */
 	public function chkIdToItemId ($strCheckId) {
 		$colIndex = $this->GetColIndex();
@@ -149,14 +149,15 @@ class QCheckBoxColumn extends QDataGridColumn
 		$len = strlen ($strControlIdPrefix);
 		return substr ($strCheckId, $len);
 	}
-	
+
 	/**
 	 * Returns an array of items for the selected rows, loaded using the specified class's Load($id) method
 	 *
-	 * @param string $strClass The class name of the object type to return
-	 * @param bool $blnIndex Whether to spend extra time indexing the array by Id
-	 * @return array An array of selected Items
+	 * @param string $strClass   The class name of the object type to return
+	 * @param bool   $blnIndex   Whether to spend extra time indexing the array by Id
+	 * @param null   $objClauses QQClause expression
 	 *
+	 * @return array An array of selected Items
 	 */
 	public function GetSelectedItems($strClass, $blnIndex = true, $objClauses = null)
 	{
@@ -206,13 +207,14 @@ class QCheckBoxColumn extends QDataGridColumn
 		
 		return $itemIds;
 	}
-	
-	
+
+
 	/**
 	 * Returns an array of changed ids.
 	 *
-	 * @return bool[] Key is the object Id, value is the new check state (bln)
+	 * @param bool $blnRemember
 	 *
+	 * @return bool[] Key is the object Id, value is the new check state (bln)
 	 */
 	public function GetChangedIds($blnRemember = false)
 	{
@@ -286,14 +288,16 @@ class QCheckBoxColumn extends QDataGridColumn
 			}
 		}
 	}
-	
+
 	/**
 	 * Override method to perform a property "Set"
 	 * This will set the property $strName to be $mixValue
 	 *
-	 * @param string $strName Name of the property to set
+	 * @param string $strName  Name of the property to set
 	 * @param string $mixValue New value of the property
+	 *
 	 * @return mixed
+	 * @throws Exception|QCallerException
 	 */
 	public function __set($strName, $mixValue) {
 		switch ($strName) {

@@ -5,57 +5,65 @@
 	 * @package Controls
 	 */
 
+	/**
+	 * Class QFilterType: Type of filter which can be implemented on a QDataGrid's Column
+	 *
+	 * A constant from this class determines the type of filter which is to be applied to the UI
+	 * in a QDataGrid and hence determines the type of query to be sent to the database for filtering
+	 * results based on input
+	 */
 	abstract class QFilterType {
+		/** No filter */
 		const None = '';
+		/** Text search filter */
 		const TextFilter = 'Text';
+		/** List type filter (mostly used for Boolean fields) */
 		const ListFilter = 'List';
 	}
 
 	/**
 	 * This defines a specific column <td> for a DataGrid
 	 * All the appearance properties should be self-explanatory.
-	 *
 	 * The SortByCommand and ReverseSortByCommand are both optional -- and are explained in more
 	 * depth in DataGrid.inc
 	 *
 	 * @package Controls
-	 *
-	 * @property string $BackColor
-	 * @property string $BorderColor
-	 * @property string $BorderStyle
-	 * @property string $BorderWidth
-	 * @property string $CssClass
-	 * @property boolean $FontBold
-	 * @property boolean $FontItalic
-	 * @property string $FontNames
-	 * @property boolean $FontOverline
-	 * @property string $FontSize
-	 * @property boolean $FontStrikeout
-	 * @property boolean $FontUnderline
-	 * @property string $ForeColor
-	 * @property string $HorizontalAlign
-	 * @property string $VerticalAlign
-	 * @property string $Width
-	 * @property boolean $Wrap
-	 * @property mixed $OrderByClause
-	 * @property mixed $ReverseOrderByClause
-	 * @property mixed $FilterByCommand
-	 * @property-read array $FilterInfo
-	 * @property integer $FilterBoxSize
-	 * @property string $FilterType
-	 * @property mixed $FilterList
-	 * @property integer $FilterColId
-	 * @property string $FilterPrefix
-	 * @property string $FilterPostfix
-	 * @property mixed $FilterConstant
-	 * @property-read mixed $ActiveFilter
+	 * @property string      $BackColor
+	 * @property string      $BorderColor
+	 * @property string      $BorderStyle
+	 * @property string      $BorderWidth
+	 * @property string      $CssClass
+	 * @property boolean     $FontBold
+	 * @property boolean     $FontItalic
+	 * @property string      $FontNames
+	 * @property boolean     $FontOverline
+	 * @property string      $FontSize
+	 * @property boolean     $FontStrikeout
+	 * @property boolean     $FontUnderline
+	 * @property string      $ForeColor
+	 * @property string      $HorizontalAlign
+	 * @property string      $VerticalAlign
+	 * @property string      $Width
+	 * @property boolean     $Wrap
+	 * @property mixed       $OrderByClause
+	 * @property mixed       $ReverseOrderByClause
+	 * @property mixed       $FilterByCommand
+	 * @property-read array  $FilterInfo
+	 * @property integer     $FilterBoxSize
+	 * @property string      $FilterType
+	 * @property mixed       $FilterList
+	 * @property integer     $FilterColId
+	 * @property string      $FilterPrefix
+	 * @property string      $FilterPostfix
+	 * @property mixed       $FilterConstant
+	 * @property-read mixed  $ActiveFilter
 	 * @property-write mixed $Filter
-	 * @property mixed $SortByCommand
-	 * @property mixed $ReverseSortByCommand
-	 * @property string $Html is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
-	 * @property string $Name is the name of the column, as displayed in the DataGrid's header row for that column
-	 * @property boolean $HtmlEntities
-	 * @property boolean $HasResetButton
+	 * @property mixed       $SortByCommand
+	 * @property mixed       $ReverseSortByCommand
+	 * @property string      $Html is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
+	 * @property string      $Name is the name of the column, as displayed in the DataGrid's header row for that column
+	 * @property boolean     $HtmlEntities
+	 * @property boolean     $HasResetButton
 	 */
 	class QDataGridColumn extends QBaseClass {
 		// APPEARANCE
@@ -209,9 +217,17 @@
 			return $strToReturn;
 		}
 
-		//creates a list for a column's filter
-		//2 ways of calling the fuction: specify only one paramter and it should be an advanced list item
-		//the other way is to call it using 2 parameters with first one being a name and other a value
+		/**
+		 * creates a list for a column's filter
+		 * 2 ways of calling the fuction:
+		 *  1. specify only one paramter and it should be an advanced list item
+		 *  2. the other way is to call it using 2 parameters with first one being a name and other a value
+		 *
+		 * @param null|string $arg1
+		 * @param null|QQCondition $arg2
+		 *
+		 * @throws Exception
+		 */
 		public function FilterAddListItem($arg1=null, $arg2=null) {
 			if($this->arrFilterList === null) {
 				$this->arrFilterList = array();
@@ -229,7 +245,11 @@
 				throw new Exception("Please specify a name and QQCondition pair OR a name and value pair as parameters.");
 			}
 		}
-		
+
+		/**
+		 * Tells whether or not the column has a filter
+		 * @return bool Does the column have a filter?
+		 */
 		public function HasFilter() {
 			return $this->ActiveFilter !== null || $this->FilterByCommand !== null || $this->FilterType != QFilterType::None;
 		}
@@ -342,6 +362,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -412,6 +439,16 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 *
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				// APPEARANCE

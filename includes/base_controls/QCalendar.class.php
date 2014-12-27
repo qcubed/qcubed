@@ -39,19 +39,19 @@ class QCalendar extends QDateTimeTextBox {
 	protected $strJqDateFormat = 'M d yy';
     protected $blnShowButtonPanel = true;
 
-	// map the JQuery datepicker format specs to QCodo QDateTime format specs.
-	//qcodo	jquery			php	Description
+	// map the JQuery datepicker format specs to QCubed QDateTime format specs.
+	//QCubed	JQuery		PHP	Description
 	//-------------------------------------------------
-	//MMMM	MM			F	Month as full name (e.g., March)
-	//MMM	M			M	Month as three-letters (e.g., Mar)
-	//MM	mm			m	Month as an integer with leading zero (e.g., 03)
-	//M	m			n	Month as an integer (e.g., 3)
-	//DDDD	DD			l	Day of week as full name (e.g., Wednesday)
-	//DDD	D			D	Day of week as three-letters (e.g., Wed)
-	//DD	dd			d	Day as an integer with leading zero (e.g., 02)
-	//D	d			j	Day as an integer (e.g., 2)
-	//YYYY	yy			Y	Year as a four-digit integer (e.g., 1977)
-	//YY	y			y	Year as a two-digit integer (e.g., 77)
+	//MMMM	    MM			F	Month as full name (e.g., March)
+	//MMM	    M			M	Month as three-letters (e.g., Mar)
+	//MM	    mm			m	Month as an integer with leading zero (e.g., 03)
+	//M	        m			n	Month as an integer (e.g., 3)
+	//DDDD	    DD			l	Day of week as full name (e.g., Wednesday)
+	//DDD	    D			D	Day of week as three-letters (e.g., Wed)
+	//DD	    dd			d	Day as an integer with leading zero (e.g., 02)
+	//D	        d			j	Day as an integer (e.g., 2)
+	//YYYY	    yy			Y	Year as a four-digit integer (e.g., 1977)
+	//YY	    y			y	Year as a two-digit integer (e.g., 77)
 	static private $mapQC2JQ = array(
 		'MMMM' => 'MM',
 		'MMM' => 'M',

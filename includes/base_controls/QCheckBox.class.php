@@ -338,10 +338,12 @@ TMPL;
 		/**
 		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @param boolean $blnInit	Generate initialization code instead of reload
+		 *
+		 * @return string
+		 * @return string
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
@@ -370,7 +372,5 @@ TMPL;
 TMPL;
 			return $strRet;
 		}
-
-
 	}
 ?>

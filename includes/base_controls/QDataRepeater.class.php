@@ -19,9 +19,12 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var null|string Path to the template file for this QDataRepeater */
 		protected $strTemplate = null;
+		/** @var null|integer Index of item being processed (starts from 0) */
 		protected $intCurrentItemIndex = null;
 
+		/** @var string tag to be used to put the contents in */
 		protected $strTagName = 'div';
 
 		//////////
@@ -29,6 +32,12 @@
 		//////////
 		public function ParsePostData() {}
 
+		/**
+		 * Returns the HTML to be sent to the user's browser
+		 *
+		 * @return string The HTML to be sent to the browser
+		 * @throws Exception|QCallerException
+		 */
 		protected function GetControlHtml() {
 			$this->DataBind();
 
@@ -73,6 +82,14 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -93,6 +110,15 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 
