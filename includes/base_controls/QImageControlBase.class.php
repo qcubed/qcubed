@@ -9,15 +9,14 @@
 	 * This class will render an Image Control of any image file in the system
 	 *
 	 * @package Controls
-	 *
-	 * @property boolean $ScaleCanvasDown
-	 * @property boolean $ScaleImageUp
-	 * @property string $ImageType
-	 * @property integer $Quality
-	 * @property string $CacheFolder
-	 * @property string $CacheFilename
-	 * @property string $ImagePath
-	 * @property string $AlternateText
+	 * @property boolean      $ScaleCanvasDown
+	 * @property boolean      $ScaleImageUp
+	 * @property string       $ImageType
+	 * @property integer      $Quality
+	 * @property string       $CacheFolder
+	 * @property string       $CacheFilename
+	 * @property string       $ImagePath
+	 * @property string       $AlternateText
 	 * @property-write string $BackColor
 	 * @property-write string $Width
 	 * @property-write string $Height
@@ -527,6 +526,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -558,6 +564,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method implementation
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

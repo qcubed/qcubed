@@ -28,8 +28,11 @@
 		protected $strNounPlural;
 
 		// BEHAVIOR
+		/** @var null|QPaginator Paginator at the top */
 		protected $objPaginator = null;
+		/** @var null|QPaginator Paginator at the bottom */
 		protected $objPaginatorAlternate = null;
+		/** @var bool Determines whether this QDataGrid wll use AJAX or not */
 		protected $blnUseAjax = false;
 
 		// MISC

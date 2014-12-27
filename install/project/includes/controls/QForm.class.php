@@ -16,9 +16,6 @@
 	 *
 	 * @package Controls
 	 * @author Qcubed
-	 * @copyright
-	 * @version 2011
-	 * @access public
 	 */
 	abstract class QForm extends QFormBase {
 		///////////////////////////

@@ -9,45 +9,78 @@
 	 * This defines a the stle for a row <tr> for a DataGrid
 	 * All the appearance properties should be self-explanatory.
 	 *
-	 * @package Controls
+	 * @package  Controls
+	 * @property string  $BackColor       sets the CSS background-color of the control
+	 * @property string  $BorderColor     sets the CSS border-color of the control
+	 * @property string  $BorderStyle     is used to set CSS border-style by {@link QBorderStyle}
+	 * @property string  $BorderWidth     sets the CSS border-width of the control
+	 * @property string  $CssClass        sets or returns the CSS class for this control
+	 * @property boolean $FontBold        sets the font bold or normal
+	 * @property boolean $FontItalic      sets the Font italic or normal
+	 * @property string  $FontNames       sets the name of used fonts
+	 * @property boolean $FontOverline    will the text have a line over it?
+	 * @property string  $FontSize        sets the font-size of the control
+	 * @property boolean $FontStrikeout   will the font in the text be striked at the middle (cut-through)?
+	 * @property boolean $FontUnderline   will the font in the test be underlined?
+	 * @property string  $ForeColor       sets the forecolor of the control (like fontcolor)
+	 * @property string  $Height          Height of the row
+	 * @property string  $HorizontalAlign Type of horizintal assignement (constant from QHorizontalAlign)
+	 * @property string  $VerticalAlign   Type of vertical assignement (constant from QVerticalAlign)
 	 *
-	 * @property string $BackColor sets the CSS background-color of the control
-	 * @property string $BorderColor sets the CSS border-color of the control
-	 * @property string $BorderStyle is used to set CSS border-style by {@link QBorderStyle}
-	 * @property string $BorderWidth sets the CSS border-width of the control
-	 * @property string $CssClass sets or returns the CSS class for this control
-	 * @property boolean $FontBold sets the font bold or normal
-	 * @property boolean $FontItalic sets the Font italic or normal
-	 * @property string $FontNames sets the name of used fonts
-	 * @property boolean $FontOverline
-	 * @property string $FontSize sets the font-size of the control
-	 * @property boolean $FontStrikeout
-	 * @property boolean $FontUnderline sets the font underlined
-	 * @property string $ForeColor sets the forecolor of the control (like fontcolor)
-	 * @property string $Height
-	 * @property string $HorizontalAlign
-	 * @property string $VerticalAlign
-	 * @property boolean $Wrap
+	 * @property boolean $Wrap Should the contents inside the cell be wrapped?
+	 *                         This property is not supported by HTML5 and should be considered deprecated.
 	 */
 	class QDataGridRowStyle extends QBaseClass {
+		/** @var null|string the Background color of the row */
 		protected $strBackColor = null;
+		/** @var null|string the border color of the row */
 		protected $strBorderColor = null;
+		/** @var string style of the border  */
 		protected $strBorderStyle = QBorderStyle::NotSet;
+		/** @var null|string Width of the border */
 		protected $strBorderWidth = null;
+		/** @var null|string CSS class for the row */
 		protected $strCssClass = null;
+		/** @var bool Determines if the font of text will be bold ?*/
 		protected $blnFontBold = false;
+		/** @var bool Determines if the font of text will be italicized? */
 		protected $blnFontItalic = false;
+		/** @var null|string CSS font-family property of the text in the row */
 		protected $strFontNames = null;
+		/** @var bool Determines if the text will have an overline? */
 		protected $blnFontOverline = false;
+		/**
+		 * @var null|string|integer Font size of the text
+		 *                          Integer value will mean pixels
+		 *                          String value will be sent to browser as is
+		 */
 		protected $strFontSize = null;
+		/** @var bool Determines if the font of text will be striked out */
 		protected $blnFontStrikeout = false;
+		/** @var bool Determines if the font of text will be underlined */
 		protected $blnFontUnderline = false;
+		/** @var null|string Color of the text */
 		protected $strForeColor = null;
+		/**
+		 * @var null|string|integer Height of the row
+		 *                          Integer value will mean pixels
+		 *                          String value will be sent to browser as is
+		 */
 		protected $strHeight = null;
+		/** @var string Horizontal alignment of the text within */
 		protected $strHorizontalAlign = QHorizontalAlign::NotSet;
+		/** @var string Vertical alignment of the text within */
 		protected $strVerticalAlign = QVerticalAlign::NotSet;
+		/** @var bool Determines if the contents will be wrapped in the cell or not */
 		protected $blnWrap = true;
 
+		/**
+		 * Allows the row style to be overriden with an already existing QDataGridRowStyle
+		 *
+		 * @param QDataGridRowStyle $objOverrideStyle
+		 *
+		 * @return QDataGridRowStyle
+		 */
 		public function ApplyOverride(QDataGridRowStyle $objOverrideStyle) {
 			$objNewStyle = clone $this;
 
@@ -97,6 +130,11 @@
 			return $objNewStyle;
 		}
 
+		/**
+		 * Returns HTML attributes for the QDataGrid row
+		 *
+		 * @return string HTML attributes
+		 */
 		public function GetAttributes() {
 			$strToReturn = "";
 
@@ -191,6 +229,14 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case "BackColor": return $this->strBackColor;
@@ -224,6 +270,15 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "BackColor": 
