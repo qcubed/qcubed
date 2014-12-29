@@ -590,12 +590,13 @@
 
 		/**
 		 * Returns all actions that are connected with specific events
-		 * @param string $strEventType
-		 *  the type of the event. Be sure and use a
-		 *  QFooEvent::EventName here. (QClickEvent::EventName, for example)
+		 *
+		 * @param string $strEventType the type of the event. Be sure and use a
+		 *                              QFooEvent::EventName here. (QClickEvent::EventName, for example)
 		 * @param string $strActionType if given only actions of this type will be
-		 *  returned
-		 * @return array
+		 *                              returned
+		 *
+		 * @return QAction[]
 		 */
 		public function GetAllActions($strEventType, $strActionType = null) {
 			$objArrayToReturn = array();
@@ -1816,7 +1817,7 @@
 		 * PHP __get magic method implementation
 		 * @param string $strName Property Name
 		 *
-		 * @return array|bool|int|mixed|null|QControl|QForm|string
+		 * @return mixed
 		 * @throws Exception|QCallerException
 		 */
 		public function __get($strName) {

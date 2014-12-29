@@ -327,7 +327,7 @@
 
 		/**
 		 * Used by the QCubed Code Generator to allow for the code generation of
-		 * the actual "Type::Xxx" constant, instead of the text of the constant,
+		 * the actual "QType::Xxx" constant, instead of the text of the constant,
 		 * in generated code.
 		 * It is rare for Constant to be used manually outside of Code Generation.
 		 *

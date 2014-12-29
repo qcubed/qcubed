@@ -53,7 +53,6 @@
 		 *
 		 * @throws QCallerException
 		 * @throws Exception|QCallerException
-		 * @internal param \mixed[] $objOverrideArray the array of name-value pair items of properties/attributes to override
 		 * @return void
 		 */
 		public final function OverrideAttributes($mixOverrideArray) {

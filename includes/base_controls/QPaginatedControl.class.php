@@ -7,20 +7,20 @@
 
 	/**
 	 * @package Controls
-	 *
-	 * @property string $Noun
-	 * @property string $NounPlural
+	 * @property string         $Noun
+	 * @property string         $NounPlural
 	 * @property QPaginatorBase $Paginator
 	 * @property QPaginatorBase $PaginatorAlternate
-	 * @property boolean $UseAjax
-	 * @property integer $ItemsPerPage is how many items you want to display per page when Pagination is enabled
-	 * @property integer $TotalItemCount is the total number of items in the ENTIRE recordset -- only used when Pagination is enabled
-	 * @property mixed $DataSource is an array of anything.  THIS MUST BE SET EVERY TIME (DataSource does NOT persist from postback to postback
-	 * @property-read mixed $LimitClause
-	 * @property-read mixed $LimitInfo is what should be passed in to the LIMIT clause of the sql query that retrieves the array of items from the database
-	 * @property-read integer $ItemCount
-	 * @property integer $PageNumber is the current page number you are viewing
-	 * @property-read integer $PageCount
+	 * @property boolean        $UseAjax
+	 * @property integer        $ItemsPerPage   is how many items you want to display per page when Pagination is enabled
+	 * @property integer        $TotalItemCount is the total number of items in the ENTIRE recordset -- only used when Pagination is enabled
+	 * @property mixed          $DataSource     is an array of anything.  THIS MUST BE SET EVERY TIME (DataSource does NOT persist from postback to postback
+	 * @property-read mixed     $LimitClause
+	 * @property-read mixed     $LimitInfo      is what should be passed in to the LIMIT clause of the sql query that retrieves the array of items from the database
+	 * @property-read integer   $ItemCount
+	 * @property integer        $PageNumber     is the current page number you are viewing
+	 * @property-read integer   $PageCount
+	 * @property-read integer   $ItemsOffset    Current offset of Items from the result
 	 */
 	abstract class QPaginatedControl extends QControl {
 		// APPEARANCE
@@ -36,16 +36,26 @@
 		protected $blnUseAjax = false;
 
 		// MISC
+		/** @var array DataSource from which the items are picked and rendered */
 		protected $objDataSource;
+		/** @var QControlProxy Proxy used for sorting QDataGrid by a particular column */
 		protected $prxDatagridSorting;
 
 		// SETUP
+		/** @var bool Is this paginator a block element? */
 		protected $blnIsBlockElement = true;
 		
 		// DATABIND CALLBACK
 		protected $strDataBindMethod;
 		protected $objDataBindControl;
 
+		/**
+		 * @param QControl|QControlBase|QForm $objParentObject
+		 * @param null|string                       $strControlId
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 
@@ -106,6 +116,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 * @param string $strName Property name
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
