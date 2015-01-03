@@ -55,6 +55,12 @@
 		 * @return bool
 		 */
 		public final static function StartsWith($strHaystack, $strNeedle) {
+			// If the length of needle is greater than the length of haystack, then return false
+			if(strlen($strNeedle) > strlen($strHaystack)){
+				// To supress the error in strpos function below
+				return false;
+			}
+
 			// search backwards starting from haystack length characters from the end
 			return $strNeedle === "" || strrpos($strHaystack, $strNeedle, -strlen($strHaystack)) !== false;
 		}
@@ -68,6 +74,12 @@
 		 * @return bool
 		 */
 		public final static function EndsWith($strHaystack, $strNeedle) {
+			// If the length of needle is greater than the length of haystack, then return false
+			if(strlen($strNeedle) > strlen($strHaystack)){
+				// To supress the error in strpos function below
+				return false;
+			}
+
 			// search forward starting from end minus needle length characters
 			return $strNeedle === "" || strpos($strHaystack, $strNeedle, strlen($strHaystack) - strlen($strNeedle)) !== false;
 		}
