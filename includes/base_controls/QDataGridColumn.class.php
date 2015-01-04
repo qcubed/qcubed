@@ -111,6 +111,16 @@
 		protected $strHtml;
 		protected $blnHtmlEntities = true;
 
+		/**
+		 * Constructor
+		 *
+		 * @param string      $strName               Name of the column
+		 * @param null|string $strHtml               Html for the column
+		 * @param null|mixed  $objOverrideParameters Parameters to be overriden (for func_get_args())
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __construct($strName, $strHtml = null, $objOverrideParameters = null) {
 			$this->strName = $strName;
 			$this->strHtml = $strHtml;
@@ -127,6 +137,14 @@
 				}
 		}
 
+		/**
+		 * Returns the HTML attributes for the column
+		 *
+		 * @param bool $blnIncludeCustom [For future use only]
+		 * @param bool $blnIncludeAction [For future use only]
+		 *
+		 * @return string
+		 */
 		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
 			$strToReturn = "";
 			$strStyle = "";			
@@ -351,8 +369,7 @@
 			}
 		}
 
-		public function ClearFilter() 
-		{
+		public function ClearFilter() {
 			$this->objActiveFilter = null;
 			if($this->arrFilterByCommand !== null)
 				$this->arrFilterByCommand['value'] = null;
