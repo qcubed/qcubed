@@ -309,9 +309,6 @@
 		protected $strLabelForMultipleFound;
 		protected $strLabelForPaginated;
 
-		/** @var string|integer Action parameter for the row's sorting proxy (at the header) */
-		protected $strActionParameter;
-
 		protected $strRowActionParameterHtml;
 		/** @var QEvent[] List of events for which actions have to be taken*/
 		protected $objRowEventArray = array();
@@ -825,13 +822,13 @@
 					else
 						$strName = $objColumn->Name;
 
-					$this->strActionParameter = $intColumnIndex;
+					$this->mixActionParameter = $intColumnIndex;
 
 					$strToReturn .= sprintf("    <th %s><a id=\"%s\" href=\"%s\" %s%s>%s</a></th>\r\n",
 						$this->objHeaderRowStyle->GetAttributes(),
-						$this->ControlId . "_col_" . $this->strActionParameter,
+						$this->ControlId . "_col_" . $this->mixActionParameter,
                         			QApplication::$RequestUri,
-						$this->prxDatagridSorting->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_col_" . $this->strActionParameter, false),
+						$this->prxDatagridSorting->RenderAsEvents($this->mixActionParameter, true, $this->ControlId . "_col_" . $this->mixActionParameter, false),
 						$this->objHeaderLinkStyle->GetAttributes(),
 						$strName);
 				}

@@ -369,6 +369,48 @@
 		}
 
 		/**
+		 * This function evaluates a template and is used by a variety of controls. It is similar to the function found in the
+		 * QForm, but recreated here so that the "$this" in the template will be the control, instead of the form,
+		 * and the protected members of the control are available to draw directly.
+		 * @param string $strTemplate Path to the HTML template file
+		 *
+		 * @return string The evaluated HTML string
+		 */
+		public function EvaluateTemplate($strTemplate) {
+			global $_ITEM;		// used by data repeater
+			global $_CONTROL;
+			global $_FORM;
+
+			$_FORM = $this->objForm;
+
+			if ($strTemplate) {
+				QApplication::$ProcessOutput = false;
+				// Store the Output Buffer locally
+				$strAlreadyRendered = ob_get_contents();
+				if ($strAlreadyRendered) {
+					ob_clean();
+				}
+
+				// Evaluate the new template
+				ob_start('__QForm_EvaluateTemplate_ObHandler');
+				require($strTemplate);
+				$strTemplateEvaluated = ob_get_contents();
+				ob_end_clean();
+
+				// Restore the output buffer and return evaluated template
+				if ($strAlreadyRendered) {
+					print($strAlreadyRendered);
+				}
+				QApplication::$ProcessOutput = true;
+
+				return $strTemplateEvaluated;
+			}
+
+			return null;
+		}
+
+
+		/**
 		 * Used by the QForm engine to call the method in the control, allowing the method to be a protected method.
 		 *
 		 * @param QControl $objControl
@@ -1883,7 +1925,6 @@
 				case "OnPage": return $this->blnOnPage;
 				case "RenderMethod": return $this->strRenderMethod;
 				case "WrapperModified": return $this->blnWrapperModified;
-				case "strActionParameter": //for backward compatibility	
 				case "ActionParameter": return $this->mixActionParameter;
 				case "ActionsMustTerminate": return $this->blnActionsMustTerminate;
 				case "WrapperCssClass": return $this->strWrapperCssClass;
@@ -2392,7 +2433,6 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "strActionParameter": // for backward compatibility
 				case "ActionParameter":
 					try {
 						$this->mixActionParameter = ($mixValue instanceof QJsClosure) ? $mixValue : QType::Cast($mixValue, QType::String);
