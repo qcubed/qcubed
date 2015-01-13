@@ -826,9 +826,9 @@
 
 					$strToReturn .= sprintf("    <th %s><a id=\"%s\" href=\"%s\" %s%s>%s</a></th>\r\n",
 						$this->objHeaderRowStyle->GetAttributes(),
-						$this->ControlId . "_col_" . $this->mixActionParameter,
+						$this->ControlId . "_col_" . $intColumnIndex,
                         			QApplication::$RequestUri,
-						$this->prxDatagridSorting->RenderAsEvents($this->mixActionParameter, true, $this->ControlId . "_col_" . $this->mixActionParameter, false),
+						$this->prxDatagridSorting->RenderAsEvents($intColumnIndex, true, $this->ControlId . "_col_" . $intColumnIndex, false),
 						$this->objHeaderLinkStyle->GetAttributes(),
 						$strName);
 				}

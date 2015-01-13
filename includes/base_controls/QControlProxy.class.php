@@ -33,12 +33,14 @@
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 				
 			$this->mixActionParameter = $strActionParameter;
-			$strToReturn = $this->GetActionAttributes();
+			$strAction = $this->GetActionAttributes();
 			
-			QApplication::ExecuteJavaScript($strToReturn);
+			QApplication::ExecuteJavaScript($strAction);
 			
-			if ($blnRenderControlId && $blnDisplayOutput)
+			if ($blnRenderControlId && $blnDisplayOutput) {
 				echo sprintf("id='%s'", $this->strTargetControlId);
+				return '';
+			}
 			else if($blnRenderControlId)
 				return sprintf("id='%s'", $this->strTargetControlId);
 			else
