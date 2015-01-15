@@ -7,8 +7,6 @@
 	 * Class QControlProxy is used to 'proxy' the actions for another control
 	 */
 	class QControlProxy extends QControl {
-		/** @var string|mixed Action Parameter for which the proxy's events would fire */
-		protected $strActionParameter;
 		/** @var string HTML element ID which is to be rendered/sent to the browser */
 		protected $strTargetControlId;
 		
@@ -34,13 +32,15 @@
 			else
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 				
-			$this->strActionParameter = $strActionParameter;
-			$strToReturn = $this->GetActionAttributes();
+			$this->mixActionParameter = $strActionParameter;
+			$strAction = $this->GetActionAttributes();
 			
-			QApplication::ExecuteJavaScript($strToReturn);
+			QApplication::ExecuteJavaScript($strAction);
 			
-			if ($blnRenderControlId && $blnDisplayOutput)
+			if ($blnRenderControlId && $blnDisplayOutput) {
 				echo sprintf("id='%s'", $this->strTargetControlId);
+				return '';
+			}
 			else if($blnRenderControlId)
 				return sprintf("id='%s'", $this->strTargetControlId);
 			else
@@ -62,7 +62,7 @@
 			else
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 			
-			$this->strActionParameter = $strActionParameter;
+			$this->mixActionParameter = $strActionParameter;
 			$objActions = $this->GetAllActions('QClickEvent');
 			$strToReturn = '';
 			foreach ($objActions as $objAction)

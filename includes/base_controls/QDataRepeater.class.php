@@ -1,159 +1,293 @@
 <?php
-	/**
-	 * This file contains the QDataRepeater class.
-	 *
-	 * @package Controls
-	 */
+
+/**
+ * The QDataRepeater is a generic html base object for creating an object that contains a list of items tied
+ * to the database. To specify how to draw the items, you can either create a template file, override the
+ * GetItemHtml method, override the GetItemInnerHtml and GetItemAttributes methods, or specify
+ * corresponding callbacks for those methods.
+ *
+ * The callbacks below can be specified as either a string, or an array. If a string, it should be the name of a
+ * public method in the parent form. If an array, it should be a PHP Callable array. If your callback is a method in
+ * a form, do NOT pass the form object in to the array, but rather just pass the name of the method as a string.
+ * (This is due to a problem PHP has with serializing recursive objects.) If its a method in a control, pass an array
+ * with the control and method name, i.e. [$objControl, 'RenderMethod']
+ *
+ * @package Controls
+ *
+ * @property-read 	integer $CurrentItemIndex	The zero-based index of the item being drawn.
+ * @property 		string  $TagName			The tag name to be used as the main object
+ * @property 		string  $ItemTagName		The tag name to used for each item (if Template is not defined)
+ * @property 		string 	$Template			A php template file that will be evaluated for each item. The template will have
+ * 												$_ITEM as the item in the DataSource array, $_CONTROL as this control, and $_FORM as
+ * 												the form object. If you provide a template, the callbacks will not be used.
+ * @property-write 	string $ItemHtmlCallback	A Callable which will be called to get the html for each item.
+ * 												Parameters passed are the item from the DataSource array, and the index of the
+ * 												item being drawn. The callback should return the entire html for the item. If
+ * 												you provide this callback, the ItemAttributesCallback and ItemInnerHtmlCallback
+ * 												will not be used.
+ * @property-write 	string $ItemAttributesCallback	A Callable which will be called to get the attributes for each item.
+ * 												Use this with the ItemInnerHtmlCallback and the ItemTagName. The callback
+ * 												will be passed the item and the index of the item. It should return key/value
+ * 												pairs which will be used as the attributes for the item's tag. Use only
+ * 												if you are not using a Template or the ItemHtmlCallback.
+ * @property-write 	string $ItemInnerHtmlCallback	A Callable which will be called to get the inner html for each item.
+ * 												Use this with the ItemAttributesCallback and the ItemTagName. The callback
+ * 												will be passed the item and the index of the item. It should return the complete
+ * 												text to appear inside the open and close tags for the item.	 *
+ */
+class QDataRepeater extends QPaginatedControl {
+	///////////////////////////
+	// Private Member Variables
+	///////////////////////////
+
+	// APPEARANCE
+	/** @var string */
+	protected $strTemplate = null;
+	/** @var integer */
+	protected $intCurrentItemIndex = null;
+
+	/** @var string  */
+	protected $strTagName = 'div';
+	/** @var string  */
+	protected $strItemTagName = 'div';
+
+	/** @var  Callable | string */
+	protected $itemHtmlCallback;
+	/** @var  Callable | string */
+	protected $itemAttributesCallback;
+	/** @var  Callable | string */
+	protected $itemInnerHtmlCallback;
+
+
+	//////////
+	// Methods
+	//////////
+	public function ParsePostData() {}
 
 	/**
-	 * @package Controls
+	 * Returns the html corresponding to a given item. You have many ways of rendering an item:
+	 * 	- Specify a template that will get evaluated for each item. See EvaluateTemplate for more info.
+	 *  - Specify a HtmlCallback callable to be called for each item to get the html for the item.
+	 *  - Override this routine.
+	 *  - Specify the item's tag name, and then use the helper functions or callbacks to return just the
+	 *    attributes and/or inner html of the object.
 	 *
-	 * @property string $Template
-	 * @property-read integer $CurrentItemIndex
-	 * @property string $TagName
-	 *
+	 * @param $objItem
+	 * @return string
+	 * @throws QCallerException
 	 */
-	class QDataRepeater extends QPaginatedControl {
-		///////////////////////////
-		// Private Member Variables
-		///////////////////////////
+	protected function GetItemHtml($objItem) {
+		if ($this->strTemplate) {
+			return $this->EvaluateTemplate($this->strTemplate);
+		} elseif ($this->itemHtmlCallback) {
+			if (is_string($this->itemHtmlCallback)) {
+				$strMethod = $this->itemHtmlCallback;
+				return $this->objForm->$strMethod($objItem, $this->intCurrentItemIndex);
+			} else {
+				return call_user_func($this->itemHtmlCallback, $objItem, $this->intCurrentItemIndex);
+			}
+		}
 
-		// APPEARANCE
-		/** @var null|string Path to the template file for this QDataRepeater */
-		protected $strTemplate = null;
-		/** @var null|integer Index of item being processed (starts from 0) */
-		protected $intCurrentItemIndex = null;
+		if (!$this->strItemTagName) {
+			throw new QCallerException ("You must specify an item tag name before rendering the list.");
+		}
 
-		/** @var string tag to be used to put the contents in */
-		protected $strTagName = 'div';
+		$strToReturn = '<' . $this->strItemTagName;
 
-		//////////
-		// Methods
-		//////////
-		public function ParsePostData() {}
+		if ($strParamArray = $this->GetItemAttributes($objItem)) {
+			foreach ($strParamArray as $key=>$str) {
+				$strToReturn .= ' ' . $key . '="' . $str . '"';
+			}
+		}
 
-		/**
-		 * Returns the HTML to be sent to the user's browser
-		 *
-		 * @return string The HTML to be sent to the browser
-		 * @throws Exception|QCallerException
-		 */
-		protected function GetControlHtml() {
-			$this->DataBind();
+		$strToReturn .= '>';
 
-			// Setup Style
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle)
-				$strStyle = sprintf('style="%s"', $strStyle);
+		$strToReturn .= $this->GetItemInnerHtml($objItem);
 
-			// Iterate through everything
-			$this->intCurrentItemIndex = 0;
-			$strEvalledItems = '';
-			$strToReturn = '';
-			if (($this->strTemplate) && ($this->objDataSource)) {
-				global $_FORM;
-				global $_CONTROL;
-				global $_ITEM;
-				$_FORM = $this->objForm;
-				$objCurrentControl = $_CONTROL;
-				$_CONTROL = $this;
+		$strToReturn .= '</' . $this->strItemTagName . '>';
+		return $strToReturn;
+	}
 
-				foreach ($this->objDataSource as $objObject) {
-					$_ITEM = $objObject;
-					$strEvalledItems .= $this->objForm->EvaluateTemplate($this->strTemplate);
-					$this->intCurrentItemIndex++;
+	/**
+	 * Return the attributes that go in the item tag, as an array of key=>value pairs. Values will be output
+	 * verbatim, so escape them if necessary. If you define AttributesCallback, it will be used to determine
+	 * the attributes.
+	 *
+	 * @param $objItem
+	 * @return array
+	 */
+	protected function GetItemAttributes ($objItem) {
+		if ($this->itemAttributesCallback) {
+			if (is_string($this->itemAttributesCallback)) {
+				$strMethod = $this->itemAttributesCallback;
+				return $this->objForm->$strMethod($objItem, $this->intCurrentItemIndex);
+			} else {
+				return call_user_func($this->itemAttributesCallback, $objItem, $this->intCurrentItemIndex);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the HTML between the item tags. Uses __toString on the object by default. Will use the
+	 * InnerHtmlCallback if provided.
+	 *
+	 * @param $objItem
+	 * @return mixed
+	 */
+	protected function GetItemInnerHtml($objItem) {
+		if ($this->itemInnerHtmlCallback) {
+			if (is_string($this->itemInnerHtmlCallback)) {
+				$strMethod = $this->itemInnerHtmlCallback;
+				return $this->objForm->$strMethod($objItem, $this->intCurrentItemIndex);
+			} else {
+				return call_user_func($this->itemInnerHtmlCallback, $objItem, $this->intCurrentItemIndex);
+			}
+		}
+		return $objItem->__toString();	// default to rendering a database object
+	}
+
+	/**
+	 * Returns the HTML for the control.
+	 * @return string
+	 */
+	protected function GetControlHtml() {
+		$this->DataBind();
+
+		// Setup Style
+		$strStyle = $this->GetStyleAttributes();
+		if ($strStyle)
+			$strStyle = sprintf('style="%s"', $strStyle);
+
+		// Iterate through everything
+		$this->intCurrentItemIndex = 0;
+		$strEvalledItems = '';
+		$strToReturn = '';
+		if ($this->objDataSource) {
+			global $_FORM;
+			global $_CONTROL;
+			global $_ITEM;
+			$_FORM = $this->objForm;
+			$objCurrentControl = $_CONTROL;
+			$_CONTROL = $this;
+
+			foreach ($this->objDataSource as $objObject) {
+				$_ITEM = $objObject;
+				$strEvalledItems .= $this->GetItemHtml($objObject);
+				$this->intCurrentItemIndex++;
+			}
+
+			$strToReturn = sprintf('<%s id="%s" %s%s>%s</%s>',
+				$this->strTagName,
+				$this->strControlId,
+				$this->GetAttributes(),
+				$strStyle,
+				$strEvalledItems,
+				$this->strTagName);
+
+			$_CONTROL = $objCurrentControl;
+		}
+
+		$this->objDataSource = null;
+		return $strToReturn;
+	}
+
+	/////////////////////////
+	// Public Properties: GET
+	/////////////////////////
+	public function __get($strName) {
+		switch ($strName) {
+			// APPEARANCE
+			case "Template": return $this->strTemplate;
+			case "CurrentItemIndex": return $this->intCurrentItemIndex;
+			case "TagName": return $this->strTagName;
+			case "ItemTagName": return $this->strItemTagName;
+
+			default:
+				try {
+					return parent::__get($strName);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
 				}
-
-				$strToReturn = sprintf('<%s id="%s" %s%s>%s</%s>',
-					$this->strTagName,
-					$this->strControlId,
-					$this->GetAttributes(),
-					$strStyle,
-					$strEvalledItems,
-					$this->strTagName);
-
-				$_CONTROL = $objCurrentControl;
-			}
-
-			$this->objDataSource = null;
-			return $strToReturn;
-		}
-
-		/////////////////////////
-		// Public Properties: GET
-		/////////////////////////
-		/**
-		 * PHP magic method
-		 *
-		 * @param string $strName
-		 *
-		 * @return mixed
-		 * @throws Exception|QCallerException
-		 */
-		public function __get($strName) {
-			switch ($strName) {
-				// APPEARANCE
-				case "Template": return $this->strTemplate;
-				case "CurrentItemIndex": return $this->intCurrentItemIndex;
-				case "TagName": return $this->strTagName;
-				
-				default:
-					try {
-						return parent::__get($strName);
-					} catch (QCallerException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-			}
-		}
-
-		/////////////////////////
-		// Public Properties: SET
-		/////////////////////////
-		/**
-		 * PHP magic method
-		 *
-		 * @param string $strName
-		 * @param string $mixValue
-		 *
-		 * @return mixed
-		 * @throws Exception|QCallerException|QInvalidCastException
-		 */
-		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
-			switch ($strName) {
-				// APPEARANCE
-				case "Template":
-					try {
-						if (file_exists($mixValue))
-							$this->strTemplate = QType::Cast($mixValue, QType::String);
-						else
-							throw new QCallerException('Template file does not exist: ' . $mixValue);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case "TagName":
-					try {
-						$this->strTagName = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				default:
-					try {
-						parent::__set($strName, $mixValue);
-					} catch (QCallerException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-					break;
-			}
 		}
 	}
+
+	/////////////////////////
+	// Public Properties: SET
+	/////////////////////////
+	public function __set($strName, $mixValue) {
+		switch ($strName) {
+			// APPEARANCE
+			case "Template":
+				try {
+					if (file_exists($mixValue)) {
+						$this->blnModified = true;
+						$this->strTemplate = QType::Cast($mixValue, QType::String);
+					} else
+						throw new QCallerException('Template file does not exist: ' . $mixValue);
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
+			case "TagName":
+				try {
+					$this->blnModified = true;
+					$this->strTagName = QType::Cast($mixValue, QType::String);
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
+			case 'ItemTagName':
+				try {
+					$this->blnModified = true;
+					$this->strItemTagName = QType::Cast($mixValue, QType::String);
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
+			case 'ItemHtmlCallback':
+				$this->blnModified = true;
+				if (is_array($mixValue) && reset($mixValue) === $this->objForm) {
+					// Do not pass [$objForm, 'methodName']. Rather, just set to 'methodName', and the form will be searched for that method.
+					throw new QCallerException ('Do not pass the form object in a callable array. Instead, just pass the method name.');
+				}
+				$this->itemHtmlCallback = $mixValue;
+				break;
+
+			case 'ItemAttributeCallback':	// callback should return an array of key/value items
+				$this->blnModified = true;
+				if (is_array($mixValue) && reset($mixValue) === $this->objForm) {
+					// Do not pass [$objForm, 'methodName']. Rather, just set to 'methodName', and the form will be searched for that method.
+					throw new QCallerException ('Do not pass the form object in a callable array. Instead, just pass the method name.');
+				}
+				$this->itemAttributeCallback = $mixValue;
+				break;
+
+			case 'ItemInnerHtmlCallback':
+				$this->blnModified = true;
+				if (is_array($mixValue) && reset($mixValue) === $this->objForm) {
+					// Do not pass [$objForm, 'methodName']. Rather, just set to 'methodName', and the form will be searched for that method.
+					throw new QCallerException ('Do not pass the form object in a callable array. Instead, just pass the method name.');
+				}
+				$this->itemInnerHtmlCallback = $mixValue;
+				break;
+
+			default:
+				try {
+					parent::__set($strName, $mixValue);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+				break;
+		}
+	}
+}
 ?>
