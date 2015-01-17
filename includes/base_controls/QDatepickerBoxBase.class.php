@@ -212,11 +212,13 @@
 			}
 		}
 
-		/**** Codegen Helpers, used during the Codegen process only. ****/
+		/* === Codegen Helpers, used during the Codegen process only. === */
 
 		/**
 		 * Return a variable name given a property name.
+		 *
 		 * @param $strPropName
+		 *
 		 * @return string
 		 */
 		public static function Codegen_VarName($strPropName) {
@@ -225,10 +227,12 @@
 
 		/**
 		 * Return code that will update the control with data from the database.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 *
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @param bool $blnInit
+		 * @param bool                                           $blnInit
+		 *
 		 * @return string
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
@@ -247,9 +251,11 @@
 
 		/**
 		 * Return code that will update the database with info from the control.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 *
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
 		 * @return string
 		 */
 		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {

@@ -26,44 +26,45 @@
 	 * All the appearance properties should be self-explanatory.
 	 * The SortByCommand and ReverseSortByCommand are both optional -- and are explained in more
 	 * depth in DataGrid.inc
+
 	 *
-	 * @package Controls
-	 * @property string      $BackColor
-	 * @property string      $BorderColor
-	 * @property string      $BorderStyle
-	 * @property string      $BorderWidth
-	 * @property string      $CssClass
-	 * @property boolean     $FontBold
-	 * @property boolean     $FontItalic
-	 * @property string      $FontNames
-	 * @property boolean     $FontOverline
-	 * @property string      $FontSize
-	 * @property boolean     $FontStrikeout
-	 * @property boolean     $FontUnderline
-	 * @property string      $ForeColor
-	 * @property string      $HorizontalAlign
-	 * @property string      $VerticalAlign
-	 * @property string      $Width
-	 * @property boolean     $Wrap
-	 * @property mixed       $OrderByClause
-	 * @property mixed       $ReverseOrderByClause
-	 * @property mixed       $FilterByCommand
-	 * @property-read array  $FilterInfo
-	 * @property integer     $FilterBoxSize
-	 * @property string      $FilterType
-	 * @property mixed       $FilterList
-	 * @property integer     $FilterColId
-	 * @property string      $FilterPrefix
-	 * @property string      $FilterPostfix
-	 * @property mixed       $FilterConstant
-	 * @property-read mixed  $ActiveFilter
-	 * @property-write mixed $Filter
-	 * @property mixed       $SortByCommand
-	 * @property mixed       $ReverseSortByCommand
-	 * @property string      $Html is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
-	 * @property string      $Name is the name of the column, as displayed in the DataGrid's header row for that column
-	 * @property boolean     $HtmlEntities
-	 * @property boolean     $HasResetButton
+*@package Controls
+	 * @property string               $BackColor            Background colour of an element of this column
+	 * @property string               $BorderColor          Border colour of an element of this column
+	 * @property string               $BorderStyle          Border style of an element of this column (constant from QBorderStyle class)
+	 * @property string               $BorderWidth          Border width of an element of this column
+	 * @property string               $CssClass             CSS class of an element of this column
+	 * @property boolean              $FontBold             Determines if the font will be bold
+	 * @property boolean              $FontItalic           Determines if the font will be italicized
+	 * @property string               $FontNames            Font family to be used (can use a value from QFontFamily class)
+	 * @property boolean              $FontOverline         Determines if the font will have an overline
+	 * @property string|integer       $FontSize             Font size of the element in this column
+	 * @property boolean              $FontStrikeout        Determines if the font will be striked out
+	 * @property boolean              $FontUnderline        Determines if the font will be underlined
+	 * @property null|string          $ForeColor            Text Color of the element in this column
+	 * @property string               $HorizontalAlign      The horizontal text alignment attribute for the element in this column
+	 * @property string               $VerticalAlign        The vertical alignment attribute for the element in this column
+	 * @property string|integer       $Width                Column width
+	 * @property boolean              $Wrap                 Determines if the column will have nowrap html attribute set on it or not
+	 * @property mixed                $OrderByClause        The ordering clause associated with this column
+	 * @property null|QQOrderBy       $ReverseOrderByClause The REVERSED ordering clause associated with this column
+	 * @property mixed                $FilterByCommand
+	 * @property-read array           $FilterInfo
+	 * @property integer              $FilterBoxSize        Determines the width ("size" attribute) of the input control of this column on the filter row
+	 * @property string               $FilterType           Type of filter to be used for this column (text/list)
+	 * @property mixed                $FilterList
+	 * @property integer              $FilterColId          The filter column id to be used for the column
+	 * @property string               $FilterPrefix
+	 * @property string               $FilterPostfix
+	 * @property mixed                $FilterConstant
+	 * @property-read mixed           $ActiveFilter
+	 * @property-write mixed          $Filter
+	 * @property mixed                $SortByCommand
+	 * @property mixed                $ReverseSortByCommand
+	 * @property string               $Html                 is the contents of the column itself -- the $this->strHtml contents can contain backticks ` to deliniate commands that are to be PHP evaled (again, see DataGrid.inc for more info)
+	 * @property string               $Name                 is the name of the column, as displayed in the DataGrid's header row for that column
+	 * @property boolean              $HtmlEntities         Determines if the contents of this column have to be processed through HtmlEntities
+	 * @property boolean              $HasResetButton       If the concerned row is a filter row then this variable determines if it has a Reset Button on it
 	 */
 	class QDataGridColumn extends QBaseClass {
 		// APPEARANCE
@@ -93,9 +94,9 @@
 		 *                  string = applied as-is
 		 */
 		protected $strCssClass = null;
-		/** @var bool Determines if the font will be bold? */
+		/** @var bool Determines if the font will be bold */
 		protected $blnFontBold = false;
-		/** @var bool Determines if the font will be italicized? */
+		/** @var bool Determines if the font will be italicized */
 		protected $blnFontItalic = false;
 		/** @var null|string Font family to be used (can use a value from QFontFamily class) */
 		protected $strFontNames = null;
@@ -142,7 +143,7 @@
 		 */
 		protected $objOrderByClause = null;
 		/**
-		 * @var null|QQOrderBy The RESERVED ordering clause associated with this column
+		 * @var null|QQOrderBy The REVERSED ordering clause associated with this column
 		 */
 		protected $objReverseOrderByClause = null;
 
