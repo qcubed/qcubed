@@ -359,16 +359,13 @@
 			}
 			return $str;
 		}
-		
+
 		/**
-		 * Call a JQuery UI Method on the object. 
-		 * 
+		 * Call a JQuery UI Method on the object.
 		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
 		 *
-		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
-		 * @param string $strMethodName the method name to call
-		 * @internal param $mixed [optional] $mixParam1
-		 * @internal param $mixed [optional] $mixParam2
+		 * @param boolean $blnAttribute  true if the method is modifying an option, false if executing a command
+		 * @param string  $strMethodName the method name to call
 		 */
 		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
 			$args = func_get_args();

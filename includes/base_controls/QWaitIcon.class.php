@@ -21,21 +21,38 @@
 		///////////////////////////
 
 		// APPEARANCE
+		/** @var null|string String to be displayed (e.g. "Please wait") (can be HTML) */
 		protected $strText = null;
+		/** @var null|string Padding for the rendered element */
 		protected $strPadding = null;
+		/** @var string HTML tag name to be used for rendering the text */
 		protected $strTagName = 'span';
-		protected $blnDisplay = false;
 
 		// LAYOUT
+		/** @var string Horizontal alignment for the text of the wait icon */
 		protected $strHorizontalAlign = QHorizontalAlign::NotSet;
+		/** @var string Vertical alignment for the wait icon */
 		protected $strVerticalAlign = QVerticalAlign::NotSet;
 
+		/**
+		 * Constructor
+		 *
+		 * @param QControl|QControlBase|QForm $objParentObject Parent control/form of this wait icon
+		 * @param null|string                 $strControlId    Control ID to be set for the wait icon
+		 *
+		 * @throws Exception|QCallerException
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 
 			$this->strText = sprintf('<img src="%s/spinner_14.gif" width="14" height="14" alt="Please Wait..."/>', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__);
 		}
 
+		/**
+		 * Returns the styles attributes for the wait icon
+		 *
+		 * @return string CSS style attributes as one string
+		 */
 		public function GetStyleAttributes() {
 			$strStyle = parent::GetStyleAttributes();
 
@@ -55,7 +72,18 @@
 		// Methods
 		//////////
 		public function ParsePostData() {}
+
+		/**
+		 * Validates the wait icon (for now it just returns true)
+		 *
+		 * @return bool
+		 */
 		public function Validate() {return true;}
+
+		/**
+		 * Returns the HTML we have to send to the browser to render this wait icon
+		 * @return string HTML to be returned
+		 */
 		protected function GetControlHtml() {
 			$strStyle = $this->GetStyleAttributes();
 
@@ -76,6 +104,14 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName Property name
+		 *
+		 * @return mixed|null|string
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -100,6 +136,15 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName  Property name
+		 * @param string $mixValue Property value
+		 *
+		 * @return mixed|void
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

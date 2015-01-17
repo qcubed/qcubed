@@ -136,12 +136,13 @@ TMPL;
 		/**
 		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @param boolean $blnInit	Generate initialization code instead of reload
+		 * @param boolean                                        $blnInit Generate initialization code instead of reload
 		 *
 		 * @return string Function definition
+		 * @throws Exception
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);

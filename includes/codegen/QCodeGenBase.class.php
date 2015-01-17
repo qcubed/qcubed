@@ -743,7 +743,6 @@
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
-		 * @internal param string $strDelimiter
 		 * @return string
 		 */
 		public static function MetaControlControlName ($objColumn) {
@@ -755,10 +754,12 @@
 
 		/**
 		 * The property name used in the meta control for the given column or virtual column
+		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
 		 * @return string
+		 * @throws Exception
 		 */
-
 		public static function MetaControlPropertyName ($objColumn) {
 			if ($objColumn instanceof QColumn) {
 				if ($objColumn->Reference) {
