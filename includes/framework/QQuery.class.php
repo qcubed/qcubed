@@ -1347,6 +1347,9 @@
 		abstract public function __toString();
 	}
 
+	/**
+	 * Class QQOrderBy: Represents an 'ORDER BY' statement on SQL/DB level
+	 */
 	class QQOrderBy extends QQClause {
 		/** @var QQNode[]  */
 		protected $objNodeArray;
@@ -1379,9 +1382,25 @@
 			else
 				throw new QCallerException('No parameters passed in to OrderBy clause', 3);
 		}
+
+		/**
+		 * Constructor function
+		 *
+		 * @param $mixParameterArray
+		 *
+		 * @throws QCallerException|QInvalidCastException
+		 */
 		public function __construct($mixParameterArray) {
 			$this->objNodeArray = $this->CollapseNodes($mixParameterArray);
 		}
+
+		/**
+		 * Updates the query builder according to this clause
+		 *
+		 * @param QQueryBuilder $objBuilder
+		 *
+		 * @throws Exception|QCallerException
+		 */
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			$intLength = count($this->objNodeArray);
 			for ($intIndex = 0; $intIndex < $intLength; $intIndex++) {

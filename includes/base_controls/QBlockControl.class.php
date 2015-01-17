@@ -270,9 +270,7 @@
 		 * @param string $mixValue Property Value
 		 *
 		 * @return mixed
-		 * @throws QCallerException
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {

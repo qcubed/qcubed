@@ -1133,8 +1133,7 @@
 		 *
 		 * @return QControl $control the input control used for filtering
 		 */
-		protected function CreateFilterControl($strControlId, QDataGridColumn $objColumn)
-		{
+		protected function CreateFilterControl($strControlId, QDataGridColumn $objColumn) {
 			//show the current filter in the control
 			$value = $objColumn->GetActiveFilterValue();
 
