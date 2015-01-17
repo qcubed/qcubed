@@ -7,8 +7,8 @@
 
 	/**
 	 * @package Controls
-	 * @property string         $Noun
-	 * @property string         $NounPlural
+	 * @property string         $Noun Name of the items which are being paginated (book, movie, post etc.)
+	 * @property string         $NounPlural Plural form of ame of the items which are being paginated (books, movies, posts etc.)
 	 * @property QPaginatorBase $Paginator
 	 * @property QPaginatorBase $PaginatorAlternate
 	 * @property boolean        $UseAjax
@@ -24,7 +24,9 @@
 	 */
 	abstract class QPaginatedControl extends QControl {
 		// APPEARANCE
+		/** @var string Name of the items which are being paginated (books, movies, posts etc.) */
 		protected $strNoun;
+		/**  @var string Plural form of ame of the items which are being paginated (books, movies, posts etc.) */
 		protected $strNounPlural;
 
 		// BEHAVIOR
