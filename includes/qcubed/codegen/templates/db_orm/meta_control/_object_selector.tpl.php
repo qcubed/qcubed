@@ -23,6 +23,10 @@
 		protected $objEditControl;
 		/** @var QGenericSearchOptions */
 		protected $objSearchOptions = null;
+		/** @var QQCondition */
+		protected $objAdditionalConditions = null;
+		/** @var QQClause[] */
+		protected $objOptionalClauses = null;
 		/** @var <?php echo $objTable->ClassName ?>DataTable */
 		protected $objSearchControl;
 		/** @var QPanel */
@@ -147,7 +151,7 @@
 		 * @return QDatabaseResultBase|<?php echo $objTable->ClassName ?>[]
 		 */
 		protected function search($strTyped) {
-			return <?php echo $objTable->ClassName ?>::GenericSearchCursor($strTyped, $this->objSearchOptions);
+			return <?php echo $objTable->ClassName ?>::GenericSearchCursor($strTyped, $this->objSearchOptions, $this->objAdditionalConditions, $this->objOptionalClauses);
 		}
 
 		/**
