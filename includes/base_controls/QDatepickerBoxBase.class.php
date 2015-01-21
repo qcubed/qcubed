@@ -9,25 +9,24 @@
 	 *
 	 */
 
-    /**
-     * Impelements a JQuery UI Datepicker in a box
-     * 
-     * A Datepicker Box is similar to a Datepicker, but its not associated with a field. It
-     * just displays a calendar for picking a date.
-     * 
-	 * @property string $DateFormat			The format to use for displaying the date
-	 * @property string $DateTimeFormat		Alias for DateFormat
-	 * @property QDateTime $DateTime		The date to set the field to
-	 * @property mixed $Minimum				Alias for MinDate
-	 * @property mixed $Maximum				Alias for MaxDate
-	 * @property string $Text				Textual date to set it to
+	/**
+	 * Impelements a JQuery UI Datepicker in a box
+	 * A Datepicker Box is similar to a Datepicker, but its not associated with a field. It
+	 * just displays a calendar for picking a date.
 	 *
-	 * @link http://jqueryui.com/datepicker/#inline
+	 * @property string    $DateFormat             The format to use for displaying the date
+	 * @property string    $DateTimeFormat         Alias for DateFormat
+	 * @property QDateTime $DateTime               The date to set the field to
+	 * @property mixed     $Minimum                Alias for MinDate
+	 * @property mixed     $Maximum                Alias for MaxDate
+	 * @property string    $Text                   Textual date to set it to
+	 * @link    http://jqueryui.com/datepicker/#inline
 	 * @package Controls\Base
 	 */
 	class QDatepickerBoxBase extends QDatepickerBoxGen {
+		/** @var string Format for the datetime to pick */
 		protected $strDateTimeFormat = "MM/DD/YYYY"; // matches default of JQuery UI control
-		/** @var QDateTime */
+		/** @var QDateTime variable to store the picked value */
 		protected $dttDateTime;
 
 		public function ParsePostData() {
@@ -78,6 +77,14 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method implementation
+		 *
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// MISC
@@ -104,6 +111,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method implementation
+		 *
+		 * @param string $strName  Property name
+		 * @param string $mixValue Property value to be set
+		 *
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case 'MaxDate':
@@ -197,11 +212,13 @@
 			}
 		}
 
-		/**** Codegen Helpers, used during the Codegen process only. ****/
+		/* === Codegen Helpers, used during the Codegen process only. === */
 
 		/**
 		 * Return a variable name given a property name.
+		 *
 		 * @param $strPropName
+		 *
 		 * @return string
 		 */
 		public static function Codegen_VarName($strPropName) {
@@ -210,10 +227,12 @@
 
 		/**
 		 * Return code that will update the control with data from the database.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 *
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @param bool $blnInit
+		 * @param bool                                           $blnInit
+		 *
 		 * @return string
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
@@ -232,9 +251,11 @@
 
 		/**
 		 * Return code that will update the database with info from the control.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 *
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
 		 * @return string
 		 */
 		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {

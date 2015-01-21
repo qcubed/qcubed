@@ -263,10 +263,14 @@
 			}
 		}
 
-		/**** Codegen Helpers, used during the Codegen process only. ****/
+		/* === Codegen Helpers, used during the Codegen process only. === */
 
 		/**
-		 * @param string $strPropName
+		 * /**
+		 * Returns the variable name for a control of this type during code generation process
+		 *
+		 * @param string $strPropName Property name for which the control to be generated is being generated
+		 *
 		 * @return string
 		 */
 		public static function Codegen_VarName($strPropName) {

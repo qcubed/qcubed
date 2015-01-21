@@ -7,6 +7,7 @@
 	 * JQueryUI end. They have been meaning to do a rewrite for quite some time, but have not gotten to that.
 	 */
 	class QDatepicker_SelectEvent2 extends QEvent {
+		/** Event name for the event */
 		const EventName = 'QDatepicker_Select2';
 	}
 
@@ -34,11 +35,18 @@
 	 * @link http://jqueryui.com/datepicker/
 	 * @package Controls\Base
 	 */
-	class QDatepickerBase extends QDatepickerGen
-	{
+	class QDatepickerBase extends QDatepickerGen {
+		/** @var string Default datetime format for the picker */
 		protected $strDateTimeFormat = "MM/DD/YYYY";	// same as default for JQuery UI control
+		/** @var QDateTime variable to hold the date time to be selected (or already selected) */
 		protected $dttDateTime;	// default to no selection
-		
+
+		/**
+		 * @param QControl|QControlBase|QForm $objParentObject
+		 * @param null|string                 $strControlId
+		 *
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct ($objParentObject, $strControlId);
 			
@@ -57,6 +65,13 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * @param string $strName
+		 *
+		 * @return mixed|null|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// MISC
@@ -78,6 +93,15 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName  Property name
+		 * @param string $mixValue Property value
+		 *
+		 * @return mixed|void
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case 'MaxDate':
@@ -165,8 +189,15 @@
 			}
 		}
 
-		/**** Codegen Helpers, used during the Codegen process only. ****/
+		/* === Codegen Helpers, used during the Codegen process only. === */
 
+		/**
+		 * Returns the variable name for a control of this type during code generation process
+		 *
+		 * @param string $strPropName Property name for which the control to be generated is being generated
+		 *
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'cal' . $strPropName;
 		}

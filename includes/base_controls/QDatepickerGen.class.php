@@ -484,6 +484,11 @@
 			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
 		}
 
+		/**
+		 * Returns all Javscript that needs to be executed after rendering of this control
+		 *
+		 * @return string The JS to be executed
+		 */
 		public function GetEndScript() {
 			$str = '';
 			if ($this->getJqControlId() !== $this->ControlId) {
@@ -652,7 +657,14 @@
 			$this->CallJqUiMethod(false, "show");
 		}
 
-
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName Property name
+		 *
+		 * @return mixed|string
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'AltField': return $this->mixAltField;
@@ -715,6 +727,15 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName  Property name
+		 * @param string $mixValue Property value
+		 *
+		 * @return mixed|void
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case 'AltField':

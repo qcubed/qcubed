@@ -1,9 +1,20 @@
 <?php
- /**
-	* @package Codegen
-	*/
 
+	/**
+	 * @package Codegen
+	 */
+
+	/**
+	 * Class QConvertNotationBase: Helps convert notations from entities
+	 */
 	abstract class QConvertNotationBase {
+		/**
+		 * Returns prefix for variable according to variable type
+		 *
+		 * @param string $strType The type of variable for which the prefix is needed
+		 *
+		 * @return string The variable prefix
+		 */
 		public static function PrefixFromType($strType) {
 			switch ($strType) {
 				case QType::ArrayType:
@@ -23,6 +34,13 @@
 			}
 		}
 
+		/**
+		 * Replaces underscores with spaces and makes the first character of all the words as uppercase
+		 *
+		 * @param string $strName String which has to be converted into single words
+		 *
+		 * @return string The resulting string (as words)
+		 */
 		public static function WordsFromUnderscore($strName) {
 			$strToReturn = trim(str_replace('_', ' ', $strName));
 			if (strtolower($strToReturn) == $strToReturn)
@@ -30,6 +48,13 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Converts a underscored word into a CamelCased word
+		 *
+		 * @param string $strName String to be converted
+		 *
+		 * @return string The resulting camel-cased word
+		 */
 		public static function CamelCaseFromUnderscore($strName) {
 			$strToReturn = '';
 
@@ -53,6 +78,13 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Converts a CamelCased word into separate words
+		 *
+		 * @param string $strName String to be converted
+		 *
+		 * @return string Resulting set of words derived from camel case
+		 */
 		public static function WordsFromCamelCase($strName) {
 			if (strlen($strName) == 0)
 				return '';

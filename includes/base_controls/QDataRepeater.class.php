@@ -195,6 +195,14 @@ class QDataRepeater extends QPaginatedControl {
 	/////////////////////////
 	// Public Properties: GET
 	/////////////////////////
+	/**
+	 * PHP magic method
+	 *
+	 * @param string $strName Name of the property
+	 *
+	 * @return int|mixed|string
+	 * @throws Exception|QCallerException
+	 */
 	public function __get($strName) {
 		switch ($strName) {
 			// APPEARANCE
@@ -216,6 +224,15 @@ class QDataRepeater extends QPaginatedControl {
 	/////////////////////////
 	// Public Properties: SET
 	/////////////////////////
+	/**
+	 * PHP magic method
+	 *
+	 * @param string $strName  Property name
+	 * @param string $mixValue Property value
+	 *
+	 * @return mixed|void
+	 * @throws Exception|QCallerException|QInvalidCastException
+	 */
 	public function __set($strName, $mixValue) {
 		switch ($strName) {
 			// APPEARANCE
