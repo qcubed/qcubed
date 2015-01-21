@@ -62,9 +62,10 @@ TMPL;
 		/**
 		 * Codegen the create method and any other support methods to be part of the meta control.
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
 		 * @return string The function definition
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {

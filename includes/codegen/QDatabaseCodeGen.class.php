@@ -13,10 +13,12 @@
 	 */
 	class QDatabaseCodeGen extends QCodeGen {
 		// Objects
+		/** @var array|QTable[] Array of tables in the database */
 		protected $objTableArray;
 		protected $strExcludedTableArray;
 		protected $objTypeTableArray;
 		protected $strAssociationTableNameArray;
+		/** @var QDatabaseBase The database we are dealing with */
 		protected $objDb;
 
 		protected $intDatabaseIndex;
@@ -406,68 +408,75 @@
 
 
 			// ITERATION 1: Simply create the Table and TypeTable Arrays
-			if ($strTableArray) foreach ($strTableArray as $strTableName) {
+			if ($strTableArray) {
+				foreach ($strTableArray as $strTableName) {
 
-				// Do we Exclude this Table Name? (given includeTables and excludeTables)
-				// First check the lists of Excludes and the Exclude Patterns
-				if (in_array($strTableName,$this->strExcludeListArray) ||
-					(strlen($this->strExcludePattern) > 0 && preg_match(":".$this->strExcludePattern.":i",$strTableName))) {
+					// Do we Exclude this Table Name? (given includeTables and excludeTables)
+					// First check the lists of Excludes and the Exclude Patterns
+					if (in_array($strTableName, $this->strExcludeListArray) ||
+						(strlen($this->strExcludePattern) > 0 && preg_match(":" . $this->strExcludePattern . ":i", $strTableName))
+					) {
 
-					// So we THINK we may be excluding this table
-					// But check against the explicit INCLUDE list and patterns
-					if (in_array($strTableName,$this->strIncludeListArray) ||
-						(strlen($this->strIncludePattern) > 0 && preg_match(":".$this->strIncludePattern.":i",$strTableName))) {
-						// If we're here, we explicitly want to include this table
-						// Therefore, do nothing
-					} else {
-						// If we're here, then we want to exclude this table
-						$this->strExcludedTableArray[strtolower($strTableName)] = true;
+						// So we THINK we may be excluding this table
+						// But check against the explicit INCLUDE list and patterns
+						if (in_array($strTableName, $this->strIncludeListArray) ||
+							(strlen($this->strIncludePattern) > 0 && preg_match(":" . $this->strIncludePattern . ":i", $strTableName))
+						) {
+							// If we're here, we explicitly want to include this table
+							// Therefore, do nothing
+						} else {
+							// If we're here, then we want to exclude this table
+							$this->strExcludedTableArray[strtolower($strTableName)] = true;
 
-						// Exit this iteration of the foreach loop
-						continue;
+							// Exit this iteration of the foreach loop
+							continue;
+						}
 					}
-				}
 
-				// Check to see if this table name exists anywhere else yet, and warn if it is
-				foreach (QCodeGen::$CodeGenArray as $objCodeGen) {
-					if ($objCodeGen instanceof QDatabaseCodeGen) {
-						foreach ($objCodeGen->objTableArray as $objPossibleDuplicate)
-							if (strtolower($objPossibleDuplicate->Name) == strtolower($strTableName))
-								$this->strErrors .= 'Duplicate Table Name Used: ' . $strTableName . "\r\n";
+					// Check to see if this table name exists anywhere else yet, and warn if it is
+					foreach (QCodeGen::$CodeGenArray as $objCodeGen) {
+						if ($objCodeGen instanceof QDatabaseCodeGen) {
+							foreach ($objCodeGen->objTableArray as $objPossibleDuplicate)
+								if (strtolower($objPossibleDuplicate->Name) == strtolower($strTableName)) {
+									$this->strErrors .= 'Duplicate Table Name Used: ' . $strTableName . "\r\n";
+								}
+						}
 					}
-				}
 
-				// Perform different tasks based on whether it's an Association table,
-				// a Type table, or just a regular table
-				$blnIsTypeTable = false;
-				foreach ($this->intTypeTableSuffixLengthArray as $intIndex => $intTypeTableSuffixLength) {
-					if (($intTypeTableSuffixLength) &&
-						(strlen($strTableName) > $intTypeTableSuffixLength) &&
-						(substr($strTableName, strlen($strTableName) - $intTypeTableSuffixLength) == $this->strTypeTableSuffixArray[$intIndex])) {
-						// Let's mark, that we have type table
-						$blnIsTypeTable = true;
-						// Create a TYPE Table and add it to the array
-						$objTypeTable = new QTypeTable($strTableName);
-						$this->objTypeTableArray[strtolower($strTableName)] = $objTypeTable;
-						// If we found type table, there is no point of iterating for other type table suffixes
-						break;
+					// Perform different tasks based on whether it's an Association table,
+					// a Type table, or just a regular table
+					$blnIsTypeTable = false;
+					foreach ($this->intTypeTableSuffixLengthArray as $intIndex => $intTypeTableSuffixLength) {
+						if (($intTypeTableSuffixLength) &&
+							(strlen($strTableName) > $intTypeTableSuffixLength) &&
+							(substr($strTableName, strlen($strTableName) - $intTypeTableSuffixLength) == $this->strTypeTableSuffixArray[$intIndex])
+						) {
+							// Let's mark, that we have type table
+							$blnIsTypeTable = true;
+							// Create a TYPE Table and add it to the array
+							$objTypeTable = new QTypeTable($strTableName);
+							$this->objTypeTableArray[strtolower($strTableName)] = $objTypeTable;
+							// If we found type table, there is no point of iterating for other type table suffixes
+							break;
 //						_p("TYPE Table: $strTableName<br />", false);
+						}
 					}
-				}
-				if (!$blnIsTypeTable) {
-					// If current table wasn't type table, let's look for other table types
-					if (($this->intAssociationTableSuffixLength) &&
-						(strlen($strTableName) > $this->intAssociationTableSuffixLength) &&
-						(substr($strTableName, strlen($strTableName) - $this->intAssociationTableSuffixLength) == $this->strAssociationTableSuffix)) {
-						// Add this ASSOCIATION Table Name to the array
-						$this->strAssociationTableNameArray[strtolower($strTableName)] = $strTableName;
+					if (!$blnIsTypeTable) {
+						// If current table wasn't type table, let's look for other table types
+						if (($this->intAssociationTableSuffixLength) &&
+							(strlen($strTableName) > $this->intAssociationTableSuffixLength) &&
+							(substr($strTableName, strlen($strTableName) - $this->intAssociationTableSuffixLength) == $this->strAssociationTableSuffix)
+						) {
+							// Add this ASSOCIATION Table Name to the array
+							$this->strAssociationTableNameArray[strtolower($strTableName)] = $strTableName;
 //						_p("ASSN Table: $strTableName<br />", false);
 
-					} else {
-						// Create a Regular Table and add it to the array
-						$objTable = new QTable($strTableName);
-						$this->objTableArray[strtolower($strTableName)] = $objTable;
+						} else {
+							// Create a Regular Table and add it to the array
+							$objTable = new QTable($strTableName);
+							$this->objTableArray[strtolower($strTableName)] = $objTable;
 //						_p("Table: $strTableName<br />", false);
+						}
 					}
 				}
 			}

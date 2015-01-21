@@ -27,6 +27,12 @@
 		/** @var int  */
 		protected $intMaxItemCount = null;
 
+		/**
+		 * Constructor
+		 *
+		 * @param QControl|QForm $objParentObject Parent of this textbox
+		 * @param null|string    $strControlId    Desired control ID for the textbox
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			// borrows too short and too long labels from super class
@@ -61,7 +67,13 @@
 			return true;
 		}
 
-
+		/**
+		 * PHP magic method
+		 * @param string $strName Property name
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -89,11 +101,12 @@
 		/////////////////////////
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Name of the property
+		 *
+		 * @param string $strName  Name of the property
 		 * @param string $mixValue Value of the property
 		 *
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @return mixed|void
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
@@ -181,5 +194,4 @@
 		}
 
 	}
-
 ?>

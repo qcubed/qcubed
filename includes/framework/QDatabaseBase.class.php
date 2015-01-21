@@ -28,7 +28,8 @@
 
 		/**
 		 * Construct the new QCacheSetAction object.
-		 * @param string $strKey the key to use for the object
+		 *
+		 * @param string $strKey   the key to use for the object
 		 * @param object $objValue the object to put in the cache
 		 */
 		public function __construct($strKey, $objValue) {
@@ -96,10 +97,12 @@
 		 * @var array Additions to cache
 		 */
 		protected $arrLocalCacheAdditions;
+
 		/**
 		 * @var array Removals from cache
 		 */
 		protected $arrLocalCacheRemovals;
+
 		/**
 		 * @var QAbstractCacheProvider The super cache to query values from.
 		 */
@@ -122,6 +125,7 @@
 		
 		/**
 		 * Apply changes to the cache object supplyed.
+		 *
 		 * @param QAbstractCacheProvider $objAbstractCacheProvider The cache object to apply changes.
 		 */
 		public function Replay($objAbstractCacheProvider) {
@@ -165,41 +169,40 @@
 			$this->objCacheActionQueue[] = new QCacheDeleteAllAction;
 		}
 	}
-	
+
 	/**
-	 * Every database adapter must implement the following 5 classes (all which are abstract):
+	 * Every database adapter must implement the following 5 classes (all of which are abstract):
 	 * * DatabaseBase
 	 * * DatabaseFieldBase
 	 * * DatabaseResultBase
 	 * * DatabaseRowBase
 	 * * DatabaseExceptionBase
-	 *
-	 * This Database library also has the following classes already defined, and 
+	 * This Database library also has the following classes already defined, and
 	 * Database adapters are assumed to use them internally:
 	 * * DatabaseIndex
 	 * * DatabaseForeignKey
 	 * * DatabaseFieldType (which is an abstract class that solely contains constants)
 	 *
-	 * @property-read string $EscapeIdentifierBegin
-	 * @property-read string $EscapeIdentifierEnd
+	 * @property-read string  $EscapeIdentifierBegin
+	 * @property-read string  $EscapeIdentifierEnd
 	 * @property-read boolean $EnableProfiling
-	 * @property-read int $AffectedRows
-	 * @property-read string $Profile
-	 * @property-read int $DatabaseIndex
-	 * @property-read int $Adapter
-	 * @property-read string $Server
-	 * @property-read string $Port
-	 * @property-read string $Database
-	 * @property-read string $Service
-	 * @property-read string $Protocol
-	 * @property-read string $Host
-	 * @property-read string $Username
-	 * @property-read string $Password
-	 * @property boolean $Caching if true objects loaded from this database will be kept in cache (assuming a cache provider is also configured)
-	 * @property-read string $DateFormat
+	 * @property-read int     $AffectedRows
+	 * @property-read string  $Profile
+	 * @property-read int     $DatabaseIndex
+	 * @property-read int     $Adapter
+	 * @property-read string  $Server
+	 * @property-read string  $Port
+	 * @property-read string  $Database
+	 * @property-read string  $Service
+	 * @property-read string  $Protocol
+	 * @property-read string  $Host
+	 * @property-read string  $Username
+	 * @property-read string  $Password
+	 * @property boolean      $Caching         if true objects loaded from this database will be kept in cache (assuming a cache provider is also configured)
+	 * @property-read string  $DateFormat
 	 * @property-read boolean $OnlyFullGroupBy database adapter sub-classes can override and set this property to true
-	 *      to prevent the behavior of automatically adding all the columns to the select clause when the query has
-	 *      an aggregation clause.
+	 *          to prevent the behavior of automatically adding all the columns to the select clause when the query has
+	 *          an aggregation clause.
 	 * @package DatabaseAdapters
 	 */
 	abstract class QDatabaseBase extends QBaseClass {
@@ -217,7 +220,9 @@
 		protected $objConfigArray;
 		protected $blnConnectedFlag = false;
 
+		/** @var string The beginning part of characters which can escape identifiers in a SQL query for the database */
 		protected $strEscapeIdentifierBegin = '"';
+		/** @var string The ending part of characters which can escape identifiers in a SQL query for the database */
 		protected $strEscapeIdentifierEnd = '"';
 		protected $blnOnlyFullGroupBy = false; // should be set in sub-classes as appropriate
 		
@@ -237,25 +242,87 @@
 		protected static $objCacheProviderStack;
 
 		// Abstract Methods that ALL Database Adapters MUST implement
+		/**
+		 * Connects to the database
+		 */
 		abstract public function Connect();
 		// these are protected - externally, the "Query/NonQuery" wrappers are meant to be called
+		/**
+		 * Sends a SQL query for execution to the database
+		 * In this regard, a query is a 'SELECT' statement
+		 *
+		 * @param string $strQuery The Query to be executed
+		 *
+		 * @return mixed Result that the database returns after running the query.
+		 */
 		abstract protected function ExecuteQuery($strQuery);
+
+		/**
+		 * Sends a non-SELECT query (such as INSERT, UPDATE, DELETE, TRUNCATE) to DB server.
+		 * In most cases, the results of this function are not used and you should not send
+		 * 'SELECT' queries using this method because a result is not guaranteed to be returned
+		 *
+		 * If there was an error, it would most probably be caught as an exception.
+		 *
+		 * @param string $strNonQuery The Query to be executed
+		 *
+		 * @return mixed Result that the database returns after running the query
+		 */
 		abstract protected function ExecuteNonQuery($strNonQuery);
 
+		/**
+		 * Returns the list of tables in the database (as string)
+		 *
+		 * @return mixed|string[] List of tables
+		 */
 		abstract public function GetTables();
+
+		/**
+		 * Returns the ID to be inserted in a table column (normally it an autoincrement column)
+		 *
+		 * @param null|string $strTableName  Table name where the ID has to be inserted
+		 * @param null|string $strColumnName Column name where the ID has to be inserted
+		 *
+		 * @return mixed
+		 */
 		abstract public function InsertId($strTableName = null, $strColumnName = null);
 
+		/**
+		 * Get the list of columns/fields for a given table
+		 *
+		 * @param string $strTableName Name of table whose fields we have to get
+		 *
+		 * @return mixed
+		 */
 		abstract public function GetFieldsForTable($strTableName);
+
+		/**
+		 * Get list of indexes for a table
+		 *
+		 * @param string $strTableName Name of table whose column indexes we have to get
+		 *
+		 * @return mixed
+		 */
 		abstract public function GetIndexesForTable($strTableName);
+
+		/**
+		 * Get list of foreign keys for a table
+		 *
+		 * @param string $strTableName Name of table whose foreign keys we are trying to get
+		 *
+		 * @return mixed
+		 */
 		abstract public function GetForeignKeysForTable($strTableName);
 
 		/**
 		 * This function actually begins the database transaction.
 		 * Must be implemented in all subclasses.
 		 * The "TransactionBegin" wrapper are meant to be called by end-user code
+		 *
 		 * @return void Nothing
 		 */
 		abstract protected function ExecuteTransactionBegin();
+
 		/**
 		 * This function actually commits the database transaction.
 		 * Must be implemented in all subclasses.
@@ -263,16 +330,19 @@
 		 * @return void Nothing
 		 */
 		abstract protected function ExecuteTransactionCommit();
+
 		/**
 		 * This function actually rolls back the database transaction.
 		 * Must be implemented in all subclasses.
 		 * The "TransactionRollBack" wrapper are meant to be called by end-user code
+		 *
 		 * @return void Nothing
 		 */
 		abstract protected function ExecuteTransactionRollBack();
 
 		/**
 		 * This function begins the database transaction.
+		 *
 		 * @return void Nothing
 		 */
 		public final function TransactionBegin() {
@@ -307,8 +377,10 @@
 			}
 			$this->intTransactionDepth--;
 		}
+
 		/**
 		 * This function rolls back the database transaction.
+		 *
 		 * @return void Nothing
 		 */
 		public final function TransactionRollBack() {
@@ -344,12 +416,32 @@
 		abstract public function SqlLimitVariableSuffix($strLimitInfo);
 		abstract public function SqlSortByVariable($strSortByInfo);
 
+		/**
+		 * Closes the database connection
+		 *
+		 * @return mixed
+		 */
 		abstract public function Close();
 
+		/**
+		 * Given an identifier for a SQL query, this method returns the escaped identifier
+		 *
+		 * @param string $strIdentifier Identifier to be escaped
+		 *
+		 * @return string Escaped identifier string
+		 */
 		public function EscapeIdentifier($strIdentifier) {
 			return $this->strEscapeIdentifierBegin . $strIdentifier . $this->strEscapeIdentifierEnd;
 		}
 
+		/**
+		 * Given an array of identifiers, this method returns array of escaped identifiers
+		 * For corner case handling, if a single identifier is supplied, a single escaped identifier is returned
+		 *
+		 * @param array|string $mixIdentifiers Array of escaped identifiers (array) or one unescaped identifier (string)
+		 *
+		 * @return array|string Array of escaped identifiers (array) or one escaped identifier (string)
+		 */
 		public function EscapeIdentifiers($mixIdentifiers) {
 			if (is_array($mixIdentifiers)) {
 				return array_map(array($this, 'EscapeIdentifier'), $mixIdentifiers);
@@ -358,6 +450,13 @@
 			}
 		}
 
+		/**
+		 * Escapes values (or single value) which we can then send to the database
+		 *
+		 * @param array|mixed $mixValues Array of values (or a single value) to be escaped
+		 *
+		 * @return array|string Array of (or a single) escaped value(s)
+		 */
 		public function EscapeValues($mixValues) {
 			if (is_array($mixValues)) {
 				return array_map(array($this, 'SqlVariable'), $mixValues);
@@ -366,6 +465,13 @@
 			}
 		}
 
+		/**
+		 * Escapes both column and values when supplied as an array
+		 *
+		 * @param array $mixColumnsAndValuesArray Array with column=>value format with both (column and value) sides unescaped
+		 *
+		 * @return array Array with column=>value format data with both column and value escaped
+		 */
 		public function EscapeIdentifiersAndValues($mixColumnsAndValuesArray) {
 			$result = array();
 			foreach ($mixColumnsAndValuesArray as $strColumn => $mixValue) {
@@ -374,6 +480,14 @@
 			return $result;
 		}
 
+		/**
+		 * INSERTs or UPDATEs a table
+		 *
+		 * @param string            $strTable                 Table name
+		 * @param array             $mixColumnsAndValuesArray column=>value array
+		 *                                                    (they are given to 'EscapeIdentifiersAndValues' method)
+		 * @param null|string|array $strPKNames               Name(s) of primary key column(s) (expressed as string or array)
+		 */
 		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
 			$strEscapedArray = $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
 			$strColumns = array_keys($strEscapedArray);
@@ -467,7 +581,7 @@
 
 		/**
 		 * PHP magic method
-		 * @param string $strName
+		 * @param string $strName Property name
 		 *
 		 * @return mixed
 		 * @throws Exception|QCallerException
@@ -518,8 +632,8 @@
 
 		/**
 		 * PHP magic method to set class properties
-		 * @param string $strName
-		 * @param string $mixValue
+		 * @param string $strName  Property name
+		 * @param string $mixValue Property value
 		 *
 		 * @return mixed|void
 		 * @throws Exception|QCallerException
@@ -541,8 +655,8 @@
 		}
 
 		/**
-		 * Constructs a Database Adapter based on the database index and the configuration array of properties for this particular adapter
-		 * Sets up the base-level configuration properties for this database,
+		 * Constructs a Database Adapter based on the database index and the configuration array of properties
+		 * for this particular adapter. Sets up the base-level configuration properties for this database,
 		 * namely DB Profiling and Database Index
 		 *
 		 * @param integer  $intDatabaseIndex
@@ -550,7 +664,7 @@
 		 *                                 by QApplicationBase::InitializeDatabaseConnections();
 		 *
 		 * @throws Exception|QCallerException|QInvalidCastException
-		 * @return \QDatabaseBase
+		 * @return QDatabaseBase
 		 */
 		public function __construct($intDatabaseIndex, $objConfigArray) {
 			// Setup DatabaseIndex
@@ -564,7 +678,6 @@
 			if ($this->blnEnableProfiling)
 				$this->strProfileArray = array();
 		}
-
 
 		/**
 		 * Allows for the enabling of DB profiling while in middle of the script
@@ -840,6 +953,14 @@
 
 		protected $strType;
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName Property name
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case "Name":
@@ -912,6 +1033,14 @@
 
 		abstract public function Close();
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName Property name
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'QueryBuilder':
@@ -1029,6 +1158,14 @@
 			$this->strReferenceColumnNameArray = $strReferenceColumnNameArray;
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName Property name
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case "KeyName":
