@@ -214,7 +214,8 @@
 	QApplicationBase::$ClassFile['qsimpletablecheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletable'] = __QCUBED__ . '/controls/QSimpleTable.class.php';
 
-	QApplicationBase::$ClassFile['qhtmlattributemanager'] = __QCUBED_CORE__ . '/base_controls/QHtmlAttributeManager.class.php';
+	QApplicationBase::$ClassFile['qhtmlattributemanager'] = __QCUBED__ . '/controls/QHtmlAttributeManager.class.php';
+	QApplicationBase::$ClassFile['qhtmlattributemanagerbase'] = __QCUBED_CORE__ . '/base_controls/QHtmlAttributeManagerBase.class.php';
 
 
 	QApplicationBase::$ClassFile['qdatarepeater'] = __QCUBED_CORE__ . '/base_controls/QDataRepeater.class.php';

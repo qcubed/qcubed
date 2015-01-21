@@ -69,7 +69,7 @@
  *  Readonly textboxes are selectedable, and their values get posted. Disabled textboxes are not selectabel and values do not post.
  */
 
-class QHtmlAttributeManager extends QBaseClass {
+class QHtmlAttributeManagerBase extends QBaseClass {
 	/** @var  array attributes stored in PHP native format so they can be retrieved. Escaping happens when they are drawn. */
 	protected $attributes = array();
 	protected $styles = array();
