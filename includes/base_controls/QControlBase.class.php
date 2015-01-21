@@ -887,7 +887,7 @@
 		 * @return string
 		 */
 		public function renderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
-			$attributes['id'] = $this->ControlId;
+			$attributes['id'] = $this->strControlId;
 			if ($attributeOverrides) {
 				$attributes = array_merge($attributes, $attributeOverrides);
 			}
