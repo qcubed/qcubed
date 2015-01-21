@@ -32,6 +32,8 @@
 				case QType::String:
 					return "str";
 			}
+			// Suppressing the IDE warning about no value being return
+			return "";
 		}
 
 		/**
@@ -129,8 +131,16 @@
 			return $strToReturn;
 		}
 
-
-
+		/**
+		 * Given a CamelCased word, returns the underscored version
+		 * example:
+		 * CamelCased word: WeightInGrams
+		 * underscored word: weight_in_grams
+		 *
+		 * @param string $strName CamelCased word
+		 *
+		 * @return string Underscored word
+		 */
 		public static function UnderscoreFromCamelCase($strName) {
 			if (strlen($strName) == 0)
 				return '';
@@ -148,6 +158,18 @@
 			return strtolower($strToReturn);
 		}
 
+		/**
+		 * Returns a javaCase word given an underscore word
+		 * example:
+		 * underscore word: weight_in_grams
+		 * javaCase word: weightInGrams
+		 *
+		 * javaCase words are like camel case words, except that the first character is lower case
+		 *
+		 * @param string $strName The underscored word
+		 *
+		 * @return string The word in javaCase
+		 */
 		public static function JavaCaseFromUnderscore($strName) {
 			$strToReturn = QConvertNotation::CamelCaseFromUnderscore($strName);
 			return strtolower(substr($strToReturn, 0, 1)) . substr($strToReturn, 1);
