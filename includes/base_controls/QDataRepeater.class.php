@@ -172,10 +172,8 @@ class QDataRepeater extends QPaginatedControl {
 				$this->intCurrentItemIndex++;
 			}
 
-			$attrOverride = array('id'=>$this->strControlId);
-
 			$strToReturn = $this->renderTag($this->strTagName,
-				$attrOverride,
+				null,
 				null,
 				$strEvalledItems);
 

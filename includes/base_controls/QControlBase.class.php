@@ -878,6 +878,21 @@
 			return $this->renderHtmlAttributes();
 		}
 
+		/**
+		 * Returns the html for the attributes for the base control of the QControl.
+		 * Allows the given arrays to override the attributes and styles before
+		 * rendering. This inserts the control id into the rendering of the tag.
+		 * @param null|string 	$attributeOverrides
+		 * @param null|string 	$styleOverrides
+		 * @return string
+		 */
+		public function renderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
+			$attributes['id'] = $this->ControlId;
+			if ($attributeOverrides) {
+				$attributes = array_merge($attributes, $attributeOverrides);
+			}
+			return parent::renderHtmlAttributes($attributes, $styleOverrides);
+		}
 
 		/**
 		 * Returns all action attributes for this QControl

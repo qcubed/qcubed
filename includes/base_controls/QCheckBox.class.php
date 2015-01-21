@@ -74,7 +74,7 @@
 		 */
 		protected function GetControlHtml() {
 
-			$attrOverride = array('type'=>'checkbox', 'name'=>$this->strControlId, 'id'=>$this->strControlId);
+			$attrOverride = array('type'=>'checkbox', 'name'=>$this->strControlId);
 			if ($this->blnChecked) {
 				$attrOverride['checked']='checked';
 			}

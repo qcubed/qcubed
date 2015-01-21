@@ -243,7 +243,7 @@
 		 * @return string HTML string
 		 */
 		protected function GetControlHtml() {
-			$attrOverride = array('name'=>$this->strControlId, 'id'=>$this->strControlId);
+			$attrOverride = array('name'=>$this->strControlId);
 
 			switch ($this->strTextMode) {
 				case QTextMode::MultiLine:

@@ -142,29 +142,6 @@
 			return $strToReturn;
 		}
 
-		/**
-		 * Returns the CSS styles for the control
-		 * @return string The CSS style string
-		 */
-		public function GetStyleAttributes() {
-			$strStyle = parent::GetStyleAttributes();
-			
-			if ($this->strPadding) {
-				if (is_numeric($this->strPadding))
-					$strStyle .= sprintf('padding:%spx;', $this->strPadding);
-				else
-					$strStyle .= sprintf('padding:%s;', $this->strPadding);
-			}
-
-			if (($this->strHorizontalAlign) && ($this->strHorizontalAlign != QHorizontalAlign::NotSet))
-				$strStyle .= sprintf('text-align:%s;', $this->strHorizontalAlign);
-
-			if (($this->strVerticalAlign) && ($this->strVerticalAlign != QVerticalAlign::NotSet))
-				$strStyle .= sprintf('vertical-align:%s;', $this->strVerticalAlign);
-
-			return $strStyle;
-		}
-
 		//////////
 		// Methods
 		//////////
@@ -179,15 +156,14 @@
 		 * @return string The HTML string
 		 */
 		protected function GetControlHtml() {
-			$strStyle = $this->GetStyleAttributes();
-
-			if ($strStyle)
-				$strStyle = sprintf('style="%s"', $strStyle);
-
-			if ($this->strFormat)
+			if ($this->strFormat) {
 				$strText = sprintf($this->strFormat, $this->strText);
-			else
+			}
+			else {
 				$strText = $this->strText;
+			}
+
+			$strText = ($this->blnHtmlEntities) ? QApplication::HtmlEntities($strText) : $strText;
 
 			$strTemplateEvaluated = '';
 			if ($this->strTemplate) {
@@ -198,20 +174,55 @@
 				$_CONTROL = $objCurrentControl;
 			}
 
-			$strToReturn = sprintf('<%s id="%s" %s%s>%s%s%s</%s>',
-				$this->strTagName,
-				$this->strControlId,
-				$this->GetAttributes(),
-				$strStyle,
-				($this->blnHtmlEntities) ? QApplication::HtmlEntities($strText) : $strText,
-				$strTemplateEvaluated,
-				($this->blnAutoRenderChildren) ? $this->RenderChildren(false) : '',
-				$this->strTagName);
+			$strText .= $strTemplateEvaluated;
+
+			if ($this->blnAutoRenderChildren) {
+				$strText .= $this->RenderChildren(false);
+			}
+
+			$strToReturn = $this->renderTag($this->strTagName,
+				null,
+				null,
+				$strText);
 
 //			if ($this->blnDropTarget)
 //				$strToReturn .= sprintf('<span id="%s_ctldzmask" style="position:absolute;"><span style="font-size: 1px">&nbsp;</span></span>', $this->strControlId);
 
 			return $strToReturn;
+		}
+
+		/**
+		 * Return the inner html between the tags.
+		 *
+		 * @return string
+		 */
+		protected function GetInnerHtml() {
+			if ($this->strFormat) {
+				$strText = sprintf($this->strFormat, $this->strText);
+			}
+			else {
+				$strText = $this->strText;
+			}
+
+			if ($this->blnHtmlEntities) {
+				$strText = QApplication::HtmlEntities($strText);
+			}
+
+			$strTemplateEvaluated = '';
+			if ($this->strTemplate) {
+				global $_CONTROL;
+				$objCurrentControl = $_CONTROL;
+				$_CONTROL = $this;
+				$strTemplateEvaluated = $this->EvaluateTemplate($this->strTemplate);
+				$_CONTROL = $objCurrentControl;
+			}
+
+			$strText .= $strTemplateEvaluated;
+
+			if ($this->blnAutoRenderChildren) {
+				$strText .= $this->RenderChildren(false);
+			}
+			return $strText;
 		}
 
 		/**
@@ -242,14 +253,10 @@
 				case "Template": return $this->strTemplate;
 				case "AutoRenderChildren": return $this->blnAutoRenderChildren;
 				case "TagName": return $this->strTagName;
-				case "Padding": return $this->strPadding;
 				case "HtmlEntities": return $this->blnHtmlEntities;
 
 				// BEHAVIOR
 				case "DropTarget": return $this->blnDropTarget;
-
-				case "HorizontalAlign": return $this->strHorizontalAlign;
-				case "VerticalAlign": return $this->strVerticalAlign;
 
 				default:
 					try {
@@ -351,18 +358,6 @@
 						throw $objExc;
 					}
 
-				case "Padding":
-					try {
-						if ($this->strPadding !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strPadding = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
 				case "DropTarget":
 					try {
 						if ($this->blnDropTarget !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
@@ -375,29 +370,6 @@
 						throw $objExc;
 					}
 
-				case "HorizontalAlign":
-					try {
-						if ($this->strHorizontalAlign !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strHorizontalAlign = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case "VerticalAlign":
-					try {
-						if ($this->strVerticalAlign !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strVerticalAlign = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 
 				default:
 					try {

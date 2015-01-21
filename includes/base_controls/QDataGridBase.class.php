@@ -888,10 +888,8 @@
 		 * @throws Exception|QCallerException
 		 */
 		protected function GetControlHtml() {
-			$attrOverride = array('id'=>$this->strControlId);
-
 			return 	$this->renderTag('table',
-				$attrOverride,
+				null,
 				null,
 				$this->GetInnerHtml());
 		}
