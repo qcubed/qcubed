@@ -211,7 +211,7 @@
 		 *
 		 * @return string
 		 */
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
+		public function GetAttributes() {
 			$strToReturn = "";
 			$strStyle = "";			
 

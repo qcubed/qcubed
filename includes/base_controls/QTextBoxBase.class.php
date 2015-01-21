@@ -24,11 +24,9 @@
 	 * @property string $CrossScripting can be Allow, HtmlEntities, or Deny.  Deny is the default. Prevents cross scripting hacks.  HtmlEntities causes framework to automatically call php function htmlentities on the input data.  Allow allows everything to come through without altering at all.  USE "ALLOW" judiciously: using ALLOW on text entries, and then outputting that data WILL allow hackers to perform cross scripting hacks.
 	 * @property integer $MaxLength is the "maxlength" html attribute (applicable for SingleLine textboxes)
 	 * @property integer $MinLength is the minimum requred length to pass validation
-	 * @property boolean $ReadOnly is the "readonly" html attribute (making a textbox "ReadOnly" is very similar to setting the textbox to Enabled=false.  There are only subtle display-differences, I believe, between the two.
 	 * @property integer $Rows is the "rows" html attribute (applicable for MultiLine textboxes)
-	 * @property string $TextMode can be "SingleLine", "MultiLine", and "Password".
+	 * @property string $TextMode a QTextMode item. Determines if its a single or multi-line textbox, and the "type" property of the input.
 	 * @property boolean $ValidateTrimmed
-	 * @property boolean $Wrap is the "wrap" html attribute (applicable for MultiLine textboxes)
 	 * @property boolean $AutoTrim to automatically remove white space from beginning and end of data
 	 * @property integer $SanitizeFilter PHP filter constant to apply to incoming data
 	 * @property mixed $SanitizeFilterOptions PHP filter constants or array to apply to SanitizeFilter option
@@ -37,10 +35,6 @@
 	 * @property mixed $LabelForInvalid PHP filter constants or array to apply to ValidateFilter option
 	 */
 	abstract class QTextBoxBase extends QControl {
-		///////////////////////////
-		// Private Member Variables
-		///////////////////////////
-
 		// APPEARANCE
 		/** @var int */
 		protected $intColumns = 0;
@@ -68,11 +62,9 @@
 		protected $intMaxLength = 0;
 		/** @var int */
 		protected $intMinLength = 0;
-		/** @var bool */
-		protected $blnReadOnly = false;
 		/** @var int */
 		protected $intRows = 0;
-		/** @var string */
+		/** @var string Subclasses should not set this directly, but rather use the TextMode accessor */
 		protected $strTextMode = QTextMode::SingleLine;
 		/** @var string */
 		protected $strCrossScripting;
@@ -95,11 +87,6 @@
 		/** @var string */
 		protected $strLabelForInvalid = null;
 		
-		
-
-		// LAYOUT
-		/** @var bool */
-		protected $blnWrap = true;
 
 		//////////
 		// Methods
@@ -252,71 +239,75 @@
 		}
 
 		/**
-		 * @param bool $blnIncludeCustom
-		 * @param bool $blnIncludeAction
-		 *
-		 * @return string
-		 */
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
-			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
-
-			if ($this->blnReadOnly)
-				$strToReturn .= 'readonly="readonly" ';
-
-			if ($this->intMaxLength)
-				$strToReturn .= sprintf('maxlength="%s" ', $this->intMaxLength);
-			if ($this->strTextMode == QTextMode::MultiLine) {
-				if ($this->intColumns)
-					$strToReturn .= sprintf('cols="%s" ', $this->intColumns);
-				if ($this->intRows)
-					$strToReturn .= sprintf('rows="%s" ', $this->intRows);
-				if (!$this->blnWrap)
-					$strToReturn .= 'wrap="off" ';
-			} else {
-				if ($this->intColumns)
-					$strToReturn .= sprintf('size="%s" ', $this->intColumns);
-			}
-
-			if(strlen($this->strPlaceholder) > 0) {
-				$strToReturn .= sprintf('placeholder="%s" ', QApplication::HtmlEntities($this->strPlaceholder));
-			}
-
-			return $strToReturn;
-		}
-
-		/**
 		 * Returns the HTML formatted string for the control
 		 * @return string HTML string
 		 */
 		protected function GetControlHtml() {
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle) {
-				$strStyle = sprintf('style="%s"', $strStyle);
-			}
+			$attrOverride = array('name'=>$this->strControlId, 'id'=>$this->strControlId);
 
 			switch ($this->strTextMode) {
 				case QTextMode::MultiLine:
-					$strToReturn = sprintf('<textarea name="%s" id="%s" %s%s>' . $this->strFormat . '</textarea>',
-						$this->strControlId,
-						$this->strControlId,
-						$this->GetAttributes(),
-						$strStyle,
-						QApplication::HtmlEntities($this->strText));
-					break;
+					return $this->renderTag('textarea',
+								$attrOverride,
+								null,
+								QApplication::HtmlEntities($this->strText)
+					);
 
 				default:
+					$attrOverride['value'] = QApplication::HtmlEntities($this->strText);
 					$typeStr = $this->strTextMode ? $this->strTextMode : 'text';
-					$strToReturn = sprintf('<input type="%s" name="%s" id="%s" value="' . $this->strFormat . '" %s%s />',
-						$typeStr,
-						$this->strControlId,
-						$this->strControlId,
-						QApplication::HtmlEntities($this->strText),
-						$this->GetAttributes(),
-						$strStyle);
+					$attrOverride['type'] = $typeStr;
+					return $this->renderTag('input',
+						$attrOverride,
+						null,
+						null,
+						true
+					);
+
+			}
+		}
+
+
+		/**
+		 * Render HTML attributes for the purpose of drawing the tag. Text objects have a number of parameters specific
+		 * to them, some of which we use for validation, and some of which are dual purpose.
+		 * We render those here, rather than setting the attributes when those are set.
+		 *
+		 * @param null $attributeOverrides
+		 * @param null $styleOverrides
+		 * @return string|void
+		 */
+		public function renderHtmlAttributes ($attributeOverrides = null, $styleOverrides = null) {
+			if ($this->intMaxLength) {
+				$attributeOverrides['maxlength'] = $this->intMaxLength;
+			}
+			if ($this->strTextMode == QTextMode::MultiLine) {
+				if ($this->intColumns) {
+					$attributeOverrides['cols'] = $this->intColumns;
+				}
+				if ($this->intRows) {
+					$attributeOverrides['rows'] = $this->intRows;
+				}
+				if (!$this->blnWrap) {
+					/**
+					 * $strToReturn .= 'wrap="off" '; Note that this is not standard HTML5 and not supported by all browsers
+					 * In fact, HTML5 has completely changed its meaning to mean whether the text itself has embedded
+					 * hard returns inserted when the textarea wraps. Deprecating. We will have to wait for another solution.
+					 */
+				}
+			} else {
+				if ($this->intColumns) {
+					$attributeOverrides['size'] = $this->intColumns;
+				}
 			}
 
-			return $strToReturn;
+			if(strlen($this->strPlaceholder) > 0) {
+				$attributeOverrides['placeholder'] = QApplication::HtmlEntities($this->strPlaceholder);
+			}
+
+			return parent::renderHtmlAttributes($attributeOverrides, $styleOverrides);
 		}
+
 
 		/**
 		 * Tests that the value given inside the textbox passes the rules set for the input
@@ -390,7 +381,6 @@
 		 * Attaches an oninput handler to detect changes. Must be attached before other scripts are attached so that it.
 		 * The "change" handler is a little redundant, but many javascript widgets that change the text (autocomplete, datepicker)
 		 * do not send the input event correctly, but they DO send the change event.
-		 * goes first.
 		 *
 		 * @return string
 		 */
@@ -398,6 +388,27 @@
 			$str = parent::GetEndScript();
 			$str = sprintf ('$j("#%s").on ("input", qc.formObjChanged).change (qc.formObjChanged);', $this->ControlId) . $str;
 			return $str;
+		}
+
+		/**
+		 * Sets the text mode. Use this instead of setting the textMode directly.
+		 * @param $strMode
+		 */
+		public function setTextMode($strMode) {
+			if ($this->strTextMode !== ($strMode = QType::Cast($strMode, QType::String))) {
+				$this->blnModified = true;
+				$this->strTextMode = $strMode;
+				switch ($strMode) {
+					case QTextMode::SingleLine:
+						$typeStr = $this->strTextMode ? $this->strTextMode : 'text';
+						$this->setHtmlAttribute('type', $typeStr);
+						break;
+
+					case QTextMode::MultiLine:
+						$this->removeHtmlAttribute('type');
+						break;
+				}
+			}
 		}
 
 
@@ -431,7 +442,6 @@
 				case "CrossScripting": return $this->strCrossScripting;
 				case "MaxLength": return $this->intMaxLength;
 				case "MinLength": return $this->intMinLength;
-				case "ReadOnly": return $this->blnReadOnly;
 				case "Rows": return $this->intRows;
 				case "TextMode": return $this->strTextMode;
 				case "ValidateTrimmed": return $this->blnValidateTrimmed;
@@ -609,17 +619,6 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "ReadOnly":
-					try {
-						if ($this->blnReadOnly !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
-							$this->blnReadOnly = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 				case "Rows":
 					try {
 						if ($this->intRows !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
@@ -633,10 +632,7 @@
 					}
 				case "TextMode":
 					try {
-						if ($this->strTextMode !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strTextMode = $mixValue;
-						}
+						$this->setTextMode ($mixValue);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -652,18 +648,11 @@
 					}
 
 				// LAYOUT
-				case "Wrap":
-					try {
-						if ($this->blnWrap !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
-							$this->blnWrap = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-					
+				//case "Wrap":
+					// Deprecated. HTML5 has changed the meaning of this, and wrap=off is not consistenly implemented
+					// across browers.
+					break;
+
 				// FILTERING and VALIDATING, no redraw needed
 				case "AutoTrim":
 					try {

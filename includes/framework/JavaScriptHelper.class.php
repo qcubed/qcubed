@@ -93,7 +93,7 @@
 
 		/**
 		 * Returns javascript that on execution will retrieve the value from the DOM element corresponding to
-		 * the $objControl using the key $strKey and assign it to the variable $strValue.
+		 * the $objControl using the key $strKey and assign it to the javascript variable $strValue.
 		 *
 		 * @static
 		 * @param QControl $objControl
@@ -104,6 +104,45 @@
 		public static function customDataRetrieval(QControl $objControl, $strKey, $strValue) {
 			return 'var '.$strValue.' = jQuery("#'.$objControl->ControlId.'").data("'.$strKey.'");';
 		}
+
+		/**
+		 * Helper class to convert a name from camel case to using dashes to separated words.
+		 * data-* html attributes have special conversion rules. Key names should always be lower case. Dashes in the
+		 * name get converted to camel case javascript variable names by jQuery.
+		 * For example, if you want to pass the value with key name "testVar" from PHP to javascript by printing it in
+		 * the html, you would use this function to help convert it to "data-test-var", after which you can retrieve
+		 * in in javascript by calling ".data('testVar')". on the object.
+		 * @param $strName
+		 * @return string
+		 */
+		public static function dataNameFromCamelCase($strName) {
+			if (preg_match('/[A-Z][A-Z]/', $strName)) {
+				throw new QCallerException ('Not a camel case string');
+			}
+			return preg_replace_callback('/([A-Z])/',
+				function ($matches) {
+					return '-' . strtolower($matches[1]);
+				},
+				$strName
+			);
+
+		}
+
+		/**
+		 * Converts an html data attribute name to camelCase.
+		 *
+		 * @param $strName
+		 * @return string
+		 */
+		public static function dataNameToCamelCase($strName) {
+			return preg_replace_callback('/-([a-z])/',
+				function ($matches) {
+					return ucfirst($matches[1]);
+				},
+				$strName
+			);
+		}
+
 
 		/**
 		 * Recursively convert a php object to a javascript object.

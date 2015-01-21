@@ -46,6 +46,11 @@
 		protected $strSourceImageType = null;
 		protected $strCachedActualFilePath = null;
 
+		// Attributes
+		// Since these types of tags can have width and height attributes
+		protected $strWidth;
+		protected $strHeight;
+
 		//////////
 		// Methods
 		//////////

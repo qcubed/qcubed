@@ -16,7 +16,6 @@
 		protected function Form_Create() {
 			// Define the DataGrid
 			$this->dtgPersons = new QDataGrid($this);
-			$this->dtgPersons->CellPadding = 5;
 			$this->dtgPersons->CellSpacing = 0;
 
 			// Define Columns -- we will define render helper methods to help with the rendering

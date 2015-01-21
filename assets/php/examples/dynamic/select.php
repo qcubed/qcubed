@@ -9,7 +9,6 @@
 		protected function Form_Create() {
 			// Define the DataGrid
 			$this->dtgPersons = new QDataGrid($this);
-			$this->dtgPersons->CellPadding = 5;
 			$this->dtgPersons->CellSpacing = 0;
 			
 			// Specify Pagination with 10 items per page

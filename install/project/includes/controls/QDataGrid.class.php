@@ -44,7 +44,7 @@
 			}
 
 			// For example... let's default the CssClass to datagrid
-			$this->strCssClass = 'datagrid';
+			$this->CssClass = 'datagrid';
 		}
 
 		// Override any of these methods/variables below to alter the way the DataGrid gets rendered

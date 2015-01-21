@@ -63,17 +63,19 @@
 	}
 
 	/**
-	 * Class QGridLines: Set the gridlines which have to be rendered for a QDataGrid
+	 * Class QGridLines: Set the gridlines which have to be rendered for a QDataGrid. HTML5 no longer supports
+	 * the "rules" attributes, so this is now handled in CSS by adding a particular class to the table. So
+	 * the text below corresponds to class names added to the table.
 	 */
 	abstract class QGridLines {
 		/** No gridlines to be rendered */
-		const None = 'none';
+		const None = '';
 		/** Horizontal gridlines but not vertical gridlines should be renderd */
-		const Horizontal = 'horizontal';
+		const Horizontal = 'horizontalRules';
 		/** Vertical gridlines should be rendered but not horizontal ones */
-		const Vertical = 'vertical';
+		const Vertical = 'verticalRules';
 		/** Both horizontal and verical gridlines have to be rendered */
-		const Both = 'both';
+		const Both = 'horizontalRules verticalRules';
 	}
 
 	/**
@@ -225,6 +227,21 @@
 	}
 
 	/**
+	 * Categories of ajax response
+	 */
+	abstract class QAjaxResponse {
+		const Watcher = 'watcher';
+		const Controls = 'controls';
+		const Commands = 'commands'; // TODO: Remove this and issue specific commands rather than eval'ing javascript?
+		const Html = 'html';
+		const Value = 'value';
+		const Id = 'id';
+		const Attributes = 'attributes';
+		const Css = 'css';
+	}
+
+
+/**
 	 * Contains options for the CSS 'position' property.
 	 */
 	abstract class QPosition {

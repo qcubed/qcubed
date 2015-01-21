@@ -230,7 +230,7 @@
 		 * Returns all action attributes
 		 * @return string
 		 */
-		public function GetActionAttributes() {
+		public function RenderActionScripts() {
 			$strToReturn = $this->callbackString() . " = ";
 			if (!count($this->objActionArray)) {
 				return $strToReturn . 'null;';

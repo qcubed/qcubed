@@ -432,25 +432,29 @@ qcubed = {
                     }
                 }
             },
-            success: function(xml) {
+            success: function(json) {
                 var strCommands = [];
 
                 qcubed._prevUpdateTime = new Date().getTime();
+                if (json.controls) $j.each(json.controls, function() {
+                    var strControlId = '#' + this.id,
+                        $control = $j(strControlId);
 
-                $j(xml).find('control').each(function() {
-                    var $this = $j(this),
-                        strControlId = '#' + $this.attr("id"),
-                        strControlHtml = $this.text(),
-                        $control = $j(strControlId),
-                        $relParent,
-                        relSelector = "[data-rel='" + strControlId + "']";
+                    if (this.value !== undefined) {
+                        $control.val(this.value);
+                    }
 
-                    if (strControlId === "#Qform__FormState") {
-                        $control.val(strControlHtml);
-                    } else {
+                    if (this.attributes !== undefined) {
+                        $control.attr (this.attributes);
+                    }
+
+                    if (this.html !== undefined) {
                         if ($control.length && !$control.get(0).wrapper) {
                             //remove related controls (error, name ...) for wrapper-less controls
-                            if ($this.data("hasrel")) {
+                            if ($control.data("hasrel")) {
+                                var relSelector = "[data-rel='" + strControlId + "']",
+                                    $relParent;
+
                                 //ensure that the control is not wrapped in an element related to it (it would be removed)
                                 $relParent = $control.parents(relSelector).last();
                                 if ($relParent.length) {
@@ -459,20 +463,23 @@ qcubed = {
                                 $j(relSelector).remove();
                             }
 
-                            $control.before(strControlHtml).remove();
+                            $control.before(this.html).remove();
                         } else {
-                            $j(strControlId + '_ctl').html(strControlHtml);
+                            $j(strControlId + '_ctl').html(this.html);
                         }
                     }
-                }).end().find('watcher').each(function() {
+                });
+
+                if (json.watcher) {
                     if (qFormParams.control) {
                         qcubed.broadcastChange();
                     }
-                }).end().find('command').each(function() {
-                    strCommands.push($j(this).text());
-                });
-                /** @todo eval is evil, do no evil */
-                eval(strCommands.join(''));
+                }
+                if (json.commands) {
+                    /** @todo eval is evil, do no evil */
+                    eval (json.commands);
+                }
+
                 if (qcubed.objAjaxWaitIcon) {
                     $j(qcubed.objAjaxWaitIcon).hide();
                 }
@@ -707,7 +714,16 @@ qcubed.registerControl = function(mixControl) {
     // Create New Methods, etc.
     // Like: objWrapper.something = xyz;
 
-    // Updating Style-related Things
+    /**
+     * This function was originally intended to be used by javascript to manipulate QControl objects and have the result
+     * reported back to the PHP side. Modern jQuery objects now have events that can be hooked to catch changes to
+     * objects, and using those events is probably a better approach in most cases. Various jQuery UI base QControls
+     * use this method. In any case, you can use this as a model for how to use the recordControlModification function
+     * to send results to PHP objects.
+     *
+     * @param strStyleName
+     * @param strNewValue
+     */
     objWrapper.updateStyle = function(strStyleName, strNewValue) {
         var objControl = (this.control) ? this.control : this,
             objNewParentControl,

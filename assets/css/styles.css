@@ -70,7 +70,8 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
 .paginator .selected { background: #780000; border:1px solid #d90d0d; border-radius: 3px; display: inline-block; color: #fff; padding: 0 5px; }
 
 /* Form fields */
-.renderWithName { padding: 5px 0; overflow: hidden; position: relative; }
+.renderWithName { padding: 5px 0; position: relative; }
+.renderWithName .form-name {overflow: hidden; }
 
 .form-field input,
 .form-field textarea { max-width: 300px; width: 99%; }

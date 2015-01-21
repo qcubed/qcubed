@@ -82,19 +82,7 @@
 					try {
 						/** @var QDataGridRowStyle $objStyle */
 						$objStyle = QType::Cast($mixValue, "QDataGridRowStyle");
-						$this->BackColor = $objStyle->BackColor;
-						$this->BorderColor = $objStyle->BorderColor;
-						$this->BorderStyle = $objStyle->BorderStyle;
-						$this->BorderWidth = $objStyle->BorderWidth;
-						$this->CssClass = $objStyle->CssClass;
-						$this->FontBold = $objStyle->FontBold;
-						$this->FontItalic = $objStyle->FontItalic;
-						$this->FontNames = $objStyle->FontNames;
-						$this->FontOverline = $objStyle->FontOverline;
-						$this->FontSize = $objStyle->FontSize;
-						$this->FontStrikeout = $objStyle->FontStrikeout;
-						$this->FontUnderline = $objStyle->FontUnderline;
-						$this->ForeColor = $objStyle->ForeColor;
+						$this->override ($objStyle);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -215,16 +203,14 @@
 	 *     $objRowStyle->BackColor = "blue";
 	 *
 	 * @package Controls
-	 * @property QDataGridRowStyle    $AlternateRowStyle      is the DataGridRowStyle object that defines how "alternating rows" should be displayed
-	 * @property string               $BorderCollapse         defines the BorderCollapse css style for the table
-	 * @property QDataGridRowStyle    $HeaderRowStyle         is the DataGridRowStyle object that defines how the "header row" should be displayed (attributes that get rendred in the header row's <tr>)
-	 * @property QDataGridRowStyle    $FilterRowStyle         The row style for the filter row at the top
-	 * @property QDataGridRowStyle    $HeaderLinkStyle        is the DataGridRowStyle object that defines how links, specifically, in the header row should be displayed.  Basically, anything defined here will show up as html attributes and css styles within the '<a href="">' tag of the link, itself, in the header.  Links in the header ONLY GET DISPLAYED when a column is sortable
-	 * @property QDataGridRowStyle    $RowStyle               is the main or "default" DataGridRowStyle for the entire table.  Any overriding row style (see "OverrideRowStyle(int, DataGridRowStyle)" below) or any appearance properties set in AlternateRowStyle or HeaderRowStyle will be applied in those specific situations. Any appearance properties NOT set in ovverrides, alternate, or header will simply default to what RowStyle has defined.
-	 * @property integer              $CellPadding            refers the the HTML CellPadding attribute of the <table>
-	 * @property integer              $CellSpacing            refers the the HTML CellSpacing attribute of the <table>
-	 * @property string               $GridLines              refers the the HTML rules attribute of the <table>
-	 * @property boolean              $ShowHeader             is the flag of whether or not to show the Header row
+	 * @property QDataGridRowStyle    $AlternateRowStyle	 is the DataGridRowStyle object that defines how "alternating rows" should be displayed
+	 * @property QDataGridRowStyle    $HeaderRowStyle   	 is the DataGridRowStyle object that defines how the "header row" should be displayed (attributes that get rendred in the header row's <tr>)
+	 * @property QDataGridRowStyle    $FilterRowStyle   	 The row style for the filter row at the top
+	 * @property QDataGridRowStyle    $HeaderLinkStyle  	 is the DataGridRowStyle object that defines how links, specifically, in the header row should be displayed.  Basically, anything defined here will show up as html attributes and css styles within the '<a href="">' tag of the link, itself, in the header.  Links in the header ONLY GET DISPLAYED when a column is sortable
+	 * @property QDataGridRowStyle    $RowStyle         	 is the main or "default" DataGridRowStyle for the entire table.  Any overriding row style (see "OverrideRowStyle(int, DataGridRowStyle)" below) or any appearance properties set in AlternateRowStyle or HeaderRowStyle will be applied in those specific situations. Any appearance properties NOT set in ovverrides, alternate, or header will simply default to what RowStyle has defined.
+	 * @property integer              $CellSpacing      	 refers the the HTML CellSpacing attribute of the <table>
+	 * @property string               $GridLines        	 refers the the HTML rules attribute of the <table>
+	 * @property boolean              $ShowHeader        	 is the flag of whether or not to show the Header row
 	 * @property boolean              $ShowFooter
 	 * @property boolean              $ShowFilter
 	 * @property boolean              $ShowFilterButton      Should the filter button (on filter row) be shown?
@@ -252,8 +238,6 @@
 		// APPEARANCE
 		/** @var null|QDataGridRowStyle Row style for alternate rows */
 		protected $objAlternateRowStyle = null;
-		/** @var string Border Collapse option (constant from QBorderCollapse) */
-		protected $strBorderCollapse = QBorderCollapse::NotSet;
 		/** @var null|QDataGridRowStyle Style for the top row (not the filter row) */
 		protected $objHeaderRowStyle = null;
 		/** @var null|QDataGridRowStyle Style for the filter row (not the top row) */
@@ -271,12 +255,6 @@
 		protected $objWaitIcon = 'default';
 
 		// LAYOUT
-		/** @var int cellpadding attribute value for the rendered table HTML */
-		protected $intCellPadding = -1;
-		/** @var int cellspacing attribute value for the rendered table HTML */
-		protected $intCellSpacing = -1;
-		/** @var string Grid lines style for the QDataGrid (constant from QGridLines class) */
-		protected $strGridLines = QGridLines::None;
 		/** @var bool Show the header for the table? */
 		protected $blnShowHeader = true;
 		/** @var bool Determines if the filter row has to be shown or not */
@@ -686,56 +664,6 @@
 		public function ParsePostData() {}
 
 		/**
-		 * Returns the HTML attributes for the table that has to be rendered on the browser
-		 *
-		 * @param bool $blnIncludeCustom [For future use only]
-		 * @param bool $blnIncludeAction [For future use only]
-		 *
-		 * @return string HTML to be rendered
-		 */
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = false) {
-			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
-
-			if ($this->strGridLines == QGridLines::Horizontal)
-				$strToReturn .= 'rules="rows" ';
-			else if ($this->strGridLines == QGridLines::Vertical)
-				$strToReturn .= 'rules="cols" ';
-			else if ($this->strGridLines == QGridLines::Both)
-				$strToReturn .= 'rules="all" ';
-
-			if ($this->intCellPadding >= 0)
-				$strToReturn .= sprintf('cellpadding="%s" ', $this->intCellPadding);
-
-			if ($this->intCellSpacing >= 0)
-				$strToReturn .= sprintf('cellspacing="%s" ', $this->intCellSpacing);
-
-			$strBorder = $this->strBorderWidth;
-			settype($strBorder, QType::Integer);
-			$strToReturn .= sprintf('border="%s" ', $strBorder);
-
-			if ($this->strBorderColor)
-				$strToReturn .= sprintf('bordercolor="%s" ', $this->strBorderColor);
-
-			return $strToReturn;
-		}
-
-		/**
-		 * Returns CSS attributes for the QDataGrid
-		 *
-		 * @return string CSS attributes
-		 */
-		public function GetStyleAttributes() {
-			$strToReturn = parent::GetStyleAttributes();
-
-			if ($this->strBorderCollapse == QBorderCollapse::Collapse)
-				$strToReturn .= 'border-collapse:collapse;';
-			else if ($this->strBorderCollapse == QBorderCollapse::Separate)
-				$strToReturn .= 'border-collapse:separate;';
-
-			return $strToReturn;
-		}
-
-		/**
 		 * Parse the _POST to see if the user is requesting a change in the sort column or page
 		 * NOTE: This is an event handler (hence not all parameters of this method are used in its body)
 		 *
@@ -937,7 +865,7 @@
 				// parse the action parameter
 				$objRow->ActionParameter = QDataGridBase::ParseHtml($this->strRowActionParameterHtml, $this, null, $objObject);
 				$strToReturn = $objRow->GetHtml($strColumnsHtml);
-				QApplication::ExecuteJavaScript($objRow->GetActionAttributes());
+				QApplication::ExecuteJavaScript($objRow->RenderActionScripts());
 			} else {
 				// If there are no events, don't create any row controls'
 				// Finish up
@@ -949,7 +877,7 @@
 
 		/**
 		 * Returns the footer row HTML
-		 * NOTE: This function currently does nothing
+		 * NOTE: This function currently does nothing but is available for overriding
 		 */
 		protected function GetFooterRowHtml() {}
 
@@ -1433,16 +1361,15 @@
 			switch ($strName) {
 				// APPEARANCE
 				case "AlternateRowStyle": return $this->objAlternateRowStyle;
-				case "BorderCollapse": return $this->strBorderCollapse;
 				case "HeaderRowStyle": return $this->objHeaderRowStyle;
 				case "FilterRowStyle": return $this->objFilterRowStyle;
 				case "HeaderLinkStyle": return $this->objHeaderLinkStyle;
 				case "RowStyle": return $this->objRowStyle;
 
 				// LAYOUT
-				case "CellPadding": return $this->intCellPadding;
-				case "CellSpacing": return $this->intCellSpacing;
-				case "GridLines": return $this->strGridLines;
+				case "CellPadding": throw new Exception ('Cell padding is no longer supported in HTML5');
+				case "CellSpacing": return $this->getCssStyle('border-spacing');
+				//case "GridLines": return $this->hasCssClass(QGridLines::Vertical);
 				case "ShowHeader": return $this->blnShowHeader;
 				case "ShowFooter": return $this->blnShowFooter;
 				case "ShowFilter": return $this->blnShowFilter;
@@ -1575,14 +1502,6 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "BorderCollapse":
-					try {
-						$this->strBorderCollapse = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 				case "HeaderRowStyle":
 					try {
 						$this->objHeaderRowStyle = QType::Cast($mixValue, "QDataGridRowStyle");
@@ -1700,16 +1619,15 @@
 
 				// LAYOUT
 				case "CellPadding":
-					try {
-						$this->intCellPadding = QType::Cast($mixValue, QType::Integer);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
+					throw new QCallerException ("Cellpadding is no longer supported in HTML5. Use css padding on the table cells instead.");
 				case "CellSpacing":
 					try {
-						$this->intCellSpacing = QType::Cast($mixValue, QType::Integer);
+						$this->setCssStyle('border-spacing', $mixValue = QType::Cast($mixValue, QType::String), true);
+						if ($mixValue == '0' && $mixValue == '0px') {
+							$this->setCssStyle('border-collapsed', 'collapse');
+						} else {
+							$this->setCssStyle('border-collapsed', 'separate');
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
