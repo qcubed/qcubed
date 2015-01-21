@@ -610,7 +610,7 @@
 					}
 				case "TextMode":
 					try {
-						if ($this->strTextMode !== ($strMode = QType::Cast($strMode, QType::String))) {
+						if ($this->strTextMode !== ($strMode = QType::Cast($mixValue, QType::String))) {
 							$this->blnModified = true;
 							$this->strTextMode = $strMode;
 						}

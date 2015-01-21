@@ -154,11 +154,6 @@ class QDataRepeater extends QPaginatedControl {
 	protected function GetControlHtml() {
 		$this->DataBind();
 
-		// Setup Style
-		$strStyle = $this->GetStyleAttributes();
-		if ($strStyle)
-			$strStyle = sprintf('style="%s"', $strStyle);
-
 		// Iterate through everything
 		$this->intCurrentItemIndex = 0;
 		$strEvalledItems = '';
@@ -177,13 +172,12 @@ class QDataRepeater extends QPaginatedControl {
 				$this->intCurrentItemIndex++;
 			}
 
-			$strToReturn = sprintf('<%s id="%s" %s%s>%s</%s>',
-				$this->strTagName,
-				$this->strControlId,
-				$this->GetAttributes(),
-				$strStyle,
-				$strEvalledItems,
-				$this->strTagName);
+			$attrOverride = array('id'=>$this->strControlId);
+
+			$strToReturn = $this->renderTag($this->strTagName,
+				$attrOverride,
+				null,
+				$strEvalledItems);
 
 			$_CONTROL = $objCurrentControl;
 		}

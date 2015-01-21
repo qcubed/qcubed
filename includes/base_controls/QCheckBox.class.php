@@ -68,7 +68,7 @@
 		 * Returns the HTML code for the control which can be sent to the client.
 		 *
 		 * Note, previous version wrapped this in a div and made the control a block level control unnecessarily. To
-		 * achieve a block control, simply set blnUserWrapper.
+		 * achieve a block control, set blnUseWrapper and blnIsBlockElement.
 		 *
 		 * @return string THe HTML for the control
 		 */
@@ -79,7 +79,7 @@
 				$attrOverride['checked']='checked';
 			}
 
-			$strCheckHtml = $this->renderTag($attrOverride);
+			$strCheckHtml = $this->renderTag('input', $attrOverride, null, null, true);
 
 			if (strlen($this->strText)) {
 				$strText = ($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText;
@@ -88,12 +88,10 @@
 				} else {
 					$strCombined = $strCheckHtml . $strText;
 				}
+
 				$strLblAttrs = $this->renderCheckLabelAttributes();
 
-				$strCheckHtml = sprintf ('<label id="%s_chklbl" %s>%s</label>',
-					$this->strControlId,
-					$strLblAttrs,
-					$strCombined);
+				$strCheckHtml = QHtml::renderTag('label', $strLblAttrs, $strCombined);
 			}
 			return $strCheckHtml;
 		}
@@ -118,6 +116,7 @@
 		 */
 		protected function renderCheckLabelAttributes() {
 			$attr = $this->getHtmlAttributes(['disabled','title']);
+			$attr['id'] = $this->strControlId . '_chklbl';
 			return $this->getCheckLabelStyler()->renderHtmlAttributes($attr);
 		}
 

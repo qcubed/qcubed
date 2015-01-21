@@ -888,17 +888,24 @@
 		 * @throws Exception|QCallerException
 		 */
 		protected function GetControlHtml() {
+			$attrOverride = array('id'=>$this->strControlId);
+
+			return 	$this->renderTag('table',
+				$attrOverride,
+				null,
+				$this->GetInnerHtml());
+		}
+
+		protected function GetInnerHtml() {
 			$this->DataBind();
 
-			// Table Tag
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle)
-				$strStyle = sprintf('style="%s" ', $strStyle);
-			$strToReturn = sprintf("<table id=\"%s\" %s%s>\r\n", $this->strControlId, $this->GetAttributes(), $strStyle);
+			$strToReturn = '';
 
 			// Paginator Row (if applicable)
-			if ($this->objPaginator)
+			if ($this->objPaginator) {
+				// TODO: caption is not the right tag here. It should be a nav or menu, but these are not allowed inside a table tag.
 				$strToReturn .= "<caption>\r\n" . $this->GetPaginatorRowHtml($this->objPaginator) . "</caption>\r\n";
+			}
 			// bottom paginator
 			//if ($this->objPaginatorAlternate)
 			//	$strToReturn .= "<caption align=\"bottom\">\r\n" . $this->GetPaginatorRowHtml($this->objPaginatorAlternate) . "</caption>\r\n";
@@ -935,9 +942,9 @@
 			$strToReturn .= "</tbody>\r\n";
 
 			// Finish Up
-			$strToReturn .= '</table>';
 			$this->objDataSource = null;
 			return $strToReturn;
+
 		}
 
 		protected function PersistPrepare() {
