@@ -255,8 +255,6 @@
 
 				default:
 					$attrOverride['value'] = QApplication::HtmlEntities($this->strText);
-					$typeStr = $this->strTextMode ? $this->strTextMode : 'text';
-					$attrOverride['type'] = $typeStr;
 					return $this->renderTag('input',
 						$attrOverride,
 						null,
@@ -299,6 +297,8 @@
 				if ($this->intColumns) {
 					$attributeOverrides['size'] = $this->intColumns;
 				}
+				$typeStr = $this->strTextMode ? $this->strTextMode : 'text';
+				$attributeOverrides['type'] = $typeStr;
 			}
 
 			if(strlen($this->strPlaceholder) > 0) {
@@ -389,28 +389,6 @@
 			$str = sprintf ('$j("#%s").on ("input", qc.formObjChanged).change (qc.formObjChanged);', $this->ControlId) . $str;
 			return $str;
 		}
-
-		/**
-		 * Sets the text mode. Use this instead of setting the textMode directly.
-		 * @param $strMode
-		 */
-		public function setTextMode($strMode) {
-			if ($this->strTextMode !== ($strMode = QType::Cast($strMode, QType::String))) {
-				$this->blnModified = true;
-				$this->strTextMode = $strMode;
-				switch ($strMode) {
-					case QTextMode::SingleLine:
-						$typeStr = $this->strTextMode ? $this->strTextMode : 'text';
-						$this->setHtmlAttribute('type', $typeStr);
-						break;
-
-					case QTextMode::MultiLine:
-						$this->removeHtmlAttribute('type');
-						break;
-				}
-			}
-		}
-
 
 		/////////////////////////
 		// Public Properties: GET
@@ -632,7 +610,10 @@
 					}
 				case "TextMode":
 					try {
-						$this->setTextMode ($mixValue);
+						if ($this->strTextMode !== ($strMode = QType::Cast($strMode, QType::String))) {
+							$this->blnModified = true;
+							$this->strTextMode = $strMode;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
