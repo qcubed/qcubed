@@ -14,7 +14,8 @@
 	 * @property-read QAutocomplete $Input
 	 * @property-read QPanel $Toolbar
 	 * @property-read <?php echo $objTable->ClassName ?>UpdatePanel $EditControl
-	 * @property-read<?php echo $objTable->ClassName ?>DataTable $SearchControl
+	 * @property-read <?php echo $objTable->ClassName ?>DataTable $SearchControl
+	 * @property-write QCallback $PostSelectionCallback
 	 */
 	class <?php echo $objTable->ClassName ?>ObjectSelectorGen extends <?php echo $objTable->ClassName ?>Popup {
 		/** @var QAutocomplete */
@@ -29,6 +30,8 @@
 		protected $objOptionalClauses = null;
 		/** @var <?php echo $objTable->ClassName ?>DataTable */
 		protected $objSearchControl;
+		/** @var QCallback */
+		protected $objPostSelectionCallback;
 		/** @var QPanel */
 		protected $pnlToolbar;
 		/** @var boolean */
@@ -215,6 +218,9 @@
 				if ($this->btnEdit)
 					$this->btnEdit->Visible = true;
 			}
+			if ($this->objPostSelectionCallback) {
+				$this->objPostSelectionCallback->Call();
+			}
 		}
 
 		public function btnSearch_Click($strFormId, $strControlId, $strParameter) {
@@ -335,6 +341,9 @@
 					case "LabelForRequiredUnname":
 						parent::__set($strName, $mixValue);
 						$this->txtAutocomplete->__set($strName, $mixValue);
+						break;
+					case "PostSelectionCallback":
+						$this->objPostSelectionCallback = QType::Cast($mixValue, 'QCallback');
 						break;
 					default:
 						parent::__set($strName, $mixValue);
