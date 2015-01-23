@@ -99,6 +99,8 @@
 	class QGenericSearchOptions {
 		public $defaultSkipTypeCast = false;
 		public $defaultSkipBooleans = true;
+		public $defaultSkipNumbers = false;
+		public $defaultSkipDates = false;
 		public $defaultStringComparisonMode = QStringComparisonMode::contains;
 		public $defaultDateComparisonMode = QDateComparisonMode::withinDay;
 
@@ -114,6 +116,10 @@
 		public $SkipTypeCast = array();
 		/** @var bool[] */
 		public $SkipBoolean = array();
+		/** @var bool[] */
+		public $SkipNumber = array();
+		/** @var bool[] */
+		public $SkipDate = array();
 		/** @var string[] */
 		public $StringComparisonMode = array();
 		/** @var string[] */
@@ -203,6 +209,18 @@
 					return $this->SkipBoolean[$strProperty];
 				}
 				return $this->defaultSkipBooleans;
+			}
+			if ($strType == QType::DateTime) {
+				if (array_key_exists($strProperty, $this->SkipDate)) {
+					return $this->SkipDate[$strProperty];
+				}
+				return $this->defaultSkipDates;
+			}
+			if ($strType == QType::Integer || $strType == QType::Float) {
+				if (array_key_exists($strProperty, $this->SkipNumber)) {
+					return $this->SkipNumber[$strProperty];
+				}
+				return $this->defaultSkipNumbers;
 			}
 			return false;
 		}
