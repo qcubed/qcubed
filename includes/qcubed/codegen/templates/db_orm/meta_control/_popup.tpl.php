@@ -43,13 +43,20 @@
 			}
 			$this->AutoRenderChildren = true;
 			$this->UseWrapper = false;
+		}
 
-			$this->dlgPopup = new QDialog($this);
-			$this->dlgPopup->Height = 'auto';
-			$this->dlgPopup->Width = 'auto';
-			$this->dlgPopup->AutoOpen = false;
-			$this->dlgPopup->AutoRenderChildren = true;
-			$this->dlgPopup->Modal = true;
+		/**
+		* @param string|null $strDialogTitle dialog title
+		* @return QDialog
+		*/
+		protected function createPopupDialog($strDialogTitle = null) {
+			$dlgPopup = new QDialog($this);
+			$dlgPopup->Height = 'auto';
+			$dlgPopup->Width = 'auto';
+			$dlgPopup->AutoOpen = false;
+			$dlgPopup->AutoRenderChildren = true;
+			$dlgPopup->Modal = true;
+			return $dlgPopup;
 		}
 
 		/**
@@ -58,7 +65,7 @@
 		 * @return <?php echo $objTable->ClassName ?>ViewPanel
 		 */
 		public function View($obj<?php echo $objTable->ClassName ?>Ref, $strDialogTitle = null) {
-			$this->dlgPopup->RemoveChildControls(true);
+			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
 			$objViewPanel = new <?php echo $objTable->ClassName ?>ViewPanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, true);
 			if ($this->strViewTemplate) {
 				$objViewPanel->Template = $this->strViewTemplate;
@@ -66,7 +73,6 @@
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('<?php echo $objTable->ClassName ?>');
 			}
-			$this->dlgPopup->Title = $strDialogTitle;
 			$this->dlgPopup->ShowDialogBox();
 			$this->dlgPopup->MoveToTop();
 			if ($this->objViewPanelPostCreateCallback)
@@ -82,7 +88,7 @@
 		 * @return <?php echo $objTable->ClassName ?>UpdatePanel
 		 */
 		public function Edit($obj<?php echo $objTable->ClassName ?>Ref, QCallback $objSaveCallback = null, QCallback $objDeleteCallback = null, $strDialogTitle = null) {
-			$this->dlgPopup->RemoveChildControls(true);
+			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
 			$objEditPanel = new <?php echo $objTable->ClassName ?>UpdatePanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, false);
 			if ($this->strEditTemplate) {
 				$objEditPanel->Template = $this->strEditTemplate;
@@ -93,7 +99,6 @@
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('Edit <?php echo $objTable->ClassName ?>');
 			}
-			$this->dlgPopup->Title = $strDialogTitle;
 			$this->dlgPopup->ShowDialogBox();
 			$this->dlgPopup->MoveToTop();
 			if ($this->objEditPanelPostCreateCallback)
@@ -107,7 +112,7 @@
 		 * @return <?php echo $objTable->ClassName ?>UpdatePanel
 		 */
 		public function Create(QCallback $objSaveCallback = null, $strDialogTitle = null) {
-			$this->dlgPopup->RemoveChildControls(true);
+			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
 			$objCreatePanel = new <?php echo $objTable->ClassName ?>UpdatePanel($this->dlgPopup, null, false);
 			if ($this->strCreateTemplate) {
 				$objCreatePanel->Template = $this->strCreateTemplate;
@@ -117,7 +122,6 @@
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('Create <?php echo $objTable->ClassName ?>');
 			}
-			$this->dlgPopup->Title = $strDialogTitle;
 			$this->dlgPopup->ShowDialogBox();
 			$this->dlgPopup->MoveToTop();
 			if ($this->objCreatePanelPostCreateCallback)
@@ -131,14 +135,13 @@
 		 * @return <?php echo $objTable->ClassName ?>DataTable
 		 */
 		public function Select(QCallback $objCallback = null, $strDialogTitle = null) {
-			$this->dlgPopup->RemoveChildControls(true);
+			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
 			$this->objSearchCallback = $objCallback;
 			$this->objSearchControl = new <?php echo $objTable->ClassName ?>DataTable($this->dlgPopup);
 			$this->objSearchControl->AddAction(new QDataTable_RowClickEvent(), new QAjaxControlAction($this, "searchRow_Click"));
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('Select <?php echo $objTable->ClassName ?>');
 			}
-			$this->dlgPopup->Title = $strDialogTitle;
 			$this->dlgPopup->ShowDialogBox();
 			$this->dlgPopup->MoveToTop();
 			if ($this->objSearchControlPostCreateCallback)
@@ -147,16 +150,19 @@
 		}
 
 		public function searchRow_Click($strFormId, $strControlId, $strParameter) {
-			$this->CloseEditPopup(false);
+			$this->ClosePopupDialog();
 			$obj<?php echo $objTable->ClassName ?> = $this->objSearchControl->LoadObjectFromRowData($strParameter);
 			if ($this->objSearchCallback) {
 				$this->objSearchCallback->Call($obj<?php echo $objTable->ClassName ?>);
 			}
 		}
 
-		public function CloseEditPopup($blnChangesMade, $blnDeleted = false) {
-			$this->dlgPopup->RemoveChildControls(true);
-			$this->dlgPopup->HideDialogBox();
+		public function ClosePopupDialog() {
+			if ($this->dlgPopup) {
+				$this->dlgPopup->HideDialogBox();
+				$this->RemoveChildControl($this->dlgPopup->ControlId, true);
+				$this->dlgPopup = null;
+			}
 		}
 
 		public function __get($strName) {
