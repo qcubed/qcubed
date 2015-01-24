@@ -13,10 +13,13 @@
 	 * @property-write string $ViewTemplate
 	 * @property-write string $CreateTemplate
 	 * @property-read QDialog $PopupDialog
+	 * @property boolean $Modal
 	 */
 	class <?php echo $objTable->ClassName ?>PopupGen extends QPanel {
 		/** @var QDialog */
 		protected $dlgPopup;
+		/** @var boolean */
+		protected $blnModal = true;
 		/** @var QCallback */
 		protected $objSearchCallback;
 		/** @var QCallback */
@@ -55,7 +58,7 @@
 			$dlgPopup->Width = 'auto';
 			$dlgPopup->AutoOpen = false;
 			$dlgPopup->AutoRenderChildren = true;
-			$dlgPopup->Modal = true;
+			$dlgPopup->Modal = $this->blnModal;
 			return $dlgPopup;
 		}
 
@@ -168,6 +171,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case "PopupDialog": return $this->dlgPopup;
+				case "Modal": return $this->blnModal;
 
 				default:
 					try {
@@ -181,6 +185,14 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
+				case "Modal":
+					try {
+						$this->blnModal = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 				case "ViewPanelPostCreateCallback":
 					try {
 						$this->objViewPanelPostCreateCallback = QType::Cast($mixValue, 'QCallback');
