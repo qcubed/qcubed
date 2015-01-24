@@ -211,6 +211,13 @@
 		protected $objWatcher = null;
 		/** @var QQNode  Used by designer to associate a db node with this control */
 		protected $objLinkedNode;
+		/**
+		 * @var bool | null For controls that also produce built-in labels (QCheckBox, QCheckBoxList, etc.)
+		 * True to wrap the checkbox with the label (the Bootstrap way). False to put the label next to the
+		 * checkbox (the jQueryUI way).
+		 */
+		protected $blnWrapLabel = false;
+
 
 		//////////
 		// Methods
@@ -1157,7 +1164,8 @@
 		}
 
         /**
-         * Return one-time scripts associated with the control. Called by the form during an ajax draw.
+         * Return one-time scripts associated with the control. Called by the form during an ajax draw only if the
+		 * entire control was not rendered.
          *
          * @return null|string
          */
@@ -1794,6 +1802,7 @@
 				case "Modified": return $this->IsModified();
 				case "LinkedNode": return $this->objLinkedNode;
 				case "WrapperStyles": return $this->getWrapperStyler();
+				case "WrapLabel": return $this->blnWrapLabel;
 
 
 				default:
@@ -2043,6 +2052,18 @@
 							if ($this->ParentControl) {
 								$this->ParentControl->MarkAsModified();
 							}
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case "WrapLabel":
+					try {
+						if($this->blnWrapLabel != QType::Cast($mixValue, QType::Boolean)) {
+							$this->blnWrapLabel = !$this->blnWrapLabel;
+							//need to render the parent again (including its children)
+							$this->MarkAsModified();
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

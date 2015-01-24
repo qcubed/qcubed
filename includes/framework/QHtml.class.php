@@ -38,6 +38,44 @@
 		}
 
 		/**
+		 * Renders an input element with a label tag. Uses separate styling for the label and the input object.
+		 * In particular, this gives you the option of wrapping the input with a label (which is what Bootstrap
+		 * expects on checkboxes) or putting the label next to the object (which is what jQueryUI expects).
+		 *
+		 * Note that if you are not setting $blnWrapped, it is up to you to insert the "for" attribute into
+		 * the label attributes.
+		 *
+		 * @param $strLabel
+		 * @param $blnTextLeft
+		 * @param $strAttributes
+		 * @param $strLabelAttributes
+		 * @param $blnWrapped
+		 * @return string
+		 */
+		public static function renderLabeledInput($strLabel, $blnTextLeft, $strAttributes, $strLabelAttributes, $blnWrapped) {
+			$strHtml = self::renderTag('input', $strAttributes, null, true);
+
+			if ($blnWrapped) {
+				if ($blnTextLeft) {
+					$strCombined = $strLabel .  $strHtml;
+				} else {
+					$strCombined = $strHtml . $strLabel;
+				}
+
+				$strHtml = self::renderTag('label', $strLabelAttributes, $strCombined);
+			}
+			else {
+				$strLabel = self::renderTag('label', $strLabelAttributes, $strLabel);
+				if ($blnTextLeft) {
+					$strHtml = $strLabel .  $strHtml;
+				} else {
+					$strHtml = $strHtml . $strLabel;
+				}
+			}
+			return $strHtml;
+		}
+
+		/**
 		 * Returns the formatted value of type <length>.
 		 * See http://www.w3.org/TR/CSS1/#units for more info.
 		 * @param 	string 	$strValue 	The number or string to be formatted to the <length> compatible value.

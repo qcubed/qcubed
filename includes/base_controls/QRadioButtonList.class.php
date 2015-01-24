@@ -36,7 +36,8 @@
 		const ButtonModeNone = 0;
 		const ButtonModeJq = 1;
 		const ButtonModeSet = 2;
-		
+		const ButtonModeList = 3;	// just a vanilla list of checkboxes with no row or column styling
+
 		///////////////////////////
 		// Private Member Variables
 		///////////////////////////
@@ -54,7 +55,8 @@
 		protected $strRepeatDirection = QRepeatDirection::Vertical;
 		protected $objItemStyle = null;
 		protected $intButtonMode;
-		
+		protected $strMaxHeight; // will create a scroll pane if height is exceeded
+
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->objItemStyle = new QListItemStyle();
@@ -94,81 +96,61 @@
 			$strScript .= parent::GetEndScript();
 			return $strScript;
 		}
-		
-		protected function GetItemHtml($objItem, $intIndex, $strTabIndex) {
-			// The Default Item Style
-			$objStyle = $this->objItemStyle;
 
-			// Apply any Style Override (if applicable)
-			if ($objItem->ItemStyle) {
-				$objStyle = $objStyle->ApplyOverride($objItem->ItemStyle);
+		protected function GetItemHtml($objItem, $intIndex, $strTabIndex, $blnWrapLabel) {
+			$objLabelStyles = new QTagStyler();
+			if ($this->objItemStyle) {
+				$objLabelStyles->override($this->objItemStyle); // default style
 			}
-			$strIndexedId = $this->strControlId.'_'.$intIndex;
-			$strToReturn = '';
-			if (!$this->blnEnabled) {
-				$strToReturn .= '<span disabled="disabled">';
+			if ($objItemStyle = $objItem->ItemStyle) {
+				$objLabelStyles->override($objItemStyle); // per item styling
 			}
 
-			$strLabel = sprintf('<label for="%s">%s</label>',
-				$strIndexedId,
-				($this->blnHtmlEntities) ? QApplication::HtmlEntities($objItem->Name) : $objItem->Name
-			);
+			$objStyles = new QTagStyler();
+			$objStyles->setHtmlAttribute('type', 'radio');
+			$objStyles->setHtmlAttribute('value', $intIndex);
+			$objStyles->setHtmlAttribute('name', $this->strControlId);
+			$strIndexedId = $this->strControlId . '_' . $intIndex;
+			$objStyles->setHtmlAttribute('id', $strIndexedId);
 
-			$strInput = sprintf('<input id="%s" name="%s" value="%s" type="radio" %s%s%s%s />',
-				$strIndexedId,
-				$this->strControlId,
-				$intIndex,
-				($this->blnEnabled) ? '' : 'disabled="disabled" ',
-				($objItem->Selected) ? 'checked="checked" ' : '',
-				$objStyle->GetAttributes(),
-				$strTabIndex
-			);
-
-			if ($this->strTextAlign == QTextAlign::Left) {
-				$strToReturn .= $strLabel;
-				$strToReturn .= $strInput;
-			} else {
-				$strToReturn .= $strInput;
-				$strToReturn .= $strLabel;
+			if ($strTabIndex) {
+				$objStyles->TabIndex = $strTabIndex;	// Use parent control tabIndex, which will cause the browser to take them in order of drawing
+			}
+			if (!$this->Enabled) {
+				$objStyles->Enabled = false;
 			}
 
-			if (!$this->blnEnabled) {
-				$strToReturn .= '</span>';
+			$strLabelText = $objItem->Label;
+			if (empty($strLabelText)) {
+				$strLabelText = $objItem->Name;
 			}
-			$strToReturn .= "\n";
-			return $strToReturn;
+			if ($this->blnHtmlEntities) {
+				$strLabelText = QApplication::HtmlEntities($strLabelText);
+			}
+
+			if ($objItem->Selected) {
+				$objStyles->setHtmlAttribute('checked', 'checked');
+			}
+
+			if ($blnWrapLabel) {
+				$objLabelStyles->setHtmlAttribute('for', $strIndexedId);
+			}
+
+			$strHtml = QHtml::renderLabeledInput(
+				$strLabelText,
+				$this->strTextAlign == QTextAlign::Left,
+				$objStyles->renderHtmlAttributes(),
+				$objLabelStyles->renderHtmlAttributes(),
+				$blnWrapLabel);
+
+			return $strHtml;
 		}
 
 		protected function GetControlHtml() {
 			if ((!$this->objItemsArray) || (count($this->objItemsArray) == 0))
 				return "";
 
-			if ($this->intTabIndex)
-				$strTabIndex = sprintf('tabindex="%s" ', $this->intTabIndex);
-			else
-				$strTabIndex = "";
-
-			if ($this->strToolTip)
-				$strToolTip = sprintf('title="%s" ', $this->strToolTip);
-			else
-				$strToolTip = "";
-
-			if ($this->strCssClass)
-				$strCssClass = sprintf('class="%s" ', $this->strCssClass);
-			else
-				$strCssClass = "";
-
-			if ($this->strAccessKey)
-				$strAccessKey = sprintf('accesskey="%s" ', $this->strAccessKey);
-			else
-				$strAccessKey = "";
-		
-			$strStyle = $this->GetStyleAttributes();
-			if (strlen($strStyle) > 0)
-				$strStyle = sprintf('style="%s" ', $strStyle);
-
-			$strCustomAttributes = $this->GetCustomAttributes();
-
+			/* Deprecated. Use Margin and Padding on the ItemStyle attribute.
 			if ($this->intCellPadding >= 0)
 				$strCellPadding = sprintf('cellpadding="%s" ', $this->intCellPadding);
 			else
@@ -178,34 +160,36 @@
 				$strCellSpacing = sprintf('cellspacing="%s" ', $this->intCellSpacing);
 			else
 				$strCellSpacing = "";
-			
-			if ($this->intButtonMode == self::ButtonModeSet) {
-				$strToReturn = sprintf('<div id="%s" %s%s%s%s%s>',
-					$this->strControlId,
-					$strAccessKey,
-					$strToolTip,
-					$strCssClass,
-					$strStyle,
-					$strCustomAttributes) . "\n";
-					
-				$count = $this->ItemCount;
-				for ($intIndex = 0; $intIndex < $count; $intIndex++) {
-					$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strTabIndex) . "\n";
-				}
-				$strToReturn .= '</div>';
-				return $strToReturn;
-			}
-			// Generate Table HTML
-			$strToReturn = sprintf('<table id="%s" %s%sborder="0" %s%s%s%s%s>',
-				$this->strControlId,
-				$strCellPadding,
-				$strCellSpacing,
-				$strAccessKey,
-				$strToolTip,
-				$strCssClass,
-				$strStyle,
-				$strCustomAttributes);
+			*/
 
+			if ($this->intButtonMode == self::ButtonModeSet || $this->intButtonMode == self::ButtonModeList) {
+				return $this->RenderButtonSet();
+			}
+			elseif ($this->intRepeatColumns == 1) {
+				$strToReturn = $this->RenderButtonColumn();
+			}
+			else {
+				$strToReturn = $this->RenderButtonTable();
+			}
+
+			if ($this->strMaxHeight) {
+				$objStyler = new QTagStyler();
+				$objStyler->setCssStyle('max-height', $this->strMaxHeight, true);
+				$objStyler->setCssStyle('overflow-y', 'scroll');
+
+				$strToReturn = QHtml::renderTag('div', $objStyler->renderHtmlAttributes(), $strToReturn);
+			}
+			return $strToReturn;
+
+		}
+
+		/**
+		 * Renders the button group as a table, paying attention to the number of columns wanted.
+		 * @return string
+		 */
+		public function RenderButtonTable() {
+			// TODO: Do this without using a table, since this is really not a correct use of html
+			$strToReturn = '';
 			if ($this->ItemCount > 0) {
 				// Figure out the number of ROWS for this table
 				$intRowCount = floor($this->ItemCount / $this->intRepeatColumns);
@@ -215,8 +199,6 @@
 
 				// Iterate through Table Rows
 				for ($intRowIndex = 0; $intRowIndex < $intRowCount; $intRowIndex++) {
-					$strToReturn .= '<tr>';
-
 					// Figure out the number of COLUMNS for this particular ROW
 					if (($intRowIndex == $intRowCount - 1) && ($intWidowCount > 0))
 						// on the last row for a table with widowed-columns, ColCount is the number of widows
@@ -226,6 +208,7 @@
 						$intColCount = $this->intRepeatColumns;
 
 					// Iterate through Table Columns
+					$strRowHtml = '';
 					for ($intColIndex = 0; $intColIndex < $intColCount; $intColIndex++) {
 						if ($this->strRepeatDirection == QRepeatDirection::Horizontal)
 							$intIndex = $intColIndex + $this->intRepeatColumns * $intRowIndex;
@@ -234,17 +217,46 @@
 								+ min(($this->ItemCount % $this->intRepeatColumns), $intColIndex)
 								+ $intRowIndex;
 
-						$strToReturn .= '<td>';
-						$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strTabIndex);
-						$strToReturn .= '</td>';
+						$strItemHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->getHtmlAttribute('tabindex'), $this->blnWrapLabel);
+						$strCellHtml = QHtml::renderTag ('td', null, $strItemHtml);
+						$strRowHtml .= $strCellHtml;
 					}
-					
-					$strToReturn .= '</tr>';
+
+					$strRowHtml = QHtml::renderTag('tr', null, $strRowHtml);
+					$strToReturn .= $strRowHtml;
 				}
 			}
 
-			$strToReturn .= '</table>';
+			return $this->renderTag ('table', ['id'=>$this->strControlId], null, $strToReturn);
+		}
 
+		/**
+		 * Renders the checkbox list as a buttonset, rendering just as a list of checkboxes and allowing css or javascript
+		 * to format the rest.
+		 * @return string
+		 */
+		public function RenderButtonSet() {
+			$count = $this->ItemCount;
+			$strToReturn = '';
+			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
+				$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->getHtmlAttribute('tabindex'), $this->blnWrapLabel) . "\n";
+			}
+			$strToReturn = $this->renderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
+			return $strToReturn;
+		}
+
+		/**
+		 * Render as a single column. This implementation simply wraps the columns in divs.
+		 * @return string
+		 */
+		public function RenderButtonColumn() {
+			$count = $this->ItemCount;
+			$strToReturn = '';
+			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
+				$strHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->getHtmlAttribute('tabindex'), $this->blnWrapLabel);
+				$strToReturn .= QHtml::renderTag('div', null, $strHtml);
+			}
+			$strToReturn = $this->renderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
 			return $strToReturn;
 		}
 

@@ -286,13 +286,13 @@
 				if ($this->intRows) {
 					$attributeOverrides['rows'] = $this->intRows;
 				}
-				if (!$this->blnWrap) {
+				//if (!$this->blnWrap) {
 					/**
 					 * $strToReturn .= 'wrap="off" '; Note that this is not standard HTML5 and not supported by all browsers
 					 * In fact, HTML5 has completely changed its meaning to mean whether the text itself has embedded
 					 * hard returns inserted when the textarea wraps. Deprecating. We will have to wait for another solution.
 					 */
-				}
+				//}
 			} else {
 				if ($this->intColumns) {
 					$attributeOverrides['size'] = $this->intColumns;
@@ -425,7 +425,7 @@
 				case "ValidateTrimmed": return $this->blnValidateTrimmed;
 
 				// LAYOUT
-				case "Wrap": return $this->blnWrap;
+				//case "Wrap": return $this->blnWrap;
 
 				// FILTERING and VALIDATION
 				case "AutoTrim": return $this->blnAutoTrim;

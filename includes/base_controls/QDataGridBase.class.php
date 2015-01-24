@@ -208,7 +208,8 @@
 	 * @property QDataGridRowStyle    $FilterRowStyle   	 The row style for the filter row at the top
 	 * @property QDataGridRowStyle    $HeaderLinkStyle  	 is the DataGridRowStyle object that defines how links, specifically, in the header row should be displayed.  Basically, anything defined here will show up as html attributes and css styles within the '<a href="">' tag of the link, itself, in the header.  Links in the header ONLY GET DISPLAYED when a column is sortable
 	 * @property QDataGridRowStyle    $RowStyle         	 is the main or "default" DataGridRowStyle for the entire table.  Any overriding row style (see "OverrideRowStyle(int, DataGridRowStyle)" below) or any appearance properties set in AlternateRowStyle or HeaderRowStyle will be applied in those specific situations. Any appearance properties NOT set in ovverrides, alternate, or header will simply default to what RowStyle has defined.
-	 * @property integer              $CellSpacing      	 refers the the HTML CellSpacing attribute of the <table>
+	 * @property integer 			  $CellPadding 			 refers the the HTML CellPadding attribute of the <table>. Not supported in HTML 5.
+	 * @property integer 		      $CellSpacing 			 refers the the HTML CellSpacing attribute of the <table>  Not supported in HTML 5.
 	 * @property string               $GridLines        	 refers the the HTML rules attribute of the <table>
 	 * @property boolean              $ShowHeader        	 is the flag of whether or not to show the Header row
 	 * @property boolean              $ShowFooter
@@ -255,6 +256,10 @@
 		protected $objWaitIcon = 'default';
 
 		// LAYOUT
+		/** @var int CellPadding. Deprecated. */
+		protected $intCellPadding = -1;
+		/** @var int CellSpacing. Deprecated. */
+		protected $intCellSpacing = -1;
 		/** @var bool Show the header for the table? */
 		protected $blnShowHeader = true;
 		/** @var bool Determines if the filter row has to be shown or not */
@@ -1372,8 +1377,8 @@
 				case "RowStyle": return $this->objRowStyle;
 
 				// LAYOUT
-				case "CellPadding": throw new Exception ('Cell padding is no longer supported in HTML5');
-				case "CellSpacing": return $this->getCssStyle('border-spacing');
+				case "CellPadding": return $this->intCellPadding;
+				case "CellSpacing": return $this->intCellSpacing;
 				//case "GridLines": return $this->hasCssClass(QGridLines::Vertical);
 				case "ShowHeader": return $this->blnShowHeader;
 				case "ShowFooter": return $this->blnShowFooter;
@@ -1624,8 +1629,23 @@
 
 				// LAYOUT
 				case "CellPadding":
-					throw new QCallerException ("Cellpadding is no longer supported in HTML5. Use css padding on the table cells instead.");
+					try {
+						$this->intCellPadding = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 				case "CellSpacing":
+					try {
+						$this->intCellSpacing = QType::Cast($mixValue, QType::Integer);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				/* TODO
+				case "BorderSpacing":
 					try {
 						$this->setCssStyle('border-spacing', $mixValue = QType::Cast($mixValue, QType::String), true);
 						if ($mixValue == '0' && $mixValue == '0px') {
@@ -1638,6 +1658,7 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+				*/
 				case "GridLines":
 					try {
 						$this->strGridLines = QType::Cast($mixValue, QType::String);

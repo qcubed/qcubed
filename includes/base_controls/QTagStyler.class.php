@@ -21,10 +21,10 @@
 		 *
 		 * @return QTagStyler
 		 */
-		public function applyOverride(QTagStyler $objOverrideStyle) {
+		public function ApplyOverride(QTagStyler $objOverrideStyle) {
 			$objNewStyle = clone $this;
 
-			$objNewStyle->override($objOverrideStyle);
+			$objNewStyle->Override($objOverrideStyle);
 
 			return $objNewStyle;
 		}
