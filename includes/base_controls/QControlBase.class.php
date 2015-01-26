@@ -90,6 +90,8 @@
 	 * @property boolean $UseWrapper defaults to true
 	 * @property-read boolean $WrapperModified
 	 * @property string $WrapperCssClass
+	 * @property boolean $WrapLabel For checkboxes, radio buttons, and similar controls, whether to wrap the label around
+	 * 		the control, or place the label next to the control. Two legal styles of label creation that different css and JS frameworks expect.
 	 */
 	abstract class QControlBase extends QHtmlAttributeManager {
 

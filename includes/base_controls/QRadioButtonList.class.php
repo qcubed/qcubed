@@ -132,7 +132,7 @@
 				$objStyles->setHtmlAttribute('checked', 'checked');
 			}
 
-			if ($blnWrapLabel) {
+			if (!$blnWrapLabel) {
 				$objLabelStyles->setHtmlAttribute('for', $strIndexedId);
 			}
 

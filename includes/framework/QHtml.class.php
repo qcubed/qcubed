@@ -17,22 +17,39 @@
 		}
 
 		/**
-		 * Renders an html tag with the given attributes and innerhtml. Will attempt to format the code so that
-		 * it is easy to view in a browser, with the innerhtml indented and on a new line in between the tags.
+		 * Renders an html tag with the given attributes and inner html. Will attempt to format the code so that
+		 * it is easy to view in a browser, with the inner html indented and on a new line in between the tags. You
+		 * can turn this off by setting __MINIMIZE__
+		 *
+		 * There area a few special cases to consider:
+		 * - Void elements will not be formatted to avoid adding unnecessary white space since these are generally
+		 *   inline elements
+		 * - Non-void elements always use internal newlines, even in __MINIMIZE__ mode. This is to prevent different behavior
+		 *   from appearing in __MINIMIZE__ mode on inline elements, because inline elements with internal space will render with space to separate
+		 *   from surrounding elements. Usually, this is not an issue, but in the special situations where you really need inline
+		 *   elements to be right up against its siblings, set $blnNoSpace to true.
+		 *
 		 *
 		 * @param string 	$strTag				The tag name
 		 * @param string 	$strAttributes 		String of attribute values. Attributes should already be escaped as needed.
 		 * @param string 	$strInnerHtml 		The text to print between
 		 * @param boolean	$blnIsVoidElement 	True to print as a tag with no closing tag.
+		 * @param boolean	$blnNoSpace		 	Renders with no white-space. Useful in special inline situations.
 		 * @return string						The rendered html tag
 		 */
-		public static function renderTag($strTag, $strAttributes, $strInnerHtml = null, $blnIsVoidElement = false) {
-			$strToReturn = '<' . $strTag . ' ' . trim($strAttributes);
+		public static function renderTag($strTag, $strAttributes, $strInnerHtml = null, $blnIsVoidElement = false, $blnNoSpace = false) {
+			$strToReturn = '<' . $strTag;
+			if ($strAttributes) {
+				$strToReturn .=  ' ' . trim($strAttributes);
+			};
 			if ($blnIsVoidElement) {
-				$strToReturn .= ' />' . _nl(); // conforms to both XHTML and HTML5 for both normal and foreign elements
+				$strToReturn .= ' />'; // conforms to both XHTML and HTML5 for both normal and foreign elements
+			}
+			elseif ($blnNoSpace) {
+				$strToReturn .= '>' . trim($strInnerHtml) . '</' . $strTag . '>';
 			}
 			else {
-				$strToReturn .= '>' . _nl() . _indent(trim($strInnerHtml)) .  _nl() . '</' . $strTag . '>' . _nl();
+				$strToReturn .= '>' . "\n" . _indent(trim($strInnerHtml)) .  "\n" . '</' . $strTag . '>' . _nl();
 			}
 			return $strToReturn;
 		}
@@ -53,7 +70,7 @@
 		 * @return string
 		 */
 		public static function renderLabeledInput($strLabel, $blnTextLeft, $strAttributes, $strLabelAttributes, $blnWrapped) {
-			$strHtml = self::renderTag('input', $strAttributes, null, true);
+			$strHtml = trim(self::renderTag('input', $strAttributes, null, true));
 
 			if ($blnWrapped) {
 				if ($blnTextLeft) {
@@ -65,7 +82,7 @@
 				$strHtml = self::renderTag('label', $strLabelAttributes, $strCombined);
 			}
 			else {
-				$strLabel = self::renderTag('label', $strLabelAttributes, $strLabel);
+				$strLabel = trim(self::renderTag('label', $strLabelAttributes, $strLabel));
 				if ($blnTextLeft) {
 					$strHtml = $strLabel .  $strHtml;
 				} else {

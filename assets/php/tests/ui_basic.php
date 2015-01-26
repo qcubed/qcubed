@@ -7,6 +7,7 @@
 		protected $lstSelect;
 		protected $lstSelect2;
 		protected $lstCheck;
+		protected $lstCheck2;
 		protected $lstRadio;
 		protected $chkCheck;
 		protected $rdoRadio1;
@@ -32,6 +33,7 @@
 
 			$this->chkCheck = new QCheckBox($this);
 			$this->chkCheck->Name = 'CheckBox';
+			$this->chkCheck->WrapLabel = true;
 
 			$items = array (1=>'Item1', 2=>'Item2', 3=>'Item3');
 			$this->lstSelect = new QListBox($this);
@@ -48,6 +50,14 @@
 			$this->lstCheck->Name = 'Check List';
 			$this->lstCheck->RepeatDirection = QRepeatDirection::Horizontal;
 			$this->lstCheck->RepeatColumns = 4;
+
+			$this->lstCheck2 = new QCheckBoxList($this);
+			$this->lstCheck2->AddItems ($items);
+			$this->lstCheck2->Name = 'Check List';
+			$this->lstCheck2->RepeatColumns = 1;
+			$this->lstCheck2->MaxHeight = 100;
+			$this->lstCheck2->WrapLabel = true;
+			$this->lstCheck2->Name = 'Check List 2';
 
 			$this->lstRadio = new QRadioButtonList($this);
 			$this->lstRadio->AddItems ($items);

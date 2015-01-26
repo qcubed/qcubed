@@ -91,9 +91,9 @@ function _nl($strText = '') {
 		return $strText;
 	} else {
 		if ($strText && substr($strText, -1) == "\n") {
-			return $strText;
+			return $strText; // text already ends with a newline
 		} else {
-			return $strText . "\r\n";
+			return $strText . "\n";
 		}
 	}
 }
