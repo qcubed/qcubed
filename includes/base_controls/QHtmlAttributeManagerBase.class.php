@@ -67,6 +67,7 @@
  * @property boolean $NoWrap sets the CSS white-space  property to nowrap
  * @property boolean $ReadOnly is the "readonly" html attribute (making a textbox "ReadOnly" is  similar to setting the textbox to Enabled
  *  Readonly textboxes are selectedable, and their values get posted. Disabled textboxes are not selectabel and values do not post.
+ * @property string $AltText text used for 'alt' attribute in images
  */
 
 class QHtmlAttributeManagerBase extends QBaseClass {
@@ -206,8 +207,10 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param string $strName
 	 * @param string $strValue
 	 * @param bool $blnIsLength true if this is a unit specifier e.g. 2px
+	 * @return bool true if the style was actually changed (vs. it was already set that way)
 	 */
 	public function setCssStyle ($strName, $strValue, $blnIsLength = false) {
+		$ret = false;
 		if (!is_null($strValue)) {
 			if ($blnIsLength) {
 				if (isset($this->styles[$strName])) {
@@ -216,6 +219,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 					$oldValue = '';
 				}
 				if (QHtml::setLength ($oldValue, $strValue)) {
+					$ret = true;
 					$this->markAsModified();
 					$this->styles[$strName] = $oldValue; // oldValue was updated
 				}
@@ -223,21 +227,25 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			elseif (!isset($this->styles[$strName]) || $this->styles[$strName] !== $strValue) {
 				$this->styles[$strName] = $strValue;
 				$this->markAsModified();
+				$ret = true;
 			}
 		} else {
 			if (isset($this->styles[$strName])) {
 				unset($this->styles[$strName]);
 				$this->markAsModified();
+				$ret = true;
 			}
 		}
+		return $ret;
 	}
 
 	/**
 	 * Removes the given CSS style property.
 	 * @param $strName
+	 * @return bool true if the style was removed, false if it wasn't there to begin with
 	 */
 	public function removeCssStyle ($strName) {
-		$this->setCssStyle ($strName, null);
+		return $this->setCssStyle ($strName, null);
 	}
 
 	/**
@@ -455,6 +463,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			case "TabIndex": return $this->getHtmlAttribute('tabindex');
 			case "ToolTip": return $this->getHtmlAttribute('title');
 			case "ReadOnly": return $this->hasHtmlAttribute('readonly');
+			case "AltText": return $this->hasHtmlAttribute('alt');
 
 			default:
 				try {
@@ -783,6 +792,15 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			case "ReadOnly":
 				try {
 					$this->setHtmlAttribute('readonly',  QType::Cast($mixValue, QType::Boolean) ? 'readonly' : null);
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
+			case "AltText":
+				try {
+					$this->setHtmlAttribute('alt', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();

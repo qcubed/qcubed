@@ -139,7 +139,9 @@
 		protected function renderLabelAttributes() {
 			$attributes = $this->getHtmlAttributes(['title']); // copy tooltip to wrapping label
 			$objStyler = $this->getCheckLabelStyler();
-			$objStyler = $objStyler->ApplyOverride($attributes);
+			if ($attributes) {
+				$objStyler = $objStyler->ApplyOverride($attributes);
+			}
 
 			if (!$this->Enabled) {
 				$objStyler->AddCssClass('disabled');	// add the disabled class to the label for styling

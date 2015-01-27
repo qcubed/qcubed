@@ -72,8 +72,8 @@ FUNC;
 						$this->aryNewSize['height'] = $a[3];
 						
 						// update dimensions
-						$this->strWidth = $this->aryNewSize['width'];
-						$this->strHeight = $this->aryNewSize['height'];
+						$this->Width = $this->aryNewSize['width'];
+						$this->Height = $this->aryNewSize['height'];
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

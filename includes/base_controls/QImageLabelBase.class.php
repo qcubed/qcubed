@@ -42,6 +42,7 @@
 		protected $strForeColor = '000000';
 		protected $strBackColor = 'ffffff';
 		protected $strFontSize = 12;
+		protected $strFontNames = null;
 
 		protected $strText = null;
 		protected $intXCoordinate = 0;
@@ -66,62 +67,12 @@
 		protected $strCacheFolder = null;
 		protected $strCachedImageFilePath = null;
 
-		//////////
-		// Methods
-		//////////
-		public function GetStyleAttributes() {
-			$strToReturn = "";
-
-			if (($this->strDisplayStyle) && ($this->strDisplayStyle != QDisplayStyle::NotSet))
-				$strToReturn .= sprintf("display:%s;", $this->strDisplayStyle);
-			if ($this->strBorderColor)
-				$strToReturn .= sprintf("color:%s;", $this->strBorderColor);
-			if (strlen(trim($this->strBorderWidth)) > 0) {
-				$strBorderWidth = null;
-				try {
-					$strBorderWidth = QType::Cast($this->strBorderWidth, QType::Integer);
-				} catch (QInvalidCastException $objExc) {}
-
-				if (is_null($strBorderWidth))
-					$strToReturn .= sprintf('border-width:%s;', $this->strBorderWidth);
-				else
-					$strToReturn .= sprintf('border-width:%spx;', $this->strBorderWidth);
-
-				if ((!$this->strBorderStyle) || ($this->strBorderStyle == QBorderStyle::NotSet))
-					// For "No Border Style" -- apply a "solid" style because width is set
-						$strToReturn .= "border-style:solid;";
-			}
-			if (($this->strBorderStyle) && ($this->strBorderStyle != QBorderStyle::NotSet))
-				$strToReturn .= sprintf("border-style:%s;", $this->strBorderStyle);
-			
-			if (($this->strCursor) && ($this->strCursor != QCursor::NotSet))
-				$strToReturn .= sprintf("cursor:%s;", $this->strCursor);
-
-			if ($this->strCustomStyleArray) foreach ($this->strCustomStyleArray as $strKey => $strValue)
-				$strToReturn .= sprintf('%s:%s;', $strKey, $strValue);
-
-			return $strToReturn;
-		}
-
 		public function ParsePostData() {}
 
 		protected function GetControlHtml() {
 			if (!$this->strFontNames)
 //				throw new QCallerException('Must specify a FontNames value before rendering this QImageLabel');
 				return;
-
-			if ($this->strWidth)
-				$strWidth = sprintf(' width="%s"', $this->strWidth);
-			else
-				$strWidth = '';
-			if ($this->strHeight)
-				$strHeight = sprintf(' height="%s"', $this->strHeight);
-			else
-				$strHeight = '';
-			
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle)
-				$strStyle = sprintf(' style="%s"', $strStyle);
 
 			$strSerialized = $this->Serialize();
 			if ($this->strCacheFolder) {
@@ -159,15 +110,9 @@
 				);
 			}
 
-			$strToReturn = sprintf('<img src="%s"%s%s alt="%s" id="%s" %s%s/>',
-				$strPath, 
-				$strWidth,
-				$strHeight,
-				QApplication::HtmlEntities($this->strText),
-				$this->strControlId,
-				$this->GetAttributes(),
-				$strStyle);
-			return $strToReturn;
+			$attrOverrides['src'] = $strPath;
+			$attrOverrides['alt'] = QApplication::HtmlEntities($this->strText);
+			return $this->renderTag ('img', $attrOverrides, null, null, true);
 		}
 		public function Validate() {return true;}
 
@@ -203,6 +148,8 @@
 		}
 		
 		protected function RenderImage($strPath = null) {
+			$strWidth = $this->Width;
+
 			// Make Sure Font File Exists
 			if (file_exists($this->strFontNames))
 				$strFontPath = $this->strFontNames;
@@ -249,7 +196,7 @@
 			// 1. If no width/height set, then use bounding box + padding
 			// 2. otherwise, if alignment, we set to alignment
 			// 3. otherwise, use coordinates
-			if (!$this->strWidth) {
+			if (!$strWidth) {
 				// Step 1 -- Use Bounding Box + Padding
 				$intWidth = $intBoxWidth + ($this->intPaddingWidth * 2);
 				$intX = $this->intPaddingWidth;
@@ -260,10 +207,10 @@
 						$intX = -1 * $intXCoordinate1 + 2 + $this->intPaddingWidth;
 						break;
 					case QHorizontalAlign::Right:
-						$intX = $this->strWidth - $intBoxWidth - 2 - $this->intPaddingWidth;
+						$intX = $strWidth - $intBoxWidth - 2 - $this->intPaddingWidth;
 						break;
 					case QHorizontalAlign::Center:
-						$intX = round(($this->strWidth - $intBoxWidth) / 2);
+						$intX = round(($strWidth - $intBoxWidth) / 2);
 						break;
 
 					// Step 3 - Use Coordinates
@@ -272,7 +219,7 @@
 						break;
 				}
 				
-				$intWidth = $this->strWidth;
+				$intWidth = $strWidth;
 			}
 
 			if (!$this->strHeight) {
