@@ -92,25 +92,13 @@ class QDataRepeater extends QPaginatedControl {
 			throw new QCallerException ("You must specify an item tag name before rendering the list.");
 		}
 
-		$strToReturn = '<' . $this->strItemTagName;
-
-		if ($strParamArray = $this->GetItemAttributes($objItem)) {
-			foreach ($strParamArray as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-		}
-
-		$strToReturn .= '>';
-
-		$strToReturn .= $this->GetItemInnerHtml($objItem);
-
-		$strToReturn .= '</' . $this->strItemTagName . '>';
+		$strToReturn = QHtml::RenderTag($this->strTagName, $this->GetItemAttributes($objItem), $this->GetItemInnerHtml($objItem));
 		return $strToReturn;
 	}
 
 	/**
-	 * Return the attributes that go in the item tag, as an array of key=>value pairs. Values will be output
-	 * verbatim, so escape them if necessary. If you define AttributesCallback, it will be used to determine
+	 * Return the attributes that go in the item tag, as an array of key=>value pairs. Values will be escaped for you.
+	 * If you define AttributesCallback, it will be used to determine
 	 * the attributes.
 	 *
 	 * @param $objItem

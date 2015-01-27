@@ -59,13 +59,7 @@
 				$cellValue = '&nbsp;';
 			}
 			
-			$strToReturn = '<th';
-			$aParams = $this->GetHeaderCellParams();
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-			$strToReturn .= '>' . $cellValue . '</th>';
-			return $strToReturn;
+			return QHtml::RenderTag('th', $this->GetHeaderCellParams(), $cellValue);
 		}
 		
 		/**
@@ -109,27 +103,19 @@
 			}
 	
 			if ($blnAsHeader || $this->blnRenderAsHeader) {
-				$tag = 'th';
+				$strTag = 'th';
 			} else {
-				$tag = 'td';
+				$strTag = 'td';
 			}
 			
-			$strToReturn = '<' . $tag;
-			
-			$aParams = $this->GetCellParams($item);
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-			$strToReturn .= '>' . $cellValue . '</' . $tag . '>';
-			return $strToReturn;
+			return QHtml::RenderTag($strTag, $this->GetCellParams($item), $cellValue);
 		}
 
 		/**
 		 * Return a key/val array of items to insert inside the cell tag. 
 		 * 
 		 * Handles class, style, and id already. Override to add additional items, like an onclick handler.
-		 * No checking is done on these params, the raw strings are output
-		 * 
+		 *
 		 * @param mixed $item
 		 */
 		protected function GetCellParams ($item) {
@@ -139,7 +125,7 @@
 			}
 			
 			if ($strId = $this->GetCellId ($item)) {
-				$aParams['id'] = addslashes($strId);
+				$aParams['id'] = $strId;
 			}
 			
 			if ($strStyle = $this->GetCellStyle ($item)) {
@@ -183,14 +169,7 @@
 		abstract public function FetchCellValue($item);
 		
 		public function RenderColTag() {
-			$strToReturn = '<col ';
-			
-			$aParams = $this->GetColParams();
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= $key . '="' . $str . '" ';
-			}
-			$strToReturn .= '/>';
-			return $strToReturn;
+			return QHtml::RenderTag('col', $this->GetColParams(), null, true);
 		}
 
 		/**
@@ -203,10 +182,10 @@
 				$aParams['span'] = $this->intSpan;
 			}
 			if ($this->strId) {
-				$aParams['id'] = addslashes($this->strId);
+				$aParams['id'] = $this->strId;
 			}
 			if ($this->strCssClass) {
-				$aParams['class'] = addslashes($this->strCssClass);
+				$aParams['class'] = $this->strCssClass;
 			}
 
 			return $aParams;		
@@ -862,15 +841,9 @@
 		
 		public function FetchCellObject($item) {
 
-			$strToReturn = '<input type="checkbox"';
-
 			$aParams = $this->GetCheckboxParams($item);
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-
-			$strToReturn .= ' />';
-			return $strToReturn;
+			$aParams['type'] = 'checkbox';
+			return QHtml::RenderTag('input', $aParams, null, true);
 		}
 		
 		public function GetCheckboxParams ($item) {
@@ -878,13 +851,13 @@
 			
 			if ($this->checkParamCallback) {
 				$aParams = call_user_func($this->checkParamCallback, $item, 'id');
-				$aParams['id'] = addslashes($aParams['id']);
+				$aParams['id'] = $aParams['id'];
 				return $aParams;
 			}
 			
 			
 			if ($strId = $this->GetCheckId ($item)) {
-				$aParams['id'] = addslashes($strId);
+				$aParams['id'] = $strId;
 			}
 			
 			if ($strCheck = $this->IsChecked ($item)) {

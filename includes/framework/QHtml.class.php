@@ -4,6 +4,9 @@
 	 * pieces of HTML and CSS code.  All methods are static.
 	 */
 	abstract class QHtml {
+
+		const IsVoid = true;
+
 		/**
 		 * This faux constructor method throws a caller exception.
 		 * The Css object should never be instantiated, and this constructor
@@ -30,17 +33,23 @@
 		 *   elements to be right up against its siblings, set $blnNoSpace to true.
 		 *
 		 *
-		 * @param string 	$strTag				The tag name
-		 * @param string 	$strAttributes 		String of attribute values. Attributes should already be escaped as needed.
-		 * @param string 	$strInnerHtml 		The text to print between
-		 * @param boolean	$blnIsVoidElement 	True to print as a tag with no closing tag.
-		 * @param boolean	$blnNoSpace		 	Renders with no white-space. Useful in special inline situations.
+		 * @param string 		$strTag				The tag name
+		 * @param null|mixed 	$mixAttributes 		String of attribute values or array of attribute values.
+		 * @param null|string 		$strInnerHtml 		The text to print between
+		 * @param boolean		$blnIsVoidElement 	True to print as a tag with no closing tag.
+		 * @param boolean		$blnNoSpace		 	Renders with no white-space. Useful in special inline situations.
 		 * @return string						The rendered html tag
 		 */
-		public static function RenderTag($strTag, $strAttributes, $strInnerHtml = null, $blnIsVoidElement = false, $blnNoSpace = false) {
+		public static function RenderTag($strTag, $mixAttributes, $strInnerHtml = null, $blnIsVoidElement = false, $blnNoSpace = false) {
+			assert ('!empty($strTag)');
 			$strToReturn = '<' . $strTag;
-			if ($strAttributes) {
-				$strToReturn .=  ' ' . trim($strAttributes);
+			if ($mixAttributes) {
+				if (is_string($mixAttributes)) {
+					$strToReturn .=  ' ' . trim($mixAttributes);
+				} else {
+					// assume array
+					$strToReturn .=  QHtml::RenderHtmlAttributes($mixAttributes);
+				}
 			};
 			if ($blnIsVoidElement) {
 				$strToReturn .= ' />'; // conforms to both XHTML and HTML5 for both normal and foreign elements
@@ -49,6 +58,7 @@
 				$strToReturn .= '>' . trim($strInnerHtml) . '</' . $strTag . '>';
 			}
 			else {
+				// the hardcoded newlines below are important to prevent different drawing behavior in MINIMIZE mode
 				$strToReturn .= '>' . "\n" . _indent(trim($strInnerHtml)) .  "\n" . '</' . $strTag . '>' . _nl();
 			}
 			return $strToReturn;

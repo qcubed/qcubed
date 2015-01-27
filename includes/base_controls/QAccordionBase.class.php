@@ -54,9 +54,7 @@
 			foreach ($this->GetChildControls() as $objControl) {
 				if (!$objControl->Rendered) {
 					$renderMethod = $objControl->strPreferredRenderMethod;
-					$strToReturn .= '<div>';
-					$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
-					$strToReturn .= '</div>';
+					$strToReturn .= QHtml::RenderTag('div', null, $objControl->$renderMethod(false));
 				}
 			}
 

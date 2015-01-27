@@ -59,9 +59,7 @@
 			foreach ($this->GetChildControls() as $objControl) {
 				if (!$objControl->Rendered) {
 					$renderMethod = $objControl->strPreferredRenderMethod;
-					$strToReturn .= '<div>';
-					$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
-					$strToReturn .= '</div>';
+					$strToReturn .= QHtml::RenderTag('div', null, $objControl->$renderMethod($blnDisplayOutput));
 				}
 			}
 
@@ -79,31 +77,29 @@
 		 * @return string
 		 */
 		protected function GetTabHeaderHtml() {
-			$strResult = '<ul>';
+			$strHtml = '';
 			$childControls = $this->GetChildControls();
 			for ($i = 0, $cnt = count($childControls); $i < $cnt; ++$i) {
 				$strControlId = $childControls[$i]->ControlId;
-				$strResult .= '<li><a href="#'.$strControlId.'">';
 				if (array_key_exists($key = $strControlId, $this->objTabHeadersArray) ||
 						array_key_exists($key = $i, $this->objTabHeadersArray)) {
 					$objHeader = $this->objTabHeadersArray[$key];
 					if ($objHeader instanceof QControl) {
-						$strResult .= $objHeader->GetControlHtml();
+						$strText = $objHeader->GetControlHtml();
 					} else {
-						$strResult .= (string)$objHeader;
+						$strText = (string)$objHeader;
 					}
 				}
 				elseif ($strName = $childControls[$i]->Name) {
-					$strResult .= $strName;
+					$strText = $strName;
 				}
 				else {
-					$strResult .= 'Tab '. ($i+1);
+					$strText = 'Tab '. ($i+1);
 				}
-				$strResult .= '</a></li>';
+				$strAnchor = QHtml::RenderTag('a', ['href'=>'#' . $strControlId], $strText, false, true);
+				$strHtml .= QHtml::RenderTag ('li', null, $strAnchor);
 			}
-
-			$strResult .= '</ul>';
-			return $strResult;
+			return QHtml::RenderTag('ul', null, $strHtml);
 		}
 
 		/**

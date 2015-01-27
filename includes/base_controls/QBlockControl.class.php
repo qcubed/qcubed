@@ -156,34 +156,11 @@
 		 * @return string The HTML string
 		 */
 		protected function GetControlHtml() {
-			if ($this->strFormat) {
-				$strText = sprintf($this->strFormat, $this->strText);
-			}
-			else {
-				$strText = $this->strText;
-			}
-
-			$strText = ($this->blnHtmlEntities) ? QApplication::HtmlEntities($strText) : $strText;
-
-			$strTemplateEvaluated = '';
-			if ($this->strTemplate) {
-				global $_CONTROL;
-				$objCurrentControl = $_CONTROL;
-				$_CONTROL = $this;
-				$strTemplateEvaluated = $this->EvaluateTemplate($this->strTemplate);
-				$_CONTROL = $objCurrentControl;
-			}
-
-			$strText .= $strTemplateEvaluated;
-
-			if ($this->blnAutoRenderChildren) {
-				$strText .= $this->RenderChildren(false);
-			}
 
 			$strToReturn = $this->RenderTag($this->strTagName,
 				null,
 				null,
-				$strText);
+				$this->GetInnerHtml());
 
 //			if ($this->blnDropTarget)
 //				$strToReturn .= sprintf('<span id="%s_ctldzmask" style="position:absolute;"><span style="font-size: 1px">&nbsp;</span></span>', $this->strControlId);
