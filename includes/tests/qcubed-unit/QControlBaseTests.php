@@ -28,7 +28,7 @@ class QControlBaseTests extends QUnitTestCaseBase {
 			if ($strProperty) {
 				$this->ctlTest->$strProperty = $strValue;
 			} else {
-				$this->ctlTest->setCssStyle ($strCssProperty, $strValue, true);
+				$this->ctlTest->SetCssStyle ($strCssProperty, $strValue, true);
 			}
 			
 			$strAttrs = $this->ctlTest->$strGetStyleMethod() . ';';

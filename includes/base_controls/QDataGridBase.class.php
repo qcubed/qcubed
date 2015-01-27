@@ -82,7 +82,7 @@
 					try {
 						/** @var QDataGridRowStyle $objStyle */
 						$objStyle = QType::Cast($mixValue, "QDataGridRowStyle");
-						$this->override ($objStyle);
+						$this->Override ($objStyle);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -893,7 +893,7 @@
 		 * @throws Exception|QCallerException
 		 */
 		protected function GetControlHtml() {
-			return 	$this->renderTag('table',
+			return 	$this->RenderTag('table',
 				null,
 				null,
 				$this->GetInnerHtml());
@@ -1379,7 +1379,7 @@
 				// LAYOUT
 				case "CellPadding": return $this->intCellPadding;
 				case "CellSpacing": return $this->intCellSpacing;
-				//case "GridLines": return $this->hasCssClass(QGridLines::Vertical);
+				//case "GridLines": return $this->HasCssClass(QGridLines::Vertical);
 				case "ShowHeader": return $this->blnShowHeader;
 				case "ShowFooter": return $this->blnShowFooter;
 				case "ShowFilter": return $this->blnShowFilter;
@@ -1647,11 +1647,11 @@
 				/* TODO
 				case "BorderSpacing":
 					try {
-						$this->setCssStyle('border-spacing', $mixValue = QType::Cast($mixValue, QType::String), true);
+						$this->SetCssStyle('border-spacing', $mixValue = QType::Cast($mixValue, QType::String), true);
 						if ($mixValue == '0' && $mixValue == '0px') {
-							$this->setCssStyle('border-collapsed', 'collapse');
+							$this->SetCssStyle('border-collapsed', 'collapse');
 						} else {
-							$this->setCssStyle('border-collapsed', 'separate');
+							$this->SetCssStyle('border-collapsed', 'separate');
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

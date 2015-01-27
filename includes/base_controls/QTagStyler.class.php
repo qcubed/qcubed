@@ -37,7 +37,7 @@
 		 * @deprecated
 		 */
 		public function GetAttributes() {
-			return $this->renderHtmlAttributes();
+			return $this->RenderHtmlAttributes();
 		}
 	}
 ?>

@@ -180,7 +180,7 @@
 				$strText .= $this->RenderChildren(false);
 			}
 
-			$strToReturn = $this->renderTag($this->strTagName,
+			$strToReturn = $this->RenderTag($this->strTagName,
 				null,
 				null,
 				$strText);

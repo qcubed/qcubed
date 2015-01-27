@@ -75,7 +75,8 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
 .renderWithName { padding: 5px 0; position: relative; }
 .renderWithName .form-name {overflow: hidden; }
 
-.form-field input,
+.form-field input[type=text],
+.form-field input[type=password],
 .form-field textarea { max-width: 300px; width: 99%; }
 .form-actions { border-radius: 3px; background: #333; padding: 10px; margin: 10px auto; }
 .form-save,

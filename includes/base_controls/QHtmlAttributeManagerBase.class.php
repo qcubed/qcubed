@@ -63,7 +63,7 @@
  *  an array, either numerically indexed, in which case it is in top, right, bottom, left order, or keyed with the
  *  names 'top', 'right', 'bottom', 'left'
  * @property-write array $Data a key/value array of data-* items to set. Keys can be in camelCase notation, in which case they will be
- *  converted to dashed notation. Use getDataAttribute() to retrieve the value of a data attribute.
+ *  converted to dashed notation. Use GetDataAttribute() to retrieve the value of a data attribute.
  * @property boolean $NoWrap sets the CSS white-space  property to nowrap
  * @property boolean $ReadOnly is the "readonly" html attribute (making a textbox "ReadOnly" is  similar to setting the textbox to Enabled
  *  Readonly textboxes are selectedable, and their values get posted. Disabled textboxes are not selectabel and values do not post.
@@ -80,17 +80,17 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param $strName
 	 * @param $strValue
 	 */
-	public function setHtmlAttribute ($strName, $strValue) {
+	public function SetHtmlAttribute ($strName, $strValue) {
 		if (!is_null($strValue)) {
 			if (!isset($this->attributes[$strName]) || $this->attributes[$strName] !== $strValue) {
 				// only make a change if it has actually changed value.
 				$this->attributes[$strName] = $strValue;
-				$this->markAsModified();
+				$this->MarkAsModified();
 			}
 		} else {
 			if (isset($this->attributes[$strName])) {
 				unset($this->attributes[$strName]);
-				$this->markAsModified();
+				$this->MarkAsModified();
 			}
 		}
 	}
@@ -100,8 +100,8 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 *
 	 * @param $strName
 	 */
-	public function removeHtmlAttribute ($strName) {
-		$this->setHtmlAttribute($strName, null);
+	public function RemoveHtmlAttribute ($strName) {
+		$this->SetHtmlAttribute($strName, null);
 	}
 
 	/**
@@ -110,7 +110,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param $strName
 	 * @return null
 	 */
-	public function getHtmlAttribute ($strName) {
+	public function GetHtmlAttribute ($strName) {
 		if (isset ($this->attributes[$strName])) {
 			return $this->attributes[$strName];
 		}
@@ -124,10 +124,10 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param array | null $selection an array of titles of attributes that you want the result to be limited to
 	 * @return array
 	 */
-	public function getHtmlAttributes($selection = null) {
+	public function GetHtmlAttributes($selection = null) {
 		$attributes = $this->attributes;
 		if ($this->styles) {
-			$attributes['style'] = $this->renderCssStyles();
+			$attributes['style'] = $this->RenderCssStyles();
 		}
 		if ($selection) {
 			$attributes = array_intersect_key($attributes, array_fill_keys($selection, 1));
@@ -141,7 +141,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param string $strName
 	 * @return bool
 	 */
-	public function hasHtmlAttribute ($strName) {
+	public function HasHtmlAttribute ($strName) {
 		return (isset($this->attributes[$strName]));
 	}
 
@@ -160,15 +160,15 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 *
 	 * $j('#test1').data('testCase');
 	 *
-	 * Conversion to special html data-* name formatting is handled here automatically. So if you setDataAttribute('testCase') here,
+	 * Conversion to special html data-* name formatting is handled here automatically. So if you SetDataAttribute('testCase') here,
 	 * you can get it using .data('testCase') in jQuery
 	 *
 	 * @param $strName
 	 * @param $strValue
 	 */
-	public function setDataAttribute ($strName, $strValue) {
+	public function SetDataAttribute ($strName, $strValue) {
 		$strName = 'data-' . JavaScriptHelper::dataNameFromCamelCase($strName);
-		$this->setHtmlAttribute($strName, $strValue);
+		$this->SetHtmlAttribute($strName, $strValue);
 	}
 
 	/**
@@ -180,18 +180,18 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param $strName
 	 * @return null
 	 */
-	public function getDataAttribute ($strName) {
+	public function GetDataAttribute ($strName) {
 		$strName = 'data-' . JavaScriptHelper::dataNameFromCamelCase($strName);
-		return $this->getHtmlAttribute($strName);
+		return $this->GetHtmlAttribute($strName);
 	}
 
 	/**
 	 * Removes the given data attribute.
 	 * @param $strName
 	 */
-	public function removeDataAttribute ($strName) {
+	public function RemoveDataAttribute ($strName) {
 		$strName = 'data-' . JavaScriptHelper::dataNameFromCamelCase($strName);
-		$this->removeHtmlAttribute($strName);
+		$this->RemoveHtmlAttribute($strName);
 	}
 
 
@@ -209,7 +209,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param bool $blnIsLength true if this is a unit specifier e.g. 2px
 	 * @return bool true if the style was actually changed (vs. it was already set that way)
 	 */
-	public function setCssStyle ($strName, $strValue, $blnIsLength = false) {
+	public function SetCssStyle ($strName, $strValue, $blnIsLength = false) {
 		$ret = false;
 		if (!is_null($strValue)) {
 			if ($blnIsLength) {
@@ -218,21 +218,21 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				} else {
 					$oldValue = '';
 				}
-				if (QHtml::setLength ($oldValue, $strValue)) {
+				if (QHtml::SetLength ($oldValue, $strValue)) {
 					$ret = true;
-					$this->markAsModified();
+					$this->MarkAsModified();
 					$this->styles[$strName] = $oldValue; // oldValue was updated
 				}
 			}
 			elseif (!isset($this->styles[$strName]) || $this->styles[$strName] !== $strValue) {
 				$this->styles[$strName] = $strValue;
-				$this->markAsModified();
+				$this->MarkAsModified();
 				$ret = true;
 			}
 		} else {
 			if (isset($this->styles[$strName])) {
 				unset($this->styles[$strName]);
-				$this->markAsModified();
+				$this->MarkAsModified();
 				$ret = true;
 			}
 		}
@@ -244,8 +244,8 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param $strName
 	 * @return bool true if the style was removed, false if it wasn't there to begin with
 	 */
-	public function removeCssStyle ($strName) {
-		return $this->setCssStyle ($strName, null);
+	public function RemoveCssStyle ($strName) {
+		return $this->SetCssStyle ($strName, null);
 	}
 
 	/**
@@ -253,7 +253,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param $strName
 	 * @return bool
 	 */
-	public function hasCssStyle ($strName) {
+	public function HasCssStyle ($strName) {
 		return isset($this->styles[$strName]);
 	}
 
@@ -262,7 +262,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param $strName
 	 * @return string|null
 	 */
-	public function getCssStyle ($strName) {
+	public function GetCssStyle ($strName) {
 		if (isset ($this->styles[$strName])) {
 			return $this->styles[$strName];
 		}
@@ -289,23 +289,23 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param string $strPrefix
 	 * @param string|array $mixValue
 	 */
-	public function setCssBoxValue($strPrefix, $mixValue) {
+	public function SetCssBoxValue($strPrefix, $mixValue) {
 		if (is_string($mixValue)) {
 			// shortcut
-			$this->setCssStyle($strPrefix, $mixValue);
+			$this->SetCssStyle($strPrefix, $mixValue);
 		} elseif (is_array($mixValue)) {
 			if (array_key_exists(0, $mixValue)) {
 				// top right bottom left, numerically indexed
-				if (isset($mixValue[0])) $this->setCssStyle($strPrefix. '-top', $mixValue[0], true);
-				if (isset($mixValue[1])) $this->setCssStyle($strPrefix. '-right', $mixValue[1], true);
-				if (isset($mixValue[2])) $this->setCssStyle($strPrefix. '-bottom', $mixValue[2], true);
-				if (isset($mixValue[3])) $this->setCssStyle($strPrefix. '-left', $mixValue[3], true);
+				if (isset($mixValue[0])) $this->SetCssStyle($strPrefix. '-top', $mixValue[0], true);
+				if (isset($mixValue[1])) $this->SetCssStyle($strPrefix. '-right', $mixValue[1], true);
+				if (isset($mixValue[2])) $this->SetCssStyle($strPrefix. '-bottom', $mixValue[2], true);
+				if (isset($mixValue[3])) $this->SetCssStyle($strPrefix. '-left', $mixValue[3], true);
 			} else {
 				// assume key/value
-				if (isset($mixValue['top'])) $this->setCssStyle($strPrefix. '-top', $mixValue['top'], true);
-				if (isset($mixValue['right'])) $this->setCssStyle($strPrefix. '-right', $mixValue['right'], true);
-				if (isset($mixValue['bottom'])) $this->setCssStyle($strPrefix. '-bottom', $mixValue['bottom'], true);
-				if (isset($mixValue['left'])) $this->setCssStyle($strPrefix. '-left', $mixValue['left'], true);
+				if (isset($mixValue['top'])) $this->SetCssStyle($strPrefix. '-top', $mixValue['top'], true);
+				if (isset($mixValue['right'])) $this->SetCssStyle($strPrefix. '-right', $mixValue['right'], true);
+				if (isset($mixValue['bottom'])) $this->SetCssStyle($strPrefix. '-bottom', $mixValue['bottom'], true);
+				if (isset($mixValue['left'])) $this->SetCssStyle($strPrefix. '-left', $mixValue['left'], true);
 			}
 		}
 	}
@@ -316,15 +316,15 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * Adds a css class name to the 'class' property. Prevents duplication.
 	 * @param string $strNewClass
 	 */
-	public function addCssClass($strNewClass) {
+	public function AddCssClass($strNewClass) {
 		if (!$strNewClass) return;
 
-		$strClasses = $this->getHtmlAttribute('class');
+		$strClasses = $this->GetHtmlAttribute('class');
 		if (is_null($strClasses)) {
 			$strClasses= '';
 		}
-		if (QHtml::addClass($strClasses, $strNewClass)) {
-			$this->setHtmlAttribute('class', $strClasses);
+		if (QHtml::AddClass($strClasses, $strNewClass)) {
+			$this->SetHtmlAttribute('class', $strClasses);
 		}
 	}
 
@@ -332,11 +332,11 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * This will remove a css class name from the 'class' property (if it exists).
 	 * @param string $strCssClass
 	 */
-	public function removeCssClass($strCssClass) {
+	public function RemoveCssClass($strCssClass) {
 		if (!$strCssClass) return;
-		$strClasses = $this->getHtmlAttribute('class');
-		if ($strClasses && QHtml::removeClass($strClasses, $strCssClass)) {
-			$this->setHtmlAttribute('class', $strClasses);
+		$strClasses = $this->GetHtmlAttribute('class');
+		if ($strClasses && QHtml::RemoveClass($strClasses, $strCssClass)) {
+			$this->SetHtmlAttribute('class', $strClasses);
 		}
 	}
 
@@ -346,7 +346,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param $strClass
 	 * @return bool
 	 */
-	public function hasCssClass($strClass) {
+	public function HasCssClass($strClass) {
 		if (!isset($this->attributes['class'])) return false;
 		$strClasses = explode (' ', $this->attributes['class']);
 		return (in_array($strClass, $strClasses));
@@ -357,7 +357,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 *
 	 * @param QHtmlAttributeManager $objNewStyles
 	 */
-	protected function override(QHtmlAttributeManager $objNewStyles) {
+	protected function Override(QHtmlAttributeManager $objNewStyles) {
 		$this->attributes = array_merge($this->attributes, $objNewStyles->attributes);
 		$this->styles = array_merge($this->styles, $objNewStyles->styles);
 	}
@@ -365,7 +365,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	/**
 	 * Mark the parent class as modified. The host class must implement this if this functionality is desired.
 	 */
-	protected function markAsModified() {}
+	protected function MarkAsModified() {}
 
 	/**
 	 * Returns the html for the attributes. Allows the given arrays to override the attributes and styles before
@@ -374,15 +374,15 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param null|string 	$styleOverrides
 	 * @return string
 	 */
-	public function renderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
+	public function RenderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
 		$attributes = $this->attributes;
 		if ($this->styles || $styleOverrides) {
-			$attributes['style'] = $this->renderCssStyles($styleOverrides);
+			$attributes['style'] = $this->RenderCssStyles($styleOverrides);
 		}
 		if ($attributeOverrides) {
 			$attributes = array_merge($attributes, $attributeOverrides);
 		}
-		return QHtml::renderHtmlAttributes($attributes);
+		return QHtml::RenderHtmlAttributes($attributes);
 	}
 
 	/**
@@ -390,12 +390,12 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param null|string 	$styleOverrides
 	 * @return string
 	 */
-	public function renderCssStyles($styleOverrides = null) {
+	public function RenderCssStyles($styleOverrides = null) {
 		$styles = $this->styles;
 		if ($styleOverrides) {
 			$styles = array_merge($styles, $styleOverrides);
 		}
-		return QHtml::renderStyles($styles);
+		return QHtml::RenderStyles($styles);
 	}
 
 	/**
@@ -409,9 +409,9 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param bool				$blnIsVoidElement	true if it should not have innerHtml or a closing tag.
 	 * @return string			HTML out, escaped with HTML entities as needed.
 	 */
-	protected function renderTag($strTag, $attributeOverrides = null, $styleOverrides = null, $strInnerHtml = null, $blnIsVoidElement = false) {
-		$strAttributes = $this->renderHtmlAttributes($attributeOverrides, $styleOverrides);
-		return QHtml::renderTag($strTag, $strAttributes, $strInnerHtml, $blnIsVoidElement);
+	protected function RenderTag($strTag, $attributeOverrides = null, $styleOverrides = null, $strInnerHtml = null, $blnIsVoidElement = false) {
+		$strAttributes = $this->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
+		return QHtml::RenderTag($strTag, $strAttributes, $strInnerHtml, $blnIsVoidElement);
 	}
 
 
@@ -428,42 +428,42 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	public function __get($strName) {
 		switch ($strName) {
 			// Styles
-			case "BackColor": return $this->getCssStyle('background-color');
-			case "BorderColor": return $this->getCssStyle('border-color');
-			case "BorderStyle": return $this->getCssStyle('border-style');
-			case "BorderWidth": return $this->getCssStyle('border-width');
-			case "BorderCollapse": return $this->getCssStyle('border-collapse');
-			case "Display": return !($this->getCssStyle('display') === QDisplayStyle::None);
-			case "DisplayStyle": return $this->getCssStyle('display');
-			case "FontBold": return $this->getCssStyle('font-weight') == 'bold';
-			case "FontItalic": return $this->getCssStyle('font-style') == 'italic';
-			case "FontNames": return $this->getCssStyle('font-family');
-			case "FontOverline": return $this->getCssStyle('text-decoration') == 'overline';
-			case "FontStrikeout": return $this->getCssStyle('text-decoration') == 'line-through';
-			case "FontUnderline": return $this->getCssStyle('text-decoration') == 'underline';
-			case "FontSize": return $this->getCssStyle('font-size');
-			case "ForeColor": return $this->getCssStyle('color');
-			case "Opacity": return $this->getCssStyle('opacity');
-			case "Cursor": return $this->getCssStyle('cursor');
-			case "Height": return $this->getCssStyle('height');
-			case "Width": return $this->getCssStyle('width');
-			case "Overflow": return $this->getCssStyle('overflow');
-			case "Position": return $this->getCssStyle('position');
-			case "Top": return $this->getCssStyle('top');
-			case "Left": return $this->getCssStyle('left');
-			case "HorizontalAlign": return $this->getCssStyle('text-align');
-			case "VerticalAlign": return $this->getCssStyle('vertical-align');
+			case "BackColor": return $this->GetCssStyle('background-color');
+			case "BorderColor": return $this->GetCssStyle('border-color');
+			case "BorderStyle": return $this->GetCssStyle('border-style');
+			case "BorderWidth": return $this->GetCssStyle('border-width');
+			case "BorderCollapse": return $this->GetCssStyle('border-collapse');
+			case "Display": return !($this->GetCssStyle('display') === QDisplayStyle::None);
+			case "DisplayStyle": return $this->GetCssStyle('display');
+			case "FontBold": return $this->GetCssStyle('font-weight') == 'bold';
+			case "FontItalic": return $this->GetCssStyle('font-style') == 'italic';
+			case "FontNames": return $this->GetCssStyle('font-family');
+			case "FontOverline": return $this->GetCssStyle('text-decoration') == 'overline';
+			case "FontStrikeout": return $this->GetCssStyle('text-decoration') == 'line-through';
+			case "FontUnderline": return $this->GetCssStyle('text-decoration') == 'underline';
+			case "FontSize": return $this->GetCssStyle('font-size');
+			case "ForeColor": return $this->GetCssStyle('color');
+			case "Opacity": return $this->GetCssStyle('opacity');
+			case "Cursor": return $this->GetCssStyle('cursor');
+			case "Height": return $this->GetCssStyle('height');
+			case "Width": return $this->GetCssStyle('width');
+			case "Overflow": return $this->GetCssStyle('overflow');
+			case "Position": return $this->GetCssStyle('position');
+			case "Top": return $this->GetCssStyle('top');
+			case "Left": return $this->GetCssStyle('left');
+			case "HorizontalAlign": return $this->GetCssStyle('text-align');
+			case "VerticalAlign": return $this->GetCssStyle('vertical-align');
 			case "Wrap": throw new Exception ("Wrap is deprecated. Use NoWrap instead");
-			case "NoWrap": return $this->getCssStyle('white-space') == 'nowrap';
+			case "NoWrap": return $this->GetCssStyle('white-space') == 'nowrap';
 
 			// Attributes
-			case "CssClass": return $this->getHtmlAttribute('class');
-			case "AccessKey": return $this->getHtmlAttribute('accesskey');
-			case "Enabled": return $this->getHtmlAttribute('disabled') === null;
-			case "TabIndex": return $this->getHtmlAttribute('tabindex');
-			case "ToolTip": return $this->getHtmlAttribute('title');
-			case "ReadOnly": return $this->hasHtmlAttribute('readonly');
-			case "AltText": return $this->hasHtmlAttribute('alt');
+			case "CssClass": return $this->GetHtmlAttribute('class');
+			case "AccessKey": return $this->GetHtmlAttribute('accesskey');
+			case "Enabled": return $this->GetHtmlAttribute('disabled') === null;
+			case "TabIndex": return $this->GetHtmlAttribute('tabindex');
+			case "ToolTip": return $this->GetHtmlAttribute('title');
+			case "ReadOnly": return $this->HasHtmlAttribute('readonly');
+			case "AltText": return $this->HasHtmlAttribute('alt');
 
 			default:
 				try {
@@ -490,7 +490,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			// Styles
 			case "BackColor":
 				try {
-					$this->setCssStyle('background-color', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('background-color', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -498,7 +498,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "BorderColor":
 				try {
-					$this->setCssStyle('border-color', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('border-color', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -506,7 +506,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "BorderStyle":
 				try {
-					$this->setCssStyle('border-style', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('border-style', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -514,9 +514,9 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "BorderWidth":
 				try {
-					$this->setCssStyle('border-width', QType::Cast($mixValue, QType::String), true);
-					if (!$this->hasCssStyle ('border-style')) {
-						$this->setCssStyle('border-style', 'solid');
+					$this->SetCssStyle('border-width', QType::Cast($mixValue, QType::String), true);
+					if (!$this->HasCssStyle ('border-style')) {
+						$this->SetCssStyle('border-style', 'solid');
 					}
 					break;
 				} catch (QInvalidCastException $objExc) {
@@ -525,7 +525,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "BorderCollapse":
 				try {
-					$this->setCssStyle('border-collapse', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('border-collapse', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -536,14 +536,14 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			case "DisplayStyle":
 				if (is_bool($mixValue)) {
 					if ($mixValue) {
-						$this->removeCssStyle('display'); // do the default
+						$this->RemoveCssStyle('display'); // do the default
 					}
 					else {
-						$this->setCssStyle('display', QDisplayStyle::None);
+						$this->SetCssStyle('display', QDisplayStyle::None);
 					}
 				} else {
 					try {
-						$this->setCssStyle('display', QType::Cast($mixValue, QType::String));
+						$this->SetCssStyle('display', QType::Cast($mixValue, QType::String));
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -553,7 +553,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "FontBold":
 				try {
-					$this->setCssStyle('font-weight', QType::Cast($mixValue, QType::Boolean) ? 'bold' : null);
+					$this->SetCssStyle('font-weight', QType::Cast($mixValue, QType::Boolean) ? 'bold' : null);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -562,7 +562,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "FontItalic":
 				try {
-					$this->setCssStyle('font-style', QType::Cast($mixValue, QType::Boolean) ? 'italic' : null);
+					$this->SetCssStyle('font-style', QType::Cast($mixValue, QType::Boolean) ? 'italic' : null);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -571,7 +571,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "FontNames":
 				try {
-					$this->setCssStyle('font-family', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('font-family', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -580,7 +580,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "FontOverline":
 				try {
-					$this->setCssStyle('text-decoration', QType::Cast($mixValue, QType::Boolean) ? 'overline' : null);
+					$this->SetCssStyle('text-decoration', QType::Cast($mixValue, QType::Boolean) ? 'overline' : null);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -588,7 +588,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "FontStrikeout":
 				try {
-					$this->setCssStyle('text-decoration', QType::Cast($mixValue, QType::Boolean) ? 'line-through' : null);
+					$this->SetCssStyle('text-decoration', QType::Cast($mixValue, QType::Boolean) ? 'line-through' : null);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -596,7 +596,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "FontUnderline":
 				try {
-					$this->setCssStyle('text-decoration', QType::Cast($mixValue, QType::Boolean) ? 'underline' : null);
+					$this->SetCssStyle('text-decoration', QType::Cast($mixValue, QType::Boolean) ? 'underline' : null);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -604,7 +604,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "FontSize":
 				try {
-					$this->setCssStyle('font-size', QType::Cast($mixValue, QType::String), true);
+					$this->SetCssStyle('font-size', QType::Cast($mixValue, QType::String), true);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -613,7 +613,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "ForeColor":
 				try {
-					$this->setCssStyle('color', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('color', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -625,7 +625,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 					if (($mixValue < 0) || ($mixValue > 100)) {
 						throw new QCallerException('Opacity must be an integer value between 0 and 100');
 					}
-					$this->setCssStyle('opacity', $mixValue);
+					$this->SetCssStyle('opacity', $mixValue);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -633,7 +633,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "Cursor":
 				try {
-					$this->setCssStyle('cursor', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('cursor', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -642,7 +642,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "Height":
 				try {
-					$this->setCssStyle('height', QType::Cast($mixValue, QType::String), true);
+					$this->SetCssStyle('height', QType::Cast($mixValue, QType::String), true);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -651,7 +651,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "Width":
 				try {
-					$this->setCssStyle('width', QType::Cast($mixValue, QType::String), true);
+					$this->SetCssStyle('width', QType::Cast($mixValue, QType::String), true);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -660,7 +660,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "Overflow":
 				try {
-					$this->setCssStyle('overflow', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('overflow', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -668,7 +668,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "Position":
 				try {
-					$this->setCssStyle('position', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('position', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -676,7 +676,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "Top":
 				try {
-					$this->setCssStyle('top', QType::Cast($mixValue, QType::String), true);
+					$this->SetCssStyle('top', QType::Cast($mixValue, QType::String), true);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -684,7 +684,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "Left":
 				try {
-					$this->setCssStyle('left', QType::Cast($mixValue, QType::String), true);
+					$this->SetCssStyle('left', QType::Cast($mixValue, QType::String), true);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -692,7 +692,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "HorizontalAlign":
 				try {
-					$this->setCssStyle('text-align', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('text-align', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -700,7 +700,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "VerticalAlign":
 				try {
-					$this->setCssStyle('vertical-align', QType::Cast($mixValue, QType::String));
+					$this->SetCssStyle('vertical-align', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -712,7 +712,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "NoWrap":
 				try {
-					$this->setCssStyle('white-space', QType::Cast($mixValue, QType::Boolean) ? 'nowrap' : null);
+					$this->SetCssStyle('white-space', QType::Cast($mixValue, QType::Boolean) ? 'nowrap' : null);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -720,11 +720,11 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 
 			case "Padding": // top right bottom left
-				$this->setCssBoxValue('padding', $mixValue);
+				$this->SetCssBoxValue('padding', $mixValue);
 				break;
 
 			case "Margin": // top right bottom left
-				$this->setCssBoxValue('margin', $mixValue);
+				$this->SetCssBoxValue('margin', $mixValue);
 				break;
 
 			// Attributes
@@ -732,9 +732,9 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				try {
 					$strCssClass = QType::Cast($mixValue, QType::String);
 					if (substr($strCssClass, 0, 1) == '+') {
-						$this->addCssClass(substr($strCssClass, 1));
+						$this->AddCssClass(substr($strCssClass, 1));
 					} else {
-						$this->setHtmlAttribute('class', QType::Cast($mixValue, QType::String));
+						$this->SetHtmlAttribute('class', QType::Cast($mixValue, QType::String));
 					}
 					break;
 				} catch (QInvalidCastException $objExc) {
@@ -743,7 +743,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "AccessKey":
 				try {
-					$this->setHtmlAttribute('accesskey', QType::Cast($mixValue, QType::String));
+					$this->SetHtmlAttribute('accesskey', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -751,7 +751,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "Enabled":
 				try {
-					$this->setHtmlAttribute('disabled',  QType::Cast($mixValue, QType::Boolean) ? null : 'disabled');
+					$this->SetHtmlAttribute('disabled',  QType::Cast($mixValue, QType::Boolean) ? null : 'disabled');
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -762,7 +762,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "TabIndex":
 				try {
-					$this->setHtmlAttribute('tabindex', QType::Cast($mixValue, QType::String));
+					$this->SetHtmlAttribute('tabindex', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -770,7 +770,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				}
 			case "ToolTip":
 				try {
-					$this->setHtmlAttribute('title', QType::Cast($mixValue, QType::String));
+					$this->SetHtmlAttribute('title', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -781,7 +781,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				try {
 					$dataArray = QType::Cast($mixValue, QType::ArrayType);
 					foreach ($dataArray as $key=>$value) {
-						$this->setDataAttribute($key, $value);
+						$this->SetDataAttribute($key, $value);
 					}
 					break;
 				} catch (QInvalidCastException $objExc) {
@@ -791,7 +791,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "ReadOnly":
 				try {
-					$this->setHtmlAttribute('readonly',  QType::Cast($mixValue, QType::Boolean) ? 'readonly' : null);
+					$this->SetHtmlAttribute('readonly',  QType::Cast($mixValue, QType::Boolean) ? 'readonly' : null);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -800,7 +800,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 			case "AltText":
 				try {
-					$this->setHtmlAttribute('alt', QType::Cast($mixValue, QType::String));
+					$this->SetHtmlAttribute('alt', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();

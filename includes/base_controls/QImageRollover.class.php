@@ -49,17 +49,17 @@
 		 * @param $strValue
 		 */
 		public function SetCustomLinkStyle($strName, $strValue) {
-			if ($this->GetLinkStyler()->setCssStyle($strName, $strValue)) {
+			if ($this->GetLinkStyler()->SetCssStyle($strName, $strValue)) {
 				$this->blnModified = true;
 			}
 		}
 		
 		public function GetCustomLinkStyle($strName) {
-			return $this->GetLinkStyler()->getCssStyle($strName);
+			return $this->GetLinkStyler()->GetCssStyle($strName);
 		}
 
 		public function RemoveCustomLinkStyle($strName) {
-			if ($this->removeCssStyle($strName)) {
+			if ($this->RemoveCssStyle($strName)) {
 				$this->blnModified = true;
 			}
 		}
@@ -70,15 +70,15 @@
 			if (!$this->AltText) {
 				$attrOverrides['alt'] = $this->ToolTip;
 			}
-			$strHtml = $this->renderTag ('img', $attrOverrides, null, null, true);
+			$strHtml = $this->RenderTag ('img', $attrOverrides, null, null, true);
 
 			if ($this->strLinkUrl) {
 				$linkOverrides['href'] = $this->strLinkUrl;
 				$linkOverrides['id'] = $this->strControlId;
 				$linkOverrides['name'] = $this->strControlId;
 				$this->GetLinkStyler()->ToolTip = $this->ToolTip;	// copy tooltip
-				$strLinkAttributes = $this->GetLinkStyler()->renderHtmlAttributes($linkOverrides);
-				$strHtml = QHtml::renderTag('a', $strLinkAttributes, $strHtml);
+				$strLinkAttributes = $this->GetLinkStyler()->RenderHtmlAttributes($linkOverrides);
+				$strHtml = QHtml::RenderTag('a', $strLinkAttributes, $strHtml);
 			}
 			return $strHtml;
 		}

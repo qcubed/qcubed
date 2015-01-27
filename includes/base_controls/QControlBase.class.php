@@ -435,7 +435,7 @@
 		 * @param $strId
 		 * @param $strParameter
 		 */
-		public static function callActionMethod(QControl $objControl, $strMethodName, $strFormId, $strId, $strParameter) {
+		public static function CallActionMethod(QControl $objControl, $strMethodName, $strFormId, $strId, $strParameter) {
 			$objControl->$strMethodName($strFormId, $strId, $strParameter);
 		}
 
@@ -447,7 +447,7 @@
 		 * to the object being serialized into a copy of the object. After deserialization, you would have the form,
 		 * and then somewhere inside the form, a separate copy of the form. This is a long-standing bug in PHP.
 		 */
-		public function sleep() {
+		public function Sleep() {
 			$this->objForm = null;
 		}
 
@@ -455,7 +455,7 @@
 		 * The object has just been unserialized, so fix up pointers to embedded forms.
 		 * @param QForm $objForm
 		 */
-		public function wakeup(QForm $objForm) {
+		public function Wakeup(QForm $objForm) {
 			$this->objForm = $objForm;
 		}
 
@@ -467,7 +467,7 @@
 		 * @param QForm|QControl|array $obj
 		 * @return mixed
 		 */
-		public static function sleepHelper($obj) {
+		public static function SleepHelper($obj) {
 			if ($obj instanceof QForm) {
 				// assume its THE form
 				return '**QF;';
@@ -493,7 +493,7 @@
 		 *
 		 * @return mixed
 		 */
-		public static function wakeupHelper($objForm, $obj) {
+		public static function WakeupHelper($objForm, $obj) {
 			if (is_array ($obj)) {
 				$ret = array();
 				foreach ($obj as $key=>$val) {
@@ -516,7 +516,7 @@
 		 *
 		 * @param QControl|QControlBase $objControl the control to add
 		 */
-		public function addChildControl(QControl $objControl) {
+		public function AddChildControl(QControl $objControl) {
 			$this->blnModified = true;
 			$this->objChildControlArray[$objControl->ControlId] = $objControl;
 			$objControl->objParentControl = $this;
@@ -528,7 +528,7 @@
 		 * @param boolean $blnUseNumericIndexes
 		 * @return QControl[]
 		 */
-		public function getChildControls($blnUseNumericIndexes = true) {
+		public function GetChildControls($blnUseNumericIndexes = true) {
 			if ($blnUseNumericIndexes) {
 				$objToReturn = array();
 				foreach ($this->objChildControlArray as $objChildControl)
@@ -543,7 +543,7 @@
 		 * @param string $strControlId
 		 * @return QControl
 		 */
-		public function getChildControl($strControlId) {
+		public function GetChildControl($strControlId) {
 			if (array_key_exists($strControlId, $this->objChildControlArray))
 				return $this->objChildControlArray[$strControlId];
 			else
@@ -554,7 +554,7 @@
 		 * Removes all child controls
 		 * @param boolean $blnRemoveFromForm
 		 */
-		public function removeChildControls($blnRemoveFromForm) {
+		public function RemoveChildControls($blnRemoveFromForm) {
 			foreach ($this->objChildControlArray as $objChildControl) {
 				$this->RemoveChildControl($objChildControl->ControlId, $blnRemoveFromForm);
 			}
@@ -565,7 +565,7 @@
 		 * @param string $strControlId
 		 * @param boolean $blnRemoveFromForm should the control be removed from the form, too?
 		 */
-		public function removeChildControl($strControlId, $blnRemoveFromForm) {
+		public function RemoveChildControl($strControlId, $blnRemoveFromForm) {
 			$this->blnModified = true;
 			if (array_key_exists($strControlId, $this->objChildControlArray)) {
 				$objChildControl = $this->objChildControlArray[$strControlId];
@@ -585,7 +585,7 @@
 		 *
 		 * @throws QCallerException
 		 */
-		public function addAction($objEvent, $objAction) {
+		public function AddAction($objEvent, $objAction) {
 			if (!($objEvent instanceof QEvent)) {
 				throw new QCallerException('First parameter of AddAction is expecting an object of type QEvent');
 			}
@@ -620,7 +620,7 @@
 		 *
 		 * @throws QCallerException
 		 */
-		public function addActionArray($objEvent, $objActionArray) {
+		public function AddActionArray($objEvent, $objActionArray) {
 			if (!($objEvent instanceof QEvent)) {
 				throw new QCallerException('First parameter of AddAction is expecting on object of type QEvent');
 			}
@@ -639,7 +639,7 @@
 		 *
 		 * @param string $strEventName
 		 */
-		public function removeAllActions($strEventName) {
+		public function RemoveAllActions($strEventName) {
 			// Modified
 			$this->blnModified = true;
 
@@ -656,7 +656,7 @@
 		 *
 		 * @return QAction[]
 		 */
-		public function getAllActions($strEventType, $strActionType = null) {
+		public function GetAllActions($strEventType, $strActionType = null) {
 			$objArrayToReturn = array();
 			if ($this->objActionArray) foreach ($this->objActionArray as $objActionArray) {
 				foreach ($objActionArray as $objAction)
@@ -691,10 +691,10 @@
 		 *
 		 * @param string $strName
 		 * @param string $strValue
-		 * @deprecated Use setHtmlAttribute instead
+		 * @deprecated Use SetHtmlAttribute instead
 		 */
 		public function SetCustomAttribute($strName, $strValue) {
-			$this->setHtmlAttribute($strName, $strValue);
+			$this->SetHtmlAttribute($strName, $strValue);
 		}
 
 		/**
@@ -704,10 +704,10 @@
 		 *
 		 * @throws QCallerException
 		 * @return string
-		 * @deprected Use getHtmlAttribute instead
+		 * @deprected Use GetHtmlAttribute instead
 		 */
 		public function GetCustomAttribute($strName) {
-			return $this->getHtmlAttribute($strName);
+			return $this->GetHtmlAttribute($strName);
 		}
 
 		/**
@@ -716,10 +716,10 @@
 		 * @param string $strName
 		 *
 		 * @throws QCallerException
-		 * @deprecated Use removeHtmlAttribute instead
+		 * @deprecated Use RemoveHtmlAttribute instead
 		 */
 		public function RemoveCustomAttribute($strName) {
-			$this->removeHtmlAttribute($strName);
+			$this->RemoveHtmlAttribute($strName);
 		}
 
 		/**
@@ -740,10 +740,10 @@
 		 *
 		 * @param string $strName
 		 * @param string $strValue
-		 * @deprecated Use setCssStyle instead
+		 * @deprecated Use SetCssStyle instead
 		 */
 		public function SetCustomStyle($strName, $strValue) {
-			$this->setCssStyle($strName, $strValue);
+			$this->SetCssStyle($strName, $strValue);
 		}
 
 		/**
@@ -755,7 +755,7 @@
 		 * @return string
 		 */
 		public function GetCustomStyle($strName) {
-			return $this->getCssStyle($strName);
+			return $this->GetCssStyle($strName);
 		}
 
 		/**
@@ -764,10 +764,10 @@
 		 * @param string $strName
 		 *
 		 * @throws QCallerException
-		 * @deprecated use removeCssStyle instead
+		 * @deprecated use RemoveCssStyle instead
 		 */
 		public function RemoveCustomStyle($strName) {
-			$this->removeCssStyle($strName);
+			$this->RemoveCssStyle($strName);
 		}
 
         /**
@@ -870,7 +870,7 @@
 		 * @deprecated Use renderHtmlAttributes instead
 		 */
 		public function GetAttributes($blnIncludeCustom = true) {
-			return $this->renderHtmlAttributes() . ' ';
+			return $this->RenderHtmlAttributes() . ' ';
 		}
 
 		/**
@@ -884,7 +884,7 @@
 		 * @deprecated Unused
 		 */
 		public function GetCustomAttributes() {
-			return $this->renderHtmlAttributes();
+			return $this->RenderHtmlAttributes();
 		}
 
 		/**
@@ -895,12 +895,12 @@
 		 * @param null|string 	$styleOverrides
 		 * @return string
 		 */
-		public function renderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
+		public function RenderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
 			$attributes['id'] = $this->strControlId;
 			if ($attributeOverrides) {
 				$attributes = array_merge($attributes, $attributeOverrides);
 			}
-			return parent::renderHtmlAttributes($attributes, $styleOverrides);
+			return parent::RenderHtmlAttributes($attributes, $styleOverrides);
 		}
 
 		/**
@@ -908,7 +908,7 @@
 		 *
 		 * @return string
 		 */
-		public function renderActionScripts() {
+		public function RenderActionScripts() {
 			$strToReturn = '';
 			foreach ($this->objActionArray as $strEventName => $objActions)
 				$strToReturn .= $this->GetJavaScriptForEvent($strEventName);
@@ -922,7 +922,7 @@
 		 * @return null|string
 		 */
 
-		public function getJavaScriptForEvent($strEventName) {
+		public function GetJavaScriptForEvent($strEventName) {
 			return QAction::RenderActions($this, $strEventName, $this->objActionArray[$strEventName]);
 		}
 
@@ -947,7 +947,7 @@
 		 * @deprected Use
 		 */
 		public function GetStyleAttributes() {
-			return $this->renderCssStyles();
+			return $this->RenderCssStyles();
 		}
 
 		/**
@@ -960,8 +960,8 @@
 		 *
 		 * @return string
 		 */
-		protected function getWrapperStyleAttributes($blnIsBlockElement = false) {
-			return $this->getWrapperStyler()->renderCssStyles();
+		protected function GetWrapperStyleAttributes($blnIsBlockElement = false) {
+			return $this->getWrapperStyler()->RenderCssStyles();
 		}
 
 
@@ -975,7 +975,7 @@
 		 * @param null $styleOverrides
 		 * @return string
 		 */
-		public function renderCssStyles($styleOverrides = null) {
+		public function RenderCssStyles($styleOverrides = null) {
 			$styles = $this->styles;
 			if ($styleOverrides) {
 				$styles = array_merge($this->styles, $styleOverrides);
@@ -996,13 +996,13 @@
 		 * @param array $attributeOverrides
 		 * @return string
 		 */
-		protected function renderWrapperAttributes($blnIsBlockElement, $attributeOverrides = null) {
+		protected function RenderWrapperAttributes($blnIsBlockElement, $attributeOverrides = null) {
 			$styleOverrides = null;
 			if (!$this->blnDisplay) {
 				$styleOverrides = ['display'=>'none'];
 			}
 
-			return $this->getWrapperStyler()->renderHtmlAttributes($attributeOverrides, $styleOverrides);
+			return $this->getWrapperStyler()->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
 		}
 
 		/**
@@ -1012,13 +1012,13 @@
 		 * @param $blnForceBlockElement
 		 * @return string
 		 */
-		protected function renderWrappedOutput($strOutput, $blnForceBlockElement) {
+		protected function RenderWrappedOutput($strOutput, $blnForceBlockElement) {
 			$blnIsBlockElement = $this->blnIsBlockElement || $blnForceBlockElement;
 			$strTag = $blnIsBlockElement ? 'div' : 'span';
 			$overrides = ['id'=>$this->strControlId . '_ctl'];
-			$strAttributes = $this->renderWrapperAttributes($blnIsBlockElement, $overrides);
+			$strAttributes = $this->RenderWrapperAttributes($blnIsBlockElement, $overrides);
 
-			return QHtml::renderTag($strTag, $strAttributes, $strOutput);
+			return QHtml::RenderTag($strTag, $strAttributes, $strOutput);
 		}
 
 		/**
@@ -1045,7 +1045,7 @@
 		 * @throws Exception|QCallerException
 		 * @see QControlBase::RenderOutput()
 		 */
-		protected function renderHelper($mixParameterArray, $strRenderMethod) {
+		protected function RenderHelper($mixParameterArray, $strRenderMethod) {
 			// Make sure the form is already "RenderBegun"
 			if ((!$this->objForm) || ($this->objForm->FormStatus != QForm::FormStatusRenderBegun)) {
 				if (!$this->objForm)
@@ -1106,13 +1106,13 @@
 		/**
 		 * The current use of this function is unknown at the moment.
 		 */
-		protected function getNonWrappedHtml() {}
+		protected function GetNonWrappedHtml() {}
 
 		/**
 		 * Sets focus to this control
 		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
-		public function focus() {
+		public function Focus() {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus();', $this->strControlId));
 		}
 
@@ -1120,8 +1120,8 @@
 		 * Same as "Focus": Sets focus to this control
 		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
-		public function setFocus() {
-			$this->focus();
+		public function SetFocus() {
+			$this->Focus();
 		}
 
 		/**
@@ -1131,7 +1131,7 @@
 		 * @param string $strToColor blink color
 		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
-		public function blink($strFromColor = '#ffff66', $strToColor = '#ffffff') {
+		public function Blink($strFromColor = '#ffff66', $strToColor = '#ffffff') {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").blink("%s", "%s");', $this->strControlId, $strFromColor, $strToColor));
 		}
 
@@ -1145,7 +1145,7 @@
 		 *
 		 * @return string
 		 */
-		public function getEndScript() {
+		public function GetEndScript() {
 
 			$strToReturn = '';
 
@@ -1158,7 +1158,7 @@
 			if ($this->objDroppable)
 				$strToReturn .= $this->objDroppable->GetControlJavaScript() . ';';
 
-			$strToReturn .= $this->renderActionScripts();
+			$strToReturn .= $this->RenderActionScripts();
 
 			$this->strAttributeScripts = null; // erase the attribute scripts, because the entire control is being drawn, so we don't need them anymore.
 
@@ -1171,7 +1171,7 @@
          *
          * @return null|string
          */
-        public function renderAttributeScripts()
+        public function RenderAttributeScripts()
         {
             if ($this->strAttributeScripts) {
                 $strToReturn = implode (";\n", $this->strAttributeScripts);
@@ -1192,7 +1192,7 @@
          *
          * @param string $strScript
          */
-        public function addAttributeScript ($strScript)
+        public function AddAttributeScript ($strScript)
         {
             $this->strAttributeScripts[] = $strScript;
         }
@@ -1202,7 +1202,7 @@
 		 * INITIALLY rendered.
 		 *
 		 */
-		public function getEndHtml() {}
+		public function GetEndHtml() {}
 
 		/**
 		 * Refreshes the control
@@ -1263,7 +1263,7 @@
 					// as standard HTML
 					if (($this->objParentControl) && ($this->objParentControl->Rendered || $this->objParentControl->Rendering)) {
 						if($this->blnUseWrapper) {
-							$strOutput = $this->renderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
+							$strOutput = $this->RenderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
 						} else {
 							$strOutput = $strOutput . $this->GetNonWrappedHtml();
 						}
@@ -1274,12 +1274,12 @@
 
 				default:
 					if ($this->blnUseWrapper) {
-						$strOutput = $this->renderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->getNonWrappedHtml();
+						$strOutput = $this->RenderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
 					} else {
-						$strOutput = $strOutput . $this->getNonWrappedHtml();
+						$strOutput = $strOutput . $this->GetNonWrappedHtml();
 					}
 
-					$strOutput = $this->renderComment(self::CommentStart) . _indent($strOutput) . $this->renderComment(self::CommentEnd);
+					$strOutput = $this->RenderComment(self::CommentStart) . _indent($strOutput) . $this->RenderComment(self::CommentEnd);
 					break;
 			}
 
@@ -1361,7 +1361,7 @@
 					// If something changed in the wrapper attributes, we need to tell the jQuery response to handle that too.
 					// In particular, if the wrapper was hidden, and is now displayed, we need to make sure that the control
 					// becomes visible before other scripts execute, or those other scripts will not see the control.
-				$controls[] = [QAjaxResponse::Id=>$this->strControlId . '_ctl', QAjaxResponse::Attributes=>$this->getWrapperStyler()->getHtmlAttributes()];
+				$controls[] = [QAjaxResponse::Id=>$this->strControlId . '_ctl', QAjaxResponse::Attributes=>$this->getWrapperStyler()->GetHtmlAttributes()];
 			}
 			return $controls;
 		}
@@ -1527,8 +1527,8 @@
 		 * @param string $strType	Either QControl::CommentStart or QControl::CommentEnd
 		 * @return string
 		 */
-		public function renderComment($strType) {
-			return  QHtml::comment( $strType . ' ' . get_class($this) . ' ' . $this->strName . ' id:' . $this->strControlId);
+		public function RenderComment($strType) {
+			return  QHtml::Comment( $strType . ' ' . get_class($this) . ' ' . $this->strName . ' id:' . $this->strControlId);
 		}
 
 
@@ -1867,7 +1867,7 @@
 				case "Enabled":
 					try {
 						if ($this->blnEnabled !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->markAsModified();
+							$this->MarkAsModified();
 							$this->blnEnabled = $mixValue;
 						}
 						break;
@@ -1886,7 +1886,7 @@
 				case "Visible":
 					try {
 						if ($this->blnVisible !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->markAsModified();
+							$this->MarkAsModified();
 							$this->blnVisible = $mixValue;
 						}
 						break;
@@ -1897,7 +1897,7 @@
 				case "PreferredRenderMethod":
 					try {
 						if ($this->strPreferredRenderMethod !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->markAsModified();
+							$this->MarkAsModified();
 							$this->strPreferredRenderMethod = $mixValue;
 						}
 						break;
@@ -1909,7 +1909,7 @@
 				case "HtmlBefore":
 					try {
 						if ($this->strHtmlBefore !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->markAsModified();
+							$this->MarkAsModified();
 							$this->strHtmlBefore = $mixValue;
 						}
 						break;
@@ -1920,7 +1920,7 @@
 				case "HtmlAfter":
 					try {
 						if ($this->strHtmlAfter !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->markAsModified();
+							$this->MarkAsModified();
 							$this->strHtmlAfter = $mixValue;
 						}
 						break;
@@ -1931,7 +1931,7 @@
 				case "Instructions":
 					try {
 						if ($this->strInstructions !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->markAsModified();
+							$this->MarkAsModified();
 							$this->strInstructions = $mixValue;
 						}
 						break;
@@ -1942,7 +1942,7 @@
 				case "Warning":
 					try {
 						$this->strWarning = QType::Cast($mixValue, QType::String);
-						$this->markAsModified(); // always modify, since it will get reset on subsequent drawing
+						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2016,7 +2016,7 @@
 				case "Name":
 					try {
 						if ($this->strName !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->markAsModified();
+							$this->MarkAsModified();
 							$this->strName = $mixValue;
 						}
 						break;
@@ -2027,7 +2027,7 @@
 				case "ActionParameter":
 					try {
 						$this->mixActionParameter = ($mixValue instanceof QJsClosure) ? $mixValue : QType::Cast($mixValue, QType::String);
-						$this->markAsModified();
+						$this->MarkAsModified();
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

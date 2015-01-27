@@ -37,7 +37,7 @@
 		 * @param boolean	$blnNoSpace		 	Renders with no white-space. Useful in special inline situations.
 		 * @return string						The rendered html tag
 		 */
-		public static function renderTag($strTag, $strAttributes, $strInnerHtml = null, $blnIsVoidElement = false, $blnNoSpace = false) {
+		public static function RenderTag($strTag, $strAttributes, $strInnerHtml = null, $blnIsVoidElement = false, $blnNoSpace = false) {
 			$strToReturn = '<' . $strTag;
 			if ($strAttributes) {
 				$strToReturn .=  ' ' . trim($strAttributes);
@@ -69,8 +69,8 @@
 		 * @param $blnWrapped
 		 * @return string
 		 */
-		public static function renderLabeledInput($strLabel, $blnTextLeft, $strAttributes, $strLabelAttributes, $blnWrapped) {
-			$strHtml = trim(self::renderTag('input', $strAttributes, null, true));
+		public static function RenderLabeledInput($strLabel, $blnTextLeft, $strAttributes, $strLabelAttributes, $blnWrapped) {
+			$strHtml = trim(self::RenderTag('input', $strAttributes, null, true));
 
 			if ($blnWrapped) {
 				if ($blnTextLeft) {
@@ -79,10 +79,10 @@
 					$strCombined = $strHtml . $strLabel;
 				}
 
-				$strHtml = self::renderTag('label', $strLabelAttributes, $strCombined);
+				$strHtml = self::RenderTag('label', $strLabelAttributes, $strCombined);
 			}
 			else {
-				$strLabel = trim(self::renderTag('label', $strLabelAttributes, $strLabel));
+				$strLabel = trim(self::RenderTag('label', $strLabelAttributes, $strLabel));
 				if ($blnTextLeft) {
 					$strHtml = $strLabel .  $strHtml;
 				} else {
@@ -98,7 +98,7 @@
 		 * @param 	string 	$strValue 	The number or string to be formatted to the <length> compatible value.
 		 * @return 	string 	the formatted value of type <length>.
 		 */
-		public final static function formatLength($strValue) {
+		public final static function FormatLength($strValue) {
 			if (is_numeric($strValue)) {
 				if (0 == $strValue) {
 					if (!is_int($strValue)) {
@@ -128,7 +128,7 @@
 		 * @param 	string 	$newLength
 		 * @return 	bool	true if the length was changed
 		 */
-		public static function setLength(&$strOldLength, $newLength) {
+		public static function SetLength(&$strOldLength, $newLength) {
 			if ($newLength && preg_match('#^(\+|\-|/|\*)(.+)$#',$newLength, $matches)) { // do math operation
 				$strOperator = $matches[1];
 				$newValue = $matches[2];
@@ -189,7 +189,7 @@
 		 * @param string 	$strNewClasses 	New class to add. Could be a list separated by spaces.
 		 * @return bool 	true if the class list was changed.
 		 */
-		public static function addClass(&$strClassList, $strNewClasses) {
+		public static function AddClass(&$strClassList, $strNewClasses) {
 			$strNewClasses = trim($strNewClasses);
 			if (empty($strNewClasses)) return false;
 
@@ -220,7 +220,7 @@
 		 * @param string 	$strCssNamesToRemove	space separated list of names to remove
 		 * @return bool 	true if the class list was changed
 		 */
-		public static function removeClass(&$strClassList, $strCssNamesToRemove) {
+		public static function RemoveClass(&$strClassList, $strCssNamesToRemove) {
 			$strNewCssClass = '';
 			$blnRemoved = false;
 			$strCssNamesToRemove = trim($strCssNamesToRemove);
@@ -260,7 +260,7 @@
 		 * @param  $strPrefix
 		 * @return bool true if the class list changed
 		 */
-		public static function removeClassesByPrefix (&$strClassList, $strPrefix) {
+		public static function RemoveClassesByPrefix (&$strClassList, $strPrefix) {
 			$aRet = array();
 			$blnChanged = false;
 			if ($strClassList) foreach (explode (' ', $strClassList) as $strClass) {
@@ -282,7 +282,7 @@
 		 * @param array $attributes
 		 * @return string
 		 */
-		public static function renderHtmlAttributes ($attributes) {
+		public static function RenderHtmlAttributes ($attributes) {
 			$strToReturn = '';
 			if ($attributes) {
 				foreach ($attributes as $strName=>$strValue) {
@@ -303,7 +303,7 @@
 		 * @param array 	$styles		key/value array representing the styles.
 		 * @return string	a string suitable for including in a css 'style' property
 		 */
-		public static function renderStyles($styles) {
+		public static function RenderStyles($styles) {
 			if (!$styles) return '';
 			return implode('; ', array_map(
 				function ($v, $k) { return $k . ':' . $v; },
@@ -318,7 +318,7 @@
 		 * @param bool 		$blnRemoveOnMinimize
 		 * @return string
 		 */
-		public static function comment($strText, $blnRemoveOnMinimize = true) {
+		public static function Comment($strText, $blnRemoveOnMinimize = true) {
 			if ($blnRemoveOnMinimize && defined('__MINIMIZE__') && __MINIMIZE__) {
 				return '';
 			}

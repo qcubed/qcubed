@@ -54,7 +54,7 @@ class QTag extends QHtmlAttributeManager {
 		if (is_null($strInnerText)) {
 			$strInnerText = $this->getInnerHtml();
 		}
-		$strOut = $this->renderTag($this->strTag,
+		$strOut = $this->RenderTag($this->strTag,
 			$attributeOverrides,
 			$styleOverrides,
 			$strInnerText,

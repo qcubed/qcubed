@@ -100,20 +100,20 @@
 				} else {
 					$strLabelAttributes = $this->renderLabelAttributes();
 				}
-				$strCheckHtml = QHtml::renderLabeledInput(
+				$strCheckHtml = QHtml::RenderLabeledInput(
 					$strText,
 					$this->strTextAlign == QTextAlign::Left,
-					$this->renderHtmlAttributes($attrOverride),
+					$this->RenderHtmlAttributes($attrOverride),
 					$strLabelAttributes,
 					$this->blnWrapLabel
 				);
 				if (!$this->blnWrapLabel) {
 					// Additionally wrap in a span so we can associate the label with the checkbox visually and apply the styles
-					$strCheckHtml = QHtml::renderTag('span',  $this->renderLabelAttributes(), $strCheckHtml);
+					$strCheckHtml = QHtml::RenderTag('span',  $this->renderLabelAttributes(), $strCheckHtml);
 				}
 			}
 			else {
-				$strCheckHtml = $this->renderTag('input', $attrOverride, null, null, true);
+				$strCheckHtml = $this->RenderTag('input', $attrOverride, null, null, true);
 			}
 			return $strCheckHtml;
 		}
@@ -137,7 +137,7 @@
 		 * @return string
 		 */
 		protected function renderLabelAttributes() {
-			$attributes = $this->getHtmlAttributes(['title']); // copy tooltip to wrapping label
+			$attributes = $this->GetHtmlAttributes(['title']); // copy tooltip to wrapping label
 			$objStyler = $this->getCheckLabelStyler();
 			if ($attributes) {
 				$objStyler = $objStyler->ApplyOverride($attributes);

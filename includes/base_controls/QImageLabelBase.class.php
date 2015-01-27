@@ -112,7 +112,7 @@
 
 			$attrOverrides['src'] = $strPath;
 			$attrOverrides['alt'] = QApplication::HtmlEntities($this->strText);
-			return $this->renderTag ('img', $attrOverrides, null, null, true);
+			return $this->RenderTag ('img', $attrOverrides, null, null, true);
 		}
 		public function Validate() {return true;}
 

@@ -29,7 +29,7 @@
 		 * @deprecated use QHtml::formatLength
 		 */
 		public final static function FormatLength($strValue) {
-			return QHtml::formatLength($strValue);
+			return QHtml::FormatLength($strValue);
 		}
 	}
 ?>

@@ -247,7 +247,7 @@
 
 			switch ($this->strTextMode) {
 				case QTextMode::MultiLine:
-					return $this->renderTag('textarea',
+					return $this->RenderTag('textarea',
 								$attrOverride,
 								null,
 								QApplication::HtmlEntities($this->strText)
@@ -255,7 +255,7 @@
 
 				default:
 					$attrOverride['value'] = QApplication::HtmlEntities($this->strText);
-					return $this->renderTag('input',
+					return $this->RenderTag('input',
 						$attrOverride,
 						null,
 						null,
@@ -275,7 +275,7 @@
 		 * @param null $styleOverrides
 		 * @return string|void
 		 */
-		public function renderHtmlAttributes ($attributeOverrides = null, $styleOverrides = null) {
+		public function RenderHtmlAttributes ($attributeOverrides = null, $styleOverrides = null) {
 			if ($this->intMaxLength) {
 				$attributeOverrides['maxlength'] = $this->intMaxLength;
 			}
@@ -305,7 +305,7 @@
 				$attributeOverrides['placeholder'] = QApplication::HtmlEntities($this->strPlaceholder);
 			}
 
-			return parent::renderHtmlAttributes($attributeOverrides, $styleOverrides);
+			return parent::RenderHtmlAttributes($attributeOverrides, $styleOverrides);
 		}
 
 

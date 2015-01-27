@@ -128,7 +128,7 @@
 				$attrOverride['name'] = $this->strControlId;
 			}
 
-			$strToReturn = $this->renderTag('select', $attrOverride, null, $this->renderInnerHtml());
+			$strToReturn = $this->RenderTag('select', $attrOverride, null, $this->renderInnerHtml());
 
 			// If MultiSelect and if NOT required, add a "Reset" button to deselect everything
 			if (($this->SelectionMode == QSelectionMode::Multiple) && (!$this->blnRequired) && ($this->blnEnabled) && ($this->blnVisible)) {
@@ -228,13 +228,13 @@
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
-				case "Rows": return $this->getHtmlAttribute('size');
+				case "Rows": return $this->GetHtmlAttribute('size');
 				case "LabelForRequired": return $this->strLabelForRequired;
 				case "LabelForRequiredUnnamed": return $this->strLabelForRequiredUnnamed;
 				case "ItemStyle": return $this->objItemStyle;
 				
 				// BEHAVIOR
-				case "SelectionMode": return $this->hasHtmlAttribute('multiple') ? QSelectionMode::Multiple : QSelectionMode::Single;
+				case "SelectionMode": return $this->HasHtmlAttribute('multiple') ? QSelectionMode::Multiple : QSelectionMode::Single;
 
 				default:
 					try {
@@ -262,7 +262,7 @@
 				// APPEARANCE
 				case "Rows":
 					try {
-						$this->setHtmlAttribute('size', QType::Cast($mixValue, QType::Integer));
+						$this->SetHtmlAttribute('size', QType::Cast($mixValue, QType::Integer));
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -289,9 +289,9 @@
 				case "SelectionMode":
 					try {
 						if (QType::Cast($mixValue, QType::String) == QSelectionMode::Multiple) {
-							$this->setHtmlAttribute('multiple', 'multiple');
+							$this->SetHtmlAttribute('multiple', 'multiple');
 						} else {
-							$this->removeHtmlAttribute('multiple');
+							$this->RemoveHtmlAttribute('multiple');
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

@@ -33,7 +33,7 @@
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 				
 			$this->mixActionParameter = $strActionParameter;
-			$strToReturn = $this->renderActionScripts();
+			$strToReturn = $this->RenderActionScripts();
 			
 			QApplication::ExecuteJavaScript($strToReturn);
 			

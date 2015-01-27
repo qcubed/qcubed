@@ -53,7 +53,7 @@
 			$attrOverride['name'] = $this->strControlId;
 			$strText = ($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText;
 
-			return $this->renderTag('button', $attrOverride, null, $strText);
+			return $this->RenderTag('button', $attrOverride, null, $strText);
 		}
 
 

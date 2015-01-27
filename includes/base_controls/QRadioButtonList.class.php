@@ -100,18 +100,18 @@
 		protected function GetItemHtml($objItem, $intIndex, $strTabIndex, $blnWrapLabel) {
 			$objLabelStyles = new QTagStyler();
 			if ($this->objItemStyle) {
-				$objLabelStyles->override($this->objItemStyle); // default style
+				$objLabelStyles->Override($this->objItemStyle); // default style
 			}
 			if ($objItemStyle = $objItem->ItemStyle) {
-				$objLabelStyles->override($objItemStyle); // per item styling
+				$objLabelStyles->Override($objItemStyle); // per item styling
 			}
 
 			$objStyles = new QTagStyler();
-			$objStyles->setHtmlAttribute('type', 'radio');
-			$objStyles->setHtmlAttribute('value', $intIndex);
-			$objStyles->setHtmlAttribute('name', $this->strControlId);
+			$objStyles->SetHtmlAttribute('type', 'radio');
+			$objStyles->SetHtmlAttribute('value', $intIndex);
+			$objStyles->SetHtmlAttribute('name', $this->strControlId);
 			$strIndexedId = $this->strControlId . '_' . $intIndex;
-			$objStyles->setHtmlAttribute('id', $strIndexedId);
+			$objStyles->SetHtmlAttribute('id', $strIndexedId);
 
 			if ($strTabIndex) {
 				$objStyles->TabIndex = $strTabIndex;	// Use parent control tabIndex, which will cause the browser to take them in order of drawing
@@ -129,18 +129,18 @@
 			}
 
 			if ($objItem->Selected) {
-				$objStyles->setHtmlAttribute('checked', 'checked');
+				$objStyles->SetHtmlAttribute('checked', 'checked');
 			}
 
 			if (!$blnWrapLabel) {
-				$objLabelStyles->setHtmlAttribute('for', $strIndexedId);
+				$objLabelStyles->SetHtmlAttribute('for', $strIndexedId);
 			}
 
-			$strHtml = QHtml::renderLabeledInput(
+			$strHtml = QHtml::RenderLabeledInput(
 				$strLabelText,
 				$this->strTextAlign == QTextAlign::Left,
-				$objStyles->renderHtmlAttributes(),
-				$objLabelStyles->renderHtmlAttributes(),
+				$objStyles->RenderHtmlAttributes(),
+				$objLabelStyles->RenderHtmlAttributes(),
 				$blnWrapLabel);
 
 			return $strHtml;
@@ -174,10 +174,10 @@
 
 			if ($this->strMaxHeight) {
 				$objStyler = new QTagStyler();
-				$objStyler->setCssStyle('max-height', $this->strMaxHeight, true);
-				$objStyler->setCssStyle('overflow-y', 'scroll');
+				$objStyler->SetCssStyle('max-height', $this->strMaxHeight, true);
+				$objStyler->SetCssStyle('overflow-y', 'scroll');
 
-				$strToReturn = QHtml::renderTag('div', $objStyler->renderHtmlAttributes(), $strToReturn);
+				$strToReturn = QHtml::RenderTag('div', $objStyler->RenderHtmlAttributes(), $strToReturn);
 			}
 			return $strToReturn;
 
@@ -217,17 +217,17 @@
 								+ min(($this->ItemCount % $this->intRepeatColumns), $intColIndex)
 								+ $intRowIndex;
 
-						$strItemHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->getHtmlAttribute('tabindex'), $this->blnWrapLabel);
-						$strCellHtml = QHtml::renderTag ('td', null, $strItemHtml);
+						$strItemHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
+						$strCellHtml = QHtml::RenderTag ('td', null, $strItemHtml);
 						$strRowHtml .= $strCellHtml;
 					}
 
-					$strRowHtml = QHtml::renderTag('tr', null, $strRowHtml);
+					$strRowHtml = QHtml::RenderTag('tr', null, $strRowHtml);
 					$strToReturn .= $strRowHtml;
 				}
 			}
 
-			return $this->renderTag ('table', ['id'=>$this->strControlId], null, $strToReturn);
+			return $this->RenderTag ('table', ['id'=>$this->strControlId], null, $strToReturn);
 		}
 
 		/**
@@ -239,9 +239,9 @@
 			$count = $this->ItemCount;
 			$strToReturn = '';
 			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
-				$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->getHtmlAttribute('tabindex'), $this->blnWrapLabel) . "\n";
+				$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel) . "\n";
 			}
-			$strToReturn = $this->renderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
+			$strToReturn = $this->RenderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
 			return $strToReturn;
 		}
 
@@ -253,10 +253,10 @@
 			$count = $this->ItemCount;
 			$strToReturn = '';
 			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
-				$strHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->getHtmlAttribute('tabindex'), $this->blnWrapLabel);
-				$strToReturn .= QHtml::renderTag('div', null, $strHtml);
+				$strHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
+				$strToReturn .= QHtml::RenderTag('div', null, $strHtml);
 			}
-			$strToReturn = $this->renderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
+			$strToReturn = $this->RenderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
 			return $strToReturn;
 		}
 
