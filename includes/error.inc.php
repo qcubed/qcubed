@@ -170,7 +170,15 @@
 	 * This shutdown function will catch those errors.
 	 */
 	function QCubedShutdown() {
-		if ($error = error_get_last() &&
+
+		$strTimerOutput = QTimer::VarDump(false);
+		if ($strTimerOutput && __TIMER_OUT_FILE__) {
+			file_put_contents(__TIMER_OUT_FILE__, $strTimerOutput . "\n", FILE_APPEND);
+		}
+
+		$error = error_get_last();
+		if ($error &&
+				is_array ($error) &&
 				(!defined ('QCodeGen::DebugMode') || QCodeGen::DebugMode)){ // if we are codegenning, only error if we are in debug mode. Prevents chmod error.
 			QCodoHandleError (
 				$error['type'],
