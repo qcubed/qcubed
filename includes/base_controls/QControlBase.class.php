@@ -180,7 +180,7 @@
 		/** @var string|QJsClosure|null The action parameter (typically small amount of data) for the Ajax or Server Callback  */
 		protected $mixActionParameter = null;
 		/** @var string|null CSS class for the control's wrapper */
-		protected $strWrapperCssClass = null;
+		//protected $strWrapperCssClass = null; -- See objWrapperStyler now
 		/** @var bool Should the wrapper be used when rendering?  */
 		protected $blnUseWrapper = true;
         /** @var string  One time scripts associated with the control. */
@@ -1740,7 +1740,7 @@
 			return false;
 		}
 
-		public function getWrapperStyler() {
+		public function GetWrapperStyler() {
 			if (!$this->objWrapperStyler) {
 				$this->objWrapperStyler = new QTagStyler();
 			}
@@ -1793,7 +1793,7 @@
 				case "WrapperModified": return $this->blnWrapperModified;
 				case "ActionParameter": return $this->mixActionParameter;
 				case "ActionsMustTerminate": return $this->blnActionsMustTerminate;
-				case "WrapperCssClass": return $this->strWrapperCssClass;
+				case "WrapperCssClass": return $this->GetWrapperStyler()->CssClass;
 				case "UseWrapper": return $this->blnUseWrapper;
 
 				// SETTINGS
@@ -2037,8 +2037,7 @@
 				case "WrapperCssClass":
 					try {
 						$strWrapperCssClass = QType::Cast($mixValue, QType::String);
-						if ($strWrapperCssClass != $this->strWrapperCssClass) {
-							$this->strWrapperCssClass = $strWrapperCssClass;
+						if ($this->GetWrapperStyler()->SetCssClass($strWrapperCssClass)) {
 							$this->MarkAsWrapperModified();
 						}
 						break;

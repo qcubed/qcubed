@@ -79,6 +79,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * Sets the given html attribute to the given value.
 	 * @param $strName
 	 * @param $strValue
+	 * @return boolean true if the attribute changed value
 	 */
 	public function SetHtmlAttribute ($strName, $strValue) {
 		if (!is_null($strValue)) {
@@ -86,13 +87,16 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				// only make a change if it has actually changed value.
 				$this->attributes[$strName] = $strValue;
 				$this->MarkAsModified();
+				return true;
 			}
 		} else {
 			if (isset($this->attributes[$strName])) {
 				unset($this->attributes[$strName]);
 				$this->MarkAsModified();
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -311,13 +315,35 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	}
 
 
+	/**
+	 * Sets the CSS class to the given value(s). Multiple class names can be separated with a space. If you
+	 * preceed the class names with a plus(+) they will be added to the current class. If a minus (-) they
+	 * will be removed.
+	 *
+	 * @param $strNewClass
+	 */
+	public function SetCssClass($strNewClass) {
+		assert ('$strNewClass[0] != "+" || $strNewClass[1] == " "'); // If a plus sign, be sure to follow with a space. For consistency.
+		if (substr($strNewClass, 0, 2) == '+ ') {
+			$ret = $this->AddCssClass(substr($strNewClass, 2));
+		}
+		elseif (substr($strNewClass, 0, 2) == '- ') {
+			$ret = $this->RemoveCssClass(substr($strNewClass, 2));
+		}
+		else {
+			$ret = $this->SetHtmlAttribute('class', $strNewClass);
+		}
+		return $ret;
+	}
 
 	/**
 	 * Adds a css class name to the 'class' property. Prevents duplication.
 	 * @param string $strNewClass
+	 * @return bool true if the class was not already attached.
 	 */
 	public function AddCssClass($strNewClass) {
-		if (!$strNewClass) return;
+		$ret = false;
+		if (!$strNewClass) return false;
 
 		$strClasses = $this->GetHtmlAttribute('class');
 		if (is_null($strClasses)) {
@@ -325,7 +351,9 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 		}
 		if (QHtml::AddClass($strClasses, $strNewClass)) {
 			$this->SetHtmlAttribute('class', $strClasses);
+			$ret = true;
 		}
+		return $ret;
 	}
 
 	/**
@@ -731,11 +759,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			case "CssClass":
 				try {
 					$strCssClass = QType::Cast($mixValue, QType::String);
-					if (substr($strCssClass, 0, 1) == '+') {
-						$this->AddCssClass(substr($strCssClass, 1));
-					} else {
-						$this->SetHtmlAttribute('class', QType::Cast($mixValue, QType::String));
-					}
+					$this->SetCssClass($strCssClass);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
