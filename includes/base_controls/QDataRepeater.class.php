@@ -92,7 +92,7 @@ class QDataRepeater extends QPaginatedControl {
 			throw new QCallerException ("You must specify an item tag name before rendering the list.");
 		}
 
-		$strToReturn = QHtml::RenderTag($this->strTagName, $this->GetItemAttributes($objItem), $this->GetItemInnerHtml($objItem));
+		$strToReturn = QHtml::RenderTag($this->strItemTagName, $this->GetItemAttributes($objItem), $this->GetItemInnerHtml($objItem));
 		return $strToReturn;
 	}
 
