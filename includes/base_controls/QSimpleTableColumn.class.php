@@ -691,11 +691,8 @@
 		 *
 		 * @throws InvalidArgumentException
 		 */
-		public function __construct($strName, $objCallable, $mixParams = null) {
+		public function __construct($strName, callable $objCallable, $mixParams = null) {
 			parent::__construct($strName);
-			if (!is_callable($objCallable)) {
-				throw new InvalidArgumentException('Must be callable.');
-			}
 			if ($objCallable instanceof Closure) {
 				throw new InvalidArgumentException('Cannot be a Closure.');
 			}
