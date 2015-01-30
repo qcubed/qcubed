@@ -66,7 +66,7 @@ class QMetaEditDlg extends QDialog {
 		$this->dtgGeneralOptions->ShowHeader = false;
 		$this->dtgGeneralOptions->Name = "Definition Options";
 		$this->dtgGeneralOptions->CreatePropertyColumn('Attribute', 'Name');
-		$col = $this->dtgGeneralOptions->AddColumn (new QSimpleTableClosureColumn('Attribute', array ($this, 'dtg_ValueRender'), $this->dtgGeneralOptions));
+		$col = $this->dtgGeneralOptions->AddColumn (new QSimpleTableCallableColumn('Attribute', array ($this, 'dtg_ValueRender'), $this->dtgGeneralOptions));
 		$col->HtmlEntities = false;
 		$this->dtgGeneralOptions->SetDataBinder('dtgGeneralOptions_Bind', $this);
 
@@ -115,7 +115,7 @@ class QMetaEditDlg extends QDialog {
 			$dtg = new QSimpleTable($panel);
 			$dtg->ShowHeader = false;
 			$dtg->CreatePropertyColumn('Attribute', 'Name');
-			$col = $dtg->AddColumn (new QSimpleTableClosureColumn('Attribute', array ($this, 'dtg_ValueRender'), $dtg));
+			$col = $dtg->AddColumn (new QSimpleTableCallableColumn('Attribute', array ($this, 'dtg_ValueRender'), $dtg));
 			$col->HtmlEntities = false;
 			$dtg->SetDataBinder('dtgControlBind', $this);
 			$dtg->Name = $tabName; // holder for category
