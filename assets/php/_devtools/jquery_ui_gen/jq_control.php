@@ -311,9 +311,7 @@ class JqControlGen extends QCodeGenBase {
 		$strOutDirControlsBase = __QCUBED_CORE__ . "/base_controls";
 
 		$mixArgumentArray = array('objJqDoc' => $objJqDoc);
-		$strTemplate = file_get_contents('jq_control.tpl');
-		//use EvaluateTemplate to avoid dealing with XML
-		$strResult = $this->EvaluateTemplate($strTemplate, 'jq_ctl', $mixArgumentArray);
+		$strResult = $this->EvaluatePHP('jq_control.tpl.php', $mixArgumentArray);
 		$strOutFileName = $strOutDirControlsBase . '/'.$objJqDoc->strQcClass . 'Gen.class.php';
 		file_put_contents($strOutFileName, $strResult);
 
