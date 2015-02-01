@@ -7,7 +7,7 @@
 	 * @package Controls
 	 * 
 	 * @property integer $ItemsPerPage 		How many items you want to display per page when Pagination is enabled
-	 * @property integer $PageNumber 		The current page number you are viewing
+	 * @property integer $PageNumber 		The current page number you are viewing. 1 is the first page, there is no page zero.
 	 * @property integer $TotalItemCount 	The total number of items in the ENTIRE recordset -- only used when Pagination is enabled
 	 * @property boolean $UseAjax			Whether to use ajax in the drawing.
 	 * @property-read integer $PageCount	Current number of pages being represented
@@ -309,6 +309,27 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * After adjusting the total item count, or page size, or other parameters, call this to adjust the page number
+		 * to make sure it is not off the end.
+		 */
+		public function LimitPageNumber() {
+			$pageCount = $this->CalcPageCount();
+			if ($this->intPageNumber > $pageCount) {
+				if ($pageCount <= 1) {
+					$this->intPageNumber = 1;
+				} else {
+					$this->intPageNumber = $pageCount;
+				}
+			}
+		}
+
+		public function CalcPageCount() {
+			return floor($this->intTotalItemCount / $this->intItemsPerPage) +
+				((($this->intTotalItemCount % $this->intItemsPerPage) != 0) ? 1 : 0);
+
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -320,8 +341,7 @@
 				case "TotalItemCount": return $this->intTotalItemCount;
 				case "UseAjax": return $this->blnUseAjax;
 				case "PageCount":
-					return floor($this->intTotalItemCount / $this->intItemsPerPage) +
-						((($this->intTotalItemCount % $this->intItemsPerPage) != 0) ? 1 : 0);
+					return $this->CalcPageCount();
 				case 'WaitIcon':
 					return $this->objWaitIcon;
 				case "PaginatedControl":
@@ -379,10 +399,14 @@
 
 				case "TotalItemCount":
 					try {
-						if ($mixValue > 0)
-							return ($this->intTotalItemCount = QType::Cast($mixValue, QType::Integer));
-						else
-							return ($this->intTotalItemCount = 0);
+						if ($mixValue > 0) {
+							$this->intTotalItemCount = QType::Cast($mixValue, QType::Integer);
+						}
+						else {
+							$this->intTotalItemCount = 0;
+						}
+						$this->LimitPageNumber();
+						return $this->intTotalItemCount;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
