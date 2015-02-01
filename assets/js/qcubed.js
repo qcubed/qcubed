@@ -479,6 +479,16 @@ qcubed = {
                     /** @todo eval is evil, do no evil */
                     eval (json.commands);
                 }
+                if (json.winclose) {
+                    window.close();
+                }
+                if (json.loc) {
+                    if (json.loc == 'reload') {
+                        window.location.reload(true);
+                    } else {
+                        document.location = json.loc;
+                    }
+                }
 
                 if (qcubed.objAjaxWaitIcon) {
                     $j(qcubed.objAjaxWaitIcon).hide();

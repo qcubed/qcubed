@@ -238,6 +238,8 @@
 		const Id = 'id';
 		const Attributes = 'attributes';
 		const Css = 'css';
+		const Close = 'winclose';
+		const Location = 'loc';
 	}
 
 

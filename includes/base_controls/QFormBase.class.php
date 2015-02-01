@@ -581,13 +581,15 @@
 			ob_clean();
 			if (isset($_POST['Qform__FormCallType']) &&  $_POST['Qform__FormCallType'] == QCallType::Ajax) {
 				// AJAX-based Response
+				header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
 
-				// Response is in XML Format
-				header('Content-Type: text/xml');
+				$strJSON = JavaScriptHelper::toJsObject(['loc'=>'reload']);
 
-				// Use javascript to reload
-				_p('<?xml version="1.0"?><response><controls/><commands><command>window.location.reload(true);</command></commands></response>', false);
-
+				// Output it and update render state
+				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
+					$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
+				}
+				print ($strJSON);
 			} else {
 				header('Location: '. QApplication::$RequestUri);
 			}
@@ -643,7 +645,7 @@
 			// watcher collection
 
 			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
-				$aResult[QAjaxResponse::Watcher] = $this->strWatcherTimeher;
+				$aResult[QAjaxResponse::Watcher] = $this->strWatcherTime;
 			}
 
 			// Recursively render changed controls, starting with all top-level controls
@@ -758,16 +760,7 @@
 			} else {
 				ob_clean();
 
-				// Response is in XML Format
-				header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
-
-				$strJSON = JavaScriptHelper::toJsObject($aResult);
-
-				// Output it and update render state
-				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
-					$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
-				}
-				print ($strJSON);
+				QApplication::SendAjaxResponse($aResult);
 			}
 
 			// Update Render State
