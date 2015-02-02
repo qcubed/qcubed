@@ -204,10 +204,10 @@ class QTimer {
 	public static function VarDump($blnDisplayOutput = true) {
 		$strToReturn = '';
 		foreach (self::$objTimerArray as $objTimer) {
-			$strToReturn .= $objTimer->__toString() . "<br>";
+			$strToReturn .= $objTimer->__toString() . "\n";
 		}
 		if ($blnDisplayOutput) {
-			echo $strToReturn;
+			echo nl2br($strToReturn);
 		} else {
 			return $strToReturn;
 		}

@@ -578,7 +578,7 @@
 		}
 
 		/**
-		 * Given a table name, returns a variable name that will be used to reprsent the corresponding model object.
+		 * Given a table name, returns a variable name that will be used to represent the corresponding model object.
 		 * @param string $strTableName
 		 * @return string
 		 */
