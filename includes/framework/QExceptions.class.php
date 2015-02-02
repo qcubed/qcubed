@@ -67,7 +67,9 @@
 		 * at the very least the Caller of the most immediate function, which is
 		 * 1 up the call stack, is responsible.  So therefore, by default, intOffset
 		 * is set to 1.
+		 * 
 		 * It is rare for intOffset to be set to an integer other than 1.
+		 *
 		 * Normally, the Offset would be altered by calls to IncrementOffset
 		 * at every step the CallerException is caught/rethrown up the call stack.
 		 *
@@ -167,6 +169,15 @@
 		 */
 		public function __construct($strType, $strClass, $strProperty) {
 			parent::__construct(sprintf("Undefined %s property or variable in '%s' class: %s", $strType, $strClass, $strProperty), 2);
+		}
+	}
+
+	/**
+	 * Thrown when we try to call an undefined method. Helpful for codegen.
+	 */
+	class QUndefinedMethodException extends QCallerException {
+		public function __construct($strClass, $strMethod) {
+			parent::__construct(sprintf("Undefined method in '%s' class: %s", $strClass, $strMethod), 2);
 		}
 	}
 
