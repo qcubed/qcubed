@@ -65,31 +65,42 @@
 						$strCode = sprintf(' if (%s) {%s}', $objAction->objEvent->Condition, trim($strCode));
 					}
 
+					$strCode .= _nl();
+
 					// Append it to the Return Value
 					$strToReturn .= $strCode;
 				}
 			}
+			$strToReturn = _nl() . _indent($strToReturn);
 
 			if (strlen($strToReturn)) {
 				if ($strJqUiProperty) {
-					return sprintf('$j("#%s").%s("option", {%s: function(event, ui){
-								%s
-								}});
-								', $objControl->getJqControlId(), $objControl->getJqSetupFunction(), $strJqUiProperty, substr($strToReturn, 1));
+					$strOut = sprintf('$j("#%s").%s("option", {%s: function(event, ui){%s}});',
+						$objControl->getJqControlId(),
+						$objControl->getJqSetupFunction(),
+						$strJqUiProperty,
+						$strToReturn);
 				} elseif ($objControl instanceof QControlProxy) {
 					if ($objControl->TargetControlId) {
-						return sprintf('$j("#%s").on("%s", function(event, ui){
-									%s
-									});
-									', $objControl->TargetControlId, $strEventName, substr($strToReturn, 1));
+						$strOut = sprintf('$j("#%s").on("%s", function(event, ui){%s});', $objControl->TargetControlId, $strEventName, $strToReturn);
 					}
 				} else {
-					return sprintf('$j("#%s").on("%s", function(event, ui){
-								%s
-								});
-								', $objControl->getJqControlId(), $strEventName, substr($strToReturn, 1));
+					$strOut = sprintf('$j("#%s").on("%s", function(event, ui){%s});',
+						$objControl->getJqControlId(),
+						$strEventName, $strToReturn);
 
-					//return sprintf('%s="%s" ', $strEventName, substr($strToReturn, 1));
+				}
+
+				if (isset($strOut)) {
+					if (!(defined('__MINIMIZE__') && __MINIMIZE)) {
+						// Render a comment
+						$strOut = _nl() .  _nl() .
+							sprintf ('/*** Event: %s  Control Name: %s Control Id: %s  ***/', $strEventName, $objControl->Name, $objControl->ControlId) .
+							_nl() .
+							_indent($strOut) .
+							_nl() . _nl();
+					}
+					return $strOut;
 				}
 			}
 

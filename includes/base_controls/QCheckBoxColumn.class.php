@@ -107,7 +107,7 @@ class QCheckBoxColumn extends QDataGridColumn
 		$strOutput = $this->chkSelectAll->Render(false);
 		
 		if ($blnWithLabel) {
-			$strOutput = '<label for="'.$this->chkSelectAll->ControlId.'">' . $this->strName . ' ' . $strOutput . '</label>';
+			$strOutput = QHtml::RenderTag('label', null,  $this->strName . ' ' . $strOutput);
 		}
 		
 		return $strOutput;

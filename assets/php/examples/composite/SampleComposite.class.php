@@ -88,10 +88,7 @@ class SampleComposite extends QControl {
 		}
 		$strStyle = sprintf('style="%s;text-align:center;"', $strStyle);
 
-		// Lets get all the other attributes -- because we have actions defined internally,
-		// we specifically do not want to include externally defined actions.  Therefore,
-		// we pass in "false" for the optional blnIncludeAction parameter
-		$strAttributes = $this->GetAttributes(true, false);
+		$strAttributes = $this->GetAttributes();
 
 		// Let's update the label
 		$this->lblMessage->Text = $this->intValue;

@@ -80,8 +80,8 @@ FUNC;
 						$this->aryNewPosition['top'] = $a[3];
 						
 						// update parent's coordinates
-						$this->objParentControl->strTop = $this->aryNewPosition['top'];
-						$this->objParentControl->strLeft = $this->aryNewPosition['left'];
+						$this->objParentControl->Top = $this->aryNewPosition['top'];
+						$this->objParentControl->Left = $this->aryNewPosition['left'];
 						break;
 						
 					} catch (QInvalidCastException $objExc) {

@@ -8,6 +8,10 @@
 	/**
 	 * This class will render an HTML Checkbox.
 	 *
+	 * Labels are a little tricky with checkboxes. There are two built-in ways to make labels:
+	 * 1) Assign a Name property, and render using something like RenderWithName
+	 * 2) Assign a Text property, in which case the checkbox will be wrapped with a label and the text you assign.
+	 *
 	 * @package Controls
 	 *
 	 * @property string $Text is used to display text that is displayed next to the checkbox.  The text is rendered as an html "Label For" the checkbox.
@@ -16,9 +20,9 @@
 	 * @property boolean $HtmlEntities specifies whether the checkbox text will have to be run through htmlentities or not.
 	 */
 	class QCheckBox extends QControl {
-		///////////////////////////
-		// Private Member Variables
-		///////////////////////////
+
+		protected $strTag = 'input';
+		protected $blnIsVoidElement = true;
 
 		// APPEARANCE
 		/** @var string Text opposite to the checkbox */
@@ -34,9 +38,17 @@
 		/** @var bool Determines whether the checkbox is checked? */
 		protected $blnChecked = false;
 
+		/**
+		 * @var  QTagStyler for labels of checkboxes. If side-by-side labeling, the styles will be applied to a
+		 * span that wraps both the checkbox and the label.
+		 */
+		protected $objLabelStyle;
+
+
 		//////////
 		// Methods
 		//////////
+
 		/**
 		 * Parses the Post Data submitted for the control and sets the values
 		 * according to the data submitted
@@ -58,84 +70,83 @@
 		}
 
 		/**
-		 * Returns the HTML code for the control which can be sent to the client
+		 * Returns the HTML code for the control which can be sent to the client.
+		 *
+		 * Note, previous version wrapped this in a div and made the control a block level control unnecessarily. To
+		 * achieve a block control, set blnUseWrapper and blnIsBlockElement.
+		 *
 		 * @return string THe HTML for the control
 		 */
 		protected function GetControlHtml() {
-			if (!$this->blnEnabled)
-				$strDisabled = 'disabled="disabled" ';
-			else
-				$strDisabled = "";
+			$attrOverride = array('type'=>'checkbox', 'name'=>$this->strControlId);
+			return $this->RenderButton($attrOverride);
+		}
 
-			if ($this->intTabIndex)
-				$strTabIndex = sprintf('tabindex="%s" ', $this->intTabIndex);
-			else
-				$strTabIndex = "";
-
-			if ($this->strToolTip)
-				$strToolTip = sprintf('title="%s" ', $this->strToolTip);
-			else
-				$strToolTip = "";
-
-			if ($this->strCssClass)
-				$strCssClass = sprintf('class="%s" ', $this->strCssClass);
-			else
-				$strCssClass = "";
-
-			if ($this->strAccessKey)
-				$strAccessKey = sprintf('accesskey="%s" ', $this->strAccessKey);
-			else
-				$strAccessKey = "";
-				
-			if ($this->blnChecked)
-				$strChecked = 'checked="checked" ';
-			else
-				$strChecked = "";
-
-			$strStyle = $this->GetStyleAttributes();
-			if (strlen($strStyle) > 0)
-				$strStyle = sprintf('style="%s" ', $strStyle);
-
-			$strCustomAttributes = $this->GetCustomAttributes();
-
-			if (strlen($this->strText)) {
-				$this->blnIsBlockElement = true;
-				$strCheckHtml = sprintf('<input type="checkbox" id="%s" name="%s" %s%s%s%s />',
-					$this->strControlId,
-					$this->strControlId,
-					$strDisabled,
-					$strChecked,
-					$strAccessKey,
-					$strTabIndex);
-
-				$strLabelHtml = sprintf ('<label for="%s">%s</label>',
-					$this->strControlId,
-					($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText);
-				if ($this->strTextAlign == QTextAlign::Left) {
-					$strCombined = $strLabelHtml .  $strCheckHtml;
-				} else {
-					$strCombined = $strCheckHtml . $strLabelHtml;
-				}
-
-				$strToReturn = sprintf('<div %s%s%s%s%s>%s</div>',
-					$strCssClass, $strToolTip, $strStyle, $strCustomAttributes, $strDisabled, $strCombined);
-
-			} else {
-				$this->blnIsBlockElement = false;
-				$strToReturn = sprintf('<input type="checkbox" id="%s" name="%s" %s%s%s%s%s%s%s%s />',
-					$this->strControlId,
-					$this->strControlId,
-					$strCssClass,
-					$strDisabled,
-					$strChecked,
-					$strAccessKey,
-					$strToolTip,
-					$strTabIndex,
-					$strCustomAttributes,
-					$strStyle);
+		/**
+		 * Render the button code. Broken out to allow QRadioButton to use it too.
+		 *
+		 * @param $attrOverride
+		 * @return string
+		 */
+		protected function RenderButton ($attrOverride) {
+			if ($this->blnChecked) {
+				$attrOverride['checked']='checked';
 			}
 
-			return $strToReturn;
+			if (strlen($this->strText)) {
+				$strText = ($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText;
+				if (!$this->blnWrapLabel) {
+					$strLabelAttributes = ' for="' . $this->strControlId .'"';
+				} else {
+					$strLabelAttributes = $this->renderLabelAttributes();
+				}
+				$strCheckHtml = QHtml::RenderLabeledInput(
+					$strText,
+					$this->strTextAlign == QTextAlign::Left,
+					$this->RenderHtmlAttributes($attrOverride),
+					$strLabelAttributes,
+					$this->blnWrapLabel
+				);
+				if (!$this->blnWrapLabel) {
+					// Additionally wrap in a span so we can associate the label with the checkbox visually and apply the styles
+					$strCheckHtml = QHtml::RenderTag('span',  $this->renderLabelAttributes(), $strCheckHtml);
+				}
+			}
+			else {
+				$strCheckHtml = $this->RenderTag('input', $attrOverride, null, null, true);
+			}
+			return $strCheckHtml;
+		}
+
+		/**
+		 * Return a styler to style the label that surrounds the control if the control has text.
+		 * @return string
+		 */
+		public function getCheckLabelStyler() {
+			if (!$this->objLabelStyle) {
+				$this->objLabelStyle = new QTagStyler();
+			}
+			return $this->objLabelStyle;
+		}
+
+		/**
+		 * There is a little but of a conundrum here. If there is text assigned to the checkbox, we wrap
+		 * the checkbox in a label. However, in this situation, its unclear what to do with the class and style
+		 * attributes that are for the checkbox. We are going to let the developer use the label styler to make
+		 * it clear what their intentions are.
+		 * @return string
+		 */
+		protected function renderLabelAttributes() {
+			$attributes = $this->GetHtmlAttributes(['title']); // copy tooltip to wrapping label
+			$objStyler = $this->getCheckLabelStyler();
+			if ($attributes) {
+				$objStyler = $objStyler->ApplyOverride($attributes);
+			}
+
+			if (!$this->Enabled) {
+				$objStyler->AddCssClass('disabled');	// add the disabled class to the label for styling
+			}
+			return $objStyler->renderHtmlAttributes();
 		}
 
 		/**
@@ -251,7 +262,18 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					
+
+				// Copy certain attributes to the label styler when assigned since its part of the control.
+				case 'CssClass':
+					try {
+						parent::__set($strName, $mixValue);
+						$this->getCheckLabelStyler()->CssClass = $mixValue; // assign to both checkbox and label so they can be styled together using css
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);

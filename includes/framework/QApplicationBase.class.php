@@ -573,20 +573,11 @@
 			if ((QApplication::$RequestMode == QRequestMode::Ajax) ||
 				(array_key_exists('Qform__FormCallType', $_POST) &&
 				($_POST['Qform__FormCallType'] == QCallType::Ajax))) {
-				// AJAX-based Response
-
-				// Response is in XML Format
-				header('Content-Type: text/xml');
-
-				// Output it and update render state
-				$strLocation = 'document.location="' . $strLocation . '"';
-				$strLocation = QString::XmlEscape($strLocation);
-				print('<?xml version="1.0"?><response><controls/><commands><command>' . $strLocation . '</command></commands></response>');
-
+				QApplication::SendAjaxResponse([QAjaxResponse::Location => $strLocation]);
 			} else {
 				// Was "DOCUMENT_ROOT" set?
 				if (array_key_exists('DOCUMENT_ROOT', $_SERVER) && ($_SERVER['DOCUMENT_ROOT'])) {
-					// If so, we're likley using PHP as a Plugin/Module
+					// If so, we're likely using PHP as a Plugin/Module
 					// Use 'header' to redirect
 					header(sprintf('Location: %s', $strLocation));
 				} else {
@@ -612,13 +603,8 @@
 
 			if (QApplication::$RequestMode == QRequestMode::Ajax) {
 				// AJAX-based Response
-
-				// Response is in XML Format
-				header('Content-Type: text/xml');
-
-				// OUtput it and update render state
-				_p('<?xml version="1.0"?><response><controls/><commands><command>window.close();</command></commands></response>', false);
-
+				$aResponse[QAjaxResponse::Close] = 1;
+				QApplication::SendAjaxResponse($aResponse);
 			} else {
 				// Use JavaScript to close
 				_p('<script type="text/javascript">window.close();</script>', false);
@@ -954,6 +940,25 @@
 		 */
 		public static function HtmlEntities($strText) {
 			return htmlentities($strText, ENT_COMPAT, QApplication::$EncodingType);
+		}
+
+		/**
+		 * Print an ajax response to the browser.
+		 *
+		 * @param $strResponseArray An array keyed with QAjaxResponse items. These items will be read by the qcubed.js
+		 * ajax success function and operated on. The goals is to eventually have all possible response types represented
+		 * in the QAjaxResponse so that we can remove the "eval" in qcubed.js.
+		 */
+		public static function SendAjaxResponse($strResponseArray) {
+			header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
+
+			$strJSON = JavaScriptHelper::toJsObject($strResponseArray);
+
+			// Output it and update render state
+			if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
+				$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
+			}
+			print ($strJSON);
 		}
 
   		/**

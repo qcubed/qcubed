@@ -22,7 +22,7 @@ class QHtmlList extends QControl {
      *
      * @param $objListItem
      */
-    public function AddListItem (QHtmlListItem $objListItem) {
+    public function AddItem (QHtmlListItem $objListItem) {
         $objListItem->_Id = $this->ControlId . '_' . count($this->objListItems);
         $this->objListItems[] = $objListItem;
     }
@@ -139,7 +139,7 @@ class QHtmlListItem extends QBaseClass {
 	 * Adds a list item as a sub-item.
 	 * @param QHtmlListItem $objListItem
 	 */
-	public function AddListItem (QHtmlListItem $objListItem) {
+	public function AddItem (QHtmlListItem $objListItem) {
         $objListItem->strId = $this->strId . '_' . count ($this->objSubItems);
         $this->objSubItems[] = $objListItem;
     }

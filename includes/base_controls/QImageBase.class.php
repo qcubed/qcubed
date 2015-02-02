@@ -21,7 +21,7 @@
 
 		// APPEARANCE
 		protected $strAlternateText;
-		protected $strImageType = QIMageType::Png;
+		protected $strImageType = QImageType::Png;
 		protected $intJpegQuality = 100;
 
 		// CacheFolder Location for Cached Generated Images (if applicable)

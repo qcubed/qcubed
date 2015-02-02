@@ -14,9 +14,6 @@
 		// APPEARANCE
 		protected $intIndexCount = 10;
 
-		/** @var string Default CSS class for the Paginator */
-		protected $strCssClass = 'paginator';
-
 		//////////
 		// Methods
 		//////////
@@ -25,13 +22,15 @@
 		 * @param QControl|QForm $objParentObject
 		 * @param null|string    $strControlId
 		 */
-		/*
+
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 
-			$this->strLabelForPrevious = QApplication::Translate('<<');
-			$this->strLabelForNext = QApplication::Translate('>>');
-		}*/
+			$this->CssClass = 'paginator';
+			//$this->strLabelForPrevious = QApplication::Translate('<<');
+			//$this->strLabelForNext = QApplication::Translate('>>');
+
+		}
 
 	}
 ?>

@@ -22,20 +22,14 @@
 		///////////////////////////
 		// Private Member Variables
 		///////////////////////////
-		
+
 		// APPEARANCE
-		/** @var int Number of rows to be shown for the select box */
-		private $intRows = 1;
 		/** @var string Error to be shown if the box is empty, has a name and is marked as required */
 		protected $strLabelForRequired;
 		/** @var string Error to be shown If the box is empty, doesn't have a name and is marked as required */
 		protected $strLabelForRequiredUnnamed;
 		/** @var null|QListItemStyle The style for each element to be displayed */
 		protected $objItemStyle = null;
-
-		// BEHAVIOR
-		/** @var string Selection mode for the listbox (single or multiple element selection) */
-		protected $strSelectionMode = QSelectionMode::Single;
 
 		//////////
 		// Methods
@@ -87,25 +81,6 @@
 		}
 
 		/**
-		 * Returns the HTML attributes to be used on the HTML to be rendered for the element.
-		 * @param bool $blnIncludeCustom
-		 * @param bool $blnIncludeAction
-		 *
-		 * @return string
-		 */
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
-			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
-
-			if ($this->intRows)
-				$strToReturn .= sprintf('size="%s" ', $this->intRows);
-			if ($this->strSelectionMode == QSelectionMode::Multiple)
-				$strToReturn .= 'multiple="multiple" ';
-				
-			return $strToReturn;
-
-		}
-
-		/**
 		 * Returns the HTML-Code for a single Item
 		 * 
 		 * @param QListItem $objItem
@@ -126,7 +101,7 @@
 				($objItem->Selected) ? 'selected="selected"' : "",
 				$objStyle->GetAttributes(),
 				QApplication::HtmlEntities($objItem->Name)
-			);
+			) . _nl();
 
 			return $strToReturn;
 		}
@@ -136,24 +111,34 @@
 		 * @return string
 		 */
 		protected function GetControlHtml() {
-			// If no selection is specified, we select the first item, because once we draw this, that is what the browser will consider select on the screen.
+			// If no selection is specified, we select the first item, because once we draw this, that is what the browser
+			// will consider selected on the screen.
 			// We need to make sure that what we draw is mirrored in our current state
 			if ($this->SelectionMode == QSelectionMode::Single &&
 					$this->SelectedIndex == -1 &&
 					$this->ItemCount > 0) {
 				$this->SelectedIndex = 0;
 			}
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle)
-				$strStyle = sprintf('style="%s"', $strStyle);
 
-			$strToReturn = sprintf('<select name="%s%s" id="%s" %s%s>', 
-						$this->strControlId,
-						($this->strSelectionMode == QSelectionMode::Multiple) ? "[]" : "",
-						$this->strControlId,
-						$this->GetAttributes(),
-						$strStyle);
+			$attrOverride = array('id'=>$this->strControlId);
 
+			if ($this->SelectionMode == QSelectionMode::Multiple) {
+				$attrOverride['name'] = $this->strControlId . "[]";
+			} else {
+				$attrOverride['name'] = $this->strControlId;
+			}
+
+			$strToReturn = $this->RenderTag('select', $attrOverride, null, $this->renderInnerHtml());
+
+			// If MultiSelect and if NOT required, add a "Reset" button to deselect everything
+			if (($this->SelectionMode == QSelectionMode::Multiple) && (!$this->blnRequired) && ($this->blnEnabled) && ($this->blnVisible)) {
+				$strToReturn .= $this->GetResetButtonHtml();
+			}
+			return $strToReturn;
+		}
+
+		protected function renderInnerHtml() {
+			$strToReturn = '';
 			$strCurrentGroup = null;
 			if (is_array($this->objItemsArray)) {
 				for ($intIndex = 0; $intIndex < $this->ItemCount; $intIndex++) {
@@ -167,7 +152,7 @@
 							
 						else if ($strCurrentGroup != $objItem->ItemGroup)
 							// Different Group
-							$strToReturn .= '</optgroup><optgroup label="' . QApplication::HtmlEntities($objItem->ItemGroup) . '">';
+							$strToReturn .= '</optgroup>' . _nl() . '<optgroup label="' . QApplication::HtmlEntities($objItem->ItemGroup) . '">';
 
 						$strCurrentGroup = $objItem->ItemGroup;
 						
@@ -175,7 +160,7 @@
 					} else {
 						if (!is_null($strCurrentGroup)) {
 							// End the current group
-							$strToReturn .= '</optgroup>';
+							$strToReturn .= '</optgroup>' . _nl();
 							$strCurrentGroup = null;
 						}
 					}
@@ -183,13 +168,8 @@
 				}
 				
 				if (!is_null($strCurrentGroup))
-					$strToReturn .= '</optgroup>';
+					$strToReturn .= '</optgroup>' . _nl();;
 			}
-			$strToReturn .= '</select>';
-
-			// If MultiSelect and if NOT required, add a "Reset" button to deselect everything
-			if (($this->strSelectionMode == QSelectionMode::Multiple) && (!$this->blnRequired) && ($this->blnEnabled) && ($this->blnVisible))
-				$strToReturn .= $this->GetResetButtonHtml();
 
 			return $strToReturn;
 		}
@@ -248,13 +228,13 @@
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
-				case "Rows": return $this->intRows;
+				case "Rows": return $this->GetHtmlAttribute('size');
 				case "LabelForRequired": return $this->strLabelForRequired;
 				case "LabelForRequiredUnnamed": return $this->strLabelForRequiredUnnamed;
 				case "ItemStyle": return $this->objItemStyle;
 				
 				// BEHAVIOR
-				case "SelectionMode": return $this->strSelectionMode;
+				case "SelectionMode": return $this->HasHtmlAttribute('multiple') ? QSelectionMode::Multiple : QSelectionMode::Single;
 
 				default:
 					try {
@@ -282,10 +262,7 @@
 				// APPEARANCE
 				case "Rows":
 					try {
-						if ($this->intRows !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
-							$this->blnModified = true;
-							$this->intRows = $mixValue;
-						}
+						$this->SetHtmlAttribute('size', QType::Cast($mixValue, QType::Integer));
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -311,9 +288,10 @@
 				// BEHAVIOR
 				case "SelectionMode":
 					try {
-						if ($this->strSelectionMode !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strSelectionMode = $mixValue;
+						if (QType::Cast($mixValue, QType::String) == QSelectionMode::Multiple) {
+							$this->SetHtmlAttribute('multiple', 'multiple');
+						} else {
+							$this->RemoveHtmlAttribute('multiple');
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -373,7 +351,6 @@ TMPL;
 				new QMetaParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
 				new QMetaParam (get_called_class(), 'SelectionMode', 'Single or multiple selections', QMetaParam::SelectionList,
 					array (null=>'Default',
-						'QSelectionMode::None'=>'None',
 						'QSelectionMode::Single'=>'Single',
 						'QSelectionMode::Multiple'=>'Multiple'
 					))

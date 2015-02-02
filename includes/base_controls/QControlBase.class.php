@@ -1,143 +1,130 @@
 <?php
 	/**
-	 * QControlBase is the base class of all QControls and shares their common properties
+	 * QControlBase is the base class of all QControls and shares their common properties.
 	 * 
-	 * Please note that not every control will utilize every single one of these properties.
-	 * Keep in mind that Controls that are not Enabled or not Visible will not go through the form's
-	 * Validation routine.
+	 * Not every control will utilize every single one of these properties.
+	 *
 	 * All Controls must implement the following abstract functions:
 	 * <ul>
 	 * 		<li>{@link QControlBase::GetControlHtml()}</li>
 	 * 		<li>{@link QControlBase::ParsePostData()}</li>
 	 * 		<li>{@link QControlBase::Validate()}</li>
 	 * </ul>
-	 * 
+	 *
+	 * A QControl conceptually is an object in an html form that manages data or that can be controlled via PHP.
+	 * In the early days of the internet, this was simply an html input or select tag that was submitted via a POST.
+	 * As the internet has evolved, so has QControl, but its basic idea is the same. Its an object on the screen that
+	 * you would like to either control from PHP, or receive information from. The parts of a QControl that are
+	 * sent to the browser are:
+	 *  - The base tag and its contents, as returned by GetControlHtml(). This would be an Input tag, or a Button, or
+	 *    even just a div. Many Javascript widget libraries will take a div and add to it to create a control. The tag
+	 *    will include an id in all cases. If you do not assign one, a unique id will be created automatically.
+	 *  - An optional Name, often sent to the browser in a Label tag.
+	 *  - Optional instructions
+	 *  - Optional validation error text
+	 *  - Optional Javascript attached to the control as part of its inherint functionality, or to control settable options
+	 *    that are handled by a jQuery wrapper function of some kind.
+	 *  - Optional Javascript attached to the control through the AddActions mechanism.
+	 *
+	 * You control how these parts are rendered by implementing Render* methods in your own QControl class. Some basic
+	 * ones are included in this class for you to start with.
+	 *
+	 * Depending on the control, and the implementation, the control might need or want to be rendered with a wrapper tag,
+	 * which is controlled by the blnUseWrapper member. For example, if you want to have a form object with a name,
+	 * instructions and error text, a wrapper might be needed to make sure all these parts redraw when something changes in
+	 * the control. Bootstrap's formObjectGroup is an example of a control that would have all these parts.
+	 * Also, if you know that a javascript widget library is going to wrap your html in additional html,
+	 * you should include a wrapper here so the additional html is included inside your wrapper, and thus the entire
+	 * control will get redrawn on a refresh (jQueryUI's Dialog is an example of this kind of widget.)
+	 *
+	 * QControls are part of a tree type hierarchy, whose parent can either be a QForm, or another QControl.
+	 *
+	 * The QControl system is designed to manage the process of redrawing a control automatically when something about
+	 * the control changes. You can force a redraw by using the Refresh command from outside of a control, or by setting
+	 * the blnModified member variable from a subclass. You can also use the QWatcher mechanism to automatically redraw
+	 * when something in the database changes.
+	 *
+	 * QControls are the base objects for actions to be attached to events. When attaching actions to multiple objects
+	 * of the same type, considering using the QOnEvent trigger for you action, as it can be more efficient in certain
+	 * cases.
+	 *
+	 * QControls can trigger validation and are part of the validation system. QControls that are not Enabled or not
+	 * Visible will not go through the form's Validation routine.
+	 *
+	 * Controls can be made visible using either the Visible or Display PHP parameters. Both are booleans.
+	 * - Setting Visible to false completely removes the control from the DOM, leaving either just its
+	 *   wrapper or a an invisible span stub in its place. When the control is made visible again, it is entirely
+	 *   redrawn.
+	 * - Setting Display to false leaves the control in the DOM, but simply sets its display property to 'none' in CSS.
+	 *   Show and hide are much faster.
+	 *
 	 * @package Controls
 	 * 
-	 * @property string $AccessKey allows you to specify what Alt-Letter combination will automatically focus that control on the form
 	 * @property boolean $ActionsMustTerminate Prevent the default action from happenning upon an event trigger. See documentation for "protected $blnActionsMustTerminate" below.
 	 * @property mixed $ActionParameter This property allows you to pass your own parameters to the handlers for actions applied to this control.
 	 *			 this can be a string or an object of type QJsClosure. If you pass in a QJsClosure it is possible to return javascript objects/arrays 
 	 *			 when using an ajax or server action.
-	 * @property string $BackColor sets the CSS background-color of the control
-	 * @property string $BorderColor sets the CSS border-color of the control
-	 * @property string $BorderWidth sets the CSS border-width of the control
-	 * @property string $BorderStyle is used to set CSS border-style by {@link QBorderStyle}
 	 * @property mixed $CausesValidation flag says whether or not the form should run through its validation routine if this control has an action defined and is acted upon
 	 * @property-read string $ControlId returns the id of this control
-	 * @property string $CssClass sets or returns the CSS class for this control
-	 * @property string $Cursor is used to set CSS cursor property by {@link QCursor}
-	 * @property boolean $Display shows or hides the control using the CSS display property.  In either case, the control is still rendered on the page. See the Visible property if you wish to not render a control.
-	 * @property string $DisplayStyle is used to set CSS display property by {@link QDisplayStyle}
-	 * @property boolean $Enabled specifies whether or not this is enabled (it will grey out the control and make it inoperable if set to true)
-	 * @property boolean $FontBold sets the font bold or normal
-	 * @property boolean $FontItalic sets the Font italic or normal
-	 * @property string $FontNames sets the name of used fonts
-	 * @property boolean $FontOverline 
-	 * @property string $FontSize sets the font-size of the control
-	 * @property boolean $FontStrikeout  
-	 * @property boolean $FontUnderline sets the font underlined
-	 * @property string $ForeColor sets the forecolor of the control (like fontcolor)
 	 * @property-read QForm $Form returns the parent form object
 	 * @property-read string $FormAttributes
-	 * @property string $Height
 	 * @property string $HtmlAfter HTML that is shown after the control {@link QControl::RenderWithName}
 	 * @property string $HtmlBefore HTML that is shown before the control {@link QControl::RenderWithName}
 	 * @property string $Instructions instructions that is shown next to the control's name label {@link QControl::RenderWithName}
 	 * @property-read string $JavaScripts
-	 * @property string $Left CSS left property
 	 * @property-read boolean $Modified indicates if the control has been changed. Used to tell Qcubed to rerender the control or not (Ajax calls).
 	 * @property boolean $Moveable
 	 * @property boolean $Resizable
 	 * @property string $Name sets the Name of the Control (see {@link QControl::RenderWithName})
 	 * @property-read boolean $OnPage is true if the control is connected to the form
-	 * @property integer $Opacity sets the opacity of the control (0-100)
-	 * @property string $Overflow is used to set CSS overflow property by {@link QOverflow}
 	 * @property-read QForm|QControl $ParentControl returns the parent control
-	 * @property string $Position is used to set CSS position property by {@link QPosition}
 	 * @property-read boolean $Rendered
 	 * @property-read boolean $Rendering
 	 * @property-read string $RenderMethod carries the name of the function, which were initially used for rendering
 	 * @property string $PreferredRenderMethod carries the name of the function, which were initially used for rendering
 	 * @property boolean $Required specifies whether or not this is required (will cause a validation error if the form is trying to be validated and this control is left blank)
 	 * @property-read string $StyleSheets
-	 * @property integer $TabIndex specifies the index/tab order on a form
-	 * @property string $ToolTip specifies the text to be displayed when the mouse is hovering over the control
-	 * @property string $Top
 	 * @property-read string $ValidationError is the string that contains the validation error (if applicable) or will be blank if (1) the form did not undergo its validation routine or (2) this control had no error
 	 * @property boolean $Visible specifies whether or not the control should be rendered in the page.  This is in contrast to Display, which will just hide the control via CSS styling.
 	 * @property string $Warning is warning text (looks like an error, but it can be user defined) that will be shown next to the control's name label {@link QControl::RenderWithName}
-	 * @property string $Width
 	 * @property boolean $UseWrapper defaults to true
 	 * @property-read boolean $WrapperModified
 	 * @property string $WrapperCssClass
+	 * @property boolean $WrapLabel For checkboxes, radio buttons, and similar controls, whether to wrap the label around
+	 * 		the control, or place the label next to the control. Two legal styles of label creation that different css and JS frameworks expect.
 	 */
-	abstract class QControlBase extends QBaseClass {
-		///////////////////////////
-		// Private Member Variables
-		///////////////////////////
+	abstract class QControlBase extends QHtmlAttributeManager {
 
-		// APPEARANCE
-		/** @var string Background color for the control */
-		protected $strBackColor = null;
-		/** @var string Border color for the control */
-		protected $strBorderColor = null;
-		/** @var QBorderStyle|string The border style for the control */
-		protected $strBorderStyle = QBorderStyle::NotSet;
-		/** @var string Border width - can be specified in numbers(will add pixels for that) or a number with unit attached to it */
-		protected $strBorderWidth = null;
-		/** @var string CSS class for the control */
-		protected $strCssClass = null;
-		/** @var bool should the control be displayed? */
-		protected $blnDisplay = true;
-		/** @var QDisplayStyle|string Display style (CSS) for the control */
-		protected $strDisplayStyle = QDisplayStyle::NotSet;
-		/** @var bool Will the text font for the control be bold */
-		protected $blnFontBold = false;
-		/** @var bool Will the text font for the control be italisized */
-		protected $blnFontItalic = false;
-		/** @var string Names of the fonts to be used for the control's text */
-		protected $strFontNames = null;
-		/** @var bool Line above the text (strTextDecoration will store the value) */
-		protected $blnFontOverline = false;
-		/** @var string Font-size: Can be specified in numbers (will add 'px' for that) or a number with a unit attached with it */
-		protected $strFontSize = null;
-		/** @var bool Line over the text, striking it through (strTextDecoration will store the value) */
-		protected $blnFontStrikeout = false;
-		/** @var bool Line under the text (strTextDecoration will store the value) */
-		protected $blnFontUnderline = false;
-		/** @var string the 'color' CSS property of the control */
-		protected $strForeColor = null;
-		/** @var integer Opacity of the control. Range from 0 to 100 (is converted to float automatically) */
-		protected $intOpacity = null;
+		/*
+		 * Constannts
+		 */
+		const CommentStart = 'Begin';
+		const CommentEnd = 'End';
 
-		// BEHAVIOR
-		/** @var string The 'accesskey' attribute of the control */
-		protected $strAccessKey = null;
-		/** @var bool|string|QControl|array How will this control cause validations to trigger  */
+		/*
+		 * Static Members
+		 */
+
+		protected $objWrapperStyler = null;
+
+		/**
+		 * Protected members
+		 */
+
+		/** @var mixed Controls how this control will effect the validation system */
 		protected $mixCausesValidation = false;
 		/** @var string Cursor that should appear when hovering on the control */
-		protected $strCursor = QCursor::NotSet;
-		/** @var bool Is the control Enabled or Disabled */
 		protected $blnEnabled = true;
 		/** @var bool Is it mandatory for the control to recive data on a POST back for the control to be called valid? */
 		protected $blnRequired = false;
 		/** @var int Tab-index */
-		protected $intTabIndex = 0;
-		/** @var string the 'title' HTML attribute for the control */
-		protected $strToolTip = null;
-		/** @var string The validation error to be shown */
 		protected $strValidationError = null;
 		/** @var bool Should the control be visible or not (it normally effects whether Render method will be called or not) */
 		protected $blnVisible = true;
+		/** @var bool should the control be displayed? */
+		protected $blnDisplay = true;
 		/** @var string Preferred method to be used for rendering e.g. Render, RenderWithName, RenderWithError */
 		protected $strPreferredRenderMethod = 'Render';
-	
-		// LAYOUT
-		/** @var string Height of the control. If numeric, 'px' is attached; otherwise used as it is */
-		protected $strHeight = null;
-		/** @var string Width of the control. If numeric, 'px' is attached; otherwise used as it is */
-		protected $strWidth = null;
 
 		/** @var string HTML to rendered before the actual control */
 		protected $strHtmlBefore = null;
@@ -147,15 +134,6 @@
 		protected $strInstructions = null;
 		/** @var string Same as validation error message but is supposed to contain custom messages */
 		protected $strWarning = null;
-
-		/** @var QOverflow|string Overflow property for the control */
-		protected $strOverflow = QOverflow::NotSet;
-		/** @var QPosition|string Position of the control */
-		protected $strPosition = QPosition::NotSet;
-		/** @var string|null The margin from the top for 'fixed' element. Is used only with the control's wrapper enabled */
-		protected $strTop = null;
-		/** @var string|null The margin from the left for 'fixed' element. Is used only with the control's wrapper enabled */
-		protected $strLeft = null;
 
 		/** @var QDraggable|null When initialized, it implements the jQuery UI Draggable capabilities on to this control.*/
 		protected $objDraggable = null;
@@ -202,7 +180,7 @@
 		/** @var string|QJsClosure|null The action parameter (typically small amount of data) for the Ajax or Server Callback  */
 		protected $mixActionParameter = null;
 		/** @var string|null CSS class for the control's wrapper */
-		protected $strWrapperCssClass = null;
+		//protected $strWrapperCssClass = null; -- See objWrapperStyler now
 		/** @var bool Should the wrapper be used when rendering?  */
 		protected $blnUseWrapper = true;
         /** @var string  One time scripts associated with the control. */
@@ -228,12 +206,20 @@
 		 * Modification of this variable is to be done by using 'ActionMustTerminate' property exposed as a property
 		 */
 		protected $blnActionsMustTerminate = false;
-		/** @var bool Is this control a block type element? */
+		/** @var bool Is this control a block type element? This determines whether the control will be wrapped in
+		 *  a div or a span if blnUseWrapper is true. For example, if */
 		protected $blnIsBlockElement = false;
 		/** @var QWatcher Stores information about watched tables. */
 		protected $objWatcher = null;
 		/** @var QQNode  Used by designer to associate a db node with this control */
 		protected $objLinkedNode;
+		/**
+		 * @var bool | null For controls that also produce built-in labels (QCheckBox, QCheckBoxList, etc.)
+		 * True to wrap the checkbox with the label (the Bootstrap way). False to put the label next to the
+		 * checkbox (the jQueryUI way).
+		 */
+		protected $blnWrapLabel = false;
+
 
 		//////////
 		// Methods
@@ -256,7 +242,6 @@
 				$this->objForm = $objParentObject;
 			else if ($objParentObject instanceof QControl) {
 				$this->objParentControl = $objParentObject;
-//				$this->objParentControl->blnModified = true;
 				$this->objForm = $objParentObject->Form;
 			} else
 				throw new QCallerException('ParentObject must be either a QForm or QControl object');
@@ -268,7 +253,7 @@
 				if (ctype_alnum($strControlId))
 					$this->strControlId = $strControlId;
 				else
-					throw new QCallerException('ControlIDs must be only alphanumeric characters: ' . $strControlId);
+					throw new QCallerException('ControlIds must be only alphanumeric characters: ' . $strControlId);
 			}
 			try {
 				$this->objForm->AddControl($this);
@@ -279,6 +264,37 @@
 				throw $objExc;
 			}
 		}
+
+		/**
+		 * ParsePostData parses the value of this control from FormState
+		 *
+		 * This abstract method must be implemented by all controls.
+		 *
+		 * When utilizing formgen, the programmer should never access form variables directly (e.g.
+		 * via the $_FORM array). It can be assumed that at *ANY* given time, a control's
+		 * values/properties will be "up to date" with whatever the webuser has entered in.
+		 *
+		 * When a Form is Created via Form::Create(string), the form will go through to check and
+		 * see if it is a first-run of a form, or if it is a post-back.  If it is a postback, it
+		 * will go through its own private array of controls and call ParsePostData on EVERY control
+		 * it has.  Each control is responsible for "knowing" how to parse the $_POST data to update
+		 * its own values/properties based on what was returned to via the postback.
+		 */
+		abstract public function ParsePostData();
+
+		/**
+		 * Checks if this controls contains a valid value.
+		 *
+		 * This abstract method defines how a control should validate itself based on the value/
+		 * properties it has. It should also include the handling of ensuring the "Required"
+		 * requirements are obeyed if this control's "Required" flag is set to true.
+		 *
+		 * For Controls that can't realistically be "validated" (e.g. labels, datagrids, etc.),
+		 * those controls should simply have Validate() return true.
+		 *
+		 * @return boolean
+		 */
+		abstract public function Validate();
 
 		/**
 		 * This function returns a persistent control which is supposed to be created only once for the user session
@@ -675,15 +691,10 @@
 		 *
 		 * @param string $strName
 		 * @param string $strValue
+		 * @deprecated Use SetHtmlAttribute instead
 		 */
 		public function SetCustomAttribute($strName, $strValue) {
-			$this->blnModified = true;
-			if (!is_null($strValue))
-				$this->strCustomAttributeArray[$strName] = $strValue;
-			else {
-				$this->strCustomAttributeArray[$strName] = null;
-				unset($this->strCustomAttributeArray[$strName]);
-			}
+			$this->SetHtmlAttribute($strName, $strValue);
 		}
 
 		/**
@@ -693,12 +704,10 @@
 		 *
 		 * @throws QCallerException
 		 * @return string
+		 * @deprected Use GetHtmlAttribute instead
 		 */
 		public function GetCustomAttribute($strName) {
-			if ((is_array($this->strCustomAttributeArray)) && (array_key_exists($strName, $this->strCustomAttributeArray)))
-				return $this->strCustomAttributeArray[$strName];
-			else
-				throw new QCallerException(sprintf("Custom Attribute does not exist in Control '%s': %s", $this->strControlId, $strName));
+			return $this->GetHtmlAttribute($strName);
 		}
 
 		/**
@@ -707,14 +716,10 @@
 		 * @param string $strName
 		 *
 		 * @throws QCallerException
+		 * @deprecated Use RemoveHtmlAttribute instead
 		 */
 		public function RemoveCustomAttribute($strName) {
-			$this->blnModified = true;
-			if ((is_array($this->strCustomAttributeArray)) && (array_key_exists($strName, $this->strCustomAttributeArray))) {
-				$this->strCustomAttributeArray[$strName] = null;
-				unset($this->strCustomAttributeArray[$strName]);
-			} else
-				throw new QCallerException(sprintf("Custom Attribute does not exist in Control '%s': %s", $this->strControlId, $strName));
+			$this->RemoveHtmlAttribute($strName);
 		}
 
 		/**
@@ -735,15 +740,10 @@
 		 *
 		 * @param string $strName
 		 * @param string $strValue
+		 * @deprecated Use SetCssStyle instead
 		 */
 		public function SetCustomStyle($strName, $strValue) {
-			$this->blnModified = true;
-			if (!is_null($strValue))
-				$this->strCustomStyleArray[$strName] = $strValue;
-			else {
-				$this->strCustomStyleArray[$strName] = null;
-				unset($this->strCustomStyleArray[$strName]);
-			}
+			$this->SetCssStyle($strName, $strValue);
 		}
 
 		/**
@@ -755,10 +755,7 @@
 		 * @return string
 		 */
 		public function GetCustomStyle($strName) {
-			if ((is_array($this->strCustomStyleArray)) && (array_key_exists($strName, $this->strCustomStyleArray)))
-				return $this->strCustomStyleArray[$strName];
-			else
-				throw new QCallerException(sprintf("Custom Style does not exist in Control '%s': %s", $this->strControlId, $strName));
+			return $this->GetCssStyle($strName);
 		}
 
 		/**
@@ -767,14 +764,10 @@
 		 * @param string $strName
 		 *
 		 * @throws QCallerException
+		 * @deprecated use RemoveCssStyle instead
 		 */
 		public function RemoveCustomStyle($strName) {
-			$this->blnModified = true;
-			if ((is_array($this->strCustomStyleArray)) && (array_key_exists($strName, $this->strCustomStyleArray))) {
-				$this->strCustomStyleArray[$strName] = null;
-				unset($this->strCustomStyleArray[$strName]);
-			} else
-				throw new QCallerException(sprintf("Custom Style does not exist in Control '%s': %s", $this->strControlId, $strName));
+			$this->RemoveCssStyle($strName);
 		}
 
         /**
@@ -863,62 +856,6 @@
 
 
 		/**
-		 * This will add a CssClass name to the CssClass property (if it does not yet exist),
-		 * updating the CssClass property accordingly.
-		 * @param string $strCssClassName
-		 */
-		public function AddCssClass($strCssClassName) {
-			$blnAdded = false;
-			$strNewCssClass = '';
-			$strCssClassName = trim($strCssClassName);
-
-			foreach (explode(' ', $this->strCssClass) as $strCssClass)
-				if ($strCssClass = trim($strCssClass)) {
-					if ($strCssClass == $strCssClassName)
-						$blnAdded = true;
-					$strNewCssClass .= $strCssClass . ' ';
-				}
-			if (!$blnAdded)
-				$this->CssClass = $strNewCssClass . $strCssClassName;
-			else
-				$this->CssClass = trim($strNewCssClass);
-		}
-
-		/**
-		 * This will remove a CssClass name from the CssClass property (if it exists),
-		 * updating the CssClass property accordingly.
-		 * @param string $strCssClassName
-		 */
-		public function RemoveCssClass($strCssClassName) {
-			$strNewCssClass = '';
-			$strCssClassName = trim($strCssClassName);
-			foreach (explode(' ', $this->strCssClass) as $strCssClass)
-				if ($strCssClass = trim($strCssClass)) {
-					if ($strCssClass != $strCssClassName)
-						$strNewCssClass .= $strCssClass . ' ';
-				}
-			$this->CssClass = trim($strNewCssClass);
-		}
-
-		/**
-		 * ParsePostData parses the value of this control from FormState
-		 *
-		 * This abstract method must be implemented by all controls.
-		 *
-		 * When utilizing formgen, the programmer should never access form variables directly (e.g.
-		 * via the $_FORM array). It can be assumed that at *ANY* given time, a control's
-		 * values/properties will be "up to date" with whatever the webuser has entered in.
-		 *
-		 * When a Form is Created via Form::Create(string), the form will go through to check and
-		 * see if it is a first-run of a form, or if it is a post-back.  If it is a postback, it
-		 * will go through its own private array of controls and call ParsePostData on EVERY control
-		 * it has.  Each control is responsible for "knowing" how to parse the $_POST data to update
-		 * its own values/properties based on what was returned to via the postback.
-		 */
-		abstract public function ParsePostData();
-
-
-		/**
 		 * Returns all attributes in the correct HTML format
 		 *
 		 * This is utilized by Render methods to display various name-value HTML attributes for the
@@ -929,31 +866,11 @@
 		 * attributes (e.g. textbox will likely add the maxlength html attribute, etc.)
 		 *
 		 * @param boolean $blnIncludeCustom Include Custom attributes?
-		 * @param boolean $blnIncludeAction Include Action attributes?
 		 * @return string
+		 * @deprecated Use renderHtmlAttributes instead
 		 */
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
-			$blnIncludeAction = false;
-			$strToReturn = "";
-
-			if (!$this->blnEnabled)
-				$strToReturn .= 'disabled="disabled" ';
-			if ($this->intTabIndex)
-				$strToReturn .= sprintf('tabindex="%s" ', $this->intTabIndex);
-			if ($this->strToolTip)
-				$strToReturn .= sprintf('title="%s" ', QApplication::HtmlEntities($this->strToolTip));
-			if ($this->strCssClass)
-				$strToReturn .= sprintf('class="%s" ', $this->strCssClass);
-			if ($this->strAccessKey)
-				$strToReturn .= sprintf('accesskey="%s" ', $this->strAccessKey);
-
-			if ($blnIncludeCustom)
-				$strToReturn .= $this->GetCustomAttributes();
-
-			if ($blnIncludeAction)
-				$strToReturn .= $this->GetActionAttributes();
-
-			return $strToReturn;
+		public function GetAttributes($blnIncludeCustom = true) {
+			return $this->RenderHtmlAttributes() . ' ';
 		}
 
 		/**
@@ -964,19 +881,26 @@
 		 * Note: if the the value is === false, then the key will be randered as is, without any value
 		 *
 		 * @return string
+		 * @deprecated Unused
 		 */
 		public function GetCustomAttributes() {
-			$strToReturn = '';
-			if ($this->strCustomAttributeArray)
-				foreach ($this->strCustomAttributeArray as $strKey => $strValue) {
-					if ($strValue === false) {
-						$strToReturn .= $strKey . ' ';
-					} else {
-						$strToReturn .= sprintf('%s="%s" ', $strKey, $strValue);
-					}
-				}
+			return $this->RenderHtmlAttributes();
+		}
 
-			return $strToReturn;
+		/**
+		 * Returns the html for the attributes for the base control of the QControl.
+		 * Allows the given arrays to override the attributes and styles before
+		 * rendering. This inserts the control id into the rendering of the tag.
+		 * @param null|string 	$attributeOverrides
+		 * @param null|string 	$styleOverrides
+		 * @return string
+		 */
+		public function RenderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
+			$attributes['id'] = $this->strControlId;
+			if ($attributeOverrides) {
+				$attributes = array_merge($attributes, $attributeOverrides);
+			}
+			return parent::RenderHtmlAttributes($attributes, $styleOverrides);
 		}
 
 		/**
@@ -984,7 +908,7 @@
 		 *
 		 * @return string
 		 */
-		public function GetActionAttributes() {
+		public function RenderActionScripts() {
 			$strToReturn = '';
 			foreach ($this->objActionArray as $strEventName => $objActions)
 				$strToReturn .= $this->GetJavaScriptForEvent($strEventName);
@@ -997,6 +921,7 @@
 		 *
 		 * @return null|string
 		 */
+
 		public function GetJavaScriptForEvent($strEventName) {
 			return QAction::RenderActions($this, $strEventName, $this->objActionArray[$strEventName]);
 		}
@@ -1019,86 +944,10 @@
 		 * white-space:nowrap;margin:10px;height:20px;
 		 *
 		 * @return string
+		 * @deprected Use
 		 */
 		public function GetStyleAttributes() {
-			$strToReturn = "";
-
-			if (strlen(trim($this->strWidth)) > 0) {
-				$strToReturn .= sprintf('width:%s;', QCss::FormatLength($this->strWidth));
-			}
-			if (strlen(trim($this->strHeight)) > 0) {
-				$strToReturn .= sprintf('height:%s;', QCss::FormatLength($this->strHeight));
-			}
-			if ($this->blnUseWrapper) {
-				if (($this->strDisplayStyle) && ($this->strDisplayStyle != QDisplayStyle::NotSet)) {
-					$strToReturn .= sprintf("display:%s;", $this->strDisplayStyle);
-				}
-			} else {
-				if (($this->blnDisplay) &&($this->strDisplayStyle) && ($this->strDisplayStyle != QDisplayStyle::NotSet)) {
-					//only apply a display style if it should be displayed and a style is set
-					//in case of blnDisplay == false the "display:none;" is set in GetWrapperStyleAttributes
-					$strToReturn .= sprintf("display:%s;", $this->strDisplayStyle); 
-				}
-				$strToReturn .= $this->GetWrapperStyleAttributes();
-			}
-			if ($this->strForeColor)
-				$strToReturn .= sprintf("color:%s;", $this->strForeColor);
-			if ($this->strBackColor)
-				$strToReturn .= sprintf("background-color:%s;", $this->strBackColor);
-			if ($this->strBorderColor)
-				$strToReturn .= sprintf("border-color:%s;", $this->strBorderColor);
-			if (strlen(trim($this->strBorderWidth)) > 0) {
-				$strToReturn .= sprintf('border-width:%s;', QCss::FormatLength($this->strBorderWidth));
-
-				if ((!$this->strBorderStyle) || ($this->strBorderStyle == QBorderStyle::NotSet))
-					// For "No Border Style" -- apply a "solid" style because width is set
-						$strToReturn .= "border-style:solid;";
-			}
-			if (($this->strBorderStyle) && ($this->strBorderStyle != QBorderStyle::NotSet))
-				$strToReturn .= sprintf("border-style:%s;", $this->strBorderStyle);
-
-			if ($this->strFontNames)
-				$strToReturn .= sprintf("font-family:%s;", $this->strFontNames);
-			if ($this->strFontSize) {
-				if (is_numeric($this->strFontSize))
-					$strToReturn .= sprintf("font-size:%spx;", $this->strFontSize);
-				else
-					$strToReturn .= sprintf("font-size:%s;", $this->strFontSize);
-			}
-			if ($this->blnFontBold)
-				$strToReturn .= "font-weight:bold;";
-			if ($this->blnFontItalic)
-				$strToReturn .= "font-style:italic;";
-
-			$strTextDecoration = "";
-			if ($this->blnFontUnderline)
-				$strTextDecoration .= "underline ";
-			if ($this->blnFontOverline)
-				$strTextDecoration .= "overline ";
-			if ($this->blnFontStrikeout)
-				$strTextDecoration .= "line-through ";
-
-			if ($strTextDecoration) {
-				$strTextDecoration = trim($strTextDecoration);
-				$strToReturn .= sprintf("text-decoration:%s;", $strTextDecoration);
-			}
-
-			if (($this->strCursor) && ($this->strCursor != QCursor::NotSet))
-				$strToReturn .= sprintf("cursor:%s;", $this->strCursor);
-
-			if (($this->strOverflow) && ($this->strOverflow != QOverflow::NotSet))
-				$strToReturn .= sprintf("overflow:%s;", $this->strOverflow);
-
-			if (!is_null($this->intOpacity)) {
-				if (QApplication::IsBrowser(QBrowserType::InternetExplorer) && QApplication::$BrowserVersion < 9)
-					$strToReturn .= sprintf('filter:alpha(opacity=%s);', $this->intOpacity);
-				else
-					$strToReturn .= sprintf('opacity:%s;', $this->intOpacity / 100.0);
-			}
-			if ($this->strCustomStyleArray) foreach ($this->strCustomStyleArray as $strKey => $strValue)
-				$strToReturn .= sprintf('%s:%s;', $strKey, QCss::FormatLength($strValue));
-
-			return $strToReturn;
+			return $this->RenderCssStyles();
 		}
 
 		/**
@@ -1107,28 +956,69 @@
 		 * within a "wrapper's" HTML "style" attribute
 		 *
 		 * @param bool $blnIsBlockElement
+		 * @deprecated
 		 *
 		 * @return string
 		 */
-		protected function GetWrapperStyleAttributes($blnIsBlockElement=false) {
-			$strStyle = '';
-			if (($this->strPosition) && ($this->strPosition != QPosition::NotSet))
-				$strStyle .= sprintf('position:%s;', $this->strPosition);
+		protected function GetWrapperStyleAttributes($blnIsBlockElement = false) {
+			return $this->getWrapperStyler()->RenderCssStyles();
+		}
 
-			if (!$this->blnDisplay)
-				$strStyle .= 'display:none;';
-			else if ($blnIsBlockElement)
-				$strStyle .= 'display:inline;';
 
-			if (strlen(trim($this->strLeft)) > 0) {
-				$strStyle .= sprintf('left:%s;', QCss::FormatLength($this->strLeft));
+		/**
+		 * Overrides the default CSS renderer in order to deal with a special situation:
+		 * Since there is the possibility of a wrapper, we have to delegate certain CSS properties to the wrapper so
+		 * that the whole control gets those properties. Those are mostly positioning properties. In this override,
+		 * we detect when we do NOT have a wrapper, and therefore have to copy the positioning properties from the
+		 * wrapper styler down to the control itself.
+		 *
+		 * @param null $styleOverrides
+		 * @return string
+		 */
+		public function RenderCssStyles($styleOverrides = null) {
+			$styles = $this->styles;
+			if ($styleOverrides) {
+				$styles = array_merge($this->styles, $styleOverrides);
 			}
 
-			if (strlen(trim($this->strTop)) > 0) {
-				$strStyle .= sprintf('top:%s;', QCss::FormatLength($this->strTop));
+			if (!$this->blnUseWrapper) {
+				// add wrapper styles if no wrapper. control must stand on its own.
+				// This next line sucks just the given attributes out of the wrapper styler
+				$aWStyles = array_intersect_key ($this->getWrapperStyler()->styles, ['position'=>1, 'top'=>1, 'left'=>1]);
+				$styles = array_merge($styles, $aWStyles);
 			}
-			
-			return $strStyle;
+			return QHtml::RenderStyles($styles);
+		}
+
+		/**
+		 * Renders the wrapper attributes. Makes sure the control is hidden if display is off.
+		 * @param bool $blnIsBlockElement
+		 * @param array $attributeOverrides
+		 * @return string
+		 */
+		protected function RenderWrapperAttributes($blnIsBlockElement, $attributeOverrides = null) {
+			$styleOverrides = null;
+			if (!$this->blnDisplay) {
+				$styleOverrides = ['display'=>'none'];
+			}
+
+			return $this->getWrapperStyler()->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
+		}
+
+		/**
+		 * Renders the given output with the current wrapper.
+		 *
+		 * @param $strOuput
+		 * @param $blnForceBlockElement
+		 * @return string
+		 */
+		protected function RenderWrappedOutput($strOutput, $blnForceBlockElement) {
+			$blnIsBlockElement = $this->blnIsBlockElement || $blnForceBlockElement;
+			$strTag = $blnIsBlockElement ? 'div' : 'span';
+			$overrides = ['id'=>$this->strControlId . '_ctl'];
+			$strAttributes = $this->RenderWrapperAttributes($blnIsBlockElement, $overrides);
+
+			return QHtml::RenderTag($strTag, $strAttributes, $strOutput);
 		}
 
 		/**
@@ -1214,12 +1104,13 @@
 		}
 
 		/**
-		 * The current use of this function is unknown at the moment. Need to dig deeper.
+		 * The current use of this function is unknown at the moment.
 		 */
 		protected function GetNonWrappedHtml() {}
 
 		/**
 		 * Sets focus to this control
+		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
 		public function Focus() {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus();', $this->strControlId));
@@ -1227,9 +1118,10 @@
 
 		/**
 		 * Same as "Focus": Sets focus to this control
+		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
 		public function SetFocus() {
-			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus()', $this->strControlId));
+			$this->Focus();
 		}
 
 		/**
@@ -1237,6 +1129,7 @@
 		 *
 		 * @param string $strFromColor start color
 		 * @param string $strToColor blink color
+		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
 		public function Blink($strFromColor = '#ffff66', $strToColor = '#ffffff') {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").blink("%s", "%s");', $this->strControlId, $strFromColor, $strToColor));
@@ -1254,35 +1147,27 @@
 		 */
 		public function GetEndScript() {
 
-			$strToReturn = $this->GetActionAttributes();
+			$strToReturn = '';
 
 			if ($this->objResizable)
-				$strToReturn = sprintf('%s; %s', $this->objResizable->GetControlJavaScript(), $strToReturn);
+				$strToReturn .= $this->objResizable->GetControlJavaScript() . ';';
 
 			if ($this->objDraggable)
-				$strToReturn = sprintf('%s; %s', $this->objDraggable->GetControlJavaScript(), $strToReturn);
+				$strToReturn .= $this->objDraggable->GetControlJavaScript() . ';';
 
 			if ($this->objDroppable)
-				$strToReturn = sprintf('%s; %s', $this->objDroppable->GetControlJavaScript(), $strToReturn);
+				$strToReturn .= $this->objDroppable->GetControlJavaScript() . ';';
 
-			// This allows display settings to be applied before other control-specific javascript code is executed
-			// It is important if control was hidden and is now appearing to be visible, and
-			// the control or any of it's childs has a javascript code that depends on jquery width or outerWidth API.
-			// In this case the control should be made visible (display: any-non-hidden-value) first and only then
-			// the jquery width or outerWidth API can be used.
-			if (($this->blnWrapperModified) && ($this->blnVisible) && ($this->blnUseWrapper)) {
-				$strWrapperStyle = $this->GetWrapperStyleAttributes($this->blnIsBlockElement);
-				$strJavaScript = sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass);
-				$strToReturn = sprintf('%s; %s', $strJavaScript, $strToReturn);
-			}
+			$strToReturn .= $this->RenderActionScripts();
 
-            $this->strAttributeScripts = null; // erase the attribute scripts, because the entire control is being drawn.
+			$this->strAttributeScripts = null; // erase the attribute scripts, because the entire control is being drawn, so we don't need them anymore.
 
 			return $strToReturn;
 		}
 
         /**
-         * Return one-time scripts associated with the control.
+         * Return one-time scripts associated with the control. Called by the form during an ajax draw only if the
+		 * entire control was not rendered.
          *
          * @return null|string
          */
@@ -1301,7 +1186,9 @@
         /**
          * Executes a java script associated with the control. These scripts are specifically for the purpose of
          * changing some attribute of the control that would also be taken care of during a refresh of the entire
-         * control. The script will only be executed if the entire control is not redrawn.
+         * control. The script will only be executed if the entire control is not redrawn. We can't just call
+		 * QApplication::ExecuteJavascripts, because in some situations we want the order of these scripts to
+		 * come before that standard application javascripts.
          *
          * @param string $strScript
          */
@@ -1314,9 +1201,6 @@
 		 * For any HTML code that needs to be rendered at the END of the QForm when this control is
 		 * INITIALLY rendered.
 		 *
-		 * This function is never used throughout the whole framework. So it probably should be
-		 * deprecated. Only Call to this function is in QFormBase Line 1171.
-		 * @deprecated
 		 */
 		public function GetEndHtml() {}
 
@@ -1328,48 +1212,47 @@
 		 * Otherwise, this will do nothing
 		 */
 		public function Refresh() {
-			if ((!$this->blnRendered) && (!$this->blnRendering))
-				$this->blnModified = true;
+			if ((!$this->blnRendered) &&
+					(!$this->blnRendering))
+				$this->MarkAsModified();
 		}
 
 		/**
-		 * RenderOutput should be the last call in your custom RenderMethod.
-		 * RenderOutput wraps your content with valid divs and control-identifiers, echos your code
-		 * to the content buffer or simply returns it. See {@link QControlBase::RenderHelper()}.
-		 *
+		 * renderOutput should be the last call in your custom RenderMethod. It is responsible for the following:
+		 * - Creating the wrapper if you are using a wrapper, or
+		 * - Possibly creating a dummy control if not using a wrapper and the control is hidden.
+		 * - Generating the control's output in one of 3 ways:
+		 * 		- Generate straight html if drawing the control as part of a complete page refresh
+		 * 		- Generate straight html if in an ajax call, but a parent is getting redrawn, which requires this
+		 *        whole control to get drawn
+		 * 		- If in an ajax call and we are the top level control getting drawn, then generate special code that
+		 * 		  out javascript will read and put into the control's spot on the page. Requires coordination with
+		 * 		  the code in qcubed.js.
+		 * 		 *
 		 * @param string  $strOutput
-		 *   Your html-code which should be given out
+		 *   Your html-code which should be printed out
 		 * @param boolean $blnDisplayOutput
-		 *   should it be given out, or just be returned?
+		 *   should it be printed, or just be returned?
 		 * @param boolean $blnForceAsBlockElement
-		 *   should it be given out as a block element, regardless of its configured tag?
-		 * @param string  $strWrapperAttributes
+		 *   True to make it a block element. Only works if blnUseWrapper is true.
+		 * @param string  $strHasDataRel
+		 *   Will contain an additional attribute for ajax processing to tie related html objects together if there is no
+		 *   wrapper around them (and thus no other way to tell they are related).
 		 *
 		 * @return string
 		 */
-		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strWrapperAttributes = '') {
+		protected function renderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strHasDataRel = '') {
 			// First, let's mark this control as being rendered and is ON the Page
 			$this->blnRendering = false;
 			$this->blnRendered = true;
 			$this->blnOnPage = true;
 
-			$strWrapperStyle='';
-			// Determine whether or not $strOutput is considered a XHTML "Block" Element
-			$blnIsBlockElement = $blnForceAsBlockElement || $this->blnIsBlockElement;
-			if($this->blnUseWrapper) {
-				// Check for Visibility
-				if (!$this->blnVisible)
-					$strOutput = '';
-
-				$strWrapperStyle = $this->GetWrapperStyleAttributes($blnIsBlockElement);
-
-				if ($this->strWrapperCssClass)
-					$strWrapperAttributes .= sprintf(' class="%s"', $this->strWrapperCssClass);
+			// TODO: Move the following to RenderHelper to determine that the output should be empty BEFORE we waste time rendering the whole control!
+			if ($this->blnUseWrapper) {
+				if (!$this->blnVisible) $strOutput = '';
 			} else if (!$this->blnVisible) {
-				/*no wrapper is used + the control should not be visible
-				 *	--> render a span with the control id and display:none
-				 *  This allows us to change blnVisible to true in an Ajax call
-				 *  as the span will get replaced with the real control 
+				/* No wrapper is used and the control is not visible. We must ender a span with the control id and
+				 *	display:none in order to be able change blnVisible to true in an Ajax call later and redraw the control.
 				 */
 				$strOutput = sprintf('<span id="%s" style="display:none;"></span>', $this->strControlId);
 			}
@@ -1379,43 +1262,24 @@
 					// If we have a ParentControl and the ParentControl has NOT been rendered, then output
 					// as standard HTML
 					if (($this->objParentControl) && ($this->objParentControl->Rendered || $this->objParentControl->Rendering)) {
-						if ($strWrapperStyle)
-							$strWrapperStyle = sprintf('style="%s"', $strWrapperStyle);
 						if($this->blnUseWrapper) {
-							if ($blnIsBlockElement)
-								$strOutput = sprintf('<div id="%s_ctl" %s%s>%s</div>%s', $this->strControlId, $strWrapperStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
-							else
-								$strOutput = sprintf('<span id="%s_ctl" %s%s>%s</span>%s', $this->strControlId, $strWrapperStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
+							$strOutput = $this->RenderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
 						} else {
 							$strOutput = $strOutput . $this->GetNonWrappedHtml();
 						}
 					} else {
-						// Otherwise, we are rendering as a top-level AJAX response
-						// Surround Output HTML around CDATA tags
-						$strOutput = QString::XmlEscape($strOutput);
-						// use the wrapper attribute to pass in the special attribute data-hasrel (if no wrappers are used and RenderWithError or similar methods are called)
-						$strOutput = sprintf('<control id="%s" %s>%s</control>', $this->strControlId, $strWrapperAttributes, $strOutput);
-
-						// This code was moved to the GetEndScript function.
-						// See comment there for an explanation.
-//						if (($this->blnWrapperModified) && ($this->blnVisible) && ($this->blnUseWrapper)) {
-//							QApplication::ExecuteJavaScript(sprintf('w = qc.getW("%s"); w.style.cssText = "%stext-decoration:inherit;"; w.className = "%s";', $this->strControlId, $strWrapperStyle, $this->strWrapperCssClass), QJsPriority::High);
-//						}
+						// Do nothing. RenderAjax will handle it.
 					}
 					break;
 
 				default:
-					if ($strWrapperStyle)
-						$strWrapperStyle = sprintf('style="%s"', $strWrapperStyle);
-
 					if ($this->blnUseWrapper) {
-						if ($blnIsBlockElement)
-							$strOutput = sprintf('<div id="%s_ctl" %s%s>%s</div>%s', $this->strControlId, $strWrapperStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
-						else
-							$strOutput = sprintf('<span id="%s_ctl" %s%s>%s</span>%s', $this->strControlId, $strWrapperStyle, $strWrapperAttributes, $strOutput, $this->GetNonWrappedHtml());
+						$strOutput = $this->RenderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
 					} else {
 						$strOutput = $strOutput . $this->GetNonWrappedHtml();
 					}
+
+					$strOutput = $this->RenderComment(self::CommentStart) . _indent($strOutput) . $this->RenderComment(self::CommentEnd);
 					break;
 			}
 
@@ -1466,28 +1330,40 @@
 				throw $objExc;
 			}
 
-			// Call RenderOutput, Returning its Contents
+			// Call RenderOutput, returning its contents
 			return $this->RenderOutput($strOutput, $blnDisplayOutput);
 		}
 
 		/**
-		 * RenderAjax will be called during an Ajax-Rerendering of the controls due to it being modified
-		 * @param boolean $blnDisplayOutput render the control or return as string
-		 * @return string
+		 * RenderAjax will be called during an Ajax rendering of the controls. Every control gets called. Each control
+		 * is responsible for rendering itself. Some objects automatically render their child objects, and some don't,
+		 * so we detect whether the parent is being rendered, and assume the parent is taking care of rendering for
+		 * us if so.
+		 *
+		 * @return array[] array of control arrays to be interpreted by the response function in qcubed.js
 		 */
-		public function RenderAjax($blnDisplayOutput = true) {
+		public function RenderAjax() {
 			// Only render if this control has been modified at all
+			$controls = [];
 			if ($this->IsModified()) {
-
 				// Render if (1) object has no parent or (2) parent was not rendered nor currently being rendered
 				if ((!$this->objParentControl) || ((!$this->objParentControl->Rendered) && (!$this->objParentControl->Rendering))) {
 					$strRenderMethod = $this->strRenderMethod;
-					if ($strRenderMethod)
-						return $this->$strRenderMethod($blnDisplayOutput);
+					if ($strRenderMethod) {
+						$strOutput = $this->$strRenderMethod(false);
+						$controls[] = [QAjaxResponse::Id=>$this->strControlId, QAjaxResponse::Html=>$strOutput];
+					}
 				}
 			}
-			// The following line is to suppres the warning in PhpStorm
-			return '';
+
+			if ($this->blnWrapperModified && ($this->blnVisible) && ($this->blnUseWrapper)) {
+					// Top level ajax response will usually just draw the innerText of the wrapper
+					// If something changed in the wrapper attributes, we need to tell the jQuery response to handle that too.
+					// In particular, if the wrapper was hidden, and is now displayed, we need to make sure that the control
+					// becomes visible before other scripts execute, or those other scripts will not see the control.
+				$controls[] = [QAjaxResponse::Id=>$this->strControlId . '_ctl', QAjaxResponse::Attributes=>$this->getWrapperStyler()->GetHtmlAttributes()];
+			}
+			return $controls;
 		}
 
 		/**
@@ -1542,10 +1418,10 @@
 				data-rel="controlid_of_the_related_control" are removed before updating
 			    the control --> no duplication of error/warning controls 
 			 */
-			$strWrapperAttributes = '';
+			$strHasDataRel = '';
 			$strDataRel = '';
 			if (!$this->blnUseWrapper) {
-				$strWrapperAttributes = 'data-hasrel="1" ';
+				$strHasDataRel = 'data-hasrel="1" ';
 				$strDataRel = sprintf('data-rel="#%s" ', $this->strControlId);
 			}
 			
@@ -1562,7 +1438,7 @@
 			}
 
 			// Call RenderOutput, Returning its Contents
-			return $this->RenderOutput($strOutput, $blnDisplayOutput, false, $strWrapperAttributes);
+			return $this->RenderOutput($strOutput, $blnDisplayOutput, false, $strHasDataRel);
 		}
 
 
@@ -1585,11 +1461,11 @@
 			////////////////////
 
 			$strDataRel = '';
-			$strWrapperAttributes = '';
+			$strHasDataRel = '';
 			if (!$this->blnUseWrapper) {
 				//there is no wrapper --> add the special attribute data-rel to the name control
 				$strDataRel = sprintf('data-rel="#%s"',$this->strControlId);
-				$strWrapperAttributes = 'data-hasrel="1"';
+				$strHasDataRel = 'data-hasrel="1"';
 			}
 
 			// Custom Render Functionality Here
@@ -1641,34 +1517,35 @@
 
 			////////////////////////////////////////////
 			// Call RenderOutput, Returning its Contents
-			return $this->RenderOutput($strToReturn, $blnDisplayOutput, false, $strWrapperAttributes);
+			return $this->RenderOutput($strToReturn, $blnDisplayOutput, false, $strHasDataRel);
 			////////////////////////////////////////////
 		}
+
+		/**
+		 * Format a comment block if we are not in MINIMIZE mode.
+		 *
+		 * @param string $strType	Either QControl::CommentStart or QControl::CommentEnd
+		 * @return string
+		 */
+		public function RenderComment($strType) {
+			return  QHtml::Comment( $strType . ' ' . get_class($this) . ' ' . $this->strName . ' id:' . $this->strControlId);
+		}
+
 
 		/**
 		 * Helper method to render the control using some other class/method.
 		 *
 		 * Useful for plugins that want to override the render behavior for the controls
 		 * without modifying the control code.
+		 * @param $classname
+		 * @param $methodname
+		 * @param array $args
+		 * @return mixed
 		 */
 		public function RenderExtensionRenderer($classname, $methodname, $args=array()){
 			$RenderExtensionInstance = new $classname;
 			return $RenderExtensionInstance->{$methodname}($args);
 		}
-
-		/**
-		 * Checks if this controls contains a valid value.
-		 *
-		 * This abstract method defines how a control should validate itself based on the value/
-		 * properties it has. It should also include the handling of ensuring the "Required"
-		 * requirements are obeyed if this control's "Required" flag is set to true.
-		 *
-		 * For Controls that can't realistically be "validated" (e.g. labels, datagrids, etc.),
-		 * those controls should simply have Validate() return true.
-		 *
-		 * @return boolean
-		 */
-		abstract public function Validate();
 
 		/**
 		 * Validate self + child controls. Controls must mark themselves modified, or somehow redraw themselves
@@ -1725,6 +1602,15 @@
 		 */
 		public function MarkAsModified() {
 			$this->blnModified = true;
+			/*
+			 TODO: Implement and test the code below to reduce the amount of redrawing. In particular, the current
+			    implementation will cause invisible and display:none controls to be redrawn whenever something changes,
+				even though its not needed.
+
+			if ($this->blnVisible &&
+			$this->blnDisplay) {
+				$this->blnModified = true;
+			} */
 		}
 
 		/**
@@ -1759,12 +1645,14 @@
 			$this->MarkAsModified();
 
 			// Mark the old parent (if applicable) as modified
-			if ($this->objParentControl)
+			if ($this->objParentControl) {
 				$this->objParentControl->RemoveChildControl($this->ControlId, false);
+			}
 
 			// Mark the new parent (if applicable) as modified
-			if ($objControl)
+			if ($objControl) {
 				$objControl->AddChildControl($this);
+			}
 		}
 
 		/**
@@ -1793,7 +1681,7 @@
 		}
 
 		/**
-		 * Used by jQuery UI wrapper controls to find the element on which to apply the jQuery function
+		 * Used by jQuery UI wrapper controls to find the element on which to apply the jQuery  function
 		 *
 		 * NOTE: Some controls that use jQuery will get wrapped with extra divs by the jQuery library.
 		 * If such a control then gets replaced by Ajax, the jQuery effects will be deleted. To solve this,
@@ -1852,6 +1740,13 @@
 			return false;
 		}
 
+		public function GetWrapperStyler() {
+			if (!$this->objWrapperStyler) {
+				$this->objWrapperStyler = new QTagStyler();
+			}
+			return $this->objWrapperStyler;
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -1864,48 +1759,19 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
-				// APPEARANCE
-				case "BackColor": return $this->strBackColor;
-				case "BorderColor": return $this->strBorderColor;
-				case "BorderStyle": return $this->strBorderStyle;
-				case "BorderWidth": return $this->strBorderWidth;
-				case "CssClass": return $this->strCssClass;
 				case "Display": return $this->blnDisplay;
-				case "DisplayStyle": return $this->strDisplayStyle;
-				case "FontBold": return $this->blnFontBold;
-				case "FontItalic": return $this->blnFontItalic;
-				case "FontNames": return $this->strFontNames;
-				case "FontOverline": return $this->blnFontOverline;
-				case "FontSize": return $this->strFontSize;
-				case "FontStrikeout": return $this->blnFontStrikeout;
-				case "FontUnderline": return $this->blnFontUnderline;
-				case "ForeColor": return $this->strForeColor;
-				case "Opacity": return $this->intOpacity;
-
-				// BEHAVIOR
-				case "AccessKey": return $this->strAccessKey;
 				case "CausesValidation": return $this->mixCausesValidation;
-				case "Cursor": return $this->strCursor;
 				case "Enabled": return $this->blnEnabled;
 				case "Required": return $this->blnRequired;
-				case "TabIndex": return $this->intTabIndex;
-				case "ToolTip": return $this->strToolTip;
 				case "ValidationError": return $this->strValidationError;
 				case "Visible": return $this->blnVisible;
 				case "PreferredRenderMethod": return $this->strPreferredRenderMethod;
 
 				// LAYOUT
-				case "Height": return $this->strHeight;
-				case "Width": return $this->strWidth;
 				case "HtmlBefore": return $this->strHtmlBefore;
 				case "HtmlAfter": return $this->strHtmlAfter;
 				case "Instructions": return $this->strInstructions;
 				case "Warning": return $this->strWarning;
-
-				case "Overflow": return $this->strOverflow;
-				case "Position": return $this->strPosition;
-				case "Top": return $this->strTop;
-				case "Left": return $this->strLeft;
 
 				case "Moveable": return $this->objDraggable && !$this->objDraggable->Disabled;
 				case "Resizable": return $this->objResizable && !$this->objResizable->Disabled;
@@ -1927,7 +1793,7 @@
 				case "WrapperModified": return $this->blnWrapperModified;
 				case "ActionParameter": return $this->mixActionParameter;
 				case "ActionsMustTerminate": return $this->blnActionsMustTerminate;
-				case "WrapperCssClass": return $this->strWrapperCssClass;
+				case "WrapperCssClass": return $this->GetWrapperStyler()->CssClass;
 				case "UseWrapper": return $this->blnUseWrapper;
 
 				// SETTINGS
@@ -1937,6 +1803,8 @@
 
 				case "Modified": return $this->IsModified();
 				case "LinkedNode": return $this->objLinkedNode;
+				case "WrapperStyles": return $this->getWrapperStyler();
+				case "WrapLabel": return $this->blnWrapLabel;
 
 
 				default:
@@ -1964,202 +1832,29 @@
 		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				// APPEARANCE
-				case "BackColor":
+				// Shunt position settings to the wrapper. Actual drawing will get resolved at draw time.
+				case "Position":
+				case "Top":
+				case "Left":
 					try {
-						if ($this->strBackColor !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strBackColor = $mixValue;
-						}
+						$this->getWrapperStyler()->__set($strName, $mixValue);
+						$this->markAsWrapperModified();
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "BorderColor":
+				case "Display":	// boolean to determine whether to display or not
 					try {
-						if ($this->strBorderColor !== ($mixValue = QType::Cast($mixValue, QType::String))){
-							$this->blnModified = true;
-							$this->strBorderColor = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "BorderStyle":
-					try {
-						if ($this->strBorderStyle !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strBorderStyle = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "BorderWidth":
-					try {
-						if ($this->strBorderWidth !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strBorderWidth = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "CssClass":
-					try {
-						if ($this->strCssClass !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strCssClass = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Display":
-					try {
-						$blnDisplay = QType::Cast($mixValue, QType::Boolean);
-						if ($blnDisplay != $this->blnDisplay) {
-							$this->blnDisplay = $blnDisplay;
-							$this->MarkAsWrapperModified();
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "DisplayStyle":
-					try {
-						if ($this->strDisplayStyle !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strDisplayStyle = $mixValue;
-							if ($this->strDisplayStyle != QDisplayStyle::None) {
-								$this->blnDisplay = true;
-							}
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "FontBold":
-					try {
-						if ($this->blnFontBold !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
-							$this->blnFontBold = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "FontItalic":
-					try {
-						if ($this->blnFontItalic !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
-							$this->blnFontItalic = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "FontNames":
-					try {
-						if ($this->strFontNames !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strFontNames = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "FontOverline":
-					try {
-						if ($this->blnFontOverline !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
-							$this->blnFontOverline = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "FontSize":
-					try {
-						if ($this->strFontSize !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strFontSize = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "FontStrikeout":
-					try {
-						if ($this->blnFontStrikeout !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
-							$this->blnFontStrikeout = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "FontUnderline":
-					try {
-						if ($this->blnFontUnderline !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
-							$this->blnFontUnderline = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "ForeColor":
-					try {
-						if ($this->strForeColor !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strForeColor = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Opacity":
-					try {
-						if ($this->intOpacity !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
-							if (($this->intOpacity < 0) || ($this->intOpacity > 100))
-								throw new QCallerException('Opacity must be an integer value between 0 and 100');
-							$this->blnModified = true;
-							$this->intOpacity = $mixValue;
-						}
+						$mixValue = QType::Cast($mixValue, QType::Boolean);
+						$this->markAsWrapperModified();
+						$this->blnDisplay = $mixValue;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
 
-				// BEHAVIOR
-				case "AccessKey":
-					try {
-						if ($this->strAccessKey !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strAccessKey = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 				case "CausesValidation":
 					try {
 						$this->mixCausesValidation = $mixValue;
@@ -2169,21 +1864,10 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "Cursor":
-					try {
-						if ($this->strCursor !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strCursor = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 				case "Enabled":
 					try {
 						if ($this->blnEnabled !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
+							$this->MarkAsModified();
 							$this->blnEnabled = $mixValue;
 						}
 						break;
@@ -2199,32 +1883,10 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "TabIndex":
-					try {
-						if ($this->intTabIndex !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
-							$this->blnModified = true;
-							$this->intTabIndex = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "ToolTip":
-					try {
-						if ($this->strToolTip !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strToolTip = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 				case "Visible":
 					try {
 						if ($this->blnVisible !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->blnModified = true;
+							$this->MarkAsModified();
 							$this->blnVisible = $mixValue;
 						}
 						break;
@@ -2235,7 +1897,7 @@
 				case "PreferredRenderMethod":
 					try {
 						if ($this->strPreferredRenderMethod !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
+							$this->MarkAsModified();
 							$this->strPreferredRenderMethod = $mixValue;
 						}
 						break;
@@ -2244,33 +1906,10 @@
 						throw $objExc;
 					}
 
-				// LAYOUT
-				case "Height":
-					try {
-						if ($this->strHeight !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strHeight = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Width":
-					try {
-						if ($this->strWidth !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strWidth = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 				case "HtmlBefore":
 					try {
 						if ($this->strHtmlBefore !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
+							$this->MarkAsModified();
 							$this->strHtmlBefore = $mixValue;
 						}
 						break;
@@ -2281,7 +1920,7 @@
 				case "HtmlAfter":
 					try {
 						if ($this->strHtmlAfter !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
+							$this->MarkAsModified();
 							$this->strHtmlAfter = $mixValue;
 						}
 						break;
@@ -2292,7 +1931,7 @@
 				case "Instructions":
 					try {
 						if ($this->strInstructions !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
+							$this->MarkAsModified();
 							$this->strInstructions = $mixValue;
 						}
 						break;
@@ -2303,55 +1942,7 @@
 				case "Warning":
 					try {
 						$this->strWarning = QType::Cast($mixValue, QType::String);
-						$this->blnModified = true;	// always modify, since it will get reset on subsequent drawing
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case "Overflow":
-					try {
-						if ($this->strOverflow !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
-							$this->strOverflow = $mixValue;
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Position":
-					try {
-						$strPosition = QType::Cast($mixValue, QType::String);
-						if ($strPosition != $this->strPosition) {
-							$this->strPosition = $strPosition;
-							$this->MarkAsWrapperModified();
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Top":
-					try {
-						$strTop = QType::Cast($mixValue, QType::String);
-						if ($strTop != $this->strTop) {
-							$this->strTop = $strTop;
-							$this->MarkAsWrapperModified();
-						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Left":
-					try {
-						$strLeft = QType::Cast($mixValue, QType::String);
-						if ($strLeft != $this->strLeft) {
-							$this->strLeft = $strLeft;
-							$this->MarkAsWrapperModified();
-						}
+						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2425,7 +2016,7 @@
 				case "Name":
 					try {
 						if ($this->strName !== ($mixValue = QType::Cast($mixValue, QType::String))) {
-							$this->blnModified = true;
+							$this->MarkAsModified();
 							$this->strName = $mixValue;
 						}
 						break;
@@ -2436,7 +2027,7 @@
 				case "ActionParameter":
 					try {
 						$this->mixActionParameter = ($mixValue instanceof QJsClosure) ? $mixValue : QType::Cast($mixValue, QType::String);
-						$this->blnModified = true;
+						$this->MarkAsModified();
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2446,8 +2037,7 @@
 				case "WrapperCssClass":
 					try {
 						$strWrapperCssClass = QType::Cast($mixValue, QType::String);
-						if ($strWrapperCssClass != $this->strWrapperCssClass) {
-							$this->strWrapperCssClass = $strWrapperCssClass;
+						if ($this->GetWrapperStyler()->SetCssClass($strWrapperCssClass)) {
 							$this->MarkAsWrapperModified();
 						}
 						break;
@@ -2463,6 +2053,18 @@
 							if ($this->ParentControl) {
 								$this->ParentControl->MarkAsModified();
 							}
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case "WrapLabel":
+					try {
+						if($this->blnWrapLabel != QType::Cast($mixValue, QType::Boolean)) {
+							$this->blnWrapLabel = !$this->blnWrapLabel;
+							//need to render the parent again (including its children)
+							$this->MarkAsModified();
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {

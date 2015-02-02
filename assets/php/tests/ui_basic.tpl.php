@@ -6,6 +6,7 @@
 <?php $this->lstSelect->RenderWithName(); ?>
 <?php $this->lstSelect2->RenderWithName(); ?>
 <?php $this->lstCheck->RenderWithName(); ?>
+<?php $this->lstCheck2->RenderWithName(); ?>
 <?php $this->lstRadio->RenderWithName(); ?>
 <fieldset>
 	<legend>Radio Group</legend>

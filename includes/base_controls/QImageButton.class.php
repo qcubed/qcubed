@@ -37,8 +37,8 @@
 		//////////
 		// Methods
 		//////////
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
-			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
+		public function GetAttributes($blnIncludeCustom = true) {
+			$strToReturn = parent::GetAttributes($blnIncludeCustom);
 
 			if ($this->strAlternateText)
 				$strToReturn .= sprintf('alt="%s" ', $this->strAlternateText);

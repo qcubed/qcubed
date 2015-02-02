@@ -581,13 +581,15 @@
 			ob_clean();
 			if (isset($_POST['Qform__FormCallType']) &&  $_POST['Qform__FormCallType'] == QCallType::Ajax) {
 				// AJAX-based Response
+				header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
 
-				// Response is in XML Format
-				header('Content-Type: text/xml');
+				$strJSON = JavaScriptHelper::toJsObject(['loc'=>'reload']);
 
-				// Use javascript to reload
-				_p('<?xml version="1.0"?><response><controls/><commands><command>window.location.reload(true);</command></commands></response>', false);
-
+				// Output it and update render state
+				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
+					$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
+				}
+				print ($strJSON);
 			} else {
 				header('Location: '. QApplication::$RequestUri);
 			}
@@ -618,35 +620,39 @@
 		 * @return string The Ajax helper string (should be JS commands)
 		 */
 		protected function RenderAjaxHelper($objControl) {
-			// $strToReturn = '';
-			if ($objControl)
-				$strToReturn = $objControl->RenderAjax(false);
-			if ($strToReturn)
-				$strToReturn .= "\r\n";
-			foreach ($objControl->GetChildControls() as $objChildControl) {
-				$strToReturn .= $this->RenderAjaxHelper($objChildControl);
+			$controls = [];
+
+			if ($objControl) {
+				$controls = array_merge($controls, $objControl->RenderAjax());	// will return an array of controls to be merged with current controls
+				foreach ($objControl->GetChildControls() as $objChildControl) {
+					$controls = array_merge($controls, $this->RenderAjaxHelper($objChildControl));
+				}
 			}
-			return $strToReturn;
+
+			return $controls;
 		}
 
+		/**
+		 * Renders the actual ajax return value as a json object. Since json must be UTF-8 encoded, will convert to
+		 * UTF-8 if needed. Response is parsed in the "success" function in qcubed.js, and handled there.
+		 */
 		protected function RenderAjax() {
+			$sResult = [];
+
 			// Update the Status
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 
-			$strToReturn = '';
-
 			// watcher collection
+
 			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
-				$strToReturn = '<watcher></watcher>';
+				$aResult[QAjaxResponse::Watcher] = $this->strWatcherTime;
 			}
 
-			// Create the Control collection
-			$strToReturn .= '<controls>';
-
 			// Recursively render changed controls, starting with all top-level controls
+			$controls = array();
 			foreach ($this->GetAllControls() as $objControl) {
 				if (!$objControl->ParentControl) {
-					$strToReturn .= $this->RenderAjaxHelper($objControl);
+					$controls = array_merge($controls, $this->RenderAjaxHelper($objControl));
 				}
 			}
 
@@ -655,6 +661,8 @@
 			$strStyleSheetToAddArray = array();
 			$strFormAttributeToModifyArray = array();
 
+			// TODO: Change the following so that instead of issuing javascript, we issue json parameters that get interpreted
+			// by the response in qcubed.js and acted on accordingly
 			foreach ($this->GetAllControls() as $objControl) {
 				// Include any javascript files that were added by the control
 				// Note: current implementation does not handle removal of javascript files
@@ -732,8 +740,9 @@
 			}
 
 			// Set Up the Command Node
-			if (trim($strCommands))
-				$strCommands = '<command>' . QString::XmlEscape(trim($strCommands)) . '</command>';
+			if (trim($strCommands)) {
+				$aResult[QAjaxResponse::Commands] = trim($strCommands);
+			}
 
 			// Persist Controls (if applicable)
 			foreach ($this->objPersistentControlArray as $objControl)
@@ -741,30 +750,17 @@
 
 			// Add in the form state
 			$strFormState = QForm::Serialize($this);
-			$strToReturn .= sprintf('<control id="Qform__FormState">%s</control>', $strFormState);
-
-			// close Control collection, Open the Command collection
-			$strToReturn .= '</controls><commands>';
-
-			$strToReturn .= $strCommands;
-
-			// close Command collection
-			$strToReturn .= '</commands>';
+			$controls[] = [QAjaxResponse::Id=>"Qform__FormState", QAjaxResponse::Value=>$strFormState];
+			$aResult[QAjaxResponse::Controls] = $controls;
 
 			$strContents = trim(ob_get_contents());
 
 			if (strtolower(substr($strContents, 0, 5)) == 'debug') {
+				// TODO: Output debugging information.
 			} else {
 				ob_clean();
 
-				// Response is in XML Format
-				header('Content-Type: text/xml');
-
-				// Output it and update render state
-				if (QApplication::$EncodingType)
-					printf("<?xml version=\"1.0\" encoding=\"%s\"?><response>%s</response>\r\n", QApplication::$EncodingType, $strToReturn);
-				else
-					printf("<?xml version=\"1.0\"?><response>%s</response>\r\n", $strToReturn);
+				QApplication::SendAjaxResponse($aResult);
 			}
 
 			// Update Render State
@@ -1761,18 +1757,13 @@
 			$objForm = clone($this);
 
 			// Render HTML
-			$strToReturn .= "\r\n<div style=\"display: none;\">\r\n\t";
-
-			$strToReturn .= "\r\n\t";
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId);
-			$strToReturn .= "\r\n</div>\r\n";
-
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormControl" id="Qform__FormControl" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormEvent" id="Qform__FormEvent" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormParameter" id="Qform__FormParameter" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCallType" id="Qform__FormCallType" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormUpdates" id="Qform__FormUpdates" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCheckableControls" id="Qform__FormCheckableControls" value="" />');
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId) . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormControl" id="Qform__FormControl" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormEvent" id="Qform__FormEvent" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormParameter" id="Qform__FormParameter" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCallType" id="Qform__FormCallType" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormUpdates" id="Qform__FormUpdates" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCheckableControls" id="Qform__FormCheckableControls" value="" />') . _nl();
 
 			foreach ($this->GetAllControls() as $objControl) {
 				if ($objControl->Rendered) {

@@ -16,7 +16,6 @@ class ExampleForm extends QForm {
 		// included /examples/datagrid/QDataGrid.inc file.  Feel free to make changes to the
 		// main QDataGrid.inc custom subclass, which is located in /includes/qform/QDataGrid.inc.
 		$this->dtgPersons = new QDataGrid($this);
-		$this->dtgPersons->CellPadding = 5;
 		$this->dtgPersons->CellSpacing = 0;
 
 		// Enabling AJAX
