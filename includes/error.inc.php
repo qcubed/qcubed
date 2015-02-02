@@ -172,10 +172,18 @@
 	 */
 
 	function QCubedShutdown() {
+		if (defined ('__TIMER_OUT_FILE__')) {
+			$strTimerOutput = QTimer::VarDump(false);
+			if ($strTimerOutput) {
+				file_put_contents(__TIMER_OUT_FILE__, $strTimerOutput . "\n", FILE_APPEND);
+			}
+		}
+
 		$error = error_get_last();
 		if ($error &&
-				is_array ($error) &&
-				(!defined ('QCodeGen::DebugMode') || QCodeGen::DebugMode)){ // if we are codegenning, only error if we are in debug mode. Prevents chmod error.
+			is_array ($error) &&
+			(!defined ('QCodeGen::DebugMode') || QCodeGen::DebugMode)) { // if we are codegenning, only error if we are in debug mode. Prevents chmod error.
+
 			QCodoHandleError (
 				$error['type'],
 				$error['message'],
