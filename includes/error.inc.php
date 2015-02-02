@@ -172,7 +172,7 @@
 	function QCubedShutdown() {
 
 		$strTimerOutput = QTimer::VarDump(false);
-		if ($strTimerOutput && __TIMER_OUT_FILE__) {
+		if ($strTimerOutput && defined('__TIMER_OUT_FILE__')) {
 			file_put_contents(__TIMER_OUT_FILE__, $strTimerOutput . "\n", FILE_APPEND);
 		}
 
