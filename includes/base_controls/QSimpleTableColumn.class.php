@@ -76,7 +76,7 @@
 		 * @return array
 		 */
 		public function GetHeaderCellParams () {
-			$aParams = array();
+			$aParams['scope'] = 'col';
 			if ($this->strHeaderCssClass) {
 				$aParams['class'] = $this->strHeaderCssClass;
 			}
@@ -130,6 +130,10 @@
 			
 			if ($strStyle = $this->GetCellStyle ($item)) {
 				$aParams['style'] = $strStyle;
+			}
+			if ($this->blnRenderAsHeader) {
+				// assume this means it is a row header
+				$aParams['scope'] = 'row';
 			}
 			return $aParams;		
 		}
