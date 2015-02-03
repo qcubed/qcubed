@@ -40,6 +40,13 @@
 			throw new QUndefinedPropertyException("SET", $objReflection->getName(), $strName);
 		}
 
+		public function __call($strName, $arguments)
+		{
+			$objReflection = new ReflectionClass($this);
+			throw new QUndefinedMethodException($objReflection->getName(), $strName);
+		}
+
+
 		/**
 		 * This allows you to set any properties, given by a name-value pair list
 		 * in mixOverrideArray.

@@ -82,10 +82,12 @@
 		 public function Load(<?= implode (',', $aStrs) ?>, $objClauses = null) {
 			if (<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>strlen($<?= $objColumn->VariableName  ?>) && <?php } ?><?php GO_BACK(4); ?>) {
 				$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?> = <?= $objTable->ClassName ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>, $objClauses);
+				$this->strTitleVerb = QApplication::Translate('Edit');
 				$this->blnEditMode = true;
 			}
 			else {
 				$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?> = new <?= $objTable->ClassName ?>();
+				$this->strTitleVerb = QApplication::Translate('Create');
 				$this->blnEditMode = false;
 			}
 			$this->Refresh ();
