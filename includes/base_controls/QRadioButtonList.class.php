@@ -263,12 +263,11 @@
 		public function Validate() {
 			if ($this->blnRequired) {
 				if ($this->SelectedIndex == -1) {
-					$this->strValidationError = sprintf(QApplication::Translate('%s is required'), $this->strName);
+					$this->ValidationError = sprintf(QApplication::Translate('%s is required'), $this->strName);
 					return false;
 				}
 			}
 
-			$this->strValidationError = null;
 			return true;
 		}
 

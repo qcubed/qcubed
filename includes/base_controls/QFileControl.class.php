@@ -74,12 +74,11 @@
 		 * @return bool
 		 */
 		public function Validate() {
-			$this->strValidationError = "";
 			if ($this->blnRequired) {
 				if (strlen($this->strFileName) > 0)
 					return true;
 				else {
-					$this->strValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
+					$this->ValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
 					return false;
 				}
 			} else

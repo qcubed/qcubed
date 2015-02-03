@@ -213,15 +213,13 @@
 		}
 
 		public function Validate() {
-			$this->strValidationError = "";
-
 			// Check for Required
 			if ($this->blnRequired && $this->SelectedItem === null)
 			{
 				if ($this->strName)
-					$this->strValidationError = sprintf($this->strLabelForRequired, $this->strName);
+					$this->ValidationError = sprintf($this->strLabelForRequired, $this->strName);
 				else
-					$this->strValidationError = $this->strLabelForRequiredUnnamed;
+					$this->ValidationError = $this->strLabelForRequiredUnnamed;
 				return false;
 			}
 

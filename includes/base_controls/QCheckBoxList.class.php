@@ -272,12 +272,10 @@
 		public function Validate() {
 			if ($this->blnRequired) {
 				if ($this->SelectedIndex == -1) {
-					$this->strValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
+					$this->ValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
 					return false;
 				}
 			}
-
-			$this->strValidationError = null;
 			return true;
 		}
 

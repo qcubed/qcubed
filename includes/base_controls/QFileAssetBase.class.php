@@ -91,9 +91,9 @@
 				if ($this->blnRequired && !$this->strFile) {
 					$blnToReturn = false;
 					if ($this->strName)
-						$this->strValidationError = $this->strName . QApplication::Translate(' is required');
+						$this->ValidationError = $this->strName . QApplication::Translate(' is required');
 					else
-						$this->strValidationError = $this->strName . QApplication::Translate('Required');
+						$this->ValidationError = $this->strName . QApplication::Translate('Required');
 				}
 			}
 

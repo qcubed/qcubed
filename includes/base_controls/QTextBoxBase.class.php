@@ -318,8 +318,6 @@
 		 * @return bool whether or not the control is valid
 		 */
 		public function Validate() {
-			$this->strValidationError = "";
-
 			// Get the Text string
 			if ($this->blnValidateTrimmed)
 				$strText = trim($this->strText);
@@ -329,9 +327,9 @@
 			if ($this->blnRequired) {
 				if (mb_strlen($strText, QApplication::$EncodingType) == 0) {
 					if ($this->strName)
-						$this->strValidationError = sprintf($this->strLabelForRequired, $this->strName);
+						$this->ValidationError = sprintf($this->strLabelForRequired, $this->strName);
 					else
-						$this->strValidationError = $this->strLabelForRequiredUnnamed;
+						$this->ValidationError = $this->strLabelForRequiredUnnamed;
 					return false;
 				}
 			}
@@ -340,9 +338,9 @@
 			if ($this->intMinLength > 0) {
 				if (mb_strlen($strText, QApplication::$EncodingType) < $this->intMinLength) {
 					if ($this->strName)
-						$this->strValidationError = sprintf($this->strLabelForTooShort, $this->strName, $this->intMinLength);
+						$this->ValidationError = sprintf($this->strLabelForTooShort, $this->strName, $this->intMinLength);
 					else
-						$this->strValidationError = sprintf($this->strLabelForTooShortUnnamed, $this->intMinLength);
+						$this->ValidationError = sprintf($this->strLabelForTooShortUnnamed, $this->intMinLength);
 					return false;
 				}
 			}
@@ -351,9 +349,9 @@
 			if ($this->intMaxLength > 0) {
 				if (mb_strlen($strText, QApplication::$EncodingType) > $this->intMaxLength) {
 					if ($this->strName)
-						$this->strValidationError = sprintf($this->strLabelForTooLong, $this->strName, $this->intMaxLength);
+						$this->ValidationError = sprintf($this->strLabelForTooLong, $this->strName, $this->intMaxLength);
 					else
-						$this->strValidationError = sprintf($this->strLabelForTooLongUnnamed, $this->intMaxLength);
+						$this->ValidationError = sprintf($this->strLabelForTooLongUnnamed, $this->intMaxLength);
 					return false;
 				}
 			}
@@ -361,7 +359,7 @@
 			// Check against PHP validation
 			if ($this->intValidateFilter && $this->strText) { 
 				if (!filter_var($this->strText, $this->intValidateFilter, $this->mixValidateFilterOptions)) {
-					$this->strValidationError = $this->strLabelForInvalid;
+					$this->ValidationError = $this->strLabelForInvalid;
 					return false;
 				}
 			}

@@ -51,13 +51,13 @@
 
 				if ($this->intMinItemCount !== null &&
 						count ($a) < $this->intMinItemCount) {
-					$this->strValidationError = sprintf($this->strLabelForTooShort, $this->intMinItemCount);
+					$this->ValidationError = sprintf($this->strLabelForTooShort, $this->intMinItemCount);
 					return false;
 				}
 
 				if ($this->intMaxItemCount !== null &&
 					count ($a) > $this->intMaxItemCount) {
-					$this->strValidationError = sprintf($this->strLabelForTooLong, $this->intMaxItemCount);
+					$this->ValidationError = sprintf($this->strLabelForTooLong, $this->intMaxItemCount);
 					return false;
 				}
 
