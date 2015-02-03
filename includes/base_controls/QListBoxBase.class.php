@@ -196,22 +196,22 @@
 			if ($this->blnRequired) {
 				if ($this->SelectedIndex == -1) {
 					if ($this->strName)
-						$this->strValidationError = sprintf($this->strLabelForRequired, $this->strName);
+						$this->ValidationError = sprintf($this->strLabelForRequired, $this->strName);
 					else
-						$this->strValidationError = $this->strLabelForRequiredUnnamed;
+						$this->ValidationError = $this->strLabelForRequiredUnnamed;
 					return false;
 				}
 
 				if (($this->SelectedIndex == 0) && (strlen($this->SelectedValue) == 0)) {
 					if ($this->strName)
-						$this->strValidationError = sprintf($this->strLabelForRequired, $this->strName);
+						$this->ValidationError = sprintf($this->strLabelForRequired, $this->strName);
 					else
-						$this->strValidationError = $this->strLabelForRequiredUnnamed;
+						$this->ValidationError = $this->strLabelForRequiredUnnamed;
 					return false;
 				}
 			}
 
-			$this->strValidationError = null;
+			$this->ValidationError = null;
 			return true;
 		}
 

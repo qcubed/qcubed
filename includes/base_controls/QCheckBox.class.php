@@ -169,14 +169,12 @@
 			if ($this->blnRequired) {
 				if (!$this->blnChecked) {
 					if ($this->strName)
-						$this->strValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
+						$this->ValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
 					else
-						$this->strValidationError = QApplication::Translate('Required');
+						$this->ValidationError = QApplication::Translate('Required');
 					return false;
 				}
 			}
-
-			$this->strValidationError = null;
 			return true;
 		}
 
@@ -288,7 +286,7 @@
 		/* === Codegen Helpers, used during the Codegen process only. === */
 
 		/**
-		 * /**
+		 *
 		 * Returns the variable name for a control of this type during code generation process
 		 *
 		 * @param string $strPropName Property name for which the control to be generated is being generated
@@ -364,11 +362,10 @@ TMPL;
 		/**
 		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
 		 *
-		 * @param QCodeGen                                       $objCodeGen
-		 * @param QTable                                         $objTable
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
-		 * @return string
 		 * @return string
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
@@ -399,4 +396,3 @@ TMPL;
 			return $strRet;
 		}
 	}
-?>

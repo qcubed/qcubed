@@ -44,22 +44,22 @@
 
 					if (isset($this->intMinWidth) AND $this->intMinWidth > $width) {
 						$blnToReturn = false;
-						$this->strValidationError = $this->strName . QApplication::Translate(' is too short the min width is ') . $this->intMinWidth;
+						$this->ValidationError = $this->strName . QApplication::Translate(' is too short the min width is ') . $this->intMinWidth;
 					}
 
 					if (isset($this->intMaxWidth) AND $this->intMaxWidth < $width) {
 						$blnToReturn = false;
-						$this->strValidationError = $this->strName . QApplication::Translate(' is too big the max width is ') . $this->intMaxWidth;
+						$this->ValidationError = $this->strName . QApplication::Translate(' is too big the max width is ') . $this->intMaxWidth;
 					}
 
 					if (isset($this->intMinHeight) AND $this->intMinHeight > $height) {
 						$blnToReturn = false;
-						$this->strValidationError = $this->strName . QApplication::Translate(' is too short the min height is ') . $this->intMinHeight;
+						$this->ValidationError = $this->strName . QApplication::Translate(' is too short the min height is ') . $this->intMinHeight;
 					}
 
 					if (isset($this->intMaxHeight) AND $this->intMaxHeight < $height) {
 						$blnToReturn = false;
-						$this->strValidationError = $this->strName . QApplication::Translate(' is too big the max height is ') . $this->intMaxHeight;
+						$this->ValidationError = $this->strName . QApplication::Translate(' is too big the max height is ') . $this->intMaxHeight;
 					}
 				}
 			}

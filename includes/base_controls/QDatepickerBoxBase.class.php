@@ -52,25 +52,23 @@
 			if ($this->strText != '') {
 				$dttDateTime = new QDateTime($this->strText, null, QDateTime::DateOnlyType);
 				if ($dttDateTime->IsDateNull()) {
-					$this->strValidationError = QApplication::Translate("Invalid date");
+					$this->ValidationError = QApplication::Translate("Invalid date");
 					return false;
 				}
 				if (!is_null($this->Minimum)) {
 					if ($dttDateTime->IsEarlierThan($this->Minimum)) {
-						$this->strValidationError = QApplication::Translate("Date is earlier than minimum allowed");
+						$this->ValidationError = QApplication::Translate("Date is earlier than minimum allowed");
 						return false;
 					}
 				}
 
 				if (!is_null($this->Maximum)) {
 					if ($dttDateTime->IsLaterThan($this->Maximum)) {
-						$this->strValidationError = QApplication::Translate("Date is later than maximum allowed");
+						$this->ValidationError = QApplication::Translate("Date is later than maximum allowed");
 						return false;
 					}
 				}
 			}
-
-			$this->strValidationError = '';
 			return true;
 		}
 

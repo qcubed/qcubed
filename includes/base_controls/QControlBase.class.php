@@ -84,9 +84,9 @@
 	 * @property string $PreferredRenderMethod carries the name of the function, which were initially used for rendering
 	 * @property boolean $Required specifies whether or not this is required (will cause a validation error if the form is trying to be validated and this control is left blank)
 	 * @property-read string $StyleSheets
-	 * @property-read string $ValidationError is the string that contains the validation error (if applicable) or will be blank if (1) the form did not undergo its validation routine or (2) this control had no error
+	 * @property string $ValidationError is the string that contains the validation error (if applicable) or will be blank if (1) the form did not undergo its validation routine or (2) this control had no error
 	 * @property boolean $Visible specifies whether or not the control should be rendered in the page.  This is in contrast to Display, which will just hide the control via CSS styling.
-	 * @property string $Warning is warning text (looks like an error, but it can be user defined) that will be shown next to the control's name label {@link QControl::RenderWithName}
+	 * @property string $Warning is warning text that will be shown next to the control's name label {@link QControl::RenderWithName}
 	 * @property boolean $UseWrapper defaults to true
 	 * @property-read boolean $WrapperModified
 	 * @property string $WrapperCssClass
@@ -1942,6 +1942,16 @@
 				case "Warning":
 					try {
 						$this->strWarning = QType::Cast($mixValue, QType::String);
+						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "ValidationError":
+					try {
+						$this->strValidationError = QType::Cast($mixValue, QType::String);
 						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
 						break;
 					} catch (QInvalidCastException $objExc) {

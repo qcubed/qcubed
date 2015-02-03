@@ -323,9 +323,9 @@
 
 				if ($blnIsNull) {
 					if ($this->strName)
-						$this->strValidationError = sprintf(QApplication::Translate('%s is required'), $this->strName);
+						$this->ValidationError = sprintf(QApplication::Translate('%s is required'), $this->strName);
 					else
-						$this->strValidationError = QApplication::Translate('Required');
+						$this->ValidationError = QApplication::Translate('Required');
 					return false;
 				}
 			} else {
@@ -334,12 +334,11 @@
 					($this->strDateTimePickerType == QDateTimePickerType::DateTimeSeconds )) &&
 					($this->intSelectedDay || $this->intSelectedMonth || $this->intSelectedYear) &&
 					($this->dttDateTime->IsDateNull())) {
-					$this->strValidationError = QApplication::Translate('Invalid Date');
+					$this->ValidationError = QApplication::Translate('Invalid Date');
 					return false;
 				}
 			}
 
-			$this->strValidationError = '';
 			return true;
 		}
 

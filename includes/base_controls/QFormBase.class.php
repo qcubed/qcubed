@@ -252,18 +252,23 @@
 		protected function Form_PreRender() {}
 
 		/**
-		 * The 'Default' Form_Validate method. This method in any class derived from QForm (pages created by QCubed).
-		 * This method runs everytime an action is triggered (the form is submitted)
-		 * The overriding function in the derived class is supposed to use this function to specify
-		 * the conditions which when fulfilled represent a satisfactory input from the user (and would return true).
-		 * If the required conditions (e.g. a 'Required' input was left blank) is not met, the function is
-		 * supposed to return false.
+		 * The Form_Validate method.
 		 *
-		 * If this function (the overridden function in the child class) returns false then the action is
-		 * not triggerred and nothing happens (the script ends silently)
-		 * @return bool
+		 * Before we get here, all the controls will first be validated. Override this method to do
+		 * additional form level validation, and any form level actions needed as part of the validation process,
+		 * like displaying an error message.
+		 *
+		 * This is the last thing called in the validation process, and will always be called if
+		 * validation is requested, even if prior controls caused a validation error. Return false to prevent
+		 * validation and cancel the current action.
+		 *
+		 * $blnValid will contain the result of control validation. If it is false, you know that validation will
+		 * fail, regardless of what you return from the function.
+		 *
+		 * @param bool 		$blnValid	The current state of the validation.
+		 * @return bool 	Return false to prevent validation.
 		 */
-		protected function Form_Validate() {return true;}
+		protected function Form_Validate($blnValid) {return true;}
 
 		/**
 		 * This function is meant to be overriden by child class and is called when the Form exits
@@ -1225,7 +1230,7 @@
 
 						// Run Form-Specific Validation (if any)
 						if ($mixCausesValidation && !($mixCausesValidation instanceof QDialog)) {
-							if (!$this->Form_Validate()) {
+							if (!$this->Form_Validate($blnValid)) {
 								$blnValid = false;
 							}
 						}
@@ -1309,8 +1314,9 @@
 			foreach ($this->GetAllControls() as $objControl) {
 				// Include any StyleSheets?  The control would have a
 				// comma-delimited list of stylesheet files to include (if applicable)
-				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
+				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets)) {
 					$strStyleSheetArray = array_merge($strStyleSheetArray, $strScriptArray);
+				}
 			}
 
 			// In order to make ui-themes workable, move the jquery.css to the end of list.
