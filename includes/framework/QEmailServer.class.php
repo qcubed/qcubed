@@ -51,7 +51,7 @@
 		 *
 		 * @var string $TestModeDirectory
 		 */		
-		public static $TestModeDirectory = '/tmp';
+		public static $TestModeDirectory = __TMP__;
 
 		/**
 		 * Boolean flag signifying whether SMTP's AUTH PLAIN should be used
