@@ -3,48 +3,40 @@
  * Class QHtmlList
  * A control that lets you dynamically create an html unordered or ordered list with
  * sub-lists. These structures are often used as the basis for javascript widgets like
- * menu bars. Subclass these classes for specific javascript widget needs.
+ * menu bars.
+ *
+ * Also supports data binding. When using the data binder, it will recreate the item list each time it draws,
+ * and then delete the item list so that the list does not get stored in the formstate. It is common for lists like
+ * this to associate items in a database with items in a list through the value attribute of each item.
+ * In an effort to make sure that database ids are not exposed to the client (for security reasons), the value
+ * attribute is encrypted.
+ *
+ * @property string  $Tag		Tag for main wrapping object
+ * @property string  $ItemTag 	Tag for each item
  */
 
 
-class QHtmlList extends QControl {
+class QHtmlList extends QListControl {
+	/** @var callable */
     protected $mixDataBinder = null;
-    protected $objListItems = array();
-    protected $strTag = 'ul';
-
-    public function __construct($objParentObject, $strControlId = null) {
-        parent::__construct ($objParentObject, $strControlId);
-    }
+	/** @var string  top level tag */
+	protected $strTag = 'ul';
+	/** @var string  item tag */
+	protected $strItemTag = 'li';
 
     /**
-     * Adds a list item. Gives it an automatically generated unique id based on the
-     * control id.
-     *
-     * @param $objListItem
-     */
-    public function AddItem (QHtmlListItem $objListItem) {
-        $objListItem->_Id = $this->ControlId . '_' . count($this->objListItems);
-        $this->objListItems[] = $objListItem;
-    }
-
-	/**
-	 * Removes all the list items.
-	 */
-	public function RemoveAllListItems () {
-        $this->objListItems = array();
-    }
-
-    /**
-     * A binder that will generate the sub items. The binder should add
+     * A binder that will generate the item list. The binder should add
      * list items to this control. The current list items will be cleared first.
-     * @param $mixDataBinder
+     * @param callable $mixDataBinder
      */
-    public function SetDataBinder($mixDataBinder) {
+    public function SetDataBinder(callable $mixDataBinder) {
         $this->mixDataBinder = $mixDataBinder;
     }
 
-
-    public function ParsePostData() {}
+	/**
+	 * This is not a typical input control, so there is no post data to read.
+	 */
+	public function ParsePostData() {}
 
 	/**
 	 * Validate the submitted data
@@ -58,247 +50,136 @@ class QHtmlList extends QControl {
      * @return string
      */
     public function GetControlHtml() {
+		$strHtml = '';
         if ($this->mixDataBinder) {
-            $this->RemoveAllListItems();
             call_user_func($this->mixDataBinder, $this);
         }
-        if ($this->objListItems) {
-            $strStyle = $this->GetStyleAttributes();
-            if ($strStyle)
-                $strStyle = sprintf('style="%s"', $strStyle);
-
-            $strAttributes = $this->GetAttributes();
-
-            $strHtml = sprintf ('<%s id="%s" %s %s>', $this->strTag,
-                $this->ControlId, $strAttributes, $strStyle);
-            foreach ($this->objListItems as $objListItem) {
-                $strHtml .= $objListItem->GetHtml();
+        if ($this->GetItemCount()) {
+			$strHtml = '';
+            foreach ($this->GetAllItems() as $objItem) {
+                $strHtml .= $this->GetItemHtml($objItem);
             }
-            $strHtml .= '</ul>';
-            return $strHtml;
+
+			$strHtml = $this->RenderTag($this->strTag, null, null, $strHtml);
         }
-        return '';
-    }
+		if ($this->mixDataBinder) {
+			$this->RemoveAllItems();
+		}
+
+		return $strHtml;
+	}
 
 	/**
-	 * Finds the list item that corresponds to the given id.
-	 * @param $strId Id of the list item to find
-	 * @return null|QHtmlListItem
-	 */
-	public function FindListItemById ($strId) {
-        if ($this->objListItems) {
-            foreach ($this->objListItems as $objListItem) {
-                if ($objListItem->Id == $strId) {
-                    return $objListItem;
-                }
-                elseif ($objItem = $objListItem->FindSubItem ($strId)) {
-                    return $objItem;
-                }
-            }
-        }
-        return null;
-    }
-}
-
-/**
- * Class QHtmlListItem
- * An Html list item. List items can contain other list items as sub-items.
- */
-
-/**
- * @package Controls
- *
- * @property string $SubTag Tag to use to bracket sub items.
- * @property string $Text Text to display on the item
- * @property-read string $Id Id of item.
- * @property string $Anchor If set, the anchor text to print in the href= string
- */
-
-class QHtmlListItem extends QBaseClass {
-	/** @var string subtag to use for bracketing sub items. */
-    protected $strSubTag = 'ul';
-	/** @var  string visible text of item. */
-    protected $strText;
-	/** @var string id to print in the tag. This is set by the QHtmlList above. */
-    protected $strId;
-	/** @var  string if this has an anchor, what to redirect to. Could be javascript or a page. */
-    protected $strAnchor;
-	/** @var QHtmlListItem[] the sub items.  */
-    protected $objSubItems = array();
-
-	/**
-	 * @param $strText
-	 * @param null $strAnchor
-	 */
-	public function __construct($strText, $strAnchor = null) {
-        $this->strText = $strText;
-        $this->strAnchor = $strAnchor;
-    }
-
-	/**
-	 * Adds a list item as a sub-item.
-	 * @param QHtmlListItem $objListItem
-	 */
-	public function AddItem (QHtmlListItem $objListItem) {
-        $objListItem->strId = $this->strId . '_' . count ($this->objSubItems);
-        $this->objSubItems[] = $objListItem;
-    }
-
-	/**
-	 * Removes all subitems.
-	 */
-	public function RemoveSubItems() {
-        $this->objSubItems = array();
-    }
-
-	/**
-	 * Returns the attribute string for rendering.
+	 * Return the html to draw an item.
+	 *
+	 * @param QListItem $objItem
 	 * @return string
 	 */
-	public function GetAttributes() {
-        $strHtml = '';
-        if ($this->strId) {
-            $strHtml .= 'id="' . $this->strId . '"';
-        }
-        return $strHtml;
-    }
+	protected function GetItemHtml ($objItem) {
+		$strHtml = $this->GetItemText($objItem);
+		$strHtml .= "\n";
+		if ($objItem->GetItemCount()) {
+			$strSubHtml = '';
+			foreach ($objItem->GetAllItems() as $objSubItem) {
+				$strSubHtml .= $this->GetItemHtml($objSubItem);
+			}
+			$strHtml .= QHtml::RenderTag($this->strTag, null, $strSubHtml);
+		}
+		$objStyler = $this->GetItemStyler($objItem);
+		$strHtml = QHtml::RenderTag($this->strItemTag, $objStyler->RenderHtmlAttributes(), $strHtml);
 
+		return $strHtml;
+	}
+
+	protected function GetItemText ($objItem) {
+		$strHtml = QApplication::HtmlEntities($objItem->Text);
+
+		if ($strAnchor = $objItem->Anchor) {
+			$strHtml = QHtml::RenderTag('a', ['href' => $strAnchor], $strHtml, false, true);
+		}
+		return $strHtml;
+	}
+
+	protected function GetItemStyler ($objItem) {
+		if ($this->objItemStyle) {
+			$objStyler = clone $this->objItemStyle;
+		}
+		else {
+			$objStyler = new QListItemStyle();
+		}
+		$objStyler->SetHtmlAttribute('id', $objItem->ControlId);
+		if ($objStyle = $objItem->ItemStyle) {
+			$objStyler->Override($objStyle);
+		}
+		return $objStyler;
+	}
+
+	/////////////////////////
+	// Public Properties: GET
+	/////////////////////////
 	/**
-	 * Returns the inner html for the list item. Override to customize how list items get drawn.
-	 * @return string
-	 */
-	public function GetInnerHtml() {
-        $strHtml = QApplication::HtmlEntities($this->strText);
-
-        if ($this->strAnchor) {
-            $strHtml = sprintf ('<a href="%s">%s</a>', $this->strAnchor, $strHtml);
-        }
-        return $strHtml;
-    }
-
-	/**
-	 * Return the complete HTML for the list item.
-	 * @return string
-	 */
-	public function GetHtml () {
-        $strHtml = sprintf ('<li %s>', $this->GetAttributes());
-        $strHtml .= $this->GetInnerHtml();
-        $strHtml .= $this->RenderSubItems();
-        $strHtml .= '</li>';
-        return $strHtml;
-    }
-
-	/**
-	 * Render the sub items.
-	 * @return string
-	 */
-	public function RenderSubItems() {
-        if ($this->objSubItems) {
-            $strHtml = '<' . $this->strSubTag . '>';
-            foreach ($this->objSubItems as $objListItem) {
-                $strHtml .= $objListItem->GetHtml();
-            }
-            $strHtml .= '</' . $this->strSubTag . '>';
-            return $strHtml;
-        }
-        return '';
-    }
-
-	/**
-	 * @param $strId
-	 * @return mixed
-	 */
-	public function FindSubItem($strId) {
-        if ($this->objSubItems) {
-            foreach ($this->objSubItems as $objListItem) {
-                if ($objListItem->Id == $strId) {
-                    return $objListItem;
-                }
-                elseif ($objItem = $objListItem->FindSubItem ($strId)) {
-                    return $objItem;
-                }
-            }
-        }
-    }
-
-	/**
-	 * PHP Magic function to get properties
-	 * @param string $strText
+	 * PHP magic function
+	 * @param string $strName
 	 *
 	 * @return mixed
 	 * @throws Exception|QCallerException
 	 */
-    public function __get($strText) {
-        switch ($strText) {
-            case "SubTag": return $this->strSubTag;
-            case "Text": return $this->strText;
-            case "Id": return $this->strId;
-			case "Anchor": return $this->strAnchor;
+	public function __get($strName) {
+		switch ($strName) {
+			// APPEARANCE
+			case "Tag": return $this->strTag;
+			case "ItemTag": return $this->strItemTag;
+			default:
+				try {
+					return parent::__get($strName);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+		}
+	}
 
-            default:
-                try {
-                    return parent::__get($strText);
-                } catch (QCallerException $objExc) {
-                    $objExc->IncrementOffset();
-                    throw $objExc;
-                }
-        }
-    }
-
+	/////////////////////////
+	// Public Properties: SET
+	/////////////////////////
 	/**
-	 * PHP Magic function to set class properties
-	 * @param string $strText
+	 * PHP magic method
+	 * @param string $strName
 	 * @param string $mixValue
 	 *
 	 * @return mixed
 	 * @throws Exception|QCallerException|QInvalidCastException
 	 */
-    public function __set($strText, $mixValue) {
-        switch ($strText) {
-			case "Text":
+	public function __set($strName, $mixValue) {
+		switch ($strName) {
+			// APPEARANCE
+			case "Tag":
 				try {
-					$this->strText = QType::Cast($mixValue, QType::String);
+					$this->strTag = QType::Cast($mixValue, QType::String);
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+			case "ItemTag":
+				try {
+					$this->strItemTag = QType::Cast($mixValue, QType::String);
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
 
-			case "Anchor":
+			default:
 				try {
-					$this->strAnchor = QType::Cast($mixValue, QType::String);
-					break;
-				} catch (QInvalidCastException $objExc) {
+					parent::__set($strName, $mixValue);
+				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
+				break;
+		}
+	}
 
-			case "SubTag":
-                try {
-                    $this->strSubTag = QType::Cast($mixValue, QType::String);
-                    break;
-                } catch (QInvalidCastException $objExc) {
-                    $objExc->IncrementOffset();
-                    throw $objExc;
-                }
-
-            case "_Id":
-                try {
-                    $this->strId = QType::Cast($mixValue, QType::String);
-                    break;
-                } catch (QInvalidCastException $objExc) {
-                    $objExc->IncrementOffset();
-                    throw $objExc;
-                }
-
-            default:
-                try {
-                    parent::__set($strText, $mixValue);
-                } catch (QCallerException $objExc) {
-                    $objExc->IncrementOffset();
-                    throw $objExc;
-                }
-                break;
-        }
-    }
 }
+

@@ -70,16 +70,10 @@
 				$this->SelectedIndex = $_POST[$this->strControlId];
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
-				if (array_key_exists($this->strControlId, $_POST)) {
-					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
-						if ($_POST[$this->strControlId] == $intIndex)
-							$this->objItemsArray[$intIndex]->Selected = true;
-						else
-							$this->objItemsArray[$intIndex]->Selected = false;
-					}
+				if (isset($_POST[$this->strControlId])) {
+					$this->SetSelectedItemsByIndex(array($_POST[$this->strControlId]), false);
 				} else {
-					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) 
-						$this->objItemsArray[$intIndex]->Selected = false;
+					$this->UnselectAllItems(false);
 				}
 			}
 		}
@@ -147,8 +141,8 @@
 		}
 
 		protected function GetControlHtml() {
-			if ((!$this->objItemsArray) || (count($this->objItemsArray) == 0))
-				return "";
+			$intItemCount = $this->GetItemCount();
+			if (!$intItemCount) return '';
 
 			/* Deprecated. Use Margin and Padding on the ItemStyle attribute.
 			if ($this->intCellPadding >= 0)
@@ -217,7 +211,7 @@
 								+ min(($this->ItemCount % $this->intRepeatColumns), $intColIndex)
 								+ $intRowIndex;
 
-						$strItemHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
+						$strItemHtml = $this->GetItemHtml($this->GetItem($intIndex), $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
 						$strCellHtml = QHtml::RenderTag ('td', null, $strItemHtml);
 						$strRowHtml .= $strCellHtml;
 					}
@@ -239,7 +233,7 @@
 			$count = $this->ItemCount;
 			$strToReturn = '';
 			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
-				$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel) . "\n";
+				$strToReturn .= $this->GetItemHtml($this->GetItem($intIndex), $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel) . "\n";
 			}
 			$strToReturn = $this->RenderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
 			return $strToReturn;
@@ -253,7 +247,7 @@
 			$count = $this->ItemCount;
 			$strToReturn = '';
 			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
-				$strHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
+				$strHtml = $this->GetItemHtml($this->GetItem($intIndex), $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
 				$strToReturn .= QHtml::RenderTag('div', null, $strHtml);
 			}
 			$strToReturn = $this->RenderTag('div', ['id'=>$this->strControlId], null, $strToReturn);

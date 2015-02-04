@@ -173,6 +173,7 @@
 
 	QApplicationBase::$ClassFile['qlistcontrol'] = __QCUBED_CORE__ . '/base_controls/QListControl.class.php';
 	QApplicationBase::$ClassFile['qlistitem'] = __QCUBED_CORE__ . '/base_controls/QListItem.class.php';
+	QApplicationBase::$ClassFile['qlistitemmanager'] = __QCUBED_CORE__ . '/base_controls/QListItemManager.trait.php';
 	QApplicationBase::$ClassFile['qlistboxbase'] = __QCUBED_CORE__ . '/base_controls/QListBoxBase.class.php';
 	QApplicationBase::$ClassFile['qlistbox'] = __QCUBED__ . '/controls/QListBox.class.php';
 	QApplicationBase::$ClassFile['qlistitemstyle'] = __QCUBED_CORE__ . '/base_controls/QListItemStyle.class.php';
@@ -181,7 +182,6 @@
 	QApplicationBase::$ClassFile['qtreenav'] = __QCUBED_CORE__ . '/base_controls/QTreeNav.class.php';
 	QApplicationBase::$ClassFile['qtreenavitem'] = __QCUBED_CORE__ . '/base_controls/QTreeNavItem.class.php';
 	QApplicationBase::$ClassFile['qhtmllist'] = __QCUBED_CORE__ . '/base_controls/QHtmlList.class.php';
-	QApplicationBase::$ClassFile['qhtmllistitem'] = __QCUBED_CORE__ . '/base_controls/QHtmlList.class.php';
 
 	QApplicationBase::$ClassFile['qtextboxbase'] = __QCUBED_CORE__ . '/base_controls/QTextBoxBase.class.php';
 	QApplicationBase::$ClassFile['qtextbox'] = __QCUBED__ . '/controls/QTextBox.class.php';

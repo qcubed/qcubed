@@ -12,9 +12,7 @@
 	 * @property integer $Rows          specifies how many rows you want to have shown.
 	 * @property string  $LabelForRequired
 	 * @property string  $LabelForRequiredUnnamed
-	 * @property string  $ItemStyle     {@link QListItemStyle}
 	 * @property string  $SelectionMode {@link QSelectionMode} specifies if this is a "Single" or "Multiple" select control.
-	 * @see     QListItemStyle
 	 * @see     QSelectionMode
 	 * @package Controls
 	 */
@@ -28,8 +26,6 @@
 		protected $strLabelForRequired;
 		/** @var string Error to be shown If the box is empty, doesn't have a name and is marked as required */
 		protected $strLabelForRequiredUnnamed;
-		/** @var null|QListItemStyle The style for each element to be displayed */
-		protected $objItemStyle = null;
 
 		//////////
 		// Methods
@@ -49,33 +45,21 @@
 		}
 
 		/**
-		 * Prases the data recieved back from the client/browser
+		 * Parses the data received back from the client/browser
 		 */
 		public function ParsePostData() {
 			if (array_key_exists($this->strControlId, $_POST)) {
 				if (is_array($_POST[$this->strControlId])) {
-					// Multi-Select, so find them all
-					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
-						if (array_search($intIndex, $_POST[$this->strControlId]) !== false)
-							$this->objItemsArray[$intIndex]->Selected = true;
-						else
-							$this->objItemsArray[$intIndex]->Selected = false;
-					}
+					// Multi-Select, so find them all.
+					$this->SetSelectedItemsById($_POST[$this->strControlId], false);
 				} else {
 					// Single-select
-					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
-						if ($_POST[$this->strControlId] == $intIndex)
-							$this->objItemsArray[$intIndex]->Selected = true;
-						else
-							$this->objItemsArray[$intIndex]->Selected = false;
-					}
+					$this->SetSelectedItemsById(array($_POST[$this->strControlId]), false);
 				}
 			} else {
 				// Multiselect forms with nothing passed via $_POST means that everything was DE selected
-				if ($this->strSelectionMode == QSelectionMode::Multiple) {
-					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
-						$this->objItemsArray[$intIndex]->Selected = false;
-					}
+				if ($this->SelectionMode == QSelectionMode::Multiple) {
+					$this->UnselectAllItems(false);
 				}
 			}
 		}
@@ -87,23 +71,27 @@
 		 * @param integer $intIndex
 		 * @return string resulting HTML
 		 */
-		protected function GetItemHtml($objItem, $intIndex) {
+		protected function GetItemHtml($objItem) {
 			// The Default Item Style
-			$objStyle = $this->objItemStyle;
-
-			// Apply any Style Override (if applicable)
-			if ($objItem->ItemStyle) {
-				$objStyle = $objStyle->ApplyOverride($objItem->ItemStyle);
+			if ($this->objItemStyle) {
+				$objStyler = clone ($this->objItemStyle);
+			} else {
+				$objStyler = new QListItemStyle();
 			}
 
-			$strToReturn = sprintf('<option value="%s" %s%s>%s</option>',
-				($objItem->Empty) ? '' : $intIndex,
-				($objItem->Selected) ? 'selected="selected"' : "",
-				$objStyle->GetAttributes(),
-				QApplication::HtmlEntities($objItem->Name)
-			) . _nl();
+			// Apply any Style Override (if applicable)
+			if ($objStyle = $objItem->ItemStyle) {
+				$objStyler->Override($objStyle);
+			}
 
-			return $strToReturn;
+			$objStyler->SetHtmlAttribute('value', ($objItem->Empty) ? '' : $objItem->ControlId);
+			if ($objItem->Selected) {
+				$objStyler->SetHtmlAttribute('selected', 'selected');
+			}
+
+			$strHtml = QHtml::RenderTag('option', $objStyler->RenderHtmlAttributes(), QApplication::HtmlEntities($objItem->Name), false, true) . _nl();
+
+			return $strHtml;
 		}
 
 		/**
@@ -120,15 +108,13 @@
 				$this->SelectedIndex = 0;
 			}
 
-			$attrOverride = array('id'=>$this->strControlId);
-
 			if ($this->SelectionMode == QSelectionMode::Multiple) {
 				$attrOverride['name'] = $this->strControlId . "[]";
 			} else {
 				$attrOverride['name'] = $this->strControlId;
 			}
 
-			$strToReturn = $this->RenderTag('select', $attrOverride, null, $this->renderInnerHtml());
+			$strToReturn = $this->RenderTag('select', $attrOverride, null, $this->RenderInnerHtml());
 
 			// If MultiSelect and if NOT required, add a "Reset" button to deselect everything
 			if (($this->SelectionMode == QSelectionMode::Multiple) && (!$this->blnRequired) && ($this->blnEnabled) && ($this->blnVisible)) {
@@ -137,41 +123,41 @@
 			return $strToReturn;
 		}
 
-		protected function renderInnerHtml() {
-			$strToReturn = '';
-			$strCurrentGroup = null;
-			if (is_array($this->objItemsArray)) {
-				for ($intIndex = 0; $intIndex < $this->ItemCount; $intIndex++) {
-					$objItem = $this->objItemsArray[$intIndex];
-					// Figure Out Groups (if applicable)
-					if (!is_null($objItem->ItemGroup)) {
-						// We've got grouping -- are we in a new or same group?
-						if (is_null($strCurrentGroup))
-							// New Group
-							$strToReturn .= '<optgroup label="' . QApplication::HtmlEntities($objItem->ItemGroup) . '">';							
-							
-						else if ($strCurrentGroup != $objItem->ItemGroup)
-							// Different Group
-							$strToReturn .= '</optgroup>' . _nl() . '<optgroup label="' . QApplication::HtmlEntities($objItem->ItemGroup) . '">';
+		/**
+		 * Return the inner html for the select box.
+		 * @return string
+		 */
+		protected function RenderInnerHtml() {
+			$strHtml = '';
+			$intItemCount = $this->GetItemCount();
+			if (!$intItemCount) return '';
+			$groups = array();
 
-						$strCurrentGroup = $objItem->ItemGroup;
-						
-					// We've got no (or no more) grouping
-					} else {
-						if (!is_null($strCurrentGroup)) {
-							// End the current group
-							$strToReturn .= '</optgroup>' . _nl();
-							$strCurrentGroup = null;
-						}
-					}
-					$strToReturn .= $this->GetItemHtml($objItem, $intIndex);
+			for ($intIndex = 0; $intIndex < $intItemCount; $intIndex++) {
+				$objItem = $this->GetItem ($intIndex);
+				// Figure Out Groups (if applicable)
+				if ($strGroup = $objItem->ItemGroup) {
+					$groups[$strGroup][] = $objItem;
+				} else {
+					$groups[''][] = $objItem;
 				}
-				
-				if (!is_null($strCurrentGroup))
-					$strToReturn .= '</optgroup>' . _nl();;
 			}
 
-			return $strToReturn;
+			foreach ($groups as $strGroup=>$items) {
+				if (!$strGroup) {
+					foreach ($items as $objItem) {
+						$strHtml .= $this->GetItemHtml($objItem);
+					}
+				}
+				else {
+					$strGroupHtml = '';
+					foreach ($items as $objItem) {
+						$strGroupHtml .= $this->GetItemHtml($objItem);
+					}
+					$strHtml .= QHtml::RenderTag('optgroup', ['label' => QApplication::HtmlEntities($strGroup)], $strGroupHtml);
+				}
+			}
+			return $strHtml;
 		}
 
 		/**
@@ -231,8 +217,7 @@
 				case "Rows": return $this->GetHtmlAttribute('size');
 				case "LabelForRequired": return $this->strLabelForRequired;
 				case "LabelForRequiredUnnamed": return $this->strLabelForRequiredUnnamed;
-				case "ItemStyle": return $this->objItemStyle;
-				
+
 				// BEHAVIOR
 				case "SelectionMode": return $this->HasHtmlAttribute('multiple') ? QSelectionMode::Multiple : QSelectionMode::Single;
 
@@ -299,16 +284,6 @@
 						throw $objExc;
 					}
 				
-				case "ItemStyle":
-					try {
-						$this->blnModified = true;
-						$this->objItemStyle = QType::Cast($mixValue, "QListItemStyle");
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-					break;
-
 				default:
 					try {
 						parent::__set($strName, $mixValue);
