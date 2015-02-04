@@ -225,6 +225,7 @@
 					break;
 					
 				case "SelectedValue":	// mirror list control
+				case "Value":
 				case 'SelectedId':
 					// Set this at creation time to initialize the selected id. 
 					// This is also set by the javascript above to keep track of subsequent selections made by the user.
@@ -280,6 +281,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case "SelectedValue":	// mirror list control
+				case "Value": // most common situation
 				case 'SelectedId': return $this->strSelectedId;
 
 				default: 

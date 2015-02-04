@@ -5,9 +5,7 @@
 	 */
 
 	/**
-	 * This defines the style for an Item for a ListBox
-	 * All the appearance properties should be self-explanatory.
-	 * For more information about ListItem appearance, please see QListItem.class.php
+	 * This defines the style for an Item for a QListControl, which is the base for many different list types.
 	 *
 	 * @package Controls
 	 */

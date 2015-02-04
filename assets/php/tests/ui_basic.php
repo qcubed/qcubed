@@ -99,6 +99,7 @@
 			$this->lstSelect->Warning = 'Value = ' . $this->lstSelect->SelectedValue;
 			$this->lstSelect2->Warning = 'Values = ' . implode (',', $this->lstSelect2->SelectedValues);
 			$this->lstCheck->Warning = 'Values = ' . implode (',', $this->lstCheck->SelectedValues);
+			$this->lstCheck2->Warning = 'Values = ' . implode (',', $this->lstCheck2->SelectedValues);
 			$this->lstRadio->Warning = 'Value = ' . $this->lstRadio->SelectedValue;
 			$this->rdoRadio1->Warning = 'Value = ' . $this->rdoRadio1->Checked;
 			$this->rdoRadio2->Warning = 'Value = ' . $this->rdoRadio2->Checked;

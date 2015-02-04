@@ -66,7 +66,7 @@
  *  converted to dashed notation. Use GetDataAttribute() to retrieve the value of a data attribute.
  * @property boolean $NoWrap sets the CSS white-space  property to nowrap
  * @property boolean $ReadOnly is the "readonly" html attribute (making a textbox "ReadOnly" is  similar to setting the textbox to Enabled
- *  Readonly textboxes are selectedable, and their values get posted. Disabled textboxes are not selectabel and values do not post.
+ *  Readonly textboxes are selectedable, and their values get posted. Disabled textboxes are not selectable and values do not post.
  * @property string $AltText text used for 'alt' attribute in images
  */
 
@@ -393,7 +393,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	/**
 	 * Mark the parent class as modified. The host class must implement this if this functionality is desired.
 	 */
-	protected function MarkAsModified() {}
+	public function MarkAsModified() {}
 
 	/**
 	 * Returns the html for the attributes. Allows the given arrays to override the attributes and styles before
