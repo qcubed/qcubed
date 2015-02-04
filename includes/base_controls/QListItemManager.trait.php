@@ -30,8 +30,8 @@
 				$objListItem = new QListItem($mixListItemOrName, $strValue, $blnSelected, $strItemGroup);
 			}
 
-			if ($strControlId = $objListItem->ControlId) {
-				$objListItem->ControlId = $this->ControlId . '_' . count($this->objListItemArray);	// auto assign the id based on parent id
+			if ($strControlId = $this->ControlId) {
+				$objListItem->ControlId = $strControlId . '_' . count($this->objListItemArray);	// auto assign the id based on parent id
 				$objListItem->Reindex();
 			}
 			$this->objListItemArray[] = $objListItem;

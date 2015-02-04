@@ -75,7 +75,7 @@ class QHtmlList extends QListControl {
 	 * @param QListItem $objItem
 	 * @return string
 	 */
-	protected function GetItemHtml ($objItem) {
+	protected function GetItemHtml (QListItem $objItem) {
 		$strHtml = $this->GetItemText($objItem);
 		$strHtml .= "\n";
 		if ($objItem->GetItemCount()) {
@@ -83,7 +83,7 @@ class QHtmlList extends QListControl {
 			foreach ($objItem->GetAllItems() as $objSubItem) {
 				$strSubHtml .= $this->GetItemHtml($objSubItem);
 			}
-			$strHtml .= QHtml::RenderTag($this->strTag, null, $strSubHtml);
+			$strHtml .= QHtml::RenderTag($this->strTag, $this->GetSubTagAttributes($objItem), $strSubHtml);
 		}
 		$objStyler = $this->GetItemStyler($objItem);
 		$strHtml = QHtml::RenderTag($this->strItemTag, $objStyler->RenderHtmlAttributes(), $strHtml);
@@ -91,7 +91,13 @@ class QHtmlList extends QListControl {
 		return $strHtml;
 	}
 
-	protected function GetItemText ($objItem) {
+	/**
+	 * Return the text html of the item.
+	 *
+	 * @param QListItem $objItem
+	 * @return string
+	 */
+	protected function GetItemText (QListItem $objItem) {
 		$strHtml = QApplication::HtmlEntities($objItem->Text);
 
 		if ($strAnchor = $objItem->Anchor) {
@@ -100,7 +106,14 @@ class QHtmlList extends QListControl {
 		return $strHtml;
 	}
 
-	protected function GetItemStyler ($objItem) {
+	/**
+	 * Return the item styler for the given item. Combines the generic item styles found in this class with
+	 * any specific item styles found in the item.
+	 *
+	 * @param QListItem $objItem
+	 * @return QListItemStyle
+	 */
+	protected function GetItemStyler (QListItem $objItem) {
 		if ($this->objItemStyle) {
 			$objStyler = clone $this->objItemStyle;
 		}
@@ -112,6 +125,15 @@ class QHtmlList extends QListControl {
 			$objStyler->Override($objStyle);
 		}
 		return $objStyler;
+	}
+
+	/**
+	 * Return the attributes for the sub tag that wraps the item tags
+	 * @param QListItem $objItem
+	 * @return null|array|string
+	 */
+	protected function GetSubTagAttributes(QListItem $objItem) {
+		return null;
 	}
 
 	/////////////////////////

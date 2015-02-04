@@ -44,8 +44,6 @@
 		protected $strLabel = null;
 		/** @var  string if this has an anchor, what to redirect to. Could be javascript or a page. */
 		protected $strAnchor;
-		/** @var QListItem[] and array of subitems if this is a recursive item.  */
-		protected $objSubItems;
 		/** @var  string the internal id */
 		protected $strControlId;
 
