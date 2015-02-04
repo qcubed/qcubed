@@ -185,6 +185,8 @@
 		protected $blnUseWrapper = true;
         /** @var string  One time scripts associated with the control. */
         protected $strAttributeScripts = null;
+		/** @var The INITIAL class for the object. Only subclasses should set this before calling the parent constructor. */
+		protected $strCssClass = null;
 
 		// SETTINGS
 		/** @var string List of JavaScript files to be attached with the control when rendering */
@@ -255,6 +257,14 @@
 				else
 					throw new QCallerException('ControlIds must be only alphanumeric characters: ' . $strControlId);
 			}
+
+			/* If the subclass sets this, we pass it off to the attribute manager. Mostly for backwards compatibility,
+			 * but is a conventient way to set the initial class.
+			 */
+			if ($this->strCssClass) {
+				$this->AddCssClass($this->strCssClass);
+			}
+
 			try {
 				$this->objForm->AddControl($this);
 				if ($this->objParentControl)
@@ -1251,7 +1261,7 @@
 			if ($this->blnUseWrapper) {
 				if (!$this->blnVisible) $strOutput = '';
 			} else if (!$this->blnVisible) {
-				/* No wrapper is used and the control is not visible. We must ender a span with the control id and
+				/* No wrapper is used and the control is not visible. We must enter a span with the control id and
 				 *	display:none in order to be able change blnVisible to true in an Ajax call later and redraw the control.
 				 */
 				$strOutput = sprintf('<span id="%s" style="display:none;"></span>', $this->strControlId);
@@ -1782,6 +1792,7 @@
 
 				// MISC
 				case "ControlId": return $this->strControlId;
+				case "WrapperId": return $this->strControlId . '_ctl';
 				case "Form": return $this->objForm;
 				case "ParentControl": return $this->objParentControl;
 
