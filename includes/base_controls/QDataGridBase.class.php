@@ -210,7 +210,7 @@
 	 * @property QDataGridRowStyle    $RowStyle         	 is the main or "default" DataGridRowStyle for the entire table.  Any overriding row style (see "OverrideRowStyle(int, DataGridRowStyle)" below) or any appearance properties set in AlternateRowStyle or HeaderRowStyle will be applied in those specific situations. Any appearance properties NOT set in ovverrides, alternate, or header will simply default to what RowStyle has defined.
 	 * @property integer 			  $CellPadding 			 refers the the HTML CellPadding attribute of the <table>. Not supported in HTML 5.
 	 * @property integer 		      $CellSpacing 			 refers the the HTML CellSpacing attribute of the <table>  Not supported in HTML 5.
-	 * @property string               $GridLines        	 refers the the HTML rules attribute of the <table>
+	 * @property string               $GridLines        	 refers the the HTML rules attribute of the <table>. Not supported in HTML 5.
 	 * @property boolean              $ShowHeader        	 is the flag of whether or not to show the Header row
 	 * @property boolean              $ShowFooter
 	 * @property boolean              $ShowFilter
@@ -270,6 +270,8 @@
 		protected $blnShowFilterResetButton = true;
 		/** @var bool Determines of the footer has to be shown or not */
 		protected $blnShowFooter = false;
+		/** @var  Deprecated. Rules attribute of table. Not supported in HTML 5. */
+		protected $strGridLines;
 
 		// MISC
 		/** @var QDataGridColumn[] */
@@ -1379,7 +1381,7 @@
 				// LAYOUT
 				case "CellPadding": return $this->intCellPadding;
 				case "CellSpacing": return $this->intCellSpacing;
-				//case "GridLines": return $this->HasCssClass(QGridLines::Vertical);
+				case "GridLines": return $this->strGridLines;
 				case "ShowHeader": return $this->blnShowHeader;
 				case "ShowFooter": return $this->blnShowFooter;
 				case "ShowFilter": return $this->blnShowFilter;
@@ -1662,6 +1664,7 @@
 				case "GridLines":
 					try {
 						$this->strGridLines = QType::Cast($mixValue, QType::String);
+						$this->SetHtmlAttribute('rules', $this->strGridLines);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
