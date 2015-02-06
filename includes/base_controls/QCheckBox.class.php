@@ -98,7 +98,7 @@
 				if (!$this->blnWrapLabel) {
 					$strLabelAttributes = ' for="' . $this->strControlId .'"';
 				} else {
-					$strLabelAttributes = $this->renderLabelAttributes();
+					$strLabelAttributes = $this->RenderLabelAttributes();
 				}
 				$strCheckHtml = QHtml::RenderLabeledInput(
 					$strText,
@@ -109,7 +109,7 @@
 				);
 				if (!$this->blnWrapLabel) {
 					// Additionally wrap in a span so we can associate the label with the checkbox visually and apply the styles
-					$strCheckHtml = QHtml::RenderTag('span',  $this->renderLabelAttributes(), $strCheckHtml);
+					$strCheckHtml = QHtml::RenderTag('span',  $this->RenderLabelAttributes(), $strCheckHtml);
 				}
 			}
 			else {
@@ -130,13 +130,13 @@
 		}
 
 		/**
-		 * There is a little but of a conundrum here. If there is text assigned to the checkbox, we wrap
+		 * There is a little bit of a conundrum here. If there is text assigned to the checkbox, we wrap
 		 * the checkbox in a label. However, in this situation, its unclear what to do with the class and style
 		 * attributes that are for the checkbox. We are going to let the developer use the label styler to make
 		 * it clear what their intentions are.
 		 * @return string
 		 */
-		protected function renderLabelAttributes() {
+		protected function RenderLabelAttributes() {
 			$attributes = $this->GetHtmlAttributes(['title']); // copy tooltip to wrapping label
 			$objStyler = $this->getCheckLabelStyler();
 			if ($attributes) {
@@ -146,7 +146,10 @@
 			if (!$this->Enabled) {
 				$objStyler->AddCssClass('disabled');	// add the disabled class to the label for styling
 			}
-			return $objStyler->renderHtmlAttributes();
+			if (!$this->Display) {
+				$objStyler->Display = false;
+			}
+			return $objStyler->RenderHtmlAttributes();
 		}
 
 		/**
