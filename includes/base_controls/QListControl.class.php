@@ -224,6 +224,22 @@
 			$this->objItemsArray[$intIndex] = $objListItem;
 		}
 
+		/**
+		 * Returns the current state of the control to be able to restore it later.
+		 */
+		public function GetState(){
+			return array('SelectedValues'=>$this->SelectedValues);
+		}
+
+		/**
+		 * Restore the  state of the control.
+		 */
+		public function PutState($state) {
+			if (!empty($state['SelectedValues'])) {
+				$this->SelectedValues = $state['SelectedValues'];
+			}
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////

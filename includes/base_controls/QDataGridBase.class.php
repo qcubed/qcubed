@@ -950,11 +950,6 @@
 
 		}
 
-		protected function PersistPrepare() {
-			parent::PersistPrepare();
-			$this->RemoveAllColumns();
-		}
-
 		/**
 		 * Create the row used for datagrid filtering
 		 *
@@ -1355,6 +1350,48 @@
 			}
 			return $filters;
 		}
+
+		/**
+		 * Returns the current state of the control to be able to restore it later.
+		 * @return mixed
+		 */
+		public function GetState() {
+			$state = array();
+			if ($this->SortColumnIndex != -1) {
+				$state["c"] = $this->GetColumn($this->SortColumnIndex)->Name;
+				$state["d"] = $this->SortDirection;
+			}
+			if ($this->Paginator || $this->PaginatorAlternate) {
+				$state["p"] = $this->PageNumber;
+			}
+			return $state;
+		}
+
+		/**
+		 * Restore the state of the control.
+		 * @param mixed $state Previously saved state as returned by GetState above.
+		 */
+		public function PutState($state) {
+			// use the name as the column key because columns might be added or removed for some reason
+			if (isset ($state["c"])) {
+				$a = $this->GetAllColumns();
+				for ($i = 0; $i < count($a); $i++) {
+					if ($a[$i]->Name == $state["c"]) {
+						$this->SortColumnIndex = $i;
+						break;
+					}
+				}
+			}
+			if (isset ($state["d"])) {
+				$this->SortDirection = $state["d"];
+			}
+			if (isset ($state["p"]) &&
+				($this->Paginator || $this->PaginatorAlternate)) {
+
+				$this->PageNumber = $state["p"];
+			}
+		}
+
 
 		/////////////////////////
 		// Public Properties: GET

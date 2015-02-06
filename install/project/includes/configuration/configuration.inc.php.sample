@@ -405,6 +405,9 @@ if (!defined('SERVER_INSTANCE')) {
 			// Define the Filepath for any logged errors
 			define('ERROR_LOG_PATH', __TMP__ . '/error_log');
 
+			// Name of session variable used to save the state of form objects.
+			define('__SESSION_SAVED_STATE__', 'QSavedState');
+
 			// To Log ALL errors that have occurred, set flag to true
 			//			define('ERROR_LOG_FLAG', true);
 

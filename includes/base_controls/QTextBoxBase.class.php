@@ -388,6 +388,24 @@
 			return $str;
 		}
 
+		/**
+		 * Returns the current state of the control to be able to restore it later.
+		 * @return mixed
+		 */
+		protected function GetState(){
+			return array('Text'=>$this->Text);
+		}
+
+		/**
+		 * Restore the state of the control.
+		 * @param mixed $state Previously saved state as returned by GetState above.
+		 */
+		protected function PutState($state) {
+			if (isset($state['Text'])) {
+				$this->Text = $state['Text'];
+			}
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
