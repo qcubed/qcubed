@@ -30,12 +30,12 @@
 				$objListItem = new QListItem($mixListItemOrName, $strValue, $blnSelected, $strItemGroup);
 			}
 
-			if ($strControlId = $this->ControlId) {
-				$objListItem->ControlId = $strControlId . '_' . count($this->objListItemArray);	// auto assign the id based on parent id
+			if ($strControlId = $this->GetId()) {
+				$objListItem->SetId($strControlId . '_' . count($this->objListItemArray));	// auto assign the id based on parent id
 				$objListItem->Reindex();
 			}
 			$this->objListItemArray[] = $objListItem;
-			$this->_MarkAsModified();
+			$this->MarkAsModified();
 		}
 
 		/**
@@ -74,21 +74,28 @@
 		 * Reindex the ids of the items based on the current item.
 		 */
 		public function Reindex() {
-			if ($this->ControlId && $this->objListItemArray) for ($i = 0; $i < $this->GetItemCount(); $i++) {
-				$this->objListItemArray[$i]->ControlId = $this->ControlId . '_' . $i;	// assign the id based on parent id
+			if ($this->GetId() && $this->objListItemArray) for ($i = 0; $i < $this->GetItemCount(); $i++) {
+				$this->objListItemArray[$i]->SetId($this->GetId() . '_' . $i);	// assign the id based on parent id
 				$this->objListItemArray[$i]->Reindex();
 			}
 		}
 
 		/**
-		 * Stub function. If the object this is mixed in with is a control, then the control will override and implement.
+		 * Stub function. The including function needs to implement this.
 		 */
-		private function _MarkAsModified() {
-			if (method_exists($this, 'MarkAsModified')) {
-				$this->MarkAsModified();	// No current way around this. We are calling an unknown function, which makes this trait not self validated.
-			}
-		}
+		abstract public function MarkAsModified();
 
+		/**
+		 * Returns the id of the item, however the item stores it.
+		 * @return string
+		 */
+		abstract public function GetId();
+
+		/**
+		 * Sets the id of the object
+		 * @param string
+		 */
+		abstract public function SetId($strId);
 
 		/**
 		 * Adds an array of items, or an array of key=>value pairs. Convenient for adding a list from a type table.
@@ -121,7 +128,7 @@
 				$this->AddItem($item, $val, $blnSelected, $strItemGroup, $mixOverrideParameters);
 			};
 			$this->Reindex();
-			$this->_MarkAsModified();
+			$this->MarkAsModified();
 		}
 
 		/**
@@ -162,7 +169,7 @@
 		 * Removes all the items in objListItemArray
 		 */
 		public function RemoveAllItems() {
-			$this->_MarkAsModified();
+			$this->MarkAsModified();
 			$this->objListItemArray = null;
 		}
 
@@ -190,7 +197,7 @@
 
 			$this->objListItemArray[$intCount] = null;
 			unset($this->objListItemArray[$intCount]);
-			$this->_MarkAsModified();
+			$this->MarkAsModified();
 			$this->Reindex();
 		}
 
@@ -209,10 +216,10 @@
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
-			$objListItem->ControlId = $this->ControlId . '_' . $intIndex;
+			$objListItem->SetId($this->GetId() . '_' . $intIndex);
 			$this->objListItemArray[$intIndex] = $objListItem;
 			$objListItem->Reindex();
-			$this->_MarkAsModified();
+			$this->MarkAsModified();
 		}
 
 		/**
@@ -265,7 +272,7 @@
 				}
 			}
 			if ($blnMarkAsModified) {
-				$this->_MarkAsModified();
+				$this->MarkAsModified();
 			}
 		}
 
@@ -279,14 +286,14 @@
 			$intCount = $this->GetItemCount();
 			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
 				$objItem = $this->GetItem($intIndex);
-				$strId = $objItem->ControlId;
+				$strId = $objItem->GetId();
 				$objItem->Selected = in_array($strId, $strIdArray);
 				if ($objItem->GetItemCount()) {
 					$objItem->SetSelectedItemsById($strIdArray, false);
 				}
 			}
 			if ($blnMarkAsModified) {
-				$this->_MarkAsModified();
+				$this->MarkAsModified();
 			}
 		}
 
@@ -302,7 +309,7 @@
 				$objItem->Selected = in_array($intIndex, $intIndexArray);
 			}
 			if ($blnMarkAsModified) {
-				$this->_MarkAsModified();
+				$this->MarkAsModified();
 			}
 		}
 
@@ -339,7 +346,7 @@
 				$objItem->Selected = $blnSelected;
 			}
 			if ($blnMarkAsModified) {
-				$this->_MarkAsModified();
+				$this->MarkAsModified();
 			}
 		}
 
@@ -360,7 +367,7 @@
 				}
 			}
 			if ($blnMarkAsModified) {
-				$this->_MarkAsModified();
+				$this->MarkAsModified();
 			}
 		}
 

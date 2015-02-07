@@ -33,6 +33,23 @@
 		// Methods
 		//////////
 
+		/**
+		 * Return the id. Used by QListItemManager trait.
+		 * @return string
+		 */
+		public function GetId() {
+			return $this->strControlId;
+		}
+
+		/**
+		 * Set the Id. Used by QListItemManager trait.
+		 * @param $strId
+		 */
+		public function SetId($strId) {
+			assert(false); // should never get called on top level item.
+		}
+
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////

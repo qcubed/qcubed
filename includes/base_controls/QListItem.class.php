@@ -45,7 +45,7 @@
 		/** @var  string if this has an anchor, what to redirect to. Could be javascript or a page. */
 		protected $strAnchor;
 		/** @var  string the internal id */
-		protected $strControlId;
+		protected $strId;
 
 
 		/////////////////////////
@@ -94,17 +94,38 @@
 		}
 
 		/**
+		 * Required for QListItemManager trait
+		 */
+		public function MarkAsModified() {}
+
+		/**
+		 * Return the id. Used by trait.
+		 * @return string
+		 */
+		public function GetId() {
+			return $this->strId;
+		}
+
+		/**
+		 * Set the Id. Used by trait.
+		 * @param $strId
+		 */
+		public function SetId($strId) {
+			$this->strId = $strId;
+		}
+
+		/**
 		 * Returns the details of the control as JSON string. This is customized for the JQuery UI autocomplete. If your
 		 * widget requires something else, you will need to subclass and override this.
 		 * @return string
 		 */
 		public function toJsObject() {
-			$strControlId = $this->strValue;
-			if (!$strControlId) {
-				$strControlId = $this->strControlId;
+			$strId = $this->strValue;
+			if (!$strId) {
+				$strId = $this->strId;
 			}
 
-			$a = array('value' => $this->strName, 'id' => $strControlId);
+			$a = array('value' => $this->strName, 'id' => $strId);
 			if ($this->strLabel) {
 				$a['label'] = $this->strLabel;
 			}
@@ -113,7 +134,8 @@
 			}
 			return JavaScriptHelper::toJsObject($a);
 		}
-		
+
+
 
 		/////////////////////////
 		// Public Properties: GET
@@ -135,8 +157,7 @@
 				case "Label": return $this->strLabel;
 				case "Empty": return $this->strValue == null && $this->strName == null;
 				case "Anchor": return $this->strAnchor;
-				case "ControlId": return $this->strControlId;
-				case "Id": return $this->strControlId;
+				case "Id": return $this->strId;
 
 				case "Text":
 					if ($this->strLabel) {
@@ -230,7 +251,7 @@
 				case "Id":
 				case "ControlId":
 					try {
-						$this->strControlId = QType::Cast($mixValue, QType::String);
+						$this->strId = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
