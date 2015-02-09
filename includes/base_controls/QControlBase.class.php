@@ -961,6 +961,48 @@
 		}
 
 		/**
+		 * Returns the styler for the wrapper tag.
+		 * @return null|QTagStyler
+		 */
+		public function GetWrapperStyler() {
+			if (!$this->objWrapperStyler) {
+				$this->objWrapperStyler = new QTagStyler();
+			}
+			return $this->objWrapperStyler;
+		}
+
+		/**
+		 * Adds the given class to the wrapper tag.
+		 * @param $strClass
+		 */
+		public function AddWrapperCssClass($strClass) {
+			if ($this->GetWrapperStyler()->AddCssClass($strClass)) {
+				$this->MarkAsWrapperModified();
+			}
+			/**
+			 * TODO: This can likely be done just in javascript without a complete refresh of the control.
+			 *
+			 * if ($this->blnRendered && $this->blnOnScreen) {
+			 *   Change using javascript
+			 * }
+			 */
+		}
+
+		/**
+		 * Removes the given class from the wrapper tag.
+		 * @param $strClass
+		 */
+		public function RemoveWrapperCssClass($strClass) {
+			if ($this->GetWrapperStyler()->RemoveCssClass($strClass)) {
+				$this->MarkAsWrapperModified();
+			}
+
+			// TODO: do this in javascript
+			// QApplication::ExecuteControlCommand($this->WrapperId, 'removeClass', $this->strValidationState);
+
+		}
+
+		/**
 		 * Returns all wrapper-style-attributes
 		 * Similar to GetStyleAttributes, but specifically for CSS name/value pairs that will render
 		 * within a "wrapper's" HTML "style" attribute
@@ -971,7 +1013,7 @@
 		 * @return string
 		 */
 		protected function GetWrapperStyleAttributes($blnIsBlockElement = false) {
-			return $this->getWrapperStyler()->RenderCssStyles();
+			return $this->GetWrapperStyler()->RenderCssStyles();
 		}
 
 
@@ -1012,7 +1054,7 @@
 				$styleOverrides = ['display'=>'none'];
 			}
 
-			return $this->getWrapperStyler()->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
+			return $this->GetWrapperStyler()->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
 		}
 
 		/**
@@ -1748,13 +1790,6 @@
 				$objParent = $objParent->objParentControl;
 			}
 			return false;
-		}
-
-		public function GetWrapperStyler() {
-			if (!$this->objWrapperStyler) {
-				$this->objWrapperStyler = new QTagStyler();
-			}
-			return $this->objWrapperStyler;
 		}
 
 		/**
