@@ -70,28 +70,24 @@
 		public function ParsePostData() {
 			if (QApplication::$RequestMode == QRequestMode::Ajax) {
 				// Ajax will only send information about controls that are on the screen, so we know they are rendered
-				for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
-					if (!empty($_POST[$this->strControlId][$intIndex]))
-						$this->objItemsArray[$intIndex]->Selected = true;
-					else
-						$this->objItemsArray[$intIndex]->Selected = false;
-				}
+				$a = array_keys($_POST[$this->strControlId]);
+				$this->SetSelectedItemsByIndex($a, false);
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if ((array_key_exists($this->strControlId, $_POST)) && (is_array($_POST[$this->strControlId]))) {
-					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) {
-						if (array_key_exists($intIndex, $_POST[$this->strControlId]))
-							$this->objItemsArray[$intIndex]->Selected = true;
-						else
-							$this->objItemsArray[$intIndex]->Selected = false;
-					}
+					$a = array_keys($_POST[$this->strControlId]);
+					$this->SetSelectedItemsByIndex($a, false);
 				} else {
-					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) 
-						$this->objItemsArray[$intIndex]->Selected = false;
+					$this->UnselectAllItems(false);
 				}
 			}
 		}
-		
+
+		/**
+		 * Return the javascript associated with the control.
+		 *
+		 * @return string
+		 */
 		public function GetEndScript() {
 			$strScript = sprintf ('$j("#%s").on("change", "input", qc.formObjChanged);', $this->ControlId); // detect change for framework
 
@@ -106,7 +102,16 @@
 			return $strScript;
 		}
 
-		protected function GetItemHtml($objItem, $intIndex, $strTabIndex, $blnWrapLabel) {
+		/**
+		 * Return the HTML for the given item.
+		 *
+		 * @param QListItem $objItem
+		 * @param integer $intIndex
+		 * @param string $strTabIndex
+		 * @param boolean $blnWrapLabel
+		 * @return string
+		 */
+		protected function GetItemHtml(QListItem $objItem, $intIndex, $strTabIndex, $blnWrapLabel) {
 			$objLabelStyles = new QTagStyler();
 			if ($this->objItemStyle) {
 				$objLabelStyles->Override($this->objItemStyle); // default style
@@ -119,7 +124,7 @@
 			$objStyles->SetHtmlAttribute('type', 'checkbox');
 			$objStyles->SetHtmlAttribute('name', $this->strControlId . '[' . $intIndex . ']');
 
-			$strIndexedId = $this->strControlId . '_' . $intIndex;
+			$strIndexedId = $objItem->Id;
 			$objStyles->SetHtmlAttribute('id', $strIndexedId);
 			if ($strTabIndex) {
 				$objStyles->TabIndex = $strTabIndex;
@@ -154,8 +159,12 @@
 			return $strHtml;
 		}
 
+		/**
+		 * Return the html to draw the base control.
+		 * @return string
+		 */
 		protected function GetControlHtml() {
-			if ((!$this->objItemsArray) || (count($this->objItemsArray) == 0))
+			if ((!$this->objListItemArray) || (count($this->objListItemArray) == 0))
 				return "";
 
 			/* Deprecated. Use Margin and Padding on the ItemStyle attribute.
@@ -225,7 +234,7 @@
 								+ min(($this->ItemCount % $this->intRepeatColumns), $intColIndex)
 								+ $intRowIndex;
 
-						$strItemHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
+						$strItemHtml = $this->GetItemHtml($this->objListItemArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
 						$strCellHtml = QHtml::RenderTag ('td', null, $strItemHtml);
 						$strRowHtml .= $strCellHtml;
 					}
@@ -247,7 +256,7 @@
 			$count = $this->ItemCount;
 			$strToReturn = '';
 			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
-				$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel) . "\n";
+				$strToReturn .= $this->GetItemHtml($this->objListItemArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel) . "\n";
 			}
 			$strToReturn = $this->RenderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
 			return $strToReturn;
@@ -261,7 +270,7 @@
 			$count = $this->ItemCount;
 			$strToReturn = '';
 			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
-				$strHtml = $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
+				$strHtml = $this->GetItemHtml($this->objListItemArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
 				$strToReturn .= QHtml::RenderTag('div', null, $strHtml);
 			}
 			$strToReturn = $this->RenderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
@@ -269,6 +278,10 @@
 		}
 
 
+		/**
+		 * Validate the control.
+		 * @return bool
+		 */
 		public function Validate() {
 			if ($this->blnRequired) {
 				if ($this->SelectedIndex == -1) {

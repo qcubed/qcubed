@@ -1757,6 +1757,14 @@
 			return $this->objWrapperStyler;
 		}
 
+		/**
+		 * Returns the form associated with the control. Used by the QDataBinder trait.
+		 * @return QForm
+		 */
+		public function GetForm() {
+			return $this->objForm;
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////

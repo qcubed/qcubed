@@ -602,17 +602,16 @@
 			// End the Response Script
 			exit();	
 		}
-		
-		public function CallDataBinder($strMethodName, QPaginatedControl $objPaginatedControl, $objParentControl = null) {
+
+		/**
+		 * Calls a data binder associated with the form. Does this so data binder can be protected. Mostly for legacy code.
+		 * @param callable $callable
+		 * @param  QControl $objPaginatedControl
+		 * @throws QDataBindException
+		 */
+		public function CallDataBinder($callable, $objPaginatedControl) {
 			try {
-				if (is_array($strMethodName)) {
-					call_user_func($strMethodName, $objPaginatedControl);
-				}
-				elseif ($objParentControl) {
-					$objParentControl->$strMethodName($objPaginatedControl);
-				} else {
-					$this->$strMethodName($objPaginatedControl);
-				}
+				call_user_func($callable, $objPaginatedControl);
 			} catch (QCallerException $objExc) {
 				throw new QDataBindException($objExc);
 			}
