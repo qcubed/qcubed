@@ -5,9 +5,12 @@
 	 */
 
 	/**
-	 * Since QListItems can be recursive, then logically both a QListControl, and a QListItem manages a collection of
-	 * QListItems. To prevent duplication of code, this trait is used by both to do that basic management of the
-	 * item list itself.
+	 * This is a trait that presents an interface for managing an item list. It is used by the QListControl, QHListControl,
+	 * and the QHListItem classes, the latter because a QHListItem can itself contain a list of other items.
+	 *
+	 * Note that some abstract methods are declared here that must be implemented by the using class:
+	 * GetId()	- returns the id
+	 * MarkAsModified() - marks the object as modified. Optional.
 	 *
 	 * @package Controls
 	 */
@@ -15,21 +18,15 @@
 		///////////////////////////
 		// Private Member Variables
 		///////////////////////////
-		/** @var QListItem[] an array of subitems if this is a recursive item.  */
+		/** @var QListItemBase[] an array of subitems if this is a recursive item.  */
 		protected $objListItemArray;
 
-		public function AddItem($mixListItemOrName, $strValue = null, $blnSelected = null, $strItemGroup = null, $mixOverrideParameters = null) {
-			if (gettype($mixListItemOrName) == QType::Object) {
-				$objListItem = QType::Cast($mixListItemOrName, "QListItem");
-			}
-			elseif ($mixOverrideParameters) {
-				// The OverrideParameters can only be included if they are not null, because OverrideAttributes in QBaseClass can't except a NULL Value
-				$objListItem = new QListItem($mixListItemOrName, $strValue, $blnSelected, $strItemGroup, $mixOverrideParameters);
-			}
-			else {
-				$objListItem = new QListItem($mixListItemOrName, $strValue, $blnSelected, $strItemGroup);
-			}
-
+		/**
+		 * Add a base list item to the list.
+		 *
+		 * @param QListItemBase $objListItem
+		 */
+		public function AddListItem(QListItemBase $objListItem) {
 			if ($strControlId = $this->GetId()) {
 				$objListItem->SetId($strControlId . '_' . count($this->objListItemArray));	// auto assign the id based on parent id
 				$objListItem->Reindex();
@@ -38,18 +35,19 @@
 			$this->MarkAsModified();
 		}
 
+
 		/**
 		 * Allows you to add a ListItem at a certain index
 		 * Unlike AddItem, this will insert the ListItem at whatever index is passed to the function.  Additionally,
 		 * only a ListItem object can be passed (as opposed to an object or strings)
 		 *
-		 * @param integer   $intIndex    index at which the item should be inserted
-		 * @param QListItem $objListItem the ListItem which shall be inserted
+		 * @param integer   	$intIndex    index at which the item should be inserted
+		 * @param QListItemBase $objListItem the ListItem which shall be inserted
 		 *
 		 * @throws QIndexOutOfRangeException
 		 * @throws Exception|QInvalidCastException
 		 */
-		public function AddItemAt($intIndex, QListItem $objListItem) {
+		public function AddItemAt($intIndex, QListItemBase $objListItem) {
 			try {
 				$intIndex = QType::Cast($intIndex, QType::Integer);
 			} catch (QInvalidCastException $objExc) {
@@ -71,7 +69,8 @@
 		}
 
 		/**
-		 * Reindex the ids of the items based on the current item.
+		 * Reindex the ids of the items based on the current item. We manage all the ids in the list internally
+		 * to be able to get to an item in the list quickly, and to make sure the ids are unique.
 		 */
 		public function Reindex() {
 			if ($this->GetId() && $this->objListItemArray) for ($i = 0; $i < $this->GetItemCount(); $i++) {
@@ -92,41 +91,30 @@
 		abstract public function GetId();
 
 		/**
-		 * Sets the id of the object
-		 * @param string
-		 */
-		abstract public function SetId($strId);
-
-		/**
-		 * Adds an array of items, or an array of key=>value pairs. Convenient for adding a list from a type table.
-		 * When passing key=>val pairs, mixSelectedValues can be an array, or just a single value to compare against to indicate what is selected.
+		 * Adds an array of items,
 		 *
-		 * @param array  $mixItemArray          Array of QListItems or key=>val pairs.
-		 * @param mixed  $mixSelectedValues     Array of selected values, or value of one selection
-		 * @param string $strItemGroup          allows you to apply grouping (<optgroup> tag)
-		 * @param string $mixOverrideParameters OverrideParameters for ListItemStyle
+		 * @param QListItemBase[]  $objListItemArray          Array of QListItems or key=>val pairs.
 		 *
 		 * @throws Exception|QInvalidCastException
 		 */
-		public function AddItems(array $mixItemArray, $mixSelectedValues = null, $strItemGroup = null, $mixOverrideParameters = null) {
+		public function AddListItems(array $objListItemArray) {
 			try {
-				$mixItemArray = QType::Cast($mixItemArray, QType::ArrayType);
+				$objListItemArray = QType::Cast($objListItemArray, QType::ArrayType);
+				if ($objListItemArray) {
+					if (!reset($objListItemArray) instanceof QListItemBase) {
+						throw new QCallerException ('Not an array of QListItemBase types');
+					}
+				}
 			} catch (QInvalidCastException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
 
-			foreach ($mixItemArray as $val => $item) {
-				if ($val === '') {
-					$val = null; // these are equivalent when specified as a key of an array
-				}
-				if ($mixSelectedValues && is_array($mixSelectedValues)) {
-					$blnSelected = in_array($val, $mixSelectedValues);
-				} else {
-					$blnSelected = ($val === $mixSelectedValues);	// differentiate between null and 0 values
-				}
-				$this->AddItem($item, $val, $blnSelected, $strItemGroup, $mixOverrideParameters);
-			};
+			if ($this->objListItemArray) {
+				$this->objListItemArray = array_merge ($this->objListItemArray, $objListItemArray);
+			} else {
+				$this->objListItemArray = $objListItemArray;
+			}
 			$this->Reindex();
 			$this->MarkAsModified();
 		}
@@ -223,6 +211,19 @@
 		}
 
 		/**
+		 * Return the count of the items.
+		 *
+		 * @return int
+		 */
+		public function GetItemCount() {
+			$count = 0;
+			if ($this->objListItemArray) {
+				$count = count($this->objListItemArray);
+			}
+			return $count;
+		}
+
+		/**
 		 * Finds the item by id recursively. Makes use of the fact that we maintain the ids in order to efficiently
 		 * find the item.
 		 *
@@ -237,169 +238,10 @@
 					$a[1] < count ($this->objListItemArray)) {	// just in case
 				$objFoundItem = $this->objListItemArray[$a[1]];
 			}
-			if (isset($a[2])) {
+			if (isset($a[2])) { // a recursive list
 				$objFoundItem = $objFoundItem->FindItem ($a[1] . '_' . $a[2]);
 			}
 
 			return $objFoundItem;
 		}
-
-		public function GetItemCount($blnRecursive = false) {
-			$count = 0;
-			if ($this->objListItemArray) {
-				$count = count($this->objListItemArray);
-				if ($blnRecursive) {
-					foreach ($this->objListItemArray as $objListItem) {
-						$count += $objListItem->GetItemCount(true);
-					}
-				}
-			}
-			return $count;
-		}
-
-		/**
-		 * Recursively unselects all the items and subitems in the list.
-		 *
-		 * @param bool $blnMarkAsModified
-		 */
-		public function UnselectAllItems($blnMarkAsModified = true) {
-			$intCount = $this->GetItemCount();
-			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
-				$objItem = $this->GetItem($intIndex);
-				$objItem->Selected = false;
-				if ($objItem->GetItemCount()) {
-					$objItem->UnselectAllItems(false);
-				}
-			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
-			}
-		}
-
-
-		/**
-		 * Selects the given items by Id, and unselects items that are not in the list.
-		 * @param string[] $strIdArray
-		 * @param bool $blnMarkAsModified
-		 */
-		public function SetSelectedItemsById(array $strIdArray, $blnMarkAsModified = true) {
-			$intCount = $this->GetItemCount();
-			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
-				$objItem = $this->GetItem($intIndex);
-				$strId = $objItem->GetId();
-				$objItem->Selected = in_array($strId, $strIdArray);
-				if ($objItem->GetItemCount()) {
-					$objItem->SetSelectedItemsById($strIdArray, false);
-				}
-			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
-			}
-		}
-
-		/**
-		 * Set the selected item by index. This can only set top level items. Lower level items are untouched.
-		 * @param integer[] $intIndexArray
-		 * @param bool $blnMarkAsModified
-		 */
-		public function SetSelectedItemsByIndex(array $intIndexArray, $blnMarkAsModified = true) {
-			$intCount = $this->GetItemCount();
-			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
-				$objItem = $this->GetItem($intIndex);
-				$objItem->Selected = in_array($intIndex, $intIndexArray);
-			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
-			}
-		}
-
-		/**
-		 * Set the selected items by value. We equate nulls and empty strings, but must be careful not to equate
-		 * those with a zero.
-		 *
-		 * @param array $mixValueArray
-		 * @param bool $blnMarkAsModified
-		 */
-		public function SetSelectedItemsByValue(array $mixValueArray, $blnMarkAsModified = true) {
-			$intCount = $this->GetItemCount();
-
-			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
-				$objItem = $this->GetItem($intIndex);
-				$mixCurVal = $objItem->Value;
-				$blnSelected = false;
-				foreach ($mixValueArray as $mixValue) {
-					if (!$mixValue) {
-						if ($mixValue === null || $mixValue === '') {
-							if ($mixCurVal === null || $mixCurVal === '') {
-								$blnSelected = true;
-							}
-						} else {
-							if (!($mixCurVal === null || $mixCurVal === '')) {
-								$$blnSelected = true;
-							}
-						}
-					}
-					elseif ($mixCurVal == $mixValue) {
-						$blnSelected = true;
-					}
-				}
-				$objItem->Selected = $blnSelected;
-			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
-			}
-		}
-
-
-		/**
-		 * Set the selected items by name.
-		 * @param string[] $strNameArray
-		 * @param bool $blnMarkAsModified
-		 */
-		public function SetSelectedItemsByName(array $strNameArray, $blnMarkAsModified = true) {
-			$intCount = $this->GetItemCount();
-			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
-				$objItem = $this->GetItem($intIndex);
-				$strName = $objItem->Name;
-				$objItem->Selected = in_array($strName, $strNameArray);
-				if ($objItem->GetItemCount()) {
-					$objItem->SetSelectedItemsByName($strNameArray, false);
-				}
-			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
-			}
-		}
-
-
-		public function GetFirstSelectedItem() {
-			$intCount = $this->GetItemCount();
-			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
-				$objItem = $this->GetItem($intIndex);
-				if ($objItem->Selected) {
-					return $objItem;
-				}
-				if ($objItem2 = $objItem->GetFirstSelectedItem()) {
-					return $objItem2;
-				}
-			}
-			return null;
-		}
-
-		public function GetSelectedItems() {
-			$aResult = array();
-			$intCount = $this->GetItemCount();
-			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
-				$objItem = $this->GetItem($intIndex);
-				if ($objItem->Selected) {
-					$aResult[] = $objItem;
-				}
-				if ($objItems = $objItem->GetSelectedItems()) {
-					$aResult = array_merge ($aResult, $objItems);
-				}
-			}
-			return $aResult;
-		}
-
-
 	}

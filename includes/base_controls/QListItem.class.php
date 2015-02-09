@@ -11,41 +11,21 @@
 	 * for the options in each item. Note that not all the options are used by every control, and we don't do any drawing here.
 	 *
 	 * @package Controls
-	 * @property string         $Name      Usually what gets displayed. Can be overridden by the Label attribute in certain situations.
-	 * @property string         $Value     is any text that represents the value of the item (e.g. maybe a DB Id)
 	 * @property boolean        $Selected  is a boolean of whether or not this item is selected or not (do only! use during initialization, otherwise this should be set by the {@link QListControl}!)
 	 * @property string         $ItemGroup is the group (if any) in which the Item should be displayed
-	 * @property QListItemStyle $ItemStyle Custom HTML attributes for this particular item.
-	 * @property string         $Text      synonym of Name. Used to store longer text with the item.
 	 * @property string         $Label     is optional text to display instead of the Name for certain controls.
-	 * @property-read boolean   $Empty     true when both $Name and $Value are null, in which case this item will be rendered with an empty value in the list control
-	 * @property string $Anchor If set, the anchor text to print in the href= string when drawing as an anchored item.
-	 * @property string $ControlId If set, the id associated with the item.
-	 * @property string $Id 	Synonym of ControlId.
 	 */
-	class QListItem extends QBaseClass {
-
-		use QListItemManager;
+	class QListItem extends QListItemBase {
 
 		///////////////////////////
 		// Private Member Variables
 		///////////////////////////
-		/** @var null|string Name of the Item */
-		protected $strName = null;
-		/** @var null|string Value of the Item */
-		protected $strValue = null;
 		/** @var bool Is the item selected? */
 		protected $blnSelected = false;
 		/** @var null|string Group to which the item belongs, if control supports groups. */
 		protected $strItemGroup = null;
-		/** @var QListItemStyle Custom attributes of the list item */
-		protected $objItemStyle;
 		/** @var string Label text for the item. */
 		protected $strLabel = null;
-		/** @var  string if this has an anchor, what to redirect to. Could be javascript or a page. */
-		protected $strAnchor;
-		/** @var  string the internal id */
-		protected $strId;
 
 
 		/////////////////////////
@@ -66,8 +46,7 @@
 		 * @return QListItem
 		 */
 		public function __construct($strName, $strValue = null, $blnSelected = false, $strItemGroup = null, $mixOverrideParameters = null) {
-			$this->strName = $strName;
-			$this->strValue = $strValue;
+			parent::__construct ($strName, $strValue);
 			$this->blnSelected = $blnSelected;
 			$this->strItemGroup = $strItemGroup;
 
@@ -77,41 +56,8 @@
 				throw new QCallerException ("Please provide either a string, or an array, but not multiple parameters");
 			}
 			if ($mixOverrideParameters) {
-				$this->objItemStyle = new QListItemStyle();
-				$this->objItemStyle->OverrideAttributes($mixOverrideParameters);
+				$this->GetStyle()->OverrideAttributes($mixOverrideParameters);
 			}
-		}
-
-		/**
-		 * Returns the css style of the list item
-		 * @deprecated
-		 *
-		 * @return string
-		 */
-		public function GetAttributes() {
-			$strToReturn = $this->objItemStyle->GetAttributes();
-			return $strToReturn;
-		}
-
-		/**
-		 * Required for QListItemManager trait
-		 */
-		public function MarkAsModified() {}
-
-		/**
-		 * Return the id. Used by trait.
-		 * @return string
-		 */
-		public function GetId() {
-			return $this->strId;
-		}
-
-		/**
-		 * Set the Id. Used by trait.
-		 * @param $strId
-		 */
-		public function SetId($strId) {
-			$this->strId = $strId;
 		}
 
 		/**
@@ -149,24 +95,9 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
-				case "Name": return $this->strName;
-				case "Value": return $this->strValue;
 				case "Selected": return $this->blnSelected;
 				case "ItemGroup": return $this->strItemGroup;
-				case "ItemStyle": return $this->objItemStyle;
 				case "Label": return $this->strLabel;
-				case "Empty": return $this->strValue == null && $this->strName == null;
-				case "Anchor": return $this->strAnchor;
-				case "Id": return $this->strId;
-
-				case "Text":
-					if ($this->strLabel) {
-						return $this->strLabel;
-					}
-					else {
-						return $this->strName;
-					}
-
 
 				default:
 					try {
@@ -191,23 +122,6 @@
 		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case "Text":
-				case "Name":
-					try {
-						$this->strName = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Value":
-					try {
-						$this->strValue = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}				
 				case "Selected":
 					try {
 						$this->blnSelected = QType::Cast($mixValue, QType::Boolean);
@@ -224,34 +138,9 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "ItemStyle":
-					try {
-						$this->objItemStyle = QType::Cast($mixValue, "QListItemStyle");
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 				case "Label":
 					try {
 						$this->strLabel = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Anchor":
-					try {
-						$this->strAnchor = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Id":
-				case "ControlId":
-					try {
-						$this->strId = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -268,4 +157,3 @@
 			}
 		}
 	}
-?>

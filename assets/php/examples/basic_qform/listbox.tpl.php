@@ -15,26 +15,24 @@
 		<strong>QRadioButtonList</strong> controls which all inherit from QListControl to allow you to
 		present the data and functionality that you need to in the most user-friendly way possible.</p>
 
-	<p>In this example we create a <strong>QListBox</strong> control.  This single-select listbox will pull its data
+	<p>In this example we create a <strong>QListBox</strong> and <strong>QCheckbox</strong> control.  They pull their data
 		from the <strong>Person</strong> table in the database.  Also, if you select a person, we will update the
 		<strong>lblMessage</strong> label to show what you have selected.</p>
 
 	<p>If you do a <strong>View Source...</strong> in your browser to view the HTML,
-		you'll note that the &lt;option&gt; values are arbitrary indexes (starting with 0).  This is
-		done intentionally.  <strong>QListControl</strong> uses arbitrary listcontrol indexes to lookup the specific
-		value that was assigned to that <strong>QListItem</strong>.  It allows you to do things like put in non-string
-		based data into the value, or even to have multiple listitems point have the same exact value.</p>
-
-	<p>And in fact, this is what we have done.  The actual value of each <strong>QListItem</strong> is <i>not</i> a
-		<strong>Person</strong> Id, but it is in fact the <strong>Person</strong> object, itself.  Note that in our
-		<strong>lstPersons_Change</strong>, we never need to re-lookup the <strong>Person</strong> via a <strong>Person::Load</strong>.  We
-		simply display the <strong>Person's</strong> name directly from the object that is returned by the <strong>SelectedValue</strong>
-		call on our <strong>QListBox</strong>.</p>
+		you'll note that the <strong>value</strong> attributes in the &lt;option&gt; tags are indexes (starting with 0)
+		and not the values assigned in the PHP code.  This is done intentionally as a security measure to prevent database
+		indexes from being sent to the browser, and to allow for non-string based values, or even duplicate values.
+		You can lookup specific values in the <strong>QListControl</strong> by using the <strong>SelectedValue</strong>
+		attribute. You can also lookup selected Names, Ids, and get the whole <strong>QListItem</strong>.</p>
 </div>
 
 <div id="demoZone">
-	<p><?php $this->lstPersons->Render(); ?></p>
-	<p>Currently Selected: <?php $this->lblMessage->Render(); ?></p>
+
+	<p><label>List 1</label><?php $this->lstPersons->Render(); ?></p>
+	<p><label>List 2</label><?php $this->chkPersons->Render(); ?></p>
+
+	<p>Recently Selected: <?php $this->lblMessage->Render(); ?></p>
 </div>
 
 <?php $this->RenderEnd(); ?>

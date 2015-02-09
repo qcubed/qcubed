@@ -8,9 +8,9 @@
 	/**
 	 * Abstract object which is extended by anything which involves lists of selectable items.
 	 * This object is the foundation for the ListBox, CheckBoxList, RadioButtonList
-	 * and TreeNav.
+	 * and TreeNav. Subclasses can be used as objects to specify one-to-many and many-to-many relationships.
 	 *
-	 * @property integer        $ItemCount      the current count of ListItems in the control.
+	 * @property-read integer        $ItemCount      the current count of ListItems in the control.
 	 * @property integer        $SelectedIndex  is the index number of the control that is selected. "-1" means that nothing is selected. If multiple items are selected, it will return the lowest index number of all ListItems that are currently selected. Set functionality: selects that specific ListItem and will unselect all other currently selected ListItems.
 	 * @property string         $SelectedName   simply returns ListControl::SelectedItem->Name, or null if nothing is selected.
 	 * @property-read QListItem $SelectedItem   (readonly!) returns the ListItem object, itself, that is selected (or the ListItem with the lowest index number of a ListItems that are currently selected if multiple items are selected). It will return null if nothing is selected.
@@ -33,6 +33,55 @@
 		// Methods
 		//////////
 
+		public function AddItem($mixListItemOrName, $strValue = null, $blnSelected = null, $strItemGroup = null, $mixOverrideParameters = null) {
+			if (gettype($mixListItemOrName) == QType::Object) {
+				$objListItem = QType::Cast($mixListItemOrName, "QListItem");
+			}
+			elseif ($mixOverrideParameters) {
+				// The OverrideParameters can only be included if they are not null, because OverrideAttributes in QBaseClass can't except a NULL Value
+				$objListItem = new QListItem($mixListItemOrName, $strValue, $blnSelected, $strItemGroup, $mixOverrideParameters);
+			}
+			else {
+				$objListItem = new QListItem($mixListItemOrName, $strValue, $blnSelected, $strItemGroup);
+			}
+
+			$this->AddListItem ($objListItem);
+		}
+
+		/**
+		 * Adds an array of items, or an array of key=>value pairs. Convenient for adding a list from a type table.
+		 * When passing key=>val pairs, mixSelectedValues can be an array, or just a single value to compare against to indicate what is selected.
+		 *
+		 * @param array  $mixItemArray          Array of QListItems or key=>val pairs.
+		 * @param mixed  $mixSelectedValues     Array of selected values, or value of one selection
+		 * @param string $strItemGroup          allows you to apply grouping (<optgroup> tag)
+		 * @param string $mixOverrideParameters OverrideParameters for ListItemStyle
+		 *
+		 * @throws Exception|QInvalidCastException
+		 */
+		public function AddItems(array $mixItemArray, $mixSelectedValues = null, $strItemGroup = null, $mixOverrideParameters = null) {
+			try {
+				$mixItemArray = QType::Cast($mixItemArray, QType::ArrayType);
+			} catch (QInvalidCastException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+
+			foreach ($mixItemArray as $val => $item) {
+				if ($val === '') {
+					$val = null; // these are equivalent when specified as a key of an array
+				}
+				if ($mixSelectedValues && is_array($mixSelectedValues)) {
+					$blnSelected = in_array($val, $mixSelectedValues);
+				} else {
+					$blnSelected = ($val === $mixSelectedValues);	// differentiate between null and 0 values
+				}
+				$this->AddItem($item, $val, $blnSelected, $strItemGroup, $mixOverrideParameters);
+			};
+			$this->Reindex();
+			$this->MarkAsModified();
+		}
+
 		/**
 		 * Return the id. Used by QListItemManager trait.
 		 * @return string
@@ -42,11 +91,132 @@
 		}
 
 		/**
-		 * Set the Id. Used by QListItemManager trait.
-		 * @param $strId
+		 * Recursively unselects all the items and subitems in the list.
+		 *
+		 * @param bool $blnMarkAsModified
 		 */
-		public function SetId($strId) {
-			assert(false); // should never get called on top level item.
+		public function UnselectAllItems($blnMarkAsModified = true) {
+			$intCount = $this->GetItemCount();
+			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
+				$objItem = $this->GetItem($intIndex);
+				$objItem->Selected = false;
+			}
+			if ($blnMarkAsModified) {
+				$this->MarkAsModified();
+			}
+		}
+
+
+		/**
+		 * Selects the given items by Id, and unselects items that are not in the list.
+		 * @param string[] $strIdArray
+		 * @param bool $blnMarkAsModified
+		 */
+		public function SetSelectedItemsById(array $strIdArray, $blnMarkAsModified = true) {
+			$intCount = $this->GetItemCount();
+			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
+				$objItem = $this->GetItem($intIndex);
+				$strId = $objItem->GetId();
+				$objItem->Selected = in_array($strId, $strIdArray);
+			}
+			if ($blnMarkAsModified) {
+				$this->MarkAsModified();
+			}
+		}
+
+		/**
+		 * Set the selected item by index. This can only set top level items. Lower level items are untouched.
+		 * @param integer[] $intIndexArray
+		 * @param bool $blnMarkAsModified
+		 */
+		public function SetSelectedItemsByIndex(array $intIndexArray, $blnMarkAsModified = true) {
+			$intCount = $this->GetItemCount();
+			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
+				$objItem = $this->GetItem($intIndex);
+				$objItem->Selected = in_array($intIndex, $intIndexArray);
+			}
+			if ($blnMarkAsModified) {
+				$this->MarkAsModified();
+			}
+		}
+
+		/**
+		 * Set the selected items by value. We equate nulls and empty strings, but must be careful not to equate
+		 * those with a zero.
+		 *
+		 * @param array $mixValueArray
+		 * @param bool $blnMarkAsModified
+		 */
+		public function SetSelectedItemsByValue(array $mixValueArray, $blnMarkAsModified = true) {
+			$intCount = $this->GetItemCount();
+
+			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
+				$objItem = $this->GetItem($intIndex);
+				$mixCurVal = $objItem->Value;
+				$blnSelected = false;
+				foreach ($mixValueArray as $mixValue) {
+					if (!$mixValue) {
+						if ($mixValue === null || $mixValue === '') {
+							if ($mixCurVal === null || $mixCurVal === '') {
+								$blnSelected = true;
+							}
+						} else {
+							if (!($mixCurVal === null || $mixCurVal === '')) {
+								$$blnSelected = true;
+							}
+						}
+					}
+					elseif ($mixCurVal == $mixValue) {
+						$blnSelected = true;
+					}
+				}
+				$objItem->Selected = $blnSelected;
+			}
+			if ($blnMarkAsModified) {
+				$this->MarkAsModified();
+			}
+		}
+
+
+		/**
+		 * Set the selected items by name.
+		 * @param string[] $strNameArray
+		 * @param bool $blnMarkAsModified
+		 */
+		public function SetSelectedItemsByName(array $strNameArray, $blnMarkAsModified = true) {
+			$intCount = $this->GetItemCount();
+			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
+				$objItem = $this->GetItem($intIndex);
+				$strName = $objItem->Name;
+				$objItem->Selected = in_array($strName, $strNameArray);
+			}
+			if ($blnMarkAsModified) {
+				$this->MarkAsModified();
+			}
+		}
+
+
+		public function GetFirstSelectedItem() {
+			$intCount = $this->GetItemCount();
+			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
+				$objItem = $this->GetItem($intIndex);
+				if ($objItem->Selected) {
+					return $objItem;
+				}
+			}
+			return null;
+		}
+
+		public function GetSelectedItems() {
+			$aResult = array();
+			$intCount = $this->GetItemCount();
+			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
+				$objItem = $this->GetItem($intIndex);
+				if ($objItem->Selected) {
+					$aResult[] = $objItem;
+				}
+			}
+			return $aResult;
 		}
 
 
@@ -65,7 +235,7 @@
 				case "ItemCount":
 					return $this->GetItemCount();
 
-				case "SelectedIndex":	// assumes one level deep
+				case "SelectedIndex":
 					for ($intIndex = 0; $intIndex < $this->GetItemCount(); $intIndex++) {
 						if ($this->GetItem($intIndex)->Selected)
 							return $intIndex;
@@ -88,6 +258,9 @@
 				case "SelectedItem":
 					if ($objItem = $this->GetFirstSelectedItem()) {
 						return $objItem;
+					}
+					elseif ($this->GetItemCount()) {
+						return $this->GetItem (0);
 					}
 					return null;
 				case "SelectedItems":
@@ -200,6 +373,7 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+					return null;
 			}
 		}
 
@@ -265,13 +439,13 @@ TMPL;
 		 * generate QListControl derivatives, but with a few places to insert customization depending on the actual
 		 * control being generated.
 		 *
-		 * @param QCodeGen                                       $objCodeGen
+		 * @param QDatabaseCodeGen                               $objCodeGen
 		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_MetaCreate(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
@@ -361,6 +535,7 @@ TMPL;
 				} else {
 					$strVarType = $objColumn->ObjectDescription;
 				}
+				$strRefVarName = null;
 				$strRet .= <<<TMPL
 
 		/**
@@ -379,7 +554,7 @@ TMPL;
 				$strRefTable = $objColumn->AssociatedTable;
 				$strRefPropName = $objColumn->OppositeObjectDescription;
 				$strRefPK = $objCodeGen->GetTable($strRefTable)->PrimaryKeyColumnArray[0]->PropertyName;
-				$strPK = $objTable->PrimaryKeyColumnArray[0]->PropertyName;
+				//$strPK = $objTable->PrimaryKeyColumnArray[0]->PropertyName;
 
 				$strRet .= <<<TMPL
 		/**
@@ -410,13 +585,13 @@ TMPL;
 				if ($objColumn instanceof QColumn) {
 					$strRefVarType = $objColumn->Reference->VariableType;
 					$strRefVarName = $objColumn->Reference->VariableName;
-					$strRefPropName = $objColumn->Reference->PropertyName;
+					//$strRefPropName = $objColumn->Reference->PropertyName;
 					$strRefTable = $objColumn->Reference->Table;
 				}
 				elseif ($objColumn instanceof QReverseReference) {
 					$strRefVarType = $objColumn->VariableType;
 					$strRefVarName = $objColumn->VariableName;
-					$strRefPropName = $objColumn->PropertyName;
+					//$strRefPropName = $objColumn->PropertyName;
 					$strRefTable = $objColumn->Table;
 				}
 				$strRet .= <<<TMPL
@@ -450,14 +625,14 @@ TMPL;
 		/**
 		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
 		 *
-		 * @param QCodeGen                                       $objCodeGen
+		 * @param QDatabaseCodeGen                               $objCodeGen
 		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param boolean                                        $blnInit Generate initialization code instead of reload
 		 *
 		 * @return string
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public static function Codegen_MetaRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);

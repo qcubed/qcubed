@@ -258,6 +258,10 @@
 				restore_error_handler();
 			}
 		}
+
+		public function __sleep() {
+			throw new Exception ('Cannot serialize QCryptography');
+		}
 	}
 
 ?>

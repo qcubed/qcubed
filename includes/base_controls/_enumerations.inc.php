@@ -443,4 +443,28 @@
 		const None = 'none';
 	}
 
+	/**
+	 * Class QOrderedListType
+	 * For specifying how to number an ordered html list. Goes in the type attribute.
+	 */
+	abstract class QOrderedListType {
+		const Numbers = '1';
+		const UppercaseLetters = 'A';
+		const LowercaseLetters = 'a';
+		const UppercaseRoman = 'I';
+		const LowercaseRoman = 'i';
+	}
+
+	/**
+	 * Class QUnorderedListStyle
+	 * For specifying what to dislay in an unordered html list. Goes in the list-style-type style.
+	 */
+	abstract class QUnorderedListStyle {
+		const Disc = 'disc';
+		const Circle = 'circle';
+		const Square = 'square';
+		const None = 'none';
+	}
+
+
 ?>

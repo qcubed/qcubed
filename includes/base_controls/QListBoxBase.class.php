@@ -68,10 +68,9 @@
 		 * Returns the HTML-Code for a single Item
 		 * 
 		 * @param QListItem $objItem
-		 * @param integer $intIndex
 		 * @return string resulting HTML
 		 */
-		protected function GetItemHtml($objItem) {
+		protected function GetItemHtml(QListItem $objItem) {
 			// The Default Item Style
 			if ($this->objItemStyle) {
 				$objStyler = clone ($this->objItemStyle);
@@ -84,7 +83,7 @@
 				$objStyler->Override($objStyle);
 			}
 
-			$objStyler->SetHtmlAttribute('value', ($objItem->Empty) ? '' : $objItem->ControlId);
+			$objStyler->SetHtmlAttribute('value', ($objItem->Empty) ? '' : $objItem->Id);
 			if ($objItem->Selected) {
 				$objStyler->SetHtmlAttribute('selected', 'selected');
 			}
@@ -299,10 +298,11 @@
 
 		/**
 		 * Override to insert additional create options pertinent to the control.
-		 * @param $objTable
-		 * @param $objColumn
-		 * @param $strControlVarName
-		 * @return string|void
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QManyToManyReference|QReverseReference $objColumn
+		 * @param string $strControlVarName
+		 * @return string
 		 */
 		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
 			$strRet = parent::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
@@ -333,4 +333,3 @@ TMPL;
 		}
 
 	}
-?>

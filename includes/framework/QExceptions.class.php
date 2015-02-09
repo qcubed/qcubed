@@ -219,4 +219,42 @@
 			parent::__construct(sprintf('Invalid Form State Data for "%s" object (session may have been lost)', $strFormId), 2);
 		}
 	}
+
+	/**
+	 * @property-read integer $Offset
+	 * @property-read mixed $BackTrace
+	 * @property-read string $Query
+	 */
+	class QDataBindException extends Exception {
+		private $intOffset;
+		private $strTraceArray;
+		private $strQuery;
+
+		public function __construct(QCallerException $objExc) {
+			parent::__construct($objExc->getMessage(), $objExc->getCode());
+			$this->intOffset = $objExc->Offset;
+			$this->strTraceArray = $objExc->TraceArray;
+
+			if ($objExc instanceof QDatabaseExceptionBase)
+				$this->strQuery = $objExc->Query;
+
+			$this->file = $this->strTraceArray[$this->intOffset]['file'];
+			$this->line = $this->strTraceArray[$this->intOffset]['line'];
+		}
+
+		public function __get($strName) {
+			switch($strName) {
+				case "Offset":
+					return $this->intOffset;
+
+				case "BackTrace":
+					$objTraceArray = debug_backtrace();
+					return (var_export($objTraceArray, true));
+
+				case "Query":
+					return $this->strQuery;
+			}
+		}
+	}
+
 ?>

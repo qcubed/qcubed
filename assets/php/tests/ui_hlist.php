@@ -7,17 +7,21 @@
 		protected $btnServer;
 		protected $btnAjax;
 
-		protected function Form_Create() {
-			$this->list1 = new QHtmlList($this);
-			$this->list1->Name = 'List';
+		protected $a;
 
-			$a = [new QListItem ('A', 1),
-				new QListItem ('B', 2),
-				new QListItem ('C', 3),
-				new QListItem ('D', 4)
+
+		protected function Form_Create() {
+			$this->a = [new QHListItem ('A', 1),
+				new QHListItem ('B', 2),
+				new QHListItem ('C', 3),
+				new QHListItem ('D', 4)
 			];
 
-			$this->list1->AddItems($a);
+			$this->list1 = new QHListControl($this);
+			$this->list1->Name = 'List';
+
+
+			$this->list1->AddItems($this->a);
 			$this->list1->SetDataBinder([$this, 'DataBind']);
 
 			$this->btnServer = new QButton ($this);
@@ -33,17 +37,12 @@
 		}
 
 		public function DataBind() {
-			$a = [new QListItem ('A', 1),
-				new QListItem ('B', 2),
-				new QListItem ('C', 3),
-				new QListItem ('D', 4)
-			];
 
-			$a[0]->AddItems(['aa'=>0, 'ab'=>2, 'ac'=>3]);
-			$a[1]->AddItems(['ba'=>0, 'bb'=>1]);
+			$this->a[0]->AddItems(['aa'=>0, 'ab'=>2, 'ac'=>3]);
+			$this->a[1]->AddItems(['ba'=>0, 'bb'=>1]);
 
 			$this->list1->RemoveAllItems();
-			$this->list1->AddItems($a);
+			$this->list1->AddListItems($this->a);
 		}
 		
 	}

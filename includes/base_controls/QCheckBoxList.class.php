@@ -82,7 +82,12 @@
 				}
 			}
 		}
-		
+
+		/**
+		 * Return the javascript associated with the control.
+		 *
+		 * @return string
+		 */
 		public function GetEndScript() {
 			$strScript = sprintf ('$j("#%s").on("change", "input", qc.formObjChanged);', $this->ControlId); // detect change for framework
 
@@ -97,7 +102,16 @@
 			return $strScript;
 		}
 
-		protected function GetItemHtml($objItem, $intIndex, $strTabIndex, $blnWrapLabel) {
+		/**
+		 * Return the HTML for the given item.
+		 *
+		 * @param QListItem $objItem
+		 * @param integer $intIndex
+		 * @param string $strTabIndex
+		 * @param boolean $blnWrapLabel
+		 * @return string
+		 */
+		protected function GetItemHtml(QListItem $objItem, $intIndex, $strTabIndex, $blnWrapLabel) {
 			$objLabelStyles = new QTagStyler();
 			if ($this->objItemStyle) {
 				$objLabelStyles->Override($this->objItemStyle); // default style
@@ -110,7 +124,7 @@
 			$objStyles->SetHtmlAttribute('type', 'checkbox');
 			$objStyles->SetHtmlAttribute('name', $this->strControlId . '[' . $intIndex . ']');
 
-			$strIndexedId = $objItem->ControlId;
+			$strIndexedId = $objItem->Id;
 			$objStyles->SetHtmlAttribute('id', $strIndexedId);
 			if ($strTabIndex) {
 				$objStyles->TabIndex = $strTabIndex;
@@ -145,6 +159,10 @@
 			return $strHtml;
 		}
 
+		/**
+		 * Return the html to draw the base control.
+		 * @return string
+		 */
 		protected function GetControlHtml() {
 			if ((!$this->objListItemArray) || (count($this->objListItemArray) == 0))
 				return "";
@@ -260,6 +278,10 @@
 		}
 
 
+		/**
+		 * Validate the control.
+		 * @return bool
+		 */
 		public function Validate() {
 			if ($this->blnRequired) {
 				if ($this->SelectedIndex == -1) {

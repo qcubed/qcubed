@@ -1,7 +1,8 @@
 <?php
 /**
- * Class QHtmlList
- * A control that lets you dynamically create an html unordered or ordered list with
+ * Class QList
+ *
+ * A control that lets you dynamically create an html unordered or ordered hierarchical list with
  * sub-lists. These structures are often used as the basis for javascript widgets like
  * menu bars.
  *
@@ -16,22 +17,52 @@
  */
 
 
-class QHtmlList extends QListControl {
-	/** @var callable */
-    protected $mixDataBinder = null;
+class QHListControl extends QControl {
+
+	use QListItemManager, QDataBinder;
+
 	/** @var string  top level tag */
 	protected $strTag = 'ul';
 	/** @var string  item tag */
 	protected $strItemTag = 'li';
+	/** @var null|QListItemStyle The common style for all elements in the list */
+	protected $objItemStyle = null;
+	/** @var null|QCryptography the temporary cryptography object for encrypting database values sent to the client */
+	protected $objCrypt = null;
 
-    /**
-     * A binder that will generate the item list. The binder should add
-     * list items to this control. The current list items will be cleared first.
-     * @param callable $mixDataBinder
-     */
-    public function SetDataBinder(callable $mixDataBinder) {
-        $this->mixDataBinder = $mixDataBinder;
-    }
+	/**
+	 * Adds an item to the list.
+	 *
+	 * @param QHListItem|string $mixListItemOrName
+	 * @param null|string $strValue
+	 * @param null|string $strAnchor
+	 */
+	public function AddItem($mixListItemOrName, $strValue = null, $strAnchor = null) {
+		if (gettype($mixListItemOrName) == QType::Object) {
+			$objListItem = QType::Cast($mixListItemOrName, "QHListItem");
+		}
+		else {
+			$objListItem = new QHListItem($mixListItemOrName, $strValue, $strAnchor);
+		}
+
+		$this->AddListItem ($objListItem);
+	}
+
+	/**
+	 * Adds an array of items to the list. The array can also be an array of key>val pairs
+	 * @param array $objItemArray	An array of QHListItems or key=>val pairs to be sent to constructor.
+	 */
+	public function AddItems($objItemArray) {
+		if (!$objItemArray) return;
+
+		if (!is_object(reset($objItemArray))) {
+			foreach ($objItemArray as $key=>$val) {
+				$this->AddItem ($key, $val);
+			}
+		} else {
+			$this->AddListItems ($objItemArray);
+		}
+	}
 
 	/**
 	 * This is not a typical input control, so there is no post data to read.
@@ -44,15 +75,23 @@ class QHtmlList extends QListControl {
 	 */
     public function Validate() {return true;}
 
-    /**
+	/**
+	 * Return the id. Used by QListItemManager trait.
+	 * @return string
+	 */
+	public function GetId() {
+		return $this->strControlId;
+	}
+
+	/**
      * Returns the HTML for the control and all subitems.
      * 
      * @return string
      */
     public function GetControlHtml() {
 		$strHtml = '';
-        if ($this->mixDataBinder) {
-            call_user_func($this->mixDataBinder, $this);
+        if ($this->HasDataBinder()) {
+            $this->CallDataBinder();
         }
         if ($this->GetItemCount()) {
 			$strHtml = '';
@@ -62,7 +101,7 @@ class QHtmlList extends QListControl {
 
 			$strHtml = $this->RenderTag($this->strTag, null, null, $strHtml);
         }
-		if ($this->mixDataBinder) {
+		if ($this->HasDataBinder()) {
 			$this->RemoveAllItems();
 		}
 
@@ -72,10 +111,10 @@ class QHtmlList extends QListControl {
 	/**
 	 * Return the html to draw an item.
 	 *
-	 * @param QListItem $objItem
+	 * @param QHListItem $objItem
 	 * @return string
 	 */
-	protected function GetItemHtml (QListItem $objItem) {
+	protected function GetItemHtml (QHListItem $objItem) {
 		$strHtml = $this->GetItemText($objItem);
 		$strHtml .= "\n";
 		if ($objItem->GetItemCount()) {
@@ -83,7 +122,11 @@ class QHtmlList extends QListControl {
 			foreach ($objItem->GetAllItems() as $objSubItem) {
 				$strSubHtml .= $this->GetItemHtml($objSubItem);
 			}
-			$strHtml .= QHtml::RenderTag($this->strTag, $this->GetSubTagAttributes($objItem), $strSubHtml);
+			$strTag = $objItem->Tag;
+			if (!$strTag) {
+				$strTag = $this->strTag;
+			}
+			$strHtml .= QHtml::RenderTag($strTag, $this->GetSubTagAttributes($objItem), $strSubHtml);
 		}
 		$objStyler = $this->GetItemStyler($objItem);
 		$strHtml = QHtml::RenderTag($this->strItemTag, $objStyler->RenderHtmlAttributes(), $strHtml);
@@ -97,7 +140,7 @@ class QHtmlList extends QListControl {
 	 * @param QListItem $objItem
 	 * @return string
 	 */
-	protected function GetItemText (QListItem $objItem) {
+	protected function GetItemText (QHListItem $objItem) {
 		$strHtml = QApplication::HtmlEntities($objItem->Text);
 
 		if ($strAnchor = $objItem->Anchor) {
@@ -113,14 +156,20 @@ class QHtmlList extends QListControl {
 	 * @param QListItem $objItem
 	 * @return QListItemStyle
 	 */
-	protected function GetItemStyler (QListItem $objItem) {
+	protected function GetItemStyler (QHListItem $objItem) {
 		if ($this->objItemStyle) {
 			$objStyler = clone $this->objItemStyle;
 		}
 		else {
 			$objStyler = new QListItemStyle();
 		}
-		$objStyler->SetHtmlAttribute('id', $objItem->ControlId);
+		$objStyler->SetHtmlAttribute('id', $objItem->Id);
+
+		// since we are going to embed the value in the tag, we are going to encrypt it in case its a database record id.
+		if ($objItem->Value) {
+			$strEncryptedValue = $this->EncryptValue($objItem);
+			$objStyler->SetDataAttribute('value', $strEncryptedValue);
+		}
 		if ($objStyle = $objItem->ItemStyle) {
 			$objStyler->Override($objStyle);
 		}
@@ -128,12 +177,42 @@ class QHtmlList extends QListControl {
 	}
 
 	/**
+	 * Return the encrypted value of the given object
+	 *
+	 * @param QHListItem $objItem
+	 * @return string
+	 */
+	protected function EncryptValue(QHListItem $objItem) {
+		if (!$this->objCrypt) {
+			$this->objCrypt = new QCryptography(null, true);
+		}
+		return $this->objCrypt->Encrypt($objItem->Value);
+	}
+
+	/**
+	 * Return the decrypted value of the given value string.
+	 *
+	 * @param $strEncryptedValue
+	 * @return string
+	 */
+	public function DecryptValue ($strEncryptedValue) {
+		if (!$this->objCrypt) {
+			$this->objCrypt = new QCryptography(null, true);
+		}
+		return $this->objCrypt->Decrypt($strEncryptedValue);
+	}
+
+	public function Sleep() {
+		unset($this->objCrypt);
+	}
+
+	/**
 	 * Return the attributes for the sub tag that wraps the item tags
 	 * @param QListItem $objItem
 	 * @return null|array|string
 	 */
-	protected function GetSubTagAttributes(QListItem $objItem) {
-		return null;
+	protected function GetSubTagAttributes(QHListItem $objItem) {
+		return $objItem->GetSubTagStyler()->RenderHtmlAttributes();
 	}
 
 	/////////////////////////
