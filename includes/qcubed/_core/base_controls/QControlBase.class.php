@@ -1365,7 +1365,7 @@
 				$strOutput = $this->GetControlHtml();
 
 				if ($this->strValidationError)
-					$strOutput .= sprintf('<br %s/><span %sclass="warning">%s</span>', $strDataRel, $strDataRel, $this->strValidationError);
+					$strOutput .= sprintf('<br %s/><span %sclass="error">%s</span>', $strDataRel, $strDataRel, $this->strValidationError);
 				else if ($this->strWarning)
 					$strOutput .= sprintf('<br %s/><span %sclass="warning">%s</span>', $strDataRel, $strDataRel, $this->strWarning);
 			} catch (QCallerException $objExc) {
@@ -1435,7 +1435,7 @@
 			if ($this->strValidationError){
 				$strMessage = sprintf('<span class="error">%s</span>', $this->strValidationError);
 			}else if ($this->strWarning){
-				$strMessage = sprintf('<span class="error">%s</span>', $this->strWarning);
+				$strMessage = sprintf('<span class="warning">%s</span>', $this->strWarning);
 			}
 			
 			try {
