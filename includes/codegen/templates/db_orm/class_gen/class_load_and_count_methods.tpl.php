@@ -23,14 +23,21 @@
 
 		 */
 		public static function Load(<?= $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray); ?>, $objOptionalClauses = null) {
-			$strCacheKey = false;
-			if (QApplication::$objCacheProvider && !$objOptionalClauses && QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Caching) {
-				$strCacheKey = QApplication::$objCacheProvider->CreateKey(QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>]->Database, '<?= $objTable->ClassName ?>', <?= $objCodeGen->ParameterListFromColumnArray($objTable->PrimaryKeyColumnArray); ?>);
-				$objCachedObject = QApplication::$objCacheProvider->Get($strCacheKey);
-				if ($objCachedObject !== false) {
-					return $objCachedObject;
-				}
+			if (!$objOptionalClauses) {
+<?php if (count ($objTable->PrimaryKeyColumnArray) == 1) { ?>
+				$objCachedObject = static::GetFromCache ($<?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>);
+<?php } else {
+	$aItems = array();
+	foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {
+		$aItems[] = '$' . $objColumn->VariableName;
+	}
+?>
+				$strCacheKey = static::MakeMultiKey (array(<?= implode (', ', $aItems) ?>));
+				$objCachedObject = static::GetFromCache ($strCacheKey);
+<?php } ?>
+				if ($objCachedObject) return $objCachedObject;
 			}
+
 			// Use QuerySingle to Perform the Query
 			$objToReturn = <?= $objTable->ClassName ?>::QuerySingle(
 				QQ::AndCondition(
@@ -41,11 +48,9 @@
 				),
 				$objOptionalClauses
 			);
-			if ($strCacheKey !== false) {
-				QApplication::$objCacheProvider->Set($strCacheKey, $objToReturn);
-			}
 			return $objToReturn;
 		}
+
 
 		/**
 		 * Load all <?= $objTable->ClassNamePlural ?>

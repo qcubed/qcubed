@@ -6,16 +6,19 @@
 	require(__QCUBED_CORE__ . '/codegen/QReverseReference.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QTable.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QTypeTable.class.php');
+	require(__QCUBED_CORE__ . '/codegen/QMetacontrolOptions.class.php');
 
 	/**
 	 * @package Codegen
 	 */
 	class QDatabaseCodeGen extends QCodeGen {
 		// Objects
+		/** @var array|QTable[] Array of tables in the database */
 		protected $objTableArray;
 		protected $strExcludedTableArray;
 		protected $objTypeTableArray;
 		protected $strAssociationTableNameArray;
+		/** @var QDatabaseBase The database we are dealing with */
 		protected $objDb;
 
 		protected $intDatabaseIndex;
@@ -62,6 +65,9 @@
 		protected $strPatternTableName = '[[:alpha:]_][[:alnum:]_]*';
 		protected $strPatternColumnName = '[[:alpha:]_][[:alnum:]_]*';
 		protected $strPatternKeyName = '[[:alpha:]_][[:alnum:]_]*';
+
+		protected $blnGenerateControlId;
+		protected $objMetacontrolOptions;
 
 		/**
 		 * @param $strTableName
@@ -371,6 +377,9 @@
 				}
 			}
 
+			$this->blnGenerateControlId = QCodeGen::LookupSetting($objSettingsXml, 'generateControlId', 'support', QType::Boolean);
+			$this->objMetacontrolOptions = new QMetacontrolOptions();
+
 			if ($this->strErrors)
 				return;
 
@@ -399,68 +408,75 @@
 
 
 			// ITERATION 1: Simply create the Table and TypeTable Arrays
-			if ($strTableArray) foreach ($strTableArray as $strTableName) {
+			if ($strTableArray) {
+				foreach ($strTableArray as $strTableName) {
 
-				// Do we Exclude this Table Name? (given includeTables and excludeTables)
-				// First check the lists of Excludes and the Exclude Patterns
-				if (in_array($strTableName,$this->strExcludeListArray) ||
-					(strlen($this->strExcludePattern) > 0 && preg_match(":".$this->strExcludePattern.":i",$strTableName))) {
+					// Do we Exclude this Table Name? (given includeTables and excludeTables)
+					// First check the lists of Excludes and the Exclude Patterns
+					if (in_array($strTableName, $this->strExcludeListArray) ||
+						(strlen($this->strExcludePattern) > 0 && preg_match(":" . $this->strExcludePattern . ":i", $strTableName))
+					) {
 
-					// So we THINK we may be excluding this table
-					// But check against the explicit INCLUDE list and patterns
-					if (in_array($strTableName,$this->strIncludeListArray) ||
-						(strlen($this->strIncludePattern) > 0 && preg_match(":".$this->strIncludePattern.":i",$strTableName))) {
-						// If we're here, we explicitly want to include this table
-						// Therefore, do nothing
-					} else {
-						// If we're here, then we want to exclude this table
-						$this->strExcludedTableArray[strtolower($strTableName)] = true;
+						// So we THINK we may be excluding this table
+						// But check against the explicit INCLUDE list and patterns
+						if (in_array($strTableName, $this->strIncludeListArray) ||
+							(strlen($this->strIncludePattern) > 0 && preg_match(":" . $this->strIncludePattern . ":i", $strTableName))
+						) {
+							// If we're here, we explicitly want to include this table
+							// Therefore, do nothing
+						} else {
+							// If we're here, then we want to exclude this table
+							$this->strExcludedTableArray[strtolower($strTableName)] = true;
 
-						// Exit this iteration of the foreach loop
-						continue;
+							// Exit this iteration of the foreach loop
+							continue;
+						}
 					}
-				}
 
-				// Check to see if this table name exists anywhere else yet, and warn if it is
-				foreach (QCodeGen::$CodeGenArray as $objCodeGen) {
-					if ($objCodeGen instanceof QDatabaseCodeGen) {
-						foreach ($objCodeGen->objTableArray as $objPossibleDuplicate)
-							if (strtolower($objPossibleDuplicate->Name) == strtolower($strTableName))
-								$this->strErrors .= 'Duplicate Table Name Used: ' . $strTableName . "\r\n";
+					// Check to see if this table name exists anywhere else yet, and warn if it is
+					foreach (QCodeGen::$CodeGenArray as $objCodeGen) {
+						if ($objCodeGen instanceof QDatabaseCodeGen) {
+							foreach ($objCodeGen->objTableArray as $objPossibleDuplicate)
+								if (strtolower($objPossibleDuplicate->Name) == strtolower($strTableName)) {
+									$this->strErrors .= 'Duplicate Table Name Used: ' . $strTableName . "\r\n";
+								}
+						}
 					}
-				}
 
-				// Perform different tasks based on whether it's an Association table,
-				// a Type table, or just a regular table
-				$blnIsTypeTable = false;
-				foreach ($this->intTypeTableSuffixLengthArray as $intIndex => $intTypeTableSuffixLength) {
-					if (($intTypeTableSuffixLength) &&
-						(strlen($strTableName) > $intTypeTableSuffixLength) &&
-						(substr($strTableName, strlen($strTableName) - $intTypeTableSuffixLength) == $this->strTypeTableSuffixArray[$intIndex])) {
-						// Let's mark, that we have type table
-						$blnIsTypeTable = true;
-						// Create a TYPE Table and add it to the array
-						$objTypeTable = new QTypeTable($strTableName);
-						$this->objTypeTableArray[strtolower($strTableName)] = $objTypeTable;
-						// If we found type table, there is no point of iterating for other type table suffixes
-						break;
+					// Perform different tasks based on whether it's an Association table,
+					// a Type table, or just a regular table
+					$blnIsTypeTable = false;
+					foreach ($this->intTypeTableSuffixLengthArray as $intIndex => $intTypeTableSuffixLength) {
+						if (($intTypeTableSuffixLength) &&
+							(strlen($strTableName) > $intTypeTableSuffixLength) &&
+							(substr($strTableName, strlen($strTableName) - $intTypeTableSuffixLength) == $this->strTypeTableSuffixArray[$intIndex])
+						) {
+							// Let's mark, that we have type table
+							$blnIsTypeTable = true;
+							// Create a TYPE Table and add it to the array
+							$objTypeTable = new QTypeTable($strTableName);
+							$this->objTypeTableArray[strtolower($strTableName)] = $objTypeTable;
+							// If we found type table, there is no point of iterating for other type table suffixes
+							break;
 //						_p("TYPE Table: $strTableName<br />", false);
+						}
 					}
-				}
-				if (!$blnIsTypeTable) {
-					// If current table wasn't type table, let's look for other table types
-					if (($this->intAssociationTableSuffixLength) &&
-						(strlen($strTableName) > $this->intAssociationTableSuffixLength) &&
-						(substr($strTableName, strlen($strTableName) - $this->intAssociationTableSuffixLength) == $this->strAssociationTableSuffix)) {
-						// Add this ASSOCIATION Table Name to the array
-						$this->strAssociationTableNameArray[strtolower($strTableName)] = $strTableName;
+					if (!$blnIsTypeTable) {
+						// If current table wasn't type table, let's look for other table types
+						if (($this->intAssociationTableSuffixLength) &&
+							(strlen($strTableName) > $this->intAssociationTableSuffixLength) &&
+							(substr($strTableName, strlen($strTableName) - $this->intAssociationTableSuffixLength) == $this->strAssociationTableSuffix)
+						) {
+							// Add this ASSOCIATION Table Name to the array
+							$this->strAssociationTableNameArray[strtolower($strTableName)] = $strTableName;
 //						_p("ASSN Table: $strTableName<br />", false);
 
-					} else {
-						// Create a Regular Table and add it to the array
-						$objTable = new QTable($strTableName);
-						$this->objTableArray[strtolower($strTableName)] = $objTable;
+						} else {
+							// Create a Regular Table and add it to the array
+							$objTable = new QTable($strTableName);
+							$this->objTableArray[strtolower($strTableName)] = $objTable;
 //						_p("Table: $strTableName<br />", false);
+						}
 					}
 				}
 			}
@@ -478,7 +494,7 @@
 			if ($this->strAssociationTableNameArray) foreach ($this->strAssociationTableNameArray as $strAssociationTableName)
 				$this->AnalyzeAssociationTable($strAssociationTableName);
 
-			// Finall, for each Relationship in all Tables, Warn on Non Single Column PK based FK:
+			// Finally, for each Relationship in all Tables, Warn on Non Single Column PK based FK:
 			if ($this->objTableArray) foreach ($this->objTableArray as $objTable)
 				if ($objTable->ColumnArray) foreach ($objTable->ColumnArray as $objColumn)
 					if ($objColumn->Reference && !$objColumn->Reference->IsType) {
@@ -540,7 +556,7 @@
 
 			if ((!$objFieldArray[0]->NotNull) ||
 				(!$objFieldArray[1]->NotNull)) {
-				$this->strErrors .= sprintf("AssociationTable %s's two columns must both be not null or a composite Primary Key",
+				$this->strErrors .= sprintf("AssociationTable %s's two columns must both be not null",
 					$strTableName);
 				return;
 			}
@@ -599,6 +615,7 @@
 				$objManyToManyReference->KeyName = $objForeignKey->KeyName;
 				$objManyToManyReference->Table = $strTableName;
 				$objManyToManyReference->Column = $objForeignKey->ColumnNameArray[0];
+				$objManyToManyReference->PropertyName = $this->ModelColumnPropertyName($objManyToManyReference->Column);
 				$objManyToManyReference->OppositeColumn = $objOppositeForeignKey->ColumnNameArray[0];
 				$objManyToManyReference->AssociatedTable = $objOppositeForeignKey->ReferenceTableName;
 
@@ -610,18 +627,20 @@
 				$objTable = $this->GetTable($objManyToManyReference->AssociatedTable);
 				$objOppositeColumn = clone($objTable->PrimaryKeyColumnArray[0]);
 				$objOppositeColumn->Name = $objManyToManyReference->OppositeColumn;
-				$objManyToManyReference->OppositeVariableName = $this->VariableNameFromColumn($objOppositeColumn);
-				$objManyToManyReference->OppositePropertyName = $this->PropertyNameFromColumn($objOppositeColumn);
+				$objManyToManyReference->OppositeVariableName = $this->ModelColumnVariableName($objOppositeColumn);
+				$objManyToManyReference->OppositePropertyName = $this->ModelColumnPropertyName($objOppositeColumn->Name);
 				$objManyToManyReference->OppositeVariableType = $objOppositeColumn->VariableType;
 
-				$objManyToManyReference->VariableName = $this->ReverseReferenceVariableNameFromTable($objOppositeForeignKey->ReferenceTableName);
-				$objManyToManyReference->VariableType = $this->ReverseReferenceVariableTypeFromTable($objOppositeForeignKey->ReferenceTableName);
+				$objManyToManyReference->VariableName = $this->ModelReverseReferenceVariableName($objOppositeForeignKey->ReferenceTableName);
+				$objManyToManyReference->VariableType = $this->ModelReverseReferenceVariableType($objOppositeForeignKey->ReferenceTableName);
 
 				$objManyToManyReference->ObjectDescription = $strGraphPrefixArray[$intIndex] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objForeignKey->ReferenceTableName, $objOppositeForeignKey->ReferenceTableName, false);
 				$objManyToManyReference->ObjectDescriptionPlural = $strGraphPrefixArray[$intIndex] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objForeignKey->ReferenceTableName, $objOppositeForeignKey->ReferenceTableName, true);
 
 				$objManyToManyReference->OppositeObjectDescription = $strGraphPrefixArray[($intIndex == 0) ? 1 : 0] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objOppositeForeignKey->ReferenceTableName, $objForeignKey->ReferenceTableName, false);
 				$objManyToManyReference->IsTypeAssociation = ($objTable instanceof QTypeTable);
+				$objManyToManyReference->Options = $this->objMetacontrolOptions->GetOptions($this->ModelClassName($objForeignKey->ReferenceTableName), $objManyToManyReference->ObjectDescription);
+
 			}
 
 
@@ -660,7 +679,7 @@
 
 			// Setup the Type Table Object
 			$strTableName = $objTypeTable->Name;
-			$objTypeTable->ClassName = $this->ClassNameFromTableName($strTableName);
+			$objTypeTable->ClassName = $this->ModelClassName($strTableName);
 
 			// Ensure that there are only 2 fields, an integer PK field (can be named anything) and a unique varchar field
 			$objFieldArray = $this->objDb->GetFieldsForTable($strTableName);
@@ -691,7 +710,7 @@
 				if (sizeof($objRow) > 2) { // there are extra columns to process
 					$strExtraPropertyArray[$objRow[0]] = array();
 					for ($i = 2; $i < sizeof($objRow); $i++) {
-						$strFieldName = QCodeGen::TypeNameFromColumnName($objFieldArray[$i]->Name);
+						$strFieldName = QCodeGen::TypeColumnPropertyName($objFieldArray[$i]->Name);
 						$strExtraFields[$i - 2] = $strFieldName;
 						$strExtraPropertyArray[$objRow[0]][$strFieldName] = $objRow[$i];
 					}
@@ -724,7 +743,7 @@
 			// Setup the Table Object
 			$objTable->OwnerDbIndex = $this->intDatabaseIndex;
 			$strTableName = $objTable->Name;
-			$objTable->ClassName = $this->ClassNameFromTableName($strTableName);
+			$objTable->ClassName = $this->ModelClassName($strTableName);
 			$objTable->ClassNamePlural = $this->Pluralize($objTable->ClassName);
 
 
@@ -907,14 +926,17 @@
 							$objReference->Column = $objForeignKey->ReferenceColumnNameArray[0];
 
 							// Setup VariableType
-							$objReference->VariableType = $this->ClassNameFromTableName($strReferencedTableName);
+							$objReference->VariableType = $this->ModelClassName($strReferencedTableName);
 
 							// Setup PropertyName and VariableName
-							$objReference->PropertyName = $this->ReferencePropertyNameFromColumn($objColumn);
-							$objReference->VariableName = $this->ReferenceVariableNameFromColumn($objColumn);
+							$objReference->PropertyName = $this->ModelReferencePropertyName($objColumn->Name);
+							$objReference->VariableName = $this->ModelReferenceVariableName($objColumn->Name);
 
 							// Add this reference to the column
 							$objColumn->Reference = $objReference;
+
+							// References will not have been correctly read earlier, so try again with the reference name
+							$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->ClassName, $objReference->PropertyName) + $objColumn->Options;
 
 
 
@@ -930,12 +952,12 @@
 								$objReverseReference->Column = $strColumnName;
 								$objReverseReference->NotNull = $objColumn->NotNull;
 								$objReverseReference->Unique = $objColumn->Unique;
-								$objReverseReference->PropertyName = $this->PropertyNameFromColumn($this->GetColumn($strTableName, $strColumnName));
+								$objReverseReference->PropertyName = $this->ModelColumnPropertyName($strColumnName);
 
 								$objReverseReference->ObjectDescription = $this->CalculateObjectDescription($strTableName, $strColumnName, $strReferencedTableName, false);
 								$objReverseReference->ObjectDescriptionPlural = $this->CalculateObjectDescription($strTableName, $strColumnName, $strReferencedTableName, true);
-								$objReverseReference->VariableName = $this->ReverseReferenceVariableNameFromTable($objTable->Name);
-								$objReverseReference->VariableType = $this->ReverseReferenceVariableTypeFromTable($objTable->Name);
+								$objReverseReference->VariableName = $this->ModelReverseReferenceVariableName($objTable->Name);
+								$objReverseReference->VariableType = $this->ModelReverseReferenceVariableType($objTable->Name);
 
 								// For Special Case ReverseReferences, calculate Associated MemberVariableName and PropertyName...
 
@@ -950,7 +972,11 @@
 								} else if ($objColumn->Unique) {
 									$objReverseReference->ObjectMemberVariable = $this->CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName);
 									$objReverseReference->ObjectPropertyName = $this->CalculateObjectPropertyName($strTableName, $strColumnName, $strReferencedTableName);
+									// get override options for codegen
+									$objReverseReference->Options = $this->objMetacontrolOptions->GetOptions($objReference->VariableType, $objReverseReference->ObjectDescription);
 								}
+
+
 
 								// Add this ReverseReference to the referenced table's ReverseReferenceArray
 								$objArray = $objReferencedTable->ReverseReferenceArray;
@@ -1045,11 +1071,12 @@
 				$objColumn->Unique = true;
 			$objColumn->Timestamp = $objField->Timestamp;
 
-			$objColumn->VariableName = $this->VariableNameFromColumn($objColumn);
-			$objColumn->PropertyName = $this->PropertyNameFromColumn($objColumn);
+			$objColumn->VariableName = $this->ModelColumnVariableName($objColumn);
+			$objColumn->PropertyName = $this->ModelColumnPropertyName($objColumn->Name);
 
 			// separate overrides embedded in the comment
 
+			// extract options embedded in the comment field
 			if (($strComment = $objField->Comment) &&
 				($pos1 = strpos ($strComment, '{')) !== false &&
 				($pos2 = strrpos ($strComment, '}', $pos1))) {
@@ -1060,10 +1087,19 @@
 				if ($a) {
 					$objColumn->Options = $a;
 					$objColumn->Comment = substr ($strComment, 0, $pos1) . substr ($strComment, $pos2 + 1); // return comment without options
+					if (!empty ($a['Timestamp'])) {
+						$objColumn->Timestamp = true;	// alternate way to specify that a column is a self-updating timestamp
+					}
+					if ($objColumn->Timestamp && !empty($a['AutoUpdate'])) {
+						$objColumn->AutoUpdate = true;
+					}
 				} else {
 					$objColumn->Comment = $strComment;
 				}
 			}
+
+			// merge with options found in the design editor, letting editor take precedence
+			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->ClassName, $objColumn->PropertyName) + $objColumn->Options;
 
 			return $objColumn;
 		}
@@ -1234,6 +1270,62 @@
 
 			return $objForeignKeyArray;
 		}
+
+		public function GenerateControlId($objTable, $objColumn) {
+			$strControlId = null;
+			if (isset($objColumn->Options['ControlId'])) {
+				$strControlId = $objColumn->Options['ControlId'];
+			} elseif ($this->blnGenerateControlId) {
+				$strObjectName = $this->ModelVariableName($objTable->Name);
+				$strClassName = $objTable->ClassName;
+				$strControlVarName = $this->MetaControlVariableName($objColumn);
+				$strLabelName = QCodeGen::MetaControlControlName($objColumn);
+
+				$strControlId = $strControlVarName . $strClassName;
+
+			}
+			return $strControlId;
+		}
+
+
+
+
+		/**
+		 * Returns a string that will cast a variable coming from the database into a php type.
+		 * Doing this in the template saves significant amounts of time over using QType::Cast() or GetColumn.
+		 * @param QColumn $objColumn
+		 * @return string
+		 * @throws Exception
+		 */
+		public function GetCastString (QColumn $objColumn) {
+			switch ($objColumn->DbType) {
+				case QDatabaseFieldType::Bit:
+					return ('$mixVal = (bool)$mixVal;');
+
+				case QDatabaseFieldType::Blob:
+				case QDatabaseFieldType::Char:
+				case QDatabaseFieldType::VarChar:
+					return ''; // no need to cast, since its already a string or a null
+
+				case QDatabaseFieldType::Date:
+					return ('$mixVal = new QDateTime($mixVal, null, QDateTime::DateOnlyType);');
+
+				case QDatabaseFieldType::DateTime:
+					return ('$mixVal = new QDateTime($mixVal);');
+
+				case QDatabaseFieldType::Time:
+					return ('$mixVal = new QDateTime($mixVal, null, QDateTime::TimeOnlyType);');
+
+				case QDatabaseFieldType::Float:
+				case QDatabaseFieldType::Integer:
+					return ('$mixVal = (' . $objColumn->VariableType . ')$mixVal;');
+
+				default:
+					throw new Exception ('Invalid database field type');
+					exit;
+			}
+		}
+
 
 
 		////////////////////

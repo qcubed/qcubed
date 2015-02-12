@@ -1,27 +1,53 @@
 <?php
+
+	/**
+	 * Class QMimeType: Helps determine MIME type of a file residing on the server
+	 */
 	abstract class QMimeType {
 		// Constants for Mime Types
+		/** Binary Data / Default */
 		const _Default = 'application/octet-stream';
+		/** Binary data */
 		const Executable = 'application/octet-stream';
+		/** GIF image */
 		const Gif = 'image/gif';
+		/** GZip archive */
 		const Gzip = 'application/x-gzip';
+		/** HTML file */
 		const Html = 'text/html';
+		/** Image in JPEG/JPG format */
 		const Jpeg = 'image/jpeg';
+		/** MP3 audio */
 		const Mp3 = 'audio/mpeg';
+		/** MPEG Video */
 		const MpegVideo = 'video/mpeg';
+		/** Microsoft Office Excel file */
 		const MsExcel = 'application/vnd.ms-excel';
+		/** Microsoft Office Powerpoint file */
 		const MsPowerpoint = 'application/vnd.ms-powerpoint';
+		/** Microsoft Office Word file */
 		const MsWord = 'application/vnd.ms-word';
+		/** OpenOfficeXml word processing file (e.g. LibreOffice writer file) */
 		const OoXmlWordProcessing = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+		/** OpenOfficeXml presentation file (e.g. LibreOffice impress file) */
 		const OoXmlPresentation = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+		/** OpenOfficeXml spreadsheet file (e.g. LibreOffice calc file) */
 		const OoXmlSpreadsheet = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+		/** PDF format document */
 		const Pdf = 'application/pdf';
+		/** Plain text file */
 		const PlainText = 'text/plain';
+		/** PNG format image */
 		const Png = 'image/png';
+		/** RTF document */
 		const RichText = 'text/rtf';
+		/** QuickTime video */
 		const Quicktime = 'video/quicktime';
+		/** Audio in WAV format */
 		const WavAudio = 'audio/x-wav';
+		/** XML file */
 		const Xml = 'text/xml';
+		/** Zip archive */
 		const Zip = 'application/x-zip';
 
 		/**
@@ -29,32 +55,32 @@
 		 * @var string[]
 		 */
 		public static $MimeTypeFor = array(
-			'doc' => QMimeType::MsWord,
+			'doc'  => QMimeType::MsWord,
 			'docx' => QMimeType::OoXmlWordProcessing,
-			'exe' => QMimeType::Executable,
-			'gif' => QMimeType::Gif,
-			'gz' => QMimeType::Gzip,
-			'htm' => QMimeType::Html,
+			'exe'  => QMimeType::Executable,
+			'gif'  => QMimeType::Gif,
+			'gz'   => QMimeType::Gzip,
+			'htm'  => QMimeType::Html,
 			'html' => QMimeType::Html,
 			'jpeg' => QMimeType::Jpeg,
-			'jpg' => QMimeType::Jpeg,
-			'mov' => QMimeType::Quicktime,
-			'mp3' => QMimeType::Mp3,
+			'jpg'  => QMimeType::Jpeg,
+			'mov'  => QMimeType::Quicktime,
+			'mp3'  => QMimeType::Mp3,
 			'mpeg' => QMimeType::MpegVideo,
-			'mpg' => QMimeType::MpegVideo,
-			'pdf' => QMimeType::Pdf,
-			'php' => QMimeType::PlainText,
-			'png' => QMimeType::Png,
-			'ppt' => QMimeType::MsPowerpoint,
+			'mpg'  => QMimeType::MpegVideo,
+			'pdf'  => QMimeType::Pdf,
+			'php'  => QMimeType::PlainText,
+			'png'  => QMimeType::Png,
+			'ppt'  => QMimeType::MsPowerpoint,
 			'pptx' => QMimeType::OoXmlPresentation,
-			'rtf' => QMimeType::RichText,
-			'sql' => QMimeType::PlainText,
-			'txt' => QMimeType::PlainText,
-			'wav' => QMimeType::WavAudio,
-			'xls' => QMimeType::MsExcel,
+			'rtf'  => QMimeType::RichText,
+			'sql'  => QMimeType::PlainText,
+			'txt'  => QMimeType::PlainText,
+			'wav'  => QMimeType::WavAudio,
+			'xls'  => QMimeType::MsExcel,
 			'xlsx' => QMimeType::OoXmlSpreadsheet,
-			'xml' => QMimeType::Xml,
-			'zip' => QMimeType::Zip
+			'xml'  => QMimeType::Xml,
+			'zip'  => QMimeType::Zip
 		);
 
 

@@ -24,44 +24,14 @@ class QFieldset extends QBlockControl {
 	/**
 	 * We will output style tags and such, but fieldset styling is not well supported across browsers.
 	 */
-	protected function GetControlHtml() {
-		$strStyle = $this->GetStyleAttributes();
+	protected function GetInnerHtml() {
+		$strHtml = parent::GetInnerHtml();
 
-		if ($strStyle)
-			$strStyle = sprintf('style="%s"', $strStyle);
-
-		if ($this->strFormat)
-			$strText = sprintf($this->strFormat, $this->strText);
-		else
-			$strText = $this->strText;
-
-		$strTemplateEvaluated = '';
-		if ($this->strTemplate) {
-			global $_CONTROL;
-			$objCurrentControl = $_CONTROL;
-			$_CONTROL = $this;
-			$strTemplateEvaluated = $this->objForm->EvaluateTemplate($this->strTemplate);
-			$_CONTROL = $objCurrentControl;
-		}
-
-		$strLegend = '';
 		if (!empty($this->strLegend)) {
-			$strLegend = '<legend>' . $this->strLegend . '</legend>';
+			$strHtml = '<legend>' . $this->strLegend . '</legend>' . _nl() . $strHtml;
 		}
 
-		$strToReturn = sprintf('<%s id="%s" %s%s>%s%s%s%s</%s>',
-			$this->strTagName,
-			$this->strControlId,
-			$this->GetAttributes(),
-			$strStyle,
-			$strLegend,
-			($this->blnHtmlEntities) ? QApplication::HtmlEntities($strText) : $strText,
-			$strTemplateEvaluated,
-			($this->blnAutoRenderChildren) ? $this->RenderChildren(false) : '',
-			$this->strTagName);
-
-
-		return $strToReturn;
+		return $strHtml;
 	}
 
 	/////////////////////////

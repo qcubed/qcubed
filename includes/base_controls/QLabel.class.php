@@ -17,18 +17,27 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
+		/**
+		 * @param string $strPropName
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'lbl' . $strPropName;
 		}
 
-		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, QColumn $objColumn) {
-			$strClassName = $objCodeGen->FormControlClassForColumn($objColumn);
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+		/**
+		 * Outputs the code at the top of the metacontrol to declare the variable that will hold the control.
+		 * @param QCodeGen $objCodeGen
+		 * @param $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
+			$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			$strRet = <<<TMPL
 		/**
-		 * @var {$strClassName} {$strControlVarName}
+		 * @var QLabel {$strControlVarName}
 		 * @access protected
 		 */
 		protected \${$strControlVarName};
@@ -53,14 +62,17 @@ TMPL;
 		/**
 		 * Codegen the create method and any other support methods to be part of the meta control.
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @return string The function definition
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 			$strControlType = 'QLabel';
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+
+			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			$strDateTimeExtra = '';
@@ -77,8 +89,20 @@ TMPL;
 		 * @param string \$strControlId optional ControlId to use{$strDateTimeParamExtra}
 		 * @return $strControlType
 		 */
-
 		public function {$strControlVarName}_Create(\$strControlId = null{$strDateTimeExtra}) {
+
+TMPL;
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+			$strRet .= <<<TMPL
 			\$this->{$strControlVarName} = new {$strControlType}(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlVarName}->Name = QApplication::Translate('{$strLabelName}');
 
@@ -89,9 +113,17 @@ TMPL;
 
 TMPL;
 			}
-			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+			$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+TMPL;
+			}
+
+
+			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+
+			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -105,50 +137,77 @@ TMPL;
 		/**
 		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn $objColumn
-		 * @param boolean $blnInit	Generate initialization code instead of reload
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param boolean                                        $blnInit Generate initialization code instead of reload
+		 *
+		 * @return string Function definition
+		 * @throws Exception
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
-			$strIfTest = '';
-			if (!$blnInit) {
-				$strIfTest = "if (\$this->{$strControlVarName}) ";
-			}
-
-			if ($objColumn->Identity ||
+			// Preamble with an if test if not initializing
+			if ($objColumn instanceof QColumn){
+				if ($objColumn->Identity ||
 					$objColumn->Timestamp) {
-				$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text =  \$this->blnEditMode ? \$this->{$strObjectName}->{$strPropName} : QApplication::Translate('N\\A');";
-			}
-			else if ($objColumn->Reference) {
-				if ($objColumn->Reference->IsType) {
-					$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$objColumn->PropertyName} ? {$objColumn->Reference->VariableType}::\$NameArray[\$this->{$strObjectName}->{$objColumn->PropertyName}] : null;";
-				} else {
-					$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? \$this->{$strObjectName}->{$strPropName}->__toString() : null;";
+					$strRet = "\$this->{$strControlVarName}->Text =  \$this->blnEditMode ? \$this->{$strObjectName}->{$strPropName} : QApplication::Translate('N\\A');";
 				}
+				else if ($objColumn->Reference) {
+					if ($objColumn->Reference->IsType) {
+						$strRet = "\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$objColumn->PropertyName} ? {$objColumn->Reference->VariableType}::\$NameArray[\$this->{$strObjectName}->{$objColumn->PropertyName}] : null;";
+					} else {
+						$strRet = "\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? \$this->{$strObjectName}->{$strPropName}->__toString() : null;";
+					}
+				}
+				else {
+					switch ($objColumn->VariableType) {
+						case "boolean":
+							$strRet = "\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? QApplication::Translate('Yes') : QApplication::Translate('No');";
+							break;
+
+						case "QDateTime":
+							$strRet = "\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? \$this->{$strObjectName}->{$strPropName}->qFormat(\$this->str{$strPropName}DateTimeFormat) : null;";
+							break;
+
+						default:
+							$strRet = "\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName};";
+					}
+				}
+			}
+			elseif ($objColumn instanceof QReverseReference) {
+				if ($objColumn->Unique) {
+					$strRet = "\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$objColumn->ObjectPropertyName} ? \$this->{$strObjectName}->{$objColumn->ObjectPropertyName}->__toString() : null;";
+				}
+			}
+			elseif ($objColumn instanceof QManyToManyReference) {
+				$strRet = "\$this->{$strControlVarName}->Text = implode(\$this->str{$objColumn->ObjectDescription}Glue, \$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Array());";
 			}
 			else {
-				switch ($objColumn->VariableType) {
-					case "boolean":
-						$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? QApplication::Translate('Yes') : QApplication::Translate('No');";
-						break;
-
-					case "QDateTime":
-						$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName} ? \$this->{$strObjectName}->{$strPropName}->qFormat(\$this->str{$strPropName}DateTimeFormat) : null;";
-						break;
-
-					default:
-						$strRet = "\t\t\t{$strIfTest}\$this->{$strControlVarName}->Text = \$this->{$strObjectName}->{$strPropName};";
-				}
+				throw new Exception ('Unknown column type.');
 			}
+
+			if (!$blnInit) {
+				$strRet = "\t\t\tif (\$this->{$strControlVarName}) " . $strRet;
+			} else {
+				$strRet = "\t\t\t" . $strRet;
+			}
+
 			return $strRet . "\n";
 		}
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		/**
+		 * Return blank string since labels do not send data to the database.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			return '';
 		}
 }

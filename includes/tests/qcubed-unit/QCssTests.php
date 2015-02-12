@@ -8,7 +8,7 @@ class QCssTests extends QUnitTestCaseBase {
 	
 	protected function helpTest($objTestDataArray) {
 		$strValue = $objTestDataArray["Value"];
-		$strAttrs = QCss::FormatLength($strValue);
+		$strAttrs = QHtml::FormatLength($strValue);
 
 		$strMessage =
 			$objTestDataArray["Msg"] .
@@ -17,7 +17,7 @@ class QCssTests extends QUnitTestCaseBase {
 		$this->assertEqual($strAttrs,  $objTestDataArray["Expected"], $strMessage);
 	}
 
-	public function testCss() {
+	public function testFormatLength() {
 		$objCaseArray = array( 
 			array(
 				"Value" => "0", "Expected" => "0", "Msg" => "String zero renders with no 'px'"
@@ -97,5 +97,164 @@ class QCssTests extends QUnitTestCaseBase {
 		}
 
 	}
+
+	protected function helpTest2($objTestDataArray) {
+		$strOldValue = $objTestDataArray["OldValue"];
+		$newValue = $objTestDataArray["NewValue"];
+		$blnChanged = QHtml::SetLength($strOldValue, $newValue);
+
+		$this->assertEqual($blnChanged,  $objTestDataArray["Changed"]);
+		$this->assertEqual($strOldValue,  $objTestDataArray["Expected"]);
+		// problem with sending a percent sign into message, so we just use default message.
+	}
+
+	public function testSetLength() {
+		$objCaseArray = array(
+			array(
+				"OldValue" => "0", "NewValue" => "0", "Changed"=>false, "Expected" => "0", "Msg" => "Zero set to zero."
+			),
+			array(
+				"OldValue" => "1px", "NewValue" => "2em", "Changed"=>true, "Expected" => "2em", "Msg" => "1px changed to 2em."
+			),
+			array(
+				"OldValue" => "1px", "NewValue" => "1px", "Changed"=>false, "Expected" => "1px", "Msg" => "1px not changed."
+			),
+			array(
+				"OldValue" => "1px", "NewValue" => "+1", "Changed"=>true, "Expected" => "2px", "Msg" => "1 added to 1px."
+			),
+			array(
+				"OldValue" => "1px", "NewValue" => "-1", "Changed"=>true, "Expected" => "0px", "Msg" => "1 subtracted from 1px." //??? should we drop the px?
+			),
+			array(
+				"OldValue" => "1em", "NewValue" => "/2", "Changed"=>true, "Expected" => "0.5em", "Msg" => "1em divided in half."
+			),
+			array(
+				"OldValue" => "1em", "NewValue" => "*2", "Changed"=>true, "Expected" => "2em", "Msg" => "1em multiplied by 2."
+			),
+			array(
+				"OldValue" => "1.1em", "NewValue" => "*2", "Changed"=>true, "Expected" => "2.2em", "Msg" => "1.1em multiplied by 2."
+			),
+			array(
+				"OldValue" => '10%', "NewValue" => "*2", "Changed"=>true, "Expected" => '20%', "Msg" => '10 percent multiplied by 2.'
+			)
+		);
+
+		foreach($objCaseArray as $objCase) {
+			$this->helpTest2($objCase);
+		}
+	}
+
+	protected function helpTestAddClass($objTestDataArray) {
+		$strOldValue = $objTestDataArray["OldValue"];
+		$newValue = $objTestDataArray["NewValue"];
+		$blnChanged = QHtml::AddClass($strOldValue, $newValue);
+
+		$this->assertEqual($blnChanged,  $objTestDataArray["Changed"]);
+		$this->assertEqual($strOldValue,  $objTestDataArray["Expected"]);
+		// problem with sending a percent sign into message, so we just use default message.
+	}
+
+	public function testAddClass() {
+		$objCaseArray = array(
+			array(
+				"OldValue" => "", "NewValue" => "test", "Changed"=>true, "Expected" => "test"
+			),
+			array(
+				"OldValue" => "test", "NewValue" => "test", "Changed"=>false, "Expected" => "test"
+			),
+			array(
+				"OldValue" => "test class2", "NewValue" => "test", "Changed"=>false, "Expected" => "test class2"
+			),
+			array(
+				"OldValue" => "test", "NewValue" => "class2", "Changed"=>true, "Expected" => "test class2"
+			),
+			array(
+				"OldValue" => "test", "NewValue" => "class2 class3", "Changed"=>true, "Expected" => "test class2 class3"
+			)
+		);
+
+		foreach($objCaseArray as $objCase) {
+			$this->helpTestAddClass($objCase);
+		}
+	}
+
+	protected function helpTestRemoveClass($objTestDataArray) {
+		$strOldValue = $objTestDataArray["OldValue"];
+		$newValue = $objTestDataArray["NewValue"];
+		$blnChanged = QHtml::RemoveClass($strOldValue, $newValue);
+
+		$this->assertEqual($blnChanged,  $objTestDataArray["Changed"]);
+		$this->assertEqual($strOldValue,  $objTestDataArray["Expected"]);
+		// problem with sending a percent sign into message, so we just use default message.
+	}
+
+	public function testRemoveClass() {
+		$objCaseArray = array(
+			array(
+				"OldValue" => "", "NewValue" => "test", "Changed"=>false, "Expected" => ""
+			),
+			array(
+				"OldValue" => "test", "NewValue" => "test", "Changed"=>true, "Expected" => ""
+			),
+			array(
+				"OldValue" => "test class2", "NewValue" => "test", "Changed"=>true, "Expected" => "class2"
+			),
+			array(
+				"OldValue" => "test", "NewValue" => "class2", "Changed"=>false, "Expected" => "test"
+			),
+			array(
+				"OldValue" => "test class2 class3", "NewValue" => "test class3", "Changed"=>true, "Expected" => "class2"
+			)
+		);
+
+		foreach($objCaseArray as $objCase) {
+			$this->helpTestRemoveClass($objCase);
+		}
+	}
+
+	public function testJavascriptDataConversions() {
+		$objCaseArray = array(
+			array(
+				"Value" => "bob", "Expected" => "bob"
+			),
+			array(
+				"Value" => "Bob", "Expected" => "-bob"
+			),
+			array(
+				"Value" => "bobSmith", "Expected" => "bob-smith"
+			),
+			array(
+				"Value" => "bobSmithJones", "Expected" => "bob-smith-jones"
+			)
+		);
+
+		foreach($objCaseArray as $objCase) {
+			$newValue = JavaScriptHelper::dataNameFromCamelCase($objCase["Value"]);
+			$this->assertEqual($newValue,  $objCase["Expected"]);
+		}
+
+		$objCaseArray = array(
+			array(
+				"Value" => "bob", "Expected" => "bob"
+			),
+			array(
+				"Value" => "-bob", "Expected" => "Bob"
+			),
+			array(
+				"Value" => "bob-smith", "Expected" => "bobSmith"
+			),
+			array(
+				"Value" => "bob-smith-jones", "Expected" => "bobSmithJones"
+			)
+		);
+
+		foreach($objCaseArray as $objCase) {
+			$newValue = JavaScriptHelper::dataNameToCamelCase($objCase["Value"]);
+			$this->assertEqual($newValue,  $objCase["Expected"]);
+		}
+
+	}
+
+
 }
 ?>

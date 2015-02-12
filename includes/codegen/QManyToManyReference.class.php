@@ -7,6 +7,7 @@
 	 * @property string $KeyName
 	 * @property string $Table
 	 * @property string $Column
+	 * @property string $PropertyName
 	 * @property string $OppositeColumn
 	 * @property string $OppositeVariableType
 	 * @property string $OppositeVariableName
@@ -19,6 +20,7 @@
 	 * @property string $ObjectDescriptionPlural
 	 * @property QColumn[] $ColumnArray
 	 * @property boolean $IsTypeAssociation
+	 * @property array $Options
 	 */
 	class QManyToManyReference extends QBaseClass {
 
@@ -46,8 +48,14 @@
 		protected $strColumn;
 
 		/**
+		 * Name of property corresponding to this column as used in the node.
+		 * @var string PropertyName
+		 */
+		protected $strPropertyName;
+
+		/**
 		 * Name of the opposite column (the column that owns the foreign key to the related table)
-		 * @var string Column
+		 * @var string OppositeColumn
 		 */
 		protected $strOppositeColumn;
 
@@ -127,6 +135,12 @@
 		 * @var boolean IsTypeAssociation
 		 */
 		protected $blnIsTypeAssociation;
+
+		/**
+		 * Keyed array of overrides read from the override file
+		 * @var array Overrides
+		 */
+		protected $options;
 		
 
 
@@ -153,6 +167,8 @@
 					return $this->strTable;
 				case 'Column':
 					return $this->strColumn;
+				case 'PropertyName':
+					return $this->strPropertyName;
 				case 'OppositeColumn':
 					return $this->strOppositeColumn;
 				case 'OppositeVariableType':
@@ -177,7 +193,9 @@
 					return $this->objColumnArray;
 				case 'IsTypeAssociation':
 					return $this->blnIsTypeAssociation;
-					
+				case 'Options':
+					return $this->options;
+
 				default:
 					try {
 						return parent::__get($strName);
@@ -207,6 +225,8 @@
 						return $this->strTable = QType::Cast($mixValue, QType::String);
 					case 'Column':
 						return $this->strColumn = QType::Cast($mixValue, QType::String);
+					case 'PropertyName':
+						return $this->strPropertyName = QType::Cast($mixValue, QType::String);
 					case 'OppositeColumn':
 						return $this->strOppositeColumn = QType::Cast($mixValue, QType::String);
 					case 'OppositeVariableType':
@@ -230,7 +250,9 @@
 					case 'ColumnArray':
 						return $this->objColumnArray = QType::Cast($mixValue, QType::ArrayType);						
 					case 'IsTypeAssociation':
-						return $this->blnIsTypeAssociation = QType::Cast($mixValue, QType::Boolean);						
+						return $this->blnIsTypeAssociation = QType::Cast($mixValue, QType::Boolean);
+					case 'Options':
+						return $this->options = QType::Cast($mixValue, QType::ArrayType);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

@@ -40,6 +40,7 @@
 
 	// Preload Required Framework Classes
 	require(__QCUBED_CORE__ . '/base_controls/_enumerations.inc.php');
+	require(__QCUBED_CORE__ . '/base_controls/_utilities.inc.php');
 	require(__QCUBED_CORE__ . '/framework/QBaseClass.class.php');
 	require(__QCUBED_CORE__ . '/framework/QExceptions.class.php');
 	require(__QCUBED_CORE__ . '/framework/QType.class.php');
@@ -73,6 +74,7 @@
 	QApplicationBase::$PreloadedClassFile['_effect_actions'] = __QCUBED_CORE__ . '/base_controls/_effect_actions.inc.php';
 	QApplicationBase::$PreloadedClassFile['_events'] = __QCUBED_CORE__ . '/base_controls/_events.inc.php';
 	QApplicationBase::$PreloadedClassFile['qq'] = __QCUBED_CORE__ . '/framework/QQuery.class.php';
+	QApplicationBase::$PreloadedClassFile['qmodeltrait'] = __QCUBED_CORE__ . '/framework/QModelTrait.trait.php';
 
 	// Define ClassFile Locations for FormState Handlers
 	QApplicationBase::$ClassFile['qformstatehandler'] = __QCUBED_CORE__ . '/qform_state_handlers/QFormStateHandler.class.php';
@@ -90,7 +92,8 @@
 	QApplicationBase::$ClassFile['qmimetype'] = __QCUBED_CORE__ . '/framework/QMimeType.class.php';
 	QApplicationBase::$ClassFile['qdatetime'] = __QCUBED_CORE__ . '/framework/QDateTime.class.php';
 	QApplicationBase::$ClassFile['qstring'] = __QCUBED_CORE__ . '/framework/QString.class.php';
-	QApplicationBase::$ClassFile['qcss'] = __QCUBED_CORE__ . '/framework/QCss.class.php';
+	QApplicationBase::$ClassFile['qcss'] = __QCUBED_CORE__ . '/framework/QCss.class.phpp';
+	QApplicationBase::$ClassFile['qhtml'] = __QCUBED_CORE__ . '/framework/QHtml.class.php';
 	QApplicationBase::$ClassFile['qstack'] = __QCUBED_CORE__ . '/framework/QStack.class.php';
 	QApplicationBase::$ClassFile['qcryptography'] = __QCUBED_CORE__ . '/framework/QCryptography.class.php';
 	QApplicationBase::$ClassFile['qsoapservice'] = __QCUBED_CORE__ . '/framework/QSoapService.class.php';
@@ -169,7 +172,12 @@
 	QApplicationBase::$ClassFile['qlinkbutton'] = __QCUBED_CORE__ . '/base_controls/QLinkButton.class.php';
 
 	QApplicationBase::$ClassFile['qlistcontrol'] = __QCUBED_CORE__ . '/base_controls/QListControl.class.php';
+	QApplicationBase::$ClassFile['qlistitembase'] = __QCUBED_CORE__ . '/base_controls/QListItemBase.class.php';
 	QApplicationBase::$ClassFile['qlistitem'] = __QCUBED_CORE__ . '/base_controls/QListItem.class.php';
+	QApplicationBase::$ClassFile['qlistitemmanager'] = __QCUBED_CORE__ . '/base_controls/QListItemManager.trait.php';
+	QApplicationBase::$ClassFile['qhlistcontrol'] = __QCUBED_CORE__ . '/base_controls/QHListControl.class.php';
+	QApplicationBase::$ClassFile['qhlistitem'] = __QCUBED_CORE__ . '/base_controls/QHListItem.class.php';
+	QApplicationBase::$ClassFile['qdatabinder'] = __QCUBED_CORE__ . '/base_controls/QDataBinder.trait.php';
 	QApplicationBase::$ClassFile['qlistboxbase'] = __QCUBED_CORE__ . '/base_controls/QListBoxBase.class.php';
 	QApplicationBase::$ClassFile['qlistbox'] = __QCUBED__ . '/controls/QListBox.class.php';
 	QApplicationBase::$ClassFile['qlistitemstyle'] = __QCUBED_CORE__ . '/base_controls/QListItemStyle.class.php';
@@ -177,8 +185,6 @@
 	QApplicationBase::$ClassFile['qradiobuttonlist'] = __QCUBED_CORE__ . '/base_controls/QRadioButtonList.class.php';
 	QApplicationBase::$ClassFile['qtreenav'] = __QCUBED_CORE__ . '/base_controls/QTreeNav.class.php';
 	QApplicationBase::$ClassFile['qtreenavitem'] = __QCUBED_CORE__ . '/base_controls/QTreeNavItem.class.php';
-	QApplicationBase::$ClassFile['qhtmllist'] = __QCUBED_CORE__ . '/base_controls/QHtmlList.class.php';
-	QApplicationBase::$ClassFile['qhtmllistitem'] = __QCUBED_CORE__ . '/base_controls/QHtmlList.class.php';
 
 	QApplicationBase::$ClassFile['qtextboxbase'] = __QCUBED_CORE__ . '/base_controls/QTextBoxBase.class.php';
 	QApplicationBase::$ClassFile['qtextbox'] = __QCUBED__ . '/controls/QTextBox.class.php';
@@ -188,6 +194,9 @@
 	QApplicationBase::$ClassFile['qemailtextbox'] = __QCUBED_CORE__ . '/base_controls/QEmailTextBox.class.php';
 	QApplicationBase::$ClassFile['qurltextbox'] = __QCUBED_CORE__ . '/base_controls/QUrlTextBox.class.php';
 	QApplicationBase::$ClassFile['qwritebox'] = __QCUBED_CORE__ . '/base_controls/QWriteBox.class.php';
+	QApplicationBase::$ClassFile['qcsvtextbox'] = __QCUBED_CORE__ . '/base_controls/QCsvTextBox.class.php';
+	QApplicationBase::$ClassFile['qtag'] = __QCUBED_CORE__ . '/base_controls/QTag.class.php';
+	QApplicationBase::$ClassFile['qtagstyler'] = __QCUBED_CORE__ . '/base_controls/QTagStyler.class.php';
 
 	QApplicationBase::$ClassFile['qpaginatedcontrol'] = __QCUBED_CORE__ . '/base_controls/QPaginatedControl.class.php';
 	QApplicationBase::$ClassFile['qpaginatorbase'] = __QCUBED_CORE__ . '/base_controls/QPaginatorBase.class.php';
@@ -204,9 +213,13 @@
 	QApplicationBase::$ClassFile['qabstractsimpletabledatacolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletablepropertycolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletableindexedcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletableclosurecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qsimpletablecallablecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletablecheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
 	QApplicationBase::$ClassFile['qsimpletable'] = __QCUBED__ . '/controls/QSimpleTable.class.php';
+
+	QApplicationBase::$ClassFile['qhtmlattributemanager'] = __QCUBED__ . '/controls/QHtmlAttributeManager.class.php';
+	QApplicationBase::$ClassFile['qhtmlattributemanagerbase'] = __QCUBED_CORE__ . '/base_controls/QHtmlAttributeManagerBase.class.php';
+
 
 	QApplicationBase::$ClassFile['qdatarepeater'] = __QCUBED_CORE__ . '/base_controls/QDataRepeater.class.php';
 
@@ -228,6 +241,12 @@
 	QApplicationBase::$ClassFile['qwatchercache'] = __QCUBED_CORE__ . '/watchers/QWatcherCache.class.php';
 	QApplicationBase::$ClassFile['qwatchernone'] = __QCUBED_CORE__ . '/watchers/QWatcherNone.class.php';
 
+	QApplicationBase::$ClassFile['qmetaeditdlg'] = __QCUBED_CORE__ .'/codegen/QMetaEditDlg.class.php';
+	QApplicationBase::$ClassFile['qmetaparam'] = __QCUBED_CORE__ .'/codegen/QMetaParam.class.php';
+	QApplicationBase::$ClassFile['qmetacontroloptions'] = __QCUBED_CORE__ .'/codegen/QMetacontrolOptions.class.php';
+
+
+
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
 
@@ -240,76 +259,4 @@
 		}
 	}
 	
-	// Includes for Plugin files
-	//require(__PLUGINS__ . '/plugin_includes.php');
-	
-	// Special Print Functions / Shortcuts
-	// NOTE: These are simply meant to be shortcuts to actual QCubed functional
-	// calls to make your templates a little easier to read.  By no means do you have to
-	// use them.  Your templates can just as easily make the fully-named method/function calls.
-		/**
-		 * Standard Print function.  To aid with possible cross-scripting vulnerabilities,
-		 * this will automatically perform QApplication::HtmlEntities() unless otherwise specified.
-		 *
-		 * @param string $strString string value to print
-		 * @param boolean $blnHtmlEntities perform HTML escaping on the string first
-		 */
-		function _p($strString, $blnHtmlEntities = true) {
-			// Standard Print
-			if ($blnHtmlEntities && (gettype($strString) != 'object'))
-				print(QApplication::HtmlEntities($strString));
-			else
-				print($strString);
-		}
-
-		/**
-		 * Standard Print as Block function.  To aid with possible cross-scripting vulnerabilities,
-		 * this will automatically perform QApplication::HtmlEntities() unless otherwise specified.
-		 * 
-		 * Difference between _b() and _p() is that _b() will convert any linebreaks to <br/> tags.
-		 * This allows _b() to print any "block" of text that will have linebreaks in standard HTML.
-		 *
-		 * @param string $strString
-		 * @param boolean $blnHtmlEntities
-		 */
-		function _b($strString, $blnHtmlEntities = true) {
-			// Text Block Print
-			if ($blnHtmlEntities && (gettype($strString) != 'object'))
-				print(nl2br(QApplication::HtmlEntities($strString)));
-			else
-				print(nl2br($strString));
-		}
-
-		/**
-		 * Standard Print-Translated function.  Note: Because translation typically
-		 * occurs on coded text strings, NO HTML ESCAPING will be performed on the string.
-		 * 
-		 * Uses QApplication::Translate() to perform the translation (if applicable)
-		 *
-		 * @param string $strString string value to print via translation
-		 */
-		function _t($strString) {
-			// Print, via Translation (if applicable)
-			print(QApplication::Translate($strString));
-		}
-
-		function _tr($strString) {
-			return QApplication::Translate($strString);
-		}
-
-		function _i($intNumber) {
-			// Not Yet Implemented
-			// Print Integer with Localized Formatting
-		}
-
-		function _f($intNumber) {
-			// Not Yet Implemented
-			// Print Float with Localized Formatting
-		}
-
-		function _c($strString) {
-			// Not Yet Implemented
-			// Print Currency with Localized Formatting
-		}
-	//////////////////////////////////////
 ?>

@@ -18,16 +18,17 @@
 
 		global $__exc_strType;
 		if (isset($__exc_strType))
-			return;
+			return; // error was already called, avoid endless looping
 			
 		$__exc_objReflection = new ReflectionObject($__exc_objException);
 
 		$__exc_strType = "Exception";
+		$__exc_errno = $__exc_objException->ErrorNumber;
 		$__exc_strMessage = $__exc_objException->getMessage();
 		$__exc_strObjectType = $__exc_objReflection->getName();
 
 		if ($__exc_objException instanceof QDatabaseExceptionBase) {
-			$__exc_objErrorAttribute = new QErrorAttribute("Database Error Number", $__exc_objException->ErrorNumber, false);
+			$__exc_objErrorAttribute = new QErrorAttribute("Database Error Number", $__exc_errno, false);
 			$__exc_objErrorAttributeArray[0] = $__exc_objErrorAttribute;
 
 			if ($__exc_objException->Query) {
@@ -57,7 +58,7 @@
 			require(__DOCROOT__ . ERROR_PAGE_PATH);
 		} else {
 			// Error in installer or similar - ERROR_PAGE_PATH constant is not defined yet.
-			echo "error: errno: ". $__exc_errno . "<br/>" . $__exc_errstr . "<br/>" . $__exc_errfile . ":" . $__exc_errline . "<br/>" . $__exc_errcontext ; 
+			echo "error: errno: ". $__exc_errno . "<br/>" . $__exc_strMessage . "<br/>" . $__exc_strFilename . ":" . $__exc_intLineNumber . "<br/>" . $__exc_strStackTrace ;
 		}
 		exit();
 	}
@@ -65,14 +66,14 @@
 	function QcodoHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, $__exc_errcontext) {
 		// If a command is called with "@", then we should return
 		if (error_reporting() == 0)
-			return;
+			return true;
 
 		if (class_exists('QApplicationBase'))
 			QApplicationBase::$ErrorFlag = true;
 
 		global $__exc_strType;
 		if (isset($__exc_strType))
-			return;
+			return true; // Already handled elsewhere, avoi looping
 
 		$__exc_strType = "Error";
 		$__exc_strMessage = $__exc_errstr;
@@ -169,8 +170,20 @@
 	 * Some errors are not caught by a php custom error handler, which can cause the system to silently fail.
 	 * This shutdown function will catch those errors.
 	 */
+
 	function QCubedShutdown() {
-		if ($error = error_get_last()){
+		if (defined ('__TIMER_OUT_FILE__')) {
+			$strTimerOutput = QTimer::VarDump(false);
+			if ($strTimerOutput) {
+				file_put_contents(__TIMER_OUT_FILE__, $strTimerOutput . "\n", FILE_APPEND);
+			}
+		}
+
+		$error = error_get_last();
+		if ($error &&
+			is_array ($error) &&
+			(!defined ('QCodeGen::DebugMode') || QCodeGen::DebugMode)) { // if we are codegenning, only error if we are in debug mode. Prevents chmod error.
+
 			QCodoHandleError (
 				$error['type'],
 				$error['message'],

@@ -37,18 +37,18 @@
 
 		// Controls for <?= $objTable->ClassName ?>'s Data Fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-		/** @var <?= $objCodeGen->FormControlClassForColumn($objColumn); ?>  */
-		public $<?= $objCodeGen->FormControlVariableNameForColumn($objColumn); ?>;
+		/** @var <?= $objCodeGen->MetaControlControlClass($objColumn); ?>  */
+		public $<?= $objCodeGen->MetaControlVariableName($objColumn); ?>;
 <?php } ?>
 
 		// Other ListBoxes (if applicable) via Unique ReverseReferences and ManyToMany References
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
-		public $<?= $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference); ?>;
+		public $<?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>;
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-		public $<?= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?>;
+		public $<?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>;
 <?php } ?>
 
 		// Other Controls
@@ -87,16 +87,16 @@
 
 			// Call MetaControl's methods to create qcontrols based on <?= $objTable->ClassName ?>'s data fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-	<?php	if ($objColumn->Options && $objColumn->Options['FormGen'] == 'none' || $objColumn->Options['FormGen'] == 'meta') continue; ?>
-			$this-><?= $objCodeGen->FormControlVariableNameForColumn($objColumn); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->FormControlVariableNameForColumn($objColumn); ?>_Create();
+	<?php	if ($objColumn->Options && isset ($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None || $objColumn->Options['FormGen'] == QFormGen::ControlOnly)) continue; ?>
+			$this-><?= $objCodeGen->MetaControlVariableName($objColumn); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objColumn); ?>_Create();
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
-			$this-><?= $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->FormControlVariableNameForUniqueReverseReference($objReverseReference); ?>_Create();
+			$this-><?= $objCodeGen->MetaControlVariableName($objReverseReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>_Create();
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-			$this-><?= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->FormControlVariableNameForManyToManyReference($objManyToManyReference); ?>_Create();
+			$this-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>_Create();
 <?php } ?>
 
 			// Create Buttons and Actions on this Form

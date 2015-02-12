@@ -14,8 +14,7 @@
 	 * fetched from the datasource.</p>
 	 *
 	 * <p><i>NOTE</i>: Unlike QDataGrid, this class does not use eval() for evaluating the cell values. Instead, a variety of
-	 * methods can be used to fetch the data for cells, including callable objects such as
-	 * closures (introduced in PHP 5,3).</p>
+	 * methods can be used to fetch the data for cells, including callable objects.</p>
 	 *
 	 * @package Controls
 	 *
@@ -89,14 +88,14 @@
 		}
 
 		/**
-		 * Add a closure column and return it.
+		 * Add a callable column and return it.
 		 * 
 		 * @param string $strName column name
-		 * @param object $objClosure a closure object. Note that this can be an array.
+		 * @param object $objCallable a callable object. Note that this can be an array.
 		 * @param integer $intColumnIndex column position
 		 */
-		public function CreateClosureColumn($strName, $objClosure, $intColumnIndex = -1) {
-			$objColumn = new QSimpleTableClosureColumn($strName, $objClosure);
+		public function CreateCallableColumn($strName, $objCallable, $intColumnIndex = -1) {
+			$objColumn = new QSimpleTableCallableColumn($strName, $objCallable);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
@@ -322,17 +321,12 @@
 			$strToReturn = '';
 			for ($i = 0; $i < $this->intHeaderRowCount; $i++) {
 				$this->intCurrentHeaderRowIndex = $i;
-				$strToReturn .= '<tr';
-				$strParamArray = $this->GetHeaderRowParams();
-				foreach ($strParamArray as $key=>$str) {
-					$strToReturn .= ' ' . $key . '="' . $str . '"';
-				}
-				$strToReturn .= '>';
 
+				$strCells = '';
 				if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn) {
-					$strToReturn .= $objColumn->RenderHeaderCell();
+					$strCells .= $objColumn->RenderHeaderCell();
 				}
-				$strToReturn .= "  </tr>\r\n";
+				$strToReturn .= QHtml::RenderTag('tr', $this->GetHeaderRowParams(), $strCells);
 			}
 
 			return $strToReturn;
@@ -360,25 +354,17 @@
 		 *  This is NOT the index of the data source, only the visual row number currently on screen.
 		 */
 		protected function GetDataGridRowHtml($objObject, $intCurrentRowIndex) {
-			$strToReturn = '<tr';
-			
-			$strParamArray = $this->GetRowParams($objObject, $intCurrentRowIndex);
-			foreach ($strParamArray as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-			
-			$strToReturn .= '>';
-
+			$strCells = '';
 			foreach ($this->objColumnArray as $objColumn) {
 				try {
-					$strToReturn .= $objColumn->RenderCell($objObject);
+					$strCells .= $objColumn->RenderCell($objObject);
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
 			}
-			$strToReturn .= "</tr>\r\n";
-			return $strToReturn;
+
+			return QHtml::RenderTag('tr', $this->GetRowParams($objObject, $intCurrentRowIndex), $strCells);
 		}
 		
 		/**
@@ -396,7 +382,7 @@
 			}
 			
 			if ($strId = $this->GetRowId ($objObject, $intCurrentRowIndex)) {
-				$strParamArray['id'] = addslashes($strId);
+				$strParamArray['id'] = $strId;
 			}
 			
 			if ($strStyle = $this->GetRowStyle ($objObject, $intCurrentRowIndex)) {
@@ -463,13 +449,16 @@
 			$i = 0;
 			while ($i < $len) {
 				$objColumn = $this->objColumnArray[$i];
-				$strToReturn .= $objColumn->RenderColTag();
+				$strToReturn .= $objColumn->RenderColTag() . _nl();
 				$i += $objColumn->Span;
 			}
-			$strToReturn .= "\n";
 			return $strToReturn;
 		}
 
+		/**
+		 * Return the html for the table.
+		 * @return string
+		 */
 		protected function GetControlHtml() {
 			$this->DataBind();
 
@@ -478,45 +467,43 @@
 				return '';
 			}
 
-			// Table Tag
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle)
-				$strStyle = sprintf('style="%s" ', $strStyle);
-			$strToReturn = sprintf("<table id=\"%s\" %s%s>\n", $this->strControlId, $this->GetAttributes(), $strStyle);
 
+			$strHtml = '';
 			// Caption if present
 			if ($this->strCaption) {
-				$strToReturn .= "<caption>" . QApplication::HtmlEntities($this->strCaption) . "</caption>\n";
+				$strHtml .= '<caption>' . QApplication::HtmlEntities($this->strCaption) . '</caption>' . _nl();
 			}
 			
 			// Column tags (if applicable)
 			if ($this->blnRenderColumnTags) {
-				$strToReturn .= $this->GetColumnTagsHtml();
+				$strHtml .= $this->GetColumnTagsHtml();
 			}
 			
 			// Header Row (if applicable)
-			if ($this->blnShowHeader)
-				$strToReturn .= "<thead>\n" . $this->GetHeaderRowHtml() . "</thead>\n";
+			if ($this->blnShowHeader) {
+				$strHtml .= QHtml::RenderTag ('thead', null, $this->GetHeaderRowHtml());
+			}
 
 			// Footer Row (if applicable)
-			if ($this->blnShowFooter)
-				$strToReturn .= "<tfoot>\n" . $this->GetFooterRowHtml() . "</tfoot>\n";
+			if ($this->blnShowFooter) {
+				$strHtml .=  QHtml::RenderTag ('tfoot', null, $this->GetFooterRowHtml());
+			}
 
 			// DataGrid Rows
-			$strToReturn .= "<tbody>\n";
+			$strRows = '';
 			$intCurrentRowIndex = 0;
 			if ($this->objDataSource) {
 				foreach ($this->objDataSource as $objObject) {
-					$strToReturn .= $this->GetDataGridRowHtml($objObject, $intCurrentRowIndex);
+					$strRows .= $this->GetDataGridRowHtml($objObject, $intCurrentRowIndex);
 					$intCurrentRowIndex++;
 				}
 			}
-			$strToReturn .= "</tbody>\r\n";
+			$strHtml .= QHtml::RenderTag('tbody', null, $strRows);
 
-			// Finish Up
-			$strToReturn .= '</table>';
+			$strHtml = $this->RenderTag('table', null, null, $strHtml);
+
 			$this->objDataSource = null;
-			return $strToReturn;
+			return $strHtml;
 		}
 
 		/**

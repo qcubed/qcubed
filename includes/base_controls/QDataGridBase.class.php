@@ -44,6 +44,13 @@
 	 * @property-write QDataGridRowStyle $Style
 	 */
 	class QDataGridRow extends QControl {
+		/**
+		 * Returns the HTML for a row complete with row-level styles when supplied with the HTML of the row
+		 *
+		 * @param string $strColumnsHtml The calculated inner HTML for the row
+		 *
+		 * @return string The HTML for the entire row with applied styles enclosed inside '<tr>' tag
+		 */
 		public function GetHtml($strColumnsHtml) {
 			$strStyle = $this->GetStyleAttributes();
 			if (strlen($strStyle) > 0)
@@ -56,29 +63,26 @@
 		protected function GetControlHtml() { }
 		public function ParsePostData() {}
 		public function Validate() {}
-		
+
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "Style":
 					try {
 						/** @var QDataGridRowStyle $objStyle */
 						$objStyle = QType::Cast($mixValue, "QDataGridRowStyle");
-						$this->BackColor = $objStyle->BackColor;
-						$this->BorderColor = $objStyle->BorderColor;
-						$this->BorderStyle = $objStyle->BorderStyle;
-						$this->BorderWidth = $objStyle->BorderWidth;
-						$this->CssClass = $objStyle->CssClass;
-						$this->FontBold = $objStyle->FontBold;
-						$this->FontItalic = $objStyle->FontItalic;
-						$this->FontNames = $objStyle->FontNames;
-						$this->FontOverline = $objStyle->FontOverline;
-						$this->FontSize = $objStyle->FontSize;
-						$this->FontStrikeout = $objStyle->FontStrikeout;
-						$this->FontUnderline = $objStyle->FontUnderline;
-						$this->ForeColor = $objStyle->ForeColor;
+						$this->Override ($objStyle);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -118,10 +122,10 @@
 	 * in the main data source array.
 	 *
 	 * So, for example, supposed the following:
-	 * 		$strSimpleArray = {"Blah", "Foo", "Baz", "Fun"};
-	 * 		$dtgDataGrid = new DataGrid("dtgDataGrid");
-	 * 		$dtgDataGrid->AddColumn("Column Heading", "Contents: `$_ROW`");
-	 * 		$dtgDataGrid->DataSource = $strSimpleArray;
+	 *        $strSimpleArray = {"Blah", "Foo", "Baz", "Fun"};
+	 *        $dtgDataGrid = new DataGrid("dtgDataGrid");
+	 *        $dtgDataGrid->AddColumn("Column Heading", "Contents: `$_ROW`");
+	 *        $dtgDataGrid->DataSource = $strSimpleArray;
 	 * This will generate a simple 4-row, 1-column table that contains the following:
 	 *      Column Heading
 	 *      --------------
@@ -132,10 +136,10 @@
 	 * In this case, $_ROW is a string, itself, which is each item in the DataSource's array.
 	 *
 	 * Utilizing the back-tick and $_ROW feature, you can do infinitely more complicatd display functionality:
-	 * 		$dtgDataGrid = new DataGrid("dtgDataGrid");
-	 * 		$dtgDataGrid->AddColumn("Title", "<b>`$_ROW->Title`</b>");
-	 * 		$dtgDataGrid->AddColumn("Calculated Result", "`DisplayResults($_ROW->Calculate())`");
-	 * 		$dtgDataGrid->DataSource = Foo::LoadAll();
+	 *        $dtgDataGrid = new DataGrid("dtgDataGrid");
+	 *        $dtgDataGrid->AddColumn("Title", "<b>`$_ROW->Title`</b>");
+	 *        $dtgDataGrid->AddColumn("Calculated Result", "`DisplayResults($_ROW->Calculate())`");
+	 *        $dtgDataGrid->DataSource = Foo::LoadAll();
 	 * This could then generate a table with much more data-rich information:
 	 *      Title             Calculated Result
 	 *      ----------------- --------------------
@@ -144,23 +148,19 @@
 	 *      Blah              (None)
 	 * In this case, $_ROW is actually a Foo object.
 	 *
-	 *
 	 * IMPORTANT: Please note that while all properties can/should be set up only once within the form's
 	 * !IsPostBack() clause, the DataSource **MUST** be set **EVERY TIME**.  The contents of DataSource
 	 * do NOT persist from postback to postback.
 	 *
-	 *
 	 * The appearance of the datagrid control appears to be complicated, but keep in mind that it simply
 	 * utlizes the cascading nature of how browsers render tables based on styles assigned to
 	 * the <table>, <tr>, and <td>.  In short:
-	 *     Appearance properties defined to the DataGrid, itself, show up as HTML Attributes
-	 *     and CSS Styles within the <table> tag.
-	 *
-	 *     Appearance properties defined to a specific row's DataGridRowStyle will show up as
-	 *     HTML attributes within that specific row's <tr> tag.
-	 *
-	 *     Appearance properties defined to a DataGridColumn will show up as HTML attributes
-	 *     within that specific row's <td> tag.
+	 *      - Appearance properties defined to the DataGrid, itself, show up as HTML Attributes
+	 *          and CSS Styles within the <table> tag.
+	 *      - Appearance properties defined to a specific row's DataGridRowStyle will show up as
+	 *          HTML attributes within that specific row's <tr> tag.
+	 *      - Appearance properties defined to a DataGridColumn will show up as HTML attributes
+	 *          within that specific row's <td> tag.
 	 *
 	 * So, attributes will only show up if it is defined at that particular level.  So if you define a background color
 	 * for a DataGridRowStyle for a particular row, but not for a DataGridColumn or for the DataGrid in general, that
@@ -170,27 +170,25 @@
 	 * inherit from the parent (where a <td>'s parent is the <tr>, and the <tr>'s parent is the <table>,
 	 * and any defined appearance property will simply override whatever was defined by the parent.
 	 *
-	 *
 	 * Sorting
+	 * =======
 	 * Whether or not a column can be sorted depends on whether or not you define a SortByCommand (and
 	 * subsequently a ReverseSortByComamnd) on the DataGridColumn itself.  This SortByCommand is meant
 	 * to be the SQL syntax used in an "ORDER BY" clause of a SQL query.  This fits in really well
 	 * with the CodeGen Framework's Class::LoadArrayByXXX() and Class::LoadAll() which takes "$strSortInfo"
 	 * as an optional parameter.
-	 *
 	 * If a DataGrid is being sorted by a specific column, DataGrid::SortInfo will return to you the contents
 	 * of DataGridColumn::SortByCommand (or ReverseSortByCommand if it's a reverse sort) for the specific
 	 * column being sorted by.  Therefore, you can set up your data source like:
 	 *     $dtgDataGrid->DataSource = Foo::LoadAll($dtgDataGrid->SortInfo);
 	 *
-	 *
 	 * Pagination
+	 * ==========
 	 * Pagination can be toggled on and off with the DataGrid::Paginate flag.  When enabling pagination, you
 	 * must specify how many items, TOTAL, are in the full list (DataGrid::TotalItemCount).  The DataGrid will
 	 * then automatically calculate the SQL Limit information (as used in a "LIMIT" clause of a SQL query) to
 	 * be used when querying a specific subset of the total list.  As with sorting, this fits really well
 	 * with the CodeGen Framework's LoadArray methods which takes $strLimitInfo" as an optional parameter.
-	 *
 	 * Moreover, the codegen also auto-generates CountBy methods for every LoadAll/LoadArray method it generates
 	 * to assist with the DataGrid::TotalItemCount property:
 	 *     $dtgDataGrid->TotalItemCount = Foo::CountAll();
@@ -205,91 +203,165 @@
 	 *     $objRowStyle->BackColor = "blue";
 	 *
 	 * @package Controls
-	 *
-	 * @property QDataGridRowStyle $AlternateRowStyle is the DataGridRowStyle object that defines how "alternating rows" should be displayed
-	 * @property string $BorderCollapse defines the BorderCollapse css style for the table
-	 * @property QDataGridRowStyle $HeaderRowStyle is the DataGridRowStyle object that defines how the "header row" should be displayed (attributes that get rendred in the header row's <tr>)
-	 * @property QDataGridRowStyle $FilterRowStyle
-	 * @property QDataGridRowStyle $HeaderLinkStyle is the DataGridRowStyle object that defines how links, specifically, in the header row should be displayed.  Basically, anything defined here will show up as html attributes and css styles within the '<a href="">' tag of the link, itself, in the header.  Links in the header ONLY GET DISPLAYED when a column is sortable
-	 * @property QDataGridRowStyle $RowStyle is the main or "default" DataGridRowStyle for the entire table.  Any overriding row style (see "OverrideRowStyle(int, DataGridRowStyle)" below) or any appearance properties set in AlternateRowStyle or HeaderRowStyle will be applied in those specific situations. Any appearance properties NOT set in ovverrides, alternate, or header will simply default to what RowStyle has defined.
-	 * @property integer $CellPadding refers the the HTML CellPadding attribute of the <table>
-	 * @property integer $CellSpacing refers the the HTML CellSpacing attribute of the <table>
-	 * @property string $GridLines refers the the HTML rules attribute of the <table>
-	 * @property boolean $ShowHeader is the flag of whether or not to show the Header row
-	 * @property boolean $ShowFooter
-	 * @property boolean $ShowFilter
-	 * @property boolean $ShowFilterButton
-	 * @property boolean $ShowFilterResetButton
-	 * @property mixed $OrderByClause
-	 * @property mixed $SortInfo
-	 * @property-read integer $CurrentRowIndex is the current row index that is being rendered.  Useful for render-helper functions that may get called when rendering the datagrid, itself
-	 * @property integer $SortColumnIndex is the current column that is being "sorted by" (or -1 if none)
-	 * @property integer $SortDirection specifies the direction of that sort, 0 for SortBy, and 1 for ReverseSortBy
-	 * @property string $LabelForNoneFound
-	 * @property string $LabelForOneFound
-	 * @property string $LabelForMultipleFound
-	 * @property string $LabelForPaginated
-	 * @property mixed $Owner
-	 * @property mixed $FilterInfo
-	 * @property mixed $Conditions
-	 * @property-write QPaginatorBase $Paginator
-	 * @property-write QPaginatorBase $PaginatorAlternate
-	 * @property-write boolean $UseAjax
-	 * @property-write string $RowActionParameterHtml
-	 * @property-read QButton $FilterButton
-	 * @property-read QWaitIcon $WaitIcon
+	 * @property QDataGridRowStyle    $AlternateRowStyle	 is the DataGridRowStyle object that defines how "alternating rows" should be displayed
+	 * @property QDataGridRowStyle    $HeaderRowStyle   	 is the DataGridRowStyle object that defines how the "header row" should be displayed (attributes that get rendred in the header row's <tr>)
+	 * @property QDataGridRowStyle    $FilterRowStyle   	 The row style for the filter row at the top
+	 * @property QDataGridRowStyle    $HeaderLinkStyle  	 is the DataGridRowStyle object that defines how links, specifically, in the header row should be displayed.  Basically, anything defined here will show up as html attributes and css styles within the '<a href="">' tag of the link, itself, in the header.  Links in the header ONLY GET DISPLAYED when a column is sortable
+	 * @property QDataGridRowStyle    $RowStyle         	 is the main or "default" DataGridRowStyle for the entire table.  Any overriding row style (see "OverrideRowStyle(int, DataGridRowStyle)" below) or any appearance properties set in AlternateRowStyle or HeaderRowStyle will be applied in those specific situations. Any appearance properties NOT set in ovverrides, alternate, or header will simply default to what RowStyle has defined.
+	 * @property integer 			  $CellPadding 			 refers the the HTML CellPadding attribute of the <table>. Not supported in HTML 5.
+	 * @property integer 		      $CellSpacing 			 refers the the HTML CellSpacing attribute of the <table>  Not supported in HTML 5.
+	 * @property string               $GridLines        	 refers the the HTML rules attribute of the <table>. Not supported in HTML 5.
+	 * @property boolean              $ShowHeader        	 is the flag of whether or not to show the Header row
+	 * @property boolean              $ShowFooter
+	 * @property boolean              $ShowFilter
+	 * @property boolean              $ShowFilterButton      Should the filter button (on filter row) be shown?
+	 * @property boolean              $ShowFilterResetButton Should the reset filter button (on filter row) be shown?
+	 * @property mixed                $OrderByClause
+	 * @property mixed                $SortInfo
+	 * @property-read integer         $CurrentRowIndex        is the current row index that is being rendered.  Useful for render-helper functions that may get called when rendering the datagrid, itself
+	 * @property integer              $SortColumnIndex        is the current column that is being "sorted by" (or -1 if none)
+	 * @property integer              $SortDirection          specifies the direction of that sort, 0 for SortBy, and 1 for ReverseSortBy
+	 * @property string               $LabelForNoneFound      Format string for the label to show on the paginator when no result is found
+	 * @property string               $LabelForOneFound       Format string for the label to show on the paginator when one result is found
+	 * @property string               $LabelForMultipleFound  Format string for the label to show on the paginator when more than one result is found
+	 * @property string               $LabelForPaginated      Format string for the label to show on the paginator indicating current results window
+	 * @property mixed                $Owner
+	 * @property mixed                $FilterInfo
+	 * @property mixed                $Conditions
+	 * @property-write QPaginatorBase $Paginator              Paginator to go browse through results
+	 * @property-write QPaginatorBase $PaginatorAlternate     A second paginator to go browse through results (can be used at bottom)
+	 * @property-write boolean        $UseAjax                Will the paginator use AJAX or not
+	 * @property-write string         $RowActionParameterHtml String which evaluates as the ActionParameter for row of the result.
+	 * @property-read QButton         $FilterButton           Button to filter the results (if filtering is enabled)
+	 * @property-read QWaitIcon       $WaitIcon               Wait icon (e.g. a spinner) to be shown while filtering is being done on the server
 	 */
 	abstract class QDataGridBase extends QPaginatedControl {
 		// APPEARANCE
+		/** @var null|QDataGridRowStyle Row style for alternate rows */
 		protected $objAlternateRowStyle = null;
-		protected $strBorderCollapse = QBorderCollapse::NotSet;
+		/** @var null|QDataGridRowStyle Style for the top row (not the filter row) */
 		protected $objHeaderRowStyle = null;
+		/** @var null|QDataGridRowStyle Style for the filter row (not the top row) */
 		protected $objFilterRowStyle = null;
+		/**
+		 * @var null|QDataGridRowStyle[] List of styles for corresponding rows
+		 *                               (in intRowNumber => objStyleObject style)
+		 */
 		protected $objOverrideRowStyleArray = null;
+		/** @var null|QDataGridRowStyle Style object for the links header */
 		protected $objHeaderLinkStyle = null;
+		/** @var null|QDataGridRowStyle Row style for rown in the datagrid */
 		protected $objRowStyle = null;
+		/** @var string|QWaitIcon Wait icon for Ajax Actions */
 		protected $objWaitIcon = 'default';
 
 		// LAYOUT
+		/** @var int CellPadding. Deprecated. */
 		protected $intCellPadding = -1;
+		/** @var int CellSpacing. Deprecated. */
 		protected $intCellSpacing = -1;
-		protected $strGridLines = QGridLines::None;
+		/** @var bool Show the header for the table? */
 		protected $blnShowHeader = true;
+		/** @var bool Determines if the filter row has to be shown or not */
 		protected $blnShowFilter = false;
+		/** @var bool Determines if the filter button has to be shown or not */
 		protected $blnShowFilterButton = true;
+		/** @var bool Determines if the reset button on the filter row has to be shown or not */
 		protected $blnShowFilterResetButton = true;
+		/** @var bool Determines of the footer has to be shown or not */
 		protected $blnShowFooter = false;
+		/** @var  Deprecated. Rules attribute of table. Not supported in HTML 5. */
+		protected $strGridLines;
 
 		// MISC
 		/** @var QDataGridColumn[] */
 		protected $objColumnArray;
 
+		/** @var int Number of rows in the current render */
 		protected $intRowCount = 0;
+		/**
+		 *  @var int The index of the row being processed
+		 *           (This variable is used internally)
+		 */
 		protected $intCurrentRowIndex;
+		/** @var int Column index by which we are sorting the results */
 		protected $intSortColumnIndex = -1;
+		/**
+		 * @var int The index of column under consideration
+		 *          (This variable is used internally)
+		 */
 		protected $intCurrentColumnId = 1;
+		/** @var int Sort is ascending (0) or descending (1) */
 		protected $intSortDirection = 0;
-		
+
+		/**
+		 * @var string Format string for the label to show on the paginator when no result is found
+		 *             (Please see constructor for default values)
+		 */
 		protected $strLabelForNoneFound;
+		/**
+		 * @var string Format string for the label to show on the paginator when one result is found
+		 *             (Please see constructor for default values)
+		 */
 		protected $strLabelForOneFound;
+		/**
+		 * @var string Format string for the label to show on the paginator when more than one entry is found
+		 *             (Please see constructor for default values)
+		 */
 		protected $strLabelForMultipleFound;
+		/**
+		 * @var string Format string for the label to show on the paginator indicating current results window
+		 *             This format string is responsible for telling the user about the current chunk of
+		 *             results that he/she is viewing. It produces strings like:
+		 *             - Results: Viewing Cars 11-20 of 72
+		 *
+		 *             Please see constructor for the way this format string is to be specified
+		 */
 		protected $strLabelForPaginated;
-		
+
+		/**
+		 * @var string String which evaluates as the ActionParameter for row of the result.
+		 *             This one is used for passing a string as an action parameter for the entire row
+		 *             and can be used inside an event handler which handles click on an entire row of the
+		 *             QDataGrid. The event handler will recieve the value determined by the evaluation of
+		 *             this string.
+		 *
+		 *             Please see the "Making entire QDataGrid rows clickable" example on examples site
+		 *             to understand the usage.
+		 */
 		protected $strRowActionParameterHtml;
-		/** @var QEvent[] */
+		/** @var QEvent[] List of events for which actions have to be taken*/
 		protected $objRowEventArray = array();
+		/** @var QAction[] List of actions to be taken (elements will correspond to the row event array) */
 		protected $objRowActionArray = array();
 
+		/** @var null Owner table of this QDataGrid (not being used right now) */
 		protected $objOwner = null;
 
+		/** @var null|QButton Button for filtering results (is rendered on the filter row on top) */
 		protected $btnFilter = null;
+		/** @var array|QButton[] */
 		protected $btnFilterResetArray = array();
 
+		/**
+		 * Add an action on a row of this QDataGrid
+		 *
+		 * @param QEvent  $objEvent  Event object
+		 * @param QAction $objAction Action object
+		 */
 		public function AddRowAction($objEvent, $objAction) {
 			array_push($this->objRowEventArray, $objEvent);
 			array_push($this->objRowActionArray, $objAction);
 		}
-		
+
+		/**
+		 * Constructor
+		 *
+		 * @param QControl|QControlBase|QForm $objParentObject Parent object
+		 * @param null                        $strControlId    Control ID (optional)
+		 *
+		 * @throws Exception|QCallerException
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			try {
 				parent::__construct($objParentObject, $strControlId);
@@ -308,7 +380,7 @@
 			$this->strLabelForOneFound = QApplication::Translate('<b>Results:</b> 1 %s found.');
 			$this->strLabelForMultipleFound = QApplication::Translate('<b>Results:</b> %s %s found.');
 			$this->strLabelForPaginated = QApplication::Translate('<b>Results:</b>&nbsp;Viewing&nbsp;%s&nbsp;%s-%s&nbsp;of&nbsp;%s.');
-			
+
 			$this->objColumnArray = array();
 
 			// Setup Sorting Events
@@ -326,11 +398,24 @@
 		}
 
 		// Used to add a DataGridColumn to this DataGrid
+		/**
+		 * Add a column to the QDataGrid
+		 *
+		 * @param QDataGridColumn $objColumn The column to be added
+		 */
 		public function AddColumn(QDataGridColumn $objColumn) {
 			$this->blnModified = true;
 			$this->objColumnArray[] = $objColumn;
 		}
-		
+
+		/**
+		 * Add a column at a given index
+		 *
+		 * @param integer         $intColumnIndex
+		 * @param QDataGridColumn $objColumn
+		 *
+		 * @throws Exception|QCallerException|QIndexOutOfRangeException|QInvalidCastException
+		 */
 		public function AddColumnAt($intColumnIndex, QDataGridColumn $objColumn) {
 			$this->blnModified = true;
 			try {
@@ -352,6 +437,16 @@
 			}
 		}
 
+		/**
+		 * Removes a column from the datagrid given the index of the column
+		 *
+		 * @param integer $intColumnIndex The index of column which has to be removed
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QIndexOutOfRangeException
+		 * @throws QInvalidCastException
+		 */
 		public function RemoveColumn($intColumnIndex) {
 			$this->blnModified = true;
 			try {
@@ -367,6 +462,11 @@
 			array_splice($this->objColumnArray, $intColumnIndex, 1);
 		}
 
+		/**
+		 * Removes a column from the datagrid (the first column that matches) given the name of the column
+		 *
+		 * @param string $strName Name of the column
+		 */
 		public function RemoveColumnByName($strName) {
 			$this->blnModified = true;
 			for ($intIndex = 0; $intIndex < count($this->objColumnArray); $intIndex++)
@@ -376,6 +476,11 @@
 				}
 		}
 
+		/**
+		 * Remove all column from the datagrid given the column name
+		 *
+		 * @param string $strName Name of the column
+		 */
 		public function RemoveColumnsByName($strName) {
 			$this->blnModified = true;
 			for ($intIndex = 0; $intIndex < count($this->objColumnArray); $intIndex++)
@@ -385,36 +490,86 @@
 				}
 		}
 
+		/**
+		 * Remove all columns from the QDataGrid
+		 */
 		public function RemoveAllColumns() {
 			$this->blnModified = true;
 			$this->objColumnArray = array();
 		}
 
+		/**
+		 * Returns the array of all columns in the QDataGrid
+		 *
+		 * @return array|QDataGridColumn[]
+		 */
 		public function GetAllColumns() {
 			return $this->objColumnArray;
 		}
 
+		/**
+		 * Returns a column from the QDataGrid given its index
+		 *
+		 * @param int $intColumnIndex Index of the column
+		 *
+		 * @return QDataGridColumn|null
+		 */
 		public function GetColumn($intColumnIndex) {
-			if (array_key_exists($intColumnIndex, $this->objColumnArray))
+			if (array_key_exists($intColumnIndex, $this->objColumnArray)) {
 				return $this->objColumnArray[$intColumnIndex];
+			}
+
+			return null;
 		}
 
+		/**
+		 * Returns a column from the QDataGrid given its name
+		 *
+		 * @param string $strName Name of the column
+		 *
+		 * @return QDataGridColumn|null The found column
+		 */
 		public function GetColumnByName($strName) {
-			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn)
-				if ($objColumn->Name == $strName)
-					return $objColumn;
+			if ($this->objColumnArray) {
+				foreach ($this->objColumnArray as $objColumn)
+					if ($objColumn->Name == $strName) {
+						return $objColumn;
+					}
+			}
+
+			return null;
 		}
 
+		/**
+		 * Returns an array of columns of same name from the QDataGrid
+		 *
+		 * @param string $strName Name of the column
+		 *
+		 * @return QDataGridColumn[] Array of found columns
+		 */
 		public function GetColumnsByName($strName) {
 			$objColumnArrayToReturn = array();
-			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn)
-				if ($objColumn->Name == $strName)
-					array_push($objColumnArrayToReturn, $objColumn);
+			if ($this->objColumnArray) {
+				foreach ($this->objColumnArray as $objColumn)
+					if ($objColumn->Name == $strName) {
+						array_push($objColumnArrayToReturn, $objColumn);
+					}
+			}
+
 			return $objColumnArrayToReturn;
 		}
 
-		// If you want to override a SPECIFIC row's style, you can specify
-		// the RowIndex and the DataGridRowStyle with which to override		
+		/**
+		 * Overrides the style of a QDataGrid row given a style object
+		 *
+		 * If you want to override a SPECIFIC row's style, you can specify
+		 * the RowIndex and the DataGridRowStyle with which to override
+		 *
+		 * @param int               $intRowIndex Index of the row
+		 * @param QDataGridRowStyle $objStyle    Style object to be applied to the row
+		 *
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function OverrideRowStyle($intRowIndex, $objStyle) {
 			try {
 				$objStyle = QType::Cast($objStyle, "QDataGridRowStyle");
@@ -425,28 +580,51 @@
 			$this->objOverrideRowStyleArray[$intRowIndex] = $objStyle;
 		}
 
-		// Used upon rendering to find backticks and perform PHP eval's
+		/**
+		 * Wrapper around static function ParseHtml of this class
+		 *
+		 * @param QDataGridColumn $objColumn Column which is to be parsed
+		 * @param mixed           $objObject An element from DataSource which is interpreted as '$_ITEM' in template
+		 *
+		 * @return string
+		 * @throws Exception|QCallerException
+		 */
 		protected function ParseColumnHtml(QDataGridColumn $objColumn, $objObject) {
 			return QDataGridBase::ParseHtml($objColumn->Html, $this, $objColumn, $objObject);
 		}
-		
-		// Used upon rendering to find backticks and perform PHP eval's
+
+		/**
+		 * Parses the HTML written in the template and replaces the value of expressions and returns the HTML
+		 * Used upon rendering to find backticks and perform PHP eval's
+		 *
+		 * @param string                  $strHtml    Expression to be evaluated and converted into the final HTML
+		 * @param QDataGridBase|QDataGrid $objControl This object (the QDataGrid)
+		 * @param QDataGridColumn         $objColumn  Column which is to be parsed
+		 * @param mixed                   $objObject  An element from DataSource which is interpreted as '$_ITEM' in template
+		 *
+		 * @return string
+		 * @throws Exception|QCallerException
+		 */
 		public static function ParseHtml($strHtml, $objControl, $objColumn, $objObject) {
+			/** @var mixed $_ITEM */
 			$_ITEM = $objObject;
+			/** @var QFormBase|QForm $_FORM */
 			$_FORM = $objControl->Form;
+			/** @var QDataGridBase|QDataGrid $_CONTROL */
 			$_CONTROL = $objControl;
+			/** @var QDataGridColumn $_COLUMN */
 			$_COLUMN = $objColumn;
 			$_OWNER = $objControl->Owner;
 
 			$intPosition = 0;
-			
+
 			while (($intStartPosition = strpos($strHtml, '<?=', $intPosition)) !== false) {
 				$intEndPosition = strpos($strHtml, '?>', $intStartPosition);
 				if ($intEndPosition === false)
 					return $strHtml;
 				$strToken = substr($strHtml, $intStartPosition + 3, ($intEndPosition - $intStartPosition) - 3);
 				$strToken = trim($strToken);
-				
+
 				if ($strToken) {
 					// Because Eval doesn't utilize exception management, we need to do hack thru the PHP Error Handler
 					set_error_handler("DataGridEvalHandleError");
@@ -473,7 +651,7 @@
 						$strEvaledToken = $strEvaledToken->qFormat();
 					else
 						$strEvaledToken = $strEvaledToken->__toString();
-				}					
+				}
 
 				$strHtml = sprintf("%s%s%s",
 					substr($strHtml, 0, $intStartPosition),
@@ -486,47 +664,22 @@
 			return $strHtml;
 		}
 
-		// The Table, itself, should have no actions defined on it and should not be parsing anything
+		/**
+		 * This method does absolutely nothing and is here because of constraints (derived from an abstract class)
+		 * This is because the Table, itself, should have no actions defined on it and should not be parsing anything
+		 */
 		public function ParsePostData() {}
 
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = false) {
-			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
-
-			if ($this->strGridLines == QGridLines::Horizontal)
-				$strToReturn .= 'rules="rows" ';
-			else if ($this->strGridLines == QGridLines::Vertical)
-				$strToReturn .= 'rules="cols" ';
-			else if ($this->strGridLines == QGridLines::Both)
-				$strToReturn .= 'rules="all" ';
-
-			if ($this->intCellPadding >= 0)
-				$strToReturn .= sprintf('cellpadding="%s" ', $this->intCellPadding);
-
-			if ($this->intCellSpacing >= 0)
-				$strToReturn .= sprintf('cellspacing="%s" ', $this->intCellSpacing);
-
-			$strBorder = $this->strBorderWidth;
-			settype($strBorder, QType::Integer);
-			$strToReturn .= sprintf('border="%s" ', $strBorder);
-
-			if ($this->strBorderColor)
-				$strToReturn .= sprintf('bordercolor="%s" ', $this->strBorderColor);
-
-			return $strToReturn;
-		}
-		
-		public function GetStyleAttributes() {
-			$strToReturn = parent::GetStyleAttributes();
-
-			if ($this->strBorderCollapse == QBorderCollapse::Collapse) 
-				$strToReturn .= 'border-collapse:collapse;';
-			else if ($this->strBorderCollapse == QBorderCollapse::Separate) 
-				$strToReturn .= 'border-collapse:separate;';
-
-			return $strToReturn;
-		}
-
-		// Parse the _POST to see if the user is requesting a change in the sort column or page
+		/**
+		 * Parse the _POST to see if the user is requesting a change in the sort column or page
+		 * NOTE: This is an event handler (hence not all parameters of this method are used in its body)
+		 *
+		 * @param string $strFormId Form ID
+		 * @param string $strControlId Control ID
+		 * @param string $strParameter Action Parameter
+		 *
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function Sort_Click($strFormId, $strControlId, $strParameter) {
 			$this->blnModified = true;
 
@@ -534,27 +687,29 @@
 				// Sorting
 				$intColumnIndex = QType::Cast($strParameter, QType::Integer);
 				$objColumn = $this->objColumnArray[$intColumnIndex];
-				
+
 				// First, reset pagination (if applicable)
-				if ($this->objPaginator)
+				if ($this->objPaginator) {
 					$this->PageNumber = 1;
+				}
 
 				// First, make sure the Column is Sortable
 				if ($objColumn->OrderByClause) {
 					// It is
-					
+
 					// Are we currently sorting by this column?
 					if ($this->intSortColumnIndex == $intColumnIndex) {
 						// Yes we are currently sorting by this column
-						
+
 						// In Reverse?
 						if ($this->intSortDirection == 1) {
 							// Yep -- unreverse the sort
 							$this->intSortDirection = 0;
 						} else {
 							// Nope -- can we reverse?
-							if ($objColumn->ReverseOrderByClause)
+							if ($objColumn->ReverseOrderByClause) {
 								$this->intSortDirection = 1;
+							}
 						}
 					} else {
 						// Nope -- so let's set it to this column
@@ -569,6 +724,13 @@
 			}
 		}
 
+		/**
+		 * Get the HTML for the paginator associated with this QDataGrid
+		 *
+		 * @param QPaginator $objPaginator
+		 *
+		 * @return string HTML to be returned
+		 */
 		protected function GetPaginatorRowHtml($objPaginator) {
 			$strToReturn = "  <span class=\"paginator-control\">";
 			$strToReturn .= $objPaginator->Render(false);
@@ -592,10 +754,17 @@
 			}
 
 			$strToReturn .= "</span>\r\n";
-			
+
 			return $strToReturn;
 		}
-		
+
+		/**
+		 * Returns the HTML for the row header if the result was sorted by that row
+		 *
+		 * @param QDataGridColumn $objColumn
+		 *
+		 * @return string HTML for the sorted header column
+		 */
 		protected function GetHeaderSortedHtml(QDataGridColumn $objColumn) {
 			$strToReturn = sprintf('<span style="text-transform: uppercase;">%s</span>', $objColumn->Name);
 
@@ -607,30 +776,35 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns the HTML for the header row
+		 *
+		 * @return string HTML for the header row
+		 */
 		protected function GetHeaderRowHtml() {
 			$objHeaderStyle = $this->objRowStyle->ApplyOverride($this->objHeaderRowStyle);
 
 			$strToReturn = sprintf("  <tr %s>\r\n", $objHeaderStyle->GetAttributes());
 			$intColumnIndex = 0;
 			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn) {
-				if ($objColumn->OrderByClause) {						
+				if ($objColumn->OrderByClause) {
 					// This Column is Sortable
 					if ($intColumnIndex == $this->intSortColumnIndex)
 						$strName = $this->GetHeaderSortedHtml($objColumn);
 					else
 						$strName = $objColumn->Name;
 
-					$this->strActionParameter = $intColumnIndex;
+					$this->mixActionParameter = $intColumnIndex;
 
 					$strToReturn .= sprintf("    <th %s><a id=\"%s\" href=\"%s\" %s%s>%s</a></th>\r\n",
 						$this->objHeaderRowStyle->GetAttributes(),
-						$this->ControlId . "_col_" . $this->strActionParameter,
+						$this->ControlId . "_col_" . $intColumnIndex,
                         			QApplication::$RequestUri,
-						$this->prxDatagridSorting->RenderAsEvents($this->strActionParameter, true, $this->ControlId . "_col_" . $this->strActionParameter, false),
+						$this->prxDatagridSorting->RenderAsEvents($intColumnIndex, true, $this->ControlId . "_col_" . $intColumnIndex, false),
 						$this->objHeaderLinkStyle->GetAttributes(),
 						$strName);
 				}
-				elseif ($objColumn instanceof QCheckBoxColumn) {	
+				elseif ($objColumn instanceof QCheckBoxColumn) {
 					$strCheck = $objColumn->chkSelectAll_Render(true);
 					$strToReturn .= sprintf("    <th %s>%s</th>\r\n", $this->objHeaderRowStyle->GetAttributes(), $strCheck);
 				}
@@ -642,7 +816,14 @@
 
 			return $strToReturn;
 		}
-		
+
+		/**
+		 * @param $objObject
+		 *
+		 * @return string HTML of the row
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		protected function GetDataGridRowHtml($objObject) {
 			// Get the Default Style
 			$objStyle = $this->objRowStyle;
@@ -672,7 +853,7 @@
 				$objStyle = $objStyle->ApplyOverride($this->objAlternateRowStyle);
 
 			// Apply any Style Override (if applicable)
-			if ((is_array($this->objOverrideRowStyleArray)) && 
+			if ((is_array($this->objOverrideRowStyleArray)) &&
 				(array_key_exists($this->intCurrentRowIndex, $this->objOverrideRowStyleArray)) &&
 				(!is_null($this->objOverrideRowStyleArray[$this->intCurrentRowIndex])))
 				$objStyle = $objStyle->ApplyOverride($this->objOverrideRowStyleArray[$this->intCurrentRowIndex]);
@@ -691,7 +872,7 @@
 				// parse the action parameter
 				$objRow->ActionParameter = QDataGridBase::ParseHtml($this->strRowActionParameterHtml, $this, null, $objObject);
 				$strToReturn = $objRow->GetHtml($strColumnsHtml);
-				QApplication::ExecuteJavaScript($objRow->GetActionAttributes());
+				QApplication::ExecuteJavaScript($objRow->RenderActionScripts());
 			} else {
 				// If there are no events, don't create any row controls'
 				// Finish up
@@ -701,20 +882,35 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns the footer row HTML
+		 * NOTE: This function currently does nothing but is available for overriding
+		 */
 		protected function GetFooterRowHtml() {}
 
+		/**
+		 * Returns the HTML for creating the QDataGrid on user's browser
+		 *
+		 * @return string The HTML for the QDataGrid
+		 * @throws Exception|QCallerException
+		 */
 		protected function GetControlHtml() {
+			return 	$this->RenderTag('table',
+				null,
+				null,
+				$this->GetInnerHtml());
+		}
+
+		protected function GetInnerHtml() {
 			$this->DataBind();
 
-			// Table Tag
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle)
-				$strStyle = sprintf('style="%s" ', $strStyle);
-			$strToReturn = sprintf("<table id=\"%s\" %s%s>\r\n", $this->strControlId, $this->GetAttributes(), $strStyle);
+			$strToReturn = '';
 
 			// Paginator Row (if applicable)
-			if ($this->objPaginator)
+			if ($this->objPaginator) {
+				// TODO: caption is not the right tag here. It should be a nav or menu, but these are not allowed inside a table tag.
 				$strToReturn .= "<caption>\r\n" . $this->GetPaginatorRowHtml($this->objPaginator) . "</caption>\r\n";
+			}
 			// bottom paginator
 			//if ($this->objPaginatorAlternate)
 			//	$strToReturn .= "<caption align=\"bottom\">\r\n" . $this->GetPaginatorRowHtml($this->objPaginatorAlternate) . "</caption>\r\n";
@@ -751,9 +947,9 @@
 			$strToReturn .= "</tbody>\r\n";
 
 			// Finish Up
-			$strToReturn .= '</table>';
 			$this->objDataSource = null;
 			return $strToReturn;
+
 		}
 
 		protected function PersistPrepare() {
@@ -761,10 +957,11 @@
 			$this->RemoveAllColumns();
 		}
 
-		/******
-		* Create the row used for datagrid filtering
-		* @return string $strToReturn of html table row
-		*/
+		/**
+		 * Create the row used for datagrid filtering
+		 *
+		 * @return string $strToReturn of html table row
+		 */
 		protected function GetFilterRowHtml() {
 			$objFilterStyle = $this->objRowStyle->ApplyOverride($this->objFilterRowStyle);
 			$strToReturn = sprintf('  <tr %s>'."\r\n", $objFilterStyle->GetAttributes());
@@ -818,14 +1015,26 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns the filter control ID for a column
+		 * @param QDataGridColumn $objColumn
+		 *
+		 * @return string The column filter control ID
+		 */
 		protected function GetColumnFilterControlId(QDataGridColumn $objColumn) {
 			if ($objColumn->FilterColId === null)
 				$objColumn->FilterColId = $this->intCurrentColumnId++;
 			return 'ctl'.$this->ControlId.'flt'.$objColumn->FilterColId;
 		}
 
-		public function GetFilterControl(QDataGridColumn $objColumn)
-		{
+		/**
+		 * Returns filter control for a given QDataGridColumn
+		 *
+		 * @param QDataGridColumn $objColumn The column whose filter control is needed
+		 *
+		 * @return QTextBox|QListBox
+		 */
+		public function GetFilterControl(QDataGridColumn $objColumn) {
 			$strControlId = $this->GetColumnFilterControlId($objColumn);
 			//find/build the control
 			if(($ctlFilter = $this->GetChildControl($strControlId)) === null)
@@ -834,8 +1043,15 @@
 			return $ctlFilter;
 		}
 
-		public function GetResetButton(QDataGridColumn $objColumn)
-		{
+		/**
+		 * Returns the reset button for the QDataGrid which will be used in the filter row
+		 * (filter row is the row at the top for filtering data)
+		 *
+		 * @param QDataGridColumn $objColumn
+		 *
+		 * @return null|QButton
+		 */
+		public function GetResetButton(QDataGridColumn $objColumn) {
 			if (!$this->ShowFilterResetButton)
 				return null;
 			if (!$objColumn->HasResetButton)
@@ -848,16 +1064,16 @@
 			return $this->btnFilterResetArray[$strControlId];
 		}
 
-		/******
-		* CreateControls used in the filter row and set their fiter values if available. 
-		* @param string $strControlId id based on the column that the control is contained
-		* @param QDataGridColumn $objColumn the QDataGridColumn that contains the filter data. 
-		* @return QControl $control the input control used for filtering
-		*/
-		//this, btnReset_Click and GetControlValue are the functions to override/change if you want to add new types
-
-		protected function CreateFilterControl($strControlId, QDataGridColumn $objColumn)
-		{
+		/**
+		 * CreateControls used in the filter row and set their fiter values if available.
+		 * NOTE: this function, btnReset_Click and GetControlValue are the functions to override/change if you want to add new types
+		 *
+		 * @param string          $strControlId id based on the column that the control is contained
+		 * @param QDataGridColumn $objColumn    the QDataGridColumn that contains the filter data.
+		 *
+		 * @return QControl $control the input control used for filtering
+		 */
+		protected function CreateFilterControl($strControlId, QDataGridColumn $objColumn) {
 			//show the current filter in the control
 			$value = $objColumn->GetActiveFilterValue();
 
@@ -891,12 +1107,14 @@
 			return $ctlFilter;
 		}
 
-		/******
-		* Get the control's filter input for filtering
-		* @param string $type id based on the column that the control is contained
-		* @param obj $control the filter control to get the filter input 
-		* @return string The input used for filtering
-		*/
+		/**
+		 * Get the control's filter input for filtering
+		 *
+		 * @param string                   $strFilterType id based on the column that the control is contained
+		 * @param QLabel|QListBox|QControl $ctlControl    the filter control to get the filter input
+		 *
+		 * @return string The input used for filtering
+		 */
 		//this, btnReset_Click and CreateControl are the functions to override/change if you want to add new types
 		protected function GetFilterControlValue($strFilterType, $ctlControl) {
 			//depending on the control, the members used to store the value are different
@@ -917,12 +1135,14 @@
 
 		/**
 		 * This function creates a textbox suitable for the filter bar
-		* @param string $strControlId id based on the column that the control is contained
-		* @param string $strControlName The name to give the textbox
-		* @param int $columns The Columns setting to use for the textbox
-		* @param string $strValue The text to fill the textbox with
-		* @return QTextBox the resulting textbox
-		**/
+		 *
+		 * @param string $strControlId   id based on the column that the control is contained
+		 * @param string $strControlName The name to give the textbox
+		 * @param int    $columns        The Columns setting to use for the textbox
+		 * @param string $strValue       The text to fill the textbox with
+		 *
+		 * @return QTextBox the resulting textbox
+		 */
 		protected function filterTextBox_Create($strControlId, $strControlName, $columns, $strValue) {
 			$ctlFilterTextBox = new QTextBox($this, $strControlId);
 			$ctlFilterTextBox->Name = $strControlName;
@@ -934,13 +1154,15 @@
 		}
 
 		/**
-		* This function creates a listbox suitable for the filter bar
-		* @param string $strControlId id based on the column that the control is contained
-		* @param string $strControlName The name to give the textbox
-		* @param string[] $arrListValues A name=>value array of items to add to the list
-		* @param string $strSelectedValue The value to start selected
-		* @return QListBox the resulting listbox
-		**/
+		 * This function creates a listbox suitable for the filter bar
+		 *
+		 * @param string   $strControlId     id based on the column that the control is contained
+		 * @param string   $strControlName   The name to give the textbox
+		 * @param string[] $arrListValues    A name=>value array of items to add to the list
+		 * @param string   $strSelectedValue The value to start selected
+		 *
+		 * @return QListBox the resulting listbox
+		 */
 		protected function filterListBox_Create($strControlId, $strControlName, $arrListValues, $strSelectedValue)
 		{
 			$ctlFilterListbox = new QListBox($this, $strControlId);
@@ -961,7 +1183,7 @@
 		/**
 		 * Creates the reset button for the filter row
 		 *
-		 * @return void 
+		 * @return QButton
 		 *
 		 */
 		protected function btnFilterReset_Create() {
@@ -980,8 +1202,7 @@
 		/**
 		 * Creates the Filter button for the filter row
 		 *
-		 * @return void 
-		 *
+		 * @return QButton
 		 */
 		protected function btnFilter_Create()
 		{
@@ -1004,7 +1225,7 @@
 		/**
 		 * Creates the objWaitIcon for this datagrid, since we don't want to use the default form one
 		 *
-		 * @return void 
+		 * @return void
 		 *
 		 */
 		protected function objWaitIcon_Create()
@@ -1012,14 +1233,15 @@
 			$this->objWaitIcon = new QWaitIcon($this);
 		}
 
-		/******
-		* For each column, get its input filter value and set the columns filter with it.
-		* @param string $strFormId
-		* @param string $strControlId
-		* @param string $strParameter
-		*/
-		public function btnFilter_Click($strFormId, $strControlId, $strParameter)
-		{
+		/**
+		 * For each column, get its input filter value and set the columns filter with it.
+		 * NOTE: this is a regular event handler method
+		 *
+		 * @param string $strFormId Form ID of the form in which this data grid is defined
+		 * @param string $strControlId Control ID of the datagrid
+		 * @param string $strParameter Action parameter
+		 */
+		public function btnFilter_Click($strFormId, $strControlId, $strParameter) {
 			//set the filter commands
 			foreach($this->objColumnArray as $objColumn)
 			{
@@ -1045,10 +1267,9 @@
 			$this->MarkAsModified();
 		}
 
-		/******
-		* Clear all  filter column control input values.
-		* @param $strFormId = null, $strControlId = null, $strParameter = null
-		*/
+		/**
+		 * Clear all  filter column control input values.
+		 */
 		public function ClearFilters()
 		{
 			foreach($this->objColumnArray as $objColumn)
@@ -1056,6 +1277,9 @@
 				if($objColumn->HasFilter())
 				{
 					//both modes clear in the same way
+					/**
+					 * @var QLabel|QListBox|QControl $ctlFilter
+					 */
 					$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
 					if ($ctlFilter !== null)
 					{
@@ -1080,23 +1304,25 @@
 			$this->MarkAsModified();
 		}
 
-		/******
-		* Click handler for the reset button
-		* @param $strFormId = null, $strControlId = null, $strParameter = null
-		*/
-		//this, GetControlValue and CreateControl are the functions to override/change if you want to add new types
-		public function btnFilterReset_Click($strFormId, $strControlId, $strParameter) 
-		{
+		/**
+		 * Click handler for the reset button
+		 * NOTE: This function, GetControlValue and CreateControl are the functions to override/change if you want to add new types
+		 *
+		 * @param string $strFormId Form ID
+		 * @param string $strControlId Control ID
+		 * @param string $strParameter Action Parameter
+		 */
+		public function btnFilterReset_Click($strFormId, $strControlId, $strParameter) {
 			$this->ClearFilters();
 		}
 
-		/******
-		* Set Filter values (used to restore a previously saved state)
-		* @param array $filters array of filters indexed by column name
-		* contain either a string or a filter object
-			*/
-		public function SetFilters($filters)
-		{
+		/**
+		 * Set Filter values (used to restore a previously saved state)
+		 *
+		 * @param array $filters array of filters indexed by column name
+		 *                       contain either a string or a filter object
+		 */
+		public function SetFilters($filters) {
 			foreach($this->objColumnArray as $col) {
 				if (isset($filters[$col->Name])) {
 					$value = $filters[$col->Name];
@@ -1116,12 +1342,13 @@
 				}
 			}
 		}
-		/******
-		* Get Filter values from each column (used to save a state)
-		* @return array $filters array of filters indexed by column name
-		*/
-		public function GetFilters()
-		{
+
+		/**
+		 * Get Filter values from each column (used to save a state)
+		 *
+		 * @return array $filters array of filters indexed by column name
+		 */
+		public function GetFilters() {
 			$filters = array();
 			foreach($this->objColumnArray as $col) {
 				$activeFilterState = $col->GetActiveFilterState();
@@ -1134,11 +1361,18 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
 				case "AlternateRowStyle": return $this->objAlternateRowStyle;
-				case "BorderCollapse": return $this->strBorderCollapse;
 				case "HeaderRowStyle": return $this->objHeaderRowStyle;
 				case "FilterRowStyle": return $this->objFilterRowStyle;
 				case "HeaderLinkStyle": return $this->objHeaderLinkStyle;
@@ -1214,8 +1448,8 @@
 									$colCondition = $objColumn->ActiveFilter;
 							}
 
-							/*FilterConstant allows us to specify a custom QQuery that applies in addition to any 
-							user-specified filters. EG: If the user enters a Cost to filter on, also filter on 
+							/*FilterConstant allows us to specify a custom QQuery that applies in addition to any
+							user-specified filters. EG: If the user enters a Cost to filter on, also filter on
 							object actually being sold*/
 							if(null !== $colCondition && null !== $objColumn->FilterConstant)
 								$colCondition = QQ::AndCondition($colCondition, $objColumn->FilterConstant);
@@ -1258,20 +1492,23 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				// APPEARANCE
 				case "AlternateRowStyle":
 					try {
 						$this->objAlternateRowStyle = QType::Cast($mixValue, "QDataGridRowStyle");
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "BorderCollapse":
-					try {
-						$this->strBorderCollapse = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1356,12 +1593,11 @@
 					$this->prxDatagridSorting->AddAction(new QClickEvent(), new QTerminateAction());
 
 					$actionName = 'btnFilter_Click';
-					foreach($this->objColumnArray as $objColumn) 
-					{
+					foreach($this->objColumnArray as $objColumn) {
 						if ($objColumn->HasFilter())
 						{
 							$ctlFilter = $this->GetChildControl($this->GetColumnFilterControlId($objColumn));
-							if ($ctlFilter !== null) 
+							if ($ctlFilter !== null)
 							{
 								$ctlFilter->RemoveAllActions(QKeyDownEvent::EventName);
 								if ($this->blnUseAjax)
@@ -1410,9 +1646,25 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+				/* TODO
+				case "BorderSpacing":
+					try {
+						$this->SetCssStyle('border-spacing', $mixValue = QType::Cast($mixValue, QType::String), true);
+						if ($mixValue == '0' && $mixValue == '0px') {
+							$this->SetCssStyle('border-collapsed', 'collapse');
+						} else {
+							$this->SetCssStyle('border-collapsed', 'separate');
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				*/
 				case "GridLines":
 					try {
 						$this->strGridLines = QType::Cast($mixValue, QType::String);
+						$this->SetHtmlAttribute('rules', $this->strGridLines);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

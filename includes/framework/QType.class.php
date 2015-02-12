@@ -74,10 +74,12 @@
 		const Boolean = 'boolean';
 		const Object = 'object';
 		const ArrayType = 'array';
-
 		const DateTime = 'QDateTime';
-		
 		const Resource = 'resource';
+
+		// Virtual types
+		const Association = 'association';
+		const ReverseReference = 'reverse_reference';
 
 		const NoOp = 1;
 		const CheckOnly = 2;
@@ -251,15 +253,16 @@
 		/**
 		 * Used to cast a variable to another type.  Allows for moderate
 		 * support of strongly-named types.
-		 *
 		 * Will throw an exception if the cast fails, causes unexpected side effects,
 		 * if attempting to cast an object to a value (or vice versa), or if an object
 		 * is being cast to a class that isn't a subclass (e.g. parent).  The exception
 		 * thrown will be an InvalidCastException, which extends CallerException.
 		 *
-		 * @param mixed $mixItem the value, array or object that you want to cast
+		 * @param mixed  $mixItem the value, array or object that you want to cast
 		 * @param string $strType the type to cast to.  Can be a QType::XXX constant (e.g. QType::Integer), or the name of a Class
+		 *
 		 * @return mixed the passed in value/array/object that has been cast to strType
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public final static function Cast($mixItem, $strType) {
 			switch (QType::$intBehaviour) {
@@ -321,16 +324,17 @@
 					throw new QInvalidCastException(sprintf('Unable to determine type of item to be cast: %s', $mixItem));
 			}
 		}
-		
+
 		/**
 		 * Used by the QCubed Code Generator to allow for the code generation of
-		 * the actual "Type::Xxx" constant, instead of the text of the constant,
+		 * the actual "QType::Xxx" constant, instead of the text of the constant,
 		 * in generated code.
-		 *
 		 * It is rare for Constant to be used manually outside of Code Generation.
 		 *
 		 * @param string $strType the type to convert to 'constant' form
+		 *
 		 * @return string the text of the Text:Xxx Constant
+		 * @throws QInvalidCastException
 		 */
 		public final static function Constant($strType) {
 			switch ($strType) {
@@ -391,13 +395,15 @@
 					}
 			}
 		}
-		
+
 		/**
 		 * Used by the QCubed Code Generator and QSoapService class to allow for the xml generation of
 		 * the actual "s:type" Soap Variable types.
 		 *
 		 * @param string $strType the type to convert to 'constant' form
+		 *
 		 * @return string the text of the SOAP standard s:type variable type
+		 * @throws QInvalidCastException
 		 */
 		public final static function SoapType($strType) {
 			switch ($strType) {

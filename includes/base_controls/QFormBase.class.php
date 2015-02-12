@@ -8,13 +8,12 @@
 
 	/**
 	 * @package Controls
-	 *
-	 * @property-read string $FormId Form ID of the QForm
-	 * @property-read string $CallType Type of call (useful when the QForm submits due to user action)
-	 * @property-read string $DefaultWaitIcon Defaul Ajax wait icon control
-	 * @property-read integer $FormStatus Status of form (pre-render stage, rendering stage of already rendered stage)
-	 * @property string $HtmlIncludeFilePath (Alternate) path to the template file to be used
-	 * @property string $CssClass Form CSS class.
+	 * @property-read string     $FormId              Form ID of the QForm
+	 * @property-read string     $CallType            Type of call (useful when the QForm submits due to user action)
+	 * @property-read QWaitIcon  $DefaultWaitIcon     Default Ajax wait icon control
+	 * @property-read integer    $FormStatus          Status of form (pre-render stage, rendering stage of already rendered stage)
+	 * @property string          $HtmlIncludeFilePath (Alternate) path to the template file to be used
+	 * @property string          $CssClass            Form CSS class.
 	 */
 	abstract class QFormBase extends QBaseClass {
 		///////////////////////////
@@ -28,9 +27,16 @@
 		protected $objControlArray;
 		/** @var array Array of persistent controls on the Form */
 		protected $objPersistentControlArray = array();
+		/**
+		 * @var QControlGrouping List of Groupings in the form (for old drag and drop)
+		 * Use of this is deprecated in favor of jQueryUI drag and drop, but code remains in case we need it again.
+		 * @deprecated
+		 */
 		protected $objGroupingArray;
+		/** @var bool Has the body tag already been rendered? */
 		protected $blnRenderedBodyTag = false;
-		protected $blnRenderedCheckableControlArray;
+		protected $blnRenderedCheckableControlArray = array();
+		/** @var string The type of call made to the QForm (Ajax, Server or Fresh GET request) */
 		protected $strCallType;
 		/** @var null|QWaitIcon Default wait icon for the page/QForm  */
 		protected $objDefaultWaitIcon = null;
@@ -246,18 +252,23 @@
 		protected function Form_PreRender() {}
 
 		/**
-		 * The 'Default' Form_Validate method. This method in any class derived from QForm (pages created by QCubed).
-		 * This method runs everytime an action is triggered (the form is submitted)
-		 * The overriding function in the derived class is supposed to use this function to specify
-		 * the conditions which when fulfilled represent a satisfactory input from the user (and would return true).
-		 * If the required conditions (e.g. a 'Required' input was left blank) is not met, the function is
-		 * supposed to return false.
+		 * The Form_Validate method.
 		 *
-		 * If this function (the overridden function in the child class) returns false then the action is
-		 * not triggerred and nothing happens (the script ends silently)
-		 * @return bool
+		 * Before we get here, all the controls will first be validated. Override this method to do
+		 * additional form level validation, and any form level actions needed as part of the validation process,
+		 * like displaying an error message.
+		 *
+		 * This is the last thing called in the validation process, and will always be called if
+		 * validation is requested, even if prior controls caused a validation error. Return false to prevent
+		 * validation and cancel the current action.
+		 *
+		 * $blnValid will contain the result of control validation. If it is false, you know that validation will
+		 * fail, regardless of what you return from the function.
+		 *
+		 * @param bool 		$blnValid	The current state of the validation.
+		 * @return bool 	Return false to prevent validation.
 		 */
-		protected function Form_Validate() {return true;}
+		protected function Form_Validate($blnValid) {return true;}
 
 		/**
 		 * This function is meant to be overriden by child class and is called when the Form exits
@@ -288,6 +299,22 @@
 		 */
 		public function IsCheckableControlRendered($strControlId) {
 			return array_key_exists($strControlId, $this->blnRenderedCheckableControlArray);
+		}
+
+		/**
+		 * Helper function for below GetModifiedControls
+		 * @param $objControl
+		 * @return boolean
+		 */
+		protected static function IsControlModified ($objControl) {
+			return $objControl->IsModified();
+		}
+		/**
+		 * Return only the controls that have been modified
+		 */
+		public function GetModifiedControls() {
+			$ret = array_filter ($this->objControlArray, 'QForm::IsControlModified');
+			return $ret;
 		}
 
 		/**
@@ -385,28 +412,61 @@
 				}
 
 				// Clear the RenderedCheckableControlArray
-				$objClass->blnRenderedCheckableControlArray = array();
-				$strCheckableControlList = trim($_POST['Qform__FormCheckableControls']);
-				$strCheckableControlArray = explode(' ', $strCheckableControlList);
-				foreach ($strCheckableControlArray as $strCheckableControl) {
-					$objClass->blnRenderedCheckableControlArray[trim($strCheckableControl)] = true;
+				if (!empty($_POST['Qform__FormCheckableControls'])) {
+					$objClass->blnRenderedCheckableControlArray = array();
+					$strCheckableControlList = trim($_POST['Qform__FormCheckableControls']);
+					$strCheckableControlArray = explode(' ', $strCheckableControlList);
+					foreach ($strCheckableControlArray as $strCheckableControl) {
+						$objClass->blnRenderedCheckableControlArray[trim($strCheckableControl)] = true;
+					}
 				}
 
 				// Iterate through all the controls
-				foreach ($objClass->objControlArray as $objControl) {
-					// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
-					if (($objControl->Visible) &&
-						(($objClass->strCallType == QCallType::Ajax) || ($objControl->Enabled)) &&
-						($objControl->RenderMethod)) {
-						// Call each control's ParsePostData()
-						$objControl->ParsePostData();
-					}
 
-					// Reset the modified/rendered flags and the validation
-					// in ALL controls
-					$objControl->ResetFlags();
-					$objControl->ValidationReset();
+				// This is original code. In an effort to minimize changes, we aren't going to touch the server calls for now
+				if ($objClass->strCallType != QCallType::Ajax) {
+					foreach ($objClass->objControlArray as $objControl) {
+						// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
+						if (($objControl->Visible) &&
+							($objControl->Enabled) &&
+							($objControl->RenderMethod)) {
+							// Call each control's ParsePostData()
+							$objControl->ParsePostData();
+						}
+
+						// Reset the modified/rendered flags and the validation
+						// in ALL controls
+						$objControl->ResetFlags();
+						$objControl->ValidationReset();
+					}
 				}
+				else {
+					// Ajax post. Only send data to controls specified in the post to save time.
+					foreach ($_POST as $key=>$val) {
+						$strControlId = $key;
+						if (($intOffset = strrpos ($strControlId, '_')) !== false) {
+							$strControlId = substr ($strControlId, 0, $intOffset);
+						}
+						$previouslyFoundArray = array();
+						if (($objControl = $objClass->GetControl($strControlId)) &&
+								!isset($previouslyFoundArray[$strControlId])) {
+							// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
+							if (($objControl->Visible) &&
+								($objControl->RenderMethod)) {
+								// Call each control's ParsePostData()
+								$objControl->ParsePostData();
+							}
+
+							// Reset the modified/rendered flags and the validation
+							// in controls we have touched
+							$objControl->ResetFlags();
+							$objControl->ValidationReset();
+							$previouslyFoundArray[$strControlId] = true;
+						}
+					}
+				}
+
+
 
 				// Trigger Run Event (if applicable)
 				$objClass->Form_Run();
@@ -445,6 +505,21 @@
 
 				// Trigger Create Event (if applicable)
 				$objClass->Form_Create();
+
+				if (defined ('__DESIGN_MODE__')) {
+					$dlg = new QMetaEditDlg ($objClass, 'qmetaeditdlg');
+					$objControls = $objClass->GetAllControls();
+					foreach ($objControls as $objControl) {
+						if ($objControl != $dlg &&
+								!$objControl->IsDescendantOf($dlg) &&
+								!$objControl instanceof QJsTimer) {
+							$objControl->AddAction (new QContextMenuEvent(), new QAjaxAction ('ctlDesigner_Click'));
+							$objControl->AddAction (new QContextMenuEvent(), new QStopPropagationAction());
+							$objControl->AddAction (new QContextMenuEvent(), new QTerminateAction());
+						}
+					}
+				}
+
 			}
 
 			// Trigger PreRender Event (if applicable)
@@ -489,6 +564,14 @@
 			$objClass->Form_Exit();
 		}
 
+		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
+			$objControl = $this->GetControl($strControlId);
+			if ($objControl->LinkedNode) {
+				$dlg = $this->GetControl ('qmetaeditdlg');
+				$dlg->EditControl ($objControl);
+			}
+		}
+
 		/**
 		 * An invalid form state was found. 
 		 * We were handed a formstate, but the formstate could not be interpreted. This could be for
@@ -503,13 +586,15 @@
 			ob_clean();
 			if (isset($_POST['Qform__FormCallType']) &&  $_POST['Qform__FormCallType'] == QCallType::Ajax) {
 				// AJAX-based Response
+				header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
 
-				// Response is in XML Format
-				header('Content-Type: text/xml');
+				$strJSON = JavaScriptHelper::toJsObject(['loc'=>'reload']);
 
-				// Use javascript to reload
-				_p('<?xml version="1.0"?><response><controls/><commands><command>window.location.reload(true);</command></commands></response>', false);
-
+				// Output it and update render state
+				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
+					$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
+				}
+				print ($strJSON);
 			} else {
 				header('Location: '. QApplication::$RequestUri);
 			}
@@ -517,17 +602,16 @@
 			// End the Response Script
 			exit();	
 		}
-		
-		public function CallDataBinder($strMethodName, QPaginatedControl $objPaginatedControl, $objParentControl = null) {
+
+		/**
+		 * Calls a data binder associated with the form. Does this so data binder can be protected. Mostly for legacy code.
+		 * @param callable $callable
+		 * @param  QControl $objPaginatedControl
+		 * @throws QDataBindException
+		 */
+		public function CallDataBinder($callable, $objPaginatedControl) {
 			try {
-				if (is_array($strMethodName)) {
-					call_user_func($strMethodName, $objPaginatedControl);
-				}
-				elseif ($objParentControl) {
-					$objParentControl->$strMethodName($objPaginatedControl);
-				} else {
-					$this->$strMethodName($objPaginatedControl);
-				}
+				call_user_func($callable, $objPaginatedControl);
 			} catch (QCallerException $objExc) {
 				throw new QDataBindException($objExc);
 			}
@@ -540,51 +624,56 @@
 		 * @return string The Ajax helper string (should be JS commands)
 		 */
 		protected function RenderAjaxHelper($objControl) {
-			// $strToReturn = '';
-			if ($objControl)
-				$strToReturn = $objControl->RenderAjax(false);
-			if ($strToReturn)
-				$strToReturn .= "\r\n";
-			foreach ($objControl->GetChildControls() as $objChildControl) {
-				$strToReturn .= $this->RenderAjaxHelper($objChildControl);
-			}
-			return $strToReturn;
-		}
+			$controls = [];
 
-		protected function RenderAjax() {
-			// Update the Status
-			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
-
-			$strToReturn = '';
-
-			// watcher collection
-			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
-				$strToReturn = '<watcher></watcher>';
-			}
-
-			// Create the Control collection
-			$strToReturn .= '<controls>';
-
-			// Include each control (if applicable) that has been changed/modified
-			foreach ($this->GetAllControls() as $objControl) {
-				if (!$objControl->ParentControl) {
-					$strToReturn .= $this->RenderAjaxHelper($objControl);
+			if ($objControl) {
+				$controls = array_merge($controls, $objControl->RenderAjax());	// will return an array of controls to be merged with current controls
+				foreach ($objControl->GetChildControls() as $objChildControl) {
+					$controls = array_merge($controls, $this->RenderAjaxHelper($objChildControl));
 				}
 			}
 
-			// First, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
+			return $controls;
+		}
+
+		/**
+		 * Renders the actual ajax return value as a json object. Since json must be UTF-8 encoded, will convert to
+		 * UTF-8 if needed. Response is parsed in the "success" function in qcubed.js, and handled there.
+		 */
+		protected function RenderAjax() {
+			$sResult = [];
+
+			// Update the Status
+			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
+
+			// watcher collection
+
+			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+				$aResult[QAjaxResponse::Watcher] = $this->strWatcherTime;
+			}
+
+			// Recursively render changed controls, starting with all top-level controls
+			$controls = array();
+			foreach ($this->GetAllControls() as $objControl) {
+				if (!$objControl->ParentControl) {
+					$controls = array_merge($controls, $this->RenderAjaxHelper($objControl));
+				}
+			}
+
+			// Go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			$strJavaScriptToAddArray = array();
 			$strStyleSheetToAddArray = array();
 			$strFormAttributeToModifyArray = array();
 
+			// TODO: Change the following so that instead of issuing javascript, we issue json parameters that get interpreted
+			// by the response in qcubed.js and acted on accordingly
 			foreach ($this->GetAllControls() as $objControl) {
-				// Include any JavaScripts?  The control would have a
-				// comma-delimited list of javascript files to include (if applicable)
+				// Include any javascript files that were added by the control
+				// Note: current implementation does not handle removal of javascript files
 				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts))
 					$strJavaScriptToAddArray = array_merge($strJavaScriptToAddArray, $strScriptArray);
 
-				// Include any StyleSheets?  The control would have a
-				// comma-delimited list of stylesheet files to include (if applicable)
+				// Include any new stylesheets
 				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
 					$strStyleSheetToAddArray = array_merge($strStyleSheetToAddArray, $strScriptArray);
 
@@ -606,25 +695,26 @@
 			// Render the JS Commands to Execute
 			$strCommands = '';
 
-			// First, get all controls that need to run regC
 			$strControlIdToRegister = array();
-			foreach ($this->GetAllControls() as $objControl)
-				if ($objControl->Rendered)
-					array_push($strControlIdToRegister, '"' . $objControl->ControlId . '"');
-			if (count($strControlIdToRegister))
-				$strCommands .= sprintf('qc.regCA(new Array(%s)); ', implode(',', $strControlIdToRegister));
-
-			// Next, go through all controls and groupings for their GetEndScripts
+			$strJavaScript = '';
 			foreach ($this->GetAllControls() as $objControl) {
-				if ($objControl->Rendered) {
-					$strJavaScript = $objControl->GetEndScript();
+				if ($objControl->Rendered) { // whole control was rendered during this event
+					$strScript = trim ($objControl->GetEndScript());
+					$strControlIdToRegister[] = '"' . $objControl->ControlId . '"';
 				} else {
-                    $strJavaScript = $objControl->RenderAttributeScripts();
+                    $strScript = trim($objControl->RenderAttributeScripts()); // render one-time attribute commands only
                 }
-                if ($strJavaScript = trim($strJavaScript)) {
-                    $strCommands .= $strJavaScript . ';';
-                }
+				if ($strScript) {
+					$strJavaScript .= $strScript . ';';
+				}
+				$objControl->ResetFlags();
             }
+			if (count($strControlIdToRegister)) {
+				$strCommands .= sprintf('qc.regCA(new Array(%s)); ', implode(',', $strControlIdToRegister));
+			}
+			$strCommands .= $strJavaScript;
+
+
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strRender = $objGrouping->Render();
 				if (trim($strRender))
@@ -654,8 +744,9 @@
 			}
 
 			// Set Up the Command Node
-			if (trim($strCommands))
-				$strCommands = '<command>' . QString::XmlEscape(trim($strCommands)) . '</command>';
+			if (trim($strCommands)) {
+				$aResult[QAjaxResponse::Commands] = trim($strCommands);
+			}
 
 			// Persist Controls (if applicable)
 			foreach ($this->objPersistentControlArray as $objControl)
@@ -663,30 +754,17 @@
 
 			// Add in the form state
 			$strFormState = QForm::Serialize($this);
-			$strToReturn .= sprintf('<control id="Qform__FormState">%s</control>', $strFormState);
-
-			// close Control collection, Open the Command collection
-			$strToReturn .= '</controls><commands>';
-
-			$strToReturn .= $strCommands;
-
-			// close Command collection
-			$strToReturn .= '</commands>';
+			$controls[] = [QAjaxResponse::Id=>"Qform__FormState", QAjaxResponse::Value=>$strFormState];
+			$aResult[QAjaxResponse::Controls] = $controls;
 
 			$strContents = trim(ob_get_contents());
 
 			if (strtolower(substr($strContents, 0, 5)) == 'debug') {
+				// TODO: Output debugging information.
 			} else {
 				ob_clean();
 
-				// Response is in XML Format
-				header('Content-Type: text/xml');
-
-				// Output it and update render state
-				if (QApplication::$EncodingType)
-					printf("<?xml version=\"1.0\" encoding=\"%s\"?><response>%s</response>\r\n", QApplication::$EncodingType, $strToReturn);
-				else
-					printf("<?xml version=\"1.0\"?><response>%s</response>\r\n", $strToReturn);
+				QApplication::SendAjaxResponse($aResult);
 			}
 
 			// Update Render State
@@ -722,8 +800,8 @@
 			$strSerializedForm = serialize($objForm);
 
 			// Setup and Call the FormStateHandler to retrieve the PostDataState to return
-			$strSaveCommand = array(QForm::$FormStateHandler, 'Save');
-			$strPostDataState = call_user_func_array($strSaveCommand, array($strSerializedForm, $blnBackButtonFlag));
+			$strFormStateHandler = QForm::$FormStateHandler;
+			$strPostDataState = $strFormStateHandler::Save ($strSerializedForm, $blnBackButtonFlag);
 
 			// Return the PostDataState
 			return $strPostDataState;
@@ -738,8 +816,8 @@
 		 */
 		public static function Unserialize($strPostDataState) {
 			// Setup and Call the FormStateHandler to retrieve the Serialized Form
-			$strLoadCommand = array(QForm::$FormStateHandler, 'Load');
-			$strSerializedForm = call_user_func($strLoadCommand, $strPostDataState);
+			$strFormStateHandler = QForm::$FormStateHandler;
+			$strSerializedForm = $strFormStateHandler::Load ($strPostDataState);
 
 			if ($strSerializedForm) {
 				// Unserialize and Cast the Form
@@ -769,6 +847,7 @@
 		 */
 		public function AddControl(QControl $objControl) {
 			$strControlId = $objControl->ControlId;
+			$objControl->MarkAsModified(); // make sure new controls get drawn
 			if (array_key_exists($strControlId, $this->objControlArray))
 				throw new QCallerException(sprintf('A control already exists in the form with the ID: %s', $strControlId));
 			if (array_key_exists($strControlId, $this->objGroupingArray))
@@ -784,10 +863,12 @@
 		 * @return null|QControl
 		 */
 		public function GetControl($strControlId) {
-			if (array_key_exists($strControlId, $this->objControlArray))
+			if (isset($this->objControlArray[$strControlId])) {
 				return $this->objControlArray[$strControlId];
-			else
+			}
+			else {
 				return null;
+			}
 		}
 
 		/**
@@ -821,7 +902,7 @@
 
 		/**
 		 * Returns all controls belonging to the Form as an array.
-		 * @return mixed
+		 * @return mixed|QControl[]
 		 */
 		public function GetAllControls() {
 			return $this->objControlArray;
@@ -916,10 +997,11 @@
 
 		/**
 		 * Returns the child controls of the current QForm or a QControl object
-		 * @param QForm|QControl $objParentObject The object whose child controls are to be searched for
 		 *
-		 * @return array
+		 * @param QForm|QControl|QFormBase $objParentObject The object whose child controls are to be searched for
+		 *
 		 * @throws QCallerException
+		 * @return QControl[]
 		 */
 		public function GetChildControls($objParentObject) {
 			$objControlArrayToReturn = array();
@@ -989,7 +1071,14 @@
 				return null;
 		}
 
-		public function TriggerMethod($strId, $strMethodName) {
+		/**
+		 * Triggers an event handler method for a given control ID
+		 * NOTE: Parameters must be already validated.
+		 *
+		 * @param string $strControlId  Control ID for which the method has to be triggered
+		 * @param string $strMethodName Method name which has to be fired
+		 */
+		protected function TriggerMethod($strControlId, $strMethodName) {
 			$strParameter = $_POST['Qform__FormParameter'];
 
 			$intPosition = strpos($strMethodName, ':');
@@ -998,9 +1087,9 @@
 				$strMethodName = substr($strMethodName, $intPosition + 1);
 
 				$objControl = $this->objControlArray[$strControlName];
-				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strId, $strParameter);
+				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strControlId, $strParameter);
 			} else
-				$this->$strMethodName($this->strFormId, $strId, $strParameter);
+				$this->$strMethodName($this->strFormId, $strControlId, $strParameter);
 		}
 
 		/**
@@ -1013,6 +1102,15 @@
 			return $objControl->ValidateControlAndChildren();
 		}
 
+		/**
+		 * Runs/Triggers any and all event handling functions for the control on which an event took place
+		 * Depending on the control's CausesValidation value, it also calls for validation of the control or
+		 * control and children or entire QForm.
+		 *
+		 * @param null|string $strControlIdOverride If supplied, the control with the supplied ID is selected
+		 *
+		 * @throws Exception|QCallerException
+		 */
 		protected function TriggerActions($strControlIdOverride = null) {
 			if (array_key_exists('Qform__FormControl', $_POST)) {
 				if ($strControlIdOverride) {
@@ -1020,6 +1118,8 @@
 				} else {
 					$strId = $_POST['Qform__FormControl'];
 				}
+
+				// Control ID determined
 				if ($strId != '') {
 					$strEvent = $_POST['Qform__FormEvent'];
 					$strAjaxActionId = NULL;
@@ -1129,7 +1229,7 @@
 
 						// Run Form-Specific Validation (if any)
 						if ($mixCausesValidation && !($mixCausesValidation instanceof QDialog)) {
-							if (!$this->Form_Validate()) {
+							if (!$this->Form_Validate($blnValid)) {
 								$blnValid = false;
 							}
 						}
@@ -1160,6 +1260,9 @@
 			}
 		}
 
+		/**
+		 * Begins rendering the page
+		 */
 		protected function Render() {
 			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
 				QApplication::ExecuteJavaScript('qcubed.broadcastChange()');
@@ -1210,8 +1313,9 @@
 			foreach ($this->GetAllControls() as $objControl) {
 				// Include any StyleSheets?  The control would have a
 				// comma-delimited list of stylesheet files to include (if applicable)
-				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
+				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets)) {
 					$strStyleSheetArray = array_merge($strStyleSheetArray, $strScriptArray);
+				}
 			}
 
 			// In order to make ui-themes workable, move the jquery.css to the end of list.
@@ -1638,6 +1742,7 @@
 
 
 
+			$strEndScript = sprintf('qc.initForm("%s"); ', $this->strFormId)  . $strEndScript; // must come before control scripts
 
 				// Finally, add QCubed includes path
 			$strEndScript = sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ ) . $strEndScript;
@@ -1657,25 +1762,23 @@
 			$objForm = clone($this);
 
 			// Render HTML
-			$strToReturn .= "\r\n<div style=\"display: none;\">\r\n\t";
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormState" id="Qform__FormState" value="%s" />', QForm::Serialize($objForm));
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId) . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormControl" id="Qform__FormControl" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormEvent" id="Qform__FormEvent" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormParameter" id="Qform__FormParameter" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCallType" id="Qform__FormCallType" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormUpdates" id="Qform__FormUpdates" value="" />') . _nl();
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCheckableControls" id="Qform__FormCheckableControls" value="" />') . _nl();
 
-			$strToReturn .= "\r\n\t";
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId);
-			$strToReturn .= "\r\n</div>\r\n";
-
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormControl" id="Qform__FormControl" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormEvent" id="Qform__FormEvent" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormParameter" id="Qform__FormParameter" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCallType" id="Qform__FormCallType" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormUpdates" id="Qform__FormUpdates" value="" />');
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCheckableControls" id="Qform__FormCheckableControls" value="" />');
-
-			foreach ($this->GetAllControls() as $objControl)
-				if ($objControl->Rendered)
+			foreach ($this->GetAllControls() as $objControl) {
+				if ($objControl->Rendered) {
 					$strToReturn .= $objControl->GetEndHtml();
+				}
+				$objControl->ResetFlags(); // Make sure controls are serialized in a reset state
+			}
 
-            $strToReturn .= "\n</form>";
+			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormState" id="Qform__FormState" value="%s" />', QForm::Serialize($objForm));
+			$strToReturn .= "\n</form>";
 
 			$strToReturn .= $strEndScript;
 

@@ -3,6 +3,11 @@
  *
  * @package Tests
  */
+
+if(!class_exists('TypeTest')){
+	require_once __INCLUDES__ .'/model/TypeTest.class.php';
+}
+
 class QDateTimeTests extends QUnitTestCaseBase {
 	public function testNow() {
 		$obj1 = QDateTime::Now();
@@ -173,6 +178,7 @@ class QDateTimeTests extends QUnitTestCaseBase {
 	public function testSetProperties() {
 		$obj1 = new QDateTime();
 		$obj1->setDate(2002, 3, 15);
+		$this->assertTrue($obj1->IsTimeNull(), "Setting only a date after null constructor keeps time null");
 
 		$obj2 = new QDateTime("2002-03-15");
 		$obj3 = new QDateTime("2002-03-15 13:15");
@@ -182,6 +188,17 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$this->assertTrue($obj1->IsEqualTo($obj3)); // dates are the same!
 
 		$this->assertFalse($obj3->IsEqualTo($obj4)); // dates are different!
+
+
+		$obj5 = new QDateTime ('13:15:02', null, QDateTime::TimeOnlyType);
+		$this->assertTrue($obj5->IsDateNull(), "Setting only a date after null constructor keeps time null");
+		$obj6 = new QDateTime ('2002-03-15 13:15:02');
+
+
+		$obj1->SetTime($obj5);
+
+		$this->assertFalse($obj1->IsTimeNull(), "Setting a time with object results in a change in null time status");
+		$this->assertTrue($obj1->IsEqualTo($obj6), "SetTime correctly combines date only and time only values");
 	}
 
 	public function testFormat() {
@@ -233,6 +250,47 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$this->assertTrue ($dt1->IsEqualTo($dt2));
 		$this->assertEqual ($dt1->getTimezone()->getName(), $dt2->getTimezone()->getName());
 
+	}
+
+	public function testSave() {
+		$objTest = new TypeTest();
+
+		// Test null saves
+		$objTest->Save();
+		$id = $objTest->Id;
+
+		$objTest2 = TypeTest::Load($id);
+		$this->assertNull ($objTest2->Date, 'Null date is saved as a NULL in database');
+		$this->assertNull ($objTest2->Time, 'Null time is saved as a NULL in database');
+		$this->assertNull ($objTest2->DateTime, 'Null datetime is saved as a NULL in database');
+		$objTest2->Delete();
+
+		// Test empty saves
+		$objTest = new TypeTest();
+		$objTest->Date = new QDateTime();
+		$objTest->Time = new QDateTime();
+		$objTest->DateTime = new QDateTime();
+		$objTest->Save();
+		$id = $objTest->Id;
+		$objTest2 = TypeTest::Load($id);
+		$this->assertNull ($objTest2->Date, 'Empty date is saved as a NULL in database');
+		$this->assertNull ($objTest2->Time, 'Empty time is saved as a NULL in database');
+		$this->assertNull ($objTest2->DateTime, 'Empty datetime is saved as a NULL in database');
+		$objTest2->Delete();
+
+		// Test value combinations
+		$objTest = new TypeTest();
+		$objTest->Date = new QDateTime('2002-3-5', null, QDateTime::DateOnlyType);
+		$objTest->Time = new QDateTime('13:15:02', null, QDateTime::TimeOnlyType);
+		$objTest->DateTime = new QDateTime('2002-3-5 13:15:02');
+		$objTest->Save();
+
+		$id = $objTest->Id;
+		$objTest2 = TypeTest::Load($id);
+		$dt = clone($objTest2->Date);
+		$dt->SetTime($objTest2->Time);
+		$this->assertTrue ($dt->IsEqualTo($objTest2->DateTime), 'Combined dates and times after a save are correct.');
+		$objTest2->Delete();
 	}
 }
 ?>

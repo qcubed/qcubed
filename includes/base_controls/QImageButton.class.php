@@ -37,8 +37,8 @@
 		//////////
 		// Methods
 		//////////
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
-			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
+		public function GetAttributes($blnIncludeCustom = true) {
+			$strToReturn = parent::GetAttributes($blnIncludeCustom);
 
 			if ($this->strAlternateText)
 				$strToReturn .= sprintf('alt="%s" ', $this->strAlternateText);
@@ -51,13 +51,15 @@
 		public function ParsePostData() {
 			$strKeyX = sprintf('%s_x', $this->strControlId);
 			$strKeyY = sprintf('%s_y', $this->strControlId);
-			if (array_key_exists($strKeyX, $_POST)) {
+			if (isset ($strKeyX) && $_POST[$strKeyX] !== '') {
 				$this->intClickX = $_POST[$strKeyX];
 				$this->intClickY = $_POST[$strKeyY];
-			} else {
+			}
+			/*
+			else {
 				$this->intClickX = null;
 				$this->intClickY = null;
-			}
+			}*/
 		}
 
 		protected function GetControlHtml() {

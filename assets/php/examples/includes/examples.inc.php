@@ -67,6 +67,7 @@
 			self::AddCoreExampleFile($intIndex, '/basic_qform/calculator_2.php Calculator Example with Validation');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/calculator_3.php Calculator Example with &quot;Design&quot;');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/listbox.php * Introduction to QListControl');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/hlist.php * Generating Html Lists');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/textbox.php * Introduction to QTextBoxControls');
 			
 			$intIndex++;
@@ -220,22 +221,40 @@
 			self::AddCoreExampleFile($intIndex, '/plugins/about.php Plugin Ecosystem: Introduction');
 			self::AddCoreExampleFile($intIndex, '/plugins/components.php Writing your own plugins, Part 1: components of a plugin');
 			self::AddCoreExampleFile($intIndex, '/plugins/packaging.php Writing your own plugins, Part 2: packaging a plugin');
-			self::AddCoreExampleFile($intIndex, '/plugins/unattended.php Automatic Installation of Plugins');
+			//self::AddCoreExampleFile($intIndex, '/plugins/unattended.php Automatic Installation of Plugins');
 			self::AddCoreReferencedFile('/plugins/components.php', '__CORE_FRAMEWORK__QPluginInterface.class.php');
 
-			if (sizeof(Examples::$PluginExamples) > 0) {			
-				$intIndex++;
-				Examples::$Categories[$intIndex] = array();
-				Examples::$Categories[$intIndex]['name'] = 'Examples for Plugins';
-				Examples::$Categories[$intIndex]['description'] = 'Examples and Documentation for Community-Written Plugins';
-				foreach (Examples::$PluginExamples as $example) {
-					array_push(Examples::$Categories[$intIndex], $example);
+			// Scan plugin folders for examples to include
+			if (defined ('__PLUGINS__') &&
+				is_dir(__PLUGINS__)) {
+				$plugins = scandir(__PLUGINS__);
+
+				if (count($plugins) > 0) {
+					//$intIndex++;
+					//Examples::$Categories[$intIndex] = array();
+					//Examples::$Categories[$intIndex]['name'] = 'Examples for Plugins';
+					//Examples::$Categories[$intIndex]['description'] = 'Examples and Documentation for Community-Written Plugins';
+
+					foreach ($plugins as $dirName) {
+						if ($dirName != '.' && $dirName != '..' && file_exists(__PLUGINS__ . '/' . $dirName . '/composer.json')) {
+							// read composer file for examples file name
+							$composerDetails = json_decode(file_get_contents(__PLUGINS__ . '/' . $dirName . '/composer.json' ), true);
+							if (!empty($composerDetails['extra']['examples'])) { // embed example page name into composer file for convenience
+								foreach ($composerDetails['extra']['examples'] as $strExample) {
+									$strExamplePath = __PLUGINS__ . '/' . $dirName . '/examples/' . $strExample;
+									if (file_exists ($strExamplePath)) {
+										self::AddPluginExampleFile($dirName, $strExample);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
 		
 		public static function AddPluginExampleFile($strPluginName, $strExampleFileName) {
-			array_push(Examples::$PluginExamples, __PLUGIN_ASSETS__ . '/' . $strPluginName . "/" . $strExampleFileName);
+			Examples::$PluginExamples[$strPluginName][] = $strExampleFileName;
 		}
 		
 		private static function AddCoreExampleFile($intIndex, $strExampleFileName) {
@@ -260,18 +279,18 @@
 						$strExample = $objExampleCategory[$intExampleIndex];
 						$intPosition = strpos($strExample, ' ');
 						$strScriptPath = substr($strExample, 0, $intPosition);
-						$strName = substr($strExample, $intPosition + 1);
-						
-						$scriptName = QApplicationBase::$ScriptName;
-						
-						$count = substr_count($strScriptPath, QApplicationBase::$ScriptName);
 
-						if (substr_count($strScriptPath, QApplicationBase::$ScriptName) > 0 || // for built-in examples
-							substr_count(QApplicationBase::$ScriptName, $strScriptPath) > 0) { // for plugins
+						if (substr_count($strScriptPath, QApplicationBase::$ScriptName) > 0) { // for plugins
 							return $intCategoryIndex;
 						}
 					}
 				}
+			}
+
+			// Might be a plugin
+			$strScript = QApplicationBase::$ScriptName;
+			if ($offset = strpos (QApplicationBase::$ScriptFilename, '/plugin/')) {
+				return 'plugin';
 			}
 
 			return null;
@@ -298,19 +317,37 @@
 				}
 			}
 
+			// Might be a plugin
+			$strScript = QApplicationBase::$ScriptName;
+			if ($offset = strpos (QApplicationBase::$ScriptFilename, '/plugin/')) {
+				$offset += strlen ('/plugin/');
+				$endoffset = strpos (QApplicationBase::$ScriptFilename, '/', $offset);
+				$strCat = substr (QApplicationBase::$ScriptFilename, $offset, $endoffset - $offset);
+				return $strCat;
+			}
+
 			return null;
 		}
 		
-		public static function GetExampleName($intCategoryId, $intExampleId) {
-			$strExample = Examples::$Categories[$intCategoryId][$intExampleId];
+		public static function GetExampleName($mixCategoryId, $mixExampleId) {
+			if ($mixCategoryId == 'plugin') {
+				$strExample = Examples::$PluginExamples[$mixExampleId][0];
+				return $strExample;
+			}
+			$strExample = Examples::$Categories[$mixCategoryId][$mixExampleId];
 			$intPosition = strpos($strExample, ' ');
 			$strScriptPath = substr($strExample, 0, $intPosition);
 			$strName = substr($strExample, $intPosition + 1);
 			return $strName;
 		}
 		
-		public static function GetExampleScriptPath($intCategoryId, $intExampleId) {
-			$strExample = Examples::$Categories[$intCategoryId][$intExampleId];
+		public static function GetExampleScriptPath($mixCategoryId, $mixExampleId) {
+			if ($mixCategoryId == 'plugin') {
+				$strExample = Examples::$PluginExamples[$mixExampleId][0];
+				$strScriptPath =  __PLUGIN_ASSETS__ . "/{$mixExampleId}/examples/{$strExample}";
+				return $strScriptPath;
+			}
+			$strExample = Examples::$Categories[$mixCategoryId][$mixExampleId];
 			$intPosition = strpos($strExample, ' ');
 			$strScriptPath = substr($strExample, 0, $intPosition);
 			$strName = substr($strExample, $intPosition + 1);

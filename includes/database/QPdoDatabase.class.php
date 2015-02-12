@@ -64,7 +64,7 @@ abstract class QPdoDatabase extends QDatabaseBase {
 
 }
 /**
- * QPdoDatabaseResult
+ * Class QPdoDatabaseResult: Class to handle results sent by database upon querying
  *
  * @abstract
  */
@@ -117,7 +117,7 @@ abstract class QPdoDatabaseResult extends QDatabaseResultBase {
  * 
  * @abstract
  */
-abstract class QPdoDatabaseException extends QDatabaseExceptionBase {
+class QPdoDatabaseException extends QDatabaseExceptionBase {
 		public function __construct($strMessage, $intNumber, $strQuery) {
 				parent::__construct(sprintf("PDO %s", $strMessage[2]), 2);
 				$this->intErrorNumber = $intNumber;

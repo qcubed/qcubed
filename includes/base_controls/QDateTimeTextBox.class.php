@@ -86,7 +86,7 @@
 					$dttTest = QDateTimeTextBox::ParseForDateTimeValue($this->strText);
 
 					if (!$dttTest) {
-						$this->strValidationError = $this->strLabelForInvalid;
+						$this->ValidationError = $this->strLabelForInvalid;
 						return false;
 					}
 
@@ -100,7 +100,7 @@
 						}
 
 						if ($dttTest->IsEarlierThan($dttToCompare)) {
-							$this->strValidationError = 'Date cannot be ' . $strError;
+							$this->ValidationError = 'Date cannot be ' . $strError;
 							return false;
 						}
 					}
@@ -115,7 +115,7 @@
 						}
 
 						if ($dttTest->IsLaterThan($dttToCompare)) {
-							$this->strValidationError = 'Date cannot be ' . $strError;
+							$this->ValidationError = 'Date cannot be ' . $strError;
 							return false;
 						}
 					}
@@ -123,7 +123,6 @@
 			} else
 				return false;
 
-			$this->strValidationError = '';
 			return true;
 		}
 

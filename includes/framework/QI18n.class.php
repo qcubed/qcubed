@@ -3,7 +3,6 @@
 /**
  * Factory class for translations
  * @author Ago Luberg
- *
  */
 class QI18n extends QBaseClass {
 	/**
@@ -36,14 +35,11 @@ class QI18n extends QBaseClass {
 	/**
 	 * Loads translation with given language and country code.
 	 *
-	 * @param null $strLanguageCode
-	 * @param null $strCountryCode
-	 * @param null $strTranslationClass
+	 * @param null|string $strLanguageCode
+	 * @param null|string $strCountryCode
+	 * @param null|string $strTranslationClass
 	 *
 	 * @throws QCallerException
-	 * @internal param $string [optional] $strLanguageCode Language code
-	 * @internal param $string [optional] $strCountryCode Country code
-	 * @internal param $string [optional] $strTranslationClass Translation class name
 	 * @return QTranslationBase
 	 */
 	public static function Load($strLanguageCode = null, $strCountryCode = null, $strTranslationClass = null) {

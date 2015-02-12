@@ -18,7 +18,7 @@
 		 * @return \QCss
 		 */
 		public final function __construct() {
-			throw new QCallerException('Css should never be instantiated.  All methods and variables are publically statically accessible.');
+			throw new QCallerException('Css should never be instantiated.  All methods and variables are publicly statically accessible.');
 		}
 
 		/**
@@ -26,27 +26,10 @@
 		 * See http://www.w3.org/TR/CSS1/#units for more info.
 		 * @param string $strValue The number or string to be formatted to the <length> compatible value.
 		 * @return string the formatted value of type <length>.
+		 * @deprecated use QHtml::formatLength
 		 */
 		public final static function FormatLength($strValue) {
-			if (is_numeric($strValue)) {
-				if (0 == $strValue) {
-					if (!is_int($strValue)) {
-						$fltValue = floatval($strValue);
-						return sprintf('%s', $fltValue);
-					} else {
-						return sprintf('%s', $strValue);
-					}
-				} else {
-					if (!is_int($strValue)) {
-						$fltValue = floatval($strValue);
-						return sprintf('%spx', $fltValue);
-					} else {
-						return sprintf('%spx', $strValue);
-					}
-				}
-			} else {
-				return sprintf('%s', $strValue);
-			}
+			return QHtml::FormatLength($strValue);
 		}
 	}
 ?>

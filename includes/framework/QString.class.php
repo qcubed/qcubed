@@ -9,7 +9,7 @@
 		 * The String object should never be instantiated, and this constructor
 		 * override simply guarantees it.
 		 *
-		 * @return void
+		 * @throws QCallerException
 		 */
 		public final function __construct() {
 			throw new QCallerException('String should never be instantiated.  All methods and variables are publically statically accessible.');
@@ -18,7 +18,9 @@
 		/**
 		 * Returns the first character of a given string, or null if the given
 		 * string is null.
-		 * @param string $strString 
+		 *
+		 * @param string $strString
+		 *
 		 * @return string the first character, or null
 		 */
 		public final static function FirstCharacter($strString) {
@@ -31,7 +33,9 @@
 		/**
 		 * Returns the last character of a given string, or null if the given
 		 * string is null.
-		 * @param string $strString 
+		 *
+		 * @param string $strString
+		 *
 		 * @return string the last character, or null
 		 */
 		public final static function LastCharacter($strString) {
@@ -43,9 +47,49 @@
 		}
 
 		/**
+		 * Checks whether a given string starts with another (sub)string
+		 *
+		 * @param string $strHaystack
+		 * @param string $strNeedle
+		 *
+		 * @return bool
+		 */
+		public final static function StartsWith($strHaystack, $strNeedle) {
+			// If the length of needle is greater than the length of haystack, then return false
+			if(strlen($strNeedle) > strlen($strHaystack)){
+				// To supress the error in strpos function below
+				return false;
+			}
+
+			// search backwards starting from haystack length characters from the end
+			return $strNeedle === "" || strrpos($strHaystack, $strNeedle, -strlen($strHaystack)) !== false;
+		}
+
+		/**
+		 * Checks whether a given string ends with another (sub)string
+		 *
+		 * @param string $strHaystack
+		 * @param string $strNeedle
+		 *
+		 * @return bool
+		 */
+		public final static function EndsWith($strHaystack, $strNeedle) {
+			// If the length of needle is greater than the length of haystack, then return false
+			if(strlen($strNeedle) > strlen($strHaystack)){
+				// To supress the error in strpos function below
+				return false;
+			}
+
+			// search forward starting from end minus needle length characters
+			return $strNeedle === "" || strpos($strHaystack, $strNeedle, strlen($strHaystack) - strlen($strNeedle)) !== false;
+		}
+
+		/**
 		 * Truncates the string to a given length, adding elipses (if needed).
-		 * @param string $strString string to truncate
+		 *
+		 * @param string  $strText      string to truncate
 		 * @param integer $intMaxLength the maximum possible length of the string to return (including length of the elipse)
+		 *
 		 * @return string the full string or the truncated string with eplise
 		 */
 		public final static function Truncate($strText, $intMaxLength) {
@@ -57,7 +101,9 @@
 
 		/**
 		 * Escapes the string so that it can be safely used in as an Xml Node (basically, adding CDATA if needed)
+		 *
 		 * @param string $strString string to escape
+		 *
 		 * @return string the XML Node-safe String
 		 */
 		public final static function XmlEscape($strString) {
@@ -69,7 +115,15 @@
 
 			return $strString;
 		}
-		
+
+		/**
+		 * Finds longest substring which is common among two strings
+		 *
+		 * @param string $str1
+		 * @param string $str2
+		 *
+		 * @return string
+		 */
 		// Implementation from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
 		public final static function LongestCommonSubsequence($str1, $str2) {
 			$str1Len = mb_strlen($str1, __QAPPLICATION_ENCODING_TYPE__);

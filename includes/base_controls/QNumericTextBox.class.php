@@ -70,13 +70,13 @@
 					try {
 						$this->strText = QType::Cast($this->strText, $this->strDataType);
 					} catch (QInvalidCastException $objExc) {
-						$this->strValidationError = $this->strLabelForInvalid;
+						$this->ValidationError = $this->strLabelForInvalid;
 						$this->MarkAsModified();
 						return false;
 					}
 
 					if (!is_numeric($this->strText)) {
-						$this->strValidationError = $this->strLabelForInvalid;
+						$this->ValidationError = $this->strLabelForInvalid;
 						$this->MarkAsModified();
 						return false;
 					}
@@ -86,7 +86,7 @@
 
 						if ($newVal != $this->strText) {
 							if ($this->strLabelForNotStepAligned) {
-								$this->strValidationError = sprintf($this->strLabelForNotStepAligned, $this->mixStep);
+								$this->ValidationError = sprintf($this->strLabelForNotStepAligned, $this->mixStep);
 								$this->MarkAsModified();
 								return false;
 							}
@@ -96,13 +96,13 @@
 					}
 
 					if ((!is_null($this->mixMinimum)) && ($this->strText < $this->mixMinimum)) {
-						$this->strValidationError = sprintf($this->strLabelForGreater, $this->mixMinimum);
+						$this->ValidationError = sprintf($this->strLabelForGreater, $this->mixMinimum);
 						$this->MarkAsModified();
 						return false;
 					}
 
 					if ((!is_null($this->mixMaximum)) && ($this->strText > $this->mixMaximum)) {
-						$this->strValidationError = sprintf($this->strLabelForLess, $this->mixMaximum);
+						$this->ValidationError = sprintf($this->strLabelForLess, $this->mixMaximum);
 						$this->MarkAsModified();
 						return false;
 					}
@@ -110,7 +110,6 @@
 			} else
 				return false;
 
-			$this->strValidationError = "";
 			return true;
 		}
 
@@ -155,11 +154,12 @@
 		/////////////////////////
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Property Name
+		 *
+		 * @param string $strName  Property Name
 		 * @param string $mixValue Property value
 		 *
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
@@ -228,6 +228,23 @@
 					break;
 			}
 		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return array
+		 */
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Maximum', 'Meximum value allowed', QType::String),// float or integer
+				new QMetaParam (get_called_class(), 'Minimum', 'Meximum value allowed', QType::String),
+				new QMetaParam (get_called_class(), 'Step', 'If value must be aligned on a step, the step amount', QType::String),
+				new QMetaParam (get_called_class(), 'LabelForLess', 'If value is too small, override the default error message', QType::String),
+				new QMetaParam (get_called_class(), 'LabelForGreater', 'If value is too big, override the default error message', QType::String),
+				new QMetaParam (get_called_class(), 'LabelForNotStepAligned', 'If value is not step aligned, override the default error message', QType::String)
+			));
+		}
+
 	}
 
 ?>

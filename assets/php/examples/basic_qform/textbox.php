@@ -8,6 +8,7 @@ class ExamplesForm extends QForm {
 	protected $txtBasic;
 	protected $txtInt;
 	protected $txtFlt;
+	protected $txtList;
 	protected $txtEmail;
 	protected $txtUrl;
 	protected $txtCustom;
@@ -26,6 +27,10 @@ class ExamplesForm extends QForm {
 		$this->txtInt->Maximum = 10;
 
 		$this->txtFlt = new QFloatTextBox($this);
+
+		$this->txtList = new QCsvTextBox($this);
+		$this->txtList->MinItemCount = 2;
+		$this->txtList->MaxItemCount = 5;
 
 		$this->txtEmail = new QEmailTextBox($this);
 		$this->txtUrl = new QUrlTextBox($this);

@@ -13,7 +13,7 @@
      * @property-read QQNode<?= $objReference->VariableType ?> $_ChildTableNode
      **/
 	class QQNode<?= $objTable->ClassName ?><?= $objReference->ObjectDescription ?> extends QQAssociationNode {
-		protected $strType = 'association';
+		protected $strType = QType::Association;
 		protected $strName = '<?= strtolower($objReference->ObjectDescription); ?>';
 
 		protected $strTableName = '<?= $objReference->Table ?>';
@@ -86,7 +86,7 @@
 					return new QQNode<?= $objTable->ClassName ?><?= $objReference->ObjectDescription ?>($this);
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?>
 				case '<?= $objReference->ObjectDescription ?>':
-					return new QQReverseReferenceNode<?= $objReference->VariableType ?>($this, '<?= strtolower($objReference->ObjectDescription); ?>', 'reverse_reference', '<?= $objReference->Column ?>', '<?= $objReference->ObjectDescription ?>');
+					return new QQReverseReferenceNode<?= $objReference->VariableType ?>($this, '<?= strtolower($objReference->ObjectDescription); ?>', QType::ReverseReference, '<?= $objReference->Column ?>', '<?= $objReference->ObjectDescription ?>');
 <?php } ?><?php $objPkColumn = $objTable->PrimaryKeyColumnArray[0]; ?>
 
 				case '_PrimaryKeyNode':
@@ -144,7 +144,7 @@
 					return new QQNode<?= $objTable->ClassName ?><?= $objReference->ObjectDescription ?>($this);
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?>
 				case '<?= $objReference->ObjectDescription ?>':
-					return new QQReverseReferenceNode<?= $objReference->VariableType ?>($this, '<?= strtolower($objReference->ObjectDescription); ?>', 'reverse_reference', '<?= $objReference->Column ?>', '<?= $objReference->ObjectDescription ?>');
+					return new QQReverseReferenceNode<?= $objReference->VariableType ?>($this, '<?= strtolower($objReference->ObjectDescription); ?>', QType::ReverseReference, '<?= $objReference->Column ?>', '<?= $objReference->ObjectDescription ?>');
 <?php } ?><?php $objPkColumn = $objTable->PrimaryKeyColumnArray[0]; ?>
 
 				case '_PrimaryKeyNode':

@@ -18,10 +18,14 @@
 		const <?= $objColumn->PropertyName ?>Default = <?php
 	if (is_null($objColumn->Default))
 		print 'null';
-	else if (is_numeric($objColumn->Default))
+	elseif (is_numeric($objColumn->Default))
 		print $objColumn->Default;
-	else
+	elseif ($objColumn->Default == 'CURRENT_TIMESTAMP') {
+		print 'QDateTime::Now';
+	}
+	else {
 		print "'" . addslashes($objColumn->Default) . "'";
+	}
 ?>;
 
 <?php if ((!$objColumn->Identity) && ($objColumn->PrimaryKey)) { ?>
@@ -41,55 +45,55 @@
 		if (is_a($objAssociatedTable, 'QTypeTable')) {
 ?>
 		/**
-		 * Private member variable that stores a <?= $objReference->VariableType ?> id,
+		 * Protected member variable that stores a <?= $objReference->VariableType ?> id,
 		 * if this <?= $objTable->ClassName ?> object was restored with
 		 * an expansion on the <?= $objReference->Table ?> association table.
 		 * @var integer _int<?= $objReference->ObjectDescription ?>;
 		 */
-		private $_int<?= $objReference->ObjectDescription ?>;
+		protected $_int<?= $objReference->ObjectDescription ?>;
 
 		/**
-		 * Private member variable that stores an array of <?= $objReference->VariableType ?> ids,
+		 * Protected member variable that stores an array of <?= $objReference->VariableType ?> ids,
 		 * if this <?= $objTable->ClassName ?> object was restored with
 		 * an ExpandAsArray on the <?= $objReference->ObjectDescription ?> association table.
 		 * @var integer[] _int<?= $objReference->ObjectDescription ?>Array;
 		 */
-		private $_int<?= $objReference->ObjectDescription ?>Array = null;
+		protected $_int<?= $objReference->ObjectDescription ?>Array = null;
 
 <?php 	} else { ?>
 		/**
-		 * Private member variable that stores a reference to a single <?= $objReference->ObjectDescription ?> object
+		 * Protected member variable that stores a reference to a single <?= $objReference->ObjectDescription ?> object
 		 * (of type <?= $objReference->VariableType ?>), if this <?= $objTable->ClassName ?> object was restored with
 		 * an expansion on the <?= $objReference->Table ?> association table.
 		 * @var <?= $objReference->VariableType ?> _obj<?= $objReference->ObjectDescription ?>;
 		 */
-		private $_obj<?= $objReference->ObjectDescription ?>;
+		protected $_obj<?= $objReference->ObjectDescription ?>;
 
 		/**
-		 * Private member variable that stores a reference to an array of <?= $objReference->ObjectDescription ?> objects
+		 * Protected member variable that stores a reference to an array of <?= $objReference->ObjectDescription ?> objects
 		 * (of type <?= $objReference->VariableType ?>[]), if this <?= $objTable->ClassName ?> object was restored with
 		 * an ExpandAsArray on the <?= $objReference->Table ?> association table.
 		 * @var <?= $objReference->VariableType ?>[] _obj<?= $objReference->ObjectDescription ?>Array;
 		 */
-		private $_obj<?= $objReference->ObjectDescription ?>Array = null;
+		protected $_obj<?= $objReference->ObjectDescription ?>Array = null;
 <?php 	} ?>
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
 		/**
-		 * Private member variable that stores a reference to a single <?= $objReference->ObjectDescription ?> object
+		 * Protected member variable that stores a reference to a single <?= $objReference->ObjectDescription ?> object
 		 * (of type <?= $objReference->VariableType ?>), if this <?= $objTable->ClassName ?> object was restored with
 		 * an expansion on the <?= $objReference->Table ?> association table.
 		 * @var <?= $objReference->VariableType ?> _obj<?= $objReference->ObjectDescription ?>;
 		 */
-		private $_obj<?= $objReference->ObjectDescription ?>;
+		protected $_obj<?= $objReference->ObjectDescription ?>;
 
 		/**
-		 * Private member variable that stores a reference to an array of <?= $objReference->ObjectDescription ?> objects
+		 * Protected member variable that stores a reference to an array of <?= $objReference->ObjectDescription ?> objects
 		 * (of type <?= $objReference->VariableType ?>[]), if this <?= $objTable->ClassName ?> object was restored with
 		 * an ExpandAsArray on the <?= $objReference->Table ?> association table.
 		 * @var <?= $objReference->VariableType ?>[] _obj<?= $objReference->ObjectDescription ?>Array;
 		 */
-		private $_obj<?= $objReference->ObjectDescription ?>Array = null;
+		protected $_obj<?= $objReference->ObjectDescription ?>Array = null;
 
 <?php } ?><?php } ?>
 		/**

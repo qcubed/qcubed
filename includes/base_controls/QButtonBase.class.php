@@ -44,26 +44,16 @@
 		 * @return string The HTML string of the control
 		 */
 		protected function GetControlHtml() {
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle)
-				$strStyle = sprintf('style="%s"', $strStyle);
+			if ($this->blnPrimaryButton) {
+				$attrOverride['type'] = "submit";
+			}
+			else {
+				$attrOverride['type'] = "button";
+			}
+			$attrOverride['name'] = $this->strControlId;
+			$strText = ($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText;
 
-			if ($this->blnPrimaryButton)
-				$strCommand = "submit";
-			else
-				$strCommand = "button";
-
-			$strToReturn = sprintf('<button type="%s" name="%s" id="%s" %s%s > %s </button>',
-				$strCommand,
-				$this->strControlId,
-				$this->strControlId,
-				$this->GetAttributes(),
-				$strStyle,                    
-				($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText
-			);
-  
-			return $strToReturn;
-
+			return $this->RenderTag('button', $attrOverride, null, $strText);
 		}
 
 

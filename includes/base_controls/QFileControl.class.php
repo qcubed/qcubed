@@ -43,6 +43,11 @@
 			}
 		}
 
+		/**
+		 * Returns the HTML of the control which can be sent to user's browser
+		 *
+		 * @return string HTML of the control
+		 */
 		protected function GetControlHtml() {
 			// Reset Internal Values
 			$this->strFileName = null;
@@ -63,13 +68,17 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Tells if the file control is valid
+		 *
+		 * @return bool
+		 */
 		public function Validate() {
-			$this->strValidationError = "";
 			if ($this->blnRequired) {
 				if (strlen($this->strFileName) > 0)
 					return true;
 				else {
-					$this->strValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
+					$this->ValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
 					return false;
 				}
 			} else
@@ -79,6 +88,14 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// MISC
@@ -100,6 +117,13 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

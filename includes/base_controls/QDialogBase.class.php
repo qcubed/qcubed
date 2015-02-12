@@ -230,16 +230,16 @@ FUNC;
 		/**
 		 * Adds a button to the dialog. Use this to add buttons BEFORE bringing up the dialog.
 		 *
-		 * @param $strButtonName
-		 * @param $strButtonId	Id associated with the button for detecting clicks. Note that this is not the id on the form.
-		 * 	Different dialogs can have the same button id.
-		 *  To specify a control id for the button (for styling purposes for example), set the id in options.
-		 * @param bool $blnCausesValidation If the button causes the dialog to be validated before the action is executed
-		 * @param bool $blnIsPrimary Whether this button will be automatically clicked if user presses an enter key.
-		 * @param string $strConfirmation If set, will confirm with the given string before the click is sent
-		 * @param array $options	Additional attributes to add to the button. Useful things to do are:
-		 *  	array('class'=>'ui-button-left') to create a button on the left side.
-		 *  	array('class'=>'ui-priority-primary') to style a button as important or primary.
+		 * @param string $strButtonName
+		 * @param string $strButtonId         Id associated with the button for detecting clicks. Note that this is not the id on the form.
+		 *                                    Different dialogs can have the same button id.
+		 *                                    To specify a control id for the button (for styling purposes for example), set the id in options.
+		 * @param bool   $blnCausesValidation If the button causes the dialog to be validated before the action is executed
+		 * @param bool   $blnIsPrimary        Whether this button will be automatically clicked if user presses an enter key.
+		 * @param string $strConfirmation     If set, will confirm with the given string before the click is sent
+		 * @param array  $options             Additional attributes to add to the button. Useful things to do are:
+		 *                                    array('class'=>'ui-button-left') to create a button on the left side.
+		 *                                    array('class'=>'ui-priority-primary') to style a button as important or primary.
 		 */
 		public function AddButton ($strButtonName, $strButtonId = null, $blnCausesValidation = false, $blnIsPrimary = false, $strConfirmation = null, $options = null) {
 			if (!$this->mixButtons) {
@@ -393,6 +393,14 @@ FUNC;
 			$this->blnWrapperModified = false;
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case '_ClickedButton': // Internal only. Do not use. Used by JS above to keep track of clicked button.
@@ -478,7 +486,15 @@ FUNC;
 					}
 				}
 		}
-		
+
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'ClickedButton': return $this->strClickedButtonId;

@@ -1,25 +1,26 @@
 <?php
+
 	/**
 	 * Used by the QCubed Code Generator to describe a table's column
-	 * @package Codegen
 	 *
-	 * @property QTable|QTypeTable $OwnerTable
-	 * @property boolean $PrimaryKey
-	 * @property string $Name
-	 * @property string $PropertyName
-	 * @property string $VariableName
-	 * @property string $VariableType
-	 * @property string $VariableTypeAsConstant
-	 * @property string $DbType
-	 * @property int $Length
-	 * @property mixed $Default
-	 * @property boolean $NotNull
-	 * @property boolean $Identity
-	 * @property boolean $Indexed
-	 * @property boolean $Unique
-	 * @property boolean $Timestamp
-	 * @property QReference $Reference
-	 * @property string $Comment
+	 * @package Codegen
+	 * @property QTable|QTypeTable $OwnerTable             Table in which this column exists
+	 * @property boolean           $PrimaryKey             Is the column a (part of) primary key
+	 * @property string            $Name                   Column name
+	 * @property string            $PropertyName           Corresponding property name for the table
+	 * @property string            $VariableName           Corresponding variable name (in ORM class and elsewhere)
+	 * @property string            $VariableType           Type of data this column is supposed to store (constant from QType class)
+	 * @property string            $VariableTypeAsConstant Variable type expressed as QType casted string (integer column would have this value as: "QType::Integer")
+	 * @property string            $DbType                 Type of databse
+	 * @property int               $Length                 If applicable, the length of data to be stored (useful for varchar data types)
+	 * @property mixed             $Default                Default value of the column
+	 * @property boolean           $NotNull                Is this column a "NOT NULL" column?
+	 * @property boolean           $Identity               Is this column an Identity column?
+	 * @property boolean           $Indexed                Is there a single column index on this column?
+	 * @property boolean           $Unique                 Does this column have a 'Unique' key defined on it?
+	 * @property boolean           $Timestamp              Can this column contain a timestamp value?
+	 * @property QReference        $Reference              Reference to another column (if this one is a foreign key)
+	 * @property string            $Comment                Comment on the column
 	 */
 	class QColumn extends QBaseClass {
 
@@ -60,7 +61,7 @@
 		protected $strVariableName;
 
 		/**
-		 * The type of the protected member variable (uses one of the string constants from the Type class)
+		 * The type of the protected member variable (uses one of the string constants from the QType class)
 		 * @var string VariableType
 		 */
 		protected $strVariableType;
@@ -136,9 +137,13 @@
 		 * Various overrides and options embedded in the comment for the column as a json object.
 		 * @var array Overrides
 		 */
-		protected $options;
+		protected $options = array();
 
-
+		/**
+		 * For Timestamp columns, will add to the sql code to set this field to NOW whenever there is a save
+		 * @var boolean
+		 */
+		protected $blnAutoUpdate;
 
 
 		////////////////////
@@ -192,6 +197,8 @@
 					return $this->strComment;
 				case 'Options':
 					return $this->options;
+				case 'AutoUpdate':
+					return $this->blnAutoUpdate;
 				default:
 					try {
 						return parent::__get($strName);
@@ -260,6 +267,8 @@
 						return $this->strComment = QType::Cast($mixValue, QType::String);
 					case 'Options':
 						return $this->options = QType::Cast($mixValue, QType::ArrayType);
+					case 'AutoUpdate':
+						return $this->blnAutoUpdate = QType::Cast($mixValue, QType::Boolean);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

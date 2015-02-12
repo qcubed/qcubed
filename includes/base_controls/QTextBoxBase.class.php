@@ -24,11 +24,9 @@
 	 * @property string $CrossScripting can be Allow, HtmlEntities, or Deny.  Deny is the default. Prevents cross scripting hacks.  HtmlEntities causes framework to automatically call php function htmlentities on the input data.  Allow allows everything to come through without altering at all.  USE "ALLOW" judiciously: using ALLOW on text entries, and then outputting that data WILL allow hackers to perform cross scripting hacks.
 	 * @property integer $MaxLength is the "maxlength" html attribute (applicable for SingleLine textboxes)
 	 * @property integer $MinLength is the minimum requred length to pass validation
-	 * @property boolean $ReadOnly is the "readonly" html attribute (making a textbox "ReadOnly" is very similar to setting the textbox to Enabled=false.  There are only subtle display-differences, I believe, between the two.
 	 * @property integer $Rows is the "rows" html attribute (applicable for MultiLine textboxes)
-	 * @property string $TextMode can be "SingleLine", "MultiLine", and "Password".
+	 * @property string $TextMode a QTextMode item. Determines if its a single or multi-line textbox, and the "type" property of the input.
 	 * @property boolean $ValidateTrimmed
-	 * @property boolean $Wrap is the "wrap" html attribute (applicable for MultiLine textboxes)
 	 * @property boolean $AutoTrim to automatically remove white space from beginning and end of data
 	 * @property integer $SanitizeFilter PHP filter constant to apply to incoming data
 	 * @property mixed $SanitizeFilterOptions PHP filter constants or array to apply to SanitizeFilter option
@@ -37,10 +35,6 @@
 	 * @property mixed $LabelForInvalid PHP filter constants or array to apply to ValidateFilter option
 	 */
 	abstract class QTextBoxBase extends QControl {
-		///////////////////////////
-		// Private Member Variables
-		///////////////////////////
-
 		// APPEARANCE
 		/** @var int */
 		protected $intColumns = 0;
@@ -68,11 +62,9 @@
 		protected $intMaxLength = 0;
 		/** @var int */
 		protected $intMinLength = 0;
-		/** @var bool */
-		protected $blnReadOnly = false;
 		/** @var int */
 		protected $intRows = 0;
-		/** @var string */
+		/** @var string Subclasses should not set this directly, but rather use the TextMode accessor */
 		protected $strTextMode = QTextMode::SingleLine;
 		/** @var string */
 		protected $strCrossScripting;
@@ -95,11 +87,6 @@
 		/** @var string */
 		protected $strLabelForInvalid = null;
 		
-		
-
-		// LAYOUT
-		/** @var bool */
-		protected $blnWrap = true;
 
 		//////////
 		// Methods
@@ -137,7 +124,7 @@
 			// We load lazy to make sure that the library is not loaded every time 'prepend.inc.php'
 			// or 'qcubed.inc.php' is inlcuded. HTMLPurifier is a HUGE and SLOW library. Lazy loading
 			// keeps it simpler.
-			require_once(__VENDOR__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
+			require_once(__DOCROOT__ . __VENDOR_ASSETS__ . '/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
 
 			// We configure the default set of forbidden tags (elements) and attributes here
 			// so that the rules are applicable the moment CrossScripting is set to Purify.
@@ -252,71 +239,75 @@
 		}
 
 		/**
-		 * @param bool $blnIncludeCustom
-		 * @param bool $blnIncludeAction
-		 *
-		 * @return string
-		 */
-		public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
-			$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
-
-			if ($this->blnReadOnly)
-				$strToReturn .= 'readonly="readonly" ';
-
-			if ($this->intMaxLength)
-				$strToReturn .= sprintf('maxlength="%s" ', $this->intMaxLength);
-			if ($this->strTextMode == QTextMode::MultiLine) {
-				if ($this->intColumns)
-					$strToReturn .= sprintf('cols="%s" ', $this->intColumns);
-				if ($this->intRows)
-					$strToReturn .= sprintf('rows="%s" ', $this->intRows);
-				if (!$this->blnWrap)
-					$strToReturn .= 'wrap="off" ';
-			} else {
-				if ($this->intColumns)
-					$strToReturn .= sprintf('size="%s" ', $this->intColumns);
-			}
-
-			if(strlen($this->strPlaceholder) > 0) {
-				$strToReturn .= sprintf('placeholder="%s" ', $this->strPlaceholder);
-			}
-
-			return $strToReturn;
-		}
-
-		/**
 		 * Returns the HTML formatted string for the control
 		 * @return string HTML string
 		 */
 		protected function GetControlHtml() {
-			$strStyle = $this->GetStyleAttributes();
-			if ($strStyle) {
-				$strStyle = sprintf('style="%s"', $strStyle);
-			}
+			$attrOverride = array('name'=>$this->strControlId);
 
 			switch ($this->strTextMode) {
 				case QTextMode::MultiLine:
-					$strToReturn = sprintf('<textarea name="%s" id="%s" %s%s>' . $this->strFormat . '</textarea>',
-						$this->strControlId,
-						$this->strControlId,
-						$this->GetAttributes(),
-						$strStyle,
-						QApplication::HtmlEntities($this->strText));
-					break;
+					return $this->RenderTag('textarea',
+								$attrOverride,
+								null,
+								QApplication::HtmlEntities($this->strText)
+					);
 
 				default:
-					$typeStr = $this->strTextMode ? $this->strTextMode : 'text';
-					$strToReturn = sprintf('<input type="%s" name="%s" id="%s" value="' . $this->strFormat . '" %s%s />',
-						$typeStr,
-						$this->strControlId,
-						$this->strControlId,
-						QApplication::HtmlEntities($this->strText),
-						$this->GetAttributes(),
-						$strStyle);
+					$attrOverride['value'] = QApplication::HtmlEntities($this->strText);
+					return $this->RenderTag('input',
+						$attrOverride,
+						null,
+						null,
+						true
+					);
+
+			}
+		}
+
+
+		/**
+		 * Render HTML attributes for the purpose of drawing the tag. Text objects have a number of parameters specific
+		 * to them, some of which we use for validation, and some of which are dual purpose.
+		 * We render those here, rather than setting the attributes when those are set.
+		 *
+		 * @param null $attributeOverrides
+		 * @param null $styleOverrides
+		 * @return string|void
+		 */
+		public function RenderHtmlAttributes ($attributeOverrides = null, $styleOverrides = null) {
+			if ($this->intMaxLength) {
+				$attributeOverrides['maxlength'] = $this->intMaxLength;
+			}
+			if ($this->strTextMode == QTextMode::MultiLine) {
+				if ($this->intColumns) {
+					$attributeOverrides['cols'] = $this->intColumns;
+				}
+				if ($this->intRows) {
+					$attributeOverrides['rows'] = $this->intRows;
+				}
+				//if (!$this->blnWrap) {
+					/**
+					 * $strToReturn .= 'wrap="off" '; Note that this is not standard HTML5 and not supported by all browsers
+					 * In fact, HTML5 has completely changed its meaning to mean whether the text itself has embedded
+					 * hard returns inserted when the textarea wraps. Deprecating. We will have to wait for another solution.
+					 */
+				//}
+			} else {
+				if ($this->intColumns) {
+					$attributeOverrides['size'] = $this->intColumns;
+				}
+				$typeStr = $this->strTextMode ? $this->strTextMode : 'text';
+				$attributeOverrides['type'] = $typeStr;
 			}
 
-			return $strToReturn;
+			if(strlen($this->strPlaceholder) > 0) {
+				$attributeOverrides['placeholder'] = QApplication::HtmlEntities($this->strPlaceholder);
+			}
+
+			return parent::RenderHtmlAttributes($attributeOverrides, $styleOverrides);
 		}
+
 
 		/**
 		 * Tests that the value given inside the textbox passes the rules set for the input
@@ -327,8 +318,6 @@
 		 * @return bool whether or not the control is valid
 		 */
 		public function Validate() {
-			$this->strValidationError = "";
-
 			// Get the Text string
 			if ($this->blnValidateTrimmed)
 				$strText = trim($this->strText);
@@ -338,9 +327,9 @@
 			if ($this->blnRequired) {
 				if (mb_strlen($strText, QApplication::$EncodingType) == 0) {
 					if ($this->strName)
-						$this->strValidationError = sprintf($this->strLabelForRequired, $this->strName);
+						$this->ValidationError = sprintf($this->strLabelForRequired, $this->strName);
 					else
-						$this->strValidationError = $this->strLabelForRequiredUnnamed;
+						$this->ValidationError = $this->strLabelForRequiredUnnamed;
 					return false;
 				}
 			}
@@ -349,9 +338,9 @@
 			if ($this->intMinLength > 0) {
 				if (mb_strlen($strText, QApplication::$EncodingType) < $this->intMinLength) {
 					if ($this->strName)
-						$this->strValidationError = sprintf($this->strLabelForTooShort, $this->strName, $this->intMinLength);
+						$this->ValidationError = sprintf($this->strLabelForTooShort, $this->strName, $this->intMinLength);
 					else
-						$this->strValidationError = sprintf($this->strLabelForTooShortUnnamed, $this->intMinLength);
+						$this->ValidationError = sprintf($this->strLabelForTooShortUnnamed, $this->intMinLength);
 					return false;
 				}
 			}
@@ -360,9 +349,9 @@
 			if ($this->intMaxLength > 0) {
 				if (mb_strlen($strText, QApplication::$EncodingType) > $this->intMaxLength) {
 					if ($this->strName)
-						$this->strValidationError = sprintf($this->strLabelForTooLong, $this->strName, $this->intMaxLength);
+						$this->ValidationError = sprintf($this->strLabelForTooLong, $this->strName, $this->intMaxLength);
 					else
-						$this->strValidationError = sprintf($this->strLabelForTooLongUnnamed, $this->intMaxLength);
+						$this->ValidationError = sprintf($this->strLabelForTooLongUnnamed, $this->intMaxLength);
 					return false;
 				}
 			}
@@ -370,7 +359,7 @@
 			// Check against PHP validation
 			if ($this->intValidateFilter && $this->strText) { 
 				if (!filter_var($this->strText, $this->intValidateFilter, $this->mixValidateFilterOptions)) {
-					$this->strValidationError = $this->strLabelForInvalid;
+					$this->ValidationError = $this->strLabelForInvalid;
 					return false;
 				}
 			}
@@ -384,6 +373,19 @@
 		 */
 		public function Select() {
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").select();', $this->strControlId));
+		}
+
+		/**
+		 * Attaches an oninput handler to detect changes. Must be attached before other scripts are attached so that it.
+		 * The "change" handler is a little redundant, but many javascript widgets that change the text (autocomplete, datepicker)
+		 * do not send the input event correctly, but they DO send the change event.
+		 *
+		 * @return string
+		 */
+		public function GetEndScript() {
+			$str = parent::GetEndScript();
+			$str = sprintf ('$j("#%s").on ("input", qc.formObjChanged).change (qc.formObjChanged);', $this->ControlId) . $str;
+			return $str;
 		}
 
 		/////////////////////////
@@ -409,25 +411,26 @@
 				case "LabelForTooLong": return $this->strLabelForTooLong;
 				case "LabelForTooLongUnnamed": return $this->strLabelForTooLongUnnamed;
 				case "Placeholder": return $this->strPlaceholder;
+				case 'Value': return empty($this->strText) ? null : $this->strText;
+
 
 				// BEHAVIOR
 				case "CrossScripting": return $this->strCrossScripting;
 				case "MaxLength": return $this->intMaxLength;
 				case "MinLength": return $this->intMinLength;
-				case "ReadOnly": return $this->blnReadOnly;
 				case "Rows": return $this->intRows;
 				case "TextMode": return $this->strTextMode;
 				case "ValidateTrimmed": return $this->blnValidateTrimmed;
 
 				// LAYOUT
-				case "Wrap": return $this->blnWrap;
+				//case "Wrap": return $this->blnWrap;
 
 				// FILTERING and VALIDATION
 				case "AutoTrim": return $this->blnAutoTrim;
 				case "SanitizeFilter": return $this->intSanitizeFilter;
-				case "SanitizeFilterOptions": return $this->$mixSanitizeFilterOptions;
+				case "SanitizeFilterOptions": return $this->mixSanitizeFilterOptions;
 				case "ValidateFilter": return $this->intValidateFilter;
-				case "ValidateFilterOptions": return $this->strLabelForInvalid;
+				case "ValidateFilterOptions": return $this->mixValidateFilterOptions;
 				case "LabelForInvalid": return $this->strLabelForInvalid;
 				
 				default:
@@ -445,20 +448,41 @@
 		/////////////////////////
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Name of the property
+		 *
+		 * @param string $strName  Name of the property
 		 * @param string $mixValue Value of the property
 		 *
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
+			// Setters that do not cause a complete redraw
 			switch ($strName) {
+				case "Text":
+				case "Value":
+					try {
+						$val = QType::Cast($mixValue, QType::String);
+						if ($val !== $this->strText) {
+							$this->strText = $val;
+							if ($this->OnPage) {
+								QApplication::ExecuteJavaScript(sprintf ('$j("#%s").val(%s)', $this->strControlId, JavaScriptHelper::toJsObject($this->strText)));
+							} else {
+								$this->blnModified = true;
+							}
+						}
+						return $this->strText;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				// APPEARANCE
 				case "Columns":
 					try {
-						$this->intColumns = QType::Cast($mixValue, QType::Integer);
+						if ($this->intColumns !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intColumns = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -466,15 +490,10 @@
 					}
 				case "Format":
 					try {
-						$this->strFormat = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Text":
-					try {
-						$this->strText = QType::Cast($mixValue, QType::String);
+						if ($this->strFormat !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strFormat = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -482,6 +501,7 @@
 					}
 				case "LabelForRequired":
 					try {
+						// no redraw needed
 						$this->strLabelForRequired = QType::Cast($mixValue, QType::String);
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -530,7 +550,10 @@
 					}
 				case "Placeholder":
 					try {
-						$this->strPlaceholder = QType::Cast($mixValue, QType::String);
+						if ($this->strPlaceholder !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strPlaceholder = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -552,7 +575,10 @@
 					}
 				case "MaxLength":
 					try {
-						$this->intMaxLength = QType::Cast($mixValue, QType::Integer);
+						if ($this->intMaxLength !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intMaxLength = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -560,15 +586,10 @@
 					}
 				case "MinLength":
 					try {
-						$this->intMinLength = QType::Cast($mixValue, QType::Integer);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "ReadOnly":
-					try {
-						$this->blnReadOnly = QType::Cast($mixValue, QType::Boolean);
+						if ($this->intMinLength !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intMinLength = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -576,7 +597,10 @@
 					}
 				case "Rows":
 					try {
-						$this->intRows = QType::Cast($mixValue, QType::Integer);
+						if ($this->intRows !== ($mixValue = QType::Cast($mixValue, QType::Integer))) {
+							$this->blnModified = true;
+							$this->intRows = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -584,7 +608,10 @@
 					}
 				case "TextMode":
 					try {
-						$this->strTextMode = QType::Cast($mixValue, QType::String);
+						if ($this->strTextMode !== ($strMode = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strTextMode = $strMode;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -600,16 +627,12 @@
 					}
 
 				// LAYOUT
-				case "Wrap":
-					try {
-						$this->blnWrap = QType::Cast($mixValue, QType::Boolean);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-					
-				// FILTERING and VALIDATING
+				//case "Wrap":
+					// Deprecated. HTML5 has changed the meaning of this, and wrap=off is not consistenly implemented
+					// across browers.
+					break;
+
+				// FILTERING and VALIDATING, no redraw needed
 				case "AutoTrim":
 					try {
 						$this->blnAutoTrim = QType::Cast($mixValue, QType::Boolean);
@@ -677,7 +700,12 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
-
+		/**
+		 * Returns the name of the property for Code Generator
+		 * @param string $strPropName
+		 *
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'txt' . $strPropName;
 		}
@@ -691,14 +719,14 @@
 		 * @param QColumn $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strClassName = $objTable->ClassName;
-			$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 
 			// Read the control type in case we are generating code for a subclass of QTextBox
-			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+			$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 
 			$strRet = <<<TMPL
 		/**
@@ -707,11 +735,23 @@
 		 * @return $strControlType
 		 */
 		public function {$strControlVarName}_Create(\$strControlId = null) {
+
+TMPL;
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+			$strRet .= <<<TMPL
 			\$this->{$strControlVarName} = new $strControlType(\$this->objParentObject, \$strControlId);
 			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
 
 TMPL;
-			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			if ($objColumn->NotNull) {
 				$strRet .=<<<TMPL
@@ -734,7 +774,15 @@ TMPL;
 TMPL;
 			}
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
+
+TMPL;
+			}
+
+			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -748,15 +796,15 @@ TMPL;
 		}
 
 		/**
-		 * Generate code to reload data from the MetaControl into this control.
+		 * Generate code to reload data from the Model into this control.
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn $objColumn
 		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
 		 * @return string
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
@@ -769,15 +817,45 @@ TMPL;
 		}
 
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		/**
+		 * Return code to update the Model object with the contents of the control.
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param $objColumn
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strRet = <<<TMPL
-				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->Text;
+				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$strPropName} = \$this->{$strControlVarName}->Text;
 
 TMPL;
 			return $strRet;
+		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QMetaParam[]
+		 */
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Columns', 'Width of field', QType::Integer),
+				new QMetaParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
+				new QMetaParam (get_called_class(), 'Format', 'printf format string to use', QType::String),
+				new QMetaParam (get_called_class(), 'Placeholder', 'HTML5 Placeholder attribute', QType::String),
+				new QMetaParam (get_called_class(), 'ReadOnly', 'Editable or not', QType::Boolean),
+				new QMetaParam (get_called_class(), 'TextMode', 'Field type', QMetaParam::SelectionList,
+					array (null=>'-',
+						'QTextMode::Search'=>'Search',
+						'QTextMode::MultiLine'=>'MultiLine',
+						'QTextMode::Password'=>'Password',
+						'QTextMode::SingleLine'=>'SingleLine'
+					))
+			));
 		}
 	}
 

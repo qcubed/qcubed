@@ -25,6 +25,16 @@
 			$strValue = '\' . $objDatabase->SqlVariable($this->'.$objColumn->VariableName.') . \'';
 			$strValues .= '							' . $strValue;
 			$strColUpdates .= $strCol .' = '.$strValue;
+		} elseif ($objColumn->Timestamp && $objColumn->AutoUpdate) {
+			if ($strCols) $strCols .= ",\n";
+			if ($strValues) $strValues .= ",\n";
+			if ($strColUpdates) $strColUpdates .= ",\n";
+			$strCol = '							' . $strEscapeIdentifierBegin.$objColumn->Name.$strEscapeIdentifierEnd;
+			$strCols .= $strCol;
+			$strValue = '\' . $objDatabase->SqlVariable(QDateTime::NowToString(QDateTime::FormatIso)) . \'';
+			$strValues .= '							' . $strValue;
+			$strColUpdates .= $strCol .' = '.$strValue;
+
 		}
 	}
 	if ($strValues) {
@@ -171,7 +181,7 @@
 <?php } ?>
 <?php } ?>
 
-			$this->DeleteCache();
+			$this->DeleteFromCache();
 
 			if (static::$blnWatchChanges) {
 				QWatcher::MarkTableModified ('<?= QApplication::$Database[$objTable->OwnerDbIndex]->Database ?>', '<?= $objTable->Name ?>');

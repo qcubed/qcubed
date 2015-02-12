@@ -87,6 +87,14 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName Property name
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// APPEARANCE
@@ -110,6 +118,15 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName  Property name
+		 * @param string $mixValue Property value
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

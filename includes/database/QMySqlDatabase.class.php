@@ -99,6 +99,9 @@
 		}
 	}
 
+	/**
+	 * Class to handle results sent by database upon querying
+	 */
 	class QMySqlDatabaseResult extends QMySqliDatabaseResult {
 		protected $objMySqlResult;
 		protected $objDb;

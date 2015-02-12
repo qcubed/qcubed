@@ -9,25 +9,24 @@
 	 *
 	 */
 
-    /**
-     * Impelements a JQuery UI Datepicker in a box
-     * 
-     * A Datepicker Box is similar to a Datepicker, but its not associated with a field. It
-     * just displays a calendar for picking a date.
-     * 
-	 * @property string $DateFormat			The format to use for displaying the date
-	 * @property string $DateTimeFormat		Alias for DateFormat
-	 * @property QDateTime $DateTime		The date to set the field to
-	 * @property mixed $Minimum				Alias for MinDate
-	 * @property mixed $Maximum				Alias for MaxDate
-	 * @property string $Text				Textual date to set it to
+	/**
+	 * Impelements a JQuery UI Datepicker in a box
+	 * A Datepicker Box is similar to a Datepicker, but its not associated with a field. It
+	 * just displays a calendar for picking a date.
 	 *
-	 * @link http://jqueryui.com/datepicker/#inline
+	 * @property string    $DateFormat             The format to use for displaying the date
+	 * @property string    $DateTimeFormat         Alias for DateFormat
+	 * @property QDateTime $DateTime               The date to set the field to
+	 * @property mixed     $Minimum                Alias for MinDate
+	 * @property mixed     $Maximum                Alias for MaxDate
+	 * @property string    $Text                   Textual date to set it to
+	 * @link    http://jqueryui.com/datepicker/#inline
 	 * @package Controls\Base
 	 */
 	class QDatepickerBoxBase extends QDatepickerBoxGen {
-		protected $strDateTimeFormat = "MM/DD/YY"; // matches default of JQuery UI control
-		/** @var QDateTime */
+		/** @var string Format for the datetime to pick */
+		protected $strDateTimeFormat = "MM/DD/YYYY"; // matches default of JQuery UI control
+		/** @var QDateTime variable to store the picked value */
 		protected $dttDateTime;
 
 		public function ParsePostData() {
@@ -53,31 +52,37 @@
 			if ($this->strText != '') {
 				$dttDateTime = new QDateTime($this->strText, null, QDateTime::DateOnlyType);
 				if ($dttDateTime->IsDateNull()) {
-					$this->strValidationError = QApplication::Translate("Invalid date");
+					$this->ValidationError = QApplication::Translate("Invalid date");
 					return false;
 				}
 				if (!is_null($this->Minimum)) {
 					if ($dttDateTime->IsEarlierThan($this->Minimum)) {
-						$this->strValidationError = QApplication::Translate("Date is earlier than minimum allowed");
+						$this->ValidationError = QApplication::Translate("Date is earlier than minimum allowed");
 						return false;
 					}
 				}
 
 				if (!is_null($this->Maximum)) {
 					if ($dttDateTime->IsLaterThan($this->Maximum)) {
-						$this->strValidationError = QApplication::Translate("Date is later than maximum allowed");
+						$this->ValidationError = QApplication::Translate("Date is later than maximum allowed");
 						return false;
 					}
 				}
 			}
-
-			$this->strValidationError = '';
 			return true;
 		}
 
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method implementation
+		 *
+		 * @param string $strName
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// MISC
@@ -104,6 +109,14 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method implementation
+		 *
+		 * @param string $strName  Property name
+		 * @param string $mixValue Property value to be set
+		 *
+		 * @throws Exception|QCallerException|QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case 'MaxDate':
@@ -197,14 +210,31 @@
 			}
 		}
 
-		/**** Codegen Helpers, used during the Codegen process only. ****/
+		/* === Codegen Helpers, used during the Codegen process only. === */
 
+		/**
+		 * Return a variable name given a property name.
+		 *
+		 * @param $strPropName
+		 *
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'cal' . $strPropName;
 		}
 
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		/**
+		 * Return code that will update the control with data from the database.
+		 *
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param bool                                           $blnInit
+		 *
+		 * @return string
+		 */
+		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
@@ -217,8 +247,17 @@
 		}
 
 
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+		/**
+		 * Return code that will update the database with info from the control.
+		 *
+		 * @param QCodeGen                                       $objCodeGen
+		 * @param QTable                                         $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @return string
+		 */
+		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strRet = <<<TMPL
@@ -226,6 +265,15 @@
 
 TMPL;
 			return $strRet;
+		}
+
+		/**
+		 * @return QMetaParam[]
+		 */
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'DateFormat', 'How to format the date. Default: MM/DD/YY', QType::String)
+			));
 		}
 
 	}

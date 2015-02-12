@@ -82,7 +82,6 @@ CREATE TABLE address (
 
 CREATE INDEX IDX_address_1 ON address(person_id);
 
-DROP TABLE IF EXISTS two_key;
 CREATE TABLE two_key (
   "server" VARCHAR(50) NOT NULL,
   "directory" VARCHAR(50) NOT NULL,
@@ -100,7 +99,7 @@ CREATE TABLE person_type (
   CONSTRAINT PK_person_type PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS person_persontype_assn (
+CREATE TABLE person_persontype_assn (
   person_id INT NOT NULL,
   person_type_id INT NOT NULL,
   CONSTRAINT PK_person_persontype_assn PRIMARY KEY (person_id, person_type_id)
@@ -109,12 +108,25 @@ CREATE TABLE IF NOT EXISTS person_persontype_assn (
 CREATE INDEX IX_persontype_1 ON person_persontype_assn(person_id);
 CREATE INDEX IX_persontype_2 ON person_persontype_assn(person_type_id);
 
-DROP TABLE IF EXISTS qc_watchers;
-CREATE TABLE IF NOT EXISTS qc_watchers (
+CREATE TABLE qc_watchers (
   table_key varchar(200) NOT NULL,
   ts varchar(40) NOT NULL,
   CONSTRAINT PK_qc_watchers PRIMARY KEY (table_key)
 );
+
+CREATE TABLE type_test (
+  id INT NOT NULL IDENTITY,
+  date date,
+  time time,
+  date_time datetime,
+  test_int BIGINT,
+  test_float float,
+  test_text text,
+  test_bit bit,
+  test_varchar VARCHAR(10),
+  PRIMARY KEY (id)
+);
+
 
 
 ALTER TABLE login ADD CONSTRAINT person_login FOREIGN KEY (person_id) REFERENCES person (id);

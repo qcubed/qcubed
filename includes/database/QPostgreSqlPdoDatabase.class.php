@@ -131,14 +131,26 @@ class QPostgreSqlPdoDatabase extends QPdoDatabase {
 
 				// Check for DATE Value
 				if ($mixData instanceof QDateTime) {
-						if ($mixData->IsTimeNull())
-								return $strToReturn . sprintf("'%s'", $mixData->__toString('YYYY-MM-DD'));
-						else
-								return $strToReturn . sprintf("'%s'", $mixData->__toString(QDateTime::FormatIso));
+						if ($mixData->IsTimeNull()) {
+							if ($mixData->IsDateNull()) {
+								return $strToReturn . 'NULL'; // null date and time is a null value
+							}
+							return  $strToReturn . sprintf("'%s'", $mixData->qFormat('YYYY-MM-DD'));
+						} elseif ($mixData->IsDateNull()) {
+							return  $strToReturn . sprintf("'%s'", $mixData->qFormat('hhhh:mm:ss'));
+						} else {
+							return  $strToReturn . sprintf("'%s'", $mixData->qFormat(QDateTime::FormatIso));
+						}
+						return $strToReturn . $s;
+
 				}
 
 				// Assume it's some kind of string value
-				return $strToReturn . sprintf("'%s'", pg_escape_string($mixData));
+				// must connect to the adapter to use quote
+				if (!$this->objPdo) {
+					$this->Connect();
+				}
+				return $strToReturn . sprintf("%s", $this->objPdo->quote($mixData));
 		}
 
 		public function SqlLimitVariablePrefix($strLimitInfo) {
@@ -397,7 +409,7 @@ class QPostgreSqlPdoDatabase extends QPdoDatabase {
 
 }
 /**
- * QPostgreSqlPdoDatabaseResult
+ * QPostgreSqlPdoDatabaseResult: Class to handle results sent by database upon querying
  */
 class QPostgreSqlPdoDatabaseResult extends QPdoDatabaseResult {
 
@@ -434,6 +446,14 @@ class QPostgreSqlPdoDatabaseRow extends QDatabaseRowBase {
 			$this->strColumnArray = $strColumnArray;
 		}
 
+		/**
+		 * Gets the value of a column from a result row returned by the database
+		 *
+		 * @param string                  $strColumnName Name of te column
+		 * @param null|QDatabaseFieldType $strColumnType Data type
+		 *
+		 * @return mixed
+		 */
 		public function GetColumn($strColumnName, $strColumnType = null) {
 			if (!isset($this->strColumnArray[$strColumnName])) {
 				return null;
@@ -470,6 +490,13 @@ class QPostgreSqlPdoDatabaseRow extends QDatabaseRowBase {
 			}
 		}
 
+		/**
+		 * Tells whether a particular column exists in a returned database row
+		 *
+		 * @param string $strColumnName Name of te column
+		 *
+		 * @return bool
+		 */
 		public function ColumnExists($strColumnName) {
 			return array_key_exists($strColumnName, $this->strColumnArray);
 		}
@@ -607,9 +634,7 @@ class QPostgreSqlPdoDatabaseField extends QDatabaseFieldBase {
 								break;
 						case 'timestamp':
 						case 'timestamp without time zone':
-						// System-generated Timestamp values need to be treated as plain text
-								$this->strType = QDatabaseFieldType::VarChar;
-								$this->blnTimestamp = true;
+								$this->strType = QDatabaseFieldType::DateTime;
 								break;
 						case 'date':
 								$this->strType = QDatabaseFieldType::Date;

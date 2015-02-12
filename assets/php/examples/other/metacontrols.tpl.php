@@ -4,43 +4,67 @@
 <div id="instructions">
 	<h1>Generated MetaControl Objects</h1>
 	As you build out more and more database-driven <strong>QForms</strong> and <strong>QPanels</strong>, you'll notice
-	that you still may spend quite a bit of wasted time coding the same type of Control
+	that you may spend quite a bit of time coding the same type of Control
 	definition, setup and data binding procedures over and over again. This becomes
 	especially tedious when you are talking about modifying objects with a large
 	number of fields.</p>
 
-<p>Utilizing QControls and the code generator, QCubed can generate <strong>MetaControl</strong> classes for each
-	of your ORM classes. <strong>MetaControls</strong> are essentially classes which contains functionality
-	to simplify the <strong>QControl</strong> creation/definition, setup and data binding process for you.</p>
+<p>An important part of the "View" functionality of the MVC architecture of QCubed is the <strong>MetaControl</strong>.
+	It connects specific screen controls to the fields in a database table,
+	and includes the code to create the controls, populate them with data from the table, and save the user's changes
+	back to the database.
+	<strong>MetaControls</strong> include a code-generated base, and also a stub sub-class to allow you to override parts of the
+	<strong>MetaControl</strong> for your own customizations.
 
-<p>Essentially, for each field in a class, you can have the <strong>MetaControl</strong> return for you a data bound
-	and setup <strong>QControl</strong> for editing, or even a <strong>QLabel</strong> just for viewing.  But because these MetaControls
+<p>For each field in a class, you can have the <strong>MetaControl</strong> return for you a data bound
+	and setup <strong>QControl</strong> for editing, or a <strong>QLabel</strong> just for viewing.  But because these MetaControls
 	are simply returning standard QControls, you can then modify them (stylizing, adding events, etc.) as you normally would
 	any other control.</p>
 
-<p>You'll note in the PHP code that while it doesn't appear that we save that much in terms of Lines of Code,
-	you will note that some of the more tedious, non application-specific code of literally making calls like
-	<strong>$this->txtFirstName = new QTextBox($this)</strong> and setting up the <strong>Text</strong>, <strong>Required</strong> and <strong>Name</strong> properties
-	of <strong>$txtFirstName</strong> is now done for you.</p>
+<p>As you request controls from the <strong>MetaControl</strong>, it keeps track of which controls you have request, so that you can call
+		<strong>SavePerson()</strong> on the <strong>MetaControl</strong>, and it will go through any controls
+		created thus far and bind the data for those controls back to the Person object. If your application needs to
+		scroll through a group of objects, you can use the <strong>Load</strong> method to load new data for a database record
+		into all of your requested controls automatically. </p>
 
-<p>And because the <strong>MetaControl</strong> will be able to keep track <i>which</i> controls have been generated
-	thus far, you can call
-	(for example) <strong>SavePerson()</strong> on the <strong>MetaControl</strong>, and it will smartly go through any controls
-	created thus far and bind the data back to the Person object.</p>
+<h2>The MetaControl Designer</h2>
 
-<p>We show this in our example below, where we have clickable labels and hidden textboxes to
-	aid with the viewing and/or editing of Person #1.</p>
+<p>The code-generated controls includes some basic options which QCubed reads from the database. For example, if your database field
+	is not allowed to be null, the code-generated control will automatically have the <strong>Required</strong>
+	attribute set to true. To further customize what will be generated in the base version of the <strong>MetaControl</strong>,
+	you can use the <strong>MetaControl Designer</strong>. To use the designer, do the following:</p>
 
-<p>Finally, note that because <strong>MetaControls</strong> encapsulate all the functionality for a given
-	instance of a given object, and because it is able to keep track of and maintain its own
+	<ol>
+		<li>Define the <strong>__DESIGN_MODE__</strong> constant in your configuration file.</li>
+		<li>Right click on the <strong>QControl</strong> you want to modify in your browser.</li>
+		<li>Set your options, click the Save button, and the code-generate again.</li>
+	</ol>
+
+<p>You can set a large variety of options from this dialog (try it now by right clicking on a field in the example to the right), including
+	the ability to change the type of control generated for a database field.
+	Hover over any option in the designer to popup a description of that option.</p>
+
+<p>The options for the <strong>MetaControl Designer</strong> are saved in the "codegen_options.json" file in your configuration directory.
+	If you make a change that you cannot fix from the <strong>MetaControl Designer</strong> (like hiding a control that you want to show),
+	you can always directly edit that file to recover from your mistake.</p>
+
+<h2>The Example</h2>
+
+<p>The example shows some basic controls so that you can try out the <strong>MetaControl Designer</strong>. Right click
+	on any of the fields or the checkboxes to bring up a dialog that will let you specify the various options for
+	the codegen process.</p>
+
+<p>Finally, note that since the <strong>MetaControls</strong> encapsulate all the functionality for a given
+	instance of a given object, and since it is able to keep track of and maintain its own
 	set of controls, you can easily have multiple <strong>MetaControls</strong> on any <strong>QForm</strong> or <strong>QPanel</strong>,
-	if you want to view or edit multiple objects of any class at the same time.</p>
+	view or edit multiple objects of any class at the same time.</p>
 </div>
 
 <div id="demoZone">
 	<p>Click on any label to edit:</p>
-	<?php $this->lblFirstName->RenderWithName(); ?><?php $this->txtFirstName->RenderWithName(); ?>
-	<?php $this->lblLastName->RenderWithName(); ?><?php $this->txtLastName->RenderWithName(); ?>
+	<?php $this->txtFirstName->RenderWithName(); ?>
+	<?php $this->txtLastName->RenderWithName(); ?>
+	<?php $this->lstPersonTypes->RenderWithName(); ?>
 
 	<p>
 		<?php $this->btnSave->Render(); ?>

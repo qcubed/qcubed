@@ -306,7 +306,7 @@ class QSqLite3PdoDatabase extends QPdoDatabase {
 }
 
 /**
- * QSqLite3PdoDatabaseResult
+ * QSqLite3PdoDatabaseResult: Class to handle results sent by database upon querying
  */
 class QSqLite3PdoDatabaseResult extends QPdoDatabaseResult {
 
@@ -343,6 +343,14 @@ class QSqLite3PdoDatabaseRow extends QDatabaseRowBase {
 		$this->strColumnArray = $strColumnArray;
 	}
 
+	/**
+	 * Gets the value of a column from a result row returned by the database
+	 *
+	 * @param string                  $strColumnName Name of te column
+	 * @param null|QDatabaseFieldType $strColumnType Data type
+	 *
+	 * @return mixed
+	 */
 	public function GetColumn($strColumnName, $strColumnType = null) {
 		if (!isset($this->strColumnArray[$strColumnName])) {
 			return null;
@@ -378,6 +386,13 @@ class QSqLite3PdoDatabaseRow extends QDatabaseRowBase {
 		}
 	}
 
+	/**
+	 * Tells whether a particular column exists in a returned database row
+	 *
+	 * @param string $strColumnName Name of te column
+	 *
+	 * @return bool
+	 */
 	public function ColumnExists($strColumnName) {
 		return array_key_exists($strColumnName, $this->strColumnArray);
 	}
@@ -478,17 +493,13 @@ class QSqLite3PdoDatabaseField extends QDatabaseFieldBase {
 				//    not be able to use a QFloatTextBox -- only a regular QTextBox)
 				$this->strType = QDatabaseFieldType::VarChar;
 				break;
-			case 'TIMESTAMP':
-				// System-generated Timestamp values need to be treated as plain text
-				$this->strType = QDatabaseFieldType::VarChar;
-				$this->blnTimestamp = true;
-				break;
 			case 'DATE':
 				$this->strType = QDatabaseFieldType::Date;
 				break;
 			case 'TIME':
 				$this->strType = QDatabaseFieldType::Time;
 				break;
+			case 'TIMESTAMP':	// Timestamps do not exist
 			case 'DATETIME':
 				$this->strType = QDatabaseFieldType::DateTime;
 				break;

@@ -8,6 +8,10 @@
 	/**
 	 * This class will render an HTML Checkbox.
 	 *
+	 * Labels are a little tricky with checkboxes. There are two built-in ways to make labels:
+	 * 1) Assign a Name property, and render using something like RenderWithName
+	 * 2) Assign a Text property, in which case the checkbox will be wrapped with a label and the text you assign.
+	 *
 	 * @package Controls
 	 *
 	 * @property string $Text is used to display text that is displayed next to the checkbox.  The text is rendered as an html "Label For" the checkbox.
@@ -16,9 +20,9 @@
 	 * @property boolean $HtmlEntities specifies whether the checkbox text will have to be run through htmlentities or not.
 	 */
 	class QCheckBox extends QControl {
-		///////////////////////////
-		// Private Member Variables
-		///////////////////////////
+
+		protected $strTag = 'input';
+		protected $blnIsVoidElement = true;
 
 		// APPEARANCE
 		/** @var string Text opposite to the checkbox */
@@ -34,15 +38,26 @@
 		/** @var bool Determines whether the checkbox is checked? */
 		protected $blnChecked = false;
 
+		/**
+		 * @var  QTagStyler for labels of checkboxes. If side-by-side labeling, the styles will be applied to a
+		 * span that wraps both the checkbox and the label.
+		 */
+		protected $objLabelStyle;
+
+
 		//////////
 		// Methods
 		//////////
+
 		/**
 		 * Parses the Post Data submitted for the control and sets the values
 		 * according to the data submitted
 		 */
 		public function ParsePostData() {
-			if ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
+			if (QApplication::$RequestMode == QRequestMode::Ajax) {
+				$this->blnChecked = QType::Cast ($_POST[$this->strControlId], QType::Boolean);
+			}
+			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (array_key_exists($this->strControlId, $_POST)) {
 					if ($_POST[$this->strControlId])
 						$this->blnChecked = true;
@@ -55,84 +70,96 @@
 		}
 
 		/**
-		 * Returns the HTML code for the control which can be sent to the client
+		 * Returns the HTML code for the control which can be sent to the client.
+		 *
+		 * Note, previous version wrapped this in a div and made the control a block level control unnecessarily. To
+		 * achieve a block control, set blnUseWrapper and blnIsBlockElement.
+		 *
 		 * @return string THe HTML for the control
 		 */
 		protected function GetControlHtml() {
-			if (!$this->blnEnabled)
-				$strDisabled = 'disabled="disabled" ';
-			else
-				$strDisabled = "";
+			$attrOverride = array('type'=>'checkbox', 'name'=>$this->strControlId);
+			return $this->RenderButton($attrOverride);
+		}
 
-			if ($this->intTabIndex)
-				$strTabIndex = sprintf('tabindex="%s" ', $this->intTabIndex);
-			else
-				$strTabIndex = "";
-
-			if ($this->strToolTip)
-				$strToolTip = sprintf('title="%s" ', $this->strToolTip);
-			else
-				$strToolTip = "";
-
-			if ($this->strCssClass)
-				$strCssClass = sprintf('class="%s" ', $this->strCssClass);
-			else
-				$strCssClass = "";
-
-			if ($this->strAccessKey)
-				$strAccessKey = sprintf('accesskey="%s" ', $this->strAccessKey);
-			else
-				$strAccessKey = "";
-				
-			if ($this->blnChecked)
-				$strChecked = 'checked="checked" ';
-			else
-				$strChecked = "";
-
-			$strStyle = $this->GetStyleAttributes();
-			if (strlen($strStyle) > 0)
-				$strStyle = sprintf('style="%s" ', $strStyle);
-
-			$strCustomAttributes = $this->GetCustomAttributes();
-
-			if (strlen($this->strText)) {
-				$this->blnIsBlockElement = true;
-				$strCheckHtml = sprintf('<input type="checkbox" id="%s" name="%s" %s%s%s%s />',
-					$this->strControlId,
-					$this->strControlId,
-					$strDisabled,
-					$strChecked,
-					$strAccessKey,
-					$strTabIndex);
-
-				$strLabelHtml = sprintf ('<label for="%s">%s</label>',
-					$this->strControlId,
-					($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText);
-				if ($this->strTextAlign == QTextAlign::Left) {
-					$strCombined = $strLabelHtml .  $strCheckHtml;
-				} else {
-					$strCombined = $strCheckHtml . $strLabelHtml;
-				}
-
-				$strToReturn = sprintf('<div %s%s%s%s%s>%s</div>',
-					$strCssClass, $strToolTip, $strStyle, $strCustomAttributes, $strDisabled, $strCombined);
-
-			} else {
-				$this->blnIsBlockElement = false;
-				$strToReturn = sprintf('<input type="checkbox" id="%s" name="%s" %s%s%s%s%s%s%s%s />',
-					$this->strControlId,
-					$this->strControlId,
-					$strCssClass,
-					$strDisabled,
-					$strChecked,
-					$strAccessKey,
-					$strToolTip,
-					$strTabIndex,
-					$strCustomAttributes,
-					$strStyle);
+		/**
+		 * Render the button code. Broken out to allow QRadioButton to use it too.
+		 *
+		 * @param $attrOverride
+		 * @return string
+		 */
+		protected function RenderButton ($attrOverride) {
+			if ($this->blnChecked) {
+				$attrOverride['checked']='checked';
 			}
 
-			return $strToReturn;
+			if (strlen($this->strText)) {
+				$strText = ($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText;
+				if (!$this->blnWrapLabel) {
+					$strLabelAttributes = ' for="' . $this->strControlId .'"';
+				} else {
+					$strLabelAttributes = $this->RenderLabelAttributes();
+				}
+				$strCheckHtml = QHtml::RenderLabeledInput(
+					$strText,
+					$this->strTextAlign == QTextAlign::Left,
+					$this->RenderHtmlAttributes($attrOverride),
+					$strLabelAttributes,
+					$this->blnWrapLabel
+				);
+				if (!$this->blnWrapLabel) {
+					// Additionally wrap in a span so we can associate the label with the checkbox visually and apply the styles
+					$strCheckHtml = QHtml::RenderTag('span',  $this->RenderLabelAttributes(), $strCheckHtml);
+				}
+			}
+			else {
+				$strCheckHtml = $this->RenderTag('input', $attrOverride, null, null, true);
+			}
+			return $strCheckHtml;
+		}
+
+		/**
+		 * Return a styler to style the label that surrounds the control if the control has text.
+		 * @return string
+		 */
+		public function getCheckLabelStyler() {
+			if (!$this->objLabelStyle) {
+				$this->objLabelStyle = new QTagStyler();
+			}
+			return $this->objLabelStyle;
+		}
+
+		/**
+		 * There is a little bit of a conundrum here. If there is text assigned to the checkbox, we wrap
+		 * the checkbox in a label. However, in this situation, its unclear what to do with the class and style
+		 * attributes that are for the checkbox. We are going to let the developer use the label styler to make
+		 * it clear what their intentions are.
+		 * @return string
+		 */
+		protected function RenderLabelAttributes() {
+			$attributes = $this->GetHtmlAttributes(['title']); // copy tooltip to wrapping label
+			$objStyler = $this->getCheckLabelStyler();
+			if ($attributes) {
+				$objStyler = $objStyler->ApplyOverride($attributes);
+			}
+
+			if (!$this->Enabled) {
+				$objStyler->AddCssClass('disabled');	// add the disabled class to the label for styling
+			}
+			if (!$this->Display) {
+				$objStyler->Display = false;
+			}
+			return $objStyler->RenderHtmlAttributes();
+		}
+
+		/**
+		 * Send end script to detect the change on the control before other actions.
+		 * @return string
+		 */
+		public function GetEndScript() {
+			$str = parent::GetEndScript();
+			$str = sprintf ('$j("#%s").change(qc.formObjChanged);', $this->ControlId) . $str;
+			return $str;
 		}
 
 		/**
@@ -145,14 +172,12 @@
 			if ($this->blnRequired) {
 				if (!$this->blnChecked) {
 					if ($this->strName)
-						$this->strValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
+						$this->ValidationError = QApplication::Translate($this->strName) . ' ' . QApplication::Translate('is required');
 					else
-						$this->strValidationError = QApplication::Translate('Required');
+						$this->ValidationError = QApplication::Translate('Required');
 					return false;
 				}
 			}
-
-			$this->strValidationError = null;
 			return true;
 		}
 
@@ -238,7 +263,18 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-					
+
+				// Copy certain attributes to the label styler when assigned since its part of the control.
+				case 'CssClass':
+					try {
+						parent::__set($strName, $mixValue);
+						$this->getCheckLabelStyler()->CssClass = $mixValue; // assign to both checkbox and label so they can be styled together using css
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -250,8 +286,16 @@
 			}
 		}
 
-		/**** Codegen Helpers, used during the Codegen process only. ****/
+		/* === Codegen Helpers, used during the Codegen process only. === */
 
+		/**
+		 *
+		 * Returns the variable name for a control of this type during code generation process
+		 *
+		 * @param string $strPropName Property name for which the control to be generated is being generated
+		 *
+		 * @return string
+		 */
 		public static function Codegen_VarName($strPropName) {
 			return 'chk' . $strPropName;
 		}
@@ -266,30 +310,49 @@
 		 * @return string
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-			$strControlId = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-			$strLabelName = QCodeGen::MetaControlLabelNameFromColumn($objColumn);
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 
 			// Read the control type in case we are generating code for a subclass
-			$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+			$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 
 			$strRet = <<<TMPL
 		/**
-		 * Create and setup a $strControlType $strControlId
+		 * Create and setup a $strControlType $strControlVarName
 		 * @param string \$strControlId optional ControlId to use
 		 * @return $strControlType
 		 */
-		public function {$strControlId}_Create(\$strControlId = null) {
-			\$this->{$strControlId} = new $strControlType(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlId}->Name = QApplication::Translate('$strLabelName');
-			\$this->{$strControlId}->Checked = \$this->{$strObjectName}->{$objColumn->PropertyName};
+		public function {$strControlVarName}_Create(\$strControlId = null) {
+
+TMPL;
+			$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
+
+			if ($strControlIdOverride) {
+				$strRet .= <<<TMPL
+			if (!\$strControlId) {
+				\$strControlId = '$strControlIdOverride';
+			}
+
+TMPL;
+			}
+			$strRet .= <<<TMPL
+			\$this->{$strControlVarName} = new $strControlType(\$this->objParentObject, \$strControlId);
+			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
+			\$this->{$strControlVarName}->Checked = \$this->{$strObjectName}->{$objColumn->PropertyName};
 
 TMPL;
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+			if ($strMethod = QCodeGen::$PreferredRenderMethod) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
+
+TMPL;
+			}
+			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
 			$strRet .= <<<TMPL
-			return \$this->{$strControlId};
+			return \$this->{$strControlVarName};
 		}
 
 
@@ -299,8 +362,17 @@ TMPL;
 
 		}
 
+		/**
+		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
+		 *
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @return string
+		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
@@ -309,8 +381,15 @@ TMPL;
 		}
 
 
+		/**
+		 * Generate the code to move data from the control to the database.
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn $objColumn
+		 * @return string
+		 */
 		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-			$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
 			$strRet = <<<TMPL
@@ -319,7 +398,4 @@ TMPL;
 TMPL;
 			return $strRet;
 		}
-
-
 	}
-?>

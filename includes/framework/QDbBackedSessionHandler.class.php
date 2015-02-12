@@ -27,9 +27,12 @@
 
 		/**
 		 * @static
-		 * @param int $intDbIndex The index in the database array
+		 *
+		 * @param int    $intDbIndex   The index in the database array
 		 * @param string $strTableName The table name to be used for saving sessions.
-		 * @return boolean
+		 *
+		 * @return bool
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public static function Initialize($intDbIndex = 1, $strTableName = "qc_session") {
 			self::$intDbIndex = QType::Cast($intDbIndex, QType::Integer);
@@ -61,17 +64,34 @@
 			return $session_ok;
 		}
 
+		/**
+		 * Open the session (used by PHP when the session handler is active)
+		 * @param string $save_path
+		 * @param string $session_name
+		 *
+		 * @return bool
+		 */
 		public static function SessionOpen($save_path, $session_name) {
 			self::$strSessionName = $session_name;
 			// Nothing to do
 			return true;
 		}
 
+		/**
+		 * Close the session (used by PHP when the session handler is active)
+		 * @return bool
+		 */
 		public static function SessionClose() {
 			// Nothing to do.
 			return true;
 		}
 
+		/**
+		 * Read the session data (used by PHP when the session handler is active)
+		 * @param string $id
+		 *
+		 * @return string the session data, base64 decoded
+		 */
 		public static function SessionRead($id) {
 			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
@@ -98,6 +118,12 @@
 			return base64_decode($strData);
 		}
 
+		/**
+		 * Tells whether a session by given name exists or not (used by PHP when the session handler is active)
+		 * @param string $id Session ID
+		 *
+		 * @return bool does the session exist or not
+		 */
 		public static function SessionExists($id) {
 			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
@@ -116,6 +142,14 @@
 			return !empty($result_row);
 		}
 
+		/**
+		 * Write data to the session
+		 *
+		 * @param string $id The session ID
+		 * @param string $strSessionData Data to be written to the Session whose ID was supplied
+		 *
+		 * @return bool
+		 */
 		public static function SessionWrite($id, $strSessionData) {
 			// We save base 64 encoded data in the database and there are reasons for it:
 			// If you are having anything in session data which does not go well with the UTF-8 (default for most databases)
@@ -136,6 +170,13 @@
 			return true;
 		}
 
+		/**
+		 * Destroy the session for a given session ID
+		 *
+		 * @param string $id The session ID
+		 *
+		 * @return bool
+		 */
 		public static function SessionDestroy($id) {
 			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
@@ -149,6 +190,13 @@
 			return true;
 		}
 
+		/**
+		 * Garbage collect session data (delete/destroy sessions which are older than the max allowed lifetime)
+		 *
+		 * @param int $intMaxSessionLifetime The max session lifetime (in seconds)
+		 *
+		 * @return bool
+		 */
 		public static function SessionGarbageCollect($intMaxSessionLifetime) {
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			$old = time() - $intMaxSessionLifetime;

@@ -32,10 +32,12 @@
 	abstract class QDisplayStyle {
 		/** Hide the control */
 		const None = 'none';
-		/** Treat as a block-control */
+		/** Treat as a block element */
 		const Block = 'block';
-		/** Treat as an inline-control */
+		/** Treat as an inline element */
 		const Inline = 'inline';
+		/** Treat as an inline-block element */
+		const InlineBlock = 'inline-block';
 		/** Display style not set. Browser will take care */
 		const NotSet = 'NotSet';
 	}
@@ -50,16 +52,30 @@
 		const Right = 'right';
 	}
 
+	/**
+	 * Class QRepeatDirection: Set the direction in which QRadioButtonList and QCheckBoxList will be repeated
+	 */
 	abstract class QRepeatDirection {
+		/** Repeat Horizontally */
 		const Horizontal = 'Horizontal';
+		/** Repeat Vertically */
 		const Vertical = 'Vertical';
 	}
 
+	/**
+	 * Class QGridLines: Set the gridlines which have to be rendered for a QDataGrid. HTML5 no longer supports
+	 * the "rules" attributes, so this is now handled in CSS by adding a particular class to the table. So
+	 * the text below corresponds to class names added to the table.
+	 */
 	abstract class QGridLines {
-		const None = 'none';
-		const Horizontal = 'horizontal';
-		const Vertical = 'vertical';
-		const Both = 'both';
+		/** No gridlines to be rendered */
+		const None = '';
+		/** Horizontal gridlines but not vertical gridlines should be renderd */
+		const Horizontal = 'horizontalRules';
+		/** Vertical gridlines should be rendered but not horizontal ones */
+		const Vertical = 'verticalRules';
+		/** Both horizontal and verical gridlines have to be rendered */
+		const Both = 'horizontalRules verticalRules';
 	}
 
 	/**
@@ -70,7 +86,7 @@
 		const Single = 'Single';
 		/** Can select more than one */
 		const Multiple = 'Multiple';
-		/** Cannot select any item */
+		/** Selection mode not specified */
 		const None = 'None';
 	}
 
@@ -96,24 +112,45 @@
 		const Url = 'url';
 	}
 
+	/**
+	 * Class QHorizontalAlign: Horizontal alignment of a QControl (mostly the text of the control)
+	 */
 	abstract class QHorizontalAlign {
+		/** Not set */
 		const NotSet = 'NotSet';
+		/** Left align */
 		const Left = 'left';
+		/** Center align */
 		const Center = 'center';
+		/** Right align */
 		const Right = 'right';
+		/** Justify alignment for text */
 		const Justify = 'justify';
 	}
 
+	/**
+	 * Class QVerticalAlign: Vertical alignment of a QControl
+	 */
 	abstract class QVerticalAlign {
+		/** Not set */
 		const NotSet = 'NotSet';
+		/** Pull to top (top alignment) */
 		const Top = 'top';
+		/** Center vertically */
 		const Middle = 'middle';
+		/** Push to bottom (bottom alignment) */
 		const Bottom = 'bottom';
 	}
 
+	/**
+	 * Class QBorderCollapse: css "border-collapse" property for QDataGrid
+	 */
 	abstract class QBorderCollapse {
+		/** Not set */
 		const NotSet = 'NotSet';
+		/** Borders are not collapsed */
 		const Separate = 'Separate';
+		/** Collapse the borders */
 		const Collapse = 'Collapse';
 	}
 
@@ -121,27 +158,43 @@
 	 * Contains the display options for the QDateTimePicker control
 	 */
 	abstract class QDateTimePickerType {
+		/** Show only date */
 		const Date = 'Date';
+		/** Show date and time */
 		const DateTime = 'DateTime';
+		/** Show date and time with seconds */
 		const DateTimeSeconds = 'DateTimeSeconds';
+		/** Show only time (not the date) */
 		const Time = 'Time';
+		/** Show time with seconds (but not the date) */
 		const TimeSeconds = 'TimeSeconds';
 	}
 
+	/**
+	 * Class QCalendarType: [Currently unused]
+	 */
 	abstract class QCalendarType {
+		/** Date only */
 		const DateOnly = 'DateOnly';
+		/** Date and time */
 		const DateTime = 'DateTime';
+		/** Date and time with seconds */
 		const DateTimeSeconds = 'DateTimeSeconds';
+		/** Time only */
 		const TimeOnly = 'TimeOnly';
+		/** Time with seconds */
 		const TimeSecondsOnly = 'TimeSecondsOnly';
 	}
 
 	/**
-	 * Formats accepted by the QDateTimePicker Qcontrol
+	 * Order in which the listboxes of QDateTimePicker are shown/rendered
 	 */
 	abstract class QDateTimePickerFormat {
+		/** Render Month, then Day, then Year */
 		const MonthDayYear = 'MonthDayYear';
+		/** Render Day first, then Month, then Year */
 		const DayMonthYear = 'DayMonthYear';
+		/** Render Year, then Month and then Day */
 		const YearMonthDay = 'YearMonthDay';
 	}
 
@@ -174,6 +227,23 @@
 	}
 
 	/**
+	 * Categories of ajax response
+	 */
+	abstract class QAjaxResponse {
+		const Watcher = 'watcher';
+		const Controls = 'controls';
+		const Commands = 'commands'; // TODO: Remove this and issue specific commands rather than eval'ing javascript?
+		const Html = 'html';
+		const Value = 'value';
+		const Id = 'id';
+		const Attributes = 'attributes';
+		const Css = 'css';
+		const Close = 'winclose';
+		const Location = 'loc';
+	}
+
+
+/**
 	 * Contains options for the CSS 'position' property.
 	 */
 	abstract class QPosition {
@@ -186,9 +256,14 @@
 		/** Will result in 'static' positioning. Is default */
 		const NotSet = 'NotSet';
 	}
-	
+
+	/**
+	 * Class QResizeHandleDirection: [Currently Unused]
+	 */
 	abstract class QResizeHandleDirection {
+		/** vertical resize */
 		const Vertical = 'Vertical';
+		/** horizontal resize */
 		const Horizontal = 'Horizontal';
 	}
 
@@ -200,38 +275,73 @@
 		const NotSet = 'NotSet';
 		/** Auto */
 		const Auto = 'auto';
+		/** Cell selection cursor (like one used in MS Excel) */
+		const Cell = 'cell';
+		/** Right click context menu icon */
+		const ContextMenu = 'context-menu';
+		/** The cursor indicates that the column can be resized horizontally */
+		const ColResize = 'col-resize';
+		/** Indicates something is going to be copied */
+		const Copy = 'copy';
 		/** Frag the damn enemy! */
 		const CrossHair = 'crosshair';
 		/** Whatever the browser wants to */
 		const CursorDefault = 'default';
+		/** Indicating that something can be grabbed (like hand control when reading a PDF) */
+		const Grab = 'grab';
+		/** Indicating that something is being grabbed (closed hand control when you drag a page in a PDF reader) */
+		const Grabbing = 'grabbing';
+		/** When you feel like running for your life! (the cursor usually is a '?' symbol) */
+		const Help = 'help';
+		/** When a dragged element cannot be dropped */
+		const NoDrop = 'no-drop';
+		/** No cursor at all - cursor gets invisible */
+		const None = 'none';
+		/** When an action is not allowed (can appear on disabled controls) */
+		const NotAllowed = 'not-allowed';
 		/** For links (usually creates the 'hand') */
 		const Pointer = 'pointer';
+		/** Indicates an event in progress */
+		const Progress = 'progress';
 		/** The icon to move things across */
 		const Move = 'move';
+		/** Creates the 'I' cursor usually seen over editable controls */
+		const Text = 'text';
+		/** The text editing (I) cursor rotated 90 degrees for editing vertically written text */
+		const VerticalText = 'vertical-text';
+		/** Hourglass */
+		const Wait = 'wait';
+		/** Magnification glass style zoom in (+) cursor */
+		const ZoomIn = 'zoom-in';
+		/** Magnification glass style zoom out (-) cursor */
+		const ZoomOut = 'zoom-out';
+		// Resize cursors
 		/** Right edge resize */
 		const EResize = 'e-resize';
-		/** Top-right resize */
-		const NEResize = 'ne-resize';
-		/** Top-left resize */
-		const NWResize = 'nw-resize';
+		/** Horizontal bi-directional resize cursor */
+		const EWResize = 'ew-resize';
 		/** Top edge resize */
 		const NResize = 'n-resize';
+		/** Top-right resize */
+		const NEResize = 'ne-resize';
+		/** Bidirectional North-East or South-West resize */
+		const NESWResize = 'nesw-resize';
+		/** Bidirectional vertical resize cursor */
+		const NSResize = 'ns-resize';
+		/** Top-left resize */
+		const NWResize = 'nw-resize';
+		/** Bidirectional North-West or South-East resize cursor */
+		const NWSEResize = 'nwse-resize';
+		/** Row can be resized (you might see it when trying to alter height of a row in MS Excel) */
+		const RowResize = 'row-resize';
+		/** Bottom edge resize */
+		const SResize = 's-resize';
 		/** Bottom-right resize */
 		const SEResize = 'se-resize';
 		/** Bottom-left resize */
 		const SWResize = 'sw-resize';
-		/** Bottom edge resize */
-		const SResize = 's-resize';
 		/** Left edge resize */
 		const WResize = 'w-resize';
-		/** Creates the 'I' cursor usually seen over editable controls */
-		const Text = 'text';
-		/** Hourglass */
-		const Wait = 'wait';
-		/** When you feel like running for your life! (the cursor usually is a '?' symbol) */
-		const Help = 'help';
-		/** Progress curson */
-		const Progress = 'progress';
 	}
 
 	/**
@@ -316,5 +426,45 @@
 		const QueryString = 2;
 		/** Via Post Data (not in use currently) */
 		const PostData = 3;
-	}	
+	}
+
+	/**
+	 * Class QFormGen
+	 * For specifying the FormGen param value. Declares what to generate for the given database object.
+	 */
+	abstract class QFormGen {
+		/** Generate both a control and a label */
+		const Both = 'both';
+		/** Generate only a label */
+		const LabelOnly = 'label';
+		/** Generate only a control */
+		const ControlOnly = 'control';
+		/** Do not generate anything for this database object */
+		const None = 'none';
+	}
+
+	/**
+	 * Class QOrderedListType
+	 * For specifying how to number an ordered html list. Goes in the type attribute.
+	 */
+	abstract class QOrderedListType {
+		const Numbers = '1';
+		const UppercaseLetters = 'A';
+		const LowercaseLetters = 'a';
+		const UppercaseRoman = 'I';
+		const LowercaseRoman = 'i';
+	}
+
+	/**
+	 * Class QUnorderedListStyle
+	 * For specifying what to dislay in an unordered html list. Goes in the list-style-type style.
+	 */
+	abstract class QUnorderedListStyle {
+		const Disc = 'disc';
+		const Circle = 'circle';
+		const Square = 'square';
+		const None = 'none';
+	}
+
+
 ?>

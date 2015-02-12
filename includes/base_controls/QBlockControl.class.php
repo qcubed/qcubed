@@ -142,29 +142,6 @@
 			return $strToReturn;
 		}
 
-		/**
-		 * Returns the CSS styles for the control
-		 * @return string The CSS style string
-		 */
-		public function GetStyleAttributes() {
-			$strStyle = parent::GetStyleAttributes();
-			
-			if ($this->strPadding) {
-				if (is_numeric($this->strPadding))
-					$strStyle .= sprintf('padding:%spx;', $this->strPadding);
-				else
-					$strStyle .= sprintf('padding:%s;', $this->strPadding);
-			}
-
-			if (($this->strHorizontalAlign) && ($this->strHorizontalAlign != QHorizontalAlign::NotSet))
-				$strStyle .= sprintf('text-align:%s;', $this->strHorizontalAlign);
-
-			if (($this->strVerticalAlign) && ($this->strVerticalAlign != QVerticalAlign::NotSet))
-				$strStyle .= sprintf('vertical-align:%s;', $this->strVerticalAlign);
-
-			return $strStyle;
-		}
-
 		//////////
 		// Methods
 		//////////
@@ -173,61 +150,40 @@
 		 */
 		public function ParsePostData() {}
 
-		/**
-		 * This function evaluates the QBlockControl Template. It is similar to the function found in the
-		 * QForm, but recreated here so that the "$this" in the template will be the control, instead of the form,
-		 * and the protected members of the control are available to draw directly.
-		 * @param string $strTemplate Path to the HTML template file
-		 *
-		 * @return string The evaluated HTML string
-		 */
-		public function EvaluateTemplate($strTemplate) {
-			global $_ITEM;
-			global $_CONTROL;
-			global $_FORM;
-
-			$_FORM = $this->Form;
-
-			if ($strTemplate) {
-				QApplication::$ProcessOutput = false;
-				// Store the Output Buffer locally
-				$strAlreadyRendered = ob_get_contents();
-				if ($strAlreadyRendered) {
-					ob_clean();
-				}
-
-				// Evaluate the new template
-				ob_start('__QForm_EvaluateTemplate_ObHandler');
-				require($strTemplate);
-				$strTemplateEvaluated = ob_get_contents();
-				ob_end_clean();
-
-				// Restore the output buffer and return evaluated template
-				if ($strAlreadyRendered) {
-					print($strAlreadyRendered);
-				}
-				QApplication::$ProcessOutput = true;
-
-				return $strTemplateEvaluated;
-			} else
-				return null;
-		}
-
 
 		/**
 		 * Returns the HTML of the QControl
 		 * @return string The HTML string
 		 */
 		protected function GetControlHtml() {
-			$strStyle = $this->GetStyleAttributes();
 
-			if ($strStyle)
-				$strStyle = sprintf('style="%s"', $strStyle);
+			$strToReturn = $this->RenderTag($this->strTagName,
+				null,
+				null,
+				$this->GetInnerHtml());
 
-			if ($this->strFormat)
+//			if ($this->blnDropTarget)
+//				$strToReturn .= sprintf('<span id="%s_ctldzmask" style="position:absolute;"><span style="font-size: 1px">&nbsp;</span></span>', $this->strControlId);
+
+			return $strToReturn;
+		}
+
+		/**
+		 * Return the inner html between the tags.
+		 *
+		 * @return string
+		 */
+		protected function GetInnerHtml() {
+			if ($this->strFormat) {
 				$strText = sprintf($this->strFormat, $this->strText);
-			else
+			}
+			else {
 				$strText = $this->strText;
+			}
+
+			if ($this->blnHtmlEntities) {
+				$strText = QApplication::HtmlEntities($strText);
+			}
 
 			$strTemplateEvaluated = '';
 			if ($this->strTemplate) {
@@ -238,20 +194,12 @@
 				$_CONTROL = $objCurrentControl;
 			}
 
-			$strToReturn = sprintf('<%s id="%s" %s%s>%s%s%s</%s>',
-				$this->strTagName,
-				$this->strControlId,
-				$this->GetAttributes(),
-				$strStyle,
-				($this->blnHtmlEntities) ? QApplication::HtmlEntities($strText) : $strText,
-				$strTemplateEvaluated,
-				($this->blnAutoRenderChildren) ? $this->RenderChildren(false) : '',
-				$this->strTagName);
+			$strText .= $strTemplateEvaluated;
 
-//			if ($this->blnDropTarget)
-//				$strToReturn .= sprintf('<span id="%s_ctldzmask" style="position:absolute;"><span style="font-size: 1px">&nbsp;</span></span>', $this->strControlId);
-
-			return $strToReturn;
+			if ($this->blnAutoRenderChildren) {
+				$strText .= $this->RenderChildren(false);
+			}
+			return $strText;
 		}
 
 		/**
@@ -282,14 +230,10 @@
 				case "Template": return $this->strTemplate;
 				case "AutoRenderChildren": return $this->blnAutoRenderChildren;
 				case "TagName": return $this->strTagName;
-				case "Padding": return $this->strPadding;
 				case "HtmlEntities": return $this->blnHtmlEntities;
 
 				// BEHAVIOR
 				case "DropTarget": return $this->blnDropTarget;
-
-				case "HorizontalAlign": return $this->strHorizontalAlign;
-				case "VerticalAlign": return $this->strVerticalAlign;
 
 				default:
 					try {
@@ -310,18 +254,17 @@
 		 * @param string $mixValue Property Value
 		 *
 		 * @return mixed
-		 * @throws QCallerException
-		 * @throws Exception|QCallerException
-		 * @throws Exception|QInvalidCastException
+		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				// APPEARANCE
 				case "Text":
 					try {
-						$this->strText = QType::Cast($mixValue, QType::String);
+						if ($this->strText !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strText = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -330,7 +273,10 @@
 
 				case "Format":
 					try {
-						$this->strFormat = QType::Cast($mixValue, QType::String);
+						if ($this->strFormat !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strFormat = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -339,6 +285,7 @@
 
 				case "Template":
 					try {
+						$this->blnModified = true;
 						if ($mixValue) {
 							if (file_exists($mixValue))
 								$this->strTemplate = QType::Cast($mixValue, QType::String);
@@ -354,7 +301,10 @@
 
 				case "AutoRenderChildren":
 					try {
-						$this->blnAutoRenderChildren = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnAutoRenderChildren !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnAutoRenderChildren = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -363,7 +313,10 @@
 
 				case "TagName":
 					try {
-						$this->strTagName = QType::Cast($mixValue, QType::String);
+						if ($this->strTagName !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strTagName = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -372,16 +325,10 @@
 
 				case "HtmlEntities":
 					try {
-						$this->blnHtmlEntities = QType::Cast($mixValue, QType::Boolean);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case "Padding":
-					try {
-						$this->strPadding = QType::Cast($mixValue, QType::String);
+						if ($this->blnHtmlEntities !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnHtmlEntities = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -390,30 +337,16 @@
 
 				case "DropTarget":
 					try {
-						$this->blnDropTarget = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnDropTarget !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnDropTarget = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
 
-				case "HorizontalAlign":
-					try {
-						$this->strHorizontalAlign = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-				case "VerticalAlign":
-					try {
-						$this->strVerticalAlign = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 
 				default:
 					try {

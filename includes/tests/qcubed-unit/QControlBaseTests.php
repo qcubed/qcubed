@@ -28,10 +28,10 @@ class QControlBaseTests extends QUnitTestCaseBase {
 			if ($strProperty) {
 				$this->ctlTest->$strProperty = $strValue;
 			} else {
-				$this->ctlTest->SetCustomStyle($strCssProperty, $strValue);
+				$this->ctlTest->SetCssStyle ($strCssProperty, $strValue, true);
 			}
 			
-			$strAttrs = $this->ctlTest->$strGetStyleMethod();
+			$strAttrs = $this->ctlTest->$strGetStyleMethod() . ';';
 			
 			$intResult = strpos($strAttrs, $strCssProperty . ':' . $objTestDataArray["Expected"]);
 			$strMessage =

@@ -475,7 +475,7 @@
 	}
 
 	/**
-	 *
+	 * Class to handle results sent by database upon querying
 	 * @package DatabaseAdapters
 	 */
 	class QSqlServerDatabaseResult extends QDatabaseResultBase {
@@ -547,6 +547,14 @@
 			$this->strColumnArray = $strColumnArray;
 		}
 
+		/**
+		 * Gets the value of a column from a result row returned by the database
+		 *
+		 * @param string                  $strColumnName Name of te column
+		 * @param null|QDatabaseFieldType $strColumnType Data type
+		 *
+		 * @return mixed
+		 */
 		public function GetColumn($strColumnName, $strColumnType = null) {
 			if (!isset($this->strColumnArray[$strColumnName])) {
 				return null;
@@ -578,6 +586,13 @@
 			}
 		}
 
+		/**
+		 * Tells whether a particular column exists in a returned database row
+		 *
+		 * @param string $strColumnName Name of te column
+		 *
+		 * @return bool
+		 */
 		public function ColumnExists($strColumnName) {
 			return array_key_exists($strColumnName, $this->strColumnArray);
 		}
@@ -746,7 +761,7 @@
 						$this->strType = QDatabaseFieldType::Time;
 						break;
 					case 'timestamp':
-						// System-generated Timestamp values need to be treated as plain text
+						// System-generated Timestamp values need to be treated as plain text. They are NOT actual times, but just counters.
 						$this->strType = QDatabaseFieldType::VarChar;
 						$this->blnTimestamp = true;
 						break;

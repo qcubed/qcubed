@@ -84,18 +84,20 @@
 	$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
 	$varType = (is_a($objAssociatedTable, 'QTypeTable') ? 'integer' : $objReference->VariableType);
 ?>
-				case '_<?= $objReference->ObjectDescription ?>':
+				case '<?= $objReference->ObjectDescription ?>':
+				case '_<?= $objReference->ObjectDescription ?>': // for backwards compatibility
 					/**
-					 * Gets the value for the private <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
+					 * Gets the value for the protected <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
 					 * if set due to an expansion on the <?= $objReference->Table ?> association table
 					 * @return <?= $varType ?>
 
 					 */
 					return $this-><?= $varPrefix . $objReference->ObjectDescription ?>;
 
-				case '_<?= $objReference->ObjectDescription ?>Array':
+				case '<?= $objReference->ObjectDescription ?>Array':
+				case '_<?= $objReference->ObjectDescription ?>Array': // for backwards compatibility
 					/**
-					 * Gets the value for the private <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
+					 * Gets the value for the protected <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
 					 * if set due to an ExpandAsArray on the <?= $objReference->Table ?> association table
 					 * @return <?= $varType ?>[]
 					 */
@@ -103,18 +105,20 @@
 
 
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReference) { ?><?php if (!$objReference->Unique) { ?>
+				case '<?= $objReference->ObjectDescription ?>':
 				case '_<?= $objReference->ObjectDescription ?>':
 					/**
-					 * Gets the value for the private _obj<?= $objReference->ObjectDescription ?> (Read-Only)
+					 * Gets the value for the protected _obj<?= $objReference->ObjectDescription ?> (Read-Only)
 					 * if set due to an expansion on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
 					 * @return <?= $objReference->VariableType ?>
 
 					 */
 					return $this->_obj<?= $objReference->ObjectDescription ?>;
 
+				case '<?= $objReference->ObjectDescription ?>Array':
 				case '_<?= $objReference->ObjectDescription ?>Array':
 					/**
-					 * Gets the value for the private _obj<?= $objReference->ObjectDescription ?>Array (Read-Only)
+					 * Gets the value for the protected _obj<?= $objReference->ObjectDescription ?>Array (Read-Only)
 					 * if set due to an ExpandAsArray on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
 					 * @return <?= $objReference->VariableType ?>[]
 					 */

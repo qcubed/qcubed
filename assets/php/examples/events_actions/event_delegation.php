@@ -31,14 +31,12 @@
 		protected function Form_Create() {
 			// Define the DataGrid
 			$this->dtgPersons = new QDataGrid($this, 'dtgPersons');
-			$this->dtgPersons->CellPadding = 5;
 			$this->dtgPersons->CellSpacing = 0;
 			$this->dtgPersons->Height = "560px";
 			
 			
 			// Define the DataGrid using event delegation
 			$this->dtgPersonsDelegated = new QDataGrid($this, 'dtgPersonsDelegated');
-			$this->dtgPersonsDelegated->CellPadding = 5;
 			$this->dtgPersonsDelegated->CellSpacing = 0;
 			
 			// Define Columns

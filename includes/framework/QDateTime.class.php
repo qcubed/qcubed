@@ -6,44 +6,58 @@
 
 	/**
 	 * QDateTime
-	 * 
 	 * This DateTime class provides a nice wrapper around the PHP DateTime class,
 	 * which is included with all versions of PHP >= 5.2.0. It includes many enhancements,
 	 * including the ability to specify a null date or time portion to represent a date only or
 	 * time only object.
-	 *
 	 * Inherits from the php DateTime object, and the built-in methods are available for you to call
 	 * as well. In particular, note that the built-in format, and the qFormat routines here take different
 	 * specifiers. Feel free to use either.
 	 *
-	 * @property null|integer $Month
-	 * @property null|integer $Day
-	 * @property null|integer $Year
-	 * @property null|integer $Hour
-	 * @property null|integer $Minute
-	 * @property null|integer $Second
-	 * @property integer $Timestamp
-	 * @property-read string $Age A string representation of the age relative to now.
-	 * @property-read QDateTime $LastDayOfTheMonth A new QDateTime representing the last day of this date's month.
+	 * @property null|integer   $Month
+	 * @property null|integer   $Day
+	 * @property null|integer   $Year
+	 * @property null|integer   $Hour
+	 * @property null|integer   $Minute
+	 * @property null|integer   $Second
+	 * @property integer        $Timestamp
+	 * @property-read string    $Age                A string representation of the age relative to now.
+	 * @property-read QDateTime $LastDayOfTheMonth  A new QDateTime representing the last day of this date's month.
 	 * @property-read QDateTime $FirstDayOfTheMonth A new QDateTime representing the first day of this date's month.
 	 */
 	class QDateTime extends DateTime {
+		/** Used to specify the time right now (used when creating new instances of this class) */
 		const Now = 'now';
+		/** Date and time in ISO format */
 		const FormatIso = 'YYYY-MM-DD hhhh:mm:ss';
+		/** Date and time in ISO compressed format */
 		const FormatIsoCompressed = 'YYYYMMDDhhhhmmss';
+		/** Format used for displaying short date */
 		const FormatDisplayDate = 'MMM DD YYYY';
+		/** Format used for displaying the full date */
 		const FormatDisplayDateFull = 'DDD, MMMM D, YYYY';
+		/** Format used for displaying the short date and time */
 		const FormatDisplayDateTime = 'MMM DD YYYY hh:mm zz';
+		/** Format used for displaying the full date and time */
 		const FormatDisplayDateTimeFull = 'DDDD, MMMM D, YYYY, h:mm:ss zz';
+		/** Format to display only the time */
 		const FormatDisplayTime = 'hh:mm:ss zz';
+		/** Date and time format according to RFC 822 */
 		const FormatRfc822 = 'DDD, DD MMM YYYY hhhh:mm:ss ttt';
+		/** Date and time format according to RFC 5322 */
 		const FormatRfc5322 = 'DDD, DD MMM YYYY hhhh:mm:ss ttttt';
 
+		/** Format used to represent date for SOAP */
 		const FormatSoap = 'YYYY-MM-DDThhhh:mm:ss';
 
+		/* Type in which the date and time has to be interpreted */
+		/** Unknown type interpretation */
 		const UnknownType = 0;
+		/** Interpret as only date (used in QDateTimePicket and MySqli database type) */
 		const DateOnlyType = 1;
+		/** Interpret as only time (used in QDateTimePicket and MySqli database type) */
 		const TimeOnlyType = 2;
+		/** Interpret as both date and type (used in QDateTimePicket and MySqli database type) */
 		const DateAndTimeType = 3;
 
 		/** @var bool true if date is null */
@@ -129,7 +143,7 @@
 
 		/**
 		 * @param $dttArray
-		 * @return array|null
+		 * @return QDateTime[]|null
 		 */
 		public function GetSoapDateTimeArray($dttArray) {
 			if (!$dttArray)
@@ -161,8 +175,10 @@
 		 * - Will NOT throw exceptions. Errors simply result in a null datetime.
 		 *
 		 * @param null|integer|string|QDateTime|DateTime $mixValue
-		 * @param DateTimeZone $objTimeZone
-		 * @param int $intType
+		 * @param DateTimeZone                           $objTimeZone
+		 * @param int                                    $intType
+		 *
+		 * @throws QCallerException
 		 */
 		public function __construct($mixValue = null, DateTimeZone $objTimeZone = null, $intType = QDateTime::UnknownType) {
 			if ($mixValue instanceof QDateTime) {
@@ -224,6 +240,7 @@
 				case QDateTime::DateAndTimeType:
 					$this->blnDateNull = false;
 					$this->blnTimeNull = false;
+					break;
 				default:
 					break;
 			}
@@ -232,8 +249,8 @@
 		/**
 		* Returns a new QDateTime object set to the last day of the specified month.
 		* 
-		* @param int month
-		* @param int year
+		* @param int $intMonth
+		* @param int $intYear
 		* @return QDateTime the last day to a month in a year
 		*/
 		public static function LastDayOfTheMonth($intMonth, $intYear) {
@@ -244,8 +261,8 @@
 		/**
 		* Returns a new QDateTime object set to the first day of the specified month.
 		* 
-		* @param int month
-		* @param int year
+		* @param int $intMonth
+		* @param int $intYear
 		* @return QDateTime the first day of the month
 		*/
 		public static function FirstDayOfTheMonth($intMonth, $intYear) {
@@ -331,6 +348,10 @@
 		 * @return string the formatted date as a string
 		 */
 		public function qFormat($strFormat = null) {
+			if ($this->blnDateNull && $this->blnTimeNull) {
+				return '';
+			}
+
 			if (is_null($strFormat)) {
 				if ($this->blnDateNull && !$this->blnTimeNull) {
 					$strFormat = QDateTime::$DefaultTimeFormat;
@@ -718,8 +739,6 @@
 			elseif (!$dtsSpan instanceof QDateTimeSpan) {
 				throw new QCallerException("Can only add DateTimeInterval or QDateTimeSpan objects");
 			}
-			// Get this DateTime timestamp
-			$intTimestamp = $this->Timestamp;
 
 			// And add the Span Second count to it
 			$this->Timestamp = $this->Timestamp + $dtsSpan->Seconds;
@@ -804,6 +823,13 @@
 			return $this;
 		}
 
+		/**
+		 * PHP magic method
+		 * @param $strName
+		 *
+		 * @return QDateTime|string
+		 * @throws QUndefinedPropertyException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Month':
@@ -871,6 +897,15 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param $strName
+		 * @param $mixValue
+		 *
+		 * @return mixed
+		 * @throws Exception|QCallerException|QDateTimeNullException|QInvalidCastException|QUndefinedPropertyException
+		 */
 		public function __set($strName, $mixValue) {
 			try {
 				switch ($strName) {

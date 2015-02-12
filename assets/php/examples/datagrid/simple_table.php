@@ -56,10 +56,7 @@ class ExampleForm extends QForm {
 		$this->tblPersons->HeaderRowCssClass = 'header_row';
 
 		// Define Columns
-		$objColumn = new QSimpleTableClosureColumn('Full Name',
-							function($item) {
-								return 'Full Name is "' . $item->FirstName . ' ' . $item->LastName . '"';
-							});
+		$objColumn = new QSimpleTableCallableColumn('Full Name', 'ExampleForm::getFullName');
 		$this->tblPersons->AddColumn($objColumn);
 
 		// The second column demonstrates using a property name for fetching the data

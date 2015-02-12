@@ -59,13 +59,7 @@
 				$cellValue = '&nbsp;';
 			}
 			
-			$strToReturn = '<th';
-			$aParams = $this->GetHeaderCellParams();
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-			$strToReturn .= '>' . $cellValue . '</th>';
-			return $strToReturn;
+			return QHtml::RenderTag('th', $this->GetHeaderCellParams(), $cellValue);
 		}
 		
 		/**
@@ -82,7 +76,7 @@
 		 * @return array
 		 */
 		public function GetHeaderCellParams () {
-			$aParams = array();
+			$aParams['scope'] = 'col';
 			if ($this->strHeaderCssClass) {
 				$aParams['class'] = $this->strHeaderCssClass;
 			}
@@ -109,27 +103,19 @@
 			}
 	
 			if ($blnAsHeader || $this->blnRenderAsHeader) {
-				$tag = 'th';
+				$strTag = 'th';
 			} else {
-				$tag = 'td';
+				$strTag = 'td';
 			}
 			
-			$strToReturn = '<' . $tag;
-			
-			$aParams = $this->GetCellParams($item);
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-			$strToReturn .= '>' . $cellValue . '</' . $tag . '>';
-			return $strToReturn;
+			return QHtml::RenderTag($strTag, $this->GetCellParams($item), $cellValue);
 		}
 
 		/**
 		 * Return a key/val array of items to insert inside the cell tag. 
 		 * 
 		 * Handles class, style, and id already. Override to add additional items, like an onclick handler.
-		 * No checking is done on these params, the raw strings are output
-		 * 
+		 *
 		 * @param mixed $item
 		 */
 		protected function GetCellParams ($item) {
@@ -139,11 +125,15 @@
 			}
 			
 			if ($strId = $this->GetCellId ($item)) {
-				$aParams['id'] = addslashes($strId);
+				$aParams['id'] = $strId;
 			}
 			
 			if ($strStyle = $this->GetCellStyle ($item)) {
 				$aParams['style'] = $strStyle;
+			}
+			if ($this->blnRenderAsHeader) {
+				// assume this means it is a row header
+				$aParams['scope'] = 'row';
 			}
 			return $aParams;		
 		}
@@ -183,14 +173,7 @@
 		abstract public function FetchCellValue($item);
 		
 		public function RenderColTag() {
-			$strToReturn = '<col ';
-			
-			$aParams = $this->GetColParams();
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= $key . '="' . $str . '" ';
-			}
-			$strToReturn .= '/>';
-			return $strToReturn;
+			return QHtml::RenderTag('col', $this->GetColParams(), null, true);
 		}
 
 		/**
@@ -203,10 +186,10 @@
 				$aParams['span'] = $this->intSpan;
 			}
 			if ($this->strId) {
-				$aParams['id'] = addslashes($this->strId);
+				$aParams['id'] = $this->strId;
 			}
 			if ($this->strCssClass) {
-				$aParams['class'] = addslashes($this->strCssClass);
+				$aParams['class'] = $this->strCssClass;
 			}
 
 			return $aParams;		
@@ -668,21 +651,21 @@
 	}
 
 	/**
-	 * A type of column based on a user specified function (Closure) that can be used when a complex logic is required
-	 * to fetch the cell data from the DataSource items
+	 * A type of column that lets you use a PHP 'callable'. However, you CANNOT send a PHP closure to this,
+	 * since closures are not serializable. You CAN do things like array($this, 'method'), or 'Class::StaticMethod'.
 	 *
 	 * @property int|string $Index the index or key to use when accessing the arrays in the DataSource array
 	 *
 	 */
-	class QSimpleTableClosureColumn extends QAbstractSimpleTableDataColumn {
+	class QSimpleTableCallableColumn extends QAbstractSimpleTableDataColumn {
 		/** @var callback */
-		protected $objClosure;
+		protected $objCallable;
 		/** @var array extra parameters passed to closure */
 		protected $mixParams;
 
 		/**
 		 * @param string $strName name of the column
-		 * @param callback $objClosure a callable object. It should take a single argument, the item
+		 * @param callback $objCallable a callable object. It should take a single argument, the item
 		 *   of the array. Do NOT pass an actual Closure object, as they are not serializable. However,
 		 *   you can pass a callable, like array($this, 'method'), or an object that has the __invoke method defined,
 		 *   as long as its serializable. You can also pass static methods as a string, as in "Class::method"
@@ -691,20 +674,20 @@
 		 *
 		 * @throws InvalidArgumentException
 		 */
-		public function __construct($strName, $objClosure, $mixParams = null) {
+		public function __construct($strName, callable $objCallable, $mixParams = null) {
 			parent::__construct($strName);
-			if (!is_callable($objClosure)) {
-				throw new InvalidArgumentException();
+			if ($objCallable instanceof Closure) {
+				throw new InvalidArgumentException('Cannot be a Closure.');
 			}
-			$this->objClosure = $objClosure;
+			$this->objCallable = $objCallable;
 			$this->mixParams = $mixParams;
 		}
 
 		public function FetchCellObject($item) {
 			if ($this->mixParams) {
-				return call_user_func($this->objClosure, $item, $this->mixParams);
+				return call_user_func($this->objCallable, $item, $this->mixParams);
 			} else {
-				return call_user_func($this->objClosure, $item);
+				return call_user_func($this->objCallable, $item);
 			}
 		}
 
@@ -712,7 +695,7 @@
 		 * Fix up possible embedded reference to the form.
 		 */
 		public function Sleep() {
-			$this->objClosure = QControl::SleepHelper($this->objClosure);
+			$this->objCallable = QControl::SleepHelper($this->objCallable);
 			parent::Sleep();
 		}
 
@@ -722,13 +705,13 @@
 		 */
 		public function Wakeup(QForm $objForm) {
 			parent::Wakeup($objForm);
-			$this->objClosure = QControl::WakeupHelper($objForm, $this->objClosure);
+			$this->objCallable = QControl::WakeupHelper($objForm, $this->objCallable);
 		}
 
 		public function __get($strName) {
 			switch ($strName) {
-				case 'Closure':
-					return $this->objClosure;
+				case 'Callable':
+					return $this->objCallable;
 				default:
 					try {
 						return parent::__get($strName);
@@ -741,11 +724,11 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case "Closure":
+				case "Callable":
 					if (!is_callable($mixValue)) {
-						throw new QInvalidCastException("Closure must be a callable object");
+						throw new QInvalidCastException("Callable must be a callable object");
 					}
-					$this->objClosure = $mixValue;
+					$this->objCallable = $mixValue;
 					break;
 
 				default:
@@ -859,15 +842,9 @@
 		
 		public function FetchCellObject($item) {
 
-			$strToReturn = '<input type="checkbox"';
-
 			$aParams = $this->GetCheckboxParams($item);
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-
-			$strToReturn .= ' />';
-			return $strToReturn;
+			$aParams['type'] = 'checkbox';
+			return QHtml::RenderTag('input', $aParams, null, true);
 		}
 		
 		public function GetCheckboxParams ($item) {
@@ -875,13 +852,13 @@
 			
 			if ($this->checkParamCallback) {
 				$aParams = call_user_func($this->checkParamCallback, $item, 'id');
-				$aParams['id'] = addslashes($aParams['id']);
+				$aParams['id'] = $aParams['id'];
 				return $aParams;
 			}
 			
 			
 			if ($strId = $this->GetCheckId ($item)) {
-				$aParams['id'] = addslashes($strId);
+				$aParams['id'] = $strId;
 			}
 			
 			if ($strCheck = $this->IsChecked ($item)) {
@@ -890,8 +867,8 @@
 			return $aParams;		
 		}
 		
-		public function SetCheckParamCallback ($closure) {
-			$this->checkParamCallback = $closure;
+		public function SetCheckParamCallback ($callable) {
+			$this->checkParamCallback = $callable;
 		}
 		
 		/**

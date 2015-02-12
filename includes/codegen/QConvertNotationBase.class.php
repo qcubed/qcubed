@@ -1,9 +1,20 @@
 <?php
- /**
-	* @package Codegen
-	*/
 
+	/**
+	 * @package Codegen
+	 */
+
+	/**
+	 * Class QConvertNotationBase: Helps convert notations from entities
+	 */
 	abstract class QConvertNotationBase {
+		/**
+		 * Returns prefix for variable according to variable type
+		 *
+		 * @param string $strType The type of variable for which the prefix is needed
+		 *
+		 * @return string The variable prefix
+		 */
 		public static function PrefixFromType($strType) {
 			switch ($strType) {
 				case QType::ArrayType:
@@ -21,8 +32,17 @@
 				case QType::String:
 					return "str";
 			}
+			// Suppressing the IDE warning about no value being return
+			return "";
 		}
 
+		/**
+		 * Replaces underscores with spaces and makes the first character of all the words as uppercase
+		 *
+		 * @param string $strName String which has to be converted into single words
+		 *
+		 * @return string The resulting string (as words)
+		 */
 		public static function WordsFromUnderscore($strName) {
 			$strToReturn = trim(str_replace('_', ' ', $strName));
 			if (strtolower($strToReturn) == $strToReturn)
@@ -30,6 +50,13 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Converts a underscored word into a CamelCased word
+		 *
+		 * @param string $strName String to be converted
+		 *
+		 * @return string The resulting camel-cased word
+		 */
 		public static function CamelCaseFromUnderscore($strName) {
 			$strToReturn = '';
 
@@ -53,6 +80,13 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Converts a CamelCased word into separate words
+		 *
+		 * @param string $strName String to be converted
+		 *
+		 * @return string Resulting set of words derived from camel case
+		 */
 		public static function WordsFromCamelCase($strName) {
 			if (strlen($strName) == 0)
 				return '';
@@ -97,8 +131,16 @@
 			return $strToReturn;
 		}
 
-
-
+		/**
+		 * Given a CamelCased word, returns the underscored version
+		 * example:
+		 * CamelCased word: WeightInGrams
+		 * underscored word: weight_in_grams
+		 *
+		 * @param string $strName CamelCased word
+		 *
+		 * @return string Underscored word
+		 */
 		public static function UnderscoreFromCamelCase($strName) {
 			if (strlen($strName) == 0)
 				return '';
@@ -116,6 +158,18 @@
 			return strtolower($strToReturn);
 		}
 
+		/**
+		 * Returns a javaCase word given an underscore word
+		 * example:
+		 * underscore word: weight_in_grams
+		 * javaCase word: weightInGrams
+		 *
+		 * javaCase words are like camel case words, except that the first character is lower case
+		 *
+		 * @param string $strName The underscored word
+		 *
+		 * @return string The word in javaCase
+		 */
 		public static function JavaCaseFromUnderscore($strName) {
 			$strToReturn = QConvertNotation::CamelCaseFromUnderscore($strName);
 			return strtolower(substr($strToReturn, 0, 1)) . substr($strToReturn, 1);

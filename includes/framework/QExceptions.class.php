@@ -2,7 +2,7 @@
 	/**
 	 * This is the main exception to be thrown by any
 	 * method to indicate that the CALLER is responsible for
-	 * causing the exception.  This works in conjunction with Qcodo's
+	 * causing the exception.  This works in conjunction with QCubed's
 	 * error handling/reporting, so that the correct file/line-number is
 	 * displayed to the user.
 	 *
@@ -23,6 +23,7 @@
 	 * the exception object, to indicate that OuterMethod's CALLER is responsible for the exception.
 	 *
 	 * So the code snippet to call InnerMethod by OuterMethod should look like:
+	 * <code>
 	 *	function OuterMethod($mixValue) {
 	 *		try {
 	 *			InnerMethod($mixValue);
@@ -32,6 +33,7 @@
 	 *		}
 	 *		// Do Other Stuff
 	 *	}
+	 * </code>
 	 * Again, this will assure the user that the line of code responsible for the excpetion is properly being reported
 	 * by the QCubed error reporting/handler.
 	 * @property-read int $Offset The exception offset.
@@ -39,9 +41,20 @@
 	 * @property-read string $TraceArray The exception backtrace in a form of an array.
 	 */
 	class QCallerException extends Exception {
+		/**
+		 * @var int Exception offset
+		 *          The element in the stack trace array indicated by this index is marked
+		 *          as the point which caused the exception
+		 */
 		private $intOffset;
+		/** @var array The stack trace array as caputred by debug_backtrace() */
 		private $strTraceArray;
-		
+
+		/**
+		 * Set message for the exception
+		 *
+		 * @param string $strMessage
+		 */
 		public function setMessage($strMessage) {
 			$this->message = $strMessage;
 		}
@@ -59,9 +72,9 @@
 		 *
 		 * Normally, the Offset would be altered by calls to IncrementOffset
 		 * at every step the CallerException is caught/rethrown up the call stack.
-		 * @param string $strMessage the Message of the exception
-		 * @param integer $intOffset the optional Offset value (currently defaulted to 1)
-		 * @return CallerException the new exception
+		 *
+		 * @param string  $strMessage the Message of the exception
+		 * @param integer $intOffset  the optional Offset value (currently defaulted to 1)
 		 */
 		public function __construct($strMessage, $intOffset = 1) {
 			parent::__construct($strMessage);
@@ -96,6 +109,12 @@
 				$this->line = '';
 		}
 
+		/**
+		 * PHP magic method
+		 * @param $strName
+		 *
+		 * @return array|int|mixed
+		 */
 		public function __get($strName) {
 			if ($strName == "Offset")
 				return $this->intOffset;
@@ -108,14 +127,29 @@
 		}
 	}
 
-	
+	/**
+	 * Used when trying to access a table object which does not have a primary key defined on it
+	 */
 	class QUndefinedPrimaryKeyException extends QCallerException {
+		/**
+		 * Constructor method
+		 * @param string $strMessage
+		 */
 		public function __construct($strMessage) {
 			parent::__construct($strMessage, 2);
 		}
 	}
 
+	/**
+	 * Thrown when trying to access an element in an array whose index does not exist
+	 * NOTE: this exception will not fire automatically for you unless you use it with the try-catch block
+	 */
 	class QIndexOutOfRangeException extends QCallerException {
+		/**
+		 * Constructor method
+		 * @param string $intIndex
+		 * @param int    $strMessage
+		 */
 		public function __construct($intIndex, $strMessage) {
 			if ($strMessage)
 				$strMessage = ": " . $strMessage;
@@ -123,28 +157,104 @@
 		}
 	}
 
+	/**
+	 * Thrown when a particular property of class is not defined and we try to access it
+	 */
 	class QUndefinedPropertyException extends QCallerException {
+		/**
+		 * Constructor method
+		 * @param string $strType
+		 * @param int    $strClass
+		 * @param string $strProperty
+		 */
 		public function __construct($strType, $strClass, $strProperty) {
 			parent::__construct(sprintf("Undefined %s property or variable in '%s' class: %s", $strType, $strClass, $strProperty), 2);
 		}
 	}
 
+	/**
+	 * Thrown when we try to call an undefined method. Helpful for codegen.
+	 */
+	class QUndefinedMethodException extends QCallerException {
+		public function __construct($strClass, $strMethod) {
+			parent::__construct(sprintf("Undefined method in '%s' class: %s", $strClass, $strMethod), 2);
+		}
+	}
+
+	/**
+	 * Thrown when optimistic locking (in ORM Save() method) detects that DB data was updated
+	 */
 	class QOptimisticLockingException extends QCallerException {
+		/**
+		 * Constructor method
+		 * @param string $strClass
+		 */
 		public function __construct($strClass) {
 			parent::__construct(sprintf('Optimistic Locking constraint when trying to update %s object.  To update anyway, call ->Save() with $blnForceUpdate set to true', $strClass, 2));
 		}
 	}
 
+	/**
+	 * Thrown when the desired page is protected by ALLOW REMOTE ADMIN feature and the request does not qualify
+	 */
 	class QRemoteAdminDeniedException extends QCallerException {
+		/**
+		 * Constructor method
+		 */
 		public function __construct() {
 			parent::__construct('Remote access to "' . QApplication::$RequestUri . '" has been disabled.' .
 				"\r\nTo allow remote access to this script, set the ALLOW_REMOTE_ADMIN constant to TRUE\r\nor to \"" . $_SERVER['REMOTE_ADDR'] . '" in "configuration.inc.php".', 2);
 		}
 	}
-	
+
+	/**
+	 * Thrown when formstate is not found
+	 */
 	class QInvalidFormStateException extends QCallerException {
+		/**
+		 * Constructor method
+		 * @param string $strFormId Form ID for which the state was not found
+		 */
 		public function __construct($strFormId) {
 			parent::__construct(sprintf('Invalid Form State Data for "%s" object (session may have been lost)', $strFormId), 2);
 		}
 	}
+
+	/**
+	 * @property-read integer $Offset
+	 * @property-read mixed $BackTrace
+	 * @property-read string $Query
+	 */
+	class QDataBindException extends Exception {
+		private $intOffset;
+		private $strTraceArray;
+		private $strQuery;
+
+		public function __construct(QCallerException $objExc) {
+			parent::__construct($objExc->getMessage(), $objExc->getCode());
+			$this->intOffset = $objExc->Offset;
+			$this->strTraceArray = $objExc->TraceArray;
+
+			if ($objExc instanceof QDatabaseExceptionBase)
+				$this->strQuery = $objExc->Query;
+
+			$this->file = $this->strTraceArray[$this->intOffset]['file'];
+			$this->line = $this->strTraceArray[$this->intOffset]['line'];
+		}
+
+		public function __get($strName) {
+			switch($strName) {
+				case "Offset":
+					return $this->intOffset;
+
+				case "BackTrace":
+					$objTraceArray = debug_backtrace();
+					return (var_export($objTraceArray, true));
+
+				case "Query":
+					return $this->strQuery;
+			}
+		}
+	}
+
 ?>
