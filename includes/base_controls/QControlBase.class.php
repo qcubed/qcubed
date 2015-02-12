@@ -1793,6 +1793,35 @@
 		}
 
 		/**
+		 * Searches the control and it's hierarchy to see if a method by given name exists.
+		 * This method searches only in the current control and its parents and so on.
+		 * It will not search for the method in any siblings at any stage in the process.
+		 *
+		 * @param string $strMethodName            Name of the method
+		 * @param bool   $blnIncludeCurrentControl Include this control as well?
+		 *
+		 * @return null|QControl The control found in the hierarchy to have the method
+		 *                       Or null if no control was found in the hierarchy with the given name
+		 */
+		public function GetControlFromHierarchyByMethodName($strMethodName, $blnIncludeCurrentControl = true) {
+			if ($blnIncludeCurrentControl == true) {
+				$ctlDelegatorControl = $this;
+			} else {
+				$ctlDelegatorControl = $this->objParentControl;
+			}
+			do {
+				if (method_exists($ctlDelegatorControl, $strMethodName)) {
+					return $ctlDelegatorControl;
+				} else {
+					$ctlDelegatorControl = $ctlDelegatorControl->objParentControl;
+				}
+			} while (!($ctlDelegatorControl instanceof QFormBase));
+
+			// If we are here, we could not find the method in the hierarchy/lineage of this control.
+			return null;
+		}
+
+		/**
 		 * Returns the form associated with the control. Used by the QDataBinder trait.
 		 * @return QForm
 		 */
