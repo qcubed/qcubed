@@ -153,7 +153,7 @@
 		public function __construct($intIndex, $strMessage) {
 			if ($strMessage)
 				$strMessage = ": " . $strMessage;
-			parent::__construct(sprintf("Index (%s) is out of range%s", $intIndex, $strMessage), 2);
+			parent::__construct(sprintf(QApplication::Translate("Index (%s) is out of range%s"), $intIndex, $strMessage), 2);
 		}
 	}
 
@@ -168,7 +168,7 @@
 		 * @param string $strProperty
 		 */
 		public function __construct($strType, $strClass, $strProperty) {
-			parent::__construct(sprintf("Undefined %s property or variable in '%s' class: %s", $strType, $strClass, $strProperty), 2);
+			parent::__construct(sprintf(QApplication::Translate("Undefined %s property or variable in '%s' class: %s"), $strType, $strClass, $strProperty), 2);
 		}
 	}
 
@@ -177,7 +177,7 @@
 	 */
 	class QUndefinedMethodException extends QCallerException {
 		public function __construct($strClass, $strMethod) {
-			parent::__construct(sprintf("Undefined method in '%s' class: %s", $strClass, $strMethod), 2);
+			parent::__construct(sprintf(QApplication::Translate("Undefined method in '%s' class: %s"), $strClass, $strMethod), 2);
 		}
 	}
 
@@ -190,7 +190,7 @@
 		 * @param string $strClass
 		 */
 		public function __construct($strClass) {
-			parent::__construct(sprintf('Optimistic Locking constraint when trying to update %s object.  To update anyway, call ->Save() with $blnForceUpdate set to true', $strClass, 2));
+			parent::__construct(sprintf(QApplication::Translate('Optimistic Locking constraint when trying to update %s object.  To update anyway, call ->Save() with $blnForceUpdate set to true'), $strClass, 2));
 		}
 	}
 
@@ -202,8 +202,13 @@
 		 * Constructor method
 		 */
 		public function __construct() {
-			parent::__construct('Remote access to "' . QApplication::$RequestUri . '" has been disabled.' .
-				"\r\nTo allow remote access to this script, set the ALLOW_REMOTE_ADMIN constant to TRUE\r\nor to \"" . $_SERVER['REMOTE_ADDR'] . '" in "configuration.inc.php".', 2);
+			parent::__construct(
+				sprintf(
+					QApplication::Translate('Remote access to "%s" has been disabled.' . "\n" .
+					'To allow remote access to this script, set the ALLOW_REMOTE_ADMIN constant to TRUE' . "\n" .
+					'or to "%s" in "configuration.inc.php".')
+					, QApplication::$RequestUri, $_SERVER['REMOTE_ADDR'])
+				, 2);
 		}
 	}
 
@@ -216,7 +221,7 @@
 		 * @param string $strFormId Form ID for which the state was not found
 		 */
 		public function __construct($strFormId) {
-			parent::__construct(sprintf('Invalid Form State Data for "%s" object (session may have been lost)', $strFormId), 2);
+			parent::__construct(sprintf(QApplication::Translate('Invalid Form State Data for "%s" object (session may have been lost)'), $strFormId), 2);
 		}
 	}
 
