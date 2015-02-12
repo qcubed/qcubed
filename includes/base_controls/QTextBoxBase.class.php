@@ -384,7 +384,7 @@
 		 */
 		public function GetEndScript() {
 			$str = parent::GetEndScript();
-			$str = sprintf ('$j("#%s").on ("input", qc.formObjChanged).change (qc.formObjChanged);', $this->ControlId) . $str;
+			$str = sprintf ('$j("#%s").on("input",qc.formObjChanged).change(qc.formObjChanged);', $this->ControlId) . $str;
 			return $str;
 		}
 
