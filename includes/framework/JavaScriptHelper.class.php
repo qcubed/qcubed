@@ -55,6 +55,28 @@
 		}
 	}
 
+	/**
+	 * Class QJsonParameterList
+	 * A Wrapper class that will render an array without the brackets, so that it becomes a variable length parameter list.
+	 */
+	class QJsParameterList {
+		protected $arrContent;
+
+		public function __construct ($arrContent) {
+			$this->arrContent = $arrContent;
+		}
+
+		public function toJsObject() {
+			$strList = '';
+			foreach ($this->arrContent as $objItem) {
+				if (strlen($strList) > 0) $strList .= ',';
+				$strList .= self::toJsObject($objItem);
+			}
+
+			return $strList;
+		}
+	}
+
 	class QNoScriptAjaxAction extends QAjaxAction {
 		private $objTargetAction;
 

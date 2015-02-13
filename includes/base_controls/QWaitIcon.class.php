@@ -27,6 +27,9 @@
 		protected $strPadding = null;
 		/** @var string HTML tag name to be used for rendering the text */
 		protected $strTagName = 'span';
+		/** @var bool  */
+		protected $blnDisplay = false;
+
 
 		// LAYOUT
 		/** @var string Horizontal alignment for the text of the wait icon */

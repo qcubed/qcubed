@@ -433,67 +433,22 @@ qcubed = {
                 }
             },
             success: function(json) {
-                var strCommands = [];
-
                 qcubed._prevUpdateTime = new Date().getTime();
-                if (json.controls) $j.each(json.controls, function() {
-                    var strControlId = '#' + this.id,
-                        $control = $j(strControlId);
-
-                    if (this.value !== undefined) {
-                        $control.val(this.value);
-                    }
-
-                    if (this.attributes !== undefined) {
-                        $control.attr (this.attributes);
-                    }
-
-                    if (this.html !== undefined) {
-                        if ($control.length && !$control.get(0).wrapper) {
-                            //remove related controls (error, name ...) for wrapper-less controls
-                            if ($control.data("hasrel")) {
-                                var relSelector = "[data-rel='" + strControlId + "']",
-                                    $relParent;
-
-                                //ensure that the control is not wrapped in an element related to it (it would be removed)
-                                $relParent = $control.parents(relSelector).last();
-                                if ($relParent.length) {
-                                    $control.insertBefore($relParent);
-                                }
-                                $j(relSelector).remove();
-                            }
-
-                            $control.before(this.html).remove();
-                        } else {
-                            $j(strControlId + '_ctl').html(this.html);
-                        }
-                    }
-                });
-
-                if (json.watcher) {
-                    if (qFormParams.control) {
-                        qcubed.broadcastChange();
-                    }
+                if (json.js) {
+                    var deferreds = [];
+                    // Load all javascript files before attempting to process the rest of the response, in case some things depend on the injected files
+                    $j.each(json.js, function(i,v) {
+                        deferreds.push(qcubed.loadJavaScriptFile(v));
+                    });
+                    qcubed.processImmediateAjaxResponse(json, qFormParams); // go ahead and begin processing things that will not depend on the javascript files to allow parallel processing
+                    $j.when.apply($j, deferreds).then(
+                        function () {qcubed.processDeferredAjaxResponse(json);}, // success
+                        function () {console.log('Failed to load a file');} // failed to load a file. What to do?
+                    );
+                } else {
+                    qcubed.processImmediateAjaxResponse(json, qFormParams);
+                    qcubed.processDeferredAjaxResponse(json);
                 }
-                if (json.commands) {
-                    /** @todo eval is evil, do no evil */
-                    eval (json.commands);
-                }
-                if (json.winclose) {
-                    window.close();
-                }
-                if (json.loc) {
-                    if (json.loc == 'reload') {
-                        window.location.reload(true);
-                    } else {
-                        document.location = json.loc;
-                    }
-                }
-
-                if (qcubed.objAjaxWaitIcon) {
-                    $j(qcubed.objAjaxWaitIcon).hide();
-                }
-
             }
         });
 
@@ -514,7 +469,7 @@ qcubed = {
             } else if (strScript.indexOf("http") !== 0) {
                 strScript = qc.jsAssets + "/" + strScript;
             }
-            $j.ajax({
+            return $j.ajax({
                 url: strScript,
                 success: objCallback,
                 dataType: "script",
@@ -563,6 +518,83 @@ qcubed = {
         }
 
         return this;
+    },
+    processImmediateAjaxResponse: function(json, qFormParams) {
+        if (json.controls) $j.each(json.controls, function() {
+            var strControlId = '#' + this.id,
+                $control = $j(strControlId);
+
+            if (this.value !== undefined) {
+                $control.val(this.value);
+            }
+
+            if (this.attributes !== undefined) {
+                $control.attr (this.attributes);
+            }
+
+            if (this.html !== undefined) {
+                if ($control.length && !$control.get(0).wrapper) {
+                    //remove related controls (error, name ...) for wrapper-less controls
+                    if ($control.data("hasrel")) {
+                        var relSelector = "[data-rel='" + strControlId + "']",
+                            $relParent;
+
+                        //ensure that the control is not wrapped in an element related to it (it would be removed)
+                        $relParent = $control.parents(relSelector).last();
+                        if ($relParent.length) {
+                            $control.insertBefore($relParent);
+                        }
+                        $j(relSelector).remove();
+                    }
+
+                    $control.before(this.html).remove();
+                } else {
+                    $j(strControlId + '_ctl').html(this.html);
+                }
+            }
+        });
+
+        if (json.regc) {
+            qcubed.registerControlArray (json.regc);
+        }
+
+        if (json.watcher && qFormParams.control) {
+            qcubed.broadcastChange();
+        }
+        if (json.ss) {
+            $j.each(json.ss, function (i,v) {
+                qc.loadStyleSheetFile(v, "all");
+            });
+        }
+    },
+    processDeferredAjaxResponse: function(json) {
+        if (json.ctrl_commands) {
+            $j.each(json.ctrl_commands, function () {
+                $j('#' + this.id)[this.func](this.params);
+            });
+        }
+        if (json.commands) {
+            /** @todo eval is evil, do no evil */
+            $j.each(json.commands, function(i, v) {
+                eval (v);
+            });
+        }
+
+        if (json.winclose) {
+            window.close();
+        }
+        if (json.loc) {
+            if (json.loc == 'reload') {
+                window.location.reload(true);
+            } else {
+                document.location = json.loc;
+            }
+        }
+
+        if (qcubed.objAjaxWaitIcon) {
+            $j(qcubed.objAjaxWaitIcon).hide();
+        }
+
     }
 };
 
