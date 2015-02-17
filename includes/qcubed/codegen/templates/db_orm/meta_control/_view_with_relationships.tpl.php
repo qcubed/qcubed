@@ -78,7 +78,7 @@
 			$objReference = $objColumn->Reference;
 			$objReferencedTable = $this->GetTable($objReference->Table);
 ?>
-			if ($obj<?php echo $objTable->ClassName ?> && $obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?> && $obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?>->__Restored) {
+			if ($obj<?php echo $objTable->ClassName ?> && $this->showTab($obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?>)) {
 				$this->pnl<?php echo $objReference->PropertyName ?>View = new <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar($this->tabs, $obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?>, false, true, false, false);
 				$this->int<?php echo $objReference->PropertyName ?>TabIdx = count($headers);
 				$headers[] = QApplication::Translate('<?php echo preg_replace('/Object$/', '', $objReference->PropertyName) ?>');
@@ -88,6 +88,10 @@
 	}
 ?>
 			$this->tabs->Headers = $headers;
+		}
+
+		protected function showTab($objRelated) {
+			return $objRelated && $objRelated->__Restored;
 		}
 
 		public function __get($strName) {
