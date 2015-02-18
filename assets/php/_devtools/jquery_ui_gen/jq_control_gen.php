@@ -24,6 +24,10 @@ class HtmlJqDoc extends JqDoc {
 			$text = preg_replace('/<\/code>\s*<code>/', '', $text);
 			$text = preg_replace('/<div>/', '', $text);
 			$text = preg_replace('/<\/div>/', '', $text);
+
+			$text = preg_replace('/<strong>/', '', $text);
+			$text = preg_replace('/<\/strong>/', '', $text);
+
 			$description .= $text;
 			$desc_node = $desc_node->next_sibling();
 		}
@@ -70,6 +74,7 @@ class HtmlJqDoc extends JqDoc {
 
 		$nodes = $htmlOption->find('span.option-type');
 		$type = preg_replace('/Type: /', '', $nodes[0]->plaintext);
+		$type = trim($type);
 		if ($this->is_event_option($type))
 			return $type;
 
@@ -228,9 +233,19 @@ function jq_inc_gen() {
 	file_put_contents($strOutFileName, $strResult);
 }
 
+function jq_indent ($strText, $intCount, $blnComment = false) {
+	$strTabs = str_repeat("\t", $intCount);
+	if ($blnComment) {
+		$strTabs .= ' * ';
+	}
+	$strRet = preg_replace ( '/^/m', $strTabs , $strText);
+	return $strRet;
+}
+
 $baseUrl = "http://api.jqueryui.com";
 
 // QBlock control uses these differently to make these capabilities a part of any block control
+
 jq_control_gen($baseUrl."/Draggable", null, 'QControl');
 jq_control_gen($baseUrl."/Droppable", null, 'QControl');
 jq_control_gen($baseUrl."/Resizable", null, 'QControl');

@@ -1,5 +1,5 @@
 <?php
-include_once('simple_html_dom.php');
+//include_once('simple_html_dom.php');
 require('../../qcubed.inc.php');
 require(__INCLUDES__ . '/codegen/QCodeGen.class.php');
 
@@ -9,6 +9,11 @@ class JqAttributes {
 
 	public function __construct($origName, $description) {
 		$this->name = $origName;
+
+		$html = new \Html2Text\Html2Text($description);
+		$description = $html->getText();
+		//$description = preg_replace ( '/ \t/m', "\t" , $description);
+		$description = str_replace(" \t", "\t", $description);
 		$this->description = $description;
 	}
 }

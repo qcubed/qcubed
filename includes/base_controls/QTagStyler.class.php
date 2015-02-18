@@ -39,5 +39,13 @@
 		public function GetAttributes() {
 			return $this->RenderHtmlAttributes();
 		}
+
+		/**
+		 * Sets the attributes to the given array.
+		 *
+		 * @param $attributes
+		 */
+		public function SetAttributes($attributes) {
+			$this->attributes = $attributes;
+		}
 	}
-?>

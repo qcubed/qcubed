@@ -1,3 +1,4 @@
+<?= '<?php' ?>
 <?php
 	/**
 	 * <?= $objJqDoc->strQcClass ?>Gen File
@@ -29,7 +30,7 @@
 	
 <?php foreach ($objJqDoc->events as $event) { ?>
 	/**
-	 * <?= str_replace("\n", "\n\t * ", wordwrap(trim($event->description), $objJqDoc->descriptionLine, "\n\t\t")) ?>
+<?= jq_indent($event->description, 1, true); ?>
 	 */
 	class <?= $event->eventClassName ?> extends QJqUiEvent {
 		const EventName = '<?= $event->eventName ?>';
@@ -38,16 +39,16 @@
 
 	/* Custom "property" event classes for this control */
 <?php foreach ($objJqDoc->options as $option) { ?>
-	<?php if ($option instanceof Event) { ?>
+<?php 	if ($option instanceof Event) { ?>
 	/**
-	 * <?= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), $objJqDoc->descriptionLine, "\n\t\t")) ?>
+<?= jq_indent($option->description, 1, true); ?>
 	 */
 	class <?= $option->eventClassName ?> extends QJqUiPropertyEvent {
 		const EventName = '<?= $option->eventName ?>';
 		protected $strJqProperty = '<?= $option->name ?>';
 	}
 
-	<?php } ?>
+<?php 	} ?>
 <?php } ?>
 
 	/**
@@ -62,7 +63,8 @@
 	 * @see <?= $objJqDoc->strQcClass ?>Base
 	 * @package Controls\Base
 <?php foreach ($objJqDoc->options as $option) { ?>
-	 * @property <?= $option->phpType ?> $<?= $option->propName ?> <?= str_replace("\n", "\n\t * ", wordwrap(trim($option->description), $objJqDoc->descriptionLine, "\n\t\t")) ?>
+	 * @property <?= $option->phpType ?> $<?= $option->propName ?> <?= jq_indent($option->description, 1, true); ?>
+
 <?php } ?>
 	 */
 
@@ -71,101 +73,67 @@
 		protected $strStyleSheets = __JQUERY_CSS__;
 <?php foreach ($objJqDoc->options as $option) { ?>
 		/** @var <?= $option->phpType ?> */
-	<?php if (!$option->defaultValue) { ?>
+<?php 	if (!$option->defaultValue) { ?>
 		protected $<?= $option->varName ?>;
-	<?php } ?>
-	<?php if ($option->defaultValue) { ?>
+<?php 	} ?>
+<?php 	if ($option->defaultValue) { ?>
 		protected $<?= $option->varName ?> = null;
-	<?php } ?>
+<?php 	} ?>
 <?php } ?>
-		
-		protected function makeJsProperty($strProp, $strKey) {
-			$objValue = $this->$strProp;
-			if (null === $objValue) {
-				return '';
-			}
 
-			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
-		}
-
-		protected function makeJqOptions() {
-<?php if (method_exists($objJqDoc->strQcBaseClass, 'makeJqOptions')) { ?>
-			$strJqOptions = parent::makeJqOptions();
-			if ($strJqOptions) $strJqOptions .= ', ';
+		/**
+		 * Builds the option array to be sent to the widget consctructor.
+		 *
+		 * @return array key=>value array of options
+		 */
+		protected function MakeJqOptions() {
+<?php if (method_exists($objJqDoc->strQcBaseClass, 'MakeJqOptions')) { ?>
+			$jqOptions = parent::MakeJqOptions();
 <?php } ?>
-<?php if (!method_exists($objJqDoc->strQcBaseClass, 'makeJqOptions')) { ?>
-			$strJqOptions = '';
+<?php if (!method_exists($objJqDoc->strQcBaseClass, 'MakeJqOptions')) { ?>
+			$jqOptions = null;
 <?php } ?>
 <?php foreach ($objJqDoc->options as $option) { ?>
-			$strJqOptions .= $this->makeJsProperty('<?= $option->propName ?>', '<?= $option->name ?>');
+			if (!is_null($val = $this-><?= $option->propName ?>)) {$jqOptions['<?= $option->name ?>'] = $val;}
 <?php } ?>
-			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
-			return $strJqOptions;
+			return $jqOptions;
 		}
 
-		public function getJqSetupFunction() {
+		public function GetJqSetupFunction() {
 			return '<?= $objJqDoc->strJqSetupFunc ?>';
 		}
 
-		public function GetControlJavaScript() {
-			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
-		}
-
 		public function GetEndScript() {
-			$str = '';
 			if ($this->getJqControlId() !== $this->ControlId) {
-				// #845: if the element receiving the jQuery UI events is different than this control
-				// we need to clean-up the previously attached event handlers, so that they are not duplicated 
-				// during the next ajax update which replaces this control.
-				$str = sprintf('jQuery("#%s").off(); ', $this->getJqControlId());
+				// If events are not attached to the actual object being drawn, then the old events will not get
+				// deleted. We delete the old events here. This code must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($this->getJqControlId(), "off", QJsPriority::High);
 			}
-			$str .= $this->GetControlJavaScript();
-			if ($strParentScript = parent::GetEndScript()) {
-				$str .= '; ' . $strParentScript;
+			$jqOptions = $this->makeJqOptions();
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction());
 			}
-			return $str;
-		}
-		
-		/**
-		 * Call a JQuery UI Method on the object. 
-		 * 
-		 * A helper function to call a jQuery UI Method. Takes variable number of arguments.
-		 *
-		 * @param boolean $blnAttribute true if the method is modifying an option, false if executing a command
-		 * @param string $strMethodName the method name to call
-		 * @internal param $mixed [optional] $mixParam1
-		 * @internal param $mixed [optional] $mixParam2
-		 */
-		protected function CallJqUiMethod($blnAttribute, $strMethodName /*, ... */) {
-			$args = func_get_args();
-			array_shift ($args);
+			else {
+				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), $jqOptions);
+			}
 
-			$strArgs = JavaScriptHelper::toJsObject($args);
-			$strJs = sprintf('jQuery("#%s").%s(%s)',
-				$this->getJqControlId(),
-				$this->getJqSetupFunction(),
-				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			if ($blnAttribute) {
-				$this->AddAttributeScript($strJs);
-			} else {
-				QApplication::ExecuteJavaScript($strJs);
-			}
+			return parent::GetEndScript();
 		}
-
 
 <?php foreach ($objJqDoc->methods as $method) { ?>
 		/**
 		 * <?= str_replace("\n", "\n\t\t * ", wordwrap(trim($method->description))) ?>
 <?php foreach ($method->requiredArgs as $reqArg) { ?>
-    <?php if ($reqArg{0} != '"') { ?>
+<?php 	if ($reqArg{0} != '"') { ?>
 		 * @param <?= $reqArg ?>
-    <?php } ?>
+<?php 	} ?>
 <?php } ?>
 <?php foreach ($method->optionalArgs as $optArg) { ?>
 		 * @param <?= $optArg ?>
 <?php } ?>
 		 */
-		public function <?= $method->phpSignature ?> {<?php  
+		public function <?= $method->phpSignature ?> {
+<?php
 				$args = array();
 				foreach ($method->requiredArgs as $reqArg) {
 					$args[] = $reqArg;
@@ -173,8 +141,9 @@
 				foreach ($method->optionalArgs as $optArg) {
 					$args[] = $optArg;
 				}
-				$strArgs = join(", ", $args); ?>
-			$this->CallJqUiMethod(false, <?= $strArgs; ?>);
+				$strArgs = join(", ", $args);
+?>
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), <?= $strArgs; ?>);
 		}
 <?php } ?>
 
@@ -196,45 +165,40 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-<?php foreach ($objJqDoc->options as $option) { ?>
+<?php 	foreach ($objJqDoc->options as $option) { ?>
 				case '<?= $option->propName ?>':
-	<?php if (!$option->phpQType) { ?>
+<?php 		if (!$option->phpQType) { ?>
 					$this-><?= $option->varName ?> = $mixValue;
-	<?php if (!($option instanceof Event)) { ?>
-				
-					if ($this->OnPage) {
-						$this->CallJqUiMethod(true, 'option', '<?= $option->name ?>', $mixValue);
-					}
+<?php 			if (!($option instanceof Event)) { ?>
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', '<?= $option->name ?>', $mixValue);
 					break;
-	<?php } ?>
-	<?php } ?>
-	<?php if ($option->phpQType) { ?>
+<?php 			} ?>
+<?php 		} ?>
+<?php 		if ($option->phpQType) { ?>
 					try {
-	<?php if (!($option instanceof Event)) { ?>
+<?php 			if (!($option instanceof Event)) { ?>
 						$this-><?= $option->varName ?> = QType::Cast($mixValue, <?= $option->phpQType ?>);
-						if ($this->OnPage) {
-							$this->CallJqUiMethod(true, 'option', '<?= $option->name ?>', $this-><?= $option->varName ?>);
-						}
-	<?php } ?>
-	<?php if ($option instanceof Event) { ?>
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', '<?= $option->name ?>', $this-><?= $option->varName ?>);
+<?php 			} ?>
+<?php 			if ($option instanceof Event) { ?>
 						$this-><?= $option->varName ?> = new QJsClosure($mixValue, array("<?= join('","', $option->arrArgs) ?>"));
-	<?php } ?>
+<?php 			} ?>
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-	<?php } ?>
+<?php 		} ?>
 
-<?php } ?>
+<?php 	} ?>
 
-<?php if ($objJqDoc->hasDisabledProperty) { ?>
+<?php 	if ($objJqDoc->hasDisabledProperty) { ?>
 				case 'Enabled':
 					$this->Disabled = !$mixValue;	// Tie in standard QCubed functionality
 					parent::__set($strName, $mixValue);
 					break;
 					
-<?php } ?>
+<?php 	} ?>
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -254,9 +218,9 @@
 		public static function GetMetaParams() {
 			return array_merge(parent::GetMetaParams(), array(
 <?php foreach ($objJqDoc->options as $option) { ?>
-	<?php if ($option->phpQType) { ?>
-				new QMetaParam (get_called_class(), '<?= $option->propName ?>', '<?= addslashes(trim($option->description)) ?>', <?= $option->phpQType ?>),
-	<?php } ?>
+<?php 	if ($option->phpQType) { ?>
+				new QMetaParam (get_called_class(), '<?= $option->propName ?>', '<?= addslashes(trim(str_replace(array("\n", "\r"), '', $option->description))) ?>', <?= $option->phpQType ?>),
+<?php 	} ?>
 <?php } ?>			));
 		}
 	}

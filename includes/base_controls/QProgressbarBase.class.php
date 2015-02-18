@@ -23,17 +23,9 @@
 		 * The javascript for the control to be sent to the client.
 		 * @return string The control's JS
 		 */
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
-			
-			// if something else changes the value of the progress bar, make sure we know about it
-			$strJS .=<<<FUNC
-			.on("progressbarchange", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "_Value", jQuery(this).progressbar ("value"));
-					})						
-										
-FUNC;
-			
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.progressbar', $this->ControlId);
 			return $strJS;
 		}
 

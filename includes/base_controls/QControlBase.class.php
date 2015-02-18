@@ -67,7 +67,7 @@
 	 * @property mixed $CausesValidation flag says whether or not the form should run through its validation routine if this control has an action defined and is acted upon
 	 * @property-read string $ControlId returns the id of this control
 	 * @property-read QForm $Form returns the parent form object
-	 * @property-read string $FormAttributes
+	 * @property-read array $FormAttributes
 	 * @property string $HtmlAfter HTML that is shown after the control {@link QControl::RenderWithName}
 	 * @property string $HtmlBefore HTML that is shown before the control {@link QControl::RenderWithName}
 	 * @property string $Instructions instructions that is shown next to the control's name label {@link QControl::RenderWithName}
@@ -875,11 +875,10 @@
 		 * that most subclasses will extend this method's functionality to add Control-specific HTML
 		 * attributes (e.g. textbox will likely add the maxlength html attribute, etc.)
 		 *
-		 * @param boolean $blnIncludeCustom Include Custom attributes?
 		 * @return string
 		 * @deprecated Use renderHtmlAttributes instead
 		 */
-		public function GetAttributes($blnIncludeCustom = true) {
+		public function GetAttributes() {
 			return $this->RenderHtmlAttributes() . ' ';
 		}
 
@@ -1202,14 +1201,15 @@
 			$strToReturn = '';
 
 			if ($this->objResizable)
-				$strToReturn .= $this->objResizable->GetControlJavaScript() . ';';
+				$strToReturn .= $this->objResizable->GetEndScript();
 
 			if ($this->objDraggable)
-				$strToReturn .= $this->objDraggable->GetControlJavaScript() . ';';
+				$strToReturn .= $this->objDraggable->GetEndScript();
 
 			if ($this->objDroppable)
-				$strToReturn .= $this->objDroppable->GetControlJavaScript() . ';';
+				$strToReturn .= $this->objDroppable->GetEndScript();
 
+			$strToReturn .= ';';
 			$strToReturn .= $this->RenderActionScripts();
 
 			$this->strAttributeScripts = null; // erase the attribute scripts, because the entire control is being drawn, so we don't need them anymore.
@@ -1220,33 +1220,35 @@
         /**
          * Return one-time scripts associated with the control. Called by the form during an ajax draw only if the
 		 * entire control was not rendered.
-         *
-         * @return null|string
+		 *
+		 * Instead of actually rendering, we add them to the application event queue.
          */
         public function RenderAttributeScripts()
         {
             if ($this->strAttributeScripts) {
-                $strToReturn = implode (";\n", $this->strAttributeScripts);
-                $this->strAttributeScripts = null;
-                return $strToReturn;
-            }
-            else {
-                return '';
+				foreach ($this->strAttributeScripts as $scriptArgs) {
+					array_unshift($scriptArgs, $this->getJqControlId());
+					call_user_func_array('QApplication::ExecuteControlCommand', $scriptArgs);
+				}
             }
         }
 
         /**
          * Executes a java script associated with the control. These scripts are specifically for the purpose of
          * changing some attribute of the control that would also be taken care of during a refresh of the entire
-         * control. The script will only be executed if the entire control is not redrawn. We can't just call
-		 * QApplication::ExecuteJavascripts, because in some situations we want the order of these scripts to
-		 * come before that standard application javascripts.
+         * control. The script will only be executed in ajax if the entire control is not redrawn.
+		 *
+		 * Note that these will execute after most of the other commands execute, so do not count on the order
+		 * in which they will execute relative to other commands.
          *
-         * @param string $strScript
-         */
-        public function AddAttributeScript ($strScript)
+		 * @param string $strMethodName	The name of the javascript function to call on this control.
+		 * @param string $key
+		 * @param string $val
+		 */
+		public function AddAttributeScript ($strMethod, $key, $val /*, ... */)
         {
-            $this->strAttributeScripts[] = $strScript;
+			$args = func_get_args();	// Sometimes we need more than two parameters to set something.
+            $this->strAttributeScripts[] = $args;
         }
 
 		/**
@@ -2047,7 +2049,7 @@
 						$this->MarkAsWrapperModified();
 						if (QType::Cast($mixValue, QType::Boolean)) {
 							if (!$this->objDraggable) {
-								$this->objDraggable = new QDraggable($this);
+								$this->objDraggable = new QDraggable($this, $this->ControlId . 'draggable');
 							} else {
 								$this->objDraggable->Disabled = false;
 							}

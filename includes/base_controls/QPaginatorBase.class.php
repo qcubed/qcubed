@@ -304,7 +304,7 @@
 				$strStyle = sprintf(' style="%s"', $strStyle);
 
 			// Wrap the whole paginator in the main control tag
-			$strToReturn = sprintf('<%s id="%s" %s%s>%s</%s>', $this->strTag, $this->strControlId, $strStyle, $this->GetAttributes(true, false), $strToReturn, $this->strTag);
+			$strToReturn = sprintf('<%s id="%s" %s%s>%s</%s>', $this->strTag, $this->strControlId, $strStyle, $this->GetAttributes(), $strToReturn, $this->strTag);
 
 			return $strToReturn;
 		}

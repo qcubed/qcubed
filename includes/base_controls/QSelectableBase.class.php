@@ -28,26 +28,9 @@
 
 		// These functions are used to keep track of the selected items 
 		
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
-			
-			$strJS .=<<<FUNC
-			.on("selectablestop", function (event, ui) {
-				var strItems;
-				
-				strItems = "";
-				jQuery(".ui-selected", this).each(function() {
-					strItems = strItems + "," + this.id;
-				});
-				
-				if (strItems) {
-					strItems = strItems.substring (1);
-				}
-				qcubed.recordControlModification("$this->ControlId", "_SelectedItems", strItems);
-				
-			})
-FUNC;
-			
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.selectable', $this->ControlId);
 			return $strJS;
 		}
 

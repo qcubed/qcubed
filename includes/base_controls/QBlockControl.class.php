@@ -6,21 +6,18 @@
 	 */
 
 	/**
-	 * This class will render HTML via a pair of <span></span> tags.  It is
-	 * used to simply display any miscellaneous HTML that you would want displayed.
-	 * Because of this, it can't really execute any actions.  Any Server- or Client-Actions
-	 * defined will simply be ignored.
+	 * This abstract class is designed to be a base for class for span and div controls. It adds additional drag and
+	 * drop support to these objects, as well as templating.
 	 *
 	 * @package Controls
 	 *
 	 * @property string $Text is the Html that you want rendered
-	 * @property string $Format
-	 * @property string $Template
-	 * @property boolean $AutoRenderChildren
-	 * @property string $TagName
-	 * @property string $Padding
-	 * @property boolean $HtmlEntities
-	 * @property boolean $DropTarget
+	 * @property string $Format is a sprintf string that the Text property will be sent to for further formatting.
+	 * @property string $Template Path to the HTML template (.tpl.php) file (applicable in case a template is being used for Render)
+	 * @property boolean $AutoRenderChildren Render the child controls of this control automatically
+	 * @property string $TagName HTML tag to be used by the control (such as div or span)
+	 * @property boolean $HtmlEntities hould htmlentities be used on the contents of this control
+	 * @property boolean $DropTarget Is this a drop target?
 	 * @property string $HorizontalAlign
 	 * @property string $VerticalAlign
 	 * @property integer $ResizeHandleMinimum
@@ -41,9 +38,6 @@
 		protected $strTemplate = null;
 		/** @var bool Render the child controls of this control automatically? */
 		protected $blnAutoRenderChildren = false;
-		/** @var null|string|int Padding (CSS Style) value */
-		protected $strPadding = null;
-
 		/** @var string HTML tag to be used by the control (such as div or span) */
 		protected $strTagName = null;
 		/** @var bool Should htmlentities be used on the contents of this control? */
@@ -53,12 +47,6 @@
 		/** @var bool Is it a drop target? */
 		protected $blnDropTarget = false;
 
-		// LAYOUT
-		/** @var  string|QHorizontalAlign Horizontal alignment style */
-		protected $strHorizontalAlign = QHorizontalAlign::NotSet;
-		/** @var  string|QVerticalAlign Vertical alignment style */
-		protected $strVerticalAlign = QVerticalAlign::NotSet;
-
 		// Move Targets and Drop Zones
 		protected $objMovesControlsArray = array();
 		protected $objDropsControlsArray = array();
@@ -67,18 +55,19 @@
 
 		public function AddControlToMove($objTargetControl = null) {		
 			$this->strJavaScripts = __JQUERY_EFFECTS__;
-			
 			if($objTargetControl && $objTargetControl->ControlId != $this->ControlId) {
 				QApplication::ExecuteJavascript(sprintf('var pos_%s = $j("#%s").offset()', $objTargetControl->ControlId, $objTargetControl->ControlId));
 				QApplication::ExecuteJavascript(sprintf('$j("#%s").on("drag",  function (ev, ui) { p = $j("#%s").offset(); p.left = pos_%s.left + ui.position.left; p.top = pos_%s.top + ui.position.top; $j("#%s").offset(p); } );', $this->strControlId,	$objTargetControl->ControlId,  $objTargetControl->ControlId,  $objTargetControl->ControlId, $objTargetControl->ControlId ));
+				$this->objMovesControlsArray[$objTargetControl->ControlId] = true;
+
+				// TODO:
+				// Replace ExecuteJavascript with this:
+				//$this->AddAttributeScript('qcubed', 'ctrlToMove', $objTargetControl->ControlId);
 			}
-			
-			$this->blnMoveable = true;
 			return;
 		}
 
 		public function RemoveControlToMove(QControl $objTargetControl) {
-			$this->objMovesControlsArray[$objTargetControl->ControlId] = null;
 			unset($this->objMovesControlsArray[$objTargetControl->ControlId]);
 		}
 
@@ -105,8 +94,8 @@
 		}
 
 		public function RemoveAllDropZones() {
-			QApplication::ExecuteJavascript(sprintf('$j("#%s").draggable("option", "revert", "invalid");',$this->strControlId));
-			
+			QApplication::ExecuteControlCommand($this->strControlId, 'draggable', "option", "revert", "invalid");
+
 			foreach ($this->objDropsControlsArray as $strControlId => $blnValue) {
 				if ($blnValue) {
 					$objControl = $this->objForm->GetControl($strControlId);
@@ -126,15 +115,16 @@
 			
 			// DROP ZONES
 			foreach ($this->objDropsControlsArray as $strKey => $blnIsDropZone) {
-				if ($blnIsDropZone)
-					$strToReturn .= sprintf('$j("#%s").droppable(); ', $strKey);
+				if ($blnIsDropZone) {
+					QApplication::ExecuteControlCommand($strKey, 'droppable');
+				}
 			}
 
 			foreach ($this->objIsDropZoneFor as $strKey => $blnIsDropZone) {
 				if ($blnIsDropZone) {
 					$objControl = $this->objForm->GetControl($strKey);
 					if ($objControl && ($objControl->strRenderMethod)) {
-						$strToReturn .= sprintf('$j("#%s").droppable("option", "accept", "#%s");', $this->strControlId, $strKey);
+						QApplication::ExecuteControlCommand($this->strControlId, 'droppable', 'option', 'accept', '#' . $strKey);
 					}
 				}
 			}

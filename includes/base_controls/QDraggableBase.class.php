@@ -44,26 +44,10 @@
 		public function Validate() {return true;}
 		public function ParsePostData() {}
 		
-		
-		// These functions are used to keep track of the position of the draggable. Note that event though
-		// the draggable interface includes a 'ui' that is supposed to return original and new position of the 
-		// draggable, there are bugs in the jQuery UI code such that it doesn't always work, so we use
-		// an alternate way of doing it.
-		
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
-			
-			$strJS .=<<<FUNC
-			.on("dragstart", function () {
-						var c = jQuery(this);
-						c.data ("originalPosition", c.position());
-					})						
-			.on("dragstop", function () {
-						var c = jQuery(this);
-			 			qcubed.recordControlModification("$this->ControlId", "_DragData", c.data("originalPosition").left + "," + c.data("originalPosition").top + "," + c.position().left + "," + c.position().top);
-					})						
-FUNC;
-			
+
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.draggable', $this->getJqControlId(), $this->ControlId);
 			return $strJS;
 		}
 
@@ -80,8 +64,8 @@ FUNC;
 						$this->aryNewPosition['top'] = $a[3];
 						
 						// update parent's coordinates
-						$this->objParentControl->Top = $this->aryNewPosition['top'];
-						$this->objParentControl->Left = $this->aryNewPosition['left'];
+						$this->objParentControl->getWrapperStyler()->Top = $this->aryNewPosition['top'];
+						$this->objParentControl->getWrapperStyler()->Left = $this->aryNewPosition['left'];
 						break;
 						
 					} catch (QInvalidCastException $objExc) {

@@ -25,7 +25,7 @@
 	 * @property-read QDateTime $LastDayOfTheMonth  A new QDateTime representing the last day of this date's month.
 	 * @property-read QDateTime $FirstDayOfTheMonth A new QDateTime representing the first day of this date's month.
 	 */
-	class QDateTime extends DateTime {
+	class QDateTime extends DateTime implements JsonSerializable {
 		/** Used to specify the time right now (used when creating new instances of this class) */
 		const Now = 'now';
 		/** Date and time in ISO format */
@@ -142,8 +142,8 @@
 		}
 
 		/**
-		 * @param $dttArray
-		 * @return QDateTime[]|null
+		 * @param QDateTime[] $dttArray
+		 * @return array
 		 */
 		public function GetSoapDateTimeArray($dttArray) {
 			if (!$dttArray)
@@ -821,6 +821,40 @@
 		public function Modify($mixValue) {
 			parent::modify($mixValue);
 			return $this;
+		}
+
+		/**
+		 * Convert the object to a javascript object. This is code that if executed in javascript would produce a Date
+		 * javascript object. Note that the date will be created in the browser's local timezone, so convert to the
+		 * browser's timezone first if that is important for you.
+		 *
+		 * @return string
+		 */
+		public function toJsObject() {
+			if ($this->blnDateNull) {
+				$dt = self::Now();	// time only will use today's date.
+				$dt->setTime($this);
+			} else {
+				$dt = clone $this;
+			}
+			return sprintf ('new Date(%s, %s, %s, %s, %s, %s)', $dt->Year, $dt->Month - 1, $dt->Day, $dt->Hour, $dt->Minute, $dt->Second);
+		}
+
+		/**
+		 * Returns a datetime in a way that it will pass through a json_encode and be decodalbe in qcubed.js.
+		 * qcubed.unpackParams looks for this.
+		 *
+		 * @return array|mixed;
+		 */
+		public function jsonSerialize() {
+			if ($this->blnDateNull) {
+				$dt = self::Now();	// time only will use today's date.
+				$dt->setTime($this);
+			} else {
+				$dt = clone $this;
+			}
+			return [JavaScriptHelper::ObjectType=>'qDateTime', 'year'=>$dt->Year, 'month'=>$dt->Month - 1,
+					'day'=>$dt->Day, 'hour'=>$dt->Hour, 'minute'=>$dt->Minute, 'second'=>$dt->Second];
 		}
 
 		/**

@@ -93,9 +93,9 @@
 
 			$ctrlId = $this->ControlId;
 			if ($this->intButtonMode == self::ButtonModeSet) {
-				$strScript .= sprintf ('jQuery("#%s").buttonset();', $ctrlId) . "\n";
+				QApplication::ExecuteControlCommand($ctrlId, 'buttonset');
 			} elseif ($this->intButtonMode == self::ButtonModeJq) {
-				$strScript .= sprintf ('jQuery("input:checkbox", "#%s").button();', $ctrlId) . "\n";
+				QApplication::ExecuteSelectorFunction(["input:checkbox", "#" . $ctrlId], 'button');
 			}
 			$strScript .= parent::GetEndScript();
 
@@ -449,10 +449,11 @@
 
 		/**
 		 * Override to insert additional create options pertinent to the control.
-		 * @param $objTable
-		 * @param $objColumn
-		 * @param $strControlVarName
-		 * @return string|void
+		 * @param QCodeGen $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QManyToManyReference|QReverseReference $objColumn
+		 * @param string $strControlVarName
+		 * @return string
 		 */
 		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
 			$strRet = parent::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);

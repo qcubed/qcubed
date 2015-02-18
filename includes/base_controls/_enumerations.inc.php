@@ -232,10 +232,9 @@
 	abstract class QAjaxResponse {
 		const Watcher = 'watcher';
 		const Controls = 'controls';
-		const CommandHigh = 'commandsHigh'; // TODO: Remove this and issue specific commands rather than eval'ing javascript?
-		const CommandMedium = 'commands'; // TODO: Remove this and issue specific commands rather than eval'ing javascript?
-		const CommandLow = 'commandsLow'; // TODO: Remove this and issue specific commands rather than eval'ing javascript?
-		const ControlCommands = 'ctrl_command';
+		const CommandsHigh = 'commandsHigh';
+		const CommandsMedium = 'commands';
+		const CommandsLow = 'commandsLow';
 		const RegC = 'regc'; // register control list
 		const Html = 'html';
 		const Value = 'value';

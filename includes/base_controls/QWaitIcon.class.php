@@ -96,7 +96,7 @@
 			$strToReturn = sprintf('<%s id="%s" %s%s>%s</%s>',
 				$this->strTagName,
 				$this->strControlId,
-				$this->GetAttributes(true, false),
+				$this->GetAttributes(),
 				$strStyle,
 				$this->strText,
 				$this->strTagName);

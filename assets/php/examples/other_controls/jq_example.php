@@ -111,7 +111,7 @@
 			$this->Sortable->AddAction(new QSortable_StopEvent(), new QAjaxAction ('sortable_stop'));
 			
 			// Accordion
-			$this->Accordion = new QAccordion($this);
+			$this->Accordion = new QAccordion($this, 'accordionCtl');
 			$lbl = new QLinkButton($this->Accordion);
 			$lbl->Text = 'Header 1';
 			$pnl = new QPanel($this->Accordion);

@@ -36,15 +36,9 @@
 		 * Return the javascript associated with the control.
 		 * @return string
 		 */
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
-			// The below keeps our own copy of the active index synchronized with jQuery UI's copy.
-			$strJS .= sprintf(';$j("#%s").on("tabsactivate", function(event, ui) {
-						var i = $j(this).tabs( "option", "active" );
-						var id = ui.newPanel ? ui.newPanel.attr("id") : null;
-						qcubed.recordControlModification(this.id, "_active", [i,id]);
-					})',
-					$this->ControlId);
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.tabs', $this->ControlId);
 			return $strJS;
 		}
 

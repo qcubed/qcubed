@@ -65,24 +65,13 @@
 				return $strToReturn;
 		}
 		
-		// These functions are used to keep track of the selected index.
-		// To query or set the selected index, use ->Active
 		/**
 		 * Returns the Javascript needed as the part of control's behavior
 		 * @return string The control's JS
 		 */
-		public function GetControlJavaScript() {
-			
-			$formId = $this->Form->FormId;
-			$strJS = parent::GetControlJavaScript();
-			
-			$strJS .=<<<FUNC
-			.on("accordionactivate", function(event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "_SelectedIndex", jQuery(this).accordion("option", "active"));
-						qc.pA("$formId", "$this->ControlId", "QChangeEvent", "", "");
-			})						
-FUNC;
-			
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.accordion', $this->ControlId);
 			return $strJS;
 		}
 
