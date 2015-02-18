@@ -63,13 +63,13 @@
 		public function renderButton_Click($strFormId, $strControlId, $strParameter) {
 			$this->intHitCnt++;
 			$this->dtgButtons->MarkAsModified();
-			QApplication::ExecuteJavaScript("alert('alert 2: a standard priority script')");
-			QApplication::ExecuteJavaScript("alert('alert 1: a standard priority script')");
-			QApplication::ExecuteJavaScript("alert('Just updated the datagrid: the javascript for adding the css class to the buttons is not executed yet!')");
-			QApplication::ExecuteJavaScript('$j(".ui-button").addClass("ui-state-highlight")'); //change the button color: this is executed with standard priority
+			QApplication::ExecuteJsFunction('alert', 'alert 2: a standard priority script');
+			QApplication::ExecuteJsFunction('alert', 'alert 1: a standard priority script');
+			QApplication::ExecuteJsFunction('alert', 'Just updated the datagrid: the javascript for adding the css class to the buttons is not executed yet!');
+			QApplication::ExecuteSelectorFunction(".ui-button", 'addClass', "ui-state-highlight");
 		}
 
-                public function renderLowPriorityButton_Click($strFormId, $strControlId, $strParameter) {
+        public function renderLowPriorityButton_Click($strFormId, $strControlId, $strParameter) {
 			$this->intHitCnt++;
 			$this->dtgButtons->MarkAsModified();
 			QApplication::ExecuteJavaScript("alert('alert 3: a low priority script')",  QJsPriority::Low);

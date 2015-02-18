@@ -9,7 +9,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QDialog_BeforeCloseEvent extends QJqUiEvent {
-		const EventName = 'dialogbeforeclose ';
+		const EventName = 'dialogbeforeclose';
 	}
 	/**
 	 * Triggered when the dialog is closed.
@@ -20,7 +20,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QDialog_CloseEvent extends QJqUiEvent {
-		const EventName = 'dialogclose ';
+		const EventName = 'dialogclose';
 	}
 	/**
 	 * Triggered when the dialog is created.
@@ -31,7 +31,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QDialog_CreateEvent extends QJqUiEvent {
-		const EventName = 'dialogcreate ';
+		const EventName = 'dialogcreate';
 	}
 	/**
 	 * Triggered while the dialog is being dragged.
@@ -45,7 +45,7 @@
 	 * 
 	 */
 	class QDialog_DragEvent extends QJqUiEvent {
-		const EventName = 'dialogdrag ';
+		const EventName = 'dialogdrag';
 	}
 	/**
 	 * Triggered when the user starts dragging the dialog.
@@ -59,7 +59,7 @@
 	 * 
 	 */
 	class QDialog_DragStartEvent extends QJqUiEvent {
-		const EventName = 'dialogdragstart ';
+		const EventName = 'dialogdragstart';
 	}
 	/**
 	 * Triggered after the dialog has been dragged.
@@ -73,7 +73,7 @@
 	 * 
 	 */
 	class QDialog_DragStopEvent extends QJqUiEvent {
-		const EventName = 'dialogdragstop ';
+		const EventName = 'dialogdragstop';
 	}
 	/**
 	 * Triggered when the dialog gains focus.
@@ -84,7 +84,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QDialog_FocusEvent extends QJqUiEvent {
-		const EventName = 'dialogfocus ';
+		const EventName = 'dialogfocus';
 	}
 	/**
 	 * Triggered when the dialog is opened.
@@ -95,7 +95,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QDialog_OpenEvent extends QJqUiEvent {
-		const EventName = 'dialogopen ';
+		const EventName = 'dialogopen';
 	}
 	/**
 	 * Triggered while the dialog is being resized.
@@ -113,7 +113,7 @@
 	 * 
 	 */
 	class QDialog_ResizeEvent extends QJqUiEvent {
-		const EventName = 'dialogresize ';
+		const EventName = 'dialogresize';
 	}
 	/**
 	 * Triggered when the user starts resizing the dialog.
@@ -131,7 +131,7 @@
 	 * 
 	 */
 	class QDialog_ResizeStartEvent extends QJqUiEvent {
-		const EventName = 'dialogresizestart ';
+		const EventName = 'dialogresizestart';
 	}
 	/**
 	 * Triggered after the dialog has been resized.
@@ -149,7 +149,7 @@
 	 * 
 	 */
 	class QDialog_ResizeStopEvent extends QJqUiEvent {
-		const EventName = 'dialogresizestop ';
+		const EventName = 'dialogresizestop';
 	}
 
 	/* Custom "property" event classes for this control */

@@ -802,9 +802,8 @@
 		 */
 		protected static $JavascriptCommandArray = array();
 
-		/** @var array Files to be added to the list of files in front of the javascript commands. Should include jquery, etc. */
+		/** @var array JS files to be added to the list of files in front of the javascript commands. Should include jquery, etc. */
 		protected static $JavascriptFileArray = array();
-
 
 		/*
 				public static $AlertMessageArray = array();
@@ -942,13 +941,13 @@
 		 * One time add of style sheets, to be used by QForm only for last minute style sheet injection.
 		 * @param string[] $strStyleSheetArray
 		 */
-		public static function AddStyleSheets ($strStyleSheetArray) {
-			if (empty(QApplication::$JavascriptFileArray[QAjaxResponse::StyleSheets])) {
-				QApplication::$JavascriptFileArray[QAjaxResponse::StyleSheets] = $strStyleSheetArray;
+		public static function AddStyleSheets (array $strStyleSheetArray) {
+			if (empty(QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets])) {
+				QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets] = $strStyleSheetArray;
 			}
 			else {
-				QApplication::$JavascriptFileArray[QAjaxResponse::StyleSheets] =
-					array_merge (QApplication::$JavascriptFileArray[QAjaxResponse::StyleSheets], $strStyleSheetArray);
+				QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets] =
+					array_merge (QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets], $strStyleSheetArray);
 			}
 		}
 
@@ -1011,17 +1010,6 @@
 		public static function RenderFiles() {
 			$strScript = '';
 
-			// Style sheet injection by a control. Not very common, as other ways of adding style sheets would normally be done first.
-			// Might even need to be removed.
-			if (!empty(QApplication::$JavascriptFileArray[QAjaxResponse::StyleSheets])) {
-				$str = '';
-				foreach (QApplication::$JavascriptFileArray[QAjaxResponse::StyleSheets] as $ss) {
-					$str .= 'qc.loadStyleSheetFile("' . $ss . '", "all"); ';
-				}
-				QApplication::$JavascriptFileArray[QAjaxResponse::StyleSheets] = null;
-				$strScript .= sprintf('<script type="text/javascript">%s</script>', $str) . "\n"; // wrap in javascript block
-			}
-
 			// Javascript files should get processed before the commands.
 			if (!empty(QApplication::$JavascriptFileArray[QAjaxResponse::JavaScripts])) {
 				foreach (QApplication::$JavascriptFileArray[QAjaxResponse::JavaScripts] as $js) {
@@ -1043,6 +1031,15 @@
 		 */
 		public static function RenderJavascript() {
 			$strScript = '';
+
+			// Style sheet injection by a control. Not very common, as other ways of adding style sheets would normally be done first.
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets])) {
+				$str = '';
+				foreach (QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets] as $ss) {
+					$str .= 'qc.loadStyleSheetFile("' . $ss . '", "all"); ';
+				}
+				QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets] = null;
+			}
 
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::Alert])) {
 				foreach (QApplication::$JavascriptCommandArray[QAjaxResponse::Alert] as $strAlert) {

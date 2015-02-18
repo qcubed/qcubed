@@ -11,7 +11,7 @@
 	 * 
 	 */
 	class QSelectMenu_ChangeEvent extends QJqUiEvent {
-		const EventName = 'selectmenuchange ';
+		const EventName = 'selectmenuchange';
 	}
 	/**
 	 * Triggered when the menu is hidden.
@@ -21,7 +21,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSelectMenu_CloseEvent extends QJqUiEvent {
-		const EventName = 'selectmenuclose ';
+		const EventName = 'selectmenuclose';
 	}
 	/**
 	 * Triggered when the selectmenu is created.
@@ -32,7 +32,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSelectMenu_CreateEvent extends QJqUiEvent {
-		const EventName = 'selectmenucreate ';
+		const EventName = 'selectmenucreate';
 	}
 	/**
 	 * Triggered when an items gains focus.
@@ -45,7 +45,7 @@
 	 * 
 	 */
 	class QSelectMenu_FocusEvent extends QJqUiEvent {
-		const EventName = 'selectmenufocus ';
+		const EventName = 'selectmenufocus';
 	}
 	/**
 	 * Triggered when the menu is opened.
@@ -55,7 +55,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSelectMenu_OpenEvent extends QJqUiEvent {
-		const EventName = 'selectmenuopen ';
+		const EventName = 'selectmenuopen';
 	}
 	/**
 	 * Triggered when a menu item is selected.
@@ -68,7 +68,7 @@
 	 * 
 	 */
 	class QSelectMenu_SelectEvent extends QJqUiEvent {
-		const EventName = 'selectmenuselect ';
+		const EventName = 'selectmenuselect';
 	}
 
 	/* Custom "property" event classes for this control */

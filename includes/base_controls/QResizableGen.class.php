@@ -8,7 +8,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QResizable_CreateEvent extends QJqUiEvent {
-		const EventName = 'resizecreate ';
+		const EventName = 'resizecreate';
 	}
 	/**
 	 * This event is triggered during the resize, on the drag of the resize
@@ -35,7 +35,7 @@
 	 * 
 	 */
 	class QResizable_ResizeEvent extends QJqUiEvent {
-		const EventName = 'resize ';
+		const EventName = 'resize';
 	}
 	/**
 	 * This event is triggered at the start of a resize operation.
@@ -61,7 +61,7 @@
 	 * 
 	 */
 	class QResizable_StartEvent extends QJqUiEvent {
-		const EventName = 'resizestart ';
+		const EventName = 'resizestart';
 	}
 	/**
 	 * This event is triggered at the end of a resize operation.
@@ -87,7 +87,7 @@
 	 * 
 	 */
 	class QResizable_StopEvent extends QJqUiEvent {
-		const EventName = 'resizestop ';
+		const EventName = 'resizestop';
 	}
 
 	/* Custom "property" event classes for this control */

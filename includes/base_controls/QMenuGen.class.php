@@ -10,7 +10,7 @@
 	 * 
 	 */
 	class QMenu_BlurEvent extends QJqUiEvent {
-		const EventName = 'menublur ';
+		const EventName = 'menublur';
 	}
 	/**
 	 * Triggered when the menu is created.
@@ -21,7 +21,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QMenu_CreateEvent extends QJqUiEvent {
-		const EventName = 'menucreate ';
+		const EventName = 'menucreate';
 	}
 	/**
 	 * Triggered when a menu gains focus or when any menu item is activated.
@@ -34,7 +34,7 @@
 	 * 
 	 */
 	class QMenu_FocusEvent extends QJqUiEvent {
-		const EventName = 'menufocus ';
+		const EventName = 'menufocus';
 	}
 	/**
 	 * Triggered when a menu item is selected.
@@ -47,7 +47,7 @@
 	 * 
 	 */
 	class QMenu_SelectEvent extends QJqUiEvent {
-		const EventName = 'menuselect ';
+		const EventName = 'menuselect';
 	}
 
 	/* Custom "property" event classes for this control */

@@ -1315,7 +1315,7 @@
 
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
-				$strToReturn  .= '<style type="text/css" media="all">@import "' . $this->GetCssFileUri($strScript) . ';</style>';
+				$strToReturn  .= '<style type="text/css" media="all">@import "' . $this->GetCssFileUri($strScript) . '</style>';
 				$strToReturn .= "\r\n";
 			}
 
@@ -1653,7 +1653,8 @@
 
 					/* Note: GetEndScript may cause the control to register additional commands, which will be rendered in QApplication::RenderJavaScript */
 					if ($strControlScript = $objControl->GetEndScript()) {
-						$strEventScripts .= $strControlScript . ";\n";
+						$strControlScript = JavaScriptHelper::TerminateScript($strControlScript);
+						$strEventScripts .= $strControlScript;
 					}
 				}
 			}
@@ -1662,7 +1663,8 @@
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strGroupingScript = $objGrouping->Render();
 				if (strlen($strGroupingScript) > 0) {
-					$strEventScripts .= $strGroupingScript . ";\n";
+					$strGroupingScript = JavaScriptHelper::TerminateScript($strGroupingScript);
+					$strEventScripts .= $strGroupingScript;
 				}
 			}
 
@@ -1702,11 +1704,12 @@
 			 */
 			foreach ($this->GetAllControls() as $objControl) {
 				if ($objControl->Rendered) {
-					$strHtml .= $objControl->GetEndHtml() . _nl();
+					$strHtml .= $objControl->GetEndHtml();
 				}
 				$objControl->ResetFlags(); // Make sure controls are serialized in a reset state
 			}
 
+			$strHtml .= _nl();
 			$strHtml .= QApplication::RenderFiles() . _nl();
 
 			// Render hidden controls related to the form

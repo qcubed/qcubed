@@ -9,7 +9,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSpinner_ChangeEvent extends QJqUiEvent {
-		const EventName = 'spinchange ';
+		const EventName = 'spinchange';
 	}
 	/**
 	 * Triggered when the spinner is created.
@@ -20,7 +20,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSpinner_CreateEvent extends QJqUiEvent {
-		const EventName = 'spincreate ';
+		const EventName = 'spincreate';
 	}
 	/**
 	 * Triggered during increment/decrement (to determine direction of spin
@@ -37,7 +37,7 @@
 	 * 
 	 */
 	class QSpinner_SpinEvent extends QJqUiEvent {
-		const EventName = 'spin ';
+		const EventName = 'spin';
 	}
 	/**
 	 * Triggered before a spin. Can be canceled, preventing the spin from
@@ -49,7 +49,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSpinner_StartEvent extends QJqUiEvent {
-		const EventName = 'spinstart ';
+		const EventName = 'spinstart';
 	}
 	/**
 	 * Triggered after a spin.
@@ -60,7 +60,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSpinner_StopEvent extends QJqUiEvent {
-		const EventName = 'spinstop ';
+		const EventName = 'spinstop';
 	}
 
 	/* Custom "property" event classes for this control */

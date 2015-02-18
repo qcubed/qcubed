@@ -8,7 +8,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QDraggable_CreateEvent extends QJqUiEvent {
-		const EventName = 'dragcreate ';
+		const EventName = 'dragcreate';
 	}
 	/**
 	 * Triggered while the mouse is moved during the dragging.
@@ -26,7 +26,7 @@
 	 * 
 	 */
 	class QDraggable_DragEvent extends QJqUiEvent {
-		const EventName = 'drag ';
+		const EventName = 'drag';
 	}
 	/**
 	 * Triggered when dragging starts.
@@ -44,7 +44,7 @@
 	 * 
 	 */
 	class QDraggable_StartEvent extends QJqUiEvent {
-		const EventName = 'dragstart ';
+		const EventName = 'dragstart';
 	}
 	/**
 	 * Triggered when dragging stops.
@@ -62,7 +62,7 @@
 	 * 
 	 */
 	class QDraggable_StopEvent extends QJqUiEvent {
-		const EventName = 'dragstop ';
+		const EventName = 'dragstop';
 	}
 
 	/* Custom "property" event classes for this control */

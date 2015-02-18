@@ -24,7 +24,7 @@
 	 * 
 	 */
 	class QSortable_ActivateEvent extends QJqUiEvent {
-		const EventName = 'sortactivate ';
+		const EventName = 'sortactivate';
 	}
 	/**
 	 * This event is triggered when sorting stops, but when the
@@ -51,7 +51,7 @@
 	 * 
 	 */
 	class QSortable_BeforeStopEvent extends QJqUiEvent {
-		const EventName = 'sortbeforestop ';
+		const EventName = 'sortbeforestop';
 	}
 	/**
 	 * This event is triggered during sorting, but only when the DOM position
@@ -78,7 +78,7 @@
 	 * 
 	 */
 	class QSortable_ChangeEvent extends QJqUiEvent {
-		const EventName = 'sortchange ';
+		const EventName = 'sortchange';
 	}
 	/**
 	 * Triggered when the sortable is created.
@@ -89,7 +89,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSortable_CreateEvent extends QJqUiEvent {
-		const EventName = 'sortcreate ';
+		const EventName = 'sortcreate';
 	}
 	/**
 	 * This event is triggered when sorting was stopped, is propagated to all
@@ -116,7 +116,7 @@
 	 * 
 	 */
 	class QSortable_DeactivateEvent extends QJqUiEvent {
-		const EventName = 'sortdeactivate ';
+		const EventName = 'sortdeactivate';
 	}
 	/**
 	 * This event is triggered when a sortable item is moved away from a
@@ -145,7 +145,7 @@
 	 * 
 	 */
 	class QSortable_OutEvent extends QJqUiEvent {
-		const EventName = 'sortout ';
+		const EventName = 'sortout';
 	}
 	/**
 	 * This event is triggered when a sortable item is moved into a sortable
@@ -172,7 +172,7 @@
 	 * 
 	 */
 	class QSortable_OverEvent extends QJqUiEvent {
-		const EventName = 'sortover ';
+		const EventName = 'sortover';
 	}
 	/**
 	 * This event is triggered when an item from a connected sortable list
@@ -199,7 +199,7 @@
 	 * 
 	 */
 	class QSortable_ReceiveEvent extends QJqUiEvent {
-		const EventName = 'sortreceive ';
+		const EventName = 'sortreceive';
 	}
 	/**
 	 * This event is triggered when a sortable item from the list has been
@@ -224,7 +224,7 @@
 	 * 
 	 */
 	class QSortable_RemoveEvent extends QJqUiEvent {
-		const EventName = 'sortremove ';
+		const EventName = 'sortremove';
 	}
 	/**
 	 * This event is triggered during sorting.
@@ -250,7 +250,7 @@
 	 * 
 	 */
 	class QSortable_SortEvent extends QJqUiEvent {
-		const EventName = 'sort ';
+		const EventName = 'sort';
 	}
 	/**
 	 * This event is triggered when sorting starts.
@@ -276,7 +276,7 @@
 	 * 
 	 */
 	class QSortable_StartEvent extends QJqUiEvent {
-		const EventName = 'sortstart ';
+		const EventName = 'sortstart';
 	}
 	/**
 	 * This event is triggered when sorting has stopped.
@@ -302,7 +302,7 @@
 	 * 
 	 */
 	class QSortable_StopEvent extends QJqUiEvent {
-		const EventName = 'sortstop ';
+		const EventName = 'sortstop';
 	}
 	/**
 	 * This event is triggered when the user stopped sorting and the DOM
@@ -329,7 +329,7 @@
 	 * 
 	 */
 	class QSortable_UpdateEvent extends QJqUiEvent {
-		const EventName = 'sortupdate ';
+		const EventName = 'sortupdate';
 	}
 
 	/* Custom "property" event classes for this control */

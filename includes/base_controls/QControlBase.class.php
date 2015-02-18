@@ -1164,7 +1164,7 @@
 		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
 		public function Focus() {
-			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus();', $this->strControlId));
+			QApplication::ExecuteControlCommand($this->strControlId, 'focus');
 		}
 
 		/**
@@ -1209,7 +1209,6 @@
 			if ($this->objDroppable)
 				$strToReturn .= $this->objDroppable->GetEndScript();
 
-			$strToReturn .= ';';
 			$strToReturn .= $this->RenderActionScripts();
 
 			$this->strAttributeScripts = null; // erase the attribute scripts, because the entire control is being drawn, so we don't need them anymore.

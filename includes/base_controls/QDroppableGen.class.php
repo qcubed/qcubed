@@ -19,7 +19,7 @@
 	 * 
 	 */
 	class QDroppable_ActivateEvent extends QJqUiEvent {
-		const EventName = 'dropactivate ';
+		const EventName = 'dropactivate';
 	}
 	/**
 	 * Triggered when the droppable is created.
@@ -30,7 +30,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QDroppable_CreateEvent extends QJqUiEvent {
-		const EventName = 'dropcreate ';
+		const EventName = 'dropcreate';
 	}
 	/**
 	 * Triggered when an accepted draggable stops dragging.
@@ -50,7 +50,7 @@
 	 * 
 	 */
 	class QDroppable_DeactivateEvent extends QJqUiEvent {
-		const EventName = 'dropdeactivate ';
+		const EventName = 'dropdeactivate';
 	}
 	/**
 	 * Triggered when an accepted draggable is dropped on the droppable
@@ -71,7 +71,7 @@
 	 * 
 	 */
 	class QDroppable_DropEvent extends QJqUiEvent {
-		const EventName = 'drop ';
+		const EventName = 'drop';
 	}
 	/**
 	 * Triggered when an accepted draggable is dragged out of the droppable
@@ -83,7 +83,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QDroppable_OutEvent extends QJqUiEvent {
-		const EventName = 'dropout ';
+		const EventName = 'dropout';
 	}
 	/**
 	 * Triggered when an accepted draggable is dragged over the droppable
@@ -104,7 +104,7 @@
 	 * 
 	 */
 	class QDroppable_OverEvent extends QJqUiEvent {
-		const EventName = 'dropover ';
+		const EventName = 'dropover';
 	}
 
 	/* Custom "property" event classes for this control */

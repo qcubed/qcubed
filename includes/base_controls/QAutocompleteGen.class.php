@@ -11,7 +11,7 @@
 	 * 
 	 */
 	class QAutocomplete_ChangeEvent extends QJqUiEvent {
-		const EventName = 'autocompletechange ';
+		const EventName = 'autocompletechange';
 	}
 	/**
 	 * Triggered when the menu is hidden. Not every close event will be
@@ -23,7 +23,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QAutocomplete_CloseEvent extends QJqUiEvent {
-		const EventName = 'autocompleteclose ';
+		const EventName = 'autocompleteclose';
 	}
 	/**
 	 * Triggered when the autocomplete is created.
@@ -34,7 +34,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QAutocomplete_CreateEvent extends QJqUiEvent {
-		const EventName = 'autocompletecreate ';
+		const EventName = 'autocompletecreate';
 	}
 	/**
 	 * Triggered when focus is moved to an item (not selecting). The default
@@ -53,7 +53,7 @@
 	 * 
 	 */
 	class QAutocomplete_FocusEvent extends QJqUiEvent {
-		const EventName = 'autocompletefocus ';
+		const EventName = 'autocompletefocus';
 	}
 	/**
 	 * Triggered when the suggestion menu is opened or updated.
@@ -64,7 +64,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QAutocomplete_OpenEvent extends QJqUiEvent {
-		const EventName = 'autocompleteopen ';
+		const EventName = 'autocompleteopen';
 	}
 	/**
 	 * Triggered after a search completes, before the menu is shown. Useful
@@ -84,7 +84,7 @@
 	 * 
 	 */
 	class QAutocomplete_ResponseEvent extends QJqUiEvent {
-		const EventName = 'autocompleteresponse ';
+		const EventName = 'autocompleteresponse';
 	}
 	/**
 	 * Triggered before a search is performed, after minLength and delay are
@@ -97,7 +97,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QAutocomplete_SearchEvent extends QJqUiEvent {
-		const EventName = 'autocompletesearch ';
+		const EventName = 'autocompletesearch';
 	}
 	/**
 	 * Triggered when an item is selected from the menu. The default action
@@ -116,7 +116,7 @@
 	 * 
 	 */
 	class QAutocomplete_SelectEvent extends QJqUiEvent {
-		const EventName = 'autocompleteselect ';
+		const EventName = 'autocompleteselect';
 	}
 
 	/* Custom "property" event classes for this control */

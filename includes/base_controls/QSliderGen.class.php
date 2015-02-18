@@ -13,7 +13,7 @@
 	 * 
 	 */
 	class QSlider_ChangeEvent extends QJqUiEvent {
-		const EventName = 'slidechange ';
+		const EventName = 'slidechange';
 	}
 	/**
 	 * Triggered when the slider is created.
@@ -24,7 +24,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSlider_CreateEvent extends QJqUiEvent {
-		const EventName = 'slidecreate ';
+		const EventName = 'slidecreate';
 	}
 	/**
 	 * Triggered on every mouse move during slide. The value provided in the
@@ -46,7 +46,7 @@
 	 * 
 	 */
 	class QSlider_SlideEvent extends QJqUiEvent {
-		const EventName = 'slide ';
+		const EventName = 'slide';
 	}
 	/**
 	 * Triggered when the user starts sliding.
@@ -61,7 +61,7 @@
 	 * 
 	 */
 	class QSlider_StartEvent extends QJqUiEvent {
-		const EventName = 'slidestart ';
+		const EventName = 'slidestart';
 	}
 	/**
 	 * Triggered after the user slides a handle.
@@ -76,7 +76,7 @@
 	 * 
 	 */
 	class QSlider_StopEvent extends QJqUiEvent {
-		const EventName = 'slidestop ';
+		const EventName = 'slidestop';
 	}
 
 	/* Custom "property" event classes for this control */

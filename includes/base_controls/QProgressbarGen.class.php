@@ -8,7 +8,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QProgressbar_ChangeEvent extends QJqUiEvent {
-		const EventName = 'progressbarchange ';
+		const EventName = 'progressbarchange';
 	}
 	/**
 	 * Triggered when the value of the progressbar reaches the maximum value.
@@ -19,7 +19,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QProgressbar_CompleteEvent extends QJqUiEvent {
-		const EventName = 'progressbarcomplete ';
+		const EventName = 'progressbarcomplete';
 	}
 	/**
 	 * Triggered when the progressbar is created.
@@ -30,7 +30,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QProgressbar_CreateEvent extends QJqUiEvent {
-		const EventName = 'progressbarcreate ';
+		const EventName = 'progressbarcreate';
 	}
 
 	/* Custom "property" event classes for this control */

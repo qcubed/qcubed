@@ -603,11 +603,14 @@ qcubed = {
                     // Find the function by name. Walk an object list in the process.
                     var objs = this.func.split(".");
                     var obj = window;
+                    var ctx = null;
+
                     $j.each (objs, function (i, v) {
+                        ctx = obj;
                         obj = obj[v];
                     });
-                    // obj is now a function object
-                    obj.apply($j, params);
+                    // obj is now a function object, and ctx is the parent of the function object
+                    obj.apply(ctx, params);
                 }
             });
         }
@@ -637,13 +640,23 @@ qcubed = {
         if (!params) {
             return null;
         }
-        var newParams = $j.map(params, function (item, index){
+        var newParams = [];
+
+        $j.each(params, function (index, item){
             if ($j.type(item) == 'object') {
-                return $j.map (item, function (obj, key) {
-                    return qcubed.upackObj(obj);
-                });
+                if (item.qObjType) {
+                    item = qcubed.unpackObj(item);  // top level special object
+                }
+                else {
+                    // look for special objects inside top level objects.
+                    var newItem = {}
+                    $j.each (item, function (key, obj) {
+                        newItem[key] = qcubed.unpackObj(obj);
+                    });
+                    item = newItem;
+                }
             }
-            return item;
+            newParams.push(item);
         });
         return newParams;
     },
@@ -667,6 +680,7 @@ qcubed = {
                         break;
                 }
         }
+        return obj; // no change
     }
 };
 

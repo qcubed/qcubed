@@ -8,7 +8,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QJqRadioButton_CreateEvent extends QJqUiEvent {
-		const EventName = 'buttoncreate ';
+		const EventName = 'buttoncreate';
 	}
 
 	/* Custom "property" event classes for this control */

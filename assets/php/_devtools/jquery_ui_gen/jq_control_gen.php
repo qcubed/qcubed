@@ -115,6 +115,7 @@ class HtmlJqDoc extends JqDoc {
 			$nodes = $htmlEvent->find('span.returns');
 			$type = preg_replace('/Type: /', '', $nodes[0]->plaintext);
 		}
+		$type = trim($type);
 
 		// sometimes jQuery controls (e.g. tabs) uses the same property name for more than one options
 		$name = $this->unique_name($name);

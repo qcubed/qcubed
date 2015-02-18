@@ -321,4 +321,19 @@
 			}
 		}
 
+		/**
+		 * Utility function to make sure a script is terminated with a semicolon.
+		 *
+		 * @param $strScript
+		 * @return string
+		 */
+		public static function TerminateScript($strScript) {
+			if (!$strScript) return '';
+			if (!($strScript = trim ($strScript))) return '';
+			if (substr($strScript, -1) != ';') {
+				$strScript .= ';';
+			}
+			return $strScript . _nl();
+		}
+
 	}

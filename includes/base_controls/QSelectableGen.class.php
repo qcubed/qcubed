@@ -8,7 +8,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSelectable_CreateEvent extends QJqUiEvent {
-		const EventName = 'selectablecreate ';
+		const EventName = 'selectablecreate';
 	}
 	/**
 	 * Triggered at the end of the select operation, on each element added to
@@ -22,7 +22,7 @@
 	 * 
 	 */
 	class QSelectable_SelectedEvent extends QJqUiEvent {
-		const EventName = 'selectableselected ';
+		const EventName = 'selectableselected';
 	}
 	/**
 	 * Triggered during the select operation, on each element added to the
@@ -36,7 +36,7 @@
 	 * 
 	 */
 	class QSelectable_SelectingEvent extends QJqUiEvent {
-		const EventName = 'selectableselecting ';
+		const EventName = 'selectableselecting';
 	}
 	/**
 	 * Triggered at the beginning of the select operation.
@@ -47,7 +47,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSelectable_StartEvent extends QJqUiEvent {
-		const EventName = 'selectablestart ';
+		const EventName = 'selectablestart';
 	}
 	/**
 	 * Triggered at the end of the select operation.
@@ -58,7 +58,7 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._	 */
 	class QSelectable_StopEvent extends QJqUiEvent {
-		const EventName = 'selectablestop ';
+		const EventName = 'selectablestop';
 	}
 	/**
 	 * Triggered at the end of the select operation, on each element removed
@@ -73,7 +73,7 @@
 	 * 
 	 */
 	class QSelectable_UnselectedEvent extends QJqUiEvent {
-		const EventName = 'selectableunselected ';
+		const EventName = 'selectableunselected';
 	}
 	/**
 	 * Triggered during the select operation, on each element removed from
@@ -88,7 +88,7 @@
 	 * 
 	 */
 	class QSelectable_UnselectingEvent extends QJqUiEvent {
-		const EventName = 'selectableunselecting ';
+		const EventName = 'selectableunselecting';
 	}
 
 	/* Custom "property" event classes for this control */

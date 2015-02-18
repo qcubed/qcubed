@@ -19,7 +19,7 @@
 	 * 
 	 */
 	class QAccordion_ActivateEvent extends QJqUiEvent {
-		const EventName = 'accordionactivate ';
+		const EventName = 'accordionactivate';
 	}
 	/**
 	 * Triggered directly before a panel is activated. Can be canceled to
@@ -39,7 +39,7 @@
 	 * 
 	 */
 	class QAccordion_BeforeActivateEvent extends QJqUiEvent {
-		const EventName = 'accordionbeforeactivate ';
+		const EventName = 'accordionbeforeactivate';
 	}
 	/**
 	 * Triggered when the accordion is created. If the accordion is
@@ -54,7 +54,7 @@
 	 * 
 	 */
 	class QAccordion_CreateEvent extends QJqUiEvent {
-		const EventName = 'accordioncreate ';
+		const EventName = 'accordioncreate';
 	}
 
 	/* Custom "property" event classes for this control */

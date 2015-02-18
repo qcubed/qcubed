@@ -19,7 +19,7 @@
 	 * 
 	 */
 	class QTabs_ActivateEvent extends QJqUiEvent {
-		const EventName = 'tabsactivate ';
+		const EventName = 'tabsactivate';
 	}
 	/**
 	 * Triggered immediately before a tab is activated. Can be canceled to
@@ -39,7 +39,7 @@
 	 * 
 	 */
 	class QTabs_BeforeActivateEvent extends QJqUiEvent {
-		const EventName = 'tabsbeforeactivate ';
+		const EventName = 'tabsbeforeactivate';
 	}
 	/**
 	 * Triggered when a remote tab is about to be loaded, after the
@@ -68,7 +68,7 @@
 	 * 
 	 */
 	class QTabs_BeforeLoadEvent extends QJqUiEvent {
-		const EventName = 'tabsbeforeload ';
+		const EventName = 'tabsbeforeload';
 	}
 	/**
 	 * Triggered when the tabs are created. If the tabs are collapsed, ui.tab
@@ -83,7 +83,7 @@
 	 * 
 	 */
 	class QTabs_CreateEvent extends QJqUiEvent {
-		const EventName = 'tabscreate ';
+		const EventName = 'tabscreate';
 	}
 	/**
 	 * Triggered after a remote tab has been loaded.
@@ -98,7 +98,7 @@
 	 * 
 	 */
 	class QTabs_LoadEvent extends QJqUiEvent {
-		const EventName = 'tabsload ';
+		const EventName = 'tabsload';
 	}
 
 	/* Custom "property" event classes for this control */
