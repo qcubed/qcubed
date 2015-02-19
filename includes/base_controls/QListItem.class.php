@@ -15,7 +15,7 @@
 	 * @property string         $ItemGroup is the group (if any) in which the Item should be displayed
 	 * @property string         $Label     is optional text to display instead of the Name for certain controls.
 	 */
-	class QListItem extends QListItemBase {
+	class QListItem extends QListItemBase implements JsonSerializable {
 
 		///////////////////////////
 		// Private Member Variables
@@ -80,6 +80,28 @@
 			}
 			return JavaScriptHelper::toJsObject($a);
 		}
+
+		/**
+		 * Returns the details of the control as javascript string. This is customized for the JQuery UI autocomplete. If your
+		 * widget requires something else, you will need to subclass and override this.
+		 * @return string
+		 */
+		public function jsonSerialize() {
+			$strId = $this->strValue;
+			if (!$strId) {
+				$strId = $this->strId;
+			}
+
+			$a = array('value' => $this->strName, 'id' => $strId);
+			if ($this->strLabel) {
+				$a['label'] = $this->strLabel;
+			}
+			if ($this->strItemGroup) {
+				$a['category'] = $this->strItemGroup;
+			}
+			return $a;
+		}
+
 
 
 

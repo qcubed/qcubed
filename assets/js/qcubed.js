@@ -829,6 +829,43 @@ qcubed.tabs = function(controlId) {
     });
 }
 
+qcubed.autocomplete = function(controlId) {
+    var jqObj = jQuery('#' + controlId);
+    jqObj.on("autocompleteselect", function (event, ui) {
+        qc.recCM(this.id, "SelectedId", ui.item.id);
+        qc.formObjChanged(event);
+    })
+    .on("autocompletefocus", function (event, ui) {
+        if ( /^key/.test(event.originalEvent.type) ) {
+            qc.recCM(this.id, "SelectedId", ui.item.id);
+            qc.formObjChanged(event);
+        }
+    })
+    .on("autocompletechange", function( event, ui ) {
+        var toTest = ui.item ? (ui.item.value ? ui.item.value : ui.item.label) : '';
+        if ( !ui.item ||
+            jQuery( this ).val() != toTest) {
+            // remove invalid value, as no match
+            qc.recCM(this.id, "SelectedId", '');
+        }
+        else {
+            // items might change even when no menu item is selected
+            qc.recCM(this.id, "SelectedId", ui.item.id);
+        }
+    });
+}
+qcubed.acSourceFunction = function (request, response) {
+    this.acResponse = response; // save for later, to be called by responding javascript
+    $j(this.element).trigger('QAutocomplete_Source', request.term); // tell ourselves to go get the data
+}
+qcubed.acSetData = function(controlId, data) {
+    var jqObj = jQuery('#' + controlId);
+    var f = jqObj.data('ui-autocomplete').acResponse;
+    f(data);
+}
+qcubed.acUseFilter = function(filter) {
+    $j.ui.autocomplete.filter = filter;
+}
 
 /////////////////////////////////////
 // Event Object-related functionality

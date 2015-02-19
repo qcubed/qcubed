@@ -69,6 +69,25 @@
 	}
 
 	/**
+	 * Class QJsNoQuoteString
+	 * Outputs a string without quotes. Strings are normally quoted. Useful for specifying that you want the value
+	 * of a previously declared variable.
+	 */
+	class QJsNoQuoteString {
+		protected $strContent;
+
+		public function __construct($strContent) {
+			$this->strContent = $strContent;
+		}
+
+		public function toJsObject() {
+			return $this->strContent;
+		}
+
+	}
+
+
+	/**
 	 * Class QJsonParameterList
 	 * A Wrapper class that will render an array without the brackets, so that it becomes a variable length parameter list.
 	 */

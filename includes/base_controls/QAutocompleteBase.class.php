@@ -43,6 +43,7 @@
 	class QAutocomplete_SourceEvent extends QEvent {
 		/** Event Name */
 		const EventName = 'QAutocomplete_Source';
+		const JsReturnParam = 'ui'; // ends up being the request.term value
 	}
 
 
@@ -68,8 +69,6 @@
 	 */
 	class QAutocompleteBase extends QAutocompleteGen
 	{
-		const RESPONSE_ATTR = '__qac_response';
-
 		/** @var string */
 		protected $strSelectedId = null;
 		/** @var boolean */
@@ -80,22 +79,29 @@
 		//protected $strMultipleValueDelimiter = null;
 		//protected $blnDisplayHtml = false;
 
-		public function __construct($objParentObject, $strControlId = null) {
-			parent::__construct ($objParentObject, $strControlId);
-			$this->AddJavascriptFile('qcubed.autocomplete.js');
-		}
-
 		/**
 		 * When this filter is passed to QAutocomplete::UseFilter, only the items in the source list that contain the typed term will be shown in the drop-down
 		 * This is the default filter used by the jQuery autocomplete. Useful when resetting from a previousely set filter.
 		 * @see QAutocomplete::UseFilter
 		 */
-		const FILTER_CONTAINS ='function(array, term) { var matcher = new RegExp($.ui.autocomplete.escapeRegex(term), "i"); return $.grep(array, function(value) { return matcher.test(value.label || value.value || value); }); }';
+		const FILTER_CONTAINS ='
+		function(array, term) {
+			var matcher = new RegExp($j.ui.autocomplete.escapeRegex(term), "i");
+			return $j.grep(array, function(value) {
+				return matcher.test(value.label || value.value || value);
+			});
+		}';
 		/**
 		 * When this filter is passed to QAutocomplete::UseFilter, only the items in the source list that start with the typed term will be shown in the drop-down
 		 * @see QAutocomplete::UseFilter
 		 */
-		const FILTER_STARTS_WITH ='function(array, term) { var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i"); return $.grep(array, function(value) { return matcher.test(value.label || value.value || value); }); }';
+		const FILTER_STARTS_WITH ='
+		function(array, term) {
+			var matcher = new RegExp("^" + $j.ui.autocomplete.escapeRegex(term), "i");
+			return $j.grep(array, function(value) {
+				return matcher.test(value.label || value.value || value);
+			});
+		}';
 
 		/**
 		 * Set a filter to use when using a simple array as a source (in non-ajax mode). Note that ALL non-ajax autocompletes on the page
@@ -113,13 +119,12 @@
 		 * @see QAutocomplete::FILTER_STARTS_WITH
 		 */
 		static public function UseFilter($filter) {
-			if ($filter instanceof QJsClosure) {
-				$filter = $filter->toJsObject();
-			} else if (!is_string($filter)) {
+			if (is_string($filter)) {
+				$filter = new QJsNoQuoteString($filter);
+			} else if (!$filter instanceof QJsClosure) {
 				throw new QCallerException("filter must be either a string or an instance of QJsClosure");
 			}
-			$strJS = '(function($, undefined) { $.ui.autocomplete.filter = ' . $filter . '} (jQuery))';
-			QApplication::ExecuteJavaScript($strJS);
+			QApplication::ExecuteJsFunction('qcubed.acUseFilter', $filter);
 		}
 
 
@@ -136,41 +141,19 @@
 		 *
 		 * @param string         $strMethodName    Name of the method which has to be bound
 		 * @param QForm|QControl $objParentControl The parent control on which the action is to be bound
-		 * @param bool           $blnReturnTermAsParameter Return the terms as a parameter to the handler
 		 */
-		public function SetDataBinder($strMethodName, $objParentControl = null, $blnReturnTermAsParameter = false) {
-			$strJsReturnParam = $this->JsReturnParam();
-
-			
+		public function SetDataBinder($strMethodName, $objParentControl = null) {
 			if ($objParentControl) {
-				$objAction = new QAjaxControlAction($objParentControl, $strMethodName, 'default', null, $strJsReturnParam);
+				$objAction = new QAjaxControlAction($objParentControl, $strMethodName, 'default', null, 'ui');
 			} else {
-				$objAction = new QAjaxAction($strMethodName, 'default', null, $strJsReturnParam);
+				$objAction = new QAjaxAction($strMethodName, 'default', null, 'ui');
 			}
-			
-			// use the ajax action to generate an ajax script for us, but 
-			// since this is an option of the control, we can't actually 'bind' it, so we instead use an
-			// empty action to tie the action to the data binder method name
-			$objEvent = new QAutocomplete_SourceEvent();
-			$objAction->Event = $objEvent;
-			$strBody = 'this.response = response;';	// response is a javascript closure, and we have to save it to use it later.
-			$strBody .= $objAction->RenderScript($this);
-			$this->mixSource = new QJsClosure($strBody, array('request', 'response'));
-					
-			$this->RemoveAllActions(QAutocomplete_SourceEvent::EventName);
-			$objAction = new QNoScriptAjaxAction($objAction);
-			parent::AddAction($objEvent, $objAction);
-			
+			$this->AddAction(new QAutocomplete_SourceEvent(), $objAction);
+
+			$this->mixSource = new QJsNoQuoteString('qcubed.acSourceFunction');
+
 			$this->blnUseAjax = true;
 			$this->blnModified = true;
-		}
-
-		/**
-		 * Return the javascript for the return parameter used by the data binder above.
-		 * @return string
-		 */
-		protected function JsReturnParam() {
-			return 'request.term';
 		}
 
 		// These functions are used to keep track of the selected value, and to implement
@@ -181,16 +164,17 @@
 		 */
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qAutocomplete', $this->getJqControlId());
+			QApplication::ExecuteJsFunction('qc.autocomplete', $this->getJqControlId(), QJsPriority::High);
 			return $strJS;
 		}
 		
 		
 		// Response to an ajax request for data
 		protected function prepareAjaxList($dataSource) {
-			$list = $dataSource ? JavaScriptHelper::toJsObject($dataSource) : "[]";
-			$strJS = sprintf('$j("#%s").data("ui-autocomplete").response(%s);', $this->ControlId, $list);
-			QApplication::ExecuteJavaScript($strJS, QJsPriority::High);
+			if (!$dataSource) {
+				$dataSource = array();
+			}
+			QApplication::ExecuteJsFunction('qc.acSetData', $this->getJqControlId(), $dataSource, QJsPriority::High);
 		}
 
 		/**
