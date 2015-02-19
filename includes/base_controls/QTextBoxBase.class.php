@@ -10,29 +10,28 @@
 	 * [input type="password"] or [textarea] depending on the TextMode (see below).
 	 *
 	 * @package Controls\Base
-	 *
-	 * @property integer $Columns is the "cols" html attribute (applicable for MultiLine textboxes)
-	 * @property string $Format
-	 * @property string $Text is the contents of the textbox, itself
-	 * @property string $LabelForRequired
-	 * @property string $LabelForRequiredUnnamed
-	 * @property string $LabelForTooShort
-	 * @property string $LabelForTooShortUnnamed
-	 * @property string $LabelForTooLong
-	 * @property string $LabelForTooLongUnnamed
-	 * @property string $Placeholder HTML5 Only. Placeholder text that gets erased once a user types.
-	 * @property string $CrossScripting can be Allow, HtmlEntities, or Deny.  Deny is the default. Prevents cross scripting hacks.  HtmlEntities causes framework to automatically call php function htmlentities on the input data.  Allow allows everything to come through without altering at all.  USE "ALLOW" judiciously: using ALLOW on text entries, and then outputting that data WILL allow hackers to perform cross scripting hacks.
-	 * @property integer $MaxLength is the "maxlength" html attribute (applicable for SingleLine textboxes)
-	 * @property integer $MinLength is the minimum requred length to pass validation
-	 * @property integer $Rows is the "rows" html attribute (applicable for MultiLine textboxes)
-	 * @property string $TextMode a QTextMode item. Determines if its a single or multi-line textbox, and the "type" property of the input.
+	 * @property integer $Columns               is the "cols" html attribute (applicable for MultiLine textboxes)
+	 * @property string  $Format
+	 * @property string  $Text                  is the contents of the textbox, itself
+	 * @property string  $LabelForRequired
+	 * @property string  $LabelForRequiredUnnamed
+	 * @property string  $LabelForTooShort
+	 * @property string  $LabelForTooShortUnnamed
+	 * @property string  $LabelForTooLong
+	 * @property string  $LabelForTooLongUnnamed
+	 * @property string  $Placeholder           HTML5 Only. Placeholder text that gets erased once a user types.
+	 * @property string  $CrossScripting        can be Allow, HtmlEntities, or Deny.  Deny is the default. Prevents cross scripting hacks.  HtmlEntities causes framework to automatically call php function htmlentities on the input data.  Allow allows everything to come through without altering at all.  USE "ALLOW" judiciously: using ALLOW on text entries, and then outputting that data WILL allow hackers to perform cross scripting hacks.
+	 * @property integer $MaxLength             is the "maxlength" html attribute (applicable for SingleLine textboxes)
+	 * @property integer $MinLength             is the minimum requred length to pass validation
+	 * @property integer $Rows                  is the "rows" html attribute (applicable for MultiLine textboxes)
+	 * @property string  $TextMode              a QTextMode item. Determines if its a single or multi-line textbox, and the "type" property of the input.
 	 * @property boolean $ValidateTrimmed
-	 * @property boolean $AutoTrim to automatically remove white space from beginning and end of data
-	 * @property integer $SanitizeFilter PHP filter constant to apply to incoming data
-	 * @property mixed $SanitizeFilterOptions PHP filter constants or array to apply to SanitizeFilter option
-	 * @property integer $ValidateFilter PHP filter constant to apply to validate with
-	 * @property mixed $ValidateFilterOptions PHP filter constants or array to apply to ValidateFilter option
-	 * @property mixed $LabelForInvalid PHP filter constants or array to apply to ValidateFilter option
+	 * @property boolean $AutoTrim              to automatically remove white space from beginning and end of data
+	 * @property integer $SanitizeFilter        PHP filter constant to apply to incoming data
+	 * @property mixed   $SanitizeFilterOptions PHP filter constants or array to apply to SanitizeFilter option
+	 * @property integer $ValidateFilter        PHP filter constant to apply to validate with
+	 * @property mixed   $ValidateFilterOptions PHP filter constants or array to apply to ValidateFilter option
+	 * @property mixed   $LabelForInvalid       PHP filter constants or array to apply to ValidateFilter option
 	 */
 	abstract class QTextBoxBase extends QControl {
 		// APPEARANCE
@@ -148,13 +147,11 @@
 		 * This function allows to set the Configuration for HTMLPurifier
 		 * similar to the HTMLPurifierConfig::set() method from the HTMLPurifier API.
 		 *
-		 * @param strParameter: The parameter to set for HTMLPurifier
-		 * @param mixValue: Value of the parameter.
-		 *
-		 *  NOTE: THERE IS NO SUPPORT FOR THE DEPRECATED API OF HTMLPURIFIER, HENCE NO THIRD ARGUMENT TO THE
-		 *  	FUNCTION CAN BE PASSED.
-		 *
-		 * Visit http://htmlpurifier.org/live/configdoc/plain.html for the list of parameters and their effects.
+		 * @param strParameter : The parameter to set for HTMLPurifier
+		 * @param mixValue     : Value of the parameter.
+		 *                     NOTE: THERE IS NO SUPPORT FOR THE DEPRECATED API OF HTMLPURIFIER, HENCE NO THIRD ARGUMENT TO THE
+		 *                     FUNCTION CAN BE PASSED.
+		 *                     Visit http://htmlpurifier.org/live/configdoc/plain.html for the list of parameters and their effects.
 		 */
 		public function SetPurifierConfig($strParameter, $mixValue) {
 			if ($this->objHTMLPurifierConfig != null) {
@@ -273,6 +270,7 @@
 		 *
 		 * @param null $attributeOverrides
 		 * @param null $styleOverrides
+		 *
 		 * @return string|void
 		 */
 		public function RenderHtmlAttributes ($attributeOverrides = null, $styleOverrides = null) {
@@ -315,6 +313,7 @@
 		 * (1) Checks if the textbox was empty while 'Required' property was set to true
 		 * (2) Trims input if ValidateTrimmed was set to true
 		 * (3) Checks for length contrainsts set by 'MaxLength' and 'MinLength' properties
+		 *
 		 * @return bool whether or not the control is valid
 		 */
 		public function Validate() {
@@ -797,11 +796,13 @@ TMPL;
 
 		/**
 		 * Generate code to reload data from the Model into this control.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn $objColumn
-		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
-		 * @return string
+		 *
+		 * @param QCodeGen $objCodeGen Codegen Object
+		 * @param QTable   $objTable   Table Object
+		 * @param QColumn  $objColumn  Column Object
+		 * @param boolean  $blnInit    Is initializing a new control verses loading a previously created control
+		 *
+		 * @return string Generated code
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
@@ -820,10 +821,11 @@ TMPL;
 		/**
 		 * Return code to update the Model object with the contents of the control.
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param $objColumn
-		 * @return string
+		 * @param QCodeGen $objCodeGen Codegen Object
+		 * @param QTable   $objTable   Table Object
+		 * @param QColumn  $objColumn  Column Object
+		 *
+		 * @return string Generated code
 		 */
 		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
