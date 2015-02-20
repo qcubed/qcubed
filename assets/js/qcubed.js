@@ -525,32 +525,32 @@ qcubed = {
     processImmediateAjaxResponse: function(json, qFormParams) {
         if (json.controls) $j.each(json.controls, function() {
             var strControlId = '#' + this.id,
-                $control = $j(strControlId);
+                control = $j(strControlId);
 
             if (this.value !== undefined) {
-                $control.val(this.value);
+                control.val(this.value);
             }
 
             if (this.attributes !== undefined) {
-                $control.attr (this.attributes);
+                control.attr (this.attributes);
             }
 
             if (this.html !== undefined) {
-                if ($control.length && !$control.get(0).wrapper) {
+                if (control.length && !control.get(0).wrapper) {
                     //remove related controls (error, name ...) for wrapper-less controls
-                    if ($control.data("hasrel")) {
+                    if (control.data("hasrel")) {
                         var relSelector = "[data-rel='" + strControlId + "']",
                             $relParent;
 
                         //ensure that the control is not wrapped in an element related to it (it would be removed)
-                        $relParent = $control.parents(relSelector).last();
+                        $relParent = control.parents(relSelector).last();
                         if ($relParent.length) {
-                            $control.insertBefore($relParent);
+                            control.insertBefore($relParent);
                         }
                         $j(relSelector).remove();
                     }
 
-                    $control.before(this.html).remove();
+                    control.before(this.html).remove();
                 } else {
                     $j(strControlId + '_ctl').html(this.html);
                 }
@@ -678,6 +678,15 @@ qcubed = {
                     case 'qDateTime':
                         return new Date(obj.year, obj.month, obj.day, obj.hour, obj.minute, obj.second);
                         break;
+
+                    case 'qVarName':
+                        // Find the variable value starting at the window context.
+                        var vars = obj.varName.split(".");
+                        var val = window;
+                        $j.each (vars, function (i, v) {
+                            val = val[v];
+                        });
+                        return val;
                 }
         }
         return obj; // no change
@@ -856,11 +865,14 @@ qcubed.autocomplete = function(controlId) {
 }
 qcubed.acSourceFunction = function (request, response) {
     this.acResponse = response; // save for later, to be called by responding javascript
-    $j(this.element).trigger('QAutocomplete_Source', request.term); // tell ourselves to go get the data
+    var el = $j(this.element);
+    var a = el.autocomplete("instance");
+    el.trigger('QAutocomplete_Source', request.term); // tell ourselves to go get the data
 }
 qcubed.acSetData = function(controlId, data) {
     var jqObj = jQuery('#' + controlId);
-    var f = jqObj.data('ui-autocomplete').acResponse;
+    var i = jqObj.autocomplete("instance");
+    var f = i.acResponse;
     f(data);
 }
 qcubed.acUseFilter = function(filter) {

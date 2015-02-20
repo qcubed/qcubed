@@ -120,7 +120,7 @@
 		 */
 		static public function UseFilter($filter) {
 			if (is_string($filter)) {
-				$filter = new QJsNoQuoteString($filter);
+				$filter = new QJsVarName($filter);
 			} else if (!$filter instanceof QJsClosure) {
 				throw new QCallerException("filter must be either a string or an instance of QJsClosure");
 			}
@@ -150,7 +150,7 @@
 			}
 			$this->AddAction(new QAutocomplete_SourceEvent(), $objAction);
 
-			$this->mixSource = new QJsNoQuoteString('qcubed.acSourceFunction');
+			$this->mixSource = new QJsVarName('qcubed.acSourceFunction');
 
 			$this->blnUseAjax = true;
 			$this->blnModified = true;
@@ -174,7 +174,7 @@
 			if (!$dataSource) {
 				$dataSource = array();
 			}
-			QApplication::ExecuteJsFunction('qc.acSetData', $this->getJqControlId(), $dataSource, QJsPriority::High);
+			QApplication::ExecuteJsFunction('qc.acSetData', $this->getJqControlId(), $dataSource, QJsPriority::Exclusive);
 		}
 
 		/**

@@ -69,11 +69,11 @@
 	}
 
 	/**
-	 * Class QJsNoQuoteString
-	 * Outputs a string without quotes. Strings are normally quoted. Useful for specifying that you want the value
-	 * of a previously declared variable.
+	 * Class QJsVarName
+	 * Outputs a string without quotes to specify a global variable name. Strings are normally quoted. Dot notation
+	 * can be used to specify items within globals.
 	 */
-	class QJsNoQuoteString {
+	class QJsVarName implements JsonSerializable{
 		protected $strContent;
 
 		public function __construct($strContent) {
@@ -84,6 +84,11 @@
 			return $this->strContent;
 		}
 
+		public function jsonSerialize() {
+			$a[JavaScriptHelper::ObjectType] = 'qVarName';
+			$a['varName'] = $this->strContent;
+			return JavaScriptHelper::MakeJsonEncodable($a);
+		}
 	}
 
 
