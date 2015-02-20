@@ -25,7 +25,6 @@
 	 * @property integer $MinLength             is the minimum requred length to pass validation
 	 * @property integer $Rows                  is the "rows" html attribute (applicable for MultiLine textboxes)
 	 * @property string  $TextMode              a QTextMode item. Determines if its a single or multi-line textbox, and the "type" property of the input.
-	 * @property boolean $ValidateTrimmed
 	 * @property boolean $AutoTrim              to automatically remove white space from beginning and end of data
 	 * @property integer $SanitizeFilter        PHP filter constant to apply to incoming data
 	 * @property mixed   $SanitizeFilterOptions PHP filter constants or array to apply to SanitizeFilter option
@@ -69,9 +68,7 @@
 		protected $strCrossScripting;
 		/** @var null  */
 		protected $objHTMLPurifierConfig = null;
-		/** @var bool */
-		protected $blnValidateTrimmed = false;
-		
+
 		// Sanitization and validating
 		/** @var bool */
 		protected $blnAutoTrim = false;
@@ -311,17 +308,13 @@
 		 * Tests that the value given inside the textbox passes the rules set for the input
 		 * Tests it does:
 		 * (1) Checks if the textbox was empty while 'Required' property was set to true
-		 * (2) Trims input if ValidateTrimmed was set to true
-		 * (3) Checks for length contrainsts set by 'MaxLength' and 'MinLength' properties
+		 * (2) Checks for length contrainsts set by 'MaxLength' and 'MinLength' properties
 		 *
 		 * @return bool whether or not the control is valid
 		 */
 		public function Validate() {
-			// Get the Text string
-			if ($this->blnValidateTrimmed)
-				$strText = trim($this->strText);
-			else
-				$strText = $this->strText;
+			// Copy text
+			$strText = $this->strText;
 			// Check for Required
 			if ($this->blnRequired) {
 				if (mb_strlen($strText, QApplication::$EncodingType) == 0) {
@@ -419,7 +412,6 @@
 				case "MinLength": return $this->intMinLength;
 				case "Rows": return $this->intRows;
 				case "TextMode": return $this->strTextMode;
-				case "ValidateTrimmed": return $this->blnValidateTrimmed;
 
 				// LAYOUT
 				//case "Wrap": return $this->blnWrap;
@@ -611,14 +603,6 @@
 							$this->blnModified = true;
 							$this->strTextMode = $strMode;
 						}
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "ValidateTrimmed":
-					try {
-						$this->blnValidateTrimmed = QType::Cast($mixValue, QType::Boolean);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
