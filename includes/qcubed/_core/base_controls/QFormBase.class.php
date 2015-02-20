@@ -404,9 +404,17 @@
 					// Reset the modified/rendered flags and the validation
 					// in ALL controls
 					$objControl->ResetFlags();
-					$objControl->ValidationReset();
 				}
 
+				// Only if our action is validating, we are going to reset the validation state of all the controls
+				if (isset($_POST['Qform__FormControl']) && isset($objClass->objControlArray[$_POST['Qform__FormControl']])) {
+					$objControl = $objClass->objControlArray[$_POST['Qform__FormControl']];
+					if ($objControl->CausesValidation) {
+						foreach ($objClass->objControlArray as $objControl) {
+							$objControl->ValidationReset();
+						}
+					}
+				}
 				// Trigger Run Event (if applicable)
 				$objClass->Form_Run();
 
@@ -554,10 +562,12 @@
 			$strToReturn = '<controls>';
 
 			// Include each control (if applicable) that has been changed/modified
-			foreach ($this->GetAllControls() as $objControl)
-				if (!$objControl->ParentControl)
+			foreach ($this->GetAllControls() as $objControl) {
+				if (!$objControl->ParentControl) {
 //					$strToReturn .= $objControl->RenderAjax(false) . "\r\n";
 					$strToReturn .= $this->RenderAjaxHelper($objControl);
+				}
+			}
 
 			// First, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			$strJavaScriptToAddArray = array();
