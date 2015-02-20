@@ -66,8 +66,10 @@
  *  converted to dashed notation. Use GetDataAttribute() to retrieve the value of a data attribute.
  * @property boolean $NoWrap sets the CSS white-space  property to nowrap
  * @property boolean $ReadOnly is the "readonly" html attribute (making a textbox "ReadOnly" is  similar to setting the textbox to Enabled
- *  Readonly textboxes are selectedable, and their values get posted. Disabled textboxes are not selectabel and values do not post.
+ *  Readonly textboxes are selectedable, and their values get posted. Disabled textboxes are not selectable and values do not post.
  * @property string $AltText text used for 'alt' attribute in images
+ * @property string $OrderedListType type for ordered lists. Expects a QOrderedListType.
+ * @property string $UnorderedListStyle style for unordered lists. Expects a QUnorderedListType.
  */
 
 class QHtmlAttributeManagerBase extends QBaseClass {
@@ -393,7 +395,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	/**
 	 * Mark the parent class as modified. The host class must implement this if this functionality is desired.
 	 */
-	protected function MarkAsModified() {}
+	public function MarkAsModified() {}
 
 	/**
 	 * Returns the html for the attributes. Allows the given arrays to override the attributes and styles before
@@ -483,6 +485,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			case "VerticalAlign": return $this->GetCssStyle('vertical-align');
 			case "Wrap": throw new Exception ("Wrap is deprecated. Use NoWrap instead");
 			case "NoWrap": return $this->GetCssStyle('white-space') == 'nowrap';
+			case "UnorderedListStyle": return $this->GetCssStyle('list-style-type');
 
 			// Attributes
 			case "CssClass": return $this->GetHtmlAttribute('class');
@@ -492,6 +495,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			case "ToolTip": return $this->GetHtmlAttribute('title');
 			case "ReadOnly": return $this->HasHtmlAttribute('readonly');
 			case "AltText": return $this->HasHtmlAttribute('alt');
+			case "OrderedListType": return $this->GetHtmlAttribute('type');
 
 			default:
 				try {
@@ -755,6 +759,15 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 				$this->SetCssBoxValue('margin', $mixValue);
 				break;
 
+			case "UnorderedListStyle":
+				try {
+					$this->SetCssStyle('list-style-type', QType::Cast($mixValue, QType::String));
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
 			// Attributes
 			case "CssClass":
 				try {
@@ -825,6 +838,15 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 			case "AltText":
 				try {
 					$this->SetHtmlAttribute('alt', QType::Cast($mixValue, QType::String));
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
+			case "OrderedListType":
+				try {
+					$this->SetHtmlAttribute('type', QType::Cast($mixValue, QType::String));
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();

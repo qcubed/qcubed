@@ -28,19 +28,9 @@
 		const Vertical = 'vertical';
 		const Horizontal = 'horizontal';
 
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
-			
-			$strJS .=<<<FUNC
-			.on("slidechange", function (event, ui) {
-					if (ui.values && ui.values.length) {
-			 			qcubed.recordControlModification("$this->ControlId", "_Values", ui.values[0] + ',' +  ui.values[1]);
-			 		} else {
-			 			qcubed.recordControlModification("$this->ControlId", "_Value", ui.value);
-					}
-				})						
-FUNC;
-			
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.slider', $this->ControlId);
 			return $strJS;
 		}
 		

@@ -13,6 +13,7 @@
 	 * @property string $MatteClickable
 	 * @property boolean $Modal
 	 * @property string $AnyKeyCloses
+	 * @deprecated Use QDialog instead
 	 */
 	class QDialogBox extends QPanel {
 		protected $strTitle = "";		

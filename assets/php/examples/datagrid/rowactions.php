@@ -58,8 +58,8 @@ class ExampleForm extends QForm {
 
 		$objPerson = Person::Load($intPersonId);
 
-		QApplication::ExecuteJavascript("alert('You clicked on a person with ID #" . $intPersonId .
-				": " . $objPerson->FirstName . " " . $objPerson->LastName . "');");
+		QApplication::DisplayAlert("You clicked on a person with ID #" . $intPersonId .
+				": " . $objPerson->FirstName . " " . $objPerson->LastName);
 	}
 }
 

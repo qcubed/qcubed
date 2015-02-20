@@ -23,6 +23,8 @@
 	 * @property-read integer   $ItemsOffset    Current offset of Items from the result
 	 */
 	abstract class QPaginatedControl extends QControl {
+		use QDataBinder;
+
 		// APPEARANCE
 		/** @var string Name of the items which are being paginated (books, movies, posts etc.) */
 		protected $strNoun;
@@ -46,10 +48,6 @@
 		// SETUP
 		/** @var bool Is this paginator a block element? */
 		protected $blnIsBlockElement = true;
-		
-		// DATABIND CALLBACK
-		protected $strDataBindMethod;
-		protected $objDataBindControl;
 
 		/**
 		 * @param QControl|QControlBase|QForm $objParentObject
@@ -67,43 +65,18 @@
 			$this->prxDatagridSorting = new QControlProxy($this);
 		}
 
-		/**
-		 * Check the binder for a reference to the form.
-		 */
-		public function Sleep() {
-			// This overriding function ensures that DataSource is set to null
-			// before serializing the object to the __formstate
-			// (Due to the potentially humungous size of some datasets, it is more efficient
-			// to requery than to serialize and put as a hidden form element)
-
-			$this->objDataSource = null;
-			$this->objDataBindControl = QControl::SleepHelper ($this->objDataBindControl);
-			parent::Sleep();
-		}
-
-		public function Wakeup(QForm $objForm) {
-			parent::Wakeup($objForm);
-			$this->objDataBindControl = QControl::WakeupHelper ($objForm, $this->objDataBindControl);
-		}
-
-
 		// PaginatedControls should (in general) never have anything that ever needs to be validated -- so this always
 		// returns true.
 		public function Validate() {
 			return true;
 		}
-		
-		public function SetDataBinder($strMethodName, $objParentControl = null) {
-			$this->strDataBindMethod = $strMethodName;
-			$this->objDataBindControl = $objParentControl;
-		}
 
 		public function DataBind() {
 			// Run the DataBinder (if applicable)
-			if (($this->objDataSource === null) && ($this->strDataBindMethod) && (!$this->blnRendered))
+			if (($this->objDataSource === null) && ($this->HasDataBinder()) && (!$this->blnRendered))
 			{
 				try {
-					$this->objForm->CallDataBinder($this->strDataBindMethod, $this, $this->objDataBindControl);
+					$this->CallDataBinder();
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
@@ -325,40 +298,4 @@
 		}
 	}
 
-	/**
-	 * @property-read integer $Offset
-	 * @property-read mixed $BackTrace
-	 * @property-read string $Query
-	 */
-	class QDataBindException extends Exception {
-		private $intOffset;
-		private $strTraceArray;
-		private $strQuery;
-
-		public function __construct(QCallerException $objExc) {
-			parent::__construct($objExc->getMessage(), $objExc->getCode());
-			$this->intOffset = $objExc->Offset;
-			$this->strTraceArray = $objExc->TraceArray;
-
-			if ($objExc instanceof QDatabaseExceptionBase)
-				$this->strQuery = $objExc->Query;
-
-			$this->file = $this->strTraceArray[$this->intOffset]['file'];
-			$this->line = $this->strTraceArray[$this->intOffset]['line'];
-		}
-
-		public function __get($strName) {
-			switch($strName) {
-				case "Offset":
-					return $this->intOffset;
-					
-				case "BackTrace":
-					$objTraceArray = debug_backtrace();
-					return (var_export($objTraceArray, true));
-					
-				case "Query":
-					return $this->strQuery;
-			}
-		}
-	}
 ?>

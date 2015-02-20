@@ -564,54 +564,69 @@
 		 * can be an entire URL.
 		 *
 		 * @param string $strLocation target patch
+		 * @param bool $blnAbortCurrentScript Whether to abort the current script, or finish it out so data gets saved.
 		 * @return void
 		 */
-		public static function Redirect($strLocation) {
-			// Clear the output buffer (if any)
-			ob_clean();
+		public static function Redirect($strLocation, $blnAbortCurrentScript = false) {
 
-			if ((QApplication::$RequestMode == QRequestMode::Ajax) ||
-				(array_key_exists('Qform__FormCallType', $_POST) &&
-				($_POST['Qform__FormCallType'] == QCallType::Ajax))) {
-				QApplication::SendAjaxResponse([QAjaxResponse::Location => $strLocation]);
-			} else {
-				// Was "DOCUMENT_ROOT" set?
-				if (array_key_exists('DOCUMENT_ROOT', $_SERVER) && ($_SERVER['DOCUMENT_ROOT'])) {
-					// If so, we're likely using PHP as a Plugin/Module
-					// Use 'header' to redirect
-					header(sprintf('Location: %s', $strLocation));
-				} else {
-					// We're likely using this as a CGI
-					// Use JavaScript to redirect
-					printf('<script type="text/javascript">document.location = "%s";</script>', $strLocation);
-				}
+			if (!$blnAbortCurrentScript) {
+				// Use the javascript command mechanism
+				QApplication::$JavascriptCommandArray[QAjaxResponse::Location] = $strLocation;
 			}
+			else {
+				// Clear the output buffer (if any)
+				ob_clean();
 
-			// End the Response Script
-			exit();
+				if ((QApplication::$RequestMode == QRequestMode::Ajax) ||
+					(array_key_exists('Qform__FormCallType', $_POST) &&
+						($_POST['Qform__FormCallType'] == QCallType::Ajax))) {
+					QApplication::SendAjaxResponse(array(QAjaxResponse::Location => $strLocation));
+				} else {
+					// Was "DOCUMENT_ROOT" set?
+					if (array_key_exists('DOCUMENT_ROOT', $_SERVER) && ($_SERVER['DOCUMENT_ROOT'])) {
+						// If so, we're likely using PHP as a Plugin/Module
+						// Use 'header' to redirect
+						header(sprintf('Location: %s', $strLocation));
+					} else {
+						// We're likely using this as a CGI
+						// Use JavaScript to redirect
+						printf('<script type="text/javascript">document.location = "%s";</script>', $strLocation);
+					}
+				}
+
+				// End the Response Script
+				exit();
+			}
 		}
 
 
 		/**
-		 * This will close the window.  It will immediately end processing of the rest of the script.
+		 * This will close the window.
 		 *
+		 * @param bool $blnAbortCurrentScript Whether to abort the current script, or finish it out so data gets saved.
 		 * @return void
 		 */
-		public static function CloseWindow() {
-			// Clear the output buffer (if any)
-			ob_clean();
-
-			if (QApplication::$RequestMode == QRequestMode::Ajax) {
-				// AJAX-based Response
-				$aResponse[QAjaxResponse::Close] = 1;
-				QApplication::SendAjaxResponse($aResponse);
-			} else {
-				// Use JavaScript to close
-				_p('<script type="text/javascript">window.close();</script>', false);
+		public static function CloseWindow($blnAbortCurrentScript = false) {
+			if (!$blnAbortCurrentScript) {
+				// Use the javascript command mechanism
+				QApplication::$JavascriptCommandArray[QAjaxResponse::Close] = true;
 			}
+			else {
+				// Clear the output buffer (if any)
+				ob_clean();
 
-			// End the Response Script
-			exit();
+				if (QApplication::$RequestMode == QRequestMode::Ajax) {
+					// AJAX-based Response
+					$aResponse[QAjaxResponse::Close] = 1;
+					QApplication::SendAjaxResponse($aResponse);
+				} else {
+					// Use JavaScript to close
+					_p('<script type="text/javascript">window.close();</script>', false);
+				}
+
+				// End the Response Script
+				exit();
+			}
 		}
 
 		/**
@@ -655,8 +670,8 @@
 		protected static function GenerateQueryStringHelper($strKey, $mixValue) {
 			if (is_array($mixValue)) {
 				$strToReturn = null;
-				foreach ($mixValue as $strSubKey => $mixValue) {
-					$strToReturn .= QApplication::GenerateQueryStringHelper($strKey . '[' . $strSubKey . ']', $mixValue);
+				foreach ($mixValue as $strSubKey => $mixSubValue) {
+					$strToReturn .= QApplication::GenerateQueryStringHelper($strKey . '[' . $strSubKey . ']', $mixSubValue);
 				}
 				return $strToReturn;
 			} else
@@ -731,7 +746,7 @@
 				list($net, $mask) = explode('/', $range);
 				$net = ip2long(trim($net));
 				$mask = trim($mask);
-				$ip_net = ip2long($net);
+				//$ip_net = ip2long($net);
 				if (strpos($mask, '.') !== false) {
 					// mask has the dotted notation
 					$ip_mask = ip2long($mask);
@@ -782,14 +797,20 @@
 				return null;
 		}
 
-		/** @var array List of alert messages we have to show via JS */
-		public static $AlertMessageArray = array();
-		/** @var array List of JS commands (normal priority) */
-		public static $JavaScriptArray = array();
-		/** @var array List of JS commands (high priority) */
-		public static $JavaScriptArrayHighPriority = array();
-		/** @var array List of JS commands (low priority) */
-		public static $JavaScriptArrayLowPriority = array();
+		/** @var array A structured array of commands to be sent to either the ajax response, or page output.
+		 * Replaces the AlertMessageArray, JavaScriptArray, JavaScriptArrayHighPriority, and JavaScriptArrayLowPriority.
+		 */
+		protected static $JavascriptCommandArray = array();
+
+		/** @var array JS files to be added to the list of files in front of the javascript commands. Should include jquery, etc. */
+		protected static $JavascriptFileArray = array();
+
+		/*
+				public static $AlertMessageArray = array();
+				public static $JavaScriptArray = array();
+				public static $JavaScriptArrayHighPriority = array();
+				public static $JavaScriptArrayLowPriority = array();
+				public static $ControlCommands = array();*/
 
 		/** @var bool Used to determine if an error has occurred */
 		public static $ErrorFlag = false;
@@ -799,35 +820,148 @@
 		 * @param string $strMessage Message to be displayed
 		 */
 		public static function DisplayAlert($strMessage) {
-			array_push(QApplication::$AlertMessageArray, $strMessage);
+			QApplication::$JavascriptCommandArray[QAjaxResponse::Alert][] = $strMessage;
 		}
 
 		/**
-		 * Thic class can be used to call a Javascript function sittin in the client browser from the server side.
+		 * This class can be used to call a Javascript function in the client browser from the server side.
 		 * Can be used inside event handlers to do something after verification  on server side.
+		 *
+		 * TODO: Since this is implemented with an "eval" on the client side in ajax, we should phase this out in favor
+		 * of specific commands sent to the client.
+		 *
 		 * @static
+		 * @deprecated Will be eventually removed. If you need to do something in javascript, add it to QAjaxResponse.
 		 * @param string $strJavaScript the javascript to execute
-		 * @param int $intPriority
+		 * @param string $strPriority
+		 * @throws QCallerException
 		 */
-		public static function ExecuteJavaScript($strJavaScript, $intPriority = QJsPriority::Standard) {
-			if (is_bool($intPriority)) {
+		public static function ExecuteJavaScript($strJavaScript, $strPriority = QJsPriority::Standard) {
+			if (is_bool($strPriority)) {
 				//we keep this codepath for backward compatibility
-				if ($intPriority == true)
-					array_push(QApplication::$JavaScriptArrayHighPriority, $strJavaScript);
-				else
-					array_push(QApplication::$JavaScriptArray, $strJavaScript);
+				if ($strPriority === true) {
+					throw new QCallerException('Please specify a correct priority value');
+				}
 			} else {
-				switch ($intPriority) {
+				switch ($strPriority) {
 					case QJsPriority::High:
-						array_push(QApplication::$JavaScriptArrayHighPriority, $strJavaScript);
+						QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh][] = ['script'=>$strJavaScript];
 						break;
 					case QJsPriority::Low:
-						array_push(QApplication::$JavaScriptArrayLowPriority, $strJavaScript);
+						QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow][] = ['script'=>$strJavaScript];
 						break;
 					default:
-						array_push(QApplication::$JavaScriptArray, $strJavaScript);
+						QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium][] = ['script'=>$strJavaScript];
 						break;
 				}
+			}
+		}
+
+		/**
+		 * Execute a function on a particular control. Many javascript widgets are structured this way, and this gives us
+		 * a general purpose way of sending commands to widgets without an 'eval' on the client side.
+		 *
+		 * Commands will be executed in the order received, along with ExecuteJavaScript commands and ExecuteObjectCommands.
+		 * If you want to force a command to execute first, give it high priority, or last, give it low priority.
+		 *
+		 * @param string $strControlId			Id of control to direct the command to.
+		 * @param string $strFunctionName		Function name to call. For jQueryUI, this would be the widget name
+		 * @param string $strFunctionName,...   Unlimited OPTIONAL parameters to use as a parameter list to the function. List can
+		 * 										end with a QJsPriority to prioritize the command.
+		 */
+		public static function ExecuteControlCommand ($strControlId, $strFunctionName /*, ..., QJsPriority */) {
+			$args = func_get_args();
+			$args[0] = '#' . $strControlId;
+			call_user_func_array('QApplication::ExecuteSelectorFunction', $args);
+		}
+
+		/**
+		 * Call a function on a jQuery selector. The selector can be a single string, or an array where the first
+		 * item is a selector specifying the items within the context of the second selector.
+		 *
+		 * @param array|string $mixSelector
+		 * @param string $strFunctionName
+		 * @param string $strFunctionName,...   Unlimited OPTIONAL parameters to use as a parameter list to the function. List can
+		 * 										end with a QJsPriority to prioritize the command.
+		 * @throws QCallerException
+		 */
+		public static function ExecuteSelectorFunction ($mixSelector, $strFunctionName /*, ..., QJsPriority */) {
+			if (!(is_string($mixSelector) || (is_array($mixSelector) && count($mixSelector) == 2))) {
+				throw new QCallerException ('Selector must be a string or an array of two items');
+			}
+			$args = func_get_args();
+			array_shift ($args);
+			array_shift ($args);
+			if ($args && end($args) === QJsPriority::High) {
+				$code = QAjaxResponse::CommandsHigh;
+				array_pop($args);
+			}
+			elseif ($args && end($args) === QJsPriority::Low) {
+				$code = QAjaxResponse::CommandsLow;
+				array_pop($args);
+			} else {
+				$code = QAjaxResponse::CommandsMedium;
+			}
+			if (empty($args)) {
+				$args = null;
+			}
+
+			QApplication::$JavascriptCommandArray[$code][] = ['selector'=>$mixSelector, 'func'=>$strFunctionName, 'params'=>$args];
+		}
+
+
+		/**
+		 * Call the given function with the given arguments. If just a function name, then the window object is searched.
+		 * The function can be inside an object accessible from the global namespace by separating with periods.
+		 * @param string $strFunctionName Can be namespaced, as in "qcubed.func".
+		 * @param string $strFunctionName,...   Unlimited OPTIONAL parameters to use as a parameter list to the function. List can
+		 * 										end with a QJsPriority to prioritize the command.
+		 */
+		public static function ExecuteJsFunction($strFunctionName /*, ... */) {
+			$args = func_get_args();
+			array_shift ($args);
+			if ($args && end($args) === QJsPriority::High) {
+				$code = QAjaxResponse::CommandsHigh;
+				array_pop($args);
+			}
+			elseif ($args && end($args) === QJsPriority::Low) {
+				$code = QAjaxResponse::CommandsLow;
+				array_pop($args);
+			} else {
+				$code = QAjaxResponse::CommandsMedium;
+			}
+			if (empty($args)) {
+				$args = null;
+			}
+
+			QApplication::$JavascriptCommandArray[$code][] = ['func'=>$strFunctionName, 'params'=>$args];
+		}
+
+		/**
+		 * One time add of style sheets, to be used by QForm only for last minute style sheet injection.
+		 * @param string[] $strStyleSheetArray
+		 */
+		public static function AddStyleSheets (array $strStyleSheetArray) {
+			if (empty(QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets])) {
+				QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets] = $strStyleSheetArray;
+			}
+			else {
+				QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets] =
+					array_merge (QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets], $strStyleSheetArray);
+			}
+		}
+
+		/**
+		 * Add an array of javascript files for one-time inclusion. Called by QForm. Do not call.
+		 * @param string[] $strJavaScriptFileArray
+		 */
+		public static function AddJavaScriptFiles ($strJavaScriptFileArray) {
+			if (empty(QApplication::$JavascriptFileArray[QAjaxResponse::JavaScripts])) {
+				QApplication::$JavascriptFileArray[QAjaxResponse::JavaScripts] = $strJavaScriptFileArray;
+			}
+			else {
+				QApplication::$JavascriptFileArray[QAjaxResponse::JavaScripts] =
+					array_merge (QApplication::$JavascriptFileArray[QAjaxResponse::JavaScripts], $strJavaScriptFileArray);
 			}
 		}
 
@@ -852,10 +986,14 @@
 					// Update Cache-Control setting
 					header('Cache-Control: ' . QApplication::$CacheControl);
 
-					$strScript = QApplicationBase::RenderJavaScript(false);
-
-					if ($strScript)
-						return sprintf('%s<script type="text/javascript">%s</script>', $strBuffer, $strScript);
+					/*
+					 * Normally, FormBase->RenderEnd will render the javascripts. In the unusual case
+					 * of not rendering with a QForm object, this will still output embedded javascript commands.
+					 */
+					$strScript = QApplicationBase::RenderJavascript(false);
+					if ($strScript) {
+						return $strBuffer . '<script type="text/javascript">' . $strScript . '</script>';
+					}
 
 					return $strBuffer;
 				}
@@ -863,53 +1001,143 @@
 		}
 
 		/**
-		 * Function renders Javascript on the client browser.
+		 * Render scripts for injecting files into the html output. This is for server only, not ajax.
+		 * This list will appear ahead of the javascript commands rendered below.
+		 *
 		 * @static
-		 * @param bool $blnOutput if true print the result, otherwise return it
-		 * @return null|string
+		 * @return string
 		 */
-		public static function RenderJavaScript($blnOutput = true) {
+		public static function RenderFiles() {
 			$strScript = '';
-			foreach (QApplication::$AlertMessageArray as $strAlert) {
-				$strAlert = addslashes($strAlert);
-				$strScript .= sprintf('alert("%s"); ', $strAlert);
-			}
-			foreach (QApplication::$JavaScriptArrayHighPriority as $strJavaScript) {
-				$strJavaScript = trim($strJavaScript);
-				if (QString::LastCharacter($strJavaScript) != ';')
-					$strScript .= sprintf('%s; ', $strJavaScript);
-				else
-					$strScript .= sprintf('%s ', $strJavaScript);
-			}
-			foreach (QApplication::$JavaScriptArray as $strJavaScript) {
-				$strJavaScript = trim($strJavaScript);
-				if (QString::LastCharacter($strJavaScript) != ';')
-					$strScript .= sprintf('%s; ', $strJavaScript);
-				else
-					$strScript .= sprintf('%s ', $strJavaScript);
-			}
-			foreach (QApplication::$JavaScriptArrayLowPriority as $strJavaScript) {
-				$strJavaScript = trim($strJavaScript);
-				if (QString::LastCharacter($strJavaScript) != ';')
-					$strScript .= sprintf('%s; ', $strJavaScript);
-				else
-					$strScript .= sprintf('%s ', $strJavaScript);
-			}
 
-			QApplication::$AlertMessageArray = array();
-			QApplication::$JavaScriptArrayHighPriority = array();
-			QApplication::$JavaScriptArray = array();
-			QApplication::$JavaScriptArrayLowPriority = array();
-
-			if ($strScript) {
-				if ($blnOutput) {
-					_p($strScript, false);
-				} else {
-					return $strScript;
+			// Javascript files should get processed before the commands.
+			if (!empty(QApplication::$JavascriptFileArray[QAjaxResponse::JavaScripts])) {
+				foreach (QApplication::$JavascriptFileArray[QAjaxResponse::JavaScripts] as $js) {
+					$strScript .= sprintf('<script type="text/javascript" src="%s"></script>', QApplication::GetJsFileUri($js)) . "\n";
 				}
 			}
-			return null;
+
+			QApplication::$JavascriptFileArray = array();
+
+			return $strScript;
 		}
+
+		/**
+		 * Function renders all the Javascript commands as output to the client browser. This is a mirror of what
+		 * occurs in the success function in the qcubed.js ajax code.
+		 *
+		 * @static
+		 * @return string
+		 */
+		public static function RenderJavascript() {
+			$strScript = '';
+
+			// Style sheet injection by a control. Not very common, as other ways of adding style sheets would normally be done first.
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets])) {
+				$str = '';
+				foreach (QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets] as $ss) {
+					$str .= 'qc.loadStyleSheetFile("' . $ss . '", "all"); ';
+				}
+				QApplication::$JavascriptCommandArray[QAjaxResponse::StyleSheets] = null;
+			}
+
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::Alert])) {
+				foreach (QApplication::$JavascriptCommandArray[QAjaxResponse::Alert] as $strAlert) {
+					$strAlert = addslashes($strAlert);
+					$strScript .= sprintf('alert("%s"); ', $strAlert);
+				}
+			}
+
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh])) {
+				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh]);
+			}
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium])) {
+				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium]);
+			}
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow])) {
+				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow]);
+			}
+
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::Location])) {
+				$strLocation = QApplication::$JavascriptCommandArray[QAjaxResponse::Location];
+				$strScript .= sprintf('document.location = "%s";', $strLocation);
+			}
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::Close])) {
+				$strScript .= 'window.close();';
+			}
+
+			QApplication::$JavascriptCommandArray = array();
+
+			return $strScript;
+		}
+
+		private static function RenderCommandArray(array $commandArray) {
+			$strScript = '';
+			foreach ($commandArray as $command) {
+				if (isset($command['script'])) {	// a script to use eval on
+					$strScript .= sprintf('%s;', $command['script']) . _nl();
+				}
+				elseif (isset($command['selector'])) {	// a control function
+					if (is_array($command['selector'])) {
+						$strSelector = sprintf('"%s", "%s"', $command['selector'][0], $command['selector'][1]);
+					}
+					else {
+						$strSelector = '"' . $command['selector'] . '"';
+					}
+
+					if ($params = $command['params']) {
+						$objParams = new QJsParameterList($params);
+						$strParams = $objParams->toJsObject();
+					} else {
+						$strParams = '';
+					}
+					$strScript .= sprintf ('jQuery(%s).%s(%s);', $strSelector, $command['func'], $strParams) . _nl();
+				}
+				elseif (isset($command['func'])) {	// a function call
+					if ($params = $command['params']) {
+						$objParams = new QJsParameterList($params);
+						$strParams = $objParams->toJsObject();
+					}
+					else {
+						$strParams = '';
+					}
+					$strScript .= sprintf ('%s(%s);', $command['func'], $strParams)  . _nl();
+				}
+			}
+			return $strScript;
+		}
+
+		/**
+		 * Return the javascript command array, for use by form ajax response. Will erase the command array, so
+		 * the form better use it.
+		 * @static
+		 * @return array
+		 */
+		public static function GetJavascriptCommandArray() {
+			// Combine the javascripts into one array item
+			$scripts = array();
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium])) {
+				$scripts = QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium];
+			}
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh])) {
+				$scripts = array_merge (QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh], $scripts);
+				unset (QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh]);
+			}
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow])) {
+				$scripts = array_merge ($scripts, QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow]);
+				unset (QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow]);
+			}
+			if ($scripts) {
+				QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium] = $scripts;
+			}
+
+			// add the file inclusion array onto the front of the command array
+			$a = array_merge(QApplication::$JavascriptFileArray, QApplication::$JavascriptCommandArray);
+			QApplication::$JavascriptFileArray = array();
+			QApplication::$JavascriptCommandArray = array();
+			return $a;
+		}
+
 
   		/**
 		 * If LanguageCode is specified and QI18n::Initialize() has been called, then this
@@ -919,6 +1147,7 @@
 		 * Otherwise, this will simply return the token as is.
 		 * This method is also used by the global print-translated "_t" function.
 		 *
+		 * @static
 		 * @param string $strToken
 		 * @return string the Translated token (if applicable)
 		 */
@@ -945,23 +1174,46 @@
 		/**
 		 * Print an ajax response to the browser.
 		 *
-		 * @param $strResponseArray An array keyed with QAjaxResponse items. These items will be read by the qcubed.js
+		 * @param array $strResponseArray An array keyed with QAjaxResponse items. These items will be read by the qcubed.js
 		 * ajax success function and operated on. The goals is to eventually have all possible response types represented
 		 * in the QAjaxResponse so that we can remove the "eval" in qcubed.js.
 		 */
-		public static function SendAjaxResponse($strResponseArray) {
+		public static function SendAjaxResponse(array $strResponseArray) {
 			header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
-
-			$strJSON = JavaScriptHelper::toJsObject($strResponseArray);
-
-			// Output it and update render state
-			if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
-				$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
-			}
+			$strJSON = JavascriptHelper::toJSON($strResponseArray);
 			print ($strJSON);
 		}
 
-  		/**
+
+		/**
+		 * Utility function to get the JS file URI, given a string input
+		 * @param string $strFile File name to be tested
+		 *
+		 * @return string the final JS file URI
+		 */
+		public static function GetJsFileUri($strFile) {
+			if ((strpos($strFile, "http") === 0) || (strpos($strFile, "https") === 0))
+				return $strFile;
+			if (strpos($strFile, "/") === 0)
+				return __VIRTUAL_DIRECTORY__ . $strFile;
+			return __VIRTUAL_DIRECTORY__ . __JS_ASSETS__ . '/' . $strFile;
+		}
+
+		/**
+		 * Utility function to get the CSS file URI, given a string input
+		 * @param string $strFile File name to be tested
+		 *
+		 * @return string the final CSS URI
+		 */
+		public static function GetCssFileUri($strFile) {
+			if ((strpos($strFile, "http") === 0) || (strpos($strFile, "https") === 0))
+				return $strFile;
+			if (strpos($strFile, "/") === 0)
+				return __VIRTUAL_DIRECTORY__ . $strFile;
+			return __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/' . $strFile;
+		}
+
+		/**
 		 * For development purposes, this static method outputs all the Application static variables
 		 *
 		 * @return void
@@ -1010,14 +1262,15 @@
 
 	/**
 	 * Class for enumerating Javascript priority.
+	 * These are taken out of a parameter list, and so are very unlikely strings to include normally.
 	 */
 	class QJsPriority {
 		/** Standard Priority */
-		const Standard = 0;
+		const Standard = '*jsMed*';
 		/** High prioriy JS */
-		const High = 1;
+		const High = '*jsHigh*';
 		/** Low Priority JS */
-		const Low = -1;
+		const Low = '*jsLow*';
 	}
 
 	/**
@@ -1089,4 +1342,3 @@
 		/** We don't know this gentleman...err...gentlebrowser */
 		const Unsupported = 0x8000000;
 	}
-?>

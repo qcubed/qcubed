@@ -98,7 +98,7 @@
 				if (!$this->blnWrapLabel) {
 					$strLabelAttributes = ' for="' . $this->strControlId .'"';
 				} else {
-					$strLabelAttributes = $this->renderLabelAttributes();
+					$strLabelAttributes = $this->RenderLabelAttributes();
 				}
 				$strCheckHtml = QHtml::RenderLabeledInput(
 					$strText,
@@ -109,7 +109,7 @@
 				);
 				if (!$this->blnWrapLabel) {
 					// Additionally wrap in a span so we can associate the label with the checkbox visually and apply the styles
-					$strCheckHtml = QHtml::RenderTag('span',  $this->renderLabelAttributes(), $strCheckHtml);
+					$strCheckHtml = QHtml::RenderTag('span',  $this->RenderLabelAttributes(), $strCheckHtml);
 				}
 			}
 			else {
@@ -120,7 +120,7 @@
 
 		/**
 		 * Return a styler to style the label that surrounds the control if the control has text.
-		 * @return string
+		 * @return QTagStyler
 		 */
 		public function getCheckLabelStyler() {
 			if (!$this->objLabelStyle) {
@@ -130,23 +130,25 @@
 		}
 
 		/**
-		 * There is a little but of a conundrum here. If there is text assigned to the checkbox, we wrap
+		 * There is a little bit of a conundrum here. If there is text assigned to the checkbox, we wrap
 		 * the checkbox in a label. However, in this situation, its unclear what to do with the class and style
 		 * attributes that are for the checkbox. We are going to let the developer use the label styler to make
 		 * it clear what their intentions are.
 		 * @return string
 		 */
-		protected function renderLabelAttributes() {
+		protected function RenderLabelAttributes() {
+			$objStyler = new QTagStyler();
 			$attributes = $this->GetHtmlAttributes(['title']); // copy tooltip to wrapping label
-			$objStyler = $this->getCheckLabelStyler();
-			if ($attributes) {
-				$objStyler = $objStyler->ApplyOverride($attributes);
-			}
+			$objStyler->SetAttributes($attributes);
+			$objStyler->OverrideAttributes($this->getCheckLabelStyler());
 
 			if (!$this->Enabled) {
 				$objStyler->AddCssClass('disabled');	// add the disabled class to the label for styling
 			}
-			return $objStyler->renderHtmlAttributes();
+			if (!$this->Display) {
+				$objStyler->Display = false;
+			}
+			return $objStyler->RenderHtmlAttributes();
 		}
 
 		/**
@@ -317,12 +319,12 @@
 		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
 		 * This is called during the codegen process.
 		 *
-		 * @param QCodeGen $objCodeGen
+		 * @param QDatabaseCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		public static function Codegen_MetaCreate(QDatabaseCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));

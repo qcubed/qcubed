@@ -5,33 +5,28 @@
 	 */
 
 	/**
-	 * Utilized by the {@link QListControl} class which contains a private array of ListItems.
+	 * Utilized by the {@link QListControl} class which contains a private array of ListItems. Originally these
+	 * represented items in a select list, but now represent items in any kind of control that has repetitive items
+	 * in it. This includes list controls, menus, drop-downs, and hierarchical lists. This is a general purpose container
+	 * for the options in each item. Note that not all the options are used by every control, and we don't do any drawing here.
 	 *
 	 * @package Controls
-	 * @property string         $Name      is what gets displayed
-	 * @property string         $Value     is any text that represents the value of the ListItem (e.g. maybe a DB Id)
 	 * @property boolean        $Selected  is a boolean of whether or not this item is selected or not (do only! use during initialization, otherwise this should be set by the {@link QListControl}!)
 	 * @property string         $ItemGroup is the group (if any) in which the Item should be displayed
-	 * @property QListItemStyle $ItemStyle is the QListItemStyle in which the Item should be rendered
-	 * @property string         $Label     is optional text to display in the drop down menu of a QAutocomplete instead of the Name. The Name will still be what gets filled in to the text box.
-	 * @property-read boolean   $Empty     true when both $Name and $Value are null, in which case this item will be rendered with an empty value in the list control
+	 * @property string         $Label     is optional text to display instead of the Name for certain controls.
 	 */
-	class QListItem extends QBaseClass {
+	class QListItem extends QListItemBase {
+
 		///////////////////////////
 		// Private Member Variables
 		///////////////////////////
-		/** @var null|string Name of the Item */
-		protected $strName = null;
-		/** @var null|string Value of the Item */
-		protected $strValue = null;
 		/** @var bool Is the item selected? */
 		protected $blnSelected = false;
-		/** @var null|string Group to which the item belongs */
+		/** @var null|string Group to which the item belongs, if control supports groups. */
 		protected $strItemGroup = null;
-		/** @var QListItemStyle Inline style of the item */
-		protected $objItemStyle;
-		/** @var string Label text for the item */
+		/** @var string Label text for the item. */
 		protected $strLabel = null;
+
 
 		/////////////////////////
 		// Methods
@@ -43,56 +38,40 @@
 		 * @param string  $strValue     is any text that represents the value of the ListItem (e.g. maybe a DB Id)
 		 * @param boolean $blnSelected  is a boolean of whether or not this item is selected or not (optional)
 		 * @param string  $strItemGroup is the group (if any) in which the Item should be displayed
-		 * @param array   $strOverrideParameters
+		 * @param array|string   $mixOverrideParameters
 		 *                              allows you to override item styles.  It is either a string formatted as Property=Value
 		 *                              or an array of the format array(property => value)
 		 *
 		 * @throws Exception|QCallerException
 		 * @return QListItem
 		 */
-		public function __construct($strName, $strValue, $blnSelected = false, $strItemGroup = null, $strOverrideParameters = null) {
-			$this->strName = $strName;
-			$this->strValue = $strValue;
+		public function __construct($strName, $strValue = null, $blnSelected = false, $strItemGroup = null, $mixOverrideParameters = null) {
+			parent::__construct ($strName, $strValue);
 			$this->blnSelected = $blnSelected;
 			$this->strItemGroup = $strItemGroup;
 
 			// Override parameters get applied here
 			$strOverrideArray = func_get_args();
 			if (count($strOverrideArray) > 4)	{
-				try {
-					$strOverrideArray = array_reverse($strOverrideArray);
-					array_pop($strOverrideArray);
-					array_pop($strOverrideArray);
-					array_pop($strOverrideArray);
-					array_pop($strOverrideArray);
-					$strOverrideArray = array_reverse($strOverrideArray);
-					$this->objItemStyle = new QListItemStyle();
-					$this->objItemStyle->OverrideAttributes($strOverrideArray);
-				} catch (QCallerException $objExc) {
-					$objExc->IncrementOffset();
-					throw $objExc;
-				}
+				throw new QCallerException ("Please provide either a string, or an array, but not multiple parameters");
+			}
+			if ($mixOverrideParameters) {
+				$this->GetStyle()->OverrideAttributes($mixOverrideParameters);
 			}
 		}
 
 		/**
-		 * Returns the css style of the list item
-		 * @param bool $blnIncludeCustom [Currently Unused]
-		 * @param bool $blnIncludeAction [Currently Unused]
-		 *
-		 * @return string
-		 */
-		public function GetAttributes() {
-			$strToReturn = $this->objItemStyle->GetAttributes();
-			return $strToReturn;
-		}
-
-		/**
-		 * Returns the details of the control as JSON string
+		 * Returns the details of the control as javascript string. This is customized for the JQuery UI autocomplete. If your
+		 * widget requires something else, you will need to subclass and override this.
 		 * @return string
 		 */
 		public function toJsObject() {
-			$a = array('value' => $this->strName, 'id' => $this->strValue);
+			$strId = $this->strValue;
+			if (!$strId) {
+				$strId = $this->strId;
+			}
+
+			$a = array('value' => $this->strName, 'id' => $strId);
 			if ($this->strLabel) {
 				$a['label'] = $this->strLabel;
 			}
@@ -101,7 +80,8 @@
 			}
 			return JavaScriptHelper::toJsObject($a);
 		}
-		
+
+
 
 		/////////////////////////
 		// Public Properties: GET
@@ -115,13 +95,9 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
-				case "Name": return $this->strName;
-				case "Value": return $this->strValue;
 				case "Selected": return $this->blnSelected;
 				case "ItemGroup": return $this->strItemGroup;
-				case "ItemStyle": return $this->objItemStyle;
 				case "Label": return $this->strLabel;
-				case "Empty": return $this->strValue == null && $this->strName == null;
 
 				default:
 					try {
@@ -146,22 +122,6 @@
 		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case "Name":
-					try {
-						$this->strName = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Value":
-					try {
-						$this->strValue = QType::Cast($mixValue, QType::String);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}				
 				case "Selected":
 					try {
 						$this->blnSelected = QType::Cast($mixValue, QType::Boolean);
@@ -178,14 +138,6 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-				case "ItemStyle":
-					try {
-						$this->objItemStyle = QType::Cast($mixValue, "QListItemStyle");
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
 				case "Label":
 					try {
 						$this->strLabel = QType::Cast($mixValue, QType::String);
@@ -194,7 +146,6 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-										
 				default:
 					try {
 						parent::__set($strName, $mixValue);
@@ -206,4 +157,3 @@
 			}
 		}
 	}
-?>

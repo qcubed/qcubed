@@ -232,7 +232,10 @@
 	abstract class QAjaxResponse {
 		const Watcher = 'watcher';
 		const Controls = 'controls';
-		const Commands = 'commands'; // TODO: Remove this and issue specific commands rather than eval'ing javascript?
+		const CommandsHigh = 'commandsHigh';
+		const CommandsMedium = 'commands';
+		const CommandsLow = 'commandsLow';
+		const RegC = 'regc'; // register control list
 		const Html = 'html';
 		const Value = 'value';
 		const Id = 'id';
@@ -240,6 +243,9 @@
 		const Css = 'css';
 		const Close = 'winclose';
 		const Location = 'loc';
+		const Alert = 'alert';
+		const StyleSheets = 'ss';
+		const JavaScripts = 'js';
 	}
 
 
@@ -442,5 +448,29 @@
 		/** Do not generate anything for this database object */
 		const None = 'none';
 	}
+
+	/**
+	 * Class QOrderedListType
+	 * For specifying how to number an ordered html list. Goes in the type attribute.
+	 */
+	abstract class QOrderedListType {
+		const Numbers = '1';
+		const UppercaseLetters = 'A';
+		const LowercaseLetters = 'a';
+		const UppercaseRoman = 'I';
+		const LowercaseRoman = 'i';
+	}
+
+	/**
+	 * Class QUnorderedListStyle
+	 * For specifying what to dislay in an unordered html list. Goes in the list-style-type style.
+	 */
+	abstract class QUnorderedListStyle {
+		const Disc = 'disc';
+		const Circle = 'circle';
+		const Square = 'square';
+		const None = 'none';
+	}
+
 
 ?>

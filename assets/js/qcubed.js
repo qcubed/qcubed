@@ -408,15 +408,18 @@ qcubed = {
 
                 qcubed.ajaxError = true;
                 if (XMLHttpRequest.status !== 0 || result.length > 0) {
-                    if (result.substr(0, 6) === '<html>') {
+                    if (result.substr(0, 15) === '<!DOCTYPE html>') {
                         alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
                         objErrorWindow = window.open('about:blank', 'qcubed_error', 'menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
                         objErrorWindow.focus();
                         objErrorWindow.document.write(result);
                         return false;
                     } else {
+                        var resultText = $j('<div>').text(result);
                         $dialog = $j('<div id="Qcubed_AJAX_Error" />')
-                            .html(result)
+                            .append('<h1>' + textStatus + '</h1>')
+                            .append('<p>' + errorThrown + '</p>')
+                            .append(resultText)
                             .dialog({
                                 modal: true,
                                 width: 'auto',
@@ -433,67 +436,22 @@ qcubed = {
                 }
             },
             success: function(json) {
-                var strCommands = [];
-
                 qcubed._prevUpdateTime = new Date().getTime();
-                if (json.controls) $j.each(json.controls, function() {
-                    var strControlId = '#' + this.id,
-                        $control = $j(strControlId);
-
-                    if (this.value !== undefined) {
-                        $control.val(this.value);
-                    }
-
-                    if (this.attributes !== undefined) {
-                        $control.attr (this.attributes);
-                    }
-
-                    if (this.html !== undefined) {
-                        if ($control.length && !$control.get(0).wrapper) {
-                            //remove related controls (error, name ...) for wrapper-less controls
-                            if ($control.data("hasrel")) {
-                                var relSelector = "[data-rel='" + strControlId + "']",
-                                    $relParent;
-
-                                //ensure that the control is not wrapped in an element related to it (it would be removed)
-                                $relParent = $control.parents(relSelector).last();
-                                if ($relParent.length) {
-                                    $control.insertBefore($relParent);
-                                }
-                                $j(relSelector).remove();
-                            }
-
-                            $control.before(this.html).remove();
-                        } else {
-                            $j(strControlId + '_ctl').html(this.html);
-                        }
-                    }
-                });
-
-                if (json.watcher) {
-                    if (qFormParams.control) {
-                        qcubed.broadcastChange();
-                    }
+                if (json.js) {
+                    var deferreds = [];
+                    // Load all javascript files before attempting to process the rest of the response, in case some things depend on the injected files
+                    $j.each(json.js, function(i,v) {
+                        deferreds.push(qcubed.loadJavaScriptFile(v));
+                    });
+                    qcubed.processImmediateAjaxResponse(json, qFormParams); // go ahead and begin processing things that will not depend on the javascript files to allow parallel processing
+                    $j.when.apply($j, deferreds).then(
+                        function () {qcubed.processDeferredAjaxResponse(json);}, // success
+                        function () {console.log('Failed to load a file');} // failed to load a file. What to do?
+                    );
+                } else {
+                    qcubed.processImmediateAjaxResponse(json, qFormParams);
+                    qcubed.processDeferredAjaxResponse(json);
                 }
-                if (json.commands) {
-                    /** @todo eval is evil, do no evil */
-                    eval (json.commands);
-                }
-                if (json.winclose) {
-                    window.close();
-                }
-                if (json.loc) {
-                    if (json.loc == 'reload') {
-                        window.location.reload(true);
-                    } else {
-                        document.location = json.loc;
-                    }
-                }
-
-                if (qcubed.objAjaxWaitIcon) {
-                    $j(qcubed.objAjaxWaitIcon).hide();
-                }
-
             }
         });
 
@@ -514,7 +472,7 @@ qcubed = {
             } else if (strScript.indexOf("http") !== 0) {
                 strScript = qc.jsAssets + "/" + strScript;
             }
-            $j.ajax({
+            return $j.ajax({
                 url: strScript,
                 success: objCallback,
                 dataType: "script",
@@ -563,6 +521,166 @@ qcubed = {
         }
 
         return this;
+    },
+    processImmediateAjaxResponse: function(json, qFormParams) {
+        if (json.controls) $j.each(json.controls, function() {
+            var strControlId = '#' + this.id,
+                $control = $j(strControlId);
+
+            if (this.value !== undefined) {
+                $control.val(this.value);
+            }
+
+            if (this.attributes !== undefined) {
+                $control.attr (this.attributes);
+            }
+
+            if (this.html !== undefined) {
+                if ($control.length && !$control.get(0).wrapper) {
+                    //remove related controls (error, name ...) for wrapper-less controls
+                    if ($control.data("hasrel")) {
+                        var relSelector = "[data-rel='" + strControlId + "']",
+                            $relParent;
+
+                        //ensure that the control is not wrapped in an element related to it (it would be removed)
+                        $relParent = $control.parents(relSelector).last();
+                        if ($relParent.length) {
+                            $control.insertBefore($relParent);
+                        }
+                        $j(relSelector).remove();
+                    }
+
+                    $control.before(this.html).remove();
+                } else {
+                    $j(strControlId + '_ctl').html(this.html);
+                }
+            }
+        });
+
+        if (json.regc) {
+            qcubed.registerControlArray (json.regc);
+        }
+
+        if (json.watcher && qFormParams.control) {
+            qcubed.broadcastChange();
+        }
+        if (json.ss) {
+            $j.each(json.ss, function (i,v) {
+                qc.loadStyleSheetFile(v, "all");
+            });
+        }
+        if (json.alert) {
+            $j.each(json.alert, function (i,v) {
+                alert(v);
+            });
+        }
+    },
+    processDeferredAjaxResponse: function(json) {
+        if (json.commands) { // commands
+            $j.each(json.commands, function (index, command) {
+                if (command.script) {
+                    /** @todo eval is evil, do no evil */
+                    eval (command.script);
+                }
+                else if (command.selector) {
+                    var params = qc.unpackParams(command.params);
+                    var objs;
+
+                    if (typeof command.selector === 'string') {
+                        objs = $j(command.selector);
+                    } else {
+                        objs = $j(command.selector[0], command.selector[1]);
+                    }
+
+                    // apply the function on each jQuery object found, using the found jQuery object as the context.
+                    objs.each (function () {
+                         $j(this)[command.func].apply($j(this), params);
+                    });
+                }
+                else if (this.func) {
+                    var params = qc.unpackParams(this.params);
+
+                    // Find the function by name. Walk an object list in the process.
+                    var objs = this.func.split(".");
+                    var obj = window;
+                    var ctx = null;
+
+                    $j.each (objs, function (i, v) {
+                        ctx = obj;
+                        obj = obj[v];
+                    });
+                    // obj is now a function object, and ctx is the parent of the function object
+                    obj.apply(ctx, params);
+                }
+            });
+        }
+        if (json.winclose) {
+            window.close();
+        }
+        if (json.loc) {
+            if (json.loc == 'reload') {
+                window.location.reload(true);
+            } else {
+                document.location = json.loc;
+            }
+        }
+
+        if (qcubed.objAjaxWaitIcon) {
+            $j(qcubed.objAjaxWaitIcon).hide();
+        }
+
+    },
+    /**
+     * Convert from JSON return value to an actual jQuery object. Certain structures don't work in JSON, like closures,
+     * but can be part of a javascript object.
+     * @param params
+     * @returns {*}
+     */
+    unpackParams: function(params) {
+        if (!params) {
+            return null;
+        }
+        var newParams = [];
+
+        $j.each(params, function (index, item){
+            if ($j.type(item) == 'object') {
+                if (item.qObjType) {
+                    item = qcubed.unpackObj(item);  // top level special object
+                }
+                else {
+                    // look for special objects inside top level objects.
+                    var newItem = {}
+                    $j.each (item, function (key, obj) {
+                        newItem[key] = qcubed.unpackObj(obj);
+                    });
+                    item = newItem;
+                }
+            }
+            newParams.push(item);
+        });
+        return newParams;
+    },
+
+    /**
+     * Given an object coming from qcubed, will attempt to decode the object into a corresponding javascript object.
+     * @param obj
+     * @returns {*}
+     */
+    unpackObj: function (obj) {
+        if ($j.type(obj) == 'object' &&
+            obj.qObjType) {
+
+                switch (obj.qObjType) {
+                    case 'qClosure':
+                        return new Function(obj.params, obj.func);
+                        break;
+
+                    case 'qDateTime':
+                        return new Date(obj.year, obj.month, obj.day, obj.hour, obj.minute, obj.second);
+                        break;
+                }
+        }
+        return obj; // no change
     }
 };
 
@@ -611,6 +729,104 @@ qcubed.updateForm = function() {
         // delay to let multiple fast actions only trigger periodic refreshes
         qcubed.setTimeout ('qcubed.update', 'qcubed.updateForm', qcubed.minUpdateInterval);
     }
+}
+
+/////////////////////////////////////
+// Drag and drop support
+/////////////////////////////////////
+
+qcubed.draggable = function (parentId, draggableId) {
+    // we are working around some jQuery UI bugs here..
+    jQuery('#' + parentId).on("dragstart", function () {
+        var c = jQuery(this);
+        c.data ("originalPosition", c.position());
+    }).on("dragstop", function () {
+        var c = jQuery(this);
+        qcubed.recordControlModification(draggableId, "_DragData", c.data("originalPosition").left + "," + c.data("originalPosition").top + "," + c.position().left + "," + c.position().top);
+    })
+}
+
+qcubed.droppable = function (parentId, droppableId) {
+    jQuery('#' + parentId).on("drop", function (event, ui) {
+        qcubed.recordControlModification(droppableId, "_DroppedId", ui.draggable.attr("id"));
+    })
+}
+
+qcubed.resizable = function (parentId, resizeableId) {
+    $j('#' + parentId).on("resizestart", function () {
+        var c = jQuery(this);
+        c.data ("oW", c.width());
+        c.data ("oH", c.height());
+    })
+    .on("resizestop", function () {
+        var c = jQuery(this);
+        qcubed.recordControlModification(resizeableId, "_ResizeData", c.data("oW") + "," + c.data("oH") + "," + c.width() + "," + c.height());
+    });
+}
+
+/////////////////////////////////////
+// JQueryUI Support
+/////////////////////////////////////
+
+qcubed.dialog = function(controlId) {
+    $j('#' + controlId).on ("keydown", "input,select", function(event) {
+        // makes sure a return key fires the default button if there is one
+        if (event.which == 13) {
+            var b = $j(this).closest("[role=\'dialog\']").find("button[type=\'submit\']");
+            if (b) {
+                b[0].click();
+            }
+            event.preventDefault();
+        }
+    });
+}
+
+qcubed.accordion = function(controlId) {
+    $j('#' + controlId).on("accordionactivate", function(event, ui) {
+        qcubed.recordControlModification(controlId, "_SelectedIndex", $j(this).accordion("option", "active"));
+        $j(this).trigger("change");
+    });
+}
+
+qcubed.progressbar = function(controlId) {
+    $j('#' + controlId).on("progressbarchange", function (event, ui) {
+        qcubed.recordControlModification(controlId, "_Value", $j(this).progressbar ("value"));
+    });
+}
+
+qcubed.selectable = function(controlId) {
+    $j('#' + controlId).on("selectablestop", function (event, ui) {
+        var strItems;
+
+        strItems = "";
+        $j(".ui-selected", this).each(function() {
+            strItems = strItems + "," + this.id;
+        });
+
+        if (strItems) {
+            strItems = strItems.substring (1);
+        }
+        qcubed.recordControlModification(controlId, "_SelectedItems", strItems);
+
+    });
+}
+
+qcubed.slider = function(controlId) {
+    $j('#' + controlId).on("slidechange", function (event, ui) {
+        if (ui.values && ui.values.length) {
+            qcubed.recordControlModification(controlId, "_Values", ui.values[0] + ',' +  ui.values[1]);
+        } else {
+            qcubed.recordControlModification(controlId, "_Value", ui.value);
+        }
+    });
+}
+
+qcubed.tabs = function(controlId) {
+    $j('#' + controlId).on("tabsactivate", function(event, ui) {
+        var i = $j(this).tabs( "option", "active" );
+        var id = ui.newPanel ? ui.newPanel.attr("id") : null;
+        qcubed.recordControlModification(controlId, "_active", [i,id]);
+    });
 }
 
 

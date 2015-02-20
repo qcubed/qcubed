@@ -167,18 +167,14 @@
 			$intPersonId = intval($strParameter);
 			
 			$objPerson = $this->arrPersons[$intPersonId];
-			
-			QApplication::ExecuteJavascript("alert('You clicked on a person with ID #" . $intPersonId .
-				": " . $objPerson->FirstName . " " . $objPerson->LastName . "');");
+			QApplication::DisplayAlert("You clicked on a person with ID #{$intPersonId}: {$objPerson->FirstName} {$objPerson->LastName}");
 		}
 		
 		public function dtgPersonsDelegatedRow_Click($strFormId, $strControlId, $strParameter) {
 			$intPersonId = intval($strParameter);
 			
 			$objPerson = $this->arrPersonsDelegated[$intPersonId];
-			
-			QApplication::ExecuteJavascript("alert('You clicked on a person with ID #" . $intPersonId .
-				": " . $objPerson->FirstName . " " . $objPerson->LastName . "');");
+			QApplication::DisplayAlert("You clicked on a person with ID #{$intPersonId}: {$objPerson->FirstName} {$objPerson->LastName}");
 		}
 		
 		/**

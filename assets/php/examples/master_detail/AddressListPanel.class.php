@@ -238,10 +238,8 @@
 				throw $objExc;
 			}
 		   
-		$this->dtgAddresses->Refresh();
-			QApplication::ExecuteJavaScript(
-				sprintf('qcubed.getControl("%s").focus()', 
-				$this->txtStreet->ControlId));
+			$this->dtgAddresses->Refresh();
+			QApplication::ExecuteControlCommand($this->txtStreet->ControlId, 'focus');
 		}
 
 		public function btnRecordDelete_Click($strFormId, $strControlId, $strParameter) {

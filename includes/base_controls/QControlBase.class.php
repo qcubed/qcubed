@@ -67,7 +67,7 @@
 	 * @property mixed $CausesValidation flag says whether or not the form should run through its validation routine if this control has an action defined and is acted upon
 	 * @property-read string $ControlId returns the id of this control
 	 * @property-read QForm $Form returns the parent form object
-	 * @property-read string $FormAttributes
+	 * @property-read array $FormAttributes
 	 * @property string $HtmlAfter HTML that is shown after the control {@link QControl::RenderWithName}
 	 * @property string $HtmlBefore HTML that is shown before the control {@link QControl::RenderWithName}
 	 * @property string $Instructions instructions that is shown next to the control's name label {@link QControl::RenderWithName}
@@ -186,6 +186,8 @@
 		protected $blnUseWrapper = true;
         /** @var string  One time scripts associated with the control. */
         protected $strAttributeScripts = null;
+		/** @var The INITIAL class for the object. Only subclasses should set this before calling the parent constructor. */
+		protected $strCssClass = null;
 
 		// SETTINGS
 		/** @var string List of JavaScript files to be attached with the control when rendering */
@@ -259,6 +261,14 @@
 				else
 					throw new QCallerException('ControlIds must be only alphanumeric characters: ' . $strControlId);
 			}
+
+			/* If the subclass sets this, we pass it off to the attribute manager. Mostly for backwards compatibility,
+			 * but is a conventient way to set the initial class.
+			 */
+			if ($this->strCssClass) {
+				$this->AddCssClass($this->strCssClass);
+			}
+
 			try {
 				$this->objForm->AddControl($this);
 				if ($this->objParentControl)
@@ -841,11 +851,10 @@
 		 * that most subclasses will extend this method's functionality to add Control-specific HTML
 		 * attributes (e.g. textbox will likely add the maxlength html attribute, etc.)
 		 *
-		 * @param boolean $blnIncludeCustom Include Custom attributes?
 		 * @return string
 		 * @deprecated Use renderHtmlAttributes instead
 		 */
-		public function GetAttributes($blnIncludeCustom = true) {
+		public function GetAttributes() {
 			return $this->RenderHtmlAttributes() . ' ';
 		}
 
@@ -927,6 +936,48 @@
 		}
 
 		/**
+		 * Returns the styler for the wrapper tag.
+		 * @return null|QTagStyler
+		 */
+		public function GetWrapperStyler() {
+			if (!$this->objWrapperStyler) {
+				$this->objWrapperStyler = new QTagStyler();
+			}
+			return $this->objWrapperStyler;
+		}
+
+		/**
+		 * Adds the given class to the wrapper tag.
+		 * @param $strClass
+		 */
+		public function AddWrapperCssClass($strClass) {
+			if ($this->GetWrapperStyler()->AddCssClass($strClass)) {
+				$this->MarkAsWrapperModified();
+			}
+			/**
+			 * TODO: This can likely be done just in javascript without a complete refresh of the control.
+			 *
+			 * if ($this->blnRendered && $this->blnOnScreen) {
+			 *   Change using javascript
+			 * }
+			 */
+		}
+
+		/**
+		 * Removes the given class from the wrapper tag.
+		 * @param $strClass
+		 */
+		public function RemoveWrapperCssClass($strClass) {
+			if ($this->GetWrapperStyler()->RemoveCssClass($strClass)) {
+				$this->MarkAsWrapperModified();
+			}
+
+			// TODO: do this in javascript
+			// QApplication::ExecuteControlCommand($this->WrapperId, 'removeClass', $this->strValidationState);
+
+		}
+
+		/**
 		 * Returns all wrapper-style-attributes
 		 * Similar to GetStyleAttributes, but specifically for CSS name/value pairs that will render
 		 * within a "wrapper's" HTML "style" attribute
@@ -937,7 +988,7 @@
 		 * @return string
 		 */
 		protected function GetWrapperStyleAttributes($blnIsBlockElement = false) {
-			return $this->getWrapperStyler()->RenderCssStyles();
+			return $this->GetWrapperStyler()->RenderCssStyles();
 		}
 
 
@@ -978,7 +1029,7 @@
 				$styleOverrides = ['display'=>'none'];
 			}
 
-			return $this->getWrapperStyler()->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
+			return $this->GetWrapperStyler()->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
 		}
 
 		/**
@@ -1089,7 +1140,7 @@
 		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
 		public function Focus() {
-			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").focus();', $this->strControlId));
+			QApplication::ExecuteControlCommand($this->strControlId, 'focus');
 		}
 
 		/**
@@ -1126,13 +1177,13 @@
 			$strToReturn = '';
 
 			if ($this->objResizable)
-				$strToReturn .= $this->objResizable->GetControlJavaScript() . ';';
+				$strToReturn .= $this->objResizable->GetEndScript();
 
 			if ($this->objDraggable)
-				$strToReturn .= $this->objDraggable->GetControlJavaScript() . ';';
+				$strToReturn .= $this->objDraggable->GetEndScript();
 
 			if ($this->objDroppable)
-				$strToReturn .= $this->objDroppable->GetControlJavaScript() . ';';
+				$strToReturn .= $this->objDroppable->GetEndScript();
 
 			$strToReturn .= $this->RenderActionScripts();
 
@@ -1144,33 +1195,35 @@
         /**
          * Return one-time scripts associated with the control. Called by the form during an ajax draw only if the
 		 * entire control was not rendered.
-         *
-         * @return null|string
+		 *
+		 * Instead of actually rendering, we add them to the application event queue.
          */
         public function RenderAttributeScripts()
         {
             if ($this->strAttributeScripts) {
-                $strToReturn = implode (";\n", $this->strAttributeScripts);
-                $this->strAttributeScripts = null;
-                return $strToReturn;
-            }
-            else {
-                return '';
+				foreach ($this->strAttributeScripts as $scriptArgs) {
+					array_unshift($scriptArgs, $this->getJqControlId());
+					call_user_func_array('QApplication::ExecuteControlCommand', $scriptArgs);
+				}
             }
         }
 
         /**
          * Executes a java script associated with the control. These scripts are specifically for the purpose of
          * changing some attribute of the control that would also be taken care of during a refresh of the entire
-         * control. The script will only be executed if the entire control is not redrawn. We can't just call
-		 * QApplication::ExecuteJavascripts, because in some situations we want the order of these scripts to
-		 * come before that standard application javascripts.
+         * control. The script will only be executed in ajax if the entire control is not redrawn.
+		 *
+		 * Note that these will execute after most of the other commands execute, so do not count on the order
+		 * in which they will execute relative to other commands.
          *
-         * @param string $strScript
-         */
-        public function AddAttributeScript ($strScript)
+		 * @param string $strMethodName	The name of the javascript function to call on this control.
+		 * @param string $key
+		 * @param string $val
+		 */
+		public function AddAttributeScript ($strMethod, $key, $val /*, ... */)
         {
-            $this->strAttributeScripts[] = $strScript;
+			$args = func_get_args();	// Sometimes we need more than two parameters to set something.
+            $this->strAttributeScripts[] = $args;
         }
 
 		/**
@@ -1227,7 +1280,7 @@
 			if ($this->blnUseWrapper) {
 				if (!$this->blnVisible) $strOutput = '';
 			} else if (!$this->blnVisible) {
-				/* No wrapper is used and the control is not visible. We must ender a span with the control id and
+				/* No wrapper is used and the control is not visible. We must enter a span with the control id and
 				 *	display:none in order to be able change blnVisible to true in an Ajax call later and redraw the control.
 				 */
 				$strOutput = sprintf('<span id="%s" style="display:none;"></span>', $this->strControlId);
@@ -1716,11 +1769,41 @@
 			return false;
 		}
 
-		public function GetWrapperStyler() {
-			if (!$this->objWrapperStyler) {
-				$this->objWrapperStyler = new QTagStyler();
+		/**
+		 * Searches the control and it's hierarchy to see if a method by given name exists.
+		 * This method searches only in the current control and its parents and so on.
+		 * It will not search for the method in any siblings at any stage in the process.
+		 *
+		 * @param string $strMethodName            Name of the method
+		 * @param bool   $blnIncludeCurrentControl Include this control as well?
+		 *
+		 * @return null|QControl The control found in the hierarchy to have the method
+		 *                       Or null if no control was found in the hierarchy with the given name
+		 */
+		public function GetControlFromHierarchyByMethodName($strMethodName, $blnIncludeCurrentControl = true) {
+			if ($blnIncludeCurrentControl == true) {
+				$ctlDelegatorControl = $this;
+			} else {
+				$ctlDelegatorControl = $this->objParentControl;
 			}
-			return $this->objWrapperStyler;
+			do {
+				if (method_exists($ctlDelegatorControl, $strMethodName)) {
+					return $ctlDelegatorControl;
+				} else {
+					$ctlDelegatorControl = $ctlDelegatorControl->objParentControl;
+				}
+			} while (!($ctlDelegatorControl instanceof QFormBase));
+
+			// If we are here, we could not find the method in the hierarchy/lineage of this control.
+			return null;
+		}
+
+		/**
+		 * Returns the form associated with the control. Used by the QDataBinder trait.
+		 * @return QForm
+		 */
+		public function GetForm() {
+			return $this->objForm;
 		}
 
 		/////////////////////////
@@ -1758,6 +1841,7 @@
 
 				// MISC
 				case "ControlId": return $this->strControlId;
+				case "WrapperId": return $this->strControlId . '_ctl';
 				case "Form": return $this->objForm;
 				case "ParentControl": return $this->objParentControl;
 
@@ -1940,7 +2024,7 @@
 						$this->MarkAsWrapperModified();
 						if (QType::Cast($mixValue, QType::Boolean)) {
 							if (!$this->objDraggable) {
-								$this->objDraggable = new QDraggable($this);
+								$this->objDraggable = new QDraggable($this, $this->ControlId . 'draggable');
 							} else {
 								$this->objDraggable->Disabled = false;
 							}

@@ -9,6 +9,8 @@ class ExamplesForm extends QForm {
 	// A listbox of Persons
 	protected $lstPersons;
 
+	protected $chkPersons;
+
 	// Initialize our Controls during the Form Creation process
 	protected function Form_Create() {
 		// Define our Label
@@ -30,6 +32,19 @@ class ExamplesForm extends QForm {
 		}
 		// Declare a QChangeEvent to call a server action: the lstPersons_Change PHP method
 		$this->lstPersons->AddAction(new QChangeEvent(), new QServerAction('lstPersons_Change'));
+
+		// Do the same but with a multiple selection QCheckboxList
+		$this->chkPersons = new QCheckBoxList($this);
+		if ($objPersons){
+			foreach ($objPersons as $objPerson) {
+				// We want to display the listitem as Last Name, First Name
+				// and the VALUE of the listitem will be the database id
+				$this->chkPersons->AddItem($objPerson->FirstName . ' ' . $objPerson->LastName, $objPerson->Id);
+			}
+		}
+		$this->chkPersons->RepeatColumns = 2;
+		$this->chkPersons->AddAction(new QChangeEvent(), new QServerAction('chkPersons_Change'));
+
 	}
 
 	// Handle the changing of the listbox
@@ -49,6 +64,21 @@ class ExamplesForm extends QForm {
 			$this->lblMessage->Text = '<None>';
 		}
 	}
+
+	// Handle the changing of the checkbox list
+	protected function chkPersons_Change($strFormId, $strControlId, $strParameter) {
+		// In this example, since our values are database ids, we use the ids to lookup the names and display them.
+
+		$names = $this->chkPersons->SelectedNames;
+
+		if ($names) {
+			$this->lblMessage->Text = implode (", ", $names);
+		} else {
+			// No one was selected
+			$this->lblMessage->Text = '<None>';
+		}
+	}
+
 }
 
 // Run the Form we have defined

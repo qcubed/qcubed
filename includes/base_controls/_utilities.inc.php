@@ -83,14 +83,16 @@ function _tp($strString, $blnHtmlEntities = true) {
  * attached to the end. If a newline is already there, the string will be returned as is. All this provided we
  * are not in MINIMIZE mode. Otherwise we return the string unchanged.
  *
- * @param string $strText
+ * @param string|null $strText
  * @return string
  */
-function _nl($strText = '') {
+function _nl($strText = null) {
 	if (defined ('__MINIMIZE__') && __MINIMIZE__) {
 		return $strText;
 	} else {
-		if ($strText && substr($strText, -1) == "\n") {
+		if ($strText === null) return "\n";
+		if (!$strText) return '';	// don't add a shadow newline
+		if (substr($strText, -1) == "\n") {
 			return $strText; // text already ends with a newline
 		} else {
 			return $strText . "\n";

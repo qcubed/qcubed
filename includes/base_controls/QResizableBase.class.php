@@ -39,30 +39,16 @@
 		public function Validate() {return true;}
 		public function ParsePostData() {}
 		
-		// These functions are used to keep track of the selected value, and to implement 
-		// optional autocomplete functionality.
-		
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
-			$strJS .=<<<FUNC
-			.on("resizestart", function () {
-						var c = jQuery(this);
-						c.data ("oW", c.width());
-						c.data ("oH", c.height());
-			})						
-			.on("resizestop", function () {
-						var c = jQuery(this);
-			 			qcubed.recordControlModification("$this->ControlId", "_ResizeData", c.data("oW") + "," + c.data("oH") + "," + c.width() + "," + c.height());
-					})						
-FUNC;
-			
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.resizable', $this->getJqControlId(), $this->ControlId);
 			return $strJS;
 		}
 
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case '_ResizeData': // Internal only. Do not use. Called by JS above to keep track of user selection.
+				case '_ResizeData': // Internal only. Do not use. Called by qcubed.resizable to keep track of changes.
 					try {
 						$data = QType::Cast($mixValue, QType::String);
 						$a = explode (",", $data);
@@ -119,4 +105,3 @@ FUNC;
 		}
 		
 	}
-?>

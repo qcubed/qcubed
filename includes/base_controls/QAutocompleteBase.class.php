@@ -139,8 +139,6 @@
 		 * @param bool           $blnReturnTermAsParameter Return the terms as a parameter to the handler
 		 */
 		public function SetDataBinder($strMethodName, $objParentControl = null, $blnReturnTermAsParameter = false) {
-			$strBody = '';
-
 			$strJsReturnParam = $this->JsReturnParam();
 
 			
@@ -181,10 +179,9 @@
 		 * Gets the Javascript part of the control which is sent to the client side upon the completion of Render
 		 * @return string The JS string
 		 */
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
-			$strJS .= sprintf (';qAutocomplete("%s")', $this->getJqControlId());
-
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qAutocomplete', $this->getJqControlId());
 			return $strJS;
 		}
 		
@@ -193,7 +190,7 @@
 		protected function prepareAjaxList($dataSource) {
 			$list = $dataSource ? JavaScriptHelper::toJsObject($dataSource) : "[]";
 			$strJS = sprintf('$j("#%s").data("ui-autocomplete").response(%s);', $this->ControlId, $list);
-			QApplication::ExecuteJavaScript($strJS, true);
+			QApplication::ExecuteJavaScript($strJS, QJsPriority::High);
 		}
 
 		/**
@@ -225,6 +222,7 @@
 					break;
 					
 				case "SelectedValue":	// mirror list control
+				case "Value":
 				case 'SelectedId':
 					// Set this at creation time to initialize the selected id. 
 					// This is also set by the javascript above to keep track of subsequent selections made by the user.
@@ -280,6 +278,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case "SelectedValue":	// mirror list control
+				case "Value": // most common situation
 				case 'SelectedId': return $this->strSelectedId;
 
 				default: 
@@ -341,8 +340,9 @@ TMPL;
 		 *
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference $objColumn
+		 * @param QColumn $objColumn
 		 * @return string
+		 * @throws Exception
 		 */
 		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 
@@ -493,7 +493,9 @@ TMPL;
 		 *
 		 * @param QCodeGen $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference $objColumn
+		 * @param QColumn $objColumn
+		 * @param bool $blnInit
+		 * @return string
 		 */
 		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strPrimaryKey = $objCodeGen->GetTable($objColumn->Reference->Table)->PrimaryKeyColumnArray[0]->PropertyName;

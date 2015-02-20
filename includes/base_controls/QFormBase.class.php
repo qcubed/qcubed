@@ -277,10 +277,16 @@
 		 * $blnValid will contain the result of control validation. If it is false, you know that validation will
 		 * fail, regardless of what you return from the function.
 		 *
-		 * @param bool 		$blnValid	The current state of the validation.
 		 * @return bool 	Return false to prevent validation.
 		 */
-		protected function Form_Validate($blnValid) {return true;}
+		protected function Form_Validate() {return true;}
+
+		/**
+		 * If you want to respond in some way to an invalid form that you have not already been able to handle,
+		 * override this function. For example, you could display a message that an error occurred with some of the
+		 * controls.
+		 */
+		protected function Form_Invalid() {}
 
 		/**
 		 * This function is meant to be overriden by child class and is called when the Form exits
@@ -299,8 +305,12 @@
 		public function VarExport($blnReturn = true) {
 			if ($this->objControlArray) foreach ($this->objControlArray as $objControl)
 				$objControl->VarExport(false);
-			if ($blnReturn)
+			if ($blnReturn) {
 				return var_export($this, true);
+			}
+			else {
+				return null;
+			}
 		}
 
 		/**
@@ -315,7 +325,7 @@
 
 		/**
 		 * Helper function for below GetModifiedControls
-		 * @param $objControl
+		 * @param QControl $objControl
 		 * @return boolean
 		 */
 		protected static function IsControlModified ($objControl) {
@@ -367,7 +377,7 @@
 
 			if ($objClass) {
 				// Globalize
-				$_FORM = $objClass;
+				//$_FORM = $objClass;
 
 				$objClass->strCallType = $_POST['Qform__FormCallType'];
 				$objClass->intFormStatus = QFormBase::FormStatusUnrendered;
@@ -493,10 +503,10 @@
 				$objClass->SaveControlState();
 			} else {
 				// We have no form state -- Create Brand New One
-				$objClass = new $strFormId();
+				$objClass = self::CreateForm($strFormId);
 
 				// Globalize
-				$_FORM = $objClass;
+				//$_FORM = $objClass;
 
 				// Setup HTML Include File Path, based on passed-in strAlternateHtmlFile (if any)
 				try {
@@ -608,7 +618,7 @@
 				// AJAX-based Response
 				header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
 
-				$strJSON = JavaScriptHelper::toJsObject(['loc'=>'reload']);
+				$strJSON = JavaScriptHelper::toJsObject(['loc' => 'reload']);
 
 				// Output it and update render state
 				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
@@ -622,17 +632,16 @@
 			// End the Response Script
 			exit();	
 		}
-		
-		public function CallDataBinder($strMethodName, QPaginatedControl $objPaginatedControl, $objParentControl = null) {
+
+		/**
+		 * Calls a data binder associated with the form. Does this so data binder can be protected. Mostly for legacy code.
+		 * @param callable $callable
+		 * @param  QControl $objPaginatedControl
+		 * @throws QDataBindException
+		 */
+		public function CallDataBinder($callable, $objPaginatedControl) {
 			try {
-				if (is_array($strMethodName)) {
-					call_user_func($strMethodName, $objPaginatedControl);
-				}
-				elseif ($objParentControl) {
-					$objParentControl->$strMethodName($objPaginatedControl);
-				} else {
-					$this->$strMethodName($objPaginatedControl);
-				}
+				call_user_func($callable, $objPaginatedControl);
 			} catch (QCallerException $objExc) {
 				throw new QDataBindException($objExc);
 			}
@@ -662,13 +671,10 @@
 		 * UTF-8 if needed. Response is parsed in the "success" function in qcubed.js, and handled there.
 		 */
 		protected function RenderAjax() {
-			$sResult = [];
-
 			// Update the Status
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 
 			// watcher collection
-
 			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
 				$aResult[QAjaxResponse::Watcher] = $this->strWatcherTime;
 			}
@@ -680,99 +686,66 @@
 					$controls = array_merge($controls, $this->RenderAjaxHelper($objControl));
 				}
 			}
+			$aResponse[QAjaxResponse::Controls] = $controls;
 
 			// Go through all controls and gather up any JS or CSS to run or Form Attributes to modify
-			$strJavaScriptToAddArray = array();
-			$strStyleSheetToAddArray = array();
-			$strFormAttributeToModifyArray = array();
-
-			// TODO: Change the following so that instead of issuing javascript, we issue json parameters that get interpreted
-			// by the response in qcubed.js and acted on accordingly
 			foreach ($this->GetAllControls() as $objControl) {
 				// Include any javascript files that were added by the control
 				// Note: current implementation does not handle removal of javascript files
-				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts))
-					$strJavaScriptToAddArray = array_merge($strJavaScriptToAddArray, $strScriptArray);
+				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts)) {
+					QApplication::AddJavaScriptFiles($strScriptArray);
+				}
 
 				// Include any new stylesheets
-				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
-					$strStyleSheetToAddArray = array_merge($strStyleSheetToAddArray, $strScriptArray);
+				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets)) {
+					QApplication::AddStyleSheets(array_keys($strScriptArray));
+				}
 
 				// Form Attributes?
 				if ($objControl->FormAttributes) {
+					QApplication::ExecuteControlCommand($this->strFormId, 'attr', $objControl->FormAttributes);
 					foreach ($objControl->FormAttributes as $strKey=>$strValue) {
 						if (!array_key_exists($strKey, $this->strFormAttributeArray)) {
 							$this->strFormAttributeArray[$strKey] = $strValue;
-							$strFormAttributeToModifyArray[$strKey] = $strValue;
 						} else if ($this->strFormAttributeArray[$strKey] != $strValue) {
 							$this->strFormAttributeArray[$strKey] = $strValue;
-							$strFormAttributeToModifyArray[$strKey] = $strValue;
 						}
 					}
 				}
 			}
 
-
-			// Render the JS Commands to Execute
-			$strCommands = '';
-
 			$strControlIdToRegister = array();
-			$strJavaScript = '';
 			foreach ($this->GetAllControls() as $objControl) {
+				$strScript = '';
 				if ($objControl->Rendered) { // whole control was rendered during this event
 					$strScript = trim ($objControl->GetEndScript());
-					$strControlIdToRegister[] = '"' . $objControl->ControlId . '"';
+					$strControlIdToRegister[] = $objControl->ControlId;
 				} else {
-                    $strScript = trim($objControl->RenderAttributeScripts()); // render one-time attribute commands only
+                    $objControl->RenderAttributeScripts(); // render one-time attribute commands only
                 }
 				if ($strScript) {
-					$strJavaScript .= $strScript . ';';
+					QApplication::ExecuteJavaScript($strScript);
 				}
 				$objControl->ResetFlags();
             }
-			if (count($strControlIdToRegister)) {
-				$strCommands .= sprintf('qc.regCA(new Array(%s)); ', implode(',', $strControlIdToRegister));
+
+			if ($strControlIdToRegister) {
+				$aResponse[QAjaxResponse::RegC] = $strControlIdToRegister;
 			}
-			$strCommands .= $strJavaScript;
 
 
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strRender = $objGrouping->Render();
 				if (trim($strRender))
-					$strCommands .= trim($strRender);
+					QApplication::ExecuteJavaScript($strRender);
 			}
 
-			// Next, look to the Application object for any commands to run
-			$strCommands .= QApplication::RenderJavaScript(false);
 
-			// Finally, bring in "high priority commands"
-
-			// First, alter any <Form> settings that need to be altered
-			foreach ($strFormAttributeToModifyArray as $strKey=>$strValue)
-				$strCommands = sprintf('document.getElementById("%s").%s = "%s"; ', $this->strFormId, $strKey, $strValue) . $strCommands;
-
-			// Next, add any new CSS files that haven't yet been included to the end of the High Priority commands string
-			foreach ($strStyleSheetToAddArray as $strScript)
-				$strCommands = 'qc.loadStyleSheetFile("' . $strScript . '", "all"); ' . $strCommands;
-
-			// Next, add any new JS files that haven't yet been included to the BEGINNING of the High Priority commands string
-			// (already rendered HP commands up to this point will be placed into the callback)
-			foreach (array_reverse($strJavaScriptToAddArray) as $strScript) {
-				if ($strCommands)
-					$strCommands = 'qc.loadJavaScriptFile("' . $strScript . '", function() {' . $strCommands . '}); ';
-				else
-					$strCommands = 'qc.loadJavaScriptFile("' . $strScript . '", null); ';
-			}
-
-			// Set Up the Command Node
-			if (trim($strCommands)) {
-				$aResult[QAjaxResponse::Commands] = trim($strCommands);
-			}
+			$aResponse = array_merge($aResponse, QApplication::GetJavascriptCommandArray());
 
 			// Add in the form state
 			$strFormState = QForm::Serialize($this);
-			$controls[] = [QAjaxResponse::Id=>"Qform__FormState", QAjaxResponse::Value=>$strFormState];
-			$aResult[QAjaxResponse::Controls] = $controls;
+			$aResponse[QAjaxResponse::Controls][] = [QAjaxResponse::Id=>"Qform__FormState", QAjaxResponse::Value=>$strFormState];
 
 			$strContents = trim(ob_get_contents());
 
@@ -781,7 +754,7 @@
 			} else {
 				ob_clean();
 
-				QApplication::SendAjaxResponse($aResult);
+				QApplication::SendAjaxResponse($aResponse);
 			}
 
 			// Update Render State
@@ -854,6 +827,15 @@
 				return $objForm;
 			} else
 				return null;
+		}
+
+		/**
+		 * Create a new form with the given type.
+		 * @param string $strFormClassType
+		 * @return QForm
+		 */
+		private static function CreateForm ($strFormClassType) {
+			return new $strFormClassType();
 		}
 
 		/**
@@ -1257,7 +1239,7 @@
 
 						// Run Form-Specific Validation (if any)
 						if ($mixCausesValidation && !($mixCausesValidation instanceof QDialog)) {
-							if (!$this->Form_Validate($blnValid)) {
+							if (!$this->Form_Validate()) {
 								$blnValid = false;
 							}
 						}
@@ -1274,6 +1256,9 @@
 										$this->TriggerMethod($strId, $strMethodName);
 								}
 							}
+						}
+						else {
+							$this->Form_Invalid();	// notify form that something went wrong
 						}
 					} else {
 						// Nope -- Throw an exception
@@ -1358,7 +1343,7 @@
 
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
-				$strToReturn  .= sprintf('<style type="text/css" media="all">@import "%s";</style>', $this->GetCssFileUri($strScript));
+				$strToReturn  .= '<style type="text/css" media="all">@import "' . $this->GetCssFileUri($strScript) . '</style>';
 				$strToReturn .= "\r\n";
 			}
 
@@ -1402,7 +1387,9 @@
 			// Update FormStatus and Clear Included JS/CSS list
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 			$this->blnStylesRendered = false;
-			
+
+			// Prepare for rendering
+
 			QApplicationBase::$ProcessOutput = false;
 			$strOutputtedText = trim(ob_get_contents());
 			if (strpos(strtolower($strOutputtedText), '<body') === false) {
@@ -1415,7 +1402,6 @@
 
 			// Iterate through the form's ControlArray to Define FormAttributes and additional JavaScriptIncludes
 			$this->strFormAttributeArray = array();
-
 			foreach ($this->GetAllControls() as $objControl) {
 				// Form Attributes?
 				if ($objControl->FormAttributes) {
@@ -1589,11 +1575,7 @@
 		 * @return string the final JS file URI
 		 */
 		public function GetJsFileUri($strFile) {
-			if ((strpos($strFile, "http") === 0) || (strpos($strFile, "https") === 0))
-				return $strFile;
-			if (strpos($strFile, "/") === 0)
-				return __VIRTUAL_DIRECTORY__ . $strFile;
-			return __VIRTUAL_DIRECTORY__ . __JS_ASSETS__ . '/' . $strFile;
+			return QApplication::GetJsFileUri($strFile);
 		}
 
 		/**
@@ -1603,11 +1585,7 @@
 		 * @return string the final CSS URI
 		 */
 		public function GetCssFileUri($strFile) {
-			if ((strpos($strFile, "http") === 0) || (strpos($strFile, "https") === 0))
-				return $strFile;
-			if (strpos($strFile, "/") === 0)
-				return __VIRTUAL_DIRECTORY__ . $strFile;
-			return __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ . '/' . $strFile;
+			return QApplication::GetCssFileUri($strFile);
 		}
 
 		/**
@@ -1630,6 +1608,8 @@
 		}
 
 		/**
+		 * Renders the end of the form, including the closing form and body tags.
+		 * Renders the html for hidden controls.
 		 * @param bool $blnDisplayOutput should the output be returned or directly printed to screen.
 		 *
 		 * @return null|string
@@ -1649,7 +1629,100 @@
 					throw new QCallerException('FormStatus is in an unknown status');
 			}
 
-			$strToReturn = '';
+			$strHtml = '';	// This will be the final output
+
+			/**** Render any controls that get automatically rendered ****/
+			foreach ($this->GetAllControls() as $objControl) {
+				if ($objControl instanceof QDialog &&
+					!$objControl->Rendered) {
+					$strHtml .= $objControl->Render(false) . _nl();
+
+				}
+			}
+
+			/**** Prepare Javascripts ****/
+
+			// Clear included javascript array since we are completely redrawing the page
+			$this->strIncludedJavaScriptFileArray = array();
+			$strControlIdToRegister = array();
+			$strEventScripts = '';
+
+			// Add form level javascripts and libraries
+			$strJavaScriptArray = $this->ProcessJavaScriptList($this->GetFormJavaScripts());
+			QApplication::AddJavaScriptFiles($strJavaScriptArray);
+
+			// Go through all controls and gather up any JS or CSS to run or Form Attributes to modify
+			foreach ($this->GetAllControls() as $objControl) {
+				// Include the javascripts specified by each control.
+				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts)) {
+					QApplication::AddJavaScriptFiles($strScriptArray);
+				}
+
+				// Include any StyleSheets?  The control would have a
+				// comma-delimited list of stylesheet files to include (if applicable)
+				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets)) {
+					QApplication::AddStyleSheets(array_keys($strScriptArray));
+				}
+
+				// Form Attributes?
+				if ($objControl->FormAttributes) {
+					QApplication::ExecuteControlCommand($this->strFormId, 'attr', $objControl->FormAttributes);
+					foreach ($objControl->FormAttributes as $strKey=>$strValue) {
+						if (!array_key_exists($strKey, $this->strFormAttributeArray)) {
+							$this->strFormAttributeArray[$strKey] = $strValue;
+						} else if ($this->strFormAttributeArray[$strKey] != $strValue) {
+							$this->strFormAttributeArray[$strKey] = $strValue;
+						}
+					}
+				}
+
+				if ($objControl->Rendered) {
+					$strControlIdToRegister[] = $objControl->ControlId;
+
+					/* Note: GetEndScript may cause the control to register additional commands, which will be rendered in QApplication::RenderJavaScript */
+					if ($strControlScript = $objControl->GetEndScript()) {
+						$strControlScript = JavaScriptHelper::TerminateScript($strControlScript);
+						$strEventScripts .= $strControlScript;
+					}
+				}
+			}
+
+			// Add grouping commands to events (Used for deprecated drag and drop, but not removed yet)
+			foreach ($this->objGroupingArray as $objGrouping) {
+				$strGroupingScript = $objGrouping->Render();
+				if (strlen($strGroupingScript) > 0) {
+					$strGroupingScript = JavaScriptHelper::TerminateScript($strGroupingScript);
+					$strEventScripts .= $strGroupingScript;
+				}
+			}
+
+			/*** Build the javascript block ****/
+
+			// Start with variable settings and initForm
+			$strEndScript = sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ ) .
+							sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__) .
+							sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) .
+							sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__) .
+							sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) .
+							sprintf('qc.initForm("%s"); ', $this->strFormId);
+
+			// Register controls
+			if ($strControlIdToRegister) {
+				$strEndScript .= sprintf('qc.regCA(%s); ', JavaScriptHelper::toJsObject($strControlIdToRegister));
+			}
+
+			// Add any application level js commands.
+			$strEndScript .= QApplication::RenderJavascript();
+
+			// Add the javascript coming from controls and events
+			$strEndScript .=  ';'  . $strEventScripts;
+
+
+			// Create Final EndScript Script
+			$strEndScript = sprintf('<script type="text/javascript">$j(document).ready(function() { %s; });</script>', $strEndScript);
+
+
+			/**** Render the HTML itself, appending the javascript we generated above ****/
 
 			/*
 			 * Render any dialog that is not yet rendered. Now that we are using JQuery UI's dialog,
@@ -1658,156 +1731,44 @@
 			 * each dialog.
 			 */
 			foreach ($this->GetAllControls() as $objControl) {
-				if ($objControl instanceof QDialog &&
-						!$objControl->Rendered) {
-					$strToReturn .= $objControl->Render(false) . "\r\n";
-
-				}
-			}
-
-			//Clear included javascript array
-			$this->strIncludedJavaScriptFileArray = array();
-			// Add form level javascripts and libraries
-			$strJavaScriptArray = $this->ProcessJavaScriptList($this->GetFormJavaScripts());
-
-			// Setup IncludeJs
-			$strToReturn .= "\r\n";
-
-			// Include javascripts that need to be included
-			foreach ($strJavaScriptArray as $strScript) {
-				$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $this->GetJsFileUri($strScript));
-				$strToReturn .= "\r\n";
-			}
-
-			// Setup End Script
-			$strEndScript = '';
-			$strEvents = '';
-
-			// First, call regC on all Controls
-			$strControlIdToRegister = array();
-			foreach ($this->GetAllControls() as $objControl)
-				if ($objControl->Rendered)
-					array_push($strControlIdToRegister, '"' . $objControl->ControlId . '"');
-			if (count($strControlIdToRegister))
-				$strEndScript .= sprintf('qc.regCA(new Array(%s)); ', implode(',', $strControlIdToRegister));
-
-			// Next, run any GetEndScrips on Controls and Groupings
-			foreach ($this->GetAllControls() as $objControl) {
 				if ($objControl->Rendered) {
-					$strControlScript = $objControl->GetEndScript();
-					if (strlen($strControlScript) > 0) {
-						$strEvents .= $strControlScript . ";\n";
-					}
-				}
-			}
-			foreach ($this->objGroupingArray as $objGrouping) {
-				$strGroupingScript = $objGrouping->Render();
-				if (strlen($strGroupingScript) > 0) {
-					$strEvents .= $strGroupingScript . ";\n";
-				}
-			}
-
-            // Run End Script Compressor
-			$strEndScriptArray = explode(";\n", $strEndScript);
-			$strEndScriptCommands = array();
-			foreach ($strEndScriptArray as $strEndScript)
-				$strEndScriptCommands[trim($strEndScript)] = true;
-			$strEndScript = implode(";\n", array_keys($strEndScriptCommands));
-
-			// Next, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
-			// due to dynamically created controls
-			$strJavaScriptToAddArray = array();
-			$strStyleSheetToAddArray = array();
-			$strFormAttributeToModifyArray = array();
-
-			foreach ($this->GetAllControls() as $objControl) {
-				// Include any JavaScripts?  The control would have a
-				// comma-delimited list of javascript files to include (if applicable)
-				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts))
-					$strJavaScriptToAddArray = array_merge($strJavaScriptToAddArray, $strScriptArray);
-
-				// Include any StyleSheets?  The control would have a
-				// comma-delimited list of stylesheet files to include (if applicable)
-				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
-					$strStyleSheetToAddArray = array_merge($strStyleSheetToAddArray, $strScriptArray);
-
-				// Form Attributes?
-				if ($objControl->FormAttributes) {
-					foreach ($objControl->FormAttributes as $strKey=>$strValue) {
-						if (!array_key_exists($strKey, $this->strFormAttributeArray)) {
-							$this->strFormAttributeArray[$strKey] = $strValue;
-							$strFormAttributeToModifyArray[$strKey] = $strValue;
-						} else if ($this->strFormAttributeArray[$strKey] != $strValue) {
-							$this->strFormAttributeArray[$strKey] = $strValue;
-							$strFormAttributeToModifyArray[$strKey] = $strValue;
-						}
-					}
-				}
-			}
-
-			// First, alter any <Form> settings that need to be altered
-			foreach ($strFormAttributeToModifyArray as $strKey=>$strValue)
-				$strEndScript .= sprintf('document.getElementById("%s").%s = "%s"; ', $this->strFormId, $strKey, $strValue);
-
-			// Next, add any new CSS files that haven't yet been included to the end of the High Priority commands string
-			foreach ($strStyleSheetToAddArray as $strScript)
-				$strEndScript .= 'qc.loadStyleSheetFile("' . $strScript . '", "all"); ';
-
-			if ($strEvents) {
-				// qc.regCA first, $strEvents 2nd, application scripts 3rd
-				$strEndScript = $strEndScript . ';' . $strEvents;
-			}
-
-            // Add any application level js commands. These might refer to previous objects.
-            $strEndScript .= QApplication::RenderJavaScript(false);
-
-            // Next, add any new JS files that haven't yet been included to the BEGINNING of the High Priority commands string
-			// (already rendered HP commands up to this point will be placed into the callback)
-			foreach ($strJavaScriptToAddArray as $strScript) {
-				$strToReturn  .= sprintf('<script type="text/javascript" src="%s"></script>', $this->GetJsFileUri($strScript));
-				$strToReturn .= "\r\n";
-			}
-
-
-
-			$strEndScript = sprintf('qc.initForm("%s"); ', $this->strFormId)  . $strEndScript; // must come before control scripts
-
-				// Finally, add QCubed includes path
-			$strEndScript = sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ ) . $strEndScript;
-			$strEndScript = sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__) . $strEndScript;
-			$strEndScript = sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) . $strEndScript;
-			$strEndScript = sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__) . $strEndScript;
-			$strEndScript = sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) . $strEndScript;
-
-			// Create Final EndScript Script
-			$strEndScript = sprintf('<script type="text/javascript">$j(document).ready(function() { %s; });</script>', $strEndScript);
-
-			// Clone Myself
-			$objForm = clone($this);
-
-			// Render HTML
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId) . _nl();
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormControl" id="Qform__FormControl" value="" />') . _nl();
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormEvent" id="Qform__FormEvent" value="" />') . _nl();
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormParameter" id="Qform__FormParameter" value="" />') . _nl();
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCallType" id="Qform__FormCallType" value="" />') . _nl();
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormUpdates" id="Qform__FormUpdates" value="" />') . _nl();
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormCheckableControls" id="Qform__FormCheckableControls" value="" />') . _nl();
-
-			foreach ($this->GetAllControls() as $objControl) {
-				if ($objControl->Rendered) {
-					$strToReturn .= $objControl->GetEndHtml();
+					$strHtml .= $objControl->GetEndHtml();
 				}
 				$objControl->ResetFlags(); // Make sure controls are serialized in a reset state
 			}
 
-			$strToReturn .= sprintf('<input type="hidden" name="Qform__FormState" id="Qform__FormState" value="%s" />', QForm::Serialize($objForm));
-			$strToReturn .= "\n</form>";
+			$strHtml .= _nl();
+			$strHtml .= QApplication::RenderFiles() . _nl();
 
-			$strToReturn .= $strEndScript;
+			// Render hidden controls related to the form
+			$strHtml .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId) . _nl();
+			$strHtml .= sprintf('<input type="hidden" name="Qform__FormControl" id="Qform__FormControl" value="" />') . _nl();
+			$strHtml .= sprintf('<input type="hidden" name="Qform__FormEvent" id="Qform__FormEvent" value="" />') . _nl();
+			$strHtml .= sprintf('<input type="hidden" name="Qform__FormParameter" id="Qform__FormParameter" value="" />') . _nl();
+			$strHtml .= sprintf('<input type="hidden" name="Qform__FormCallType" id="Qform__FormCallType" value="" />') . _nl();
+			$strHtml .= sprintf('<input type="hidden" name="Qform__FormUpdates" id="Qform__FormUpdates" value="" />') . _nl();
+			$strHtml .= sprintf('<input type="hidden" name="Qform__FormCheckableControls" id="Qform__FormCheckableControls" value="" />') . _nl();
 
-			if ($this->blnRenderedBodyTag)
-				$strToReturn .= '</body>';
+			// Serialize and write out the formstate
+			$strHtml .= sprintf('<input type="hidden" name="Qform__FormState" id="Qform__FormState" value="%s" />', QForm::Serialize(clone($this))) . _nl();
+
+			// close the form tag
+			$strHtml .= "</form>";
+
+			// Add the JavaScripts rendered above
+			$strHtml .= $strEndScript;
+
+			// close the body tag
+			if ($this->blnRenderedBodyTag) {
+				$strHtml .= '</body>';
+			}
+
+			/**** Cleanup ****/
+
+			// Persist Controls (if applicable)
+			foreach ($this->objPersistentControlArray as $objControl) {
+				$objControl->Persist();
+			}
 
 			// Update Form Status
 			$this->intFormStatus = QFormBase::FormStatusRenderEnded;
@@ -1815,12 +1776,12 @@
 			// Display or Return
 			if ($blnDisplayOutput) {
 				if(!QApplication::$CliMode) {
-					print($strToReturn);
+					print($strHtml);
 				}
 				return null;
 			} else {
 				if(!QApplication::$CliMode) {
-					return $strToReturn;
+					return $strHtml;
 				} else {
 					return '';
 				}
@@ -1831,4 +1792,3 @@
 	function __QForm_EvaluateTemplate_ObHandler($strBuffer) {
 		return $strBuffer;
 	}
-?>

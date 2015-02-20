@@ -5,13 +5,8 @@
 	 *
 	 * An object which represents a javascript closure (annonymous function). Use this to embed a
 	 * function into a PHP array or object that eventually will get turned into javascript.
-	 *
-	 * @property-read boolean $RawArrayKey If this closure is part of an array, this will determine whether
-	 * 	the key for the array gets processed using toJsObject() (which for a string, will put quotes around it),
-	 *  or the key will get output a raw text. As of JQuery 1.8, there are situations where quoted keys
-	 *  are treated as properties, and non-quoted keys are treated as function names.
 	 */
-	class QJsClosure {
+	class QJsClosure implements JsonSerializable {
 		/** @var  string The js code for the function. */
 		protected $strBody;
 		/** @var array parameter names for the function call that get passed into the function. */
@@ -26,9 +21,27 @@
 			$this->strParamsArray = $strParamsArray;
 		}
 
+		/**
+		 * Return a javascript enclosure. Enclosures cannot be included in JSON, so we need to create a custom
+		 * encoding to include in the json that will get decoded at the other side.
+		 *
+		 * @return string
+		 */
 		public function toJsObject() {
 			$strParams = $this->strParamsArray ? implode(', ', $this->strParamsArray) : '';
-			return 'function('.$strParams.') {'.$this->strBody.'}';
+			return  'function('.$strParams.') {' . $this->strBody . '}';
+		}
+
+		/**
+		 * Converts the object into something serializable by json_encode. Will get decoded in qcubed.unpackObj
+		 * @return mixed
+		 */
+		public function jsonSerialize() {
+			// Encode in a way to decode in qcubed.js
+			$a[JavaScriptHelper::ObjectType] = 'qClosure';
+			$a['func'] = $this->strBody;
+			$a['params'] = $this->strParamsArray;
+			return JavaScriptHelper::MakeJsonEncodable($a);
 		}
 	}
 
@@ -36,9 +49,9 @@
 	 * Wrapper class for arrays to control whether the key in the array is quoted.
 	 * In some situations, a quoted key has a different meaning from a non-quoted key.
 	 * For example, when making a list of parameters to pass when calling the jQuery $() command,
-	 * (i.e. $j(selector, params)), quoted words are turned into parameters, and nonquoted words
+	 * (i.e. $j(selector, params)), quoted words are turned into parameters, and non-quoted words
 	 * are turned into functions. For example, "size" will set the size attribute of the object, and
-	 * sixe (no quotes), will call the size() function on the object.
+	 * size (no quotes), will call the size() function on the object.
 	 *
 	 * To use it, simply wrap the value part of the array with this class.
 	 * @usage: $a = array ("click", new QJsNoQuoteKey (new QJsClosure('alert ("I was clicked")')));
@@ -55,6 +68,33 @@
 		}
 	}
 
+	/**
+	 * Class QJsonParameterList
+	 * A Wrapper class that will render an array without the brackets, so that it becomes a variable length parameter list.
+	 */
+	class QJsParameterList {
+		protected $arrContent;
+
+		public function __construct ($arrContent) {
+			$this->arrContent = $arrContent;
+		}
+
+		public function toJsObject() {
+			$strList = '';
+			foreach ($this->arrContent as $objItem) {
+				if (strlen($strList) > 0) $strList .= ',';
+				$strList .= JavaScriptHelper::toJsObject($objItem);
+			}
+			return $strList;
+		}
+	}
+
+	/**
+	 * A wrapper class for generating an ajax action with no script. This is helpful in situations where data
+	 * will be returned to the javascript object later.
+	 *
+	 * Class QNoScriptAjaxAction
+	 */
 	class QNoScriptAjaxAction extends QAjaxAction {
 		private $objTargetAction;
 
@@ -74,9 +114,11 @@
 	}
 
 	/**
-	 * Class JavaScriptHelper: used to help around with some JS code creation when rendering controls
+	 * Class JavaScriptHelper: used to help with generating javascript code
 	 */
 	abstract class JavaScriptHelper {
+
+		const ObjectType = 'qObjType';	// Identifies a JSON object as an object we want handle specially in qcubed.js
 		/**
 		 * Returns javascript that on execution will insert the value $strValue into the DOM element corresponding to
 		 * the $objControl using the key $strKey
@@ -114,6 +156,7 @@
 		 * in in javascript by calling ".data('testVar')". on the object.
 		 * @param $strName
 		 * @return string
+		 * @throws QCallerException
 		 */
 		public static function dataNameFromCamelCase($strName) {
 			if (preg_match('/[A-Z][A-Z]/', $strName)) {
@@ -143,43 +186,54 @@
 			);
 		}
 
+		public static function jsEncodeString($objValue) {
+			// default to string if not specified
+			static $search = array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"');
+			static $replace = array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"');
+			return '"' . str_replace($search, $replace, $objValue) . '"';
+		}
 
 		/**
 		 * Recursively convert a php object to a javascript object.
 		 * If the $objValue is an object other than Date and has a toJsObject() method, the method will be called
-		 * to perform the conversion.
-		 * Array values are recursively converted as well.
+		 * to perform the conversion. Array values are recursively converted as well.
+		 *
+		 * This string is designed to create the object if it was directly output to the browser. See toJSON below
+		 * for an equivalent version that is passable through a json interface.
+		 *
 		 * @static
 		 * @param mixed $objValue the php object to convert
 		 * @return string javascript representation of the php object
 		 */
 		public static function toJsObject($objValue) {
+			$strRet = '';
+
 			switch (gettype($objValue)) {
 				case 'double':
 				case 'integer':
-					return $objValue;
+					$strRet = (string)$objValue;
+					break;
+
 				case 'boolean':
-					return $objValue? 'true' : 'false';
+					$strRet = $objValue? 'true' : 'false';
+					break;
+
 				case 'string':
-					// see below
+					$strRet = self::jsEncodeString($objValue);
 					break;
+
 				case 'NULL':
-					return 'null';
+					$strRet = 'null';
+					break;
+
 				case 'object':
-					if ($objValue instanceof QDateTime) {
-						return 'new Date('.$objValue->Year.','.($objValue->Month-1).','.$objValue->Day.')';
-					} else if ($objValue instanceof DateTime) {
-						return self::toJsObject(new QDateTime($objValue));
-					}
 					if (method_exists($objValue, 'toJsObject')) {
-						return $objValue->toJsObject();
+						$strRet = $objValue->toJsObject();
 					}
 					break;
+
 				case 'array':
 					$array = (array)$objValue;
-					if (count($array) == 0) {
-						return '[]';
-					}
 					if (0 !== count(array_diff_key($array, array_keys(array_keys($array))))) {
 						// associative array - create a hash
 						$strHash = '';
@@ -191,22 +245,95 @@
 								$strHash .= self::toJsObject($objKey).': '.self::toJsObject($objItem);
 							}
 						}
-						return '{'.$strHash.'}';
+						$strRet = '{'.$strHash.'}';
 					}
-					// simple array - create a list
-					$strList = '';
-					foreach ($array as $objItem) {
-						if (strlen($strList) > 0) $strList .= ',';
-						$strList .= self::toJsObject($objItem);
+					else {
+						// simple array - create a list
+						$strList = '';
+						foreach ($array as $objItem) {
+							if (strlen($strList) > 0) $strList .= ',';
+							$strList .= self::toJsObject($objItem);
+						}
+						$strRet = '['.$strList.']';
 					}
-					return '['.$strList.']';
+
+					break;
+
+				default:
+					$strRet = self::jsEncodeString((string)$objValue);
+					break;
 
 			}
-
-			// default to string
-			static $search = array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"');
-			static $replace = array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"');
-			return '"' . str_replace($search, $replace, $objValue) . '"';
+			return $strRet;
 		}
+
+		/**
+		 * Our specialized json encoder. Strings will be converted to UTF-8. Arrays will be recursively searched and
+		 * both keys and values made UTF-8. Objects will be converted with json_encode, and so objects that need a special
+		 * encoding should implement the jsonSerializable interface. See below
+		 * @param mixed $objValue
+		 * @return string
+		 */
+		public static function toJSON($objValue) {
+			assert ('is_array($objValue) || is_object($objValue)');	// json spec says only arrays or objects can be encoded
+			$objValue = JavaScriptHelper::MakeJsonEncodable($objValue);
+			return json_encode($objValue);
+		}
+
+		/**
+		 * Convert an object to a structure that we can call json_encode on. This is particularly meant for the purpose of
+		 * sending json data to qcubed.js through ajax, but can be used for other things as well.
+		 *
+		 * PHP 5.4 has a new jsonSerializable interface that objects should use to modify their encoding if needed. Otherwise,
+		 * public member variables will be encoded. The goal of object serialization should be to be able to send it
+		 * to qcubed.unpackParams in qcubed.js to create the javascript form of the object. This decoder will look for objects
+		 * that have the 'qObjType' key set and send the object to the special unpacker.
+		 *
+		 * DateTime handling is absent below. DateTime objects will get converted, but not in a very useful way. If you
+		 * are using strict DateTime objects (not likely since the framework normally uses QDateTime for all date objects),
+		 * you should convert them to QDateTime objects before sending them here.
+		 *
+		 * @param mixed $objValue
+		 * @return mixed
+		 */
+		public static function MakeJsonEncodable($objValue) {
+			if (QApplication::$EncodingType && QApplication::$EncodingType == 'UTF-8') {
+				return $objValue; // Nothing to do, since all strings are already UTF-8 and objects can take care of themselves.
+			}
+
+			switch (gettype($objValue)) {
+				case 'string':
+					$objValue = mb_convert_encoding($objValue, 'UTF-8', QApplication::$EncodingType);
+					return $objValue;
+
+				case 'array':
+					$newArray = array();
+					foreach ($objValue as $key=>$val) {
+						$key = self::makeJsonEncodable($key);
+						$val = self::makeJsonEncodable($val);
+						$newArray[$key] = $val;
+					}
+					return $newArray;
+
+				default:
+					return $objValue;
+
+			}
+		}
+
+		/**
+		 * Utility function to make sure a script is terminated with a semicolon.
+		 *
+		 * @param $strScript
+		 * @return string
+		 */
+		public static function TerminateScript($strScript) {
+			if (!$strScript) return '';
+			if (!($strScript = trim ($strScript))) return '';
+			if (substr($strScript, -1) != ';') {
+				$strScript .= ';';
+			}
+			return $strScript . _nl();
+		}
+
 	}
-?>

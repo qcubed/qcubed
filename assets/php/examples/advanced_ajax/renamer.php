@@ -45,7 +45,8 @@ class ExampleForm extends QForm {
 			$this->lblArray[$strParameter]->Visible = false;
 			$this->txtArray[$strParameter]->Visible = true;
 			$this->txtArray[$strParameter]->Text = html_entity_decode($this->lblArray[$strParameter]->Text, ENT_COMPAT, QApplication::$EncodingType);
-			QApplication::ExecuteJavaScript(sprintf("document.getElementById('%s').select(); document.getElementById('%s').focus();", $this->txtArray[$strParameter]->ControlId, $this->txtArray[$strParameter]->ControlId));
+			QApplication::ExecuteControlCommand($this->txtArray[$strParameter]->ControlId, 'select');
+			QApplication::ExecuteControlCommand($this->txtArray[$strParameter]->ControlId, 'focus');
 		} else {
 			// Nope -- not yet selected
 			// First, unselect everything else

@@ -93,14 +93,14 @@
 					if (!is_null($this->dttMinimum)) {
 						if ($this->dttMinimum == QDateTime::Now) {
 							$dttToCompare = new QDateTime(QDateTime::Now);
-							$strError = 'in the past';
+							$strError = QApplication::Translate('in the past');
 						} else {
 							$dttToCompare = $this->dttMinimum;
-							$strError = 'before ' . $this->dttMinimum->__toString();
+							$strError = QApplication::Translate('before ') . $dttToCompare->__toString();
 						}
 
 						if ($dttTest->IsEarlierThan($dttToCompare)) {
-							$this->ValidationError = 'Date cannot be ' . $strError;
+							$this->ValidationError = QApplication::Translate('Date cannot be ') . $strError;
 							return false;
 						}
 					}
@@ -108,14 +108,14 @@
 					if (!is_null($this->dttMaximum)) {
 						if ($this->dttMaximum == QDateTime::Now) {
 							$dttToCompare = new QDateTime(QDateTime::Now);
-							$strError = 'in the future';
+							$strError = QApplication::Translate('in the future');
 						} else {
 							$dttToCompare = $this->dttMaximum;
-							$strError = 'after ' . $this->dttMaximum->__toString();
+							$strError = QApplication::Translate('after ') . $dttToCompare->__toString();
 						}
 
 						if ($dttTest->IsLaterThan($dttToCompare)) {
-							$this->ValidationError = 'Date cannot be ' . $strError;
+							$this->ValidationError = QApplication::Translate('Date cannot be ') . $strError;
 							return false;
 						}
 					}

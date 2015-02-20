@@ -27,6 +27,9 @@
 		protected $strPadding = null;
 		/** @var string HTML tag name to be used for rendering the text */
 		protected $strTagName = 'span';
+		/** @var bool  */
+		protected $blnDisplay = false;
+
 
 		// LAYOUT
 		/** @var string Horizontal alignment for the text of the wait icon */
@@ -93,7 +96,7 @@
 			$strToReturn = sprintf('<%s id="%s" %s%s>%s</%s>',
 				$this->strTagName,
 				$this->strControlId,
-				$this->GetAttributes(true, false),
+				$this->GetAttributes(),
 				$strStyle,
 				$this->strText,
 				$this->strTagName);
