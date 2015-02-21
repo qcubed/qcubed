@@ -797,6 +797,14 @@
 				return null;
 		}
 
+		/**
+		 * If this particular item is set, we ensure that this command, and only this command will get invoked on the
+		 * next response. The rest of the commands will wait until the next response.
+		 *
+		 * @var null|array;
+		 */
+		public static $JavascriptExclusiveCommand = null;
+
 		/** @var array A structured array of commands to be sent to either the ajax response, or page output.
 		 * Replaces the AlertMessageArray, JavaScriptArray, JavaScriptArrayHighPriority, and JavaScriptArrayLowPriority.
 		 */
@@ -850,6 +858,9 @@
 					case QJsPriority::Low:
 						QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow][] = ['script'=>$strJavaScript];
 						break;
+					case QJsPriority::Exclusive:
+						QApplication::$JavascriptExclusiveCommand = ['script'=>$strJavaScript];
+						break;
 					default:
 						QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium][] = ['script'=>$strJavaScript];
 						break;
@@ -899,6 +910,11 @@
 			elseif ($args && end($args) === QJsPriority::Low) {
 				$code = QAjaxResponse::CommandsLow;
 				array_pop($args);
+			}
+			elseif ($args && end($args) === QJsPriority::Exclusive) {
+				array_pop($args);
+				QApplication::$JavascriptExclusiveCommand = ['selector'=>$mixSelector, 'func'=>$strFunctionName, 'params'=>$args];
+				return;
 			} else {
 				$code = QAjaxResponse::CommandsMedium;
 			}
@@ -927,7 +943,13 @@
 			elseif ($args && end($args) === QJsPriority::Low) {
 				$code = QAjaxResponse::CommandsLow;
 				array_pop($args);
-			} else {
+			}
+			elseif ($args && end($args) === QJsPriority::Exclusive) {
+				array_pop($args);
+				QApplication::$JavascriptExclusiveCommand = ['func'=>$strFunctionName, 'params'=>$args];
+				return;
+			}
+			else {
 				$code = QAjaxResponse::CommandsMedium;
 			}
 			if (empty($args)) {
@@ -1114,6 +1136,14 @@
 		 * @return array
 		 */
 		public static function GetJavascriptCommandArray() {
+
+			if (QApplication::$JavascriptExclusiveCommand) {
+				// only render this one;
+				$a[QAjaxResponse::CommandsMedium] = [QApplication::$JavascriptExclusiveCommand];
+				QApplication::$JavascriptExclusiveCommand = null;
+				return $a;
+			}
+
 			// Combine the javascripts into one array item
 			$scripts = array();
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium])) {
@@ -1271,6 +1301,9 @@
 		const High = '*jsHigh*';
 		/** Low Priority JS */
 		const Low = '*jsLow*';
+		/** Execute ONLY this command and exclude all others */
+		const Exclusive = '*jsExclusive*';
+
 	}
 
 	/**

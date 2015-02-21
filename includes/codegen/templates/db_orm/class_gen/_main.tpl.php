@@ -31,7 +31,7 @@
 <?php include("property_comments.tpl.php"); ?>
 
 	 */
-	class <?= $objTable->ClassName ?>Gen extends QBaseClass implements IteratorAggregate {
+	class <?= $objTable->ClassName ?>Gen extends QBaseClass implements IteratorAggregate, JsonSerializable {
 
 		use QModelTrait;
 

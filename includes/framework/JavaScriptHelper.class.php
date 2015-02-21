@@ -69,6 +69,30 @@
 	}
 
 	/**
+	 * Class QJsVarName
+	 * Outputs a string without quotes to specify a global variable name. Strings are normally quoted. Dot notation
+	 * can be used to specify items within globals.
+	 */
+	class QJsVarName implements JsonSerializable{
+		protected $strContent;
+
+		public function __construct($strContent) {
+			$this->strContent = $strContent;
+		}
+
+		public function toJsObject() {
+			return $this->strContent;
+		}
+
+		public function jsonSerialize() {
+			$a[JavaScriptHelper::ObjectType] = 'qVarName';
+			$a['varName'] = $this->strContent;
+			return JavaScriptHelper::MakeJsonEncodable($a);
+		}
+	}
+
+
+	/**
 	 * Class QJsonParameterList
 	 * A Wrapper class that will render an array without the brackets, so that it becomes a variable length parameter list.
 	 */
