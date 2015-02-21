@@ -32,68 +32,6 @@ $j.ajaxQueue = function(o) {
     }
 };
 
-/**
- * Synced Ajax requests.
- * The Ajax request will happen as soon as you call this method, but
- * the callbacks (success/error/complete) won't fire until all previous
- * synced requests have been completed.
- * @param object o Options.
- * @return object The callback.
- * @deprecacted Core no longer uses this. Uses ajaxq instead.
- */
-$j.ajaxSync = function(o) {
-    var fn = $j.ajaxSync.fn,
-        data = $j.ajaxSync.data;
-
-    pos = fn.length;
-
-    fn[ pos ] = {
-        error: o.error,
-        success: o.success,
-        complete: o.complete,
-        done: false
-    };
-
-    data[ pos ] = {
-        error: [],
-        success: [],
-        complete: []
-    };
-
-    o.error = function() {
-        data[ pos ].error = arguments;
-    };
-    o.success = function() {
-        data[ pos ].success = arguments;
-    };
-    o.complete = function() {
-        var i;
-
-        data[ pos ].complete = arguments;
-        fn[ pos ].done = true;
-
-        if (pos === 0 || !fn[ pos - 1 ])
-            for (i = pos; i < fn.length && fn[i].done; i++) {
-                if (fn[i].error) {
-                    fn[i].error.apply($j, data[i].error);
-                }
-                if (fn[i].success) {
-                    fn[i].success.apply($j, data[i].success);
-                }
-                if (fn[i].complete) {
-                    fn[i].complete.apply($j, data[i].complete);
-                }
-
-                fn[i] = null;
-                data[i] = null;
-            }
-    };
-
-    return $j.ajax(o);
-};
-
-$j.ajaxSync.fn = [];
-$j.ajaxSync.data = [];
 
 /**
  * @namespace qcubed
@@ -956,14 +894,6 @@ qcubed.javascriptWrapperStyleToQcodo = {};
 qcubed.javascriptWrapperStyleToQcodo.position = "Position";
 qcubed.javascriptWrapperStyleToQcodo.top = "Top";
 qcubed.javascriptWrapperStyleToQcodo.left = "Left";
-
-/*
- qcubed.recordControlModification = function(strControlId, strProperty, strNewValue) {
- if (!qcubed.controlModifications[strControlId]) {
- qcubed.controlModifications[strControlId] = {};
- }
- qcubed.controlModifications[strControlId][strProperty] = strNewValue;
- };*/
 
 qcubed.registerControl = function(mixControl) {
     var objControl = qcubed.getControl(mixControl),
