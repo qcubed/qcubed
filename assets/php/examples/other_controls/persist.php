@@ -16,7 +16,9 @@ class PersistentExampleForm extends QForm {
 		$this->ddnProjectPicker2->SaveState = true;
 
 		$this->fld1 = new QTextBox($this);
+		$this->fld1->Text = 'Change Me';
 		$this->fld2 = new QTextBox($this);
+		$this->fld2->Text = 'Change Me';
 		$this->fld2->SaveState = true;
 
 		$this->btnReload = new QButton($this);

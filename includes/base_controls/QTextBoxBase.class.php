@@ -385,7 +385,7 @@
 		 * @return mixed
 		 */
 		protected function GetState(){
-			return array('Text'=>$this->Text);
+			return array('text'=>$this->Text);
 		}
 
 		/**
@@ -393,8 +393,8 @@
 		 * @param mixed $state Previously saved state as returned by GetState above.
 		 */
 		protected function PutState($state) {
-			if (isset($state['Text'])) {
-				$this->Text = $state['Text'];
+			if (isset($state['text'])) {
+				$this->Text = $state['text'];
 			}
 		}
 

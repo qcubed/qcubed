@@ -33,7 +33,34 @@
 			QApplication::ExecuteJsFunction('qcubed.slider', $this->ControlId);
 			return $strJS;
 		}
-		
+
+		/**
+		 * Returns the state data to restore later.
+		 * @return mixed
+		 */
+		protected function GetState() {
+			if ($this->mixRange === true) {
+				return ['values'=>$this->Values];
+			}
+			else {
+				return ['value'=>$this->Value];
+			}
+		}
+
+		/**
+		 * Restore the state of the control.
+		 * @param mixed $state
+		 */
+		protected function PutState($state) {
+			if (isset($state['values'])) {
+				$this->Values = $state['values'];
+			}
+			elseif (isset($state['value'])) {
+				$this->Value = $state['value'];
+			}
+		}
+
+
 		public function __set($strName, $mixValue) {
 
 			switch ($strName) {

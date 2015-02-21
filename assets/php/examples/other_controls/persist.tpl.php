@@ -14,7 +14,8 @@
 
 		<p>To get a control to restore its prior state, simply set its <b>SaveState</b> attribute to <b>true</b>.
 			The control will automatically be set to its previous state. Generally, you would only do this for controls
-			that are not used to read and write data to the database, but rather view the data.</p>
+			that are not getting data directly from the database, but rather controls that change how data is viewed. A
+			good example would be a text box you use to filter a list.</p>
 
 		<p>The control state data by default is saved in the session in a variable named by the <b>__SESSION_SAVED_STATE__</b>
 			configuration constant (the default value is 'QSavedState'). If your application has authenticated users that
@@ -24,11 +25,18 @@
 			the visual state of the control, and takes up very little space.</p>
 
 		<p>In the example, you will see two sets of controls. One has SaveState turned on, and the other does not. When you
-			click on the "Reload the page" link, you will notice that the controls with SaveState on do not change, but the other
-			one reverts to its default value.</p>
+			click on the "Reload the Page" button, you will notice that the controls with <b>SaveState</b> set to <b>true</b>
+			do not change, but the other controls revert to their default values.</p>
 
-		<p>Note on QCubed V2: Persistent controls in version 2 of QCubed were quite different and used as a kind of data cache.
+		<h2>Note on Usage</h2>
+		<p>The moment that you set <b>SaveState</b> to <b>true</b>, QCubed will look for a previously saved
+			state and restore it if one is found. So, if you would like to set your control to a particular default value,
+			do that <em>before</em> you set <b>SaveState</b> to <b>true</b>.</p>
+
+		<h2>Note on QCubed V2</h2>
+		<p>Persistent controls in version 2 of QCubed were quite different and used as a kind of data cache.
 			The old interface and functionality has been removed as no one actually reported using it and it was rather cumbersome.</p>
+
 	</div>
 
 	<div id="demoZone">

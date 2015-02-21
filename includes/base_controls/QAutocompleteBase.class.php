@@ -186,6 +186,30 @@
 		}
 
 		/**
+		 * Control subclasses should return their state data that they will use to restore later.
+		 * @return mixed
+		 */
+		protected function GetState() {
+			$state = parent::GetState();
+			$state['selectedId']=$this->SelectedId;
+			return $state;
+		}
+
+		/**
+		 * Restore the state of the control. The control will have already been
+		 * created and initialized. Subclasses should verify that the restored state is still valid for the data
+		 * available.
+		 * @param mixed $state
+		 */
+		protected function PutState($state) {
+			parent::PutState($state);
+			if (isset($state['selectedId'])) {
+				$this->SelectedId = $state['selectedId'];
+			}
+		}
+
+
+		/**
 		 * PHP __set Magic method
 		 * @param string $strName Property Name
 		 * @param string $mixValue Property Value
