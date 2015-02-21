@@ -1460,6 +1460,43 @@
 			$this->strIncludedJavaScriptFileArray = array();
 			// Figure out initial list of JavaScriptIncludes
 			$strJavaScriptArray = $this->ProcessJavaScriptList(__JQUERY_BASE__ . ', ' . __JQUERY_EFFECTS__ . ',jquery/jquery.ajaxq-0.0.1.js,' . __QCUBED_JS_CORE__);
+
+			// Next, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
+			// due to dynamically created controls
+			$strJavaScriptToAddArray = array();
+			$strStyleSheetToAddArray = array();
+			$strFormAttributeToModifyArray = array();
+
+			foreach ($this->GetAllControls() as $objControl) {
+				// Include any JavaScripts?  The control would have a
+				// comma-delimited list of javascript files to include (if applicable)
+				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts))
+					$strJavaScriptToAddArray = array_merge($strJavaScriptToAddArray, $strScriptArray);
+
+				// Include any StyleSheets?  The control would have a
+				// comma-delimited list of stylesheet files to include (if applicable)
+				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
+					$strStyleSheetToAddArray = array_merge($strStyleSheetToAddArray, $strScriptArray);
+
+				// Form Attributes?
+				if ($objControl->FormAttributes) {
+					foreach ($objControl->FormAttributes as $strKey=>$strValue) {
+						if (!array_key_exists($strKey, $this->strFormAttributeArray)) {
+							$this->strFormAttributeArray[$strKey] = $strValue;
+							$strFormAttributeToModifyArray[$strKey] = $strValue;
+						} else if ($this->strFormAttributeArray[$strKey] != $strValue) {
+							$this->strFormAttributeArray[$strKey] = $strValue;
+							$strFormAttributeToModifyArray[$strKey] = $strValue;
+						}
+					}
+				}
+			}
+
+			if (defined('__PRELOAD_JS_FILES__') && __PRELOAD_JS_FILES__) {
+				$strJavaScriptArray = array_merge($strJavaScriptArray, $strJavaScriptToAddArray);
+				$strJavaScriptToAddArray = array();
+			}
+
 			// Setup IncludeJs
 			$strToReturn = "\r\n";
 
@@ -1503,37 +1540,6 @@
 			foreach ($strEndScriptArray as $strEndScript)
 				$strEndScriptCommands[trim($strEndScript)] = true;
 			$strEndScript = implode(";\n", array_keys($strEndScriptCommands));
-
-			// Next, go through all controls and gather up any JS or CSS to run or Form Attributes to modify
-			// due to dynamically created controls
-			$strJavaScriptToAddArray = array();
-			$strStyleSheetToAddArray = array();
-			$strFormAttributeToModifyArray = array();
-
-			foreach ($this->GetAllControls() as $objControl) {
-				// Include any JavaScripts?  The control would have a
-				// comma-delimited list of javascript files to include (if applicable)
-				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts))
-					$strJavaScriptToAddArray = array_merge($strJavaScriptToAddArray, $strScriptArray);
-
-				// Include any StyleSheets?  The control would have a
-				// comma-delimited list of stylesheet files to include (if applicable)
-				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets))
-					$strStyleSheetToAddArray = array_merge($strStyleSheetToAddArray, $strScriptArray);
-
-				// Form Attributes?
-				if ($objControl->FormAttributes) {
-					foreach ($objControl->FormAttributes as $strKey=>$strValue) {
-						if (!array_key_exists($strKey, $this->strFormAttributeArray)) {
-							$this->strFormAttributeArray[$strKey] = $strValue;
-							$strFormAttributeToModifyArray[$strKey] = $strValue;
-						} else if ($this->strFormAttributeArray[$strKey] != $strValue) {
-							$this->strFormAttributeArray[$strKey] = $strValue;
-							$strFormAttributeToModifyArray[$strKey] = $strValue;
-						}
-					}
-				}
-			}
 
 			// First, alter any <Form> settings that need to be altered
 			foreach ($strFormAttributeToModifyArray as $strKey=>$strValue)
