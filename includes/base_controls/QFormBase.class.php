@@ -447,7 +447,6 @@
 						// Reset the modified/rendered flags and the validation
 						// in ALL controls
 						$objControl->ResetFlags();
-						$objControl->ValidationReset();
 					}
 				}
 				else {
@@ -460,23 +459,27 @@
 						$previouslyFoundArray = array();
 						if (($objControl = $objClass->GetControl($strControlId)) &&
 								!isset($previouslyFoundArray[$strControlId])) {
-							// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
 							if (($objControl->Visible) &&
 								($objControl->RenderMethod)) {
 								// Call each control's ParsePostData()
 								$objControl->ParsePostData();
+								$objControl->ResetFlags();  // this should NOT be needed, but just in case
 							}
 
-							// Reset the modified/rendered flags and the validation
-							// in controls we have touched
-							$objControl->ResetFlags();
-							$objControl->ValidationReset();
 							$previouslyFoundArray[$strControlId] = true;
 						}
 					}
 				}
 
-
+				// Only if our action is validating, we are going to reset the validation state of all the controls
+				if (isset($_POST['Qform__FormControl']) && isset($objClass->objControlArray[$_POST['Qform__FormControl']])) {
+					$objControl = $objClass->objControlArray[$_POST['Qform__FormControl']];
+					if ($objControl->CausesValidation) {
+						foreach ($objClass->objControlArray as $objControl) {
+							$objControl->ValidationReset();
+						}
+					}
+				}
 
 				// Trigger Run Event (if applicable)
 				$objClass->Form_Run();
@@ -651,12 +654,30 @@
 		 * UTF-8 if needed. Response is parsed in the "success" function in qcubed.js, and handled there.
 		 */
 		protected function RenderAjax() {
+			$aResponse = array();
+
+			if (QApplication::$JavascriptExclusiveCommand) {
+				/**
+				 * Processing of the actions has resulted in a very high priority exclusive response. This would typically
+				 * happen when a javascript widget is requesting data from us. We want to respond as quickly as possible,
+				 * and also prevent possibly redrawing the widget while its already in the middle of its own drawing.
+				 * We short-circuit the drawing process here.
+				 */
+
+				$aResponse = QApplication::GetJavascriptCommandArray();
+				$strFormState = QForm::Serialize($this);
+				$aResponse[QAjaxResponse::Controls][] = [QAjaxResponse::Id=>"Qform__FormState", QAjaxResponse::Value=>$strFormState];	// bring it back next time
+				ob_clean();
+				QApplication::SendAjaxResponse($aResponse);
+				exit();
+			}
+
 			// Update the Status
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 
 			// watcher collection
 			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
-				$aResult[QAjaxResponse::Watcher] = $this->strWatcherTime;
+				$aResponse[QAjaxResponse::CommandsMedium] = QApplication::$JavascriptExclusiveCommand;
 			}
 
 			// Recursively render changed controls, starting with all top-level controls
