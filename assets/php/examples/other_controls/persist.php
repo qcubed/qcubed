@@ -4,6 +4,8 @@ class PersistentExampleForm extends QForm {
 	// We will persist this control in the $_SESSION
 	protected $ddnProjectPicker1;
 	protected $ddnProjectPicker2;
+	protected $fld1;
+	protected $fld2;
 
 	protected $btnReload;
 
@@ -12,6 +14,10 @@ class PersistentExampleForm extends QForm {
 		$this->ddnProjectPicker1 = new ProjectPickerListBox ($this);
 		$this->ddnProjectPicker2 = new ProjectPickerListBox ($this);
 		$this->ddnProjectPicker2->SaveState = true;
+
+		$this->fld1 = new QTextBox($this);
+		$this->fld2 = new QTextBox($this);
+		$this->fld2->SaveState = true;
 
 		$this->btnReload = new QButton($this);
 		$this->btnReload->Text = 'Reload the Page';

@@ -1786,11 +1786,6 @@
 
 			/**** Cleanup ****/
 
-			// Persist Controls (if applicable)
-			foreach ($this->objPersistentControlArray as $objControl) {
-				$objControl->Persist();
-			}
-
 			// Update Form Status
 			$this->intFormStatus = QFormBase::FormStatusRenderEnded;
 

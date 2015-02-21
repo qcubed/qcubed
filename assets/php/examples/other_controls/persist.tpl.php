@@ -23,19 +23,26 @@
 			he used it previously. The data that is stored in the session variable is only the bare minimum to recreate
 			the visual state of the control, and takes up very little space.</p>
 
-		<p>In the example, you will see to list controls. One has SaveState turned on, and the other does not. When you
-			click on the "Reload the page" link, you will notice that the one with SaveState does not change, but the other
+		<p>In the example, you will see two sets of controls. One has SaveState turned on, and the other does not. When you
+			click on the "Reload the page" link, you will notice that the controls with SaveState on do not change, but the other
 			one reverts to its default value.</p>
 
-		<p>Note on QCubed V2: Persistent controls in version 2 of QCubed were used as a kind of data cache. This old interface
-			and functionality has been removed as no one actually reported using it and it was rather cumbersome to use.</p>
-
+		<p>Note on QCubed V2: Persistent controls in version 2 of QCubed were quite different and used as a kind of data cache.
+			The old interface and functionality has been removed as no one actually reported using it and it was rather cumbersome.</p>
 	</div>
 
 	<div id="demoZone">
 		<?php $this->RenderBegin(); ?>
-		<?php $this->ddnProjectPicker1->Render(); ?></p>
-		<?php $this->ddnProjectPicker2->Render(); ?></p>
+		<fieldset>
+			<legend>SavedState = false</legend>
+			<?php $this->ddnProjectPicker1->Render(); ?></p>
+			<?php $this->fld1->Render(); ?></p>
+		</fieldset>
+		<fieldset>
+			<legend>SavedState = true</legend>
+			<?php $this->ddnProjectPicker2->Render(); ?></p>
+			<?php $this->fld2->Render(); ?></p>
+		</fieldset>
 		<?php $this->btnReload->Render(); ?></p>
 
 		<?php $this->RenderEnd(); ?>

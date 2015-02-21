@@ -336,7 +336,7 @@
 		public function _ReadState() {
 			if (defined ('__SESSION_SAVED_STATE__') && $this->blnSaveState) {
 				$formName = get_class($this->Form);
-				if (isset ($_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId]["SelectedValues"])) {
+				if (isset ($_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId])) {
 					$state = $_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId];
 					$this->PutState($state);
 				}
