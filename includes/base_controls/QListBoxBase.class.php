@@ -159,17 +159,6 @@
 			return $strHtml;
 		}
 
-		/**
-		 * End script to support the detection of changes before other change scripts are called.
-		 * @return string
-		 */
-		public function GetEndScript() {
-			$str = parent::GetEndScript();
-			$str = sprintf ('$j("#%s").change(qc.formObjChanged);', $this->ControlId) . $str;
-			return $str;
-		}
-
-
 		// For multiple-select based listboxes, you must define the way a "Reset" button should look
 		abstract protected function GetResetButtonHtml();
 

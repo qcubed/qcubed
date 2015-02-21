@@ -70,11 +70,13 @@
 		public function ParsePostData() {
 			if (QApplication::$RequestMode == QRequestMode::Ajax) {
 				// Ajax will only send information about controls that are on the screen, so we know they are rendered
-				$a = array_keys($_POST[$this->strControlId]);
-				$this->SetSelectedItemsByIndex($a, false);
+				if (isset($_POST[$this->strControlId]) && is_array($_POST[$this->strControlId])) {
+					$a = array_keys($_POST[$this->strControlId]);
+					$this->SetSelectedItemsByIndex($a, false);
+				}
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
-				if ((array_key_exists($this->strControlId, $_POST)) && (is_array($_POST[$this->strControlId]))) {
+				if (isset($_POST[$this->strControlId]) && is_array($_POST[$this->strControlId])) {
 					$a = array_keys($_POST[$this->strControlId]);
 					$this->SetSelectedItemsByIndex($a, false);
 				} else {
@@ -89,16 +91,13 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strScript = sprintf ('$j("#%s").on("change", "input", qc.formObjChanged);', $this->ControlId); // detect change for framework
-
 			$ctrlId = $this->ControlId;
 			if ($this->intButtonMode == self::ButtonModeSet) {
 				QApplication::ExecuteControlCommand($ctrlId, 'buttonset');
 			} elseif ($this->intButtonMode == self::ButtonModeJq) {
 				QApplication::ExecuteSelectorFunction(["input:checkbox", "#" . $ctrlId], 'button');
 			}
-			$strScript .= parent::GetEndScript();
-
+			$strScript = parent::GetEndScript();
 			return $strScript;
 		}
 

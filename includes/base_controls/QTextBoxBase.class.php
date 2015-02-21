@@ -367,19 +367,6 @@
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").select();', $this->strControlId));
 		}
 
-		/**
-		 * Attaches an oninput handler to detect changes. Must be attached before other scripts are attached so that it.
-		 * The "change" handler is a little redundant, but many javascript widgets that change the text (autocomplete, datepicker)
-		 * do not send the input event correctly, but they DO send the change event.
-		 *
-		 * @return string
-		 */
-		public function GetEndScript() {
-			$str = parent::GetEndScript();
-			$str = sprintf ('$j("#%s").on("input",qc.formObjChanged).change(qc.formObjChanged);', $this->ControlId) . $str;
-			return $str;
-		}
-
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
