@@ -408,15 +408,18 @@ qcubed = {
 
                 qcubed.ajaxError = true;
                 if (XMLHttpRequest.status !== 0 || result.length > 0) {
-                    if (result.substr(0, 6) === '<html>') {
+                    if (result.substr(0, 15) === '<!DOCTYPE html>') {
                         alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
                         objErrorWindow = window.open('about:blank', 'qcubed_error', 'menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
                         objErrorWindow.focus();
                         objErrorWindow.document.write(result);
                         return false;
                     } else {
+                        var resultText = $j('<div>').text(result);
                         $dialog = $j('<div id="Qcubed_AJAX_Error" />')
-                            .html(result)
+                            .append('<h1>' + textStatus + '</h1>')
+                            .append('<p>' + errorThrown + '</p>')
+                            .append(resultText)
                             .dialog({
                                 modal: true,
                                 width: 'auto',
@@ -566,20 +569,51 @@ qcubed = {
                 qc.loadStyleSheetFile(v, "all");
             });
         }
+        if (json.alert) {
+            $j.each(json.alert, function (i,v) {
+                alert(v);
+            });
+        }
     },
     processDeferredAjaxResponse: function(json) {
-        if (json.ctrl_commands) {
-            $j.each(json.ctrl_commands, function () {
-                $j('#' + this.id)[this.func](this.params);
-            });
-        }
-        if (json.commands) {
-            /** @todo eval is evil, do no evil */
-            $j.each(json.commands, function(i, v) {
-                eval (v);
-            });
-        }
+        if (json.commands) { // commands
+            $j.each(json.commands, function (index, command) {
+                if (command.script) {
+                    /** @todo eval is evil, do no evil */
+                    eval (command.script);
+                }
+                else if (command.selector) {
+                    var params = qc.unpackParams(command.params);
+                    var objs;
 
+                    if (typeof command.selector === 'string') {
+                        objs = $j(command.selector);
+                    } else {
+                        objs = $j(command.selector[0], command.selector[1]);
+                    }
+
+                    // apply the function on each jQuery object found, using the found jQuery object as the context.
+                    objs.each (function () {
+                         $j(this)[command.func].apply($j(this), params);
+                    });
+                }
+                else if (this.func) {
+                    var params = qc.unpackParams(this.params);
+
+                    // Find the function by name. Walk an object list in the process.
+                    var objs = this.func.split(".");
+                    var obj = window;
+                    var ctx = null;
+
+                    $j.each (objs, function (i, v) {
+                        ctx = obj;
+                        obj = obj[v];
+                    });
+                    // obj is now a function object, and ctx is the parent of the function object
+                    obj.apply(ctx, params);
+                }
+            });
+        }
         if (json.winclose) {
             window.close();
         }
@@ -595,6 +629,58 @@ qcubed = {
             $j(qcubed.objAjaxWaitIcon).hide();
         }
 
+    },
+    /**
+     * Convert from JSON return value to an actual jQuery object. Certain structures don't work in JSON, like closures,
+     * but can be part of a javascript object.
+     * @param params
+     * @returns {*}
+     */
+    unpackParams: function(params) {
+        if (!params) {
+            return null;
+        }
+        var newParams = [];
+
+        $j.each(params, function (index, item){
+            if ($j.type(item) == 'object') {
+                if (item.qObjType) {
+                    item = qcubed.unpackObj(item);  // top level special object
+                }
+                else {
+                    // look for special objects inside top level objects.
+                    var newItem = {}
+                    $j.each (item, function (key, obj) {
+                        newItem[key] = qcubed.unpackObj(obj);
+                    });
+                    item = newItem;
+                }
+            }
+            newParams.push(item);
+        });
+        return newParams;
+    },
+
+    /**
+     * Given an object coming from qcubed, will attempt to decode the object into a corresponding javascript object.
+     * @param obj
+     * @returns {*}
+     */
+    unpackObj: function (obj) {
+        if ($j.type(obj) == 'object' &&
+            obj.qObjType) {
+
+                switch (obj.qObjType) {
+                    case 'qClosure':
+                        return new Function(obj.params, obj.func);
+                        break;
+
+                    case 'qDateTime':
+                        return new Date(obj.year, obj.month, obj.day, obj.hour, obj.minute, obj.second);
+                        break;
+                }
+        }
+        return obj; // no change
     }
 };
 
@@ -643,6 +729,104 @@ qcubed.updateForm = function() {
         // delay to let multiple fast actions only trigger periodic refreshes
         qcubed.setTimeout ('qcubed.update', 'qcubed.updateForm', qcubed.minUpdateInterval);
     }
+}
+
+/////////////////////////////////////
+// Drag and drop support
+/////////////////////////////////////
+
+qcubed.draggable = function (parentId, draggableId) {
+    // we are working around some jQuery UI bugs here..
+    jQuery('#' + parentId).on("dragstart", function () {
+        var c = jQuery(this);
+        c.data ("originalPosition", c.position());
+    }).on("dragstop", function () {
+        var c = jQuery(this);
+        qcubed.recordControlModification(draggableId, "_DragData", c.data("originalPosition").left + "," + c.data("originalPosition").top + "," + c.position().left + "," + c.position().top);
+    })
+}
+
+qcubed.droppable = function (parentId, droppableId) {
+    jQuery('#' + parentId).on("drop", function (event, ui) {
+        qcubed.recordControlModification(droppableId, "_DroppedId", ui.draggable.attr("id"));
+    })
+}
+
+qcubed.resizable = function (parentId, resizeableId) {
+    $j('#' + parentId).on("resizestart", function () {
+        var c = jQuery(this);
+        c.data ("oW", c.width());
+        c.data ("oH", c.height());
+    })
+    .on("resizestop", function () {
+        var c = jQuery(this);
+        qcubed.recordControlModification(resizeableId, "_ResizeData", c.data("oW") + "," + c.data("oH") + "," + c.width() + "," + c.height());
+    });
+}
+
+/////////////////////////////////////
+// JQueryUI Support
+/////////////////////////////////////
+
+qcubed.dialog = function(controlId) {
+    $j('#' + controlId).on ("keydown", "input,select", function(event) {
+        // makes sure a return key fires the default button if there is one
+        if (event.which == 13) {
+            var b = $j(this).closest("[role=\'dialog\']").find("button[type=\'submit\']");
+            if (b) {
+                b[0].click();
+            }
+            event.preventDefault();
+        }
+    });
+}
+
+qcubed.accordion = function(controlId) {
+    $j('#' + controlId).on("accordionactivate", function(event, ui) {
+        qcubed.recordControlModification(controlId, "_SelectedIndex", $j(this).accordion("option", "active"));
+        $j(this).trigger("change");
+    });
+}
+
+qcubed.progressbar = function(controlId) {
+    $j('#' + controlId).on("progressbarchange", function (event, ui) {
+        qcubed.recordControlModification(controlId, "_Value", $j(this).progressbar ("value"));
+    });
+}
+
+qcubed.selectable = function(controlId) {
+    $j('#' + controlId).on("selectablestop", function (event, ui) {
+        var strItems;
+
+        strItems = "";
+        $j(".ui-selected", this).each(function() {
+            strItems = strItems + "," + this.id;
+        });
+
+        if (strItems) {
+            strItems = strItems.substring (1);
+        }
+        qcubed.recordControlModification(controlId, "_SelectedItems", strItems);
+
+    });
+}
+
+qcubed.slider = function(controlId) {
+    $j('#' + controlId).on("slidechange", function (event, ui) {
+        if (ui.values && ui.values.length) {
+            qcubed.recordControlModification(controlId, "_Values", ui.values[0] + ',' +  ui.values[1]);
+        } else {
+            qcubed.recordControlModification(controlId, "_Value", ui.value);
+        }
+    });
+}
+
+qcubed.tabs = function(controlId) {
+    $j('#' + controlId).on("tabsactivate", function(event, ui) {
+        var i = $j(this).tabs( "option", "active" );
+        var id = ui.newPanel ? ui.newPanel.attr("id") : null;
+        qcubed.recordControlModification(controlId, "_active", [i,id]);
+    });
 }
 
 

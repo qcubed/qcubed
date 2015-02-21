@@ -38,7 +38,7 @@
 			$strJqUiProperty = null;
 
 			if ($objControl->ActionsMustTerminate) {
-				$strToReturn .= ' event.preventDefault();';
+				$strToReturn .= ' event.preventDefault();' . _nl();
 			}
 
 			if ($objActions && count($objActions)) {
@@ -54,7 +54,7 @@
 					if ($objAction->objEvent->Delay > 0) {
 						$strCode = sprintf(" qcubed.setTimeout('%s', \$j.proxy(function(){%s},this), %s);",
 							$objControl->ControlId,
-							$objAction->RenderScript($objControl),
+						    _nl() . _indent(trim($objAction->RenderScript($objControl))) . _nl(),
 							$objAction->objEvent->Delay);
 					} else {
 						$strCode = ' ' . $objAction->RenderScript($objControl);
@@ -62,7 +62,7 @@
 
 					// Add Condition (if applicable)
 					if (strlen($objAction->objEvent->Condition)) {
-						$strCode = sprintf(' if (%s) {%s}', $objAction->objEvent->Condition, trim($strCode));
+						$strCode = sprintf(' if (%s) {%s}', $objAction->objEvent->Condition, _nl() . _indent(trim($strCode)) . _nl());
 					}
 
 					$strCode .= _nl();
@@ -526,7 +526,7 @@
 		}
 
 		/**
-		 * Returns the JS whcih will be executed on the client side
+		 * Returns the JS which will be executed on the client side
 		 * @param QControl $objControl
 		 *
 		 * @return string

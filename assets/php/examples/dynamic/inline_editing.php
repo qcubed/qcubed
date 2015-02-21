@@ -184,7 +184,7 @@
 			$this->txtLastName->Text = $objPerson->LastName;
 
 			// Let's put the focus on the FirstName Textbox
-			QApplication::ExecuteJavaScript(sprintf('qcubed.getControl("%s").focus()', $this->txtFirstName->ControlId));
+			QApplication::ExecuteControlCommand($this->txtFirstName->ControlId, 'focus');
 		}
 
 		// Handle the action for the Save button being clicked.
@@ -214,7 +214,7 @@
 			$this->txtLastName->Text = '';
 
 			// Let's put the focus on the FirstName Textbox
-			QApplication::ExecuteJavaScript(sprintf('qcubed.getControl("%s").focus()', $this->txtFirstName->ControlId));
+			$this->txtFirstName->Focus();
 		}
 	}
 

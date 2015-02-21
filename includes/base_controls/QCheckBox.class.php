@@ -120,7 +120,7 @@
 
 		/**
 		 * Return a styler to style the label that surrounds the control if the control has text.
-		 * @return string
+		 * @return QTagStyler
 		 */
 		public function getCheckLabelStyler() {
 			if (!$this->objLabelStyle) {
@@ -137,11 +137,10 @@
 		 * @return string
 		 */
 		protected function RenderLabelAttributes() {
+			$objStyler = new QTagStyler();
 			$attributes = $this->GetHtmlAttributes(['title']); // copy tooltip to wrapping label
-			$objStyler = $this->getCheckLabelStyler();
-			if ($attributes) {
-				$objStyler = $objStyler->ApplyOverride($attributes);
-			}
+			$objStyler->SetAttributes($attributes);
+			$objStyler->OverrideAttributes($this->getCheckLabelStyler());
 
 			if (!$this->Enabled) {
 				$objStyler->AddCssClass('disabled');	// add the disabled class to the label for styling
@@ -304,12 +303,12 @@
 		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
 		 * This is called during the codegen process.
 		 *
-		 * @param QCodeGen $objCodeGen
+		 * @param QDatabaseCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		public static function Codegen_MetaCreate(QDatabaseCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
 			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));

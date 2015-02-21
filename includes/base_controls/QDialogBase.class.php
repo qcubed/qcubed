@@ -130,23 +130,9 @@
 		 * @return string
 		 */
 
-		public function GetControlJavaScript() {
-			$strJs = parent::GetControlJavaScript();
-
-			// Fire the default button on enter event. Works with both dialog buttons and QCubed buttons.
-			// This also prevents other submit buttons outside the dialog from firing as a result of pressing enter in a control inside this dialog.
-			// Since the parent control calls off on each draw, we will need to reattach events on each draw.
-			$strJs .= '.on ("keydown", "input,select", function(event) {
-				if (event.which == 13) {
-					var b = $j(this).closest("[role=\'dialog\']").find("button[type=\'submit\']");
-					if (b) {
-						b[0].click();
-					}
-					event.preventDefault();
-				}
-			});
-			';
-
+		public function GetEndScript() {
+			$strJs = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.dialog', $this->getJqControlId());
 			return $strJs;
 		}
 
@@ -187,8 +173,9 @@
 		 *
 		 * @return string
 		 */
-		protected function makeJqOptions() {
-			$strOptions = parent::makeJqOptions();
+		protected function MakeJqOptions() {
+			$jqOptions = parent::MakeJqOptions();
+
             $controlId = $this->ControlId;
 			$strFormId = $this->Form->FormId;
 
@@ -199,31 +186,20 @@
 				$strHideCloseButtonScript = '';
 			}
 
-            if ($strOptions) {
-                $strOptions .= ', ';
-            } else {
-                $strOptions = '';
-            }
-
-            $strOptions .= <<<FUNC
-                open: function(event, ui) {
-                    qcubed.recordControlModification("$controlId", "_IsOpen", true);
-                    $strHideCloseButtonScript
-			    },
-			    close: function(event, ui) {
-			        qcubed.recordControlModification("$controlId", "_IsOpen", false);
-			    },
-			    appendTo: "#$strFormId"
-FUNC;
+			$jqOptions['open'] = new QJsClosure (
+				sprintf ('qcubed.recordControlModification("%s", "_IsOpen", true);
+				%s', $controlId, $strHideCloseButtonScript)
+				, ['event', 'ui']);
+			$jqOptions['close'] = new QJsClosure (sprintf (
+				'qcubed.recordControlModification("%s", "_IsOpen", false);
+			    ', $controlId), ['event', 'ui']);
+			$jqOptions['appendTo'] = "#{$strFormId}";
 
 			// By doing the styling at creation time, we ensure that it gets done only once.
 			if ($strCreateJs = $this->StylingJs()) {
-				$strOptions .= ",
-				create: function(event, ui) {
-				$strCreateJs
-				}";
+				$jqOptions['create'] =  new QJsClosure($strCreateJs);
 			}
-			return $strOptions;
+			return $jqOptions;
 		}
 
 
@@ -256,10 +232,11 @@ FUNC;
 				$strButtonId = $strButtonName;
 			}
 
+			// Brackets are for possible "confirm" above
 			$strJS .= sprintf('
 				{
 					qcubed.recordControlModification("%s", "_ClickedButton", "%s");
-					jQuery("#%s").trigger("QDialog_Button", $j(event.currentTarget).data("btnid"));
+					$j("#%s").trigger("QDialog_Button", $j(event.currentTarget).data("btnid"));
 				}
 				event.preventDefault();
 				', $controlId, $strButtonId, $controlId);

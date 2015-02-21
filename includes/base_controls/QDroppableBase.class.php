@@ -41,15 +41,9 @@
 		// These functions are used to keep track of the selected value, and to implement 
 		// optional autocomplete functionality.
 		
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
-			
-			$strJS .=<<<FUNC
-			.on("drop", function (event, ui) {
-			 			qcubed.recordControlModification("$this->ControlId", "_DroppedId", ui.draggable.attr("id"));
-					})						
-FUNC;
-			
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
+			QApplication::ExecuteJsFunction('qcubed.droppable', $this->getJqControlId(), $this->ControlId);
 			return $strJS;
 		}
 

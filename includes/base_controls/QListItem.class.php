@@ -61,7 +61,7 @@
 		}
 
 		/**
-		 * Returns the details of the control as JSON string. This is customized for the JQuery UI autocomplete. If your
+		 * Returns the details of the control as javascript string. This is customized for the JQuery UI autocomplete. If your
 		 * widget requires something else, you will need to subclass and override this.
 		 * @return string
 		 */

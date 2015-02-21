@@ -4,21 +4,21 @@
 <div id="instructions">
 	<h1>Executing Javascript with low/high priority</h1>
 	
-	<p>In this example you learn about executing javascript with <b>QApplication::ExecuteJavaScript</b>
-	with different priority levels.</p>
+	<p>In this example you learn about executing javascript with <b>QApplication::ExecuteJsFunction</b> and
+		<b>QApplication::ExecuteSelectorFunction</b> with different priority levels.</p>
 
-	<p>When executing JavaScript by using QApplication::ExecuteJavaScript there exist 3 priority-levels: <b> QJsPriority::Low , QJsPriority::Standard and QJsPriority::High</b>
+	<p>You can execute JavaScript using one of three priority-levels: <b> QJsPriority::Low , QJsPriority::Standard and QJsPriority::High</b>
 	Scripts with higher priority-level will be placed in the javascript execution-queue before scripts with lower ones 
-	and scripts with equal priority level are executed in order. But knowing these three priority levels is not enough. QCubed Controls using JavaScript(i.e.: QJqButton using a JQuery UI control) have their own mechanism to execute JavaScript related to them.</p>
+	and scripts with equal priority level are executed in the order you send them. </p>
 	
 	<h2>QCubed task order:</h2>
 	
 	<ul>
-		<li>render/update html</li>
-		<li>execute JavaScript returned by the controls' method <b>GetEndScript</b></li>
-		<li>execute JavaScript from <b>QApplication::ExecuteJavaScript</b> with <b>QJsPriority::High</b>
-		<li>execute JavaScript from <b>QApplication::ExecuteJavaScript</b> with <b>QJsPriority::Standard</b>
-		<li>execute JavaScript from <b>QApplication::ExecuteJavaScript</b> with <b>QJsPriority::Low</b>
+		<li>Render/update html</li>
+		<li>Execute QActions attached to controls with QEvents</li>
+		<li>Execute JavaScript functions with <b>QJsPriority::High</b>
+		<li>Execute JavaScript functions with <b>QJsPriority::Standard</b>
+		<li>Execute JavaScript functions with <b>QJsPriority::Low</b>
 	</ul>
 
 	<p>Take a look at the example below. By clicking on one of the buttons the
@@ -37,7 +37,13 @@
 	the JavaScript for adding the new css class is executed before the alerts show up
 	and the color is changed immediately.
 	When hitting a <b>update & alert</b> button the color will be changed after the alert boxes show up because
-	all scripts are executed with standard priority.</p>    
+	all scripts are executed with standard priority.</p>
+
+	<h2>Strategies for executing Javascript</h2>
+	The <b>QApplication::ExecuteJsFunction</b>, <b>QApplication::ExecuteSelectorFunction</b> and
+	<b>QApplication::ExecuteControlCommand</b> functions are available to use invoke javascript in a number of ways.
+	If these are not adequate, we recommend you put your javascript in a file, and invoke that javascript using one of the
+	above functions.
 </div>
 
 <div id="demoZone">

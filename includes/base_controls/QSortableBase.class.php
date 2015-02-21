@@ -27,27 +27,22 @@
 		
 
 		// Find out what the sort order is at the beginning so that aryItemArray is up to date
-		public function makeJqOptions () {
-			$strJqOptions = parent::makeJqOptions();
-			
-			if ($strJqOptions) {
-				$strJqOptions .= ",";
-			}
-			
-			$strJqOptions .=<<<FUNC
-			create: function (event, ui) {
-						var ary = jQuery(this).sortable("toArray");
+		public function MakeJqOptions () {
+			$jqOptions = parent::MakeJqOptions();
+
+			// TODO: Put this in the qcubed.js file, or something like it.
+			$jqOptions['create'] =  new QJsClosure('
+					var ary = jQuery(this).sortable("toArray");
 						var str = ary.join(",");
 			 			qcubed.recordControlModification("$this->ControlId", "_ItemArray", str);
-					}					
-FUNC;
-			return $strJqOptions; 
+				');
+			return $jqOptions;
 		}		
-		public function GetControlJavaScript() {
-			$strJS = parent::GetControlJavaScript();
+		public function GetEndScript() {
+			$strJS = parent::GetEndScript();
 			
 			$strJS .=<<<FUNC
-			.on("sortstop", function (event, ui) {
+			;\$j('#{$this->ControlId}').on("sortstop", function (event, ui) {
 						var ary = jQuery(this).sortable("toArray");
 						var str = ary.join(",");
 			 			qcubed.recordControlModification("$this->ControlId", "_ItemArray", str);
@@ -96,5 +91,3 @@ FUNC;
 			}
 		}
 	}
-
-?>
