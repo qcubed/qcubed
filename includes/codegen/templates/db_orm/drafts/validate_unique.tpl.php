@@ -5,7 +5,7 @@
 			if (($obj<?php print $objTable->ClassName;?> = <?php print $objTable->ClassName;?>::LoadBy<?php print $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);?>(<?php
 				foreach ($objColumnArray as $intColumnIndex => $objColumn) {
 					print '$this->';
-					print $objCodeGen->MetaControlVariableName($objColumn);
+					print $objCodeGen->ModelConnectorVariableName($objColumn);
 					print '->';
 					if ($objColumn->VariableType == QType::DateTime) {
 						print 'DateTime';
@@ -25,7 +25,7 @@
 					}?>){
 				$blnToReturn = false;
 <?php 				foreach ($objColumnArray as $intColumnIndex => $objColumn) { ?>
-				$this-><?php print $objCodeGen->MetaControlVariableName($objColumn); ?>->Warning = QApplication::Translate("Already in Use");
+				$this-><?php print $objCodeGen->ModelConnectorVariableName($objColumn); ?>->Warning = QApplication::Translate("Already in Use");
 <?php 				} ?>
 			}
 <?php 		}

@@ -19,8 +19,8 @@
 		components that the Code Generator generates code for:</p>
 
 	<ul>
-		<li>MetaControl Classes</li>
-		<li>Meta DataGrid Classes</li>
+		<li>ModelConnector Classes</li>
+		<li>DataGrid Connector Classes</li>
 		<li>QForm and QPanel Drafts</li>
 	</ul>
 </div>

@@ -20,7 +20,7 @@ And [MODULE] is the category of file being generated, for example:
 	* class_gen - templates and subtemplates for the Data Class Gen file
 	* class_subclass - templates and subtemplates for the Data Class customizable subclass
 	* drafts - templates and subtemplates for all things with regards to draft forms/panels
-	* meta_control - templates and subtemplates for the metacontrol
+	* meta_control - templates and subtemplates for the ModelConnector
 	* meta_datagrid - templates and subtemplates for the metadatagrid
 
 And [FILE] is the filename of the  template or subtemplate, itself.

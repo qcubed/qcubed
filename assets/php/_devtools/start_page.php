@@ -18,7 +18,7 @@
 	</div>
 	<h2>Next Steps</h2>
 	<ul class="link-list">
-		<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/codegen.php">Code Generator</a> - to create ORM model objects that map to tables in your database, and metacontrols
+		<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS__) ?>/codegen.php">Code Generator</a> - to create ORM model objects that map to tables in your database, and ModelConnectors
 			and form drafts to edit and display the data.</li>
 		<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__) ?>/index.php">View Form Drafts</a> - to view the generated files (after you run the Code Generator).</li>
 		<li><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __EXAMPLES__) ?>/index.php">QCubed Examples</a> - learn QCubed by studying and modifying the example files locally.</li>

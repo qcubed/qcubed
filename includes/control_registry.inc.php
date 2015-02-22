@@ -1,6 +1,6 @@
 <?php
 
-// Called by the MetaControl Designer to create a list of controls appropriate for the given database field type
+// Called by the ModelConnector Designer to create a list of controls appropriate for the given database field type
 
 // You can put one in your __App_Includes__ directory and add to the given type to add your custom controls to the list
 // The PLUGINS directories will also be searched

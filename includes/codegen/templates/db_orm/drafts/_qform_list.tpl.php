@@ -19,7 +19,7 @@
 	/**
 	 * This is a quick-and-dirty draft QForm object to do the List All functionality
 	 * of the <?= $objTable->ClassName ?> class.  It uses the code-generated
-	 * <?= $objTable->ClassName ?>DataGrid control which has meta-methods to help with
+	 * <?= $objTable->ClassName ?>DataGrid control which has methods to help with
 	 * easily creating/defining <?= $objTable->ClassName ?> columns.
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented

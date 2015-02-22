@@ -26,7 +26,7 @@
 
 	<p>The second example is a much more practical example. In this case, we're displaying a 
 	many-to-many relationship and allowing the user to select a Project that should be associated with 
-	the current one (in this case, ACME Website Redesign). This is exactly what the MetaControls do for
+	the current one (in this case, ACME Website Redesign). This is exactly what the ModelConnectors do for
 	association tables.</p>
 
 	<p>First, we once again create the <strong>QCheckBoxColumn</strong>, and again we call
@@ -43,7 +43,7 @@
 	for us as well.</p>
 
 	<p>Once we have those changed item's Ids, we can do what we'd like with them. In this example
-	we just output them to the user via javascript alerts. When the <strong>MetaControls</strong> do this
+	we just output them to the user via javascript alerts. When the <strong>ModelConnectors</strong> do this
 	for association tables, they actually perform the described associations.
 
 	<p>Finally, you should note that using a QCheckBoxColumn requires that the databound object's

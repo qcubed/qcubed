@@ -26,13 +26,13 @@
 		}
 
 		/**
-		 * Outputs the code at the top of the metacontrol to declare the variable that will hold the control.
+		 * Outputs the code at the top of the ModelConnector to declare the variable that will hold the control.
 		 * @param QCodeGen $objCodeGen
 		 * @param $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
-			$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
+		public static function Codegen_ConnectorVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
+			$strPropName = $objCodeGen->ModelConnectorPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			$strRet = <<<TMPL
@@ -68,11 +68,11 @@ TMPL;
 		 *
 		 * @return string The function definition
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
-			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
+		public static function Codegen_ConnectorCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+			$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
 			$strControlType = 'QLabel';
 
-			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
+			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			$strDateTimeExtra = '';
@@ -121,9 +121,9 @@ TMPL;
 			}
 
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
-			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
+			$strRet .= static::Codegen_ConnectorRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -135,7 +135,7 @@ TMPL;
 		}
 
 		/**
-		 * Generate code to reload data from the MetaControl into this control, or load it for the first time
+		 * Generate code to reload data from the ModelConnector into this control, or load it for the first time
 		 *
 		 * @param QCodeGen                                       $objCodeGen
 		 * @param QTable                                         $objTable
@@ -145,9 +145,9 @@ TMPL;
 		 * @return string Function definition
 		 * @throws Exception
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-			$strPropName = QCodeGen::MetaControlPropertyName($objColumn);
+			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);
 
 			// Preamble with an if test if not initializing
@@ -207,7 +207,7 @@ TMPL;
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			return '';
 		}
 }

@@ -49,32 +49,32 @@
 			// now is time to add some trick to filter only by some field
 			 
 			// remove filter from ID column
-			$colId = $this->dtgProjects->MetaAddColumn('Id');
+			$colId = $this->dtgProjects->AddConnectedColumn('Id');
 			$colId->FilterType = "";
 
-			$this->dtgProjects->MetaAddColumn('Name', 'Name=Project');
-			$this->dtgProjects->MetaAddTypeColumn('ProjectStatusTypeId', 'ProjectStatusType');
-			//$this->dtgProjects->MetaAddColumn(QQN::Project()->ManagerPerson);
-			$this->dtgProjects->MetaAddColumn('Description');
+			$this->dtgProjects->AddConnectedColumn('Name', 'Name=Project');
+			$this->dtgProjects->AddDbTypeColumn('ProjectStatusTypeId', 'ProjectStatusType');
+			//$this->dtgProjects->AddConnectedColumn(QQN::Project()->ManagerPerson);
+			$this->dtgProjects->AddConnectedColumn('Description');
 			
 			// remove filter from field
-			//$this->dtgProjects->MetaAddColumn('StartDate');
-			$colStartDate = $this->dtgProjects->MetaAddColumn('StartDate');
+			//$this->dtgProjects->AddConnectedColumn('StartDate');
+			$colStartDate = $this->dtgProjects->AddConnectedColumn('StartDate');
 			$colStartDate->FilterType = "";
 			
 			// remove filter from field
-			//$this->dtgProjects->MetaAddColumn('EndDate');
-			$colEndDate = $this->dtgProjects->MetaAddColumn('EndDate');
+			//$this->dtgProjects->AddConnectedColumn('EndDate');
+			$colEndDate = $this->dtgProjects->AddConnectedColumn('EndDate');
 			$colEndDate->FilterType = "";
 			
 			// remove filter from field
-			// $this->dtgProjects->MetaAddColumn('Budget');
-			$colBudget = $this->dtgProjects->MetaAddColumn('Budget');
+			// $this->dtgProjects->AddConnectedColumn('Budget');
+			$colBudget = $this->dtgProjects->AddConnectedColumn('Budget');
 			$colBudget->FilterType = "";
 			
 			// remove filter from field
-			// $this->dtgProjects->MetaAddColumn('Spent');
-			$colSpent = $this->dtgProjects->MetaAddColumn('Spent');
+			// $this->dtgProjects->AddConnectedColumn('Spent');
+			$colSpent = $this->dtgProjects->AddConnectedColumn('Spent');
 			$colSpent->FilterType = ""; 
 			
 			// Second... 

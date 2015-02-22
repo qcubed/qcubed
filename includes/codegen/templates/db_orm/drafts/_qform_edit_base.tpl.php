@@ -14,7 +14,7 @@
 	/**
 	 * This is a quick-and-dirty draft QForm object to do Create, Edit, and Delete functionality
 	 * of the <?= $objTable->ClassName ?> class.  It uses the code-generated
-	 * <?= $objTable->ClassName ?>MetaControl class, which has meta-methods to help with
+	 * <?= $objTable->ClassName ?>Connector class, which has methods to help with
 	 * easily creating/defining controls to modify the fields of a <?= $objTable->ClassName ?> columns.
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
@@ -29,9 +29,9 @@
 	 * @subpackage FormBaseObjects
 	 */
 	abstract class <?= $objTable->ClassName ?>EditFormBase extends QForm {
-		// Local instance of the <?= $objTable->ClassName ?>MetaControl
+		// Local instance of the <?= $objTable->ClassName ?>Connector
 		/**
-		 * @var <?= $objTable->ClassName ?>MetaControlGen mct<?= $objTable->ClassName ?>
+		 * @var <?= $objTable->ClassName ?>ConnectorGen mct<?= $objTable->ClassName ?>
 
 		 */
 		protected $mct<?= $objTable->ClassName ?>;
@@ -40,18 +40,18 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) {
 		if (!isset ($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != QFormGen::None) {
 ?>
-		protected $<?= $objCodeGen->MetaControlVariableName($objColumn); ?>;
+		protected $<?= $objCodeGen->ModelConnectorVariableName($objColumn); ?>;
 <?php } ?>
 <?php } ?>
 
 		// Other Controls (if applicable) via Unique ReverseReferences and ManyToMany References
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
-		protected $<?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>;
+		protected $<?= $objCodeGen->ModelConnectorVariableName($objReverseReference); ?>;
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-		protected $<?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>;
+		protected $<?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference); ?>;
 <?php } ?>
 
 		// Other Controls
@@ -81,24 +81,24 @@
 		protected function Form_Create() {
 			parent::Form_Create();
 
-			// Use the CreateFromPathInfo shortcut (this can also be done manually using the <?= $objTable->ClassName ?>MetaControl constructor)
-			// MAKE SURE we specify "$this" as the MetaControl's (and thus all subsequent controls') parent
-			$this->mct<?= $objTable->ClassName ?> = <?= $objTable->ClassName ?>MetaControl::CreateFromPathInfo($this);
+			// Use the CreateFromPathInfo shortcut (this can also be done manually using the <?= $objTable->ClassName ?>Connector constructor)
+			// MAKE SURE we specify "$this" as the ModelConnector's (and thus all subsequent controls') parent
+			$this->mct<?= $objTable->ClassName ?> = <?= $objTable->ClassName ?>Connector::CreateFromPathInfo($this);
 
-			// Call MetaControl's methods to create qcontrols based on <?= $objTable->ClassName ?>'s data fields
+			// Call ModelConnector's methods to create qcontrols based on <?= $objTable->ClassName ?>'s data fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php	if ($objColumn->Options && isset ($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None)) continue; ?>
-			$this-><?= $objCodeGen->MetaControlVariableName($objColumn); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objColumn); ?>_Create();
+			$this-><?= $objCodeGen->ModelConnectorVariableName($objColumn); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->ModelConnectorVariableName($objColumn); ?>_Create();
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
 <?php	if (isset ($objReverseReference->Options['FormGen']) && $objReverseReference->Options['FormGen'] == QFormGen::None) continue; ?>
-			$this-><?= $objCodeGen->MetaControlVariableName($objReverseReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>_Create();
+			$this-><?= $objCodeGen->ModelConnectorVariableName($objReverseReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->ModelConnectorVariableName($objReverseReference); ?>_Create();
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
 <?php	if (isset ($objManyToManyReference->Options['FormGen']) && $objManyToManyReference->Options['FormGen'] == QFormGen::None) continue; ?>
-			$this-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>_Create();
+			$this-><?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference); ?>_Create();
 <?php } ?>
 
 			// Create Buttons and Actions on this Form
@@ -148,13 +148,13 @@
 		// Button Event Handlers
 
 		protected function btnSave_Click($strFormId, $strControlId, $strParameter) {
-			// Delegate "Save" processing to the <?= $objTable->ClassName ?>MetaControl
+			// Delegate "Save" processing to the <?= $objTable->ClassName ?>Connector
 			$this->mct<?= $objTable->ClassName ?>->Save<?= $objTable->ClassName ?>();
 			$this->RedirectToListPage();
 		}
 
 		protected function btnDelete_Click($strFormId, $strControlId, $strParameter) {
-			// Delegate "Delete" processing to the <?= $objTable->ClassName ?>MetaControl
+			// Delegate "Delete" processing to the <?= $objTable->ClassName ?>Connector
 			$this->mct<?= $objTable->ClassName ?>->Delete<?= $objTable->ClassName ?>();
 			$this->RedirectToListPage();
 		}

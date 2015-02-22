@@ -211,19 +211,19 @@ abstract class QInstallationValidator {
 			$result[] = $obj;
 		}
 
-		if (!QFolder::isWritable(__META_CONTROLS__)) {
+		if (!QFolder::isWritable(__MODEL_CONNECTOR__)) {
 			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "MetaControls destination directory (" . __META_CONTROLS__ . ") " .
+			$obj->strMessage = "ModelConnector destination directory (" . __MODEL_CONNECTOR__ . ") " .
 				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __META_CONTROLS__;
+			$obj->strCommandToFix = "chmod 777 " . __MODEL_CONNECTOR__;
 			$result[] = $obj;
 		}
 		
-		if (!QFolder::isWritable(__META_CONTROLS_GEN__)) {
+		if (!QFolder::isWritable(__MODEL_CONNECTOR_GEN__)) {
 			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Generated MetaControls directory (" . __META_CONTROLS_GEN__ . ") " .
+			$obj->strMessage = "Generated ModelConnector directory (" . __MODEL_CONNECTOR_GEN__ . ") " .
 				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __META_CONTROLS_GEN__;
+			$obj->strCommandToFix = "chmod 777 " . __MODEL_CONNECTOR_GEN__;
 			$result[] = $obj;
 		}
 		

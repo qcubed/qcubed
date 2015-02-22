@@ -11,7 +11,7 @@
 		QCubed includes several different QControls that assist with user input of dates and datetimes.
 		<br/><br/>
 
-		<b>QDateTimePicker</b> is the "default" control, in that the templates for MetaControls for tables with date
+		<b>QDateTimePicker</b> is the "default" control, in that the templates for ModelConnectors for tables with date
 		or datetime columns will, by default, generate <b>QDateTimePicker</b> instances.  While not "sexy" or glamourous by
 		any stretch of the imagination, it offers an immense amount of utility, in that it allows for very distinct
 		control over date, time and datetime components.  By contrast, the DHTML-based <b>QCalendar</b> control offers, by definition,

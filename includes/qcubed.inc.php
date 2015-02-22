@@ -243,9 +243,9 @@
 	QApplicationBase::$ClassFile['qwatchercache'] = __QCUBED_CORE__ . '/watchers/QWatcherCache.class.php';
 	QApplicationBase::$ClassFile['qwatchernone'] = __QCUBED_CORE__ . '/watchers/QWatcherNone.class.php';
 
-	QApplicationBase::$ClassFile['qmetaeditdlg'] = __QCUBED_CORE__ .'/codegen/QMetaEditDlg.class.php';
-	QApplicationBase::$ClassFile['qmetaparam'] = __QCUBED_CORE__ .'/codegen/QMetaParam.class.php';
-	QApplicationBase::$ClassFile['qmetacontroloptions'] = __QCUBED_CORE__ .'/codegen/QMetacontrolOptions.class.php';
+	QApplicationBase::$ClassFile['qmodelconnectoreditdlg'] = __QCUBED_CORE__ .'/codegen/QModelConnectorEditDlg.class.php';
+	QApplicationBase::$ClassFile['qmodelconnectorparam'] = __QCUBED_CORE__ .'/codegen/QModelConnectorParam.class.php';
+	QApplicationBase::$ClassFile['qmodelconnectoroptions'] = __QCUBED_CORE__ .'/codegen/QModelConnectorOptions.class.php';
 
 
 

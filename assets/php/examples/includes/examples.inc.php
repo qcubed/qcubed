@@ -174,11 +174,11 @@
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
-			Examples::$Categories[$intIndex]['name'] = 'MetaControls, Meta DataGrids, and the Drafts';
+			Examples::$Categories[$intIndex]['name'] = 'Model Connectors, DataGrid Connectors, and the Drafts';
 			Examples::$Categories[$intIndex]['description'] = 'Combining the Code Generator with the QForm Library';
 			self::AddCoreExampleFile($intIndex, '/other/formgen.php QForm and CodeGen, a Winning Combination to RAD');
-			self::AddCoreExampleFile($intIndex, '/other/metacontrols.php * Introduction to MetaControls');
-			self::AddCoreExampleFile($intIndex, '/other/meta_datagrids.php * Introduction to Meta DataGrids');
+			self::AddCoreExampleFile($intIndex, '/other/model_connectors.php * Introduction to Model Connectors');
+			self::AddCoreExampleFile($intIndex, '/other/datagrid_connectors.php * Introduction to DataGrid Connectors');
 			self::AddCoreExampleFile($intIndex, '/other/form_drafts.php * Introduction to the Drafts');
 
 			$intIndex++;

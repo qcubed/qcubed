@@ -81,7 +81,7 @@
 		}
 
 		/**
-		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
+		 * Generate code that will be inserted into the ModelConnector to connect a database object with this control.
 		 * This is called during the codegen process.
 		 *
 		 * @param QCodeGen $objCodeGen
@@ -89,14 +89,14 @@
 		 * @param QColumn $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strClassName = $objTable->ClassName;
-			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
-			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
+			$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
+			$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
 
 			// Read the control type in case we are generating code for a subclass of QTextBox
-			$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
+			$strControlType = $objCodeGen->ModelConnectorControlClass($objColumn);
 
 			$strRet = <<<TMPL
 		/**
@@ -129,8 +129,8 @@ TMPL;
 
 TMPL;
 			}
-			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
-			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
+			$strRet .= static::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_ConnectorRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -150,7 +150,7 @@ TMPL;
 		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
 		 * @return string
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
@@ -172,7 +172,7 @@ TMPL;
 		 * @param $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);

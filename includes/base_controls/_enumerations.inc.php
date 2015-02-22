@@ -411,7 +411,7 @@
 	/**
 	 * Modes supported by Meta control for creation of new controls
 	 */
-	abstract class QMetaControlCreateType {
+	abstract class QModelConnectorCreateType {
 		/** Mode to create new or edit existing entry */
 		const CreateOrEdit = 1;
 		/** Mode to create a new entry/object if a record for requested ID was not found */
@@ -421,11 +421,11 @@
 	}
 
 	/**
-	 * Class QMetaControlArgumentType
+	 * Class QModelConnectorArgumentType
 	 * Meta controls are created by input recieved from multiple sources. This class enumerates the three.
-	 * Refer to any MetaDataGrid class's MetaAddEditLinkColumn method to see how this is used
+	 * Refer to any MetaDataGrid class's AddEditLinkColumn method to see how this is used
 	 */
-	abstract class QMetaControlArgumentType {
+	abstract class QModelConnectorArgumentType {
 		/** The Pathinfo supplied to the requested file */
 		const PathInfo = 1;
 		/** Via a querystring */

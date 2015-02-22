@@ -31,7 +31,7 @@
 	 *
 	 */
 	class <?= $objTable->ClassName ?>ListPanel extends QPanel {
-		// Local instance of the Meta DataGrid to list <?= $objTable->ClassNamePlural ?>
+		// Local instance of the DataGrid connector to list <?= $objTable->ClassNamePlural ?>
 
 		/**
 		 * @var <?= $objTable->ClassName ?>DataGrid
@@ -74,7 +74,7 @@
 			// Setup the Template
 			$this->Template = __DOCROOT__ . __PANEL_DRAFTS__ . '/<?= $objTable->ClassName ?>ListPanel.tpl.php';
 
-			// Instantiate the Meta DataGrid
+			// Instantiate the DataGrid
 			$this->dtg<?= $objTable->ClassNamePlural ?> = new <?= $objTable->ClassName ?>DataGrid($this);
 
 			// Style the DataGrid (if desired)
@@ -85,27 +85,27 @@
 			$this->dtg<?= $objTable->ClassNamePlural ?>->Paginator = new QPaginator($this->dtg<?= $objTable->ClassNamePlural ?>);
 			$this->dtg<?= $objTable->ClassNamePlural ?>->ItemsPerPage = __FORM_DRAFTS_PANEL_LIST_ITEMS_PER_PAGE__;
 
-			// Use the MetaDataGrid functionality to add Columns for this datagrid
+			// Use the connector functionality to add Columns for this datagrid
 
 			// Create an Edit Column
 			$this->pxyEdit = new QControlProxy($this);
 			$this->pxyEdit->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'pxyEdit_Click'));
-			$this->dtg<?= $objTable->ClassNamePlural ?>->MetaAddEditProxyColumn($this->pxyEdit, 'Edit', 'Edit');
+			$this->dtg<?= $objTable->ClassNamePlural ?>->AddEditProxyColumn($this->pxyEdit, 'Edit', 'Edit');
 
 			// Create the Other Columns (note that you can use strings for <?= $objTable->Name ?>'s properties, or you
 			// can traverse down QQN::<?= $objTable->Name ?>() to display fields that are down the hierarchy)
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php if (!$objColumn->Reference) { ?>
-			$this->dtg<?= $objTable->ClassNamePlural ?>->MetaAddColumn('<?= $objColumn->PropertyName ?>');
+			$this->dtg<?= $objTable->ClassNamePlural ?>->AddConnectedColumn('<?= $objColumn->PropertyName ?>');
 <?php } ?>
 <?php if ($objColumn->Reference && $objColumn->Reference->IsType) { ?>
-			$this->dtg<?= $objTable->ClassNamePlural ?>->MetaAddTypeColumn('<?= $objColumn->PropertyName ?>', '<?= $objColumn->Reference->VariableType ?>');
+			$this->dtg<?= $objTable->ClassNamePlural ?>->AddDbTypeColumn('<?= $objColumn->PropertyName ?>', '<?= $objColumn->Reference->VariableType ?>');
 <?php } ?>
 <?php if ($objColumn->Reference && !$objColumn->Reference->IsType) { ?>
-			$this->dtg<?= $objTable->ClassNamePlural ?>->MetaAddColumn(QQN::<?= $objTable->ClassName ?>()-><?= $objColumn->Reference->PropertyName ?>);
+			$this->dtg<?= $objTable->ClassNamePlural ?>->AddConnectedColumn(QQN::<?= $objTable->ClassName ?>()-><?= $objColumn->Reference->PropertyName ?>);
 <?php } ?>
 <?php } ?><?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?><?php if ($objReverseReference->Unique) { ?>
-			$this->dtg<?= $objTable->ClassNamePlural ?>->MetaAddColumn(QQN::<?= $objTable->ClassName; ?>()-><?= $objReverseReference->ObjectDescription ?>);
+			$this->dtg<?= $objTable->ClassNamePlural ?>->AddConnectedColumn(QQN::<?= $objTable->ClassName; ?>()-><?= $objReverseReference->ObjectDescription ?>);
 <?php } ?><?php } ?>
 
 			// Setup the Create New button

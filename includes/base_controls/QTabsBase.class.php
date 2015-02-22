@@ -117,7 +117,7 @@
 		 * its functionality here.
 		 */
 		public function Refresh() {
-			$this->CallJqUiMethod(false, "refresh");
+			parent::Refresh();
 			QControl::Refresh();
 		}
 

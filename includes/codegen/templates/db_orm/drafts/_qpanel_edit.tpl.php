@@ -37,18 +37,18 @@
 
 		// Controls for <?= $objTable->ClassName ?>'s Data Fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-		/** @var <?= $objCodeGen->MetaControlControlClass($objColumn); ?>  */
-		public $<?= $objCodeGen->MetaControlVariableName($objColumn); ?>;
+		/** @var <?= $objCodeGen->ModelConnectorControlClass($objColumn); ?>  */
+		public $<?= $objCodeGen->ModelConnectorVariableName($objColumn); ?>;
 <?php } ?>
 
 		// Other ListBoxes (if applicable) via Unique ReverseReferences and ManyToMany References
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
-		public $<?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>;
+		public $<?= $objCodeGen->ModelConnectorVariableName($objReverseReference); ?>;
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-		public $<?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>;
+		public $<?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference); ?>;
 <?php } ?>
 
 		// Other Controls
@@ -81,22 +81,22 @@
 			$this->strTemplate = __DOCROOT__ . __PANEL_DRAFTS__ . '/<?= $objTable->ClassName ?>EditPanel.tpl.php';
 			$this->strClosePanelMethod = $strClosePanelMethod;
 
-			// Construct the <?= $objTable->ClassName ?>MetaControl
-			// MAKE SURE we specify "$this" as the MetaControl's (and thus all subsequent controls') parent
-			$this->mct<?= $objTable->ClassName ?> = <?= $objTable->ClassName ?>MetaControl::Create($this<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>, $<?= $objColumn->VariableName; ?><?php } ?>);
+			// Construct the <?= $objTable->ClassName ?>Connector
+			// MAKE SURE we specify "$this" as the ModelConnector's (and thus all subsequent controls') parent
+			$this->mct<?= $objTable->ClassName ?> = <?= $objTable->ClassName ?>Connector::Create($this<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>, $<?= $objColumn->VariableName; ?><?php } ?>);
 
-			// Call MetaControl's methods to create qcontrols based on <?= $objTable->ClassName ?>'s data fields
+			// Call the ModelConnector's methods to create qcontrols based on <?= $objTable->ClassName ?>'s data fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 	<?php	if ($objColumn->Options && isset ($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None || $objColumn->Options['FormGen'] == QFormGen::ControlOnly)) continue; ?>
-			$this-><?= $objCodeGen->MetaControlVariableName($objColumn); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objColumn); ?>_Create();
+			$this-><?= $objCodeGen->ModelConnectorVariableName($objColumn); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->ModelConnectorVariableName($objColumn); ?>_Create();
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php if ($objReverseReference->Unique) { ?>
-			$this-><?= $objCodeGen->MetaControlVariableName($objReverseReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objReverseReference); ?>_Create();
+			$this-><?= $objCodeGen->ModelConnectorVariableName($objReverseReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->ModelConnectorVariableName($objReverseReference); ?>_Create();
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
-			$this-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->MetaControlVariableName($objManyToManyReference); ?>_Create();
+			$this-><?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference); ?> = $this->mct<?= $objTable->ClassName ?>-><?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference); ?>_Create();
 <?php } ?>
 
 			// Create Buttons and Actions on this Form
@@ -118,13 +118,13 @@
 
 		// Control AjaxAction Event Handlers
 		public function btnSave_Click($strFormId, $strControlId, $strParameter) {
-			// Delegate "Save" processing to the <?= $objTable->ClassName ?>MetaControl
+			// Delegate "Save" processing to the <?= $objTable->ClassName ?>Connector
 			$this->mct<?= $objTable->ClassName ?>->Save<?= $objTable->ClassName ?>();
 			$this->CloseSelf(true);
 		}
 
 		public function btnDelete_Click($strFormId, $strControlId, $strParameter) {
-			// Delegate "Delete" processing to the <?= $objTable->ClassName ?>MetaControl
+			// Delegate "Delete" processing to the <?= $objTable->ClassName ?>Connector
 			$this->mct<?= $objTable->ClassName ?>->Delete<?= $objTable->ClassName ?>();
 			$this->CloseSelf(true);
 		}

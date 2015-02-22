@@ -19,8 +19,8 @@
 	/**
 	 * This is a quick-and-dirty draft QForm object to do Create, Edit, and Delete functionality
 	 * of the <?= $objTable->ClassName ?> class.  It uses the code-generated
-	 * <?= $objTable->ClassName ?>MetaControl class, which has meta-methods to help with
-	 * easily creating/defining controls to modify the fields of a <?= $objTable->ClassName ?> columns.
+	 * <?= $objTable->ClassName ?>Connector class, which has methods to help with
+	 * easily creating/defining controls to modify the fields of <?= $objTable->ClassName ?> columns.
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
 	 * here by overriding existing or implementing new methods, properties and variables.

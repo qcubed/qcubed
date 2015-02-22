@@ -117,7 +117,7 @@ Documentation improved
 
 Total skin rework by @scottux. New jqueryui-based theme for qcubed is generated.
 
-[49](https://github.com/qcubed/framework/issues/49) The metacontrol generated is broken
+[49](https://github.com/qcubed/framework/issues/49) The ModelConnector generated is broken
 
 [20](https://github.com/qcubed/framework/pull/20) Add the QOnEvent class for event delegation.
 

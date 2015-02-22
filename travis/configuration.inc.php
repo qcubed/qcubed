@@ -120,7 +120,7 @@ if (!defined('SERVER_INSTANCE')) {
 			// Destination for Code Generated class files
 			define ('__MODEL__', __INCLUDES__ . '/model' );
 			define ('__MODEL_GEN__', __PROJECT__ . '/generated/model_base' );
-			define ('__META_CONTROLS__', __INCLUDES__ . '/meta_controls' );
+			define ('__MODEL_CONNECTOR__', __INCLUDES__ . '/meta_controls' );
 			define ('__META_CONTROLS_GEN__', __PROJECT__ . '/generated/meta_base' );
 
 			/* Relative File Paths for Web Accessible Directories

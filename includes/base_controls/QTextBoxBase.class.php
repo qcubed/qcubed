@@ -694,7 +694,7 @@
 		}
 
 		/**
-		 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
+		 * Generate code that will be inserted into the ModelConnector to connect a database object with this control.
 		 * This is called during the codegen process.
 		 *
 		 * @param QCodeGen $objCodeGen
@@ -702,14 +702,14 @@
 		 * @param QColumn $objColumn
 		 * @return string
 		 */
-		public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strClassName = $objTable->ClassName;
-			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
-			$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
+			$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
+			$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
 
 			// Read the control type in case we are generating code for a subclass of QTextBox
-			$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
+			$strControlType = $objCodeGen->ModelConnectorControlClass($objColumn);
 
 			$strRet = <<<TMPL
 		/**
@@ -764,8 +764,8 @@ TMPL;
 TMPL;
 			}
 
-			$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
-			$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
+			$strRet .= static::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+			$strRet .= static::Codegen_ConnectorRefresh($objCodeGen, $objTable, $objColumn, true);
 
 			$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -788,7 +788,7 @@ TMPL;
 		 *
 		 * @return string Generated code
 		 */
-		public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
@@ -811,7 +811,7 @@ TMPL;
 		 *
 		 * @return string Generated code
 		 */
-		public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
@@ -825,16 +825,16 @@ TMPL;
 		/**
 		 * Returns an description of the options available to modify by the designer for the code generator.
 		 *
-		 * @return QMetaParam[]
+		 * @return QModelConnectorParam[]
 		 */
-		public static function GetMetaParams() {
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'Columns', 'Width of field', QType::Integer),
-				new QMetaParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
-				new QMetaParam (get_called_class(), 'Format', 'printf format string to use', QType::String),
-				new QMetaParam (get_called_class(), 'Placeholder', 'HTML5 Placeholder attribute', QType::String),
-				new QMetaParam (get_called_class(), 'ReadOnly', 'Editable or not', QType::Boolean),
-				new QMetaParam (get_called_class(), 'TextMode', 'Field type', QMetaParam::SelectionList,
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'Columns', 'Width of field', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Format', 'printf format string to use', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Placeholder', 'HTML5 Placeholder attribute', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ReadOnly', 'Editable or not', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'TextMode', 'Field type', QModelConnectorParam::SelectionList,
 					array (null=>'-',
 						'QTextMode::Search'=>'Search',
 						'QTextMode::MultiLine'=>'MultiLine',

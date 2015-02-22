@@ -304,8 +304,8 @@
 		 * @param string $strControlVarName
 		 * @return string
 		 */
-		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
-			$strRet = parent::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+		public static function Codegen_ConnectorCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
+			$strRet = parent::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
 			if ($objColumn instanceof QManyToManyReference) {
 				$strRet .= <<<TMPL
@@ -319,12 +319,12 @@ TMPL;
 		/**
 		 * Returns an description of the options available to modify by the designer for the code generator.
 		 *
-		 * @return QMetaParam[]
+		 * @return QModelConnectorParam[]
 		 */
-		public static function GetMetaParams() {
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
-				new QMetaParam (get_called_class(), 'SelectionMode', 'Single or multiple selections', QMetaParam::SelectionList,
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'SelectionMode', 'Single or multiple selections', QModelConnectorParam::SelectionList,
 					array (null=>'Default',
 						'QSelectionMode::Single'=>'Single',
 						'QSelectionMode::Multiple'=>'Multiple'
