@@ -41,6 +41,7 @@
 				$this->objControl->Text = $value;
 			} else if ($this->objControl instanceof QDateRangePicker) {
 				$this->objControl->Input->Text = $value;
+				$this->objControl->MarkAsModified();
 			}
 		}
 
