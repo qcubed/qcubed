@@ -24,7 +24,7 @@
 		const withinYear = 'withinYear';
 	}
 
-	class SearchTerm {
+	class SearchNode {
 		/** @var string */
 		public $strProperty;
 		/** @var string[] */
@@ -55,12 +55,19 @@
 			return $objNode;
 		}
 
-		public function GetNode($objBaseNode) {
+		protected function GetNode($objBaseNode) {
 			return self::GetNestedNode($objBaseNode, $this->strPropertiesArray);
 		}
 
-		public function GetTerm() {
+		protected function GetTerm() {
 			return $this->objTerm;
+		}
+
+		public function MakeCondition(QQBaseNode $objBaseNode, QGenericSearchOptions $objSearchOptions) {
+			$searchTerm = $this->GetTerm();
+			if (is_null($searchTerm) || $searchTerm === '')
+				return null;
+			return $objSearchOptions->MakeNodeCondition($this->GetNode($objBaseNode), $this->strProperty, $this->strType, $searchTerm);
 		}
 	}
 
@@ -253,19 +260,16 @@
 
 		/**
 		 * @param QQBaseNode $objBaseNode
-		 * @param SearchTerm[] $objTerms
+		 * @param SearchNode[] $objSearchNodes
 		 * @return QQCondition
 		 */
-		public function SearchCondition0($objBaseNode, $objTerms) {
-			if (!$objTerms) {
+		public function SearchConditionForNodes($objBaseNode, $objSearchNodes) {
+			if (!$objSearchNodes) {
 				return QQ::All();
 			}
 			$objConditions = array();
-			foreach ($objTerms as $objTerm) {
-				$searchTerm = $objTerm->GetTerm();
-				if (is_null($searchTerm) || $searchTerm === '')
-					continue;
-				$objCondition = $this->makeNodeCondition($objTerm->GetNode($objBaseNode), $objTerm->strProperty, $objTerm->strType, $searchTerm);
+			foreach ($objSearchNodes as $objSearchNode) {
+				$objCondition = $objSearchNode->MakeCondition($objBaseNode, $this);
 				if (!$objCondition)
 					continue;
 				$objConditions[] = $objCondition;
@@ -273,7 +277,7 @@
 
 			if (!$objConditions)
 				return QQ::All();
-			return QQ::AndCondition($objConditions);
+			return $this->IsMatchAllTerms() ? QQ::AndCondition($objConditions) : QQ::OrCondition($objConditions);
 		}
 
 		/**
@@ -295,7 +299,7 @@
 			foreach ($propTypes as $strProp => $strType) {
 				if ($this->IsPropertyExcluded($strProp, $strType) && !array_key_exists($strProp, $this->GetExtraProperties()))
 					continue;
-				$nodes[$strProp] = SearchTerm::GetNestedNode($objBaseNode, explode('->', $strProp));
+				$nodes[$strProp] = SearchNode::GetNestedNode($objBaseNode, explode('->', $strProp));
 			}
 			$objConditions = array();
 			foreach ($objTerms as $strTerm) {
@@ -305,7 +309,7 @@
 				$orConds = array();
 				foreach ($nodes as $strProp => $objNode) {
 					$strType = $propTypes[$strProp];
-					$cond = $this->makeNodeCondition($objNode, $strProp, $strType, $strTerm);
+					$cond = $this->MakeNodeCondition($objNode, $strProp, $strType, $strTerm);
 					if (!$cond)
 						continue;
 					$orConds[] = $cond;
@@ -315,7 +319,7 @@
 			return $this->IsMatchAllTerms() ? QQ::AndCondition($objConditions) : QQ::OrCondition($objConditions);
 		}
 
-		protected function makeNodeCondition($objNode, $strProp, $strType, $objTerm) {
+		public function MakeNodeCondition($objNode, $strProp, $strType, $objTerm) {
 			$blnRange = $this->GetRange($objTerm, $objTermLeft, $objTermRight);
 			$blnSkipTypeCast = $this->IsSkipTypeCast($strProp);
 			if (!$blnSkipTypeCast && $strType !== QType::DateTime) {

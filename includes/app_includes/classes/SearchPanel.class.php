@@ -6,7 +6,7 @@
 	 * Time: 11:36 AM
 	 * To change this template use File | Settings | File Templates.
 	 */
-	class SearchControl extends SearchTerm {
+	class SearchControl extends SearchNode {
 		public static $strRangeDelim = ' - ';
 		/** @var QControl */
 		private $objControl;
@@ -101,7 +101,7 @@
 		 * @return \QControl
 		 * @throws QCallerException
 		 */
-		public function AddSearchControl($property, $type, $name = null) {
+		public function CreateSearchControl($property, $type, $name = null) {
 			$css = 'search_'.preg_replace('/\W+/', '_', strtolower($property));
 			$action = new QAjaxControlAction($this, "btnSearch_Click");
 			if (is_string($type)) switch ($type) {
@@ -160,9 +160,31 @@
 			}
 			$objControl->Name = $name ? $name : _tr($property);
 			$objControl->UseWrapper = false;
-			$this->objSearchControls[$property] = new SearchControl($objControl, $property, $type);
-			$this->objCurrentCondition = null;
 			return $objControl;
+		}
+
+		/**
+		 * @param string $property
+		 * @param string|array|QControl|SearchControl $type
+		 * @param string|null $name
+		 * @return \QControl
+		 * @throws QCallerException
+		 */
+		public function AddSearchControl($property, $type, $name = null)
+		{
+			if ($type instanceof SearchControl) {
+				$objSearchControl = $type;
+			} else {
+				if ($type instanceof QControl) {
+					$objControl = $type;
+				} else {
+					$objControl = $this->CreateSearchControl($property, $type, $name);
+				}
+				$objSearchControl = new SearchControl($objControl, $property, $type);
+			}
+			$this->objSearchControls[$property] = $objSearchControl;
+			$this->objCurrentCondition = null;
+			return $objSearchControl->GetControl();
 		}
 
 		public function btnSearch_Click($strFormId, $strControlId, $strParameter) {
@@ -212,7 +234,7 @@
 		 * @return QQCondition
 		 */
 		public function GetCondition() {
-			return $this->objSearchOptions->SearchCondition0($this->objBaseNode, $this->objSearchControls);
+			return $this->objSearchOptions->SearchConditionForNodes($this->objBaseNode, $this->objSearchControls);
 		}
 
 		/**

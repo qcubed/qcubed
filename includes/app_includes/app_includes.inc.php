@@ -80,7 +80,7 @@
 	QApplicationBase::$ClassFile['topmenu'] = __APP_INCLUDES__ . '/classes/TopMenu.class.php';
 
 	QApplicationBase::$ClassFile['qgenericsearchoptions'] = __APP_INCLUDES__ . '/classes/QGenericSearchOptions.class.php';
-	QApplicationBase::$ClassFile['searchterm'] = __APP_INCLUDES__ . '/classes/QGenericSearchOptions.class.php';
+	QApplicationBase::$ClassFile['searchnode'] = __APP_INCLUDES__ . '/classes/QGenericSearchOptions.class.php';
 
 	QApplicationBase::$ClassFile['searchcontrol'] = __APP_INCLUDES__ . '/classes/SearchPanel.class.php';
 	QApplicationBase::$ClassFile['searchpanel'] = __APP_INCLUDES__ . '/classes/SearchPanel.class.php';
