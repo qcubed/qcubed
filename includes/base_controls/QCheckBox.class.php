@@ -364,13 +364,13 @@ TMPL;
 		/**
 		 * Generate code to reload data from the ModelConnector into this control, or load it for the first time
 		 *
-		 * @param QCodeGen $objCodeGen
+		 * @param QDatabaseCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 */
-		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);

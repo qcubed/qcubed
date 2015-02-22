@@ -137,7 +137,7 @@ TMPL;
 		/**
 		 * Generate code to reload data from the ModelConnector into this control, or load it for the first time
 		 *
-		 * @param QCodeGen                                       $objCodeGen
+		 * @param QDatabaseCodeGen                               $objCodeGen
 		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param boolean                                        $blnInit Generate initialization code instead of reload
@@ -145,7 +145,7 @@ TMPL;
 		 * @return string Function definition
 		 * @throws Exception
 		 */
-		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);

@@ -226,14 +226,14 @@
 		/**
 		 * Return code that will update the control with data from the database.
 		 *
-		 * @param QCodeGen                                       $objCodeGen
+		 * @param QDatabaseCodeGen                               $objCodeGen
 		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param bool                                           $blnInit
 		 *
 		 * @return string
 		 */
-		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
@@ -250,13 +250,13 @@
 		/**
 		 * Return code that will update the database with info from the control.
 		 *
-		 * @param QCodeGen                                       $objCodeGen
+		 * @param QDatabaseCodeGen                                       $objCodeGen
 		 * @param QTable                                         $objTable
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 */
-		public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorUpdate(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);

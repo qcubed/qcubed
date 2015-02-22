@@ -551,7 +551,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Cancel() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "cancel");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "cancel", QJsPriority::Low);
 		}
 		/**
 		 * Removes the sortable functionality completely. This will return the
@@ -559,21 +559,21 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Destroy() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the sortable.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Disable() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the sortable.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Enable() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
 		/**
 		 * Retrieves the sortables instance object. If the element does not have
@@ -584,7 +584,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Instance() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
 		 * Gets the value currently associated with the specified optionName. 
@@ -595,7 +595,7 @@
 		 * 
 		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
 		public function Option($optionName) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -603,7 +603,7 @@
 		 * 
 		 * 	* This signature does not accept any arguments.		 */
 		public function Option1() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
 		/**
 		 * Sets the value of the sortable option associated with the specified
@@ -617,14 +617,14 @@
 		 * 	* optionName Type: String The name of the option to set.
 		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
 		public function Option2($optionName, $value) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the sortable.
 		 * 
 		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
 		public function Option3($options) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 		/**
 		 * Refresh the sortable items. Triggers the reloading of all sortable
@@ -632,7 +632,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Refresh() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh", QJsPriority::Low);
 		}
 		/**
 		 * Refresh the cached positions of the sortable items. Calling this
@@ -640,7 +640,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function RefreshPositions() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refreshPositions");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refreshPositions", QJsPriority::Low);
 		}
 		/**
 		 * Serializes the sortables item ids into a form/ajax submittable string.
@@ -668,7 +668,7 @@
 		 * 	* expression (default: /(.+)[-=_](.+)/) Type: RegExp A regular
 		 * expression used to split the attribute value into key and value parts.		 * @param $options		 */
 		public function Serialize($options) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "serialize", $options);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "serialize", $options, QJsPriority::Low);
 		}
 		/**
 		 * Serializes the sortables item ids into an array of string.
@@ -678,7 +678,7 @@
 		 * 	* attribute (default: "id") Type: String The name of the attribute to
 		 * use for the values.		 * @param $options		 */
 		public function ToArray($options) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "toArray", $options);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "toArray", $options, QJsPriority::Low);
 		}
 
 

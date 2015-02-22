@@ -143,7 +143,7 @@
 				}
 				$strArgs = join(", ", $args);
 ?>
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), <?= $strArgs; ?>);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), <?= $strArgs; ?>, QJsPriority::Low);
 		}
 <?php } ?>
 

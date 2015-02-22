@@ -452,7 +452,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Destroy() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Opens the datepicker in a dialog box.
@@ -466,7 +466,7 @@
 		 * the dialog as [x, y] or a MouseEvent that contains the coordinates. If
 		 * not specified the dialog is centered on the screen.		 * @param $date		 * @param $onSelect		 * @param $settings		 * @param $pos		 */
 		public function Dialog($date, $onSelect = null, $settings = null, $pos = null) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "dialog", $date, $onSelect, $settings, $pos);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "dialog", $date, $onSelect, $settings, $pos, QJsPriority::Low);
 		}
 		/**
 		 * Returns the current date for the datepicker or null if no date has
@@ -474,21 +474,21 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function GetDate() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "getDate");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "getDate", QJsPriority::Low);
 		}
 		/**
 		 * Close a previously opened date picker.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Hide() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "hide");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "hide", QJsPriority::Low);
 		}
 		/**
 		 * Determine whether a date picker has been disabled.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function IsDisabled() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "isDisabled");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "isDisabled", QJsPriority::Low);
 		}
 		/**
 		 * Gets the value currently associated with the specified optionName. 
@@ -499,7 +499,7 @@
 		 * 
 		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
 		public function Option($optionName) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -507,7 +507,7 @@
 		 * 
 		 * 	* This signature does not accept any arguments.		 */
 		public function Option1() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
 		/**
 		 * Sets the value of the datepicker option associated with the specified
@@ -521,21 +521,21 @@
 		 * 	* optionName Type: String The name of the option to set.
 		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
 		public function Option2($optionName, $value) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the datepicker.
 		 * 
 		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
 		public function Option3($options) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 		/**
 		 * Redraw the date picker, after having made some external modifications.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Refresh() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh", QJsPriority::Low);
 		}
 		/**
 		 * Sets the date for the datepicker. The new date may be a Date object or
@@ -546,7 +546,7 @@
 		 * 
 		 * 	* date Type: String or Date The new date.		 * @param $date		 */
 		public function SetDate($date) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "setDate", $date);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "setDate", $date, QJsPriority::Low);
 		}
 		/**
 		 * Open the date picker. If the datepicker is attached to an input, the
@@ -554,7 +554,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Show() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "show");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "show", QJsPriority::Low);
 		}
 
 

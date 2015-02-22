@@ -697,12 +697,12 @@
 		 * Generate code that will be inserted into the ModelConnector to connect a database object with this control.
 		 * This is called during the codegen process.
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QDatabaseCodeGen $objCodeGen
+		 * @param QTable 			$objTable
+		 * @param QColumn 			$objColumn
 		 * @return string
 		 */
-		public static function Codegen_ConnectorCreate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorCreate(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strClassName = $objTable->ClassName;
 			$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
@@ -781,14 +781,14 @@ TMPL;
 		/**
 		 * Generate code to reload data from the Model into this control.
 		 *
-		 * @param QCodeGen $objCodeGen Codegen Object
+		 * @param QDatabaseCodeGen $objCodeGen Codegen Object
 		 * @param QTable   $objTable   Table Object
 		 * @param QColumn  $objColumn  Column Object
 		 * @param boolean  $blnInit    Is initializing a new control verses loading a previously created control
 		 *
 		 * @return string Generated code
 		 */
-		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
@@ -805,13 +805,13 @@ TMPL;
 		/**
 		 * Return code to update the Model object with the contents of the control.
 		 *
-		 * @param QCodeGen $objCodeGen Codegen Object
+		 * @param QDatabaseCodeGen $objCodeGen Codegen Object
 		 * @param QTable   $objTable   Table Object
 		 * @param QColumn  $objColumn  Column Object
 		 *
 		 * @return string Generated code
 		 */
-		public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorUpdate(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);

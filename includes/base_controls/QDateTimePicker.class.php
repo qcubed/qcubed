@@ -535,14 +535,14 @@ TMPL;
 		/**
 		 * Generate code to reload data from the ModelConnector into this control, or load it for the first time
 		 *
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable   $objTable
-		 * @param QColumn  $objColumn
-		 * @param boolean  $blnInit Generate initialization code instead of reload
+		 * @param QDatabaseCodeGen 	$objCodeGen
+		 * @param QTable   			$objTable
+		 * @param QColumn  			$objColumn
+		 * @param boolean  			$blnInit Generate initialization code instead of reload
 		 *
 		 * @return string
 		 */
-		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
+		public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);

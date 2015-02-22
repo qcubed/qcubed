@@ -529,12 +529,12 @@ TMPL;
 		}
 
 		/**
-		 * @param QCodeGen $objCodeGen
+		 * @param QDatabaseCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn|QReverseReference $objColumn
 		 * @return string
 		 */
-		public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
+		public static function Codegen_ConnectorUpdate(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = static::Codegen_VarName($strPropName);

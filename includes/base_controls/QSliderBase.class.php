@@ -144,13 +144,13 @@ TMPL;
 
 		/**
 		 * Generate code to reload data from the Model into this control.
-		 * @param QCodeGen $objCodeGen
+		 * @param QDatabaseCodeGen $objCodeGen
 		 * @param QTable $objTable
 		 * @param QColumn $objColumn
 		 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
 		 * @return string
 		 */
-		public static function Codegen_ConnectorRefresh(QCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = static::Codegen_VarName($strPropName);
