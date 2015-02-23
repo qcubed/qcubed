@@ -67,7 +67,9 @@
 		//////////
 		public function ParsePostData() {
 			if (QApplication::$RequestMode == QRequestMode::Ajax) {
-				$this->SelectedIndex = $_POST[$this->strControlId];
+				if (isset($_POST[$this->strControlId])) {
+					$this->SelectedIndex = $_POST[$this->strControlId];
+				}
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (isset($_POST[$this->strControlId])) {
@@ -79,15 +81,13 @@
 		}
 
 		public function GetEndScript() {
-			$strScript = sprintf ('$j("#%s").on("change", "input", qc.formObjChanged);', $this->ControlId); // detect change for framework
-
 			$ctrlId = $this->ControlId;
 			if ($this->intButtonMode == self::ButtonModeSet) {
-				$strScript .= sprintf ('jQuery("#%s").buttonset();', $ctrlId) . "\n";
+				QApplication::ExecuteControlCommand($ctrlId, 'buttonset');
 			} elseif ($this->intButtonMode == self::ButtonModeJq) {
-				$strScript .= sprintf ('jQuery("input:radio", "#%s").button();', $ctrlId) . "\n";
+				QApplication::ExecuteSelectorFunction(["input:radio", "#" . $ctrlId], 'button');
 			}
-			$strScript .= parent::GetEndScript();
+			$strScript = parent::GetEndScript();
 			return $strScript;
 		}
 

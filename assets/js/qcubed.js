@@ -128,7 +128,7 @@ qcubed = {
         else if (id && strType === 'radio' && name !== id) { // a radio button with a group name
             return id; // these buttons are changed individually
         }
-        else if (strType === 'hidden') { // a hidden field, possibly associated with a different widget
+        else if (id && strType === 'hidden') { // a hidden field, possibly associated with a different widget
             if ((indexOffset = id.lastIndexOf('_')) >= 0) {
                 return id.substr(0, indexOffset); // use the id of the parent control
             }
@@ -150,12 +150,12 @@ qcubed = {
         if (strType === 'radio' && name !== id) { // a radio button with a group name
             // since html does not submit a changed event on the deselected radio, we are going to invalidate all the controls in the group
             var group = $j('input[name=' + name + ']');
-            group.each(function () {
+            if (group) group.each(function () {
                 id = $j(this).attr('id');
                 qcubed.formObjsModified[id] = true;
             });
         }
-        else {
+        else if (id) {
             qcubed.formObjsModified[id] = true;
         }
     },
@@ -164,9 +164,12 @@ qcubed = {
      * @param strFormId
      */
     initForm: function (strFormId) {
-        // Allow any control to trigger a change and post of its data.
-        // Particularly useful for custom controls that use hidden inputs to transfer data
-        $j('#' + strFormId).on ('qformObjChanged', this.formObjChanged);
+
+        $j('#' + strFormId).on ('qformObjChanged', this.formObjChanged); // Allow any control, including hidden inputs, to trigger a change and post of its data.
+        $j('#' + strFormId).on ('input', 'input, textarea', this.formObjChanged);
+        // This selection on input and textarea below seems redundant, but its not. Widgets, like autocomplete, that are based on inputs
+        // will only fire a change event when they change the text, but not an input event.
+        $j('#' + strFormId).on ('change', 'input, select, textarea', this.formObjChanged);
     },
 
     /**

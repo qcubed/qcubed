@@ -31,7 +31,9 @@
 		 */
 		public function ParsePostData() {
 			if (QApplication::$RequestMode == QRequestMode::Ajax) {
-				$this->blnChecked = QType::Cast ($_POST[$this->strControlId], QType::Boolean);
+				if (isset($_POST[$this->strControlId])) {
+					$this->blnChecked = QType::Cast ($_POST[$this->strControlId], QType::Boolean);
+				}
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if ($this->strGroupName)
