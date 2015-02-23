@@ -70,6 +70,25 @@
 			return $this->RenderButton($attrOverride);
 		}
 
+		/**
+		 * Returns the current state of the control to be able to restore it later.
+		 * @return mixed
+		 */
+		public function GetState(){
+			return array('Checked'=>$this->Checked);
+		}
+
+		/**
+		 * Restore the state of the control.
+		 * @param mixed $state Previously saved state as returned by GetState above.
+		 */
+		public function PutState($state) {
+			if (isset($state['Checked'])) {
+				$this->SelectedValues = $state['Checked'];
+			}
+		}
+
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////

@@ -367,6 +367,24 @@
 			QApplication::ExecuteJavaScript(sprintf('qc.getW("%s").select();', $this->strControlId));
 		}
 
+		/**
+		 * Returns the current state of the control to be able to restore it later.
+		 * @return mixed
+		 */
+		protected function GetState(){
+			return array('text'=>$this->Text);
+		}
+
+		/**
+		 * Restore the state of the control.
+		 * @param mixed $state Previously saved state as returned by GetState above.
+		 */
+		protected function PutState($state) {
+			if (isset($state['text'])) {
+				$this->Text = $state['text'];
+			}
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////

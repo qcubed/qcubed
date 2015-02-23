@@ -76,6 +76,25 @@
 		}
 
 		/**
+		 * Returns the state data to restore later.
+		 * @return mixed
+		 */
+		protected function GetState() {
+			return ['active'=>$this->Active];
+		}
+
+		/**
+		 * Restore the state of the control.
+		 * @param mixed $state
+		 */
+		protected function PutState($state) {
+			if (isset($state['active'])) {
+				$this->Active = $state['active'];
+			}
+		}
+
+
+		/**
 		 * PHP __set magic method implementation
 		 * @param string $strName Name of the property
 		 * @param string $mixValue Value of the property
