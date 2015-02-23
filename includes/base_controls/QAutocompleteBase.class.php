@@ -79,29 +79,23 @@
 		//protected $strMultipleValueDelimiter = null;
 		//protected $blnDisplayHtml = false;
 
+		public function __construct($objParentObject, $strControlId = null) {
+			parent::__construct($objParentObject, $strControlId);
+
+			$this->AddJavascriptFile(__JS_ASSETS__ . '/qcubed.autocomplete.js');
+		}
+
 		/**
 		 * When this filter is passed to QAutocomplete::UseFilter, only the items in the source list that contain the typed term will be shown in the drop-down
 		 * This is the default filter used by the jQuery autocomplete. Useful when resetting from a previousely set filter.
 		 * @see QAutocomplete::UseFilter
 		 */
-		const FILTER_CONTAINS ='
-		function(array, term) {
-			var matcher = new RegExp($j.ui.autocomplete.escapeRegex(term), "i");
-			return $j.grep(array, function(value) {
-				return matcher.test(value.label || value.value || value);
-			});
-		}';
+		const FILTER_CONTAINS ='return $j.ui.autocomplete.escapeRegex(term);'; // this is the default filter
 		/**
-		 * When this filter is passed to QAutocomplete::UseFilter, only the items in the source list that start with the typed term will be shown in the drop-down
+		 * When this filter is passed to QAutocomplete::UseFilter, only the items in the source list that begin with the typed term will be shown in the drop-down
 		 * @see QAutocomplete::UseFilter
 		 */
-		const FILTER_STARTS_WITH ='
-		function(array, term) {
-			var matcher = new RegExp("^" + $j.ui.autocomplete.escapeRegex(term), "i");
-			return $j.grep(array, function(value) {
-				return matcher.test(value.label || value.value || value);
-			});
-		}';
+		const FILTER_STARTS_WITH ='return ("^" + $j.ui.autocomplete.escapeRegex(term));';
 
 		/**
 		 * Set a filter to use when using a simple array as a source (in non-ajax mode). Note that ALL non-ajax autocompletes on the page
@@ -120,8 +114,9 @@
 		 */
 		static public function UseFilter($filter) {
 			if (is_string($filter)) {
-				$filter = new QJsVarName($filter);
-			} else if (!$filter instanceof QJsClosure) {
+				$filter =  new QJsClosure ($filter, ['term']);
+			}
+			else if (!($filter instanceof QJsClosure)) {
 				throw new QCallerException("filter must be either a string or an instance of QJsClosure");
 			}
 			QApplication::ExecuteJsFunction('qcubed.acUseFilter', $filter);
