@@ -366,7 +366,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Close() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close", QJsPriority::Low);
 		}
 		/**
 		 * Removes the dialog functionality completely. This will return the
@@ -374,7 +374,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Destroy() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Retrieves the dialogs instance object. If the element does not have an
@@ -385,28 +385,28 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Instance() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
 		 * Whether the dialog is currently open.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function IsOpen() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "isOpen");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "isOpen", QJsPriority::Low);
 		}
 		/**
 		 * Moves the dialog to the top of the dialog stack.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function MoveToTop() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "moveToTop");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "moveToTop", QJsPriority::Low);
 		}
 		/**
 		 * Opens the dialog.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Open() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "open");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "open", QJsPriority::Low);
 		}
 		/**
 		 * Gets the value currently associated with the specified optionName. 
@@ -417,7 +417,7 @@
 		 * 
 		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
 		public function Option($optionName) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -425,7 +425,7 @@
 		 * 
 		 * 	* This signature does not accept any arguments.		 */
 		public function Option1() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
 		/**
 		 * Sets the value of the dialog option associated with the specified
@@ -439,14 +439,14 @@
 		 * 	* optionName Type: String The name of the option to set.
 		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
 		public function Option2($optionName, $value) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the dialog.
 		 * 
 		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
 		public function Option3($options) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 
 
@@ -656,25 +656,25 @@
 		}
 
 		/**
-		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
-		* used by the metacontrol designer dialog to display a list of options for the control.
-		* @return QMetaParam[]
+		* If this control is attachable to a codegenerated control in a ModelConnector, this function will be
+		* used by the ModelConnector designer dialog to display a list of options for the control.
+		* @return QModelConnectorParam[]
 		**/
-		public static function GetMetaParams() {
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'AutoOpen', 'If set to true, the dialog will automatically open uponinitialization. If false, the dialog will stay hidden until the open()method is called.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'CloseOnEscape', 'Specifies whether the dialog should close when it has focus and theuser presses the escape (ESC) key.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'CloseText', 'Specifies the text for the close button. Note that the close text isvisibly hidden when using a standard theme.', QType::String),
-				new QMetaParam (get_called_class(), 'DialogClass', 'The specified class name(s) will be added to the dialog, foradditional theming.', QType::String),
-				new QMetaParam (get_called_class(), 'Draggable', 'If set to true, the dialog will be draggable by the title bar.Requires the jQuery UI Draggable widget to be included.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'MaxHeight', 'The maximum height to which the dialog can be resized, in pixels.', QType::Integer),
-				new QMetaParam (get_called_class(), 'MaxWidth', 'The maximum width to which the dialog can be resized, in pixels.', QType::Integer),
-				new QMetaParam (get_called_class(), 'MinHeight', 'The minimum height to which the dialog can be resized, in pixels.', QType::Integer),
-				new QMetaParam (get_called_class(), 'MinWidth', 'The minimum width to which the dialog can be resized, in pixels.', QType::Integer),
-				new QMetaParam (get_called_class(), 'Modal', 'If set to true, the dialog will have modal behavior; other items onthe page will be disabled, i.e., cannot be interacted with. Modaldialogs create an overlay below the dialog but above other pageelements.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Resizable', 'If set to true, the dialog will be resizable. Requires the jQuery UIResizable widget to be included.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Title', 'Specifies the title of the dialog. If the value is null, the titleattribute on the dialog source element will be used.', QType::String),
-				new QMetaParam (get_called_class(), 'Width', 'The width of the dialog, in pixels.', QType::Integer),
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'AutoOpen', 'If set to true, the dialog will automatically open uponinitialization. If false, the dialog will stay hidden until the open()method is called.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'CloseOnEscape', 'Specifies whether the dialog should close when it has focus and theuser presses the escape (ESC) key.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'CloseText', 'Specifies the text for the close button. Note that the close text isvisibly hidden when using a standard theme.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'DialogClass', 'The specified class name(s) will be added to the dialog, foradditional theming.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Draggable', 'If set to true, the dialog will be draggable by the title bar.Requires the jQuery UI Draggable widget to be included.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'MaxHeight', 'The maximum height to which the dialog can be resized, in pixels.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'MaxWidth', 'The maximum width to which the dialog can be resized, in pixels.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'MinHeight', 'The minimum height to which the dialog can be resized, in pixels.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'MinWidth', 'The minimum width to which the dialog can be resized, in pixels.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Modal', 'If set to true, the dialog will have modal behavior; other items onthe page will be disabled, i.e., cannot be interacted with. Modaldialogs create an overlay below the dialog but above other pageelements.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Resizable', 'If set to true, the dialog will be resizable. Requires the jQuery UIResizable widget to be included.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Title', 'Specifies the title of the dialog. If the value is null, the titleattribute on the dialog source element will be used.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Width', 'The width of the dialog, in pixels.', QType::Integer),
 			));
 		}
 	}

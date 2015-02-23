@@ -78,7 +78,7 @@
 <file directoryToken="__EXAMPLES__" path="other/attribute_overriding.tpl.php" md5="9b86b392c57a0fdd5b4feeffdcacff62"/>
 <file directoryToken="__EXAMPLES__" path="other/formgen.php" md5="6c07b2946260c7b73cb7e9a7b1478463"/>
 <file directoryToken="__EXAMPLES__" path="other/print.php" md5="08884ba3d3d3bb382914aedd0832b634"/>
-<file directoryToken="__EXAMPLES__" path="other/metacontrols.tpl.php" md5="55bb4db87488ab78b31e5a7b5757c710"/>
+<file directoryToken="__EXAMPLES__" path="other/ModelConnectors.tpl.php" md5="55bb4db87488ab78b31e5a7b5757c710"/>
 <file directoryToken="__EXAMPLES__" path="other/attribute_overriding.php" md5="9dbd4b6598a235fa4e9fe8503902fc47"/>
 <file directoryToken="__EXAMPLES__" path="other/optimistic_locking.php" md5="e6ce851b53477e9423d6c1b98f588419"/>
 <file directoryToken="__EXAMPLES__" path="other/meta_datagrids.php" md5="ff9c6c0ba1de30e8a92bfd6572d1f584"/>
@@ -87,7 +87,7 @@
 <file directoryToken="__EXAMPLES__" path="other/form_state.php" md5="717924b2d504984a7bc42debe8d6136f"/>
 <file directoryToken="__EXAMPLES__" path="other/single.php" md5="ca10b8d40ebda88901107c41fe993201"/>
 <file directoryToken="__EXAMPLES__" path="other/alternate_template.php" md5="2cba87f5bdae313184d71e9c92d77337"/>
-<file directoryToken="__EXAMPLES__" path="other/metacontrols.php" md5="161ae145b91ff1a42b4e3a86b2e5eede"/>
+<file directoryToken="__EXAMPLES__" path="other/ModelConnectors.php" md5="161ae145b91ff1a42b4e3a86b2e5eede"/>
 <file directoryToken="__EXAMPLES__" path="other/form_state.tpl.php" md5="8a822df48134b10bab85d8ef1c1bd496"/>
 <file directoryToken="__EXAMPLES__" path="other/single.tpl.php" md5="e43371be54c0c81afe762ccfa96527c9"/>
 <file directoryToken="__EXAMPLES__" path="other/form_drafts.php" md5="e4fd9760871a0571874a2b91bb6dbb15"/>
@@ -497,7 +497,7 @@
 </files>
 <directories>
 <directory token="__MODEL_GEN__" coreFlag="0" relativeFlag="0"/>
-<directory token="__META_CONTROLS__" coreFlag="0" relativeFlag="0"/>
+<directory token="__MODEL_CONNECTOR__" coreFlag="0" relativeFlag="0"/>
 <directory token="__MODEL__" coreFlag="0" relativeFlag="0"/>
 <directory token="__QCUBED_CORE__" coreFlag="1" relativeFlag="0"/>
 <directory token="__PANEL_DRAFTS__" coreFlag="0" relativeFlag="1"/>

@@ -119,10 +119,10 @@
 			overlay on a list box. </p>
         <p>However, if your interface is a unique way of editing data, you will need to implement some static methods to
 			output the code required to bind the control to the database. See the <strong>Codegen_VarName</strong>,
-			<strong>Codegen_MetaCreate</strong>, <strong>Codegen_MetaRefresh</strong> and <strong>Codegen_MetaUpdate</strong>
+			<strong>Codegen_ConnectorCreate</strong>, <strong>Codegen_ConnectorRefresh</strong> and <strong>Codegen_ConnectorUpdate</strong>
 			functions in the <strong>QSlider</strong> control for an example of how to generate the binding code needed.</p>
-        <p>Implement the 		<strong>GetMetaParams</strong>function to allow a user of the control to set all of your
-			<strong>__set</strong> parameters through the MetaControl Designer user-interface. This will make it much
+        <p>Implement the <strong>GetModelConnectorParams</strong>function to allow a user of the control to set all of your
+			<strong>__set</strong> parameters through the ModelConnector Designer user-interface. This will make it much
 			easier for users to know and use the capabilities of your control.</p>
         <p>Finally, in order to make your control available to the designer as an option for the particular data types
 			your control manipulates, create a <strong>control_registry.inc.php</strong> file and put it in the root of

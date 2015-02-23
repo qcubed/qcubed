@@ -739,28 +739,28 @@
 		}
 
 		/**
-		 * Returns the control label name as used in the meta control corresponding to this column.
+		 * Returns the control label name as used in the ModelConnector corresponding to this column.
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 */
-		public static function MetaControlControlName ($objColumn) {
+		public static function ModelConnectorControlName ($objColumn) {
 			if (($o = $objColumn->Options) && isset ($o['Name'])) { // Did developer default?
 				return $o['Name'];
 			}
-			return QConvertNotation::WordsFromCamelCase(QCodeGen::MetaControlPropertyName($objColumn));
+			return QConvertNotation::WordsFromCamelCase(QCodeGen::ModelConnectorPropertyName($objColumn));
 		}
 
 		/**
-		 * The property name used in the meta control for the given column or virtual column
+		 * The property name used in the ModelConnector for the given column or virtual column
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 * @throws Exception
 		 */
-		public static function MetaControlPropertyName ($objColumn) {
+		public static function ModelConnectorPropertyName ($objColumn) {
 			if ($objColumn instanceof QColumn) {
 				if ($objColumn->Reference) {
 					return $objColumn->Reference->PropertyName;
@@ -792,9 +792,9 @@
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
-		public function MetaControlVariableName($objColumn) {
-			$strPropName = $this->MetaControlPropertyName($objColumn);
-			$strClassName = $this->MetaControlControlClass($objColumn);
+		public function ModelConnectorVariableName($objColumn) {
+			$strPropName = $this->ModelConnectorPropertyName($objColumn);
+			$strClassName = $this->ModelConnectorControlClass($objColumn);
 			return $strClassName::Codegen_VarName ($strPropName);
 		}
 
@@ -804,8 +804,8 @@
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
-		public function MetaControlLabelVariableName($objColumn) {
-			$strPropName = $this->MetaControlPropertyName($objColumn);
+		public function ModelConnectorLabelVariableName($objColumn) {
+			$strPropName = $this->ModelConnectorPropertyName($objColumn);
 			return QLabel::Codegen_VarName($strPropName);
 		}
 
@@ -818,7 +818,7 @@
 		 * @return string Class name of control which can handle this column's data
 		 * @throws Exception
 		 */
-		public function MetaControlControlClass($objColumn) {
+		public function ModelConnectorControlClass($objColumn) {
 
 			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {

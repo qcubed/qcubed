@@ -254,14 +254,14 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Destroy() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables all tabs.
 		 * 
 		 * 	* This signature does not accept any arguments.		 */
 		public function Disable() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Disables a tab. The selected tab cannot be disabled. To disable more
@@ -270,21 +270,21 @@
 		 * 
 		 * 	* index Type: Number The zero-based index of the tab to disable.		 * @param $index		 */
 		public function Disable1($index) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", $index);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", $index, QJsPriority::Low);
 		}
 		/**
 		 * Disables a tab. The selected tab cannot be disabled.
 		 * 
 		 * 	* href Type: String The href of the tab to disable.		 * @param $href		 */
 		public function Disable2($href) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", $href);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", $href, QJsPriority::Low);
 		}
 		/**
 		 * Enables all tabs.
 		 * 
 		 * 	* This signature does not accept any arguments.		 */
 		public function Enable() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
 		/**
 		 * Enables a tab. To enable more than one tab at once reset the disabled
@@ -292,14 +292,14 @@
 		 * 
 		 * 	* index Type: Number The zero-based index of the tab to enable.		 * @param $index		 */
 		public function Enable1($index) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", $index);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", $index, QJsPriority::Low);
 		}
 		/**
 		 * Enables a tab.
 		 * 
 		 * 	* href Type: String The href of the tab to enable.		 * @param $href		 */
 		public function Enable2($href) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", $href);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", $href, QJsPriority::Low);
 		}
 		/**
 		 * Retrieves the tabss instance object. If the element does not have an
@@ -310,21 +310,21 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Instance() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
 		 * Loads the panel content of a remote tab.
 		 * 
 		 * 	* index Type: Number The zero-based index of the tab to load.		 * @param $index		 */
 		public function Load($index) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "load", $index);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "load", $index, QJsPriority::Low);
 		}
 		/**
 		 * Loads the panel content of a remote tab.
 		 * 
 		 * 	* href Type: String The href of the tab to load.		 * @param $href		 */
 		public function Load1($href) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "load", $href);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "load", $href, QJsPriority::Low);
 		}
 		/**
 		 * Gets the value currently associated with the specified optionName. 
@@ -335,7 +335,7 @@
 		 * 
 		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
 		public function Option($optionName) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -343,7 +343,7 @@
 		 * 
 		 * 	* This signature does not accept any arguments.		 */
 		public function Option1() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
 		/**
 		 * Sets the value of the tabs option associated with the specified
@@ -357,14 +357,14 @@
 		 * 	* optionName Type: String The name of the option to set.
 		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
 		public function Option2($optionName, $value) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the tabs.
 		 * 
 		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
 		public function Option3($options) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 		/**
 		 * Process any tabs that were added or removed directly in the DOM and
@@ -373,7 +373,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Refresh() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh", QJsPriority::Low);
 		}
 
 
@@ -466,15 +466,15 @@
 		}
 
 		/**
-		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
-		* used by the metacontrol designer dialog to display a list of options for the control.
-		* @return QMetaParam[]
+		* If this control is attachable to a codegenerated control in a ModelConnector, this function will be
+		* used by the ModelConnector designer dialog to display a list of options for the control.
+		* @return QModelConnectorParam[]
 		**/
-		public static function GetMetaParams() {
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'Collapsible', 'When set to true, the active panel can be closed.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Event', 'The type of event that the tabs should react to in order to activatethe tab. To activate on hover, use \"mouseover\".', QType::String),
-				new QMetaParam (get_called_class(), 'HeightStyle', 'Controls the height of the tabs widget and each panel. Possiblevalues: 	* \"auto\": All panels will be set to the height of the tallest panel.	* \"fill\": Expand to the available height based on the tabs parentheight.	* \"content\": Each panel will be only as tall as its content.', QType::String),
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'Collapsible', 'When set to true, the active panel can be closed.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Event', 'The type of event that the tabs should react to in order to activatethe tab. To activate on hover, use \"mouseover\".', QType::String),
+				new QModelConnectorParam (get_called_class(), 'HeightStyle', 'Controls the height of the tabs widget and each panel. Possiblevalues: 	* \"auto\": All panels will be set to the height of the tallest panel.	* \"fill\": Expand to the available height based on the tabs parentheight.	* \"content\": Each panel will be only as tall as its content.', QType::String),
 			));
 		}
 	}

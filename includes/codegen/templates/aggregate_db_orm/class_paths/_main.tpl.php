@@ -17,9 +17,9 @@
 		QApplicationBase::$ClassFile['<?= strtolower($objTable->ClassName) ?>'] = __MODEL__ . '/<?= $objTable->ClassName ?>.class.php';
 		QApplicationBase::$ClassFile['qqnode<?= strtolower($objTable->ClassName) ?>'] = __MODEL__ . '/<?= $objTable->ClassName ?>.class.php';
 		QApplicationBase::$ClassFile['qqreversereferencenode<?= strtolower($objTable->ClassName) ?>'] = __MODEL__ . '/<?= $objTable->ClassName ?>.class.php';
-<?php } ?><?php if (__META_CONTROLS__) { ?>
-		QApplicationBase::$ClassFile['<?= strtolower($objTable->ClassName) ?>metacontrol'] = __META_CONTROLS__ . '/<?= $objTable->ClassName ?>MetaControl.class.php';
-		QApplicationBase::$ClassFile['<?= strtolower($objTable->ClassName) ?>datagrid'] = __META_CONTROLS__ . '/<?= $objTable->ClassName ?>DataGrid.class.php';
+<?php } ?><?php if (__MODEL_CONNECTOR__) { ?>
+		QApplicationBase::$ClassFile['<?= strtolower($objTable->ClassName) ?>connector'] = __MODEL_CONNECTOR__ . '/<?= $objTable->ClassName ?>Connector.class.php';
+		QApplicationBase::$ClassFile['<?= strtolower($objTable->ClassName) ?>datagrid'] = __MODEL_CONNECTOR__ . '/<?= $objTable->ClassName ?>DataGrid.class.php';
 <?php } ?>
 
 <?php } ?>

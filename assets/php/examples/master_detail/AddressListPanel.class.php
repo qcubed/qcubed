@@ -17,7 +17,7 @@
 	 */
      
 	class AddressListPanel extends QPanel {
-		// Local instance of the Meta DataGrid to list Addresses
+		// Local instance of the DataGrid connector to list Addresses
 		/**
 		 * @var AddressDataGrid
 		 */
@@ -26,7 +26,7 @@
 		// Protected Objects
 		protected $objPerson;
 
-		protected $metaAddress;
+		protected $mctAddress;
 		protected $lblId;
 		protected $lblPerson;
 		protected $txtStreet;
@@ -97,21 +97,21 @@
 				'HtmlEntities=false','Width=1px'));
 
 
-			$this->metaAddress = AddressMetaControl::CreateFromPathInfo($this->dtgAddresses);
+			$this->mctAddress = AddressConnector::CreateFromPathInfo($this->dtgAddresses);
 
-			$this->lblId = $this->metaAddress->lblId_Create();
+			$this->lblId = $this->mctAddress->lblId_Create();
 			$this->lblId->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
 			$this->lblId->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
 
-			$this->lblPerson = $this->metaAddress->lblPerson_Create();
+			$this->lblPerson = $this->mctAddress->lblPerson_Create();
 			$this->lblPerson->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
 			$this->lblPerson->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
 
-			$this->txtStreet = $this->metaAddress->txtStreet_Create();
+			$this->txtStreet = $this->mctAddress->txtStreet_Create();
 			$this->txtStreet->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
 			$this->txtStreet->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
 
-			$this->txtCity = $this->metaAddress->txtCity_Create();
+			$this->txtCity = $this->mctAddress->txtCity_Create();
 			$this->txtCity->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
 			$this->txtCity->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
 

@@ -540,7 +540,7 @@
 				$objClass->Form_Initialize();
 
 				if (defined ('__DESIGN_MODE__')) {
-					$dlg = new QMetaEditDlg ($objClass, 'qmetaeditdlg');
+					$dlg = new QModelConnectorEditDlg ($objClass, 'qconnectoreditdlg');
 					$objControls = $objClass->GetAllControls();
 					foreach ($objControls as $objControl) {
 						if ($objControl != $dlg &&
@@ -600,7 +600,7 @@
 		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
 			$objControl = $this->GetControl($strControlId);
 			if ($objControl->LinkedNode) {
-				$dlg = $this->GetControl ('qmetaeditdlg');
+				$dlg = $this->GetControl ('qconnectoreditdlg');
 				$dlg->EditControl ($objControl);
 			}
 		}

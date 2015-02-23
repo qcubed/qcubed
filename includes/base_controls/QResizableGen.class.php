@@ -275,21 +275,21 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Destroy() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the resizable.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Disable() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the resizable.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Enable() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
 		/**
 		 * Retrieves the resizables instance object. If the element does not have
@@ -300,7 +300,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Instance() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
 		 * Gets the value currently associated with the specified optionName. 
@@ -311,7 +311,7 @@
 		 * 
 		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
 		public function Option($optionName) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -319,7 +319,7 @@
 		 * 
 		 * 	* This signature does not accept any arguments.		 */
 		public function Option1() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
 		/**
 		 * Sets the value of the resizable option associated with the specified
@@ -333,14 +333,14 @@
 		 * 	* optionName Type: String The name of the option to set.
 		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
 		public function Option2($optionName, $value) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the resizable.
 		 * 
 		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
 		public function Option3($options) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 
 
@@ -555,25 +555,25 @@
 		}
 
 		/**
-		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
-		* used by the metacontrol designer dialog to display a list of options for the control.
-		* @return QMetaParam[]
+		* If this control is attachable to a codegenerated control in a ModelConnector, this function will be
+		* used by the ModelConnector designer dialog to display a list of options for the control.
+		* @return QModelConnectorParam[]
 		**/
-		public static function GetMetaParams() {
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'Animate', 'Animates to the final size after resizing.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'AnimateEasing', 'Which easing to apply when using the animate option.', QType::String),
-				new QMetaParam (get_called_class(), 'AutoHide', 'Whether the handles should hide when the user is not hovering over theelement.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Delay', 'Tolerance, in milliseconds, for when resizing should start. Ifspecified, resizing will not start until after mouse is moved beyondduration. This can help prevent unintended resizing when clicking onan element.', QType::Integer),
-				new QMetaParam (get_called_class(), 'Disabled', 'Disables the resizable if set to true.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when resizing should start. If specified,resizing will not start until after mouse is moved beyond distance.This can help prevent unintended resizing when clicking on an element.', QType::Integer),
-				new QMetaParam (get_called_class(), 'Ghost', 'If set to true, a semi-transparent helper element is shown forresizing.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Grid', 'Snaps the resizing element to a grid, every x and y pixels. Arrayvalues: [ x, y ].', QType::ArrayType),
-				new QMetaParam (get_called_class(), 'Helper', 'A class name that will be added to a proxy element to outline theresize during the drag of the resize handle. Once the resize iscomplete, the original element is sized.', QType::String),
-				new QMetaParam (get_called_class(), 'MaxHeight', 'The maximum height the resizable should be allowed to resize to.', QType::Integer),
-				new QMetaParam (get_called_class(), 'MaxWidth', 'The maximum width the resizable should be allowed to resize to.', QType::Integer),
-				new QMetaParam (get_called_class(), 'MinHeight', 'The minimum height the resizable should be allowed to resize to.', QType::Integer),
-				new QMetaParam (get_called_class(), 'MinWidth', 'The minimum width the resizable should be allowed to resize to.', QType::Integer),
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'Animate', 'Animates to the final size after resizing.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'AnimateEasing', 'Which easing to apply when using the animate option.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'AutoHide', 'Whether the handles should hide when the user is not hovering over theelement.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Delay', 'Tolerance, in milliseconds, for when resizing should start. Ifspecified, resizing will not start until after mouse is moved beyondduration. This can help prevent unintended resizing when clicking onan element.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the resizable if set to true.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when resizing should start. If specified,resizing will not start until after mouse is moved beyond distance.This can help prevent unintended resizing when clicking on an element.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Ghost', 'If set to true, a semi-transparent helper element is shown forresizing.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Grid', 'Snaps the resizing element to a grid, every x and y pixels. Arrayvalues: [ x, y ].', QType::ArrayType),
+				new QModelConnectorParam (get_called_class(), 'Helper', 'A class name that will be added to a proxy element to outline theresize during the drag of the resize handle. Once the resize iscomplete, the original element is sized.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'MaxHeight', 'The maximum height the resizable should be allowed to resize to.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'MaxWidth', 'The maximum width the resizable should be allowed to resize to.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'MinHeight', 'The minimum height the resizable should be allowed to resize to.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'MinWidth', 'The minimum width the resizable should be allowed to resize to.', QType::Integer),
 			));
 		}
 	}

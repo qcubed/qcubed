@@ -2172,9 +2172,9 @@
 
 		/**** Codegen Helpers, used during the Codegen process only. ****/
 
-		public static function Codegen_MetaVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
-			$strClassName = $objCodeGen->MetaControlControlClass($objColumn);
-			$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+		public static function Codegen_ConnectorVariableDeclaration (QCodeGen $objCodeGen, $objColumn) {
+			$strClassName = $objCodeGen->ModelConnectorControlClass($objColumn);
+			$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
 
 			$strRet = <<<TMPL
 		/**
@@ -2197,7 +2197,7 @@ TMPL;
 		 * @param string $strControlVarName
 		 * @return string
 		 */
-		public static function Codegen_MetaCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
+		public static function Codegen_ConnectorCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
 			$strRet = '';
 
 			if ($objColumn instanceof QColumn) {
@@ -2247,13 +2247,13 @@ TMPL;
 		/**
 		 * Returns an description of the options available to modify by the designer for the code generator.
 		 *
-		 * @return QMetaParam[]
+		 * @return QModelConnectorParam[]
 		 */
-		public static function GetMetaParams() {
+		public static function GetModelConnectorParams() {
 			return array(
-				new QMetaParam ('QControl', 'CssClass', 'Css Class assigned to the control', QType::String),
-				new QMetaParam ('QControl', 'AccessKey', 'Access Key to focus control', QType::String),
-				new QMetaParam ('QControl', 'CausesValidation', 'How and what to validate. Can also be set to a control.', QMetaParam::SelectionList,
+				new QModelConnectorParam ('QControl', 'CssClass', 'Css Class assigned to the control', QType::String),
+				new QModelConnectorParam ('QControl', 'AccessKey', 'Access Key to focus control', QType::String),
+				new QModelConnectorParam ('QControl', 'CausesValidation', 'How and what to validate. Can also be set to a control.', QModelConnectorParam::SelectionList,
 					array(
 						null=>'None',
 						'QCausesValidation::AllControls'=>'All Controls',
@@ -2261,19 +2261,19 @@ TMPL;
 						'QCausesValidation::SiblingsOnly'=>'Siblings Only'
 					)
 				),
-				new QMetaParam ('QControl', 'Enabled', 'Will it start as enabled (default true)?', QType::Boolean),
-				new QMetaParam ('QControl', 'Required', 'Will it fail validation if nothing is entered (default depends on data definition, if NULL is allowed.)?', QType::Boolean),
-				new QMetaParam ('QControl', 'TabIndex', '', QType::Integer),
-				new QMetaParam ('QControl', 'ToolTip', '', QType::String),
-				new QMetaParam ('QControl', 'Visible', '', QType::Boolean),
-				new QMetaParam ('QControl', 'Height', 'Height in pixels. However, you can specify a different unit (e.g. 3.0 em).', QType::String),
-				new QMetaParam ('QControl', 'Width', 'Width in pixels. However, you can specify a different unit (e.g. 3.0 em).', QType::String),
-				new QMetaParam ('QControl', 'Instructions', 'Additional help for user.', QType::String),
-				new QMetaParam ('QControl', 'Moveable', '', QType::Boolean),
-				new QMetaParam ('QControl', 'Resizable', '', QType::Boolean),
-				new QMetaParam ('QControl', 'Droppable', '', QType::Boolean),
-				new QMetaParam ('QControl', 'UseWrapper', 'Control will be forced to be wrapped with a div', QType::Boolean),
-				new QMetaParam ('QControl', 'WrapperCssClass', '', QType::String)
+				new QModelConnectorParam ('QControl', 'Enabled', 'Will it start as enabled (default true)?', QType::Boolean),
+				new QModelConnectorParam ('QControl', 'Required', 'Will it fail validation if nothing is entered (default depends on data definition, if NULL is allowed.)?', QType::Boolean),
+				new QModelConnectorParam ('QControl', 'TabIndex', '', QType::Integer),
+				new QModelConnectorParam ('QControl', 'ToolTip', '', QType::String),
+				new QModelConnectorParam ('QControl', 'Visible', '', QType::Boolean),
+				new QModelConnectorParam ('QControl', 'Height', 'Height in pixels. However, you can specify a different unit (e.g. 3.0 em).', QType::String),
+				new QModelConnectorParam ('QControl', 'Width', 'Width in pixels. However, you can specify a different unit (e.g. 3.0 em).', QType::String),
+				new QModelConnectorParam ('QControl', 'Instructions', 'Additional help for user.', QType::String),
+				new QModelConnectorParam ('QControl', 'Moveable', '', QType::Boolean),
+				new QModelConnectorParam ('QControl', 'Resizable', '', QType::Boolean),
+				new QModelConnectorParam ('QControl', 'Droppable', '', QType::Boolean),
+				new QModelConnectorParam ('QControl', 'UseWrapper', 'Control will be forced to be wrapped with a div', QType::Boolean),
+				new QModelConnectorParam ('QControl', 'WrapperCssClass', '', QType::String)
 			);
 
 		}

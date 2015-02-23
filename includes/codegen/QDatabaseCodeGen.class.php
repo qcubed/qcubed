@@ -6,7 +6,7 @@
 	require(__QCUBED_CORE__ . '/codegen/QReverseReference.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QTable.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QTypeTable.class.php');
-	require(__QCUBED_CORE__ . '/codegen/QMetacontrolOptions.class.php');
+	require(__QCUBED_CORE__ . '/codegen/QModelConnectorOptions.class.php');
 
 	/**
 	 * @package Codegen
@@ -22,8 +22,8 @@
 		protected $objDb;
 
 		protected $intDatabaseIndex;
-		/** @var string The delimiter to be used for parsing comments on the DB tables for being used as the name of Meta control's Label */
-		protected $strCommentMetaControlLabelDelimiter;
+		/** @var string The delimiter to be used for parsing comments on the DB tables for being used as the name of ModelConnector's Label */
+		protected $strCommentConnectorLabelDelimiter;
 
 		// Table Suffixes
 		protected $strTypeTableSuffixArray;
@@ -67,7 +67,7 @@
 		protected $strPatternKeyName = '[[:alpha:]_][[:alnum:]_]*';
 
 		protected $blnGenerateControlId;
-		protected $objMetacontrolOptions;
+		protected $objModelConnectorOptions;
 
 		/**
 		 * @param $strTableName
@@ -284,8 +284,8 @@
 			$this->strRelationshipsScriptPath = QCodeGen::LookupSetting($objSettingsXml, 'relationshipsScript', 'filepath');
 			$this->strRelationshipsScriptFormat = QCodeGen::LookupSetting($objSettingsXml, 'relationshipsScript', 'format');
 
-			// Column Comment for MetaControlLabel setting.
-			$this->strCommentMetaControlLabelDelimiter = QCodeGen::LookupSetting($objSettingsXml, 'columnCommentForMetaControl', 'delimiter');
+			// Column Comment for ModelConnectorLabel setting.
+			$this->strCommentConnectorLabelDelimiter = QCodeGen::LookupSetting($objSettingsXml, 'columnCommentForModelConnector', 'delimiter');
 
 			// Check to make sure things that are required are there
 			if (!$this->intDatabaseIndex)
@@ -378,7 +378,7 @@
 			}
 
 			$this->blnGenerateControlId = QCodeGen::LookupSetting($objSettingsXml, 'generateControlId', 'support', QType::Boolean);
-			$this->objMetacontrolOptions = new QMetacontrolOptions();
+			$this->objModelConnectorOptions = new QModelConnectorOptions();
 
 			if ($this->strErrors)
 				return;
@@ -639,7 +639,7 @@
 
 				$objManyToManyReference->OppositeObjectDescription = $strGraphPrefixArray[($intIndex == 0) ? 1 : 0] . $this->CalculateObjectDescriptionForAssociation($strTableName, $objOppositeForeignKey->ReferenceTableName, $objForeignKey->ReferenceTableName, false);
 				$objManyToManyReference->IsTypeAssociation = ($objTable instanceof QTypeTable);
-				$objManyToManyReference->Options = $this->objMetacontrolOptions->GetOptions($this->ModelClassName($objForeignKey->ReferenceTableName), $objManyToManyReference->ObjectDescription);
+				$objManyToManyReference->Options = $this->objModelConnectorOptions->GetOptions($this->ModelClassName($objForeignKey->ReferenceTableName), $objManyToManyReference->ObjectDescription);
 
 			}
 
@@ -936,7 +936,7 @@
 							$objColumn->Reference = $objReference;
 
 							// References will not have been correctly read earlier, so try again with the reference name
-							$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->ClassName, $objReference->PropertyName) + $objColumn->Options;
+							$objColumn->Options = $this->objModelConnectorOptions->GetOptions($objTable->ClassName, $objReference->PropertyName) + $objColumn->Options;
 
 
 
@@ -973,7 +973,7 @@
 									$objReverseReference->ObjectMemberVariable = $this->CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName);
 									$objReverseReference->ObjectPropertyName = $this->CalculateObjectPropertyName($strTableName, $strColumnName, $strReferencedTableName);
 									// get override options for codegen
-									$objReverseReference->Options = $this->objMetacontrolOptions->GetOptions($objReference->VariableType, $objReverseReference->ObjectDescription);
+									$objReverseReference->Options = $this->objModelConnectorOptions->GetOptions($objReference->VariableType, $objReverseReference->ObjectDescription);
 								}
 
 
@@ -1099,7 +1099,7 @@
 			}
 
 			// merge with options found in the design editor, letting editor take precedence
-			$objColumn->Options = $this->objMetacontrolOptions->GetOptions($objTable->ClassName, $objColumn->PropertyName) + $objColumn->Options;
+			$objColumn->Options = $this->objModelConnectorOptions->GetOptions($objTable->ClassName, $objColumn->PropertyName) + $objColumn->Options;
 
 			return $objColumn;
 		}
@@ -1278,8 +1278,8 @@
 			} elseif ($this->blnGenerateControlId) {
 				$strObjectName = $this->ModelVariableName($objTable->Name);
 				$strClassName = $objTable->ClassName;
-				$strControlVarName = $this->MetaControlVariableName($objColumn);
-				$strLabelName = QCodeGen::MetaControlControlName($objColumn);
+				$strControlVarName = $this->ModelConnectorVariableName($objColumn);
+				$strLabelName = QCodeGen::ModelConnectorControlName($objColumn);
 
 				$strControlId = $strControlVarName . $strClassName;
 
@@ -1347,8 +1347,8 @@
 					return $this->objTypeTableArray;
 				case 'DatabaseIndex':
 					return $this->intDatabaseIndex;
-				case 'CommentMetaControlLabelDelimiter':
-					return $this->strCommentMetaControlLabelDelimiter;
+				case 'CommentConnectorLabelDelimiter':
+					return $this->strCommentConnectorLabelDelimiter;
 				default:
 					try {
 						return parent::__get($strName);

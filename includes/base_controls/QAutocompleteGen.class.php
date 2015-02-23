@@ -269,7 +269,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Close() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close", QJsPriority::Low);
 		}
 		/**
 		 * Removes the autocomplete functionality completely. This will return
@@ -277,21 +277,21 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Destroy() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the autocomplete.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Disable() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the autocomplete.
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Enable() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
 		/**
 		 * Retrieves the autocompletes instance object. If the element does not
@@ -302,7 +302,7 @@
 		 * 
 		 * 	* This method does not accept any arguments.		 */
 		public function Instance() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
 		 * Gets the value currently associated with the specified optionName. 
@@ -313,7 +313,7 @@
 		 * 
 		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
 		public function Option($optionName) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
@@ -321,7 +321,7 @@
 		 * 
 		 * 	* This signature does not accept any arguments.		 */
 		public function Option1() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option");
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
 		/**
 		 * Sets the value of the autocomplete option associated with the
@@ -335,14 +335,14 @@
 		 * 	* optionName Type: String The name of the option to set.
 		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
 		public function Option2($optionName, $value) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the autocomplete.
 		 * 
 		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
 		public function Option3($options) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 		/**
 		 * Triggers a search event and invokes the data source if the event is
@@ -353,7 +353,7 @@
 		 * 
 		 * 	* value Type: String		 * @param $value		 */
 		public function Search($value = null) {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "search", $value);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "search", $value, QJsPriority::Low);
 		}
 
 
@@ -451,16 +451,16 @@
 		}
 
 		/**
-		* If this control is attachable to a codegenerated control in a metacontrol, this function will be
-		* used by the metacontrol designer dialog to display a list of options for the control.
-		* @return QMetaParam[]
+		* If this control is attachable to a codegenerated control in a ModelConnector, this function will be
+		* used by the ModelConnector designer dialog to display a list of options for the control.
+		* @return QModelConnectorParam[]
 		**/
-		public static function GetMetaParams() {
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'AutoFocus', 'If set to true the first item will automatically be focused when themenu is shown.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Delay', 'The delay in milliseconds between when a keystroke occurs and when asearch is performed. A zero-delay makes sense for local data (moreresponsive), but can produce a lot of load for remote data, whilebeing less responsive.', QType::Integer),
-				new QMetaParam (get_called_class(), 'Disabled', 'Disables the autocomplete if set to true.', QType::Boolean),
-				new QMetaParam (get_called_class(), 'MinLength', 'The minimum number of characters a user must type before a search isperformed. Zero is useful for local data with just a few items, but ahigher value should be used when a single character search could matcha few thousand items.', QType::Integer),
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'AutoFocus', 'If set to true the first item will automatically be focused when themenu is shown.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Delay', 'The delay in milliseconds between when a keystroke occurs and when asearch is performed. A zero-delay makes sense for local data (moreresponsive), but can produce a lot of load for remote data, whilebeing less responsive.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the autocomplete if set to true.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'MinLength', 'The minimum number of characters a user must type before a search isperformed. Zero is useful for local data with just a few items, but ahigher value should be used when a single character search could matcha few thousand items.', QType::Integer),
 			));
 		}
 	}
