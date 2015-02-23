@@ -24,31 +24,32 @@
 		}
 
 		public function GetData() {
-			// First, ensure that the cache file exits
-			if (file_exists($this->GetFilePath())) {
+			// First, ensure that the cache file exists
+			$filepath = $this->GetFilePath(); //cache the filepath in stead of running sprintf multiple times
+			if (file_exists($filepath)) {
 				if (count($this->strCheckFilesArray)) {
 					// Now, get the current hash of the checkfiles
 					$strHash = $this->GetCheckFilesHash();
 
 					// If No CheckFiles, the delete cache file and return false
 					if ($strHash === false) {
-						unlink($this->GetFilePath());
+						@unlink($filepath);
 						return false;
 					}
 
 					// If Hash File doesn't exist or if the values don't match, delete and return
-					$strHashFile = $this->GetFilePath() . '.hash';
-					if (!file_exists($strHashFile) ||
-						($strHash != file_get_contents($strHashFile))) {
-						unlink($this->GetFilePath());
+					$strHashFile = $filepath . '.hash';
+					if (!file_exists($strHashFile) || ($strHash != file_get_contents($strHashFile))) {
+						@unlink($filepath);
 						return false;
 					}
 				}
 
 				// If we're here, return the contents of the cache file
-				return file_get_contents($this->GetFilePath());
-			} else
+				return file_get_contents($filepath);
+			} else {
 				return false;
+			}
 		}
 
 		public function SaveData($strData) {
