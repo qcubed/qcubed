@@ -1,48 +1,59 @@
 <?php require('../includes/header.inc.php'); ?>
 
-<div id="instructions">
-	<h1>Persistent Controls: Performance for Reusable Components</h1>
-	
-	<p>What do you do if you have an element that's shared between multiple pages
-	that's computationally intensive to produce? For example, what would you do
-	in a situation where you have a dropdown control in the navigation, and that
-	dropdown is populated with a list of projects from a database? Or worse,
-	with a result of some heavy query?</p>
-	
-	<p>An obvious answer is to try to cache the results of the query so that you
-	don't have to run it every time a page is loaded. QCubed comes with a
-	feature called Persistent Controls that might save you time in certain
-	situations. It works exactly as it sounds: all control metadata is
-	cached by QCubed in the session state ($_SESSION). The next time a page is
-	loaded, control state for persistent controls will be loaded from the
-	session (which is much faster than trying to execute the query again).</p>
-	
-	<p>Try <a href="persist.php">reloading this page</a> and observe the status
-	label underneath the dropdown. Note that if you run this example again,
-	as long as your session state is not wiped, you'll never see the query
-	executed - control storage is, well, persistent. </p>
-	
-	<p>Several notes:</p>
-	<ol>
-		<li>If you want to create a reusable component that will work
-		across user sessions (and will reuse the data from the session of one user to
-		the session of another), Persistent Controls won't help. Use the <b>QCache</b>
-		instead - take a look at QueryArrayCached (<a href="../qcubed_query/qcache.php">example</a>).</li>
-		<li>Be mindful of the memory footprint of storing the <i>entire control</i>
-		in the $_SESSION. In the example below, the footprint of the tiny dropdown
-		with four values is 4KBytes. Persistent Controls can easily turn into a
-		memory hog if you don't watch for it.</li>
-	</ol>
-</div>
+	<div id="instructions">
+		<h1>Persistent Controls</h1>
 
-<div id="demoZone">
-	<?php $this->RenderBegin(); ?>    
-	<?php $this->ddnProjectPicker->Render(); ?></p>
-	<?php $this->lblStatus->Render(); ?></p>
-	
-	<a href="persist.php">Reload the page</a>
+		<p>Some controls are used for the purpose of controlling how a form looks, rather than
+			for the purpose of entering data in a database. If the user is navigating back and forth between
+			various forms, it can be very frustrating to have to manually change the controls to the previous values
+			just to get back to the data you were viewing.</p>
 
-	<?php $this->RenderEnd(); ?>
-</div>
+		<p>For example, if you have a <b>QDataGrid</b> showing multiple pages, and the user is on page 3, and then clicks
+			on an item to edit it, and then saves or cancels, your application should take the user back to page 3 of the <b>QDataGrid</b>,
+			and not page 1, the default.</p>
+
+		<p>To get a control to restore its prior state, simply set its <b>SaveState</b> attribute to <b>true</b>.
+			The control will automatically be set to its previous state. Generally, you would only do this for controls
+			that are not getting data directly from the database, but rather controls that change how data is viewed. A
+			good example would be a text box you use to filter a list.</p>
+
+		<p>The control state data by default is saved in the session in a variable named by the <b>__SESSION_SAVED_STATE__</b>
+			configuration constant (the default value is 'QSavedState'). If your application has authenticated users that
+			see private data, you can serialize the contents of this session variable and store it in your database, along with the users credentials, and then
+			restore it the next time the user logs in. The user will then see your application in the same state in which
+			he used it previously. The data that is stored in the session variable is only the bare minimum to recreate
+			the visual state of the control, and takes up very little space.</p>
+
+		<p>In the example, you will see two sets of controls. One has SaveState turned on, and the other does not. When you
+			click on the "Reload the Page" button, you will notice that the controls with <b>SaveState</b> set to <b>true</b>
+			do not change, but the other controls revert to their default values.</p>
+
+		<h2>Note on Usage</h2>
+		<p>The moment that you set <b>SaveState</b> to <b>true</b>, QCubed will look for a previously saved
+			state and restore it if one is found. So, if you would like to set your control to a particular default value,
+			do that <em>before</em> you set <b>SaveState</b> to <b>true</b>.</p>
+
+		<h2>Note on QCubed V2</h2>
+		<p>Persistent controls in version 2 of QCubed were quite different and used as a kind of data cache.
+			The old interface and functionality has been removed as no one actually reported using it and it was rather cumbersome.</p>
+
+	</div>
+
+	<div id="demoZone">
+		<?php $this->RenderBegin(); ?>
+		<fieldset>
+			<legend>SavedState = false</legend>
+			<?php $this->ddnProjectPicker1->Render(); ?></p>
+			<?php $this->fld1->Render(); ?></p>
+		</fieldset>
+		<fieldset>
+			<legend>SavedState = true</legend>
+			<?php $this->ddnProjectPicker2->Render(); ?></p>
+			<?php $this->fld2->Render(); ?></p>
+		</fieldset>
+		<?php $this->btnReload->Render(); ?></p>
+
+		<?php $this->RenderEnd(); ?>
+	</div>
 
 <?php require('../includes/footer.inc.php'); ?>

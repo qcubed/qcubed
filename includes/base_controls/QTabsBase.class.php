@@ -244,6 +244,26 @@
 			}
 		}
 
+		/**
+		 * Returns the state data to restore later.
+		 * @return mixed
+		 */
+		protected function GetState() {
+			return ['active'=>$this->Active, 'selectedId'=>$this->strSelectedId];
+		}
+
+		/**
+		 * Restore the state of the control.
+		 * @param mixed $state
+		 */
+		protected function PutState($state) {
+			if (isset($state['active'])) {
+				$this->Active = $state['active'];
+				$this->strSelectedId = $state['selectedId'];
+			}
+		}
+
+
 		public function __get($strName) {
 			switch ($strName) {
 				case "SelectedId": return $this->strSelectedId;

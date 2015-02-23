@@ -180,6 +180,22 @@
 			return true;
 		}
 
+		/**
+		 * Returns the current state of the control to be able to restore it later.
+		 */
+		public function GetState(){
+			return array('checked'=>$this->Checked);
+		}
+
+		/**
+		 * Restore the  state of the control.
+		 */
+		public function PutState($state) {
+			if (isset($state['checked'])) {
+				$this->Checked = $state['checked'];
+			}
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////

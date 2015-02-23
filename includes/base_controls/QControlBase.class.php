@@ -92,6 +92,7 @@
 	 * @property string $WrapperCssClass
 	 * @property boolean $WrapLabel For checkboxes, radio buttons, and similar controls, whether to wrap the label around
 	 * 		the control, or place the label next to the control. Two legal styles of label creation that different css and JS frameworks expect.
+	 * @property-write boolean $SaveState set to true to have the control remember its state between visits to the form that the control is on.
 	 */
 	abstract class QControlBase extends QHtmlAttributeManager {
 
@@ -222,6 +223,9 @@
 		 */
 		protected $blnWrapLabel = false;
 
+		/** @var bool true to remember the state of this control to restore if the user comes back to it. */
+		protected $blnSaveState = false;
+
 
 		//////////
 		// Methods
@@ -307,92 +311,64 @@
 		abstract public function Validate();
 
 		/**
-		 * This function returns a persistent control which is supposed to be created only once for the user session
-		 * The way to call this function is shown in QCubed Examples. For brevity, here is how it is to be used:
-		 *
-		 * <code>
-		 * ProjectPickerListBox::CreatePersistent(
-		 * 	'ProjectPickerListBox', // name of the control class
-		 * 	$this, // parent - the current QForm
-		 * 	'ddnProjects' // id on the form - just your usual ControlID
-		 * );
-		 * </code>
-		 *
-		 * The above code will create the control and save it into the form and the session if it does not exist.
-		 * If it exists, the control will be retrieved out of the $_SESSION
-		 *
-		 * @param string $strClassName Name of the class whose instance is to be persisted in the $_SESSION
-		 * 			It is not necessary that this name will be the same as the current QControl using
-		 * 			which the function is being called.
-		 * @param QForm|QFormBase|QControl|QControlBase $objParentObject Parent of this control
-		 * @param string $strControlId The ControlID it will aquire when rendered on page
-		 *
-		 * @return mixed
-		 * @throws QCallerException
-		 * @throws Exception|QCallerException
+		 * Object persistance support.
 		 */
-		public static function CreatePersistent($strClassName, $objParentObject, $strControlId) {
-			// Test the validity of the Parent object recieved by the function
-			if ($objParentObject instanceof QForm) {
-				$objForm = $objParentObject;
-				$objParentControl = null;
-			} else if ($objParentObject instanceof QControl) {
-				$objForm = $objParentObject->Form;
-				$objParentControl = $objParentObject;
-			} else
-				throw new QCallerException('Parent Object must be a QForm or QControl');
 
-			// Check if this persistent control already exists in the $_SESSION
-			if (array_key_exists($objForm->FormId . '_' . $strControlId, $_SESSION) && $_SESSION[$objForm->FormId . '_' . $strControlId]) {
-				// Control exists in the $_SESSION
-				// Extract it out of the session as a PHP Object
-				$objToReturn = unserialize($_SESSION[$objForm->FormId . '_' . $strControlId]);
-				// set its Parents and form
-				$objToReturn->objParentControl = $objParentControl;
-				$objToReturn->objForm = $objForm;
-				try {
-					// Add control to the Designated Form
-					$objToReturn->objForm->AddControl($objToReturn);
-					// If the parent control was a QControl, add the persistent control as a child to that QControl
-					if ($objToReturn->objParentControl)
-						$objToReturn->objParentControl->AddChildControl($objToReturn);
-				} catch (QCallerException $objExc) {
-					$objExc->IncrementOffset();
-					throw $objExc;
-				}
-			} else {
-				$objToReturn = new $strClassName($objParentObject, $strControlId);
+		/**
+		 * Save the state of the control to restore it later, so that if the user comes back to this page, the control
+		 * will be in the showing the same thing. Subclasses should put minimally important information into the state that
+		 * is needed to restore the state later.
+		 *
+		 * This implementation puts the state into the session. Override to provide a different method if so desired.
+		 *
+		 * Should normally be called only by FormBase code. See GetState and PutState for the control side implementation.
+		 */
+		public function _WriteState() {
+			if (defined ('__SESSION_SAVED_STATE__') && $this->blnSaveState) {
+				$formName = get_class($this->Form);
+				$_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId] = $this->GetState();
 			}
-
-			// Save the control into the form's persistent controls array
-			$objForm->PersistControl($objToReturn);
-			return $objToReturn;
 		}
 
 		/**
-		 * This function is used to prepare the current QControl for persistence.
-		 * It acts as a helper function for the 'Persist()' function of this same class (QControlBase)
+		 * Restore the  state of the control.
 		 */
-		protected function PersistPrepare() {
-			$this->objForm = null;
-			$this->objParentControl = null;
-			$this->objActionArray = array();
-			$this->objChildControlArray = array();
-			$this->blnRendered = null;
-			$this->blnRendering = null;
-			$this->blnOnPage = null;
-			$this->blnModified = null;
-			$this->mixCausesValidation = null;
+		public function _ReadState() {
+			if (defined ('__SESSION_SAVED_STATE__') && $this->blnSaveState) {
+				$formName = get_class($this->Form);
+				if (isset ($_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId])) {
+					$state = $_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId];
+					$this->PutState($state);
+				}
+			}
 		}
 
 		/**
-		 * Ensure that this QControl is persistent in the User $_SESSION
+		 * Control subclasses should return their state data that they will use to restore later.
+		 * @return mixed
 		 */
-		public function Persist() {
-			$objControl = clone($this);
-			$objControl->PersistPrepare();
-			$_SESSION[$this->objForm->FormId . '_' . $this->strControlId] = serialize($objControl);
+		protected function GetState() {
+			return null;
 		}
+
+		/**
+		 * Restore the state of the control. The control will have already been
+		 * created and initialized. Subclasses should verify that the restored state is still valid for the data
+		 * available.
+		 * @param mixed $state
+		 */
+		protected function PutState($state) {}
+
+		/**
+		 * Completely forget the saved state for this control.
+		 */
+		public function ForgetState() {
+			if (defined ('__SESSION_SAVED_STATE__')) {
+				$formName = get_class($this->Form);
+				unset($_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId]);
+			}
+		}
+
 
 		/**
 		 * This function evaluates a template and is used by a variety of controls. It is similar to the function found in the
@@ -2165,6 +2141,12 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case "SaveState":
+					$this->blnSaveState = QType::Cast($mixValue, QType::Boolean);
+					$this->_ReadState(); // during form creation, if we are setting this value, it means we want the state restored at form creation too, so handle both here.
+					break;
+
 
 				// CODEGEN
 				case "LinkedNode":

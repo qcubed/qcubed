@@ -25,8 +25,6 @@
 		protected $intFormStatus;
 		/** @var QControl[] Array of QControls with this form as the parent */
 		protected $objControlArray;
-		/** @var array Array of persistent controls on the Form */
-		protected $objPersistentControlArray = array();
 		/**
 		 * @var QControlGrouping List of Groupings in the form (for old drag and drop)
 		 * Use of this is deprecated in favor of jQueryUI drag and drop, but code remains in case we need it again.
@@ -232,8 +230,9 @@
 
 		/**
 		 * To contain the code which should be executed after the Form Run and
-		 * before the custom handlers are called
-		 * (In case it is to be used, it should be overriden by a child class)
+		 * before the custom handlers are called (In case it is to be used, it should be overridden by a child class)
+		 * In this situation, we are about to process an event, or the user has reloaded the page. Do whatever you
+		 * need to do before any event processing.
 		 */
 		protected function Form_Load() {}
 
@@ -247,9 +246,22 @@
 
 		/**
 		 * To contain the code to be executed after Form_Run, Form_Create, Form_Load has been called
-		 * and the custom defained event handlers have been executed but actual rendering process has not begun
+		 * and the custom defined event handlers have been executed but actual rendering process has not begun.
+		 * This is a good place to put data into a session variable that you need to send to
+		 * other forms.
 		 */
 		protected function Form_PreRender() {}
+
+		/**
+		 * Override this method to set data in your form controls. Appropriate things to do would be to:
+		 * - Respond to options sent by _GET or _POST variables.
+		 * - Load data into the control from the database
+		 * - Initialize controls whose data depends on the state or data in other controls.
+		 *
+		 * When this is called, the controls will have been created by Form_Create, and will have already read their saved state.
+		 *
+		 */
+		protected function Form_Initialize() {}
 
 		/**
 		 * The Form_Validate method.
@@ -489,6 +501,9 @@
 
 				// Trigger a triggered control's Server- or Ajax- action (e.g. PHP method) here (if applicable)
 				$objClass->TriggerActions();
+
+				// Once all the controls have been set up, remember them.
+				$objClass->SaveControlState();
 			} else {
 				// We have no form state -- Create Brand New One
 				$objClass = self::CreateForm($strFormId);
@@ -518,6 +533,11 @@
 
 				// Trigger Create Event (if applicable)
 				$objClass->Form_Create();
+
+				// Restore the state of all the controls just after creating them
+				$objClass->RestoreControlState();
+
+				$objClass->Form_Initialize();
 
 				if (defined ('__DESIGN_MODE__')) {
 					$dlg = new QMetaEditDlg ($objClass, 'qmetaeditdlg');
@@ -741,9 +761,6 @@
 					QApplication::ExecuteJavaScript($strRender);
 			}
 
-			// Persist Controls (if applicable)
-			foreach ($this->objPersistentControlArray as $objControl)
-				$objControl->Persist();
 
 			$aResponse = array_merge($aResponse, QApplication::GetJavascriptCommandArray());
 
@@ -892,10 +909,6 @@
 
 				// Remove this control
 				unset($this->objControlArray[$strControlId]);
-				if (array_key_exists($strControlId, $this->objPersistentControlArray)) {
-					unset($this->objPersistentControlArray[$strControlId]);
-					$_SESSION[$this->strFormId . '_' . $strControlId] = null;
-				}
 
 				// Remove this control from any groups
 				foreach ($this->objGroupingArray as $strKey => $objGrouping)
@@ -912,12 +925,27 @@
 		}
 
 		/**
-		 * Saves a class instance (usually a QControl[Base] instance) in the form.
-		 * @param QControl|QControlBase $objControl
+		 * Tell all the controls to save their state.
 		 */
-		public function PersistControl($objControl) {
-			$this->objPersistentControlArray[$objControl->ControlId] = $objControl;
+		protected function SaveControlState() {
+			// tell the controls to save their state
+			$a = $this->GetAllControls();
+			foreach ($a as $control) {
+				$control->_WriteState();
+			}
 		}
+
+		/**
+		 * Tell all the controls to read their state.
+		 */
+		protected function RestoreControlState() {
+			// tell the controls to restore their state
+			$a = $this->GetAllControls();
+			foreach ($a as $control) {
+				$control->_ReadState();
+			}
+		}
+
 
 		/**
 		 * Custom Attributes are other html name-value pairs that can be rendered within the form using this method.
@@ -1757,11 +1785,6 @@
 			}
 
 			/**** Cleanup ****/
-
-			// Persist Controls (if applicable)
-			foreach ($this->objPersistentControlArray as $objControl) {
-				$objControl->Persist();
-			}
 
 			// Update Form Status
 			$this->intFormStatus = QFormBase::FormStatusRenderEnded;
