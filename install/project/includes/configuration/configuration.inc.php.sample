@@ -167,10 +167,6 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__PLUGIN_ASSETS__',  __SUBDIRECTORY__ . '/vendor/qcubed/plugin');
 			define ('__IMAGE_CACHE__', __APP_IMAGE_ASSETS__ . '/cache');
 
-			// When __PRELOAD_JS_FILES__ is set to true, the core and plugin javascript files will be included into the
-			// page with <script> tags, rather than loaded dynamically with qc.loadJavaScriptFile
-			define ('__PRELOAD_JS_FILES__', false);
-
 			// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery
 			// installation that's local to QCubed (in that case, paths must be relative to __JS_ASSETS__
