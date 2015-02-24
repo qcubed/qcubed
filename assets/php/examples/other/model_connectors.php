@@ -21,7 +21,7 @@ class ExamplesForm extends QForm {
 	// Initialize our Controls during the Form Creation process
 	protected function Form_Create() {
 		// For now, let's load Person of ID #1
-		// Remember that $this is the Meta Control's parent, because every QControl
+		// Remember that $this is the Model Connector's parent, because every QControl
 		// we get from PersonConnector should have $this as its parent.
 		$this->mctPerson = PersonConnector::Create($this, 1);
 

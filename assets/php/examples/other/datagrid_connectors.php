@@ -9,7 +9,7 @@ class ExamplesForm extends QForm {
 	protected $pxyExample;
 
 	protected function Form_Create() {
-		// Define the DataGrid -- note that the Meta DataGrid is a DataGrid, itself --
+		// Define the DataGrid -- note that the DataGrid Connector is a DataGrid, itself --
 		// so let's just use it as a datagrid
 		$this->dtgProjects = new ProjectDataGrid($this);
 
@@ -39,7 +39,7 @@ class ExamplesForm extends QForm {
 
 		// We can easily add columns from linked/related tables.  However, to do this
 		// you MUST use a QQuery node descriptor.  No string-based properties allowed.
-		// Bonus: the Meta DataGrid will even automatically add sorting for columns in related tables.
+		// Bonus: the DataGrid Connector will even automatically add sorting for columns in related tables.
 		$colUsername = $this->dtgProjects->AddConnectedColumn(QQN::Project()->ManagerPerson->Login->Username);
 
 		// And remember, since it's a regular datagrid with regular columns,
@@ -53,7 +53,7 @@ class ExamplesForm extends QForm {
 		$this->pxyExample = new QControlProxy($this);
 		$this->pxyExample->AddAction(new QClickEvent(), new QAjaxAction('pxyExample_Click'));
 
-		// FInally, there are even Meta methods to add an Edit Button column
+		// FInally, there are even Connector methods to add an Edit Button column
 		$this->dtgProjects->AddEditProxyColumn($this->pxyExample, 'Click Me', 'Faux Edit Column');
 	}
 

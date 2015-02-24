@@ -60,7 +60,7 @@ TMPL;
 
 
 		/**
-		 * Codegen the create method and any other support methods to be part of the meta control.
+		 * Codegen the create method and any other support methods to be part of the model connector.
 		 *
 		 * @param QCodeGen                                       $objCodeGen
 		 * @param QTable                                         $objTable

@@ -409,7 +409,7 @@
 	}
 
 	/**
-	 * Modes supported by Meta control for creation of new controls
+	 * Modes supported by model connectors for creation of new controls
 	 */
 	abstract class QModelConnectorCreateType {
 		/** Mode to create new or edit existing entry */
@@ -422,8 +422,8 @@
 
 	/**
 	 * Class QModelConnectorArgumentType
-	 * Meta controls are created by input recieved from multiple sources. This class enumerates the three.
-	 * Refer to any MetaDataGrid class's AddEditLinkColumn method to see how this is used
+	 * Model connectors are created by input received from multiple sources. This class enumerates the three.
+	 * Refer to any DataGrid connector class's AddEditLinkColumn method to see how this is used
 	 */
 	abstract class QModelConnectorArgumentType {
 		/** The Pathinfo supplied to the requested file */

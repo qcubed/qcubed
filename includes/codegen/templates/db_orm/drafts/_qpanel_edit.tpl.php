@@ -14,7 +14,7 @@
 	/**
 	 * This is a quick-and-dirty draft QPanel object to do Create, Edit, and Delete functionality
 	 * of the <?= $objTable->ClassName ?> class.  It uses the code-generated
-	 * <?= $objTable->ClassName ?>MetaControl class, which has meta-methods to help with
+	 * <?= $objTable->ClassName ?>Connector class, which has methods to help with
 	 * easily creating/defining controls to modify the fields of a <?= $objTable->ClassName ?> columns.
 	 *
 	 * Any display customizations and presentation-tier logic can be implemented
@@ -29,9 +29,9 @@
 	 * @subpackage Drafts
 	 */
 	class <?= $objTable->ClassName ?>EditPanel extends QPanel {
-		// Local instance of the <?= $objTable->ClassName ?>MetaControl
+		// Local instance of the <?= $objTable->ClassName ?>Connector
 		/**
-		 * @var <?= $objTable->ClassName ?>MetaControl
+		 * @var <?= $objTable->ClassName ?>Connector
 		 */
 		protected $mct<?= $objTable->ClassName ?>;
 
