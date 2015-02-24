@@ -13,13 +13,13 @@
 		allow you to easily define and add columns for a given data class.</p>
 
 	<p>Using simple string properties or more complex (and more powerful) <strong>QCubed Query Nodes</strong>, you can
-		add any column (even columns from linked tables) to the datagrid, and the meta-functionality
+		add any column (even columns from linked tables) to the datagrid, and the Connector functionality
 		will automatically take care of things like the column's <strong>Title</strong>, <strong>Html</strong>, <strong>Filter</strong> and
 		<strong>Sorting</strong> properties.</p>
 
 	<p>It even comes with its own <strong>ConnectorDataBinder()</strong>, and the datagrid is already set up to use that
 		as its databinder (but of course, even this is override-able). It's also very easy to specify
-		a condition on the meta datagrid - you don't even need to define your own data bind function! Simply set
+		a condition on the datagrid connector - you don't even need to define your own data bind function! Simply set
 		the <strong>AdditionalConditions</strong> property to an appropriate QQuery condition, and you're good to go. In
 		this example, we'll only show projects whose status is "open". Clauses such as expand can also easily
 		be applied by similarly setting the <strong>AdditionalClauses</strong> property.</p>
@@ -28,7 +28,7 @@
 		and the columns are just regular <strong>QDataGridColumn</strong> objects, which means that you can modify
 		the colums or the datagrid itself however you see fit.</p>
 
-	<p>For example, you can change or add a filter to a meta-created <strong>QDataGridColumn</strong>. Just remember
+	<p>For example, you can change or add a filter to a connector-created <strong>QDataGridColumn</strong>. Just remember
 		that if there's already one auto-generated for you, you may want to clear it first
 		by changing the <strong>FilterType</strong> to <strong>None</strong> before applying your new filter to it. This
 		is particularly important when switching to a <strong>ListFilter</strong> type from a <strong>TextFilter</strong> type

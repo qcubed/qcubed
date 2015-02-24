@@ -1,6 +1,6 @@
 <?php
 /**
- * MetaControl tests
+ * ModelConnector tests
  * @package Tests
  */
 

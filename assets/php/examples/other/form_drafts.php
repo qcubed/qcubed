@@ -11,7 +11,7 @@
 
 	<p>At a high level, this concept is very similar to the <strong>scaffolding</strong> which
 		is provided by many other frameworks.  But note that because of the object-oriented
-		approach of the <strong>ModelConnectors</strong> and <strong>Meta DataGrids</strong>, these <strong>Drafts</strong> can offer much more
+		approach of the <strong>Model Connectors</strong> and <strong>DataGrid Connectors</strong>, these <strong>Drafts</strong> can offer much more
 		power and functionality over <strong>scaffolding</strong>.</p>
 
 	<p>It is difficult to show this in a one-page example, so if you would like to
