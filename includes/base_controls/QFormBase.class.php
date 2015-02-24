@@ -700,11 +700,14 @@
 				$aResponse[QAjaxResponse::CommandsMedium] = QApplication::$JavascriptExclusiveCommand;
 			}
 
-			// Include each control (if applicable) that has been changed/modified
-			foreach ($this->GetAllControls() as $objControl)
-				if (!$objControl->ParentControl)
-//					$strToReturn .= $objControl->RenderAjax(false) . "\r\n";
-					$strToReturn .= $this->RenderAjaxHelper($objControl);
+			// Recursively render changed controls, starting with all top-level controls
+			$controls = array();
+			foreach ($this->GetAllControls() as $objControl) {
+				if (!$objControl->ParentControl) {
+					$controls = array_merge($controls, $this->RenderAjaxHelper($objControl));
+				}
+			}
+			$aResponse[QAjaxResponse::Controls] = $controls;
 
 			// Go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			foreach ($this->GetAllControls() as $objControl) {
@@ -1693,7 +1696,6 @@
 						}
 					}
 				}
-			}
 
 				if ($objControl->Rendered) {
 					$strControlIdToRegister[] = $objControl->ControlId;
