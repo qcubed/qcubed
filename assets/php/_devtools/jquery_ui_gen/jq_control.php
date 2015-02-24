@@ -1,7 +1,17 @@
 <?php
 //include_once('simple_html_dom.php');
-require('../../qcubed.inc.php');
+require('qcubed.inc.php');
 require(__INCLUDES__ . '/codegen/QCodeGen.class.php');
+
+function jq_indent ($strText, $intCount, $blnComment = false) {
+	$strTabs = str_repeat("\t", $intCount);
+	if ($blnComment) {
+		$strTabs .= ' * ';
+	}
+	$strRet = preg_replace ( '/^/m', $strTabs , $strText);
+	return $strRet;
+}
+
 
 class JqAttributes {
 	public $name;
@@ -117,8 +127,8 @@ class Option extends JqAttributes {
 			// make sure the value is valid php code
 			//todo: find better/safer way to check for this
 			if (@eval($jsValue. ';') === false) {
-				//return null;
-				throw new Exception ("Parsing problem with " . $jsValue);
+				return null;
+				//throw new Exception ("Parsing problem with " . $jsValue);
 			}
 		} catch (exception $ex) {
 			//return null;
@@ -311,12 +321,9 @@ class JqControlGen extends QCodeGenBase {
 	 *
 	 * @param $objJqDoc
 	 */
-	public function GenerateControl($objJqDoc) {
-		$strOutDirControls = __QCUBED_CORE__ . "/../install/project/includes/controls";
-		$strOutDirControlsBase = __QCUBED_CORE__ . "/base_controls";
-
+	public function GenerateControl($objJqDoc, $strOutDirControls, $strOutDirControlsBase) {
 		$mixArgumentArray = array('objJqDoc' => $objJqDoc);
-		$strResult = $this->EvaluatePHP('jq_control.tpl.php', $mixArgumentArray);
+		$strResult = $this->EvaluatePHP(dirname(__FILE__) . '/jq_control.tpl.php', $mixArgumentArray);
 		$strOutFileName = $strOutDirControlsBase . '/'.$objJqDoc->strQcClass . 'Gen.class.php';
 		file_put_contents($strOutFileName, $strResult);
 

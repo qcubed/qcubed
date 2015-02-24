@@ -182,9 +182,13 @@ function CamelCaseFromDash($strName) {
 function jq_control_gen($strUrl, $strQcClass = null, $strQcBaseClass = 'QPanel') {
 	global $aryPathsList;
 
+	$strOutDirControls = __QCUBED_CORE__ . "/../install/project/includes/controls";
+	$strOutDirControlsBase = __QCUBED_CORE__ . "/base_controls";
+
+
 	$jqControlGen = new JqControlGen();
 	$objJqDoc = new HtmlJqDoc($strUrl, null, null, $strQcClass, $strQcBaseClass);
-	$jqControlGen->GenerateControl($objJqDoc);
+	$jqControlGen->GenerateControl($objJqDoc, $strOutDirControls, $strOutDirControlsBase);
 		
 	foreach ($objJqDoc->events as $event) {
 		$aryPathsList[strtolower($event->eventClassName)] = 
@@ -232,15 +236,6 @@ function jq_inc_gen() {
 	$strResult = "<?php\n" . $strResult . "\n?>";
 	
 	file_put_contents($strOutFileName, $strResult);
-}
-
-function jq_indent ($strText, $intCount, $blnComment = false) {
-	$strTabs = str_repeat("\t", $intCount);
-	if ($blnComment) {
-		$strTabs .= ' * ';
-	}
-	$strRet = preg_replace ( '/^/m', $strTabs , $strText);
-	return $strRet;
 }
 
 $baseUrl = "http://api.jqueryui.com";
