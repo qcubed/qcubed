@@ -231,10 +231,10 @@
 		 * @return null|QListItem
 		 */
 		public function FindItem($strId) {
+			if (!$this->objListItemArray) return null;
 			$objFoundItem = null;
 			$a = explode ('_', $strId, 3);
 			if (isset($a[1]) &&
-					$this->objListItemArray &&	// just in case
 					$a[1] < count ($this->objListItemArray)) {	// just in case
 				$objFoundItem = $this->objListItemArray[$a[1]];
 			}
