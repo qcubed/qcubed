@@ -1784,15 +1784,26 @@
 			if ($blnIncludeCurrentControl == true) {
 				$ctlDelegatorControl = $this;
 			} else {
-				$ctlDelegatorControl = $this->objParentControl;
+				if (!$this->ParentControl) {
+					// ParentControl is null. This means the parent is a QForm.
+					$ctlDelegatorControl = $this->Form;
+				} else {
+					$ctlDelegatorControl = $this->ParentControl;
+				}
 			}
+
 			do {
 				if (method_exists($ctlDelegatorControl, $strMethodName)) {
 					return $ctlDelegatorControl;
 				} else {
-					$ctlDelegatorControl = $ctlDelegatorControl->objParentControl;
+					if (!$ctlDelegatorControl->ParentControl) {
+						// ParentControl is null. This means the parent is a QForm.
+						$ctlDelegatorControl = $ctlDelegatorControl->Form;
+					} else {
+						$ctlDelegatorControl = $ctlDelegatorControl->ParentControl;
+					}
 				}
-			} while (!($ctlDelegatorControl instanceof QFormBase));
+			} while (!($ctlDelegatorControl instanceof QForm));
 
 			// If we are here, we could not find the method in the hierarchy/lineage of this control.
 			return null;
