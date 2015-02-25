@@ -794,8 +794,8 @@
 		 */
 		public function ModelConnectorVariableName($objColumn) {
 			$strPropName = $this->ModelConnectorPropertyName($objColumn);
-			$strClassName = $this->ModelConnectorControlClass($objColumn);
-			return $strClassName::Codegen_VarName ($strPropName);
+			$objControlHelper = $this->GetModelConnectorControlHelper($objColumn);
+			return $objControlHelper->VarName ($strPropName);
 		}
 
 		/**
@@ -806,7 +806,7 @@
 		 */
 		public function ModelConnectorLabelVariableName($objColumn) {
 			$strPropName = $this->ModelConnectorPropertyName($objColumn);
-			return QLabel::Codegen_VarName($strPropName);
+			return ModelConnectorControlHelper_QLabel::Instance()->VarName($strPropName);
 		}
 
 		/**
@@ -815,54 +815,54 @@
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
-		 * @return string Class name of control which can handle this column's data
+		 * @return ModelConnectorControlHelper helper object
 		 * @throws Exception
 		 */
-		public function ModelConnectorControlClass($objColumn) {
-
+		public function GetModelConnectorControlHelper($objColumn) {
 			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {
 				if (isset ($o['FormGen']) && $o['FormGen'] == QFormGen::LabelOnly) {
-					return 'QLabel';
+					return ModelConnectorControlHelper_QLabel::Instance($this);
 				}
 				if (isset($o['ControlClass'])) {
-					return $o['ControlClass'];
+					$strControlHelperClass = 'ModelConnectorControlHelper_'.$o['ControlClass'];
+					return new $strControlHelperClass();
 				}
 			}
 
 			// otherwise, return the default class based on the column
 			if ($objColumn instanceof QColumn) {
 				if ($objColumn->Identity)
-					return 'QLabel';
+					return ModelConnectorControlHelper_QLabel::Instance();
 
 				if ($objColumn->Timestamp)
-					return 'QLabel';
+					return ModelConnectorControlHelper_QLabel::Instance();
 
 				if ($objColumn->Reference)
-					return 'QListBox';
+					return ModelConnectorControlHelper_QListBox::Instance();
 
 				switch ($objColumn->VariableType) {
 					case QType::Boolean:
-						return 'QCheckBox';
+						return ModelConnectorControlHelper_QCheckBox::Instance();
 					case QType::DateTime:
-						return 'QDateTimePicker';
+						return ModelConnectorControlHelper_QDateTimePicker::Instance();
 					case QType::Integer:
-						return 'QIntegerTextBox';
+						return ModelConnectorControlHelper_QIntegerTextBox::Instance();
 					case QType::Float:
-						return 'QFloatTextBox';
+						return ModelConnectorControlHelper_QFloatTextBox::Instance();
 					default:
-						return 'QTextBox';
+						return ModelConnectorControlHelper_QTextBox::Instance();
 				}
 			}
 			elseif ($objColumn instanceof QReverseReference) {
 				if ($objColumn->Unique) {
-					return 'QListBox';
+					return ModelConnectorControlHelper_QListBox::Instance();
 				} else {
-					return 'QCheckBoxList';	// for multi-selection
+					return ModelConnectorControlHelper_QCheckBoxList::Instance(); // for multi-selection
 				}
 			}
 			elseif ($objColumn instanceof QManyToManyReference) {
-				return 'QCheckBoxList';	// for multi-selection
+				return ModelConnectorControlHelper_QCheckBoxList::Instance(); // for multi-selection
 			}
 			throw new Exception('Unknown column type.');
 		}
