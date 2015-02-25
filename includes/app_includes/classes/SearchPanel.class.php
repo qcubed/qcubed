@@ -98,7 +98,7 @@
 		 * @param string $property
 		 * @param string|array $type
 		 * @param string|null $name
-		 * @return \QControl
+		 * @return \QControl and type
 		 * @throws QCallerException
 		 */
 		public function CreateSearchControl($property, $type, $name = null) {
@@ -160,7 +160,7 @@
 			}
 			$objControl->Name = $name ? $name : _tr($property);
 			$objControl->UseWrapper = false;
-			return $objControl;
+			return array($objControl, $type);
 		}
 
 		/**
@@ -178,7 +178,7 @@
 				if ($type instanceof QControl) {
 					$objControl = $type;
 				} else {
-					$objControl = $this->CreateSearchControl($property, $type, $name);
+					list($objControl, $type) = $this->CreateSearchControl($property, $type, $name);
 				}
 				$objSearchControl = new SearchControl($objControl, $property, $type);
 			}
