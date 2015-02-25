@@ -794,7 +794,7 @@
 		 */
 		public function ModelConnectorVariableName($objColumn) {
 			$strPropName = $this->ModelConnectorPropertyName($objColumn);
-			$objControlHelper = $this->GetModelConnectorControlHelper($objColumn);
+			$objControlHelper = $this->GetControlCodeGenerator($objColumn);
 			return $objControlHelper->VarName ($strPropName);
 		}
 
@@ -806,7 +806,7 @@
 		 */
 		public function ModelConnectorLabelVariableName($objColumn) {
 			$strPropName = $this->ModelConnectorPropertyName($objColumn);
-			return ModelConnectorControlHelper_QLabel::Instance()->VarName($strPropName);
+			return QLabel_CodeGenerator::Instance()->VarName($strPropName);
 		}
 
 		/**
@@ -815,17 +815,17 @@
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
-		 * @return ModelConnectorControlHelper helper object
+		 * @return AbstractControl_CodeGenerator helper object
 		 * @throws Exception
 		 */
-		public function GetModelConnectorControlHelper($objColumn) {
+		public function GetControlCodeGenerator($objColumn) {
 			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {
 				if (isset ($o['FormGen']) && $o['FormGen'] == QFormGen::LabelOnly) {
-					return ModelConnectorControlHelper_QLabel::Instance($this);
+					return new QLabel_CodeGenerator();
 				}
 				if (isset($o['ControlClass'])) {
-					$strControlHelperClass = 'ModelConnectorControlHelper_'.$o['ControlClass'];
+					$strControlHelperClass = $o['ControlClass'].'_CodeGenerator';
 					return new $strControlHelperClass();
 				}
 			}
@@ -833,36 +833,36 @@
 			// otherwise, return the default class based on the column
 			if ($objColumn instanceof QColumn) {
 				if ($objColumn->Identity)
-					return ModelConnectorControlHelper_QLabel::Instance();
+					return new QLabel_CodeGenerator();
 
 				if ($objColumn->Timestamp)
-					return ModelConnectorControlHelper_QLabel::Instance();
+					return new QLabel_CodeGenerator();
 
 				if ($objColumn->Reference)
-					return ModelConnectorControlHelper_QListBox::Instance();
+					return new QListBox_CodeGenerator();
 
 				switch ($objColumn->VariableType) {
 					case QType::Boolean:
-						return ModelConnectorControlHelper_QCheckBox::Instance();
+						return new QCheckBox_CodeGenerator();
 					case QType::DateTime:
-						return ModelConnectorControlHelper_QDateTimePicker::Instance();
+						return new QDateTimePicker_CodeGenerator();
 					case QType::Integer:
-						return ModelConnectorControlHelper_QIntegerTextBox::Instance();
+						return new QIntegerTextBox_CodeGenerator();
 					case QType::Float:
-						return ModelConnectorControlHelper_QFloatTextBox::Instance();
+						return new QFloatTextBox_CodeGenerator();
 					default:
-						return ModelConnectorControlHelper_QTextBox::Instance();
+						return new QTextBox_CodeGenerator();
 				}
 			}
 			elseif ($objColumn instanceof QReverseReference) {
 				if ($objColumn->Unique) {
-					return ModelConnectorControlHelper_QListBox::Instance();
+					return new QListBox_CodeGenerator();
 				} else {
-					return ModelConnectorControlHelper_QCheckBoxList::Instance(); // for multi-selection
+					return new QCheckBoxList_CodeGenerator(); // for multi-selection
 				}
 			}
 			elseif ($objColumn instanceof QManyToManyReference) {
-				return ModelConnectorControlHelper_QCheckBoxList::Instance(); // for multi-selection
+				return new QCheckBoxList_CodeGenerator(); // for multi-selection
 			}
 			throw new Exception('Unknown column type.');
 		}

@@ -210,63 +210,6 @@
 			}
 		}
 
-		/* === Codegen Helpers, used during the Codegen process only. === */
-
-		/**
-		 * Return a variable name given a property name.
-		 *
-		 * @param $strPropName
-		 *
-		 * @return string
-		 */
-		public static function Codegen_VarName($strPropName) {
-			return 'cal' . $strPropName;
-		}
-
-		/**
-		 * Return code that will update the control with data from the database.
-		 *
-		 * @param QDatabaseCodeGen                               $objCodeGen
-		 * @param QTable                                         $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @param bool                                           $blnInit
-		 *
-		 * @return string
-		 */
-		public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
-			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
-			$strControlVarName = static::Codegen_VarName($strPropName);
-
-			if ($blnInit) {
-				$strRet = "\t\t\t\$this->{$strControlVarName}->DateTime = \$this->{$strObjectName}->{$strPropName};";
-			} else {
-				$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->DateTime = \$this->{$strObjectName}->{$strPropName};";
-			}
-			return $strRet . "\n";
-		}
-
-
-		/**
-		 * Return code that will update the database with info from the control.
-		 *
-		 * @param QDatabaseCodeGen                                       $objCodeGen
-		 * @param QTable                                         $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 *
-		 * @return string
-		 */
-		public static function Codegen_ConnectorUpdate(QDatabaseCodeGen $objCodeGen, QTable $objTable, $objColumn) {
-			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
-			$strControlVarName = static::Codegen_VarName($strPropName);
-			$strRet = <<<TMPL
-				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->DateTime;
-
-TMPL;
-			return $strRet;
-		}
-
 		/**
 		 * @return QModelConnectorParam[]
 		 */

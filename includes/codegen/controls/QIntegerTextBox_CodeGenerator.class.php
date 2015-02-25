@@ -1,0 +1,7 @@
+<?php
+
+class QIntegerTextBox_CodeGenerator extends QTextBox_CodeGenerator {
+	public function __construct() {
+		parent::__construct('QIntegerTextBox');
+	}
+}
