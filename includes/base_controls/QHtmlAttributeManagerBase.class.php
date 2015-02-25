@@ -439,9 +439,9 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param bool				$blnIsVoidElement	true if it should not have innerHtml or a closing tag.
 	 * @return string			HTML out, escaped with HTML entities as needed.
 	 */
-	protected function RenderTag($strTag, $attributeOverrides = null, $styleOverrides = null, $strInnerHtml = null, $blnIsVoidElement = false) {
+	protected function RenderTag($strTag, $attributeOverrides = null, $styleOverrides = null, $strInnerHtml = null, $blnIsVoidElement = false, $blnNoSpace = false) {
 		$strAttributes = $this->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
-		return QHtml::RenderTag($strTag, $strAttributes, $strInnerHtml, $blnIsVoidElement);
+		return QHtml::RenderTag($strTag, $strAttributes, $strInnerHtml, $blnIsVoidElement, $blnNoSpace);
 	}
 
 

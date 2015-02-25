@@ -1198,7 +1198,7 @@
 		 * @return string the html escaped string
 		 */
 		public static function HtmlEntities($strText) {
-			return htmlentities($strText, ENT_COMPAT, QApplication::$EncodingType);
+			return htmlentities($strText, ENT_COMPAT | ENT_HTML5, QApplication::$EncodingType);
 		}
 
 		/**
