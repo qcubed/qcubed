@@ -314,6 +314,7 @@ class JqControlGen extends QCodeGenBase {
 	public function GenerateControl($objJqDoc) {
 		$strOutDirControls = __QCUBED_CORE__ . "/../install/project/includes/controls";
 		$strOutDirControlsBase = __QCUBED_CORE__ . "/base_controls";
+		$strOutDirCodeGenControlsBase = __QCUBED_CORE__ . "/codegen/controls";
 
 		$mixArgumentArray = array('objJqDoc' => $objJqDoc);
 		$strResult = $this->EvaluatePHP('jq_control.tpl.php', $mixArgumentArray);
@@ -329,6 +330,16 @@ class JqControlGen extends QCodeGenBase {
 		$strOutFileName = $strOutDirControls . '/' . $objJqDoc->strQcClass . '.class.php';
 		if (!file_exists($strOutFileName)) {
 			$strEmpty = "<?php\n\tclass ".$objJqDoc->strQcClass." extends ".$objJqDoc->strQcClass."Base\n\t{\n\t}\n?>";
+			file_put_contents($strOutFileName, $strEmpty);
+		}
+
+		$strResult = $this->EvaluatePHP('jq_control_code_generator.tpl.php', $mixArgumentArray);
+		$strOutFileName = $strOutDirCodeGenControlsBase . '/'.$objJqDoc->strQcClass . 'Gen_CodeGenerator.class.php';
+		file_put_contents($strOutFileName, $strResult);
+
+		$strOutFileName = $strOutDirCodeGenControlsBase . '/' . $objJqDoc->strQcClass . '_CodeGenerator.class.php';
+		if (!file_exists($strOutFileName)) {
+			$strEmpty = "<?php\n\tclass ".$objJqDoc->strQcClass."_CodeGenerator extends ".$objJqDoc->strQcClass."Gen_CodeGenerator\n\t{\n\t\tpublic function __construct(\$strControlClassName = '".$objJqDoc->strQcClass."') {\n\t\t\tparent::__construct(\$strControlClassName);\n\t\t}\n\t}\n";
 			file_put_contents($strOutFileName, $strEmpty);
 		}
 

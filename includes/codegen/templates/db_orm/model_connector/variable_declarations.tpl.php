@@ -1,3 +1,9 @@
+<?php
+	/**
+	 * @var QTable $objTable
+	 * @var QCodeGenBase $objCodeGen
+	 */
+?>
 // General Variables
 		/**
 		 * @var <?= $objTable->ClassName; ?> <?= $objCodeGen->ModelVariableName($objTable->Name); ?>
@@ -25,19 +31,12 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) {
 	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
 
-	$strControlType = $objCodeGen->ModelConnectorControlClass($objColumn);
+	$objControlCodeGenerator = $objCodeGen->GetControlCodeGenerator($objColumn);
+	echo $objControlCodeGenerator->ConnectorVariableDeclaration($objCodeGen, $objColumn);
 
-	$objReflection = new ReflectionClass ($strControlType);
-	$blnHasMethod = $objReflection->hasMethod ('Codegen_ConnectorVariableDeclaration');
-	if ($blnHasMethod) {
-		echo $strControlType::Codegen_ConnectorVariableDeclaration($objCodeGen, $objColumn);
-	} else {
-		throw new QCallerException ('Can\'t find Codegen_ConnectorVariableDeclaration for ' . $strControlType);
-	}
-
-	if ($strControlType != 'QLabel' && (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] == QFormGen::Both)) {
+	if ($objControlCodeGenerator->GetControlClass() != 'QLabel' && (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] == QFormGen::Both)) {
 		// also generate a QLabel for each control that is not defaulted as a label already
-		echo QLabel::Codegen_ConnectorVariableDeclaration($objCodeGen, $objColumn);
+		echo QLabel_CodeGenerator::Instance()->ConnectorVariableDeclaration($objCodeGen, $objColumn);
 	}
 }
 ?>
@@ -54,36 +53,22 @@
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
 	if (!$objReverseReference->Unique) continue;
 	if (isset($objReverseReference->Options['FormGen']) && $objReverseReference->Options['FormGen'] == QFormGen::None) continue;
-	$strControlType = $objCodeGen->ModelConnectorControlClass($objReverseReference);
+	$objControlCodeGenerator = $objCodeGen->GetControlCodeGenerator($objReverseReference);
+	echo $objControlCodeGenerator->ConnectorVariableDeclaration($objCodeGen, $objReverseReference);
 
-	$objReflection = new ReflectionClass ($strControlType);
-	$blnHasMethod = $objReflection->hasMethod ('Codegen_ConnectorVariableDeclaration');
-	if ($blnHasMethod) {
-		echo $strControlType::Codegen_ConnectorVariableDeclaration($objCodeGen, $objReverseReference);
-	} else {
-		throw new QCallerException ('Can\'t find Codegen_ConnectorVariableDeclaration for ' . $strControlType);
-	}
-
-	if ($strControlType != 'QLabel' && (!isset($objReverseReference->Options['FormGen']) || $objReverseReference->Options['FormGen'] == QFormGen::Both)) {
+	if ($objControlCodeGenerator->GetControlClass() != 'QLabel' && (!isset($objReverseReference->Options['FormGen']) || $objReverseReference->Options['FormGen'] == QFormGen::Both)) {
 		// also generate a QLabel for each control that is not defaulted as a label already
-		echo QLabel::Codegen_ConnectorVariableDeclaration($objCodeGen, $objReverseReference);
+		echo QLabel_CodeGenerator::Instance()->ConnectorVariableDeclaration($objCodeGen, $objReverseReference);
 	}
 } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) {
 	if (isset($objManyToManyReference->Options['FormGen']) && $objManyToManyReference->Options['FormGen'] == QFormGen::None) continue;
-	$strControlType = $objCodeGen->ModelConnectorControlClass($objManyToManyReference);
+	$objControlCodeGenerator = $objCodeGen->GetControlCodeGenerator($objManyToManyReference);
+	echo $objControlCodeGenerator->ConnectorVariableDeclaration($objCodeGen, $objManyToManyReference);
 
-	$objReflection = new ReflectionClass ($strControlType);
-	$blnHasMethod = $objReflection->hasMethod ('Codegen_ConnectorVariableDeclaration');
-	if ($blnHasMethod) {
-		echo $strControlType::Codegen_ConnectorVariableDeclaration($objCodeGen, $objManyToManyReference);
-	} else {
-		throw new QCallerException ('Can\'t find Codegen_ConnectorVariableDeclaration for ' . $strControlType);
-	}
-
-	if ($strControlType != 'QLabel' && (!isset($objManyToManyReference->Options['FormGen']) || $objManyToManyReference->Options['FormGen'] == QFormGen::Both)) {
+	if ($objControlCodeGenerator->GetControlClass() != 'QLabel' && (!isset($objManyToManyReference->Options['FormGen']) || $objManyToManyReference->Options['FormGen'] == QFormGen::Both)) {
 	// also generate a QLabel for each control that is not defaulted as a label already
-		echo QLabel::Codegen_ConnectorVariableDeclaration($objCodeGen, $objManyToManyReference);
+		echo QLabel_CodeGenerator::Instance()->ConnectorVariableDeclaration($objCodeGen, $objManyToManyReference);
 	}
 ?>
 		protected $str<?= $objManyToManyReference->ObjectDescription; ?>Glue = ', ';

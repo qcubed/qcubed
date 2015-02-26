@@ -384,51 +384,5 @@
 			}
 		}
 
-		/**
-		 * Override to insert additional create options pertinent to the control.
-		 * @param $objTable
-		 * @param $objColumn
-		 * @param $strControlVarName
-		 * @return string|void
-		 */
-		public static function Codegen_ConnectorCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
-			$strRet = parent::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
-
-			if ($objColumn instanceof QManyToManyReference) {
-				$objCodeGen->ReportError($objTable->Name . ':' . $objColumn->Name . ' is not compatible with a QRadioButtonList.');
-			}
-
-			return $strRet;
-		}
-
-
-		/**
-		 * Returns an description of the options available to modify by the designer for the code generator.
-		 *
-		 * @return QModelConnectorParam[]
-		 */
-		public static function GetModelConnectorParams() {
-			return array_merge(parent::GetModelConnectorParams(), array(
-				new QModelConnectorParam (get_called_class(), 'TextAlign', '', QModelConnectorParam::SelectionList,
-					array (null=>'Default',
-						'QTextAlign::Left'=>'Left',
-						'QTextAlign::Right'=>'Right'
-					)),
-				new QModelConnectorParam (get_called_class(), 'HtmlEntities', 'Set to false to have the browser interpret the labels as HTML', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'RepeatColumns', 'The number of columns of checkboxes to display', QType::Integer),
-				new QModelConnectorParam (get_called_class(), 'RepeatDirection', 'Whether to repeat horizontally or vertically', QModelConnectorParam::SelectionList,
-					array (null=>'Default',
-						'QRepeatDirection::Horizontal'=>'Horizontal',
-						'QRepeatDirection::Vertical'=>'Vertical'
-					)),
-				new QModelConnectorParam (get_called_class(), 'ButtonMode', 'How to display the buttons', QModelConnectorParam::SelectionList,
-					array (null=>'Default',
-						'QRadioButtonList::ButtonModeJq'=>'JQuery UI Buttons',
-						'QRadioButtonList::ButtonModeSet'=>'JQuery UI Buttonset'
-					)),
-				new QModelConnectorParam (get_called_class(), 'MaxHeight', 'If set, will wrap it in a scrollable pane with the given max height', QType::Integer)
-			));
-		}
-
 	}
 ?>

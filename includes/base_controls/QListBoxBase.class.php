@@ -282,43 +282,4 @@
 					break;
 			}
 		}
-
-		/**** Codegen Helpers, used during the Codegen process only. ****/
-
-		/**
-		 * Override to insert additional create options pertinent to the control.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QManyToManyReference|QReverseReference $objColumn
-		 * @param string $strControlVarName
-		 * @return string
-		 */
-		public static function Codegen_ConnectorCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
-			$strRet = parent::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
-
-			if ($objColumn instanceof QManyToManyReference) {
-				$strRet .= <<<TMPL
-			\$this->{$strControlVarName}->SelectionMode = QSelectionMode::Multiple;
-
-TMPL;
-			}
-			return $strRet;
-		}
-
-		/**
-		 * Returns an description of the options available to modify by the designer for the code generator.
-		 *
-		 * @return QModelConnectorParam[]
-		 */
-		public static function GetModelConnectorParams() {
-			return array_merge(parent::GetModelConnectorParams(), array(
-				new QModelConnectorParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
-				new QModelConnectorParam (get_called_class(), 'SelectionMode', 'Single or multiple selections', QModelConnectorParam::SelectionList,
-					array (null=>'Default',
-						'QSelectionMode::Single'=>'Single',
-						'QSelectionMode::Multiple'=>'Multiple'
-					))
-			));
-		}
-
 	}

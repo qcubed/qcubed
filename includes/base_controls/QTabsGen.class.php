@@ -49,11 +49,11 @@
 	 * can be made to ui.jqXHR and ui.ajaxSettings. 
 	 * 
 	 * _Note: Although ui.ajaxSettings is provided and can be modified, some
-	 * of these settings have already been processed by jQuery. For example,
-	 * prefilters have been applied, data has been processed, and type has
-	 * been determined. The beforeLoad event occurs at the same time, and
-	 * therefore has the same restrictions, as the beforeSend callback from
-	 * jQuery.ajax()._
+	 * of these properties have already been processed by jQuery. For
+	 * example, prefilters have been applied, data has been processed, and
+	 * type has been determined. The beforeLoad event occurs at the same
+	 * time, and therefore has the same restrictions, as the beforeSend
+	 * callback from jQuery.ajax()._
 	 * 
 	 * 	* event Type: Event 
 	 * 
@@ -63,7 +63,7 @@
 	 * 	* panel Type: jQuery The panel which will be populated by the Ajax
 	 * response.
 	 * 	* jqXHR Type: jqXHR The jqXHR object that is requesting the content.
-	 * 	* ajaxSettings Type: Object The settings that will be used by
+	 * 	* ajaxSettings Type: Object The properties that will be used by
 	 * jQuery.ajax to request the content.
 	 * 
 	 */
@@ -463,19 +463,6 @@
 						throw $objExc;
 					}
 			}
-		}
-
-		/**
-		* If this control is attachable to a codegenerated control in a ModelConnector, this function will be
-		* used by the ModelConnector designer dialog to display a list of options for the control.
-		* @return QModelConnectorParam[]
-		**/
-		public static function GetModelConnectorParams() {
-			return array_merge(parent::GetModelConnectorParams(), array(
-				new QModelConnectorParam (get_called_class(), 'Collapsible', 'When set to true, the active panel can be closed.', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'Event', 'The type of event that the tabs should react to in order to activatethe tab. To activate on hover, use \"mouseover\".', QType::String),
-				new QModelConnectorParam (get_called_class(), 'HeightStyle', 'Controls the height of the tabs widget and each panel. Possiblevalues: 	* \"auto\": All panels will be set to the height of the tallest panel.	* \"fill\": Expand to the available height based on the tabs parentheight.	* \"content\": Each panel will be only as tall as its content.', QType::String),
-			));
 		}
 	}
 

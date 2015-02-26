@@ -209,20 +209,6 @@
 					}
 			}
 		}
-
-		/**
-		* If this control is attachable to a codegenerated control in a ModelConnector, this function will be
-		* used by the ModelConnector designer dialog to display a list of options for the control.
-		* @return QModelConnectorParam[]
-		**/
-		public static function GetModelConnectorParams() {
-			return array_merge(parent::GetModelConnectorParams(), array(
-<?php foreach ($objJqDoc->options as $option) { ?>
-<?php 	if ($option->phpQType) { ?>
-				new QModelConnectorParam (get_called_class(), '<?= $option->propName ?>', '<?= addslashes(trim(str_replace(array("\n", "\r"), '', $option->description))) ?>', <?= $option->phpQType ?>),
-<?php 	} ?>
-<?php } ?>			));
-		}
 	}
 
 ?>

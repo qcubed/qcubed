@@ -794,8 +794,8 @@
 		 */
 		public function ModelConnectorVariableName($objColumn) {
 			$strPropName = $this->ModelConnectorPropertyName($objColumn);
-			$strClassName = $this->ModelConnectorControlClass($objColumn);
-			return $strClassName::Codegen_VarName ($strPropName);
+			$objControlHelper = $this->GetControlCodeGenerator($objColumn);
+			return $objControlHelper->VarName ($strPropName);
 		}
 
 		/**
@@ -806,7 +806,7 @@
 		 */
 		public function ModelConnectorLabelVariableName($objColumn) {
 			$strPropName = $this->ModelConnectorPropertyName($objColumn);
-			return QLabel::Codegen_VarName($strPropName);
+			return QLabel_CodeGenerator::Instance()->VarName($strPropName);
 		}
 
 		/**
@@ -815,54 +815,62 @@
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
-		 * @return string Class name of control which can handle this column's data
+		 * @return AbstractControl_CodeGenerator helper object
 		 * @throws Exception
 		 */
-		public function ModelConnectorControlClass($objColumn) {
-
+		public function GetControlCodeGenerator($objColumn) {
 			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {
 				if (isset ($o['FormGen']) && $o['FormGen'] == QFormGen::LabelOnly) {
-					return 'QLabel';
+					return new QLabel_CodeGenerator();
 				}
 				if (isset($o['ControlClass'])) {
-					return $o['ControlClass'];
+					$strControlClass = $strOrigControlClass = $o['ControlClass'];
+					$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
+					while (!class_exists($strControlCodeGeneratorClass)) {
+						$strControlClass = get_parent_class($strControlClass);
+						if ($strControlClass === 'QControl') {
+							throw new QCallerException("Cannot find an appropriate subclass of AbstractControl_CodeGenerator for ".$strOrigControlClass);
+						}
+						$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
+					}
+					return new $strControlCodeGeneratorClass($strOrigControlClass);
 				}
 			}
 
 			// otherwise, return the default class based on the column
 			if ($objColumn instanceof QColumn) {
 				if ($objColumn->Identity)
-					return 'QLabel';
+					return new QLabel_CodeGenerator();
 
 				if ($objColumn->Timestamp)
-					return 'QLabel';
+					return new QLabel_CodeGenerator();
 
 				if ($objColumn->Reference)
-					return 'QListBox';
+					return new QListBox_CodeGenerator();
 
 				switch ($objColumn->VariableType) {
 					case QType::Boolean:
-						return 'QCheckBox';
+						return new QCheckBox_CodeGenerator();
 					case QType::DateTime:
-						return 'QDateTimePicker';
+						return new QDateTimePicker_CodeGenerator();
 					case QType::Integer:
-						return 'QIntegerTextBox';
+						return new QIntegerTextBox_CodeGenerator();
 					case QType::Float:
-						return 'QFloatTextBox';
+						return new QFloatTextBox_CodeGenerator();
 					default:
-						return 'QTextBox';
+						return new QTextBox_CodeGenerator();
 				}
 			}
 			elseif ($objColumn instanceof QReverseReference) {
 				if ($objColumn->Unique) {
-					return 'QListBox';
+					return new QListBox_CodeGenerator();
 				} else {
-					return 'QCheckBoxList';	// for multi-selection
+					return new QCheckBoxList_CodeGenerator(); // for multi-selection
 				}
 			}
 			elseif ($objColumn instanceof QManyToManyReference) {
-				return 'QCheckBoxList';	// for multi-selection
+				return new QCheckBoxList_CodeGenerator(); // for multi-selection
 			}
 			throw new Exception('Unknown column type.');
 		}

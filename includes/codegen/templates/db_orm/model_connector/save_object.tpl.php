@@ -1,3 +1,9 @@
+<?php
+	/**
+	 * @var QTable $objTable
+	 * @var QCodeGenBase $objCodeGen
+	 */
+?>
 /**
 		* This will update this object's <?= $objTable->ClassName; ?> instance,
 		* updating only the fields which have had a control created for it.
@@ -7,15 +13,8 @@
 				// Update any fields for controls that have been created
 <?php 	foreach ($objTable->ColumnArray as $objColumn) {
 			if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
-			$strControlType = $objCodeGen->ModelConnectorControlClass($objColumn);
-
-			$objReflection = new ReflectionClass ($strControlType);
-			$blnHasMethod = $objReflection->hasMethod ('Codegen_ConnectorUpdate');
-			if ($blnHasMethod) {
-				echo $strControlType::Codegen_ConnectorUpdate($objCodeGen, $objTable, $objColumn);
-			} else {
-				throw new QCallerException ('Can\'t find Codegen_ConnectorUpdate for ' . $strControlType);
-			}
+			$objControlCodeGenerator = $objCodeGen->GetControlCodeGenerator($objColumn);
+			echo $objControlCodeGenerator->ConnectorUpdate($objCodeGen, $objTable, $objColumn);
 			echo "\n";
 		}
 ?>
@@ -25,14 +24,8 @@
 			if (!$objReverseReference->Unique) continue;
 			if (isset($objReverseReference->Options['FormGen']) && $objReverseReference->Options['FormGen'] == QFormGen::None) continue;
 
-			$strControlType = $objCodeGen->ModelConnectorControlClass($objReverseReference);
-			$objReflection = new ReflectionClass ($strControlType);
-			$blnHasMethod = $objReflection->hasMethod ('Codegen_ConnectorUpdate');
-			if ($blnHasMethod) {
-				echo $strControlType::Codegen_ConnectorUpdate($objCodeGen, $objTable, $objReverseReference);
-			} else {
-				throw new QCallerException ('Can\'t find Codegen_ConnectorUpdate for ' . $strControlType);
-			}
+			$objControlCodeGenerator = $objCodeGen->GetControlCodeGenerator($objReverseReference);
+			echo $objControlCodeGenerator->ConnectorUpdate($objCodeGen, $objTable, $objReverseReference);
 			echo "\n";
 		}
 ?>

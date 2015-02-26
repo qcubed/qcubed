@@ -98,7 +98,10 @@ class QModelConnectorEditDlg extends QDialog {
 		if (!isset ($strControlClass)) {
 			$strControlClass = get_class ($this->objCurrentControl);
 		}
-		$params = $strControlClass::GetModelConnectorParams();
+		$strControlCodeGeneratorClass = $strControlClass.'_CodeGenerator';
+		/** @var AbstractControl_CodeGenerator $objControlCodeGenerator */
+		$objControlCodeGenerator = new $strControlCodeGeneratorClass();
+		$params = $objControlCodeGenerator->GetModelConnectorParams();
 
 		// gather categories
 		foreach ($params as $param) {
