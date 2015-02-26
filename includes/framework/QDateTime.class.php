@@ -216,13 +216,15 @@
 			}
 			else {
 				// string relative date or time
-				try {
-					parent::__construct($mixValue, $objTimeZone);
+				if ($intTime = strtotime($mixValue)) {
+					parent::__construct(date('Y-m-d H:i:s', $intTime), $objTimeZone);
 					$this->blnDateNull = false;
 					$this->blnTimeNull = false;
-				} catch (Exception $objExc) {}
-
-				$this->ReinforceNullProperties(); // in case error occurred, will set everything to null
+				} else { // error
+					parent::__construct();
+					$this->blnDateNull = true;
+					$this->blnTimeNull = true;
+				}
 			}
 
 			// User is requesting to force a particular type.
