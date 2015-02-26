@@ -1,3 +1,9 @@
+<?php
+	/**
+	 * @var QTable $objTable
+	 * @var QCodeGenBase $objCodeGen
+	 */
+?>
 /**
 		 * Override method to perform a property "Set"
 		 * This will set the property $strName to be $mixValue
@@ -18,7 +24,7 @@
 	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
 	$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
 	$strPropertyName = $objColumn->PropertyName;
-	$strClassName = $objCodeGen->ModelConnectorControlClass($objColumn);
+	$strClassName = $objCodeGen->GetControlCodeGenerator($objColumn)->GetControlClass();
 	$strLabelVarName = $objCodeGen->ModelConnectorLabelVariableName($objColumn);
 	include("property_set_case.tpl.php");
 } ?>
@@ -26,7 +32,7 @@
 	if (isset($objReverseReference->Options['FormGen']) && $objReverseReference->Options['FormGen'] == QFormGen::None) continue;
 	$strControlVarName = $objCodeGen->ModelConnectorVariableName($objReverseReference);
 	$strPropertyName = $objReverseReference->ObjectDescription;
-	$strClassName = $objCodeGen->ModelConnectorControlClass($objReverseReference);
+	$strClassName = $objCodeGen->GetControlCodeGenerator($objReverseReference)->GetControlClass();
 	$strLabelVarName = $objCodeGen->ModelConnectorLabelVariableName($objReverseReference);
 ?><?php include("property_set_case.tpl.php"); ?>
 
@@ -35,7 +41,7 @@
 	if (isset($objManyToManyReference->Options['FormGen']) && $objManyToManyReference->Options['FormGen'] == QFormGen::None) continue;
 	$strControlVarName = $objCodeGen->ModelConnectorVariableName($objManyToManyReference);
 	$strPropertyName = $objManyToManyReference->ObjectDescription;
-	$strClassName = $objCodeGen->ModelConnectorControlClass($objManyToManyReference);
+	$strClassName = $objCodeGen->GetControlCodeGenerator($objManyToManyReference)->GetControlClass();
 	$strLabelVarName = $objCodeGen->ModelConnectorLabelVariableName($objManyToManyReference);
 ?><?php include("property_set_case.tpl.php"); ?>
 
