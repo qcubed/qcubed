@@ -142,4 +142,14 @@ TMPL;
 		public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
 			throw new QCallerException('ConnectorUpdateMethod() method not implemented');
 		}
+
+		/**
+		 * If this control is attachable to a codegenerated control in a ModelConnector, this function will be
+		 * used by the ModelConnector designer dialog to display a list of options for the control.
+		 * @throws QCallerException
+		 * @return QModelConnectorParam[]
+		 */
+		public function GetModelConnectorParams() {
+			throw new QCallerException('GetModelConnectorParams() method not implemented');
+		}
 	}
