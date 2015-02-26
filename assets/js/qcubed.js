@@ -104,10 +104,6 @@ qcubed = {
     initForm: function (strFormId) {
 
         $j('#' + strFormId).on ('qformObjChanged', this.formObjChanged); // Allow any control, including hidden inputs, to trigger a change and post of its data.
-        $j('#' + strFormId).on ('input', 'input, textarea', this.formObjChanged);
-        // This selection on input and textarea below seems redundant, but its not. Widgets, like autocomplete, that are based on inputs
-        // will only fire a change event when they change the text, but not an input event.
-        $j('#' + strFormId).on ('change', 'input, select, textarea', this.formObjChanged);
     },
 
     /**
@@ -867,6 +863,11 @@ qcubed.registerControl = function(mixControl) {
         return;
     }
 
+    // detect changes to objects before any changes trigger other events
+    $j(objControl).on ('input', this.formObjChanged);
+    $j(objControl).on ('change', this.formObjChanged);
+
+
     // Link the Wrapper and the Control together
     objWrapper = this.getControl(objControl.id + "_ctl");
     if (!objWrapper) {
@@ -878,6 +879,8 @@ qcubed.registerControl = function(mixControl) {
         // Add the wrapper to the global qcodo wrappers array
         qcubed.wrappers[objWrapper.id] = objWrapper;
     }
+
+    // track change events
 
 
     // Create New Methods, etc.

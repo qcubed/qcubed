@@ -127,13 +127,19 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 
 	/**
 	 * Returns an attribute array, with styles rendered.
-	 * @param array | null $selection an array of titles of attributes that you want the result to be limited to
+	 * @param array|null $attributeOverrides
+	 * @param array|null $styleOverrides
+	 * @param array|null $selection an array of titles of attributes that you want the result to be limited to
 	 * @return array
 	 */
-	public function GetHtmlAttributes($selection = null) {
+	public function GetHtmlAttributes($attributeOverrides = null, $styleOverrides = null, $selection = null) {
 		$attributes = $this->attributes;
-		if ($this->styles) {
-			$attributes['style'] = $this->RenderCssStyles();
+		if ($attributeOverrides) {
+			$attributes = array_merge ($attributes, $attributeOverrides);
+		}
+		$strStyles = $this->RenderCssStyles($styleOverrides);
+		if ($strStyles) {
+			$attributes['style'] = $strStyles;
 		}
 		if ($selection) {
 			$attributes = array_intersect_key($attributes, array_fill_keys($selection, 1));
@@ -405,14 +411,7 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @return string
 	 */
 	public function RenderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
-		$attributes = $this->attributes;
-		if ($this->styles || $styleOverrides) {
-			$attributes['style'] = $this->RenderCssStyles($styleOverrides);
-		}
-		if ($attributeOverrides) {
-			$attributes = array_merge($attributes, $attributeOverrides);
-		}
-		return QHtml::RenderHtmlAttributes($attributes);
+		return QHtml::RenderHtmlAttributes($this->GetHtmlAttributes($attributeOverrides, $styleOverrides));
 	}
 
 	/**

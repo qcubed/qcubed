@@ -1013,23 +1013,27 @@
 				// This next line sucks just the given attributes out of the wrapper styler
 				$aWStyles = array_intersect_key ($this->getWrapperStyler()->styles, ['position'=>1, 'top'=>1, 'left'=>1]);
 				$styles = array_merge($styles, $aWStyles);
+				if (!$this->blnDisplay) {
+					$styles['display'] ='none';
+				}
 			}
 			return QHtml::RenderStyles($styles);
 		}
 
 		/**
-		 * Renders the wrapper attributes. Makes sure the control is hidden if display is off.
+		 * Returns an array of the wrapper attributes to be used for drawing, including CSS styles. Makes sure the control is hidden if display is off.
 		 * @param bool $blnIsBlockElement
 		 * @param array $attributeOverrides
 		 * @return string
 		 */
-		protected function RenderWrapperAttributes($blnIsBlockElement, $attributeOverrides = null) {
+		protected function GetWrapperAttributes($attributeOverrides = null) {
 			$styleOverrides = null;
 			if (!$this->blnDisplay) {
 				$styleOverrides = ['display'=>'none'];
 			}
+			$attributes = $this->GetWrapperStyler()->GetHtmlAttributes($attributeOverrides, $styleOverrides);
 
-			return $this->GetWrapperStyler()->RenderHtmlAttributes($attributeOverrides, $styleOverrides);
+			return $attributes;
 		}
 
 		/**
@@ -1039,13 +1043,12 @@
 		 * @param $blnForceBlockElement
 		 * @return string
 		 */
-		protected function RenderWrappedOutput($strOutput, $blnForceBlockElement) {
-			$blnIsBlockElement = $this->blnIsBlockElement || $blnForceBlockElement;
-			$strTag = $blnIsBlockElement ? 'div' : 'span';
+		protected function RenderWrappedOutput($strOutput) {
+			$strTag = $this->blnIsBlockElement ? 'div' : 'span';
 			$overrides = ['id'=>$this->strControlId . '_ctl'];
-			$strAttributes = $this->RenderWrapperAttributes($blnIsBlockElement, $overrides);
+			$attributes = $this->GetWrapperAttributes($overrides);
 
-			return QHtml::RenderTag($strTag, $strAttributes, $strOutput);
+			return QHtml::RenderTag($strTag, $attributes, $strOutput);
 		}
 
 		/**
@@ -1247,7 +1250,7 @@
 		}
 
 		/**
-		 * renderOutput should be the last call in your custom RenderMethod. It is responsible for the following:
+		 * RenderOutput should be the last call in your custom RenderMethod. It is responsible for the following:
 		 * - Creating the wrapper if you are using a wrapper, or
 		 * - Possibly creating a dummy control if not using a wrapper and the control is hidden.
 		 * - Generating the control's output in one of 3 ways:
@@ -1257,24 +1260,26 @@
 		 * 		- If in an ajax call and we are the top level control getting drawn, then generate special code that
 		 * 		  out javascript will read and put into the control's spot on the page. Requires coordination with
 		 * 		  the code in qcubed.js.
-		 * 		 *
+		 *
 		 * @param string  $strOutput
 		 *   Your html-code which should be printed out
 		 * @param boolean $blnDisplayOutput
 		 *   should it be printed, or just be returned?
-		 * @param boolean $blnForceAsBlockElement
-		 *   True to make it a block element. Only works if blnUseWrapper is true.
-		 * @param string  $strHasDataRel
+\		 * @param string  $strHasDataRel
 		 *   Will contain an additional attribute for ajax processing to tie related html objects together if there is no
 		 *   wrapper around them (and thus no other way to tell they are related).
 		 *
 		 * @return string
 		 */
-		protected function renderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strHasDataRel = '') {
+		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strHasDataRel = '') {
 			// First, let's mark this control as being rendered and is ON the Page
 			$this->blnRendering = false;
 			$this->blnRendered = true;
 			$this->blnOnPage = true;
+
+			if ($blnForceAsBlockElement) {
+				$this->blnIsBlockElement = true;	// must be remembered for ajax drawing
+			}
 
 			// TODO: Move the following to RenderHelper to determine that the output should be empty BEFORE we waste time rendering the whole control!
 			if ($this->blnUseWrapper) {
@@ -1292,7 +1297,7 @@
 					// as standard HTML
 					if (($this->objParentControl) && ($this->objParentControl->Rendered || $this->objParentControl->Rendering)) {
 						if($this->blnUseWrapper) {
-							$strOutput = $this->RenderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
+							$strOutput = $this->RenderWrappedOutput($strOutput) . $this->GetNonWrappedHtml();
 						} else {
 							$strOutput = $strOutput . $this->GetNonWrappedHtml();
 						}
@@ -1303,7 +1308,7 @@
 
 				default:
 					if ($this->blnUseWrapper) {
-						$strOutput = $this->RenderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
+						$strOutput = $this->RenderWrappedOutput($strOutput) . $this->GetNonWrappedHtml();
 					} else {
 						$strOutput = $strOutput . $this->GetNonWrappedHtml();
 					}
@@ -1390,7 +1395,11 @@
 					// If something changed in the wrapper attributes, we need to tell the jQuery response to handle that too.
 					// In particular, if the wrapper was hidden, and is now displayed, we need to make sure that the control
 					// becomes visible before other scripts execute, or those other scripts will not see the control.
-				$controls[] = [QAjaxResponse::Id=>$this->strControlId . '_ctl', QAjaxResponse::Attributes=>$this->getWrapperStyler()->GetHtmlAttributes()];
+				$wrapperAttributes = $this->GetWrapperAttributes();
+				if (!isset($wrapperAttributes['style'])) {
+					$wrapperAttributes['style'] = '';	// must specifically turn off styles if none were drawn, in case the previous state had a style and it had changed
+				}
+				$controls[] = [QAjaxResponse::Id=>$this->strControlId . '_ctl', QAjaxResponse::Attributes=>$wrapperAttributes];
 			}
 			return $controls;
 		}
@@ -1489,12 +1498,15 @@
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 			////////////////////
 
-			$strDataRel = '';
+			$aWrapperAttributes = array();
 			$strHasDataRel = '';
 			if (!$this->blnUseWrapper) {
 				//there is no wrapper --> add the special attribute data-rel to the name control
-				$strDataRel = sprintf('data-rel="#%s"',$this->strControlId);
+				$aWrapperAttributes['data-rel'] = $this->strControlId;
 				$strHasDataRel = 'data-hasrel="1"';
+				if (!$this->blnDisplay) {
+					$aWrapperAttributes['style'] = 'display: none';
+				}
 			}
 
 			// Custom Render Functionality Here
@@ -1502,9 +1514,6 @@
 			// Because this example RenderWithName will render a block-based element (e.g. a DIV), let's ensure
 			// that IsBlockElement is set to true
 			$this->blnIsBlockElement = true;
-
-			// Render the Control's Dressing
-			$strToReturn = '<div class="renderWithName" ' . $strDataRel . '>';
 
 			// Render the Left side
 			$strLabelClass = "form-name";
@@ -1521,7 +1530,7 @@
 				$strInstructions = '';
 			}
 			
-			$strToReturn .= sprintf('<div class="%s"><label for="%s">%s</label>%s</div>', $strLabelClass, $this->strControlId, $this->strName, $strInstructions);
+			$strToReturn = sprintf('<div class="%s"><label for="%s">%s</label>%s</div>', $strLabelClass, $this->strControlId, $this->strName, $strInstructions);
 
 			// Render the Right side
 			$strMessage = '';
@@ -1542,7 +1551,8 @@
 				throw $objExc;
 			}
 
-			$strToReturn .= '</div>';
+			// render control dressing, which is essentially a wrapper. Not sure why we are not just rendering a wrapper here!
+			$strToReturn = QHtml::RenderTag('div', $aWrapperAttributes, $strToReturn);
 
 			////////////////////////////////////////////
 			// Call RenderOutput, Returning its Contents

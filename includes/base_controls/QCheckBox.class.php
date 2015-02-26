@@ -140,9 +140,9 @@
 		 */
 		protected function RenderLabelAttributes() {
 			$objStyler = new QTagStyler();
-			$attributes = $this->GetHtmlAttributes(['title']); // copy tooltip to wrapping label
+			$attributes = $this->GetHtmlAttributes(null, null, ['title']); // copy tooltip to wrapping label
 			$objStyler->SetAttributes($attributes);
-			$objStyler->OverrideAttributes($this->getCheckLabelStyler());
+			$objStyler->Override($this->getCheckLabelStyler());
 
 			if (!$this->Enabled) {
 				$objStyler->AddCssClass('disabled');	// add the disabled class to the label for styling
