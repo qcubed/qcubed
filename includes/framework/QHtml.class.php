@@ -20,9 +20,11 @@
 		}
 
 		/**
-		 * Renders an html tag with the given attributes and inner html. Will attempt to format the code so that
-		 * it is easy to view in a browser, with the inner html indented and on a new line in between the tags. You
-		 * can turn this off by setting __MINIMIZE__
+		 * Renders an html tag with the given attributes and inner html.
+		 *
+		 * If the innerHtml is detected as being wrapped in an html tag of some sort, it will attempt to format the code so that
+		 * it has a structured view in a browser, with the inner html indented and on a new line in between the tags. You
+		 * can turn this off by setting __MINIMIZE__, or by passing in true to $blnNoSpace.
 		 *
 		 * There area a few special cases to consider:
 		 * - Void elements will not be formatted to avoid adding unnecessary white space since these are generally
@@ -54,8 +56,8 @@
 			if ($blnIsVoidElement) {
 				$strToReturn .= ' />'; // conforms to both XHTML and HTML5 for both normal and foreign elements
 			}
-			elseif ($blnNoSpace) {
-				$strToReturn .= '>' . trim($strInnerHtml) . '</' . $strTag . '>';
+			elseif ($blnNoSpace || substr (trim($strInnerHtml), 0, 1) !== '<') {
+				$strToReturn .= '>' . $strInnerHtml . '</' . $strTag . '>';
 			}
 			else {
 				// the hardcoded newlines below are important to prevent different drawing behavior in MINIMIZE mode

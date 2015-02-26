@@ -241,14 +241,15 @@
 
 			switch ($this->strTextMode) {
 				case QTextMode::MultiLine:
+					$strText = QApplication::HtmlEntities($this->strText);
+
 					return $this->RenderTag('textarea',
 								$attrOverride,
 								null,
-								QApplication::HtmlEntities($this->strText)
-					);
+								$strText);
 
 				default:
-					$attrOverride['value'] = QApplication::HtmlEntities($this->strText);
+					$attrOverride['value'] = $this->strText;
 					return $this->RenderTag('input',
 						$attrOverride,
 						null,
