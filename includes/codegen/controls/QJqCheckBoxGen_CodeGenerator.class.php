@@ -1,6 +1,6 @@
 <?php	class QJqCheckBoxGen_CodeGenerator extends QCheckBox_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QJqCheckBoxGen');
+		public function __construct($strControlClassName = 'QJqCheckBoxGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

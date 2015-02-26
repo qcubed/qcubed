@@ -7,8 +7,8 @@
 	}
 ?>
 	class <?= $objJqDoc->strQcClass ?>Gen_CodeGenerator extends <?= $strQcBaseClass ?>_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('<?= $objJqDoc->strQcClass ?>Gen');
+		public function __construct($strControlClassName = '<?= $objJqDoc->strQcClass ?>Gen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

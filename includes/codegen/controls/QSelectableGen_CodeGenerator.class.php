@@ -1,6 +1,6 @@
 <?php	class QSelectableGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QSelectableGen');
+		public function __construct($strControlClassName = 'QSelectableGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

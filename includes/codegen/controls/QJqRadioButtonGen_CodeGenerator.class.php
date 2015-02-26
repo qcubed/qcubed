@@ -1,6 +1,6 @@
 <?php	class QJqRadioButtonGen_CodeGenerator extends QCheckBox_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QJqRadioButtonGen');
+		public function __construct($strControlClassName = 'QJqRadioButtonGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

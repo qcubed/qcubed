@@ -1,6 +1,6 @@
 <?php	class QResizableGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QResizableGen');
+		public function __construct($strControlClassName = 'QResizableGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

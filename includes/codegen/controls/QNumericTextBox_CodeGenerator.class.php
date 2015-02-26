@@ -1,8 +1,8 @@
 <?php
 
 	class QNumericTextBox_CodeGenerator extends QTextBox_CodeGenerator {
-		public function __construct() {
-			parent::__construct('QNumericTextBox');
+		public function __construct($strControlClassName = 'QNumericTextBox') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

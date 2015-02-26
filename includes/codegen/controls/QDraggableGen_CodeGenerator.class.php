@@ -1,6 +1,6 @@
 <?php	class QDraggableGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QDraggableGen');
+		public function __construct($strControlClassName = 'QDraggableGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

@@ -1,6 +1,6 @@
 <?php	class QMenuGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QMenuGen');
+		public function __construct($strControlClassName = 'QMenuGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

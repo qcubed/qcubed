@@ -1,6 +1,6 @@
 <?php	class QSpinnerGen_CodeGenerator extends QTextBox_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QSpinnerGen');
+		public function __construct($strControlClassName = 'QSpinnerGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

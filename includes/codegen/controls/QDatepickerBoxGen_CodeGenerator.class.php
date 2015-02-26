@@ -1,6 +1,6 @@
 <?php	class QDatepickerBoxGen_CodeGenerator extends QTextBox_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QDatepickerBoxGen');
+		public function __construct($strControlClassName = 'QDatepickerBoxGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

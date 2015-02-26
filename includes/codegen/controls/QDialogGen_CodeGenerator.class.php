@@ -1,6 +1,6 @@
 <?php	class QDialogGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QDialogGen');
+		public function __construct($strControlClassName = 'QDialogGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

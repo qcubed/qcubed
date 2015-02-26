@@ -1,6 +1,6 @@
 <?php	class QAccordionGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QAccordionGen');
+		public function __construct($strControlClassName = 'QAccordionGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

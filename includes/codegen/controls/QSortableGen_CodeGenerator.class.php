@@ -1,6 +1,6 @@
 <?php	class QSortableGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QSortableGen');
+		public function __construct($strControlClassName = 'QSortableGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

@@ -1,6 +1,6 @@
 <?php	class QSelectMenuGen_CodeGenerator extends QListBox_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QSelectMenuGen');
+		public function __construct($strControlClassName = 'QSelectMenuGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

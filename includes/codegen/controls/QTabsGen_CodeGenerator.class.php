@@ -1,6 +1,6 @@
 <?php	class QTabsGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QTabsGen');
+		public function __construct($strControlClassName = 'QTabsGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

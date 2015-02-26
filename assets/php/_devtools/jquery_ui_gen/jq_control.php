@@ -339,7 +339,7 @@ class JqControlGen extends QCodeGenBase {
 
 		$strOutFileName = $strOutDirCodeGenControlsBase . '/' . $objJqDoc->strQcClass . '_CodeGenerator.class.php';
 		if (!file_exists($strOutFileName)) {
-			$strEmpty = "<?php\n\tclass ".$objJqDoc->strQcClass."_CodeGenerator extends ".$objJqDoc->strQcClass."Gen_CodeGenerator\n\t{\n\t}\n?>";
+			$strEmpty = "<?php\n\tclass ".$objJqDoc->strQcClass."_CodeGenerator extends ".$objJqDoc->strQcClass."Gen_CodeGenerator\n\t{\n\t\tpublic function __construct(\$strControlClassName = '".$objJqDoc->strQcClass."') {\n\t\t\tparent::__construct(\$strControlClassName);\n\t\t}\n\t}\n";
 			file_put_contents($strOutFileName, $strEmpty);
 		}
 

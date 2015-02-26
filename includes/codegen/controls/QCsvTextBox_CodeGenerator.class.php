@@ -1,8 +1,8 @@
 <?php
 
 	class QCsvTextBox_CodeGenerator extends QTextBox_CodeGenerator {
-		public function __construct() {
-			parent::__construct('QCsvTextBox');
+		public function __construct($strControlClassName = 'QCsvTextBox') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

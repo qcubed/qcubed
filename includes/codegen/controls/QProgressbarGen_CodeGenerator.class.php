@@ -1,6 +1,6 @@
 <?php	class QProgressbarGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QProgressbarGen');
+		public function __construct($strControlClassName = 'QProgressbarGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

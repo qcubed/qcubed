@@ -1,6 +1,6 @@
 <?php	class QJqButtonGen_CodeGenerator extends QControl_CodeGenerator	{
-		public function __construct() {
-			parent::__construct('QJqButtonGen');
+		public function __construct($strControlClassName = 'QJqButtonGen') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**
