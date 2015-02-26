@@ -137,8 +137,9 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 		if ($attributeOverrides) {
 			$attributes = array_merge ($attributes, $attributeOverrides);
 		}
-		if ($this->styles || $styleOverrides) {
-			$attributes['style'] = $this->RenderCssStyles($styleOverrides);
+		$strStyles = $this->RenderCssStyles($styleOverrides);
+		if ($strStyles) {
+			$attributes['style'] = $strStyles;
 		}
 		if ($selection) {
 			$attributes = array_intersect_key($attributes, array_fill_keys($selection, 1));
