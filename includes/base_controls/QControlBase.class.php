@@ -2181,40 +2181,5 @@
 		}
 
 
-		/**
-		 * Returns an description of the options available to modify by the designer for the code generator.
-		 *
-		 * @return QModelConnectorParam[]
-		 */
-		public static function GetModelConnectorParams() {
-			return array(
-				new QModelConnectorParam ('QControl', 'CssClass', 'Css Class assigned to the control', QType::String),
-				new QModelConnectorParam ('QControl', 'AccessKey', 'Access Key to focus control', QType::String),
-				new QModelConnectorParam ('QControl', 'CausesValidation', 'How and what to validate. Can also be set to a control.', QModelConnectorParam::SelectionList,
-					array(
-						null=>'None',
-						'QCausesValidation::AllControls'=>'All Controls',
-						'QCausesValidation::SiblingsAndChildren'=>'Siblings And Children',
-						'QCausesValidation::SiblingsOnly'=>'Siblings Only'
-					)
-				),
-				new QModelConnectorParam ('QControl', 'Enabled', 'Will it start as enabled (default true)?', QType::Boolean),
-				new QModelConnectorParam ('QControl', 'Required', 'Will it fail validation if nothing is entered (default depends on data definition, if NULL is allowed.)?', QType::Boolean),
-				new QModelConnectorParam ('QControl', 'TabIndex', '', QType::Integer),
-				new QModelConnectorParam ('QControl', 'ToolTip', '', QType::String),
-				new QModelConnectorParam ('QControl', 'Visible', '', QType::Boolean),
-				new QModelConnectorParam ('QControl', 'Height', 'Height in pixels. However, you can specify a different unit (e.g. 3.0 em).', QType::String),
-				new QModelConnectorParam ('QControl', 'Width', 'Width in pixels. However, you can specify a different unit (e.g. 3.0 em).', QType::String),
-				new QModelConnectorParam ('QControl', 'Instructions', 'Additional help for user.', QType::String),
-				new QModelConnectorParam ('QControl', 'Moveable', '', QType::Boolean),
-				new QModelConnectorParam ('QControl', 'Resizable', '', QType::Boolean),
-				new QModelConnectorParam ('QControl', 'Droppable', '', QType::Boolean),
-				new QModelConnectorParam ('QControl', 'UseWrapper', 'Control will be forced to be wrapped with a div', QType::Boolean),
-				new QModelConnectorParam ('QControl', 'WrapperCssClass', '', QType::String)
-			);
-
-		}
-
-
 	}
 ?>
