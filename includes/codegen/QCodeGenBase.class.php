@@ -825,8 +825,16 @@
 					return new QLabel_CodeGenerator();
 				}
 				if (isset($o['ControlClass'])) {
-					$strControlHelperClass = $o['ControlClass'].'_CodeGenerator';
-					return new $strControlHelperClass();
+					$strControlClass = $strOrigControlClass = $o['ControlClass'];
+					$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
+					while (!class_exists($strControlCodeGeneratorClass)) {
+						$strControlClass = get_parent_class($strControlClass);
+						if ($strControlClass === 'QControl') {
+							throw new QCallerException("Cannot find an appropriate subclass of AbstractControl_CodeGenerator for ".$strOrigControlClass);
+						}
+						$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
+					}
+					return new $strControlCodeGeneratorClass($strOrigControlClass);
 				}
 			}
 
