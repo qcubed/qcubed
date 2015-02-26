@@ -1191,6 +1191,10 @@
 		/**
 		 * Global/Central HtmlEntities command to perform the PHP equivalent of htmlentities.
 		 * Feel free to override to specify encoding/quoting specific preferences (e.g. ENT_QUOTES/ENT_NOQUOTES, etc.)
+		 *
+		 * Be careful of one thing though. This now uses ENT_HTML5, to correspond with the default page DOCTYPE. This
+		 * has the added benefit of encoding newlines in data sent to controls. In particular, a multi-line textbox
+		 * needs to have newlines encoded to prevent problems when the output is formatted using _indent().
 		 * 
 		 * This method is also used by the global print "_p" function.
 		 *
