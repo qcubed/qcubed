@@ -22,9 +22,8 @@
 		 * By default, wrappers are turned on for all controls. Wrappers create an extra <div> tag around
 		 * QControls, and were historically used to help manipulate QControls, and to group a name and error
 		 * message with a control. However, they can at times get in the way. Now that we are using jQuery to
-		 * manipulate controls, they are not needed as much, but they are still useful for grouping names and
-		 * error messages with a control. If you want to turn global wrappers off and rather set a wrapper for
-		 * individual controls, uncomment the line below.
+		 * manipulate controls, they are not needed as much, but they are still needed if you are showing
+		 * and hiding items that are grouped with other items.
 		 */
 		//protected $blnUseWrapper = false;
 	}
