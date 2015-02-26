@@ -209,16 +209,6 @@
 					break;
 			}
 		}
-
-		/**
-		 * @return QModelConnectorParam[]
-		 */
-		public static function GetModelConnectorParams() {
-			return array_merge(parent::GetModelConnectorParams(), array(
-				new QModelConnectorParam (get_called_class(), 'DateFormat', 'How to format the date. Default: MM/DD/YY', QType::String)
-			));
-		}
-
 	}
 
 ?>

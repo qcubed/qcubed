@@ -136,4 +136,26 @@ TMPL;
 TMPL;
 			return $strRet;
 		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QModelConnectorParam[]
+		 */
+		public function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'Columns', 'Width of field', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Format', 'printf format string to use', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Placeholder', 'HTML5 Placeholder attribute', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ReadOnly', 'Editable or not', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'TextMode', 'Field type', QModelConnectorParam::SelectionList,
+					array(null => '-',
+						'QTextMode::Search' => 'Search',
+						'QTextMode::MultiLine' => 'MultiLine',
+						'QTextMode::Password' => 'Password',
+						'QTextMode::SingleLine' => 'SingleLine'
+					))
+			));
+		}
 	}

@@ -76,4 +76,10 @@
 		 */
 		abstract public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn);
 
+		/**
+		 * If this control is attachable to a codegenerated control in a ModelConnector, this function will be
+		 * used by the ModelConnector designer dialog to display a list of options for the control.
+		 * @return QModelConnectorParam[]
+		 **/
+		abstract public function GetModelConnectorParams();
 	}

@@ -199,12 +199,18 @@ function jq_control_gen($strUrl, $strQcClass = null, $strQcBaseClass = 'QPanel')
 	$aryPathsList[strtolower($objJqDoc->strQcClass) . 'gen'] =
 		sprintf("__QCUBED_CORE__ . '/base_controls/%sGen.class.php'", $objJqDoc->strQcClass);
 
-	$aryPathsList[strtolower($objJqDoc->strQcClass) . 'base'] = 
+	$aryPathsList[strtolower($objJqDoc->strQcClass) . 'gen_codegenerator'] =
+		sprintf("__QCUBED_CORE__ . '/codegen/controls/%sGen_CodeGenerator.class.php'", $objJqDoc->strQcClass);
+
+	$aryPathsList[strtolower($objJqDoc->strQcClass) . 'base'] =
 			sprintf("__QCUBED_CORE__ . '/base_controls/%sBase.class.php'", $objJqDoc->strQcClass);
 			
 	
 	$aryPathsList[strtolower($objJqDoc->strQcClass)] = 
 			sprintf("__INCLUDES__ . '/controls/%s.class.php'", $objJqDoc->strQcClass);
+
+	$aryPathsList[strtolower($objJqDoc->strQcClass) . '_codegenerator'] =
+		sprintf("__QCUBED_CORE__ . '/codegen/controls/%s_CodeGenerator.class.php'", $objJqDoc->strQcClass);
 }
 
 // generate an include file for use by the ui classes

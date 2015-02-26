@@ -1,6 +1,6 @@
 <?php
 
-	class QAutocomplete_CodeGenerator extends QTextBox_CodeGenerator {
+	class QAutocomplete_CodeGenerator extends QAutocompleteGen_CodeGenerator {
 		public function __construct() {
 			parent::__construct('QAutocomplete');
 		}

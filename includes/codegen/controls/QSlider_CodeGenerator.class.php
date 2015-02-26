@@ -1,6 +1,6 @@
 <?php
 
-	class QSlider_CodeGenerator extends QControl_CodeGenerator {
+	class QSlider_CodeGenerator extends QSliderGen_CodeGenerator {
 		public function __construct() {
 			parent::__construct('QSlider');
 		}

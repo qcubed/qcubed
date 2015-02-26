@@ -24,4 +24,21 @@ TMPL;
 			}
 			return $strRet;
 		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QModelConnectorParam[]
+		 */
+		public function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'Rows', 'Height of field for multirow field', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'SelectionMode', 'Single or multiple selections', QModelConnectorParam::SelectionList,
+					array(null => 'Default',
+						'QSelectionMode::Single' => 'Single',
+						'QSelectionMode::Multiple' => 'Multiple'
+					))
+			));
+		}
+
 	}

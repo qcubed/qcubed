@@ -1,6 +1,6 @@
 <?php
 
-	class QDatepickerBox_CodeGenerator extends QTextBox_CodeGenerator {
+	class QDatepickerBox_CodeGenerator extends QDatepickerBoxGen_CodeGenerator {
 		public function __construct() {
 			parent::__construct('QDatepickerBox');
 		}
@@ -52,4 +52,14 @@
 TMPL;
 			return $strRet;
 		}
+
+		/**
+		 * @return QModelConnectorParam[]
+		 */
+		public function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'DateFormat', 'How to format the date. Default: MM/DD/YY', QType::String)
+			));
+		}
+
 	}
