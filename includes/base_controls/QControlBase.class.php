@@ -1013,6 +1013,9 @@
 				// This next line sucks just the given attributes out of the wrapper styler
 				$aWStyles = array_intersect_key ($this->getWrapperStyler()->styles, ['position'=>1, 'top'=>1, 'left'=>1]);
 				$styles = array_merge($styles, $aWStyles);
+				if (!$this->blnDisplay) {
+					$styles['display'] ='none';
+				}
 			}
 			return QHtml::RenderStyles($styles);
 		}
@@ -1270,7 +1273,7 @@
 		 *
 		 * @return string
 		 */
-		protected function renderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strHasDataRel = '') {
+		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strHasDataRel = '') {
 			// First, let's mark this control as being rendered and is ON the Page
 			$this->blnRendering = false;
 			$this->blnRendered = true;

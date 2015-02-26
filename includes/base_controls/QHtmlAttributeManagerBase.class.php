@@ -406,8 +406,9 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 */
 	public function RenderHtmlAttributes($attributeOverrides = null, $styleOverrides = null) {
 		$attributes = $this->attributes;
-		if ($this->styles || $styleOverrides) {
-			$attributes['style'] = $this->RenderCssStyles($styleOverrides);
+		$strStyles = $this->RenderCssStyles($styleOverrides);
+		if ($strStyles) {
+			$attributes['style'] = $strStyles;
 		}
 		if ($attributeOverrides) {
 			$attributes = array_merge($attributes, $attributeOverrides);
