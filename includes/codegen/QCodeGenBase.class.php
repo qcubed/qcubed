@@ -391,6 +391,7 @@
 		 *
 		 * @param null|string $strTemplateFilePath Path to the file
 		 * @param null|string $strTemplate         Text of the template (if $strTemplateFilePath is null, this field must be string)
+		 * @deprecated
 		 *
 		 * @return SimpleXMLElement
 		 * @throws Exception
