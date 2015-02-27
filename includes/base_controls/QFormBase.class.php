@@ -1674,6 +1674,16 @@
 
 			// Go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			foreach ($this->GetAllControls() as $objControl) {
+				if ($objControl->Rendered) {
+					$strControlIdToRegister[] = $objControl->ControlId;
+
+					/* Note: GetEndScript may cause the control to register additional commands, or even add javascripts, so those should be handled after this. */
+					if ($strControlScript = $objControl->GetEndScript()) {
+						$strControlScript = JavaScriptHelper::TerminateScript($strControlScript);
+						$strEventScripts .= $strControlScript;
+					}
+				}
+
 				// Include the javascripts specified by each control.
 				if ($strScriptArray = $this->ProcessJavaScriptList($objControl->JavaScripts)) {
 					QApplication::AddJavaScriptFiles($strScriptArray);
@@ -1694,16 +1704,6 @@
 						} else if ($this->strFormAttributeArray[$strKey] != $strValue) {
 							$this->strFormAttributeArray[$strKey] = $strValue;
 						}
-					}
-				}
-
-				if ($objControl->Rendered) {
-					$strControlIdToRegister[] = $objControl->ControlId;
-
-					/* Note: GetEndScript may cause the control to register additional commands, which will be rendered in QApplication::RenderJavaScript */
-					if ($strControlScript = $objControl->GetEndScript()) {
-						$strControlScript = JavaScriptHelper::TerminateScript($strControlScript);
-						$strEventScripts .= $strControlScript;
 					}
 				}
 			}
