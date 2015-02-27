@@ -395,7 +395,7 @@
 		 * @return SimpleXMLElement
 		 * @throws Exception
 		 */
-		protected function getTemplateSettings($strTemplateFilePath, $strTemplate = null) {
+		protected function getTemplateSettings($strTemplateFilePath, &$strTemplate = null) {
 			if ($strTemplate === null)
 				$strTemplate = file_get_contents($strTemplateFilePath);
 			$strError = 'Template\'s first line must be <template OverwriteFlag="boolean" DocrootFlag="boolean" TargetDirectory="string" DirectorySuffix="string" TargetFileName="string"/>: ' . $strTemplateFilePath;
@@ -415,6 +415,7 @@
 
 			if (is_null($objTemplateXml) || (!($objTemplateXml instanceof SimpleXMLElement)))
 				throw new Exception($strError);
+			$strTemplate = substr($strTemplate, $intPosition + 1);
 			return $objTemplateXml;
 		}
 

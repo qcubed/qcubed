@@ -64,7 +64,7 @@ trait QModelTrait {
 	 *
 	 * @param QQueryBuilder &$objQueryBuilder the QueryBuilder object that will be created
 	 * @param QQCondition $objConditions any conditions on the query, itself
-	 * @param QQClause[] $objOptionalClausees additional optional QQClause object or array of QQClause objects for this query
+	 * @param QQClause[] $objOptionalClauses additional optional QQClause object or array of QQClause objects for this query
 	 * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with (sending in null will skip the PrepareStatement step)
 	 * @param boolean $blnCountOnly only select a rowcount
 	 * @return string the query statement
@@ -202,7 +202,7 @@ trait QModelTrait {
 	 * Uses BuildQueryStatment to perform most of the work.
 	 *
 	 * @param QQCondition $objConditions any conditions on the query, itself
-	 * @param QQClause[]|null $objOptionalClausees additional optional QQClause objects for this query
+	 * @param QQClause[]|null $objOptionalClauses additional optional QQClause objects for this query
 	 * @param mixed[]|null $mixParameterArray an array of name-value pairs to substitute in to the placeholders in the query, if needed
 	 * @return mixed[] an array of objects
 	 * @throws Exception
@@ -255,7 +255,7 @@ trait QModelTrait {
 	 * Uses BuildQueryStatment to perform most of the work.
 	 *
 	 * @param QQCondition $objConditions any conditions on the query, itself
-	 * @param QQClause[] $objOptionalClausees additional optional QQClause objects for this query
+	 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
 	 * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with
 	 * @return integer the count of queried objects as an integer
 	 */
