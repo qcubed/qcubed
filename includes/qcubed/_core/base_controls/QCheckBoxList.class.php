@@ -32,18 +32,18 @@
 	 * @property boolean $HtmlEntities
 	 */
 	class QCheckBoxList extends QListControl {
-		
+
 		const ButtonModeNone = 0;
 		const ButtonModeJq = 1;
 		const ButtonModeSet = 2;
-		
+
 		///////////////////////////
 		// Private Member Variables
 		///////////////////////////
-		
+
 		// APPEARANCE
 		protected $strTextAlign = QTextAlign::Right;
-		
+
 		// BEHAVIOR
 		protected $blnHtmlEntities = true;
 
@@ -73,15 +73,15 @@
 							$this->objItemsArray[$intIndex]->Selected = false;
 					}
 				} else {
-					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++) 
+					for ($intIndex = 0; $intIndex < count($this->objItemsArray); $intIndex++)
 						$this->objItemsArray[$intIndex]->Selected = false;
 				}
 			}
 		}
-		
+
 		public function GetEndScript() {
 			$strScript = parent::GetEndScript();
-			
+
 			$ctrlId = $this->ControlId;
 			if ($this->intButtonMode == self::ButtonModeSet) {
 				$strScript = sprintf ('jQuery("#%s").buttonset();', $ctrlId) . "\n" . $strScript;
@@ -158,7 +158,7 @@
 				$strAccessKey = sprintf('accesskey="%s" ', $this->strAccessKey);
 			else
 				$strAccessKey = "";
-		
+
 			$strStyle = $this->GetStyleAttributes();
 			if (strlen($strStyle) > 0)
 				$strStyle = sprintf('style="%s" ', $strStyle);
@@ -174,7 +174,7 @@
 				$strCellSpacing = sprintf('cellspacing="%s" ', $this->intCellSpacing);
 			else
 				$strCellSpacing = "";
-			
+
 			if ($this->intButtonMode == self::ButtonModeSet) {
 				$strToReturn = sprintf('<div id="%s" %s%s%s%s%s>',
 					$this->strControlId,
@@ -183,7 +183,7 @@
 					$strCssClass,
 					$strStyle,
 					$strCustomAttributes) . "\n";
-					
+
 				$count = $this->ItemCount;
 				for ($intIndex = 0; $intIndex < $count; $intIndex++) {
 					$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strTabIndex) . "\n";
@@ -234,7 +234,7 @@
 						$strToReturn .= $this->GetItemHtml($this->objItemsArray[$intIndex], $intIndex, $strTabIndex);
 						$strToReturn .= '</td>';
                     }
-					
+
 					$strToReturn .= '</tr>';
 				}
 			}
@@ -255,6 +255,30 @@
 			$this->strValidationError = null;
 			return true;
 		}
+
+	    /**
+	     * Mark all items as checked (selected)
+	     */
+	    public function CheckAll()
+	    {
+	        $this->blnModified = true;
+	        foreach($this->objItemsArray as $item)
+	        {
+	            $item->Selected = true;
+	        }
+	    }
+
+	    /**
+	     * Mark all items as unchecked (not selected)
+	     */
+	    public function UncheckAll()
+	    {
+	        $this->blnModified = true;
+	        foreach($this->objItemsArray as $item)
+	        {
+	            $item->Selected = false;
+	        }
+	    }
 
 		/////////////////////////
 		// Public Properties: GET
