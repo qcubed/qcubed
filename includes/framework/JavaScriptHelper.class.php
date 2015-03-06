@@ -56,7 +56,7 @@
 	 * To use it, simply wrap the value part of the array with this class.
 	 * @usage: $a = array ("click", new QJsNoQuoteKey (new QJsClosure('alert ("I was clicked")')));
 	 */
-	class QJsNoQuoteKey {
+	class QJsNoQuoteKey implements JsonSerializable {
 		protected $mixContent;
 
 		public function __construct ($mixContent) {
@@ -66,6 +66,11 @@
 		public function toJsObject() {
 			return JavaScriptHelper::toJsObject($this->mixContent);
 		}
+
+		public function jsonSerialize() {
+			return $this->mixContent;
+		}
+
 	}
 
 	/**
