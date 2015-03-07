@@ -227,7 +227,7 @@
 								+ $intRowIndex;
 
 						$strItemHtml = $this->GetItemHtml($this->objListItemArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
-s						$strRowHtml .= $strItemHtml;
+						$strRowHtml .= $strItemHtml;
 					}
 
 					$strRowHtml = QHtml::RenderTag('div', ['class'=>'qc-tableRow'], $strRowHtml);
