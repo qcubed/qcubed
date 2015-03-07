@@ -137,7 +137,6 @@ function _r($obj, $strRenderFunc = null /*, $overrides */) {
 	$aParams = func_get_args();
 	array_shift($aParams);
 	array_shift($aParams);
-	array_shift($aParams);
 	if ($obj) {
 		if (!$strRenderFunc) {
 			if ($obj->PreferredRenderMethod) {
