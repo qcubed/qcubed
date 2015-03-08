@@ -67,19 +67,22 @@
 			}
 			$this->tabs = new QTabs($this);
 			$headers = array();
-			$this->pnlMainView = new <?php echo $objTable->ClassName ?>ViewWithToolbar($this->tabs, $obj<?php echo $objTable->ClassName ?>Ref, true, true, true, false);
+			$this->pnlMainView = $this->create<?php echo $objTable->ClassName ?>ViewPanel($obj<?php echo $objTable->ClassName ?>Ref, true, true, true, false);
 			$mct<?php echo $objTable->ClassName ?> = $this->pnlMainView->MetaControl;
 			$obj<?php echo $objTable->ClassName ?> = $mct<?php echo $objTable->ClassName ?> ? $mct<?php echo $objTable->ClassName ?>-><?php echo $objTable->ClassName ?> : null;
 			$headers[] = QApplication::Translate('<?php echo $objTable->ClassName ?>');
 
 <?php
+	$references = array();
+	$references[$objTable->ClassName] = 1;
 	if ($objTable->ColumnArray) foreach ($objTable->ColumnArray as $objColumn) {
 		if ($objColumn->Reference && !$objColumn->Reference->IsType) {
 			$objReference = $objColumn->Reference;
 			$objReferencedTable = $this->GetTable($objReference->Table);
+			$references[$objReferencedTable->ClassName] = 1;
 ?>
 			if ($obj<?php echo $objTable->ClassName ?> && $this->showTab($obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?>)) {
-				$this->pnl<?php echo $objReference->PropertyName ?>View = new <?php echo $objReferencedTable->ClassName ?>ViewWithToolbar($this->tabs, $obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?>, false, true, false, false);
+				$this->pnl<?php echo $objReference->PropertyName ?>View = $this->create<?php echo $objReferencedTable->ClassName ?>ViewPanel($obj<?php echo $objTable->ClassName ?>-><?php echo $objReference->PropertyName ?>, false, true, false, false);
 				$this->int<?php echo $objReference->PropertyName ?>TabIdx = count($headers);
 				$headers[] = QApplication::Translate('<?php echo preg_replace('/Object$/', '', $objReference->PropertyName) ?>');
 			}
@@ -90,6 +93,16 @@
 			$this->tabs->Headers = $headers;
 		}
 
+<?php
+	foreach ($references as $refClassName => $_) {
+?>
+		protected function create<?php echo $refClassName ?>ViewPanel($objRef, $blnNew = false, $blnEdit = true, $blnDelete = true, $blnShowPk = true) {
+			return new <?php echo $refClassName ?>ViewWithToolbar($this->tabs, $objRef, $blnNew, $blnEdit, $blnDelete, $blnShowPk);
+		}
+
+<?php
+	}
+?>
 		protected function showTab($objRelated) {
 			return $objRelated && $objRelated->__Restored;
 		}

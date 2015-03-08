@@ -30,10 +30,10 @@
 			$this->AutoRenderChildren = true;
 			$this->CssClass = "list_detail";
 
-			$this->pnlSearch = new <?php echo $objTable->ClassName ?>SearchPanel($this);
+			$this->pnlSearch = $this->createSearchPanel();
 			$this->pnlSearch->SearchCallback = new QMethodCallback($this, 'searchCallback');
 
-			$this->tbl<?php echo $objTable->ClassNamePlural ?> = new <?php echo $objTable->ClassName ?>DataTable(new QDiv($this, 'list_panel'));
+			$this->tbl<?php echo $objTable->ClassNamePlural ?> = $this->createDetailsPanel();
 			$this->tbl<?php echo $objTable->ClassNamePlural ?>->Language = array("sEmptyTable" => QApplication::Translate('No <?php echo $objTable->ClassNamePlural ?>'));
 
 			$this->tbl<?php echo $objTable->ClassNamePlural ?>->AddAction(new QDataTable_RowClickEvent(), new QAjaxControlAction($this, "tableRow_Click"));
@@ -54,6 +54,14 @@
 		public function searchCallback(QQCondition $objSearchCondition) {
 			// note: this will also mark $this->tbl<?php echo $objTable->ClassNamePlural ?> as modified and thus trigger a refresh of the table
 			$this->tbl<?php echo $objTable->ClassNamePlural ?>->ExtraCondition = $objSearchCondition;
+		}
+
+		protected function createSearchPanel() {
+			return new <?php echo $objTable->ClassName ?>SearchPanel($this);
+		}
+
+		protected function createDetailsPanel() {
+			return new <?php echo $objTable->ClassName ?>DataTable(new QDiv($this, 'list_panel'));
 		}
 
 		public function tableRow_Click($strFormId, $strControlId, $strParameter) {

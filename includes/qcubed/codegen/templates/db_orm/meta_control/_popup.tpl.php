@@ -63,13 +63,13 @@
 		}
 
 		/**
-		 * @param $obj<?php echo $objTable->ClassName ?>Ref
+		 * @param mixed $obj<?php echo $objTable->ClassName ?>Ref
 		 * @param string|null $strDialogTitle
 		 * @return <?php echo $objTable->ClassName ?>ViewPanel
 		 */
 		public function View($obj<?php echo $objTable->ClassName ?>Ref, $strDialogTitle = null) {
 			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
-			$objViewPanel = new <?php echo $objTable->ClassName ?>ViewPanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, true);
+			$objViewPanel = $this->createViewPanel($obj<?php echo $objTable->ClassName ?>Ref, true);
 			if ($this->strViewTemplate) {
 				$objViewPanel->Template = $this->strViewTemplate;
 			}
@@ -85,6 +85,15 @@
 
 		/**
 		 * @param mixed $obj<?php echo $objTable->ClassName ?>Ref
+		 * @param boolean $blnShowPk
+		 * @return <?php echo $objTable->ClassName ?>ViewPanel
+		 */
+		protected function createViewPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk = true) {
+			return new <?php echo $objTable->ClassName ?>ViewPanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
+		}
+
+		/**
+		 * @param mixed $obj<?php echo $objTable->ClassName ?>Ref
 		 * @param QCallback|null $objSaveCallback
 		 * @param QCallback|null $objDeleteCallback
 		 * @param string|null $strDialogTitle
@@ -92,7 +101,7 @@
 		 */
 		public function Edit($obj<?php echo $objTable->ClassName ?>Ref, QCallback $objSaveCallback = null, QCallback $objDeleteCallback = null, $strDialogTitle = null) {
 			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
-			$objEditPanel = new <?php echo $objTable->ClassName ?>UpdatePanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, false);
+			$objEditPanel = $this->createEditPanel($obj<?php echo $objTable->ClassName ?>Ref, false);
 			if ($this->strEditTemplate) {
 				$objEditPanel->Template = $this->strEditTemplate;
 			}
@@ -110,13 +119,22 @@
 		}
 
 		/**
+		 * @param mixed $obj<?php echo $objTable->ClassName ?>Ref
+		 * @param boolean $blnShowPk
+		 * @return <?php echo $objTable->ClassName ?>UpdatePanel
+		 */
+		protected function createEditPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk = false) {
+			return new <?php echo $objTable->ClassName ?>UpdatePanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
+		}
+
+		/**
 		 * @param QCallback|null $objSaveCallback
 		 * @param string|null $strDialogTitle
 		 * @return <?php echo $objTable->ClassName ?>UpdatePanel
 		 */
 		public function Create(QCallback $objSaveCallback = null, $strDialogTitle = null) {
 			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
-			$objCreatePanel = new <?php echo $objTable->ClassName ?>UpdatePanel($this->dlgPopup, null, false);
+			$objCreatePanel = $this->createEditPanel(null, false);
 			if ($this->strCreateTemplate) {
 				$objCreatePanel->Template = $this->strCreateTemplate;
 			}
@@ -140,7 +158,7 @@
 		public function Select(QCallback $objCallback = null, $strDialogTitle = null) {
 			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
 			$this->objSearchCallback = $objCallback;
-			$this->objSearchControl = new <?php echo $objTable->ClassName ?>DataTable($this->dlgPopup);
+			$this->objSearchControl = $this->createDataTablesPanel();
 			$this->objSearchControl->AddAction(new QDataTable_RowClickEvent(), new QAjaxControlAction($this, "searchRow_Click"));
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('Select <?php echo $objTable->ClassName ?>');
@@ -150,6 +168,13 @@
 			if ($this->objSearchControlPostCreateCallback)
 				$this->objSearchControlPostCreateCallback->Call($this->objSearchControl);
 			return $this->objSearchControl;
+		}
+
+		/**
+		 * @return <?php echo $objTable->ClassName ?>DataTable
+		 */
+		protected function createDataTablesPanel() {
+			return new <?php echo $objTable->ClassName ?>DataTable($this->dlgPopup);
 		}
 
 		public function searchRow_Click($strFormId, $strControlId, $strParameter) {

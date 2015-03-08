@@ -27,15 +27,23 @@
 			$this->blnShowPk = $blnShowPk;
 
 			if ($obj<?php echo $objTable->ClassName ?>Ref) {
-				$this->pnlToolbar = new <?php echo $objTable->ClassName ?>Toolbar($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnNew, $blnEdit, $blnDelete);
-				$this->pnlView = new <?php echo $objTable->ClassName ?>ViewPanel($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
+				$this->pnlToolbar = $this->createToolbarPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnNew, $blnEdit, $blnDelete);
+				$this->pnlView = $this->createViewPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
 			} else {
-				$this->pnlToolbar = new <?php echo $objTable->ClassName ?>Toolbar($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnNew, false, false);
+				$this->pnlToolbar = $this->createToolbarPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnNew, false, false);
 			}
 			$this->pnlToolbar->LoadCallback = new QMethodCallback($this, 'ReloadView');
 			$this->pnlToolbar->CreateCallback = new QMethodCallback($this, 'ReloadView');
 			$this->pnlToolbar->EditCallback = new QMethodCallback($this, 'ReloadView');
 			$this->pnlToolbar->DeleteCallback = new QMethodCallback($this, 'ReloadView');
+		}
+
+		protected function createToolbarPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnNew, $blnEdit, $blnDelete) {
+			return new <?php echo $objTable->ClassName ?>Toolbar($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnNew, $blnEdit, $blnDelete);
+		}
+
+		protected function createViewPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk) {
+			return new <?php echo $objTable->ClassName ?>ViewPanel($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
 		}
 
 		public function ReloadView($obj<?php echo $objTable->ClassName ?> = null) {
