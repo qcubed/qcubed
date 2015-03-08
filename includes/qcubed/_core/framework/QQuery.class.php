@@ -713,6 +713,26 @@
 		}
 	}
 
+	class QQConditionExists extends QQCondition {
+		protected $objNode;
+		public function __construct(QQSubQueryNode $objSubQueryDefinition) {
+			$this->objNode = $objSubQueryDefinition;
+		}
+		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+			$objBuilder->AddWhereItem ('(EXISTS (' . $this->objNode->GetColumnAlias($objBuilder).'))');
+		}
+	}
+
+	class QQConditionNotExists extends QQCondition {
+		protected $objNode;
+		public function __construct(QQSubQueryNode $objSubQueryDefinition) {
+			$this->objNode = $objSubQueryDefinition;
+		}
+		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+			$objBuilder->AddWhereItem ('(NOT EXISTS (' . $this->objNode->GetColumnAlias($objBuilder).'))');
+		}
+	}
+
 	abstract class QQConditionComparison extends QQCondition {
 		public $objQueryNode;
 		public $mixOperand;
@@ -1072,6 +1092,14 @@
 		}
 		static public function NotBetween(QQNode $objQueryNode, $strMinValue, $strMaxValue) {
 			return new QQConditionNotBetween($objQueryNode, $strMinValue, $strMaxValue);
+		}
+
+		static public function Exists(QQSubQueryNode $objSubQueryDefinition) {
+			return new QQConditionExists($objSubQueryDefinition);
+		}
+
+		static public function NotExists(QQSubQueryNode $objSubQueryDefinition) {
+			return new QQConditionNotExists($objSubQueryDefinition);
 		}
 
 		////////////////////////
