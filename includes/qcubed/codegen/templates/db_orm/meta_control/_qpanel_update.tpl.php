@@ -142,6 +142,9 @@
 				case "DeleteButton": return $this->btnDelete;
 				case "CancelButton": return $this->btnCancel;
 				case "SaveButton": return $this->btnSave;
+				case "SaveCallback": return $this->objSaveCallback;
+				case "DeleteCallback": return $this->objDeleteCallback;
+				case "CancelCallback": return $this->objCancelCallback;
 				default:
 					try {
 						return parent::__get($strName);
