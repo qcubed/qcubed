@@ -520,7 +520,7 @@ qcubed = {
                     eval (command.script);
                 }
                 else if (command.selector) {
-                    var params = qc.unpackParams(command.params);
+                    var params = qc.unpackArray(command.params);
                     var objs;
 
                     if (typeof command.selector === 'string') {
@@ -535,7 +535,7 @@ qcubed = {
                     });
                 }
                 else if (this.func) {
-                    var params = qc.unpackParams(this.params);
+                    var params = qc.unpackArray(this.params);
 
                     // Find the function by name. Walk an object list in the process.
                     var objs = this.func.split(".");
@@ -573,7 +573,7 @@ qcubed = {
      * @param params
      * @returns {*}
      */
-    unpackParams: function(params) {
+    unpackArray: function(params) {
         if (!params) {
             return null;
         }
@@ -593,6 +593,9 @@ qcubed = {
                     item = newItem;
                 }
             }
+            else if ($j.type(item) == 'array') {
+                item = qcubed.unpackArray (item);
+            }
             newParams.push(item);
         });
         return newParams;
@@ -605,26 +608,36 @@ qcubed = {
      */
     unpackObj: function (obj) {
         if ($j.type(obj) == 'object' &&
-            obj.qObjType) {
+                obj.qObjType) {
 
-                switch (obj.qObjType) {
-                    case 'qClosure':
-                        return new Function(obj.params, obj.func);
-                        break;
+            switch (obj.qObjType) {
+                case 'qClosure':
+                    return new Function(obj.params, obj.func);
+                    break;
 
-                    case 'qDateTime':
-                        return new Date(obj.year, obj.month, obj.day, obj.hour, obj.minute, obj.second);
-                        break;
+                case 'qDateTime':
+                    return new Date(obj.year, obj.month, obj.day, obj.hour, obj.minute, obj.second);
+                    break;
 
-                    case 'qVarName':
-                        // Find the variable value starting at the window context.
-                        var vars = obj.varName.split(".");
-                        var val = window;
-                        $j.each (vars, function (i, v) {
-                            val = val[v];
-                        });
-                        return val;
-                }
+                case 'qVarName':
+                    // Find the variable value starting at the window context.
+                    var vars = obj.varName.split(".");
+                    var val = window;
+                    $j.each (vars, function (i, v) {
+                        val = val[v];
+                    });
+                    return val;
+            }
+        }
+        else if ($j.type(obj) == 'object') {
+            var newItem = {}
+            $j.each (item, function (key, obj) {
+                newItem[key] = qcubed.unpackObj(obj);
+            });
+            return newItem;
+        }
+        else if ($j.type(obj) == 'array') {
+            return qcubed.unpackArray(obj);
         }
         return obj; // no change
     }
