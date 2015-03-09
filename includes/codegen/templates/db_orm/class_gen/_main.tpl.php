@@ -35,8 +35,8 @@
 
 		use QModelTrait;
 
-		/** @var boolean Set to true in superclass to be able to watch changes to this class. */
-		public static $blnWatchChanges = false;
+		/** @var boolean Set to false in superclass to save a little time if this db object should not be watched for changes. */
+		public static $blnWatchChanges = true;
 
 <?php if ($objTable->PrimaryKeyColumnArray)  { ?>
 		/** @var <?= $objTable->ClassName ?>[] Short term cached <?= $objTable->ClassName ?> objects */
