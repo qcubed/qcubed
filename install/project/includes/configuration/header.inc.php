@@ -8,7 +8,7 @@
 <?php if (isset($strPageTitle)) { ?>
 		<title><?php _p($strPageTitle); ?></title>
 <?php } ?>
-		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/styles.css");</style>
+		<style type="text/css">@import url("<?= __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ ?>/styles.css");</style>
 	</head>
 	<body>
 		<section id="content">
