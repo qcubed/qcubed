@@ -148,6 +148,9 @@
 				$objLabelStyles->SetHtmlAttribute('for', $strIndexedId);
 			}
 
+			$objStyles->AddCssClass('qc-tableCell');
+			$objLabelStyles->AddCssClass('qc-tableCell');
+
 			$strHtml = QHtml::RenderLabeledInput(
 				$strLabelText,
 				$this->strTextAlign == QTextAlign::Left,
@@ -181,20 +184,10 @@
 			if ($this->intButtonMode == self::ButtonModeSet || $this->intButtonMode == self::ButtonModeList) {
 				return $this->RenderButtonSet();
 			}
-			elseif ($this->intRepeatColumns == 1) {
-				$strToReturn = $this->RenderButtonColumn();
-			}
 			else {
 				$strToReturn = $this->RenderButtonTable();
 			}
 
-			if ($this->strMaxHeight) {
-				$objStyler = new QTagStyler();
-				$objStyler->SetCssStyle('max-height', $this->strMaxHeight, true);
-				$objStyler->SetCssStyle('overflow-y', 'scroll');
-
-				$strToReturn = QHtml::RenderTag('div', $objStyler->RenderHtmlAttributes(), $strToReturn);
-			}
 			return $strToReturn;
 
 		}
@@ -234,16 +227,26 @@
 								+ $intRowIndex;
 
 						$strItemHtml = $this->GetItemHtml($this->objListItemArray[$intIndex], $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
-						$strCellHtml = QHtml::RenderTag ('td', null, $strItemHtml);
-						$strRowHtml .= $strCellHtml;
+						$strRowHtml .= $strItemHtml;
 					}
 
-					$strRowHtml = QHtml::RenderTag('tr', null, $strRowHtml);
+					$strRowHtml = QHtml::RenderTag('div', ['class'=>'qc-tableRow'], $strRowHtml);
 					$strToReturn .= $strRowHtml;
 				}
 			}
 
-			return $this->RenderTag ('table', ['id'=>$this->strControlId], null, $strToReturn);
+			if ($this->strMaxHeight) {
+				// wrap table in a scrolling div that will end up being the actual object
+				//$objStyler = new QTagStyler();
+				$this->SetCssStyle('max-height', $this->strMaxHeight, true);
+				$this->SetCssStyle('overflow-y', 'scroll');
+
+				$strToReturn = QHtml::RenderTag('div', ['class'=>'qc-table'], $strToReturn);
+			} else {
+				$this->AddCssClass('qc-table'); // format as a table
+			}
+
+			return $this->RenderTag ('div', ['id'=>$this->strControlId], null, $strToReturn);
 		}
 
 		/**

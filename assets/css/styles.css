@@ -121,3 +121,14 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
     margin-right: .3em;
     vertical-align: middle;
 }
+
+/* Format objects as tables, without using table tags to be more correct in our html */
+.qc-table {
+    display: table;
+}
+.qc-tableRow {
+    display: table-row;
+}
+.qc-tableCell {
+    display: table-cell;
+}
