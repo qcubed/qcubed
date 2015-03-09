@@ -33,7 +33,7 @@
 			$this->pnlSearch = $this->createSearchPanel();
 			$this->pnlSearch->SearchCallback = new QMethodCallback($this, 'searchCallback');
 
-			$this->tbl<?php echo $objTable->ClassNamePlural ?> = $this->createDetailsPanel();
+			$this->tbl<?php echo $objTable->ClassNamePlural ?> = $this->createDataTablePanel();
 			$this->tbl<?php echo $objTable->ClassNamePlural ?>->Language = array("sEmptyTable" => QApplication::Translate('No <?php echo $objTable->ClassNamePlural ?>'));
 
 			$this->tbl<?php echo $objTable->ClassNamePlural ?>->AddAction(new QDataTable_RowClickEvent(), new QAjaxControlAction($this, "tableRow_Click"));
@@ -60,7 +60,7 @@
 			return new <?php echo $objTable->ClassName ?>SearchPanel($this);
 		}
 
-		protected function createDetailsPanel() {
+		protected function createDataTablePanel() {
 			return new <?php echo $objTable->ClassName ?>DataTable(new QDiv($this, 'list_panel'));
 		}
 
@@ -84,7 +84,7 @@
 		 */
 		public function ReloadDetail($obj<?php echo $objTable->ClassName ?> = null) {
 			$this->pnlMain->RemoveChildControls(true);
-			$this->pnlDetail = $this->CreateDetailPanel($obj<?php echo $objTable->ClassName ?>);
+			$this->pnlDetail = $this->createDetailPanel($obj<?php echo $objTable->ClassName ?>);
 			$this->pnlDetail->Toolbar->LoadCallback = new QMethodCallback($this, 'ReloadDetailAndRefreshList');
 			$this->pnlDetail->Toolbar->CreateCallback = new QMethodCallback($this, 'ReloadDetailAndRefreshList');
 			$this->pnlDetail->Toolbar->EditCallback = new QMethodCallback($this, 'ReloadDetailAndRefreshList', $obj<?php echo $objTable->ClassName ?>);
@@ -97,7 +97,7 @@
 
 		 * @return <?php echo $objTable->ClassName ?>ViewWithRelationships
 		 */
-		protected function CreateDetailPanel($obj<?php echo $objTable->ClassName ?>) {
+		protected function createDetailPanel($obj<?php echo $objTable->ClassName ?>) {
 			return new <?php echo $objTable->ClassName ?>ViewWithRelationships($this->pnlMain, $obj<?php echo $objTable->ClassName ?>);
 		}
 
