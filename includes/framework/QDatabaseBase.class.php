@@ -1106,6 +1106,9 @@
 		 * @return bool
 		 */
 		public function ResolveBooleanValue ($mixValue) {
+			if ($mixValue === null) {
+				return null;
+			}
 			return ((bool)$mixValue);
 		}
 
