@@ -34,6 +34,7 @@
 			}
 
 			$strColumns = $objDbRow->GetColumnNameArray();
+			$strColumnKeys = array_fill_keys(array_keys($strColumns), 1); // to be able to use isset
 
 <?php if ($objTable->PrimaryKeyColumnArray)  { // Optimize top level accesses?>
 			$key = static::GetRowPrimaryKey ($objDbRow, $strAliasPrefix, $strColumnAliasArray);
@@ -74,14 +75,16 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 				$strAlias = $strAliasPrefix . '<?= $objColumn->Name ?>';
 				$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;
-				if (isset ($strColumns[$strAliasName])) {
+				if (isset ($strColumnKeys[$strAliasName])) {
 					$mixVal = $strColumns[$strAliasName];
 <?php if ($objColumn->VariableType == QType::Boolean) { ?>
 					$objToReturn-><?= $objColumn->VariableName ?> = $objDbRow->ResolveBooleanValue($mixVal);
 <?php } else { ?>
 <?php 	if ($s = QDatabaseCodeGen::GetCastString($objColumn)) { ?>
-					<?= $s ?>
+					if ($mixVal !== null) {
+						<?= $s ?>
 
+					}
 <?php 	} ?>
 					$objToReturn-><?= $objColumn->VariableName ?> = $mixVal;
 <?php } ?>
@@ -89,7 +92,7 @@
 					$objToReturn->__<?= $objColumn->VariableName ?> = $mixVal;
 <?php } ?>
 				}
-				elseif (!array_key_exists($strAliasName, $strColumns)) {
+				else {
 					$blnNoCache = true;
 				}
 <?php } ?>
