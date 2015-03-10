@@ -95,7 +95,7 @@
 					if (!(defined('__MINIMIZE__') && __MINIMIZE)) {
 						// Render a comment
 						$strOut = _nl() .  _nl() .
-							sprintf ('/*** Event: %s  Control Name: %s Control Id: %s  ***/', $strEventName, $objControl->Name, $objControl->ControlId) .
+							sprintf ('/*** Event: %s  Control Type: %s, Control Name: %s, Control Id: %s  ***/', $strEventName, get_class($objControl), $objControl->Name, $objControl->ControlId) .
 							_nl() .
 							_indent($strOut) .
 							_nl() . _nl();
