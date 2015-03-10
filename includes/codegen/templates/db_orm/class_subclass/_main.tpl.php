@@ -27,10 +27,6 @@
 	 *
 	 */
 	class <?= $objTable->ClassName ?> extends <?= $objTable->ClassName ?>Gen {
-
-		// Uncomment the following line to enable other users to watch changes on this table.
-		//public static $blnWatchChanges = true;
-
 		/**
 		 * Default "to string" handler
 		 * Allows pages to _p()/echo()/print() this object, and to define the default
