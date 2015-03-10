@@ -42,7 +42,7 @@
 			return new <?php echo $objTable->ClassName ?>ViewPanel($objParent, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
 		}
 
-		public function Create<?php echo $objTable->ClassName ?>EditPanel($objParent, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk = false) {
+		public function Create<?php echo $objTable->ClassName ?>UpdatePanel($objParent, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk = false) {
 			return new <?php echo $objTable->ClassName ?>UpdatePanel($objParent, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
 		}
 
