@@ -631,8 +631,8 @@ qcubed = {
         }
         else if ($j.type(obj) == 'object') {
             var newItem = {}
-            $j.each (item, function (key, obj) {
-                newItem[key] = qcubed.unpackObj(obj);
+            $j.each (obj, function (key, obj2) {
+                newItem[key] = qcubed.unpackObj(obj2);
             });
             return newItem;
         }
