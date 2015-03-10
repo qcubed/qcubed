@@ -122,6 +122,41 @@ function _indent($strText, $intCount = 1) {
 	}
 }
 
+/**
+ * Render the control, checking for existence.
+ *
+ * We always return a value, rather than print, because this is designed to primarily be used in a PHP template,
+ * and php now has a shorthand way of printing items by using the opening tag <?= .
+ * 
+ * @usage <?= _r($obj, {renderFunc}, ...); ?>
+ * @param QControl $obj
+ * @param null|string $strRenderFunc
+ * @return null|string
+ */
+function _r($obj, $strRenderFunc = null /*, $overrides */) {
+	$aParams = func_get_args();
+	array_shift($aParams);
+	array_shift($aParams);
+	if ($obj) {
+		if (!$strRenderFunc) {
+			if ($obj->PreferredRenderMethod) {
+				$strRenderFunc = $obj->PreferredRenderMethod;
+			}
+			else {
+				$strRenderFunc = 'Render';
+			}
+		}
+		if (count($aParams) == 1 && is_array($aParams[0])) {
+			return $obj->$strRenderFunc(false, $aParams[0]); // single array of params which is a key->value array
+		}
+		elseif ($aParams) {
+			return call_user_func_array([$obj, $strRenderFunc], $aParams);
+		} else {
+			return $obj->$strRenderFunc(false);
+		}
+	}
+	return null;
+}
 
 /** TODO: Implement the following. */
 /*
