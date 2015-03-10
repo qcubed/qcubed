@@ -1,6 +1,7 @@
 <template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __META_CONTROLS_GEN__ ?>" TargetFileName="<?php echo $objTable->ClassName ?>ViewWithRelationshipsGen.class.php"/>
 <?php print("<?php\n"); ?>
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>ViewWithToolbar.class.php');
+	require_once(__META_CONTROLS_GEN__ . '/AppControlFactory.class.php');
 <?php
 	if ($objTable->ColumnArray) foreach ($objTable->ColumnArray as $objColumn) {
 		if ($objColumn->Reference && !$objColumn->Reference->IsType) {
@@ -97,7 +98,7 @@
 	foreach ($references as $refClassName => $_) {
 ?>
 		protected function create<?php echo $refClassName ?>ViewPanel($objRef, $blnNew = false, $blnEdit = true, $blnDelete = true, $blnShowPk = true) {
-			return new <?php echo $refClassName ?>ViewWithToolbar($this->tabs, $objRef, $blnNew, $blnEdit, $blnDelete, $blnShowPk);
+			return AppControlFactory::Inst()->Create<?php echo $refClassName ?>ViewWithToolbarPanel($this->tabs, $objRef, $blnNew, $blnEdit, $blnDelete, $blnShowPk);
 		}
 
 <?php

@@ -1,6 +1,7 @@
 <template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __META_CONTROLS_GEN__ ?>" TargetFileName="<?php echo $objTable->ClassName ?>ViewWithToolbarGen.class.php"/>
 <?php print("<?php\n"); ?>
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>Toolbar.class.php');
+	require_once(__META_CONTROLS_GEN__ . '/AppControlFactory.class.php');
 
 	/**
 	 * @property-read <?php echo $objTable->ClassName ?>Toolbar $Toolbar
@@ -39,11 +40,11 @@
 		}
 
 		protected function createToolbarPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnNew, $blnEdit, $blnDelete) {
-			return new <?php echo $objTable->ClassName ?>Toolbar($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnNew, $blnEdit, $blnDelete);
+			return AppControlFactory::Inst()->Create<?php echo $objTable->ClassName ?>ToolbarPanel($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnNew, $blnEdit, $blnDelete);
 		}
 
 		protected function createViewPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk) {
-			return new <?php echo $objTable->ClassName ?>ViewPanel($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
+			return AppControlFactory::Inst()->Create<?php echo $objTable->ClassName ?>ViewPanel($this, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
 		}
 
 		public function ReloadView($obj<?php echo $objTable->ClassName ?> = null) {

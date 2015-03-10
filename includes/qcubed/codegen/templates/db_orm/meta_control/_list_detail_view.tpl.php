@@ -3,6 +3,7 @@
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>DataTable.class.php');
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>ViewWithRelationships.class.php');
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>SearchPanel.class.php');
+	require_once(__META_CONTROLS_GEN__ . '/AppControlFactory.class.php');
 
 	/**
 	 * @property-read <?php echo $objTable->ClassName ?>DataTable $DataTable
@@ -57,11 +58,11 @@
 		}
 
 		protected function createSearchPanel() {
-			return new <?php echo $objTable->ClassName ?>SearchPanel($this);
+			return AppControlFactory::Inst()->Create<?php echo $objTable->ClassName ?>SearchPanel($this);
 		}
 
 		protected function createDataTablePanel() {
-			return new <?php echo $objTable->ClassName ?>DataTable(new QDiv($this, 'list_panel'));
+			return AppControlFactory::Inst()->Create<?php echo $objTable->ClassName ?>DataTablePanel(new QDiv($this, 'list_panel'));
 		}
 
 		public function tableRow_Click($strFormId, $strControlId, $strParameter) {
@@ -98,7 +99,7 @@
 		 * @return <?php echo $objTable->ClassName ?>ViewWithRelationships
 		 */
 		protected function createDetailPanel($obj<?php echo $objTable->ClassName ?>) {
-			return new <?php echo $objTable->ClassName ?>ViewWithRelationships($this->pnlMain, $obj<?php echo $objTable->ClassName ?>);
+			return AppControlFactory::Inst()->Create<?php echo $objTable->ClassName ?>DetailPanel($this->pnlMain, $obj<?php echo $objTable->ClassName ?>);
 		}
 
 		public function __get($strName) {

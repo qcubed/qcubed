@@ -3,6 +3,7 @@
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>UpdatePanel.class.php');
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>ViewPanel.class.php');
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>DataTable.class.php');
+	require_once(__META_CONTROLS_GEN__ . '/AppControlFactory.class.php');
 
 	/**
 	 * @property-write QCallback $ViewPanelPostCreateCallback
@@ -89,7 +90,7 @@
 		 * @return <?php echo $objTable->ClassName ?>ViewPanel
 		 */
 		protected function createViewPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk = true) {
-			return new <?php echo $objTable->ClassName ?>ViewPanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
+			return AppControlFactory::Inst()->Create<?php echo $objTable->ClassName ?>ViewPanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
 		}
 
 		/**
@@ -124,7 +125,7 @@
 		 * @return <?php echo $objTable->ClassName ?>UpdatePanel
 		 */
 		protected function createEditPanel($obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk = false) {
-			return new <?php echo $objTable->ClassName ?>UpdatePanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
+			return AppControlFactory::Inst()->Create<?php echo $objTable->ClassName ?>UpdatePanel($this->dlgPopup, $obj<?php echo $objTable->ClassName ?>Ref, $blnShowPk);
 		}
 
 		/**
@@ -158,7 +159,7 @@
 		public function Select(QCallback $objCallback = null, $strDialogTitle = null) {
 			$this->dlgPopup = $this->createPopupDialog($strDialogTitle);
 			$this->objSearchCallback = $objCallback;
-			$this->objSearchControl = $this->createDataTablesPanel();
+			$this->objSearchControl = $this->createDataTablePanel();
 			$this->objSearchControl->AddAction(new QDataTable_RowClickEvent(), new QAjaxControlAction($this, "searchRow_Click"));
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('Select <?php echo $objTable->ClassName ?>');
@@ -173,8 +174,8 @@
 		/**
 		 * @return <?php echo $objTable->ClassName ?>DataTable
 		 */
-		protected function createDataTablesPanel() {
-			return new <?php echo $objTable->ClassName ?>DataTable($this->dlgPopup);
+		protected function createDataTablePanel() {
+			return AppControlFactory::Inst()->Create<?php echo $objTable->ClassName ?>DataTablePanel($this->dlgPopup);
 		}
 
 		public function searchRow_Click($strFormId, $strControlId, $strParameter) {
