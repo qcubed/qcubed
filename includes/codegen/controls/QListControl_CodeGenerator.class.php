@@ -1,8 +1,8 @@
 <?php
 
 	class QListControl_CodeGenerator extends QControl_CodeGenerator {
-		public function __construct() {
-			parent::__construct('QListControl');
+		public function __construct($strControlClassName = 'QListControl') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

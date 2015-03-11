@@ -37,7 +37,7 @@
 
 		// Controls for <?= $objTable->ClassName ?>'s Data Fields
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-		/** @var <?= $objCodeGen->ModelConnectorControlClass($objColumn); ?>  */
+		/** @var <?= $objCodeGen->GetControlCodeGenerator($objColumn)->GetControlClass(); ?>  */
 		public $<?= $objCodeGen->ModelConnectorVariableName($objColumn); ?>;
 <?php } ?>
 

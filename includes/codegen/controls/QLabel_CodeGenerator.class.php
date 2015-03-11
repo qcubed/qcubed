@@ -3,8 +3,8 @@
 	class QLabel_CodeGenerator extends QControl_CodeGenerator {
 		private static $instance = null;
 
-		public function __construct() {
-			parent::__construct('QLabel');
+		public function __construct($strControlClassName = 'QLabel') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

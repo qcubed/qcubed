@@ -1,8 +1,8 @@
 <?php
 
 	class QRadioButtonList_CodeGenerator extends QListControl_CodeGenerator {
-		public function __construct() {
-			parent::__construct('QRadioButtonList');
+		public function __construct($strControlClassName = 'QRadioButtonList') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

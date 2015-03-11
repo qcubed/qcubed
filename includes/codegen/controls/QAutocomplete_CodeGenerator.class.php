@@ -1,8 +1,8 @@
 <?php
 
 	class QAutocomplete_CodeGenerator extends QTextBox_CodeGenerator {
-		public function __construct() {
-			parent::__construct('QAutocomplete');
+		public function __construct($strControlClassName = 'QAutocomplete') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

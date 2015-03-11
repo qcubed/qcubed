@@ -1,8 +1,14 @@
+<?php
+	/**
+	 * @var QTable $objTable
+	 * @var QCodeGenBase $objCodeGen
+	 */
+?>
 	 * @property-read <?= $objTable->ClassName ?> $<?= $objTable->ClassName ?> the actual <?= $objTable->ClassName ?> data class being edited
 <?php 
 	foreach ($objTable->ColumnArray as $objColumn) {
 		if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
-		$strClassName = $objCodeGen->ModelConnectorControlClass($objColumn);
+		$strClassName = $objCodeGen->GetControlCodeGenerator($objColumn)->GetControlClass();
 		$blnIsLabel = ($strClassName == 'QLabel');
 
 		if (!$blnIsLabel && (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != QFormGen::LabelOnly)) { ?>
@@ -15,7 +21,7 @@
 
 	foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
 		if (!$objReverseReference->Unique || (isset($objReverseReference->Options['FormGen']) && $objReverseReference->Options['FormGen'] == QFormGen::None)) continue;
-		$strClassName = $objCodeGen->ModelConnectorControlClass($objReverseReference);
+		$strClassName = $objCodeGen->GetControlCodeGenerator($objReverseReference)->GetControlClass();
 		$blnIsLabel = ($strClassName == 'QLabel');
 
 		if (!$blnIsLabel && (!isset($objReverseReference->Options['FormGen']) || $objReverseReference->Options['FormGen'] != QFormGen::LabelOnly)) { ?>
@@ -29,7 +35,7 @@
 ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) {
 		if (isset($objManyToManyReference->Options['FormGen']) && $objManyToManyReference->Options['FormGen'] == QFormGen::None) continue;
-		$strClassName = $objCodeGen->ModelConnectorControlClass($objManyToManyReference);
+		$strClassName = $objCodeGen->GetControlCodeGenerator($objManyToManyReference)->GetControlClass();
 		$blnIsLabel = ($strClassName == 'QLabel');
 
 		if (!$blnIsLabel && (!isset($objManyToManyReference->Options['FormGen']) || $objManyToManyReference->Options['FormGen'] != QFormGen::LabelOnly)) { ?>

@@ -1,8 +1,8 @@
 <?php
 
 	class QSlider_CodeGenerator extends QControl_CodeGenerator {
-		public function __construct() {
-			parent::__construct('QSlider');
+		public function __construct($strControlClassName = 'QSlider') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**

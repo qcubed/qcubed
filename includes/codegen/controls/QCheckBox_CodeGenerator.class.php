@@ -1,8 +1,8 @@
 <?php
 
 	class QCheckBox_CodeGenerator extends QControl_CodeGenerator {
-		public function __construct() {
-			parent::__construct('QCheckBox');
+		public function __construct($strControlClassName = 'QCheckBox') {
+			parent::__construct($strControlClassName);
 		}
 
 		/**
