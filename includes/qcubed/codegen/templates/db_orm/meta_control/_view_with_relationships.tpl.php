@@ -1,4 +1,16 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __META_CONTROLS_GEN__ ?>" TargetFileName="<?php echo $objTable->ClassName ?>ViewWithRelationshipsGen.class.php"/>
+<?php
+    /** @var QTable $objTable */
+    /** @var QTable[] $objTableArray */
+    /** @var QDatabaseCodeGen $objCodeGen */
+    global $_TEMPLATE_SETTINGS;
+    $_TEMPLATE_SETTINGS = array(
+        'OverwriteFlag' => true,
+        'DocrootFlag' => false,
+        'DirectorySuffix' => '',
+        'TargetDirectory' => __META_CONTROLS_GEN__,
+        'TargetFileName' => $objTable->ClassName.'ViewWithRelationshipsGen.class.php'
+    );
+?>
 <?php print("<?php\n"); ?>
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName ?>ViewWithToolbar.class.php');
 	require_once(__META_CONTROLS_GEN__ . '/AppControlFactory.class.php');

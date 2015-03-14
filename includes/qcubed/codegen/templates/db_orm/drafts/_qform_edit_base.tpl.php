@@ -1,4 +1,16 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __FORMBASE_CLASSES__  ?>" TargetFileName="<?php echo $objTable->ClassName  ?>EditFormBase.class.php"/>
+<?php
+    /** @var QTable $objTable */
+    /** @var QTable[] $objTableArray */
+    /** @var QDatabaseCodeGen $objCodeGen */
+    global $_TEMPLATE_SETTINGS;
+    $_TEMPLATE_SETTINGS = array(
+        'OverwriteFlag' => true,
+        'DocrootFlag' => false,
+        'DirectorySuffix' => '',
+        'TargetDirectory' => __FORMBASE_CLASSES__,
+        'TargetFileName' => $objTable->ClassName.'EditFormBase.class.php'
+    );
+?>
 <?php print("<?php\n"); ?>
 	require_once(__META_CONTROLS__ . '/<?php echo $objTable->ClassName  ?>UpdatePanel.class.php');
 	/**

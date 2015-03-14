@@ -1,4 +1,16 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __META_CONTROLS__  ?>" TargetFileName="<?php echo $objTable->ClassName ?>UpdatePanel.tpl.php"/>
+<?php
+    /** @var QTable $objTable */
+    /** @var QTable[] $objTableArray */
+    /** @var QDatabaseCodeGen $objCodeGen */
+    global $_TEMPLATE_SETTINGS;
+    $_TEMPLATE_SETTINGS = array(
+        'OverwriteFlag' => true,
+        'DocrootFlag' => false,
+        'DirectorySuffix' => '',
+        'TargetDirectory' => __META_CONTROLS__,
+        'TargetFileName' => $objTable->ClassName.'UpdatePanel.tpl.php'
+    );
+?>
 <?php print("<?php\n"); ?>
 	// This is the HTML template include file (.tpl.php) for <?php echo QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName)  ?>UpdatePanel.
 	// Remember that this is a DRAFT.  It is MEANT to be altered/modified.

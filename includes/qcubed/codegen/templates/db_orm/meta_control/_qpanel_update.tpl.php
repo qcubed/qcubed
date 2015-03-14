@@ -1,4 +1,16 @@
-<template OverwriteFlag="true" DocrootFlag="false" DirectorySuffix="" TargetDirectory="<?php echo __META_CONTROLS_GEN__  ?>" TargetFileName="<?php echo $objTable->ClassName  ?>UpdatePanelGen.class.php"/>
+<?php
+    /** @var QTable $objTable */
+    /** @var QTable[] $objTableArray */
+    /** @var QDatabaseCodeGen $objCodeGen */
+    global $_TEMPLATE_SETTINGS;
+    $_TEMPLATE_SETTINGS = array(
+        'OverwriteFlag' => true,
+        'DocrootFlag' => false,
+        'DirectorySuffix' => '',
+        'TargetDirectory' => __META_CONTROLS_GEN__,
+        'TargetFileName' => $objTable->ClassName.'UpdatePanelGen.class.php'
+    );
+?>
 <?php print("<?php\n"); ?>
 	/**
 	 * This is a QPanel object to do Create, Edit, and Delete functionality
