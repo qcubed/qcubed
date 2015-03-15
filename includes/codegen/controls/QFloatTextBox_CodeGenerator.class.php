@@ -1,7 +1,6 @@
 <?php
 
-class QFloatTextBox_CodeGenerator extends QTextBox_CodeGenerator {
-	public function __construct($strControlClassName = 'QFloatTextBox') {
-		parent::__construct($strControlClassName);
+	require_once('QFloatTextBoxBase_CodeGenerator.class.php');
+
+	class QFloatTextBox_CodeGenerator extends QFloatTextBoxBase_CodeGenerator {
 	}
-}
