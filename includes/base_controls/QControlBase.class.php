@@ -1219,13 +1219,12 @@
 		 * Note that these will execute after most of the other commands execute, so do not count on the order
 		 * in which they will execute relative to other commands.
          *
-		 * @param string $strMethodName	The name of the javascript function to call on this control.
-		 * @param string $key
-		 * @param string $val
+		 * @param string $strMethod	The name of the javascript function to call on this control.
+		 * @param string $args One or more arguments to send to the method that will cause the control to change
 		 */
-		public function AddAttributeScript ($strMethod, $key, $val /*, ... */)
+		public function AddAttributeScript ($strMethod, $args /*, ... */)
         {
-			$args = func_get_args();	// Sometimes we need more than two parameters to set something.
+			$args = func_get_args();
             $this->strAttributeScripts[] = $args;
         }
 
