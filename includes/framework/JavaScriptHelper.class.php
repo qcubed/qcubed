@@ -306,7 +306,11 @@
 		public static function toJSON($objValue) {
 			assert ('is_array($objValue) || is_object($objValue)');	// json spec says only arrays or objects can be encoded
 			$objValue = JavaScriptHelper::MakeJsonEncodable($objValue);
-			return json_encode($objValue);
+			$strRet = json_encode($objValue);
+			if ($strRet === false) {
+				throw new QCallerException ('Json Encoding Error: ' . json_last_error_msg());
+			}
+			return $strRet;
 		}
 
 		/**
