@@ -19,6 +19,7 @@
 	/**
 	 * @property string $LabelForRequired
 	 * @property string $LabelForRequiredUnnamed
+	 * @property QQCondition $AdditionalConditions
 	 * @property boolean $ValidateTrimmed
 	 * @property-read int $SelectedId
 	 * @property-read int $SelectedValue
@@ -172,6 +173,7 @@
 		/**
 		 * @param QDatabaseResultBase $objDbResult
 		 * @return <?php echo $objTable->ClassName ?>
+
 		 */
 		protected function getNextSearchResult(QDatabaseResultBase $objDbResult) {
 			return <?php echo $objTable->ClassName ?>::InstantiateCursor($objDbResult);
@@ -233,6 +235,17 @@
 			if ($this->objPostSelectionCallback) {
 				$this->objPostSelectionCallback->Call();
 			}
+		}
+
+		/**
+		 * @return <?php echo $objTable->ClassName ?>DataTable
+		 */
+		protected function createDataTablePanel() {
+			$objDataTable = parent::createDataTablePanel();
+			if ($this->objAdditionalConditions) {
+				$objDataTable->ExtraCondition = $this->objAdditionalConditions;
+			}
+			return $objDataTable;
 		}
 
 		public function btnSearch_Click($strFormId, $strControlId, $strParameter) {
@@ -321,6 +334,7 @@
 				case "SelectedValue":
 				case "SelectedId": return $this->txtAutocomplete->SelectedId;
 				case "SelectedObject": return $this->objSelectedObject;
+				case "AdditionalConditions": return $this->objAdditionalConditions;
 				case "Input": return $this->txtAutocomplete;
 				case "Toolbar": return $this->pnlToolbar;
 				case "EditControl": return $this->objEditControl;
@@ -356,6 +370,9 @@
 						break;
 					case "PostSelectionCallback":
 						$this->objPostSelectionCallback = QType::Cast($mixValue, 'QCallback');
+						break;
+					case "AdditionalConditions":
+						$this->objAdditionalConditions = QType::Cast($mixValue, 'QQCondition');
 						break;
 					default:
 						parent::__set($strName, $mixValue);
