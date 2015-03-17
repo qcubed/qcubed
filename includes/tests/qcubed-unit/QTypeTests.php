@@ -95,5 +95,23 @@ class QTypeTests extends QUnitTestCaseBase {
 			}
 		}
 	}
+
+	public function testDbTypeCasting() {
+		$dt1 = new QDateTime('Jan 15 2006');
+		$dt2 = new QDateTime('Mar 15 2006');
+
+		$cond = QQ::Between(QQN::Project()->StartDate, $dt1, $dt2);
+		$a = Project::QueryArray($cond);
+		$this->assertEqual(count($a), 2, "Between 2 QDateTime types works");
+
+
+		$cond = QQ::Between(QQN::Project()->Budget, 2000, 3000);
+		$a = Project::QueryArray($cond);
+		$this->assertEqual(count($a), 1, "Between 2 int types works");
+
+		$cond = QQ::Between(QQN::Project()->Name, 'A', 'C');
+		$a = Project::QueryArray($cond);
+		$this->assertEqual(count($a), 3, "Between 2 string types works");
+	}
 }
 ?>
