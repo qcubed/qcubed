@@ -839,7 +839,12 @@
 			} else {
 				$dt = clone $this;
 			}
-			return sprintf ('new Date(%s, %s, %s, %s, %s, %s)', $dt->Year, $dt->Month - 1, $dt->Day, $dt->Hour, $dt->Minute, $dt->Second);
+
+			if ($this->blnTimeNull) {
+				return sprintf ('new Date(%s, %s, %s)', $dt->Year, $dt->Month - 1, $dt->Day);
+			} else {
+				return sprintf ('new Date(%s, %s, %s, %s, %s, %s)', $dt->Year, $dt->Month - 1, $dt->Day, $dt->Hour, $dt->Minute, $dt->Second);
+			}
 		}
 
 		/**
@@ -855,8 +860,15 @@
 			} else {
 				$dt = clone $this;
 			}
-			return [JavaScriptHelper::ObjectType=>'qDateTime', 'year'=>$dt->Year, 'month'=>$dt->Month - 1,
+
+			if ($this->blnTimeNull) {
+				return [JavaScriptHelper::ObjectType=>'qDateTime', 'year'=>$dt->Year, 'month'=>$dt->Month - 1,
+					'day'=>$dt->Day];
+
+			} else {
+				return [JavaScriptHelper::ObjectType=>'qDateTime', 'year'=>$dt->Year, 'month'=>$dt->Month - 1,
 					'day'=>$dt->Day, 'hour'=>$dt->Hour, 'minute'=>$dt->Minute, 'second'=>$dt->Second];
+			}
 		}
 
 		/**
