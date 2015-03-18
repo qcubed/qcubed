@@ -298,7 +298,7 @@
 			}
 
 			if(strlen($this->strPlaceholder) > 0) {
-				$attributeOverrides['placeholder'] = QApplication::HtmlEntities($this->strPlaceholder);
+				$attributeOverrides['placeholder'] = $this->strPlaceholder;
 			}
 
 			return parent::RenderHtmlAttributes($attributeOverrides, $styleOverrides);
@@ -461,11 +461,7 @@
 						$val = QType::Cast($mixValue, QType::String);
 						if ($val !== $this->strText) {
 							$this->strText = $val;
-							if ($this->OnPage) {
-								QApplication::ExecuteJavaScript(sprintf ('$j("#%s").val(%s)', $this->strControlId, JavaScriptHelper::toJsObject($this->strText)));
-							} else {
-								$this->blnModified = true;
-							}
+							$this->AddAttributeScript('val', $val);
 						}
 						return $this->strText;
 					} catch (QInvalidCastException $objExc) {
