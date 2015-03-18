@@ -796,13 +796,14 @@
 				case 'timestamp':
 				case 'timestamp with time zone':
 					// this data type is not heavily used but is important to be included to avoid errors when code generating.
-				case 'timestamp without time zone':
-					// System-generated Timestamp values need to be treated as plain text
 					$this->strType = QDatabaseFieldType::DateTime; // PostgreSql treats timestamp as a datetime
 					//$this->blnTimestamp = true;
 					break;
 				case 'date':
 					$this->strType = QDatabaseFieldType::Date;
+					break;
+				case 'timestamp without time zone':
+					$this->strType = QDatabaseFieldType::DateTime;
 					break;
 				case 'time':
 				case 'time without time zone':		
