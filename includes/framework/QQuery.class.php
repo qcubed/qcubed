@@ -923,25 +923,19 @@
 
 	class QQConditionBetween extends QQConditionComparison {
 		protected $mixOperandTwo;
-		public function __construct(QQNode $objQueryNode, $strMinValue, $strMaxValue) {
+		public function __construct(QQNode $objQueryNode, $mixMinValue, $mixMaxValue) {
 			$this->objQueryNode = $objQueryNode;
 			if (!$objQueryNode->_ParentNode)
 				throw new QInvalidCastException('Unable to cast "' . $objQueryNode->_Name . '" table to Column-based QQNode', 3);
 
 			try {
-				$this->mixOperand = QType::Cast($strMinValue, QType::String);
-				$this->mixOperandTwo = QType::Cast($strMaxValue, QType::String);
+				$this->mixOperand = $mixMinValue;
+				$this->mixOperandTwo = $mixMaxValue;
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
-
-			if ($strMinValue instanceof QQNamedValue)
-				$this->mixOperand = $strMinValue;
-			if ($strMaxValue instanceof QQNamedValue)
-				$this->mixOperandTwo = $strMaxValue;
-
 		}
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			$mixOperand = $this->mixOperand;
@@ -1077,8 +1071,8 @@
 		static public function NotLike(QQNode $objQueryNode, $strValue) {
 			return new QQConditionNotLike($objQueryNode, $strValue);
 		}
-		static public function Between(QQNode $objQueryNode, $strMinValue, $strMaxValue) {
-			return new QQConditionBetween($objQueryNode, $strMinValue, $strMaxValue);
+		static public function Between(QQNode $objQueryNode, $mixMinValue, $mixMaxValue) {
+			return new QQConditionBetween($objQueryNode, $mixMinValue, $mixMaxValue);
 		}
 		static public function NotBetween(QQNode $objQueryNode, $strMinValue, $strMaxValue) {
 			return new QQConditionNotBetween($objQueryNode, $strMinValue, $strMaxValue);
