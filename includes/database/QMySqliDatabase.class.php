@@ -1,4 +1,8 @@
 <?php
+
+if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
+	define ('MYSQLI_ON_UPDATE_NOW_FLAG', 8192);
+}
 	/**
 	 *
 	 * @package DatabaseAdapters
