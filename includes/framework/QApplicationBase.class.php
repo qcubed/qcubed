@@ -1065,11 +1065,11 @@
 
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::Alert])) {
 				foreach (QApplication::$JavascriptCommandArray[QAjaxResponse::Alert] as $strAlert) {
-					$strAlert = addslashes($strAlert);
-					$strScript .= sprintf('alert("%s"); ', $strAlert);
+					$strAlert = json_encode($strAlert);
+					$strScript .= sprintf('alert(%s); ', $strAlert);
 				}
 			}
-
+			
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh])) {
 				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh]);
 			}
