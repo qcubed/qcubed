@@ -91,19 +91,21 @@
 		}
 
 		/**
-		 * Recursively unselects all the items and subitems in the list.
+		 * Unselect all the items and subitems in the list.
 		 *
 		 * @param bool $blnMarkAsModified
 		 */
 		public function UnselectAllItems($blnMarkAsModified = true) {
-			$intCount = $this->GetItemCount();
-			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
-				$objItem = $this->GetItem($intIndex);
-				$objItem->Selected = false;
-			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
-			}
+			$this->UpdateAllItemsSelected(false, $blnMarkAsModified);
+		}
+
+		/**
+		 * Select all the items and subitems in the list.
+		 *
+		 * @param bool $blnMarkAsModified
+		 */
+		public function SelectAllItems($blnMarkAsModified = true) {
+			$this->UpdateAllItemsSelected(true, $blnMarkAsModified);
 		}
 
 
@@ -759,6 +761,23 @@ TMPL;
 TMPL;
 
 			return $strRet;
+		}
+
+		/**
+		 * Update the select field for all items
+		 *
+		 * @param bool $blnSelected
+		 * @param bool $blnMarkAsModified
+		 */
+		private function UpdateAllItemsSelected($blnSelected, $blnMarkAsModified = true) {
+			$intCount = $this->GetItemCount();
+			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
+				$objItem = $this->GetItem($intIndex);
+				$objItem->Selected = $blnSelected;
+			}
+			if ($blnMarkAsModified) {
+				$this->MarkAsModified();
+			}
 		}
 	}
 ?>
