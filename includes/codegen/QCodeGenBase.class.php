@@ -815,62 +815,94 @@
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
-		 * @return AbstractControl_CodeGenerator helper object
+		 * @return string Class name of control which can handle this column's data
 		 * @throws Exception
 		 */
-		public function GetControlCodeGenerator($objColumn) {
+		protected function ModelConnectorControlClass($objColumn) {
+
 			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {
 				if (isset ($o['FormGen']) && $o['FormGen'] == QFormGen::LabelOnly) {
-					return new QLabel_CodeGenerator();
+					return 'QLabel';
 				}
 				if (isset($o['ControlClass'])) {
-					$strControlClass = $strOrigControlClass = $o['ControlClass'];
-					$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
-					while (!class_exists($strControlCodeGeneratorClass)) {
-						$strControlClass = get_parent_class($strControlClass);
-						if ($strControlClass === 'QControl') {
-							throw new QCallerException("Cannot find an appropriate subclass of AbstractControl_CodeGenerator for ".$strOrigControlClass);
-						}
-						$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
-					}
-					return new $strControlCodeGeneratorClass($strOrigControlClass);
+					return $o['ControlClass'];
 				}
 			}
 
 			// otherwise, return the default class based on the column
 			if ($objColumn instanceof QColumn) {
 				if ($objColumn->Identity)
-					return new QLabel_CodeGenerator();
+					return 'QLabel';
 
 				if ($objColumn->Timestamp)
-					return new QLabel_CodeGenerator();
+					return 'QLabel';
 
 				if ($objColumn->Reference)
-					return new QListBox_CodeGenerator();
+					return 'QListBox';
 
 				switch ($objColumn->VariableType) {
 					case QType::Boolean:
-						return new QCheckBox_CodeGenerator();
+						return 'QCheckBox';
 					case QType::DateTime:
-						return new QDateTimePicker_CodeGenerator();
+						return 'QDateTimePicker';
 					case QType::Integer:
-						return new QIntegerTextBox_CodeGenerator();
+						return 'QIntegerTextBox';
 					case QType::Float:
-						return new QFloatTextBox_CodeGenerator();
+						return 'QFloatTextBox';
 					default:
-						return new QTextBox_CodeGenerator();
+						return 'QTextBox';
 				}
 			}
 			elseif ($objColumn instanceof QReverseReference) {
 				if ($objColumn->Unique) {
-					return new QListBox_CodeGenerator();
+					return 'QListBox';
 				} else {
-					return new QCheckBoxList_CodeGenerator(); // for multi-selection
+					return 'QCheckBoxList';	// for multi-selection
 				}
 			}
 			elseif ($objColumn instanceof QManyToManyReference) {
-				return new QCheckBoxList_CodeGenerator(); // for multi-selection
+				return 'QCheckBoxList';	// for multi-selection
+			}
+			throw new Exception('Unknown column type.');
+		}
+
+		/**
+		 * Returns the class for the control that will be created to edit the given column,
+		 * including the 'virtual' columns of reverse references (many to one) and many-to-many references.
+		 *
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @return AbstractControl_CodeGenerator helper object
+		 * @throws Exception
+		 */
+		public function GetControlCodeGenerator($objColumn) {
+			$strControlClass = $this->ModelConnectorControlClass($objColumn);
+
+			if (method_exists($strControlClass, 'GetCodeGenerator')) {
+				return call_user_func($strControlClass.'::GetCodeGenerator');
+			}
+
+			switch ($strControlClass) {
+				case 'QLabel': return QLabel_CodeGenerator::Instance();
+				case 'QListBox': return new QListBox_CodeGenerator();
+				case 'QCheckBox': return new QCheckBox_CodeGenerator();
+				case 'QDateTimePicker': return new QDateTimePicker_CodeGenerator();
+				case 'QTextBox': return new QTextBox_CodeGenerator();
+				case 'QIntegerTextBox': return new QIntegerTextBox_CodeGenerator();
+				case 'QFloatTextBox': return new QFloatTextBox_CodeGenerator();
+				case 'QCheckBoxList': return new QCheckBoxList_CodeGenerator();
+				default: break;
+			}
+
+			$strOrigControlClass = $strControlClass;
+			$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
+			while (!class_exists($strControlCodeGeneratorClass)) {
+				$strControlClass = get_parent_class($strControlClass);
+				if ($strControlClass === 'QControl') {
+					throw new QCallerException("Cannot find an appropriate subclass of AbstractControl_CodeGenerator for ".$strOrigControlClass);
+				}
+				$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
 			}
 			throw new Exception('Unknown column type.');
 		}
