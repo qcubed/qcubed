@@ -904,7 +904,7 @@
 				}
 				$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
 			}
-			throw new Exception('Unknown column type.');
+			return new $strControlCodeGeneratorClass();
 		}
 
 		protected function CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName) {
