@@ -1209,6 +1209,7 @@
 					call_user_func_array('QApplication::ExecuteControlCommand', $scriptArgs);
 				}
             }
+			unset ($this->strAttributeScripts);
         }
 
         /**
