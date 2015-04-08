@@ -612,7 +612,11 @@ qcubed = {
 
             switch (obj.qObjType) {
                 case 'qClosure':
-                    return new Function(obj.params, obj.func);
+                    if (obj.params) {
+                        return new Function(obj.params, obj.func);
+                    } else {
+                        return new Function(obj.func);
+                    }
                     break;
 
                 case 'qDateTime':
