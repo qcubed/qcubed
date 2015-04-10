@@ -138,8 +138,13 @@
 			switch ($strName) {
 				case "HtmlIncludeFilePath":
 					// Passed-in value is null -- use the "default" path name of file".tpl.php"
-					if (!$mixValue)
+					if (!$mixValue) {
 						$strPath = realpath(substr(QApplication::$ScriptFilename, 0, strrpos(QApplication::$ScriptFilename, '.php')) . '.tpl.php');
+						if ($strPath === false) {
+							// Look again based on the object name
+							$strPath = realpath(get_class($this) . '.tpl.php');
+						}
+					}
 
 					// Use passed-in value
 					else
