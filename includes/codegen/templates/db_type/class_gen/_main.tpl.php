@@ -64,6 +64,17 @@
 <?php } ?><?php GO_BACK(2); ?>);
 
 
+<?php if (count($objTypeTable->ExtraFieldNamesArray)) { ?>
+<?php foreach ($objTypeTable->ExtraFieldNamesArray as $strColName) { ?>
+		public static $<?= $strColName ?>Array = array(
+<?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
+			<?= $intKey ?> => '<?= str_replace("'", "\\'", $arrColumns[$strColName])  ?>',
+<?php } ?><?php GO_BACK(2); ?>);
+
+<?php } ?>
+<?php } ?>
+
+
 <?php }?>
 		public static function ToString($int<?= $objTypeTable->ClassName ?>Id) {
 			switch ($int<?= $objTypeTable->ClassName ?>Id) {
@@ -86,11 +97,14 @@
 		}
 
 <?php foreach ($objTypeTable->ExtraFieldNamesArray as $strColName) { ?>
-		public static function To<?= $strColName ?>($int<?= $objTypeTable->ClassName ?>Id) {
-			if (array_key_exists($int<?= $objTypeTable->ClassName ?>Id, <?= $objTypeTable->ClassName ?>::$ExtraColumnValuesArray))
-				return <?= $objTypeTable->ClassName ?>::$ExtraColumnValuesArray[$int<?= $objTypeTable->ClassName ?>Id]['<?= $strColName ?>'];
-			else
-				throw new QCallerException(sprintf('Invalid int<?= $objTypeTable->ClassName ?>Id: %s', $int<?= $objTypeTable->ClassName ?>Id));
+		public static function To<?php echo $strColName  ?>($int<?php echo $objTypeTable->ClassName  ?>Id) {
+			switch ($int<?php echo $objTypeTable->ClassName  ?>Id) {
+<?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
+				case <?php echo $intKey  ?>: return '<?= str_replace("'", "\\'", $arrColumns[$strColName])  ?>';
+<?php } ?>
+				default:
+					throw new QCallerException(sprintf('Invalid int<?php echo $objTypeTable->ClassName  ?>Id: %s', $int<?php echo $objTypeTable->ClassName  ?>Id));
+			}
 		}
 
 <?php } ?>
@@ -179,5 +193,3 @@
 			}
 		}
 	}
-
-?>
