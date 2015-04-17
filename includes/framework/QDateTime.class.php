@@ -792,13 +792,19 @@
 		}
 
 		/**
-		 * Add months to the time.
+		 * Add months to the time. If the day on the new month is greater than the month will allow, the day is adjusted
+		 * to be the last day of that month.
 		 *
 		 * @param integer $intMonths
 		 * @return QDateTime
 		 */
 		public function AddMonths($intMonths){
+			$prevDay = $this->Day;
 			$this->Month += $intMonths;
+			if ($this->Day != $prevDay) {
+				$this->Day = 1;
+				$this->AddDays (-1);
+			}
 			return $this;
 		}
 
