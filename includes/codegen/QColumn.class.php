@@ -20,6 +20,7 @@
 	 * @property boolean           $Unique                 Does this column have a 'Unique' key defined on it?
 	 * @property boolean           $Timestamp              Can this column contain a timestamp value?
 	 * @property QReference        $Reference              Reference to another column (if this one is a foreign key)
+	 * @property array             $Options                Options for codegen
 	 * @property string            $Comment                Comment on the column
 	 */
 	class QColumn extends QBaseClass {

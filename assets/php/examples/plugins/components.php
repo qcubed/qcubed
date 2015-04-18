@@ -117,10 +117,9 @@
         <p>If you have based your control on a type that binds to a pre-existing control, you might not need to do
 			anything extra. The <strong>QSelectMenu</strong> control is an example of this, which is simply a javascript
 			overlay on a list box. </p>
-        <p>However, if your interface is a unique way of editing data, you will need to implement some static methods to
-			output the code required to bind the control to the database. See the <strong>Codegen_VarName</strong>,
-			<strong>Codegen_ConnectorCreate</strong>, <strong>Codegen_ConnectorRefresh</strong> and <strong>Codegen_ConnectorUpdate</strong>
-			functions in the <strong>QSlider</strong> control for an example of how to generate the binding code needed.</p>
+        <p>However, if your interface is a unique way of editing data, you will need to create a new class
+			called ${PLUGIN_CONTROL_CLASS}_CodeGenerator that extends AbstractControl_CodeGenerator (or more likely QControl_CodeGenerator)
+			to bind the control to the database. See the <strong>QSlider_CodeGenerator</strong> for an example of how to generate the binding code needed.</p>
         <p>Implement the <strong>GetModelConnectorParams</strong>function to allow a user of the control to set all of your
 			<strong>__set</strong> parameters through the ModelConnector Designer user-interface. This will make it much
 			easier for users to know and use the capabilities of your control.</p>

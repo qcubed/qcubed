@@ -450,52 +450,6 @@
 		}
 
 		/**
-		 * Override to insert additional create options pertinent to the control.
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QManyToManyReference|QReverseReference $objColumn
-		 * @param string $strControlVarName
-		 * @return string
-		 */
-		public static function Codegen_ConnectorCreateOptions (QCodeGen $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
-			$strRet = parent::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
-
-			if (!$objColumn instanceof QManyToManyReference) {
-				$objCodeGen->ReportError($objTable->Name . ':' . $objColumn->Name . ' is not compatible with a QCheckBoxList.');
-			}
-
-			return $strRet;
-		}
-
-
-		/**
-		 * Since this is designed to edit a many-to-many relationship, creates a separate function for updating
-		 * @param QCodeGen $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
-		 * @return string
-		 */
-		public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, $objColumn) {
-			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-			$strPropName = $objColumn->ObjectDescription;
-			$strPropNames = $objColumn->ObjectDescriptionPlural;
-			$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
-
-			$strRet = <<<TMPL
-		protected function {$strControlVarName}_Update() {
-			if (\$this->{$strControlVarName}) {
-				\$this->{$strObjectName}->UnassociateAll{$strPropNames}();
-				\$this->{$strObjectName}->Associate{$strPropName}(\$this->{$strControlVarName}->SelectedValues);
-			}
-		}
-
-
-TMPL;
-			return $strRet;
-		}
-
-
-		/**
 		 * Returns a description of the options available to modify by the designer for the code generator.
 		 *
 		 * @return QModelConnectorParam[]

@@ -1,3 +1,9 @@
+<?php
+	/**
+	 * @var QTable $objTable
+	 * @var QCodeGenBase $objCodeGen
+	 */
+?>
 /**
 		 * Override method to perform a property "Get"
 		 * This will get the value of $strName
@@ -18,7 +24,7 @@
 	$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
 	$strLabelVarName = $objCodeGen->ModelConnectorLabelVariableName($objColumn);
 	$strPropertyName = $objColumn->PropertyName;
-	$strClassName = $objCodeGen->ModelConnectorControlClass($objColumn);
+	$strClassName = $objCodeGen->GetControlCodeGenerator($objColumn)->GetControlClass();
 ?><?php include("property_get_case.tpl.php"); ?>
 
 <?php } ?>
@@ -27,7 +33,7 @@
 	$strControlVarName = $objCodeGen->ModelConnectorVariableName($objReverseReference);
 	$strLabelVarName = $objCodeGen->ModelConnectorLabelVariableName($objReverseReference);
 	$strPropertyName = $objReverseReference->ObjectDescription;
-	$strClassName = $objCodeGen->ModelConnectorControlClass($objReverseReference);
+	$strClassName = $objCodeGen->GetControlCodeGenerator($objReverseReference)->GetControlClass();
 ?><?php include("property_get_case.tpl.php"); ?>
 
 <?php } ?><?php } ?>
@@ -36,7 +42,7 @@
 	$strControlVarName = $objCodeGen->ModelConnectorVariableName($objManyToManyReference);
 	$strLabelVarName = $objCodeGen->ModelConnectorLabelVariableName($objManyToManyReference);
 	$strPropertyName = $objManyToManyReference->ObjectDescription;
-	$strClassName = $objCodeGen->ModelConnectorControlClass($objManyToManyReference);
+	$strClassName = $objCodeGen->GetControlCodeGenerator($objManyToManyReference)->GetControlClass();
 ?><?php include("property_get_case.tpl.php"); ?>
 
 <?php } ?>

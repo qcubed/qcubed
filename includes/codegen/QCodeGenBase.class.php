@@ -796,8 +796,8 @@
 		 */
 		public function ModelConnectorVariableName($objColumn) {
 			$strPropName = $this->ModelConnectorPropertyName($objColumn);
-			$strClassName = $this->ModelConnectorControlClass($objColumn);
-			return $strClassName::Codegen_VarName ($strPropName);
+			$objControlHelper = $this->GetControlCodeGenerator($objColumn);
+			return $objControlHelper->VarName ($strPropName);
 		}
 
 		/**
@@ -808,7 +808,7 @@
 		 */
 		public function ModelConnectorLabelVariableName($objColumn) {
 			$strPropName = $this->ModelConnectorPropertyName($objColumn);
-			return QLabel::Codegen_VarName($strPropName);
+			return QLabel_CodeGenerator::Instance()->VarName($strPropName);
 		}
 
 		/**
@@ -820,7 +820,7 @@
 		 * @return string Class name of control which can handle this column's data
 		 * @throws Exception
 		 */
-		public function ModelConnectorControlClass($objColumn) {
+		protected function ModelConnectorControlClass($objColumn) {
 
 			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {
@@ -867,6 +867,46 @@
 				return 'QCheckBoxList';	// for multi-selection
 			}
 			throw new Exception('Unknown column type.');
+		}
+
+		/**
+		 * Returns the class for the control that will be created to edit the given column,
+		 * including the 'virtual' columns of reverse references (many to one) and many-to-many references.
+		 *
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @return AbstractControl_CodeGenerator helper object
+		 * @throws Exception
+		 */
+		public function GetControlCodeGenerator($objColumn) {
+			$strControlClass = $this->ModelConnectorControlClass($objColumn);
+
+			if (method_exists($strControlClass, 'GetCodeGenerator')) {
+				return call_user_func($strControlClass.'::GetCodeGenerator');
+			}
+
+			switch ($strControlClass) {
+				case 'QLabel': return QLabel_CodeGenerator::Instance();
+				case 'QListBox': return new QListBox_CodeGenerator();
+				case 'QCheckBox': return new QCheckBox_CodeGenerator();
+				case 'QDateTimePicker': return new QDateTimePicker_CodeGenerator();
+				case 'QTextBox': return new QTextBox_CodeGenerator();
+				case 'QIntegerTextBox': return new QIntegerTextBox_CodeGenerator();
+				case 'QFloatTextBox': return new QFloatTextBox_CodeGenerator();
+				case 'QCheckBoxList': return new QCheckBoxList_CodeGenerator();
+				default: break;
+			}
+
+			$strOrigControlClass = $strControlClass;
+			$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
+			while (!class_exists($strControlCodeGeneratorClass)) {
+				$strControlClass = get_parent_class($strControlClass);
+				if ($strControlClass === 'QControl') {
+					throw new QCallerException("Cannot find an appropriate subclass of AbstractControl_CodeGenerator for ".$strOrigControlClass);
+				}
+				$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
+			}
+			return new $strControlCodeGeneratorClass();
 		}
 
 		protected function CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName) {
