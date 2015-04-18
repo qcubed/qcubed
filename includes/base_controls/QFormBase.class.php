@@ -1374,7 +1374,7 @@
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
 				if ($blnInHead) {
-					$strToReturn  .= '<link href="' . $this->GetCssFileUri($strScript) . '" type="text/css" rel="stylesheet" />';
+					$strToReturn  .= '<link href="' . $this->GetCssFileUri($strScript) . '" rel="stylesheet" />';
 				} else {
 					$strToReturn  .= '<style type="text/css" media="all">@import "' . $this->GetCssFileUri($strScript) . '"</style>';
 				}

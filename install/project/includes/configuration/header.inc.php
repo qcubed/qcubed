@@ -8,7 +8,8 @@
 <?php if (isset($strPageTitle)) { ?>
 		<title><?php _p($strPageTitle); ?></title>
 <?php } ?>
-		<style type="text/css">@import url("<?= __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ ?>/styles.css");</style>
+		<link href="<?= __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__ ?>/styles.css" rel="stylesheet">
+		<?php if (isset($this)) $this->RenderStyles(); ?>
 	</head>
 	<body>
 		<section id="content">
