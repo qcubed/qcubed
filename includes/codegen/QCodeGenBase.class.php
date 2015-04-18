@@ -820,7 +820,7 @@
 		 * @return string Class name of control which can handle this column's data
 		 * @throws Exception
 		 */
-		protected function ModelConnectorControlClass($objColumn) {
+		public function ModelConnectorControlClass($objColumn) {
 
 			// Is the class specified by the developer?
 			if ($o = $objColumn->Options) {
