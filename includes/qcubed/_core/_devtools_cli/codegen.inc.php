@@ -7,32 +7,56 @@
 //	require('cli_prepend.inc.php');
 
 	// Include the QCodeGen class library
-	require(__QCUBED__. '/codegen/QCodeGen.class.php');
-
 	function PrintInstructions() {
 		global $strCommandName;
-		print('QCubed Code Generator (Command Line Interface) - ' . QCUBED_VERSION . '
+		print('QCubed Code Generator (Command Line Interface) -
 Copyright (c) 2001 - 2009, QuasIdea Development, LLC, QCubed Project
 This program is free software with ABSOLUTELY NO WARRANTY; you may
 redistribute it under the terms of The MIT License.
 
-Usage: ' . $strCommandName . ' CODEGEN_SETTINGS
+Usage: ' . $strCommandName . ' QCUBED_PROJECT_DIR
 
-Where CODEGEN_SETTINGS is the absolute filepath of the codegen_settings.xml
-file, containing the code generator settings.
+Where QCUBED_BASE_DIR is the absolute filepath of the QCubed project base directory (where the QCubed includes subdirectry is).
 
 For more information, please go to http://qcu.be
 ');
 		exit();
 	}
 
+	if (!defined('__CONFIGURATION__')) {
+		if ($_SERVER['argc'] < 2) {
+			PrintInstructions();
+		}
+		$qcubedBaseDir = $_SERVER['argv'][1];
+		if (!is_dir($qcubedBaseDir)) {
+			print("Error: $qcubedBaseDir is not a directory\n");
+			PrintInstructions();
+		}
+		$prependFile = $qcubedBaseDir.'/includes/configuration/prepend.inc.php';
+		if (!is_file($prependFile)) {
+			print("Error: Could not locate prepend.inc.php: $prependFile does not exist\n");
+			PrintInstructions();
+		}
+		require($prependFile);
+
+		if (!defined('__CONFIGURATION__')) {
+			print("Error: __CONFIGURATION__ setting is not defined. Make sure $qcubedBaseDir.' is the correct QCubed base directory\n");
+			PrintInstructions();
+		}
+		if (!defined('__QCUBED__')) {
+			print("Error: __QCUBED__ setting is not defined. Make sure $qcubedBaseDir is the correct QCubed base directory\n");
+			PrintInstructions();
+		}
+	}
+
 	$settingsFile = __CONFIGURATION__ . '/codegen_settings.xml';
-	if ($_SERVER['argc'] >= 2)
-		$settingsFile = $_SERVER['argv'][1];
 
 	if (!is_file($settingsFile)) {
+		print("Error: Could not locate codegen settings file: $settingsFile does not exist\n");
 		PrintInstructions();
 	}
+
+	require(__QCUBED__. '/codegen/QCodeGen.class.php');
 
 	/////////////////////
 	// Run Code Gen
