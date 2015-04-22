@@ -11,7 +11,7 @@
 
 	if (!$strScript) {
 		$strUrl = QApplication::$RequestUri . substr($strReference, strrpos($strReference, '/'));
-		QApplication::Redirect($strUrl);
+		QApplication::Redirect($strUrl, true);
 	}
 
 ?>
