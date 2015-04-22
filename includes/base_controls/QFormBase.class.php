@@ -17,6 +17,12 @@
 	 */
 	abstract class QFormBase extends QBaseClass {
 		///////////////////////////
+		// Static Members
+		///////////////////////////
+		/** @var bool True when css scripts get rendered on page. Lets user call RenderStyles in header. */
+		protected static $blnStylesRendered = false;
+
+		///////////////////////////
 		// Protected Member Variables
 		///////////////////////////
 		/** @var string Form ID (usually passed as the first argument to the 'Run' method call) */
@@ -62,8 +68,6 @@
 		protected $strCssClass;
 
 		protected $strCustomAttributeArray = null;
-		/** @var bool True when css scripts get rendered on page. */
-		protected $blnStylesRendered = false;
 
 		protected $strWatcherTime;
 
@@ -1342,7 +1346,7 @@
 		 * @param bool $blnDisplayOutput
 		 * @return null|string
 		 */
-		public function RenderStyles($blnDisplayOutput = true) {
+		public function RenderStyles($blnDisplayOutput = true, $blnInHead = true) {
 			$strToReturn = '';
 			$this->strIncludedStyleSheetFileArray = array();
 
@@ -1369,11 +1373,15 @@
 
 			// Include styles that need to be included
 			foreach ($strStyleSheetArray as $strScript) {
-				$strToReturn  .= '<style type="text/css" media="all">@import "' . $this->GetCssFileUri($strScript) . '</style>';
+				if ($blnInHead) {
+					$strToReturn  .= '<link href="' . $this->GetCssFileUri($strScript) . '" rel="stylesheet" />';
+				} else {
+					$strToReturn  .= '<style type="text/css" media="all">@import "' . $this->GetCssFileUri($strScript) . '"</style>';
+				}
 				$strToReturn .= "\r\n";
 			}
 
-			$this->blnStylesRendered = true;
+			self::$blnStylesRendered = true;
 
 			// Return or Display
 			if ($blnDisplayOutput) {
@@ -1412,7 +1420,6 @@
 
 			// Update FormStatus and Clear Included JS/CSS list
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
-			$this->blnStylesRendered = false;
 
 			// Prepare for rendering
 
@@ -1451,8 +1458,8 @@
 			$strToReturn .= sprintf('<form method="post" id="%s" action="%s"%s>', $this->strFormId, htmlentities(QApplication::$RequestUri), $strFormAttributes);
 			$strToReturn .= "\r\n";
 			
-			if (!$this->blnStylesRendered) {
-				$strToReturn .= $this->RenderStyles(false);
+			if (!self::$blnStylesRendered) {
+				$strToReturn .= $this->RenderStyles(false, false);
 			}
 
 			// Perhaps a strFormModifiers as an array to
