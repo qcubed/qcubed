@@ -166,9 +166,6 @@
 		 * @return string
 		 */
 		protected function GetControlHtml() {
-			if ((!$this->objListItemArray) || (count($this->objListItemArray) == 0))
-				return "";
-
 			/* Deprecated. Use Margin and Padding on the ItemStyle attribute.
 			if ($this->intCellPadding >= 0)
 				$strCellPadding = sprintf('cellpadding="%s" ', $this->intCellPadding);
@@ -197,7 +194,6 @@
 		 * @return string
 		 */
 		public function RenderButtonTable() {
-			// TODO: Do this without using a table, since this is really not a correct use of html
 			$strToReturn = '';
 			if ($this->ItemCount > 0) {
 				// Figure out the number of ROWS for this table
@@ -233,17 +229,17 @@
 					$strRowHtml = QHtml::RenderTag('div', ['class'=>'qc-tableRow'], $strRowHtml);
 					$strToReturn .= $strRowHtml;
 				}
-			}
 
-			if ($this->strMaxHeight) {
-				// wrap table in a scrolling div that will end up being the actual object
-				//$objStyler = new QTagStyler();
-				$this->SetCssStyle('max-height', $this->strMaxHeight, true);
-				$this->SetCssStyle('overflow-y', 'scroll');
+				if ($this->strMaxHeight) {
+					// wrap table in a scrolling div that will end up being the actual object
+					//$objStyler = new QTagStyler();
+					$this->SetCssStyle('max-height', $this->strMaxHeight, true);
+					$this->SetCssStyle('overflow-y', 'scroll');
 
-				$strToReturn = QHtml::RenderTag('div', ['class'=>'qc-table'], $strToReturn);
-			} else {
-				$this->AddCssClass('qc-table'); // format as a table
+					$strToReturn = QHtml::RenderTag('div', ['class'=>'qc-table'], $strToReturn);
+				} else {
+					$this->AddCssClass('qc-table'); // format as a table
+				}
 			}
 
 			return $this->RenderTag ('div', ['id'=>$this->strControlId], null, $strToReturn);
