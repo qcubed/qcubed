@@ -1,4 +1,9 @@
-<?php require('../../../../../../project/includes/configuration/header.inc.php'); ?>
+<?php
+	$strPageTitle = 'Basic Test';
+ 	require('../../../../../../project/includes/configuration/header.inc.php');
+
+?>
+
 <?php $this->RenderBegin(); ?>
 <?php $this->txtText->RenderWithName(); ?>
 <?php $this->txtText2->RenderWithName(); ?>

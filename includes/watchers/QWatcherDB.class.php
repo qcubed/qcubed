@@ -147,6 +147,3 @@
 			return false;
 		}
 	}
-	
-?>
-	

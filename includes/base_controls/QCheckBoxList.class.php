@@ -71,13 +71,13 @@
 			if (QApplication::$RequestMode == QRequestMode::Ajax) {
 				// Ajax will only send information about controls that are on the screen, so we know they are rendered
 				if (isset($_POST[$this->strControlId]) && is_array($_POST[$this->strControlId])) {
-					$a = array_keys($_POST[$this->strControlId]);
+					$a = $_POST[$this->strControlId];
 					$this->SetSelectedItemsByIndex($a, false);
 				}
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
 				if (isset($_POST[$this->strControlId]) && is_array($_POST[$this->strControlId])) {
-					$a = array_keys($_POST[$this->strControlId]);
+					$a = $_POST[$this->strControlId];
 					$this->SetSelectedItemsByIndex($a, false);
 				} else {
 					$this->UnselectAllItems(false);
@@ -121,7 +121,8 @@
 
 			$objStyles = new QTagStyler();
 			$objStyles->SetHtmlAttribute('type', 'checkbox');
-			$objStyles->SetHtmlAttribute('name', $this->strControlId . '[' . $intIndex . ']');
+			$objStyles->SetHtmlAttribute('name', $this->strControlId . '[]');
+			$objStyles->SetHtmlAttribute('value', $intIndex);
 
 			$strIndexedId = $objItem->Id;
 			$objStyles->SetHtmlAttribute('id', $strIndexedId);

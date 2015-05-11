@@ -1530,7 +1530,7 @@
 				$strInstructions = '';
 			}
 			
-			$strToReturn = sprintf('<div class="%s"><label for="%s">%s</label>%s</div>', $strLabelClass, $this->strControlId, $this->strName, $strInstructions);
+			$strToReturn = sprintf('<div class="%s"><label>%s</label>%s</div>', $strLabelClass, $this->strName, $strInstructions);
 
 			// Render the Right side
 			$strMessage = '';
