@@ -37,7 +37,7 @@
 		/** @var null|QPaginator Paginator at the bottom */
 		protected $objPaginatorAlternate = null;
 		/** @var bool Determines whether this QDataGrid wll use AJAX or not */
-		protected $blnUseAjax = false;
+		protected $blnUseAjax = true;
 
 		// MISC
 		/** @var array DataSource from which the items are picked and rendered */
@@ -174,13 +174,12 @@
 		// Public Properties: SET
 		/////////////////////////
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				// APPEARANCE
 				case "Noun":
 					try {
-						return ($this->strNoun = QType::Cast($mixValue, QType::String));
+						$this->strNoun = QType::Cast($mixValue, QType::String);
+						$this->blnModified = true;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -188,7 +187,8 @@
 					}
 				case "NounPlural":
 					try {
-						return ($this->strNounPlural = QType::Cast($mixValue, QType::String));
+						$this->strNounPlural = QType::Cast($mixValue, QType::String);
+						$this->blnModified = true;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -198,24 +198,27 @@
 				// BEHAVIOR
 				case "Paginator":
 					try {
-						$objToReturn = ($this->objPaginator = QType::Cast($mixValue, 'QPaginatorBase'));
+						$this->objPaginator = QType::Cast($mixValue, 'QPaginatorBase');
 						if ($this->objPaginator) {
 							if ($this->objPaginator->Form->FormId != $this->Form->FormId)
 								throw new QCallerException('The assigned paginator must belong to the same form that this control belongs to.');
-							$objToReturn->SetPaginatedControl($this);
+							$this->objPaginator->SetPaginatedControl($this);
 						}
-						return $objToReturn;
+						$this->blnModified = true;
+						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
 				case "PaginatorAlternate":
 					try {
-						$objToReturn = ($this->objPaginatorAlternate = QType::Cast($mixValue, 'QPaginatorBase'));
+						$this->objPaginatorAlternate = QType::Cast($mixValue, 'QPaginatorBase');
 						if ($this->objPaginatorAlternate->Form->FormId != $this->Form->FormId)
 							throw new QCallerException('The assigned paginator must belong to the same form that this control belongs to.');
-						$objToReturn->SetPaginatedControl($this);
-						return $objToReturn;
+						$this->objPaginatorAlternate->SetPaginatedControl($this);
+						$this->blnModified = true;
+						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -223,14 +226,15 @@
 
 				case "UseAjax":
 					try {
-						$objToReturn = ($this->blnUseAjax = QType::Cast($mixValue, QType::Boolean));
+						$this->blnUseAjax = QType::Cast($mixValue, QType::Boolean);
 						
 						if ($this->objPaginator)
-							$this->objPaginator->UseAjax = $objToReturn;
+							$this->objPaginator->UseAjax = $this->blnUseAjax;
 						if ($this->objPaginatorAlternate)
-							$this->objPaginatorAlternate->UseAjax = $objToReturn;
+							$this->objPaginatorAlternate->UseAjax = $this->blnUseAjax;
 
-						return $objToReturn;
+						$this->blnModified = true;
+						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
@@ -238,12 +242,15 @@
 				case "ItemsPerPage":
 					if ($this->objPaginator) {
 						try {
-							$intToReturn = ($this->objPaginator->ItemsPerPage = $mixValue);
+							$intItemsPerPage = QType::Cast($mixValue, QType::Integer);
+							$this->objPaginator->ItemsPerPage = $intItemsPerPage;
 
-							if ($this->objPaginatorAlternate)
-								($this->objPaginatorAlternate->ItemsPerPage = $intToReturn);
+							if ($this->objPaginatorAlternate) {
+								$this->objPaginatorAlternate->ItemsPerPage = $intItemsPerPage;
+							}
 
-							return $intToReturn;
+							$this->blnModified = true;
+							break;
 						} catch (QCallerException $objExc) {
 							$objExc->IncrementOffset();
 							throw $objExc;
@@ -253,12 +260,15 @@
 				case "TotalItemCount":
 					if ($this->objPaginator) {
 						try {
-							$intToReturn = ($this->objPaginator->TotalItemCount = $mixValue);
+							$intTotalCount = QType::Cast($mixValue, QType::Integer);
+							$this->objPaginator->TotalItemCount = $intTotalCount;
 
-							if ($this->objPaginatorAlternate)
-								($this->objPaginatorAlternate->TotalItemCount = $intToReturn);
+							if ($this->objPaginatorAlternate) {
+								$this->objPaginatorAlternate->TotalItemCount = $intTotalCount;
+							}
 
-							return $intToReturn;
+							$this->blnModified = true;
+							break;
 						} catch (QCallerException $objExc) {
 							$objExc->IncrementOffset();
 							throw $objExc;
@@ -268,17 +278,21 @@
 
 				// MISC
 				case "DataSource": 
-					return ($this->objDataSource = $mixValue);
+					$this->objDataSource = $mixValue;
+					$this->blnModified = true;
+					break;
 
 				case "PageNumber":
 					if ($this->objPaginator) {
 						try {
-							$intToReturn = ($this->objPaginator->PageNumber = $mixValue);
+							$intPageNumber = QType::Cast($mixValue, QType::Integer);
+							$this->objPaginator->PageNumber = $intPageNumber;
 
-							if ($this->objPaginatorAlternate)
-								($this->objPaginatorAlternate->PageNumber = $intToReturn);
-
-							return $intToReturn;
+							if ($this->objPaginatorAlternate) {
+								$this->objPaginatorAlternate->PageNumber = $intPageNumber;
+							}
+							$this->blnModified = true;
+							break;
 						} catch (QCallerException $objExc) {
 							$objExc->IncrementOffset();
 							throw $objExc;
