@@ -80,7 +80,7 @@
 		 * @return string THe HTML for the control
 		 */
 		protected function GetControlHtml() {
-			$attrOverride = array('type'=>'checkbox', 'name'=>$this->strControlId);
+			$attrOverride = array('type'=>'checkbox', 'name'=>$this->strControlId, 'value'=>'true');
 			return $this->RenderButton($attrOverride);
 		}
 

@@ -68,15 +68,12 @@
 				$strStyle = sprintf('style="%s"', $strStyle);
 
 			if ($this->blnPrimaryButton) {
-				$strToReturn = sprintf('<input type="image" name="%s" id="%s" %s%s />',
-					$this->strControlId,
+				$strToReturn = sprintf('<input type="image" name="%s" %s%s />',
 					$this->strControlId,
 					$this->GetAttributes(),
 					$strStyle);
 			} else {
-				$strToReturn = sprintf('<img name="%s" id="%s" %s%s />',
-					$this->strControlId,
-					$this->strControlId,
+				$strToReturn = sprintf('<img  %s%s />',
 					$this->GetAttributes(),
 					$strStyle);
 			}

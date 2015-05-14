@@ -249,9 +249,10 @@ qcubed = {
                     case "checkbox":
                         if (index >= 0) {
                             if ($element.is(":checked")) {
-                                strPostData += "&" + strControlName + "=" + $element.is(":checked");
+                                strPostData += "&" + strControlName + "=" + $element.val();
                             }
                         } else {
+                            // TODO: use value instead of is checked
                             strPostData += "&" + strControlName + "=" + $element.is(":checked");
                         }
                         break;
