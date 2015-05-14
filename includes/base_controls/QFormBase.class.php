@@ -543,9 +543,6 @@
 				// Trigger Create Event (if applicable)
 				$objClass->Form_Create();
 
-				// Restore the state of all the controls just after creating them
-				$objClass->RestoreControlState();
-
 				$objClass->Form_Initialize();
 
 				if (defined ('__DESIGN_MODE__')) {
@@ -1745,10 +1742,13 @@
 			}
 
 			// Add any application level js commands.
-			$strEndScript .= QApplication::RenderJavascript();
+			$strEndScript .= QApplication::RenderJavascript(true);
 
 			// Add the javascript coming from controls and events
 			$strEndScript .=  ';'  . $strEventScripts;
+
+			$strEndScript .= ';' . QApplication::RenderJavascript(false);
+
 
 
 			// Create Final EndScript Script

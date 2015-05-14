@@ -1012,7 +1012,7 @@
 					 * Normally, FormBase->RenderEnd will render the javascripts. In the unusual case
 					 * of not rendering with a QForm object, this will still output embedded javascript commands.
 					 */
-					$strScript = QApplicationBase::RenderJavascript(false);
+					$strScript = QApplicationBase::RenderJavascript();
 					if ($strScript) {
 						return $strBuffer . '<script type="text/javascript">' . $strScript . '</script>';
 					}
@@ -1048,10 +1048,12 @@
 		 * Function renders all the Javascript commands as output to the client browser. This is a mirror of what
 		 * occurs in the success function in the qcubed.js ajax code.
 		 *
+		 * @param $blnBeforeControls	True to only render the javascripts that need to come before the controls are defined.
+		 * 								This is used to break the commands issued into two groups.
 		 * @static
 		 * @return string
 		 */
-		public static function RenderJavascript() {
+		public static function RenderJavascript($blnBeforeControls = false) {
 			$strScript = '';
 
 			// Style sheet injection by a control. Not very common, as other ways of adding style sheets would normally be done first.
@@ -1068,8 +1070,11 @@
 					$strAlert = json_encode($strAlert);
 					$strScript .= sprintf('alert(%s); ', $strAlert);
 				}
+				QApplication::$JavascriptCommandArray[QAjaxResponse::Alert] = null;
 			}
-			
+
+			if ($blnBeforeControls) return $strScript;
+
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh])) {
 				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh]);
 			}
@@ -1080,6 +1085,7 @@
 				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow]);
 			}
 
+			// A QApplication::Redirect
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::Location])) {
 				$strLocation = QApplication::$JavascriptCommandArray[QAjaxResponse::Location];
 				$strScript .= sprintf('document.location = "%s";', $strLocation);
