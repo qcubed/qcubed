@@ -1691,11 +1691,14 @@
 						$strControlScript = JavaScriptHelper::TerminateScript($strControlScript);
 
 						// Add comments for developer version of output
-						$strControlScript = _nl() .  _nl() .
-							sprintf ('/*** EndScript -- Control Type: %s, Control Name: %s, Control Id: %s  ***/',
-								get_class($objControl), $objControl->Name, $objControl->ControlId) .
-							_nl() .
-							_indent($strControlScript);
+						if (!(defined('__MINIMIZE__') && __MINIMIZE)) {
+							// Render a comment
+							$strControlScript = _nl() .  _nl() .
+								sprintf ('/*** EndScript -- Control Type: %s, Control Name: %s, Control Id: %s  ***/',
+									get_class($objControl), $objControl->Name, $objControl->ControlId) .
+								_nl() .
+								_indent($strControlScript);
+						}
 						$strEventScripts .= $strControlScript;
 					}
 				}
