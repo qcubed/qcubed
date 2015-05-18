@@ -84,7 +84,8 @@
 	 * 	* Number: Duration in milliseconds with default easing.
 	 * 	* String: Name of easing to use with default duration.
 	 * 
-	 * 	* Object: Animation settings with easing and duration properties. 
+	 * 	* Object: An object containing easing and duration properties to
+	 * configure animations. 
 	 * 
 	 * 	* Can also contain a down property with any of the above options.
 	 * 	* "Down" animations occur when the panel being activated has a lower
@@ -138,7 +139,7 @@
 		protected $mixIcons = null;
 
 		/**
-		 * Builds the option array to be sent to the widget consctructor.
+		 * Builds the option array to be sent to the widget constructor.
 		 *
 		 * @return array key=>value array of options
 		 */
@@ -155,25 +156,39 @@
 			return $jqOptions;
 		}
 
+		/**
+		 * Return the JavaScript function to call to associate the widget with the control.
+		 *
+		 * @return string
+		 */
 		public function GetJqSetupFunction() {
 			return 'accordion';
 		}
 
+		/**
+		 * Returns the script that attaches the JQueryUI widget to the html object.
+		 *
+		 * @return string
+		 */
 		public function GetEndScript() {
-			if ($this->getJqControlId() !== $this->ControlId) {
-				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted. We delete the old events here. This code must happen before any other event processing code.
-				QApplication::ExecuteControlCommand($this->getJqControlId(), "off", QJsPriority::High);
-			}
+			$strRet = '';
+			$strId = $this->getJqControlId();
 			$jqOptions = $this->makeJqOptions();
-			if (empty($jqOptions)) {
-				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction());
-			}
-			else {
-				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), $jqOptions);
+			$strFunc = $this->getJqSetupFunction();
+
+			if ($this->GetJqControlId() !== $this->ControlId) {
+				// If events are not attached to the actual object being drawn, then the old events will not get
+				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
+				$strRet = "\$j('#{$strId}').off();" . _nl();;
 			}
 
-			return parent::GetEndScript();
+			$strParams = '';
+			if (!empty($jqOptions)) {
+				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			}
+			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
+
+			return $strRet . parent::GetEndScript();
 		}
 
 		/**

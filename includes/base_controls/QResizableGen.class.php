@@ -29,9 +29,11 @@
 	 * 	* originalSize Type: Object The size represented as { width, height
 	 * } before the resizable is resized
 	 * 	* position Type: Object The current position represented as { left,
-	 * top }
+	 * top }. The values may be changed to modify where the element will be
+	 * positioned. Useful for custom resizing logic.
 	 * 	* size Type: Object The current size represented as { width, height
-	 * }
+	 * }. The values may be changed to modify where the element will be
+	 * positioned. Useful for custom resizing logic.
 	 * 
 	 */
 	class QResizable_ResizeEvent extends QJqUiEvent {
@@ -220,7 +222,7 @@
 		protected $intMinWidth = null;
 
 		/**
-		 * Builds the option array to be sent to the widget consctructor.
+		 * Builds the option array to be sent to the widget constructor.
 		 *
 		 * @return array key=>value array of options
 		 */
@@ -248,25 +250,39 @@
 			return $jqOptions;
 		}
 
+		/**
+		 * Return the JavaScript function to call to associate the widget with the control.
+		 *
+		 * @return string
+		 */
 		public function GetJqSetupFunction() {
 			return 'resizable';
 		}
 
+		/**
+		 * Returns the script that attaches the JQueryUI widget to the html object.
+		 *
+		 * @return string
+		 */
 		public function GetEndScript() {
-			if ($this->getJqControlId() !== $this->ControlId) {
-				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted. We delete the old events here. This code must happen before any other event processing code.
-				QApplication::ExecuteControlCommand($this->getJqControlId(), "off", QJsPriority::High);
-			}
+			$strRet = '';
+			$strId = $this->getJqControlId();
 			$jqOptions = $this->makeJqOptions();
-			if (empty($jqOptions)) {
-				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction());
-			}
-			else {
-				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), $jqOptions);
+			$strFunc = $this->getJqSetupFunction();
+
+			if ($this->GetJqControlId() !== $this->ControlId) {
+				// If events are not attached to the actual object being drawn, then the old events will not get
+				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
+				$strRet = "\$j('#{$strId}').off();" . _nl();;
 			}
 
-			return parent::GetEndScript();
+			$strParams = '';
+			if (!empty($jqOptions)) {
+				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			}
+			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
+
+			return $strRet . parent::GetEndScript();
 		}
 
 		/**
