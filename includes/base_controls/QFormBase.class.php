@@ -1689,6 +1689,13 @@
 					/* Note: GetEndScript may cause the control to register additional commands, or even add javascripts, so those should be handled after this. */
 					if ($strControlScript = $objControl->GetEndScript()) {
 						$strControlScript = JavaScriptHelper::TerminateScript($strControlScript);
+
+						// Add comments for developer version of output
+						$strControlScript = _nl() .  _nl() .
+							sprintf ('/*** EndScript -- Control Type: %s, Control Name: %s, Control Id: %s  ***/',
+								get_class($objControl), $objControl->Name, $objControl->ControlId) .
+							_nl() .
+							_indent($strControlScript);
 						$strEventScripts .= $strControlScript;
 					}
 				}

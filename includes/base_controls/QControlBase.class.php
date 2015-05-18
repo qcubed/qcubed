@@ -1166,12 +1166,10 @@
 		}
 
 		/**
-		 * Returns all Javscript that needs to be executed after rendering of this control
-		 *
-		 * For any JavaScript calls that need to be made whenever this control is rendered or
-		 * re-rendered return here your custom javascript code.
-		 *
-		 * Remember to call $strToReturn = parent::GetEndScript if you want to have basic moveable support.
+		 * Returns and fires the JavaScript that is associated with this control. The html for the control will have already
+		 * been rendered, so refer to the html object with "\$j(#{$this->ControlId})". You should do the following:
+		 *  - Return any script that attaches a JavaScript widget to the the html control.
+		 *  - Use functions like ExecuteControlCommand to fire commands to execute AFTER all controls have been attached.
 		 *
 		 * @return string
 		 */
