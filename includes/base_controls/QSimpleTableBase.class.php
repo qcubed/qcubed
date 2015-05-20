@@ -510,8 +510,10 @@
 		 * Preserialize the columns, since some columns might have references to the form.
 		 */
 		public function Sleep() {
-			foreach ($this->objColumnArray as $objColumn) {
-				$objColumn->Sleep();
+			if ($this->objColumnArray) {
+				foreach ($this->objColumnArray as $objColumn) {
+					$objColumn->Sleep();
+				}
 			}
 			parent::Sleep();
 		}
@@ -523,8 +525,10 @@
 		 */
 		public function Wakeup(QForm $objForm) {
 			parent::Wakeup($objForm);
-			foreach ($this->objColumnArray as $objColumn) {
-				$objColumn->Wakeup($objForm);
+			if ($this->objColumnArray) {
+				foreach ($this->objColumnArray as $objColumn) {
+					$objColumn->Wakeup($objForm);
+				}
 			}
 		}
 
