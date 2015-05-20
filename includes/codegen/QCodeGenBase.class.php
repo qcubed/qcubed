@@ -906,7 +906,7 @@
 				}
 				$strControlCodeGeneratorClass = $strControlClass .'_CodeGenerator';
 			}
-			return new $strControlCodeGeneratorClass();
+			return new $strControlCodeGeneratorClass($strOrigControlClass);
 		}
 
 		protected function CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName) {
