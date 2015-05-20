@@ -72,7 +72,7 @@ class HtmlJqDoc extends JqDoc {
 		$name_node = $nodes[0];
 		$origName = $name = preg_replace('/\W.*/', '', $name_node->innertext());
 
-		$nodes = $htmlOption->find('span.option-type');
+		$nodes = $htmlOption->find('div.option-type');
 		$type = preg_replace('/Type: /', '', $nodes[0]->plaintext);
 		$type = trim($type);
 		if ($this->is_event_option($type))
