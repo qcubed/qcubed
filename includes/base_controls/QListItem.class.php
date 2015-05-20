@@ -67,7 +67,7 @@
 		 */
 		public function toJsObject() {
 			$strId = $this->strValue;
-			if (!$strId) {
+			if (is_null($strId)) {
 				$strId = $this->strId;
 			}
 
