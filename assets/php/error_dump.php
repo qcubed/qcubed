@@ -15,7 +15,7 @@
  *  $__exc_objErrorAttributeArray
  */
 
-$__exc_strMessageBody = htmlentities($__exc_strMessage);
+$__exc_strMessageBody = htmlentities($__exc_strMessage, null, null, false);
 $__exc_strMessageBody = str_replace(" ", "&nbsp;", str_replace("\n", "<br/>\n", $__exc_strMessageBody));
 $__exc_strMessageBody = str_replace(":&nbsp;", ": ", $__exc_strMessageBody);
 $__exc_objFileArray = file($__exc_strFilename);
