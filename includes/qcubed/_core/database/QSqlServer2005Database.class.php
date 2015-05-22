@@ -438,6 +438,19 @@
 
 		public function GetIndexesForTable($strTableName) {
 			$objIndexArray = array();
+			
+			if ($this->TableHasNoIndexes($strTableName)) {
+				/*
+				Throwing exception might not be the best way to approach this. 
+				Allowing it to continue actually enables the error to be cleanly spotted later. Maybe a little too late?
+				
+				$strErrorCode = '-999001PNT'; //User Error Code
+				$strErrorinformation = sprintf("Error! This table %s has no indexes. You need a unique primary key at least", $strTableName);
+				throw new QSqlServer2005DatabaseException($strErrorinformation, $strErrorCode, null);
+				*/
+				
+				return array();
+			}
 
 			// Use sp_helpindex to pull the indexes
 			$objResult = $this->Query(sprintf("EXEC sp_helpindex %s", $this->SqlVariable($strTableName)));
@@ -453,6 +466,34 @@
 			}
 
 			return $objIndexArray;
+		}
+		
+		private function TableHasNoIndexes($strTableName) {
+			return !$this->TableHasIndexes($strTableName);
+		}
+		
+		private function TableHasIndexes($strTableName) {
+			$indexCountFieldName = 'IndexCount';
+			
+			$strQuery = sprintf(
+				"SELECT COUNT(*) AS %s
+					FROM sys.indexes si JOIN sys.tables st ON si.object_id = st.object_id
+					WHERE (UPPER(st.name) = UPPER(%s)) AND ((si.is_unique = 1) OR (si.is_primary_key = 1))
+				",
+				$indexCountFieldName, $this->SqlVariable($strTableName)
+			);
+			
+			//Execute Query to count indices
+			$objResult = $this->Query($strQuery);
+			
+			while ($objRow = $objResult->GetNextRow()) {
+				$indexCount = $objRow->GetColumn($indexCountFieldName, QDatabaseFieldType::Integer);
+				
+				//Return true only if the indices are more than zero
+				return (is_null($indexCount)) ? false : ($indexCount > 0); 
+			}
+			
+			return false;
 		}
 
 		public function GetForeignKeysForTable($strTableName) {
