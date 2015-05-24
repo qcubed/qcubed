@@ -89,6 +89,7 @@
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('<?php echo $objTable->ClassName ?>');
 			}
+			$this->dlgPopup->Title = $strDialogTitle;
 			$this->dlgPopup->ShowDialogBox();
 			$this->dlgPopup->MoveToTop();
 			if ($this->objViewPanelPostCreateCallback)
@@ -124,6 +125,7 @@
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('Edit <?php echo $objTable->ClassName ?>');
 			}
+			$this->dlgPopup->Title = $strDialogTitle;
 			$this->dlgPopup->ShowDialogBox();
 			$this->dlgPopup->MoveToTop();
 			if ($this->objEditPanelPostCreateCallback)
@@ -156,6 +158,7 @@
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('Create <?php echo $objTable->ClassName ?>');
 			}
+			$this->dlgPopup->Title = $strDialogTitle;
 			$this->dlgPopup->ShowDialogBox();
 			$this->dlgPopup->MoveToTop();
 			if ($this->objCreatePanelPostCreateCallback)
@@ -176,6 +179,7 @@
 			if (is_null($strDialogTitle)) {
 				$strDialogTitle = QApplication::Translate('Select <?php echo $objTable->ClassName ?>');
 			}
+			$this->dlgPopup->Title = $strDialogTitle;
 			$this->dlgPopup->ShowDialogBox();
 			$this->dlgPopup->MoveToTop();
 			if ($this->objSearchControlPostCreateCallback)
