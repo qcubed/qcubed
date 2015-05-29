@@ -131,9 +131,10 @@
 		 */
 
 		public function GetEndScript() {
-			$strJs = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qcubed.dialog', $this->getJqControlId());
-			return $strJs;
+			$strJS = parent::GetEndScript();
+			$strControlId = $this->getJqControlId();
+			$strJS = "qc.dialog('{$strControlId}');" . $strJS;
+			return $strJS;
 		}
 
 		/**
