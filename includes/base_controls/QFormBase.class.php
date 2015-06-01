@@ -1305,7 +1305,7 @@
 		 */
 		protected function Render() {
 			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
-				QApplication::ExecuteJavaScript('qcubed.broadcastChange()');
+				QApplication::ExecuteJsFunction('qc.broadcastChange');
 			}
 
 			require($this->HtmlIncludeFilePath);
