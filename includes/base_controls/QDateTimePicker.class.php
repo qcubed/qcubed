@@ -267,7 +267,7 @@
 					if (!$this->blnRequired || $dttDateTime->IsTimeNull())
 						if ($this->blnAllowBlankTime)
 							$strHourListBox .= '<option value="">--</option>';
-					for ($intHour = 0; $intHour <= 23; $intHour++) {
+					for ($intHour = 0; $intHour <= 23; $intHour += $this->intHourInterval) {
 						if (!$dttDateTime->IsTimeNull() && ($dttDateTime->Hour == $intHour))
 							$strSelected = ' selected="selected"';
 						else
@@ -279,13 +279,12 @@
 					}
 					$strHourListBox .= '</select>';
 
-
 					// Minute
 					$strMinuteListBox = sprintf('<select name="%s_lstMinute" id="%s_lstMinute" class="minute" %s>', $this->strControlId, $this->strControlId, $strAttributes);
 					if (!$this->blnRequired || $dttDateTime->IsTimeNull())
 						if ($this->blnAllowBlankTime)
 							$strMinuteListBox .= '<option value="">--</option>';
-					for ($intMinute = 0; $intMinute <= 59; $intMinute++) {
+					for ($intMinute = 0; $intMinute <= 59; $intMinute += $this->intMinuteInterval) {
 						if (!$dttDateTime->IsTimeNull() && ($dttDateTime->Minute == $intMinute))
 							$strSelected = ' selected="selected"';
 						else
@@ -303,7 +302,7 @@
 					if (!$this->blnRequired || $dttDateTime->IsTimeNull())
 						if ($this->blnAllowBlankTime)
 							$strSecondListBox .= '<option value="">--</option>';
-					for ($intSecond = 0; $intSecond <= 59; $intSecond++) {
+					for ($intSecond = 0; $intSecond <= 59; $intSecond  += $this->intSecondInterval) {
 						if (!$dttDateTime->IsTimeNull() && ($dttDateTime->Second == $intSecond))
 							$strSelected = ' selected="selected"';
 						else
@@ -319,9 +318,9 @@
 					// PUtting it all together
 					if (($this->strDateTimePickerType == QDateTimePickerType::DateTimeSeconds) ||
 						($this->strDateTimePickerType == QDateTimePickerType::TimeSeconds))
-						$strToReturn .= $strHourListBox . ':' . $strMinuteListBox . ':' . $strSecondListBox;
+						$strToReturn .= $strHourListBox . $this->strTimeSeparator . $strMinuteListBox . $this->strTimeSeparator . $strSecondListBox;
 					else
-						$strToReturn .= $strHourListBox . ':' . $strMinuteListBox;
+						$strToReturn .= $strHourListBox . $this->strTimeSeparator . $strMinuteListBox;
 			}
 
 			if ($this->strCssClass)
