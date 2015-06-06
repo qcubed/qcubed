@@ -76,6 +76,10 @@
 
 		<?php include("object_reload.tpl.php"); ?>
 
+		////////////////////
+		// UTILITIES
+		////////////////////
+		<?php include("array_indexers.tpl.php"); ?>
 
 
 
