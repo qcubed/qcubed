@@ -256,34 +256,47 @@ TMPL;
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 
 			$strRet = '';
-			$strTabs = "\t\t\t";
 
 			if (!$blnInit) {
-				$strTabs = "\t\t\t\t";
-				$strRet .= $strTabs . "\$this->{$strControlVarName}->RemoveAllItems();\n";
+				$strRet .= "\$this->{$strControlVarName}->RemoveAllItems();\n";
 			}
-			$strRet .= $strTabs . "if (!\$this->blnEditMode && \$this->{$strControlVarName}->Required) \$this->{$strControlVarName}->AddItem(QApplication::Translate('- Select One -'), null);\n";
+			$strRet .= <<<TMPL
+if (!\$this->{$strControlVarName}->Required) {
+	\$this->{$strControlVarName}->AddItem(QApplication::Translate('- None -'), null);
+}
+elseif (\$this->blnEditMode) {
+	\$this->{$strControlVarName}->AddItem(QApplication::Translate('- Select One -'), null);
+}
+
+TMPL;
 
 			$options = $objColumn->Options;
 			if (!$options || !isset ($options['NoAutoLoad'])) {
-				$strRet .= $strTabs . "\$this->{$strControlVarName}->AddItems(\$this->{$strControlVarName}_GetItems());\n";
+				$strRet .=  "\$this->{$strControlVarName}->AddItems(\$this->{$strControlVarName}_GetItems());\n";
 			}
 
 			if ($objColumn instanceof QColumn) {
-				$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->PropertyName};\n";
+				$strRet .= "\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->PropertyName};\n";
 			} elseif ($objColumn instanceof QReverseReference && $objColumn->Unique) {
-				$strRet .= $strTabs . "if (\$this->{$strObjectName}->{$objColumn->ObjectPropertyName})\n";
-				$strRet .= $strTabs . "\t\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->ObjectPropertyName}->{$objCodeGen->GetTable($objColumn->Table)->PrimaryKeyColumnArray[0]->PropertyName};\n";
+				$strRet .= "if (\$this->{$strObjectName}->{$objColumn->ObjectPropertyName})\n";
+				$strRet .= _indent("\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->ObjectPropertyName}->{$objCodeGen->GetTable($objColumn->Table)->PrimaryKeyColumnArray[0]->PropertyName};\n");
 			} elseif ($objColumn instanceof QManyToManyReference) {
 				if ($objColumn->IsTypeAssociation) {
-					$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Array());\n";
+					$strRet .= "\$this->{$strControlVarName}->SelectedValues = array_keys(\$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Array());\n";
 				} else {
 					//$strRet .= $strTabs . "\$this->{$strControlVarName}->SelectedValues = \$this->{$strObjectName}->Get{$objColumn->ObjectDescription}Keys();\n";
 				}
 			}
-			if (!$blnInit) {
-				$strRet = "\t\t\tif (\$this->{$strControlVarName}) { \n" . $strRet . "\t\t\t}\n";
+			if (!$blnInit) {	// wrap it with a test as to whether the control has been created.
+				$strRet = _indent($strRet);
+				$strRet = <<<TMPL
+if (\$this->{$strControlVarName}) {
+$strRet
+}
+
+TMPL;
 			}
+			$strRet = _indent($strRet, 3);
 			return $strRet;
 		}
 
