@@ -113,10 +113,15 @@ function _nl($strText = null) {
  * @return string
  */
 function _indent($strText, $intCount = 1) {
-	if (defined ('__MINIMIZE__') && __MINIMIZE__) {
+	if (!defined('__CODE_GENERATING__') && defined ('__MINIMIZE__') && __MINIMIZE__) {
 		return $strText;
 	} else {
-		$strTabs = str_repeat("  ", $intCount);
+		if (defined ('__CODE_GENERATING__')) {
+			$strRepeat = '    ';
+		} else {
+			$strRepeat = '  ';
+		}
+		$strTabs = str_repeat($strRepeat, $intCount);
 		$strRet = preg_replace ( '/^/m', $strTabs , $strText);
 		return $strRet;
 	}
