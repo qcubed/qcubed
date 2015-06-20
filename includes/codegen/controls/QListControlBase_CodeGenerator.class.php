@@ -264,7 +264,7 @@ TMPL;
 if (!\$this->{$strControlVarName}->Required) {
 	\$this->{$strControlVarName}->AddItem(QApplication::Translate('- None -'), null);
 }
-elseif (\$this->blnEditMode) {
+elseif (!\$this->blnEditMode) {
 	\$this->{$strControlVarName}->AddItem(QApplication::Translate('- Select One -'), null);
 }
 
