@@ -189,6 +189,19 @@
 			return true;
 		}
 
+		/**
+		 * Override of superclass that will update the selection using javascript so that the whole control does
+		 * not need to be redrawn.
+		 */
+		protected function RefreshSelection() {
+			$items = $this->SelectedItems;
+			$values = [];
+			foreach ($items as $objItem) {
+				$values[] = $objItem->Id;
+			}
+			QApplication::ExecuteControlCommand($this->ControlId, 'val', $values);
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
