@@ -177,6 +177,7 @@
 		 * @param string $strSettingsXmlFilePath Path to the settings file
 		 */
 		public static function Run($strSettingsXmlFilePath) {
+			define ('__CODE_GENERATING__', true);
 			QCodeGen::$CodeGenArray = array();
 			QCodeGen::$SettingsFilePath = $strSettingsXmlFilePath;
 
