@@ -38,7 +38,7 @@
 				'capability built-in to the panel/dialog box via the "Overflow" property of the control.</p>';
 			$this->dlgSimpleMessage->AutoOpen = false;
 
-			// Make sure this Dislog Box is "hidden"
+			// Make sure this Dialog Box is "hidden"
 			// Like any other QPanel or QControl, this can be toggled using the "Display" or the "Visible" property
 			$this->dlgSimpleMessage->Display = false;
 
@@ -111,20 +111,15 @@
 			$this->btnValidation->Text = 'Show Validation Example';
 			$this->btnValidation->AddAction(new QClickEvent(), new QShowDialog($this->dlgValidation));
 
-			// Message examples
-			$this->dlgErrorMessage = QDialog::Message("Don't do that!", $this);
-			$this->dlgErrorMessage->DialogState = QDialog::StateError;
-			$this->dlgErrorMessage->Title = 'Alert';
+			/*** Alert examples  ***/
+
 			$this->btnErrorMessage = new QButton($this);
 			$this->btnErrorMessage->Text = 'Show Error';
-			$this->btnErrorMessage->AddAction(new QClickEvent(), new QShowDialog($this->dlgErrorMessage));
+			$this->btnErrorMessage->AddAction(new QClickEvent(), new QAjaxAction('btnErrorMessage_Click'));
 
-			$this->dlgInfoMessage = QDialog::Message("You did it.", $this);
-			$this->dlgInfoMessage->DialogState = QDialog::StateHighlight;
-			$this->dlgInfoMessage->Title = 'Status';
 			$this->btnInfoMessage = new QButton($this);
-			$this->btnInfoMessage->Text = 'Show Info';
-			$this->btnInfoMessage->AddAction(new QClickEvent(), new QShowDialog($this->dlgInfoMessage));
+			$this->btnInfoMessage->Text = 'Get Info';
+			$this->btnInfoMessage->AddAction(new QClickEvent(), new QAjaxAction('btnGetInfo_Click'));
 		}
 
 		protected function btnDisplaySimpleMessage_Click($strFormId, $strControlId, $strParameter) {
@@ -163,6 +158,55 @@
 		public function btnCalculator_Close() {
 			$this->txtValue->Text = $this->dlgCalculatorWidget->Value;
 		}
+
+		/** Alert Examples **/
+
+		/**
+		 * Note that in the following examples, you do NOT save a copy of the dialog in the form. Alerts are brief
+		 * messages that are displayed, and then taken down immediately, and are not part of the form state.
+		 */
+
+		/**
+		 * In this example, we show a quick error message with a few styling options.
+		 */
+		protected function btnErrorMessage_Click($strFormId, $strControlId, $strParameter) {
+
+			/**
+			 * Bring up the dialog. Here we specify a simple dialog with no buttons.
+			 * With no buttons, a close box will be displayed so the user can close the dialog.
+			 * With one button, no close box will be displayed, but the single button will close the dialog.
+			 */
+
+			$dlg = QDialog::Alert("Don't do that!");
+			$dlg->Title = 'Error'; // Optional title for the alert.
+			$dlg->DialogState = QDialog::StateError; // Optional error styling.
+		}
+
+		/**
+		 * A more complex example designed to get user feedback. This could be a Yes/No dialog, or any number of buttons.
+		 */
+		protected function btnGetInfo_Click($strFormId, $strControlId, $strParameter) {
+			/**
+			 * Bring up the dialog. Here we specify two buttons.
+			 * With two or more buttons, we must detect a button click and close the dialog if a button is clicked.
+			 */
+
+			$dlg = QDialog::Alert("Which do you want?", ['This', 'That']);
+			$dlg->DialogState = QDialog::StateHighlight;
+			$dlg->Title = 'Info';
+			$dlg->AddAction(new QDialog_ButtonEvent(), new QAjaxAction('infoClick')); // Add the action to detect a button click.
+		}
+
+		/**
+		 * Here we respond to the button click. $strParameter will contain the text of the button clicked.
+		 */
+		protected function infoClick($strFormId, $strControlId, $strParameter) {
+			$dlg = $this->GetControl($strControlId);	// get the dialog object from the form.
+			$dlg->Close(); // close the dialog. Note that you could detect which button was clicked and only close on some of the buttons.
+			QDialog::Alert($strParameter . ' was clicked.', ['OK']);
+		}
+
+
 	}
 
 	// Run the Form we have defined

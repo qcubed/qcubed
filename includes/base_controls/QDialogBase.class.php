@@ -353,22 +353,13 @@
 			global $_FORM;
 
 			$objForm = $_FORM;
-			if (!$strControlId) {
-				$strControlId = self::MessageDialogId;
-			}
-			$dlg = $objForm->GetControl($strControlId);
-			if (!$dlg){
-				$dlg = new QDialog($objForm, $strControlId);
-			} else {
-				// Recover and reset dialog
-				$dlg->RemoveAllButtons();
-				$dlg->RemoveAllActions();
-				$dlg->blnHasCloseButton = false;
-			}
+			$dlg = new QDialog($objForm, $strControlId);
 			$dlg->Modal = true;
 			$dlg->Resizable = false;
 			$dlg->Text = $strMessage;
+			$dlg->AddAction (new QDialog_CloseEvent(), new QAjaxControlAction($dlg, 'alert_Close'));
 			if ($strButtons) {
+				$dlg->blnHasCloseButton = false;
 				if (is_string($strButtons)) {
 					$dlg->AddCloseButton($strButtons);
 				}
@@ -389,6 +380,18 @@
 			}
 			$dlg->Open();
 			return $dlg;
+		}
+
+		/**
+		 * An alert is closing, so we remove the dialog from the dom.
+		 *
+		 * @param $strFormId
+		 * @param $strControlId
+		 * @param $strParameter
+		 */
+		protected function alert_Close($strFormId, $strControlId, $strParameter) {
+			$this->Form->RemoveControl($this->ControlId);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), 'remove');
 		}
 
 		/**

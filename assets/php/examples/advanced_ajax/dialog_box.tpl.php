@@ -38,7 +38,7 @@
 		can be copied into a textbox on the main form.</li>
 		<li>A dialog that demonstrates how to specify validation, confirmation and additional styling
 		with the AddButton method.</li>
-		<li>A simple message dialog that can be styled as an alert or info message using the
+		<li>An alert dialog that can be styled as an error or info message using the
 			Themeroller styles provided with JQueryUI.</li>
 	</ol></p>
 
@@ -77,7 +77,7 @@
 	</fieldset>
 
 	<fieldset style="width: 400px;">
-		<legend>Message Examples</legend>
+		<legend>Alert Examples</legend>
 		<p>
 			<?php $this->btnErrorMessage->Render(); ?>
 			<?php $this->btnInfoMessage->Render(); ?>
