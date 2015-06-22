@@ -74,6 +74,9 @@
 		/** Display using the Themeroller highlight state */
 		const StateHighlight = 'ui-state-highlight';
 
+		/** The control id to use for the reusable global alert dialog. */
+		const MessageDialogId = 'qAlertDialog';
+
 		/** @var bool default to auto open being false, since this would be a rare need, and dialogs are auto-rendered. */
 		protected $blnAutoOpen = false;
         /** @var  string Id of last button clicked. */
@@ -331,18 +334,60 @@
 		/**
 		 * Create a message dialog. Automatically adds an OK button that closes the dialog. To detect the close,
 		 * add an action on the QDialog_CloseEvent. To change the message, use the return value and set ->Text.
+		 * To detect a button click, add a QDialog_ButtonEvent.
 		 *
-		 * @param string $strMessage
-		 * @param QForm | QControl $parent
-		 * @param string $strControlId
-		 * @return QDialog
+		 * If you specify no buttons, a close box in the corner will be created that will just close the dialog. If you
+		 * specify just a string in $strButtons, or just one string in the button array, one button will be shown that will just close the message.
+		 *
+		 * If you specify more than one button, the first button will be the default button (the one pressed if the user presses the return key). In
+		 * this case, you will need to detect the button by adding a QDialog_ButtonEvent. You will also be responsible for calling "Close()" on
+		 * the dialog after detecting a button.
+		 *
+		 * @param QForm $objForm	// The parent object, which should always be the form itself.
+		 * @param $strMessage		// The message
+		 * @param null $strButtons
+		 * @param null $strControlId
+		 * @return null|QControl|QDialog
 		 */
-		public static function Message($strMessage, $parent, $strControlId = null) {
-			$dlg = new QDialog($parent, $strControlId);
+		public static function Alert($strMessage, $strButtons = null, $strControlId = null) {
+			global $_FORM;
+
+			$objForm = $_FORM;
+			if (!$strControlId) {
+				$strControlId = self::MessageDialogId;
+			}
+			$dlg = $objForm->GetControl($strControlId);
+			if (!$dlg){
+				$dlg = new QDialog($objForm, $strControlId);
+			} else {
+				// Recover and reset dialog
+				$dlg->RemoveAllButtons();
+				$dlg->RemoveAllActions();
+				$dlg->blnHasCloseButton = false;
+			}
 			$dlg->Modal = true;
 			$dlg->Resizable = false;
 			$dlg->Text = $strMessage;
-			$dlg->Height = 100; // fix problem with jquery ui dialog making space for buttons that don't exist
+			if ($strButtons) {
+				if (is_string($strButtons)) {
+					$dlg->AddCloseButton($strButtons);
+				}
+				elseif (count($strButtons) == 1) {
+					$dlg->AddCloseButton($strButtons[0]);
+				}
+				else {
+					$strButton = array_shift($strButtons);
+					$dlg->AddButton($strButton, null, false, true);	// primary button
+
+					foreach ($strButtons as $strButton) {
+						$dlg->AddButton($strButton);
+					}
+				}
+			} else {
+				$dlg->blnHasCloseButton = true;
+				$dlg->Height = 100; // fix problem with jquery ui dialog making space for buttons that don't exist
+			}
+			$dlg->Open();
 			return $dlg;
 		}
 

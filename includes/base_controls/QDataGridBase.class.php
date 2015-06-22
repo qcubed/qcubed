@@ -606,10 +606,10 @@
 		 * @throws Exception|QCallerException
 		 */
 		public static function ParseHtml($strHtml, $objControl, $objColumn, $objObject) {
+			global $_FORM;
+
 			/** @var mixed $_ITEM */
 			$_ITEM = $objObject;
-			/** @var QFormBase|QForm $_FORM */
-			$_FORM = $objControl->Form;
 			/** @var QDataGridBase|QDataGrid $_CONTROL */
 			$_CONTROL = $objControl;
 			/** @var QDataGridColumn $_COLUMN */
