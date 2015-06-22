@@ -284,6 +284,15 @@
 					}
 					return -1;
 
+				case "SelectedIndexes":
+					$indexes = [];
+					for ($intIndex = 0; $intIndex < $this->GetItemCount(); $intIndex++) {
+						if ($this->GetItem($intIndex)->Selected) {
+							$indexes[] = $intIndex;
+						}
+					}
+					return $indexes;
+
 				case "SelectedName": // assumes first selected item is the selection
 					if ($objItem = $this->GetFirstSelectedItem()) {
 						return $objItem->Name;

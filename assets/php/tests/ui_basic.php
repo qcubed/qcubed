@@ -19,6 +19,7 @@ class BasicForm extends QForm {
 
 	protected $btnServer;
 	protected $btnAjax;
+	protected $btnSetItemsAjax;
 
 	protected function Form_Create() {
 		$this->txtText = new QTextBox($this);
@@ -35,7 +36,7 @@ class BasicForm extends QForm {
 		$this->chkCheck->Name = 'CheckBox';
 		$this->chkCheck->WrapLabel = true;
 
-		$items = array (1=>'Item1', 2=>'Item2', 3=>'Item3');
+		$items = array (1=>'Item1', 2=>'Item2', 3=>'Item3', 4=>'Item4');
 		$this->lstSelect = new QListBox($this);
 		$this->lstSelect->AddItems ($items);
 		$this->lstSelect->Name = 'Select';
@@ -88,6 +89,11 @@ class BasicForm extends QForm {
 		$this->btnAjax = new QButton ($this);
 		$this->btnAjax->Text = 'Ajax Submit';
 		$this->btnAjax->AddAction(new QClickEvent(), new QAjaxAction('submit_click'));
+
+		$this->btnSetItemsAjax = new QButton ($this);
+		$this->btnSetItemsAjax->Text = 'Ajax Set Items';
+		$this->btnSetItemsAjax->AddAction(new QClickEvent(), new QAjaxAction('setItems_click'));
+
 	}
 
 	protected function submit_click($strFormId, $strControlId, $strParameter) {
@@ -105,6 +111,20 @@ class BasicForm extends QForm {
 		$this->rdoRadio2->Warning = 'Value = ' . $this->rdoRadio2->Checked;
 		$this->rdoRadio3->Warning = 'Value = ' . $this->rdoRadio3->Checked;
 		$this->btnImage->Warning = 'X = ' . $this->btnImage->ClickX . '; Y = ' . $this->btnImage->ClickY;
+	}
+
+	/**
+	 * Using this to optimize the setting of control properties. In particular, testing the use of javascript to
+	 * set particular aspects of controls so that the entire control does not need to be redrawn.
+	 *
+	 * @param $strFormId
+	 * @param $strControlId
+	 * @param $strParameter
+	 */
+	protected function setItems_click($strFormId, $strControlId, $strParameter) {
+		$this->lstSelect2->SelectedValues = [2,4];
+		$this->lstCheck2->SelectedValues = [1,3];
+		$this->lstRadio->SelectedIndex = 3;
 	}
 
 }

@@ -23,5 +23,6 @@
 <?php $this->btnImage->RenderWithName(); ?>
 <?php $this->btnServer->Render(); ?>
 <?php $this->btnAjax->Render(); ?>
+<?php $this->btnSetItemsAjax->Render(); ?>
 <?php $this->RenderEnd(); ?>
 <?php require('../../../../../../project/includes/configuration/footer.inc.php'); ?>

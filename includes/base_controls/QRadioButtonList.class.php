@@ -265,6 +265,15 @@
 			return true;
 		}
 
+		/**
+		 * Override of superclass that will update the selection using javascript so that the whole control does
+		 * not need to be redrawn.
+		 */
+		protected function RefreshSelection() {
+			$index = $this->SelectedIndex;
+			QApplication::ExecuteSelectorFunction(['input', '#' . $this->ControlId], 'val', [$index]);
+		}
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -298,13 +307,14 @@
 		// Public Properties: SET
 		/////////////////////////
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				// APPEARANCE
 				case "TextAlign":
 					try {
-						$this->strTextAlign = QType::Cast($mixValue, QType::String);
+						if ($this->strTextAlign !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->blnModified = true;
+							$this->strTextAlign = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -313,7 +323,10 @@
 
 				case "HtmlEntities":
 					try {
-						$this->blnHtmlEntities = QType::Cast($mixValue, QType::Boolean);
+						if ($this->blnHtmlEntities !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->blnModified = true;
+							$this->blnHtmlEntities = $mixValue;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
