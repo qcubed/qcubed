@@ -323,7 +323,7 @@
 		}
 
 		/**
-		 * Returns whether or not the cheackable control with the given controlId has been rendered or not.
+		 * Returns whether or not the checkable control with the given controlId has been rendered or not.
 		 * @param string $strControlId
 		 *
 		 * @return bool

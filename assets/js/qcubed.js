@@ -204,7 +204,8 @@ qcubed = {
     getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
         var objFormElements = $j('#' + strForm).find('input,select,textarea'),
             strPostData = '',
-            formParamSelector = "#Qform__FormParameter";
+            formParamSelector = "#Qform__FormParameter",
+            nullArrays = {};
 
         if (mixParameter && (typeof mixParameter !== "string")) {
             strPostData = $j.param({Qform__FormParameter: mixParameter});
@@ -247,9 +248,15 @@ qcubed = {
             /* || strType == 'hidden'*/) {
                 switch (strType) {
                     case "checkbox":
-                        if (index >= 0) {
+                        if (index >= 0) {   // this is a group of checkboxes
                             if ($element.is(":checked")) {
                                 strPostData += "&" + strControlName + "=" + $element.val();
+                                nullArrays[strControlId] = 0;
+                            }
+                            else {
+                                if (!nullArrays.hasOwnProperty(strControlId)) {
+                                    nullArrays[strControlId] = 1;
+                                }
                             }
                         } else {
                             // TODO: use value instead of is checked
@@ -269,9 +276,15 @@ qcubed = {
                         break;
 
                     case "select-multiple":
-                        $element.find(':selected').each(function() {
-                            strPostData += "&" + strControlName + "=" + $j(this).val();
-                        });
+                        var items = $element.find(':selected');
+                        if (items.length) {
+                            items.each(function() {
+                                strPostData += "&" + strControlName + "=" + $j(this).val();
+                            });
+                        }
+                        else {
+                            strPostData += "&" + strControlName;    // mark it as set to nothing
+                        }
                         break;
 
                     default:
@@ -290,6 +303,12 @@ qcubed = {
                         strPostData += strPostValue;
                         break;
                 }
+            }
+        });
+
+        $j.each(nullArrays, function(key, val) {
+            if (val) {
+                strPostData += "&" + key;   // add a null value for the array
             }
         });
         qcubed.ajaxError = false;
