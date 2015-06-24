@@ -386,7 +386,8 @@
 
 			if ($objClass) {
 				// Globalize
-				//$_FORM = $objClass;
+				global $_FORM;
+				$_FORM = $objClass;
 
 				$objClass->strCallType = $_POST['Qform__FormCallType'];
 				$objClass->intFormStatus = QFormBase::FormStatusUnrendered;
@@ -518,7 +519,8 @@
 				$objClass = self::CreateForm($strFormId);
 
 				// Globalize
-				//$_FORM = $objClass;
+				global $_FORM;
+				$_FORM = $objClass;
 
 				// Setup HTML Include File Path, based on passed-in strAlternateHtmlFile (if any)
 				try {
@@ -1080,8 +1082,6 @@
 			global $_ITEM;
 			global $_CONTROL;
 			global $_FORM;
-
-			$_FORM = $this;
 
 			if ($strTemplate) {
 				QApplication::$ProcessOutput = false;
@@ -1665,8 +1665,8 @@
 			foreach ($this->GetAllControls() as $objControl) {
 				if ($objControl instanceof QDialog &&
 					!$objControl->Rendered) {
-					$strHtml .= $objControl->Render(false) . _nl();
-
+					$strRenderMethod = $objControl->PreferredRenderMethod;
+					$strHtml .= $objControl->$strRenderMethod(false) . _nl();
 				}
 			}
 

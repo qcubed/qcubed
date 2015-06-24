@@ -149,10 +149,7 @@
 		 *  			and used for the HTML 'id' attribute on the control.
 		 */
 		protected $strControlId;
-		/**
-		 *
-		 * @var QForm
-		 */
+		/** @var QForm Redundant copy of the global $_FORM variable. */
 		protected $objForm = null;
 		/** @var QControl Immediate parent of this control */
 		protected $objParentControl = null;
@@ -164,7 +161,7 @@
 		protected $blnRendered = false;
 		/** @var bool Is the control mid-way the process of rendering? */
 		protected $blnRendering = false;
-		/** @var bool Is the control avaialble on page? Useful when 're-rendering' a control that has children */
+		/** @var bool Is the control available on page? Useful when 're-rendering' a control that has children */
 		protected $blnOnPage = false;
 		/** @var bool Has the control been modified? Used mostly in Ajax or Server callbacks */
 		protected $blnModified = false;
@@ -325,7 +322,7 @@
 		 */
 		public function _WriteState() {
 			if (defined ('__SESSION_SAVED_STATE__') && $this->blnSaveState) {
-				$formName = get_class($this->Form);
+				$formName = get_class($this->objForm);
 				$_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId] = $this->GetState();
 			}
 		}
@@ -335,7 +332,7 @@
 		 */
 		public function _ReadState() {
 			if (defined ('__SESSION_SAVED_STATE__') && $this->blnSaveState) {
-				$formName = get_class($this->Form);
+				$formName = get_class($this->objForm);
 				if (isset ($_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId])) {
 					$state = $_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId];
 					$this->PutState($state);
@@ -364,7 +361,7 @@
 		 */
 		public function ForgetState() {
 			if (defined ('__SESSION_SAVED_STATE__')) {
-				$formName = get_class($this->Form);
+				$formName = get_class($this->objForm);
 				unset($_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId]);
 			}
 		}
@@ -382,8 +379,6 @@
 			global $_ITEM;		// used by data repeater
 			global $_CONTROL;
 			global $_FORM;
-
-			$_FORM = $this->objForm;
 
 			if ($strTemplate) {
 				QApplication::$ProcessOutput = false;
@@ -625,11 +620,16 @@
 		 *
 		 * @param string $strEventName
 		 */
-		public function RemoveAllActions($strEventName) {
+		public function RemoveAllActions($strEventName = null) {
 			// Modified
 			$this->blnModified = true;
 
-			$this->objActionArray[$strEventName] = array();
+			if ($strEventName) {
+				$this->objActionArray[$strEventName] = array();
+			}
+			else {
+				$this->objActionArray = array();
+			}
 		}
 
 		/**
@@ -1148,7 +1148,6 @@
 
 		/**
 		 * Same as "Focus": Sets focus to this control
-		 * TODO: Turn this into a specific command to avoid the javascript eval that happens on the other end.
 		 */
 		public function SetFocus() {
 			$this->Focus();
@@ -1270,11 +1269,6 @@
 		 * @return string
 		 */
 		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strHasDataRel = '') {
-			// First, let's mark this control as being rendered and is ON the Page
-			$this->blnRendering = false;
-			$this->blnRendered = true;
-			$this->blnOnPage = true;
-
 			if ($blnForceAsBlockElement) {
 				$this->blnIsBlockElement = true;	// must be remembered for ajax drawing
 			}
@@ -1291,16 +1285,27 @@
 
 			switch ($this->objForm->CallType) {
 				case QCallType::Ajax:
-					// If we have a ParentControl and the ParentControl has NOT been rendered, then output
-					// as standard HTML
-					if (($this->objParentControl) && ($this->objParentControl->Rendered || $this->objParentControl->Rendering)) {
-						if($this->blnUseWrapper) {
-							$strOutput = $this->RenderWrappedOutput($strOutput) . $this->GetNonWrappedHtml();
+					if ($this->objParentControl) {
+						if ($this->objParentControl->Rendered || $this->objParentControl->Rendering) {
+							// If we have a ParentControl and the ParentControl has NOT been rendered, then output
+							// as standard HTML
+							if ($this->blnUseWrapper) {
+								$strOutput = $this->RenderWrappedOutput($strOutput) . $this->GetNonWrappedHtml();
+							} else {
+								$strOutput = $strOutput . $this->GetNonWrappedHtml();
+							}
 						} else {
-							$strOutput = $strOutput . $this->GetNonWrappedHtml();
+							// Do nothing. RenderAjax will handle it.
 						}
 					} else {
-						// Do nothing. RenderAjax will handle it.
+						// if this is an injected top-level control, then we need to render the whole thing
+						if (!$this->blnOnPage) {
+							if ($this->blnUseWrapper) {
+								$strOutput = $this->RenderWrappedOutput($strOutput) . $this->GetNonWrappedHtml();
+							} else {
+								$strOutput = $strOutput . $this->GetNonWrappedHtml();
+							}
+						}
 					}
 					break;
 
@@ -1319,6 +1324,10 @@
 			if ($this->objWatcher) {
 				$this->objWatcher->MakeCurrent();
 			}
+
+			$this->blnRendering = false;
+			$this->blnRendered = true;
+			$this->blnOnPage = true;
 
 			// Output or Return
 			if ($blnDisplayOutput)
@@ -1381,6 +1390,10 @@
 				// Render if (1) object has no parent or (2) parent was not rendered nor currently being rendered
 				if ((!$this->objParentControl) || ((!$this->objParentControl->Rendered) && (!$this->objParentControl->Rendering))) {
 					$strRenderMethod = $this->strRenderMethod;
+					if (!$strRenderMethod && $this instanceof QDialog) {
+						// This is an injected dialog that is not on the page, so go ahead and render it
+						$strRenderMethod = $this->strPreferredRenderMethod;
+					}
 					if ($strRenderMethod) {
 						$strOutput = $this->$strRenderMethod(false);
 						$controls[] = [QAjaxResponse::Id=>$this->strControlId, QAjaxResponse::Html=>$strOutput];
@@ -1724,7 +1737,7 @@
 		 * If such a control then gets replaced by Ajax, the jQuery effects will be deleted. To solve this,
 		 * the corresponding QCubed control should set UseWrapper to true, attach the jQuery effect to
 		 * the wrapper, and override this function to return the id of the wrapper. See QDialogBase.class.php for
-		 * an exaple.
+		 * an example.
 		 *
 		 * @return string the DOM element id on which to apply the jQuery UI function
 		 */

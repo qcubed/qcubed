@@ -102,7 +102,6 @@ qcubed = {
      * @param strFormId
      */
     initForm: function (strFormId) {
-
         $j('#' + strFormId).on ('qformObjChanged', this.formObjChanged); // Allow any control, including hidden inputs, to trigger a change and post of its data.
     },
 
@@ -113,10 +112,8 @@ qcubed = {
      * @param {mixed} mixParameter
      */
     postBack: function(strForm, strControl, strEvent, mixParameter) {
-        var $objForm;
-
         strForm = $j("#Qform__FormId").val();
-        $objForm = $j('#' + strForm);
+        var $objForm = $j('#' + strForm);
 
         if (mixParameter && (typeof mixParameter !== "string")) {
             mixParameter = $j.param({Qform__FormParameter: mixParameter});
@@ -463,7 +460,8 @@ qcubed = {
     processImmediateAjaxResponse: function(json, qFormParams) {
         if (json.controls) $j.each(json.controls, function() {
             var strControlId = '#' + this.id,
-                control = $j(strControlId);
+                control = $j(strControlId),
+                wrapper = $j(strControlId + '_ctl');
 
             if (this.value !== undefined) {
                 control.val(this.value);
@@ -474,8 +472,13 @@ qcubed = {
             }
 
             if (this.html !== undefined) {
-                if (control.length && !control.get(0).wrapper) {
-                    //remove related controls (error, name ...) for wrapper-less controls
+                if (wrapper.length) {
+                    // Control's wrapper was found, so fill it in
+                    wrapper.html(this.html);
+                }
+                else if (control.length) {
+                    // control was found without a wrapper, replace it in the same position it was in.
+                    // remove related controls (error, name ...) for wrapper-less controls
                     if (control.data("hasrel")) {
                         var relSelector = "[data-rel='" + strControlId + "']",
                             $relParent;
@@ -489,8 +492,13 @@ qcubed = {
                     }
 
                     control.before(this.html).remove();
-                } else {
-                    $j(strControlId + '_ctl').html(this.html);
+                }
+                else {
+                    // control is being injected at the top level, so put it at the end of the form.
+                    var strForm = $j("#Qform__FormId").val();
+                    var $objForm = $j('#' + strForm);
+
+                    $objForm.append(this.html);
                 }
             }
         });

@@ -150,7 +150,7 @@ class QDataRepeater extends QPaginatedControl {
 			global $_FORM;
 			global $_CONTROL;
 			global $_ITEM;
-			$_FORM = $this->objForm;
+
 			$objCurrentControl = $_CONTROL;
 			$_CONTROL = $this;
 
