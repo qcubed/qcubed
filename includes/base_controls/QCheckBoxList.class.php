@@ -291,6 +291,16 @@
 			return true;
 		}
 
+		/**
+		 * Override of superclass that will update the selection using javascript so that the whole control does
+		 * not need to be redrawn.
+		 */
+		protected function RefreshSelection() {
+			$indexes = $this->SelectedIndexes;
+			QApplication::ExecuteSelectorFunction(['input', '#' . $this->ControlId], 'val', $indexes);
+		}
+
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -434,7 +444,7 @@
 						throw $objExc;
 					}
 					break;
-					
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);

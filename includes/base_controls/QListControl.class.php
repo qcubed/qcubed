@@ -93,16 +93,17 @@
 		/**
 		 * Recursively unselects all the items and subitems in the list.
 		 *
-		 * @param bool $blnMarkAsModified
+		 * @param bool $blnRefresh	True if we need to reflect the change in the html page. False if we are recording
+		 *   what the user has already done.
 		 */
-		public function UnselectAllItems($blnMarkAsModified = true) {
+		public function UnselectAllItems($blnRefresh = true) {
 			$intCount = $this->GetItemCount();
 			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
 				$objItem = $this->GetItem($intIndex);
 				$objItem->Selected = false;
 			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
+			if ($blnRefresh && $this->blnOnPage) {
+				$this->RefreshSelection();
 			}
 		}
 
@@ -110,33 +111,33 @@
 		/**
 		 * Selects the given items by Id, and unselects items that are not in the list.
 		 * @param string[] $strIdArray
-		 * @param bool $blnMarkAsModified
+		 * @param bool $blnRefresh
 		 */
-		public function SetSelectedItemsById(array $strIdArray, $blnMarkAsModified = true) {
+		public function SetSelectedItemsById(array $strIdArray, $blnRefresh = true) {
 			$intCount = $this->GetItemCount();
 			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
 				$objItem = $this->GetItem($intIndex);
 				$strId = $objItem->GetId();
 				$objItem->Selected = in_array($strId, $strIdArray);
 			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
+			if ($blnRefresh && $this->blnOnPage) {
+				$this->RefreshSelection();
 			}
 		}
 
 		/**
 		 * Set the selected item by index. This can only set top level items. Lower level items are untouched.
 		 * @param integer[] $intIndexArray
-		 * @param bool $blnMarkAsModified
+		 * @param bool $blnRefresh
 		 */
-		public function SetSelectedItemsByIndex(array $intIndexArray, $blnMarkAsModified = true) {
+		public function SetSelectedItemsByIndex(array $intIndexArray, $blnRefresh = true) {
 			$intCount = $this->GetItemCount();
 			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
 				$objItem = $this->GetItem($intIndex);
 				$objItem->Selected = in_array($intIndex, $intIndexArray);
 			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
+			if ($blnRefresh && $this->blnOnPage) {
+				$this->RefreshSelection();
 			}
 		}
 
@@ -145,9 +146,9 @@
 		 * those with a zero.
 		 *
 		 * @param array $mixValueArray
-		 * @param bool $blnMarkAsModified
+		 * @param bool $blnRefresh
 		 */
-		public function SetSelectedItemsByValue(array $mixValueArray, $blnMarkAsModified = true) {
+		public function SetSelectedItemsByValue(array $mixValueArray, $blnRefresh = true) {
 			$intCount = $this->GetItemCount();
 
 			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
@@ -172,30 +173,48 @@
 				}
 				$objItem->Selected = $blnSelected;
 			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
+			if ($blnRefresh && $this->blnOnPage) {
+				$this->RefreshSelection();
 			}
 		}
-
 
 		/**
 		 * Set the selected items by name.
 		 * @param string[] $strNameArray
-		 * @param bool $blnMarkAsModified
+		 * @param bool $blnRefresh
 		 */
-		public function SetSelectedItemsByName(array $strNameArray, $blnMarkAsModified = true) {
+		public function SetSelectedItemsByName(array $strNameArray, $blnRefresh = true) {
 			$intCount = $this->GetItemCount();
 			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
 				$objItem = $this->GetItem($intIndex);
 				$strName = $objItem->Name;
 				$objItem->Selected = in_array($strName, $strNameArray);
 			}
-			if ($blnMarkAsModified) {
-				$this->MarkAsModified();
+			if ($blnRefresh && $this->blnOnPage) {
+				$this->RefreshSelection();
 			}
 		}
 
 
+		/**
+		 * This method is called when a selection is changed. It should execute the code to refresh the selected state
+		 * of the items in the control.
+		 *
+		 * The default just redraws the control. Redrawing a large list control can take a lot of time, so subclasses should
+		 * implement a way of just setting the selection through javasacript.
+		 */
+		protected function RefreshSelection() {
+			$this->MarkAsModified();
+		}
+
+		/**
+		 * Return the first item selected.
+		 *
+		 * @return null|QListItem
+		 * @throws Exception
+		 * @throws QIndexOutOfRangeException
+		 * @throws QInvalidCastException
+		 */
 		public function GetFirstSelectedItem() {
 			$intCount = $this->GetItemCount();
 			for ($intIndex = 0; $intIndex < $intCount; $intIndex++) {
@@ -207,6 +226,14 @@
 			return null;
 		}
 
+		/**
+		 * Return all the selected items.
+		 *
+		 * @return QListItem[]
+		 * @throws Exception
+		 * @throws QIndexOutOfRangeException
+		 * @throws QInvalidCastException
+		 */
 		public function GetSelectedItems() {
 			$aResult = array();
 			$intCount = $this->GetItemCount();
@@ -256,6 +283,15 @@
 							return $intIndex;
 					}
 					return -1;
+
+				case "SelectedIndexes":
+					$indexes = [];
+					for ($intIndex = 0; $intIndex < $this->GetItemCount(); $intIndex++) {
+						if ($this->GetItem($intIndex)->Selected) {
+							$indexes[] = $intIndex;
+						}
+					}
+					return $indexes;
 
 				case "SelectedName": // assumes first selected item is the selection
 					if ($objItem = $this->GetFirstSelectedItem()) {
