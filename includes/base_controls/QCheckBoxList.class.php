@@ -70,9 +70,14 @@
 		public function ParsePostData() {
 			if (QApplication::$RequestMode == QRequestMode::Ajax) {
 				// Ajax will only send information about controls that are on the screen, so we know they are rendered
-				if (isset($_POST[$this->strControlId]) && is_array($_POST[$this->strControlId])) {
-					$a = $_POST[$this->strControlId];
-					$this->SetSelectedItemsByIndex($a, false);
+				if (isset($_POST[$this->strControlId])) {
+					if (is_array($_POST[$this->strControlId])) {
+						$a = $_POST[$this->strControlId];
+						$this->SetSelectedItemsByIndex($a, false);
+					}
+					else {
+						$this->UnselectAllItems(false);
+					}
 				}
 			}
 			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {

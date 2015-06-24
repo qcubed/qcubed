@@ -52,7 +52,10 @@
 				if (is_array($_POST[$this->strControlId])) {
 					// Multi-Select, so find them all.
 					$this->SetSelectedItemsById($_POST[$this->strControlId], false);
-				} else {
+				} elseif ($_POST[$this->strControlId] === '') {
+					$this->UnselectAllItems(false);
+				}
+				else {
 					// Single-select
 					$this->SetSelectedItemsById(array($_POST[$this->strControlId]), false);
 				}
