@@ -1680,6 +1680,7 @@
 			// Add form level javascripts and libraries
 			$strJavaScriptArray = $this->ProcessJavaScriptList($this->GetFormJavaScripts());
 			QApplication::AddJavaScriptFiles($strJavaScriptArray);
+			$strFormJsFiles = QApplication::RenderFiles();	// Render the form-level javascript files separately
 
 			// Go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			foreach ($this->GetAllControls() as $objControl) {
@@ -1739,12 +1740,7 @@
 			/*** Build the javascript block ****/
 
 			// Start with variable settings and initForm
-			$strEndScript = sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ ) .
-							sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__) .
-							sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) .
-							sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__) .
-							sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) .
-							sprintf('qc.initForm("%s"); ', $this->strFormId);
+			$strEndScript = sprintf('qc.initForm("%s"); ', $this->strFormId);
 
 			// Register controls
 			if ($strControlIdToRegister) {
@@ -1767,12 +1763,6 @@
 
 			/**** Render the HTML itself, appending the javascript we generated above ****/
 
-			/*
-			 * Render any dialog that is not yet rendered. Now that we are using JQuery UI's dialog,
-			 * it is important to have the dialogs render as the last thing on the form. The dialog needs this
-			 * to render its overlay correctly. Also, this saves the developer from having to explicitly render
-			 * each dialog.
-			 */
 			foreach ($this->GetAllControls() as $objControl) {
 				if ($objControl->Rendered) {
 					$strHtml .= $objControl->GetEndHtml();
@@ -1780,8 +1770,19 @@
 				$objControl->ResetFlags(); // Make sure controls are serialized in a reset state
 			}
 
-			$strHtml .= _nl();
-			$strHtml .= QApplication::RenderFiles() . _nl();
+			$strHtml .= $strFormJsFiles . _nl();	// Add form level javascript files
+
+			// put javascript environment defines up early for use by other js files.
+			$strHtml .= '<script type="text/javascript">' .
+				sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__) .
+				sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . __JS_ASSETS__) .
+				sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . __PHP_ASSETS__) .
+				sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . __CSS_ASSETS__) .
+				sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . __IMAGE_ASSETS__) .
+				'</script>' .
+				_nl();
+
+			$strHtml .= QApplication::RenderFiles() . _nl();	// add plugin and control js files
 
 			// Render hidden controls related to the form
 			$strHtml .= sprintf('<input type="hidden" name="Qform__FormId" id="Qform__FormId" value="%s" />', $this->strFormId) . _nl();
