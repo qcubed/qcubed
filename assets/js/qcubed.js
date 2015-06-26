@@ -305,7 +305,7 @@ qcubed = {
 
         $j.each(nullArrays, function(key, val) {
             if (val) {
-                strPostData += "&" + key;   // add a null value for the array
+                strPostData += "&" + key + '=';   // add a null value for the array
             }
         });
         qcubed.ajaxError = false;
