@@ -7,6 +7,15 @@
 
 		const IsVoid = true;
 
+		/** Common URL Protocols */
+		const HTTP = 'http://';
+		const HTTPS = 'https://';
+		const FTP = 'ftp://';
+		const SFTP = 'sftp://';
+		const SMB = 'smb://';
+		const MAIL = 'mailto:';
+
+
 		/**
 		 * This faux constructor method throws a caller exception.
 		 * The Css object should never be instantiated, and this constructor
@@ -337,4 +346,53 @@
 			return  _nl() . '<!-- ' . $strText . ' -->' . _nl();
 
 		}
+
+		/**
+		 * Generate a URL from components. This URL can be used in the QApplication::Redirect function, or applied to
+		 * an anchor tag by setting the href attribute.
+		 *
+		 * @param string $strLocation			absolute or relative path to resource, depending on your protocol. If not needed, enter an empty string.
+		 * @param array|null $queryParams		key->value array of query parameters to add to the location.
+		 * @param string|null $strAnchor		anchor to add to the url
+		 * @param string|null $strProtocol		protocol if specifying a resource outside of the current server
+		 * @param string|null $strServer				server that the resource is on. Required if specifying a protocol.
+		 * @param string|null $strUser					user name if needed. Some protocols like mailto and ftp need this
+		 * @param string|null $strPassword				password if needed. Note that password is sent in the clear.
+		 * @param string|null $intPort					port if different from default
+		 * @return string
+		 */
+		public static function MakeUrl ($strLocation, $queryParams = null, $strAnchor = null, $strProtocol = null, $strServer = null, $strUser = null, $strPassword = null, $intPort = null) {
+			// Basic URLs that are pointing to our own server
+			$strUrl = rawurlencode($strLocation); // can be relative or absolute
+			if ($queryParams)  {
+				$strUrl .= '?' . http_build_query($queryParams);
+			}
+			if ($strAnchor) {
+				$strUrl .= '#' . urlencode($strAnchor);
+			}
+
+			// More complex URLs. Once you specify protocol, you will need to specify the server too.
+			if ($strProtocol) {
+				assert('!empty($strServer)');
+
+				// We do not do any checking at this point since URLs can be complexe. It is up to you to build a correct URL.
+				// If you use a protocol that expects an absolute path, you must start with a slash (http), or a relative path (mailto), leave the slash off.
+
+				$strServer = rawurldecode($strServer);
+				// Build server portion.
+				if ($intPort) {
+					$strServer .= ':' . $intPort;
+				}
+				if ($strUser) {
+					$strUser = rawurlencode($strUser);
+					if ($strPassword) {
+						$strUser = $strUser . ':' . rawurlencode($strPassword);
+					}
+					$strServer = $strUser . '@' . $strServer;
+				}
+				$strUrl = $strProtocol . $strServer . $strUrl;
+			}
+			return $strUrl;
+		}
+
 	}
