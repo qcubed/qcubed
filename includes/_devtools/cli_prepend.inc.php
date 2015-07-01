@@ -16,14 +16,14 @@
 	else
 		exit("The prepend.inc.php file was not found at $strPathToPrepend.\r\nPlease be sre to specify the correct absolute path to prepend.inc.php in the ./path_to_prepend.txt file!\r\n");
 
-//	// Finally, verify that __DEVTOOLS__ is configured correctly
-//	if (!is_file(__DEVTOOLS__ . '/' . basename(__FILE__)))
-//		exit("Could not find " . __DEVTOOLS__ . '/' . basename(__FILE__) . ". The __DEVTOOLS__ configuration constant in configuration.inc.php does not appear to be set correctly.\r\n");
+//	// Finally, verify that __DEVTOOLS_ASSETS__ is configured correctly
+//	if (!is_file(__DEVTOOLS_ASSETS__ . '/' . basename(__FILE__)))
+//		exit("Could not find " . __DEVTOOLS_ASSETS__ . '/' . basename(__FILE__) . ". The __DEVTOOLS_ASSETS__ configuration constant in configuration.inc.php does not appear to be set correctly.\r\n");
 //
-//	$objStat1 = stat(__DOCROOT__ . __DEVTOOLS__ . '/' . basename(__FILE__));
+//	$objStat1 = stat(__DOCROOT__ . __DEVTOOLS_ASSETS__ . '/' . basename(__FILE__));
 //	$objStat2 = stat(__FILE__);
 //	if ($objStat1['ino'] != $objStat2['ino'])
-//		exit("The __DEVTOOLS__ configuration constant in configuration.inc.php does not appear to be set correctly [INode Mismatch].\r\n");
+//		exit("The __DEVTOOLS_ASSETS__ configuration constant in configuration.inc.php does not appear to be set correctly [INode Mismatch].\r\n");
 
 	// Finally, turn off output buffering
 	ob_end_flush();

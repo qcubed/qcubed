@@ -1,22 +1,40 @@
 {
-	"name": "qcubed/framework",
-	"description": "QCubed is a PHP framework for rapid web development. Building on top of jQuery, with OOP at its core, QCubed provides a powerful solution for building database-driven Web 2.0 applications.",
-	"keywords": ["php", "framework", "jquery"],
-	"homepage": "http://qcu.be/",
-	"type": "library",
-	"license": "MIT",
-	"support": {
-        "issues": "https://github.com/qcubed/framework/issues",
-        "forum": "http://qcu.be/forum",
-        "wiki": "https://github.com/qcubed/framework/wiki",
-        "source": "https://github.com/qcubed/framework",
-        "irc": "irc://irc.freenode.net/qcubed"
-    },
-	"require": {
-		"php": ">=5.4.0",
-		"ezyang/htmlpurifier": "dev-master"
-	},
-	"require-dev": {
-		"lastcraft/simpletest": "dev-master"
-	}
+  "name": "qcubed/framework",
+  "description": "QCubed is a PHP framework for rapid web development. Building on top of jQuery, with OOP at its core, QCubed provides a powerful solution for building database-driven Web 2.0 applications.",
+  "keywords": ["php", "framework", "jquery"],
+  "homepage": "http://qcu.be/",
+  "type": "library",
+  "license": "MIT",
+  "support": {
+      "issues": "https://github.com/qcubed/framework/issues",
+      "forum": "http://qcu.be/forum",
+      "wiki": "https://github.com/qcubed/framework/wiki",
+      "source": "https://github.com/qcubed/framework",
+      "irc": "irc://irc.freenode.net/qcubed"
+  },
+  "require": {
+      "php": ">=5.4.0",
+      "ezyang/htmlpurifier": "dev-master"
+  },
+  "require-dev": {
+      "lastcraft/simpletest": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "QCubed\\Devtools\\": "includes/_devtools/"
+    }
+  },
+  "extra": {
+    "writePermission": [
+        "project/generated",
+        "project/generated/connector_base",
+        "project/generated/drafts",
+        "project/generated/drafts/panels",
+        "project/generated/form_base",
+        "project/generated/model_base",
+        "project/includes/connector",
+        "project/includes/model",
+        "project/tmp"
+    ]
+  }
 }

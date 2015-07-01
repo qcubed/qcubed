@@ -495,12 +495,12 @@
 			} else if (file_exists($strFilePath = sprintf('%s/controls/%s.class.php', __INCLUDES__, $strClassName))) {
 				require_once ($strFilePath);
 				return true;
-			} else if (file_exists($strFilePath = sprintf('%s/plugin/%s.php', __INCLUDES__, $strClassName))) {
+			} else if (file_exists($strFilePath = sprintf('%s/plugins/%s.php', __INCLUDES__, $strClassName))) {
 				require_once ($strFilePath);
 				return true;
 			} else if (false !== ($intStart = strpos($strClassName, 'QCubed\\Plugin\\'))) {
-                $strClassName = substr($strClassName, $intStart + 15);
-                if (file_exists($strFilePath = sprintf('%s/plugin/%s.php', __INCLUDES__, $strClassName))) {
+                $strClassName = substr($strClassName, $intStart + 14);
+                if (file_exists($strFilePath = sprintf('%s/plugins/%s.php', __INCLUDES__, $strClassName))) {
 				    require_once ($strFilePath);
 				    return true;
 				}

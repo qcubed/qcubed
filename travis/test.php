@@ -31,7 +31,7 @@ require( __DOCROOT__ . __SUBDIRECTORY__ . '/travis/qcubed.inc.php');
 	$strCommandName = 'codegen.cli';
 
 	// Include the rest of the OS-agnostic script
-	require( __DOCROOT__ . __SUBDIRECTORY__ . '/includes/_devtools_cli/codegen.inc.php');
+	require( __DOCROOT__ . __SUBDIRECTORY__ . '/includes/_devtools/codegen.inc.php');
 
 // not using QCubed error handler for unit tests - using the SimpleTest one instead
 restore_error_handler();
