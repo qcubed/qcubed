@@ -62,7 +62,7 @@
 		/**
 		 * The constructor of CallerExceptions.  Takes in a message string
 		 * as well as an optional Offset parameter (defaults to 1).
-		 * The Offset specificies how many calls up the call stack is responsible
+		 * The Offset specifiies how many calls up the call stack is responsible
 		 * for the exception.  By definition, when a CallerException is called,
 		 * at the very least the Caller of the most immediate function, which is
 		 * 1 up the call stack, is responsible.  So therefore, by default, intOffset
@@ -81,8 +81,10 @@
 			$this->intOffset = $intOffset;
 			$this->strTraceArray = debug_backtrace();
 
-			$this->file = $this->strTraceArray[$this->intOffset]['file'];
-			$this->line = $this->strTraceArray[$this->intOffset]['line'];
+			if (isset($this->strTraceArray[$this->intOffset]['file'])) {
+				$this->file = $this->strTraceArray[$this->intOffset]['file'];
+				$this->line = $this->strTraceArray[$this->intOffset]['line'];
+			}
 		}
 
 		public function IncrementOffset() {
