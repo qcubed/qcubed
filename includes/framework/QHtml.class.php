@@ -13,7 +13,6 @@
 		const FTP = 'ftp://';
 		const SFTP = 'sftp://';
 		const SMB = 'smb://';
-		const MAIL = 'mailto:';
 
 
 		/**
@@ -363,7 +362,7 @@
 		 */
 		public static function MakeUrl ($strLocation, $queryParams = null, $strAnchor = null, $strProtocol = null, $strServer = null, $strUser = null, $strPassword = null, $intPort = null) {
 			// Basic URLs that are pointing to our own server
-			$strUrl = rawurlencode($strLocation); // can be relative or absolute
+			$strUrl = $strLocation; // can be relative or absolute
 			if ($queryParams)  {
 				$strUrl .= '?' . http_build_query($queryParams);
 			}
@@ -375,10 +374,9 @@
 			if ($strProtocol) {
 				assert('!empty($strServer)');
 
-				// We do not do any checking at this point since URLs can be complexe. It is up to you to build a correct URL.
+				// We do not do any checking at this point since URLs can be complex. It is up to you to build a correct URL.
 				// If you use a protocol that expects an absolute path, you must start with a slash (http), or a relative path (mailto), leave the slash off.
 
-				$strServer = rawurldecode($strServer);
 				// Build server portion.
 				if ($intPort) {
 					$strServer .= ':' . $intPort;
@@ -395,4 +393,11 @@
 			return $strUrl;
 		}
 
+		public static function MailToUrl ($strUser, $strServer, $queryParams = null) {
+			$strUrl = 'mailto:' . rawurlencode($strUser) . '@' . rawurlencode($strServer);
+			if ($queryParams) {
+				$strUrl .= '?' . http_build_query($queryParams, null, null, PHP_QUERY_RFC3986);
+			}
+			return $strUrl;
+		}
 	}
