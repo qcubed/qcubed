@@ -66,9 +66,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ = '/qcubed'
 			 */
 			 
-			define ('__DOCROOT__', '{C:/xampp/xampp/htdocs}');
-			define ('__VIRTUAL_DIRECTORY__', '{~my_user}');
-			define ('__SUBDIRECTORY__', '{/qcubed2}');
+			define ('__DOCROOT__', '{docroot}');
+			define ('__VIRTUAL_DIRECTORY__', '{vd}');
+			define ('__SUBDIRECTORY__', '{subdir}');
 
 			/*
 			 * The project directory is where your editable project files go. These include files

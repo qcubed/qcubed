@@ -29,6 +29,10 @@ class Installer {
 			echo 'Copying ' . $strPackageName . " files.\n";
 			self::ComposerPluginInstall($strPackageName);
 		}
+		elseif (self::startsWith($strPackageName, 'qcubed/framework')) {
+			// updating the framework
+			self::ComposerFrameworkInstall($installedPackage->getExtra());
+		}
 	}
 
 	public static function postPackageUpdate(PackageEvent $event)
@@ -54,23 +58,6 @@ class Installer {
 			self::ComposerPluginUninstall($strPackageName);
 		}
 	}
-
-	public static function postRootInstall(PackageEvent $event)
-	{
-		$installedPackage = $event->getOperation()->getPackage();
-		$strPackageName = $installedPackage->getName();
-		if (self::startsWith($strPackageName, 'qcubed')) {	// double check that we are installing a qcubed project
-			self::ComposerFrameworkInstall($installedPackage->getExtra());
-
-			// add the scripts above to manage plugin installations and framework updates
-			$installedPackage->setScripts([
-				"post-package-install"=>["QCubed\\Devtools\\Installer::postPackageInstall"],
-				"post-package-update"=>["QCubed\\Devtools\\Installer::postPackageUpdate"],
-    			"post-package-uninstall"=>["QCubed\\Devtools\\Installer::postPackageUninstall"]
-			]);
-		}
-	}
-
 
 	/**
 	 * Move files out of the vendor directory and into the project directory that are in the plugin's install directory.
@@ -102,10 +89,20 @@ class Installer {
 		self::copy_dir($strInstallDir, $strDestDir);
 
 		// Make sure particular directories are writable by the web server. These are listed in the extra section of the composer.json file.
-		$strInstallDir = dirname(__FILE__).'/../../../../../';
+		$strInstallDir = realpath(dirname(__FILE__).'/../../../../../');
+		$strSubDirectory = basename($strInstallDir);
+		$strDocRoot = realpath ($strInstallDir . '/../');
+		$strConfigDirectory = $strInstallDir . '/project/includes/configuration';
 
 		foreach ($extra['writePermission'] as $strDir) {
 			chmod ($strInstallDir . $strDir, 0777);
+		}
+
+		// fix up the configuration file
+		$strFile = file_get_contents($strConfigDirectory . '/configuration.inc.sample.php');
+		if ($strFile) {
+			str_replace (['{docroot}', '{vd}', '{subdir}'], [$strDocRoot, '', $strSubDirectory], $strFile);
+			file_put_contents($strFile, $strConfigDirectory . '/configuration.inc.php');
 		}
 	}
 
