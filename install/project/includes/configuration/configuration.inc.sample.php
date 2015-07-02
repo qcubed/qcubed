@@ -232,6 +232,8 @@ if (!defined('SERVER_INSTANCE')) {
 			 * 		those constraints are.  The path of the script can be defined here. - default is blank or none
 			 * Note: any option not used or set to blank will result in using the default value for that option
 			 */
+
+			/*<--
 			define('DB_CONNECTION_1', serialize(array(
 				'adapter' => '{db1_adapter}',
 				'server' => '{db1_serverAddress}',
@@ -241,6 +243,7 @@ if (!defined('SERVER_INSTANCE')) {
 				'password' => '{db1_password}',
 				'caching' => false,
 				'profiling' => false)));
+			-->*/
 
 			// Additional Database Connection Strings can be defined here (e.g. for connection #2, #3, #4, #5, etc.)
 			//			define('DB_CONNECTION_2', serialize(array('adapter'=>'SqlServer', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
@@ -252,7 +255,7 @@ if (!defined('SERVER_INSTANCE')) {
 			// Maximum index of the DB connections defined by DB_CONNECTION_# constants above
 			// When reading the DB_CONNECTION_# constants, it will only go up to (and including) the index defined here
 			// See ApplicationBase::InitializeDatabaseConnections()
-			define ('MAX_DB_CONNECTION_INDEX', 9);
+			define ('MAX_DB_CONNECTION_INDEX', 1);
 
 			/** The value for QApplication::$EncodingType constant */
 			define('__QAPPLICATION_ENCODING_TYPE__', 'UTF-8');
