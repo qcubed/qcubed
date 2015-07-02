@@ -90,19 +90,19 @@ class Installer {
 
 		// Make sure particular directories are writable by the web server. These are listed in the extra section of the composer.json file.
 		$strInstallDir = realpath(dirname(__FILE__).'/../../../../../');
-		$strSubDirectory = basename($strInstallDir);
+		$strSubDirectory = '/' . basename($strInstallDir);
 		$strDocRoot = realpath ($strInstallDir . '/../');
 		$strConfigDirectory = $strInstallDir . '/project/includes/configuration';
 
 		foreach ($extra['writePermission'] as $strDir) {
-			chmod ($strInstallDir . $strDir, 0777);
+			chmod ($strInstallDir . '/' . $strDir, 0777);
 		}
 
 		// fix up the configuration file
 		$strFile = file_get_contents($strConfigDirectory . '/configuration.inc.sample.php');
 		if ($strFile) {
-			str_replace (['{docroot}', '{vd}', '{subdir}'], [$strDocRoot, '', $strSubDirectory], $strFile);
-			file_put_contents($strFile, $strConfigDirectory . '/configuration.inc.php');
+			$strFile = str_replace (['{docroot}', '{vd}', '{subdir}'], [$strDocRoot, '', $strSubDirectory], $strFile);
+			file_put_contents($strConfigDirectory . '/configuration.inc.php', $strFile);
 		}
 	}
 
