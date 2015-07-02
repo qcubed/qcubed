@@ -1,5 +1,6 @@
-This directory contains command-line-based drivers for Qcubed's development
-tools:
+This directory contains various tools that help with the development phase of a project
+only. These include command line tools, and helpers for the installation process of qcubed
+and plugins. You should not include this directory in your deployment.
 
 * codegen.cli - for Unix/Linux/Mac OS X command lines
 * codegen.phpexe - for Windows command line
@@ -8,11 +9,6 @@ tools:
   of the work. They simply instantiate a QCodeGen object, execute various
   public methods on it to do the code generation, and create a text-based
   report of its activities, outputting it to STDOUT.
-
-* (future tools tba)
-
-Feel free to alter the settings, inputs and/or outputs of any of the drivers
-as you wish.
 
 
 PATH_TO_PREPEND.TXT
@@ -30,7 +26,3 @@ match the path of the PHP bin executable on your system, too.
 For the .phpexe version, you need to remember to run it as a PARAMETER to
 the php.exe executable (usually installed in c:\php\php.exe).
 
-
-CUSTOM COMMAND LINE TOOLS
-
-Feel free to implement your own command line tools here, as well.

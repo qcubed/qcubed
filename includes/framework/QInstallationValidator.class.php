@@ -24,7 +24,7 @@ abstract class QInstallationValidator {
 		}
 		
 		$docrootOnlyPath = __DOCROOT__;
-		$docrootWithSubdirPath = __DOCROOT__ . __DEVTOOLS__ . substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/"));
+		$docrootWithSubdirPath = __DOCROOT__ . __DEVTOOLS_ASSETS__ . substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/"));
 
 		$commonSubsequence = QString::LongestCommonSubsequence($_SERVER['PHP_SELF'], $_SERVER['SCRIPT_FILENAME']);
 		$root = substr($_SERVER['SCRIPT_FILENAME'], 0, strlen($_SERVER['SCRIPT_FILENAME']) - strlen($commonSubsequence));
@@ -37,7 +37,7 @@ abstract class QInstallationValidator {
 	/*
 		print("DOCROOT = " . __DOCROOT__ . "<br>");
 		print("SUBDIR = " . __SUBDIRECTORY__ . "<br>");
-		print("DEVTOOLS = " . __DEVTOOLS__ . "<br>");
+		print("DEVTOOLS = " . __DEVTOOLS_ASSETS__ . "<br>");
 
 		print("PHP_SELF = " . $_SERVER['PHP_SELF'] . "<br>");
 		print("SCRIPT_FILENAME = " . $_SERVER['SCRIPT_FILENAME'] . "<br>");

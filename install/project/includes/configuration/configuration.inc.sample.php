@@ -66,9 +66,9 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		__SUBDIRECTORY__ = '/qcubed'
 			 */
 			 
-			define ('__DOCROOT__', '{C:/xampp/xampp/htdocs}');
-			define ('__VIRTUAL_DIRECTORY__', '{~my_user}');
-			define ('__SUBDIRECTORY__', '{/qcubed2}');
+			define ('__DOCROOT__', '{docroot}');
+			define ('__VIRTUAL_DIRECTORY__', '{vd}');
+			define ('__SUBDIRECTORY__', '{subdir}');
 
 			/*
 			 * The project directory is where your editable project files go. These include files
@@ -195,7 +195,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-qcubed/jquery-ui.custom.css');
 
 			// Location of the QCubed-specific web-based development tools, like codegen.php
-			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
+			define ('__DEVTOOLS_ASSETS__', __PHP_ASSETS__ . '/_devtools');
 
 			// Location of the Examples site
 			define ('__EXAMPLES__', __PHP_ASSETS__ . '/examples');

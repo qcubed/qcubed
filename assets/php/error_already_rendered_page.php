@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+//session_start();
 
 if (isset($_SESSION['RenderedPageForError'])) {
 	echo $_SESSION['RenderedPageForError'];

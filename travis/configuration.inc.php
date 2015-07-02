@@ -184,7 +184,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-qcubed/jquery-ui.custom.css');
 
 			// Location of the QCubed-specific web-based development tools, like codegen.php
-			define ('__DEVTOOLS__', __PHP_ASSETS__ . '/_devtools');
+			define ('__DEVTOOLS_ASSETS__', __PHP_ASSETS__ . '/_devtools');
 
 			// Location of the Examples site
 			define ('__EXAMPLES__', __PHP_ASSETS__ . '/examples');
