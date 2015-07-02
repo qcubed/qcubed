@@ -1,20 +1,39 @@
 # Getting started with QCubed
 
-## Installation
+INSTALLATION
+------------
 
-### Composer install
+### Install via Composer
 
-Version 3.0 beta is installable via composer directly from our GitHub repo. See the [Sample Composer Config](https://github.com/qcubed/framework/blob/beta-3.0/install/composer.json.sample) for the configuration commands. Here are the steps:
+This is by far the easiest way to install.
 
-1. Go to either your docroot, or a directory under docroot on the computer where you will be doing development. 
-2. Create a `composer.json` file. Use the sample mentioned above to start out.
-3. Enter the `composer install` command. QCubed will be put in the ```/vendor/qcubed/framework/``` directory by default.
-4. After installing with composer, copy the contents of the ```/vendor/qcubed/framework/install/``` directory to the directory level above the /vendor directory. This should be the directory from where you executed the composer install command: ```cp -r vendor/qcubed/framework/install/* .```
-5. Make modifications to the  ```/project/includes/configuration/conifguration.inc.php``` file to reflect your setup.
-6. From a web browser, navigate to the index.php file in your install directory. 
-7. Make sure the ```/project/``` directory is writable by the web server. 
-8. You should see the welcome screen if all went well.
+If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
+at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 
+Once installed, you should install the qcubed/app-starter project by executing the following at the command line:
+
+~~~
+php composer.phar create-project qcubed/app-starter your_dir_name -sdev
+~~~
+
+Substitute whatever directory name you would like for "your_dir_name" above. 
+
+Note that if you have taken the composer installation step to rename "composer.phar" to "composer" and you put it in your path, you can instead just enter:
+
+~~~
+composer create-project qcubed/app-starter your_dir_name
+~~~
+
+Assuming you installed into the document root of your local web server, enter the following to begin the 
+configuration process.
+
+~~~
+http://localhost/your_dir_name/
+~~~
+
+If you would like to eventually place the project somewhere else in your webserver tree, even at the root level, it is
+easy to do by modifying the __SUBDIRECTORY__ configuration file setting and moving the contents of the directory to the
+new location.
 
 ### File System
 
@@ -23,39 +42,6 @@ It begins with the extraction of the QCubed tar ball. If you have downloaded QCu
 At a later point, you may choose to move folders around in your system, splitting them at different location etc.  QCubed offers the flexibility to have the framework files in any location. But that is a story you learn after using the framework (refer to the ```configuration.inc.php.sample``` file in ```includes/configuration``` directory).
 
 But, since we're just getting started, we'll provide you with the instructions on how to finish the installation assuming that you're keeping the entire QCubed installation together as originally released. In the later part of the document, we will call the installation directory (the place where you have copied QCubed framework files) as *instdir*.
-
-### Automated installation
-
-Beginning Release 2.2, we have created an automated installer which will help you configure and install QCubed.
-
-#### How to use the installer
-
-  1. You should have copied the QCubed into its own directory under DocumentRoot. We assume that your DocumentRoot is ```/var/www``` and you copied QCubed under ```/var/www/qcubed```.
-  2. Open ```http://localhost/qcubed``` from your browser. You should be provided with two options
-    * To go to the start page
-    * To launch the installer
-  3. Since we have not installed the framework, we will launch the installer.
-  4. Installer will come to its first step and will ask you for the location where you copied the file. It tries to make a guess and in most cases, the guess is right. However, you should verify the same and click on the **Next** button. Also, the instructions to install QCubed manually are shown on this (first) page of installer as well. Should you desire to do it manually, or if the installer fails, you can use the manual procedure.
-  5. The installer will redirect to the second step and check for certain things to be true. These include:
-    * The installation path was supplied.
-    * The given directory ( *instdir* ) path must be inside the webserver's DocumentRoot.
-    * The *instdir* directory must be existing.
-    * Check for the availability of the ```includes```, ```assets``` and ```drafts``` directories inside *instdir* directory.
-  6. If any of the conditions do not match, the installer will throw an error. Otherwise it will ask for the values of different fields such as ```__SUBDIRETORY__```, ```__DOCROOT__``` and ```__VIRTUAL_DIRETORY__``` along with the database settings (adapter, port, database name, database username and password). You should enter those and proceed to the 'Write Configuration' step.
-  7. In the last step (Write Configuration step), the installer will read the ```configuration.inc.php.sample``` file in the ```includes/configuration``` directory and use the placeholders therein to replace the values with what you entered.It will then dump the contents to a new file called as ```configuration.inc.php```. If ```configuration.inc.php``` already exists, then it will not overwrite the file (to make sure you do not lose your current configuration) but it will show you the file contents so that you can use them later at your will. If the installer fails to create the file due to restricted permissions, it would still show you the contents. The feature of *not overwriting current configuration file* is in place to make sure that even if someone else (unwanted user) gains the access to the installer script, he should not be able to overwrite the configuration.
-
-**NOTE**: After the installation has been finished, it is recommended to delete the installer files. They are located in ```assets/_core/php/_devtools/installer``` directory within *instdir*.
-
-### Manual Installation
-
-To install QCubed manually in face of failure of the installer due to any reason, follow the following steps
-
-  1. Copy all of the files in the /vendor/qcubed/install directory to your DOCROOT.
-  
-  2. Open the ```project/includes/configuration/configuration.inc.php.sample``` file within the *instdir* directory.
-  2. Copy the contents of this file and paste it in a new file called ```configuration.inc.php``` in the same directory (if you want, you can rename the ```configuration.inc.php.sample``` file to ```configuration.inc.php``` as well, but we would not recommend that). Save the ```configuration.inc.php``` file.
-  3. Edit the ```configuration.inc.php``` file and set the values for ```__DOCROOT__```, ```__VIRTUAL_DIRECTORY__``` and ```__SUBDIRECTORY__``` and set the correct values. You should also set the values for the definition of ```DB_CONNECTION_1``` correctly. All these variables have been explained well in the comments in the file.
-  4. Save the ```configuration.inc.php``` file.
 
 **IMPORTANT NOTE FOR WINDOWS USERS**: Please note that all paths should use standard "forward" slashes instead of "backslashes".  So windows paths would look like "c:/xampp/htdocs" instead of "c:\xampp\htdocs".
 
