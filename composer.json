@@ -13,11 +13,13 @@
       "irc": "irc://irc.freenode.net/qcubed"
   },
   "require": {
-      "php": ">=5.4.0",
-      "ezyang/htmlpurifier": "dev-master"
+      "php": ">=5.4.0"
   },
   "require-dev": {
       "lastcraft/simpletest": "dev-master"
+  },
+  "suggest": {
+    "ezyang/htmlpurifier": "dev-master"
   },
   "autoload": {
     "psr-4": {
