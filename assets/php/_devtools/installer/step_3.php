@@ -31,7 +31,7 @@
 	$strDB_Username = $_POST['db_server_username'];
 	$strDB_Password = $_POST['db_server_password'];
 	// Now read the text from the configuration.inc.php.sample file
-	$strConfigSampleText = file_get_contents($strDocroot . $strVirtDir . $strSubDir . '/project' . $strConfigSubPath . '/configuration.inc.php.sample');
+	$strConfigSampleText = file_get_contents($strDocroot . $strVirtDir . $strSubDir . '/project' . $strConfigSubPath . '/configuration.inc.sample.php');
 
 	if($strConfigSampleText === false) {
 		if($strError == null) {
@@ -41,9 +41,9 @@
 
 	// We now have the sample config file. Time to replace the strings.
 	$strConfigText = $strConfigSampleText;
-	$strConfigText = str_replace('{C:/xampp/xampp/htdocs}', $strDocroot, $strConfigText);
-	$strConfigText = str_replace('{~my_user}', $strVirtDir, $strConfigText);
-	$strConfigText = str_replace('{/qcubed2}', $strSubDir, $strConfigText);
+	$strConfigText = str_replace('{docroot}', $strDocroot, $strConfigText);
+	$strConfigText = str_replace('{vd}', $strVirtDir, $strConfigText);
+	$strConfigText = str_replace('{subdir}', $strSubDir, $strConfigText);
 	$strConfigText = str_replace('{db1_adapter}', $strDB_Adapter, $strConfigText);
 	$strConfigText = str_replace('{db1_serverAddress}', $strDB_ServerAddress, $strConfigText);
 	// if the port was left blank, then we replace it with null
@@ -55,6 +55,10 @@
 	$strConfigText = str_replace('{db1_dbname}', $strDB_DbName, $strConfigText);
 	$strConfigText = str_replace('{db1_username}', $strDB_Username, $strConfigText);
 	$strConfigText = str_replace('{db1_password}', $strDB_Password, $strConfigText);
+
+	$strConfigText = str_replace('/*<--', '', $strConfigText);
+	$strConfigText = str_replace('-->*/', '', $strConfigText);
+
 
 	$strConfigText_Final = $strConfigText;
 
