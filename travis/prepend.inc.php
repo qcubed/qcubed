@@ -19,7 +19,6 @@
 		//////////////////////////////
 		// Include the QCubed Framework
 		//////////////////////////////
-		require(__QCUBED_CORE__ . '/framework/DisableMagicQuotes.inc.php');
 		require(__QCUBED_CORE__ . '/qcubed.inc.php');
 		require(__APP_INCLUDES__ . '/app_includes.inc.php');
 
