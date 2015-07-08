@@ -4,19 +4,14 @@
 ?>
 	<h1><?php _t('Plugin Manager'); ?></h1>
 		<?php $this->RenderBegin() ?>
-	<p> QCubed uses Composer to install plugins. To install a plugin, simply require it
-	   in your list of files in your root composer.json file, then execute the Composer 
-	   install command.
+	<p> QCubed uses Composer to install plugins. To install a plugin, simply execute the 'composer require plugin_name' command on your command line.
 	</p>
+	<p>Below is a list of your currently installed plugins.</p>
 	<?php $this->dtgPlugins->Render(); ?>
 	
 	<hr />
 	
-	<p><a target="_blank" href="<?= QPluginInstaller::ONLINE_PLUGIN_REPOSITORY ?>">
-	Online repository of QCubed plugins</a></p>
-	
-	<?php $this->dlgUpload->Render(); ?>
-	
+
 	<?php $this->RenderEnd() ?>
 	
 <?php require(__CONFIGURATION__ . '/footer.inc.php'); ?>

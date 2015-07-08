@@ -16,8 +16,8 @@
 
 		protected function Form_Create() {
 			$this->dtgPlugins_Create();
-			$this->btnNewPlugin_Create();
-			$this->dlgUpload_Create();
+			//$this->btnNewPlugin_Create();
+			//$this->dlgUpload_Create();
 		}
 				
 		private function btnNewPlugin_Create() {
@@ -25,10 +25,10 @@
 			$this->btnNewPlugin->Text = "Install a New Plugin";
 			$this->btnNewPlugin->AddAction(new QClickEvent(), new QAjaxAction('btnNewPlugin_Click'));
 		}
-		
+		/*
 		public function btnNewPlugin_Click() {
 			$this->dlgUpload->ShowDialogBox();
-		}
+		}*/
 		
 		private function dtgPlugins_Create() {
 			$this->dtgPlugins = new QDataGrid($this, 'dtgPlugins');
@@ -107,7 +107,7 @@
 			}
 			return null;
 		}
-		
+		/*
 		private function dlgUpload_Create() {
 			$this->dlgUpload = new QFileAssetDialog($this, 'dlgUpload_done');
 			$this->dlgUpload->Title = "Install a New Plugin";
@@ -137,7 +137,8 @@
 			}
 			
 			QApplication::Redirect('plugin_edit.php?strType=new&strName=' . $pluginFolder);
-		}		
+		}
+		*/
 	}	
 
 	PluginManagerForm::Run('PluginManagerForm');
