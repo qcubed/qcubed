@@ -9,7 +9,7 @@
   "description": "QCubed is a PHP framework for rapid web development. Building on top of jQuery, with OOP at its core, QCubed provides a powerful solution for building database-driven Web 2.0 applications.",
   "keywords": ["php", "framework", "jquery"],
   "homepage": "http://qcu.be/",
-  "type": "library",
+  "type": "qcubed-framework",
   "license": "MIT",
   "support": {
       "issues": "https://github.com/qcubed/framework/issues",
