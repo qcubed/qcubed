@@ -122,9 +122,15 @@
 
 		<?php include("manual_query_methods.tpl.php"); ?>
 <?php } ?>
+
+		<?php include("custom_funcs.tpl.php"); // Stub file. Default is empty. Create one in your project/includes/codegen/templates/db_orm/class_gen directory to add your custom functions.?>
+
+
 	}
 
 
 
 	<?php include("qcubed_query_classes.tpl.php"); ?>
+
+
 ?>
