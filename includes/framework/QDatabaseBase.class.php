@@ -861,29 +861,43 @@
 		/**
 		 * Displays the OutputProfiling results, plus a link which will popup the details of the profiling.
 		 *
-		 * @return void
+		 * @param bool $blnPrintOutput
+		 * @return null|string
 		 */
-		public function OutputProfiling() {
+		public function OutputProfiling($blnPrintOutput = true) {
+
+			$strOut = '<div class="qDbProfile">';
 			if ($this->blnEnableProfiling) {
-				printf('<form method="post" id="frmDbProfile%s" action="%s/profile.php"><div>',
+				$strOut .= sprintf('<form method="post" id="frmDbProfile%s" action="%s/profile.php"><div>',
 					$this->intDatabaseIndex, __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__);
-				printf('<input type="hidden" name="strProfileData" value="%s" />',
+				$strOut.= sprintf('<input type="hidden" name="strProfileData" value="%s" />',
 					base64_encode(serialize($this->strProfileArray)));
-				printf('<input type="hidden" name="intDatabaseIndex" value="%s" />', $this->intDatabaseIndex);
-				printf('<input type="hidden" name="strReferrer" value="%s" /></div></form>', QApplication::HtmlEntities(QApplication::$RequestUri));
+				$strOut .= sprintf('<input type="hidden" name="intDatabaseIndex" value="%s" />', $this->intDatabaseIndex);
+				$strOut .= sprintf('<input type="hidden" name="strReferrer" value="%s" /></div></form>', QApplication::HtmlEntities(QApplication::$RequestUri));
 
 				$intCount = round(count($this->strProfileArray));
 				if ($intCount == 0)
-					printf('<b>PROFILING INFORMATION FOR DATABASE CONNECTION #%s</b>: No queries performed.  Please <a href="#" onclick="var frmDbProfile = document.getElementById(\'frmDbProfile%s\'); frmDbProfile.target = \'_blank\'; frmDbProfile.submit(); return false;">click here to view profiling detail</a><br />',
-						$this->intDatabaseIndex, $this->intDatabaseIndex);
+					$strQueryString =  'No queries';
 				else if ($intCount == 1)
-					printf('<b>PROFILING INFORMATION FOR DATABASE CONNECTION #%s</b>: 1 query performed.  Please <a href="#" onclick="var frmDbProfile = document.getElementById(\'frmDbProfile%s\'); frmDbProfile.target = \'_blank\'; frmDbProfile.submit(); return false;">click here to view profiling detail</a><br />',
-						$this->intDatabaseIndex, $this->intDatabaseIndex);
+					$strQueryString =  '1 query';
 				else
-					printf('<b>PROFILING INFORMATION FOR DATABASE CONNECTION #%s</b>: %s queries performed.  Please <a href="#" onclick="var frmDbProfile = document.getElementById(\'frmDbProfile%s\'); frmDbProfile.target = \'_blank\'; frmDbProfile.submit(); return false;">click here to view profiling detail</a><br />',
-						$this->intDatabaseIndex, $intCount, $this->intDatabaseIndex);
+					$strQueryString =  $intCount . ' queries';
+
+				$strOut .= sprintf('<b>PROFILING INFORMATION FOR DATABASE CONNECTION #%s</b>: %s performed.  Please <a href="#" onclick="var frmDbProfile = document.getElementById(\'frmDbProfile%s\'); frmDbProfile.target = \'_blank\'; frmDbProfile.submit(); return false;">click here to view profiling detail</a><br />',
+					$this->intDatabaseIndex, $strQueryString, $this->intDatabaseIndex);
 			} else {
-				_p('<form></form><b>Profiling was not enabled for this database connection (#' . $this->intDatabaseIndex . ').</b>  To enable, ensure that ENABLE_PROFILING is set to TRUE.', false);
+				$strOut .= '<form></form><b>Profiling was not enabled for this database connection (#' . $this->intDatabaseIndex . ').</b>  To enable, ensure that ENABLE_PROFILING is set to TRUE.';
+			}
+			$strOut .= '</div>';
+
+			$strOut .= '<script>$j(function() {$j(".qDbProfile").draggable();});</script>';	// make it draggable so you can move it out of the way if needed.
+
+			if ($blnPrintOutput) {
+				print ($strOut);
+				return null;
+			}
+			else {
+				return $strOut;
 			}
 		}
 
