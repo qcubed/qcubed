@@ -715,6 +715,35 @@
 		}
 
 		/**
+		 * Compare the current date with the given date. Return -1 if current date is less than given date, 0 if equal,
+		 * and 1 if greater. Null dates are considered the earliest possible date.
+		 *
+		 * @param QDateTime $dttCompare
+		 * @return int
+		 */
+		public function Compare(QDateTime $dttCompare) {
+			// All comparison operations MUST have operands with matching Date Nullstates
+			if ($this->blnDateNull && !$dttCompare->blnDateNull) {
+				return -1;
+			} elseif (!$this->blnDateNull && $dttCompare->blnDateNull) {
+				return 1;
+			}
+
+			// If mismatched Time nullstates, then only compare the Date portions
+			if ($this->blnTimeNull != $dttCompare->blnTimeNull) {
+				// Let's "Null Out" the Time
+				$dttThis = new QDateTime($this);
+				$dttThat = new QDateTime($dttCompare);
+				$dttThis->Hour = null;
+				$dttThat->Hour = null;
+			} else {
+				$dttThis = $this;
+				$dttThat = $dttCompare;
+			}
+			return ($dttThis->Timestamp < $dttThat->Timestamp ? -1 : ($dttThis->Timestamp == $dttThat->Timestamp ? 0 : 1));
+		}
+
+		/**
 		 * Returns the difference as a QDateSpan, which is easier to work with and more full featured than
 		 * the php DateTimeInterval class.
 		 *
