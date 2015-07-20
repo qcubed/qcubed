@@ -26,7 +26,8 @@
 				// Member Objects
 				///////////////////
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
+<?php if ($objColumn->Reference) { ?>
+<?php if (!$objColumn->Reference->IsType) { ?>
 				case '<?= $objColumn->Reference->PropertyName ?>':
 					/**
 					 * Gets the value for the <?= $objColumn->Reference->VariableType ?> object referenced by <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
@@ -42,7 +43,19 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+<?php } else { // type ?>
+				case '<?= $objColumn->Reference->PropertyName ?>':
+					/**
+					 * Gets the value for the <?= $objColumn->Reference->VariableType ?> type referenced by <?= $objColumn->VariableName ?>
+					 * @return string
+					 */
+					if ($this-><?= $objColumn->VariableName ?>) {
+						return <?= $objColumn->Reference->VariableType ?>::ToString($this-><?= $objColumn->VariableName ?>);
+					} else {
+						return '';
+					}
 
+<?php } ?>
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
