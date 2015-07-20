@@ -67,6 +67,11 @@
 		 */
 		protected $objIndexArray;
 
+		/**
+		 * @var array developer specified options.
+		 */
+		protected $options;
+
 
 
 		/////////////////////
@@ -201,6 +206,10 @@
 						if ($objColumn->Reference)
 							$intCount++;
 					return $intCount;
+
+				case 'Options':
+					return $this->options;
+
 				default:
 					try {
 						return parent::__get($strName);
@@ -240,6 +249,8 @@
 						return $this->objManyToManyReferenceArray = QType::Cast($mixValue, QType::ArrayType);
 					case 'IndexArray':
 						return $this->objIndexArray = QType::Cast($mixValue, QType::ArrayType);
+					case 'Options':
+						return $this->options = QType::Cast($mixValue, QType::ArrayType);
 					default:
 						return parent::__set($strName, $mixValue);
 				}
