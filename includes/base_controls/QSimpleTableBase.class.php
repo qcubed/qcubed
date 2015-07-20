@@ -1,6 +1,47 @@
 <?php
 
 	/**
+	 * Class QCellClickEvent
+	 * An event to detect clicking on a cell.
+	 * Lots of things can be determined using this event by changing the JsReturnParam values. When this event fires,
+	 * the javascript environment will have the following local variables defined:
+	 * - this: The html object for the cell clicked.
+	 * - event: The event object for the click.
+	 *
+	 * Here are some examples of return params you can specify to return data to your action handler:
+	 * 	this.id - the cell id
+	 *  this.tagName - the tag for the cell (either th or td)
+	 *  this.cellIndex - the column index that was clicked on, starting on the left with column zero
+	 *  $j(this).data('value') - the "data-value" attribute of the cell (if you specify one). Use this formula for any kind of "data-" attribute.
+	 *  $j(this).parent() - the jQuery row object
+	 *  $j(this).parent()[0] - the html row object
+	 *  $j(this).parent()[0].rowIndex - the index of the row clicked, starting with zero at the top (including any header rows).
+	 *  $j(this).parent().attr('id') or $j(this).parent()[0].id - the id of the row clicked on
+	 *  $j(this).parent().data("value") - the "data-value" attribute of the row. Use this formula for any kind of "data-" attribute.
+	 *  $j(this).parent().closest('table').find('thead').find('th')[this.cellIndex].id - the id of the column clicked in
+	 *  event.target - the html object clicked in. If your table cell had other objects in it, this will return the
+	 *    object clicked inside the cell. This could be important, for example, if you had form objects inside the cell,
+	 *    and you wanted to behave differently if a form object was clicked on, verses clicking outside the form object.
+	 *
+	 * You can put your items in a javascript array, and an array will be returned as the strParameter in the action.
+	 * Or you can put it in a javascript object, and a named array(hash) will be returned.
+	 *
+	 * The default returns the array(row=>rowIndex, col=>colIndex), but you can override this with your action. For
+	 * example:
+	 *
+	 * new QAjaxAction ('yourFunction', null, 'this.cellIndex')
+	 *
+	 * will return the column index into the strParameter, instead of the default.
+	 */
+	class QCellClickEvent extends QClickEvent {
+		const JsReturnParam = '{"row": $j(this).parent()[0].rowIndex, "col": this.cellIndex}'; // row and column of the cell. Override if needed with your action parameter.
+
+		public function __construct($intDelay = 0, $strCondition = null) {
+			parent::__construct($intDelay, $strCondition, 'th,td');
+		}
+	}
+
+	/**
 	 * <p>This control is used to display a simple html table.
 	 *
 	 * <p>The control itself will display things based off of an array of objects that gets set as the "Data Source".
@@ -115,18 +156,6 @@
 		}
 
 		/**
-		 * Add a column to the end of the column array.
-		 * @param QAbstractSimpleTableColumn $objColumn
-		 * @return QAbstractSimpleTableColumn
-		 */
-		public function AddColumn(QAbstractSimpleTableColumn $objColumn) {
-			$this->blnModified = true;
-			$this->objColumnArray[] = $objColumn;
-			$objColumn->_ParentTable = $this;
-			return $objColumn;
-		}
-
-		/**
 		 * Move the named column to the given position
 		 * @param string $strName column name
 		 * @param integer $intColumnIndex new position
@@ -154,9 +183,22 @@
 		}
 
 		/**
-		 * Add a column at the given position
+		 * Add a column to the end of the column array.
+		 * @param QAbstractSimpleTableColumn $objColumn
+		 * @return QAbstractSimpleTableColumn
+		 */
+		public function AddColumn(QAbstractSimpleTableColumn $objColumn) {
+			$this->AddColumnAt(-1, $objColumn);
+			return $objColumn;
+		}
+
+		/**
+		 * Add a column at the given position. All column adds bottle neck through here
+		 * so that subclasses can reliably override the column add process if needed.
+		 *
+		 * Use AddColumn to add a column to the end.
 		 * 
-		 * @param integer $intColumnIndex column position
+		 * @param integer $intColumnIndex column position. -1 to add to the end.
 		 * @param QAbstractSimpleTableColumn $objColumn
 		 * @throws QInvalidCastException
 		 */
@@ -168,12 +210,11 @@
 				throw $objExc;
 			}
 			$this->blnModified = true;
+			$objColumn->_ParentTable = $this;
 			if ($intColumnIndex < 0 || $intColumnIndex > count($this->objColumnArray)) {
-				$this->AddColumn($objColumn);
-				return;
+				$this->objColumnArray[] = $objColumn;
 			}
-
-			if ($intColumnIndex == 0) {
+			elseif ($intColumnIndex == 0) {
 				$this->objColumnArray = array_merge(array($objColumn), $this->objColumnArray);
 			} else {
 				$this->objColumnArray = array_merge(array_slice($this->objColumnArray, 0, $intColumnIndex),
@@ -202,6 +243,21 @@
 			$col = $this->objColumnArray[$intColumnIndex];
 			array_splice($this->objColumnArray, $intColumnIndex, 1);
 			return $col;
+		}
+
+		/**
+		 * Removes the column by column id. Assumes the ids are unique.
+		 * @param $strId
+		 */
+		public function RemoveColumnById($strId) {
+			if ($this->objColumnArray && ($count = count($this->objColumnArray))) {
+				for ($i = 0; $i < $count; $i++) {
+					if ($this->objColumnArray[$i]->Id === $strId) {
+						$this->RemoveColumn($i);
+						return;
+					}
+				}
+			}
 		}
 
 		/**
@@ -264,12 +320,26 @@
 
 		/**
 		 * Get the column at the given index, or null if the index is not valid
-		 * @param $intColumnIndex
+		 * @param integer $intColumnIndex
+		 * @param boolean blnVisible true to only count the visible columns
 		 * @return QAbstractSimpleTableColumn
 		 */
-		public function GetColumn($intColumnIndex) {
-			if (array_key_exists($intColumnIndex, $this->objColumnArray))
-				return $this->objColumnArray[$intColumnIndex];
+		public function GetColumn($intColumnIndex, $blnVisible = false) {
+			if (!$blnVisible) {
+				if (array_key_exists($intColumnIndex, $this->objColumnArray)) {
+					return $this->objColumnArray[$intColumnIndex];
+				}
+			} else {
+				$i = 0;
+				foreach ($this->objColumnArray as $objColumn) {
+					if ($objColumn->Visible) {
+						if ($i == $intColumnIndex) {
+							return $objColumn;
+						}
+						$i++;
+					}
+				}
+			}
 			return null;
 		}
 
@@ -284,6 +354,18 @@
 					return $objColumn;
 			return null;
 		}
+
+		/**
+		 * @param $strId
+		 * @return null|QAbstractSimpleTableColumn
+		 */
+		public function GetColumnById($strId) {
+			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn)
+				if ($objColumn->Id === $strId)
+					return $objColumn;
+			return null;
+		}
+
 
 		/**
 		 * Get the first column that has the given name, or null if a column with the given name does not exist
@@ -449,10 +531,20 @@
 			$i = 0;
 			while ($i < $len) {
 				$objColumn = $this->objColumnArray[$i];
-				$strToReturn .= $objColumn->RenderColTag() . _nl();
+				if ($objColumn->Visible) {
+					$strToReturn .= $objColumn->RenderColTag() . _nl();
+				}
 				$i += $objColumn->Span;
 			}
 			return $strToReturn;
+		}
+
+		protected function RenderCaption() {
+			$strHtml = '';
+			if ($this->strCaption) {
+				$strHtml .= '<caption>' . QApplication::HtmlEntities($this->strCaption) . '</caption>' . _nl();
+			}
+			return $strHtml;
 		}
 
 		/**
@@ -468,12 +560,8 @@
 			}
 
 
-			$strHtml = '';
-			// Caption if present
-			if ($this->strCaption) {
-				$strHtml .= '<caption>' . QApplication::HtmlEntities($this->strCaption) . '</caption>' . _nl();
-			}
-			
+			$strHtml = $this->RenderCaption();
+
 			// Column tags (if applicable)
 			if ($this->blnRenderColumnTags) {
 				$strHtml .= $this->GetColumnTagsHtml();
