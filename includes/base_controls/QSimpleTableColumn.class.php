@@ -171,7 +171,12 @@
 		 * @param mixed $item
 		 */
 		abstract public function FetchCellValue($item);
-		
+
+		/**
+		 * Render the column tag. This special tag can control specific features of columns, but is generally optional on a table.
+		 *
+		 * @return string
+		 */
 		public function RenderColTag() {
 			return QHtml::RenderTag('col', $this->GetColParams(), null, true);
 		}
@@ -342,8 +347,9 @@
 	 * An abstract column designed to work with QDataTables and other tables that require more than basic columns.
 	 * Supports post processing of cell contents for further formatting, and orderby clauses. 
 	 *
-	 * @property QQOrderBy $OrderByClause order by clause for sorting the column in ascending order. Used by QDataTables plugin.
-	 * @property QQOrderBy $ReverseOrderByClause order by clause for sorting the column in descending order. Used by QDataTables plugin.
+	 * @property mixed $OrderByClause order by info for sorting the column in ascending order. Used by subclasses.
+	 *    Most often this is a QQ::Clause, but can be any data needed.
+	 * @property mixed $ReverseOrderByClause order by info for sorting the column in descending order.
 	 * @property string $Format the default format to use for FetchCellValueFormatted(). Used by QDataTables plugin.
 	 *    For date columns it should be a format accepted by QDateTime::qFormat()
 	 * @property-write string $PostMethod after the cell object is retrieved, call this method on the obtained object
@@ -352,9 +358,9 @@
 	 */
 	 
 	abstract class QAbstractSimpleTableDataColumn extends QAbstractSimpleTableColumn {
-		/** @var QQOrderBy */
+		/** @var mixed Order By information. Can be a QQ::Clause, or any kind of object depending on your need */
 		protected $objOrderByClause = null;
-		/** @var QQOrderBy */
+		/** @var mixed */
 		protected $objReverseOrderByClause = null;
 		/** @var string */
 		protected $strFormat = null;
@@ -446,7 +452,7 @@
 			switch ($strName) {
 				case "OrderByClause":
 					try {
-						$this->objOrderByClause = QType::Cast($mixValue, 'QQOrderBy');
+						$this->objOrderByClause = $mixValue;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -455,7 +461,7 @@
 
 				case "ReverseOrderByClause":
 					try {
-						$this->objReverseOrderByClause = QType::Cast($mixValue, 'QQOrderBy');
+						$this->objReverseOrderByClause = $mixValue;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -499,8 +505,8 @@
 	/**
 	 * Displays a  property of an object, as in $object->Property 
 	 * 
-	 * User this to if your DataSource contains objects to display a particular property of that object in this
-	 * column. Can search with depth to, as in $obj->Prop1->Prop2.
+	 * If your DataSource is an array of objects, use this column to display a particular property of each object.
+	 * Can search with depth to, as in $obj->Prop1->Prop2.
 	 *
 	 * @property string $Property the property to use when accessing the objects in the DataSource array. Can be a s
 	 *  series of properties separated with '->', i.e. 'Prop1->Prop2->Prop3' will find the Prop3 item inside the Prop2 object,
@@ -591,6 +597,61 @@
 			}
 		}
 	}
+
+	/**
+	 * Class QSimpleTableNodeColumn
+	 *
+	 * A table column that displays the content of a database column represented by a QQNode object.
+	 * The $objNodes can be a single node, or an array of nodes. If an array of nodes, the first
+	 * node will be the display node, and the rest of the nodes will be used for sorting.
+	 */
+	class QSimpleTableNodeColumn extends QSimpleTablePropertyColumn {
+		public function __construct($strName, $objNodes) {
+			if ($objNodes instanceof QQNode) {
+				$objNodes = [$objNodes];
+			}
+			elseif (empty($objNodes) || !is_array($objNodes) || !$objNodes[0] instanceof QQNode) {
+				throw new QCallerException('Pass either a QQNode or an array of QQNodes only');
+			}
+
+			$objNode = $objNodes[0]; // First node is the data node, the rest are for sorting.
+
+			if (!$objNode->_ParentNode) {
+				throw new QCallerException('First QQNode cannot be a Top Level Node');
+			}
+			if (($objNode instanceof QQReverseReferenceNode) && !$objNode->IsUnique()) {
+				throw new QCallerException('Content QQNode cannot go through any "To Many" association nodes.');
+			}
+
+			$properties = array($objNode->_PropertyName);
+			while ($objNode = $objNode->_ParentNode) {
+				if (!($objNode instanceof QQNode))
+					throw new QCallerException('QQNode cannot go through any "To Many" association nodes.');
+				if (($objNode instanceof QQReverseReferenceNode) && !$objNode->IsUnique())
+					throw new QCallerException('QQNode cannot go through any "To Many" association nodes.');
+				if ($strPropName = $objNode->_PropertyName) {
+					$properties[] = $strPropName;
+				}
+			}
+			$properties = array_reverse($properties);
+			$strProp = implode ('->', $properties);
+			parent::__construct($strName, $strProp, null);
+
+			// build sort nodes
+			foreach ($objNodes as $objNode) {
+				if ($objNode instanceof QQReverseReferenceNode) {
+					$objNode = $objNode->_PrimaryKeyNode;
+				}
+				$objSortNodes[] = $objNode;
+				$objReverseNodes[] = $objNode;
+				$objReverseNodes[] = false;
+			}
+
+			$this->OrderByInfo = QQ::OrderBy($objSortNodes);
+			$this->ReverseOrderByInfo = QQ::OrderBy($objReverseNodes);
+		}
+	}
+
 
 	/**
 	 * A type of column that should be used when the DataSource items are arrays
@@ -801,89 +862,131 @@
 	 * A column of checkboxes. 
 	 * 
 	 * Prints checkboxes in a column, including the header. Override this class and implement whatever hooks you need. In
-	 * particular implement the CheckId hooks, and IsChecked hooks. 
+	 * particular implement the CheckId hooks, and IsChecked hooks.
+	 *
+	 * This class does not detect and record changes in the checkbox list.
+	 * Use the QSimpleTableCheckBoxColumn_ClickEvent to detect a change to a checkbox. You will need to detect whether
+	 * the header check all box was clicked, or a regular box was clicked and respond accordingly. In response to a
+	 * click, you could store the array of ids of the checkboxes clicked in a session variable, the database, or
+	 * a cache variable. You would just give an id to each checkbox. This would cause internet traffic every time
+	 * a box is clicked.
 	 *
 	 */
 	class QSimpleTableCheckBoxColumn extends QAbstractSimpleTableDataColumn {
-		protected $blnHtmlEntities = false;
+		protected $blnHtmlEntities = false;	// turn off html entities
 		protected $checkParamCallback = null;
-		
+
+		/**
+		 * Returns a header cell with a checkbox. This could be used as a check all box. Override this and return
+		 * an empty string to turn it off.
+		 *
+		 * @return string
+		 */
 		public function FetchHeaderCellValue() {
-			$strToReturn = '<input type="checkbox"';
-			$aParams = $this->GetHeaderCheckboxParams();
-			foreach ($aParams as $key=>$str) {
-				$strToReturn .= ' ' . $key . '="' . $str . '"';
-			}
-			
-			$strToReturn .= ' />';
-			return $strToReturn;
+			$aParams = $this->GetCheckboxParams(null);
+			$aParams['type'] = 'checkbox';
+			return QHtml::RenderTag('input', $aParams, null, true);
 		}
 
-		public function GetHeaderCheckboxParams () {
-			$aParams = array();
-			
-			if ($strId = $this->GetHeaderCheckId ()) {
-				$aParams['id'] = addslashes($strId);
-			}
-			
-			if ($strCheck = $this->IsHeaderChecked ()) {
-				$aParams['checked'] = 'checked';
-			}
-			return $aParams;		
-		}
-		
-		function GetHeaderCheckId () {
-			return null;	
-		}
-		
-		function IsHeaderChecked () {
-			return false;
-		}
-		
 		public function FetchCellObject($item) {
-
 			$aParams = $this->GetCheckboxParams($item);
 			$aParams['type'] = 'checkbox';
 			return QHtml::RenderTag('input', $aParams, null, true);
 		}
-		
+
+		/**
+		 * Returns an array of parameters to attach to the checkbox tag. Includes whether the
+		 * checkbox should appear as checked. Will try the callback first, and if not present,
+		 * will try overridden functions.
+		 * @param mixed|null $item	Null to indicate that we want the params for the header cell.
+		 * @return array
+		 */
 		public function GetCheckboxParams ($item) {
 			$aParams = array();
 			
-			if ($this->checkParamCallback) {
-				$aParams = call_user_func($this->checkParamCallback, $item, 'id');
-				$aParams['id'] = $aParams['id'];
-				return $aParams;
-			}
-			
-			
-			if ($strId = $this->GetCheckId ($item)) {
+			if ($strId = $this->GetCheckboxId ($item)) {
 				$aParams['id'] = $strId;
 			}
 			
-			if ($strCheck = $this->IsChecked ($item)) {
+			if ($this->IsChecked ($item)) {
 				$aParams['checked'] = 'checked';
 			}
+
+			if ($strName = $this->GetCheckboxName ($item)) {
+				$aParams['name'] = $strName; // if no name is indicated, then the data for the checkboxes will not be submitted.
+			}
+
+			$aParams['value'] = $this->GetCheckboxValue ($item); // note that value is required for html checkboxes
+
+			if ($this->checkParamCallback) {
+				$a = call_user_func($this->checkParamCallback, $item);
+				$aParams = array_merge ($aParams, $a);
+			}
+
+
 			return $aParams;		
 		}
-		
+
+		/**
+		 * Optional callback to control the appearance of the checkboxes. You can use a callback, or subclass to do this.
+		 * If a callback, it should be of the form:
+		 * 	func($item)
+		 *
+		 * 	$item is either the line item, or null to indicate the header
+		 *
+		 * This should return the following values in an array to indicate what should be put as attributes for the checkbox tag:
+		 * 	id
+		 *  name
+		 *  value
+		 *  checked (only return a value here if you want it checked. Otherwise, do not include in the array)
+		 *
+		 *  See below for a description of what should be returned for each item.
+		 *
+		 * @param $callable
+		 */
 		public function SetCheckParamCallback ($callable) {
 			$this->checkParamCallback = $callable;
 		}
 		
 		/**
 		 * Returns the id for the checkbox itself. This is used together with the check action to send the item
-		 * id to the action. This system currently supports only one checkbox column. 
-		 * @param unknown_type $item
+		 * id to the action.
+		 * @param mixed|null $item	Null to get the id for the header checkbox
 		 */
-		function GetCheckId ($item) {
+		protected function GetCheckboxId ($item) {
 			return null;
 		}
-		
-		function GetItemId ($item){}
-		
-		function IsChecked ($item) {
+
+		/**
+		 * Return true if the checkbox should be drawn checked. Override this to provide the correct value.
+		 * @param mixed|null $item	Null to get the id for the header checkbox
+		 * @return bool
+		 */
+		protected function IsChecked ($item) {
 			return false;
+		}
+
+		/**
+		 * Return the name attribute for the checkbox. If you return null, the checkbox will not get submitted to the form.
+		 * If you return a name, then that will be the key for the value submitted by the form. If you return a name
+		 * ending with brackets [], then this checkbox will be part of an array of values posted to that name.
+		 *
+		 * @param mixed|null $item	Null to get the id for the header checkbox
+		 * @return null|string
+		 */
+		protected function GetCheckboxName ($item) {
+			return null;
+		}
+
+		/**
+		 * Return the value attribute of the checkbox tag. Checkboxes are required to have a value in html.
+		 * This value will be what is posted by form post.
+		 *
+		 * @param mixed|null $item	Null to get the id for the header checkbox
+		 * @return string
+		 */
+		protected function GetCheckboxValue ($item) {
+			return "1"; // Means that if the checkbox is checked, the POST value corresponding to the name of the checkbox will be 1.
 		}
 
 		/**
@@ -905,6 +1008,14 @@
 		}
 
 	}
-	
+
+
+	class QSimpleTableCheckBoxColumn_ClickEvent extends QClickEvent {
+		const JsReturnParam = '{"row": $j(this).closest("tr")[0].rowIndex, "col": $j(this).parent()[0].cellIndex, "checked":this.checked, "id":this.id}'; // returns the array of cell info, and the new state of the checkbox
+
+		public function __construct($intDelay = 0, $strCondition = null) {
+			parent::__construct($intDelay, $strCondition, 'input[type="checkbox"]');
+		}
+	}
 
 ?>
