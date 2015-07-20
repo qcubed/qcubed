@@ -33,6 +33,13 @@
 
 	<div class="headerLine"><span><strong>Code Generated:</strong> <?php _p(date('l, F j Y, g:i:s A')); ?></span></div>
 
+<?php if (QCodeGen::$TemplatePaths) { ?>
+	<div>
+		<p><strong>Template Paths</strong></p>
+		<pre><code><?php DisplayMonospacedText(implode("\r\n", QCodeGen::$TemplatePaths)); ?></code></pre>
+	</div>
+<?php } ?>
+
 	<div>
 		<?php if ($strErrors = QCodeGen::$RootErrors) { ?>
 			<p><strong>The following root errors were reported:</strong></p>
