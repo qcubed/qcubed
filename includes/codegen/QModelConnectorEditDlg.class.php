@@ -64,25 +64,24 @@ class QModelConnectorEditDlg extends QDialog {
 
 		$this->dtgGeneralOptions = new QSimpleTable($this->tabs, 'definitionTab');
 		$this->dtgGeneralOptions->ShowHeader = false;
-		$this->dtgGeneralOptions->Name = "Definition Options";
+		$this->dtgGeneralOptions->Name = "General";
 		$this->dtgGeneralOptions->CreatePropertyColumn('Attribute', 'Name');
 		$col = $this->dtgGeneralOptions->AddColumn (new QSimpleTableCallableColumn('Attribute', array ($this, 'dtg_ValueRender'), $this->dtgGeneralOptions));
 		$col->HtmlEntities = false;
 		$this->dtgGeneralOptions->SetDataBinder('dtgGeneralOptions_Bind', $this);
 
 		$this->generalOptions = array (
-			new QModelConnectorParam ('General', 'FormGen',
+			new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'FormGen',
 				'Whether or not to generate this object, just a label for the object, just the control, or both the control and label',
 				QModelConnectorParam::SelectionList,
 				array (QFormGen::Both=>'Both', QFormGen::None=>'None', QFormGen::ControlOnly=>'Control', QFormGen::LabelOnly=>'Label')),
-			new QModelConnectorParam ('General', 'Name', 'Control\'s Name', QType::String),
-			new QModelConnectorParam ('General', 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QModelConnectorParam::SelectionList, $strClassNames),
-			new QModelConnectorParam ('General', 'NoAutoLoad', 'Prevent automatically populating a list type control. Set this if you are doing more complex list loading.', QType::Boolean)
+			new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'Name', 'Control\'s Name', QType::String),
+			new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QModelConnectorParam::SelectionList, $strClassNames)
 		);
 
 		// load values from settings file
 		foreach ($this->generalOptions as $objParam) {
-			$objControl = $objParam->GetControl ($this->dtgGeneralOptions);
+			$objControl = $objParam->GetControl ($this->dtgGeneralOptions);	// get a control that will edit this option
 			$strName = $objControl->Name;
 
 			if (isset($this->params[$strName])) {
@@ -103,6 +102,24 @@ class QModelConnectorEditDlg extends QDialog {
 		// gather categories
 		foreach ($params as $param) {
 			$this->categories[$param->Category][] = $param;
+		}
+
+		// Add any additional general items to the general tab
+		if (isset ($this->categories[QModelConnectorParam::GeneralCategory])) {
+			// load values from settings file
+			foreach ($this->categories[QModelConnectorParam::GeneralCategory] as $objParam) {
+				$objControl = $objParam->GetControl($this->dtgGeneralOptions);    // get a control that will edit this option
+				$strName = $objControl->Name;
+
+				if (isset($this->params[$strName])) {
+					$objControl->Value = $this->params[$strName];
+				} else {
+					$objControl->Value = null;
+				}
+				$this->generalOptions[] = $objParam;
+			}
+
+			unset($this->categories[QModelConnectorParam::GeneralCategory]);
 		}
 
 		foreach ($this->categories as $tabName=>$params) {
