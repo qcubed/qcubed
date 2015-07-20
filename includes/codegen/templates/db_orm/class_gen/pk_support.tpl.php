@@ -16,7 +16,7 @@
 		* Returns a single unique value representing the primary key.
 		* @return mixed
 		*/
-		protected function PrimaryKey() {
+		public function PrimaryKey() {
 <?php 	if (count ($objTable->PrimaryKeyColumnArray) == 1) { ?>
 			return $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>;
 <?php 	} else {

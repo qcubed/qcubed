@@ -30,7 +30,7 @@
 </div>
 
 <div id="demoZone">
-	<h2>TripleDES, Electronic Codebook Encryption</h3>
+	<h2>TripleDES, Electronic Codebook Encryption</h2>
 	<ul>
 <?php
 		$strOriginal = 'The quick brown fox jumps over the lazy dog.';

@@ -318,6 +318,7 @@
 	 *
 	 * @param string $strEventName the name of the event i.e.: "click"
 	 * @param string $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()...
+	 * @deprectated QEvent now has the strSelector at the end of its constructor
 	 *
 	 */
 	class QOnEvent extends QEvent{

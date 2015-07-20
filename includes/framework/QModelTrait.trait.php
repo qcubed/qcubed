@@ -115,11 +115,14 @@ trait QModelTrait {
 
 		// Iterate through all the Optional Clauses (if any) and perform accordingly
 		if ($objOptionalClauses) {
-			if ($objOptionalClauses instanceof QQClause)
+			if ($objOptionalClauses instanceof QQClause) {
 				$objOptionalClauses->UpdateQueryBuilder($objQueryBuilder);
-			else if (is_array($objOptionalClauses))
-				foreach ($objOptionalClauses as $objClause)
+			}
+			else if (is_array($objOptionalClauses)) {
+				foreach ($objOptionalClauses as $objClause) {
 					$objClause->UpdateQueryBuilder($objQueryBuilder);
+				}
+			}
 			else
 				throw new QCallerException('Optional Clauses must be a QQClause object or an array of QQClause objects');
 		}
