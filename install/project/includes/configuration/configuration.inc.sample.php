@@ -421,10 +421,6 @@ if (!defined('SERVER_INSTANCE')) {
 			// If using HTML Purifier, the location of the writeable cache directory.
 			define ('__PURIFIER_CACHE__', __CACHE__ . '/purifier');
 
-			define ('__TEMPLATES_PATH_CORE__', __QCUBED_CORE__ . '/codegen/templates/'); // path to your local overrides
-			define ('__TEMPLATES_PATH_PLUGIN__', '');	// if using a plugin template, path to that template
-			define ('__TEMPLATES_PATH_PROJECT__', __QCUBED__ . '/codegen/templates/');	// path to the core base templates
-
 			/** Uncomment if you are using QTimer to do performance testing. Will automatically output the results of your timers to the file. */
 			//define ('__TIMER_OUT_FILE__', __TMP__ . '/timers.txt');
 		break;

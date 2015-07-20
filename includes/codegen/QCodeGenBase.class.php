@@ -1,11 +1,5 @@
 <?php
 
-	/** Define the template paths for backwards compatibility. */
-	if (!defined ('__TEMPLATES_PATH_CORE__')) define ('__TEMPLATES_PATH_CORE__', __QCUBED_CORE__ . '/codegen/templates/');
-	if (!defined ('__TEMPLATES_PATH_PLUGIN__')) define ('__TEMPLATES_PATH_PLUGIN__', '');
-	if (!defined ('__TEMPLATES_PATH_PROJECT__')) define ('__TEMPLATES_PATH_PROJECT__', __QCUBED__ . '/codegen/templates/');
-
-
 	function QcodoHandleCodeGenParseError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline) {
 		$strErrorString = str_replace("SimpleXMLElement::__construct() [<a href='function.SimpleXMLElement---construct'>function.SimpleXMLElement---construct</a>]: ", '', $__exc_errstr);
 		QCodeGen::$RootErrors .= sprintf("%s\r\n", $strErrorString);
@@ -63,7 +57,7 @@
 		/** @var string Class suffix, as specified in the codegen_settings.xml file */
 		protected $strClassSuffix;
 
-		/** string Errors and Warnings collected during the process of codegen **/
+		/** @var string Errors and Warnings collected during the process of codegen **/
 		protected $strErrors;
 
 		/**
@@ -74,11 +68,11 @@
 		 */
 		const PhpReservedWords = 'new, null, break, return, switch, self, case, const, clone, continue, declare, default, echo, else, elseif, empty, exit, eval, if, try, throw, catch, public, private, protected, function, extends, foreach, for, while, do, var, class, static, abstract, isset, unset, implements, interface, instanceof, include, include_once, require, require_once, abstract, and, or, xor, array, list, false, true, global, parent, print, exception, namespace, goto, final, endif, endswitch, enddeclare, endwhile, use, as, endfor, endforeach, this';
 
-		/** Core templates path */
-		const TemplatesPathCore = __TEMPLATES_PATH_CORE__;
-		/** Plugins templates path */
-		const TemplatesPathPlugin = __TEMPLATES_PATH_PLUGIN__;
-		const TemplatesPathProject = __TEMPLATES_PATH_PROJECT__;
+		/**
+		 * @var array The list of template base paths to search, in order, when looking for a particular template. Set this
+		 * to insert new template paths. If not set, the default will be the project template path, following by the qcubed core path.
+		 */
+		public static $TemplatePaths;
 
 		/**
 		 * DebugMode -- for Template Developers
@@ -126,6 +120,7 @@
 		 * @var string $PreferredRenderMethod
 		 */
 		public static $PreferredRenderMethod;
+
 
 		/**
 		 * Template Escape Begin (from CodeGen Settings)
@@ -322,22 +317,20 @@
 			// If you are editing core templates, and getting EOF errors only on the travis build, this may be your problem. Scan your files and remove short tags.
 			if (QCodeGen::DebugMode && ini_get ('short_open_tag')) _p("Warning: PHP directive short_open_tag is on. Using short tags will cause unexpected EOF on travis build.\n", false);
 
-			$strTemplatePathCore = sprintf('%s%s', QCodeGen::TemplatesPathCore, $strTemplatePrefix);
-			if (!is_dir($strTemplatePathCore))
-				throw new Exception(sprintf("__TEMPLATES_PATH_CORE__ does not appear to be a valid directory:\r\n%s", $strTemplatePathCore));
-
-			$strTemplatePathPlugin = '';
-			if (QCodeGen::TemplatesPathPlugin) {
-				$strTemplatePathPlugin = QCodeGen::TemplatesPathCustom;
-				if (!is_dir($strTemplatePathPlugin))
-					throw new Exception(sprintf("__TEMPLATES_PATH_PLUGIN__ does not appear to be a valid directory:\r\n%s", $strTemplatePathPlugin));
-				$strTemplatePathPlugin .= $strTemplatePrefix;
+			// Default the template paths
+			if (!static::$TemplatePaths) {
+				static::$TemplatePaths = array (
+					__QCUBED__ . '/codegen/templates/',
+					__QCUBED_CORE__ . '/codegen/templates/'
+				);
 			}
 
-			$strTemplatePathProject = QCodeGen::TemplatesPathProject;
-			if (!is_dir($strTemplatePathProject))
-				throw new Exception(sprintf("__TEMPLATES_PATH_PROJECT__ does not appear to be a valid directory:\r\n%s", $strTemplatePathProject));
-			$strTemplatePathProject .= $strTemplatePrefix;
+			// validate the template paths
+			foreach (static::$TemplatePaths as $strPath) {
+				if (!is_dir($strPath)) {
+					throw new Exception(sprintf("Template path: %s does not appear to be a valid directory.", $strPath));
+				}
+			}
 
 			// Create an array of arrays of standard templates and custom (override) templates to process
 			// Index by [module_name][filename] => true/false where
@@ -347,9 +340,9 @@
 			$strTemplateArray = array();
 
 			// Go through standard templates first, then override in order
-			$this->buildTemplateArray($strTemplatePathCore, $strTemplateArray);
-			$this->buildTemplateArray($strTemplatePathPlugin, $strTemplateArray);
-			$this->buildTemplateArray($strTemplatePathProject, $strTemplateArray);
+			foreach (static::$TemplatePaths as $strPath) {
+				$this->buildTemplateArray($strPath . $strTemplatePrefix, $strTemplateArray);
+			}
 
 			// Finally, iterate through all the TemplateFiles and call GenerateFile to Evaluate/Generate/Save them
 			$blnSuccess = true;
@@ -443,12 +436,8 @@
 
 			// Evaluate the Template
 			// make sure paths are set up to pick up included files from the various directories
-			$a[] = QCodeGen::TemplatesPathCore . $strModuleSubPath;
-			if (QCodeGen::TemplatesPathPlugin) {
-				array_unshift ($a, QCodeGen::TemplatesPathPlugin . $strModuleSubPath);
-			}
-			if (QCodeGen::TemplatesPathProject) {
-				array_unshift ($a, QCodeGen::TemplatesPathProject . $strModuleSubPath);
+			foreach (static::$TemplatePaths as $strTemplatePath) {
+				$a[] = $strTemplatePath . $strModuleSubPath;
 			}
 			$strSearchPath = implode (PATH_SEPARATOR, $a) . PATH_SEPARATOR . get_include_path();
 			$strOldIncludePath = set_include_path ($strSearchPath);
