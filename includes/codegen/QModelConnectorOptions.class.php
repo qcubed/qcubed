@@ -15,6 +15,8 @@ class QModelConnectorOptions extends QBaseClass {
 	protected $options = array();
 	protected $blnChanged = false;
 
+	const TableOptionsFieldName = '*';
+
 	public function __construct() {
 		if (file_exists(__CONFIGURATION__ . '/codegen_options.json')) {
 			$strContent = file_get_contents(__CONFIGURATION__ . '/codegen_options.json');
