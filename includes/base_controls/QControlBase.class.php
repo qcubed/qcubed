@@ -88,6 +88,7 @@
 	 * @property boolean $Visible specifies whether or not the control should be rendered in the page.  This is in contrast to Display, which will just hide the control via CSS styling.
 	 * @property string $Warning is warning text that will be shown next to the control's name label {@link QControl::RenderWithName}
 	 * @property boolean $UseWrapper defaults to true
+	 * @property QQNode $LinkedNode A database node that this control is directly editing
 	 * @property-read boolean $WrapperModified
 	 * @property string $WrapperCssClass
 	 * @property boolean $WrapLabel For checkboxes, radio buttons, and similar controls, whether to wrap the label around
@@ -236,7 +237,7 @@
 		 * @param QControl|QForm|QControlBase $objParentObject
 		 * @param string                      $strControlId
 		 *   optional id of this Control. In html, this will be set as the value of the id attribute. The id can only
-		 *   contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id
+		 *   contain alphanumeric characters.  If this parameter is not passed, QCubed will generate the id.
 		 *
 		 * @throws Exception|QCallerException
 		 */
@@ -1341,6 +1342,14 @@
 		 *
 		 * As an abstract method, any class extending QControlBase must implement it.  This ensures that
 		 * each control has its own specific html.
+		 *
+		 * When outputting html, you should call GetHtmlAttributes to get the attributes for the main control.
+		 *
+		 * If you are outputting a complex control, and need to include ids in subcontrols, your ids should be of the form:
+		 * 	$parentControl->ControlId . '_' . $strSubcontrolId.
+		 * The underscore indicates that actions and post data should be routed first to the parent control, and the parent
+		 * control will handle the rest.
+		 *
 		 * @return string
 		 */
 		abstract protected function GetControlHtml();
