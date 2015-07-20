@@ -647,8 +647,8 @@
 				$objReverseNodes[] = false;
 			}
 
-			$this->OrderByInfo = QQ::OrderBy($objSortNodes);
-			$this->ReverseOrderByInfo = QQ::OrderBy($objReverseNodes);
+			$this->OrderByClause = QQ::OrderBy($objSortNodes);
+			$this->ReverseOrderByClause = QQ::OrderBy($objReverseNodes);
 		}
 	}
 
