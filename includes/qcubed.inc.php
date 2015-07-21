@@ -250,6 +250,7 @@
 	QApplicationBase::$ClassFile['qmodelconnectoreditdlg'] = __QCUBED_CORE__ .'/codegen/QModelConnectorEditDlg.class.php';
 	QApplicationBase::$ClassFile['qmodelconnectorparam'] = __QCUBED_CORE__ .'/codegen/QModelConnectorParam.class.php';
 	QApplicationBase::$ClassFile['qmodelconnectoroptions'] = __QCUBED_CORE__ .'/codegen/QModelConnectorOptions.class.php';
+	QApplicationBase::$ClassFile['qcontrolcategorytype'] = __QCUBED_CORE__ .'/codegen/QControlCategoryType.class.php';
 
 	// code generators
 	include (__QCUBED_CORE__ . '/codegen/controls/_class_paths.inc.php');
