@@ -18,6 +18,8 @@ class QModelConnectorParam extends QBaseClass {
 	/** Specifies a list of items to present to the user to select from. */
 	const SelectionList = 'list';
 
+	const GeneralCategory = 'General';
+
 	protected $strCategory;
 	protected $strName;
 	protected $strDescription;

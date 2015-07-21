@@ -425,5 +425,15 @@
 					return null;
 			}
 		}
+
+		/**
+		 * Returns a description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QModelConnectorParam[]
+		 */
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'NoAutoLoad', 'Prevent automatically populating a list type control. Set this if you are doing more complex list loading.', QType::Boolean)
+			));
+		}
 	}
-?>
