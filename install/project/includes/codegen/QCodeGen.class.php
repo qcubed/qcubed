@@ -33,10 +33,10 @@
 		 */
 		public function __construct($objSettingsXml) {
 			// Specify the paths to your template files here. These paths will be searched in the order declared, to
-			// find a particular template file. Template files found higher up in the order will override the others.
+			// find a particular template file. Template files found lower down in the order will override the previous ones.
 			static::$TemplatePaths = array (
-				__QCUBED__ . '/codegen/templates/',
-				__QCUBED_CORE__ . '/codegen/templates/'
+				__QCUBED_CORE__ . '/codegen/templates/',
+				__QCUBED__ . '/codegen/templates/'
 			);
 		}
 				

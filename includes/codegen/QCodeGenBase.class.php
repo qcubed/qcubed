@@ -320,8 +320,8 @@
 			// Default the template paths
 			if (!static::$TemplatePaths) {
 				static::$TemplatePaths = array (
-					__QCUBED__ . '/codegen/templates/',
-					__QCUBED_CORE__ . '/codegen/templates/'
+					__QCUBED_CORE__ . '/codegen/templates/',
+					__QCUBED__ . '/codegen/templates/'
 				);
 			}
 
@@ -454,8 +454,9 @@
 			$strDirectorySuffix = QType::Cast($templateSettings['DirectorySuffix'], QType::String);
 			$strTargetFileName = QType::Cast($templateSettings['TargetFileName'], QType::String);
 
-			if (is_null($blnOverwriteFlag) || is_null($strTargetFileName) || is_null($strTargetDirectory) || is_null($strDirectorySuffix) || is_null($blnDocrootFlag))
+			if (is_null($blnOverwriteFlag) || is_null($strTargetFileName) || is_null($strTargetDirectory) || is_null($strDirectorySuffix) || is_null($blnDocrootFlag))  {
 				throw new Exception('the template settings cannot be null');
+			}
 
 			if ($blnSave && $strTargetDirectory) {
 				// Figure out the REAL target directory
@@ -898,6 +899,35 @@
 			}
 			return new $strControlCodeGeneratorClass($strOrigControlClass);
 		}
+
+		public function GetDataListCodeGenerator($objTable) {
+			$strControlClass = $this->DataListControlClass($objTable);
+
+			if (method_exists($strControlClass, 'GetCodeGenerator')) {
+				return call_user_func($strControlClass.'::GetCodeGenerator');
+			}
+
+			return new QDataGrid2_CodeGenerator();
+		}
+
+		public function DataListControlClass (QTable $objTable) {
+			// Is the class specified by the developer?
+			if ($o = $objTable->Options) {
+				if (isset($o['ControlClass'])) {
+					return $o['ControlClass'];
+				}
+			}
+
+			// Otherwise, return a default
+			return 'QDataGrid2';
+		}
+
+		public function DataListVarName (QTable $objTable) {
+			$strPropName = $objTable->ClassName;
+			$objControlHelper = $this->GetDataListCodeGenerator($objTable);
+			return $objControlHelper->VarName($strPropName);
+		}
+
 
 		protected function CalculateObjectMemberVariable($strTableName, $strColumnName, $strReferencedTableName) {
 			return sprintf('%s%s%s%s',
