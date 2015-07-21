@@ -161,10 +161,8 @@
 							if ($mixCurVal === null || $mixCurVal === '') {
 								$blnSelected = true;
 							}
-						} else {
-							if (!($mixCurVal === null || $mixCurVal === '')) {
-								$$blnSelected = true;
-							}
+						} elseif (!$mixCurVal && !($mixCurVal === null || $mixCurVal === '')) {
+							$blnSelected = true;
 						}
 					}
 					elseif ($mixCurVal == $mixValue) {

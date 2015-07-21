@@ -447,9 +447,25 @@
 		}
 	}
 
+	/**
+	 * Class QQReverseReferenceNode
+	 *
+	 * Describes a foreign key relationship that links to the primary key in a table. Relationship can be unique (one-to-one) or
+	 * not unique (many-to-one).
+	 */
 	class QQReverseReferenceNode extends QQNode {
+		/** @var string The name of the foreign key in the linked table.  */
 		protected $strForeignKey;
 
+		/**
+		 * Construct the reverse reference.
+		 *
+		 * @param QQBaseNode $objParentNode
+		 * @param $strName
+		 * @param $strType
+		 * @param QQBaseNode $strForeignKey
+		 * @param null $strPropertyName		If a unique reverse relationship, the name of property that will be used in the model class.
+		 */
 		public function __construct(QQBaseNode $objParentNode, $strName, $strType, $strForeignKey, $strPropertyName = null) {
 			$this->objParentNode = $objParentNode;
 			if ($objParentNode) {
@@ -467,20 +483,42 @@
 			$this->strPropertyName = $strPropertyName;
 		}
 
+		/**
+		 * Return true if this is a unique reverse relationship.
+		 *
+		 * @return bool
+		 */
+		public function IsUnique() {
+			return !empty($this->strPropertyName);
+		}
+
+		/**
+		 * @param QQueryBuilder $objBuilder
+		 * @param $strJoinTableAlias
+		 * @param $strParentAlias
+		 * @param QQCondition $objJoinCondition
+		 */
 		protected function addJoinTable(QQueryBuilder $objBuilder, $strJoinTableAlias, $strParentAlias, QQCondition $objJoinCondition = null) {
 			$objBuilder->AddJoinItem($this->strTableName, $strJoinTableAlias,
 				$strParentAlias, $this->objParentNode->_PrimaryKey, $this->strForeignKey, $objJoinCondition);
 		}
 
+		/**
+		 * @param QQueryBuilder $objBuilder
+		 * @param bool $blnExpandSelection
+		 * @param QQCondition $objJoinCondition
+		 * @param QQSelect $objSelect
+		 * @return null|string
+		 */
 		public function GetColumnAlias(QQueryBuilder $objBuilder, $blnExpandSelection = false, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 			$this->GetTableAlias($objBuilder, $blnExpandSelection, $objJoinCondition, $objSelect);
 			return null;
 		}
 
+		/**
+		 * @return string
+		 */
 		public function GetExpandArrayAlias() {
-//			$objNode = $this;
-//			$objChildTableNode = $this->_ChildTableNode;
-//			$strToReturn = $objChildTableNode->_Name . '__' . $objChildTableNode->_PrimaryKey;
 			$strToReturn = $this->strName . '__' . $this->_PrimaryKey;
 
 			$objNode = $this->_ParentNode;
@@ -492,8 +530,11 @@
 			return $strToReturn;
 		}
 	}
+
 	/**
-	 * @property-read QQNode $_ChildTableNode
+	 * Class QQAssociationNode
+	 *
+	 * Describes a many-to-many relationship in the database that uses an association table to link two other tables together.
 	 */
 	class QQAssociationNode extends QQBaseNode {
 		public function __construct(QQBaseNode $objParentNode) {

@@ -837,6 +837,15 @@
 				return $strToReturn . sprintf("'%s'", $mixData->qFormat(QDateTime::FormatIso));
 			}
 
+			// an array. Assume we are using it in an array context, like an IN clause
+			if (is_array($mixData)) {
+				$items = [];
+				foreach ($mixData as $item) {
+					$items[] = $this->SqlVariable($item);	// recurse
+				}
+				return '(' . implode(',', $items) . ')';
+			}
+
 			// Assume it's some kind of string value
 			return $strToReturn . sprintf("'%s'", addslashes($mixData));
 		}

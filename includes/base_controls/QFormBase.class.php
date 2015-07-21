@@ -475,7 +475,7 @@
 					// Ajax post. Only send data to controls specified in the post to save time.
 					foreach ($_POST as $key=>$val) {
 						$strControlId = $key;
-						if (($intOffset = strrpos ($strControlId, '_')) !== false) {
+						if (($intOffset = strpos ($strControlId, '_')) !== false) {	// the first break is the control id
 							$strControlId = substr ($strControlId, 0, $intOffset);
 						}
 						$previouslyFoundArray = array();

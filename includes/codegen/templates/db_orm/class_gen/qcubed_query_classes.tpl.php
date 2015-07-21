@@ -76,7 +76,7 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 				case '<?= $objColumn->PropertyName ?>':
 					return new QQNode('<?= $objColumn->Name ?>', '<?= $objColumn->PropertyName ?>', '<?= $objColumn->DbType ?>', $this);
-<?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
+<?php if ($objColumn->Reference) { ?>
 				case '<?= $objColumn->Reference->PropertyName ?>':
 					return new QQNode<?= $objColumn->Reference->VariableType; ?>('<?= $objColumn->Name ?>', '<?= $objColumn->Reference->PropertyName ?>', '<?= $objColumn->DbType ?>', $this);
 <?php } ?>

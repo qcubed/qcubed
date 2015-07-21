@@ -785,7 +785,7 @@
 		 * @return string
 		 */
 		public function ModelConnectorVariableName($objColumn) {
-			$strPropName = $this->ModelConnectorPropertyName($objColumn);
+			$strPropName = static::ModelConnectorPropertyName($objColumn);
 			$objControlHelper = $this->GetControlCodeGenerator($objColumn);
 			return $objControlHelper->VarName ($strPropName);
 		}
@@ -797,7 +797,7 @@
 		 * @return string
 		 */
 		public function ModelConnectorLabelVariableName($objColumn) {
-			$strPropName = $this->ModelConnectorPropertyName($objColumn);
+			$strPropName = static::ModelConnectorPropertyName($objColumn);
 			return QLabel_CodeGenerator::Instance()->VarName($strPropName);
 		}
 

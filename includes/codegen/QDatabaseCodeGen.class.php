@@ -746,6 +746,7 @@
 			$objTable->ClassName = $this->ModelClassName($strTableName);
 			$objTable->ClassNamePlural = $this->Pluralize($objTable->ClassName);
 
+			$objTable->Options = $this->objModelConnectorOptions->GetOptions($objTable->ClassName, QModelConnectorOptions::TableOptionsFieldName);
 
 			// Get the List of Columns
 			$objFieldArray = $this->objDb->GetFieldsForTable($strTableName);

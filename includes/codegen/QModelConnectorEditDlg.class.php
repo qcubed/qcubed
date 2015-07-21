@@ -18,8 +18,9 @@ require(__QCUBED__ . '/codegen/QCodeGen.class.php');
  *
  */
 class QModelConnectorEditDlg extends QDialog {
-
+	/** @var  QControl */
 	protected $objCurrentControl;
+
 	protected $tabs;
 
 	protected $txtName;
@@ -266,9 +267,17 @@ class QModelConnectorEditDlg extends QDialog {
 	 */
 	protected function WriteParams() {
 		$node = $this->objCurrentControl->LinkedNode;
-		$strClassName = $node->_ParentNode->_ClassName;
-		$this->objModelConnectorOptions->SetOptions ($strClassName, $node->_PropertyName, $this->params);
-		$this->objModelConnectorOptions->Save();
+		if ($node) {
+			if ($node->_ParentNode) {
+				$strClassName = $node->_ParentNode->_ClassName;
+				$this->objModelConnectorOptions->SetOptions ($strClassName, $node->_PropertyName, $this->params);
+				$this->objModelConnectorOptions->Save();
+			} else {
+				// Table options
+				$this->objModelConnectorOptions->SetOptions ($node->_ClassName, '*', $this->params);
+				$this->objModelConnectorOptions->Save();
+			}
+		}
 	}
 
 	/**
@@ -277,8 +286,14 @@ class QModelConnectorEditDlg extends QDialog {
 	protected function ReadParams() {
 		$node = $this->objCurrentControl->LinkedNode;
 		if ($node) {
-			$strClassName = $node->_ParentNode->_ClassName;
-			$this->params = $this->objModelConnectorOptions->GetOptions ($strClassName, $node->_PropertyName);
+			if ($node->_ParentNode) {
+				$strClassName = $node->_ParentNode->_ClassName;
+				$this->params = $this->objModelConnectorOptions->GetOptions ($strClassName, $node->_PropertyName);
+			}
+			else {
+				// Table options
+				$this->params = $this->objModelConnectorOptions->GetOptions ($node->_ClassName, '*');
+			}
 		}
 	}
 
@@ -311,13 +326,17 @@ class QModelConnectorEditDlg extends QDialog {
 		// $controls is now an array indexed by QType, with each entry a QControl type name
 
 		// Figure out what type of control we are looking for
+		// For the most part, the control category types are the same as the database type
 		$node = $this->objCurrentControl->LinkedNode;
 		$type = $node->_Type;
-		if ($node->_Type == QType::ReverseReference) {
-			$type = QType::ArrayType;
+		if (($node->_Type == QType::ReverseReference && $node->IsUnique()) || $node->_Type == QType::ArrayType) {
+			$type = QControlCategoryType::SingleSelect;
 		}
-		elseif ($node->_TableName) { // indicates a reference to another table
-			$type = QType::ArrayType;
+		elseif (($node->_Type == QType::ReverseReference && !$node->IsUnique()) || $node->_Type == QType::Association) {
+			$type = QControlCategoryType::MultiSelect;
+		}
+		elseif ($node->_TableName) { // indicates a reference to a table
+			$type = QControlCategoryType::Table;
 		}
 
 		if (isset ($controls[$type])) {
