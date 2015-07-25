@@ -128,6 +128,10 @@
 		}
 
 		public function GetTitle() {
+			if (!QApplication::$Database) {
+				return '';
+			}
+			
 			if (array_key_exists($this->intDatabaseIndex, QApplication::$Database)) {
 				$objDatabase = QApplication::$Database[$this->intDatabaseIndex];
 				return sprintf('Database Index #%s (%s / %s / %s)', $this->intDatabaseIndex, $objDatabase->Adapter, $objDatabase->Server, $objDatabase->Database);
@@ -387,13 +391,18 @@
 		}
 
 		protected function AnalyzeDatabase() {
+			if (!QApplication::$Database) {
+				$this->strErrors = 'FATAL ERROR: No databases are listed in the configuration file.';
+				return;
+			}
+			
 			// Set aside the Database object
 			if (array_key_exists($this->intDatabaseIndex, QApplication::$Database))
 				$this->objDb = QApplication::$Database[$this->intDatabaseIndex];
 
 			// Ensure the DB Exists
 			if (!$this->objDb) {
-				$this->strErrors = 'FATAL ERROR: No database configured at index ' . $this->intDatabaseIndex . '.';
+				$this->strErrors = 'FATAL ERROR: No database configured at index ' . $this->intDatabaseIndex . '. Check your configuration file.';
 				return;
 			}
 
