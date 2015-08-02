@@ -1775,10 +1775,10 @@
 			// put javascript environment defines up early for use by other js files.
 			$strHtml .= '<script type="text/javascript">' .
 				sprintf('qc.baseDir = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__) .
-				sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . __JS_ASSETS__) .
-				sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . __PHP_ASSETS__) .
-				sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . __CSS_ASSETS__) .
-				sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ . __IMAGE_ASSETS__) .
+				sprintf('qc.jsAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __JS_ASSETS__) .
+				sprintf('qc.phpAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __PHP_ASSETS__) .
+				sprintf('qc.cssAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __CSS_ASSETS__) .
+				sprintf('qc.imageAssets = "%s"; ', __VIRTUAL_DIRECTORY__ . __IMAGE_ASSETS__) .
 				'</script>' .
 				_nl();
 
