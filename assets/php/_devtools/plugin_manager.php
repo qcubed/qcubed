@@ -52,7 +52,10 @@
 			
 		}
 		
-		public function dtgPlugins_Bind() {			
+		public function dtgPlugins_Bind() {
+			if (!is_dir(__PLUGINS__)) {
+				return;
+			}
 			$pluginDirArray = scandir ( __PLUGINS__);
 			$itemArray = array();
 			
