@@ -65,9 +65,12 @@
 			</code></pre>
 		<?php } ?>
 
-		<?php foreach (QCodeGen::GenerateAggregate() as $strMessage) { ?>
-			<p><strong><?php _p($strMessage); ?></strong></p>
-		<?php } ?>
+		<?php
+			if (!$strErrors) {
+				foreach (QCodeGen::GenerateAggregate() as $strMessage) { ?>
+					<p><strong><?php _p($strMessage); ?></strong></p>
+				<?php }
+			} ?>
 	</div>
 
 <?php require(__CONFIGURATION__ . '/footer.inc.php'); ?>
