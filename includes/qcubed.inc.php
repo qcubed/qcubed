@@ -252,6 +252,8 @@
 	QApplicationBase::$ClassFile['qmodelconnectoroptions'] = __QCUBED_CORE__ .'/codegen/QModelConnectorOptions.class.php';
 	QApplicationBase::$ClassFile['qcontrolcategorytype'] = __QCUBED_CORE__ .'/codegen/QControlCategoryType.class.php';
 
+	QApplicationBase::$ClassFile['qautocomplete_sourceevent'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
+
 	// code generators
 	include (__QCUBED_CORE__ . '/codegen/controls/_class_paths.inc.php');
 

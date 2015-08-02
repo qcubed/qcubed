@@ -36,7 +36,6 @@ qcubed.autocomplete = function(controlId) {
 qcubed.acSourceFunction = function (request, response) {
     this.acResponse = response; // save for later, to be called by responding javascript
     var el = $(this.element);
-    var a = el.autocomplete("instance");
     el.trigger('QAutocomplete_Source', request.term); // tell ourselves to go get the data
 }
 qcubed.acSetData = function(controlId, data) {
