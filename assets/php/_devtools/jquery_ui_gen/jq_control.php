@@ -43,6 +43,7 @@ class Option extends JqAttributes {
 		if (strchr($jsType, ' or ')) return 'mixed';
 		if (stripos($jsType, 'array') === 0) return 'array';
 		switch ($jsType) {
+		case 'mixed': return 'mixed';
 		case 'boolean': return 'boolean';
         case 'boolean[]': return 'boolean[]';
 		case 'string': return 'string';
@@ -228,7 +229,16 @@ class Method extends JqAttributes {
 				$arg = trim($arg, '[] ');
 				$this->phpSignature .= '$'.$arg.' = null';
 				$this->optionalArgs[] = '$'.$arg;
-			} else {
+			}
+			elseif ($arg{strlen($arg) - 1} == '[') {
+				// variable length arg list. Just describe the first ones.
+				// TODO: better handle variable length argument list
+				$arg = trim($arg, '[] ');
+				$this->phpSignature .= '$'.$arg.' = null';
+				$this->optionalArgs[] = '$'.$arg;
+				break;	// we are at the end
+			}
+			else {
 				$this->phpSignature .= '$'.$arg;
 				$this->requiredArgs[] = '$'.$arg;
 			}
