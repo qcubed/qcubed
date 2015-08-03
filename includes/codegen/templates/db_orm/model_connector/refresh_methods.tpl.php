@@ -61,14 +61,20 @@
 		/**
 		 * Load this ModelConnector with a new <?= $objTable->ClassName ?> object.
 <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
-		 * @param <?= $objColumn->VariableType ?> $<?= $objColumn->VariableName ?>
+		 * @param null|<?= $objColumn->VariableType ?> $<?= $objColumn->VariableName ?>
 <?php } ?>
 
 		 * @param $objClauses
 		 * @return void
 		 */
 		 public function Load(<?= implode (',', $aStrs) ?>, $objClauses = null) {
-			if (<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>strlen($<?= $objColumn->VariableName  ?>) && <?php } ?><?php GO_BACK(4); ?>) {
+			if (<?php
+foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {
+	if ($objColumn->VariableType == QType::String) {
+		$strCheck = 'strlen';
+	} else {
+		$strCheck = '!is_null';
+	}?><?= $strCheck ?>($<?= $objColumn->VariableName  ?>) && <?php } ?><?php GO_BACK(4); ?>) {
 				$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?> = <?= $objTable->ClassName ?>::Load(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>$<?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>, $objClauses);
 				$this->strTitleVerb = QApplication::Translate('Edit');
 				$this->blnEditMode = true;
