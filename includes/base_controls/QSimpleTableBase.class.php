@@ -87,6 +87,20 @@
 		}
 
 		/**
+		 * @param string $strName
+		 * @param mixed $objNodes
+		 * @param int $intColumnIndex
+		 * @return QSimpleTableNodeColumn
+		 * @throws Exception
+		 * @throws QInvalidCastException
+		 */
+		public function CreateNodeColumn($strName, $objNodes, $intColumnIndex = -1) {
+			$objColumn = new QSimpleTableNodeColumn($strName, $objNodes);
+			$this->AddColumnAt($intColumnIndex, $objColumn);
+			return $objColumn;
+		}
+
+		/**
 		 * Add a callable column and return it.
 		 * 
 		 * @param string $strName column name
