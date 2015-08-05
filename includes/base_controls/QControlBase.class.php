@@ -1331,10 +1331,11 @@
 			$this->blnOnPage = true;
 
 			// Output or Return
-			if ($blnDisplayOutput)
+			if ($blnDisplayOutput) {
 				print($strOutput);
-			else
+			} else {
 				return $strOutput;
+			}
 		}
 
 		/**
@@ -2240,7 +2241,8 @@
 				new QModelConnectorParam ('QControl', 'Resizable', '', QType::Boolean),
 				new QModelConnectorParam ('QControl', 'Droppable', '', QType::Boolean),
 				new QModelConnectorParam ('QControl', 'UseWrapper', 'Control will be forced to be wrapped with a div', QType::Boolean),
-				new QModelConnectorParam ('QControl', 'WrapperCssClass', '', QType::String)
+				new QModelConnectorParam ('QControl', 'WrapperCssClass', '', QType::String),
+				new QModelConnectorParam ('QControl', 'PreferredRenderMethod', '', QType::String)
 			);
 
 		}
