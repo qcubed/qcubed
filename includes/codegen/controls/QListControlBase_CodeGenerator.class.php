@@ -113,7 +113,7 @@ TMPL;
 				if ($objColumn instanceof QColumn) {
 					$strVarType = $objColumn->Reference->VariableType;
 				} else {
-					$strVarType = $objColumn->ObjectDescription;
+					$strVarType = $objColumn->VariableType;
 				}
 				$strRefVarName = null;
 				$strRet .= <<<TMPL
