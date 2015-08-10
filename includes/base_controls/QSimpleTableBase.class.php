@@ -24,6 +24,7 @@
 	 * @property boolean $ShowFooter true to show the footer row
 	 * @property boolean $RenderColumnTags true to include col tags in the table output
 	 * @property boolean $HideIfEmpty true to completely hide the table if there is no data, vs. drawing the table with no rows.
+	 * @property-write Callable $RowParamsCallback Set to a callback function to fetch custom attributes for row tags.
 	 * @throws QCallerException
 	 *
 	 */
@@ -44,6 +45,9 @@
 		protected $intHeaderRowCount = 1;
 		/** @var  integer Used during rendering to report which header row is being drawn in a multi-row header. */
 		protected $intCurrentHeaderRowIndex;
+
+		/** @var  callable */
+		protected $objRowParamsCallback;
 
 		public function __construct($objParentObject, $strControlId = null)	{
 			try {
@@ -427,10 +431,15 @@
 		 * Handles  class, style, and id by default. Override to add additional types of parameters,
 		 * like an 'onclick' paramater for example. No checking is done on these params, the raw strings are output.
 		 * 
-		 * @param mixValue $item
+		 * @param mixed $objObject	The object of data being used as the row.
+		 * @param integer $intCurrentRowIndex
+		 * @return array	Array of key/value pairs that will be used as attributes for the row tag.
 		 */
 		protected function GetRowParams ($objObject, $intCurrentRowIndex) {
 			$strParamArray = array();
+			if ($this->objRowParamsCallback) {
+				$strParamArray = call_user_func($this->objRowParamsCallback, $objObject, $intCurrentRowIndex);
+			}
 			if ($strClass = $this->GetRowClass ($objObject, $intCurrentRowIndex)) {
 				$strParamArray['class'] = $strClass;
 			}
@@ -575,6 +584,7 @@
 					$objColumn->Sleep();
 				}
 			}
+			$this->objRowParamsCallback = QControl::SleepHelper($this->objRowParamsCallback);
 			parent::Sleep();
 		}
 
@@ -585,6 +595,7 @@
 		 */
 		public function Wakeup(QForm $objForm) {
 			parent::Wakeup($objForm);
+			$this->objRowParamsCallback = QControl::WakeupHelper($objForm, $this->objRowParamsCallback);
 			if ($this->objColumnArray) {
 				foreach ($this->objColumnArray as $objColumn) {
 					$objColumn->Wakeup($objForm);
@@ -703,6 +714,16 @@
 				case "HideIfEmpty":
 					try {
 						$this->blnHideIfEmpty = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "RowParamsCallback":
+					try {
+						assert (is_callable($mixValue));
+						$this->objRowParamsCallback = $mixValue;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
