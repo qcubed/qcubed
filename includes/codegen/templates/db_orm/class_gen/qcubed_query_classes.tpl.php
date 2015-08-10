@@ -25,11 +25,11 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case '<?= $objReference->OppositePropertyName ?>':
-					return new QQNode('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeColumn->DbType ?>', $this);
+					return new QQNode('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeDbType ?>', $this);
 				case '<?= $objReference->VariableType ?>':
-					return new QQNode<?= $objReference->VariableType ?>('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeColumn->DbType ?>', $this);
+					return new QQNode<?= $objReference->VariableType ?>('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeDbType ?>', $this);
 				case '_ChildTableNode':
-					return new QQNode<?= $objReference->VariableType ?>('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeColumn->DbType ?>', $this);
+					return new QQNode<?= $objReference->VariableType ?>('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeDbType ?>', $this);
 				default:
 					try {
 						return parent::__get($strName);
