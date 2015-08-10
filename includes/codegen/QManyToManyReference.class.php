@@ -10,6 +10,7 @@
 	 * @property string $PropertyName
 	 * @property string $OppositeColumn
 	 * @property string $OppositeVariableType
+	 * @property string $OppositeDbType
 	 * @property string $OppositeVariableName
 	 * @property string $OppositePropertyName
 	 * @property string $OppositeObjectDescription
@@ -65,6 +66,14 @@
 		 * @var string OppositeVariableType
 		 */
 		protected $strOppositeVariableType;
+
+		/**
+		 * Database type of the opposite column (the column that owns the foreign key to the related table)
+		 * as a  DbType (for example, to be used to define the input parameter type to a Node)
+		 * @var string OppositeDbType
+		 */
+		protected $strOppositeDbType;
+
 
 		/**
 		 * Name of the opposite column (the column that owns the foreign key to the related table)
@@ -173,6 +182,8 @@
 					return $this->strOppositeColumn;
 				case 'OppositeVariableType':
 					return $this->strOppositeVariableType;
+				case 'OppositeDbType':
+					return $this->strOppositeDbType;
 				case 'OppositeVariableName':
 					return $this->strOppositeVariableName;
 				case 'OppositePropertyName':
@@ -231,6 +242,8 @@
 						return $this->strOppositeColumn = QType::Cast($mixValue, QType::String);
 					case 'OppositeVariableType':
 						return $this->strOppositeVariableType = QType::Cast($mixValue, QType::String);
+					case 'OppositeDbType':
+						return $this->strOppositeDbType = QType::Cast($mixValue, QType::String);
 					case 'OppositeVariableName':
 						return $this->strOppositeVariableName = QType::Cast($mixValue, QType::String);
 					case 'OppositePropertyName':

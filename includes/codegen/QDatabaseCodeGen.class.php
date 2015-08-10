@@ -644,6 +644,7 @@
 				$objManyToManyReference->OppositeVariableName = $this->ModelColumnVariableName($objOppositeColumn);
 				$objManyToManyReference->OppositePropertyName = $this->ModelColumnPropertyName($objOppositeColumn->Name);
 				$objManyToManyReference->OppositeVariableType = $objOppositeColumn->VariableType;
+				$objManyToManyReference->OppositeDbType = $objOppositeColumn->DbType;
 
 				$objManyToManyReference->VariableName = $this->ModelReverseReferenceVariableName($objOppositeForeignKey->ReferenceTableName);
 				$objManyToManyReference->VariableType = $this->ModelReverseReferenceVariableType($objOppositeForeignKey->ReferenceTableName);
