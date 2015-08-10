@@ -551,9 +551,7 @@
 					$dlg = new QModelConnectorEditDlg ($objClass, 'qconnectoreditdlg');
 					$objControls = $objClass->GetAllControls();
 					foreach ($objControls as $objControl) {
-						if ($objControl != $dlg &&
-								!$objControl->IsDescendantOf($dlg) &&
-								!$objControl instanceof QJsTimer) {
+						if ($objControl->LinkedNode) {
 							$objControl->AddAction (new QContextMenuEvent(), new QAjaxAction ('ctlDesigner_Click'));
 							$objControl->AddAction (new QContextMenuEvent(), new QStopPropagationAction());
 							$objControl->AddAction (new QContextMenuEvent(), new QTerminateAction());
@@ -607,10 +605,8 @@
 
 		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
 			$objControl = $this->GetControl($strControlId);
-			if ($objControl->LinkedNode) {
-				$dlg = $this->GetControl ('qconnectoreditdlg');
-				$dlg->EditControl ($objControl);
-			}
+			$dlg = $this->GetControl ('qconnectoreditdlg');
+			$dlg->EditControl ($objControl);
 		}
 
 		/**
