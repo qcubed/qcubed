@@ -12,6 +12,8 @@
 	 * @package Codegen
 	 */
 	class QDatabaseCodeGen extends QCodeGen {
+		public $objSettingsXml;	// Make public so templates can use it directly.
+
 		// Objects
 		/** @var array|QTable[] Array of tables in the database */
 		protected $objTableArray;
@@ -239,6 +241,9 @@
 
 		public function __construct($objSettingsXml) {
 			parent::__construct($objSettingsXml);
+			// Make settings file accessible to templates
+			$this->objSettingsXml = $objSettingsXml;
+
 			// Setup Local Arrays
 			$this->strAssociationTableNameArray = array();
 			$this->objTableArray = array();
