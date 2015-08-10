@@ -40,6 +40,14 @@
 		protected $objChildNodeArray;
 		protected $blnIsType;
 
+		/**
+		 * Return the variable type. Should be a QDatabaseFieldType enum.
+		 * @return string
+		 */
+		public function GetType() {
+			return $this->strType;
+		}
+
 		public function __get($strName) {
 			switch ($strName) {
 				case '_ParentNode':
