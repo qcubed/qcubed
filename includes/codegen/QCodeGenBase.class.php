@@ -246,7 +246,7 @@
 		 * @param string $strType
 		 * @return mixed the return type depends on the QType you pass in to $strType
 		 */
-		static protected function LookupSetting($objNode, $strTagName, $strAttributeName = null, $strType = QType::String) {
+		static public function LookupSetting($objNode, $strTagName, $strAttributeName = null, $strType = QType::String) {
 			if ($strTagName)
 				$objNode = $objNode->$strTagName;
 
@@ -435,9 +435,11 @@
 				throw new QCallerException('Template File Not Found: ' . $strTemplateFilePath);
 
 			// Evaluate the Template
-			// make sure paths are set up to pick up included files from the various directories
+			// make sure paths are set up to pick up included files from the various directories.
+			// Must be the reverse of the buildTemplateArray order
+			$a = array();
 			foreach (static::$TemplatePaths as $strTemplatePath) {
-				$a[] = $strTemplatePath . $strModuleSubPath;
+				array_unshift($a,  $strTemplatePath . $strModuleSubPath);
 			}
 			$strSearchPath = implode (PATH_SEPARATOR, $a) . PATH_SEPARATOR . get_include_path();
 			$strOldIncludePath = set_include_path ($strSearchPath);
@@ -775,8 +777,6 @@
 			else {
 				throw new Exception ('Unknown column type.');
 			}
-
-
 		}
 
 		/**
@@ -860,6 +860,62 @@
 			throw new Exception('Unknown column type.');
 		}
 
+
+		public function DataListControlClass (QTable $objTable) {
+			// Is the class specified by the developer?
+			if ($o = $objTable->Options) {
+				if (isset($o['ControlClass'])) {
+					return $o['ControlClass'];
+				}
+			}
+
+			// Otherwise, return a default
+			return 'QDataGrid';
+		}
+
+		/**
+		 * Returns the control label name as used in the data list panel corresponding to this column.
+		 *
+		 * @param QTable $objTable
+		 *
+		 * @return string
+		 */
+		public static function DataListControlName (QTable $objTable) {
+			if (($o = $objTable->Options) && isset ($o['Name'])) { // Did developer default?
+				return $o['Name'];
+			}
+			return QConvertNotation::WordsFromCamelCase($objTable->ClassNamePlural);
+		}
+
+		/**
+		 * Returns the name of an item in the data list as will be displayed in the edit panel.
+		 *
+		 * @param QTable $objTable
+		 *
+		 * @return string
+		 */
+		public static function DataListItemName (QTable $objTable) {
+			if (($o = $objTable->Options) && isset ($o['ItemName'])) { // Did developer override?
+				return $o['ItemName'];
+			}
+			return QConvertNotation::WordsFromCamelCase($objTable->ClassName);
+		}
+
+		public function DataListVarName (QTable $objTable) {
+			$strPropName = self::DataListPropertyNamePlural($objTable);
+			$objControlHelper = $this->GetDataListCodeGenerator($objTable);
+			return $objControlHelper->VarName($strPropName);
+		}
+
+		public static function DataListPropertyName (QTable $objTable) {
+			return $objTable->ClassName;
+		}
+
+		public static function DataListPropertyNamePlural (QTable $objTable) {
+			return $objTable->ClassNamePlural;
+		}
+
+
 		/**
 		 * Returns the class for the control that will be created to edit the given column,
 		 * including the 'virtual' columns of reverse references (many to one) and many-to-many references.
@@ -908,24 +964,6 @@
 			}
 
 			return new QDataGrid2_CodeGenerator();
-		}
-
-		public function DataListControlClass (QTable $objTable) {
-			// Is the class specified by the developer?
-			if ($o = $objTable->Options) {
-				if (isset($o['ControlClass'])) {
-					return $o['ControlClass'];
-				}
-			}
-
-			// Otherwise, return a default
-			return 'QDataGrid2';
-		}
-
-		public function DataListVarName (QTable $objTable) {
-			$strPropName = $objTable->ClassName;
-			$objControlHelper = $this->GetDataListCodeGenerator($objTable);
-			return $objControlHelper->VarName($strPropName);
 		}
 
 
