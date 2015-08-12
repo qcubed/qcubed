@@ -53,7 +53,7 @@ class ExamplesForm extends QForm {
 		$this->pxyExample = new QControlProxy($this);
 		$this->pxyExample->AddAction(new QClickEvent(), new QAjaxAction('pxyExample_Click'));
 
-		// FInally, there are even Connector methods to add an Edit Button column
+		// Finally, there are even Connector methods to add an Edit Button column
 		$this->dtgProjects->AddEditProxyColumn($this->pxyExample, 'Click Me', 'Faux Edit Column');
 	}
 

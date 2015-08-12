@@ -183,7 +183,7 @@
 		 * @return String
 		 */
 		public function RenderDeleteButton($objPerson) {
-			return '<button ' . $this->pxyDelete->RenderAsEvents($objPerson->Id,false,"delete_".$objPerson->Id) . '>Delete</button>';
+			return $this->pxyDelete->RenderAsButton('Delete', "delete_".$objPerson->Id);
 		}
 		
 		/**
