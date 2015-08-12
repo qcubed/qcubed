@@ -1680,7 +1680,7 @@
 
 			// Go through all controls and gather up any JS or CSS to run or Form Attributes to modify
 			foreach ($this->GetAllControls() as $objControl) {
-				if ($objControl->Rendered) {
+				if ($objControl->Rendered || $objControl->ScriptsOnly) {
 					$strControlIdToRegister[] = $objControl->ControlId;
 
 					/* Note: GetEndScript may cause the control to register additional commands, or even add javascripts, so those should be handled after this. */

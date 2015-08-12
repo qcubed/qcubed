@@ -82,7 +82,10 @@
 						$strToReturn);
 				} elseif ($objControl instanceof QControlProxy) {
 					if ($objControl->TargetControlId) {
+						// Deprecated.
 						$strOut = sprintf('$j("#%s").on("%s", function(event, ui){%s});', $objControl->TargetControlId, $strEventName, $strToReturn);
+					} else {
+						$strOut = sprintf('$j("#%s").on("%s", "[data-qpxy=\'%s\']", function(event, ui){%s});', $objControl->Form->FormId, $strEventName, $objControl->ControlId, $strToReturn);
 					}
 				} else {
 					$strOut = sprintf('$j("#%s").on("%s", function(event, ui){%s});',
@@ -233,7 +236,7 @@
 			}
 			$objActionParameter = $objControl->ActionParameter;
 			if ($objActionParameter instanceof QJsClosure) {
-				return $objActionParameter->toJsObject() . '.call()';
+				return '(' . $objActionParameter->toJsObject() . ').call(this)';
 			}
 
 			return "'" . addslashes($objActionParameter) . "'";
@@ -352,7 +355,7 @@
 			}
 			$objActionParameter = $objControl->ActionParameter;
 			if ($objActionParameter instanceof QJsClosure) {
-				return $objActionParameter->toJsObject() . '.call()';
+				return '(' . $objActionParameter->toJsObject() . ').call(this)';
 			}
 
 			return "'" . addslashes($objActionParameter) . "'";
