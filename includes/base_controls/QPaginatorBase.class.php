@@ -120,11 +120,13 @@
 				$strPrevious = $this->strLabelForPrevious;
 			} else {
 				$this->mixActionParameter = $this->intPageNumber - 1;
+				$strPrevious = $this->prxPagination->RenderAsLink($this->strLabelForPrevious, $this->mixActionParameter, ['id'=>$this->ControlId . "_arrow_" . $this->mixActionParameter]);
+				/*
 				$strPrevious = sprintf('<a id="%s" href="%s" %s>%s</a>',
 					$this->ControlId . "_arrow_" . $this->mixActionParameter,
 					QApplication::$RequestUri,
 					$this->prxPagination->RenderAsEvents($this->mixActionParameter, true, $this->ControlId . "_arrow_" . $this->mixActionParameter, false),
-					$this->strLabelForPrevious);
+					$this->strLabelForPrevious);*/
 			}
 
 			$strToReturn = sprintf('<span class="arrow previous">%s</span><span class="break">|</span>', $strPrevious);
@@ -139,11 +141,14 @@
 
 				if ($this->intPageNumber >= $intLeftBunchTrigger) {
 					$this->mixActionParameter = 1;
+					$strToReturn .= $this->prxPagination->RenderAsLink(1, $this->mixActionParameter, ['id'=>$this->ControlId . "_page_" . $this->mixActionParameter]);
+					$strToReturn = sprintf('<span class="page">%s</span>',$strToReturn);
+/*
 					$strToReturn .= sprintf('<span class="page"><a id="%s" href="%s" %s>%s</a></span>',
 						$this->ControlId . "_page_" . $this->mixActionParameter,
 						QApplication::$RequestUri,
 						$this->prxPagination->RenderAsEvents($this->mixActionParameter, true, $this->ControlId . "_page_" . $this->mixActionParameter, false),
-						1);
+						1);*/
 
 					$strToReturn .= '<span class="ellipsis">...</span>';
 				}
@@ -164,11 +169,14 @@
 				$strToReturn = sprintf('<span class="selected">%s</span>', $intIndex);
 			} else {
 				$this->mixActionParameter = $intIndex;
+				$strToReturn = $this->prxPagination->RenderAsLink($intIndex, $this->mixActionParameter, ['id'=>$this->ControlId . "_page_" . $this->mixActionParameter]);
+				$strToReturn = sprintf('<span class="page">%s</span>',$strToReturn);
+				/*
 				$strToReturn = sprintf('<span class="page"><a id="%s" href="%s" %s>%s</a></span>',
 					$this->ControlId . "_page_" . $this->mixActionParameter,
 					QApplication::$RequestUri,
 					$this->prxPagination->RenderAsEvents($this->mixActionParameter, true,
-						$this->ControlId . "_page_" . $this->mixActionParameter, false), $intIndex);
+						$this->ControlId . "_page_" . $this->mixActionParameter, false), $intIndex);*/
 			}
 			return $strToReturn;
 		}
@@ -184,11 +192,13 @@
 				$strNext = $this->strLabelForNext;
 			} else {
 				$this->mixActionParameter = $this->intPageNumber + 1;
+				$strNext = $this->prxPagination->RenderAsLink($this->strLabelForNext, $this->mixActionParameter, ['id'=>$this->ControlId . "_arrow_" . $this->mixActionParameter]);
+/*
 				$strNext = sprintf('<a id="%s" href="%s" %s>%s</a>',
 					$this->ControlId . "_arrow_" . $this->mixActionParameter,
 					QApplication::$RequestUri,
 					$this->prxPagination->RenderAsEvents($this->mixActionParameter, true, $this->ControlId . "_arrow_" . $this->mixActionParameter, false),
-					$this->strLabelForNext);
+					$this->strLabelForNext);*/
 			}
 
 			$strToReturn = sprintf('<span class="arrow next">%s</span>', $strNext);
@@ -203,11 +213,15 @@
 				if ($this->intPageNumber <= $intRightBunchTrigger) {
 
 					$this->mixActionParameter = $this->PageCount;
+					$strToReturn = $this->prxPagination->RenderAsLink($this->PageCount, $this->mixActionParameter, ['id'=>$this->ControlId . "_page_" . $this->mixActionParameter]);
+					$strToReturn = sprintf('<span class="page">%s</span>',$strToReturn);
+
+/*
 					$strToReturn = sprintf('<span class="page"><a id="%s" href="%s" %s>%s</a></span>',
 						$this->ControlId . "_page_" . $this->mixActionParameter,
 						QApplication::$RequestUri,
 						$this->prxPagination->RenderAsEvents($this->mixActionParameter, true, $this->ControlId . "_page_" . $this->mixActionParameter, false),
-						$this->PageCount) . $strToReturn;
+						$this->PageCount) . $strToReturn;*/
 
 					$strToReturn = '<span class="ellipsis">...</span>' . $strToReturn;
 				}

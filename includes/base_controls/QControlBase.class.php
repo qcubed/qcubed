@@ -59,8 +59,9 @@
 	 *   Show and hide are much faster.
 	 *
 	 * @package Controls
-	 * 
-	 * @property boolean $ActionsMustTerminate Prevent the default action from happenning upon an event trigger. See documentation for "protected $blnActionsMustTerminate" below.
+	 *
+	 * @property-read boolean $ActionsMustTerminate Prevent the default action from happenning upon an event trigger. See documentation for "protected $blnActionsMustTerminate" below.
+	 * @property-read boolean $ScriptsOnly Whether the control only generates javascripts and not html.
 	 * @property mixed $ActionParameter This property allows you to pass your own parameters to the handlers for actions applied to this control.
 	 *			 this can be a string or an object of type QJsClosure. If you pass in a QJsClosure it is possible to return javascript objects/arrays 
 	 *			 when using an ajax or server action.
@@ -207,6 +208,8 @@
 		 * Modification of this variable is to be done by using 'ActionMustTerminate' property exposed as a property
 		 */
 		protected $blnActionsMustTerminate = false;
+		/** @var bool True if this control only generates javascripts and not html. */
+		protected $blnScriptsOnly = false;
 		/** @var bool Is this control a block type element? This determines whether the control will be wrapped in
 		 *  a div or a span if blnUseWrapper is true. For example, if */
 		protected $blnIsBlockElement = false;
@@ -896,8 +899,9 @@
 		 */
 		public function RenderActionScripts() {
 			$strToReturn = '';
-			foreach ($this->objActionArray as $strEventName => $objActions)
+			foreach ($this->objActionArray as $strEventName => $objActions) {
 				$strToReturn .= $this->GetJavaScriptForEvent($strEventName);
+			}
 			return $strToReturn;
 		}
 
@@ -1895,6 +1899,7 @@
 				case "WrapperModified": return $this->blnWrapperModified;
 				case "ActionParameter": return $this->mixActionParameter;
 				case "ActionsMustTerminate": return $this->blnActionsMustTerminate;
+				case "ScriptsOnly": return $this->blnScriptsOnly;
 				case "WrapperCssClass": return $this->GetWrapperStyler()->CssClass;
 				case "UseWrapper": return $this->blnUseWrapper;
 
