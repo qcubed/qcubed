@@ -66,6 +66,8 @@
 		require(__QCUBED_CORE__ . '/framework/QDateTime.class.php');
 
 	// Define Classes to be Preloaded on QApplication::Initialize()
+	QApplicationBase::$PreloadedClassFile['qhtmlattributemanagerbase'] = __QCUBED_CORE__ . '/base_controls/QHtmlAttributeManagerBase.class.php';
+	QApplicationBase::$PreloadedClassFile['qhtmlattributemanager'] = __QCUBED__ . '/controls/QHtmlAttributeManager.class.php';
 	QApplicationBase::$PreloadedClassFile['qcontrolbase'] = __QCUBED_CORE__ . '/base_controls/QControlBase.class.php';
 	QApplicationBase::$PreloadedClassFile['qcontrol'] = __QCUBED__ . '/controls/QControl.class.php';
 	QApplicationBase::$PreloadedClassFile['qformbase'] = __QCUBED_CORE__ . '/base_controls/QFormBase.class.php';
@@ -220,10 +222,6 @@
 
 
 	QApplicationBase::$ClassFile['qsimpletable'] = __QCUBED__ . '/controls/QSimpleTable.class.php';
-
-	QApplicationBase::$ClassFile['qhtmlattributemanager'] = __QCUBED__ . '/controls/QHtmlAttributeManager.class.php';
-	QApplicationBase::$ClassFile['qhtmlattributemanagerbase'] = __QCUBED_CORE__ . '/base_controls/QHtmlAttributeManagerBase.class.php';
-
 
 	QApplicationBase::$ClassFile['qdatarepeater'] = __QCUBED_CORE__ . '/base_controls/QDataRepeater.class.php';
 

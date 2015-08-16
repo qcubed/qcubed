@@ -233,18 +233,6 @@
 		public static function Initialize() {
 			self::$EncodingType = defined('__QAPPLICATION_ENCODING_TYPE__') ? __QAPPLICATION_ENCODING_TYPE__ : self::$EncodingType;
 
-			$strCacheProviderClass = 'QCacheProviderNoCache';
-			if (defined('CACHE_PROVIDER_CLASS')) {
-				$strCacheProviderClass = CACHE_PROVIDER_CLASS;
-			}
-			if ($strCacheProviderClass) {
-				if (defined('CACHE_PROVIDER_OPTIONS')) {
-					QApplicationBase::$objCacheProvider = new $strCacheProviderClass(unserialize(CACHE_PROVIDER_OPTIONS));
-				} else {
-					QApplicationBase::$objCacheProvider = new $strCacheProviderClass();
-				}
-			}
-
 			// Are we running as CLI?
 			if (PHP_SAPI == 'cli')
 				QApplication::$CliMode = true;
@@ -406,8 +394,22 @@
 			}
 
 			// Preload Class Files
-			foreach (QApplication::$PreloadedClassFile as $strClassFile)
+			foreach (QApplication::$PreloadedClassFile as $strClassFile) {
 				require($strClassFile);
+			}
+
+			// Initialize any classes that might call into the autoloader
+			$strCacheProviderClass = 'QCacheProviderNoCache';
+			if (defined('CACHE_PROVIDER_CLASS')) {
+				$strCacheProviderClass = CACHE_PROVIDER_CLASS;
+			}
+			if ($strCacheProviderClass) {
+				if (defined('CACHE_PROVIDER_OPTIONS')) {
+					QApplicationBase::$objCacheProvider = new $strCacheProviderClass(unserialize(CACHE_PROVIDER_OPTIONS));
+				} else {
+					QApplicationBase::$objCacheProvider = new $strCacheProviderClass();
+				}
+			}
 		}
 
 		/**
