@@ -1,6 +1,6 @@
 <?php
 /**
- * Class QList
+ * Class QHListControl
  *
  * A control that lets you dynamically create an html unordered or ordered hierarchical list with
  * sub-lists. These structures are often used as the basis for javascript widgets like
