@@ -47,10 +47,10 @@
 	 * the draft Forms, which make up simple HTML/PHP scripts to perform
 	 * basic CRUD functionality on each object.
 	 * @package Codegen
+	 * @property string $Errors List of errors
+	 * @property string $Warnings List of warnings
 	 */
 	abstract class QCodeGenBase extends QBaseClass {
-
-
 		// Class Name Suffix/Prefix
 		/** @var string Class Prefix, as specified in the codegen_settings.xml file */
 		protected $strClassPrefix;
@@ -59,6 +59,9 @@
 
 		/** @var string Errors and Warnings collected during the process of codegen **/
 		protected $strErrors;
+
+		/** @var string Warnings collected during the codegen process. */
+		protected $strWarnings;
 
 		/**
 		 * PHP Reserved Words.  They make up:
@@ -1224,6 +1227,8 @@
 			switch ($strName) {
 				case 'Errors':
 					return $this->strErrors;
+				case 'Warnings':
+					return $this->strWarnings;
 				default:
 					try {
 						return parent::__get($strName);
@@ -1246,6 +1251,8 @@
 				switch($strName) {
 					case 'Errors':
 						return ($this->strErrors = QType::Cast($mixValue, QType::String));
+					case 'Warnings':
+						return ($this->strWarnings = QType::Cast($mixValue, QType::String));
 					default:
 						return parent::__set($strName, $mixValue);
 				}

@@ -62,6 +62,10 @@
 					<p class="code_title">The following errors were reported:</p>
 					<?php DisplayMonospacedText($objCodeGen->Errors); ?>
 				<?php } ?>
+				<?php if ($strWarnings = $objCodeGen->Warnings) { ?>
+					<p class="code_title">The following warnings were reported:</p>
+					<?php DisplayMonospacedText($objCodeGen->Warnings); ?>
+				<?php } ?>
 			</code></pre>
 		<?php } ?>
 
