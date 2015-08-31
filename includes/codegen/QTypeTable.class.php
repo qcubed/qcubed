@@ -77,7 +77,19 @@
 			$this->strName = $strName;
 		}
 
-
+		/**
+		 * Returns the string that will be used to represent the literal value given when codegenning a type table
+		 * @param $mixColValue
+		 * @return string
+		 */
+		public static function Literal($mixColValue) {
+			if (is_null($mixColValue)) return 'null';
+ 			elseif (is_integer($mixColValue)) return $mixColValue;
+			elseif (is_bool($mixColValue)) return ($mixColValue ? 'true' : 'false');
+			elseif (is_float($mixColValue)) return "(float)$mixColValue";
+			elseif (is_object($mixColValue)) return "'" . $mixColValue->_toString() . "'";	// whatever is suitable for the constructor of the object
+			else return "'" . str_replace("'", "\\'", $mixColValue) . "'";
+		}
 
 		////////////////////
 		// Public Overriders

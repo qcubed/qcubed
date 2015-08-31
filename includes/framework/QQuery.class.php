@@ -1160,6 +1160,11 @@
 		// QQSubQuery Factories
 		/////////////////////////
 
+		/**
+		 * @param string $strSql
+		 * @param null|QQNode[] $objParentQueryNodes	Array of nodes to specify replacement value in the sql.
+		 * @return QQSubQuerySqlNode
+		 */
 		static public function SubSql($strSql, $objParentQueryNodes = null) {
 			$objParentQueryNodeArray = func_get_args();
 			return new QQSubQuerySqlNode($strSql, $objParentQueryNodeArray);

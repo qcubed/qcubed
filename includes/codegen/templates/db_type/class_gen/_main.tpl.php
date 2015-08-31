@@ -53,23 +53,31 @@
 		public static $ExtraColumnNamesArray = array(
 <?php foreach ($objTypeTable->ExtraFieldNamesArray as $strColName) { ?>
 			'<?= $strColName ?>',
-<?php } ?><?php GO_BACK(2); ?>);
+<?php } ?><?php GO_BACK(2); ?>
+
+		);
 
 		public static $ExtraColumnValuesArray = array(
 <?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
 			<?= $intKey ?> => array (
-<?php foreach ($arrColumns as $strColName=>$strColValue) { ?>
-						'<?= $strColName ?>' => '<?= str_replace("'", "\\'", $strColValue) ?>',
-<?php } ?><?php GO_BACK(2); ?>),
-<?php } ?><?php GO_BACK(2); ?>);
+<?php 	foreach ($arrColumns as $strColName=>$mixColValue) { ?>
+				'<?= $strColName ?>' => <?= QTypeTable::Literal($mixColValue) ?>,
+<?php 	} ?><?php GO_BACK(2); ?>
+
+			),
+<?php } ?><?php GO_BACK(2); ?>
+
+		);
 
 
 <?php if (count($objTypeTable->ExtraFieldNamesArray)) { ?>
 <?php foreach ($objTypeTable->ExtraFieldNamesArray as $strColName) { ?>
 		public static $<?= $strColName ?>Array = array(
 <?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
-			<?= $intKey ?> => '<?= str_replace("'", "\\'", $arrColumns[$strColName])  ?>',
-<?php } ?><?php GO_BACK(2); ?>);
+			'<?= $intKey ?>' => <?= QTypeTable::Literal($arrColumns[$strColName]) ?>,
+<?php } ?><?php GO_BACK(2); ?>
+
+		);
 
 <?php } ?>
 <?php } ?>
@@ -100,7 +108,7 @@
 		public static function To<?php echo $strColName  ?>($int<?php echo $objTypeTable->ClassName  ?>Id) {
 			switch ($int<?php echo $objTypeTable->ClassName  ?>Id) {
 <?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
-				case <?php echo $intKey  ?>: return '<?= str_replace("'", "\\'", $arrColumns[$strColName])  ?>';
+				case <?php echo $intKey  ?>: return <?= QTypeTable::Literal($arrColumns[$strColName]) ?>;
 <?php } ?>
 				default:
 					throw new QCallerException(sprintf('Invalid int<?php echo $objTypeTable->ClassName  ?>Id: %s', $int<?php echo $objTypeTable->ClassName  ?>Id));
@@ -114,7 +122,8 @@
 
 		 * For use in association tables linked to this type.
 		 * @param QQueryBuilder $objBuilder the Query Builder object to update
-		 * @param string $strPrefix optional prefix to add to the SELECT fields
+         * @param string $strPrefix optional prefix to add to the SELECT fields
+         * @param QQSelect|null $objSelect optional select field clause
 		 */
 		public static function GetSelectFields(QQueryBuilder $objBuilder, $strPrefix = null, QQSelect $objSelect = null) {
 			if ($strPrefix) {
@@ -144,11 +153,11 @@
 		 * Takes in an optional strAliasPrefix, used in case another Object::InstantiateDbRow
 		 * is calling this <?= $objTypeTable->ClassName ?>::InstantiateDbRow in order to perform
 		 * early binding on referenced objects.
-		 * @param DatabaseRowBase $objDbRow
-		 * @param string $strAliasPrefix
-		 * @param string $strExpandAsArrayNodes
-		 * @param QBaseClass $arrPreviousItem
-		 * @param string[] $strColumnAliasArray
+		 * @param QDatabaseRowBase $objDbRow
+		 * @param string|null $strAliasPrefix
+		 * @param string|null $strExpandAsArrayNodes
+		 * @param QBaseClass|null $arrPreviousItem
+		 * @param string[]|null $strColumnAliasArray
 		 * @return <?= $objTypeTable->ClassName ?>
 
 		*/
@@ -159,7 +168,7 @@
 			}
 			$strAlias = $strAliasPrefix . 'id';
 			$strAliasName = array_key_exists($strAlias, $strColumnAliasArray) ? $strColumnAliasArray[$strAlias] : $strAlias;
-			$intId = $objDbRow->GetColumn($strAliasName, 'Integer');
+			$intId = $objDbRow->GetColumn($strAliasName, QDatabaseFieldType::Integer);
 			return $intId;
 		}
 	}
