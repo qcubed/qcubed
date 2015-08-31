@@ -10,6 +10,9 @@
 		 * @return void
 		 */
 		public function Refresh($blnReload = false) {
+			assert($this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>); // Notify in development version
+			if (!($this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>)) return; // Quietly fail in production
+
 			if ($blnReload) {
 				$this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>->Reload();
 			}
