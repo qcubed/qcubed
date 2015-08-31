@@ -80,6 +80,28 @@
 
 			return $objResultSets;
 		}
+
+		/**
+		 * Generic stored procedure executor. For Mysql 5, you can have your stored procedure return results by
+		 * "SELECT"ing the results. The results will be returned as an array.
+		 *
+		 * @param string $strProcName	Name of stored procedure
+		 * @param array|null $params
+		 * @return QMySqli5DatabaseResult[]
+		 * @throws QMySqliDatabaseException
+		 */
+		public function ExecuteProcedure($strProcName, $params = null) {
+			$strParams = '';
+			if ($params) {
+				$a = array_map(function ($val) {
+					return $this->SqlVariable($val);
+				}, $params);
+				$strParams = implode(',', $a);
+			}
+			$strSql = "call {$strProcName}({$strParams})";
+			return $this->MultiQuery($strSql);
+		}
+
 	}
 
 	/**
