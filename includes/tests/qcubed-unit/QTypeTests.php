@@ -113,5 +113,17 @@ class QTypeTests extends QUnitTestCaseBase {
 		$a = Project::QueryArray($cond);
 		$this->assertEqual(count($a), 3, "Between 2 string types works");
 	}
+
+	// Testing creation of type tables
+
+	public function testTypeTableTypes() {
+		$val = ProjectStatusType::$GuidelinesArray[2];
+		$this->assertNull($val, 'Generated a null value');
+
+		$val = ProjectStatusType::$IsActiveArray[1];
+		$this->assertEqual($val, true, 'Open project is active');
+		$this->assertEqual(is_bool($val), true, 'Type of variable is boolean.');
+
+	}
 }
 ?>

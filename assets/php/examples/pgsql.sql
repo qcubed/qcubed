@@ -67,6 +67,7 @@ CREATE TABLE project_status_type (
     name VARCHAR(50) NOT NULL,
     description TEXT,
     guidelines TEXT,
+    is_active BOOLEAN,
     CONSTRAINT PK_project_status_type PRIMARY KEY (id),
     UNIQUE (name)
 );
@@ -175,7 +176,7 @@ ALTER TABLE person_persontype_assn ADD CONSTRAINT person_persontype_assn_2 FOREI
 --   Type Data                                                                -- 
 -- ========================================================================== -- 
 
-INSERT INTO project_status_type (name, description, guidelines) VALUES ('Open', 'The project is currently active', 'All projects that we are working on should be in this state');
+INSERT INTO project_status_type (name, description, guidelines, is_active) VALUES ('Open', 'The project is currently active', 'All projects that we are working on should be in this state', 1);
 INSERT INTO project_status_type (name, description, guidelines) VALUES ('Cancelled', 'The project has been canned', null);
 INSERT INTO project_status_type (name, description, guidelines) VALUES ('Completed', 'The project has been completed successfully', 'Celebrate successes!');
 
