@@ -87,7 +87,7 @@ function _tp($strString, $blnHtmlEntities = true) {
  * @return string
  */
 function _nl($strText = null) {
-	if (defined ('__MINIMIZE__') && __MINIMIZE__) {
+	if (QApplication::$Minimize) {
 		return $strText;
 	} else {
 		if ($strText === null) return "\n";
@@ -113,7 +113,7 @@ function _nl($strText = null) {
  * @return string
  */
 function _indent($strText, $intCount = 1) {
-	if (!defined('__CODE_GENERATING__') && defined ('__MINIMIZE__') && __MINIMIZE__) {
+	if (!defined('__CODE_GENERATING__') && QApplication::$Minimize) {
 		return $strText;
 	} else {
 		if (defined ('__CODE_GENERATING__')) {

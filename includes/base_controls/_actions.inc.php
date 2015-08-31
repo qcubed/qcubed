@@ -95,7 +95,7 @@
 				}
 
 				if (isset($strOut)) {
-					if (!(defined('__MINIMIZE__') && __MINIMIZE)) {
+					if (!QApplication::$Minimize) {
 						// Render a comment
 						$strOut = _nl() .  _nl() .
 							sprintf ('/*** Event: %s  Control Type: %s, Control Name: %s, Control Id: %s  ***/', $strEventName, get_class($objControl), $objControl->Name, $objControl->ControlId) .

@@ -339,7 +339,7 @@
 		 * @return string
 		 */
 		public static function Comment($strText, $blnRemoveOnMinimize = true) {
-			if ($blnRemoveOnMinimize && defined('__MINIMIZE__') && __MINIMIZE__) {
+			if ($blnRemoveOnMinimize && QApplication::$Minimize) {
 				return '';
 			}
 			return  _nl() . '<!-- ' . $strText . ' -->' . _nl();
