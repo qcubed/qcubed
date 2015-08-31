@@ -95,6 +95,7 @@
 	 * @property boolean $WrapLabel For checkboxes, radio buttons, and similar controls, whether to wrap the label around
 	 * 		the control, or place the label next to the control. Two legal styles of label creation that different css and JS frameworks expect.
 	 * @property-write boolean $SaveState set to true to have the control remember its state between visits to the form that the control is on.
+	 * @property boolean $Minimize True to force the entire control and child controls to draw minimized. This is helpful when drawing inline-block items to prevent spaces from appearing between them.
 	 */
 	abstract class QControlBase extends QHtmlAttributeManager {
 
@@ -187,6 +188,8 @@
         protected $strAttributeScripts = null;
 		/** @var The INITIAL class for the object. Only subclasses should set this before calling the parent constructor. */
 		protected $strCssClass = null;
+		/** @var  Force this control, and all subcontrols to draw minimized. This is important when using inline-block styles, as not doing so will cause spaces between the objects. */
+		protected $blnMinimize = false;
 
 		// SETTINGS
 		/** @var string List of JavaScript files to be attached with the control when rendering */
@@ -1371,7 +1374,10 @@
 		 * @return string
 		 */
 		public function Render($blnDisplayOutput = true) {
-			// Call RenderHelper
+			$blnMinimized = QApplication::$Minimize;
+			if ($this->blnMinimize) {
+				QApplication::$Minimize = true;
+			}
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 
 			try {
@@ -1386,7 +1392,11 @@
 			}
 
 			// Call RenderOutput, returning its contents
-			return $this->RenderOutput($strOutput, $blnDisplayOutput);
+			$strOut = $this->RenderOutput($strOutput, $blnDisplayOutput);
+
+			QApplication::$Minimize = $blnMinimized;
+
+			return $strOut;
 		}
 
 		/**
@@ -1877,6 +1887,7 @@
 				case "HtmlAfter": return $this->strHtmlAfter;
 				case "Instructions": return $this->strInstructions;
 				case "Warning": return $this->strWarning;
+				case "Minimize": return $this->blnMinimize;
 
 				case "Moveable": return $this->objDraggable && !$this->objDraggable->Disabled;
 				case "Resizable": return $this->objResizable && !$this->objResizable->Disabled;
@@ -2060,6 +2071,16 @@
 					try {
 						$this->strValidationError = QType::Cast($mixValue, QType::String);
 						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "Minimize":
+					try {
+						$this->blnMinimize = QType::Cast($mixValue, QType::Boolean);
+						$this->MarkAsModified();
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

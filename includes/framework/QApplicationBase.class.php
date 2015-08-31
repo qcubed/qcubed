@@ -203,6 +203,13 @@
 		 */
 		public static $LanguageObject;
 
+		/**
+		 * True to force drawing to be minimized.
+		 *
+		 * @var bool
+		 */
+		public static $Minimize = false;
+
 		////////////////////////
 		// Public Overrides
 		////////////////////////
@@ -409,6 +416,10 @@
 				} else {
 					QApplicationBase::$objCacheProvider = new $strCacheProviderClass();
 				}
+			}
+
+			if (defined('__MINIMIZE__') && __MINIMIZE__) {
+				QApplicationBase::$Minimize = true;
 			}
 		}
 

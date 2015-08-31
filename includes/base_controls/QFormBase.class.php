@@ -1688,7 +1688,7 @@
 						$strControlScript = JavaScriptHelper::TerminateScript($strControlScript);
 
 						// Add comments for developer version of output
-						if (!(defined('__MINIMIZE__') && __MINIMIZE)) {
+						if (!QApplication::$Minimize) {
 							// Render a comment
 							$strControlScript = _nl() .  _nl() .
 								sprintf ('/*** EndScript -- Control Type: %s, Control Name: %s, Control Id: %s  ***/',
