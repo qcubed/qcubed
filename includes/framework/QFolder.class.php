@@ -109,6 +109,9 @@
 			}
 			$result = array();
 			$dh = opendir($strPath);
+			assert ('$dh !== false'); // Does directory exist?
+			if ($dh === false) return false;
+
 			while (($file = readdir($dh)) !== false) {
 				if ($file != "." && $file != "..") {
 					if (!is_dir($file)) {
@@ -141,6 +144,8 @@
 			$result = array();
 
 			$originalSet = self::getFilesInFolderHelper($strPath);
+			if (!$originalSet) return $result;	// empty directory, or directory does not exist
+
 			foreach ($originalSet as $item) {
 				$childPath = $strPath . "/" . $item;
 				if (is_dir($childPath)) {
