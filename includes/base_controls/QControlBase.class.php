@@ -186,9 +186,9 @@
 		protected $blnUseWrapper = true;
         /** @var string  One time scripts associated with the control. */
         protected $strAttributeScripts = null;
-		/** @var The INITIAL class for the object. Only subclasses should set this before calling the parent constructor. */
+		/** @var string The INITIAL class for the object. Only subclasses should set this before calling the parent constructor. */
 		protected $strCssClass = null;
-		/** @var  Force this control, and all subcontrols to draw minimized. This is important when using inline-block styles, as not doing so will cause spaces between the objects. */
+		/** @var  bool Force this control, and all subcontrols to draw minimized. This is important when using inline-block styles, as not doing so will cause spaces between the objects. */
 		protected $blnMinimize = false;
 
 		// SETTINGS
@@ -1030,7 +1030,6 @@
 
 		/**
 		 * Returns an array of the wrapper attributes to be used for drawing, including CSS styles. Makes sure the control is hidden if display is off.
-		 * @param bool $blnIsBlockElement
 		 * @param array $attributeOverrides
 		 * @return string
 		 */
@@ -1047,8 +1046,8 @@
 		/**
 		 * Renders the given output with the current wrapper.
 		 *
-		 * @param $strOuput
-		 * @param $blnForceBlockElement
+		 * @param $strOutput
+		 *
 		 * @return string
 		 */
 		protected function RenderWrappedOutput($strOutput) {

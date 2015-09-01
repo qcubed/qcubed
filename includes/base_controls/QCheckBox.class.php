@@ -20,7 +20,7 @@
 	 * @property boolean $HtmlEntities specifies whether the checkbox text will have to be run through htmlentities or not.
 	 */
 	class QCheckBox extends QControl {
-
+		/** @var string Tag for rendering the control */
 		protected $strTag = 'input';
 		protected $blnIsVoidElement = true;
 
@@ -181,6 +181,8 @@
 
 		/**
 		 * Restore the  state of the control.
+		 *
+		 * @param mixed $state
 		 */
 		public function PutState($state) {
 			if (isset($state['checked'])) {
