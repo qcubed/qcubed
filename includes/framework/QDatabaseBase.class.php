@@ -341,6 +341,14 @@
 		abstract protected function ExecuteTransactionRollBack();
 
 		/**
+		 * Template for executing stored procedures. Optional, for those database drivers that support it.
+		 * @param $strProcName
+		 * @param null $params
+		 * @return mixed
+		 */
+		public function ExecuteProcedure($strProcName, $params = null) {}
+
+		/**
 		 * This function begins the database transaction.
 		 *
 		 * @return void Nothing
@@ -1106,8 +1114,8 @@
 		/**
 		 * Gets the value of a column from a result row returned by the database
 		 *
-		 * @param string                  $strColumnName Name of te column
-		 * @param null|QDatabaseFieldType $strColumnType Data type
+		 * @param string      $strColumnName Name of the column
+		 * @param null|string $strColumnType Data type
 		 *
 		 * @return mixed
 		 */
