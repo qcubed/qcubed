@@ -117,9 +117,7 @@
 
 		/** @var mixed Controls how this control will effect the validation system */
 		protected $mixCausesValidation = false;
-		/** @var string Cursor that should appear when hovering on the control */
-		protected $blnEnabled = true;
-		/** @var bool Is it mandatory for the control to recive data on a POST back for the control to be called valid? */
+		/** @var bool Is it mandatory for the control to receive data on a POST back for the control to be called valid? */
 		protected $blnRequired = false;
 		/** @var int Tab-index */
 		protected $strValidationError = null;
@@ -1554,7 +1552,7 @@
 			if ($this->blnRequired){
 				$strLabelClass .= ' required';
 			}
-			if (!$this->blnEnabled){
+			if (!$this->Enabled){
 				$strLabelClass .= ' disabled';
 			}
 
@@ -1875,7 +1873,6 @@
 			switch ($strName) {
 				case "Display": return $this->blnDisplay;
 				case "CausesValidation": return $this->mixCausesValidation;
-				case "Enabled": return $this->blnEnabled;
 				case "Required": return $this->blnRequired;
 				case "ValidationError": return $this->strValidationError;
 				case "Visible": return $this->blnVisible;
@@ -1976,17 +1973,6 @@
 					try {
 						$this->mixCausesValidation = $mixValue;
 						// This would not need to cause a redraw
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-				case "Enabled":
-					try {
-						if ($this->blnEnabled !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
-							$this->MarkAsModified();
-							$this->blnEnabled = $mixValue;
-						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2238,7 +2224,7 @@
 
 
 		/**
-		 * Returns an description of the options available to modify by the designer for the code generator.
+		 * Returns a description of the options available to modify by the designer for the code generator.
 		 *
 		 * @return QModelConnectorParam[]
 		 */
