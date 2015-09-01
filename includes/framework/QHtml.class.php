@@ -7,11 +7,16 @@
 
 		const IsVoid = true;
 
-		/** Common URL Protocols */
+		// Common URL Protocols
+		/** HTTP Protocol */
 		const HTTP = 'http://';
+		/** HTTPS Protocol */
 		const HTTPS = 'https://';
+		/** FTP Protocol */
 		const FTP = 'ftp://';
+		/** SFTP Protocol */
 		const SFTP = 'sftp://';
+		/** SMB Protocol */
 		const SMB = 'smb://';
 
 
@@ -236,9 +241,11 @@
 
 		/**
 		 * Helper to remove a class or classes from a list of space-separated classes.
-		 * @param string 	$strClassList			class list string to search
-		 * @param string 	$strCssNamesToRemove	space separated list of names to remove
-		 * @return bool 	true if the class list was changed
+		 *
+		 * @param string $strClassList        class list string to search
+		 * @param string $strCssNamesToRemove space separated list of names to remove
+		 *
+		 * @return bool    true if the class list was changed
 		 */
 		public static function RemoveClass(&$strClassList, $strCssNamesToRemove) {
 			$strNewCssClass = '';

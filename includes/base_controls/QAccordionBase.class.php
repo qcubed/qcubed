@@ -96,9 +96,11 @@
 
 		/**
 		 * PHP __set magic method implementation
-		 * @param string $strName Name of the property
+		 *
+		 * @param string $strName  Name of the property
 		 * @param string $mixValue Value of the property
 		 *
+		 * @return mixed|void
 		 * @throws Exception|QInvalidCastException
 		 */
 		public function __set($strName, $mixValue) {

@@ -5,17 +5,16 @@
 	 * pagintors per QPaginatedControl can be declared.
 	 *
 	 * @package Controls
-	 * 
-	 * @property integer $ItemsPerPage 		How many items you want to display per page when Pagination is enabled
-	 * @property integer $PageNumber 		The current page number you are viewing. 1 is the first page, there is no page zero.
-	 * @property integer $TotalItemCount 	The total number of items in the ENTIRE recordset -- only used when Pagination is enabled
-	 * @property boolean $UseAjax			Whether to use ajax in the drawing.
-	 * @property-read integer $PageCount	Current number of pages being represented
-	 * @property mixed $WaitIcon			The wait icon to display
-	 * @property-read mixed $PaginatedControl	The paginated control linked to this control
-	 * @property integer $IndexCount		The maximum number of page numbers to disply in the paginator
-	 * @property string LabelForPrevious
-	 * @property string LabelForNext
+	 * @property integer      $ItemsPerPage        How many items you want to display per page when Pagination is enabled
+	 * @property integer      $PageNumber          The current page number you are viewing. 1 is the first page, there is no page zero.
+	 * @property integer      $TotalItemCount      The total number of items in the ENTIRE recordset -- only used when Pagination is enabled
+	 * @property boolean      $UseAjax             Whether to use ajax in the drawing.
+	 * @property-read integer $PageCount           Current number of pages being represented
+	 * @property mixed        $WaitIcon            The wait icon to display
+	 * @property-read mixed   $PaginatedControl    The paginated control linked to this control
+	 * @property integer      $IndexCount          The maximum number of page numbers to disply in the paginator
+	 * @property string       LabelForPrevious     Label to be used for the 'Previous' link.
+	 * @property string       LabelForNext         Label to be used for the 'Next' link.
 	 */
 	abstract class QPaginatorBase extends QControl {
 		/** @var string Label for the 'Previous' link */
@@ -24,17 +23,17 @@
 		protected $strLabelForNext;
 
 		// BEHAVIOR
-		/** @var int  */
+		/** @var int Default number of items per page */
 		protected $intItemsPerPage = 15;
-		/** @var int  */
+		/** @var int Default page number (to begin rendering with) */
 		protected $intPageNumber = 1;
-		/** @var int  */
+		/** @var int Default item count for the paginator */
 		protected $intTotalItemCount = 0;
-		/** @var bool  */
+		/** @var bool Should switching the pages happen over AJAX or Server call (page reload) */
 		protected $blnUseAjax = true;
-		/** @var  QPaginatedControl */
+		/** @var  QPaginatedControl The control which is going to be paginated with the paginator */
 		protected $objPaginatedControl;
-		/** @var string */
+		/** @var string Default Wait Icon to be used */
 		protected $objWaitIcon = 'default';
 
 		/** @var null|\QControlProxy  */
@@ -43,12 +42,21 @@
 		// SETUP
 		/** @var bool  */
 		protected $blnIsBlockElement = false;
-		/** @var string */
+		/** @var string The tag element inside which the paginator has to be rendered */
 		protected $strTag = 'span';
 
 		//////////
 		// Methods
 		//////////
+		/**
+		 * Constructor method
+		 *
+		 * @param QControl|QControlBase|QForm $objParentObject
+		 * @param null|string                     $strControlId
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			try {
 				parent::__construct($objParentObject, $strControlId);
@@ -69,7 +77,7 @@
 		 */
 		protected function Setup() {
 			// Setup Pagination Events
-			$this->prxPagination->RemoveAllActions(QClickEvent::EventName);			
+			$this->prxPagination->RemoveAllActions(QClickEvent::EventName);
 			if ($this->blnUseAjax) {
 				$this->prxPagination->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'Page_Click'));
 			}
@@ -80,17 +88,25 @@
 		}
 
 		public function ParsePostData() {}
+
+		/**
+		 * Validates the control.
+		 *
+		 * For now, it simply returns true
+		 *
+		 * @return bool
+		 */
 		public function Validate() {return true;}
 
 		/**
 		 * Respond to the Page_Click event
 		 *
-		 * @param $strFormId
-		 * @param $strControlId
-		 * @param $strParameter
+		 * @param string $strFormId
+		 * @param string $strControlId
+		 * @param string $strParameter
 		 */
 		public function Page_Click($strFormId, $strControlId, $strParameter) {
-			$this->objPaginatedControl->PageNumber = QType::Cast($strParameter, QType::Integer);			
+			$this->objPaginatedControl->PageNumber = QType::Cast($strParameter, QType::Integer);
 		}
 
 		/**
@@ -230,6 +246,13 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns the HTML for rendering the control
+		 *
+		 * @return string HTML for the control
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function GetControlHtml() {
 			$this->objPaginatedControl->DataBind();
 
@@ -338,6 +361,11 @@
 			}
 		}
 
+		/**
+		 * Calculates the total number of pages for the paginator
+		 *
+		 * @return float Number of pages
+		 */
 		public function CalcPageCount() {
 			return floor($this->intTotalItemCount / $this->intItemsPerPage) +
 				((($this->intTotalItemCount % $this->intItemsPerPage) != 0) ? 1 : 0);
@@ -347,6 +375,16 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method to get property value
+		 *
+		 * @param string $strName Name of the property
+		 *
+		 * @return bool|float|int|mixed|string
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// BEHAVIOR
@@ -380,6 +418,18 @@
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method to set the value of property of class
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

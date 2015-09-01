@@ -12,9 +12,7 @@
 	 * @property string $Escape
 	 * @property integer $MinItemCount
 	 * @property integer $MaxItemCount
-
 	 */
-
 	class QCsvTextBox extends QTextBox {
 		/** @var string */
 		protected $strDelimiter = ',';

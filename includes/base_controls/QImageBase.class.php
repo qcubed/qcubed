@@ -37,8 +37,22 @@
 		// Methods
 		//////////
 		public function ParsePostData() {}
+
+		/**
+		 * Validates the control. For now, just returns true (since there is nothing to validate in the control)
+		 * @return bool
+		 */
 		public function Validate() {return true;}
 
+		/**
+		 * Constructor method
+		 *
+		 * @param QControl|QControlBase|QForm $objParentObject
+		 * @param null|string                        $strControlId
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __construct($objParentObject, $strControlId = null) {
 			if ($objParentObject)
 				parent::__construct($objParentObject, $strControlId);
@@ -103,6 +117,13 @@
 				return $strPath;
 		}
 
+		/**
+		 * Returns the HTML for rendering the control in the browser
+		 *
+		 * @return string HTML for the control
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		protected function GetControlHtml() {
 			try {
 				// Figure Out the Path
@@ -350,6 +371,15 @@
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
+		/**
+		 * PHP magic method to set a property of this class
+		 *
+		 * @param string $strName Name of the property
+		 *
+		 * @return int|mixed|null|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				// MISCELLANEOUS
@@ -369,11 +399,20 @@
 			}
 		}
 
-
-
 		/////////////////////////
 		// Public Properties: SET
 		/////////////////////////
+		/**
+		 * PHP magic method to set the value of class properties
+		 *
+		 * @param string $strName Name of the property
+		 * @param string $mixValue Value of the property
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			$this->blnModified = true;
 

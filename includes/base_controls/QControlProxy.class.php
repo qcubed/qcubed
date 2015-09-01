@@ -18,12 +18,23 @@
 		/** @var bool Overriding parent class */
 		protected $blnScriptsOnly = true;
 
-
+		/**
+		 * Constructor Method
+		 *
+		 * @param QControl|QControlBase|QForm $objParent    Parent control
+		 * @param null|string                 $strControlId Control ID for this control
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __construct ($objParent, $strControlId = null) {
 			parent::__construct($objParent, $strControlId);
 			$this->mixActionParameter = new QJsClosure('return $j(this).data("qap")');
 		}
 
+		/**
+		 * @throws QCallerException
+		 */
 		public function GetControlHtml() {
 			throw new QCallerException('QControlProxies cannot be rendered.  Use RenderAsEvents() within an HTML tag.');
 		}
@@ -31,10 +42,11 @@
 		/**
 		 * Render as an HTML link (anchor tag)
 		 *
-		 * @param string $strLabel					Text to link to
-		 * @param string|null $strActionParameter	Action parameter for this rendering of the control. Will be sent to the ActionParameter of the action.
-		 * @param null|array $attributes			Array of attributes to add to the tag for the link.
-		 * @param string $strTag					Tag to use. Defaults to 'a'.
+		 * @param string      $strLabel           Text to link to
+		 * @param string|null $strActionParameter Action parameter for this rendering of the control. Will be sent to the ActionParameter of the action.
+		 * @param null|array  $attributes         Array of attributes to add to the tag for the link.
+		 * @param string      $strTag             Tag to use. Defaults to 'a'.
+		 *
 		 * @return string
 		 */
 		public function RenderAsLink($strLabel, $strActionParameter = null, $attributes = [], $strTag = 'a') {
@@ -53,9 +65,10 @@
 		/**
 		 * Render as an HTML button.
 		 *
-		 * @param string $strLabel					Text to link to
-		 * @param string|null $strActionParameter	Action parameter for this rendering of the control. Will be sent to the ActionParameter of the action.
-		 * @param array $attributes			Array of attributes to add to the tag for the link.
+		 * @param string      $strLabel           Text to link to
+		 * @param string|null $strActionParameter Action parameter for this rendering of the control. Will be sent to the ActionParameter of the action.
+		 * @param array       $attributes         Array of attributes to add to the tag for the link.
+		 *
 		 * @return string
 		 */
 		public function RenderAsButton($strLabel, $strActionParameter = null, $attributes = []) {
@@ -89,7 +102,7 @@
 		 * @param bool        $blnDisplayOutput   Should the output be sent to browser (true) or returned (false)
 		 * @param null        $strTargetControlId ID to be sent to the browser for this proxy's HTML element
 		 *
-		 * @deprecated		 Obsolete. Above methods generate less code and are easier to use. Also, do not mix the two.
+		 * @deprecated         Obsolete. Above methods generate less code and are easier to use. Also, do not mix the two.
 		 *
 		 * @param bool        $blnRenderControlId Control ID to be rendered or not
 		 *
@@ -124,8 +137,7 @@
 		 * @param bool        $blnDisplayOutput   Should the output be sent to browser (true) or returned (false)
 		 * @param null|string $strTargetControlId ID to be sent to the browser for this proxy's HTML element
 		 *
-		 * @deprecated	From v2. Above ways are more efficient.
-		 *
+		 * @deprecated    From v2. Above ways are more efficient.
 		 * @return string
 		 */
 		public function RenderAsHref($strActionParameter = null, $blnDisplayOutput = true, $strTargetControlId = null) {
