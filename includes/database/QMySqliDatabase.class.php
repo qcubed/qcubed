@@ -567,8 +567,8 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 		/**
 		 * Gets the value of a column from a result row returned by the database
 		 *
-		 * @param string                  $strColumnName Name of te column
-		 * @param null|QDatabaseFieldType $strColumnType Data type
+		 * @param string      	$strColumnName Name of the column
+		 * @param null|string 	$strColumnType A QDatabaseFieldType string
 		 *
 		 * @return mixed
 		 */

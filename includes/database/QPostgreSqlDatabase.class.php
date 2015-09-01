@@ -580,8 +580,8 @@
 		/**
 		 * Gets the value of a column from a result row returned by the database
 		 *
-		 * @param string                  $strColumnName Name of te column
-		 * @param null|QDatabaseFieldType $strColumnType Data type
+		 * @param string        $strColumnName Name of the column
+		 * @param null|string 	$strColumnType Data type
 		 *
 		 * @return mixed
 		 */

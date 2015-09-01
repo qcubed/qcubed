@@ -11,7 +11,7 @@
 	 * @property string            $VariableName           Corresponding variable name (in ORM class and elsewhere)
 	 * @property string            $VariableType           Type of data this column is supposed to store (constant from QType class)
 	 * @property string            $VariableTypeAsConstant Variable type expressed as QType casted string (integer column would have this value as: "QType::Integer")
-	 * @property string            $DbType                 Type of databse
+	 * @property string            $DbType                 Type in the database
 	 * @property int               $Length                 If applicable, the length of data to be stored (useful for varchar data types)
 	 * @property mixed             $Default                Default value of the column
 	 * @property boolean           $NotNull                Is this column a "NOT NULL" column?

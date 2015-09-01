@@ -18,3 +18,5 @@ before_script:
 
 script: travis/test.php
 
+sudo: false
+

@@ -719,27 +719,35 @@
 			$strTokenArray = array();
 			$strExtraPropertyArray = array();
 			$strExtraFields = array();
-			while ($objRow = $objResult->FetchRow()) {
-				$strNameArray[$objRow[0]] = str_replace("'", "\\'", str_replace('\\', '\\\\', $objRow[1]));
-				$strTokenArray[$objRow[0]] = $this->TypeTokenFromTypeName($objRow[1]);
-				if (sizeof($objRow) > 2) { // there are extra columns to process
-					$strExtraPropertyArray[$objRow[0]] = array();
-					for ($i = 2; $i < sizeof($objRow); $i++) {
+			$intRowWidth = count($objFieldArray);
+			while ($objDbRow = $objResult->GetNextRow()) {
+				$strRowArray = $objDbRow->GetColumnNameArray();
+				$id = $strRowArray[0];
+				$name = $strRowArray[1];
+
+				$strNameArray[$id] = str_replace("'", "\\'", str_replace('\\', '\\\\', $name));
+				$strTokenArray[$id] = $this->TypeTokenFromTypeName($name);
+				if ($intRowWidth > 2) { // there are extra columns to process
+					$strExtraPropertyArray[$id] = array();
+					for ($i = 2; $i < $intRowWidth; $i++) {
 						$strFieldName = QCodeGen::TypeColumnPropertyName($objFieldArray[$i]->Name);
 						$strExtraFields[$i - 2] = $strFieldName;
-						$strExtraPropertyArray[$objRow[0]][$strFieldName] = $objRow[$i];
+
+						// Get and resolve type based value
+						$value = $objDbRow->GetColumn($objFieldArray[$i]->Name, $objFieldArray[$i]->Type);
+						$strExtraPropertyArray[$id][$strFieldName] = $value;
 					}
 				}
 
 				foreach ($strReservedWords as $strReservedWord)
-					if (trim(strtolower($strTokenArray[$objRow[0]])) == $strReservedWord) {
+					if (trim(strtolower($strTokenArray[$id])) == $strReservedWord) {
 						$this->strErrors .= sprintf("Warning: TypeTable %s contains a type name which is a reserved word: %s.  Appended _ to the beginning of it.\r\n",
 							$strTableName, $strReservedWord);
-						$strTokenArray[$objRow[0]] = '_' . $strTokenArray[$objRow[0]];
+						$strTokenArray[$id] = '_' . $strTokenArray[$id];
 					}
-				if (strlen($strTokenArray[$objRow[0]]) == 0) {
+				if (strlen($strTokenArray[$id]) == 0) {
 					$this->strErrors .= sprintf("Warning: TypeTable %s contains an invalid type name: %s\r\n",
-						$strTableName, stripslashes($strNameArray[$objRow[0]]));
+						$strTableName, stripslashes($strNameArray[$id]));
 					return;
 				}
 			}
