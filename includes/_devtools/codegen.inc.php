@@ -9,7 +9,12 @@
 	// Include the QCodeGen class library
 	require(__QCUBED__. '/codegen/QCodeGen.class.php');
 
-	function PrintInstructions() {
+	// code generators
+	include (__QCUBED_CORE__ . '/codegen/controls/_class_paths.inc.php');
+
+
+
+function PrintInstructions() {
 		global $strCommandName;
 		print('QCubed Code Generator (Command Line Interface) - ' . QCUBED_VERSION . '
 Copyright (c) 2001 - 2009, QuasIdea Development, LLC, QCubed Project
