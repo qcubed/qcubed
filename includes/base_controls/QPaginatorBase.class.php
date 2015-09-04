@@ -318,7 +318,7 @@
 			$intLeftBunchTrigger = 4 + $intLeftOfBunchCount;
 			$intRightBunchTrigger = $intMaximumStartOfBunch + round(($this->intIndexCount - 8.0) / 2.0);
 
-			if ($this->intPageNumber < $intLeftBunchTrigger) {
+			if ($this->intPageNumber <= $intLeftBunchTrigger) {
 				$intPageStart = 1;
 			} else {
 				$intPageStart = min($intMaximumStartOfBunch, $this->intPageNumber - $intLeftOfBunchCount);
