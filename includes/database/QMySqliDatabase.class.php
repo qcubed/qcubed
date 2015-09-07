@@ -709,6 +709,13 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 					break;
 				case MYSQLI_TYPE_NEWDECIMAL:
 				case MYSQLI_TYPE_DECIMAL:
+					// NOTE: PHP's best response to fixed point exact precision numbers is to use the bcmath library.
+					// bcmath requires string inputs. If you try to do math directly on these, PHP will convert to float,
+					// so for those who care, they will need to be careful. For those who do not care, then PHP will do
+					// the conversion anyway.
+					$this->strType = QDatabaseFieldType::VarChar;
+					break;
+
 				case MYSQLI_TYPE_FLOAT:
 					$this->strType = QDatabaseFieldType::Float;
 					break;
