@@ -132,30 +132,43 @@
 	 * 
 	 * @see QAutocompleteBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo 	 * Which element the menu should be appended to. When the value is null,
+	 * @property mixed $AppendTo
+	 * Which element the menu should be appended to. When the value is null,
 	 * the parents of the input field will be checked for a class of
 	 * ui-front. If an element with the ui-front class is found, the menu
 	 * will be appended to that element. Regardless of the value, if no
 	 * element is found, the menu will be appended to the body. Note: The
 	 * appendTo option should not be changed while the suggestions menu is
 	 * open.
-	 * @property boolean $AutoFocus 	 * If set to true the first item will automatically be focused when the
+	 *
+	 * @property boolean $AutoFocus
+	 * If set to true the first item will automatically be focused when the
 	 * menu is shown.
-	 * @property integer $Delay 	 * The delay in milliseconds between when a keystroke occurs and when a
+	 *
+	 * @property integer $Delay
+	 * The delay in milliseconds between when a keystroke occurs and when a
 	 * search is performed. A zero-delay makes sense for local data (more
 	 * responsive), but can produce a lot of load for remote data, while
 	 * being less responsive.
-	 * @property boolean $Disabled 	 * Disables the autocomplete if set to true.
-	 * @property integer $MinLength 	 * The minimum number of characters a user must type before a search is
+	 *
+	 * @property boolean $Disabled
+	 * Disables the autocomplete if set to true.
+	 *
+	 * @property integer $MinLength
+	 * The minimum number of characters a user must type before a search is
 	 * performed. Zero is useful for local data with just a few items, but a
 	 * higher value should be used when a single character search could match
 	 * a few thousand items.
-	 * @property mixed $Position 	 * Identifies the position of the suggestions menu in relation to the
+	 *
+	 * @property mixed $Position
+	 * Identifies the position of the suggestions menu in relation to the
 	 * associated input element. The of option defaults to the input element,
 	 * but you can specify another element to position against. You can refer
 	 * to the jQuery UI Position utility for more details about the various
 	 * options.
-	 * @property mixed $Source 	 * Defines the data to use, must be specified. 
+	 *
+	 * @property mixed $Source
+	 * Defines the data to use, must be specified. 
 	 * 
 	 * Independent of the variant you use, the label is always treated as
 	 * text. If you want the label to be treated as html you can use Scott
@@ -205,6 +218,7 @@
 	 * pass to new RegExp().
 	 * 
 
+	 *
 	 */
 
 	class QAutocompleteGen extends QTextBox	{
@@ -257,31 +271,32 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 		/**
 		 * Closes the Autocomplete menu. Useful in combination with the search
 		 * method, to close the open menu.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Close() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close", QJsPriority::Low);
 		}
@@ -289,21 +304,24 @@
 		 * Removes the autocomplete functionality completely. This will return
 		 * the element back to its pre-init state.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Destroy() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the autocomplete.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Disable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the autocomplete.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Enable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
@@ -314,7 +332,8 @@
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the autocomplete plugin has loaded.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Instance() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
@@ -325,7 +344,9 @@
 		 * value of a specific key by using dot notation. For example, "foo.bar"
 		 * would get the value of the bar property on the foo option.
 		 * 
-		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
+		 * 	* optionName Type: String The name of the option to get.
+		 * @param $optionName
+		 */
 		public function Option($optionName) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
@@ -333,7 +354,8 @@
 		 * Gets an object containing key/value pairs representing the current
 		 * autocomplete options hash.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Option1() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
@@ -347,14 +369,19 @@
 		 * option.
 		 * 
 		 * 	* optionName Type: String The name of the option to set.
-		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
+		 * 	* value Type: Object A value to set for the option.
+		 * @param $optionName
+		 * @param $value
+		 */
 		public function Option2($optionName, $value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the autocomplete.
 		 * 
-		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
+		 * 	* options Type: Object A map of option-value pairs to set.
+		 * @param $options
+		 */
 		public function Option3($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
@@ -365,7 +392,9 @@
 		 * inputs value is used. Can be called with an empty string and
 		 * minLength: 0 to display all items.
 		 * 
-		 * 	* value Type: String		 * @param $value		 */
+		 * 	* value Type: String
+		 * @param $value
+		 */
 		public function Search($value = null) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "search", $value, QJsPriority::Low);
 		}

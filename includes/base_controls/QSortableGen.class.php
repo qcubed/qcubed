@@ -345,7 +345,8 @@
 	 * 
 	 * @see QSortableBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo 	 * Defines where the helper that moves with the mouse is being appended
+	 * @property mixed $AppendTo
+	 * Defines where the helper that moves with the mouse is being appended
 	 * to during the drag (for example, to resolve overlap/zIndex
 	 * issues).Multiple types supported:
 	 * 
@@ -358,14 +359,22 @@
 	 * of the sortable item.
 	 * 
 
-	 * @property string $Axis 	 * If defined, the items can be dragged only horizontally or vertically.
+	 *
+	 * @property string $Axis
+	 * If defined, the items can be dragged only horizontally or vertically.
 	 * Possible values: "x", "y".
-	 * @property mixed $Cancel 	 * Prevents sorting if you start on elements matching the selector.
-	 * @property mixed $ConnectWith 	 * A selector of other sortable elements that the items from this list
+	 *
+	 * @property mixed $Cancel
+	 * Prevents sorting if you start on elements matching the selector.
+	 *
+	 * @property mixed $ConnectWith
+	 * A selector of other sortable elements that the items from this list
 	 * should be connected to. This is a one-way relationship, if you want
 	 * the items to be connected in both directions, the connectWith option
 	 * must be set on both sortable elements.
-	 * @property mixed $Containment 	 * Defines a bounding box that the sortable items are constrained to
+	 *
+	 * @property mixed $Containment
+	 * Defines a bounding box that the sortable items are constrained to
 	 * while dragging. 
 	 * 
 	 * Note: The element specified for containment must have a calculated
@@ -382,24 +391,46 @@
 	 * Possible values: "parent", "document", "window".
 	 * 
 
-	 * @property string $Cursor 	 * Defines the cursor that is being shown while sorting.
-	 * @property mixed $CursorAt 	 * Moves the sorting element or helper so the cursor always appears to
+	 *
+	 * @property string $Cursor
+	 * Defines the cursor that is being shown while sorting.
+	 *
+	 * @property mixed $CursorAt
+	 * Moves the sorting element or helper so the cursor always appears to
 	 * drag from the same position. Coordinates can be given as a hash using
 	 * a combination of one or two keys: { top, left, right, bottom }.
-	 * @property integer $Delay 	 * Time in milliseconds to define when the sorting should start. Adding a
+	 *
+	 * @property integer $Delay
+	 * Time in milliseconds to define when the sorting should start. Adding a
 	 * delay helps preventing unwanted drags when clicking on an element.
-	 * @property boolean $Disabled 	 * Disables the sortable if set to true.
-	 * @property integer $Distance 	 * Tolerance, in pixels, for when sorting should start. If specified,
+	 *
+	 * @property boolean $Disabled
+	 * Disables the sortable if set to true.
+	 *
+	 * @property integer $Distance
+	 * Tolerance, in pixels, for when sorting should start. If specified,
 	 * sorting will not start until after mouse is dragged beyond distance.
 	 * Can be used to allow for clicks on elements within a handle.
-	 * @property boolean $DropOnEmpty 	 * If false, items from this sortable cant be dropped on an empty connect
+	 *
+	 * @property boolean $DropOnEmpty
+	 * If false, items from this sortable cant be dropped on an empty connect
 	 * sortable (see the connectWith option.
-	 * @property boolean $ForceHelperSize 	 * If true, forces the helper to have a size.
-	 * @property boolean $ForcePlaceholderSize 	 * If true, forces the placeholder to have a size.
-	 * @property array $Grid 	 * Snaps the sorting element or helper to a grid, every x and y pixels.
+	 *
+	 * @property boolean $ForceHelperSize
+	 * If true, forces the helper to have a size.
+	 *
+	 * @property boolean $ForcePlaceholderSize
+	 * If true, forces the placeholder to have a size.
+	 *
+	 * @property array $Grid
+	 * Snaps the sorting element or helper to a grid, every x and y pixels.
 	 * Array values: [ x, y ].
-	 * @property mixed $Handle 	 * Restricts sort start click to the specified element.
-	 * @property mixed $Helper 	 * Allows for a helper element to be used for dragging display.Multiple
+	 *
+	 * @property mixed $Handle
+	 * Restricts sort start click to the specified element.
+	 *
+	 * @property mixed $Helper
+	 * Allows for a helper element to be used for dragging display.Multiple
 	 * types supported:
 	 * 
 	 * 	* String: If set to "clone", then the element will be cloned and the
@@ -409,10 +440,18 @@
 	 * sorted.
 	 * 
 
-	 * @property mixed $Items 	 * Specifies which items inside the element should be sortable.
-	 * @property integer $Opacity 	 * Defines the opacity of the helper while sorting. From 0.01 to 1.
-	 * @property string $Placeholder 	 * A class name that gets applied to the otherwise white space.
-	 * @property mixed $Revert 	 * Whether the sortable items should revert to their new positions using
+	 *
+	 * @property mixed $Items
+	 * Specifies which items inside the element should be sortable.
+	 *
+	 * @property integer $Opacity
+	 * Defines the opacity of the helper while sorting. From 0.01 to 1.
+	 *
+	 * @property string $Placeholder
+	 * A class name that gets applied to the otherwise white space.
+	 *
+	 * @property mixed $Revert
+	 * Whether the sortable items should revert to their new positions using
 	 * a smooth animation.Multiple types supported:
 	 * 
 	 * 	* Boolean: When set to true, the items will animate with the default
@@ -420,18 +459,29 @@
 	 * 	* Number: The duration for the animation, in milliseconds.
 	 * 
 
-	 * @property boolean $Scroll 	 * If set to true, the page scrolls when coming to an edge.
-	 * @property integer $ScrollSensitivity 	 * Defines how near the mouse must be to an edge to start scrolling.
-	 * @property integer $ScrollSpeed 	 * The speed at which the window should scroll once the mouse pointer
+	 *
+	 * @property boolean $Scroll
+	 * If set to true, the page scrolls when coming to an edge.
+	 *
+	 * @property integer $ScrollSensitivity
+	 * Defines how near the mouse must be to an edge to start scrolling.
+	 *
+	 * @property integer $ScrollSpeed
+	 * The speed at which the window should scroll once the mouse pointer
 	 * gets within the scrollSensitivity distance.
-	 * @property string $Tolerance 	 * Specifies which mode to use for testing whether the item being moved
+	 *
+	 * @property string $Tolerance
+	 * Specifies which mode to use for testing whether the item being moved
 	 * is hovering over another item. Possible values: 
 	 * 
 	 * 	* "intersect": The item overlaps the other item by at least 50%.
 	 * 	* "pointer": The mouse pointer overlaps the other item.
 	 * 
 
-	 * @property integer $ZIndex 	 * Z-index for element/helper while being sorted.
+	 *
+	 * @property integer $ZIndex
+	 * Z-index for element/helper while being sorted.
+	 *
 	 */
 
 	class QSortableGen extends QPanel	{
@@ -538,24 +588,24 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 		/**
@@ -563,7 +613,8 @@
 		 * prior to when the current sort was started. Useful in the stop and
 		 * receive callback functions.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Cancel() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "cancel", QJsPriority::Low);
 		}
@@ -571,21 +622,24 @@
 		 * Removes the sortable functionality completely. This will return the
 		 * element back to its pre-init state.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Destroy() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the sortable.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Disable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the sortable.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Enable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
@@ -596,7 +650,8 @@
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the sortable plugin has loaded.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Instance() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
@@ -607,7 +662,9 @@
 		 * value of a specific key by using dot notation. For example, "foo.bar"
 		 * would get the value of the bar property on the foo option.
 		 * 
-		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
+		 * 	* optionName Type: String The name of the option to get.
+		 * @param $optionName
+		 */
 		public function Option($optionName) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
@@ -615,7 +672,8 @@
 		 * Gets an object containing key/value pairs representing the current
 		 * sortable options hash.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Option1() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
@@ -629,14 +687,19 @@
 		 * option.
 		 * 
 		 * 	* optionName Type: String The name of the option to set.
-		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
+		 * 	* value Type: Object A value to set for the option.
+		 * @param $optionName
+		 * @param $value
+		 */
 		public function Option2($optionName, $value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the sortable.
 		 * 
-		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
+		 * 	* options Type: Object A map of option-value pairs to set.
+		 * @param $options
+		 */
 		public function Option3($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
@@ -644,7 +707,8 @@
 		 * Refresh the sortable items. Triggers the reloading of all sortable
 		 * items, causing new items to be recognized.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Refresh() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh", QJsPriority::Low);
 		}
@@ -652,7 +716,8 @@
 		 * Refresh the cached positions of the sortable items. Calling this
 		 * method refreshes the cached item positions of all sortables.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function RefreshPositions() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refreshPositions", QJsPriority::Low);
 		}
@@ -680,7 +745,9 @@
 		 * 	* attribute (default: "id") Type: String The name of the attribute
 		 * to use for the values.
 		 * 	* expression (default: /(.+)[-=_](.+)/) Type: RegExp A regular
-		 * expression used to split the attribute value into key and value parts.		 * @param $options		 */
+		 * expression used to split the attribute value into key and value parts.
+		 * @param $options
+		 */
 		public function Serialize($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "serialize", $options, QJsPriority::Low);
 		}
@@ -690,7 +757,9 @@
 		 * 	* options Type: Object Options to customize the serialization. 
 		 * 
 		 * 	* attribute (default: "id") Type: String The name of the attribute to
-		 * use for the values.		 * @param $options		 */
+		 * use for the values.
+		 * @param $options
+		 */
 		public function ToArray($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "toArray", $options, QJsPriority::Low);
 		}

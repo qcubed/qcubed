@@ -749,7 +749,7 @@
                     $objControl->RenderAttributeScripts(); // render one-time attribute commands only
                 }
 				if ($strScript) {
-					QApplication::ExecuteJavaScript($strScript);
+					QApplication::ExecuteJavaScript($strScript, QJsPriority::High);	// put these last in the high priority queue, just before getting the commands below
 				}
 				$objControl->ResetFlags();
             }
@@ -762,7 +762,7 @@
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strRender = $objGrouping->Render();
 				if (trim($strRender))
-					QApplication::ExecuteJavaScript($strRender);
+					QApplication::ExecuteJavaScript($strRender, QJsPriority::High);
 			}
 
 

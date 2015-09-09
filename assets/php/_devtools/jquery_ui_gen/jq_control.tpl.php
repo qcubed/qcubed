@@ -117,24 +117,24 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 <?php foreach ($objJqDoc->methods as $method) { ?>

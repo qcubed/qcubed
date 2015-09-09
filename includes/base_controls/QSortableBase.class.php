@@ -41,13 +41,14 @@
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
 			
-			$strJS .=<<<FUNC
+			$strCtrlJs =<<<FUNC
 			;\$j('#{$this->ControlId}').on("sortstop", function (event, ui) {
 						var ary = jQuery(this).sortable("toArray");
 						var str = ary.join(",");
 			 			qcubed.recordControlModification("$this->ControlId", "_ItemArray", str);
 					})						
 FUNC;
+			QApplication::ExecuteJavaScript($strCtrlJs, QJsPriority::High);
 			
 			return $strJS;
 		}

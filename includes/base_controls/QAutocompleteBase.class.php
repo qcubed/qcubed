@@ -159,8 +159,8 @@
 		 */
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			$strControlId = $this->getJqControlId();
-			$strJS = "qc.autocomplete('{$strControlId}');" . $strJS;
+			QApplication::ExecuteJsFunction('qc.autocomplete', $this->GetJqControlId(), QJsPriority::High);
+
 			return $strJS;
 		}
 		

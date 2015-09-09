@@ -71,7 +71,7 @@
 		 */
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qcubed.accordion', $this->ControlId);
+			QApplication::ExecuteJsFunction('qcubed.accordion', $this->GetJqControlId(), QJsPriority::High);
 			return $strJS;
 		}
 

@@ -41,7 +41,8 @@
 		
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qcubed.resizable', $this->getJqControlId(), $this->ControlId);
+			// Attach the qcubed tracking functions just after parent script attaches the widget to the html object
+			QApplication::ExecuteJsFunction('qcubed.resizable', $this->GetJqControlId(), $this->ControlId, QJsPriority::High);
 			return $strJS;
 		}
 

@@ -46,15 +46,21 @@
 	 * 
 	 * @see QProgressbarBase
 	 * @package Controls\Base
-	 * @property boolean $Disabled 	 * Disables the progressbar if set to true.
-	 * @property integer $Max 	 * The maximum value of the progressbar.
-	 * @property mixed $Value 	 * The value of the progressbar.Multiple types supported:
+	 * @property boolean $Disabled
+	 * Disables the progressbar if set to true.
+	 *
+	 * @property integer $Max
+	 * The maximum value of the progressbar.
+	 *
+	 * @property mixed $Value
+	 * The value of the progressbar.Multiple types supported:
 	 * 
 	 * 	* Number: A value between 0 and the max.
 	 * 	* Boolean: Value can be set to false to create an indeterminate
 	 * progressbar.
 	 * 
 
+	 *
 	 */
 
 	class QProgressbarGen extends QPanel	{
@@ -95,45 +101,48 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 		/**
 		 * Removes the progressbar functionality completely. This will return the
 		 * element back to its pre-init state.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Destroy() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the progressbar.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Disable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the progressbar.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Enable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
@@ -144,7 +153,8 @@
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the progressbar plugin has loaded.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Instance() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
@@ -155,7 +165,9 @@
 		 * value of a specific key by using dot notation. For example, "foo.bar"
 		 * would get the value of the bar property on the foo option.
 		 * 
-		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
+		 * 	* optionName Type: String The name of the option to get.
+		 * @param $optionName
+		 */
 		public function Option($optionName) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
@@ -163,7 +175,8 @@
 		 * Gets an object containing key/value pairs representing the current
 		 * progressbar options hash.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Option1() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
@@ -177,21 +190,27 @@
 		 * option.
 		 * 
 		 * 	* optionName Type: String The name of the option to set.
-		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
+		 * 	* value Type: Object A value to set for the option.
+		 * @param $optionName
+		 * @param $value
+		 */
 		public function Option2($optionName, $value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the progressbar.
 		 * 
-		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
+		 * 	* options Type: Object A map of option-value pairs to set.
+		 * @param $options
+		 */
 		public function Option3($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 		/**
 		 * Gets the current value of the progressbar.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Value() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "value", QJsPriority::Low);
 		}
@@ -199,7 +218,9 @@
 		 * Sets the current value of the progressbar.
 		 * 
 		 * 	* value Type: Number or Boolean The value to set. See the value
-		 * option for details on valid values.		 * @param $value		 */
+		 * option for details on valid values.
+		 * @param $value
+		 */
 		public function Value1($value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "value", $value, QJsPriority::Low);
 		}

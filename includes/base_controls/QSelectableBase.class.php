@@ -30,7 +30,7 @@
 		
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qcubed.selectable', $this->ControlId);
+			QApplication::ExecuteJsFunction('qcubed.selectable', $this->GetJqControlId(), QJsPriority::High);
 			return $strJS;
 		}
 

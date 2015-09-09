@@ -135,8 +135,9 @@
 
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			$strControlId = $this->getJqControlId();
-			$strJS = "qc.dialog('{$strControlId}');" . $strJS;
+			$strControlId = $this->GetJqControlId();
+			QApplication::ExecuteJsFunction('qc.dialog', $strControlId, QJsPriority::High);
+
 			return $strJS;
 		}
 

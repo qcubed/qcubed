@@ -43,7 +43,7 @@
 		
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qcubed.droppable', $this->getJqControlId(), $this->ControlId);
+			QApplication::ExecuteJsFunction('qcubed.droppable', $this->GetJqControlId(), $this->ControlId, QJsPriority::High);
 			return $strJS;
 		}
 
