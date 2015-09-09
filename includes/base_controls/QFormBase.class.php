@@ -1744,12 +1744,15 @@
 			}
 
 			// Add any application level js commands.
+			// This will include high and medimum level commands
 			$strEndScript .= QApplication::RenderJavascript(true);
 
-			// Add the javascript coming from controls and events
+			// Add the javascript coming from controls and events just after the medium level commands
 			$strEndScript .=  ';'  . $strEventScripts;
 
+			// Add low level commands and other things that need to execute at the end
 			$strEndScript .= ';' . QApplication::RenderJavascript(false);
+
 
 
 

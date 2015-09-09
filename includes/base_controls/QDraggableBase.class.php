@@ -47,7 +47,7 @@
 
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qcubed.draggable', $this->getJqControlId(), $this->ControlId);
+			QApplication::ExecuteJsFunction('qcubed.draggable', $this->getJqControlId(), $this->ControlId, QJsPriority::High);
 			return $strJS;
 		}
 
