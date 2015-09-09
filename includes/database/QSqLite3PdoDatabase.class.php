@@ -482,10 +482,19 @@ class QSqLite3PdoDatabaseField extends QDatabaseFieldBase {
 			case 'MEDIUMINT':
 				$this->strType = QDatabaseFieldType::Integer;
 				break;
+			
 			case 'FLOAT':
-			case 'DECIMAL':
 				$this->strType = QDatabaseFieldType::Float;
 				break;
+
+			case 'DECIMAL':
+				// NOTE: PHP's best response to fixed point exact precision numbers is to use the bcmath library.
+				// bcmath requires string inputs. If you try to do math directly on these, PHP will convert to float,
+				// so for those who care, they will need to be careful. For those who do not care, then PHP will do
+				// the conversion anyway.
+				$this->strType = QDatabaseFieldType::VarChar;
+				break;
+
 			case 'DOUBLE':
 				// NOTE: PHP does not offer full support of double-precision floats.
 				// Value will be set as a VarChar which will guarantee that the precision will be maintained.

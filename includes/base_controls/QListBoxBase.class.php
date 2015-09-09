@@ -119,7 +119,7 @@
 			$strToReturn = $this->RenderTag('select', $attrOverride, null, $this->RenderInnerHtml());
 
 			// If MultiSelect and if NOT required, add a "Reset" button to deselect everything
-			if (($this->SelectionMode == QSelectionMode::Multiple) && (!$this->blnRequired) && ($this->blnEnabled) && ($this->blnVisible)) {
+			if (($this->SelectionMode == QSelectionMode::Multiple) && (!$this->blnRequired) && ($this->Enabled) && ($this->blnVisible)) {
 				$strToReturn .= $this->GetResetButtonHtml();
 			}
 			return $strToReturn;

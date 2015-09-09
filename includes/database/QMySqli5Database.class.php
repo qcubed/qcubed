@@ -130,7 +130,7 @@
 		protected function SetFieldType($intMySqlFieldType) {
 			switch ($intMySqlFieldType) {
 				case MYSQLI_TYPE_NEWDECIMAL:
-					$this->strType = QDatabaseFieldType::Float;
+					$this->strType = QDatabaseFieldType::VarChar;
 					break;
 
 				case MYSQLI_TYPE_BIT:

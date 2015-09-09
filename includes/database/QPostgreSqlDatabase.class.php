@@ -759,7 +759,14 @@
 					throw new QPostgreSqlDatabaseException('Unsupported Field Type: money.  Use numeric or decimal instead.', 0,null);
 					break;
 				case 'decimal':
-				case 'numeric':					
+				case 'numeric':
+					// NOTE: PHP's best response to fixed point exact precision numbers is to use the bcmath library.
+					// bcmath requires string inputs. If you try to do math directly on these, PHP will convert to float,
+					// so for those who care, they will need to be careful. For those who do not care, then PHP will do
+					// the conversion automatically.
+					$this->strType = QDatabaseFieldType::VarChar;
+					break;
+
 				case 'real':
 					$this->strType = QDatabaseFieldType::Float;
 					break;					
