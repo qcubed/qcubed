@@ -519,10 +519,10 @@
 
 
 						if (!$objReferencedColumn->PrimaryKey) {
-							$this->strWarnings .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
+							$this->strErrors .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
 								$objReferencedTable->ClassName, $objReference->KeyName, $objReferencedColumn->Name, $objReferencedTable->Name);
 						} else if (count($objReferencedTable->PrimaryKeyColumnArray) != 1) {
-							$this->strWarnings .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
+							$this->strErrors .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
 								$objReferencedTable->ClassName, $objReference->KeyName, $objReferencedColumn->Name, $objReferencedTable->Name);
 						}
 					}
@@ -916,10 +916,10 @@
 							$objTable->IndexArray = $objIndexArray;
 
 							if ($objIndex->Unique)
-								$this->strErrors .= sprintf("Notice: It is recommended that you add a single-column UNIQUE index on \"%s.%s\" for the Foreign Key %s\r\n",
+								$this->strWarnings .= sprintf("Notice: It is recommended that you add a single-column UNIQUE index on \"%s.%s\" for the Foreign Key %s\r\n",
 									$strTableName, $strColumnName, $objForeignKey->KeyName);
 							else
-								$this->strErrors .= sprintf("Notice: It is recommended that you add a single-column index on \"%s.%s\" for the Foreign Key %s\r\n",
+								$this->strWarnings .= sprintf("Notice: It is recommended that you add a single-column index on \"%s.%s\" for the Foreign Key %s\r\n",
 									$strTableName, $strColumnName, $objForeignKey->KeyName);
 						}
 
