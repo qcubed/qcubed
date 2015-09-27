@@ -519,10 +519,10 @@
 
 
 						if (!$objReferencedColumn->PrimaryKey) {
-							$this->strWarnings .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
+							$this->strErrors .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
 								$objReferencedTable->ClassName, $objReference->KeyName, $objReferencedColumn->Name, $objReferencedTable->Name);
 						} else if (count($objReferencedTable->PrimaryKeyColumnArray) != 1) {
-							$this->strWarnings .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
+							$this->strErrors .= sprintf("Warning: Invalid Relationship created in %s class (for foreign key \"%s\") -- column \"%s\" is not the single-column primary key for the referenced \"%s\" table\r\n",
 								$objReferencedTable->ClassName, $objReference->KeyName, $objReferencedColumn->Name, $objReferencedTable->Name);
 						}
 					}
