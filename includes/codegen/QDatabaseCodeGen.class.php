@@ -916,10 +916,10 @@
 							$objTable->IndexArray = $objIndexArray;
 
 							if ($objIndex->Unique)
-								$this->strErrors .= sprintf("Notice: It is recommended that you add a single-column UNIQUE index on \"%s.%s\" for the Foreign Key %s\r\n",
+								$this->strWarnings .= sprintf("Notice: It is recommended that you add a single-column UNIQUE index on \"%s.%s\" for the Foreign Key %s\r\n",
 									$strTableName, $strColumnName, $objForeignKey->KeyName);
 							else
-								$this->strErrors .= sprintf("Notice: It is recommended that you add a single-column index on \"%s.%s\" for the Foreign Key %s\r\n",
+								$this->strWarnings .= sprintf("Notice: It is recommended that you add a single-column index on \"%s.%s\" for the Foreign Key %s\r\n",
 									$strTableName, $strColumnName, $objForeignKey->KeyName);
 						}
 
