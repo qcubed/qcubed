@@ -12,7 +12,7 @@
 	 *
 	 * @package Controls
 	 *
-	 * @property mixed $DateTime
+	 * @property null|QDateTime $DateTime
 	 * @property string $DateTimePickerType
 	 * @property string $DateTimePickerFormat
 	 * @property integer $MinimumYear Minimum Year to show
