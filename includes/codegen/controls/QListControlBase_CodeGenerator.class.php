@@ -216,6 +216,12 @@ TMPL;
 		 */
 		protected \${$strControlVarName};
 
+		/**
+		 * @var string str{$strPropName}NullLabel
+		 * @access protected
+		 */
+		protected \$str{$strPropName}NullLabel;
+
 
 TMPL;
 
@@ -257,16 +263,24 @@ TMPL;
 
 			$strRet = '';
 
-			if (!$blnInit) {
+			if ($blnInit) {
+				$strRet .= <<<TMPL
+if (!\$this->str{$strPropName}NullLabel) {
+	if (!\$this->{$strControlVarName}->Required) {
+		\$this->str{$strPropName}NullLabel = '- None -';
+	}
+	elseif (!\$this->blnEditMode) {
+		\$this->str{$strPropName}NullLabel = '- Select One -';
+	}
+}
+
+TMPL;
+			}
+			else {
 				$strRet .= "\$this->{$strControlVarName}->RemoveAllItems();\n";
 			}
 			$strRet .= <<<TMPL
-if (!\$this->{$strControlVarName}->Required) {
-	\$this->{$strControlVarName}->AddItem(QApplication::Translate('- None -'), null);
-}
-elseif (!\$this->blnEditMode) {
-	\$this->{$strControlVarName}->AddItem(QApplication::Translate('- Select One -'), null);
-}
+\$this->{$strControlVarName}->AddItem(QApplication::Translate(\$this->str{$strPropName}NullLabel), null);
 
 TMPL;
 
@@ -370,4 +384,31 @@ TMPL;
 
 			return $strRet;
 		}
+
+		public function ConnectorSet(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
+			$strControlVarName = $this->VarName($strPropName);
+			$strRet = <<<TMPL
+					case '{$strPropName}NullLabel':
+						return \$this->str{$strPropName}NullLabel = \$mixValue;
+
+TMPL;
+			return $strRet;
+		}
+
+
+		public function ConnectorGet(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
+			$strControlVarName = $this->VarName($strPropName);
+			$strRet = <<<TMPL
+				case '{$strPropName}NullLabel':
+					return \$this->str{$strPropName}NullLabel;
+
+TMPL;
+			return $strRet;
+		}
+
 	}
+

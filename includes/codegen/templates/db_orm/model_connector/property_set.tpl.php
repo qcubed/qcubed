@@ -24,9 +24,12 @@
 	if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
 	$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
 	$strPropertyName = $objColumn->PropertyName;
-	$strClassName = $objCodeGen->GetControlCodeGenerator($objColumn)->GetControlClass();
+
+	$objControlCodeGenerator = $objCodeGen->GetControlCodeGenerator($objColumn);
+	$strClassName = $objControlCodeGenerator->GetControlClass();
 	$strLabelVarName = $objCodeGen->ModelConnectorLabelVariableName($objColumn);
 	include("property_set_case.tpl.php");
+	print($objControlCodeGenerator->ConnectorSet($objCodeGen, $objTable, $objColumn));
 } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?><?php if ($objReverseReference->Unique) { ?><?php
 	if (isset($objReverseReference->Options['FormGen']) && $objReverseReference->Options['FormGen'] == QFormGen::None) continue;
