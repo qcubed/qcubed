@@ -8,7 +8,7 @@
  */
 
 /**
- * A base blass for objects that manage html attributes. Uses array functions and defines a couple of arrays to manage
+ * A base class for objects that manage html attributes. Uses array functions and defines a couple of arrays to manage
  * the attributes. Values will be html escaped when printed.
  *
  * Includes:
