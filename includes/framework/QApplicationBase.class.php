@@ -576,11 +576,13 @@
 		 * This will redirect the user to a new web location.  This can be a relative or absolute web path, or it
 		 * can be an entire URL.
 		 *
+		 * TODO: break this into two routines, since the resulting UI behavior is really different. Redirect and LoadPage??
+		 *
 		 * @param string $strLocation target patch
 		 * @param bool $blnAbortCurrentScript Whether to abort the current script, or finish it out so data gets saved.
 		 * @return void
 		 */
-		public static function Redirect($strLocation, $blnAbortCurrentScript = false) {
+		public static function Redirect($strLocation, $blnAbortCurrentScript = true) {
 
 			if (!$blnAbortCurrentScript) {
 				// Use the javascript command mechanism
