@@ -143,7 +143,7 @@
 				// Only Enabled and Visible and Rendered controls should be validated
 				if (($objChildControl->Visible) && ($objChildControl->Enabled) && ($objChildControl->RenderMethod) && ($objChildControl->OnPage)) {
 					if (!$objChildControl->ValidateControlAndChildren()) {
-						$this->CallJqUiMethod(false, "option", 'active', $intControlNum);
+						$this->ActivateTab($intControlNum);
 						$blnToReturn = false;
 					}
 				}
