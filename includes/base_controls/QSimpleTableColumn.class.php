@@ -385,6 +385,7 @@
 						
 			if ($cellValue !== null && $this->strPostMethod) {
 				$strPostMethod = $this->strPostMethod;
+				assert ('is_callable([$cellValue, $strPostMethod])');	// Malformed post method, or the item is not an object
 				$cellValue = $cellValue->$strPostMethod();
 			}
 			if ($this->objPostCallback) {
