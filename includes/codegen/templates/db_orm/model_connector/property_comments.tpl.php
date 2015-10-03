@@ -8,7 +8,8 @@
 <?php 
 	foreach ($objTable->ColumnArray as $objColumn) {
 		if (isset($objColumn->Options['FormGen']) && $objColumn->Options['FormGen'] == QFormGen::None) continue;
-		$strClassName = $objCodeGen->GetControlCodeGenerator($objColumn)->GetControlClass();
+		$objGenerator = $objCodeGen->GetControlCodeGenerator($objColumn);
+		$strClassName = $objGenerator->GetControlClass();
 		$blnIsLabel = ($strClassName == 'QLabel');
 
 		if (!$blnIsLabel && (!isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != QFormGen::LabelOnly)) { ?>
@@ -17,6 +18,7 @@
 		if ($blnIsLabel || !isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != QFormGen::ControlOnly) { ?>
 	 * @property-read QLabel $<?= $objColumn->PropertyName ?>Label
 <?php 	}
+		print ($objGenerator->ConnectorPropertyComments($objCodeGen, $objTable, $objColumn));
 	}
 
 	foreach ($objTable->ReverseReferenceArray as $objReverseReference) {

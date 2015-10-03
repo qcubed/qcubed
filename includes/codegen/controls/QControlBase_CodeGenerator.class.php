@@ -142,4 +142,48 @@ TMPL;
 		public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
 			throw new QCallerException('ConnectorUpdateMethod() method not implemented');
 		}
+
+		/**
+		 * Generate extra set options for the connector.
+		 *
+		 * @param QCodeGenBase $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @throws QCallerException
+		 * @return string
+		 */
+		public function ConnectorSet(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+			return "";
+		}
+
+		/**
+		 * Generate extra set options for the connector.
+		 *
+		 * @param QCodeGenBase $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @throws QCallerException
+		 * @return string
+		 */
+		public function ConnectorGet(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+			return "";
+		}
+
+		/**
+		 * Generate extra property comments for the connector.
+		 *
+		 * @param QCodeGenBase $objCodeGen
+		 * @param QTable $objTable
+		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 *
+		 * @throws QCallerException
+		 * @return string
+		 */
+		public function ConnectorPropertyComments(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+			return "";
+		}
+
+
 	}
