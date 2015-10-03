@@ -104,27 +104,43 @@
 	 * 
 	 * @see QSelectableBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo 	 * Which element the selection helper (the lasso) should be appended to.
-	 * @property boolean $AutoRefresh 	 * This determines whether to refresh (recalculate) the position and size
+	 * @property mixed $AppendTo
+	 * Which element the selection helper (the lasso) should be appended to.
+	 *
+	 * @property boolean $AutoRefresh
+	 * This determines whether to refresh (recalculate) the position and size
 	 * of each selectee at the beginning of each select operation. If you
 	 * have many items, you may want to set this to false and call the
 	 * refresh() method manually.
-	 * @property mixed $Cancel 	 * Prevents selecting if you start on elements matching the selector.
-	 * @property integer $Delay 	 * Time in milliseconds to define when the selecting should start. This
+	 *
+	 * @property mixed $Cancel
+	 * Prevents selecting if you start on elements matching the selector.
+	 *
+	 * @property integer $Delay
+	 * Time in milliseconds to define when the selecting should start. This
 	 * helps prevent unwanted selections when clicking on an element.
-	 * @property boolean $Disabled 	 * Disables the selectable if set to true.
-	 * @property integer $Distance 	 * Tolerance, in pixels, for when selecting should start. If specified,
+	 *
+	 * @property boolean $Disabled
+	 * Disables the selectable if set to true.
+	 *
+	 * @property integer $Distance
+	 * Tolerance, in pixels, for when selecting should start. If specified,
 	 * selecting will not start until the mouse has been dragged beyond the
 	 * specified distance.
-	 * @property mixed $Filter 	 * The matching child elements will be made selectees (able to be
+	 *
+	 * @property mixed $Filter
+	 * The matching child elements will be made selectees (able to be
 	 * selected).
-	 * @property string $Tolerance 	 * Specifies which mode to use for testing whether the lasso should
+	 *
+	 * @property string $Tolerance
+	 * Specifies which mode to use for testing whether the lasso should
 	 * select an item. Possible values: 
 	 * 
 	 * 	* "fit": Lasso overlaps the item entirely.
 	 * 	* "touch": Lasso overlaps the item by any amount.
 	 * 
 
+	 *
 	 */
 
 	class QSelectableGen extends QPanel	{
@@ -180,45 +196,48 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 		/**
 		 * Removes the selectable functionality completely. This will return the
 		 * element back to its pre-init state.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Destroy() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the selectable.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Disable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the selectable.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Enable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
@@ -229,7 +248,8 @@
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the selectable plugin has loaded.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Instance() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
@@ -240,7 +260,9 @@
 		 * value of a specific key by using dot notation. For example, "foo.bar"
 		 * would get the value of the bar property on the foo option.
 		 * 
-		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
+		 * 	* optionName Type: String The name of the option to get.
+		 * @param $optionName
+		 */
 		public function Option($optionName) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
@@ -248,7 +270,8 @@
 		 * Gets an object containing key/value pairs representing the current
 		 * selectable options hash.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Option1() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
@@ -262,14 +285,19 @@
 		 * option.
 		 * 
 		 * 	* optionName Type: String The name of the option to set.
-		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
+		 * 	* value Type: Object A value to set for the option.
+		 * @param $optionName
+		 * @param $value
+		 */
 		public function Option2($optionName, $value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the selectable.
 		 * 
-		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
+		 * 	* options Type: Object A map of option-value pairs to set.
+		 * @param $options
+		 */
 		public function Option3($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
@@ -278,7 +306,8 @@
 		 * can be used to manually recalculate the position and size of each
 		 * selectee when the autoRefresh option is set to false.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Refresh() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh", QJsPriority::Low);
 		}

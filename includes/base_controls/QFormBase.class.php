@@ -749,7 +749,7 @@
                     $objControl->RenderAttributeScripts(); // render one-time attribute commands only
                 }
 				if ($strScript) {
-					QApplication::ExecuteJavaScript($strScript);
+					QApplication::ExecuteJavaScript($strScript, QJsPriority::High);	// put these last in the high priority queue, just before getting the commands below
 				}
 				$objControl->ResetFlags();
             }
@@ -762,7 +762,7 @@
 			foreach ($this->objGroupingArray as $objGrouping) {
 				$strRender = $objGrouping->Render();
 				if (trim($strRender))
-					QApplication::ExecuteJavaScript($strRender);
+					QApplication::ExecuteJavaScript($strRender, QJsPriority::High);
 			}
 
 
@@ -1744,12 +1744,15 @@
 			}
 
 			// Add any application level js commands.
+			// This will include high and medimum level commands
 			$strEndScript .= QApplication::RenderJavascript(true);
 
-			// Add the javascript coming from controls and events
+			// Add the javascript coming from controls and events just after the medium level commands
 			$strEndScript .=  ';'  . $strEventScripts;
 
+			// Add low level commands and other things that need to execute at the end
 			$strEndScript .= ';' . QApplication::RenderJavascript(false);
+
 
 
 

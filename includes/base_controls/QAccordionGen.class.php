@@ -70,7 +70,8 @@
 	 * 
 	 * @see QAccordionBase
 	 * @package Controls\Base
-	 * @property mixed $Active 	 * Which panel is currently open.Multiple types supported:
+	 * @property mixed $Active
+	 * Which panel is currently open.Multiple types supported:
 	 * 
 	 * 	* Boolean: Setting active to false will collapse all panels. This
 	 * requires the collapsible option to be true.
@@ -78,7 +79,9 @@
 	 * A negative value selects panels going backward from the last panel.
 	 * 
 
-	 * @property mixed $Animate 	 * If and how to animate changing panels.Multiple types supported:
+	 *
+	 * @property mixed $Animate
+	 * If and how to animate changing panels.Multiple types supported:
 	 * 
 	 * 	* Boolean: A value of false will disable animations.
 	 * 	* Number: Duration in milliseconds with default easing.
@@ -92,16 +95,26 @@
 	 * index than the currently active panel.
 	 * 
 
-	 * @property boolean $Collapsible 	 * Whether all the sections can be closed at once. Allows collapsing the
+	 *
+	 * @property boolean $Collapsible
+	 * Whether all the sections can be closed at once. Allows collapsing the
 	 * active section.
-	 * @property boolean $Disabled 	 * Disables the accordion if set to true.
-	 * @property string $Event 	 * The event that accordion headers will react to in order to activate
+	 *
+	 * @property boolean $Disabled
+	 * Disables the accordion if set to true.
+	 *
+	 * @property string $Event
+	 * The event that accordion headers will react to in order to activate
 	 * the associated panel. Multiple events can be specified, separated by a
 	 * space.
-	 * @property mixed $Header 	 * Selector for the header element, applied via .find() on the main
+	 *
+	 * @property mixed $Header
+	 * Selector for the header element, applied via .find() on the main
 	 * accordion element. Content panels must be the sibling immediately
 	 * after their associated headers.
-	 * @property string $HeightStyle 	 * Controls the height of the accordion and each panel. Possible values: 
+	 *
+	 * @property string $HeightStyle
+	 * Controls the height of the accordion and each panel. Possible values: 
 	 * 
 	 * 	* "auto": All panels will be set to the height of the tallest panel.
 	 * 	* "fill": Expand to the available height based on the accordions
@@ -109,13 +122,16 @@
 	 * 	* "content": Each panel will be only as tall as its content.
 	 * 
 
-	 * @property mixed $Icons 	 * Icons to use for headers, matching an icon provided by the jQuery UI
+	 *
+	 * @property mixed $Icons
+	 * Icons to use for headers, matching an icon provided by the jQuery UI
 	 * CSS Framework. Set to false to have no icons displayed. 
 	 * 
 	 * 	* header (string, default: "ui-icon-triangle-1-e")
 	 * 	* activeHeader (string, default: "ui-icon-triangle-1-s")
 	 * 
 
+	 *
 	 */
 
 	class QAccordionGen extends QPanel	{
@@ -171,45 +187,48 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 		/**
 		 * Removes the accordion functionality completely. This will return the
 		 * element back to its pre-init state.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Destroy() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the accordion.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Disable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the accordion.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Enable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
@@ -220,7 +239,8 @@
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the accordion plugin has loaded.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Instance() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
@@ -231,7 +251,9 @@
 		 * value of a specific key by using dot notation. For example, "foo.bar"
 		 * would get the value of the bar property on the foo option.
 		 * 
-		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
+		 * 	* optionName Type: String The name of the option to get.
+		 * @param $optionName
+		 */
 		public function Option($optionName) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
@@ -239,7 +261,8 @@
 		 * Gets an object containing key/value pairs representing the current
 		 * accordion options hash.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Option1() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
@@ -253,14 +276,19 @@
 		 * option.
 		 * 
 		 * 	* optionName Type: String The name of the option to set.
-		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
+		 * 	* value Type: Object A value to set for the option.
+		 * @param $optionName
+		 * @param $value
+		 */
 		public function Option2($optionName, $value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the accordion.
 		 * 
-		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
+		 * 	* options Type: Object A map of option-value pairs to set.
+		 * @param $options
+		 */
 		public function Option3($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
@@ -269,7 +297,8 @@
 		 * the DOM and recompute the height of the accordion panels. Results
 		 * depend on the content and the heightStyle option.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Refresh() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh", QJsPriority::Low);
 		}

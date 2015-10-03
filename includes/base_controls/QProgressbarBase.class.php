@@ -25,7 +25,7 @@
 		 */
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qcubed.progressbar', $this->ControlId);
+			QApplication::ExecuteJsFunction('qcubed.progressbar', $this->GetJqControlId(), QJsPriority::High);
 			return $strJS;
 		}
 

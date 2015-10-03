@@ -1762,7 +1762,7 @@
 		 *
 		 * @return string the DOM element id on which to apply the jQuery UI function
 		 */
-		public function getJqControlId() {
+		public function GetJqControlId() {
 			return $this->ControlId;
 		}
 

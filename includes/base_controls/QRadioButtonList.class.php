@@ -83,9 +83,9 @@
 		public function GetEndScript() {
 			$ctrlId = $this->ControlId;
 			if ($this->intButtonMode == self::ButtonModeSet) {
-				QApplication::ExecuteControlCommand($ctrlId, 'buttonset');
+				QApplication::ExecuteControlCommand($ctrlId, 'buttonset', QJsPriority::High);
 			} elseif ($this->intButtonMode == self::ButtonModeJq) {
-				QApplication::ExecuteSelectorFunction(["input:radio", "#" . $ctrlId], 'button');
+				QApplication::ExecuteSelectorFunction(["input:radio", "#" . $ctrlId], 'button', QJsPriority::High);
 			}
 			$strScript = parent::GetEndScript();
 			return $strScript;

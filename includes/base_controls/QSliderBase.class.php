@@ -30,7 +30,7 @@
 
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			QApplication::ExecuteJsFunction('qcubed.slider', $this->ControlId);
+			QApplication::ExecuteJsFunction('qcubed.slider', $this->GetJqControlId(), QJsPriority::High);
 			return $strJS;
 		}
 

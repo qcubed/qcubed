@@ -1088,14 +1088,18 @@
 				QApplication::$JavascriptCommandArray[QAjaxResponse::Alert] = null;
 			}
 
-			if ($blnBeforeControls) return $strScript;
-
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh])) {
 				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh]);
+				QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsHigh] = null;
 			}
+
+			if ($blnBeforeControls) return $strScript;	// When we call again, everything above here will be skipped since we are emptying the arrays
+
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium])) {
 				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium]);
+				QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium] = null;
 			}
+
 			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow])) {
 				$strScript .= self::RenderCommandArray(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow]);
 			}

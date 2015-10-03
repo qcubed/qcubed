@@ -81,10 +81,13 @@
 	 * 
 	 * @see QDraggableBase
 	 * @package Controls\Base
-	 * @property boolean $AddClasses 	 * If set to false, will prevent the ui-draggable class from being added.
+	 * @property boolean $AddClasses
+	 * If set to false, will prevent the ui-draggable class from being added.
 	 * This may be desired as a performance optimization when calling
 	 * .draggable() on hundreds of elements.
-	 * @property mixed $AppendTo 	 * Which element the draggable helper should be appended to while
+	 *
+	 * @property mixed $AppendTo
+	 * Which element the draggable helper should be appended to while
 	 * dragging. Note: The appendTo option only works when the helper option
 	 * is set to not use the original element.Multiple types supported:
 	 * 
@@ -97,15 +100,23 @@
 	 * of the draggable.
 	 * 
 
-	 * @property string $Axis 	 * Constrains dragging to either the horizontal (x) or vertical (y) axis.
+	 *
+	 * @property string $Axis
+	 * Constrains dragging to either the horizontal (x) or vertical (y) axis.
 	 * Possible values: "x", "y".
-	 * @property mixed $Cancel 	 * Prevents dragging from starting on specified elements.
-	 * @property mixed $ConnectToSortable 	 * Allows the draggable to be dropped onto the specified sortables. If
+	 *
+	 * @property mixed $Cancel
+	 * Prevents dragging from starting on specified elements.
+	 *
+	 * @property mixed $ConnectToSortable
+	 * Allows the draggable to be dropped onto the specified sortables. If
 	 * this option is used, a draggable can be dropped onto a sortable list
 	 * and then becomes part of it. Note: The helper option must be set to
 	 * "clone" in order to work flawlessly. Requires the jQuery UI Sortable
 	 * plugin to be included.
-	 * @property mixed $Containment 	 * Constrains dragging to within the bounds of the specified element or
+	 *
+	 * @property mixed $Containment
+	 * Constrains dragging to within the bounds of the specified element or
 	 * region.Multiple types supported:
 	 * 
 	 * 	* Selector: The draggable element will be contained to the bounding
@@ -118,23 +129,39 @@
 	 * y2 ].
 	 * 
 
-	 * @property string $Cursor 	 * The CSS cursor during the drag operation.
-	 * @property mixed $CursorAt 	 * Sets the offset of the dragging helper relative to the mouse cursor.
+	 *
+	 * @property string $Cursor
+	 * The CSS cursor during the drag operation.
+	 *
+	 * @property mixed $CursorAt
+	 * Sets the offset of the dragging helper relative to the mouse cursor.
 	 * Coordinates can be given as a hash using a combination of one or two
 	 * keys: { top, left, right, bottom }.
-	 * @property integer $Delay 	 * Time in milliseconds after mousedown until dragging should start. This
+	 *
+	 * @property integer $Delay
+	 * Time in milliseconds after mousedown until dragging should start. This
 	 * option can be used to prevent unwanted drags when clicking on an
 	 * element.
-	 * @property boolean $Disabled 	 * Disables the draggable if set to true.
-	 * @property integer $Distance 	 * Distance in pixels after mousedown the mouse must move before dragging
+	 *
+	 * @property boolean $Disabled
+	 * Disables the draggable if set to true.
+	 *
+	 * @property integer $Distance
+	 * Distance in pixels after mousedown the mouse must move before dragging
 	 * should start. This option can be used to prevent unwanted drags when
 	 * clicking on an element.
-	 * @property array $Grid 	 * Snaps the dragging helper to a grid, every x and y pixels. The array
+	 *
+	 * @property array $Grid
+	 * Snaps the dragging helper to a grid, every x and y pixels. The array
 	 * must be of the form [ x, y ].
-	 * @property mixed $Handle 	 * If specified, restricts dragging from starting unless the mousedown
+	 *
+	 * @property mixed $Handle
+	 * If specified, restricts dragging from starting unless the mousedown
 	 * occurs on the specified element(s). Only elements that descend from
 	 * the draggable element are permitted.
-	 * @property mixed $Helper 	 * Allows for a helper element to be used for dragging display.Multiple
+	 *
+	 * @property mixed $Helper
+	 * Allows for a helper element to be used for dragging display.Multiple
 	 * types supported:
 	 * 
 	 * 	* String: If set to "clone", then the element will be cloned and the
@@ -143,7 +170,9 @@
 	 * dragging.
 	 * 
 
-	 * @property mixed $IframeFix 	 * Prevent iframes from capturing the mousemove events during a drag.
+	 *
+	 * @property mixed $IframeFix
+	 * Prevent iframes from capturing the mousemove events during a drag.
 	 * Useful in combination with the cursorAt option, or in any case where
 	 * the mouse cursor may not be over the helper.Multiple types supported:
 	 * 
@@ -153,11 +182,17 @@
 	 * transparent overlays.
 	 * 
 
-	 * @property integer $Opacity 	 * Opacity for the helper while being dragged.
-	 * @property boolean $RefreshPositions 	 * If set to true, all droppable positions are calculated on every
+	 *
+	 * @property integer $Opacity
+	 * Opacity for the helper while being dragged.
+	 *
+	 * @property boolean $RefreshPositions
+	 * If set to true, all droppable positions are calculated on every
 	 * mousemove. _Caution: This solves issues on highly dynamic pages, but
 	 * dramatically decreases performance._
-	 * @property mixed $Revert 	 * Whether the element should revert to its start position when dragging
+	 *
+	 * @property mixed $Revert
+	 * Whether the element should revert to its start position when dragging
 	 * stops.Multiple types supported:
 	 * 
 	 * 	* Boolean: If set to true the element will always revert.
@@ -169,19 +204,31 @@
 	 * the element.
 	 * 
 
-	 * @property integer $RevertDuration 	 * The duration of the revert animation, in milliseconds. Ignored if the
+	 *
+	 * @property integer $RevertDuration
+	 * The duration of the revert animation, in milliseconds. Ignored if the
 	 * revert option is false.
-	 * @property string $Scope 	 * Used to group sets of draggable and droppable items, in addition to
+	 *
+	 * @property string $Scope
+	 * Used to group sets of draggable and droppable items, in addition to
 	 * droppables accept option. A draggable with the same scope value as a
 	 * droppable will be accepted by the droppable.
-	 * @property boolean $Scroll 	 * If set to true, container auto-scrolls while dragging.
-	 * @property integer $ScrollSensitivity 	 * Distance in pixels from the edge of the viewport after which the
+	 *
+	 * @property boolean $Scroll
+	 * If set to true, container auto-scrolls while dragging.
+	 *
+	 * @property integer $ScrollSensitivity
+	 * Distance in pixels from the edge of the viewport after which the
 	 * viewport should scroll. Distance is relative to pointer, not the
 	 * draggable. Ignored if the scroll option is false.
-	 * @property integer $ScrollSpeed 	 * The speed at which the window should scroll once the mouse pointer
+	 *
+	 * @property integer $ScrollSpeed
+	 * The speed at which the window should scroll once the mouse pointer
 	 * gets within the scrollSensitivity distance. Ignored if the scroll
 	 * option is false.
-	 * @property mixed $Snap 	 * Whether the element should snap to other elements.Multiple types
+	 *
+	 * @property mixed $Snap
+	 * Whether the element should snap to other elements.Multiple types
 	 * supported:
 	 * 
 	 * 	* Boolean: When set to true, the element will snap to all other
@@ -189,15 +236,24 @@
 	 * 	* Selector: A selector specifying which elements to snap to.
 	 * 
 
-	 * @property string $SnapMode 	 * Determines which edges of snap elements the draggable will snap to.
+	 *
+	 * @property string $SnapMode
+	 * Determines which edges of snap elements the draggable will snap to.
 	 * Ignored if the snap option is false. Possible values: "inner",
 	 * "outer", "both".
-	 * @property integer $SnapTolerance 	 * The distance in pixels from the snap element edges at which snapping
+	 *
+	 * @property integer $SnapTolerance
+	 * The distance in pixels from the snap element edges at which snapping
 	 * should occur. Ignored if the snap option is false.
-	 * @property mixed $Stack 	 * Controls the z-index of the set of elements that match the selector,
+	 *
+	 * @property mixed $Stack
+	 * Controls the z-index of the set of elements that match the selector,
 	 * always brings the currently dragged item to the front. Very useful in
 	 * things like window managers.
-	 * @property integer $ZIndex 	 * Z-index for the helper while being dragged.
+	 *
+	 * @property integer $ZIndex
+	 * Z-index for the helper while being dragged.
+	 *
 	 */
 
 	abstract class QDraggableGen extends QControl	{
@@ -313,45 +369,48 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 		/**
 		 * Removes the draggable functionality completely. This will return the
 		 * element back to its pre-init state.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Destroy() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
 		 * Disables the draggable.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Disable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
 		 * Enables the draggable.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Enable() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
@@ -362,7 +421,8 @@
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the draggable plugin has loaded.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Instance() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
@@ -373,7 +433,9 @@
 		 * value of a specific key by using dot notation. For example, "foo.bar"
 		 * would get the value of the bar property on the foo option.
 		 * 
-		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
+		 * 	* optionName Type: String The name of the option to get.
+		 * @param $optionName
+		 */
 		public function Option($optionName) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
@@ -381,7 +443,8 @@
 		 * Gets an object containing key/value pairs representing the current
 		 * draggable options hash.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Option1() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
@@ -395,14 +458,19 @@
 		 * option.
 		 * 
 		 * 	* optionName Type: String The name of the option to set.
-		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
+		 * 	* value Type: Object A value to set for the option.
+		 * @param $optionName
+		 * @param $value
+		 */
 		public function Option2($optionName, $value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the draggable.
 		 * 
-		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
+		 * 	* options Type: Object A map of option-value pairs to set.
+		 * @param $options
+		 */
 		public function Option3($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}

@@ -15,8 +15,8 @@
 	
 	<ul>
 		<li>Render/update html</li>
-		<li>Execute QActions attached to controls with QEvents</li>
 		<li>Execute JavaScript functions with <b>QJsPriority::High</b>
+		<li>Execute QActions attached to controls with QEvents</li>
 		<li>Execute JavaScript functions with <b>QJsPriority::Standard</b>
 		<li>Execute JavaScript functions with <b>QJsPriority::Low</b>
 	</ul>

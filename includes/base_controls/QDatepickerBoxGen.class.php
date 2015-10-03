@@ -81,22 +81,33 @@
 	 * 
 	 * @see QDatepickerBoxBase
 	 * @package Controls\Base
-	 * @property mixed $AltField 	 * An input element that is to be updated with the selected date from the
+	 * @property mixed $AltField
+	 * An input element that is to be updated with the selected date from the
 	 * datepicker. Use the altFormat option to change the format of the date
 	 * within this field. Leave as blank for no alternate field.
-	 * @property string $AltFormat 	 * The dateFormat to be used for the altField option. This allows one
+	 *
+	 * @property string $AltFormat
+	 * The dateFormat to be used for the altField option. This allows one
 	 * date format to be shown to the user for selection purposes, while a
 	 * different format is actually sent behind the scenes. For a full list
 	 * of the possible formats see the formatDate function
-	 * @property string $AppendText 	 * The text to display after each date field, e.g., to show the required
+	 *
+	 * @property string $AppendText
+	 * The text to display after each date field, e.g., to show the required
 	 * format.
-	 * @property boolean $AutoSize 	 * Set to true to automatically resize the input field to accommodate
+	 *
+	 * @property boolean $AutoSize
+	 * Set to true to automatically resize the input field to accommodate
 	 * dates in the current dateFormat.
-	 * @property QJsClosure $OnBeforeShow 	 * Type:Function( Element input, Object inst )Default:nullA function that
+	 *
+	 * @property QJsClosure $OnBeforeShow
+	 * Type:Function( Element input, Object inst )Default:nullA function that
 	 * takes an input field and current datepicker instance and returns an
 	 * options object to update the datepicker with. It is called just before
 	 * the datepicker is displayed.
-	 * @property QJsClosure $OnBeforeShowDay 	 * Type:Function( Date date )Default:nullA function that takes a date as
+	 *
+	 * @property QJsClosure $OnBeforeShowDay
+	 * Type:Function( Date date )Default:nullA function that takes a date as
 	 * a parameter and must return an array with: 
 	 * 
 	 * 	* [0]: true/false indicating whether or not this date is selectable
@@ -106,37 +117,65 @@
 	 * 
 	 *  The function is called for each day in the datepicker before it is
 	 * displayed.
-	 * @property string $ButtonImage 	 * A URL of an image to use to display the datepicker when the showOn
+	 *
+	 * @property string $ButtonImage
+	 * A URL of an image to use to display the datepicker when the showOn
 	 * option is set to "button" or "both". If set, the buttonText option
 	 * becomes the alt value and is not directly displayed.
-	 * @property boolean $ButtonImageOnly 	 * Whether the button image should be rendered by itself instead of
+	 *
+	 * @property boolean $ButtonImageOnly
+	 * Whether the button image should be rendered by itself instead of
 	 * inside a button element. This option is only relevant if the
 	 * buttonImage option has also been set.
-	 * @property string $ButtonText 	 * The text to display on the trigger button. Use in conjunction with the
+	 *
+	 * @property string $ButtonText
+	 * The text to display on the trigger button. Use in conjunction with the
 	 * showOn option set to "button" or "both".
-	 * @property QJsClosure $OnCalculateWeek 	 * Type:Function()Default:jQuery.datepicker.iso8601WeekA function to
+	 *
+	 * @property QJsClosure $OnCalculateWeek
+	 * Type:Function()Default:jQuery.datepicker.iso8601WeekA function to
 	 * calculate the week of the year for a given date. The default
 	 * implementation uses the ISO 8601 definition: weeks start on a Monday;
 	 * the first week of the year contains the first Thursday of the year.
-	 * @property boolean $ChangeMonth 	 * Whether the month should be rendered as a dropdown instead of text.
-	 * @property boolean $ChangeYear 	 * Whether the year should be rendered as a dropdown instead of text. Use
+	 *
+	 * @property boolean $ChangeMonth
+	 * Whether the month should be rendered as a dropdown instead of text.
+	 *
+	 * @property boolean $ChangeYear
+	 * Whether the year should be rendered as a dropdown instead of text. Use
 	 * the yearRange option to control which years are made available for
 	 * selection.
-	 * @property string $CloseText 	 * The text to display for the close link. Use the showButtonPanel option
+	 *
+	 * @property string $CloseText
+	 * The text to display for the close link. Use the showButtonPanel option
 	 * to display this button.
-	 * @property boolean $ConstrainInput 	 * When true, entry in the input field is constrained to those characters
+	 *
+	 * @property boolean $ConstrainInput
+	 * When true, entry in the input field is constrained to those characters
 	 * allowed by the current dateFormat option.
-	 * @property string $CurrentText 	 * The text to display for the current day link. Use the showButtonPanel
+	 *
+	 * @property string $CurrentText
+	 * The text to display for the current day link. Use the showButtonPanel
 	 * option to display this button.
-	 * @property string $JqDateFormat 	 * The format for parsed and displayed dates. For a full list of the
+	 *
+	 * @property string $JqDateFormat
+	 * The format for parsed and displayed dates. For a full list of the
 	 * possible formats see the formatDate function.
-	 * @property array $DayNames 	 * The list of long day names, starting from Sunday, for use as requested
+	 *
+	 * @property array $DayNames
+	 * The list of long day names, starting from Sunday, for use as requested
 	 * via the dateFormat option.
-	 * @property array $DayNamesMin 	 * The list of minimised day names, starting from Sunday, for use as
+	 *
+	 * @property array $DayNamesMin
+	 * The list of minimised day names, starting from Sunday, for use as
 	 * column headers within the datepicker.
-	 * @property array $DayNamesShort 	 * The list of abbreviated day names, starting from Sunday, for use as
+	 *
+	 * @property array $DayNamesShort
+	 * The list of abbreviated day names, starting from Sunday, for use as
 	 * requested via the dateFormat option.
-	 * @property mixed $DefaultDate 	 * Set the date to highlight on first opening if the field is blank.
+	 *
+	 * @property mixed $DefaultDate
+	 * Set the date to highlight on first opening if the field is blank.
 	 * Specify either an actual date via a Date object or as a string in the
 	 * current dateFormat, or a number of days from today (e.g. +7) or a
 	 * string of values and periods (y for years, m for months, w for weeks,
@@ -152,17 +191,29 @@
 	 * seven days from today.
 	 * 
 
-	 * @property QJsClosure $Duration 	 * Control the speed at which the datepicker appears, it may be a time in
+	 *
+	 * @property QJsClosure $Duration
+	 * Control the speed at which the datepicker appears, it may be a time in
 	 * milliseconds or a string representing one of the three predefined
 	 * speeds ("slow", "normal", "fast").
-	 * @property integer $FirstDay 	 * Set the first day of the week: Sunday is 0, Monday is 1, etc.
-	 * @property boolean $GotoCurrent 	 * When true, the current day link moves to the currently selected date
+	 *
+	 * @property integer $FirstDay
+	 * Set the first day of the week: Sunday is 0, Monday is 1, etc.
+	 *
+	 * @property boolean $GotoCurrent
+	 * When true, the current day link moves to the currently selected date
 	 * instead of today.
-	 * @property boolean $HideIfNoPrevNext 	 * Normally the previous and next links are disabled when not applicable
+	 *
+	 * @property boolean $HideIfNoPrevNext
+	 * Normally the previous and next links are disabled when not applicable
 	 * (see the minDate and maxDate options). You can hide them altogether by
 	 * setting this attribute to true.
-	 * @property boolean $IsRTL 	 * Whether the current language is drawn from right to left.
-	 * @property mixed $MaxDate 	 * The maximum selectable date. When set to null, there is no
+	 *
+	 * @property boolean $IsRTL
+	 * Whether the current language is drawn from right to left.
+	 *
+	 * @property mixed $MaxDate
+	 * The maximum selectable date. When set to null, there is no
 	 * maximum.Multiple types supported:
 	 * 
 	 * 	* Date: A date object containing the maximum date.
@@ -175,7 +226,9 @@
 	 * seven days from today.
 	 * 
 
-	 * @property mixed $MinDate 	 * The minimum selectable date. When set to null, there is no
+	 *
+	 * @property mixed $MinDate
+	 * The minimum selectable date. When set to null, there is no
 	 * minimum.Multiple types supported:
 	 * 
 	 * 	* Date: A date object containing the minimum date.
@@ -188,42 +241,64 @@
 	 * seven days from today.
 	 * 
 
-	 * @property array $MonthNames 	 * The list of full month names, for use as requested via the dateFormat
+	 *
+	 * @property array $MonthNames
+	 * The list of full month names, for use as requested via the dateFormat
 	 * option.
-	 * @property array $MonthNamesShort 	 * The list of abbreviated month names, as used in the month header on
+	 *
+	 * @property array $MonthNamesShort
+	 * The list of abbreviated month names, as used in the month header on
 	 * each datepicker and as requested via the dateFormat option.
-	 * @property boolean $NavigationAsDateFormat 	 * Whether the prevText and nextText options should be parsed as dates by
-	 * the formatDate function, allowing them to display the target month
-	 * names for example.
-	 * @property string $NextText 	 * The text to display for the next month link. With the standard
+	 *
+	 * @property boolean $NavigationAsDateFormat
+	 * Whether the currentText, prevText and nextText options should be
+	 * parsed as dates by the formatDate function, allowing them to display
+	 * the target month names for example.
+	 *
+	 * @property string $NextText
+	 * The text to display for the next month link. With the standard
 	 * ThemeRoller styling, this value is replaced by an icon.
-	 * @property mixed $NumberOfMonths 	 * The number of months to show at once.Multiple types supported:
+	 *
+	 * @property mixed $NumberOfMonths
+	 * The number of months to show at once.Multiple types supported:
 	 * 
 	 * 	* Number: The number of months to display in a single row.
 	 * 	* Array: An array defining the number of rows and columns to
 	 * display.
 	 * 
 
-	 * @property QJsClosure $OnChangeMonthYear 	 * Type:Function( Integer year, Integer month, Object inst
+	 *
+	 * @property QJsClosure $OnChangeMonthYear
+	 * Type:Function( Integer year, Integer month, Object inst
 	 * )Default:nullCalled when the datepicker moves to a new month and/or
 	 * year. The function receives the selected year, month (1-12), and the
 	 * datepicker instance as parameters. this refers to the associated input
 	 * field.
-	 * @property QJsClosure $OnClose 	 * Type:Function( String dateText, Object inst )Default:nullCalled when
+	 *
+	 * @property QJsClosure $OnClose
+	 * Type:Function( String dateText, Object inst )Default:nullCalled when
 	 * the datepicker is closed, whether or not a date is selected. The
 	 * function receives the selected date as text ("" if none) and the
 	 * datepicker instance as parameters. this refers to the associated input
 	 * field.
-	 * @property QJsClosure $OnSelect 	 * Type:Function( String dateText, Object inst )Default:nullCalled when
+	 *
+	 * @property QJsClosure $OnSelect
+	 * Type:Function( String dateText, Object inst )Default:nullCalled when
 	 * the datepicker is selected. The function receives the selected date as
 	 * text and the datepicker instance as parameters. this refers to the
 	 * associated input field.
-	 * @property string $PrevText 	 * The text to display for the previous month link. With the standard
+	 *
+	 * @property string $PrevText
+	 * The text to display for the previous month link. With the standard
 	 * ThemeRoller styling, this value is replaced by an icon.
-	 * @property boolean $SelectOtherMonths 	 * Whether days in other months shown before or after the current month
+	 *
+	 * @property boolean $SelectOtherMonths
+	 * Whether days in other months shown before or after the current month
 	 * are selectable. This only applies if the showOtherMonths option is set
 	 * to true.
-	 * @property mixed $ShortYearCutoff 	 * The cutoff year for determining the century for a date (used in
+	 *
+	 * @property mixed $ShortYearCutoff
+	 * The cutoff year for determining the century for a date (used in
 	 * conjunction with dateFormat y). Any dates entered with a year value
 	 * less than or equal to the cutoff year are considered to be in the
 	 * current century, while those greater than it are deemed to be in the
@@ -234,39 +309,64 @@
 	 * "+3" or "-5".
 	 * 
 
-	 * @property string $ShowAnim 	 * The name of the animation used to show and hide the datepicker. Use
+	 *
+	 * @property string $ShowAnim
+	 * The name of the animation used to show and hide the datepicker. Use
 	 * "show" (the default), "slideDown", "fadeIn", any of the jQuery UI
 	 * effects. Set to an empty string to disable animation.
-	 * @property boolean $ShowButtonPanel 	 * Whether to display a button pane underneath the calendar. The button
+	 *
+	 * @property boolean $ShowButtonPanel
+	 * Whether to display a button pane underneath the calendar. The button
 	 * pane contains two buttons, a Today button that links to the current
 	 * day, and a Done button that closes the datepicker. The buttons text
 	 * can be customized using the currentText and closeText options
 	 * respectively.
-	 * @property integer $ShowCurrentAtPos 	 * When displaying multiple months via the numberOfMonths option, the
+	 *
+	 * @property integer $ShowCurrentAtPos
+	 * When displaying multiple months via the numberOfMonths option, the
 	 * showCurrentAtPos option defines which position to display the current
 	 * month in.
-	 * @property boolean $ShowMonthAfterYear 	 * Whether to show the month after the year in the header.
-	 * @property string $ShowOn 	 * When the datepicker should appear. The datepicker can appear when the
+	 *
+	 * @property boolean $ShowMonthAfterYear
+	 * Whether to show the month after the year in the header.
+	 *
+	 * @property string $ShowOn
+	 * When the datepicker should appear. The datepicker can appear when the
 	 * field receives focus ("focus"), when a button is clicked ("button"),
 	 * or when either event occurs ("both").
-	 * @property mixed $ShowOptions 	 * If using one of the jQuery UI effects for the showAnim option, you can
+	 *
+	 * @property mixed $ShowOptions
+	 * If using one of the jQuery UI effects for the showAnim option, you can
 	 * provide additional properties for that animation using this option.
-	 * @property boolean $ShowOtherMonths 	 * Whether to display dates in other months (non-selectable) at the start
+	 *
+	 * @property boolean $ShowOtherMonths
+	 * Whether to display dates in other months (non-selectable) at the start
 	 * or end of the current month. To make these days selectable use the
 	 * selectOtherMonths option.
-	 * @property boolean $ShowWeek 	 * When true, a column is added to show the week of the year. The
+	 *
+	 * @property boolean $ShowWeek
+	 * When true, a column is added to show the week of the year. The
 	 * calculateWeek option determines how the week of the year is
 	 * calculated. You may also want to change the firstDay option.
-	 * @property integer $StepMonths 	 * Set how many months to move when clicking the previous/next links.
-	 * @property string $WeekHeader 	 * The text to display for the week of the year column heading. Use the
+	 *
+	 * @property integer $StepMonths
+	 * Set how many months to move when clicking the previous/next links.
+	 *
+	 * @property string $WeekHeader
+	 * The text to display for the week of the year column heading. Use the
 	 * showWeek option to display this column.
-	 * @property string $YearRange 	 * The range of years displayed in the year drop-down: either relative to
+	 *
+	 * @property string $YearRange
+	 * The range of years displayed in the year drop-down: either relative to
 	 * todays year ("-nn:+nn"), relative to the currently selected year
 	 * ("c-nn:c+nn"), absolute ("nnnn:nnnn"), or combinations of these
 	 * formats ("nnnn:-nn"). Note that this option only affects what appears
 	 * in the drop-down, to restrict which dates may be selected use the
 	 * minDate and/or maxDate options.
-	 * @property string $YearSuffix 	 * Additional text to display after the year in the month headers.
+	 *
+	 * @property string $YearSuffix
+	 * Additional text to display after the year in the month headers.
+	 *
 	 */
 
 	class QDatepickerBoxGen extends QTextBox	{
@@ -448,31 +548,32 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 		/**
 		 * Removes the datepicker functionality completely. This will return the
 		 * element back to its pre-init state.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Destroy() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
@@ -486,7 +587,12 @@
 		 * 	* options Type: Options The new options for the date picker.
 		 * 	* pos Type: Number[2] or MouseEvent The position of the top/left of
 		 * the dialog as [x, y] or a MouseEvent that contains the coordinates. If
-		 * not specified the dialog is centered on the screen.		 * @param $date		 * @param $onSelect		 * @param $options		 * @param $pos		 */
+		 * not specified the dialog is centered on the screen.
+		 * @param $date
+		 * @param $onSelect
+		 * @param $options
+		 * @param $pos
+		 */
 		public function Dialog($date, $onSelect = null, $options = null, $pos = null) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "dialog", $date, $onSelect, $options, $pos, QJsPriority::Low);
 		}
@@ -494,21 +600,24 @@
 		 * Returns the current date for the datepicker or null if no date has
 		 * been selected.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function GetDate() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "getDate", QJsPriority::Low);
 		}
 		/**
 		 * Close a previously opened date picker.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Hide() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "hide", QJsPriority::Low);
 		}
 		/**
 		 * Determine whether a date picker has been disabled.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function IsDisabled() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "isDisabled", QJsPriority::Low);
 		}
@@ -519,7 +628,9 @@
 		 * value of a specific key by using dot notation. For example, "foo.bar"
 		 * would get the value of the bar property on the foo option.
 		 * 
-		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
+		 * 	* optionName Type: String The name of the option to get.
+		 * @param $optionName
+		 */
 		public function Option($optionName) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
@@ -527,7 +638,8 @@
 		 * Gets an object containing key/value pairs representing the current
 		 * datepicker options hash.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Option1() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
@@ -541,21 +653,27 @@
 		 * option.
 		 * 
 		 * 	* optionName Type: String The name of the option to set.
-		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
+		 * 	* value Type: Object A value to set for the option.
+		 * @param $optionName
+		 * @param $value
+		 */
 		public function Option2($optionName, $value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the datepicker.
 		 * 
-		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
+		 * 	* options Type: Object A map of option-value pairs to set.
+		 * @param $options
+		 */
 		public function Option3($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 		/**
 		 * Redraw the date picker, after having made some external modifications.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Refresh() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "refresh", QJsPriority::Low);
 		}
@@ -566,7 +684,9 @@
 		 * years, "m" for months, "w" for weeks, "d" for days, e.g., "+1m +7d"),
 		 * or null to clear the selected date.
 		 * 
-		 * 	* date Type: String or Date The new date.		 * @param $date		 */
+		 * 	* date Type: String or Date The new date.
+		 * @param $date
+		 */
 		public function SetDate($date) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "setDate", $date, QJsPriority::Low);
 		}
@@ -574,7 +694,8 @@
 		 * Open the date picker. If the datepicker is attached to an input, the
 		 * input must be visible for the datepicker to be shown.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Show() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "show", QJsPriority::Low);
 		}
@@ -1147,7 +1268,7 @@
 				new QModelConnectorParam (get_called_class(), 'IsRTL', 'Whether the current language is drawn from right to left.', QType::Boolean),
 				new QModelConnectorParam (get_called_class(), 'MonthNames', 'The list of full month names, for use as requested via the dateFormatoption.', QType::ArrayType),
 				new QModelConnectorParam (get_called_class(), 'MonthNamesShort', 'The list of abbreviated month names, as used in the month header oneach datepicker and as requested via the dateFormat option.', QType::ArrayType),
-				new QModelConnectorParam (get_called_class(), 'NavigationAsDateFormat', 'Whether the prevText and nextText options should be parsed as dates bythe formatDate function, allowing them to display the target monthnames for example.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'NavigationAsDateFormat', 'Whether the currentText, prevText and nextText options should beparsed as dates by the formatDate function, allowing them to displaythe target month names for example.', QType::Boolean),
 				new QModelConnectorParam (get_called_class(), 'NextText', 'The text to display for the next month link. With the standardThemeRoller styling, this value is replaced by an icon.', QType::String),
 				new QModelConnectorParam (get_called_class(), 'OnChangeMonthYear', 'Type:Function( Integer year, Integer month, Object inst)Default:nullCalled when the datepicker moves to a new month and/oryear. The function receives the selected year, month (1-12), and thedatepicker instance as parameters. this refers to the associated inputfield.', 'QJsClosure'),
 				new QModelConnectorParam (get_called_class(), 'OnClose', 'Type:Function( String dateText, Object inst )Default:nullCalled whenthe datepicker is closed, whether or not a date is selected. Thefunction receives the selected date as text (\"\" if none) and thedatepicker instance as parameters. this refers to the associated inputfield.', 'QJsClosure'),

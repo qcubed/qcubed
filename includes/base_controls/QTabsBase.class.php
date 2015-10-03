@@ -38,8 +38,8 @@
 		 */
 		public function GetEndScript() {
 			$strJS = parent::GetEndScript();
-			$strControlId = $this->getJqControlId();
-			$strJS = "qc.tabs('{$strControlId}');" . $strJS;
+			QApplication::ExecuteJsFunction('qcubed.tabs', $this->GetJqControlId(), QJsPriority::High);
+
 			return $strJS;
 		}
 

@@ -165,13 +165,18 @@
 	 * 
 	 * @see QDialogBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo 	 * Which element the dialog (and overlay, if modal) should be appended
+	 * @property mixed $AppendTo
+	 * Which element the dialog (and overlay, if modal) should be appended
 	 * to. Note: The appendTo option should not be changed while the dialog
 	 * is open. (version added: 1.10.0)
-	 * @property boolean $AutoOpen 	 * If set to true, the dialog will automatically open upon
+	 *
+	 * @property boolean $AutoOpen
+	 * If set to true, the dialog will automatically open upon
 	 * initialization. If false, the dialog will stay hidden until the open()
 	 * method is called.
-	 * @property mixed $Buttons 	 * Specifies which buttons should be displayed on the dialog. The context
+	 *
+	 * @property mixed $Buttons
+	 * Specifies which buttons should be displayed on the dialog. The context
 	 * of the callback is the dialog element; if you need access to the
 	 * button, it is available as the target of the event object.Multiple
 	 * types supported:
@@ -184,22 +189,34 @@
 	 * and a key of showText can be used to control buttons text option.
 	 * 
 
-	 * @property boolean $CloseOnEscape 	 * Specifies whether the dialog should close when it has focus and the
+	 *
+	 * @property boolean $CloseOnEscape
+	 * Specifies whether the dialog should close when it has focus and the
 	 * user presses the escape (ESC) key.
-	 * @property string $CloseText 	 * Specifies the text for the close button. Note that the close text is
+	 *
+	 * @property string $CloseText
+	 * Specifies the text for the close button. Note that the close text is
 	 * visibly hidden when using a standard theme.
-	 * @property string $DialogClass 	 * The specified class name(s) will be added to the dialog, for
+	 *
+	 * @property string $DialogClass
+	 * The specified class name(s) will be added to the dialog, for
 	 * additional theming.
-	 * @property boolean $Draggable 	 * If set to true, the dialog will be draggable by the title bar.
+	 *
+	 * @property boolean $Draggable
+	 * If set to true, the dialog will be draggable by the title bar.
 	 * Requires the jQuery UI Draggable widget to be included.
-	 * @property mixed $Height 	 * The height of the dialog.Multiple types supported:
+	 *
+	 * @property mixed $Height
+	 * The height of the dialog.Multiple types supported:
 	 * 
 	 * 	* Number: The height in pixels.
 	 * 	* String: The only supported string value is "auto" which will allow
 	 * the dialog height to adjust based on its content.
 	 * 
 
-	 * @property mixed $Hide 	 * If and how to animate the hiding of the dialog.Multiple types
+	 *
+	 * @property mixed $Hide
+	 * If and how to animate the hiding of the dialog.Multiple types
 	 * supported:
 	 * 
 	 * 	* Boolean: When set to false, no animation will be used and the
@@ -223,24 +240,40 @@
 	 * omitted, then no delay is used.
 	 * 
 
-	 * @property integer $MaxHeight 	 * The maximum height to which the dialog can be resized, in pixels.
-	 * @property integer $MaxWidth 	 * The maximum width to which the dialog can be resized, in pixels.
-	 * @property integer $MinHeight 	 * The minimum height to which the dialog can be resized, in pixels.
-	 * @property integer $MinWidth 	 * The minimum width to which the dialog can be resized, in pixels.
-	 * @property boolean $Modal 	 * If set to true, the dialog will have modal behavior; other items on
+	 *
+	 * @property integer $MaxHeight
+	 * The maximum height to which the dialog can be resized, in pixels.
+	 *
+	 * @property integer $MaxWidth
+	 * The maximum width to which the dialog can be resized, in pixels.
+	 *
+	 * @property integer $MinHeight
+	 * The minimum height to which the dialog can be resized, in pixels.
+	 *
+	 * @property integer $MinWidth
+	 * The minimum width to which the dialog can be resized, in pixels.
+	 *
+	 * @property boolean $Modal
+	 * If set to true, the dialog will have modal behavior; other items on
 	 * the page will be disabled, i.e., cannot be interacted with. Modal
 	 * dialogs create an overlay below the dialog but above other page
 	 * elements.
-	 * @property mixed $Position 	 * Specifies where the dialog should be displayed when opened. The dialog
+	 *
+	 * @property mixed $Position
+	 * Specifies where the dialog should be displayed when opened. The dialog
 	 * will handle collisions such that as much of the dialog is visible as
 	 * possible. 
 	 * 
 	 * The of property defaults to the window, but you can specify another
 	 * element to position against. You can refer to the jQuery UI Position
 	 * utility for more details about the available properties.
-	 * @property boolean $Resizable 	 * If set to true, the dialog will be resizable. Requires the jQuery UI
+	 *
+	 * @property boolean $Resizable
+	 * If set to true, the dialog will be resizable. Requires the jQuery UI
 	 * Resizable widget to be included.
-	 * @property mixed $Show 	 * If and how to animate the showing of the dialog.Multiple types
+	 *
+	 * @property mixed $Show
+	 * If and how to animate the showing of the dialog.Multiple types
 	 * supported:
 	 * 
 	 * 	* Boolean: When set to false, no animation will be used and the
@@ -264,9 +297,14 @@
 	 * then no delay is used.
 	 * 
 
-	 * @property string $Title 	 * Specifies the title of the dialog. If the value is null, the title
+	 *
+	 * @property string $Title
+	 * Specifies the title of the dialog. If the value is null, the title
 	 * attribute on the dialog source element will be used.
-	 * @property integer $Width 	 * The width of the dialog, in pixels.
+	 *
+	 * @property integer $Width
+	 * The width of the dialog, in pixels.
+	 *
 	 */
 
 	class QDialogGen extends QPanel	{
@@ -355,30 +393,31 @@
 		 * @return string
 		 */
 		public function GetEndScript() {
-			$strRet = '';
-			$strId = $this->getJqControlId();
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
 			$strFunc = $this->getJqSetupFunction();
 
-			if ($this->GetJqControlId() !== $this->ControlId) {
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
 				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted during redraw. We delete the old events here. This code must happen before any other event processing code.
-				$strRet = "\$j('#{$strId}').off();" . _nl();;
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
 
-			$strParams = '';
-			if (!empty($jqOptions)) {
-				$strParams = JavaScriptHelper::toJsObject($jqOptions);
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
-			$strRet .= "\$j('#{$strId}').{$strFunc}({$strParams});"  . _nl();
 
-			return $strRet . parent::GetEndScript();
+			return parent::GetEndScript();
 		}
 
 		/**
 		 * Closes the dialog.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Close() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close", QJsPriority::Low);
 		}
@@ -386,7 +425,8 @@
 		 * Removes the dialog functionality completely. This will return the
 		 * element back to its pre-init state.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Destroy() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
@@ -397,28 +437,32 @@
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the dialog plugin has loaded.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Instance() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
 		 * Whether the dialog is currently open.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function IsOpen() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "isOpen", QJsPriority::Low);
 		}
 		/**
 		 * Moves the dialog to the top of the dialog stack.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function MoveToTop() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "moveToTop", QJsPriority::Low);
 		}
 		/**
 		 * Opens the dialog.
 		 * 
-		 * 	* This method does not accept any arguments.		 */
+		 * 	* This method does not accept any arguments.
+		 */
 		public function Open() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "open", QJsPriority::Low);
 		}
@@ -429,7 +473,9 @@
 		 * value of a specific key by using dot notation. For example, "foo.bar"
 		 * would get the value of the bar property on the foo option.
 		 * 
-		 * 	* optionName Type: String The name of the option to get.		 * @param $optionName		 */
+		 * 	* optionName Type: String The name of the option to get.
+		 * @param $optionName
+		 */
 		public function Option($optionName) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, QJsPriority::Low);
 		}
@@ -437,7 +483,8 @@
 		 * Gets an object containing key/value pairs representing the current
 		 * dialog options hash.
 		 * 
-		 * 	* This signature does not accept any arguments.		 */
+		 * 	* This signature does not accept any arguments.
+		 */
 		public function Option1() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
@@ -451,14 +498,19 @@
 		 * option.
 		 * 
 		 * 	* optionName Type: String The name of the option to set.
-		 * 	* value Type: Object A value to set for the option.		 * @param $optionName		 * @param $value		 */
+		 * 	* value Type: Object A value to set for the option.
+		 * @param $optionName
+		 * @param $value
+		 */
 		public function Option2($optionName, $value) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
 		 * Sets one or more options for the dialog.
 		 * 
-		 * 	* options Type: Object A map of option-value pairs to set.		 * @param $options		 */
+		 * 	* options Type: Object A map of option-value pairs to set.
+		 * @param $options
+		 */
 		public function Option3($options) {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
