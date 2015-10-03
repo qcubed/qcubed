@@ -107,9 +107,14 @@
 		 * @return bool
 		 */
 		public function ValidateControlAndChildren() {
-			if ($this->blnIsOpen &&
-					!empty ($this->blnValidationArray[$this->strClickedButtonId])) {
-				return parent::ValidateControlAndChildren();
+			if ($this->blnIsOpen) {	// don't validate a closed dialog
+				if (!empty($this->mixButtons)) {	// using built-in dialog buttons
+					if (!empty ($this->blnValidationArray[$this->strClickedButtonId])) {
+						return parent::ValidateControlAndChildren();
+					}
+				} else {	// using QButtons placed in the control
+					return parent::ValidateControlAndChildren();
+				}
 			}
 			return true;
 		}
