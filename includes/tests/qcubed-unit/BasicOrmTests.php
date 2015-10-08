@@ -330,5 +330,15 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertNull($objLogin, "New record should not be associated with null PK.");
 	}
 
+	public function testOrderByReverseReference() {
+		// orders by the private key of the reverse reference node.
+		$objPerson = Person::QuerySingle(
+			QQ::IsNotNull(QQN::Person()->ProjectAsManager->Id),
+			[QQ::OrderBy(QQN::Person()->ProjectAsManager)]
+		);
+		$this->assertEqual($objPerson->Id, 7, "Manager of first project found.");
+
+	}
+
 }
 ?>
