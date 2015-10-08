@@ -195,16 +195,16 @@ class QCheckBoxColumn extends QDataGridColumn
 		$strSubId = 'chkSelect' . $colIndex.$this->objDataGrid->ControlId .'n';
 		
 		$itemIds = array();
-		foreach ($childControls as $objControl) 
+		foreach ($childControls as $objControl) {
 			//if it's a checkbox for this column
-			if($objControl instanceof QCheckBox && substr($objControl->ControlId, 0, strlen($strSubId)) == $strSubId)
-				if($objControl->Checked)
-				{
-					$arrParams = explode(',',$objControl->ActionParameter);
+			if ($objControl instanceof QCheckBox && substr($objControl->ControlId, 0, strlen($strSubId)) == $strSubId) {
+				if ($objControl->Checked) {
+					$arrParams = explode(',', $objControl->ActionParameter);
 					$id = $arrParams[0];
 					$itemIds[$id] = $id;
 				}
-		
+			}
+		}
 		return $itemIds;
 	}
 
