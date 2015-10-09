@@ -2,7 +2,7 @@
 <?php require('../includes/header.inc.php'); ?>
 
 <div id="instructions">
-	<h1>Conditional Joins with QQ::Expand()</h1>
+	<h1>Conditional Joins with QQ::Expand() and QQ::ExpandAsArray()</h1>
 
 	<p>Sometimes, you find yourself in a situation when you want to issue a
 	query for ALL items in a given table, and only some information in
@@ -35,23 +35,34 @@
 	join</a> - so if a row of a table with which you are joining does not
 	have a matching record, the left side of your join will still be there,
 	and the right side will contain nulls.</p>
+
+	<p>Remember that conditional joins only impact how tables are joined together, and so the conditions
+	   must apply only to the joined table.</p>
 </div>
 
 <div id="demoZone">
-	<h2>Names of every person, plus usernames for each person if their Login is active</h2>
+	<h2>Names of every person, their username, and open projects they are managing.</h2>
 	<ul>
 <?php
 	QApplication::$Database[1]->EnableProfiling();
 	$objPersonArray = Person::QueryArray(
 		// We want *every single person*
 		QQ::All(),
-		QQ::Expand(
-			// We also want the login information for each person
-			QQN::Person()->Login,
+		array(
+			QQ::Expand(
+				// We also want the login information for each person
+				QQN::Person()->Login,
 
-			// But only the login information for folks that have
-			// their logins ON; for everyone else, just the Person metadata
-			QQ::Equal(QQN::Person()->Login->IsEnabled, 1)
+				// But only the login information for folks that have
+				// their logins ON; for everyone else, just the Person
+				QQ::Equal(QQN::Person()->Login->IsEnabled, 1)
+			),
+			QQ::ExpandAsArray(
+				// We also want the proejcts that are managed by each person
+				QQN::Person()->ProjectAsManager,
+				// but only if the project is open
+				QQ::Equal(QQN::Person()->ProjectAsManager->ProjectStatusTypeId, ProjectStatusType::Open)
+			)
 		)
 	);
 
@@ -59,12 +70,23 @@
 		_p('<li>', false);
 		_p($objPerson->FirstName . ' ' . $objPerson->LastName . ': ');
 		if ($objPerson->Login) {
+			_p(" Login: ");
 			_p("<strong>" . $objPerson->Login->Username . "</strong>", false);
 		} else {
-			_p("none");
+			_p("- no login -");
+		}
+		if ($objPerson->_ProjectAsManagerArray) {
+			_p("; Managed Open Projects: ");
+			$strProjects = [];
+			foreach ($objPerson->_ProjectAsManagerArray as $objProject) {
+				$strProjects[] = $objProject->Name;
+			}
+			$strProject = implode( ", ", $strProjects);
+			_p($strProject);
 		}
 		_p('</li>', false);
 	}
+
 ?>
 	</ul>
 	<p><?php QApplication::$Database[1]->OutputProfiling(); ?></p>

@@ -348,6 +348,36 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 
 	}
 
+	public function testConditionalExpansionReverse() {
+		// Get all people, and projects they are managing if the projects are open.
+		$a = Person::QueryArray(
+			QQ::All(),
+			[
+				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager, QQ::Equal(QQN::Person()->ProjectAsManager->ProjectStatusTypeId, ProjectStatusType::Open)),
+				QQ::OrderBy(QQN::Person()->Id)
+			]
+		);
+
+		$this->assertEqual($a[0]->_ProjectAsManagerArray[0]->Id, 3);
+	}
+
+	public function testConditionalExpansionAssociation() {
+		// Conditional expansion on association nodes really can only work with the PK of the join.
+
+		// Get all projects, and also expand on related projects if the id is 1
+		$a = Project::QueryArray(
+			QQ::All(),
+			[
+				QQ::ExpandAsArray(QQN::Project()->ParentProjectAsRelated, QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, 1)),
+				QQ::ExpandAsArray(QQN::Project()->ProjectAsRelated, QQ::Equal(QQN::Project()->ProjectAsRelated->Project->Id, 1)),
+				QQ::OrderBy(QQN::Project()->Id)
+			]
+		);
+
+		$this->assertEqual($a[2]->_ParentProjectAsRelatedArray[0]->Id, 1);
+	}
+
+
 
 	public function testDataGridHtml() {
 		$objMilestone = Milestone::QuerySingle(

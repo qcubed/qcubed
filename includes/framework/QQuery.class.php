@@ -1469,27 +1469,27 @@
 			return new QQHavingClause($objNode);
 		}
 
-		static public function Count($objNode, $strAttributeName) {
+		static public function Count(QQColumnNode $objNode, $strAttributeName) {
 			return new QQCount($objNode, $strAttributeName);
 		}
 
-		static public function Sum($objNode, $strAttributeName) {
+		static public function Sum(QQColumnNode $objNode, $strAttributeName) {
 			return new QQSum($objNode, $strAttributeName);
 		}
 
-		static public function Minimum($objNode, $strAttributeName) {
+		static public function Minimum(QQColumnNode $objNode, $strAttributeName) {
 			return new QQMinimum($objNode, $strAttributeName);
 		}
 
-		static public function Maximum($objNode, $strAttributeName) {
+		static public function Maximum(QQColumnNode $objNode, $strAttributeName) {
 			return new QQMaximum($objNode, $strAttributeName);
 		}
 
-		static public function Average($objNode, $strAttributeName) {
+		static public function Average(QQColumnNode $objNode, $strAttributeName) {
 			return new QQAverage($objNode, $strAttributeName);
 		}
 
-		static public function Expand($objNode, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
+		static public function Expand(QQNode $objNode, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 //			if (gettype($objNode) == 'string')
 //				return new QQExpandVirtualNode(new QQVirtualNode($objNode));
 
@@ -1499,8 +1499,8 @@
 				return new QQExpand($objNode, $objJoinCondition, $objSelect);
 		}
 
-		static public function ExpandAsArray($objNode, QQSelect $objSelect = null) {
-			return new QQExpandAsArray($objNode, $objSelect);
+		static public function ExpandAsArray(QQNode $objNode, $objCondition = null, QQSelect $objSelect = null) {
+			return new QQExpandAsArray($objNode, $objCondition, $objSelect);
 		}
 
 		static public function Select(/* array and/or parameterized list of QQNode objects*/) {
@@ -1952,22 +1952,48 @@
 	class QQExpandAsArray extends QQClause {
 		/** @var QQNode|QQAssociationNode */
 		protected $objNode;
+		protected $objCondition;
 		protected $objSelect;
-		public function __construct($objNode, QQSelect $objSelect = null) {
+
+		/**
+		 * @param QQNode $objNode
+		 * @param null|mixed $objCondition
+		 * @param QQSelect|null $objSelect
+		 * @throws QCallerException
+		 */
+		public function __construct(QQNode $objNode, $objCondition = null, QQSelect $objSelect = null) {
+			// For backwards compatibility with v2, which did not have a condition parameter, we will detect what the 2nd param is.
 			// Ensure that this is an QQAssociationNode
 			if ((!($objNode instanceof QQAssociationNode)) && (!($objNode instanceof QQReverseReferenceNode)))
 				throw new QCallerException('ExpandAsArray clause parameter must be an Association or ReverseReference node', 2);
 
-			$this->objNode = $objNode;
-			$this->objSelect = $objSelect;
+			if ($objCondition instanceof QQSelect) {
+				$this->objNode = $objNode;
+				$this->objSelect = $objCondition;
+			} else {
+				if (!is_null($objCondition)) {
+					/*
+					if ($objNode instanceof QQAssociationNode) {
+						throw new QCallerException('Join conditions can only be applied to reverse reference nodes here. Try putting a condition on the next level down.', 2);
+					}*/
+					if (!($objCondition instanceof QQCondition)) {
+						throw new QCallerException('Condition clause parameter must be a QQCondition dervied class.', 2);
+					}
+				}
+				$this->objNode = $objNode;
+				$this->objSelect = $objSelect;
+				$this->objCondition = $objCondition;
+			}
+
 		}
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			if ($this->objNode instanceof QQAssociationNode) {
 				// The below works because all code generated association nodes will have a _ChildTableNode parameter.
-				$this->objNode->_ChildTableNode->Join($objBuilder, true, null, $this->objSelect);
+				$this->objNode->_ChildTableNode->Join($objBuilder, true, $this->objCondition, $this->objSelect);
 			}
-			else
-				$this->objNode->Join($objBuilder, true, null, $this->objSelect);
+			else {
+				$this->objNode->Join($objBuilder, true, $this->objCondition, $this->objSelect);
+			}
 			$objBuilder->AddExpandAsArrayNode($this->objNode);
 		}
 		public function __toString() {
