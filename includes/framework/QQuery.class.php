@@ -2349,6 +2349,8 @@
 				$this->strEscapeIdentifierBegin, $this->GetTableAlias($strJoinTableAlias), $this->strEscapeIdentifierEnd
 			);
 
+			$strJoinIndex = $strJoinItem;
+
 			try {
 				if (($strConditionClause = $objJoinCondition->GetWhereClause($this, true)))
 					$strJoinItem .= ' AND ' . $strConditionClause;
@@ -2357,7 +2359,7 @@
 				throw $objExc;
 			}
 
-			$this->strJoinArray[$strJoinItem] = $strJoinItem;
+			$this->strJoinArray[$strJoinIndex] = $strJoinItem;
 		}
 
 		/**
