@@ -205,8 +205,11 @@
 	QApplicationBase::$ClassFile['qpaginator'] = __QCUBED__ . '/controls/QPaginator.class.php';
 
 	QApplicationBase::$ClassFile['qdatagridbase'] = __QCUBED_CORE__ . '/base_controls/QDataGridBase.class.php';
+	QApplicationBase::$ClassFile['qdatagrid2base'] = __QCUBED_CORE__ . '/base_controls/QDataGrid2Base.class.php';
 	QApplicationBase::$ClassFile['qdatagridcolumn'] = __QCUBED_CORE__ . '/base_controls/QDataGridColumn.class.php';
-	QApplicationBase::$ClassFile['qcheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QCheckBoxColumn.class.php'; 
+	QApplicationBase::$ClassFile['qcheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QCheckBoxColumn.class.php';
+	QApplicationBase::$ClassFile['qdatagrid2_checkboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QDataGrid2_CheckBoxColumn.class.php';
+
 	QApplicationBase::$ClassFile['qdatagridrowstyle'] = __QCUBED_CORE__ . '/base_controls/QDataGridRowStyle.class.php';
 	QApplicationBase::$ClassFile['qdatagrid'] = __QCUBED__ . '/controls/QDataGrid.class.php';
 
