@@ -115,7 +115,7 @@
 		 *
 		 * @var string $ApplicationName
 		 */
-		protected static $ApplicationName;
+		public static $ApplicationName;
 
 		/**
 		 * Preferred Render Method (from CodeGen Settings)
@@ -123,6 +123,20 @@
 		 * @var string $PreferredRenderMethod
 		 */
 		public static $PreferredRenderMethod;
+
+		/**
+		 * Create Method (from CodeGen Settings)
+		 *
+		 * @var string $CreateMethod
+		 */
+		public static $CreateMethod;
+
+		/**
+		 * Default Button Class (from CodeGen Settings)
+		 *
+		 * @var string $DefaultButtonClass
+		 */
+		public static $DefaultButtonClass;
 
 
 		/**
@@ -215,8 +229,10 @@
 			// Application Name
 			QCodeGen::$ApplicationName = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'name', 'application');
 
-			// Render Defaults
-			QCodeGen::$PreferredRenderMethod = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'render', 'preferredRenderMethod');
+			// Codegen Defaults
+			QCodeGen::$PreferredRenderMethod = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'formgen', 'preferredRenderMethod');
+			QCodeGen::$CreateMethod = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'formgen', 'createMethod');
+			QCodeGen::$DefaultButtonClass = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'formgen', 'buttonClass');
 
 			// Iterate Through DataSources
 			if (QCodeGen::$SettingsXml->dataSources->asXML())
@@ -737,7 +753,7 @@
 		}
 
 		/**
-		 * Returns the control label name as used in the ModelConnector corresponding to this column.
+		 * Returns the control label name as used in the ModelConnector corresponding to this column or table.
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
@@ -751,7 +767,7 @@
 		}
 
 		/**
-		 * The property name used in the ModelConnector for the given column or virtual column
+		 * The property name used in the ModelConnector for the given column, virtual column or table
 		 *
 		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
@@ -873,7 +889,7 @@
 			}
 
 			// Otherwise, return a default
-			return 'QDataGrid';
+			return 'QDataGrid2';
 		}
 
 		/**

@@ -742,4 +742,21 @@
 			}
 		}
 
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QModelConnectorParam[]
+		 */
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'RowCssClass', 'Css class given to each row', QType::String),
+				new QModelConnectorParam (get_called_class(), 'AlternateRowCssClass', 'Css class given to every other row', QType::String),
+				new QModelConnectorParam (get_called_class(), 'HeaderRowCssClass', 'Css class given to the header rows', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ShowHeader', 'Whether or not to show the header. Default is true.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'ShowFooter', 'Whether or not to show the footer. Default is false.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'RenderColumnTags', 'Whether or not to render html column tags for the columns. Column tags are only needed in special situations. Default is false.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Caption', 'Text to print in the caption tag of the table.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'HideIfEmpty', 'Whether to draw nothing if there is no data, or draw the table tags with no cells instead. Default is to drag the table tags.', QType::Boolean)
+			));
+		}
 	}
