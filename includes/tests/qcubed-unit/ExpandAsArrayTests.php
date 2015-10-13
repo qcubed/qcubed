@@ -34,7 +34,8 @@ if(!class_exists('Login')){
     require_once __INCLUDES__ .'/model/Login.class.php';
 }
 
-class ExpandAsArrayTests extends QUnitTestCaseBase {    
+class ExpandAsArrayTests extends QUnitTestCaseBase {
+
 	public function testMultiLevel() {
 		$arrPeople = Person::LoadAll(
 			self::getTestClauses()
@@ -293,10 +294,90 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		
 		$this->assertEqual ($targetPerson->Id, 12, "Person 12 found.");
 		$this->assertNull ($targetPerson->_ProjectAsManager, "Person 12 does not have a project.");
-				
-		//TODO: Conditional Array Expansion, requires API change
-		
+
 	}
+
+	public function testConditionalExpansion2() {
+		$clauses = QQ::Clause(
+			QQ::Expand(QQN::Login()->Person->ProjectAsManager, QQ::Equal (QQN::Login()->Person->ProjectAsManager->ProjectStatusTypeId, ProjectStatusType::Open)),
+			QQ::ExpandAsArray(QQN::Login()->Person->ProjectAsManager->Milestone),
+			QQ::ExpandAsArray(QQN::Login()->Person->Address),
+			QQ::OrderBy(QQN::Login()->Person->Id)
+		);
+
+		$cond = QQ::In (QQN::Login()->PersonId, [1,3,7]);
+		$targetLoginArray = Login::QueryArray (
+			$cond,
+			$clauses
+		);
+
+		$targetLogin = reset($targetLoginArray);
+		$this->assertEqual ($targetLogin->Person->Id, 1, "Person 1 found.");
+		$this->assertNotNull ($targetLogin->Person->_ProjectAsManager, "Person 1 has an open project.");
+
+		$targetLogin = next($targetLoginArray);
+		$this->assertEqual ($targetLogin->Person->Id, 3, "Person 3 found.");
+		$this->assertNull ($targetLogin->Person->_ProjectAsManager, "Person 3 does not have an open project.");
+
+		$targetLogin = next($targetLoginArray);
+		$this->assertEqual ($targetLogin->Person->Id, 7, "Person 7 found.");
+		$this->assertNull ($targetLogin->Person->_ProjectAsManager, "Person 7 does have an open project.");
+
+	}
+
+
+	public function testConditionalExpansion3() {
+
+		// A complex join with conditions. Find all team members of completed projects which have an open child project.
+		$clauses = QQ::Clause(
+			QQ::Expand(QQN::Person()->ProjectAsTeamMember->Project, QQ::Equal(QQN::Person()->ProjectAsTeamMember->Project->ProjectStatusTypeId, ProjectStatusType::Completed)),
+			QQ::Expand(QQN::Person()->ProjectAsTeamMember->Project->ProjectAsRelated->Project, QQ::Equal(QQN::Person()->ProjectAsTeamMember->Project->ProjectAsRelated->Project->ProjectStatusTypeId, ProjectStatusType::Open))
+		);
+
+		$cond = QQ::IsNotNull(QQN::Person()->ProjectAsTeamMember->Project->ProjectAsRelated->Project->Id); // Filter out unsuccessful joins
+
+		$targetPersonArray = Person::QueryArray (
+			$cond,
+			$clauses
+		);
+
+		$targetPerson = reset($targetPersonArray);
+
+		$this->assertEqual($targetPerson->ProjectAsTeamMember->ProjectStatusTypeId, ProjectStatusType::Completed, "Found completed parent project");
+		$this->assertEqual($targetPerson->ProjectAsTeamMember->ProjectAsRelated->ProjectStatusTypeId, ProjectStatusType::Open, "Found open child project");
+
+	}
+
+	public function testConditionalExpansionReverse() {
+		// Get all people, and projects they are managing if the projects are open.
+		$a = Person::QueryArray(
+			QQ::All(),
+			[
+				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager, QQ::Equal(QQN::Person()->ProjectAsManager->ProjectStatusTypeId, ProjectStatusType::Open)),
+				QQ::OrderBy(QQN::Person()->Id)
+			]
+		);
+
+		$this->assertEqual($a[0]->_ProjectAsManagerArray[0]->Id, 3);
+	}
+
+	public function testConditionalExpansionAssociation() {
+		// Conditional expansion on association nodes really can only work with the PK of the join.
+
+		// Get all projects, and also expand on related projects if the id is 1
+		$a = Project::QueryArray(
+			QQ::All(),
+			[
+				QQ::ExpandAsArray(QQN::Project()->ParentProjectAsRelated, QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, 1)),
+				QQ::ExpandAsArray(QQN::Project()->ProjectAsRelated, QQ::Equal(QQN::Project()->ProjectAsRelated->Project->Id, 1)),
+				QQ::OrderBy(QQN::Project()->Id)
+			]
+		);
+
+		$this->assertEqual($a[2]->_ParentProjectAsRelatedArray[0]->Id, 1);
+	}
+
+
 
 	public function testDataGridHtml() {
 		$objMilestone = Milestone::QuerySingle(

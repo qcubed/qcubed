@@ -43,9 +43,9 @@
 		/**
 		 * Call from control to watch a node. Watches all tables associated with the node.
 		 * 
-		 * @param QQNode $objNode
+		 * @param QQTableNode $objNode
 		 */
-		public function Watch(QQNode $objNode) {
+		public function Watch(QQTableNode $objNode) {
 			$strClassName = $objNode->_ClassName;
 
 			if (!$strClassName::$blnWatchChanges) {

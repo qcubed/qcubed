@@ -2204,7 +2204,7 @@
 				// CODEGEN
 				case "LinkedNode":
 					try {
-						$this->objLinkedNode = QType::Cast($mixValue, 'QQBaseNode');
+						$this->objLinkedNode = QType::Cast($mixValue, 'QQNode');
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

@@ -21,7 +21,7 @@
 		 * early binding on referenced objects.
 		 * @param DatabaseRowBase $objDbRow
 		 * @param string $strAliasPrefix
-		 * @param QQBaseNode $objExpandAsArrayNode
+		 * @param QQNode $objExpandAsArrayNode
 		 * @param QBaseClass $arrPreviousItem
 		 * @param string[] $strColumnAliasArray
 		 * @param boolean $blnCheckDuplicate Used by ExpandArray to indicate we should not create a new object if this is a duplicate of a previoius object
@@ -213,7 +213,7 @@
 		/**
 		 * Instantiate an array of <?= $objTable->ClassNamePlural ?> from a Database Result
 		 * @param DatabaseResultBase $objDbResult
-		 * @param QQBaseNode $objExpandAsArrayNode
+		 * @param QQNode $objExpandAsArrayNode
 		 * @param string[] $strColumnAliasArray
 		 * @return <?= $objTable->ClassName ?>[]
 		 */

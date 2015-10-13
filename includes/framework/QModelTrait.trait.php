@@ -96,7 +96,7 @@ trait QModelTrait {
 			}
 		}
 		if ($blnAddAllFieldsToSelect) {
-			static::GetSelectFields($objQueryBuilder, null, QQuery::extractSelectClause($objOptionalClauses));
+			static::BaseNode()->PutSelectFields($objQueryBuilder, null, QQuery::extractSelectClause($objOptionalClauses));
 		}
 		$objQueryBuilder->AddFromItem($strTableName);
 
@@ -110,17 +110,32 @@ trait QModelTrait {
 				$objConditions->UpdateQueryBuilder($objQueryBuilder);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
+				$objExc->IncrementOffset();
 				throw $objExc;
 			}
 
 		// Iterate through all the Optional Clauses (if any) and perform accordingly
 		if ($objOptionalClauses) {
 			if ($objOptionalClauses instanceof QQClause) {
-				$objOptionalClauses->UpdateQueryBuilder($objQueryBuilder);
+				try {
+					$objOptionalClauses->UpdateQueryBuilder($objQueryBuilder);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
 			}
 			else if (is_array($objOptionalClauses)) {
 				foreach ($objOptionalClauses as $objClause) {
-					$objClause->UpdateQueryBuilder($objQueryBuilder);
+					try {
+						$objClause->UpdateQueryBuilder($objQueryBuilder);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				}
 			}
 			else
@@ -328,7 +343,7 @@ trait QModelTrait {
 	 *
 	 * @param QDatabaseRowBase $objDbRow
 	 * @param string $strAliasPrefix
-	 * @param QQBaseNode $objNode
+	 * @param QQNode $objNode
 	 * @param QModelBase[] $objPreviousItemArray
 	 * @param string[] $strColumnAliasArray
 	 * @return boolean|null Returns true if the we used the row for an expansion, false if we already expanded this node in a previous row, or null if no expansion data was found
@@ -349,7 +364,7 @@ trait QModelTrait {
 			foreach ($objNode->ChildNodeArray as $objChildNode) {
 				$strPropName = $objChildNode->_PropertyName;
 				$strClassName = $objChildNode->_ClassName;
-				$strLongAlias = $objChildNode->ExtendedAlias();
+				$strLongAlias = $objChildNode->FullAlias();
 				$blnExpandAsArray = false;
 
 				if ($objChildNode->ExpandAsArray) {
@@ -380,7 +395,7 @@ trait QModelTrait {
 					}
 					if (count($objPreviousItem->$strVarName)) {
 						$objPreviousChildItems = $objPreviousItem->$strVarName;
-						$nextAlias = $objChildNode->ExtendedAlias() . '__';
+						$nextAlias = $objChildNode->FullAlias() . '__';
 
 						$objChildItem = $strClassName::InstantiateDbRow ($objDbRow, $nextAlias, $objChildNode, $objPreviousChildItems, $strColumnAliasArray, true);
 

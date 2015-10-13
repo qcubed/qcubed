@@ -6,7 +6,7 @@
     /**
      * @uses QQAssociationNode
      *
-     * @property-read QQNode $<?= $objReference->OppositePropertyName ?>
+     * @property-read QQColumnNode $<?= $objReference->OppositePropertyName ?>
 
      * @property-read QQNode<?= $objReference->VariableType ?> $<?= $objReference->VariableType ?>
 
@@ -25,7 +25,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case '<?= $objReference->OppositePropertyName ?>':
-					return new QQNode('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeDbType ?>', $this);
+					return new QQColumnNode('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeDbType ?>', $this);
 				case '<?= $objReference->VariableType ?>':
 					return new QQNode<?= $objReference->VariableType ?>('<?= $objReference->OppositeColumn ?>', '<?= $objReference->OppositePropertyName ?>', '<?= $objReference->OppositeDbType ?>', $this);
 				case '_ChildTableNode':
@@ -43,10 +43,10 @@
 
 <?php } ?>
     /**
-     * @uses QQNode
+     * @uses QQTableNode
      *
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-     * @property-read QQNode $<?= $objColumn->PropertyName ?>
+     * @property-read QQColumnNode $<?= $objColumn->PropertyName ?>
 
 <?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
      * @property-read QQNode<?= $objColumn->Reference->VariableType; ?> $<?= $objColumn->Reference->PropertyName ?>
@@ -67,15 +67,37 @@
 
      * @property-read QQNode<?php if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) print $objPkColumn->Reference->VariableType; ?> $_PrimaryKeyNode
      **/
-	class QQNode<?= $objTable->ClassName ?> extends QQNode {
+	class QQNode<?= $objTable->ClassName ?> extends QQTableNode {
 		protected $strTableName = '<?= $objTable->Name ?>';
 		protected $strPrimaryKey = '<?= $objTable->PrimaryKeyColumnArray[0]->Name ?>';
 		protected $strClassName = '<?= $objTable->ClassName ?>';
+
+		public function Fields() {
+			return [
+<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
+				"<?= $objColumn->Name ?>",
+<?php } ?>
+			];
+		}
+
+		public function PrimaryKeyFields() {
+			return [
+<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
+				"<?= $objColumn->Name ?>",
+<?php } ?>
+			];
+		}
+
+		protected function database() {
+			return QApplication::$Database[<?= $objCodeGen->DatabaseIndex; ?>];
+		}
+
+
 		public function __get($strName) {
 			switch ($strName) {
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 				case '<?= $objColumn->PropertyName ?>':
-					return new QQNode('<?= $objColumn->Name ?>', '<?= $objColumn->PropertyName ?>', '<?= $objColumn->DbType ?>', $this);
+					return new QQColumnNode('<?= $objColumn->Name ?>', '<?= $objColumn->PropertyName ?>', '<?= $objColumn->DbType ?>', $this);
 <?php if ($objColumn->Reference) { ?>
 				case '<?= $objColumn->Reference->PropertyName ?>':
 					return new QQNode<?= $objColumn->Reference->VariableType; ?>('<?= $objColumn->Name ?>', '<?= $objColumn->Reference->PropertyName ?>', '<?= $objColumn->DbType ?>', $this);
@@ -90,7 +112,11 @@
 <?php } ?><?php $objPkColumn = $objTable->PrimaryKeyColumnArray[0]; ?>
 
 				case '_PrimaryKeyNode':
-					return new QQNode<?php if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) print $objPkColumn->Reference->VariableType; ?>('<?= $objPkColumn->Name ?>', '<?= $objPkColumn->PropertyName ?>', '<?= $objPkColumn->DbType ?>', $this);
+<?php if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) {?>
+					return new QQNode<?= $objPkColumn->Reference->VariableType; ?>('<?= $objPkColumn->Name ?>', '<?= $objPkColumn->PropertyName ?>', '<?= $objPkColumn->DbType ?>', $this);
+<?php } else { ?>
+					return new QQColumnNode('<?= $objPkColumn->Name ?>', '<?= $objPkColumn->PropertyName ?>', '<?= $objPkColumn->DbType ?>', $this);
+<?php } ?>
 				default:
 					try {
 						return parent::__get($strName);
@@ -104,7 +130,7 @@
 
     /**
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-     * @property-read QQNode $<?= $objColumn->PropertyName ?>
+     * @property-read QQColumnNode $<?= $objColumn->PropertyName ?>
 
 <?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
      * @property-read QQNode<?= $objColumn->Reference->VariableType; ?> $<?= $objColumn->Reference->PropertyName ?>
@@ -129,11 +155,28 @@
 		protected $strTableName = '<?= $objTable->Name ?>';
 		protected $strPrimaryKey = '<?= $objTable->PrimaryKeyColumnArray[0]->Name ?>';
 		protected $strClassName = '<?= $objTable->ClassName ?>';
+
+		public function Fields() {
+			return [
+<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
+				"<?= $objColumn->Name ?>",
+<?php } ?>
+			];
+		}
+
+		public function PrimaryKeyFields() {
+			return [
+<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
+				"<?= $objColumn->Name ?>",
+<?php } ?>
+			];
+		}
+
 		public function __get($strName) {
 			switch ($strName) {
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 				case '<?= $objColumn->PropertyName ?>':
-					return new QQNode('<?= $objColumn->Name ?>', '<?= $objColumn->PropertyName ?>', '<?= $objColumn->DbType ?>', $this);
+					return new QQColumnNode('<?= $objColumn->Name ?>', '<?= $objColumn->PropertyName ?>', '<?= $objColumn->DbType ?>', $this);
 <?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
 				case '<?= $objColumn->Reference->PropertyName ?>':
 					return new QQNode<?= $objColumn->Reference->VariableType; ?>('<?= $objColumn->Name ?>', '<?= $objColumn->Reference->PropertyName ?>', '<?= $objColumn->DbType ?>', $this);
@@ -148,7 +191,11 @@
 <?php } ?><?php $objPkColumn = $objTable->PrimaryKeyColumnArray[0]; ?>
 
 				case '_PrimaryKeyNode':
-					return new QQNode<?php if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) print $objPkColumn->Reference->VariableType; ?>('<?= $objPkColumn->Name ?>', '<?= $objPkColumn->PropertyName ?>', '<?= $objPkColumn->DbType ?>', $this);
+<?php if (($objPkColumn->Reference) && (!$objPkColumn->Reference->IsType)) {?>
+					return new QQNode<?= $objPkColumn->Reference->VariableType; ?>('<?= $objPkColumn->Name ?>', '<?= $objPkColumn->PropertyName ?>', '<?= $objPkColumn->DbType ?>', $this);
+<?php } else { ?>
+					return new QQColumnNode('<?= $objPkColumn->Name ?>', '<?= $objPkColumn->PropertyName ?>', '<?= $objPkColumn->DbType ?>', $this);
+<?php } ?>
 				default:
 					try {
 						return parent::__get($strName);
