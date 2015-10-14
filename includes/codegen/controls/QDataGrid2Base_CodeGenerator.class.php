@@ -84,6 +84,7 @@ TMPL;
 TMPL;
 		foreach ($objTable->ColumnArray as $objColumn) {
 			if (isset($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None)) continue;
+			if (isset($objColumn->Options['NoColumn']) && $objColumn->Options['NoColumn']) continue;
 			$strColVarName = 'col' . $objCodeGen->ModelConnectorPropertyName($objColumn);
 			$strCode .= <<<TMPL
 	/** @var QSimpleTableNodeColumn */
@@ -135,7 +136,7 @@ TMPL;
 		$strCode = <<<TMPL
 	protected function CreatePaginator() {
 		\$this->Paginator = new QPaginator(\$this);
-		\$this->ItemsPerPage = __FORM_DRAFTS_FORM_LIST_ITEMS_PER_PAGE__;
+		\$this->ItemsPerPage = __FORM_LIST_ITEMS_PER_PAGE__;
 	}
 
 TMPL;
@@ -153,6 +154,7 @@ TMPL;
 
 		foreach ($objTable->ColumnArray as $objColumn) {
 			if (isset($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None)) continue;
+			if (isset($objColumn->Options['NoColumn']) && $objColumn->Options['NoColumn']) continue;
 
 			$strCode .= <<<TMPL
 		\$this->col{$objCodeGen->ModelConnectorPropertyName($objColumn)} = \$this->CreateNodeColumn("{$objCodeGen->ModelConnectorControlName($objColumn)}", QQN::{$objTable->ClassName}()->{$objCodeGen->ModelConnectorPropertyName($objColumn)});
@@ -427,6 +429,7 @@ TMPL;
 
 		foreach ($objTable->ColumnArray as $objColumn) {
 			if (isset($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None)) continue;
+			if (isset($objColumn->Options['NoColumn']) && $objColumn->Options['NoColumn']) continue;
 
 			$strCode .= <<<TMPL
 		\$this->col{$objCodeGen->ModelConnectorPropertyName($objColumn)} = \$this->{$strVarName}->CreateNodeColumn("{$objCodeGen->ModelConnectorControlName($objColumn)}", QQN::{$objTable->ClassName}()->{$objCodeGen->ModelConnectorPropertyName($objColumn)});

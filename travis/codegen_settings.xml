@@ -9,6 +9,17 @@
 	<name application="My QCubed Application"/>
 	<templateEscape begin="&lt;%" end="%&gt;"/>
 
+	<!--
+    createMethod: specify either queryString or pathInfo.
+    buttonClass: The default class to use for generated buttons.
+    preferredRenderMethod: The default render method to use for objects in the model connector.
+    -->
+	<formgen
+			createMethod="queryString"
+			buttonClass="QJqButton"
+			preferredRenderMethod = "RenderWithName"
+			/>
+
 	<!-- Define Data Sources (e.g. Databases, Services, etc.) -->
 	<dataSources>
 		<database index="1">

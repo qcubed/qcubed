@@ -234,6 +234,11 @@
 			QCodeGen::$CreateMethod = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'formgen', 'createMethod');
 			QCodeGen::$DefaultButtonClass = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'formgen', 'buttonClass');
 
+			if (!QCodeGen::$DefaultButtonClass) {
+				QCodeGen::$RootErrors .= "CodeGen Settings XML Fatal Error: buttonClass was not defined\r\n";
+				return;
+			}
+
 			// Iterate Through DataSources
 			if (QCodeGen::$SettingsXml->dataSources->asXML())
 				foreach (QCodeGen::$SettingsXml->dataSources->children() as $objChildNode) {

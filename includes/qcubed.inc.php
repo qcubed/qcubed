@@ -212,6 +212,7 @@
 
 	QApplicationBase::$ClassFile['qdatagridrowstyle'] = __QCUBED_CORE__ . '/base_controls/QDataGridRowStyle.class.php';
 	QApplicationBase::$ClassFile['qdatagrid'] = __QCUBED__ . '/controls/QDataGrid.class.php';
+	QApplicationBase::$ClassFile['qdatagrid2'] = __QCUBED__ . '/controls/QDataGrid2.class.php';
 
 	QApplicationBase::$ClassFile['qsimpletablebase'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableBase.class.php';
 	QApplicationBase::$ClassFile['qabstractsimpletablecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';

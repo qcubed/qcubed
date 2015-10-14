@@ -7,18 +7,17 @@
 		'DocrootFlag' => false,
 		'DirectorySuffix' => '',
 		'TargetDirectory' => __MODEL_CONNECTOR__,
-		'TargetFileName' => $objTable->ClassName . 'DataGrid.class.php'
+		'TargetFileName' => $objTable->ClassName . 'List.class.php'
 	);
 ?>
 <?php print("<?php\n"); ?>
-	require(__MODEL_CONNECTOR_GEN__ . '/<?= $objTable->ClassName ?>DataGridGen.class.php');
+	require(__MODEL_CONNECTOR_GEN__ . '/<?= $objTable->ClassName ?>ListGen.class.php');
 
 	/**
-	 * This is the DataGrid Connector customizable subclass for the List functionality
+	 * This is the connector class for the List functionality
 	 * of the <?= $objTable->ClassName ?> class.  This code-generated class extends
-	 * from the generated DataGrid connector class which contains a QDataGrid class which
-	 * can be used by any QForm or QPanel, listing a collection of <?= $objTable->ClassName ?>
-
+	 * from the generated <?= $objTable->ClassName ?>Gen  class, listing a collection
+	 * of <?= $objTable->ClassName ?>
 	 * objects.  It includes functionality to perform pagination and sorting on columns.
 	 *
 	 * To take advantage of some (or all) of these control objects, you
@@ -32,6 +31,6 @@
 	 * @subpackage ModelConnector
 	 *
 	 */
-	class <?= $objTable->ClassName ?>DataGrid extends <?= $objTable->ClassName ?>DataGridGen {
+	class <?= $objTable->ClassName ?>List extends <?= $objTable->ClassName ?>ListGen {
 	}
 ?>

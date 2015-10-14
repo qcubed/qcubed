@@ -19,7 +19,7 @@ CREATE TABLE login (
     person_id INTEGER UNSIGNED,
     username VARCHAR(20) NOT NULL,
     password VARCHAR(20),
-    is_enabled INTEGER UNSIGNED NOT NULL,
+    is_enabled TINYINT(1) NOT NULL,
     CONSTRAINT PK_login PRIMARY KEY (id),
     UNIQUE KEY IDX_login_1(person_id),
     UNIQUE KEY IDX_login_2(username)

@@ -85,7 +85,8 @@ class QModelConnectorEditDlg extends QDialog {
 					'Whether or not to generate this object, just a label for the object, just the control, or both the control and label',
 					QModelConnectorParam::SelectionList,
 					array (QFormGen::Both=>'Both', QFormGen::None=>'None', QFormGen::ControlOnly=>'Control', QFormGen::LabelOnly=>'Label')),
-				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'Name', 'Control\'s Name', QType::String)
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'Name', 'Control\'s Name', QType::String),
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'NoColumn', 'True to prevent a column in the lister from being generated.', QType::Boolean)
 			);
 		}
 		else {
