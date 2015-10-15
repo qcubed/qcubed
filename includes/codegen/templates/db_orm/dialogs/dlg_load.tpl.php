@@ -1,4 +1,4 @@
-forms<?php
+<?php
 	// Create a parameter list
 foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {
 	$params[] = '$' . $objColumn->VariableName;

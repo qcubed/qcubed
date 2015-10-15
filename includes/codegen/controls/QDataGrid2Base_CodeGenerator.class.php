@@ -123,7 +123,8 @@ TMPL;
 		\$this->CreateColumns();
 		// Set a generic data binder.
 		// Set to BindData if you want to do more custom data binding
-		\$this->SetDataBinder('_bindData', \$this);
+		\$this->SetDataBinder('DefaultDataBinder', \$this);
+		\$this->Watch(QQN::{$objTable->ClassName}());
 	}
 
 
@@ -190,8 +191,12 @@ TMPL;
 
 	protected function GenerateSubclassPrivateDataBinder(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
-	protected function _bindData() {
-		\$this->BindData();
+   /**
+	* Calls the data finder with default options. Override and call BindData with additional conditions or clauses as needed, or
+	* call you own custom data binder.
+	**/
+	public function DefaultDataBinder() {
+		\$this->BindData(null, null);
 	}
 
 
@@ -236,7 +241,14 @@ TMPL;
 	protected function GenerateSubclassGetCondition(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strCode = <<<TMPL
-	protected function GetCondition(\$objAdditionalCondition) {
+	/**
+	 * Returns the condition to use when querying the data. Default is to return the condition put in the local
+	 * objCondition member variable. You can also override this to return a condition. One use of this is to add conditions
+	 * based on additional controls you add to the view.
+	 *
+	 * @return QQCondition
+	 */
+	protected function GetCondition(\$objAdditionalCondition = null) {
 		// Get passed in condition, possibly coming from subclass or enclosing control or form
 		\$objCondition = \$objAdditionalCondition;
 		if (!\$objCondition) {
@@ -257,7 +269,14 @@ TMPL;
 
 	protected function GenerateSubclassGetClauses(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
-	protected function GetClauses(\$objAdditionalClauses) {
+	/**
+	 * Returns the clauses to use when querying the data. Default is to return the clauses put in the local
+	 * objClauses member variable. You can also override this to return clauses, or pass them in. One use of this is to add expansion clauses
+	 * for early data binding to reduce the number of accesses to the database.
+	 *
+	 * @return QQClause[]
+	 */
+	protected function GetClauses(\$objAdditionalClauses = null) {
 		\$objClauses = \$objAdditionalClauses;
 		if (!\$objClauses) {
 			\$objClauses = [];
@@ -276,6 +295,13 @@ TMPL;
 
 	protected function GenerateSubclassRowParams(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
+	/**
+	 * Returns the parameters to embed in the row tag for the data row.
+	 *
+	 * @param mixed \$objRowObject Row object. Some kind of data object.
+	 * @param string \$intCurrentRowIndex The index of the row on the screen. Not necessarily the row in the data.
+	 * @return array
+	 */
 	protected function GetRowParams (\$objRowObject, \$intCurrentRowIndex) {
 		\$params = parent::GetRowParams (\$objRowObject, \$intCurrentRowIndex);
 		\$strKey = \$objRowObject->PrimaryKey();
