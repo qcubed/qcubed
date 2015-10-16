@@ -16,7 +16,7 @@
  * @package Controls
  */
 
-abstract class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
+class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 	/** @var  bool Record the state of the AllChecked checkbox in the header. */
 	protected $blnAllChecked;
 
@@ -190,7 +190,7 @@ abstract class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 	protected function CheckAll($blnChecked) {
 		$ids = $this->GetAllIds();
 
-		foreach ($ids as $id) {
+		if ($ids) foreach ($ids as $id) {
 			$this->SetItemCheckedState($id, $blnChecked);
 		}
 	}
@@ -216,17 +216,23 @@ abstract class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 	 *
 	 * @return array
 	 */
-	protected function GetAllIds() {}
+	protected function GetAllIds() {return null;}
 
 	/**
-	 * Override this to return the unique id of the given item. This id will be used to generate the id in the tag
+	 * Returns the unique id of the given item. This id will be used to generate the id in the tag
 	 * of the checkbox, but will not directly correspond to the id. The given item id only needs to be unique within your
 	 * list of items.
+	 *
+	 * The default will assume this is a database object and use the primary key as the id. Override if you want something else.
 	 *
 	 * @param mixed $item
 	 * @return string
 	 */
-	abstract protected function GetItemId($item);
+	protected function GetItemId($item) {
+		if (is_object($item)) {
+			return $item->PrimaryKey();
+		}
+	}
 
 }
 
