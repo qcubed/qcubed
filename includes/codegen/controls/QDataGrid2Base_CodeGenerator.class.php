@@ -11,6 +11,11 @@ class QDataGrid2Base_CodeGenerator extends QControl_CodeGenerator {
 		$this->strControlClassName = $strControlClassName;
 	}
 
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	public function DataListVariableDeclaration(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strCode = parent::DataListVariableDeclaration($objCodeGen, $objTable);
@@ -19,7 +24,10 @@ class QDataGrid2Base_CodeGenerator extends QControl_CodeGenerator {
 	}
 
 
-
+	/**
+	 * @param string $strPropName
+	 * @return string
+	 */
 	public function VarName($strPropName) {
 		return 'dtg' . $strPropName;
 	}
@@ -37,13 +45,17 @@ class QDataGrid2Base_CodeGenerator extends QControl_CodeGenerator {
 		$strCode .= $this->GenerateSubclassCreatePaginator($objCodeGen, $objTable);
 		$strCode .= $this->GenerateSubclassCreateColumns($objCodeGen, $objTable);
 		$strCode .= $this->GenerateSubclassDataBinder($objCodeGen, $objTable);
-		$strCode .= $this->GenerateSubclassRowParams($objCodeGen, $objTable);
 		$strCode .= $this->GenerateSubclassGet($objCodeGen, $objTable);
 		$strCode .= $this->GenerateSubclassSet($objCodeGen, $objTable);
 
 		return $strCode;
 	}
 
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	public function DataListSubclassComments(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strObjectType = $objTable->ClassName;
 
@@ -55,7 +67,11 @@ TMPL;
 		return $strCode;
 	}
 
-
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	public function GenerateSubclassMembers(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
 	/**
@@ -76,6 +92,12 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 * @throws Exception
+	 */
 	protected function GenerateColumnDeclarations(QCodeGenBase $objCodeGen, QTable $objTable) {
 
 		$strCode = <<<TMPL
@@ -132,9 +154,17 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	public function GenerateSubclassCreatePaginator(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strCode = <<<TMPL
+	/**
+	 * Creates the paginator. Override to add an additional paginator, or to remove it.
+	 */
 	protected function CreatePaginator() {
 		\$this->Paginator = new QPaginator(\$this);
 		\$this->ItemsPerPage = __FORM_LIST_ITEMS_PER_PAGE__;
@@ -144,11 +174,22 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * Creates the columns as part of the datagrid subclass.
+	 *
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 * @throws Exception
+	 */
 	public function GenerateSubclassCreateColumns(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
 		$strCode = <<<TMPL
+	/**
+	 * Creates the columns for the table. Override to change the columns, or use the ModelEditorDialog to turn on and off individual columns.
+	 */
 	protected function CreateColumns() {
 
 TMPL;
@@ -182,18 +223,31 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	public function GenerateSubclassDataBinder(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
-		$strCode = $this->GenerateSubclassPrivateDataBinder($objCodeGen, $objTable);
+		$strCode = $this->GenerateSubclassDefaultDataBinder($objCodeGen, $objTable);
 		$strCode .= $this->GenerateSubclassPublicDataBinder($objCodeGen, $objTable);
 		return $strCode;
 	}
 
-	protected function GenerateSubclassPrivateDataBinder(QCodeGenBase $objCodeGen, QTable $objTable) {
+	/**
+	 * This default data binder is here so that the class can present data on its own. Generally, the enclosing
+	 * control would provide a data binder.
+	 *
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
+	protected function GenerateSubclassDefaultDataBinder(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
    /**
-	* Calls the data finder with default options. Override and call BindData with additional conditions or clauses as needed, or
-	* call you own custom data binder.
+	* Calls the data binder with default options. Override and call BindData with additional conditions or clauses as needed, or
+	* call your own custom data binder.
 	**/
 	public function DefaultDataBinder() {
 		\$this->BindData(null, null);
@@ -204,9 +258,19 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * Generates a data binder that can be called from the enclosing control.
+	 *
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	protected function GenerateSubclassPublicDataBinder(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strObjectType = $objTable->ClassName;
 		$strCode = <<<TMPL
+   /**
+	* Called by the framework to access the data for the control and load it into the table.
+	**/
 	public function BindData(\$objAdditionalCondition = null, \$objAdditionalClauses = null) {
 		\$objCondition = \$this->GetCondition(\$objAdditionalCondition);
 		\$objClauses = \$this->GetClauses(\$objAdditionalClauses);
@@ -238,6 +302,11 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	protected function GenerateSubclassGetCondition(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strCode = <<<TMPL
@@ -267,6 +336,11 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	protected function GenerateSubclassGetClauses(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
 	/**
@@ -293,29 +367,11 @@ TMPL;
 		return $strCode;
 	}
 
-	protected function GenerateSubclassRowParams(QCodeGenBase $objCodeGen, QTable $objTable) {
-		$strCode = <<<TMPL
 	/**
-	 * Returns the parameters to embed in the row tag for the data row.
-	 *
-	 * @param mixed \$objRowObject Row object. Some kind of data object.
-	 * @param string \$intCurrentRowIndex The index of the row on the screen. Not necessarily the row in the data.
-	 * @return array
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
 	 */
-	protected function GetRowParams (\$objRowObject, \$intCurrentRowIndex) {
-		\$params = parent::GetRowParams (\$objRowObject, \$intCurrentRowIndex);
-		\$strKey = \$objRowObject->PrimaryKey();
-		\$params['data-value'] = \$strKey;
-		return \$params;
-	}
-
-
-TMPL;
-
-		return $strCode;
-
-	}
-
 	protected function GenerateSubclassGet(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
 	/**
@@ -345,6 +401,11 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	protected function GenerateSubclassSet(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
 	/**
@@ -406,25 +467,43 @@ TMPL;
 	}
 
 
+	/**
+	 * Generate additional methods for the enclosing control to interact with this generated control.
+	 *
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	public function DataListHelperMethods(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = $this->GenerateCreateFunction($objCodeGen, $objTable);
 		$strCode .= $this->GenerateAddActions($objCodeGen, $objTable);
-		//$strCode .= $this->GenerateRowParamsCallback($objCodeGen, $objTable);
+		$strCode .= $this->GenerateRowParamsCallback($objCodeGen, $objTable);
 
 		return $strCode;
 	}
 
 
+	/**
+	 * Generates code for the enclosing control to create this control.
+	 *
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	protected function GenerateCreateFunction (QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strPropertyName = $objCodeGen->DataListPropertyName($objTable);
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
 		$strCode = <<<TMPL
+   /**
+	* Creates the data grid and prepares it to be row clickable. Override for additional creation operations.
+	**/
 	protected function {$strVarName}_Create() {
 		\$this->{$strVarName} = new {$strPropertyName}List(\$this);
 		\$this->{$strVarName}_AddActions();
 		\$this->{$strVarName}->AddCssClass('clickable-rows');
+		\$this->{$strVarName}->RowParamsCallback = [\$this, "{$strVarName}_GetRowParams"];
 
 TMPL;
 
@@ -445,41 +524,13 @@ TMPL;
 		return $strCode;
 	}
 
-	protected function GenerateCreateColumns(QCodeGenBase $objCodeGen, QTable $objTable) {
-		$strVarName = $objCodeGen->DataListVarName($objTable);
-
-		$strCode = <<<TMPL
-	protected function {$strVarName}_CreateColumns() {
-
-TMPL;
-
-		foreach ($objTable->ColumnArray as $objColumn) {
-			if (isset($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None)) continue;
-			if (isset($objColumn->Options['NoColumn']) && $objColumn->Options['NoColumn']) continue;
-
-			$strCode .= <<<TMPL
-		\$this->col{$objCodeGen->ModelConnectorPropertyName($objColumn)} = \$this->{$strVarName}->CreateNodeColumn("{$objCodeGen->ModelConnectorControlName($objColumn)}", QQN::{$objTable->ClassName}()->{$objCodeGen->ModelConnectorPropertyName($objColumn)});
-
-TMPL;
-
-		}
-
-		foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
-			if ($objReverseReference->Unique) {
-				$strCode .= <<<TMPL
-		\$this->col{$objReverseReference->ObjectDescription} = \$this->{$strVarName}->CreateNodeColumn("{$objCodeGen->ModelConnectorControlName($objReverseReference)}", QQN::{$objTable->ClassName}()->{$objReverseReference->ObjectDescription});
-
-TMPL;
-			}
-		}
-
-		$strCode .= <<<TMPL
-	}
-TMPL;
-
-		return $strCode;
-	}
-
+	/**
+	 * Generates a typical action to respond to row clicks.
+	 *
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	protected function GenerateAddActions(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
@@ -500,6 +551,13 @@ TMPL;
 		return $strCode;
 	}
 
+	/**
+	 * Generates the row param callback that will enable row clicks to know what row was clicked on.
+	 * 
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
 	protected function GenerateRowParamsCallback(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
@@ -514,45 +572,5 @@ TMPL;
 		return $strCode;
 
 	}
-
-	protected function GenerateDataBinder(QCodeGenBase $objCodeGen, QTable $objTable) {
-		$strObjectType = $objTable->ClassName;
-		$strVarName = $objCodeGen->DataListVarName($objTable);
-
-		$strCode = <<<TMPL
-
-	public function {$strVarName}_BindData() {
-		// See if enclosing panel has any additional conditions or clauses
-		\$objCondition = \$this->GetDataListCondition();
-		\$objClauses = \$this->GetDataListClauses();
-
-		if (!\$objCondition) \$objCondition = QQ::All();
-
-		if (\$this->{$strVarName}->Paginator) {
-			\$this->{$strVarName}->TotalItemCount = {$strObjectType}::QueryCount(\$objCondition, \$objClauses);
-		}
-
-		// If a column is selected to be sorted, and if that column has a OrderByClause set on it, then let's add
-		// the OrderByClause to the \$objClauses array
-		if (\$objClause = \$this->{$strVarName}->OrderByClause) {
-			\$objClauses[] = \$objClause;
-		}
-
-		// Add the LimitClause information, as well
-		if (\$objClause = \$this->{$strVarName}->LimitClause) {
-			\$objClauses[] = \$objClause;
-		}
-
-		// Set the DataSource to be a Query result from {$strObjectType}, given the clauses above
-		\$this->{$strVarName}->DataSource = {$strObjectType}::QueryArray(\$objCondition, \$objClauses);
-	}
-
-
-TMPL;
-
-		return $strCode;
-	}
-
-
 
 }
