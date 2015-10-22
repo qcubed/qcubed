@@ -28,31 +28,38 @@ TMPL;
 		 * Reads the options from the special data file, and possibly the column
 		 * @param QCodeGenBase $objCodeGen
 		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param null|QColumn|QReverseReference|QManyToManyReference $objColumn	A null column means we want the table options
 		 * @param string $strControlVarName
 		 * @return string
 		 */
 		public function ConnectorCreateOptions(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
 			$strRet = '';
 
-			if ($objColumn instanceof QColumn) {
-				$strPropName = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
-				$strClass = $objTable->ClassName;
-			} elseif ($objColumn instanceof QManyToManyReference ||
-				$objColumn instanceof QReverseReference
-			) {
-				$strPropName = $objColumn->ObjectDescription;
-				$strClass = $objTable->ClassName;
-			}
+			if (!$objColumn) {
+				$strRet .= <<<TMPL
+			\$this->{$strControlVarName}->LinkedNode = QQN::{$objTable->ClassName}();
 
-			$strRet .= <<<TMPL
+TMPL;
+				$options = $objTable->Options;
+			}
+			else {
+				if ($objColumn instanceof QColumn) {
+					$strPropName = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+					$strClass = $objTable->ClassName;
+				} elseif ($objColumn instanceof QManyToManyReference ||
+					$objColumn instanceof QReverseReference
+				) {
+					$strPropName = $objColumn->ObjectDescription;
+					$strClass = $objTable->ClassName;
+				}
+
+				$strRet .= <<<TMPL
 			\$this->{$strControlVarName}->LinkedNode = QQN::{$strClass}()->{$strPropName};
 
 TMPL;
-
-			if (($options = $objColumn->Options) &&
-				isset ($options['Overrides'])
-			) {
+				$options = $objColumn->Options;
+			}
+			if (isset ($options['Overrides'])) {
 
 				foreach ($options['Overrides'] as $name => $val) {
 					if (is_numeric($val)) {

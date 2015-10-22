@@ -122,6 +122,10 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__MODEL_GEN__', __PROJECT__ . '/generated/model_base' );
 			define ('__MODEL_CONNECTOR__', __INCLUDES__ . '/connector' );
 			define ('__MODEL_CONNECTOR_GEN__', __PROJECT__ . '/generated/connector_base' );
+			define ('__DIALOG__', __INCLUDES__ . '/dialog' );
+			define ('__DIALOG_GEN__', __PROJECT__ . '/generated/dialog_base' );
+			define ('__PANEL__', __INCLUDES__ . '/panel' );
+			define ('__PANEL_GEN__', __PROJECT__ . '/generated/panel_base' );
 
 			/* Relative File Paths for Web Accessible Directories
 			 *
@@ -138,13 +142,11 @@ if (!defined('SERVER_INSTANCE')) {
 			 * Note that this is NOT required.  Feel free to use or ignore.)
 			 */
 
-			// Destination for generated form drafts and panel drafts. Relative to __DOCROOT__.
-			define ('__FORM_DRAFTS__', __SUBDIRECTORY__ . '/project/generated/drafts');
-			define ('__PANEL_DRAFTS__', __FORM_DRAFTS__ . '/panels');
-			
-			define ('__FORMBASE_CLASSES__', __PROJECT__ . '/generated/form_base');
-			define ('__FORM_DRAFTS_FORM_LIST_ITEMS_PER_PAGE__', 20);
-			define ('__FORM_DRAFTS_PANEL_LIST_ITEMS_PER_PAGE__', 8);
+			// Destination for generated forms. Relative to __DOCROOT__.
+			define ('__FORMS__', __SUBDIRECTORY__ . '/project/forms');
+
+			define ('__FORM_LIST_ITEMS_PER_PAGE__', 20);
+
 
 			// __DOCROOT__ relative location of QCubed-specific Web Assets (JavaScripts, CSS, Images, and PHP Pages/Popups)
 			// Note: These locations are for use by the framework only. You should put your own files in __APP*_ASSETS__ directories defined below

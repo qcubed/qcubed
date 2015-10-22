@@ -877,6 +877,7 @@
 	class QSimpleTableCheckBoxColumn extends QAbstractSimpleTableDataColumn {
 		protected $blnHtmlEntities = false;	// turn off html entities
 		protected $checkParamCallback = null;
+		protected $blnShowCheckAll;
 
 		/**
 		 * Returns a header cell with a checkbox. This could be used as a check all box. Override this and return
@@ -885,9 +886,13 @@
 		 * @return string
 		 */
 		public function FetchHeaderCellValue() {
-			$aParams = $this->GetCheckboxParams(null);
-			$aParams['type'] = 'checkbox';
-			return QHtml::RenderTag('input', $aParams, null, true);
+			if ($this->blnShowCheckAll) {
+				$aParams = $this->GetCheckboxParams(null);
+				$aParams['type'] = 'checkbox';
+				return QHtml::RenderTag('input', $aParams, null, true);
+			} else {
+				return '';
+			}
 		}
 
 		public function FetchCellObject($item) {
@@ -1008,6 +1013,44 @@
 			parent::Wakeup($objForm);
 			$this->checkParamCallback = QControl::WakeupHelper($objForm, $this->checkParamCallback);
 		}
+
+		public function __get($strName) {
+			switch ($strName) {
+				case 'ShowCheckAll':
+					return $this->blnShowCheckAll;
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+
+
+		public function __set($strName, $mixValue) {
+			switch ($strName) {
+				case "ShowCheckAll":
+					try {
+						$this->blnShowCheckAll = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				default:
+					try {
+						parent::__set($strName, $mixValue);
+						break;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+
 
 	}
 

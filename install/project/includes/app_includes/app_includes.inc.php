@@ -66,4 +66,5 @@
 	 *      cause much trouble (all you would need to do is to add one line).
 	 * ================ [END] ================
          */
-?>
+
+QApplicationBase::$ClassFile['navpanel'] = __INCLUDES__ .'/app_includes/nav_panel.class.php';

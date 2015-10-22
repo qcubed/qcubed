@@ -820,6 +820,12 @@ qcubed.tabs = function(controlId) {
     });
 }
 
+qcubed.datagrid2 = function(controlId) {
+    $j('#' + controlId).on("click", "thead tr th a", function(event, ui) {
+        var cellIndex = $j(this).parent()[0].cellIndex;
+        $j(this).trigger('qdg2sort', cellIndex); // Triggers the QDataGrid2_SortEvent
+    });
+}
 
 
 /////////////////////////////////////

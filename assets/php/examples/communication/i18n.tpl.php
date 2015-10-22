@@ -9,7 +9,7 @@
 <div id="instructions">
 	<h1><?php _t('Internationalization and Translation') ?></h1>
 	<p><?php _t('
-		QQubed offers internationalization support via <b>QApplication::Translate()</b> (which internally
+		QCubed offers internationalization support via <b>QApplication::Translate()</b> (which internally
 		will use the <b>QI18n</b> class). Default language and country
 		settings can be setup in <b>prepend.inc.php</b>.  Out of the box, QCubed will check the session to determine
 		which language and country is currently being used, but it is really up to the developer to
@@ -36,7 +36,7 @@
 	</p>
 
 	<p><?php _t('
-		Note that generated Form Drafts and the QControls are all I18n aware -- they will translate themselves
+		Note that generated Forms and the QControls are all I18n aware -- they will translate themselves
 		based on the selected language (as long as the appropriate language file exists).  QCubed-specific
 		langauge files are part of QCubed core, and exist in <b>' . __QI18N_PO_PATH__ . '</b>.
 		we are desparately in need of more language files. If you are able to contribute, please take
@@ -61,8 +61,8 @@
 	<?php $this->btnEn->Render('Text="' . QApplication::Translate('Switch to') . ' en"'); ?>
 	<?php $this->btnEs->Render('Text="' . QApplication::Translate('Switch to') . ' es"'); ?>
 
-	<p><?php _t('To view the People form draft translated into the selected language, go to'); ?>
-		<a href="<?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__); ?>/person_list.php" class="bodyLink"><?php _p(__VIRTUAL_DIRECTORY__ . __FORM_DRAFTS__); ?>/person_list.php</a>
+	<p><?php _t('To view the People form translated into the selected language, go to'); ?>
+		<a href="<?php _p(__VIRTUAL_DIRECTORY__ . __FORMS__); ?>/person_list.php" class="bodyLink"><?php _p(__VIRTUAL_DIRECTORY__ . __FORMS__); ?>/person_list.php</a>
 	</p>
 	<p><?php _t('We used the <b>QI18n::Load</b> approach to ensure the following is always Spanish:'); ?><br/>
 		<?php

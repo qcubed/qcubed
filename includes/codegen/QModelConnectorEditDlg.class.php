@@ -71,14 +71,38 @@ class QModelConnectorEditDlg extends QDialog {
 		$col->HtmlEntities = false;
 		$this->dtgGeneralOptions->SetDataBinder('dtgGeneralOptions_Bind', $this);
 
-		$this->generalOptions = array (
-			new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'FormGen',
-				'Whether or not to generate this object, just a label for the object, just the control, or both the control and label',
-				QModelConnectorParam::SelectionList,
-				array (QFormGen::Both=>'Both', QFormGen::None=>'None', QFormGen::ControlOnly=>'Control', QFormGen::LabelOnly=>'Label')),
-			new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'Name', 'Control\'s Name', QType::String),
-			new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QModelConnectorParam::SelectionList, $strClassNames)
-		);
+		/**
+		 * The following default options are somewhat matched to the default list and edit templates. A more robust
+		 * implementation would get the options from the templates, or what the templates generate, so that the templates
+		 * decide what to put there. If someone wants to radically change the templates, but still have them use this dialog
+		 * to edit the options, then would be the time to change the code below.
+		 */
+		if ($this->objCurrentControl->LinkedNode->_ParentNode) {
+			// Specify general options for a database column
+			$this->generalOptions = array (
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QModelConnectorParam::SelectionList, $strClassNames),
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'FormGen',
+					'Whether or not to generate this object, just a label for the object, just the control, or both the control and label',
+					QModelConnectorParam::SelectionList,
+					array (QFormGen::Both=>'Both', QFormGen::None=>'None', QFormGen::ControlOnly=>'Control', QFormGen::LabelOnly=>'Label')),
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'Name', 'Control\'s Name', QType::String),
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'NoColumn', 'True to prevent a column in the lister from being generated.', QType::Boolean)
+			);
+		}
+		else {
+			// Specify general options for a database table, meaning an object that is listing the content of a whole table.
+			// These would be options at a higher level than the control itself, and would modify how the control is used in a form.
+			$this->generalOptions = array (
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'ControlClass', 'Override of the PHP type for the control. If you change this, save the dialog and reopen to reload the tabs to show the control specific options.', QModelConnectorParam::SelectionList, $strClassNames),
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'Name', 'The Control\'s Name. Generally leave this blank, or use a plural name.', QType::String),
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'ItemName', 'The public name of an item in the list. Its used by the title of the edit form, for example. Defaults to the name of the table in the database.', QType::String),
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'CreateFilter', 'Whether to generate a separate control to filter the data. If the data list control does its own filtering, set this to false. Default is true.', QType::Boolean),
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'EditMode',
+					'How to edit an item. 1) Options are: to go to a separate form, 2) popup a dialog, or 3) popup a dialog only if not on a mobile device since mobile devices struggle with showing dialogs that are bigger than the screen.',
+					QModelConnectorParam::SelectionList,
+					array ('form'=>'Edit with a QForm', 'dialog'=>'Edit with a QDialog', 'both'=>'Edit with a form on mobile devices, and a dialog on desktops.'))
+			);
+		}
 
 		// load values from settings file
 		foreach ($this->generalOptions as $objParam) {
@@ -274,7 +298,7 @@ class QModelConnectorEditDlg extends QDialog {
 				$this->objModelConnectorOptions->Save();
 			} else {
 				// Table options
-				$this->objModelConnectorOptions->SetOptions ($node->_ClassName, '*', $this->params);
+				$this->objModelConnectorOptions->SetOptions ($node->_ClassName, QModelConnectorOptions::TableOptionsFieldName, $this->params);
 				$this->objModelConnectorOptions->Save();
 			}
 		}
@@ -292,7 +316,7 @@ class QModelConnectorEditDlg extends QDialog {
 			}
 			else {
 				// Table options
-				$this->params = $this->objModelConnectorOptions->GetOptions ($node->_ClassName, '*');
+				$this->params = $this->objModelConnectorOptions->GetOptions ($node->_ClassName, QModelConnectorOptions::TableOptionsFieldName);
 			}
 		}
 	}

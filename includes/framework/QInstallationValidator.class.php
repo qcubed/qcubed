@@ -169,64 +169,7 @@ abstract class QInstallationValidator {
 				"On Windows, enable extension=php_zip.dll in php.ini.";
 			$result[] = $obj;
 		}
-		
-		// Checks to make sure that all codegen-related folders are good to go
-		if (!QFolder::isWritable(__DOCROOT__ . __FORM_DRAFTS__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Form drafts directory (" . __DOCROOT__ . __FORM_DRAFTS__ . ") " .
-				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __FORM_DRAFTS__;
-			$result[] = $obj;
-		}
 
-		if (!QFolder::isWritable(__DOCROOT__ . __PANEL_DRAFTS__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Panel drafts directory (" . __DOCROOT__ . __PANEL_DRAFTS__ . ") " .
-				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __PANEL_DRAFTS__;
-			$result[] = $obj;
-		}
-		
-		if (!QFolder::isWritable(__FORMBASE_CLASSES__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Generated form base classes directory (" . __FORMBASE_CLASSES__ . ") " .
-				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __FORMBASE_CLASSES__;
-			$result[] = $obj;
-		}
-		
-		if (!QFolder::isWritable(__MODEL__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Model destination directory (" . __MODEL__ . ") " .
-				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __MODEL__;
-			$result[] = $obj;
-		}
-
-		if (!QFolder::isWritable(__MODEL_GEN__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Generated model destination directory (" . __MODEL_GEN__ . ") " .
-				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __MODEL_GEN__;
-			$result[] = $obj;
-		}
-
-		if (!QFolder::isWritable(__MODEL_CONNECTOR__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "ModelConnector destination directory (" . __MODEL_CONNECTOR__ . ") " .
-				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __MODEL_CONNECTOR__;
-			$result[] = $obj;
-		}
-		
-		if (!QFolder::isWritable(__MODEL_CONNECTOR_GEN__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Generated ModelConnector directory (" . __MODEL_CONNECTOR_GEN__ . ") " .
-				"needs to be writable for the code generator to work";
-			$obj->strCommandToFix = "chmod 777 " . __MODEL_CONNECTOR_GEN__;
-			$result[] = $obj;
-		}
-		
 		// Database connection string checks
 		for ($i = 1; $i < 1 + sizeof(QApplication::$Database); $i++) {
 			if (!isset(QApplication::$Database[$i]))
