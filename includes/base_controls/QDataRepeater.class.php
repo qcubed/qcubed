@@ -160,13 +160,13 @@ class QDataRepeater extends QPaginatedControl {
 				$this->intCurrentItemIndex++;
 			}
 
-			$strToReturn = $this->RenderTag($this->strTagName,
-				null,
-				null,
-				$strEvalledItems);
-
 			$_CONTROL = $objCurrentControl;
 		}
+
+		$strToReturn = $this->RenderTag($this->strTagName,
+			null,
+			null,
+			$strEvalledItems);
 
 		$this->objDataSource = null;
 		return $strToReturn;
