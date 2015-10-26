@@ -559,7 +559,10 @@ qcubed = {
 
                     // apply the function on each jQuery object found, using the found jQuery object as the context.
                     objs.each (function () {
-                         $j(this)[command.func].apply($j(this), params);
+                        var $item = $j(this);
+                        if ($item[command.func]) {
+                            $item[command.func].apply($j(this), params);
+                        }
                     });
                 }
                 else if (this.func) {
