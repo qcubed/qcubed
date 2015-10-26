@@ -1045,11 +1045,12 @@
 		 * Renders the given output with the current wrapper.
 		 *
 		 * @param $strOutput
+		 * @param $blnForceAsBlockElement
 		 *
 		 * @return string
 		 */
-		protected function RenderWrappedOutput($strOutput) {
-			$strTag = $this->blnIsBlockElement ? 'div' : 'span';
+		protected function RenderWrappedOutput($strOutput, $blnForceAsBlockElement = false) {
+			$strTag = ($this->blnIsBlockElement || $blnForceAsBlockElement) ? 'div' : 'span';
 			$overrides = ['id'=>$this->strControlId . '_ctl'];
 			$attributes = $this->GetWrapperAttributes($overrides);
 
@@ -1109,15 +1110,13 @@
 			// Let's remember *which* render method was used to render this control
 			$this->strRenderMethod = $strRenderMethod;
 
-			// Apply any overrides (if applicable)
-			if (count($mixParameterArray) > 0) {
-				if (gettype($mixParameterArray[0]) != QType::String) {
-					// Pop the first item off the array
-					$mixParameterArray = array_reverse($mixParameterArray);
-					array_pop($mixParameterArray);
-					$mixParameterArray = array_reverse($mixParameterArray);
-				}
+			// Remove non-overrides from the parameter array
+			while (!empty($mixParameterArray) && gettype(reset($mixParameterArray)) != QType::String && gettype(reset($mixParameterArray)) != QType::ArrayType) {
+				array_shift($mixParameterArray);
+			}
 
+			// Apply any overrides (if applicable)
+			if (!empty($mixParameterArray)) {
 				// Override
 				try {
 					$this->OverrideAttributes($mixParameterArray);
@@ -1278,7 +1277,6 @@
 				$this->blnIsBlockElement = true;	// must be remembered for ajax drawing
 			}
 
-			// TODO: Move the following to RenderHelper to determine that the output should be empty BEFORE we waste time rendering the whole control!
 			if ($this->blnUseWrapper) {
 				if (!$this->blnVisible) $strOutput = '';
 			} else if (!$this->blnVisible) {
@@ -1295,7 +1293,7 @@
 							// If we have a ParentControl and the ParentControl has NOT been rendered, then output
 							// as standard HTML
 							if ($this->blnUseWrapper) {
-								$strOutput = $this->RenderWrappedOutput($strOutput) . $this->GetNonWrappedHtml();
+								$strOutput = $this->RenderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
 							} else {
 								$strOutput = $strOutput . $this->GetNonWrappedHtml();
 							}
@@ -1306,7 +1304,7 @@
 						// if this is an injected top-level control, then we need to render the whole thing
 						if (!$this->blnOnPage) {
 							if ($this->blnUseWrapper) {
-								$strOutput = $this->RenderWrappedOutput($strOutput) . $this->GetNonWrappedHtml();
+								$strOutput = $this->RenderWrappedOutput($strOutput, $blnForceAsBlockElement) . $this->GetNonWrappedHtml();
 							} else {
 								$strOutput = $strOutput . $this->GetNonWrappedHtml();
 							}
@@ -1370,7 +1368,7 @@
 		 * @throws Exception|QCallerException
 		 * @return string
 		 */
-		public function Render($blnDisplayOutput = true) {
+		public function Render($blnDisplayOutput = true /* ... */) {
 			$blnMinimized = QApplication::$Minimize;
 			if ($this->blnMinimize) {
 				QApplication::$Minimize = true;
@@ -1378,11 +1376,16 @@
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 
 			try {
-				$strOutput = sprintf('%s%s%s',
-					$this->strHtmlBefore,
-					$this->GetControlHtml(),
-					$this->strHtmlAfter
-				);
+				if ($this->blnVisible) {
+					$strOutput = sprintf('%s%s%s',
+						$this->strHtmlBefore,
+						$this->GetControlHtml(),
+						$this->strHtmlAfter
+					);
+				} else {
+					// Avoid going through the time to render the control if we are not going to display it.
+					$strOutput = "";
+				}
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
