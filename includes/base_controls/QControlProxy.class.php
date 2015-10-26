@@ -49,7 +49,7 @@
 		 *
 		 * @return string
 		 */
-		public function RenderAsLink($strLabel, $strActionParameter = null, $attributes = [], $strTag = 'a') {
+		public function RenderAsLink($strLabel, $strActionParameter = null, $attributes = [], $strTag = 'a', $blnHtmlEntities = true) {
 			$defaults['href'] = '#';
 			$defaults['data-qpxy'] = $this->strControlId;
 			if ($strActionParameter) {
@@ -57,7 +57,9 @@
 			}
 			$attributes = array_merge($defaults, $attributes); // will only apply defaults that are not in attributes
 
-			$strLabel = QApplication::HtmlEntities($strLabel);
+			if ($blnHtmlEntities) {
+				$strLabel = QApplication::HtmlEntities($strLabel);
+			}
 
 			return QHtml::RenderTag($strTag, $attributes, $strLabel);
 		}
