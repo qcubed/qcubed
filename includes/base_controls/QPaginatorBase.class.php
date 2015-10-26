@@ -35,6 +35,9 @@
 		protected $objPaginatedControl;
 		/** @var string Default Wait Icon to be used */
 		protected $objWaitIcon = 'default';
+		/** @var int Number of index items in the paginator to display */
+		protected $intIndexCount = 10;
+
 
 		/** @var null|\QControlProxy  */
 		protected $prxPagination = null;
