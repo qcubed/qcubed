@@ -1266,7 +1266,7 @@
 		 *   Your html-code which should be printed out
 		 * @param boolean $blnDisplayOutput
 		 *   should it be printed, or just be returned?
-\		 * @param string  $strHasDataRel
+		 * @param string  $strHasDataRel
 		 *   Will contain an additional attribute for ajax processing to tie related html objects together if there is no
 		 *   wrapper around them (and thus no other way to tell they are related).
 		 *
