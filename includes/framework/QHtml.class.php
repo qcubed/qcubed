@@ -50,7 +50,7 @@
 		 *
 		 * @param string 		$strTag				The tag name
 		 * @param null|mixed 	$mixAttributes 		String of attribute values or array of attribute values.
-		 * @param null|string 		$strInnerHtml 		The text to print between
+		 * @param null|string 	$strInnerHtml 		The html to print between the opening and closing tags. This will NOT be escaped.
 		 * @param boolean		$blnIsVoidElement 	True to print as a tag with no closing tag.
 		 * @param boolean		$blnNoSpace		 	Renders with no white-space. Useful in special inline situations.
 		 * @return string						The rendered html tag
@@ -400,6 +400,14 @@
 			return $strUrl;
 		}
 
+		/**
+		 * Returns a MailTo url.
+		 *
+		 * @param $strUser
+		 * @param $strServer
+		 * @param null $queryParams
+		 * @return string
+		 */
 		public static function MailToUrl ($strUser, $strServer, $queryParams = null) {
 			$strUrl = 'mailto:' . rawurlencode($strUser) . '@' . rawurlencode($strServer);
 			if ($queryParams) {
@@ -407,4 +415,23 @@
 			}
 			return $strUrl;
 		}
+
+		/**
+		 * Utility function to create a link, i.e. an "a" tag.
+		 *
+		 *
+		 *
+		 * @param string $strUrl URL to link to. Use MakeUrl or MailToUrl to create the URL.
+		 * @param string $strText The inner text. This WILL be escaped.
+		 * @param array $attributes Other html attributes to include in the tag
+		 * @param boolean $blnHtmlEntities False to prevent encoding
+		 */
+		public static function RenderLink ($strUrl, $strText, $attributes = null, $blnHtmlEntities = true) {
+			$attributes["href"] = $strUrl;
+			if ($blnHtmlEntities) {
+				$strText = QApplication::HtmlEntities($strText);
+			}
+			return self::RenderTag("a", $attributes, $strText);
+		}
+
 	}
