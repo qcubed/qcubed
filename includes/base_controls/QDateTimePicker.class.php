@@ -12,7 +12,7 @@
 	 *
 	 * @package Controls
 	 *
-	 * @property mixed $DateTime
+	 * @property null|QDateTime $DateTime
 	 * @property string $DateTimePickerType
 	 * @property string $DateTimePickerFormat
 	 * @property integer $MinimumYear Minimum Year to show
@@ -64,74 +64,136 @@
 		// Methods
 		//////////
 		public function ParsePostData() {
-			if (array_key_exists($this->strControlId . '_lstMonth', $_POST) || array_key_exists($this->strControlId . '_lstHour', $_POST)) {
-				$dttNewDateTime = new QDateTime();
 
-				// Update Date Component
-				switch ($this->strDateTimePickerType) {
-					case QDateTimePickerType::Date:
-					case QDateTimePickerType::DateTime:
-					case QDateTimePickerType::DateTimeSeconds:
-						$strKey = $this->strControlId . '_lstMonth';
-						if (array_key_exists($strKey, $_POST))
-							$intMonth = $_POST[$strKey];
-						else
+			$blnIsDateTimeSet = false;
+			if ($this->dttDateTime == null) {
+				$dttNewDateTime = QDateTime::Now();
+			} else {
+				$blnIsDateTimeSet = true;
+				$dttNewDateTime = $this->dttDateTime;
+			}
+
+			// Update Date Component
+			switch ($this->strDateTimePickerType) {
+				case QDateTimePickerType::Date:
+				case QDateTimePickerType::DateTime:
+				case QDateTimePickerType::DateTimeSeconds:
+					$strKey = $this->strControlId . '_lstMonth';
+					if (array_key_exists($strKey, $_POST)) {
+						$intMonth = $_POST[$strKey];
+					} else {
+						if ($blnIsDateTimeSet) {
+							$intMonth = $dttNewDateTime->Month;
+						} else {
 							$intMonth = null;
+						}
+					}
 
-						$strKey = $this->strControlId . '_lstDay';
-						if (array_key_exists($strKey, $_POST))
-							$intDay = $_POST[$strKey];
-						else
+					$strKey = $this->strControlId . '_lstDay';
+					if (array_key_exists($strKey, $_POST)) {
+						$intDay = $_POST[$strKey];
+					} else {
+						if ($blnIsDateTimeSet) {
+							$intDay = $dttNewDateTime->Day;
+						} else {
 							$intDay = null;
+						}
+					}
 
-						$strKey = $this->strControlId . '_lstYear';
-						if (array_key_exists($strKey, $_POST))
-							$intYear = $_POST[$strKey];
-						else
+					$strKey = $this->strControlId . '_lstYear';
+					if (array_key_exists($strKey, $_POST)) {
+						$intYear = $_POST[$strKey];
+					} else {
+						if ($blnIsDateTimeSet) {
+							$intYear = $dttNewDateTime->Year;
+						} else {
 							$intYear = null;
+						}
+					}
 
-						$this->intSelectedMonth = $intMonth;
-						$this->intSelectedDay = $intDay;
-						$this->intSelectedYear = $intYear;
+					$this->intSelectedMonth = $intMonth;
+					$this->intSelectedDay = $intDay;
+					$this->intSelectedYear = $intYear;
 
-						if (strlen($intYear) && strlen($intMonth) && strlen($intDay))
-							$dttNewDateTime->setDate($intYear, $intMonth, $intDay);
-						else
-							$dttNewDateTime->Year = null;
-						break;
-				}
+					if (strlen($intYear) && strlen($intMonth) && strlen($intDay)) {
+						$dttNewDateTime->setDate($intYear, $intMonth, $intDay);
+					} else {
+						$dttNewDateTime->Year = null;
+					}
+					break;
+			}
 
-				// Update Time Component
-				switch ($this->strDateTimePickerType) {
-					case QDateTimePickerType::Time:
-					case QDateTimePickerType::TimeSeconds:
-					case QDateTimePickerType::DateTime:
-					case QDateTimePickerType::DateTimeSeconds:
-						$strKey = $this->strControlId . '_lstHour';
+			// Update Time Component
+			$blnIsTimeSet = false;
+			if(!$dttNewDateTime->IsTimeNull()){
+				$blnIsTimeSet = true;
+			} else {
+				$dttNewDateTime->Hour = 0;
+				$dttNewDateTime->Minute = 0;
+				$dttNewDateTime->Second = 0;
+			}
+
+			switch ($this->strDateTimePickerType) {
+				case QDateTimePickerType::Time:
+				case QDateTimePickerType::TimeSeconds:
+				case QDateTimePickerType::DateTime:
+				case QDateTimePickerType::DateTimeSeconds:
+					$strKey = $this->strControlId . '_lstHour';
+					if (array_key_exists($strKey, $_POST)) {
+						$intHour = $_POST[$strKey];
+					} else {
+						if($blnIsTimeSet){
+							$intHour = $dttNewDateTime->Hour;
+						} else {
+							$intHour = null;
+						}
+					}
+
+					$strKey = $this->strControlId . '_lstMinute';
+					if (array_key_exists($strKey, $_POST)) {
+						$intMinute = $_POST[$strKey];
+					} else {
+						if($blnIsTimeSet){
+							$intMinute = $dttNewDateTime->Minute;
+						} else {
+							$intMinute = null;
+						}
+					}
+
+					$intSecond = 0;
+
+					if (($this->strDateTimePickerType == QDateTimePickerType::TimeSeconds) ||
+						($this->strDateTimePickerType == QDateTimePickerType::DateTimeSeconds)
+					) {
+						$strKey = $this->strControlId . '_lstSecond';
 						if (array_key_exists($strKey, $_POST)) {
-							$intHour = $_POST[$strKey];
-							if (strlen($intHour)) {
-								$intHour = $_POST[$this->strControlId . '_lstHour'];
-								$intMinute = $_POST[$this->strControlId . '_lstMinute'];
+							$intSecond = $_POST[$strKey];
+						} else {
+							if ($blnIsTimeSet) {
+								$intSecond = $dttNewDateTime->Second;
+							} else {
 								$intSecond = 0;
-								if (($this->strDateTimePickerType == QDateTimePickerType::TimeSeconds) ||
-									($this->strDateTimePickerType == QDateTimePickerType::DateTimeSeconds))
-									$intSecond = $_POST[$this->strControlId . '_lstSecond'];
-
-								if (strlen($intHour) && strlen($intMinute) && strlen($intSecond))
-									$dttNewDateTime->setTime($intHour, $intMinute, $intSecond);
-								else
-									$dttNewDateTime->Hour = null;
 							}
 						}
-						break;
-				}
+					}
 
-				// Update local intTimestamp
-				$this->dttDateTime = $dttNewDateTime;
+					if (strlen($intHour) && strlen($intMinute) && strlen($intSecond)) {
+						$dttNewDateTime->setTime($intHour, $intMinute, $intSecond);
+					} else {
+						$dttNewDateTime->Hour = null;
+					}
+
+					break;
 			}
+
+			$this->dttDateTime = $dttNewDateTime;
 		}
 
+		/**
+		 * Returns the HTML used to render this control
+		 *
+		 * @return string
+		 */
 		protected function GetControlHtml() {
 			// Ignore Class
 			$strCssClass = $this->strCssClass;
