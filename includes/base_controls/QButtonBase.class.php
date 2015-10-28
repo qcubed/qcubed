@@ -51,9 +51,17 @@
 				$attrOverride['type'] = "button";
 			}
 			$attrOverride['name'] = $this->strControlId;
-			$strText = ($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText;
+			$strInnerHtml = $this->GetInnerHtml();
 
-			return $this->RenderTag('button', $attrOverride, null, $strText);
+			return $this->RenderTag('button', $attrOverride, null, $strInnerHtml);
+		}
+
+		/**
+		 * Returns the html to appear between the button tags.
+		 * @return string
+		 */
+		protected function GetInnerHtml() {
+			return  ($this->blnHtmlEntities) ? QApplication::HtmlEntities($this->strText) : $this->strText;
 		}
 
 
