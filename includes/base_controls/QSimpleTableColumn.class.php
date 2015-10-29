@@ -4,15 +4,16 @@
 	 * Represents a column for a SimpleTable. Different subclasses (see below) allow accessing and fetching the data
 	 * for each cells in a variety of ways
 	 *
-	 * @property string $Name name of the column
-	 * @property string $CssClass css class of the column
-	 * @property string $HeaderCssClass css class of the column when it's rendered in a table header
-	 * @property boolean $HtmlEntities if true, cell values will be converted using htmlentities()
-	 * @property boolean $RenderAsHeader if true, all cells in the column will be rendered with a <<th>> tag instead of <<td>>
-	 * @property integer $Id HTML id attribute to put in the col tag
-	 * @property integer $Span HTML span attribute to put in the col tag
-	 * @property-read QSimpleTableBase $ParentTable parent table of the column
-	 * @property boolean $Visible Whether the column will be drawn. Defaults to true.
+	 * @property string                 $Name           name of the column
+	 * @property string                 $CssClass       CSS class of the column
+	 * @property string                 $HeaderCssClass CSS class of the column when it's rendered in a table header
+	 * @property boolean                $HtmlEntities   if true, cell values will be converted using htmlentities()
+	 * @property boolean                $RenderAsHeader if true, all cells in the column will be rendered with a <<th>> tag instead of <<td>>
+	 * @property integer                $Id             HTML id attribute to put in the col tag
+	 * @property integer                $Span           HTML span attribute to put in the col tag
+	 * @property-read QSimpleTableBase  $ParentTable    parent table of the column
+	 * @property-write QSimpleTableBase $_ParentTable   Parent table of this column
+	 * @property boolean                $Visible        Whether the column will be drawn. Defaults to true.
 	 */
 	abstract class QAbstractSimpleTableColumn extends QBaseClass {
 		/** @var string */
@@ -29,7 +30,7 @@
 		protected $objParentTable = null;
 		/** @var integer */
 		protected $intSpan = 1;
-		/** @var string optional id for column tag rendering and datatables*/
+		/** @var string optional id for column tag rendering and datatables */
 		protected $strId = null;
 		/** @var bool Easy way to hide a column without removing the column. */
 		protected $blnVisible = true;
@@ -84,13 +85,14 @@
 		}
 		
 		/**
-		 * Render a cell. 
-		 * 
+		 * Render a cell.
 		 * Called by data table for each cell. Override and call with $blnHeader = true if you want
 		 * this individual cell to render with <<th>> tags instead of <<td>>.
-		 * 
-		 * @param mixed $item
+		 *
+		 * @param mixed   $item
 		 * @param boolean $blnAsHeader
+		 *
+		 * @return string
 		 */
 		public function RenderCell($item, $blnAsHeader = false) {
 			if (!$this->blnVisible) return '';
@@ -112,11 +114,12 @@
 		}
 
 		/**
-		 * Return a key/val array of items to insert inside the cell tag. 
-		 * 
+		 * Return a key/val array of items to insert inside the cell tag.
 		 * Handles class, style, and id already. Override to add additional items, like an onclick handler.
 		 *
 		 * @param mixed $item
+		 *
+		 * @return array
 		 */
 		protected function GetCellParams ($item) {
 			$aParams = array();
@@ -140,7 +143,10 @@
 		
 		/**
 		 * Return the class of the cell.
+		 *
 		 * @param mixed $item
+		 *
+		 * @return string
 		 */
 		protected function GetCellClass ($item) {
 			if ($this->strCssClass) {
@@ -151,7 +157,10 @@
 		
 		/**
 		 * Return the id of the cell.
+		 *
 		 * @param mixed $item
+		 *
+		 * @return string
 		 */
 		protected function GetCellId ($item) {
 			return '';
@@ -159,7 +168,10 @@
 		
 		/**
 		 * Return the style string for the cell.
-		 * @param unknown_type $item
+		 *
+		 * @param mixed $item
+		 *
+		 * @return string
 		 */
 		protected function GetCellStyle ($item) {
 			return '';
@@ -173,7 +185,8 @@
 		abstract public function FetchCellValue($item);
 
 		/**
-		 * Render the column tag. This special tag can control specific features of columns, but is generally optional on a table.
+		 * Render the column tag.
+		 * This special tag can control specific features of columns, but is generally optional on a table.
 		 *
 		 * @return string
 		 */
@@ -213,7 +226,15 @@
 		public function Wakeup(QForm $objForm) {
 		}
 
-
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Name':
@@ -245,6 +266,17 @@
 			}
 		}
 
+		/**
+		 * PHP Magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "Name":
@@ -370,15 +402,16 @@
 		protected $objPostCallback = null;
 		
 		/**
-		 * Return the raw string that represents the cell value. 
-		 * 
-		 * This version uses a combination of post processing strategies so that you can set 
+		 * Return the raw string that represents the cell value.
+		 * This version uses a combination of post processing strategies so that you can set
 		 * column options to format the raw data. If no
 		 * options are set, then $item will just pass through, or __toString() will be called
 		 * if its an object. If none of these work for you, just override FetchCellObject and
 		 * return your formatted string from there.
-		 * 
+		 *
 		 * @param mixed $item
+		 *
+		 * @return mixed|string
 		 */
 		public function FetchCellValue($item) {
 			$cellValue = $this->FetchCellObject($item);
@@ -430,6 +463,15 @@
 			$this->objPostCallback = QControl::WakeupHelper($objForm, $this->objPostCallback);
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case "OrderByClause":
@@ -449,6 +491,17 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "OrderByClause":
@@ -551,6 +604,15 @@
 			return $item;
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Property':
@@ -567,6 +629,17 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "Property":
@@ -681,6 +754,15 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Index':
@@ -695,6 +777,16 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "Index":
@@ -771,6 +863,15 @@
 			$this->objCallable = QControl::WakeupHelper($objForm, $this->objCallable);
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|callable|int|mixed|QSimpleTableBase|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Callable':
@@ -785,6 +886,17 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "Callable":
@@ -825,7 +937,16 @@
 		public function FetchCellObject($item) {
 			return $item->GetVirtualAttribute ($this->strAttribute);
 		}
-		
+
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|int|mixed|null|QSimpleTableBase|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Attribute':
@@ -840,6 +961,17 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "Attribute":
@@ -1014,6 +1146,15 @@
 			$this->checkParamCallback = QControl::WakeupHelper($objForm, $this->checkParamCallback);
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'ShowCheckAll':
@@ -1028,7 +1169,17 @@
 			}
 		}
 
-
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "ShowCheckAll":
