@@ -81,7 +81,7 @@
 
 		/**
 		 * Add an Index column and return it.
-		 * Enter description here ...
+		 * Index columns assume that each data item is an array, and mixIndex is an offset in the array.
 		 *
 		 * @param string  $strName        column name
 		 * @param mixed   $mixIndex       the index to use to access the cell date. i.e. $item[$index]
