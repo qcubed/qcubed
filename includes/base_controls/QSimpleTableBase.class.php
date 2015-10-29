@@ -16,15 +16,14 @@
 	 * methods can be used to fetch the data for cells, including callable objects.</p>
 	 *
 	 * @package Controls
-	 *
-	 * @property string $RowCssClass class to be given to the row tag
-	 * @property string $AlternateRowCssClass class to be given to each alternate row tag
-	 * @property string $HeaderRowCssClass class to be given the header row
-	 * @property boolean $ShowHeader true to show the header row
-	 * @property boolean $ShowFooter true to show the footer row
-	 * @property boolean $RenderColumnTags true to include col tags in the table output
-	 * @property boolean $HideIfEmpty true to completely hide the table if there is no data, vs. drawing the table with no rows.
-	 * @property-write Callable $RowParamsCallback Set to a callback function to fetch custom attributes for row tags.
+	 * @property string         $RowCssClass          class to be given to the row tag
+	 * @property string         $AlternateRowCssClass class to be given to each alternate row tag
+	 * @property string         $HeaderRowCssClass    class to be given the header row
+	 * @property boolean        $ShowHeader           true to show the header row
+	 * @property boolean        $ShowFooter           true to show the footer row
+	 * @property boolean        $RenderColumnTags     true to include col tags in the table output
+	 * @property boolean        $HideIfEmpty          true to completely hide the table if there is no data, vs. drawing the table with no rows.
+	 * @property-write Callable $RowParamsCallback    Set to a callback function to fetch custom attributes for row tags.
 	 * @throws QCallerException
 	 *
 	 */
@@ -32,13 +31,21 @@
 		/** @var QAbstractSimpleTableColumn[] */
 		protected $objColumnArray;
 
+		/** @var string|null CSS class to be applied to for even rows */
 		protected $strRowCssClass = null;
+		/** @var string|null CSS class to be applied to for odd rows */
 		protected $strAlternateRowCssClass = null;
+		/** @var string|null CSS class to be applied to the header row */
 		protected $strHeaderRowCssClass = null;
+		/** @var bool Show the table header or not? */
 		protected $blnShowHeader = true;
+		/** @var bool Show the table footer or not? */
 		protected $blnShowFooter = false;
+		/** @var bool Column tags have to be rendered or not? */
 		protected $blnRenderColumnTags = false;
+		/** @var string|null Table caption, if applicable */
 		protected $strCaption = null;
+		/** @var bool When set, the table is hidden/not rendered when the data source is empty */
 		protected $blnHideIfEmpty = false;
 
 		/** @var integer */
@@ -49,6 +56,15 @@
 		/** @var  callable */
 		protected $objRowParamsCallback;
 
+		/**
+		 * Constructor method
+		 *
+		 * @param QControl|QControlBase|QForm $objParentObject
+		 * @param null                        $strControlId
+		 *
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __construct($objParentObject, $strControlId = null)	{
 			try {
 				parent::__construct($objParentObject, $strControlId);
@@ -58,14 +74,20 @@
 			}
 		}
 
+		/**
+		 * Nothing to parse in current implementation
+		 */
 		public function ParsePostData() { }
 
 		/**
 		 * Add an Index column and return it.
 		 * Enter description here ...
-		 * @param string $strName column name
-		 * @param mixed $mixIndex the index to use to access the cell date. i.e. $item[$index]
+		 *
+		 * @param string  $strName        column name
+		 * @param mixed   $mixIndex       the index to use to access the cell date. i.e. $item[$index]
 		 * @param integer $intColumnIndex column position
+		 *
+		 * @return QSimpleTableIndexedColumn
 		 */
 		public function CreateIndexedColumn($strName = '', $mixIndex = null, $intColumnIndex = -1) {
 			if (is_null($mixIndex)) {
@@ -78,11 +100,13 @@
 
 		/**
 		 * Add a property column and return it. The assumption is that each row's data is an object.
-		 * 
-		 * @param string $strName name of column
-		 * @param string $strProperty property to use to get the cell data. i.e. $item->$property
+		 *
+		 * @param string  $strName        name of column
+		 * @param string  $strProperty    property to use to get the cell data. i.e. $item->$property
 		 * @param integer $intColumnIndex column position
-		 * @param object $objBaseNode a query node from which the property descends, if you are using the sorting capabilities
+		 * @param object  $objBaseNode    a query node from which the property descends, if you are using the sorting capabilities
+		 *
+		 * @return QSimpleTablePropertyColumn
 		 */
 		public function CreatePropertyColumn($strName, $strProperty, $intColumnIndex = -1, $objBaseNode = null) {
 			$objColumn = new QSimpleTablePropertyColumn($strName, $strProperty, $objBaseNode);
@@ -106,10 +130,12 @@
 
 		/**
 		 * Add a callable column and return it.
-		 * 
-		 * @param string $strName column name
-		 * @param object $objCallable a callable object. Note that this can be an array.
-		 * @param integer $intColumnIndex column position
+		 *
+		 * @param string         $strName        column name
+		 * @param callable|array $objCallable    a callable object. Note that this can be an array.
+		 * @param integer        $intColumnIndex column position
+		 *
+		 * @return QSimpleTableCallableColumn
 		 */
 		public function CreateCallableColumn($strName, $objCallable, $intColumnIndex = -1) {
 			$objColumn = new QSimpleTableCallableColumn($strName, $objCallable);
@@ -133,9 +159,12 @@
 
 		/**
 		 * Move the named column to the given position
-		 * @param string $strName column name
+		 *
+		 * @param string  $strName        column name
 		 * @param integer $intColumnIndex new position
-		 * @param string $strNewName new column name
+		 * @param string  $strNewName     new column name
+		 *
+		 * @return QAbstractSimpleTableColumn
 		 */
 		public function MoveColumn($strName, $intColumnIndex = -1, $strNewName = null) {
 			$col = $this->RemoveColumnByName($strName);
@@ -148,9 +177,11 @@
 
 		/**
 		 * Rename a named column
-		 * 
+		 *
 		 * @param string $strOldName
 		 * @param string $strNewName
+		 *
+		 * @return QAbstractSimpleTableColumn
 		 */
 		public function RenameColumn($strOldName, $strNewName) {
 			$col = $this->GetColumnByName($strOldName);
@@ -160,7 +191,9 @@
 
 		/**
 		 * Add a column to the end of the column array.
+		 *
 		 * @param QAbstractSimpleTableColumn $objColumn
+		 *
 		 * @return QAbstractSimpleTableColumn
 		 */
 		public function AddColumn(QAbstractSimpleTableColumn $objColumn) {
@@ -171,11 +204,11 @@
 		/**
 		 * Add a column at the given position. All column adds bottle neck through here
 		 * so that subclasses can reliably override the column add process if needed.
-		 *
 		 * Use AddColumn to add a column to the end.
-		 * 
-		 * @param integer $intColumnIndex column position. -1 to add to the end.
+		 *
+		 * @param integer                    $intColumnIndex column position. -1 to add to the end.
 		 * @param QAbstractSimpleTableColumn $objColumn
+		 *
 		 * @throws QInvalidCastException
 		 */
 		public function AddColumnAt($intColumnIndex, QAbstractSimpleTableColumn $objColumn) {
@@ -200,7 +233,10 @@
 		}
 
 		/**
+		 * Removes a column from the table
+		 *
 		 * @param int $intColumnIndex 0-based index of the column to remove
+		 *
 		 * @return QAbstractSimpleTableColumn the removed column
 		 * @throws QIndexOutOfRangeException|QInvalidCastException
 		 */
@@ -223,6 +259,7 @@
 
 		/**
 		 * Removes the column by column id. Assumes the ids are unique.
+		 *
 		 * @param $strId
 		 */
 		public function RemoveColumnById($strId) {
@@ -238,7 +275,9 @@
 
 		/**
 		 * Remove the first column that has the given name
+		 *
 		 * @param string $strName name of the column to remove
+		 *
 		 * @return QAbstractSimpleTableColumn the removed column or null of no column with the given name was found
 		 */
 		public function RemoveColumnByName($strName) {
@@ -255,7 +294,9 @@
 
 		/**
 		 * Remove all the columns that have the given name
+		 *
 		 * @param string $strName name of the columns to remove
+		 *
 		 * @return QAbstractSimpleTableColumn[] the array of columns removed
 		 */
 		public function RemoveColumnsByName($strName/*...*/) {
@@ -264,7 +305,9 @@
 
 		/**
 		 * Remove all the columns that have any of the names in $strNamesArray
+		 *
 		 * @param string[] $strNamesArray names of the columns to remove
+		 *
 		 * @return QAbstractSimpleTableColumn[] the array of columns removed
 		 */
 		public function RemoveColumns($strNamesArray) {
@@ -288,6 +331,8 @@
 		}
 
 		/**
+		 * Returns all columns in the table
+		 *
 		 * @return QAbstractSimpleTableColumn[]
 		 */
 		public function GetAllColumns() {
@@ -296,8 +341,10 @@
 
 		/**
 		 * Get the column at the given index, or null if the index is not valid
+		 *
 		 * @param integer $intColumnIndex
-		 * @param boolean blnVisible true to only count the visible columns
+		 * @param boolean $blnVisible true to only count the visible columns
+		 *
 		 * @return QAbstractSimpleTableColumn
 		 */
 		public function GetColumn($intColumnIndex, $blnVisible = false) {
@@ -321,7 +368,9 @@
 
 		/**
 		 * Get the first column that has the given name, or null if a column with the given name does not exist
+		 *
 		 * @param string $strName column name
+		 *
 		 * @return QAbstractSimpleTableColumn
 		 */
 		public function GetColumnByName($strName) {
@@ -333,6 +382,7 @@
 
 		/**
 		 * @param $strId
+		 *
 		 * @return null|QAbstractSimpleTableColumn
 		 */
 		public function GetColumnById($strId) {
@@ -345,7 +395,9 @@
 
 		/**
 		 * Get the first column that has the given name, or null if a column with the given name does not exist
+		 *
 		 * @param string $strName column name
+		 *
 		 * @return QAbstractSimpleTableColumn
 		 */
 		public function GetColumnIndex($strName) {
@@ -360,7 +412,9 @@
 
 		/**
 		 * Get all the columns that have the given name
+		 *
 		 * @param string $strName column name
+		 *
 		 * @return QAbstractSimpleTableColumn[]
 		 */
 		public function GetColumnsByName($strName) {
@@ -372,7 +426,6 @@
 		}
 
 		/**
-		 * 
 		 * Returns the HTML for the header row, including the <<tr>> and <</tr>> tags
 		 */
 		protected function GetHeaderRowHtml() {
@@ -405,11 +458,16 @@
 		
 		
 		/**
-		 * 
 		 * Get the html for the row, from the opening <<tr>> to the closing <</tr>> inclusive
-		 * @param object $objObject Current object from the DataSource array
-		 * @param integer $intCurrentRowIndex Current visual row index being output. 
-		 *  This is NOT the index of the data source, only the visual row number currently on screen.
+		 *
+		 * @param object  $objObject          Current object from the DataSource array
+		 * @param integer $intCurrentRowIndex Current visual row index being output.
+		 *                                    This is NOT the index of the data source,
+		 *                                    only the visual row number currently on screen.
+		 *
+		 * @return string
+		 * @throws Exception
+		 * @throws QCallerException
 		 */
 		protected function GetDataGridRowHtml($objObject, $intCurrentRowIndex) {
 			$strCells = '';
@@ -456,35 +514,37 @@
 		
 		
 		/**
-		 * 
 		 * Return the html row id.
-		 * 
 		 * Override this to give the row an id.
-		 * 
-		 * @param object $objObject	object associated with this row
-		 * @param integer $intRowIndex  index of the row
+		 *
+		 * @param object  $objObject   object associated with this row
+		 * @param integer $intRowIndex index of the row
+		 *
+		 * @return null
 		 */
 		protected function GetRowId ($objObject, $intRowIndex) {
 			return null;
 		}
 
 		/**
-		 * 
 		 * Return the style string for this row.
-		 * 
-		 * @param object $objObject
+		 *
+		 * @param object  $objObject
 		 * @param integer $intRowIndex
+		 *
+		 * @return null
 		 */
 		protected function GetRowStyle ($objObject, $intRowIndex) {
 			return null;
 		}
 		
 		/**
-		 * 
 		 * Return the class string of this row.
-		 * 
-		 * @param object $objObject
+		 *
+		 * @param object  $objObject
 		 * @param integer $intRowIndex
+		 *
+		 * @return null
 		 */
 		protected function GetRowClass ($objObject, $intRowIndex) {
 			if (($intRowIndex % 2) == 1 && $this->strAlternateRowCssClass) {
@@ -520,6 +580,11 @@
 			return $strToReturn;
 		}
 
+		/**
+		 * Returns the caption string which can be used for the table.
+		 *
+		 * @return string
+		 */
 		protected function RenderCaption() {
 			$strHtml = '';
 			if ($this->strCaption) {
@@ -530,6 +595,7 @@
 
 		/**
 		 * Return the html for the table.
+		 *
 		 * @return string
 		 */
 		protected function GetControlHtml() {
@@ -603,7 +669,15 @@
 			}
 		}
 
-
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|int|mixed|null
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
 		public function __get($strName) {
 			switch ($strName) {
 				case 'RowCssClass':
@@ -637,6 +711,17 @@
 			}
 		}
 
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "RowCssClass":
