@@ -3,6 +3,7 @@
 		public static $Categories = array();
 		public static $AdditionalCode = array();
 		public static $PluginExamples = array();
+		public static $PluginAdditions = array();
 
 		public static function Init() {
 			$intIndex = -1;
@@ -244,6 +245,9 @@
 									$strExamplePath = __PLUGINS__ . '/' . $dirName . '/examples/' . $strExample;
 									if (file_exists ($strExamplePath)) {
 										self::AddPluginExampleFile($dirName, $strExample);
+										if (!empty($composerDetails['extra']['exampleExtras'][$strExample])) {
+											self::AddPluginExtraFile($dirName, $strExample, $composerDetails['extra']['exampleExtras'][$strExample]);
+										}
 									}
 								}
 							}
@@ -252,11 +256,15 @@
 				}
 			}
 		}
-		
+
 		public static function AddPluginExampleFile($strPluginName, $strExampleFileName) {
 			Examples::$PluginExamples[$strPluginName][] = $strExampleFileName;
 		}
-		
+
+		public static function AddPluginExtraFile($strPluginName, $strExampleFileName, $extras) {
+			Examples::$PluginAdditions[$strPluginName][$strExampleFileName] = $extras;
+		}
+
 		private static function AddCoreExampleFile($intIndex, $strExampleFileName) {
 			array_push(Examples::$Categories[$intIndex], __VIRTUAL_DIRECTORY__ . __EXAMPLES__ . $strExampleFileName);
 		}
@@ -280,7 +288,7 @@
 						$intPosition = strpos($strExample, ' ');
 						$strScriptPath = substr($strExample, 0, $intPosition);
 
-						if (substr_count($strScriptPath, QApplicationBase::$ScriptName) > 0) { // for plugins
+						if (substr_count($strScriptPath, QApplicationBase::$ScriptName) > 0) {
 							return $intCategoryIndex;
 						}
 					}
@@ -318,17 +326,40 @@
 			}
 
 			// Might be a plugin
-			$strScript = QApplicationBase::$ScriptName;
 			if ($offset = strpos (QApplicationBase::$ScriptFilename, '/plugin/')) {
 				$offset += strlen ('/plugin/');
 				$endoffset = strpos (QApplicationBase::$ScriptFilename, '/', $offset);
 				$strCat = substr (QApplicationBase::$ScriptFilename, $offset, $endoffset - $offset);
-				return $strCat;
+
+				// Make sure it exists
+				if (!empty(Examples::$PluginExamples[$strCat])) {
+					return $strCat;
+				}
 			}
 
 			return null;
 		}
-		
+
+		public static function GetPluginFile() {
+			if ($offset = strpos (QApplicationBase::$ScriptFilename, '/plugin/')) {
+				$offset += strlen ('/plugin/');
+				$endoffset = strpos (QApplicationBase::$ScriptFilename, '/', $offset);
+				$strCat = substr (QApplicationBase::$ScriptFilename, $offset, $endoffset - $offset);
+
+				// make sure it exists (prevents cross-script attack)
+				if (!empty(Examples::$PluginExamples[$strCat])) {
+					$endoffset = strrpos (QApplicationBase::$ScriptFilename, '/', $offset);
+					$strCurFile = substr(QApplicationBase::$ScriptFilename, $endoffset + 1);
+					for ($intExampleIndex = 0; $intExampleIndex < count(Examples::$PluginExamples[$strCat]); $intExampleIndex++) {
+						if (Examples::$PluginExamples[$strCat][$intExampleIndex] == $strCurFile) {
+							return $strCurFile;
+						}
+					}
+				}
+			}
+			return null;
+		}
+
 		public static function GetExampleName($mixCategoryId, $mixExampleId) {
 			if ($mixCategoryId == 'plugin') {
 				$strExample = Examples::$PluginExamples[$mixExampleId][0];
@@ -341,16 +372,14 @@
 			return $strName;
 		}
 		
-		public static function GetExampleScriptPath($mixCategoryId, $mixExampleId) {
+		public static function GetExampleScriptPath($mixCategoryId, $mixExampleId, $mixSubId = null) {
 			if ($mixCategoryId == 'plugin') {
-				$strExample = Examples::$PluginExamples[$mixExampleId][0];
-				$strScriptPath =  __PLUGIN_ASSETS__ . "/{$mixExampleId}/examples/{$strExample}";
+				$strScriptPath =  __PLUGIN_ASSETS__ . "/{$mixExampleId}/examples/{$mixSubId}";
 				return $strScriptPath;
 			}
 			$strExample = Examples::$Categories[$mixCategoryId][$mixExampleId];
 			$intPosition = strpos($strExample, ' ');
 			$strScriptPath = substr($strExample, 0, $intPosition);
-			$strName = substr($strExample, $intPosition + 1);
 			return $strScriptPath;
 		}
 
@@ -388,8 +417,10 @@
 					}
 		}
 		
-		public static function CodeLinks($strReference, $strCurrentScript) {
+		public static function CodeLinks($strCategoryId, $strExampleId, $strSubId, $strCurrentScript) {
 			$blnIsScript = false;
+
+			$strReference = Examples::GetExampleScriptPath($strCategoryId, $strExampleId, $strSubId);
 
 			if ($strCurrentScript == 'header.inc.php') {
 				$strToReturn = '<span class="headerGray">header.inc.php</span>';
@@ -408,7 +439,6 @@
 			}
 			
 			$strToReturn .= ' &nbsp; | &nbsp; ';
-
 			if ($strCurrentScript == 'examples.css') {
 				$strToReturn .= '<span class="headerGray">examples.css</span>';
 				$blnIsScript = true;
@@ -442,13 +472,22 @@
 				$intCount++;
 			}
 
-			if(array_key_exists($strReference, Examples::$AdditionalCode))
-				foreach (Examples::$AdditionalCode[$strReference] as $strCode) {
+			if ($strCategoryId == 'plugin') {
+				if (!empty(Examples::$PluginAdditions[$strExampleId][$strSubId])) {
+					$extraFiles = Examples::$PluginAdditions[$strExampleId][$strSubId];
+				}
+			}
+			if(array_key_exists($strReference, Examples::$AdditionalCode)) {
+				$extraFiles = Examples::$AdditionalCode[$strReference];
+			}
+
+			if (!empty($extraFiles)) {
+				foreach ($extraFiles as $strCode) {
 					if (($intCount % 7) == 0)
 						$strToReturn .= '<br/>';
 					else
 						$strToReturn .= ' &nbsp; | &nbsp; ';
-		
+
 					$strScriptname = $strCode;
 					if ($strCurrentScript == $strScriptname) {
 						$strToReturn .= sprintf('<span class="headerGray">%s</span>', preg_replace('/__.*__/', '', $strScriptname));
@@ -459,17 +498,29 @@
 
 					$intCount++;
 				}
+			}
 				
-			if ($blnIsScript)
+			if ($blnIsScript) {
 				return $strToReturn;
-			else
+			}
+			else {
 				QApplication::CloseWindow();
+			}
 		}
 
 		public static function PageLinks() {
 			$strPrevious = null;
 			$strNext = null;
 			$blnFound = false;
+
+			$strScript = QApplication::$ScriptName;
+
+			if (strpos($strScript, "plugin") !== false &&
+				strpos($strScript, "vendor") !== false) {
+				// a plugin
+				$strLink = QHtml::RenderLink(QHtml::MakeUrl(__DEVTOOLS_ASSETS__ . '/plugin_manager.php'), "Plugin Manager", ["class"=>"headerLink"]);
+				return $strLink;
+			}
 
 			foreach (Examples::$Categories as $objExampleCategory) {
 				if (!$blnFound) {
