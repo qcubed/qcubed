@@ -13,6 +13,7 @@
 	 * @property integer                $Span           HTML span attribute to put in the col tag
 	 * @property-read QSimpleTableBase  $ParentTable    parent table of the column
 	 * @property-write QSimpleTableBase $_ParentTable   Parent table of this column
+	 * @property-write callable 		$CellParamsCallback A callback to set the html parameters of a generated cell
 	 * @property boolean                $Visible        Whether the column will be drawn. Defaults to true.
 	 */
 	abstract class QAbstractSimpleTableColumn extends QBaseClass {
@@ -34,7 +35,10 @@
 		protected $strId = null;
 		/** @var bool Easy way to hide a column without removing the column. */
 		protected $blnVisible = true;
-		
+		/** @var Callable Callback to modify the html attributes of the generated cell. */
+		protected $cellParamsCallback = null;
+
+
 		/**
 		 * @param string $strName Name of the column
 		 */
@@ -138,6 +142,11 @@
 				// assume this means it is a row header
 				$aParams['scope'] = 'row';
 			}
+			if ($this->cellParamsCallback) {
+				$a = call_user_func($this->cellParamsCallback, $item);
+				$aParams = array_merge ($aParams, $a);
+			}
+
 			return $aParams;		
 		}
 		
@@ -217,6 +226,7 @@
 		 * Prepare to serialize references to the form.
 		 */
 		public function Sleep() {
+			$this->cellParamsCallback = QControl::SleepHelper($this->cellParamsCallback);
 		}
 
 		/**
@@ -224,6 +234,7 @@
 		 * @param QForm $objForm
 		 */
 		public function Wakeup(QForm $objForm) {
+			$this->cellParamsCallback = QControl::WakeupHelper($objForm, $this->cellParamsCallback);
 		}
 
 		/**
@@ -353,6 +364,10 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case "CellParamsCallback":
+					$this->cellParamsCallback = $mixValue;
+					break;
 
 				case "_ParentTable":
 					try {
