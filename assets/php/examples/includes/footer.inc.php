@@ -1,3 +1,20 @@
+<?php
+	// The url to send to view_source.php
+	// first encode the basic info
+	$strCatId = Examples::GetCategoryId();
+	$strUrl = __VIRTUAL_DIRECTORY__ .
+		__EXAMPLES__ .
+		'/view_source.php/' .
+		$strCatId . '/' .
+		Examples::GetExampleId();
+
+	if ($strCatId == "plugin") {
+		$strFile = Examples::GetPluginFile();
+		$strUrl .= '/' . $strFile . '/' . $strFile;
+	} else {
+		$strUrl .= '/' . basename(QApplication::$ScriptName);
+	}
+?>
 <?php	if(!isset($mainPage)) { ?>
 			<button id="viewSource">View Source</button>
 <?php	} ?>
@@ -11,12 +28,7 @@
 			var viewSource = document.getElementById('viewSource');
 			if (viewSource) {
 				viewSource.onclick = function (){
-					var fileNameSection = "",
-						objWindow;
-					if (arguments.length == 3) {
-						fileNameSection = "/" + strFilename;
-					}
-					objWindow = window.open("<?= __VIRTUAL_DIRECTORY__ . __EXAMPLES__ ?>/view_source.php/<?= (Examples::GetCategoryId()."/".Examples::GetExampleId()); ?>" + fileNameSection, "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
+					objWindow = window.open("<?= $strUrl ?>", "ViewSource", "menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=750,left=50,top=50");
 					objWindow.focus();
 					return false;
 				};
