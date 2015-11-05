@@ -2,18 +2,23 @@
 	require_once('qcubed.inc.php');
 	require('includes/examples.inc.php');
 
-	$intCategoryId = QApplication::PathInfo(0);
-	$intExampleId = QApplication::PathInfo(1);
-	$strScript = QApplication::PathInfo(2);
+	$strCategoryId = QApplication::PathInfo(0);
+	$strExampleId = QApplication::PathInfo(1);
+	if ($strCategoryId == 'plugin') {
+		$strSubId = QApplication::PathInfo(2);
+		$strScript = QApplication::PathInfo(3);
+	} else {
+		$strSubId = null;
+		$strScript = QApplication::PathInfo(2);
+	}
 
-	$strReference = Examples::GetExampleScriptPath($intCategoryId, $intExampleId);
-	$strName = Examples::GetExampleName($intCategoryId, $intExampleId);
+	$strReference = Examples::GetExampleScriptPath($strCategoryId, $strExampleId);
+	$strName = Examples::GetExampleName($strCategoryId, $strExampleId);
 
 	if (!$strScript) {
 		$strUrl = QApplication::$RequestUri . substr($strReference, strrpos($strReference, '/'));
 		QApplication::Redirect($strUrl, true);
 	}
-
 ?>
 <html>
 	<head>
@@ -24,7 +29,7 @@
 	</head>
 	<body>
 		<div id="closeWindow"><a href="javascript:window.close()" class="close-window">Close this Window</a></div>
-		<header><nav class="page-links"><span class="headerSmall"><?php _p(Examples::CodeLinks($strReference, $strScript), false); ?></nav></header>
+		<header><nav class="page-links"><span class="headerSmall"><?php _p(Examples::CodeLinks($strCategoryId, $strExampleId, $strSubId, $strScript), false); ?></nav></header>
 		<section id="content">
 <?php
 	// Filename Cleanup
@@ -38,7 +43,7 @@
 		$strFilename = __QCUBED_CORE__ . '/framework/' . str_replace('__CORE_FRAMEWORK__', '', str_replace('/', '', $strScript));
 	} else {		
 		$strFilename = substr($strReference, 1);
-		$strFilename = __DOCROOT__ . '/' . substr($strFilename, strlen(__VIRTUAL_DIRECTORY__), strrpos($strReference, '/') - strlen(__VIRTUAL_DIRECTORY__)) . '/' . $strScript;
+		$strFilename = __DOCROOT__ . '/' . substr($strFilename, strlen(__VIRTUAL_DIRECTORY__), strrpos($strReference, '/') - strlen(__VIRTUAL_DIRECTORY__)) . $strScript;
 	}
 
 	if (!file_exists($strFilename)) {

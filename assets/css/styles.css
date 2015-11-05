@@ -31,20 +31,6 @@ h2, h3, h4, h5, h6 { font-weight: 700; }
 
 form { margin:0; padding: 0; position: relative; }
 
-input[type=text],
-input[type=password],
-textarea,
-select { border: 1px inset #dedede; border-radius: 3px; padding: 5px; }
-
-
-textarea:focus,
-input:focus,
-select:focus { border: 1px solid #333; box-shadow: 0 0 5px #dedede; outline: 0; }
-
-textarea:disabled,
-input:disabled,
-select:disabled { border: 1px solid #dedede; color: #dedede; font-style: italic; }
-
 .disabled {color: #dedede}
 
 section { padding: 10px; }
