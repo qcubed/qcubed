@@ -126,11 +126,11 @@
 			// Update Time Component
 			$blnIsTimeSet = false;
 			if(!$dttNewDateTime->IsTimeNull()){
+				// Time is NOT NULL
 				$blnIsTimeSet = true;
 			} else {
-				$dttNewDateTime->Hour = 0;
-				$dttNewDateTime->Minute = 0;
-				$dttNewDateTime->Second = 0;
+				// TIME IS NULL
+				$blnIsTimeSet = false;
 			}
 
 			switch ($this->strDateTimePickerType) {

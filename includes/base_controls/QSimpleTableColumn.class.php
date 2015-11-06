@@ -392,18 +392,17 @@
 	
 	/**
 	 * An abstract column designed to work with QDataTables and other tables that require more than basic columns.
-	 * Supports post processing of cell contents for further formatting, and orderby clauses. 
+	 * Supports post processing of cell contents for further formatting, and orderby clauses.
 	 *
-	 * @property mixed $OrderByClause order by info for sorting the column in ascending order. Used by subclasses.
+	 * @property mixed          $OrderByClause        order by info for sorting the column in ascending order. Used by subclasses.
 	 *    Most often this is a QQ::Clause, but can be any data needed.
-	 * @property mixed $ReverseOrderByClause order by info for sorting the column in descending order.
-	 * @property string $Format the default format to use for FetchCellValueFormatted(). Used by QDataTables plugin.
+	 * @property mixed          $ReverseOrderByClause order by info for sorting the column in descending order.
+	 * @property string         $Format               the default format to use for FetchCellValueFormatted(). Used by QDataTables plugin.
 	 *    For date columns it should be a format accepted by QDateTime::qFormat()
-	 * @property-write string $PostMethod after the cell object is retrieved, call this method on the obtained object
-	 * @property-write callback $PostCallback after the cell object is retrieved, call this callback on the obtained object.
+	 * @property-write string   $PostMethod           after the cell object is retrieved, call this method on the obtained object
+	 * @property-write callback $PostCallback         after the cell object is retrieved, call this callback on the obtained object.
 	 *    If $PostMethod is also set, this will be called after that method call.
 	 */
-	 
 	abstract class QAbstractSimpleTableDataColumn extends QAbstractSimpleTableColumn {
 		/** @var mixed Order By information. Can be a QQ::Clause, or any kind of object depending on your need */
 		protected $objOrderByClause = null;
@@ -572,16 +571,14 @@
 	}
 
 	/**
-	 * Displays a  property of an object, as in $object->Property 
-	 * 
+	 * Displays a  property of an object, as in $object->Property
 	 * If your DataSource is an array of objects, use this column to display a particular property of each object.
 	 * Can search with depth to, as in $obj->Prop1->Prop2.
 	 *
-	 * @property string $Property the property to use when accessing the objects in the DataSource array. Can be a s
+	 * @property string  $Property the property to use when accessing the objects in the DataSource array. Can be a s
 	 *  series of properties separated with '->', i.e. 'Prop1->Prop2->Prop3' will find the Prop3 item inside the Prop2 object,
 	 *  inside the Prop1 object, inside the current object.
 	 * @property boolean $NullSafe if true the value fetcher will check for nulls before accessing the properties
-	 *
 	 */
 	class QSimpleTablePropertyColumn extends QAbstractSimpleTableDataColumn {
 		protected $strProperty;
@@ -589,10 +586,10 @@
 		protected $blnNullSafe = true;
 
 		/**
-		 * @param string $strName name of the column
-		 * @param string $strProperty the property name to use when accessing the DataSource row object. Can be null, in which case object will
-		 *  have the ->__toString() function called on it.
-		 * @param QQNode $objBaseNode if not null the OrderBy and ReverseOrderBy clauses will be created using the property path and the given database node
+		 * @param string      $strName     name of the column
+		 * @param string|null $strProperty the property name to use when accessing the DataSource row object.
+		 *                                 Can be null, in which case object will have the ->__toString() function called on it.
+		 * @param QQNode      $objBaseNode if not null, the OrderBy and ReverseOrderBy clauses will be created using the property path and the given database node
 		 */
 		public function __construct($strName, $strProperty, $objBaseNode = null) {
 			parent::__construct($strName);
