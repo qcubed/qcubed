@@ -19,7 +19,7 @@
 		global $__exc_strType;
 		if (isset($__exc_strType))
 			return; // error was already called, avoid endless looping
-			
+
 		$__exc_objReflection = new ReflectionObject($__exc_objException);
 
 		$__exc_strType = "Exception";
@@ -60,7 +60,9 @@
 			// Error in installer or similar - ERROR_PAGE_PATH constant is not defined yet.
 			echo "error: errno: ". $__exc_errno . "<br/>" . $__exc_strMessage . "<br/>" . $__exc_strFilename . ":" . $__exc_intLineNumber . "<br/>" . $__exc_strStackTrace ;
 		}
-		exit();
+		if (!defined('HHVM_VERSION')) {
+			exit(); // HHVM bug. Will not display output if this gets executed here.
+		}
 	}
 
 	function QcodoHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, $__exc_errcontext) {
@@ -192,6 +194,9 @@
 				''
 			);
 		}
+		//flush();	// required for hhvm
+		//error_log("Flushed");
+
 	}
 
 ?>

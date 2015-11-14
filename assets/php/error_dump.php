@@ -18,7 +18,12 @@
 $__exc_strMessageBody = htmlentities($__exc_strMessage, null, null, false);
 $__exc_strMessageBody = str_replace(" ", "&nbsp;", str_replace("\n", "<br/>\n", $__exc_strMessageBody));
 $__exc_strMessageBody = str_replace(":&nbsp;", ": ", $__exc_strMessageBody);
-$__exc_objFileArray = file($__exc_strFilename);
+
+if (file_exists($__exc_strFilename)) {
+	$__exc_objFileArray = file($__exc_strFilename);
+} else {
+	$__exc_objFileArray = array();
+}
 
 header("HTTP/1.1 500 Internal Server Error");
 ?>
@@ -110,10 +115,14 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 										$__exc_ObjSessionVarArray[$__exc_StrSessionKey] = $__exc_StrSessionValue;
 								}
 								$__exc_StrVarExport = htmlentities(var_export($__exc_ObjSessionVarArray, true));
-							} else if (($__exc_ObjVariableArray[$__exc_Key] instanceof QControl) || ($__exc_ObjVariableArray[$__exc_Key] instanceof QForm))
-								$__exc_StrVarExport = htmlentities($__exc_ObjVariableArray[$__exc_Key]->VarExport());
-							else
+							} else if (($__exc_ObjVariableArray[$__exc_Key] instanceof QControl) || ($__exc_ObjVariableArray[$__exc_Key] instanceof QForm)) {
+								if (!defined('HHVM_VERSION')) {
+									// var_export crashes hhvm currently
+									$__exc_StrVarExport = htmlentities($__exc_ObjVariableArray[$__exc_Key]->VarExport());
+								}
+							} else {
 								$__exc_StrVarExport = htmlentities(var_export($__exc_ObjVariableArray[$__exc_Key], true));
+							}
 
 							$__exc_StrToDisplay .= sprintf("<a style='display:block' href='#%s' onclick='javascript:ToggleHidden(\"%s\"); return false;'>%s</a>", $varCounter, $varCounter, $__exc_Key);
 							$__exc_StrToDisplay .= sprintf("<span id=\"%s\" style='display:none'>%s</span>", $varCounter, $__exc_StrVarExport);
