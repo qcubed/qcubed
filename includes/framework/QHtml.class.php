@@ -306,7 +306,7 @@
 		 * Render the given attribute array for html output. Escapes html entities enclosed in values. Uses
 		 * double-quotes to surround the value. Precedes the resulting text with a space character.
 		 *
-		 * @param array $attributes
+		 * @param array|null $attributes
 		 * @return string
 		 */
 		public static function RenderHtmlAttributes ($attributes) {
