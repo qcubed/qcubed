@@ -31,12 +31,13 @@
 	 * @property integer $CellSpacing specified the HTML Table's CellSpacing
 	 * @property integer $RepeatColumns specifies how many columns should be rendered in the HTML Table
 	 * @property string $RepeatDirection specifies which direction should the list go first: horizontal or vertical
+	 * @property integer $ButtonMode specifies how to render buttons
 	 */
 	class QRadioButtonList extends QListControl {
 		const ButtonModeNone = 0;
 		const ButtonModeJq = 1;
 		const ButtonModeSet = 2;
-		const ButtonModeList = 3;	// just a vanilla list of checkboxes with no row or column styling
+		const ButtonModeList = 3;	// just a vanilla list of radio buttons with no row or column styling
 
 		///////////////////////////
 		// Private Member Variables
@@ -44,6 +45,9 @@
 
 		// APPEARANCE
 		protected $strTextAlign = QTextAlign::Right;
+
+		/** @var  string The class to use when wrapping a button-label group */
+		protected $strButtonGroupClass;
 
 		// BEHAVIOR
 		protected $blnHtmlEntities = true;
@@ -114,21 +118,19 @@
 				$objStyles->Enabled = false;
 			}
 
-			$strLabelText = $objItem->Label;
-			if (empty($strLabelText)) {
-				$strLabelText = $objItem->Name;
-			}
-			if ($this->blnHtmlEntities) {
-				$strLabelText = QApplication::HtmlEntities($strLabelText);
-			}
+			$strLabelText = $this->GetLabelText($objItem);
 
 			if ($objItem->Selected) {
 				$objStyles->SetHtmlAttribute('checked', 'checked');
 			}
 
+			$objStyles->SetHtmlAttribute("autocomplete", "off"); // recommended bugfix for firefox in certain situations
+
 			if (!$blnWrapLabel) {
 				$objLabelStyles->SetHtmlAttribute('for', $strIndexedId);
 			}
+
+			$this->OverrideItemAttributes($objItem, $objStyles, $objLabelStyles);
 
 			$strHtml = QHtml::RenderLabeledInput(
 				$strLabelText,
@@ -140,21 +142,35 @@
 			return $strHtml;
 		}
 
+		/**
+		 * Provides a way for subclasses to override the attributes on specific items just before they are drawn.
+		 *
+		 * @param $objItem
+		 * @param $objItemAttributes
+		 * @param $objLabelAttributes
+		 */
+		protected function OverrideItemAttributes ($objItem, QTagStyler $objItemAttributes, QTagStyler $objLabelAttributes) {}
+
+		/**
+		 * Return the escaped text of the label.
+		 *
+		 * @param $objItem
+		 * @return string
+		 */
+		protected function GetLabelText ($objItem) {
+			$strLabelText = $objItem->Label;
+			if (empty($strLabelText)) {
+				$strLabelText = $objItem->Name;
+			}
+			if ($this->blnHtmlEntities) {
+				$strLabelText = QApplication::HtmlEntities($strLabelText);
+			}
+			return $strLabelText;
+		}
+
 		protected function GetControlHtml() {
 			$intItemCount = $this->GetItemCount();
 			if (!$intItemCount) return '';
-
-			/* Deprecated. Use Margin and Padding on the ItemStyle attribute.
-			if ($this->intCellPadding >= 0)
-				$strCellPadding = sprintf('cellpadding="%s" ', $this->intCellPadding);
-			else
-				$strCellPadding = "";
-
-			if ($this->intCellSpacing >= 0)
-				$strCellSpacing = sprintf('cellspacing="%s" ', $this->intCellSpacing);
-			else
-				$strCellSpacing = "";
-			*/
 
 			if ($this->intButtonMode == self::ButtonModeSet || $this->intButtonMode == self::ButtonModeList) {
 				return $this->RenderButtonSet();
@@ -221,7 +237,10 @@
 				}
 			}
 
-			return $this->RenderTag ('table', ['id'=>$this->strControlId], null, $strToReturn);
+			return $this->RenderTag('table',
+				null,
+				null,
+				$strToReturn);
 		}
 
 		/**
@@ -235,23 +254,31 @@
 			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
 				$strToReturn .= $this->GetItemHtml($this->GetItem($intIndex), $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel) . "\n";
 			}
-			$strToReturn = $this->RenderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
-			return $strToReturn;
+			return $this->RenderTag('div',
+				null,
+				null,
+				$strToReturn);
 		}
 
 		/**
-		 * Render as a single column. This implementation simply wraps the columns in divs.
+		 * Render as a single column. This implementation simply wraps the rows in divs.
 		 * @return string
 		 */
 		public function RenderButtonColumn() {
 			$count = $this->ItemCount;
 			$strToReturn = '';
+			$groupAttributes = null;
+			if ($this->strButtonGroupClass) {
+				$groupAttributes = ["class"=>$this->strButtonGroupClass];
+			}
 			for ($intIndex = 0; $intIndex < $count; $intIndex++) {
 				$strHtml = $this->GetItemHtml($this->GetItem($intIndex), $intIndex, $this->GetHtmlAttribute('tabindex'), $this->blnWrapLabel);
-				$strToReturn .= QHtml::RenderTag('div', null, $strHtml);
+				$strToReturn .= QHtml::RenderTag('div', $groupAttributes, $strHtml);
 			}
-			$strToReturn = $this->RenderTag('div', ['id'=>$this->strControlId], null, $strToReturn);
-			return $strToReturn;
+			return $this->RenderTag('div',
+				null,
+				null,
+				$strToReturn);
 		}
 
 		public function Validate() {
