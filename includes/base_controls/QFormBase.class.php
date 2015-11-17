@@ -699,9 +699,9 @@
 			// Update the Status
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 
-			// watcher collection
+			// Broadcast the watcher change to other windows listening
 			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
-				$aResponse[QAjaxResponse::CommandsMedium] = QApplication::$JavascriptExclusiveCommand;
+				$aResponse[QAjaxResponse::Watcher] = true;
 			}
 
 			// Recursively render changed controls, starting with all top-level controls
