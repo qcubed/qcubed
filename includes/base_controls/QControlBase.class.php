@@ -81,6 +81,7 @@
 	 * @property-read QForm|QControl $ParentControl returns the parent control
 	 * @property-read boolean $Rendered
 	 * @property-read boolean $Rendering
+	 * @property string TestingId The ID to be used for frontend functional tests (adds a data- attribute)
 	 * @property-read string $RenderMethod carries the name of the function, which were initially used for rendering
 	 * @property string $PreferredRenderMethod carries the name of the function, which were initially used for rendering
 	 * @property boolean $Required specifies whether or not this is required (will cause a validation error if the form is trying to be validated and this control is left blank)
@@ -188,6 +189,8 @@
 		protected $strCssClass = null;
 		/** @var  bool Force this control, and all subcontrols to draw minimized. This is important when using inline-block styles, as not doing so will cause spaces between the objects. */
 		protected $blnMinimize = false;
+		/** @var string|null The Testing ID for automating the frontend functional tests */
+		protected $strTestingId = null;
 
 		// SETTINGS
 		/** @var string List of JavaScript files to be attached with the control when rendering */
@@ -1896,6 +1899,7 @@
 				case "DropObj": return $this->objDroppable;
 
 				// MISC
+				case "TestingId": return $this->strTestingId;
 				case "ControlId": return $this->strControlId;
 				case "WrapperId": return $this->strControlId . '_ctl';
 				case "Form": return $this->objForm;
@@ -2139,6 +2143,26 @@
 					}
 
 				// MISC
+				case 'TestingId':
+					try {
+						$this->MarkAsWrapperModified();
+						if (QType::Cast($mixValue, QType::String)) {
+							$this->strTestingId = QType::Cast($mixValue, QType::String);
+							if(defined('__FRONTEND_TEST_MODE__') && __FRONTEND_TEST_MODE__ == true) {
+								$this->SetDataAttribute('qcontrolTestingId', $this->strTestingId);
+							}
+						} else {
+							$this->strTestingId = null;
+							if(defined('__FRONTEND_TEST_MODE__') && __FRONTEND_TEST_MODE__ == true) {
+								$this->RemoveDataAttribute('qcontrolTestingId');
+							}
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
 				case "Name":
 					try {
 						if ($this->strName !== ($mixValue = QType::Cast($mixValue, QType::String))) {

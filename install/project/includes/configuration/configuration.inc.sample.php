@@ -425,6 +425,10 @@ if (!defined('SERVER_INSTANCE')) {
 
 			/** Uncomment if you are using QTimer to do performance testing. Will automatically output the results of your timers to the file. */
 			//define ('__TIMER_OUT_FILE__', __TMP__ . '/timers.txt');
+
+			/** For enabling frontend functional tests tools such as Selenium WebDriver */
+			define('__FRONTEND_TEST_MODE__', true);
+
 		break;
 	}
 }
