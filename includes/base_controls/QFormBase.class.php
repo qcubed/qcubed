@@ -365,10 +365,6 @@
 		 * @throws Exception
 		 */
 		public static function Run($strFormId, $strAlternateHtmlFile = null) {
-			// Ensure strFormId is a subclass of QForm
-			if (!(is_subclass_of($strFormId, 'QForm')))
-				throw new QCallerException('Object must be a subclass of QForm: ' . $strFormId);
-
 			// See if we can get a Form Class out of PostData
 			$objClass = null;
 			if (array_key_exists('Qform__FormId', $_POST) && ($_POST['Qform__FormId'] == $strFormId) && array_key_exists('Qform__FormState', $_POST)) {
@@ -856,11 +852,12 @@
 
 		/**
 		 * Create a new form with the given type.
-		 * @param string $strFormClassType
+		 * @param string $strFormId  This is here mainly for backward compatibility, if subclasses use it.
 		 * @return QForm
 		 */
-		private static function CreateForm ($strFormClassType) {
-			return new $strFormClassType();
+		private static function CreateForm ($strFormId) {
+			$strClass = get_called_class();
+			return new $strClass();
 		}
 
 		/**
