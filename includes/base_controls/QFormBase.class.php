@@ -512,7 +512,9 @@
 				$objClass->SaveControlState();
 			} else {
 				// We have no form state -- Create Brand New One
-				$objClass = self::CreateForm($strFormId);
+				$strClassName = get_called_class();
+
+				$objClass = new $strClassName();
 
 				// Globalize
 				global $_FORM;
@@ -848,16 +850,6 @@
 				return $objForm;
 			} else
 				return null;
-		}
-
-		/**
-		 * Create a new form with the given type.
-		 * @param string $strFormId  This is here mainly for backward compatibility, if subclasses use it.
-		 * @return QForm
-		 */
-		private static function CreateForm ($strFormId) {
-			$strClass = get_called_class();
-			return new $strClass();
 		}
 
 		/**
