@@ -365,10 +365,6 @@
 		 * @throws Exception
 		 */
 		public static function Run($strFormId, $strAlternateHtmlFile = null) {
-			// Ensure strFormId is a subclass of QForm
-			if (!(is_subclass_of($strFormId, 'QForm')))
-				throw new QCallerException('Object must be a subclass of QForm: ' . $strFormId);
-
 			// See if we can get a Form Class out of PostData
 			$objClass = null;
 			if (array_key_exists('Qform__FormId', $_POST) && ($_POST['Qform__FormId'] == $strFormId) && array_key_exists('Qform__FormState', $_POST)) {
@@ -516,7 +512,9 @@
 				$objClass->SaveControlState();
 			} else {
 				// We have no form state -- Create Brand New One
-				$objClass = self::CreateForm($strFormId);
+				$strClassName = get_called_class();
+
+				$objClass = new $strClassName();
 
 				// Globalize
 				global $_FORM;
@@ -852,15 +850,6 @@
 				return $objForm;
 			} else
 				return null;
-		}
-
-		/**
-		 * Create a new form with the given type.
-		 * @param string $strFormClassType
-		 * @return QForm
-		 */
-		private static function CreateForm ($strFormClassType) {
-			return new $strFormClassType();
 		}
 
 		/**
