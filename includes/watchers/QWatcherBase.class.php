@@ -98,12 +98,21 @@
 		static public function MarkTableModified ($strDbName, $strTableName) {}
 
 		/**
-		 * QFormBase calls this to tell if any of the watched tables have changed.
-		 * Cache adapters should override this.
+		 * Support function for the Form to determine if any of the watchers have changed since the last time
+		 * it drew something in the form.
 		 *
-		 * @param $strFormWatcherTime
+		 * @param QWatcher[]|null $objWatchers
 		 * @return bool
 		 */
-		static public function FormWatcherChanged (&$strFormWatcherTime) { return false;}
+		static public function WatchersChanged ($objWatchers) {
+			if ($objWatchers) {
+				foreach ($objWatchers as $objWatcher) {
+					if (!$objWatcher->IsCurrent()) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 	}
 ?>

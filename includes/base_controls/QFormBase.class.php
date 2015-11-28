@@ -69,7 +69,9 @@
 
 		protected $strCustomAttributeArray = null;
 
-		protected $strWatcherTime;
+		//protected $strWatcherTime;
+		/** @var  QWatcher[] Array of currently active watchers. */
+		protected $objWatchers;
 
 		///////////////////////////
 		// Form Status Constants
@@ -348,6 +350,14 @@
 			return $ret;
 		}
 
+		/**
+		 * Called by QControlBase to notify the form of an active watcher. Do not call normally.
+		 *
+		 * @param QWatcher $objWatcher
+		 */
+		public function _AddWatcher(QWatcher $objWatcher) {
+			$this->objWatchers[] = $objWatcher;
+		}
 		/**
 		 * This method initializes the actual layout of the form
 		 * It runs in all cases including initial form (the time when Form_Create is run) as well as on
@@ -698,7 +708,7 @@
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 
 			// Broadcast the watcher change to other windows listening
-			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+			if (QWatcher::WatchersChanged($this->objWatchers)) {
 				$aResponse[QAjaxResponse::Watcher] = true;
 			}
 
@@ -1289,7 +1299,7 @@
 		 * Begins rendering the page
 		 */
 		protected function Render() {
-			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+			if (QWatcher::WatchersChanged($this->objWatchers)) {
 				QApplication::ExecuteJsFunction('qc.broadcastChange');
 			}
 

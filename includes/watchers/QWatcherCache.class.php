@@ -36,7 +36,6 @@
 					// if dropped from cache, or not yet cached
 					static::$objCache->Set($key, $curTime);
 					$time2 = $curTime;
-					static::$objCache->Set(static::GetKey ('', static::$strAppKey), $curTime);
 				}
 				$this->strWatchedKeys[$key] = $time2;
 			}
@@ -71,26 +70,20 @@
 			$time = microtime();
 
 			self::$objCache->Set($key, $time);
-			self::$objCache->Set(static::GetKey('', static::$strAppKey), $time);
 		}
 
 		/**
-		 * Support function for the Form to determine if any of the watchers have changed.
+		 * Support function for the Form to determine if any of the watchers have changed since the last time
+		 * it drew something in the form.
 		 *
-		 * @param $strFormWatcherTime
+		 * @param QWatcher[]|null $objWatchers
 		 * @return bool
 		 */
-		static public function FormWatcherChanged (&$strFormWatcherTime) {
+		static public function WatchersChanged ($objWatchers) {
 			if (!static::$objCache) {
 				static::initCache();
 			}
-			$time = static::$objCache->Get(static::GetKey ('', static::$strAppKey));
-
-			if ($strFormWatcherTime !== $time) {
-				$strFormWatcherTime = $time;
-				return true;
-			}
-			return false;
+			return parent::WatchersChanged($objWatchers);
 		}
 
 		/**
