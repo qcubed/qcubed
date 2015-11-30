@@ -165,7 +165,9 @@
 			// Check to see if this Control's Value was passed in via the POST data
 			if (array_key_exists($this->strControlId, $_POST)) {
 				// It was -- update this Control's value with the new value passed in via the POST arguments
-				$this->strText = $_POST[$this->strControlId];
+				$strText = $_POST[$this->strControlId];
+				$strText = str_replace("\r\n", "\n", $strText); // Convert posted newlines to PHP newlines
+				$this->strText = $strText;
 				
 				$this->Sanitize();
 				

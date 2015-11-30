@@ -1502,9 +1502,9 @@
 				$strOutput = $this->GetControlHtml();
 
 				if ($this->strValidationError)
-					$strOutput .= sprintf('<br %s/><span %sclass="error">%s</span>', $strDataRel, $strDataRel, $this->strValidationError);
+					$strOutput .= sprintf('<br %s/><span %sclass="error">%s</span>', $strDataRel, $strDataRel, QHtml::RenderString($this->strValidationError));
 				else if ($this->strWarning)
-					$strOutput .= sprintf('<br %s/><span %sclass="warning">%s</span>', $strDataRel, $strDataRel, $this->strWarning);
+					$strOutput .= sprintf('<br %s/><span %sclass="warning">%s</span>', $strDataRel, $strDataRel, QHtml::RenderString($this->strWarning));
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -1570,9 +1570,9 @@
 			// Render the Right side
 			$strMessage = '';
 			if ($this->strValidationError){
-				$strMessage = sprintf('<span class="error">%s</span>', $this->strValidationError);
+				$strMessage = sprintf('<span class="error">%s</span>', QHtml::RenderString($this->strValidationError));
 			}else if ($this->strWarning){
-				$strMessage = sprintf('<span class="warning">%s</span>', $this->strWarning);
+				$strMessage = sprintf('<span class="warning">%s</span>', QHtml::RenderString($this->strWarning));
 			}
 			
 			try {
