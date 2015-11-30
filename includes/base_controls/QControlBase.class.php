@@ -450,7 +450,7 @@
 		 * in the serialized stream differently than the default. If a QControl, make sure this isn't the only
 		 * instance of the control in the stream, or have some other way to serialize the control.
 		 *
-		 * @param QForm|QControl|array $obj
+		 * @param QForm|QControl|array|Callable $obj
 		 * @return mixed
 		 */
 		public static function SleepHelper($obj) {
@@ -1784,6 +1784,7 @@
 				} else {
 					$this->objWatcher = new QWatcher(); // only create a watcher object when needed, since it is stored in the form state
 				}
+				$this->objForm->_AddWatcher($this->objWatcher);	// Notify form so it can quickly check for watcher changes.
 			}
 			$this->objWatcher->Watch ($objNode);
 		}
