@@ -934,7 +934,7 @@
 	 * 
 	 * A column to display a virtual attribute from a database record.
 	 *
-	 * @property string Attribute 
+	 * @property string $Attribute
 	 */
 	class QVirtualAttributeColumn extends QAbstractSimpleTableDataColumn {
 		protected $strAttribute;
@@ -1017,11 +1017,13 @@
 	 * a cache variable. You would just give an id to each checkbox. This would cause internet traffic every time
 	 * a box is clicked.
 	 *
+	 * @property bool $ShowCheckAll
+	 *
 	 */
 	class QSimpleTableCheckBoxColumn extends QAbstractSimpleTableDataColumn {
 		protected $blnHtmlEntities = false;	// turn off html entities
 		protected $checkParamCallback = null;
-		protected $blnShowCheckAll;
+		protected $blnShowCheckAll = false;
 
 		/**
 		 * Returns a header cell with a checkbox. This could be used as a check all box. Override this and return
@@ -1225,5 +1227,3 @@
 			parent::__construct($intDelay, $strCondition, 'input[type="checkbox"]');
 		}
 	}
-
-?>

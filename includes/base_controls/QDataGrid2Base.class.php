@@ -18,6 +18,12 @@ class QDataGrid2_SortEvent extends QEvent {
 
 /**
  * Class QDataGrid2
+ *
+ * @property  QClause 	$ExpandAsArray True if this node should be array expanded.
+ * @property  string 	$SortColumnId The id of the currently sorted column. Does not change if columns are re-ordered.
+ * @property  int 		$SortColumnIndex The index of the currently sorted column.
+ * @property  int 		$SortDirection SortAscending or SortDescending.
+ *
  */
 class QDataGrid2Base extends QSimpleTable
 {
@@ -114,6 +120,8 @@ class QDataGrid2Base extends QSimpleTable
 	 */
 	public function AddActions() {
 		$this->AddAction(new QSimpleTableCheckBoxColumn_ClickEvent(), new QAjaxControlAction ($this, 'CheckClick'));
+		$this->AddAction(new QSimpleTableCheckBoxColumn_ClickEvent(), new QStopPropagationAction()); // prevent check click from bubbling as a row click.
+
 		$this->AddAction(new QDataGrid2_SortEvent(), new QAjaxControlAction ($this, 'SortClick'));
 	}
 
