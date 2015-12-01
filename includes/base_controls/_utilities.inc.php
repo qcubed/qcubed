@@ -27,7 +27,7 @@ function _p($strString, $blnHtmlEntities = true) {
 
 /**
  * Standard Print as Block function.  To aid with possible cross-scripting vulnerabilities,
- * this will automatically perform QApplication::HtmlEntities() unless otherwise specified.
+ * this will automatically perform htmlspecialchars unless otherwise specified.
  *
  * Difference between _b() and _p() is that _b() will convert any linebreaks to <br/> tags.
  * This allows _b() to print any "block" of text that will have linebreaks in standard HTML.
@@ -38,7 +38,7 @@ function _p($strString, $blnHtmlEntities = true) {
 function _b($strString, $blnHtmlEntities = true) {
 	// Text Block Print
 	if ($blnHtmlEntities && (gettype($strString) != 'object'))
-		print(nl2br(QApplication::HtmlEntities($strString)));
+		print(QHtml::RenderString($strString));
 	else
 		print(nl2br($strString));
 }
