@@ -419,8 +419,6 @@
 		/**
 		 * Utility function to create a link, i.e. an "a" tag.
 		 *
-		 *
-		 *
 		 * @param string $strUrl URL to link to. Use MakeUrl or MailToUrl to create the URL.
 		 * @param string $strText The inner text. This WILL be escaped.
 		 * @param array $attributes Other html attributes to include in the tag
@@ -432,6 +430,15 @@
 				$strText = QApplication::HtmlEntities($strText);
 			}
 			return self::RenderTag("a", $attributes, $strText);
+		}
+
+		/**
+		 * Renders a PHP string as HTML text. Makes sure special characters are encoded, and <br /> tags are substituted
+		 * for newlines.
+		 * @param $strText
+		 */
+		public static function RenderString($strText) {
+			return nl2br(htmlspecialchars($strText, ENT_COMPAT | ENT_HTML5, QApplication::$EncodingType));
 		}
 
 	}

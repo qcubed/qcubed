@@ -97,9 +97,8 @@ class BasicForm extends QForm {
 	}
 
 	protected function submit_click($strFormId, $strControlId, $strParameter) {
-		$strTemp = $this->txtText->Text;
-		$this->txtText->Text = $this->txtText2->Text;
-		$this->txtText2->Text = $strTemp;
+		$this->txtText->Warning = 'Value = ' . $this->txtText->Text;
+		$this->txtText2->Warning = 'Value = ' . $this->txtText2->Text;
 
 		$this->chkCheck->Warning = 'Value = ' . $this->chkCheck->Checked;
 		$this->lstSelect->Warning = 'Value = ' . $this->lstSelect->SelectedValue;
