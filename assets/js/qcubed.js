@@ -617,7 +617,7 @@ qcubed = {
                 }
                 else {
                     // look for special objects inside top level objects.
-                    var newItem = {}
+                    var newItem = {};
                     $j.each (item, function (key, obj) {
                         newItem[key] = qcubed.unpackObj(obj);
                     });
@@ -644,7 +644,12 @@ qcubed = {
             switch (obj.qObjType) {
                 case 'qClosure':
                     if (obj.params) {
-                        return new Function(obj.params, obj.func);
+                        params = [];
+                        $j.each (obj.params, function (i, v) {
+                            params.push(qc.unpackObj(v)); // recurse
+                        });
+
+                        return new Function(params, obj.func);
                     } else {
                         return new Function(obj.func);
                     }
@@ -662,6 +667,28 @@ qcubed = {
                         val = val[v];
                     });
                     return val;
+
+                case 'qFunc':
+                    // Returns the result of the given function called immediately
+                    // Find the function and context starting at the window context.
+                    var target = window;
+                    var params;
+                    if (obj.context) {
+                       var objects = obj.context.split(".");
+                        $j.each (objects, function (i, v) {
+                            target = target[v];
+                        });
+                    }
+
+                    if (obj.params) {
+                        params = [];
+                        $j.each (obj.params, function (i, v) {
+                            params.push(qc.unpackObj(v)); // recurse
+                        });
+                    }
+                    var func = target[obj.func];
+
+                    return func.apply(target, params);
             }
         }
         else if ($j.type(obj) == 'object') {

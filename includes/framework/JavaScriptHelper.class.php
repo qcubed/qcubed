@@ -78,7 +78,7 @@
 	 * Outputs a string without quotes to specify a global variable name. Strings are normally quoted. Dot notation
 	 * can be used to specify items within globals.
 	 */
-	class QJsVarName implements JsonSerializable{
+	class QJsVarName implements JsonSerializable {
 		protected $strContent;
 
 		public function __construct($strContent) {
@@ -95,6 +95,73 @@
 			return JavaScriptHelper::MakeJsonEncodable($a);
 		}
 	}
+
+	/**
+	 * Class QJsFunction
+	 * Outputs a function call to a global function or function in an object referenced from global space. The purpose
+	 * of this is to immediately use the results of the function call, as opposed to a closure, which stores a pointer
+	 * to a function that is used later.
+	 */
+	class QJsFunction implements JsonSerializable {
+		/** @var  string|null */
+		protected $strContext;
+		/** @var  string */
+		protected $strFunctionName;
+		/** @var  array|null */
+		protected $params;
+
+		/**
+		 * QJsFunction constructor.
+		 * @param string $strFunctionName The name of the function call.
+		 * @param null|array $strParamsArray If given, the parameters to send to the function call
+		 * @param null $strContext If given, the object in the window object which contains the function and is the context for the function.
+		 *   Use dot '.' notation to traverse the object tree. i.e. "obj1.obj2" refers to window.obj1.obj2 in javascript.
+		 */
+		public function __construct($strFunctionName, $params = null, $strContext = null) {
+			$this->strFunctionName = $strFunctionName;
+			$this->params = $params;
+			$this->strContext = $strContext;
+		}
+
+		/**
+		 * Returns this as a javascript string to be included in the end script of the page.
+		 * @return string
+		 */
+		public function toJsObject() {
+			if ($this->params) {
+				foreach ($this->params as $param) {
+					$strParams[] = JavaScriptHelper::toJsObject($param);
+				}
+				$strParams = implode (",", $strParams);
+			}
+			else {
+				$strParams = '';
+			}
+			$strFuncName = $this->strFunctionName;
+			if ($this->strContext) {
+				$strFuncName = $this->strContext . '.' . $strFuncName;
+			}
+ 			return  $strFuncName . '('.$strParams.')';
+		}
+
+		/**
+		 * Returns this as a json object to be sent to qcubed.js during ajax drawing.
+		 * @return mixed
+		 */
+		public function jsonSerialize() {
+			$a[JavaScriptHelper::ObjectType] = 'qFunc';
+			$a['func'] = $this->strFunctionName;
+			if ($this->strContext) {
+				$a['context'] = $this->strContext;
+			}
+			if ($this->params) {
+				$a['params'] = $this->params;
+			}
+
+			return JavaScriptHelper::MakeJsonEncodable($a);
+		}
+	}
+
 
 
 	/**
