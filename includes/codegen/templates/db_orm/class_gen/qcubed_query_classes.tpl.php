@@ -48,7 +48,7 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
      * @property-read QQColumnNode $<?= $objColumn->PropertyName ?>
 
-<?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
+<?php if ($objColumn->Reference) { ?>
      * @property-read QQNode<?= $objColumn->Reference->VariableType; ?> $<?= $objColumn->Reference->PropertyName ?>
 
 <?php } ?>

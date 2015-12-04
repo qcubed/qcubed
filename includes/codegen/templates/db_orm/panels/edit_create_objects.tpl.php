@@ -7,6 +7,7 @@
 		$this-><?php echo $objCodeGen->ModelConnectorVariableName($objColumn);  ?> = $this->mct<?= $strPropertyName  ?>-><?php echo $objCodeGen->ModelConnectorVariableName($objColumn);  ?>_Create();
 <?php } ?>
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
+<?php	if (isset ($objReverseReference->Options['FormGen']) && ($objReverseReference->Options['FormGen'] == 'none' || $objReverseReference->Options['FormGen'] == 'meta')) continue; ?>
 <?php if ($objReverseReference->Unique) { ?>
 		$this-><?php echo $objCodeGen->ModelConnectorVariableName($objReverseReference);  ?> = $this->mct<?= $strPropertyName ?>-><?php echo $objCodeGen->ModelConnectorVariableName($objReverseReference);  ?>_Create();
 <?php } ?>
