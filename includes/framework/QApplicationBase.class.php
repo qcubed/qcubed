@@ -610,6 +610,7 @@
 				}
 
 				// End the Response Script
+				session_write_close();
 				exit();
 			}
 		}
