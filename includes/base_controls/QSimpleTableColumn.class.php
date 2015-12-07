@@ -414,7 +414,7 @@
 		protected $strPostMethod = null;
 		/** @var callback */
 		protected $objPostCallback = null;
-		
+
 		/**
 		 * Return the raw string that represents the cell value.
 		 * This version uses a combination of post processing strategies so that you can set
@@ -449,6 +449,7 @@
 			}
 			if ($this->strFormat)
 				return sprintf($this->strFormat, $cellValue);
+
 			return $cellValue;
 		}
 
@@ -1037,7 +1038,7 @@
 				$aParams['type'] = 'checkbox';
 				return QHtml::RenderTag('input', $aParams, null, true);
 			} else {
-				return '';
+				return $this->Name;
 			}
 		}
 
