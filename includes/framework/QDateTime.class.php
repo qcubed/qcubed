@@ -230,16 +230,14 @@
 			// User is requesting to force a particular type.
 			switch ($intType) {
 				case QDateTime::DateOnlyType:
-					$this->blnDateNull = false;
 					$this->blnTimeNull = true;
 					$this->ReinforceNullProperties();
 					return;
 				case QDateTime::TimeOnlyType:
 					$this->blnDateNull = true;
-					$this->blnTimeNull = false;
 					$this->ReinforceNullProperties();
 					return;
-				case QDateTime::DateAndTimeType:
+				case QDateTime::DateAndTimeType:	// forcing both a date and time type to not be null
 					$this->blnDateNull = false;
 					$this->blnTimeNull = false;
 					break;
