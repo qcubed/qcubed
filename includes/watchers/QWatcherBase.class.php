@@ -10,7 +10,7 @@
 	 * This Base class is a template on which to build watchers that use specific caching mechanisms.
 	 * See QWatcher to select the caching mechanism you would like to use.
 	 */
-	
+
 	abstract class QWatcherBase extends QBaseClass {
 
 		/**
@@ -21,6 +21,8 @@
 		 * the same databases, they should have the same app key
 		 */
 		public static $strAppKey = 'QWATCH_APPKEY';
+
+		protected static $blnWatcherChanged;
 
 		protected $strWatchedKeys = array();
 
@@ -95,7 +97,9 @@
 		 * @param string $strTableName
 		 * @throws QCallerException
 		 */
-		static public function MarkTableModified ($strDbName, $strTableName) {}
+		static public function MarkTableModified ($strDbName, $strTableName) {
+			self::$blnWatcherChanged = true;
+		}
 
 		/**
 		 * Support function for the Form to determine if any of the watchers have changed since the last time
@@ -104,15 +108,10 @@
 		 * @param QWatcher[]|null $objWatchers
 		 * @return bool
 		 */
-		static public function WatchersChanged ($objWatchers) {
-			if ($objWatchers) {
-				foreach ($objWatchers as $objWatcher) {
-					if (!$objWatcher->IsCurrent()) {
-						return true;
-					}
-				}
-			}
-			return false;
+		static public function WatchersChanged () {
+			$blnChanged = self::$blnWatcherChanged;
+			self::$blnWatcherChanged = false;
+			return $blnChanged;
 		}
 	}
 ?>
