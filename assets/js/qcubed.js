@@ -945,8 +945,8 @@ qcubed.registerControl = function(mixControl) {
     }
 
     // detect changes to objects before any changes trigger other events
-    $j(objControl).on ('input', this.formObjChanged);
-    $j(objControl).on ('change', this.formObjChanged);
+    $j(objControl).on ('change input', this.formObjChanged);
+    $j(objControl).on ('change input', 'input, select, textarea', this.formObjChanged);   // make sure we get to bubbled events before later attached handlers
 
 
     // Link the Wrapper and the Control together
