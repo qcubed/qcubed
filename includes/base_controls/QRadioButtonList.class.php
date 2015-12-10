@@ -299,6 +299,10 @@
 		protected function RefreshSelection() {
 			$index = $this->SelectedIndex;
 			QApplication::ExecuteSelectorFunction(['input', '#' . $this->ControlId], 'val', [$index]);
+			if ($this->intButtonMode == self::ButtonModeSet ||
+					$this->intButtonMode == self::ButtonModeJq) {
+				QApplication::ExecuteSelectorFunction(['input', '#' . $this->ControlId], 'button', "refresh");
+			}
 		}
 
 		/////////////////////////
