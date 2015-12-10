@@ -498,16 +498,18 @@ qcubed = {
                 else if (control.length) {
                     // control was found without a wrapper, replace it in the same position it was in.
                     // remove related controls (error, name ...) for wrapper-less controls
-                    if (control.data("hasrel")) {
-                        var relSelector = "[data-rel='" + strControlId + "']",
-                            $relParent;
+                    var relSelector = "[data-qrel='" + strControlId + "']",
+                        relItems = $j(relSelector),
+                        $relParent;
 
-                        //ensure that the control is not wrapped in an element related to it (it would be removed)
+                    if (relItems && relItems.length) {
+                        // if the control is wrapped in a related control, we move the control outside the related controls
+                        // before deleting the related controls
                         $relParent = control.parents(relSelector).last();
                         if ($relParent.length) {
                             control.insertBefore($relParent);
                         }
-                        $j(relSelector).remove();
+                        relItems.remove();
                     }
 
                     control.before(this.html).remove();
