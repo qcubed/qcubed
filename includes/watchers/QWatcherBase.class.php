@@ -103,7 +103,9 @@
 
 		/**
 		 * Support function for the Form to determine if any of the watchers have changed since the last time
-		 * it drew something in the form.
+		 * it checked. Since this is relying on a global variable, the variable is reset upon program entry, including
+		 * ajax entry. So really, we are just detecting if any operation we have currently done has changed a watcher, so
+		 * that the form can broadcast that fact to other browser windows that might be looking.
 		 *
 		 * @param QWatcher[]|null $objWatchers
 		 * @return bool
