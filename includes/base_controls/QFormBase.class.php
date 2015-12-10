@@ -367,16 +367,20 @@
 		 * such as running Form_Validate and Control validations for every control of the page and their
 		 * child controls. Checking for an existing FormState and loading them before trigerring any action
 		 * is also a responsibility of this method.
-		 * @param string $strFormId The Form ID of the calling QForm
-		 * @param null $strAlternateHtmlFile location of the alternate HTML template file
+		 * @param string $strFormClass The class of the form to create when creating a new form.
+		 * @param string|null $strAlternateHtmlFile location of the alternate HTML template file.
+		 * @param string|null $strFormId The html id to use for the form. If null, $strFormClass will be used.
 		 *
 		 * @throws QCallerException
 		 * @throws QInvalidFormStateException
 		 * @throws Exception
 		 */
-		public static function Run($strFormId, $strAlternateHtmlFile = null) {
+		public static function Run($strFormClass, $strAlternateHtmlFile = null, $strFormId = null) {
 			// See if we can get a Form Class out of PostData
 			$objClass = null;
+			if ($strFormId === null) {
+				$strFormId = $strFormClass;
+			}
 			if (array_key_exists('Qform__FormId', $_POST) && ($_POST['Qform__FormId'] == $strFormId) && array_key_exists('Qform__FormState', $_POST)) {
 				$strPostDataState = $_POST['Qform__FormState'];
 
@@ -522,9 +526,7 @@
 				$objClass->SaveControlState();
 			} else {
 				// We have no form state -- Create Brand New One
-				$strClassName = get_called_class();
-
-				$objClass = new $strClassName();
+				$objClass = new $strFormClass();
 
 				// Globalize
 				global $_FORM;
