@@ -1266,13 +1266,10 @@
 		 *   Your html-code which should be printed out
 		 * @param boolean $blnDisplayOutput
 		 *   should it be printed, or just be returned?
-		 * @param string  $strHasDataRel
-		 *   Will contain an additional attribute for ajax processing to tie related html objects together if there is no
-		 *   wrapper around them (and thus no other way to tell they are related).
 		 *
 		 * @return string
 		 */
-		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false, $strHasDataRel = '') {
+		protected function RenderOutput($strOutput, $blnDisplayOutput, $blnForceAsBlockElement = false) {
 			if ($blnForceAsBlockElement) {
 				$this->blnIsBlockElement = true;	// must be remembered for ajax drawing
 			}
@@ -1483,19 +1480,13 @@
 			// Call RenderHelper
 			$this->RenderHelper(func_get_args(), __FUNCTION__);
 
-			/*if we do not use a wrapper we have to ensure that the error element
-				gets removed on an ajax update.
-				==> we pass a special attribute to the top level ajax response element 
-				(called "control" <== created in RenderOutput)
-				If this attribute is present, all elements that have an attribute
-				data-rel="controlid_of_the_related_control" are removed before updating
-			    the control --> no duplication of error/warning controls 
+			/**
+			 * If we are not using a wrapper, then we are going to tag related elements so that qcubed.js
+			 * can remove them when we redraw. Otherwise, they will be repeatedly added instead of replaced.
 			 */
-			$strHasDataRel = '';
 			$strDataRel = '';
 			if (!$this->blnUseWrapper) {
-				$strHasDataRel = 'data-hasrel="1" ';
-				$strDataRel = sprintf('data-rel="#%s" ', $this->strControlId);
+				$strDataRel = sprintf('data-qrel="#%s" ', $this->strControlId);
 			}
 			
 			try {
@@ -1511,7 +1502,7 @@
 			}
 
 			// Call RenderOutput, Returning its Contents
-			return $this->RenderOutput($strOutput, $blnDisplayOutput, false, $strHasDataRel);
+			return $this->RenderOutput($strOutput, $blnDisplayOutput, false);
 		}
 
 
@@ -1534,11 +1525,9 @@
 			////////////////////
 
 			$aWrapperAttributes = array();
-			$strHasDataRel = '';
 			if (!$this->blnUseWrapper) {
-				//there is no wrapper --> add the special attribute data-rel to the name control
-				$aWrapperAttributes['data-rel'] = $this->strControlId;
-				$strHasDataRel = 'data-hasrel="1"';
+				//there is no wrapper --> add the special attribute data-qrel to the name control
+				$aWrapperAttributes['data-qrel'] = $this->strControlId;
 				if (!$this->blnDisplay) {
 					$aWrapperAttributes['style'] = 'display: none';
 				}
@@ -1591,7 +1580,7 @@
 
 			////////////////////////////////////////////
 			// Call RenderOutput, Returning its Contents
-			return $this->RenderOutput($strToReturn, $blnDisplayOutput, false, $strHasDataRel);
+			return $this->RenderOutput($strToReturn, $blnDisplayOutput, false);
 			////////////////////////////////////////////
 		}
 
@@ -1733,8 +1722,9 @@
 		 * Resets the validation state to default
 		 */
 		public function ValidationReset() {
-			if (($this->strValidationError) || ($this->strWarning))
+			if (($this->strValidationError) || ($this->strWarning)) {
 				$this->blnModified = true;
+			}
 			$this->strValidationError = null;
 			$this->strWarning = null;
 		}
