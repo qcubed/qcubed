@@ -1774,7 +1774,6 @@
 				} else {
 					$this->objWatcher = new QWatcher(); // only create a watcher object when needed, since it is stored in the form state
 				}
-				$this->objForm->_AddWatcher($this->objWatcher);	// Notify form so it can quickly check for watcher changes.
 			}
 			$this->objWatcher->Watch ($objNode);
 		}
