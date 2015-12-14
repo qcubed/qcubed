@@ -223,6 +223,10 @@ class QInstallationValidationResult {
 	 * automated way to fix these.
 	 */
 	public $strCommandToFix = "";
+
+	public function __toString() {
+		return $this->strMessage;
+	}
 }
 
 

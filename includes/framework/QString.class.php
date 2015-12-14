@@ -24,10 +24,18 @@
 		 * @return string the first character, or null
 		 */
 		public final static function FirstCharacter($strString) {
-			if (mb_strlen($strString, __QAPPLICATION_ENCODING_TYPE__) > 0)
-				return mb_substr($strString, 0 , 1, __QAPPLICATION_ENCODING_TYPE__);
-			else
-				return null;
+			if (defined('__QAPPLICATION_ENCODING_TYPE__')) {
+				if (mb_strlen($strString, __QAPPLICATION_ENCODING_TYPE__) > 0)
+					return mb_substr($strString, 0 , 1, __QAPPLICATION_ENCODING_TYPE__);
+				else
+					return null;
+			} else {
+				if (strlen($strString)) {
+					return $strString[0];
+				} else {
+					return null;
+				}
+			}
 		}
 
 		/**
@@ -39,11 +47,19 @@
 		 * @return string the last character, or null
 		 */
 		public final static function LastCharacter($strString) {
-			$intLength = mb_strlen($strString, __QAPPLICATION_ENCODING_TYPE__);
-			if ($intLength > 0)
-				return mb_substr($strString, $intLength - 1, 1, __QAPPLICATION_ENCODING_TYPE__);
-			else
-				return null;
+			if (defined('__QAPPLICATION_ENCODING_TYPE__')) {
+				$intLength = mb_strlen($strString, __QAPPLICATION_ENCODING_TYPE__);
+				if ($intLength > 0)
+					return mb_substr($strString, $intLength - 1, 1, __QAPPLICATION_ENCODING_TYPE__);
+				else
+					return null;
+			} else {
+				$intLength = strlen($strString);
+				if ($intLength > 0)
+					return $strString[$intLength -1];
+				else
+					return null;
+			}
 		}
 
 		/**
@@ -126,9 +142,14 @@
 		 */
 		// Implementation from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
 		public final static function LongestCommonSubsequence($str1, $str2) {
-			$str1Len = mb_strlen($str1, __QAPPLICATION_ENCODING_TYPE__);
-			$str2Len = mb_strlen($str2, __QAPPLICATION_ENCODING_TYPE__);
-			
+			if (defined('__QAPPLICATION_ENCODING_TYPE__')) {
+				$str1Len = mb_strlen($str1, __QAPPLICATION_ENCODING_TYPE__);
+				$str2Len = mb_strlen($str2, __QAPPLICATION_ENCODING_TYPE__);
+			} else {
+				$str1Len = strlen($str1);
+				$str2Len = strlen($str2);
+			}
+
 			if($str1Len == 0 || $str2Len == 0)
 				return '';
 			

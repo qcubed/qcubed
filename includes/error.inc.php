@@ -163,7 +163,7 @@
 			require(__DOCROOT__ . ERROR_PAGE_PATH);
 		} else {
 			// Error in installer or similar - ERROR_PAGE_PATH constant is not defined yet.
-			echo "error: errno: ". $__exc_errno . "<br/>" . $__exc_errstr . "<br/>" . $__exc_errfile . ":" . $__exc_errline . "<br/>" . $__exc_errcontext ; 
+			echo "error: errno: ". $__exc_errno . "<br/>" . $__exc_errstr . "<br/>" . $__exc_errfile . ":" . $__exc_errline . "<br/>" . implode(', ', $__exc_errcontext) ;
 		}
 		exit();
 	}
