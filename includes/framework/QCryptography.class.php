@@ -174,7 +174,7 @@
 			if ($this->blnBase64) {
 				$strEncryptedData = base64_encode($strEncryptedData);
 				$strEncryptedData = str_replace('+', '-', $strEncryptedData);
-				$strEncryptedData = str_replace('/', '~', $strEncryptedData);
+				$strEncryptedData = str_replace('/', '_', $strEncryptedData);
 				$strEncryptedData = str_replace('=', '', $strEncryptedData);
 			}
 
