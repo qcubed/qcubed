@@ -377,7 +377,8 @@ if (!defined('SERVER_INSTANCE')) {
 			 *
 			 * [Column 1]
 			 *      Name = id
-			 *      Data Type = varchar / character varying with length of 32 characters (varchar(32))
+			 *      Data Type = varchar / character with variable length. Must hold session number + session name. Typically this is 34 characters, but
+			 * 						you should make it big enough to handle any situation you may encounter.
 			 *
 			 * [Column 2]
 			 *      Name = last_access_time
