@@ -1,6 +1,7 @@
 # NOTE: If you are trying to run this off of your fork, you have to change the
 # docroot in travis/configuration.inc.php from /qcubed/ to the name of your fork.
 language: php
+
 php:
     - '5.4'
     - '5.5'
@@ -14,7 +15,10 @@ install:
 
 env:
     - DB=mysql
-    - DB=pgsql
+    - DB=pgsql POSTGRESQL_VERSION=9.1
+    - DB=pgsql POSTGRESQL_VERSION=9.2
+    - DB=pgsql POSTGRESQL_VERSION=9.3
+    - DB=pgsql POSTGRESQL_VERSION=9.4
 
 before_script:
     - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database qcubed;'; mysql -u root qcubed < assets/php/examples/mysql_innodb.sql; fi"
@@ -23,4 +27,15 @@ before_script:
 script: travis/test.php
 
 sudo: false
+
+matrix:
+  exclude:
+    - php: hhvm
+      env: DB=pgsql POSTGRESQL_VERSION=9.1 # driver currently unsupported by HHVM
+    - php: hhvm
+      env: DB=pgsql POSTGRESQL_VERSION=9.2 # driver currently unsupported by HHVM
+    - php: hhvm
+      env: DB=pgsql POSTGRESQL_VERSION=9.3 # driver currently unsupported by HHVM
+    - php: hhvm
+      env: DB=pgsql POSTGRESQL_VERSION=9.4 # driver currently unsupported by HHVM
 
