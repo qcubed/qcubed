@@ -54,22 +54,21 @@
 
 		<?php foreach (QCodeGen::$CodeGenArray as $objCodeGen) { ?>
 			<p><strong><?php _p($objCodeGen->GetTitle()); ?></strong></p>
-			<pre><code><p class="code_title"><?php _p($objCodeGen->GetReportLabel()); ?></p>
-				<?php
+			<pre><code><p class="code_title"><?php _p($objCodeGen->GetReportLabel()); ?></p><?php
 					if (QCodeGen::DebugMode) {
 						DisplayMonospacedText($objCodeGen->GenerateAll());
 					} else {
 						@DisplayMonospacedText($objCodeGen->GenerateAll());
-					}?>
-				<?php if ($strErrors = $objCodeGen->Errors) { ?>
+					}
+?>
+<?php if ($strErrors = $objCodeGen->Errors) { ?>
 					<p class="code_title">The following errors were reported:</p>
-					<?php DisplayMonospacedText($objCodeGen->Errors); ?>
-				<?php } ?>
-				<?php if ($strWarnings = $objCodeGen->Warnings) { ?>
+<?php DisplayMonospacedText($objCodeGen->Errors); ?>
+<?php } ?>
+<?php if ($strWarnings = $objCodeGen->Warnings) { ?>
 					<p class="code_title">The following warnings were reported:</p>
-					<?php DisplayMonospacedText($objCodeGen->Warnings); ?>
-				<?php } ?>
-			</code></pre>
+<?php DisplayMonospacedText($objCodeGen->Warnings); ?>
+<?php } ?></code></pre>
 		<?php } ?>
 
 		<?php
