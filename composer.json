@@ -43,7 +43,8 @@
         "project/generated/model_base",
         "project/includes/connector",
         "project/includes/model",
-        "project/tmp"
+        "project/tmp",
+		"project/includes/configuration/codegen_options.json"
     ]
   }
 }

@@ -160,6 +160,20 @@ abstract class QInstallationValidator {
 			$obj->strCommandToFix = "chmod 777 " . __CACHE__;
 			$result[] = $obj;
 		}
+
+		if (!file_exists(__CONFIGURATION__ . '/codegen_options.json')) {
+			// Did the user move the __INCLUDES__ directory out of the docroot?
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = 'Create the "' . __CONFIGURATION__ . '/codegen_options.json"' . ' file.';
+			$obj->strCommandToFix = "touch " . __CONFIGURATION__. '/codegen_options.json';
+			$result[] = $obj;
+		}
+		else if (!QFile::isWritable(__CONFIGURATION__ . '/codegen_options.json')) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "The file (" . __CONFIGURATION__ . '/codegen_options.json' . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 666 " . __CONFIGURATION__ . '/codegen_options.json';
+			$result[] = $obj;
+		}
 		
 		if (!function_exists('zip_open')) {
 			$obj = new QInstallationValidationResult();
