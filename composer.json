@@ -44,7 +44,7 @@
         "project/includes/connector",
         "project/includes/model",
         "project/tmp",
-		"project/includes/configuration/codegen_options.json"
+        "project/includes/configuration/codegen_options.json"
     ]
   }
 }
