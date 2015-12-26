@@ -43,7 +43,10 @@
         "project/generated/model_base",
         "project/includes/connector",
         "project/includes/model",
-        "project/tmp"
+        "project/tmp",
+        "project/forms",
+        "project/includes/dialog",
+        "project/includes/panel"
     ]
   }
 }
