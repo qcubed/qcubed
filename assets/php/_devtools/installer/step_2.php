@@ -159,14 +159,14 @@
 		<?php
 			if (file_exists($strStylePath)) {
 		?>
-		<style type="text/css">@import url("<?php _p($strStyleUrl); ?>");</style>
+		<style type="text/css">@import url("<?php _p($strStyleUrl, false); ?>");</style>
 		<?php
 			}
 		?>
 		<?php
 			if (file_exists($strExamplesStylePath)) {
 		?>
-		<style type="text/css">@import url("<?php _p($strExamplesStyleUrl); ?>");</style>
+		<style type="text/css">@import url("<?php _p($strExamplesStyleUrl, false); ?>");</style>
 		<?php
 			}
 		?>
@@ -234,7 +234,7 @@
 <?php
 	foreach($arrDatabaseAdapters as $strAdapter) {
 ?>
-						<option value="<?php _p($strAdapter) ?>"><?php _p($strAdapter) ?></option>
+						<option value="<?php _p($strAdapter, false) ?>"><?php _p($strAdapter) ?></option>
 <?php
 	}
 ?>
@@ -299,7 +299,7 @@
             </form>
 		</section>
 		<footer>
-			<div id="tagline"><a href="http://qcubed.github.com/" title="QCubed Homepage"><img id="logo" src="<?php _p($strImagesUrl . '/qcubed_logo_footer.png'); ?>" alt="QCubed Framework" /> <span class="version"><?php _p(QCUBED_VERSION); ?></span></a></div>
+			<div id="tagline"><a href="http://qcubed.github.com/" title="QCubed Homepage"><img id="logo" src="<?php _p($strImagesUrl . '/qcubed_logo_footer.png', false); ?>" alt="QCubed Framework" /> <span class="version"><?php _p(QCUBED_VERSION); ?></span></a></div>
 		</footer>
 	</body>
 </html>

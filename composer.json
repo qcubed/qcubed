@@ -44,6 +44,9 @@
         "project/includes/connector",
         "project/includes/model",
         "project/tmp",
+        "project/forms",
+        "project/includes/dialog",
+        "project/includes/panel",
         "project/includes/configuration/codegen_options.json"
     ]
   }
