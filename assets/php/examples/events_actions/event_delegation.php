@@ -65,7 +65,7 @@
 			
 			//stop event bubbling
 			$this->pxyDelete->AddAction(new QClickEvent(), new QTerminateAction());
-			$this->pxyDelete->AddAction(new QClickEvent(), new QJavaScriptAction("event.stopPropagation()"));
+			$this->pxyDelete->AddAction(new QClickEvent(), new QStopPropagationAction());
 			
 			
 			//Highlight the datagrid rows when mousing over them using AddRowAction
@@ -116,7 +116,7 @@
 			//do not submit
 			$this->dtgPersonsDelegated->AddAction($objOnEvent, new QTerminateAction());
 			//stop event bubbling
-			$this->dtgPersonsDelegated->AddAction($objOnEvent, new QJavaScriptAction("event.stopPropagation()"));
+			$this->dtgPersonsDelegated->AddAction($objOnEvent, new QStopPropagationAction());
 			//-------------------------------------------------------------------------------------------------------
 			
 			
