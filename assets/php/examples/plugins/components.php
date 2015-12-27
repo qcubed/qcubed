@@ -120,7 +120,7 @@
         <p>However, if your interface is a unique way of editing data, you will need to create a new class
 			called ${PLUGIN_CONTROL_CLASS}_CodeGenerator that extends AbstractControl_CodeGenerator (or more likely QControl_CodeGenerator)
 			to bind the control to the database. See the <strong>QSlider_CodeGenerator</strong> for an example of how to generate the binding code needed.</p>
-        <p>Implement the <strong>GetModelConnectorParams</strong>function to allow a user of the control to set all of your
+        <p>Implement the <strong>GetModelConnectorParams</strong> function to allow a user of the control to set all of your
 			<strong>__set</strong> parameters through the ModelConnector Designer user-interface. This will make it much
 			easier for users to know and use the capabilities of your control.</p>
         <p>Finally, in order to make your control available to the designer as an option for the particular data types
