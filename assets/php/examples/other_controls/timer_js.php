@@ -72,8 +72,15 @@
 		public function OnUpdateDtg() {
 			//fetch new orders
 			$randProdNum = rand(0,3);
-			$order = new Order();
 			$this->intOrderCnt++;
+			// Limit the amount of items in a table to 10
+			// There is no paging for this datagrid, 
+			// so many items here can consume CPU greatly
+			if ($this->intOrderCnt > 10) {
+				$this->intOrderCnt = 1;
+				$this->objOrdersArray = array();
+			}
+			$order = new Order();
 			$order->Id = $this->intOrderCnt;
 			$order->Items = $this->objRandomProductsArray[$randProdNum];
 			$this->objOrdersArray[$this->intOrderCnt] = $order;
