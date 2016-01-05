@@ -550,6 +550,8 @@
 			$strColumnArray = sqlsrv_fetch_array($this->objSqlSrvResult);
 			if ($strColumnArray === false) {
 				// Determine the errorinformation
+				$strErrorInformation 	= '';
+				$strErrorCode		= '';
 				$this->GetErrorInformation($strErrorinformation, $strErrorCode);
 				throw new QSqlServer2005DatabaseException($strErrorinformation, $strErrorCode, $strNonQuery);
 			}
