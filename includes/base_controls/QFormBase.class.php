@@ -452,11 +452,16 @@
 				}
 
 				// Iterate through all the controls
+				
+				// TODO: some listener pattern should be used to update only those
+				// controls that needs it
 
-				// This is original code. In an effort to minimize changes, we aren't going to touch the server calls for now
-				if ($objClass->strCallType != QCallType::Ajax) {
+				// This is original code. In an effort to minimize changes,
+				// we aren't going to touch the server calls for now
+//				if ($objClass->strCallType != QCallType::Ajax) {
 					foreach ($objClass->objControlArray as $objControl) {
-						// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
+						// If they were rendered last time and are visible 
+						// (and if ServerAction, enabled), then Parse its post data
 						if (($objControl->Visible) &&
 							($objControl->Enabled) &&
 							($objControl->RenderMethod)) {
@@ -468,28 +473,28 @@
 						// in ALL controls
 						$objControl->ResetFlags();
 					}
-				}
-				else {
-					// Ajax post. Only send data to controls specified in the post to save time.
-					foreach ($_POST as $key=>$val) {
-						$strControlId = $key;
-						if (($intOffset = strpos ($strControlId, '_')) !== false) {	// the first break is the control id
-							$strControlId = substr ($strControlId, 0, $intOffset);
-						}
-						$previouslyFoundArray = array();
-						if (($objControl = $objClass->GetControl($strControlId)) &&
-								!isset($previouslyFoundArray[$strControlId])) {
-							if (($objControl->Visible) &&
-								($objControl->RenderMethod)) {
-								// Call each control's ParsePostData()
-								$objControl->ParsePostData();
-								$objControl->ResetFlags();  // this should NOT be needed, but just in case
-							}
-
-							$previouslyFoundArray[$strControlId] = true;
-						}
-					}
-				}
+//				}
+//				else {
+//					// Ajax post. Only send data to controls specified in the post to save time.
+//					foreach ($_POST as $key=>$val) {
+//						$strControlId = $val;
+//						if (($intOffset = strpos ($strControlId, '_')) !== false) {	// the first break is the control id
+//							$strControlId = substr ($strControlId, 0, $intOffset);
+//						}
+//						$previouslyFoundArray = array();
+//						if (($objControl = $objClass->GetControl($strControlId)) &&
+//								!isset($previouslyFoundArray[$strControlId])) {
+//							if (($objControl->Visible) &&
+//								($objControl->RenderMethod)) {
+//								// Call each control's ParsePostData()
+//								$objControl->ParsePostData();
+//								$objControl->ResetFlags();  // this should NOT be needed, but just in case
+//							}
+//
+//							$previouslyFoundArray[$strControlId] = true;
+//						}
+//					}
+//				}
 
 				// Only if our action is validating, we are going to reset the validation state of all the controls
 				if (isset($_POST['Qform__FormControl']) && isset($objClass->objControlArray[$_POST['Qform__FormControl']])) {
