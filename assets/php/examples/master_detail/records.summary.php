@@ -39,7 +39,9 @@ Here is the Child QDataGrid...
 				$this->objProject = $objProject;
 				
 				// Create the child DataGrid as a normal QDataGrid 
-				$this->dtgRecordsSummary = new PersonDataGrid($this);
+				// It is a simple QDataGrid because the generated class ProjectList
+				// is inherited from the QDataGrid2 now
+				$this->dtgRecordsSummary = new QDataGrid($this);
 				$this->dtgRecordsSummary->ShowFilter = false;
 				// pagination
 				$this->dtgRecordsSummary->Paginator = new QPaginator($this->dtgRecordsSummary);

@@ -73,11 +73,6 @@
 				'HtmlEntities=false',
 				'Name=City'));
 			$this->dtgAddresses->AddColumn(
-				new QDataGridColumn('Id',
-				'<?= $_CONTROL->ParentControl->render_AddressIdColumn($_CONTROL, $_ITEM ) ?>',
-				'HtmlEntities=false',
-				'Name=address_id'));
-			$this->dtgAddresses->AddColumn(
 				new QDataGridColumn('PersonId',
 				'<?= $_CONTROL->ParentControl->render_PersonIdColumn($_CONTROL, $_ITEM ) ?>',
 				'HtmlEntities=false',
@@ -99,9 +94,9 @@
 
 			$this->mctAddress = AddressConnector::CreateFromPathInfo($this->dtgAddresses);
 
-			$this->lblId = $this->mctAddress->lblId_Create();
-			$this->lblId->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
-			$this->lblId->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
+//			$this->lblId = $this->mctAddress->lblId_Create();
+//			$this->lblId->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
+//			$this->lblId->AddAction(new QEscapeKeyEvent(), new QTerminateAction());
 
 			$this->lblPerson = $this->mctAddress->lblPerson_Create();
 			$this->lblPerson->AddAction(new QEscapeKeyEvent(), new QAjaxControlAction($this,'btnCancel_Click',$this->dtgAddresses->WaitIcon));
@@ -145,14 +140,14 @@
 
 		// If the address for the row we are rendering is currently being edited,
 		// show the textbox.  Otherwise, display the contents as is. 		 
-		 public function render_AddressIdColumn($parControl, Address $objRecord) {
-			if (($objRecord->Id == $this->intEditAddressId) ||
-				(($this->intEditAddressId == -1) && (!$objRecord->Id)))
-				return $this->lblId->RenderWithError(false);
-			else {
-				return QApplication::HtmlEntities($objRecord->Id);
-			}
-		}
+//		 public function render_AddressIdColumn($parControl, Address $objRecord) {
+//			if (($objRecord->Id == $this->intEditAddressId) ||
+//				(($this->intEditAddressId == -1) && (!$objRecord->Id)))
+//				return $this->lblId->RenderWithError(false);
+//			else {
+//				return QApplication::HtmlEntities($objRecord->Id);
+//			}
+//		}
 
 		 public function render_PersonIdColumn($parControl, Address $objRecord) {
 			if (($objRecord->Id == $this->intEditAddressId) ||
