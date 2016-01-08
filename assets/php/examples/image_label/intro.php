@@ -13,7 +13,7 @@
 			$this->lstFont = new QListBox($this);
 			$objFontDirectory = opendir(__QCUBED_CORE__ . '/fonts');
 			while ($strFile = readdir($objFontDirectory))
-				if ($intPosition = strpos($strFile, '.pfb'))
+				if ($intPosition = strpos($strFile, '.ttf'))
 					$this->lstFont->AddItem(new QListItem(substr($strFile, 0, $intPosition), $strFile));
 			$this->lstFont->SelectedIndex = 0;
 			$this->lstFont->AddAction(new QChangeEvent(), new QAjaxAction('lstFont_Change'));
