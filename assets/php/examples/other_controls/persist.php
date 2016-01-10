@@ -28,7 +28,7 @@ class PersistentExampleForm extends QForm {
 	}
 
 	protected function btnReload_Click() {
-		QApplication::Redirect('persist.php', false); // Make sure the redirect does not abort the current script. Otherwise, the state of the controls will not be remembered.
+		QApplication::Redirect('persist.php');
 	}
 }
 
