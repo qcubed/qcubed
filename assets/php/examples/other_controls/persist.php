@@ -23,11 +23,12 @@ class PersistentExampleForm extends QForm {
 
 		$this->btnReload = new QButton($this);
 		$this->btnReload->Text = 'Reload the Page';
+		// Any action will trigger the communication from the client to the server to record changes on the client side.
 		$this->btnReload->AddAction (new QClickEvent(), new QAjaxAction('btnReload_Click'));
 	}
 
 	protected function btnReload_Click() {
-		QApplication::Redirect('persist.php');
+		QApplication::Redirect('persist.php', false); // Make sure the redirect does not abort the current script. Otherwise, the state of the controls will not be remembered.
 	}
 }
 
