@@ -926,7 +926,7 @@
 		/**
 		 * Tell all the controls to save their state.
 		 */
-		protected function SaveControlState() {
+		public function SaveControlState() {
 			// tell the controls to save their state
 			$a = $this->GetAllControls();
 			foreach ($a as $control) {
