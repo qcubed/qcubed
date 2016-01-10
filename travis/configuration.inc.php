@@ -397,6 +397,9 @@ if (!defined('SERVER_INSTANCE')) {
 			// If using HTML Purifier, the location of the writeable cache directory.
 			//define ('__PURIFIER_CACHE__', __CACHE__ . '/purifier');
 
+			/** For enabling frontend functional tests tools such as Selenium WebDriver */
+			define('__FRONTEND_TEST_MODE__', true);
+
 			break;
 	}
 }
