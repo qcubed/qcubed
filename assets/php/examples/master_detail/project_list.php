@@ -10,12 +10,9 @@
 		protected $dtgProjects;
 					
 		protected function Form_Create() {
+			// Instantiate the Meta DataGrid
 			//$this->objDefaultWaitIcon = new QWaitIcon($this);
-
-			// Instantiate the DataGrid
-			// It is a simple QDataGrid because the generated class ProjectList
-			// is inherited from the QDataGrid2 now
-			$this->dtgProjects = new QDataGrid($this);
+			$this->dtgProjects = new ProjectDataGrid($this);
 			//$this->dtgProjects->WaitIcon = $this->objDefaultWaitIcon;
 					
 			// Style the DataGrid (if desired)
@@ -52,38 +49,33 @@
 			// now is time to add some trick to filter only by some field
 			 
 			// remove filter from ID column
-			$colId = new QDataGridColumn('Id', '<?= $_ITEM->Id ?>');
+			$colId = $this->dtgProjects->AddConnectedColumn('Id');
 			$colId->FilterType = "";
-			$this->dtgProjects->AddColumn($colId);
 
-			$this->dtgProjects->AddColumn(new QDataGridColumn('Project', '<?= $_ITEM->Name ?>'));
-			$this->MetaAddTypeColumn(QQN::Project()->ProjectStatusTypeId, 'ProjectStatusType');
+			$this->dtgProjects->AddConnectedColumn('Name', 'Name=Project');
+			$this->dtgProjects->AddDbTypeColumn('ProjectStatusTypeId', 'ProjectStatusType');
 			//$this->dtgProjects->AddConnectedColumn(QQN::Project()->ManagerPerson);
-			$this->dtgProjects->AddColumn(new QDataGridColumn('Description', '<?= $_ITEM->Description ?>'));
+			$this->dtgProjects->AddConnectedColumn('Description');
 			
 			// remove filter from field
 			//$this->dtgProjects->AddConnectedColumn('StartDate');
-			$colStartDate = new QDataGridColumn('StartDate', '<?= $_ITEM->StartDate ?>');
+			$colStartDate = $this->dtgProjects->AddConnectedColumn('StartDate');
 			$colStartDate->FilterType = "";
-			$this->dtgProjects->AddColumn($colStartDate);
 			
 			// remove filter from field
 			//$this->dtgProjects->AddConnectedColumn('EndDate');
-			$colEndDate = new QDataGridColumn('EndDate', '<?= $_ITEM->EndDate ?>');
+			$colEndDate = $this->dtgProjects->AddConnectedColumn('EndDate');
 			$colEndDate->FilterType = "";
-			$this->dtgProjects->AddColumn($colEndDate);
 			
 			// remove filter from field
 			// $this->dtgProjects->AddConnectedColumn('Budget');
-			$colBudget = new QDataGridColumn('Budget', '<?= $_ITEM->Budget ?>');
+			$colBudget = $this->dtgProjects->AddConnectedColumn('Budget');
 			$colBudget->FilterType = "";
-			$this->dtgProjects->AddColumn($colBudget);
 			
 			// remove filter from field
 			// $this->dtgProjects->AddConnectedColumn('Spent');
-			$colSpent = new QDataGridColumn('Spent', '<?= $_ITEM->Spent ?>');
+			$colSpent = $this->dtgProjects->AddConnectedColumn('Spent');
 			$colSpent->FilterType = ""; 
-			$this->dtgProjects->AddColumn($colSpent);
 			
 			// Second... 
 			// we need to create out Child QDataGrid 
@@ -112,58 +104,6 @@
 			// The header row turns into links when the column can be sorted.
 			$objStyle = $this->dtgProjects->HeaderLinkStyle;
 			$objStyle->ForeColor = 'white';
-			
-			$this->dtgProjects->SetDataBinder('dtgProjects_Bind', $this);
-		}
-		
-		// This hack is here because dtgProjects is not ProjectDataGrid anymore, but just a QDataGrid
-		public function MetaAddTypeColumn($objNode, $strTypeClassName, $objOverrideParameters = null) {
-			// Validate TypeClassName
-			if (!class_exists($strTypeClassName) || !property_exists($strTypeClassName, 'NameArray')) {
-				throw new QCallerException('Invalid TypeClass Name: ' . $strTypeClassName);
-			}
-
-			// Create the Column
-			$strName = QConvertNotation::WordsFromCamelCase($objNode->_PropertyName);
-			if (strtolower(substr($strName, strlen($strName) - 3)) == ' id') {
-				$strName = substr($strName, 0, strlen($strName) - 3);
-			}
-			$strProperty = $objNode->GetDataGridHtml();
-			$objNewColumn = new QDataGridColumn(
-				QApplication::Translate($strName),
-				sprintf('<?=(%s) ? %s::$NameArray[%s] : null;?>', $strProperty, $strTypeClassName, $strProperty),
-				array(
-					'OrderByClause' => QQ::OrderBy($objNode),
-					'ReverseOrderByClause' => QQ::OrderBy($objNode, false)
-				)
-			);
-
-			// Perform Overrides
-			$objOverrideArray = func_get_args();
-			if (count($objOverrideArray) > 2) {
-				try {
-					unset($objOverrideArray[0]);
-					unset($objOverrideArray[1]);
-					$objNewColumn->OverrideAttributes($objOverrideArray);
-				} catch (QCallerException $objExc) {
-					$objExc->IncrementOffset();
-					throw $objExc;
-				}
-			}
-
-			$this->dtgProjects->AddColumn($objNewColumn);
-			return $objNewColumn;
-		}
-		
-		public function dtgProjects_Bind() {
-			// We must first let the datagrid know how many total items there are
-			$this->dtgProjects->TotalItemCount = Project::CountAll();
-
-			// Next, we must be sure to load the data source, passing in the datagrid's
-			// limit info into our loadall method.
-			$this->dtgProjects->DataSource = Project::LoadAll(QQ::Clause(
-				$this->dtgProjects->OrderByClause, $this->dtgProjects->LimitClause
-			));
 		}
 		
 		// Function to render our toggle button column
