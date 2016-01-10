@@ -471,12 +471,18 @@
 				}
 				else {
 					// Ajax post. Only send data to controls specified in the post to save time.
+					$previouslyFoundArray = array();
 					foreach ($_POST as $key=>$val) {
-						$strControlId = $key;
+						if ($key == 'Qform__FormControl') {
+							$strControlId = $val;
+						} elseif (substr($key, 0, 6) == 'Qform_') {
+							continue;	// ignore this form data
+						} else {
+							$strControlId = $key;
+						}
 						if (($intOffset = strpos ($strControlId, '_')) !== false) {	// the first break is the control id
 							$strControlId = substr ($strControlId, 0, $intOffset);
 						}
-						$previouslyFoundArray = array();
 						if (($objControl = $objClass->GetControl($strControlId)) &&
 								!isset($previouslyFoundArray[$strControlId])) {
 							if (($objControl->Visible) &&
