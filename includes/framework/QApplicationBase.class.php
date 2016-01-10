@@ -589,6 +589,12 @@
 				QApplication::$JavascriptCommandArray[QAjaxResponse::Location] = $strLocation;
 			}
 			else {
+				global $_FORM;
+
+				if ($_FORM) {
+					$_FORM->SaveControlState();
+				}
+
 				// Clear the output buffer (if any)
 				ob_clean();
 
