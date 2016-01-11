@@ -15,6 +15,9 @@
 	 * @property-write QSimpleTableBase $_ParentTable   Parent table of this column
 	 * @property-write callable $CellParamsCallback A callback to set the html parameters of a generated cell
 	 * @property boolean                $Visible        Whether the column will be drawn. Defaults to true.
+	 * @property-read QTagStyler		$CellStyler		The tag styler for the cells in the column
+	 * @property-read QTagStyler		$HeaderCellStyler		The tag styler for the header cells in the column
+	 * @property-read QTagStyler		$ColStyler		The tag styler for the col tag in the column
 	 */
 	abstract class QAbstractSimpleTableColumn extends QBaseClass {
 		/** @var string */
@@ -37,6 +40,13 @@
 		protected $blnVisible = true;
 		/** @var Callable Callback to modify the html attributes of the generated cell. */
 		protected $cellParamsCallback = null;
+		/** @var QTagStyler Styles for each cell. Usually this should be done in css for efficient code generation. */
+		protected $objCellStyler;
+		/** @var QTagStyler Styles for each header cell. Usually this should be done in css for efficient code generation. */
+		protected $objHeaderCellStyler;
+		/** @var QTagStyler Styles for each col. Usually this should be done in css for efficient code generation. */
+		protected $objColStyler;
+
 
 
 		/**
@@ -85,6 +95,9 @@
 			if ($this->strHeaderCssClass) {
 				$aParams['class'] = $this->strHeaderCssClass;
 			}
+			if ($this->objHeaderCellStyler) {
+				$aParams = $this->objHeaderCellStyler->GetHtmlAttributes($aParams);
+			}
 			return $aParams;		
 		}
 		
@@ -127,6 +140,7 @@
 		 */
 		protected function GetCellParams ($item) {
 			$aParams = array();
+
 			if ($strClass = $this->GetCellClass ($item)) {
 				$aParams['class'] = $strClass;
 			}
@@ -135,13 +149,20 @@
 				$aParams['id'] = $strId;
 			}
 			
-			if ($strStyle = $this->GetCellStyle ($item)) {
-				$aParams['style'] = $strStyle;
-			}
 			if ($this->blnRenderAsHeader) {
 				// assume this means it is a row header
 				$aParams['scope'] = 'row';
 			}
+
+			if ($this->objCellStyler) {
+				$strStyle = $this->GetCellStyle ($item);
+				$aParams = $this->objCellStyler->GetHtmlAttributes($aParams, explode(';', $strStyle));
+			} else {
+				if ($strStyle = $this->GetCellStyle ($item)) {
+					$aParams['style'] = $strStyle;
+				}
+			}
+
 			if ($this->cellParamsCallback) {
 				$a = call_user_func($this->cellParamsCallback, $item);
 				$aParams = array_merge ($aParams, $a);
@@ -219,6 +240,10 @@
 				$aParams['class'] = $this->strCssClass;
 			}
 
+			if ($this->objColStyler) {
+				$aParams = $this->objColStyler->GetHtmlAttributes($aParams);
+			}
+
 			return $aParams;		
 		}
 
@@ -266,7 +291,23 @@
 					return $this->strId;
 				case 'Visible':
 					return $this->blnVisible;
-					
+				case 'CellStyler':
+					if (!$this->objCellStyler) {
+						$this->objCellStyler = new QTagStyler();
+					}
+					return $this->objCellStyler;
+				case 'HeaderCellStyler':
+					if (!$this->objHeaderCellStyler) {
+						$this->objHeaderCellStyler = new QTagStyler();
+					}
+					return $this->objHeaderCellStyler;
+				case 'ColStyler':
+					if (!$this->objColStyler) {
+						$this->objColStyler = new QTagStyler();
+					}
+					return $this->objColStyler;
+
+
 				default:
 					try {
 						return parent::__get($strName);

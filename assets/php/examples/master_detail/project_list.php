@@ -10,119 +10,80 @@
 		protected $dtgProjects;
 					
 		protected function Form_Create() {
-			// Instantiate the Meta DataGrid
-			//$this->objDefaultWaitIcon = new QWaitIcon($this);
-			$this->dtgProjects = new ProjectDataGrid($this);
-			//$this->dtgProjects->WaitIcon = $this->objDefaultWaitIcon;
-					
-			// Style the DataGrid (if desired)
-			$this->dtgProjects->CssClass = 'datagrid';
-			$this->dtgProjects->AlternateRowStyle->CssClass = 'alternate';
+			// Instantiate the DataGrid
+			$this->dtgProjects = new QDataGrid2($this);
 
-			// Add Pagination (if desired)
+			// Style the DataGrid
+			//$this->dtgProjects->CssClass = 'datagrid';
+			$this->dtgProjects->AlternateRowCssClass = 'alternate';
+
+			// Add Pagination
 			$this->dtgProjects->Paginator = new QPaginator($this->dtgProjects);
 			$this->dtgProjects->ItemsPerPage = 3;
-			
-			/************************************************************************* 
-			/  to  use old filter  
-			/  uncomment the line  below ($this->dtgProjects->ShowFilter = false;)
-			**************************************************************************/
-			// $this->dtgProjects->ShowFilter = false;
-			/************************************************************************/
-			
-			
-			// Use the MetaDataGrid functionality to add Columns for this datagrid
-			
-			// Here we start, create our first control a simple toogle button
-			$this->dtgProjects->AddColumn(
-							new QDataGridColumn(
-								'',
-								'<?= $_FORM->render_btnToggleRecordsSummary($_ITEM) ?>',
-								'HtmlEntities=false',
-								'Width=1px'));
-			
-			// Create the Other Columns 
-			// Note that you can use strings for project's properties,
-			// or you can traverse down QQN::project() to display fields 
-			// that are down the hierarchy)
-			
-			// now is time to add some trick to filter only by some field
-			 
-			// remove filter from ID column
-			$colId = $this->dtgProjects->AddConnectedColumn('Id');
-			$colId->FilterType = "";
 
-			$this->dtgProjects->AddConnectedColumn('Name', 'Name=Project');
-			$this->dtgProjects->AddDbTypeColumn('ProjectStatusTypeId', 'ProjectStatusType');
-			//$this->dtgProjects->AddConnectedColumn(QQN::Project()->ManagerPerson);
-			$this->dtgProjects->AddConnectedColumn('Description');
+			// Add columns
 			
-			// remove filter from field
-			//$this->dtgProjects->AddConnectedColumn('StartDate');
-			$colStartDate = $this->dtgProjects->AddConnectedColumn('StartDate');
-			$colStartDate->FilterType = "";
-			
-			// remove filter from field
-			//$this->dtgProjects->AddConnectedColumn('EndDate');
-			$colEndDate = $this->dtgProjects->AddConnectedColumn('EndDate');
-			$colEndDate->FilterType = "";
-			
-			// remove filter from field
-			// $this->dtgProjects->AddConnectedColumn('Budget');
-			$colBudget = $this->dtgProjects->AddConnectedColumn('Budget');
-			$colBudget->FilterType = "";
-			
-			// remove filter from field
-			// $this->dtgProjects->AddConnectedColumn('Spent');
-			$colSpent = $this->dtgProjects->AddConnectedColumn('Spent');
-			$colSpent->FilterType = ""; 
-			
-			// Second... 
-			// we need to create out Child QDataGrid 
-			// at moment we put them hide in a column.
-			$this->dtgProjects->AddColumn(
-			new QDataGridColumn('',
-							'<?= $_FORM->render_ucRecordsSummary($_ITEM) ?>',
-							'HtmlEntities=false','Width=1px'));
-			
+			// Create a column that will hold a toggle button. We will need to manually draw the content of the cell.
+			$col = $this->dtgProjects->CreateCallableColumn('', [$this, 'render_btnToggleRecordsSummary']);
+			$col->HtmlEntities = false;
+			$col->CellStyler->Width = "1%";
+
+			$this->dtgProjects->CreateNodeColumn('Id', QQN::Project()->Id);
+			$this->dtgProjects->CreateNodeColumn('Name', QQN::Project()->Name);
+			$this->dtgProjects->CreateNodeColumn('Status', QQN::Project()->ProjectStatusType);
+			$this->dtgProjects->CreateNodeColumn('Description', QQN::Project()->Description);
+			$this->dtgProjects->CreateNodeColumn('Start Date', QQN::Project()->StartDate);
+			$this->dtgProjects->CreateNodeColumn('End Date', QQN::Project()->EndDate);
+			$this->dtgProjects->CreateNodeColumn('Budget', QQN::Project()->Budget);
+			$this->dtgProjects->CreateNodeColumn('Spent', QQN::Project()->Spent);
+
+			// Create a column that will hold a child datagrid
+
+			$col = $this->dtgProjects->CreateCallableColumn('', [$this, 'render_ucRecordsSummary']);
+			$col->HtmlEntities = false;
+			$col->CellStyler->Width = 0;
+
 			// Specify the Datagrid's Data Binder method
-			//$this->dtgProjects->SetDataBinder('dtgProjects_Bind');
-			
-			// Make the DataGrid look nice
-			$objStyle = $this->dtgProjects->RowStyle;
-			$objStyle->FontSize = 12;
-			
-			$objStyle = $this->dtgProjects->AlternateRowStyle;
-			$objStyle->BackColor = '#f6f6f6';
+			$this->dtgProjects->SetDataBinder('dtgProjects_Bind');
 
-			$objStyle = $this->dtgProjects->HeaderRowStyle;
-			$objStyle->ForeColor = 'white';
-			$objStyle->BackColor = '#780000';
+			// For purposes of this example, add a css file that styles the table.
+			// Normally you would include your global style sheets in your tpl file or header.inc.php file.
+			$this->dtgProjects->AddCssFile(__QCUBED_ASSETS__ . '/php/examples/master_detail/styles.css');
+		}
 
-			// Because browsers will apply different styles/colors for LINKs
-			// We must explicitly define the ForeColor for the HeaderLink.
-			// The header row turns into links when the column can be sorted.
-			$objStyle = $this->dtgProjects->HeaderLinkStyle;
-			$objStyle->ForeColor = 'white';
+		protected function dtgProjects_Bind() {
+			$this->dtgProjects->TotalItemCount = Project::QueryCount(QQ::All());
+
+			// If a column is selected to be sorted, and if that column has a OrderByClause set on it, then let's add
+			// the OrderByClause to the $objClauses array
+			if ($objClause = $this->dtgProjects->OrderByClause) {
+				$objClauses[] = $objClause;
+			}
+
+			// Add the LimitClause information, as well
+			if ($objClause = $this->dtgProjects->LimitClause) {
+				$objClauses[] = $objClause;
+			}
+
+			$this->dtgProjects->DataSource = Project::LoadAll($objClauses);
 		}
 		
 		// Function to render our toggle button column
 		// As you can see we pass as a parameter the item binded in the
 		// row of QDataGrid
-		public function render_btnToggleRecordsSummary(Project $objProject) {			
+		public function render_btnToggleRecordsSummary(Project $objProject) {
 			// Create their unique id...
 			$objControlId = 'btnToggleRecordsSummary' . $objProject->Id;
 			
 			if (!$objControl = $this->GetControl($objControlId)) {			
-				// magia 2011-07  add in button info of child presence
-				$team_member = Person::LoadArrayByProjectAsTeamMember($objProject->Id);
-				if (count($team_member)> 0) {
+				$intTeamMemberCount = Person::CountByProjectAsTeamMember($objProject->Id);
+				if ($intTeamMemberCount > 0) {
 
 					// If not exists create our toggle button who his parent
 					// is our master QDataGrid...
 					$objControl = new QButton($this->dtgProjects, $objControlId);
 					$objControl->Width = 25;
-					$objControl->Text = '+'.count($team_member);
+					$objControl->Text = '+' . $intTeamMemberCount;
 					$objControl->CssClass = 'inputbutton';
 				
 					// Pass the id of the bounded item just for other process
@@ -131,10 +92,7 @@
 					$objControl->ActionParameter = $objProject->Id;
 				
 					// Add event on click the toogle button
-					$objControl->AddAction(new QClickEvent(), 
-								   new QAjaxAction(
-								   'btnToggleRecordsSummary_Click',
-								   $this->dtgProjects->WaitIcon));
+					$objControl->AddAction(new QClickEvent(), new QAjaxAction( 'btnToggleRecordsSummary_Click'));
 				}
 			}
 			// We pass the parameter of "false" to make sure the control doesn't render
@@ -144,21 +102,20 @@
 			
 			
 		// Clicking the toogle button...
-		public function btnToggleRecordsSummary_Click($strFormId, $strControlId, $strParameter) {			
+		public function btnToggleRecordsSummary_Click($strFormId, $strControlId, $strParameter) {
 			// First get the button himself for change '+' to '-'
 			$srcControl = $this->GetControl($strControlId);
 			
 			$intProjectId = intval($strParameter);
 			
-			// Look for our child QDatagrid if is render...
+			// Look for our child datagrid if is render...
 			$objControlId = 'ucRecordsSummary' . $intProjectId;
 			$objControl = $this->GetControl($objControlId);
-			
-			// magia 2011-07  inserito test per presenza child
-			$team_member = Person::LoadArrayByProjectAsTeamMember($intProjectId);
-			if (count($team_member)> 0) {
+
+			$intTeamMemberCount = Person::CountByProjectAsTeamMember($intProjectId);
+			if ($intTeamMemberCount > 0) {
 				if ($objControl) {
-				// Ask if our Child DataGrid is visible...
+				// Ask if our child datagrid is visible...
 					if ($objControl->Visible) {
 						// Make it desapear ...
 						$objControl->Visible = false;
@@ -175,7 +132,7 @@
 			}
 		}
 			
-		// Ladies and Gentlemen... Our Child QDataGrid...
+		// Draw the child datagrid inside of a cell of the parent datagrid
 		public function render_ucRecordsSummary(Project $objProject) {
 			$objControlId = 'ucRecordsSummary' . $objProject->Id;
 			

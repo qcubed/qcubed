@@ -46,4 +46,4 @@ class ExampleService extends QSoapService {
 
 // We need to RUN the WebService (just like how we run a QForm)
 ExampleService::Run('ExampleService', 'http://examples.qcodo.com');
-?>
+
