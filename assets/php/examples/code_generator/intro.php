@@ -16,9 +16,9 @@
 		<strong><a href="<?php _p(__VIRTUAL_DIRECTORY__ . __DEVTOOLS_ASSETS__ . '/codegen.php'); ?>" class="bodyLink">code generate</a></strong>
 		the corresponding objects <em>before</em> trying to any of the further code generation examples.</p>
 
-	<p>Note that there is also a SQL Server version of this database script called <strong>sql_server.sql</strong>.</p>
+	<p>Note that there is also a SQL Server version of this database script called <strong>sql_server.sql</strong>. And PostgreSql version called <strong>pgsql.sql</strong>.</p>
 
-	<p>In the script, we have six tables defined.  The bulk of our examples will focus on the main three
+	<p>In the script, we have some tables defined.  The bulk of our examples will focus on the main three
 		tables of the database:</p>
 	<ul>
 		<li><strong>login</strong></li>
@@ -29,8 +29,11 @@
 	<p>The <strong>team_member_project_assn</strong> table handles the many-to-many relationship between
 		<strong>person</strong> and <strong>project</strong>.
 		The <strong>project_status_type</strong> table is a <strong>Type Table</strong> which will be discussed in
-		the example for <strong>Type Tables</strong>.  Finally the <strong>person_with_lock</strong> table is
-		specifically used by the example for <strong>Optimistic Locking</strong>.</p>
+		the example for <a href="../more_codegen/type_tables.php">Type Tables</a>.
+		The <strong>qc_watchers</strong> table is a special system table which will be discussed in
+		the example for <a href="../events_actions/watcher.php">Automatic Refreshing of Controls</a>.
+		Finally the <strong>person_with_lock</strong> table is specifically used by the example for
+		<a href="../more_codegen/optimistic_locking.php">Optimistic Locking</a>.</p>
 </div>
 
 <div id="demoZone">

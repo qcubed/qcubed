@@ -17,7 +17,7 @@ class ExampleForm extends QForm {
 		// Enable Pagination, and set to 5 items per page
 		$objPaginator = new QPaginator($this->dtgPersons);
 		$this->dtgPersons->Paginator = $objPaginator;
-		$this->dtgPersons->ItemsPerPage = 20;
+		$this->dtgPersons->ItemsPerPage = 5;
 
 		// Define Columns
 		$this->dtgPersons->AddColumn(new QDataGridColumn('Person ID', '<?= $_ITEM->Id ?>', 'Width=100',

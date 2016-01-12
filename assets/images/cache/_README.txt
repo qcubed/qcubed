@@ -1,1 +1,1 @@
-This folder is to store cached images created by the QImageControl example.
+This folder is to store cached images created, for example, by the QImageControl class.

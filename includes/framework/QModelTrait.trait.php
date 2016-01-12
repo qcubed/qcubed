@@ -322,7 +322,8 @@ trait QModelTrait {
 	public static function QueryArrayCached(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null, $blnForceUpdate = false) {
 		$strQuery = static::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 
-		$objCache = new QCache('qquery/<?php echo strtolower($objTable->ClassName)  ?>', $strQuery);
+		$strTableName = static::GetTableName();
+		$objCache = new QCache(sprintf('qquery/%s', $strTableName), $strQuery);
 		$cacheData = $objCache->GetData();
 
 		if (!$cacheData || $blnForceUpdate) {

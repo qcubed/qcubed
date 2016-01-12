@@ -452,11 +452,16 @@
 				}
 
 				// Iterate through all the controls
+				
+				// TODO: some listener pattern should be used to update only those
+				// controls that needs it
 
-				// This is original code. In an effort to minimize changes, we aren't going to touch the server calls for now
+				// This is original code. In an effort to minimize changes,
+				// we aren't going to touch the server calls for now
 				if ($objClass->strCallType != QCallType::Ajax) {
 					foreach ($objClass->objControlArray as $objControl) {
-						// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
+						// If they were rendered last time and are visible 
+						// (and if ServerAction, enabled), then Parse its post data
 						if (($objControl->Visible) &&
 							($objControl->Enabled) &&
 							($objControl->RenderMethod)) {

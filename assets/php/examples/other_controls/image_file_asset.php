@@ -15,7 +15,7 @@
 			// Let's make the File Icon "clickable" -- allowing users to download / view the currently uploaded file
 			// We need to do two things -- first, set a temporaryuploadpath that is within the docroot
 			// and then we need to set ClickToView to true
-			$this->ifaSample->TemporaryUploadPath = __DOCROOT__ . __EXAMPLES__ . '/other_controls/temp_uploads';
+			$this->ifaSample->TemporaryUploadPath = __QCUBED_UPLOAD__;
 			$this->ifaSample->ClickToView = true;
 
 			// Feel free to uncomment this yourself, but note that you can pre-define the File property.

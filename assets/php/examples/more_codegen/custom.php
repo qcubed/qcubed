@@ -28,7 +28,9 @@
 		const TaxPercentage = .0825;
 
 		public function GetPrice($fltDiscount) {
-			$fltPrice = $this->fltBudget;
+			// Note that strBudget is a DECIMAL type
+			// Use the bcmath library if you need better precision than float
+			$fltPrice = floatval($this->strBudget);
 			$fltPrice = $fltPrice * (1.0 - $fltDiscount);
 			$fltPrice = $fltPrice * (1.0 + Project::TaxPercentage);
 

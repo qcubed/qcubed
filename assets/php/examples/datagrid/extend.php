@@ -24,7 +24,7 @@ class ExampleForm extends QForm {
 		// Enable Pagination, and set to 5 items per page
 		$objPaginator = new QPaginator($this->dtgPersons);
 		$this->dtgPersons->Paginator = $objPaginator;
-		$this->dtgPersons->ItemsPerPage = 20;
+		$this->dtgPersons->ItemsPerPage = 5;
 
 		// Let's create our ALTERNATE paginator
 		$this->dtgPersons->PaginatorAlternate = new QPaginator($this->dtgPersons);

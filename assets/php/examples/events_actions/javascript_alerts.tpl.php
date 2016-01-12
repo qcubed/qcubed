@@ -17,7 +17,12 @@
 	javascript function on the page itself, so that the button has some javascript to perform.</p>
 	
 	<p>If you are interested in more advanced and flexible types of confirmation or prompts, take a look at the 
-	<a href="../../../../plugins/DialogBoxes/example/more_dialog_boxes.php">plugin that offers pre-built QDialogBox subclasses</a>.</p>
+		<?php if (file_exists('../../../../plugins/DialogBoxes/example/more_dialog_boxes.php')) { ?>
+		<a href="../../../../plugins/DialogBoxes/example/more_dialog_boxes.php">plugin that offers pre-built QDialogBox subclasses</a>.
+		<?php } else { ?>
+		<a href="https://github.com/qcubed/DialogBoxes/raw/master/releases/DialogBoxes_0.2.zip">plugin that offers pre-built QDialogBox subclasses</a>.
+		<?php } ?>
+	</p>
 </div>
 
 <div id="demoZone">
