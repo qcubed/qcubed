@@ -142,7 +142,6 @@ TMPL;
 	public function __construct(\$objParent, \$strControlId = false) {
 		parent::__construct(\$objParent, \$strControlId);
 		\$this->CreatePaginator();
-		\$this->CreateColumns();
 		// Set a generic data binder.
 		// Set to BindData if you want to do more custom data binding
 		\$this->SetDataBinder('DefaultDataBinder', \$this);
@@ -188,9 +187,9 @@ TMPL;
 
 		$strCode = <<<TMPL
 	/**
-	 * Creates the columns for the table. Override to change the columns, or use the ModelEditorDialog to turn on and off individual columns.
+	 * Creates the columns for the table. Override to customize, or use the ModelConnectorEditor to turn on and off individual columns.
 	 */
-	protected function CreateColumns() {
+	public function CreateColumns() {
 
 TMPL;
 
@@ -476,6 +475,7 @@ TMPL;
 	 */
 	public function DataListHelperMethods(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = $this->GenerateCreateFunction($objCodeGen, $objTable);
+		$strCode .= $this->GenerateCreateColumns($objCodeGen, $objTable);
 		$strCode .= $this->GenerateAddActions($objCodeGen, $objTable);
 		$strCode .= $this->GenerateRowParamsCallback($objCodeGen, $objTable);
 
@@ -501,6 +501,7 @@ TMPL;
 	**/
 	protected function {$strVarName}_Create() {
 		\$this->{$strVarName} = new {$strPropertyName}List(\$this);
+		\$this->{$strVarName}_CreateColumns();
 		\$this->{$strVarName}_AddActions();
 		\$this->{$strVarName}->AddCssClass('clickable-rows');
 		\$this->{$strVarName}->RowParamsCallback = [\$this, "{$strVarName}_GetRowParams"];
@@ -523,6 +524,79 @@ TMPL;
 TMPL;
 		return $strCode;
 	}
+
+	/**
+	 * Generates a function to add columns to the list.
+	 *
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
+	protected function GenerateCreateColumns(QCodeGenBase $objCodeGen, QTable $objTable) {
+		$strVarName = $objCodeGen->DataListVarName($objTable);
+
+		$strCode = <<<TMPL
+
+   /**
+	* Calls the list connector to add the columns. Override to customize column creation.
+	**/
+	protected function {$strVarName}_CreateColumns() {
+		\$this->{$strVarName}->CreateColumns();
+	}
+
+TMPL;
+
+		return $strCode;
+
+	}
+
+	/**
+	 * Generates an alternative create columns function that could be used by the list panel to create the columns directly.
+	 * This is designed to be added as commented out code in the list panel override class that the user can choose to use.
+	 *
+	 * @param QCodeGenBase $objCodeGen
+	 * @param QTable $objTable
+	 * @return string
+	 */
+	public function GenerateCreateColumnsOverride(QCodeGenBase $objCodeGen, QTable $objTable) {
+		$strVarName = $objCodeGen->DataListVarName($objTable);
+
+		$strVarName = $objCodeGen->DataListVarName($objTable);
+
+		$strCode = <<<TMPL
+	protected function {$strVarName}_CreateColumns() {
+
+TMPL;
+
+		foreach ($objTable->ColumnArray as $objColumn) {
+			if (isset($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None)) continue;
+			if (isset($objColumn->Options['NoColumn']) && $objColumn->Options['NoColumn']) continue;
+
+			$strCode .= <<<TMPL
+		\$col = \$this->{$strVarName}->CreateNodeColumn("{$objCodeGen->ModelConnectorControlName($objColumn)}", QQN::{$objTable->ClassName}()->{$objCodeGen->ModelConnectorPropertyName($objColumn)});
+
+TMPL;
+
+		}
+
+		foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
+			if ($objReverseReference->Unique) {
+				$strCode .= <<<TMPL
+		\$col = \$this->{$strVarName}->CreateNodeColumn("{$objCodeGen->ModelConnectorControlName($objReverseReference)}", QQN::{$objTable->ClassName}()->{$objReverseReference->ObjectDescription});
+
+TMPL;
+			}
+		}
+
+		$strCode .= <<<TMPL
+	}
+
+
+TMPL;
+
+		return $strCode;
+	}
+
 
 	/**
 	 * Generates a typical action to respond to row clicks.
