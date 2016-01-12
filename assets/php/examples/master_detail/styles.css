@@ -1,0 +1,18 @@
+.datagrid {
+    font-size: 12px;
+}
+
+.datagrid th {
+    color: white;
+    background-color: #780000;
+}
+
+.datagrid th a {
+    color: white;
+    background-color: #780000;
+}
+
+
+.datagrid tr:nth-child(even) {
+    background-color: #f6f6f6;
+}
