@@ -340,5 +340,16 @@ class BasicOrmTests extends QUnitTestCaseBase {
 
 	}
 
+	public function testOrderByExpansion() {
+		$objPersonArray = Person::QueryArray(
+			QQ::All(),
+			QQ::OrderBy(
+				QQ::IsNotNull(QQN::Person()->ProjectAsManager->Description), false, QQN::Person()->ProjectAsManager->Id
+			)
+		);
+
+		$this->assertEqual($objPersonArray[0]->Id, 7, "Found first project with manager");
+	}
+
 }
 ?>
