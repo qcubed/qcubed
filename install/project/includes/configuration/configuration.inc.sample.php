@@ -151,13 +151,14 @@ if (!defined('SERVER_INSTANCE')) {
 			// __DOCROOT__ relative location of QCubed-specific Web Assets (JavaScripts, CSS, Images, and PHP Pages/Popups)
 			// Note: These locations are for use by the framework only. You should put your own files in __APP*_ASSETS__ directories defined below
 			define ('__PROJECT_ASSETS__', __SUBDIRECTORY__ . '/project/assets');
-            define ('__VENDOR_ASSETS__', __SUBDIRECTORY__ . '/vendor');
-            define ('__QCUBED_ASSETS__',  __VENDOR_ASSETS__ . '/qcubed/framework/assets');
+			define ('__VENDOR_ASSETS__', __SUBDIRECTORY__ . '/vendor');
+			define ('__QCUBED_ASSETS__', __VENDOR_ASSETS__ . '/qcubed/framework/assets');
 
 			define ('__JS_ASSETS__', __QCUBED_ASSETS__ . '/js');
 			define ('__CSS_ASSETS__', __QCUBED_ASSETS__ . '/css');
 			define ('__IMAGE_ASSETS__', __QCUBED_ASSETS__ . '/images');
 			define ('__PHP_ASSETS__', __QCUBED_ASSETS__ . '/php');
+			define ('__QCUBED_UPLOAD__', __DOCROOT__ . __QCUBED_ASSETS__ . '/upload');
 			
 
 			// Location of asset files for your application
@@ -165,9 +166,11 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__APP_CSS_ASSETS__', __PROJECT_ASSETS__ . '/css');
 			define ('__APP_IMAGE_ASSETS__', __PROJECT_ASSETS__ . '/images');
 			define ('__APP_PHP_ASSETS__', __PROJECT_ASSETS__ . '/php');
+			define ('__APP_IMAGE_CACHE__', __APP_IMAGE_ASSETS__ . '/cache');
+			define ('__APP_UPLOAD__', __DOCROOT__ . __PROJECT_ASSETS__ . '/upload');
 			
 			define ('__PLUGIN_ASSETS__',  __SUBDIRECTORY__ . '/vendor/qcubed/plugin');
-			define ('__IMAGE_CACHE__', __APP_IMAGE_ASSETS__ . '/cache');
+			define ('__IMAGE_CACHE__', __IMAGE_ASSETS__ . '/cache');
 
 			// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery

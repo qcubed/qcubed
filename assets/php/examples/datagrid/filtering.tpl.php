@@ -23,7 +23,7 @@
 
 	<p>But know what's even easier than that? The <strong>MetaDataGrids</strong> generated for you already include these
 		filters by default! Any time you use <strong>AddConnectedColumn</strong>, it will set any appropriate filters for that
-		column without a single line of extra code on your part. :) See the <a href="../other/meta_datagrids.php">
+		column without a single line of extra code on your part. :) See the <a href="../other/datagrid_connectors.php">
 			Introduction to Meta DataGrids</a> for more information.</p>
 </div>
 

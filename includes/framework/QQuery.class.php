@@ -2596,6 +2596,9 @@
 			$this->objParentBuilder = $objBuilder;
 			$this->strColumnAliasArray = &$objBuilder->strColumnAliasArray;
 			$this->strTableAliasArray = &$objBuilder->strTableAliasArray;
+
+			$this->intTableAliasCount = &$objBuilder->intTableAliasCount;
+			$this->intColumnAliasCount = &$objBuilder->intColumnAliasCount;
 		}
 
 		/**
