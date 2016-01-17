@@ -1,15 +1,15 @@
 <?php require_once('../qcubed.inc.php');
 
 	// Setup the Feed, itself
-	$objRss = new QRssFeed('Examples Site Projects', 'http://examples.qcodo.com/', 'An Example RSS feed of the Qcodo Examples Site Projects');
-	$objRss->Image = new QRssImage('http://www.qcodo.com/images/qcodo_smaller.png');
+	$objRss = new QRssFeed('Examples Site Projects', 'http://examples.qcu.be/', 'An Example RSS feed of the Qcubed Examples Site Projects');
+	$objRss->Image = new QRssImage('http://www.qcu.be/images/qcodo_smaller.png');
 	$objRss->PubDate = new QDateTime(QDateTime::Now);
 	
 	// Iterate through all the projects, and setup a QRssItem per project
 	// Limit it to the "10 most recently started projects"
 	foreach ($objProjects = Project::LoadAll(QQ::Clause(QQ::OrderBy(QQN::Project()->StartDate, false), QQ::LimitInfo(10))) as $objProject) {
 		$objItem = new QRssItem($objProject->Name,
-			'http://examples.qcodo.com/examples/communication/rss.php/' . $objProject->Id,
+			'http://examples.qcu.be/examples/communication/rss.php/' . $objProject->Id,
 			$objProject->Description);
 	
 		$objItem->Author = $objProject->ManagerPerson->FirstName . ' ' . $objProject->ManagerPerson->LastName;

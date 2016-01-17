@@ -128,7 +128,7 @@
 			if ($intIvSize) {
 				if ($this->strRandomSource != MCRYPT_RAND) {
 					// Ignore All Warnings
-					set_error_handler('QcodoHandleError', 0);
+					set_error_handler('QcubedHandleError', 0);
 					$intCurrentLevel = error_reporting();
 					error_reporting(0);
 					$strIv = mcrypt_create_iv($intIvSize, $this->strRandomSource);
@@ -269,7 +269,7 @@
 		public function __destruct() {
 			if ($this->objMcryptModule) {
 				// Ignore All Warnings
-				set_error_handler('QcodoHandleError', 0);
+				set_error_handler('QcubedHandleError', 0);
 				$intCurrentLevel = error_reporting();
 				error_reporting(0);
 				mcrypt_module_close($this->objMcryptModule);

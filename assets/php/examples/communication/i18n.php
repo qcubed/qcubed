@@ -4,7 +4,7 @@ require_once('../qcubed.inc.php');
 
 // NOTE: IF YOU ARE RUNNING THIS EXAMPLE FROM YOUR OWN DEVELOPMENT ENVIRONMENT
 // you **MUST** remember to copy the custom es.po file from this directory and
-// place it into /includes/qcodo/i18n
+// place it into /project/includes/qcubed/i18n
 
 class ExamplesForm extends QForm {
 

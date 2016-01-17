@@ -35,7 +35,7 @@
 		global $__exc_dtg_errstr;
 		if (isset($__exc_dtg_errstr) && ($__exc_dtg_errstr))
 			$__exc_errstr = sprintf("%s\n%s", $__exc_dtg_errstr, $__exc_errstr);
-		QcodoHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, null);
+		QcubedHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, null);
 	}
 
 	/**
@@ -639,7 +639,7 @@
 					}
 
 					// Restore the original error handler
-					set_error_handler("QcodoHandleError");
+					set_error_handler("QcubedHandleError");
 					$__exc_dtg_errstr = null;
 					unset($__exc_dtg_errstr);
 				} else {

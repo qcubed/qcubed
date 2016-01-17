@@ -126,7 +126,7 @@
 			}
 
 
-			// Finally, use Qcodo's owns method for determining MIME type
+			// Finally, use Qcubed's owns method for determining MIME type
 			if (!$strToReturn)
 				$strToReturn = QMimeType::GetMimeTypeForFilename($strFilename);
 

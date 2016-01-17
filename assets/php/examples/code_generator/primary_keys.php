@@ -5,12 +5,12 @@
 	<h1>Primary Keys in Your Tables</h1>
 
 	<p>In order for any ORM architecture to work, there must be at least some kind of Primary Key defined
-		on any table for which you want an object generated.  But what is unique about Qcodo's ORM is that it does
+		on any table for which you want an object generated.  But what is unique about Qcubed's ORM is that it does
 		<em>not</em> impose any requirements on <em>how</em> to define your Primary Keys.  (Note that you can also
 		still use the framework against any database that contains tables that do <em>not</em> have primary keys,
 		it is just that those specific tables will not be generated as objects.)</p>
 
-	<p>Your Primary Key column or columns can be named however you wish.  Moreover, Qcodo supports Primary Key columns
+	<p>Your Primary Key column or columns can be named however you wish.  Moreover, Qcubed supports Primary Key columns
 		that are both "automatically incremented" and <em>not</em> "automatically incremented".  ("Automatically
 		incremented" columns are known as auto_incremement, identity, or using a sequence,
 		depending on which database platform you are using).</p>

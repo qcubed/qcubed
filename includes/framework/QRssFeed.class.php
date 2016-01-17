@@ -152,7 +152,7 @@
 			$strToReturn .= sprintf("		<link>%s</link>\r\n", ($this->strLink) ? $this->strLink : $strLink);
 
 			$intErrorLevel = error_reporting(0);
-			set_error_handler('QcodoHandleError', 0);
+			set_error_handler('QcubedHandleError', 0);
 			$objImageSize = getimagesize($this->strUrl);
 			restore_error_handler();
 			error_reporting($intErrorLevel);
