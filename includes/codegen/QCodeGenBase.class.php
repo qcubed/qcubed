@@ -1,6 +1,6 @@
 <?php
 
-	function QcodoHandleCodeGenParseError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline) {
+	function QcubedHandleCodeGenParseError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline) {
 		$strErrorString = str_replace("SimpleXMLElement::__construct() [<a href='function.SimpleXMLElement---construct'>function.SimpleXMLElement---construct</a>]: ", '', $__exc_errstr);
 		QCodeGen::$RootErrors .= sprintf("%s\r\n", $strErrorString);
 	}
@@ -205,7 +205,7 @@
 
 			// Try Parsing the Xml Settings File
 			try {
-				QApplication::SetErrorHandler('QcodoHandleCodeGenParseError', E_ALL);
+				QApplication::SetErrorHandler('QcubedHandleCodeGenParseError', E_ALL);
 				QCodeGen::$SettingsXml = new SimpleXMLElement(file_get_contents($strSettingsXmlFilePath));
 				QApplication::RestoreErrorHandler();
 			} catch (Exception $objExc) {

@@ -2,8 +2,6 @@
 /**
  * EXPERIMENTAL Oracle database adapter.
  *
- * Tested on: Qcodo Development Framework 0.3.32 (Qcodo Beta 3)
- *
  * @package DatabaseAdapters
  * @author Riccardo Tacconi, Ago Luberg, enzo - Eduardo Garcia
  

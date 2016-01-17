@@ -205,7 +205,7 @@
 			if ($strStyle)
 				$strAttributes .= sprintf(' style="%s"', $strStyle);
 
-			$strCommand = sprintf(' onchange="Qcodo__DateTimePicker_Change(\'%s\', this);"', $this->strControlId);
+			$strCommand = sprintf(' onchange="Qcubed__DateTimePicker_Change(\'%s\', this);"', $this->strControlId);
 
 			if ($this->dttDateTime) {
 				$dttDateTime = $this->dttDateTime;
