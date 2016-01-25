@@ -70,14 +70,15 @@
 		 * @param string      $strLabel           Text to link to
 		 * @param string|null $strActionParameter Action parameter for this rendering of the control. Will be sent to the ActionParameter of the action.
 		 * @param array       $attributes         Array of attributes to add to the tag for the link.
+		 * @param bool        $blnHtmlEntities    False to turn off html entities.
 		 *
 		 * @return string
 		 */
-		public function RenderAsButton($strLabel, $strActionParameter = null, $attributes = []) {
+		public function RenderAsButton($strLabel, $strActionParameter = null, $attributes = [], $blnHtmlEntities = true) {
 			$defaults['onclick']='return false';
 			$defaults['type']='button';
 			$attributes = array_merge($defaults, $attributes); // will only apply defaults that are not in attributes
-			return $this->RenderAsLink($strLabel, $strActionParameter, $attributes, 'button');
+			return $this->RenderAsLink($strLabel, $strActionParameter, $attributes, 'button', $blnHtmlEntities);
 		}
 
 		/**
