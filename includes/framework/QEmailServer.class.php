@@ -344,8 +344,8 @@
 			// Send: Content-Type Header (if applicable)
 
 			// First, setup boundaries (may be needed if multipart)
-			$strBoundary = sprintf('qcodo_mixed_boundary_%s', md5(microtime()));
-			$strAltBoundary = sprintf('qcodo_alt_boundary_%s', md5(microtime()));
+			$strBoundary = sprintf('qcubed_mixed_boundary_%s', md5(microtime()));
+			$strAltBoundary = sprintf('qcubed_alt_boundary_%s', md5(microtime()));
 
 			// Send: Other Headers (if any)
 			foreach ($objArray = $objMessage->HeaderArray as $strKey => $strValue)

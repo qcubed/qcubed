@@ -241,7 +241,7 @@ trait QModelTrait {
 	}
 
 	/**
-	 * Static Qcodo query method to issue a query and get a cursor to progressively fetch its results.
+	 * Static Qcubed query method to issue a query and get a cursor to progressively fetch its results.
 	 * Uses BuildQueryStatment to perform most of the work.
 	 *
 	 * @param QQCondition $objConditions any conditions on the query, itself
@@ -322,7 +322,8 @@ trait QModelTrait {
 	public static function QueryArrayCached(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null, $blnForceUpdate = false) {
 		$strQuery = static::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
 
-		$objCache = new QCache('qquery/<?php echo strtolower($objTable->ClassName)  ?>', $strQuery);
+		$strTableName = static::GetTableName();
+		$objCache = new QCache(sprintf('qquery/%s', $strTableName), $strQuery);
 		$cacheData = $objCache->GetData();
 
 		if (!$cacheData || $blnForceUpdate) {

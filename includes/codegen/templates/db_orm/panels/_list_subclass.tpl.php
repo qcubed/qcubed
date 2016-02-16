@@ -12,6 +12,9 @@
 		'TargetDirectory' => __PANEL__,
 		'TargetFileName' => $strPropertyName . 'ListPanel.class.php'
 	);
+
+	$listCodegenerator = $objCodeGen->GetDataListCodeGenerator($objTable);
+
 ?>
 <?php print("<?php\n"); ?>
 require(__PANEL_GEN__ . '/<?= $strPropertyName ?>ListPanelGen.class.php');
@@ -40,4 +43,13 @@ class <?= $strPropertyName ?>ListPanel extends <?= $strPropertyName ?>ListPanelG
 		$this->AutoRenderChildren = true;
 		//$this->Template =  __PANEL_GEN__ . '/<?= $strPropertyName ?>ListPanel.tpl.php';
 	}
+
+/*
+	Uncomment this block to directly create the columns here, rather than creating them from the <?= $strPropertyName ?>List connector.
+	You can then modify the column creation process by editing this function here.
+
+<?= $listCodegenerator->GenerateCreateColumnsOverride($objCodeGen, $objTable); ?>
+
+
+*/
 }

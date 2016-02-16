@@ -44,9 +44,14 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
 /* QControls */
 .datagrid { margin: auto; width: 100%; }
 .datagrid th { background: #333; color: #fff; padding: 5px; }
-.datagrid th a { color:#f6f6f6; text-decoration: none; text-transform: uppercase; }
+.datagrid th a { color:#f6f6f6; text-decoration: none; text-transform: uppercase; white-space: nowrap}
 .datagrid th a:hover { text-decoration: underline; }
 .datagrid td { border-bottom:1px solid #dedede; padding: 5px; }
+.datagrid th.sortable :hover {
+    opacity: 0.95;
+}
+
+
 
 .datagrid caption { overflow: hidden; padding: 5px; position: relative; }
 .datagrid .paginator-control { float: right; }
@@ -135,6 +140,3 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
     display: table-cell;
 }
 
-.datagrid2 th.sortable :hover {
-    opacity: 0.95;
-}

@@ -13,7 +13,7 @@
 			$this->lstFont = new QListBox($this);
 			$objFontDirectory = opendir(__QCUBED_CORE__ . '/fonts');
 			while ($strFile = readdir($objFontDirectory))
-				if ($intPosition = strpos($strFile, '.pfb'))
+				if ($intPosition = strpos($strFile, '.ttf'))
 					$this->lstFont->AddItem(new QListItem(substr($strFile, 0, $intPosition), $strFile));
 			$this->lstFont->SelectedIndex = 0;
 			$this->lstFont->AddAction(new QChangeEvent(), new QAjaxAction('lstFont_Change'));
@@ -73,7 +73,7 @@
 
 			// And finally, let's specify a CacheFolder so that the images are cached
 			// Notice that this CacheFolder path is a complete web-accessible relative-to-docroot path
-			$this->lblMessage->CacheFolder = __VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/image_label/cache';
+			$this->lblMessage->CacheFolder = __IMAGE_CACHE__;
 
 
 

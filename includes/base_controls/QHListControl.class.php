@@ -202,10 +202,6 @@ class QHListControl extends QControl {
 		return $this->objCrypt->Decrypt($strEncryptedValue);
 	}
 
-	public function Sleep() {
-		unset($this->objCrypt);
-	}
-
 	/**
 	 * Return the attributes for the sub tag that wraps the item tags
 	 * @param QListItem $objItem

@@ -69,8 +69,6 @@
 
 		protected $strCustomAttributeArray = null;
 
-		protected $strWatcherTime;
-
 		///////////////////////////
 		// Form Status Constants
 		///////////////////////////
@@ -357,20 +355,20 @@
 		 * such as running Form_Validate and Control validations for every control of the page and their
 		 * child controls. Checking for an existing FormState and loading them before trigerring any action
 		 * is also a responsibility of this method.
-		 * @param string $strFormId The Form ID of the calling QForm
-		 * @param null $strAlternateHtmlFile location of the alternate HTML template file
+		 * @param string $strFormClass The class of the form to create when creating a new form.
+		 * @param string|null $strAlternateHtmlFile location of the alternate HTML template file.
+		 * @param string|null $strFormId The html id to use for the form. If null, $strFormClass will be used.
 		 *
 		 * @throws QCallerException
 		 * @throws QInvalidFormStateException
 		 * @throws Exception
 		 */
-		public static function Run($strFormId, $strAlternateHtmlFile = null) {
-			// Ensure strFormId is a subclass of QForm
-			if (!(is_subclass_of($strFormId, 'QForm')))
-				throw new QCallerException('Object must be a subclass of QForm: ' . $strFormId);
-
+		public static function Run($strFormClass, $strAlternateHtmlFile = null, $strFormId = null) {
 			// See if we can get a Form Class out of PostData
 			$objClass = null;
+			if ($strFormId === null) {
+				$strFormId = $strFormClass;
+			}
 			if (array_key_exists('Qform__FormId', $_POST) && ($_POST['Qform__FormId'] == $strFormId) && array_key_exists('Qform__FormState', $_POST)) {
 				$strPostDataState = $_POST['Qform__FormState'];
 
@@ -454,11 +452,16 @@
 				}
 
 				// Iterate through all the controls
+				
+				// TODO: some listener pattern should be used to update only those
+				// controls that needs it
 
-				// This is original code. In an effort to minimize changes, we aren't going to touch the server calls for now
+				// This is original code. In an effort to minimize changes,
+				// we aren't going to touch the server calls for now
 				if ($objClass->strCallType != QCallType::Ajax) {
 					foreach ($objClass->objControlArray as $objControl) {
-						// If they were rendered last time and are visible (and if ServerAction, enabled), then Parse its post data
+						// If they were rendered last time and are visible 
+						// (and if ServerAction, enabled), then Parse its post data
 						if (($objControl->Visible) &&
 							($objControl->Enabled) &&
 							($objControl->RenderMethod)) {
@@ -473,12 +476,18 @@
 				}
 				else {
 					// Ajax post. Only send data to controls specified in the post to save time.
+					$previouslyFoundArray = array();
 					foreach ($_POST as $key=>$val) {
-						$strControlId = $key;
+						if ($key == 'Qform__FormControl') {
+							$strControlId = $val;
+						} elseif (substr($key, 0, 6) == 'Qform_') {
+							continue;	// ignore this form data
+						} else {
+							$strControlId = $key;
+						}
 						if (($intOffset = strpos ($strControlId, '_')) !== false) {	// the first break is the control id
 							$strControlId = substr ($strControlId, 0, $intOffset);
 						}
-						$previouslyFoundArray = array();
 						if (($objControl = $objClass->GetControl($strControlId)) &&
 								!isset($previouslyFoundArray[$strControlId])) {
 							if (($objControl->Visible) &&
@@ -516,7 +525,7 @@
 				$objClass->SaveControlState();
 			} else {
 				// We have no form state -- Create Brand New One
-				$objClass = self::CreateForm($strFormId);
+				$objClass = new $strFormClass();
 
 				// Globalize
 				global $_FORM;
@@ -700,7 +709,7 @@
 			$this->intFormStatus = QFormBase::FormStatusRenderBegun;
 
 			// Broadcast the watcher change to other windows listening
-			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+			if (QWatcher::WatchersChanged()) {
 				$aResponse[QAjaxResponse::Watcher] = true;
 			}
 
@@ -855,15 +864,6 @@
 		}
 
 		/**
-		 * Create a new form with the given type.
-		 * @param string $strFormClassType
-		 * @return QForm
-		 */
-		private static function CreateForm ($strFormClassType) {
-			return new $strFormClassType();
-		}
-
-		/**
 		 * Add a QControl to the current QForm.
 		 * @param QControl|QControlBase $objControl
 		 *
@@ -931,7 +931,7 @@
 		/**
 		 * Tell all the controls to save their state.
 		 */
-		protected function SaveControlState() {
+		public function SaveControlState() {
 			// tell the controls to save their state
 			$a = $this->GetAllControls();
 			foreach ($a as $control) {
@@ -1300,7 +1300,7 @@
 		 * Begins rendering the page
 		 */
 		protected function Render() {
-			if (QWatcher::FormWatcherChanged($this->strWatcherTime)) {
+			if (QWatcher::WatchersChanged()) {
 				QApplication::ExecuteJsFunction('qc.broadcastChange');
 			}
 

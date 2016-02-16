@@ -144,7 +144,7 @@
 						<b>Database Type:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Adapter); ?><br/>
 						<b>Database Server:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Server); ?>&nbsp;&nbsp;
 						<b>Database Name:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Database); ?><br/>
-						<b>Profile Generated From:</b> <?php _p($strReferrer); ?>
+						<b>Profile Generated From:</b> <?php _p($strReferrer, false); ?>
 					</div>
 					<div class="clear"></div>
 				</div>

@@ -160,7 +160,94 @@ abstract class QInstallationValidator {
 			$obj->strCommandToFix = "chmod 777 " . __CACHE__;
 			$result[] = $obj;
 		}
+
+		if (!file_exists(__CONFIGURATION__ . '/codegen_options.json')) {
+			// Did the user move the __INCLUDES__ directory out of the docroot?
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = 'Create the "' . __CONFIGURATION__ . '/codegen_options.json"' . ' file.';
+			$obj->strCommandToFix = "touch " . __CONFIGURATION__. '/codegen_options.json';
+			$result[] = $obj;
+		}
+		else if (!QFile::isWritable(__CONFIGURATION__ . '/codegen_options.json')) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "The file (" . __CONFIGURATION__ . '/codegen_options.json' . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 666 " . __CONFIGURATION__ . '/codegen_options.json';
+			$result[] = $obj;
+		}
 		
+		if (!file_exists(__PROJECT__ . '/forms')) {
+			// Did the user move the __INCLUDES__ directory out of the docroot?
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = 'Create the "' . __PROJECT__ . '/forms"' . ' directory.';
+			$obj->strCommandToFix = "mkdir " . __PROJECT__. '/forms';
+			$result[] = $obj;
+		}
+		else if (!QFolder::isWritable(__PROJECT__ . '/forms')) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Forms directory (" . __PROJECT__ . '/forms' . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __PROJECT__ . '/forms';
+			$result[] = $obj;
+		}
+		
+		if (!file_exists(__PANEL__)) {
+			// Did the user move the __INCLUDES__ directory out of the docroot?
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = 'Create the "' . __PANEL__ . '" directory.';
+			$obj->strCommandToFix = "mkdir " . __PANEL__;
+			$result[] = $obj;
+		}
+		else if (!QFolder::isWritable(__PANEL__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Panels directory (" . __PANEL__ . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __PANEL__;
+			$result[] = $obj;
+		}
+		
+		if (!file_exists(__DIALOG__)) {
+			// Did the user move the __INCLUDES__ directory out of the docroot?
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = 'Create the "' . __DIALOG__ . '" directory.';
+			$obj->strCommandToFix = "mkdir " . __DIALOG__;
+			$result[] = $obj;
+		}
+		else if (!QFolder::isWritable(__DIALOG__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Panels directory (" . __DIALOG__ . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __DIALOG__;
+			$result[] = $obj;
+		}
+		
+		if (!file_exists(__DOCROOT__ . __IMAGE_CACHE__)) {
+			// Did the user move the __INCLUDES__ directory out of the docroot?
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = 'Create the "' . __DOCROOT__ . __IMAGE_CACHE__ . '" directory.';
+			$obj->strCommandToFix = "mkdir " . __DOCROOT__ . __IMAGE_CACHE__;
+			$result[] = $obj;
+		}
+		else if (!QFolder::isWritable(__DOCROOT__ . __IMAGE_CACHE__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Images cache directory (" . __DOCROOT__ . __IMAGE_CACHE__ . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __IMAGE_CACHE__;
+			$result[] = $obj;
+		}
+
+
+		if (defined("__QCUBED_UPLOAD__")) {
+			if (!file_exists(__QCUBED_UPLOAD__)) {
+				// Did the user move the __INCLUDES__ directory out of the docroot?
+				$obj = new QInstallationValidationResult();
+				$obj->strMessage = 'Create the "' . __QCUBED_UPLOAD__ . '" directory.';
+				$obj->strCommandToFix = "mkdir " . __QCUBED_UPLOAD__;
+				$result[] = $obj;
+			}
+			else if (!QFolder::isWritable(__QCUBED_UPLOAD__)) {
+				$obj = new QInstallationValidationResult();
+				$obj->strMessage = "Uploads directory (" . __QCUBED_UPLOAD__ . ") needs to be writable";
+				$obj->strCommandToFix = "chmod 777 " . __QCUBED_UPLOAD__;
+				$result[] = $obj;
+			}
+		}
+
 		if (!function_exists('zip_open')) {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "ZIP extension is not enabled on this installation of PHP. " .
@@ -223,6 +310,10 @@ class QInstallationValidationResult {
 	 * automated way to fix these.
 	 */
 	public $strCommandToFix = "";
+
+	public function __toString() {
+		return $this->strMessage;
+	}
 }
 
 

@@ -16,7 +16,7 @@
 		inactivity, but still should see the results of activity from other users, you can do a couple of things:
 		<ul>
 		<li>
-			Set up a QJsTimer to generate periodic events. See the QJsTimer example page for help. In that
+			Set up a QJsTimer to generate periodic events. See the <a href="../other_controls/timer_js.php">QJsTimer example page</a> for help. In that
 			example page, it discusses adding actions to the timer. For purposes of generating opportunities for
 			the QWatcher to look at the database, you will add a null ajax action to the timer.
 		</li>

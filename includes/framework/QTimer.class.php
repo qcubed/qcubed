@@ -57,7 +57,7 @@ class QTimer {
 
 	/**
 	 * Returns timer's time
-	 * @return float Timer's time. If timer is not running, returns null.
+	 * @return float Timer's time. If timer is not running, returns saved time.
 	 */
 	public function GetTimerTime() {
 		if ($this->fltTimeStart == -1) {
@@ -124,7 +124,7 @@ class QTimer {
 	 * @return QTimer
 	 */
 	public static function Start($strName = 'default') {
-		$objTimer = self::GetTimerInstance($strName);
+		$objTimer = static::GetTimerInstance($strName);
 		return $objTimer->StartTimer();
 	}
 
@@ -134,7 +134,7 @@ class QTimer {
 	 * @return float Timer's time
 	 */
 	public static function GetTime($strName = 'default') {
-		$objTimer = self::GetTimerInstance($strName, false);
+		$objTimer = static::GetTimerInstance($strName, false);
 		if ($objTimer) {
 			return $objTimer->GetTimerTime();
 		} else {
@@ -148,7 +148,7 @@ class QTimer {
 	 * @return float Timer's time
 	 */
 	public static function Stop($strName = 'default') {
-		$objTimer = self::GetTimerInstance($strName, false);
+		$objTimer = static::GetTimerInstance($strName, false);
 		if ($objTimer) {
 			return $objTimer->StopTimer();
 		} else {
@@ -162,7 +162,7 @@ class QTimer {
 	 * @return float Timer's time before reset or null if timer does not exist
 	 */
 	public static function Reset($strName = 'default') {
-		$objTimer = self::GetTimerInstance($strName, false);
+		$objTimer = static::GetTimerInstance($strName, false);
 		if ($objTimer) {
 			return $objTimer->ResetTimer();
 		}
@@ -175,7 +175,7 @@ class QTimer {
 	 * @return QTimer or null if a timer was not found
 	 */
 	public static function GetTimer($strName = 'default') {
-		$objTimer = self::GetTimerInstance($strName, false);
+		$objTimer = static::GetTimerInstance($strName, false);
 		if ($objTimer) {
 			return $objTimer;
 		}
@@ -184,14 +184,14 @@ class QTimer {
 	}
 
 	protected static function GetTimerInstance($strName, $blnCreateNew = true) {
-		if (!isset(self::$objTimerArray[$strName])) {
+		if (!isset(static::$objTimerArray[$strName])) {
 			if ($blnCreateNew) {
-				self::$objTimerArray[$strName] = new QTimer($strName);
+				static::$objTimerArray[$strName] = new QTimer($strName);
 			} else {
 				return null;
 			}
 		}
-		return self::$objTimerArray[$strName];
+		return static::$objTimerArray[$strName];
 	}
 
 	// getters/setters?
@@ -203,7 +203,7 @@ class QTimer {
 	 */
 	public static function VarDump($blnDisplayOutput = true) {
 		$strToReturn = '';
-		foreach (self::$objTimerArray as $objTimer) {
+		foreach (static::$objTimerArray as $objTimer) {
 			$strToReturn .= $objTimer->__toString() . "\n";
 		}
 		if ($blnDisplayOutput) {

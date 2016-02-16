@@ -1302,6 +1302,47 @@
 			$objBuilder->AddWhereItem($this->objQueryNode->GetColumnAlias($objBuilder) . ' ' . QQNode::GetValue($this->mixOperand, $objBuilder, false));
 		}
 	}
+
+	class QQConditionExists extends QQCondition {
+		/** @var QQSubQuerySqlNode  */
+		protected $objNode;
+
+		/**
+		 * @param QQSubQuerySqlNode $objNode
+		 */
+		public function __construct(QQSubQuerySqlNode $objNode) {
+			$this->objNode = $objNode;
+		}
+
+		/**
+		 * @param QQueryBuilder $objBuilder
+		 */
+		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+			$objBuilder->AddWhereItem('EXISTS ' . $this->objNode->GetColumnAlias($objBuilder));
+		}
+	}
+
+	class QQConditionNotExists extends QQCondition {
+		/** @var QQSubQuerySqlNode  */
+		protected $objNode;
+
+		/**
+		 * @param QQSubQuerySqlNode $objNode
+		 */
+		public function __construct(QQSubQuerySqlNode $objNode) {
+			$this->objNode = $objNode;
+		}
+
+		/**
+		 * @param QQueryBuilder $objBuilder
+		 */
+		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+			$objBuilder->AddWhereItem('NOT EXISTS ' . $this->objNode->GetColumnAlias($objBuilder));
+		}
+	}
+
+
+
 	class QQConditionGreaterThan extends QQConditionComparison {
 		protected $strOperator = ' > ';
 	}
@@ -1382,6 +1423,13 @@
 		static public function NotBetween(QQColumnNode $objQueryNode, $strMinValue, $strMaxValue) {
 			return new QQConditionNotBetween($objQueryNode, $strMinValue, $strMaxValue);
 		}
+		static public function Exists(QQSubQuerySqlNode $objQueryNode) {
+			return new QQConditionExists($objQueryNode);
+		}
+		static public function NotExists(QQSubQuerySqlNode $objQueryNode) {
+			return new QQConditionNotExists($objQueryNode);
+		}
+
 
 		////////////////////////
 		// QQCondition Shortcuts
@@ -2548,6 +2596,9 @@
 			$this->objParentBuilder = $objBuilder;
 			$this->strColumnAliasArray = &$objBuilder->strColumnAliasArray;
 			$this->strTableAliasArray = &$objBuilder->strTableAliasArray;
+
+			$this->intTableAliasCount = &$objBuilder->intTableAliasCount;
+			$this->intColumnAliasCount = &$objBuilder->intColumnAliasCount;
 		}
 
 		/**

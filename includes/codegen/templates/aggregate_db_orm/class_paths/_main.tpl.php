@@ -19,7 +19,7 @@
 		QApplicationBase::$ClassFile['qqreversereferencenode<?= strtolower($objTable->ClassName) ?>'] = __MODEL__ . '/<?= $objTable->ClassName ?>.class.php';
 <?php } ?><?php if (__MODEL_CONNECTOR__) { ?>
 		QApplicationBase::$ClassFile['<?= strtolower($objTable->ClassName) ?>connector'] = __MODEL_CONNECTOR__ . '/<?= $objTable->ClassName ?>Connector.class.php';
-		QApplicationBase::$ClassFile['<?= strtolower($objTable->ClassName) ?>datagrid'] = __MODEL_CONNECTOR__ . '/<?= $objTable->ClassName ?>DataGrid.class.php';
+		QApplicationBase::$ClassFile['<?= strtolower($objTable->ClassName) ?>list'] = __MODEL_CONNECTOR__ . '/<?= $objTable->ClassName ?>List.class.php';
 <?php } ?>
 
 <?php } ?>

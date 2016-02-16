@@ -123,27 +123,4 @@
 					'ts'=>$time));
 
 		}
-
-		/**
-		 * Override
-		 * @param $strFormWatcherTime
-		 * @return bool
-		 */
-		static public function FormWatcherChanged (&$strFormWatcherTime) {
-			$objDatabase = QApplication::$Database[__WATCHER_DB_INDEX__];
-			$strSQL = sprintf ("SELECT * FROM %s WHERE %s = %s",
-				$objDatabase->EscapeIdentifier(__WATCHER_TABLE_NAME__),
-				$objDatabase->EscapeIdentifier("table_key"),
-				$objDatabase->EscapeValues(static::GetKey('', static::$strAppKey)));
-
-			$objDbResult = $objDatabase->Query($strSQL);
-
-			if ($strRow = $objDbResult->FetchRow()) {
-				if ($strFormWatcherTime !== $strRow[1]) {
-					$strFormWatcherTime = $strRow[1];
-					return true;
-				}
-			}
-			return false;
-		}
 	}

@@ -113,6 +113,10 @@
 
 				if ($objItem instanceof $strType)
 					return $objItem;
+
+				if ($strType == QType::String) {
+					return (string) $objItem;	// invokes __toString() magic method
+				}
 			} catch (Exception $objExc) {
 			}
 

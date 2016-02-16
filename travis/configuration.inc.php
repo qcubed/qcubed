@@ -32,34 +32,39 @@ if (!defined('SERVER_INSTANCE')) {
 			 * Please note that all paths should use standard "forward" slashes instead of "backslashes".
 			 * So windows paths would look like "c:/wwwroot" instead of "c:\wwwroot".
 			 *
-			 * Please specify the "Document Root" here.  This is the top level filepath for your web application.
-			 * If you are on a installation that uses virtual directories, then you must specify that here, as well.
+			 * QCubed uses __DOCROOT__, __VIRTUAL_DIRECTORY__, and __SUBDIRECTORY__ as shortcuts to help
+			 * specify the various paths to files using the constants later in this file. However, you
+			 * are free to define the individual constants how you would like, in order to set up a custom
+			 * configuration on your sever.
+			 *
+			 * For purposes here, 'http://hostname/' . __VIRTUAL_DIRECTORY__ . __SUBDIRECTORY__ when entered into a 
+			 * browser should correspond to __DOCROOT__ . __SUBDIRECTORY__ in your file system.
 			 *
 			 * For example, if your example web application where http://my.domain.com/index.php points to
-			 * /home/web/htdocs/index.php, then you must specify:
-			 *		__DOCROOT__ is defined as '/home/web/htdocs'
-			 *		(note the leading slash and no ending slash)
+			 * /home/web/htdocs/index.php, then you should specify:
+			 *		__DOCROOT__ = '/home/web/htdocs' (note the leading slash and no ending slash)
 			 * On Windows, if you have http://my.domain.com/index.php pointing to c:\webroot\files\index.php, then:
-			 *		__DOCROOT__ is defined as 'c:/webroot/files'
-			 *		(again, note the leading c:/ and no ending slash)
+			 *		__DOCROOT__ = 'c:/webroot/files' (again, note the leading c:/ and no ending slash)
 			 *
-			 * Next, if you are using Virtual Directories, where http://not.my.domain.com/~my_user/index.php
-			 * (for example) points to /home/my_user/public_html/index.php, then:
-			 *		__DOCROOT__ is defined as '/home/my_user/public_html'
-			 *		__VIRTUAL_DIRECTORY__ is defined as '/~my_user'
+			 * If you are using Virtual Directories, where http://not.my.domain.com/~my_user/index.php
+			 * points to /home/my_user/public_html/index.php, then:
+			 *		__DOCROOT__ = '/home/my_user/public_html'
+			 *		__SUBDIRECTORY__ = ''
+			 *		__VIRTUAL_DIRECTORY__ = '/~my_user'
 			 *
-			 * Finally, if you have installed QCubed within a SubDirectory of the Document Root, so for example
-			 * the QCubed "index.php" page is accessible at http://my.domain.com/frameworks/qcubed/index.php, then:
-			 *		__SUBDIRECTORY__ is defined as '/frameworks/qcubed'
-			 *		(again, note the leading and no ending slash)
+			 * If you have installed QCubed within a SubDirectory of the Document Root, so for example
+			 * the QCubed "index.php" page is accessible at http://my.domain.com/frameworks/qcubed/index.php, and
+			 * is located on your server at /home/my_user/public_html/frameworks/qcubed/index.php, then:
+			 *		__DOCROOT__ = '/home/my_user/public_html'
+			 *		__SUBDIRECTORY__ = '/frameworks/qcubed' (again, note the leading and no ending slash)
+			 *		__VIRTUAL_DIRECTORY__ = ''
 			 *
 			 * In combination with Virtual Directories, if you (for example) have the QCubed "index.php" page
 			 * accessible at http://not.my.domain.com/~my_user/qcubed/index.php, and the index.php resides at
 			 * c:\users\my_user\public_html\index.php, then:
-			 *		__DOCROOT__ is defined as 'c:/users/my_user/public_html'
-			 *		__VIRTUAL_DIRECTORY__ is defined as '/~my_user'
-			 *		__SUBDIRECTORY__ is defined as '/qcubed'
-			 *      /var/www/qcubed/wwwroot
+			 *		__DOCROOT__ = 'c:/users/my_user/public_html'
+			 *		__VIRTUAL_DIRECTORY__ = '/~my_user'
+			 *		__SUBDIRECTORY__ = '/qcubed'
 			 */
 			define ('__DOCROOT__', __WORKING_DIR__);
 			define ('__VIRTUAL_DIRECTORY__', '');
@@ -83,7 +88,7 @@ if (!defined('SERVER_INSTANCE')) {
 			// Will be defined in the test.php file
 			//define ('__CONFIGURATION__', __INCLUDES__ . '/configuration');
 			// The directory where the external libraries are placed, that are not in composer
-			define ('__EXTERNAL_LIBRARIES__', __DOCROOT__ . '/vendor');
+			define ('__EXTERNAL_LIBRARIES__', __DOCROOT__ . __SUBDIRECTORY__ . '/vendor');
 			// The application includes directory
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 
@@ -142,20 +147,23 @@ if (!defined('SERVER_INSTANCE')) {
 			 * Note that this is NOT required.  Feel free to use or ignore.)
 			 */
 
-			// Destination for generated form drafts and panel drafts. Relative to __DOCROOT__.
+			// Destination for generated forms. Relative to __DOCROOT__.
 			define ('__FORMS__', __SUBDIRECTORY__ . '/install/project/forms');
 
 			define ('__FORM_LIST_ITEMS_PER_PAGE__', 20);
 
+
 			// __DOCROOT__ relative location of QCubed-specific Web Assets (JavaScripts, CSS, Images, and PHP Pages/Popups)
 			// Note: These locations are for use by the framework only. You should put your own files in __APP*_ASSETS__ directories defined below
-			define ('__QCUBED_ASSETS__', __SUBDIRECTORY__ . '/assets');
 			define ('__PROJECT_ASSETS__', __SUBDIRECTORY__ . '/install/project/assets');
+           define ('__VENDOR_ASSETS__', __SUBDIRECTORY__ . '/vendor');
+			define ('__QCUBED_ASSETS__', __SUBDIRECTORY__ . '/assets');
 			
 			define ('__JS_ASSETS__', __QCUBED_ASSETS__ . '/js');
 			define ('__CSS_ASSETS__', __QCUBED_ASSETS__ . '/css');
 			define ('__IMAGE_ASSETS__', __QCUBED_ASSETS__ . '/images');
 			define ('__PHP_ASSETS__', __QCUBED_ASSETS__ . '/php');
+			define ('__QCUBED_UPLOAD__', __DOCROOT__ . __QCUBED_ASSETS__ . '/upload');
 			
 
 			// Location of asset files for your application
@@ -163,14 +171,18 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__APP_CSS_ASSETS__', __PROJECT_ASSETS__ . '/css');
 			define ('__APP_IMAGE_ASSETS__', __PROJECT_ASSETS__ . '/images');
 			define ('__APP_PHP_ASSETS__', __PROJECT_ASSETS__ . '/php');
+			define ('__APP_IMAGE_CACHE__', __APP_IMAGE_ASSETS__ . '/cache');
+			define ('__APP_UPLOAD__', __DOCROOT__ . __PROJECT_ASSETS__ . '/upload');
+			
 			define ('__PLUGIN_ASSETS__',  __SUBDIRECTORY__ . '/vendor/qcubed/plugin');
-			define ('__IMAGE_CACHE__', __APP_IMAGE_ASSETS__ . '/cache');
+			define ('__IMAGE_CACHE__', __IMAGE_ASSETS__ . '/cache');
 
 			// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
 			// the jQuery library is awesome! It's the default option below) - or by using the jQuery
 			// installation that's local to QCubed (in that case, paths must be relative to __JS_ASSETS__
-			define ('__JQUERY_BASE__', ' http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
-			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js');
+
+			define ('__JQUERY_BASE__', ' http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js');
+			define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js');
 
 			// If you want to use the local jQuery files, specify the paths relative to __JS_ASSETS__
 			// or just uncomment the 2 lines below.
@@ -191,7 +203,7 @@ if (!defined('SERVER_INSTANCE')) {
 			define ('__EXAMPLES__', __PHP_ASSETS__ . '/examples');
 
 			// Location of .po translation files
-			define ('__QI18N_PO_PATH__', __QCUBED__ . '/i18n');
+			define ('__QI18N_PO_PATH__', __INCLUDES__ . '/i18n');
 
 			/* Database Connection SerialArrays
 			 *
@@ -354,7 +366,8 @@ if (!defined('SERVER_INSTANCE')) {
 			 *
 			 * [Column 1]
 			 *      Name = id
-			 *      Data Type = varchar / character varying with length of 32 characters (varchar(32))
+			 *      Data Type = varchar / character with variable length. Must hold session number + session name. Typically this is 34 characters, but
+			 * 						you should make it big enough to handle any situation you may encounter.
 			 *
 			 * [Column 2]
 			 *      Name = last_access_time
@@ -386,6 +399,9 @@ if (!defined('SERVER_INSTANCE')) {
 
 			// Define the Filepath for any logged errors
 			define('ERROR_LOG_PATH', __TMP__ . '/error_log');
+
+			// Name of session variable used to save the state of form objects.
+			define('__SESSION_SAVED_STATE__', 'QSavedState');
 
 			// To Log ALL errors that have occurred, set flag to true
 			//			define('ERROR_LOG_FLAG', true);

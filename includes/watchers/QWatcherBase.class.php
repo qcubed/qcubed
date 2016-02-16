@@ -10,7 +10,7 @@
 	 * This Base class is a template on which to build watchers that use specific caching mechanisms.
 	 * See QWatcher to select the caching mechanism you would like to use.
 	 */
-	
+
 	abstract class QWatcherBase extends QBaseClass {
 
 		/**
@@ -21,6 +21,8 @@
 		 * the same databases, they should have the same app key
 		 */
 		public static $strAppKey = 'QWATCH_APPKEY';
+
+		protected static $blnWatcherChanged;
 
 		protected $strWatchedKeys = array();
 
@@ -95,15 +97,23 @@
 		 * @param string $strTableName
 		 * @throws QCallerException
 		 */
-		static public function MarkTableModified ($strDbName, $strTableName) {}
+		static public function MarkTableModified ($strDbName, $strTableName) {
+			self::$blnWatcherChanged = true;
+		}
 
 		/**
-		 * QFormBase calls this to tell if any of the watched tables have changed.
-		 * Cache adapters should override this.
+		 * Support function for the Form to determine if any of the watchers have changed since the last time
+		 * it checked. Since this is relying on a global variable, the variable is reset upon program entry, including
+		 * ajax entry. So really, we are just detecting if any operation we have currently done has changed a watcher, so
+		 * that the form can broadcast that fact to other browser windows that might be looking.
 		 *
-		 * @param $strFormWatcherTime
+		 * @param QWatcher[]|null $objWatchers
 		 * @return bool
 		 */
-		static public function FormWatcherChanged (&$strFormWatcherTime) { return false;}
+		static public function WatchersChanged () {
+			$blnChanged = self::$blnWatcherChanged;
+			self::$blnWatcherChanged = false;
+			return $blnChanged;
+		}
 	}
 ?>

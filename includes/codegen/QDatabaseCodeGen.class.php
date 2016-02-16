@@ -60,7 +60,7 @@
 		protected $strRelationshipsScriptFormat;
 		protected $blnRelationshipsScriptIgnoreCase;
 
-		protected $strRelationshipLinesQcodo = array();
+		protected $strRelationshipLinesQcubed = array();
 		protected $strRelationshipLinesSql = array();
 
 		// Type Table Items, Table Name and Column Name RegExp Patterns
@@ -300,7 +300,7 @@
 			if (!$this->intDatabaseIndex)
 				$this->strErrors .= "CodeGen Settings XML Fatal Error: databaseIndex was invalid or not set\r\n";
 
-			// Aggregate RelationshipLinesQcodo and RelationshipLinesSql arrays
+			// Aggregate RelationshipLinesQcubed and RelationshipLinesSql arrays
 			if ($this->strRelationships) {
 				$strLines = explode("\n", strtolower($this->strRelationships));
 				if ($strLines) foreach ($strLines as $strLine) {
@@ -311,7 +311,7 @@
 						(substr($strLine, 0, 2) != '//') &&
 						(substr($strLine, 0, 2) != '--') &&
 						(substr($strLine, 0, 1) != '#')) {
-						$this->strRelationshipLinesQcodo[$strLine] = $strLine;
+						$this->strRelationshipLinesQcubed[$strLine] = $strLine;
 					}
 				}
 			}
@@ -333,7 +333,7 @@
 									(substr($strLine, 0, 2) != '//') &&
 									(substr($strLine, 0, 2) != '--') &&
 									(substr($strLine, 0, 1) != '#')) {
-									$this->strRelationshipLinesQcodo[$strLine] = $strLine;
+									$this->strRelationshipLinesQcubed[$strLine] = $strLine;
 								}
 							}
 							break;
@@ -1138,11 +1138,11 @@
 			return $strTableName;
 		}
 
-		protected function GetForeignKeyForQcodoRelationshipDefinition($strTableName, $strLine) {
+		protected function GetForeignKeyForQcubedRelationshipDefinition($strTableName, $strLine) {
 			$strTokens = explode('=>', $strLine);
 			if (count($strTokens) != 2) {
 				$this->strErrors .= sprintf("Could not parse Relationships Script reference: %s (Incorrect Format)\r\n", $strLine);
-				$this->strRelationshipLinesQcodo[$strLine] = null;
+				$this->strRelationshipLinesQcubed[$strLine] = null;
 				return null;
 			}
 
@@ -1152,7 +1152,7 @@
 			if ((count($strSourceTokens) != 2) ||
 				(count($strDestinationTokens) != 2)) {
 				$this->strErrors .= sprintf("Could not parse Relationships Script reference: %s (Incorrect Table.Column Format)\r\n", $strLine);
-				$this->strRelationshipLinesQcodo[$strLine] = null;
+				$this->strRelationshipLinesQcubed[$strLine] = null;
 				return null;
 			}
 
@@ -1162,7 +1162,7 @@
 			$strFkName = sprintf('virtualfk_%s_%s', $strTableName, $strColumnName);
 
 			if (strtolower($strTableName) == trim($strSourceTokens[0])) {
-				$this->strRelationshipLinesQcodo[$strLine] = null;
+				$this->strRelationshipLinesQcubed[$strLine] = null;
 				return $this->GetForeignKeyHelper($strLine, $strFkName, $strTableName, $strColumnName, $strReferenceTableName, $strReferenceColumnName);
 			}
 
@@ -1270,13 +1270,13 @@
 		 * @return DatabaseForeignKeyBase[] Array of DB FK objects that were parsed out
 		 */
 		protected function GetForeignKeysFromRelationshipsScript($strTableName, $objForeignKeyArray) {
-			foreach ($this->strRelationshipLinesQcodo as $strLine) {
+			foreach ($this->strRelationshipLinesQcubed as $strLine) {
 				if ($strLine) {
-					$objForeignKey = $this->GetForeignKeyForQcodoRelationshipDefinition($strTableName, $strLine);
+					$objForeignKey = $this->GetForeignKeyForQcubedRelationshipDefinition($strTableName, $strLine);
 
 					if ($objForeignKey) {
 						array_push($objForeignKeyArray, $objForeignKey);
-						$this->strRelationshipLinesQcodo[$strLine] = null;
+						$this->strRelationshipLinesQcubed[$strLine] = null;
 					}
 				}
 			}

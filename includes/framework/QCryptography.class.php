@@ -10,6 +10,12 @@
 	/**
 	 * Class QCryptography: Helps in encrypting and decrypting data
 	 * It depends on the mcrypt module.
+	 *
+	 * While this module IS serializeable, the information it contains in serialized form is not secure and can be used
+	 * to decrypt encrypted items. So, make sure you either encrypt the serialized results, or store the results in a
+	 * secure location. That means, if you are using this in a form object, you must make sure your formstates are
+	 * not visible to the public, or they are encrypted, since the serialized version of this object will be in the formstate.
+	 *
 	 * Refer: http://php.net/manual/en/book.mcrypt.php
 	 */
 	class QCryptography extends QBaseClass {
@@ -17,11 +23,17 @@
 		protected $objMcryptModule;
 		/** @var bool Are we going to use Base 64 encoding? */
 		protected $blnBase64;
-
 		/** @var string Key to be used for encryption/decryption - used for mycrypt_generic_init */
 		protected $strKey;
 		/** @var string Initialization vector for the algorithm */
-		protected $strIv;
+		protected $strIv; // Note that this is NOT used in ECB, the default mode.
+		/** @var  string Cipher to use when creating the encryption object */
+		protected $strCipher;
+		/** @var  string Mode to use when creating the encryption object */
+		protected $strMode;
+		/** @var  string Random source to use when creating IVs */
+		protected $strRandomSource;
+
 
 		/**
 		 * Default Base64 mode for any new QCryptography instances that get constructed.
@@ -86,19 +98,25 @@
 
 			// Get the Cipher
 			if (is_null($strCipher)) {
-				$strCipher = MCRYPT_TRIPLEDES;
+				$this->strCipher = MCRYPT_TRIPLEDES;
+			} else {
+				$this->strCipher = $strCipher;
 			}
 
 			// Get the Mode
 			if (is_null($strMode)) {
-				$strMode = MCRYPT_MODE_ECB;
+				$this->strMode = MCRYPT_MODE_ECB;
+			} else {
+				$this->strMode = $strMode;
 			}
 
 			if (is_null($strRandomSource)) {
-				$strRandomSource = MCRYPT_RAND;
+				$this->strRandomSource = MCRYPT_RAND;
+			} else {
+				$this->strRandomSource = $strRandomSource;
 			}
 
-			$this->objMcryptModule = mcrypt_module_open($strCipher, null, $strMode, null);
+			$this->objMcryptModule = mcrypt_module_open($this->strCipher, null, $this->strMode, null);
 			if (!$this->objMcryptModule) {
 				throw new QCryptographyException('Unable to open LibMcrypt Module');
 			}
@@ -107,26 +125,27 @@
 			$intIvSize = mcrypt_enc_get_iv_size($this->objMcryptModule);
 
 			// Create the IV
-			if ($strRandomSource != MCRYPT_RAND) {
-				// Ignore All Warnings
-				set_error_handler('QcodoHandleError', 0);
-				$intCurrentLevel = error_reporting();
-				error_reporting(0);
-				$strIv = mcrypt_create_iv($intIvSize, $strRandomSource);
-				error_reporting($intCurrentLevel);
-				restore_error_handler();
+			if ($intIvSize) {
+				if ($this->strRandomSource != MCRYPT_RAND) {
+					// Ignore All Warnings
+					set_error_handler('QcubedHandleError', 0);
+					$intCurrentLevel = error_reporting();
+					error_reporting(0);
+					$strIv = mcrypt_create_iv($intIvSize, $this->strRandomSource);
+					error_reporting($intCurrentLevel);
+					restore_error_handler();
 
-				// If the RandomNumGenerator didn't work, we revert back to using MCRYPT_RAND
-				if (strlen($strIv) != $intIvSize) {
+					// If the RandomNumGenerator didn't work, we revert back to using MCRYPT_RAND
+					if (strlen($strIv) != $intIvSize) {
+						srand();
+						$strIv = mcrypt_create_iv($intIvSize, MCRYPT_RAND);
+					}
+				} else {
 					srand();
 					$strIv = mcrypt_create_iv($intIvSize, MCRYPT_RAND);
 				}
-			} else {
-				srand();
-				$strIv = mcrypt_create_iv($intIvSize, MCRYPT_RAND);
+				$this->strIv = $strIv;
 			}
-
-			$this->strIv = $strIv;
 
 			// Determine KeySize length
 			$intKeySize = mcrypt_enc_get_key_size($this->objMcryptModule);
@@ -136,7 +155,7 @@
 		}
 
 		/**
-		 * Encrypt the data (depends on the value of class memebers)
+		 * Encrypt the data (depends on the value of class members)
 		 * @param string $strData
 		 *
 		 * @return mixed|string
@@ -250,7 +269,7 @@
 		public function __destruct() {
 			if ($this->objMcryptModule) {
 				// Ignore All Warnings
-				set_error_handler('QcodoHandleError', 0);
+				set_error_handler('QcubedHandleError', 0);
 				$intCurrentLevel = error_reporting();
 				error_reporting(0);
 				mcrypt_module_close($this->objMcryptModule);
@@ -260,8 +279,13 @@
 		}
 
 		public function __sleep() {
-			throw new Exception ('Cannot serialize QCryptography');
+			return array_diff(array_keys(get_object_vars($this)), array('objMcryptModule')); // can't serialize the module, must recreate
 		}
+
+		public function __wakeup() {
+			$this->objMcryptModule = mcrypt_module_open($this->strCipher, null, $this->strMode, null);
+		}
+
 	}
 
 ?>

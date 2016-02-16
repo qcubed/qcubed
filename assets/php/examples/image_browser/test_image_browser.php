@@ -1,5 +1,5 @@
 <?php
-// Include prepend.inc to load Qcodo
+// Include prepend.inc to load Qcubed
 	require_once('../qcubed.inc.php');
 
 	class TestImageBrowser extends QForm {

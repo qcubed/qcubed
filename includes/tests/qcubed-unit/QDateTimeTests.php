@@ -105,6 +105,27 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$dt2 = new QDateTime($strIso, null, QDateTime::TimeOnlyType);
 		$this->assertTrue($dt2->IsDateNull());
 		$this->assertFalse($dt2->IsTimeNull());
+
+		// null constructors
+
+		$dt2 = new QDateTime(null);
+		$this->assertTrue($dt2->IsDateNull());
+		$this->assertTrue($dt2->IsTimeNull());
+
+
+		$dt2 = new QDateTime(null, null, QDateTime::DateOnlyType);
+		$this->assertTrue($dt2->IsDateNull());
+		$this->assertTrue($dt2->IsTimeNull());
+
+		$dt2 = new QDateTime(null, null, QDateTime::TimeOnlyType);
+		$this->assertTrue($dt2->IsDateNull());
+		$this->assertTrue($dt2->IsTimeNull());
+
+		$dt2 = new QDateTime(null, null, QDateTime::DateAndTimeType);	// forcing it to have a date and time
+		$this->assertFalse($dt2->IsDateNull());
+		$this->assertFalse($dt2->IsTimeNull());
+
+
 	}
 
 	public function testTimeZoneIssues() {

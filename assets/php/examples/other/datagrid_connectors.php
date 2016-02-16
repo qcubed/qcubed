@@ -49,7 +49,8 @@ class ExamplesForm extends QForm {
 		$colUsername->CellParamsCallback = [$this, 'GetUserNameCellParams'];
 		$colUsername->Name = 'Manager\'s Username';
 
-		$colStatus = $this->dtgProjects->CreateNodeColumn('ProjectStatusType', QQN::Project()->ProjectStatusTypeId);
+		$colStatus = $this->dtgProjects->CreateNodeColumn('ProjectStatusType', QQN::Project()->ProjectStatusType);
+		$colStatus->HtmlEntities = false;
 		$colStatus->Format = '<strong>%s</strong>';
 
 		$this->pxyExample = new QControlProxy($this);

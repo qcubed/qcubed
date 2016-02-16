@@ -536,7 +536,7 @@
 				throw new QCallerException('Error handler is already currently overridden.  Cannot override twice.  Call RestoreErrorHandler before calling SetErrorHandler again.');
 			if (!$strName) {
 				// No Error Handling is wanted -- simulate a "On Error, Resume" type of functionality
-				set_error_handler('QcodoHandleError', 0);
+				set_error_handler('QcubedHandleError', 0);
 				QApplicationBase::$intStoredErrorLevel = error_reporting(0);
 			} else {
 				set_error_handler($strName, $intLevel);
@@ -589,6 +589,12 @@
 				QApplication::$JavascriptCommandArray[QAjaxResponse::Location] = $strLocation;
 			}
 			else {
+				global $_FORM;
+
+				if ($_FORM) {
+					$_FORM->SaveControlState();
+				}
+
 				// Clear the output buffer (if any)
 				ob_clean();
 
@@ -610,6 +616,7 @@
 				}
 
 				// End the Response Script
+				session_write_close();
 				exit();
 			}
 		}

@@ -83,7 +83,7 @@
 				B) You can define the relationships in totally separate relationships
 				   script file by using the <relationshipsScript/> tag, where you can
 				   specify a filepath and a format.  Format can either be:
-					qcubed or qcodo - follows the same "foo.bar_id => bar.id" as above
+					qcubed - follows the same "foo.bar_id => bar.id" as above
 					sql - parses the script, looking for SQL-based ALTER TABLE statments like:
 				    	ALTER TABLE foo ADD CONSTRAINT blah FOREIGN KEY (bar_id) REFERENCES bar (id);
 			-->

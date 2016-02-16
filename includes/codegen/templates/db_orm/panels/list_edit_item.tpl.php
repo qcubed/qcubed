@@ -16,7 +16,7 @@
 <?php 		for($i = 0; $i < count($objTable->PrimaryKeyColumnArray); $i++) { ?>
 			$params['<?=$objTable->PrimaryKeyColumnArray[$i]->VariableName?>'] = $keys[<?= $i ?>];
 <?php 		} ?>
-			$strQuery = http_build_query($params, '', '&');
+			$strQuery = '?' . http_build_query($params, '', '&');
 <?php 	} ?>
 		}
 		$strEditPageUrl = __VIRTUAL_DIRECTORY__ . __FORMS__ . '/<?php echo QConvertNotation::UnderscoreFromCamelCase($strPropertyName) ?>_edit.php' . $strQuery;

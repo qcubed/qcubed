@@ -16,7 +16,15 @@ if ($blnHasUnique) {
 		if ($objIndex->Unique && !$objIndex->PrimaryKey) {
 			$objColumnArray = $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray);
 ?>
-		if (($obj<?php print $objTable->ClassName;?> = <?php print $objTable->ClassName;?>::LoadBy<?php print $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);?>(<?php
+		if ((<?php
+			foreach($objColumnArray as $intColumnIndex => $objColumn) {
+				print '$this->' . $objCodeGen->ModelConnectorVariableName($objColumn);
+				if ($intColumnIndex != count($objIndex->ColumnNameArray) - 1) {
+					print ' && ';
+				}
+			}
+
+		?>) && ($obj<?php print $objTable->ClassName;?> = <?php print $objTable->ClassName;?>::LoadBy<?php print $objCodeGen->ImplodeObjectArray('', '', '', 'PropertyName', $objColumnArray);?>(<?php
 				foreach ($objColumnArray as $intColumnIndex => $objColumn) {
 					print '$this->' . $objCodeGen->ModelConnectorVariableName($objColumn) . '->';
 					if ($objColumn->VariableType == QType::DateTime) {
@@ -37,7 +45,7 @@ if ($blnHasUnique) {
 					}?>){
 				$blnToReturn = false;
 <?php 				foreach ($objColumnArray as $intColumnIndex => $objColumn) { ?>
-				$this-><?php print $objCodeGen->ModelConnectorVariableName($objColumn); ?>->Warning = QApplication::Translate("Already in Use");
+				$this-><?php print $objCodeGen->ModelConnectorVariableName($objColumn); ?>->Warning = QApplication::Translate("This value is already in use.");
 <?php 				} ?>
 			}
 <?php 		}

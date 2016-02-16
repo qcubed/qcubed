@@ -498,16 +498,18 @@ qcubed = {
                 else if (control.length) {
                     // control was found without a wrapper, replace it in the same position it was in.
                     // remove related controls (error, name ...) for wrapper-less controls
-                    if (control.data("hasrel")) {
-                        var relSelector = "[data-rel='" + strControlId + "']",
-                            $relParent;
+                    var relSelector = "[data-qrel='" + strControlId + "']",
+                        relItems = $j(relSelector),
+                        $relParent;
 
-                        //ensure that the control is not wrapped in an element related to it (it would be removed)
+                    if (relItems && relItems.length) {
+                        // if the control is wrapped in a related control, we move the control outside the related controls
+                        // before deleting the related controls
                         $relParent = control.parents(relSelector).last();
                         if ($relParent.length) {
                             control.insertBefore($relParent);
                         }
-                        $j(relSelector).remove();
+                        relItems.remove();
                     }
 
                     control.before(this.html).remove();
@@ -617,7 +619,7 @@ qcubed = {
                 }
                 else {
                     // look for special objects inside top level objects.
-                    var newItem = {}
+                    var newItem = {};
                     $j.each (item, function (key, obj) {
                         newItem[key] = qcubed.unpackObj(obj);
                     });
@@ -644,7 +646,12 @@ qcubed = {
             switch (obj.qObjType) {
                 case 'qClosure':
                     if (obj.params) {
-                        return new Function(obj.params, obj.func);
+                        params = [];
+                        $j.each (obj.params, function (i, v) {
+                            params.push(qc.unpackObj(v)); // recurse
+                        });
+
+                        return new Function(params, obj.func);
                     } else {
                         return new Function(obj.func);
                     }
@@ -662,6 +669,28 @@ qcubed = {
                         val = val[v];
                     });
                     return val;
+
+                case 'qFunc':
+                    // Returns the result of the given function called immediately
+                    // Find the function and context starting at the window context.
+                    var target = window;
+                    var params;
+                    if (obj.context) {
+                       var objects = obj.context.split(".");
+                        $j.each (objects, function (i, v) {
+                            target = target[v];
+                        });
+                    }
+
+                    if (obj.params) {
+                        params = [];
+                        $j.each (obj.params, function (i, v) {
+                            params.push(qc.unpackObj(v)); // recurse
+                        });
+                    }
+                    var func = target[obj.func];
+
+                    return func.apply(target, params);
             }
         }
         else if ($j.type(obj) == 'object') {
@@ -893,21 +922,21 @@ qcubed.getWrapper = function(mixControl) {
 /////////////////////////////
 
 qcubed.controlModifications = {};
-qcubed.javascriptStyleToQcodo = {};
+qcubed.javascriptStyleToQcubed = {};
 qcubed.formObjsModified = {};
 qcubed.ajaxError = false;
-qcubed.javascriptStyleToQcodo.backgroundColor = "BackColor";
-qcubed.javascriptStyleToQcodo.borderColor = "BorderColor";
-qcubed.javascriptStyleToQcodo.borderStyle = "BorderStyle";
-qcubed.javascriptStyleToQcodo.border = "BorderWidth";
-qcubed.javascriptStyleToQcodo.height = "Height";
-qcubed.javascriptStyleToQcodo.width = "Width";
-qcubed.javascriptStyleToQcodo.text = "Text";
+qcubed.javascriptStyleToQcubed.backgroundColor = "BackColor";
+qcubed.javascriptStyleToQcubed.borderColor = "BorderColor";
+qcubed.javascriptStyleToQcubed.borderStyle = "BorderStyle";
+qcubed.javascriptStyleToQcubed.border = "BorderWidth";
+qcubed.javascriptStyleToQcubed.height = "Height";
+qcubed.javascriptStyleToQcubed.width = "Width";
+qcubed.javascriptStyleToQcubed.text = "Text";
 
-qcubed.javascriptWrapperStyleToQcodo = {};
-qcubed.javascriptWrapperStyleToQcodo.position = "Position";
-qcubed.javascriptWrapperStyleToQcodo.top = "Top";
-qcubed.javascriptWrapperStyleToQcodo.left = "Left";
+qcubed.javascriptWrapperStyleToQcubed = {};
+qcubed.javascriptWrapperStyleToQcubed.position = "Position";
+qcubed.javascriptWrapperStyleToQcubed.top = "Top";
+qcubed.javascriptWrapperStyleToQcubed.left = "Left";
 
 qcubed.registerControl = function(mixControl) {
     var objControl = qcubed.getControl(mixControl),
@@ -918,8 +947,8 @@ qcubed.registerControl = function(mixControl) {
     }
 
     // detect changes to objects before any changes trigger other events
-    $j(objControl).on ('input', this.formObjChanged);
-    $j(objControl).on ('change', this.formObjChanged);
+    $j(objControl).on ('change input', this.formObjChanged);
+    $j(objControl).on ('change input', 'input, select, textarea', this.formObjChanged);   // make sure we get to bubbled events before later attached handlers
 
 
     // Link the Wrapper and the Control together
@@ -930,7 +959,7 @@ qcubed.registerControl = function(mixControl) {
         objWrapper.control = objControl;
         objControl.wrapper = objWrapper;
 
-        // Add the wrapper to the global qcodo wrappers array
+        // Add the wrapper to the global qcubed wrappers array
         qcubed.wrappers[objWrapper.id] = objWrapper;
     }
 
@@ -1003,8 +1032,8 @@ qcubed.registerControl = function(mixControl) {
             case "width":
             case "height":
                 objControl.style[strStyleName] = strNewValue;
-                if (qcubed.javascriptStyleToQcodo[strStyleName]) {
-                    qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcodo[strStyleName], strNewValue);
+                if (qcubed.javascriptStyleToQcubed[strStyleName]) {
+                    qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcubed[strStyleName], strNewValue);
                 }
                 if (this.handle) {
                     this.updateHandle();
@@ -1017,13 +1046,13 @@ qcubed.registerControl = function(mixControl) {
                 break;
 
             default:
-                if (qcubed.javascriptWrapperStyleToQcodo[strStyleName]) {
+                if (qcubed.javascriptWrapperStyleToQcubed[strStyleName]) {
                     this.style[strStyleName] = strNewValue;
-                    qcubed.recordControlModification(objControl.id, qcubed.javascriptWrapperStyleToQcodo[strStyleName], strNewValue);
+                    qcubed.recordControlModification(objControl.id, qcubed.javascriptWrapperStyleToQcubed[strStyleName], strNewValue);
                 } else {
                     objControl.style[strStyleName] = strNewValue;
-                    if (qcubed.javascriptStyleToQcodo[strStyleName]) {
-                        qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcodo[strStyleName], strNewValue);
+                    if (qcubed.javascriptStyleToQcubed[strStyleName]) {
+                        qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcubed[strStyleName], strNewValue);
                     }
                 }
                 break;

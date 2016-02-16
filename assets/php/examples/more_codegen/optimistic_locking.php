@@ -93,9 +93,13 @@
 			_p('.<br/>', false);
 
 			// Try Saving Person #2 -- this should fail and throw an exception
-			$objPerson2->Save();
-			_p('Person Id #' . $objPerson2->Id . ' saved.  Name is now ' . $objPerson2->FirstName);
-			_p('.<br/>', false);
+			try {
+				$objPerson2->Save();
+				_p('Person Id #' . $objPerson2->Id . ' saved.  Name is now ' . $objPerson2->FirstName);
+				_p('.<br/>', false);
+			} catch (QOptimisticLockingException $ex) {
+				QApplication::DisplayAlert('The optimistic locking exception was caught: ' . $ex->getMessage());
+			}
 			break;
 
 

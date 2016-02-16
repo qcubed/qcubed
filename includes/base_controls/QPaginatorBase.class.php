@@ -312,26 +312,36 @@
 			 * 1 .. 89 90 91 92 *93* 94 95 96 97 .. 100
 			 * 1 .. 90 91 92 93 94 95 96 97 98 99 100
 			 */
-			$intMinimumEndOfBunch = $this->intIndexCount - 2;
-			$intMaximumStartOfBunch = $this->PageCount - $this->intIndexCount + 3;
 
-			$intLeftOfBunchCount = floor(($this->intIndexCount - 5) / 2);
-			$intRightOfBunchCount = round(($this->intIndexCount - 5.0) / 2.0);
+			$intPageCount = $this->PageCount;
 
-			$intLeftBunchTrigger = 4 + $intLeftOfBunchCount;
-			$intRightBunchTrigger = $intMaximumStartOfBunch + round(($this->intIndexCount - 8.0) / 2.0);
-
-			if ($this->intPageNumber <= $intLeftBunchTrigger) {
+			if ($intPageCount <= $this->intIndexCount) {
+				// no bunches needed
 				$intPageStart = 1;
+				$intPageEnd = $intPageCount;
 			} else {
-				$intPageStart = min($intMaximumStartOfBunch, $this->intPageNumber - $intLeftOfBunchCount);
+				$intMinimumEndOfBunch = min($this->intIndexCount - 2, $intPageCount);
+				$intMaximumStartOfBunch = max($intPageCount - $this->intIndexCount + 3, 1);
+
+				$intLeftOfBunchCount = floor(($this->intIndexCount - 5) / 2);
+				$intRightOfBunchCount = round(($this->intIndexCount - 5.0) / 2.0);
+
+				$intLeftBunchTrigger = 4 + $intLeftOfBunchCount;
+				$intRightBunchTrigger = $intMaximumStartOfBunch + round(($this->intIndexCount - 8.0) / 2.0);
+
+				if ($this->intPageNumber <= $intLeftBunchTrigger) {
+					$intPageStart = 1;
+				} else {
+					$intPageStart = min($intMaximumStartOfBunch, $this->intPageNumber - $intLeftOfBunchCount);
+				}
+
+				if ($this->intPageNumber > $intRightBunchTrigger) {
+					$intPageEnd = $intPageCount;
+				} else {
+					$intPageEnd = max($intMinimumEndOfBunch, $this->intPageNumber + $intRightOfBunchCount);
+				}
 			}
 
-			if ($this->intPageNumber > $intRightBunchTrigger) {
-				$intPageEnd = $this->PageCount;
-			} else {
-				$intPageEnd = max($intMinimumEndOfBunch, $this->intPageNumber + $intRightOfBunchCount);
-			}
 
 			for ($intIndex = $intPageStart; $intIndex <= $intPageEnd; $intIndex++) {
 				$strToReturn .= $this->GetPageButtonHtml($intIndex);
@@ -370,8 +380,9 @@
 		 * @return float Number of pages
 		 */
 		public function CalcPageCount() {
-			return floor($this->intTotalItemCount / $this->intItemsPerPage) +
+			$intCount = (int) floor($this->intTotalItemCount / $this->intItemsPerPage) +
 				((($this->intTotalItemCount % $this->intItemsPerPage) != 0) ? 1 : 0);
+			return $intCount;
 
 		}
 

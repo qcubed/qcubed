@@ -222,7 +222,7 @@
 				$intWidth = $strWidth;
 			}
 
-			if (!$this->strHeight) {
+			if (!$this->Height) {
 				// Step 1 -- Use Bounding Box + Padding
 				$intHeight = $intBoxHeight + ($this->intPaddingHeight * 2);
 				
@@ -241,15 +241,15 @@
 						break;
 					case QVerticalAlign::Bottom;
 						if ($blnTrueType)
-							$intY = $this->strHeight - $intYCoordinate2 - $this->intPaddingHeight;
+							$intY = $this->Height - $intYCoordinate2 - $this->intPaddingHeight;
 						else
-							$intY = $this->strHeight + $intYCoordinate1 - 2 - $this->intPaddingHeight;
+							$intY = $this->Height + $intYCoordinate1 - 2 - $this->intPaddingHeight;
 						break;
 					case QVerticalAlign::Middle:
 						if ($blnTrueType)
-							$intY = round(($this->strHeight - $intBoxHeight) / 2) + $intBoxHeight - $intYCoordinate2;
+							$intY = round(($this->Height - $intBoxHeight) / 2) + $intBoxHeight - $intYCoordinate2;
 						else
-							$intY = round(($this->strHeight - $intBoxHeight) / 2) + $intYCoordinate2;
+							$intY = round(($this->Height - $intBoxHeight) / 2) + $intYCoordinate2;
 						break;
 
 					// Step 3 - Use Coordinates
@@ -258,7 +258,7 @@
 						break;
 				}
 				
-				$intHeight = $this->strHeight;
+				$intHeight = $this->Height;
 			}
 			
 			if ($intWidth <= 0)

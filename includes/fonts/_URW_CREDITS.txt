@@ -1,9 +1,9 @@
 This is a sampling of release 1.0.7pre22 of Valek Filippov's improved
 versions of the URW type 1 font collection, taken from the open sourced
-Ghostscript distribution, and repackaged for Qcodo.  Only a sampling
+Ghostscript distribution, and repackaged for Qcubed.  Only a sampling
 is included in order to keep the QCubed distribution lightweight.  If you
 wish to download the rest of the fonts in the distribution, please go
-to the Downloads section on www.qcodo.com
+to the Downloads section on www.qcu.be
 
 
 
