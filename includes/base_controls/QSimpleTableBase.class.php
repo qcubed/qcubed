@@ -326,7 +326,7 @@
 		}
 
 		/**
-		 *
+		 * Remove all columns from the grid.
 		 */
 		public function RemoveAllColumns() {
 			$this->blnModified = true;
@@ -334,7 +334,8 @@
 		}
 
 		/**
-		 *
+		 * Hide all columns without removing them from the grid. They will not display in the html, but they will
+		 * still be part of the form state.
 		 */
 		public function HideAllColumns() {
 			foreach ($this->objColumnArray as $objColumn) {
@@ -344,7 +345,7 @@
 		}
 
 		/**
-		 *
+		 * Show all columns.
 		 */
 		public function ShowAllColumns() {
 			foreach ($this->objColumnArray as $objColumn) {
