@@ -325,10 +325,35 @@
 			return $removed;
 		}
 
+		/**
+		 *
+		 */
 		public function RemoveAllColumns() {
 			$this->blnModified = true;
 			$this->objColumnArray = array();
 		}
+
+		/**
+		 *
+		 */
+		public function HideAllColumns() {
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Visible = false;
+			}
+			$this->blnModified = true;
+		}
+
+		/**
+		 *
+		 */
+		public function ShowAllColumns() {
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Visible = true;
+			}
+			$this->blnModified = true;
+		}
+
+
 
 		/**
 		 * Returns all columns in the table
