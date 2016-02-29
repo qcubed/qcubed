@@ -1659,7 +1659,7 @@
 
 			/**** Render any controls that get automatically rendered ****/
 			foreach ($this->GetAllControls() as $objControl) {
-				if ($objControl instanceof QDialog &&
+				if ($objControl->AutoRender &&
 					!$objControl->Rendered) {
 					$strRenderMethod = $objControl->PreferredRenderMethod;
 					$strHtml .= $objControl->$strRenderMethod(false) . _nl();
