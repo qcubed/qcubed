@@ -5,8 +5,9 @@
 	 * for each cells in a variety of ways
 	 *
 	 * @property string                 $Name           name of the column
-	 * @property string                 $CssClass       CSS class of the column
-	 * @property string                 $HeaderCssClass CSS class of the column when it's rendered in a table header
+	 * @property string                 $CssClass       CSS class of the column. This will be applied to every cell in the column. Use ColStyper
+	 * 													to set the class for the actual 'col' tag if using col tags.
+	 * @property string                 $HeaderCssClass CSS class of the column's cells when it's rendered in a table header
 	 * @property boolean                $HtmlEntities   if true, cell values will be converted using htmlentities()
 	 * @property boolean                $RenderAsHeader if true, all cells in the column will be rendered with a <<th>> tag instead of <<td>>
 	 * @property integer                $Id             HTML id attribute to put in the col tag
@@ -235,9 +236,6 @@
 			}
 			if ($this->strId) {
 				$aParams['id'] = $this->strId;
-			}
-			if ($this->strCssClass) {
-				$aParams['class'] = $this->strCssClass;
 			}
 
 			if ($this->objColStyler) {
