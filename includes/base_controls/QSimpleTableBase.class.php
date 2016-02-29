@@ -325,10 +325,36 @@
 			return $removed;
 		}
 
+		/**
+		 * Remove all columns from the grid.
+		 */
 		public function RemoveAllColumns() {
 			$this->blnModified = true;
 			$this->objColumnArray = array();
 		}
+
+		/**
+		 * Hide all columns without removing them from the grid. They will not display in the html, but they will
+		 * still be part of the form state.
+		 */
+		public function HideAllColumns() {
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Visible = false;
+			}
+			$this->blnModified = true;
+		}
+
+		/**
+		 * Show all columns.
+		 */
+		public function ShowAllColumns() {
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Visible = true;
+			}
+			$this->blnModified = true;
+		}
+
+
 
 		/**
 		 * Returns all columns in the table
