@@ -102,7 +102,7 @@
 			if ($this->strFullAlias) {
 				return $this->strFullAlias;
 			} else {
-				//assert ('!empty($this->strAlias)');	// Alias should always be set by default
+				assert (!empty($this->strAlias));	// Alias should always be set by default
 				if ($this->objParentNode) {
 					return $this->objParentNode->FullAlias() . '__' . $this->strAlias;
 				}
