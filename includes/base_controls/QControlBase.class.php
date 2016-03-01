@@ -96,6 +96,9 @@
 	 * 		the control, or place the label next to the control. Two legal styles of label creation that different css and JS frameworks expect.
 	 * @property-write boolean $SaveState set to true to have the control remember its state between visits to the form that the control is on.
 	 * @property boolean $Minimize True to force the entire control and child controls to draw minimized. This is helpful when drawing inline-block items to prevent spaces from appearing between them.
+	 * @property boolean $AutoRender true to have the control be automatically rendered without an explicit "Render..." call. This is used by QDialogs,
+	 * 		and other similar controls that are controlled via javascript, and generally start out hidden on the page. These controls
+	 * 		are appended to the form after all other controls.
 	 */
 	abstract class QControlBase extends QHtmlAttributeManager {
 
@@ -228,6 +231,11 @@
 		/** @var bool true to remember the state of this control to restore if the user comes back to it. */
 		protected $blnSaveState = false;
 
+		/** @var bool true to have the control be automatically rendered without an explicit "Render..." call. This is used by QDialogs,
+		 * and other similar controls that are controlled via javascript, and generally start out hidden on the page. These controls
+		 * are appended to the form after all other controls.
+		 */
+		protected $blnAutoRender = false;
 
 		//////////
 		// Methods
@@ -1411,7 +1419,7 @@
 				// Render if (1) object has no parent or (2) parent was not rendered nor currently being rendered
 				if ((!$this->objParentControl) || ((!$this->objParentControl->Rendered) && (!$this->objParentControl->Rendering))) {
 					$strRenderMethod = $this->strRenderMethod;
-					if (!$strRenderMethod && $this instanceof QDialog) {
+					if (!$strRenderMethod && $this->AutoRender) {
 						// This is an injected dialog that is not on the page, so go ahead and render it
 						$strRenderMethod = $this->strPreferredRenderMethod;
 					}
@@ -1912,7 +1920,7 @@
 				case "LinkedNode": return $this->objLinkedNode;
 				case "WrapperStyles": return $this->getWrapperStyler();
 				case "WrapLabel": return $this->blnWrapLabel;
-
+				case "AutoRender": return $this->blnAutoRender;
 
 				default:
 					try {
@@ -2189,8 +2197,22 @@
 					}
 
 				case "SaveState":
-					$this->blnSaveState = QType::Cast($mixValue, QType::Boolean);
-					$this->_ReadState(); // during form creation, if we are setting this value, it means we want the state restored at form creation too, so handle both here.
+					try {
+						$this->blnSaveState = QType::Cast($mixValue, QType::Boolean);
+						$this->_ReadState(); // during form creation, if we are setting this value, it means we want the state restored at form creation too, so handle both here.
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+
+				case "AutoRender":
+					try {
+						$this->blnAutoRender = QType::Cast($mixValue, QType::Boolean);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 					break;
 
 
