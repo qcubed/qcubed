@@ -445,7 +445,13 @@
 			// for backward compatibility, don't use MAX_DB_CONNECTION_INDEX directly,
 			// but check if MAX_DB_CONNECTION_INDEX is defined
 			$intMaxIndex = defined('MAX_DB_CONNECTION_INDEX') ? constant('MAX_DB_CONNECTION_INDEX') : 9;
-			for ($intIndex = 0; $intIndex <= $intMaxIndex; $intIndex++) {
+
+			if (defined('DB_CONNECTION_0')) {
+				// This causes a conflict with how DbBackedSessionHandler works.
+				throw new Exception('Do not define DB_CONNECTION_0. Start at DB_CONNECTION_1');
+			}
+
+			for ($intIndex = 1; $intIndex <= $intMaxIndex; $intIndex++) {
 				$strConstantName = sprintf('DB_CONNECTION_%s', $intIndex);
 
 				if (defined($strConstantName)) {
