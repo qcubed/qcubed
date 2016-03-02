@@ -261,6 +261,7 @@
 	QApplicationBase::$ClassFile['qcontrolcategorytype'] = __QCUBED_CORE__ .'/codegen/QControlCategoryType.class.php';
 
 	QApplicationBase::$ClassFile['qautocomplete_sourceevent'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
+	QApplicationBase::$ClassFile['qdialog_buttonevent'] = __QCUBED_CORE__ . '/base_controls/QDialogBase.class.php';
 
 	// jQuery controls
 	include(__QCUBED_CORE__ . '/_jq_paths.inc.php');
