@@ -506,9 +506,7 @@
 				if (isset($_POST['Qform__FormControl']) && isset($objClass->objControlArray[$_POST['Qform__FormControl']])) {
 					$objControl = $objClass->objControlArray[$_POST['Qform__FormControl']];
 					if ($objControl->CausesValidation) {
-						foreach ($objClass->objControlArray as $objControl) {
-							$objControl->ValidationReset();
-						}
+						$objClass->ResetValidationStates();
 					}
 				}
 
@@ -612,6 +610,22 @@
 			$objClass->Form_Exit();
 		}
 
+		/**
+		 * Reset all validation states.
+		 */
+		public function ResetValidationStates() {
+			foreach ($this->objControlArray as $objControl) {
+				$objControl->ValidationReset();
+			}
+		}
+
+		/**
+		 * Private function to respond to a designer click.
+		 *
+		 * @param $strFormId
+		 * @param $strControlId
+		 * @param $mixParam
+		 */
 		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
 			$objControl = $this->GetControl($strControlId);
 			$dlg = $this->GetControl ('qconnectoreditdlg');
