@@ -420,17 +420,34 @@
 		}
 
 
+		public static function _ProcessActionParams(QControl $objSourceControl, QAction $objAction, $mixParameter) {
+			$mixParameters['param'] = null;
+			$mixParameters = $objSourceControl->ProcessActionParameters($objAction, $mixParameter);
+			return $mixParameters;
+		}
+
+		/**
+		 * @param $mixParameter
+		 * @return mixed
+		 */
+		protected function ProcessActionParameters(QAction $objAction, $mixParameter) {
+			$params['param'] = $mixParameter;	// this value can be modified by subclass if needed
+			$params['originalParam'] = $mixParameter;
+			$params['action'] = $objAction;
+			$params['controlId'] = $this->strControlId;
+			return $params;
+		}
+
 		/**
 		 * Used by the QForm engine to call the method in the control, allowing the method to be a protected method.
 		 *
-		 * @param QControl $objControl
-		 * @param $strMethodName
-		 * @param $strFormId
-		 * @param $strId
-		 * @param $strParameter
+		 * @param QControl $objDestControl
+		 * @param string $strMethodName
+		 * @param $strSourceControlId
+		 * @param mixed $mixParameter	Parameters coming from javascript
 		 */
-		public static function CallActionMethod(QControl $objControl, $strMethodName, $strFormId, $strId, $strParameter) {
-			$objControl->$strMethodName($strFormId, $strId, $strParameter);
+		public static function _CallActionMethod(QControl $objDestControl, $strMethodName, $strFormId, $params) {
+			$objDestControl->$strMethodName($strFormId, $params['controlId'], $params['param'], $params);
 		}
 
 		/**
