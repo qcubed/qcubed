@@ -153,7 +153,7 @@ class QHListControl extends QControl {
 	 * Return the item styler for the given item. Combines the generic item styles found in this class with
 	 * any specific item styles found in the item.
 	 *
-	 * @param QListItem $objItem
+	 * @param mixed $objItem
 	 * @return QListItemStyle
 	 */
 	protected function GetItemStyler ($objItem) {
@@ -179,10 +179,10 @@ class QHListControl extends QControl {
 	/**
 	 * Return the encrypted value of the given object
 	 *
-	 * @param QHListItem $objItem
+	 * @param mixed $objItem
 	 * @return string
 	 */
-	protected function EncryptValue(QHListItem $objItem) {
+	protected function EncryptValue($objItem) {
 		if (!$this->objCrypt) {
 			$this->objCrypt = new QCryptography(null, true);
 		}
