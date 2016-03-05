@@ -115,10 +115,10 @@ class QHListControl extends QControl {
 	/**
 	 * Return the html to draw an item.
 	 *
-	 * @param QHListItem $objItem
+	 * @param mixed $objItem
 	 * @return string
 	 */
-	protected function GetItemHtml (QHListItem $objItem) {
+	protected function GetItemHtml ($objItem) {
 		$strHtml = $this->GetItemText($objItem);
 		$strHtml .= "\n";
 		if ($objItem->GetItemCount()) {
@@ -141,10 +141,10 @@ class QHListControl extends QControl {
 	/**
 	 * Return the text html of the item.
 	 *
-	 * @param QListItem $objItem
+	 * @param mixed $objItem
 	 * @return string
 	 */
-	protected function GetItemText (QHListItem $objItem) {
+	protected function GetItemText ($objItem) {
 		$strHtml = QApplication::HtmlEntities($objItem->Text);
 
 		if ($strAnchor = $objItem->Anchor) {
@@ -157,10 +157,10 @@ class QHListControl extends QControl {
 	 * Return the item styler for the given item. Combines the generic item styles found in this class with
 	 * any specific item styles found in the item.
 	 *
-	 * @param QListItem $objItem
+	 * @param mixed $objItem
 	 * @return QListItemStyle
 	 */
-	protected function GetItemStyler (QHListItem $objItem) {
+	protected function GetItemStyler ($objItem) {
 		if ($this->objItemStyle) {
 			$objStyler = clone $this->objItemStyle;
 		}
@@ -212,10 +212,10 @@ class QHListControl extends QControl {
 
 	/**
 	 * Return the attributes for the sub tag that wraps the item tags
-	 * @param QListItem $objItem
-	 * @return null|array|string
+	 * @param mixed $objItem
+	 * @return array|null|string
 	 */
-	protected function GetSubTagAttributes(QHListItem $objItem) {
+	protected function GetSubTagAttributes($objItem) {
 		return $objItem->GetSubTagStyler()->RenderHtmlAttributes();
 	}
 
