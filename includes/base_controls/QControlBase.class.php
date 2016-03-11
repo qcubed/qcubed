@@ -1481,7 +1481,9 @@
 			foreach ($this->GetChildControls() as $objControl) {
 				if (!$objControl->Rendered) {
 					$renderMethod = $objControl->strPreferredRenderMethod;
-					$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
+					if ($renderMethod) {
+						$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
+					}
 				}
 			}
 

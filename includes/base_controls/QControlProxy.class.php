@@ -17,6 +17,8 @@
 		protected $blnActionsMustTerminate = true;
 		/** @var bool Overriding parent class */
 		protected $blnScriptsOnly = true;
+		/** @var null Overriding parent class to turn off rendering of this control when auto-rendering */
+		protected $strPreferredRenderMethod = null;
 
 		/**
 		 * Constructor Method
