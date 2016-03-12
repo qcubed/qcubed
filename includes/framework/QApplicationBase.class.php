@@ -658,6 +658,40 @@
 		}
 
 		/**
+		 * Set a cookie. Allows setting of cookies in responses to ajax requests.
+		 *
+		 * @param string $strName
+		 * @param sring $strValue
+		 * @param QDatTime $dttTimeout
+		 * @param string $strPath
+		 * @param null|string $strDomain
+		 * @param bool $blnSecure
+		 */
+		public static function SetCookie($strName, $strValue, QDateTime $dttTimeout, $strPath = '/', $strDomain = null, $blnSecure = false) {
+			if (QApplication::$RequestMode == QRequestMode::Ajax) {
+				self::ExecuteJsFunction ('qcubed.setCookie', $strName, $strValue, $dttTimeout, $strPath, $strDomain, $blnSecure);
+			}
+			else {
+				setcookie($strName, $strValue, $dttTimeout->Timestamp, $strPath, $strDomain, $blnSecure);
+			}
+		}
+
+		/**
+		 * Delete's the given cookie IF its set. In other words, you cannot set a cookie and then delete a cookie right away before the
+		 * cookie gets sent to the browser.
+		 *
+		 * @param $strName
+		 */
+		public static function DeleteCookie($strName) {
+			if (isset($_COOKIE[$strName])) { // don't post a cookie if its not set
+				$dttTimeout = QDateTime::Now();
+				$dttTimeout->AddYears(-5);
+
+				self::SetCookie($strName, "", $dttTimeout);
+			}
+		}
+
+		/**
 		 * Gets the value of the QueryString item $strItem.  Will return NULL if it doesn't exist.
 		 *
 		 * @param string $strItem the parameter name
