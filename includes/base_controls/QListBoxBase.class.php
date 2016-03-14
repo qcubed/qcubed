@@ -205,6 +205,22 @@
 			QApplication::ExecuteControlCommand($this->ControlId, 'val', $values);
 		}
 
+		/**
+		 * Restore the  state of the control. This override makes sure the item exists before putting it. Otherwise,
+		 * if the item did not exist, the default selection would be removed and nothing would be selected.
+		 * @param mixed $state
+		 */
+		public function PutState($state) {
+			if (!empty($state['SelectedValues'])) {
+				// assume only one selection in list
+				$strValue = reset($state['SelectedValues']);
+				if ($this->FindItemByValue($strValue)) {
+					$this->SelectedValues = [$strValue];
+				}
+			}
+		}
+
+
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
