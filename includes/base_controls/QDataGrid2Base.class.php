@@ -82,6 +82,10 @@ class QDataGrid2Base extends QSimpleTable
 
 		$strHtml = $objPaginator->Render(false);
 		$strHtml = QHtml::RenderTag('span', ['class'=>'paginator-control'], $strHtml);
+		if ($this->strCaption) {
+			$strHtml = '<span>' . QApplication::HtmlEntities($this->strCaption) . '</span>' . $strHtml;
+		}
+
 		$strHtml = QHtml::RenderTag('caption', null, $strHtml);
 
 		/*
