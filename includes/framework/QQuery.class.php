@@ -1474,7 +1474,7 @@
 		/////////////////////////
 
 		/**
-		 * @param string $strSql
+		 * @param string $strSql Sql string. Use {1}, {2}, etc. to represent nodes inside of the sql string.
 		 * @param null|QQNode[] $objParentQueryNodes	Array of nodes to specify replacement value in the sql.
 		 * @return QQSubQuerySqlNode
 		 */

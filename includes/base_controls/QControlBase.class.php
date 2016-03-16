@@ -538,10 +538,12 @@
 		 * @return QControl
 		 */
 		public function GetChildControl($strControlId) {
-			if (array_key_exists($strControlId, $this->objChildControlArray))
+			if (isset($this->objChildControlArray[$strControlId])) {
 				return $this->objChildControlArray[$strControlId];
-			else
+			}
+			else {
 				return null;
+			}
 		}
 
 		/**
@@ -561,7 +563,7 @@
 		 */
 		public function RemoveChildControl($strControlId, $blnRemoveFromForm) {
 			$this->blnModified = true;
-			if (array_key_exists($strControlId, $this->objChildControlArray)) {
+			if (isset($this->objChildControlArray[$strControlId])) {
 				$objChildControl = $this->objChildControlArray[$strControlId];
 				$objChildControl->objParentControl = null;
 				unset($this->objChildControlArray[$strControlId]);
