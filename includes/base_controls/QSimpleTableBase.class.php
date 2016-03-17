@@ -161,12 +161,6 @@
 		/**
 		 * Add a link column.
 		 *
-		 * @param $strName
-		 * @param $strAttribute
-		 * @param $intColumnIndex
-		 * @return QVirtualAttributeColumn
-		 */
-		/**
 		 * @param string $strName Column name to be displayed in the table header.
 		 * @param null|string|array $mixText The text to display as the label of the anchor, a callable callback to get the text,
 		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same. Depends on
