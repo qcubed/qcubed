@@ -914,7 +914,7 @@
 		 * @param string $strControlId
 		 */
 		public function RemoveControl($strControlId) {
-			if (array_key_exists($strControlId, $this->objControlArray)) {
+			if (isset($this->objControlArray[$strControlId])) {
 				// Get the Control in Question
 				$objControl = $this->objControlArray[$strControlId];
 
