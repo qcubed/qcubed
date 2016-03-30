@@ -13,6 +13,15 @@
 			throw new QCallerException('QControlProxies cannot be rendered.  Use RenderAsEvents() within an HTML tag.');
 		}
 
+		public function RenderAsScript($strEventType='QClickEvent') {
+			$objActions 	= $this->GetAllActions($strEventType);
+			$strToReturn 	= '';
+			foreach ($objActions as $objAction) {
+				$strToReturn .= $objAction->RenderScript($this);
+			}
+			return $strToReturn;
+		}
+		
 		public function RenderAsEvents($strActionParameter = null, $blnDisplayOutput = true, $strTargetControlId = null, $blnRenderControlId = true) {
 			if ($strTargetControlId)
 				$this->strTargetControlId = $strTargetControlId;
@@ -39,10 +48,9 @@
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 			
 			$this->strActionParameter = $strActionParameter;
-			$objActions = $this->GetAllActions('QClickEvent');
-			$strToReturn = '';
-			foreach ($objActions as $objAction)
-				$strToReturn .= $objAction->RenderScript($this);
+			
+			$strToReturn = $this->RenderAsScript('QClickEvent');
+			
 			if ($strToReturn)
 				$strToReturn = 'javascript:' . $strToReturn;
 			else
