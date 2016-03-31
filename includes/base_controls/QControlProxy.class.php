@@ -152,10 +152,7 @@
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 			
 			$this->mixActionParameter = $strActionParameter;
-			$objActions = $this->GetAllActions('QClickEvent');
-			$strToReturn = '';
-			foreach ($objActions as $objAction)
-				$strToReturn .= $objAction->RenderScript($this);
+			$strToReturn = $this->RenderAsScript('QClickEvent');
 			if ($strToReturn)
 				$strToReturn = 'javascript:' . $strToReturn;
 			else
@@ -174,6 +171,15 @@
 			else
 				return $strToReturn;
 		}
+		
+		public function RenderAsScript($strEventType='QClickEvent') {
+ +			$objActions 	= $this->GetAllActions($strEventType);
+ +			$strToReturn 	= '';
+ +			foreach ($objActions as $objAction) {
+ +				$strToReturn .= $objAction->RenderScript($this);
+ +			}
+ +			return $strToReturn;
+ +		}
 
 		/**
 		 * Parses postback data
