@@ -1131,8 +1131,14 @@
 			$objSourceControl = $this->objControlArray[$strControlId];
 			$params = QControl::_ProcessActionParams($objSourceControl, $objAction, $mixParameter);
 
-			$intPosition = strpos($strMethodName, ':');
-			if ($intPosition !== false) {
+			if (strpos($strMethodName, '::')) {
+				// Calling a static method in a class
+				$f = explode('::', $strMethodName);
+				if (is_callable($f)) {
+					$f($this->strFormId, $params['controlId'], $params['param'], $params);
+				}
+			}
+			elseif (($intPosition = strpos($strMethodName, ':')) !== false) {
 				$strDestControlId = substr($strMethodName, 0, $intPosition);
 				$strMethodName = substr($strMethodName, $intPosition + 1);
 

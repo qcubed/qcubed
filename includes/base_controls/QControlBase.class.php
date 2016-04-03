@@ -419,7 +419,18 @@
 			return null;
 		}
 
-
+		/**
+		 * This function passes control of action parameter processing to the control that caused the action, so that
+		 * the control can further process the action parameters. It also saves additional information in the returned
+		 * parameter array. This is useful for widgets that need to pass more information to the action than just a
+		 * simple string, and allows actions to get more information as well. This also allows widgets to modify
+		 * the action parameter, while preserving the original action parameter so that the action can see both.
+		 *
+		 * @param QControl $objSourceControl
+		 * @param QAction $objAction
+		 * @param $mixParameter
+		 * @return mixed
+		 */
 		public static function _ProcessActionParams(QControl $objSourceControl, QAction $objAction, $mixParameter) {
 			$mixParameters['param'] = null;
 			$mixParameters = $objSourceControl->ProcessActionParameters($objAction, $mixParameter);
@@ -427,6 +438,10 @@
 		}
 
 		/**
+		 * Breaks down the action parameter if needed to more useful information. Subclasses should override, call
+		 * the parent, and then modify the "param" item in the returned array if needed. This also provides additional
+		 * information to the action about the triggering control.
+		 *
 		 * @param $mixParameter
 		 * @return mixed
 		 */
