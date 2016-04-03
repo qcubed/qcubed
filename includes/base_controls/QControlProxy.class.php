@@ -171,15 +171,21 @@
 			else
 				return $strToReturn;
 		}
-		
+
+		/**
+		 * Renders all the actions for a particular event as javascripts.
+		 * 
+		 * @param string $strEventType
+		 * @return string
+		 */
 		public function RenderAsScript($strEventType='QClickEvent') {
- +			$objActions 	= $this->GetAllActions($strEventType);
- +			$strToReturn 	= '';
- +			foreach ($objActions as $objAction) {
- +				$strToReturn .= $objAction->RenderScript($this);
- +			}
- +			return $strToReturn;
- +		}
+			$objActions 	= $this->GetAllActions($strEventType);
+			$strToReturn 	= '';
+			foreach ($objActions as $objAction) {
+				$strToReturn .= $objAction->RenderScript($this);
+			}
+ 			return $strToReturn;
+ 		}
 
 		/**
 		 * Parses postback data
