@@ -360,7 +360,13 @@ class QModelConnectorEditDlg extends QDialog {
 			$type = QControlCategoryType::MultiSelect;
 		}
 		elseif ($node->_TableName) { // indicates a reference to a table
-			$type = QControlCategoryType::Table;
+			if ($node->_ParentNode) {
+				// A foreign key to another table
+				$type = QControlCategoryType::SingleSelect;
+			} else {
+				// A top level table, so a grid or list view
+				$type = QControlCategoryType::Table;
+			}
 		}
 
 		if (isset ($controls[$type])) {

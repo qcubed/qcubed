@@ -16,6 +16,7 @@
 	 * methods can be used to fetch the data for cells, including callable objects.</p>
 	 *
 	 * @package Controls
+	 * @property string         $Caption          	  string to use as the caption of the table
 	 * @property string         $RowCssClass          class to be given to the row tag
 	 * @property string         $AlternateRowCssClass class to be given to each alternate row tag
 	 * @property string         $HeaderRowCssClass    class to be given the header row
@@ -156,6 +157,44 @@
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
+
+		/**
+		 * Add a link column.
+		 *
+		 * @param string $strName Column name to be displayed in the table header.
+		 * @param null|string|array $mixText The text to display as the label of the anchor, a callable callback to get the text,
+		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same. Depends on
+		 *   what time of row item is passed.
+		 * @param null|string|array|QControlProxy $mixDestination The text representing the destination of the anchor, a callable callback to get the destination,
+		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same,
+		 *   or a QControlProxy. Depends on what time of row item is passed.
+		 * @param null|string|array $getVars An array of key=>value pairs to use as the GET variables in the link URL,
+		 *   or in the case of a QControlProxy, possibly a string to represent the action parameter. In either case, each item
+		 *   can be a property chain, an array index list, or a callable callback as specified above.
+		 * @param null|array $tagAttributes An array of key=>value pairs to use as additional attributes in the tag.
+		 *   For example, could be used to add a class or an id to each tag.
+		 * @param bool $blnAsButton Only used if this is drawing a QControlProxy. Will draw the proxy as a button.
+		 * @param int $intColumnIndex
+		 * @return QSimpleTableLinkColumn
+		 * @throws QInvalidCastException
+		 */
+		public function CreateLinkColumn ($strName,
+										  $mixText,
+										  $mixDestination = null,
+										  $getVars = null,
+										  $tagAttributes = null,
+										  $blnAsButton = false,
+										  $intColumnIndex = -1) {
+			$objColumn = new QSimpleTableLinkColumn($strName,
+				$mixText,
+				$mixDestination,
+				$getVars,
+				$tagAttributes,
+				$blnAsButton);
+			$this->AddColumnAt($intColumnIndex, $objColumn);
+			return $objColumn;
+		}
+
 
 		/**
 		 * Move the named column to the given position
@@ -325,10 +364,36 @@
 			return $removed;
 		}
 
+		/**
+		 * Remove all columns from the grid.
+		 */
 		public function RemoveAllColumns() {
 			$this->blnModified = true;
 			$this->objColumnArray = array();
 		}
+
+		/**
+		 * Hide all columns without removing them from the grid. They will not display in the html, but they will
+		 * still be part of the form state.
+		 */
+		public function HideAllColumns() {
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Visible = false;
+			}
+			$this->blnModified = true;
+		}
+
+		/**
+		 * Show all columns.
+		 */
+		public function ShowAllColumns() {
+			foreach ($this->objColumnArray as $objColumn) {
+				$objColumn->Visible = true;
+			}
+			$this->blnModified = true;
+		}
+
+
 
 		/**
 		 * Returns all columns in the table

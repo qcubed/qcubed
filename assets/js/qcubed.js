@@ -704,7 +704,26 @@ qcubed = {
             return qcubed.unpackArray(obj);
         }
         return obj; // no change
-    }
+    },
+    setCookie: function(name, val, expires, path, dom, secure) {
+            var cookie = name + "=" + encodeURIComponent(val) + "; ";
+
+            if (expires) {
+                cookie += "expires=" + expires.toUTCString() + "; ";
+            }
+
+            if (path) {
+                cookie += "path=" + path + "; ";
+            }
+            if (dom) {
+                cookie += "domain=" + dom + "; ";
+            }
+            if (secure) {
+                cookie += "secure;";
+            }
+
+            document.cookie = cookie;
+        }
 };
 
 ///////////////////////////////

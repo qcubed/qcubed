@@ -244,4 +244,20 @@
 
 			return $objFoundItem;
 		}
+
+		/**
+		 * Returns the first tiem found with the given value.
+		 *
+		 * @param $strValue
+		 * @return null|QListItemBase
+		 */
+		public function FindItemByValue($strValue) {
+			if (!$this->objListItemArray) return null;
+			foreach ($this->objListItemArray as $objItem) {
+				if ($objItem->Value == $strValue) {
+					return $objItem;
+				}
+			}
+			return null;
+		}
 	}

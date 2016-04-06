@@ -377,6 +377,23 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	}
 
 	/**
+	 * Many CSS frameworks use families of classes, which are built up from a base family name. For example,
+	 * Bootstrap uses 'col-lg-6' to represent a column that is 6 units wide on large screens and Foundation
+	 * uses 'large-6' to do the same thing. This utility removes classes that start with a particular prefix
+	 * to remove whatever sizing class was specified.
+	 *
+	 * @param string $strPrefix
+	 */
+	public function RemoveCssClassesByPrefix($strPrefix) {
+		if (!$strPrefix) return;
+		$strClasses = $this->GetHtmlAttribute('class');
+		if ($strClasses && QHtml::RemoveClassesByPrefix($strClasses, $strPrefix)) {
+			$this->SetHtmlAttribute('class', $strClasses);
+		}
+	}
+
+
+	/**
 	 * Return true if the given class is in the attribute list.
 	 *
 	 * @param $strClass
@@ -434,9 +451,9 @@ class QHtmlAttributeManagerBase extends QBaseClass {
 	 * @param $strTag
 	 * @param null|array 		$attributeOverrides	key/value pairs of values for attribute overrides
 	 * @param null|array 		$styleOverrides		key/value pairs of values for style overrides
-	 * @param null|string 		$strInnerHtml		inner html to render. Will be escaped.
+	 * @param null|string 		$strInnerHtml		inner html to render. Will NOT be escaped.
 	 * @param bool				$blnIsVoidElement	true if it should not have innerHtml or a closing tag.
-	 * @return string			HTML out, escaped with HTML entities as needed.
+	 * @return string			HTML out. Attributes will be escaped as needed, but innerHtml will be raw, so be careful.
 	 */
 	protected function RenderTag($strTag, $attributeOverrides = null, $styleOverrides = null, $strInnerHtml = null, $blnIsVoidElement = false, $blnNoSpace = false) {
 		$strAttributes = $this->RenderHtmlAttributes($attributeOverrides, $styleOverrides);

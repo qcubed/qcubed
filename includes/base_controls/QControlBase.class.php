@@ -96,6 +96,9 @@
 	 * 		the control, or place the label next to the control. Two legal styles of label creation that different css and JS frameworks expect.
 	 * @property-write boolean $SaveState set to true to have the control remember its state between visits to the form that the control is on.
 	 * @property boolean $Minimize True to force the entire control and child controls to draw minimized. This is helpful when drawing inline-block items to prevent spaces from appearing between them.
+	 * @property boolean $AutoRender true to have the control be automatically rendered without an explicit "Render..." call. This is used by QDialogs,
+	 * 		and other similar controls that are controlled via javascript, and generally start out hidden on the page. These controls
+	 * 		are appended to the form after all other controls.
 	 */
 	abstract class QControlBase extends QHtmlAttributeManager {
 
@@ -228,6 +231,11 @@
 		/** @var bool true to remember the state of this control to restore if the user comes back to it. */
 		protected $blnSaveState = false;
 
+		/** @var bool true to have the control be automatically rendered without an explicit "Render..." call. This is used by QDialogs,
+		 * and other similar controls that are controlled via javascript, and generally start out hidden on the page. These controls
+		 * are appended to the form after all other controls.
+		 */
+		protected $blnAutoRender = false;
 
 		//////////
 		// Methods
@@ -411,18 +419,50 @@
 			return null;
 		}
 
+		/**
+		 * This function passes control of action parameter processing to the control that caused the action, so that
+		 * the control can further process the action parameters. It also saves additional information in the returned
+		 * parameter array. This is useful for widgets that need to pass more information to the action than just a
+		 * simple string, and allows actions to get more information as well. This also allows widgets to modify
+		 * the action parameter, while preserving the original action parameter so that the action can see both.
+		 *
+		 * @param QControl $objSourceControl
+		 * @param QAction $objAction
+		 * @param $mixParameter
+		 * @return mixed
+		 */
+		public static function _ProcessActionParams(QControl $objSourceControl, QAction $objAction, $mixParameter) {
+			$mixParameters['param'] = null;
+			$mixParameters = $objSourceControl->ProcessActionParameters($objAction, $mixParameter);
+			return $mixParameters;
+		}
+
+		/**
+		 * Breaks down the action parameter if needed to more useful information. Subclasses should override, call
+		 * the parent, and then modify the "param" item in the returned array if needed. This also provides additional
+		 * information to the action about the triggering control.
+		 *
+		 * @param $mixParameter
+		 * @return mixed
+		 */
+		protected function ProcessActionParameters(QAction $objAction, $mixParameter) {
+			$params['param'] = $mixParameter;	// this value can be modified by subclass if needed
+			$params['originalParam'] = $mixParameter;
+			$params['action'] = $objAction;
+			$params['controlId'] = $this->strControlId;
+			return $params;
+		}
 
 		/**
 		 * Used by the QForm engine to call the method in the control, allowing the method to be a protected method.
 		 *
-		 * @param QControl $objControl
-		 * @param $strMethodName
-		 * @param $strFormId
-		 * @param $strId
-		 * @param $strParameter
+		 * @param QControl $objDestControl
+		 * @param string $strMethodName
+		 * @param $strSourceControlId
+		 * @param mixed $mixParameter	Parameters coming from javascript
 		 */
-		public static function CallActionMethod(QControl $objControl, $strMethodName, $strFormId, $strId, $strParameter) {
-			$objControl->$strMethodName($strFormId, $strId, $strParameter);
+		public static function _CallActionMethod(QControl $objDestControl, $strMethodName, $strFormId, $params) {
+			$objDestControl->$strMethodName($strFormId, $params['controlId'], $params['param'], $params);
 		}
 
 		/**
@@ -530,10 +570,12 @@
 		 * @return QControl
 		 */
 		public function GetChildControl($strControlId) {
-			if (array_key_exists($strControlId, $this->objChildControlArray))
+			if (isset($this->objChildControlArray[$strControlId])) {
 				return $this->objChildControlArray[$strControlId];
-			else
+			}
+			else {
 				return null;
+			}
 		}
 
 		/**
@@ -553,7 +595,7 @@
 		 */
 		public function RemoveChildControl($strControlId, $blnRemoveFromForm) {
 			$this->blnModified = true;
-			if (array_key_exists($strControlId, $this->objChildControlArray)) {
+			if (isset($this->objChildControlArray[$strControlId])) {
 				$objChildControl = $this->objChildControlArray[$strControlId];
 				$objChildControl->objParentControl = null;
 				unset($this->objChildControlArray[$strControlId]);
@@ -1411,7 +1453,7 @@
 				// Render if (1) object has no parent or (2) parent was not rendered nor currently being rendered
 				if ((!$this->objParentControl) || ((!$this->objParentControl->Rendered) && (!$this->objParentControl->Rendering))) {
 					$strRenderMethod = $this->strRenderMethod;
-					if (!$strRenderMethod && $this instanceof QDialog) {
+					if (!$strRenderMethod && $this->AutoRender) {
 						// This is an injected dialog that is not on the page, so go ahead and render it
 						$strRenderMethod = $this->strPreferredRenderMethod;
 					}
@@ -1456,7 +1498,9 @@
 			foreach ($this->GetChildControls() as $objControl) {
 				if (!$objControl->Rendered) {
 					$renderMethod = $objControl->strPreferredRenderMethod;
-					$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
+					if ($renderMethod) {
+						$strToReturn .= $objControl->$renderMethod($blnDisplayOutput);
+					}
 				}
 			}
 
@@ -1912,7 +1956,7 @@
 				case "LinkedNode": return $this->objLinkedNode;
 				case "WrapperStyles": return $this->getWrapperStyler();
 				case "WrapLabel": return $this->blnWrapLabel;
-
+				case "AutoRender": return $this->blnAutoRender;
 
 				default:
 					try {
@@ -2189,8 +2233,22 @@
 					}
 
 				case "SaveState":
-					$this->blnSaveState = QType::Cast($mixValue, QType::Boolean);
-					$this->_ReadState(); // during form creation, if we are setting this value, it means we want the state restored at form creation too, so handle both here.
+					try {
+						$this->blnSaveState = QType::Cast($mixValue, QType::Boolean);
+						$this->_ReadState(); // during form creation, if we are setting this value, it means we want the state restored at form creation too, so handle both here.
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+					break;
+
+				case "AutoRender":
+					try {
+						$this->blnAutoRender = QType::Cast($mixValue, QType::Boolean);
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 					break;
 
 

@@ -665,6 +665,7 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 							$intCommaPosition = strpos($this->intMaxLength, ',');
 							if ($intCommaPosition !== false) {
 								$this->intMaxLength = substr($this->intMaxLength, 0, $intCommaPosition);
+								$this->intMaxLength++; // this is a decimal, so max length should include the decimal point too.
 							}
 
 							if (!is_numeric($this->intMaxLength)) {
