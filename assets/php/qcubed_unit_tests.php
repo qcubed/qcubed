@@ -67,10 +67,19 @@ class QHtmlReporter extends PHPUnit_TextUI_ResultPrinter {
 		foreach ($this->results as $suiteName=>$suite) {
 			foreach ($suite as $testName=>$test) {
 				$status = $test['status'];
-				$strHtml = "$suiteName-&gt$testName: $status<br />";
 				if ($test['status'] !== 'passed') {
-					$strHtml = '<span style="color:red">' . $strHtml . '</span>';
+					$status = '<span style="color:red">' . $status . '</span>';
 				}
+
+				$strHtml = "$suiteName-&gt$testName: $status";
+				$strHtml = "<b>$strHtml</b><br />";
+				if (isset($test['errors'])) foreach ($test['errors'] as $error){
+					$strHtml .= htmlentities($error->__toString()) . '<br />';
+				}
+				if (isset($test['results'])) foreach ($test['results'] as $result) {
+					$strHtml .= htmlentities($result->toString()) . '<br />';
+				}
+
 				echo $strHtml;
 			}
 		}
