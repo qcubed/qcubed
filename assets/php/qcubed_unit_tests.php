@@ -2,16 +2,9 @@
 
 /* This file is the file to point the browser to to launch unit tests */
 
-$__CONFIG_ONLY__ = true;
 require('./qcubed.inc.php');
 
-require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/unit_tester.php');
-require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/reporter.php');
-
-$__CONFIG_ONLY__ = false;
-require('./qcubed.inc.php');
-
-// not using QCubed error handler for unit tests - using the SimpleTest one instead
+// not using QCubed error handler for unit tests
 restore_error_handler();
 
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
@@ -71,27 +64,13 @@ class QTestForm extends QForm {
 	
 	
 	public function runTests() {
-		
-		$filesToSkip = array(
-			"QUnitTestCaseBase.php"
-			, "QTestForm.tpl.php"
-			, "QTestControl.class.php"
-		);
+		$cliOptions = [ 'phpunit'];	// first entry is the command
 
-		$arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');
-		$arrTests = array();
-		foreach ($arrFiles as $filename) {
-			if (!in_array($filename, $filesToSkip)) {
-				require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/' . $filename);
-				$arrTests[] = str_replace(".php", "", $filename);
-			}
-		}
+		$cliOptions[] = __QCUBED_CORE__ . '/tests/qcubed-unit'; // last entry is the directory where the tests are
 
-		$suite = new TestSuite('QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - SimpleTest ' . SimpleTest::getVersion());
-		foreach ($arrTests as $className) {
-			$suite->add(new $className($this));
-		}
-		$suite->run(new QHtmlReporter());
+		$tester = new PHPUnit_TextUI_Command();
+
+		$tester->run($cliOptions);
 	}
 }
 
