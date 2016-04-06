@@ -2,6 +2,8 @@
 
 /* This file is the file to point the browser to to launch unit tests */
 
+define ('__NO_OUTPUT_BUFFER__', 1);
+
 require('./qcubed.inc.php');
 
 // not using QCubed error handler for unit tests
@@ -10,18 +12,39 @@ restore_error_handler();
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QTestControl.class.php');
 
+
 class QHtmlReporter extends PHPUnit_TextUI_ResultPrinter {
-	protected function printHeader()
-	{
-		$this->write("<p>" . PHP_Timer::resourceUsage() . "</p>");
-	}
 	public function write($buffer)
 	{
-		echo ($buffer);
+		if ($this->out) {
+			fwrite($this->out, $buffer);
+
+			if ($this->autoFlush) {
+				$this->incrementalFlush();
+			}
+		} else {
+
+			if (PHP_SAPI != 'cli' && PHP_SAPI != 'phpdbg') {
+				$buffer = htmlspecialchars($buffer);
+			}
+
+			print $buffer;
+
+			if ($this->autoFlush) {
+				$this->incrementalFlush();
+			}
+		}
 	}
+	public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
+	{
+		parent::startTestSuite($suite);
+		$this->write('<h2>' . $suite->getName() . '</h2>');
+
+	}
+
 	public function startTest(PHPUnit_Framework_Test $test)
 	{
-		$this->write('<b>' . PHPUnit_Util_Test::describe($test) . '</h2>');
+		$this->write('<p>' . PHPUnit_Util_Test::describe($test) . '</p>');
 	}
 
 	public function endTest(PHPUnit_Framework_Test $test, $time)
@@ -109,8 +132,8 @@ class QTestForm extends QForm {
 
 		//$cliOptions[] = __QCUBED_CORE__ . '/tests'; // last entry is the directory where the tests are
 
-		$tester = new PHPUnit_TextUI_Command();
 		echo('<h1>QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - PHPUnit ' . PHPUnit_Runner_Version::id() . '</h1>');
+		$tester = new PHPUnit_TextUI_Command();
 
 		$tester->run($cliOptions);
 	}

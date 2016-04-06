@@ -50,17 +50,8 @@
 	require(__QCUBED_CORE__ . '/error.inc.php');
 	
 	// Start Output Buffering (only if not on commandline)	
-	function __ob_callback($strBuffer) {
-		return QApplication::OutputPage($strBuffer);
-	}
-	
-	function isCommandLineInterface()
-	{
-		return (php_sapi_name() === 'cli');
-	}
-	if(!isCommandLineInterface()) {
-		ob_start('__ob_callback');
-	}
+	QApplicationBase::StartOutputBuffering();
+
 	// Preload Other Framework Classes
 	require(__QCUBED_CORE__ . '/framework/QDatabaseBase.class.php');
 	require(__QCUBED_CORE__ . '/database/QPdoDatabase.class.php');
