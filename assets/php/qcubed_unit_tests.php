@@ -2,8 +2,6 @@
 
 /* This file is the file to point the browser to to launch unit tests */
 
-define ('__NO_OUTPUT_BUFFER__', 1);
-
 require('./qcubed.inc.php');
 
 // not using QCubed error handler for unit tests
@@ -14,56 +12,66 @@ require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QTestControl.class.php');
 
 
 class QHtmlReporter extends PHPUnit_TextUI_ResultPrinter {
+	protected $results;
+	protected $currentSuite;
+	protected $currentTest;
+
 	public function write($buffer)
 	{
-		if ($this->out) {
-			fwrite($this->out, $buffer);
-
-			if ($this->autoFlush) {
-				$this->incrementalFlush();
-			}
-		} else {
-
-			if (PHP_SAPI != 'cli' && PHP_SAPI != 'phpdbg') {
-				$buffer = htmlspecialchars($buffer);
-			}
-
-			print $buffer;
-
-			if ($this->autoFlush) {
-				$this->incrementalFlush();
-			}
-		}
 	}
 	public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
 	{
-		parent::startTestSuite($suite);
-		$this->write('<h2>' . $suite->getName() . '</h2>');
-
+		$this->currentSuite = $suite->getName();
 	}
+
+	public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+	{
+		$this->currentSuite = null;
+	}
+
 
 	public function startTest(PHPUnit_Framework_Test $test)
 	{
-		$this->write('<p>' . PHPUnit_Util_Test::describe($test) . '</p>');
+		$this->currentTest = $test->getName();
+		$this->results[$this->currentSuite][$test->getName()]['test'] = $test;
 	}
 
-	public function endTest(PHPUnit_Framework_Test $test, $time)
+	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time) {
+		$this->results[$this->currentSuite][$test->getName()]['status'] = 'error';
+		$this->results[$this->currentSuite][$test->getName()]['errors'][] = compact('e', 'time');
+	}
+	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time) {
+		$this->results[$this->currentSuite][$test->getName()]['status'] = 'failed';
+		$this->results[$this->currentSuite][$test->getName()]['results'][] = compact('e', 'time');
+	}
+	public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time) {
+		$this->results[$this->currentSuite][$test->getName()]['status'] = 'incomplete';
+		$this->results[$this->currentSuite][$test->getName()]['errors'][] = compact('e', 'time');
+	}
+	public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time) {
+		$this->results[$this->currentSuite][$test->getName()]['status'] = 'skipped';
+		$this->results[$this->currentSuite][$test->getName()]['errors'][] = compact('e', 'time');
+	}
+
+	public function endTest(PHPUnit_Framework_Test $test, $time) {
+		$t = &$this->results[$this->currentSuite][$test->getName()];
+		if (!isset($t['status'])) {
+			$t['status'] = 'passed';
+		}
+		$t['time'] = $time;
+		$this->currentTest = null;
+	}
+
+	public function printResult(PHPUnit_Framework_TestResult $result)
 	{
-		if (!$this->lastTestFailed) {
-			//$this->writeProgress('.');
-		}
-
-		if ($test instanceof PHPUnit_Framework_TestCase) {
-			$this->numAssertions += $test->getNumAssertions();
-		} elseif ($test instanceof PHPUnit_Extensions_PhptTestCase) {
-			$this->numAssertions++;
-		}
-
-		$this->lastTestFailed = false;
-
-		if ($test instanceof PHPUnit_Framework_TestCase) {
-			if (!$test->hasExpectationOnOutput()) {
-				$this->write($test->getActualOutput());
+		foreach ($this->results as $suiteName=>$suite) {
+			foreach ($suite as $testName=>$test) {
+				$status = $test['status'];
+				$strHtml = "$suiteName-&gt$testName: $status<br />";
+				if ($test['status'] !== 'passed') {
+					$strHtml = '<span style="color:red">' . $strHtml . '</span>';
+				}
+				echo $strHtml;
 			}
 		}
 	}
