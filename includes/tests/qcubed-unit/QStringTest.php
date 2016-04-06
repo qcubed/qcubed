@@ -3,11 +3,8 @@
  * 
  * @package Tests
  */
-class QStringTest extends \PHPUnit_Framework_TestCase {
+class QStringTest extends QUnitTestCaseBase {
 
-	/**
-	 * Not that this code is from previous SimpleTest. PHPUnit can use a data driver to do this.
-	 */
 	public function testLongestCommonSubsequence() {
 		$this->lcsCheckValueHelper("hello world", "world war 2", "world");
 		$this->lcsCheckValueHelper("what's up people", "what in the world is going on", "what");

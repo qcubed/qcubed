@@ -10,8 +10,47 @@ restore_error_handler();
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QTestControl.class.php');
 
-class QHtmlReporter extends HtmlReporter {
-	function paintMethodStart($test_name) {
+class QHtmlReporter extends PHPUnit_TextUI_ResultPrinter {
+	protected function printHeader()
+	{
+		$this->write("<p>" . PHP_Timer::resourceUsage() . "</p>");
+	}
+	public function write($buffer)
+	{
+		echo ($buffer);
+	}
+	public function startTest(PHPUnit_Framework_Test $test)
+	{
+		$this->write('<b>' . PHPUnit_Util_Test::describe($test) . '</h2>');
+	}
+
+	public function endTest(PHPUnit_Framework_Test $test, $time)
+	{
+		if (!$this->lastTestFailed) {
+			//$this->writeProgress('.');
+		}
+
+		if ($test instanceof PHPUnit_Framework_TestCase) {
+			$this->numAssertions += $test->getNumAssertions();
+		} elseif ($test instanceof PHPUnit_Extensions_PhptTestCase) {
+			$this->numAssertions++;
+		}
+
+		$this->lastTestFailed = false;
+
+		if ($test instanceof PHPUnit_Framework_TestCase) {
+			if (!$test->hasExpectationOnOutput()) {
+				$this->write($test->getActualOutput());
+			}
+		}
+	}
+
+}
+
+
+
+/*
+function paintMethodStart($test_name) {
 		$tempBreadcrumb = $this->getTestList();
 		array_shift($tempBreadcrumb);
 		$breadcrumb = implode("-&gt;", $tempBreadcrumb);
@@ -37,6 +76,7 @@ class QHtmlReporter extends HtmlReporter {
 		print "{$messageWithoutTrace}<br />\n";
 	}
 }
+*/
 
 class QTestForm extends QForm {
 	public $ctlTest;
@@ -65,10 +105,12 @@ class QTestForm extends QForm {
 	
 	public function runTests() {
 		$cliOptions = [ 'phpunit'];	// first entry is the command
+		array_push($cliOptions, '-c', __QCUBED_CORE__ . '/tests');	// the config file is here
 
-		$cliOptions[] = __QCUBED_CORE__ . '/tests/qcubed-unit'; // last entry is the directory where the tests are
+		//$cliOptions[] = __QCUBED_CORE__ . '/tests'; // last entry is the directory where the tests are
 
 		$tester = new PHPUnit_TextUI_Command();
+		echo('<h1>QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - PHPUnit ' . PHPUnit_Runner_Version::id() . '</h1>');
 
 		$tester->run($cliOptions);
 	}
