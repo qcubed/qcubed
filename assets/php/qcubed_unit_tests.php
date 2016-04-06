@@ -64,24 +64,34 @@ class QHtmlReporter extends PHPUnit_TextUI_ResultPrinter {
 
 	public function printResult(PHPUnit_Framework_TestResult $result)
 	{
+		echo('<h1>QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - PHPUnit ' . PHPUnit_Runner_Version::id() . '</h1>');
+
 		foreach ($this->results as $suiteName=>$suite) {
+			$strHtml = "<b>$suiteName</b><br />";
 			foreach ($suite as $testName=>$test) {
 				$status = $test['status'];
+				$status = ucfirst($status);
 				if ($test['status'] !== 'passed') {
 					$status = '<span style="color:red">' . $status . '</span>';
+				} else {
+					$status = '<span style="color:green">' . $status . '</span>';
 				}
 
-				$strHtml = "$suiteName-&gt$testName: $status";
-				$strHtml = "<b>$strHtml</b><br />";
+				$strHtml .= "$status: $testName";
+				$strHtml = "$strHtml<br />";
 				if (isset($test['errors'])) foreach ($test['errors'] as $error){
-					$strHtml .= htmlentities($error->__toString()) . '<br />';
+					$strHtml .= nl2br(htmlentities($error['e']->__toString())) . '<br />';
 				}
 				if (isset($test['results'])) foreach ($test['results'] as $result) {
-					$strHtml .= htmlentities($result->toString()) . '<br />';
+					$strMessage = $result['e']->toString() . "\n";
+					// get first line
+					$lines = explode ("\n", PHPUnit_Util_Filter::getFilteredStacktrace($result['e']));
+					$strMessage .= $lines[0] . "\n";
+					$strHtml .= nl2br(htmlentities($strMessage)) . '<br />';
 				}
-
-				echo $strHtml;
 			}
+			echo $strHtml;
+
 		}
 	}
 
@@ -149,7 +159,6 @@ class QTestForm extends QForm {
 
 		//$cliOptions[] = __QCUBED_CORE__ . '/tests'; // last entry is the directory where the tests are
 
-		echo('<h1>QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - PHPUnit ' . PHPUnit_Runner_Version::id() . '</h1>');
 		$tester = new PHPUnit_TextUI_Command();
 
 		$tester->run($cliOptions);
