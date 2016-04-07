@@ -82,10 +82,10 @@ class QHtmlReporter extends PHPUnit_TextUI_ResultPrinter {
 				if (isset($test['errors'])) foreach ($test['errors'] as $error){
 					$strHtml .= nl2br(htmlentities($error['e']->__toString())) . '<br />';
 				}
-				if (isset($test['results'])) foreach ($test['results'] as $result) {
-					$strMessage = $result['e']->toString() . "\n";
+				if (isset($test['results'])) foreach ($test['results'] as $error) {
+					$strMessage = $error['e']->toString() . "\n";
 					// get first line
-					$lines = explode ("\n", PHPUnit_Util_Filter::getFilteredStacktrace($result['e']));
+					$lines = explode ("\n", PHPUnit_Util_Filter::getFilteredStacktrace($error['e']));
 					$strMessage .= $lines[0] . "\n";
 					$strHtml .= nl2br(htmlentities($strMessage)) . '<br />';
 				}

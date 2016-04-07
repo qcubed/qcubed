@@ -11,14 +11,19 @@ require_once (__INCLUDES__ .'/connector/PersonConnector.class.php');
 
 
 class ModelConnectorTests extends QUnitTestCaseBase {
-	protected $frmTest;
+	protected static $frmTest;
 
-	public function setForm($objForm) {
-		$this->frmTest = $objForm;
+	/**
+	 * @beforeClass
+	 */
+	public static function setUpClass()
+	{
+		global $_FORM;
+		self::$frmTest = $_FORM;
 	}
 
 	public function testBasicControls() {
-		$mctTypeTest = TypeTestConnector::Create($this->frmTest);
+		$mctTypeTest = TypeTestConnector::Create(self::$frmTest);
 
 		$mctTypeTest->DateControl->DateTime = new QDateTime ('10/10/2010');
 		$mctTypeTest->DateTimeControl->DateTime = new QDateTime ('11/11/2011');
@@ -30,7 +35,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 
 		$id = $mctTypeTest->SaveTypeTest();
 
-		$mctTypeTest2 = TypeTestConnector::Create($this->frmTest, $id);
+		$mctTypeTest2 = TypeTestConnector::Create(self::$frmTest, $id);
 		$dt = $mctTypeTest2->DateControl->DateTime;
 		$this->assertTrue ($dt->IsEqualTo (new QDateTime ('10/10/2010', null, QDateTime::DateOnlyType)), 'Date only type saved correctly through connector.');
 		$dt = $mctTypeTest2->DateTimeControl->DateTime;
@@ -46,14 +51,14 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 
 	public function testReference() {
 		// test through list control
-		$mctProject = ProjectConnector::Create ($this->frmTest, 1);
+		$mctProject = ProjectConnector::Create (self::$frmTest, 1);
 		$lstControl = $mctProject->ManagerPersonIdControl;
 		$this->assertTrue ($lstControl instanceof QListBox);
-		$this->assertTrue ($lstControl->SelectedValue, 7, "Read manager as person value.");
+		$this->assertEquals ($lstControl->SelectedValue, 7, "Read manager as person value.");
 		$lstControl->SelectedValue = 6;
 		$mctProject->SaveProject();
 
-		$mctProject2 = ProjectConnector::Create ($this->frmTest, 1);
+		$mctProject2 = ProjectConnector::Create (self::$frmTest, 1);
 		$objPerson = $mctProject2->Project->ManagerPerson;
 		$this->assertEquals($objPerson->Id, 6, "Forward reference saved correctly through connector.");
 		$mctProject2->Project->ManagerPersonId = 7;
@@ -65,7 +70,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 
 
 		// test through auto complete
-		$mctAddress = AddressConnector::Create ($this->frmTest);
+		$mctAddress = AddressConnector::Create (self::$frmTest);
 		$lstControl = $mctAddress->PersonIdControl;
 		$this->assertTrue ($lstControl instanceof QAutocomplete);
 		$lstControl->SelectedValue = 2;
@@ -73,7 +78,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 		$mctAddress->CityControl->Text = 'Test City';
 		$id = $mctAddress->SaveAddress();
 
-		$mctAddress2 = AddressConnector::Create ($this->frmTest, $id);
+		$mctAddress2 = AddressConnector::Create (self::$frmTest, $id);
 		$objPerson = $mctAddress2->Address->Person;
 		$this->assertEquals($objPerson->FirstName, 'Kendall', "Forward reference saved correctly through connector.");
 		$mctAddress->DeleteAddress();
@@ -84,7 +89,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 	}
 
 	public function testReverseReference() {
-		$mctPerson = PersonConnector::Create ($this->frmTest, 7);
+		$mctPerson = PersonConnector::Create (self::$frmTest, 7);
 		$lstControl = $mctPerson->LoginControl;
 		$this->assertTrue ($lstControl instanceof QListControl);
 		$this->assertEquals ($lstControl->SelectedValue, 4);
@@ -108,7 +113,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 	public function testManyToMany() {
 		$clauses = array(QQ::ExpandAsArray(QQN::Person()->ProjectAsTeamMember));
 		$objPerson = Person::Load (2, $clauses);
-		$mctPerson = new PersonConnector ($this->frmTest, $objPerson);
+		$mctPerson = new PersonConnector (self::$frmTest, $objPerson);
 		$lstControl = $mctPerson->ProjectAsTeamMemberControl;
 		$this->assertTrue ($lstControl instanceof QListControl);
 		$values = $lstControl->SelectedValues;
@@ -139,7 +144,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 	}
 
 	public function testType1() {
-		$mctProject = ProjectConnector::Create($this->frmTest,3);
+		$mctProject = ProjectConnector::Create(self::$frmTest,3);
 		$this->assertEquals ($mctProject->ProjectStatusTypeIdControl->SelectedValue, 1);
 
 		$mctProject->ProjectStatusTypeIdControl->SelectedValue = ProjectStatusType::Cancelled;
@@ -157,7 +162,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 	}
 
 	public function testTypeMulti() {
-		$mctPerson = PersonConnector::Create ($this->frmTest, 3);
+		$mctPerson = PersonConnector::Create (self::$frmTest, 3);
 		$values = $mctPerson->PersonTypeControl->SelectedValues;
 		$this->assertEquals(count ($values), 3);
 
@@ -179,7 +184,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 	 */
 	public function testOverrides() {
 
-		$mctAddress = AddressConnector::Create ($this->frmTest);
+		$mctAddress = AddressConnector::Create (self::$frmTest);
 
 		$blnError = false;
 		try {
@@ -190,15 +195,15 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 		}
 		$this->assertTrue($blnError, 'Street Label was removed by override.');
 
-		$this->assertEquals($mctAddress->CityControl->Width, 100);
+		$this->assertEquals($mctAddress->CityControl->Width, '100px');
 
 		// Many-to-Many settings
-		$mctProject = ProjectConnector::Create ($this->frmTest);
+		$mctProject = ProjectConnector::Create (self::$frmTest);
 		$this->assertEquals($mctProject->PersonAsTeamMemberControl->RepeatColumns, 3);
 		$this->assertEquals($mctProject->PersonAsTeamMemberControl->Name, 'Team Members');
 
 		// Unique Reverse Reference
-		$mctPerson = PersonConnector::Create ($this->frmTest);
+		$mctPerson = PersonConnector::Create (self::$frmTest);
 		$this->assertTrue ($mctPerson->LoginControl->Required, 'Reverse reference was marked required by override file.');
 
 		$objItem = $mctPerson->LoginControl->GetItem(0);
