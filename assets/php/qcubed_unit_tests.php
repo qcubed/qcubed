@@ -93,6 +93,12 @@ class QHtmlReporter extends PHPUnit_TextUI_ResultPrinter {
 			echo $strHtml;
 
 		}
+
+		$str = "\nRan " . $result->count() . " tests in " . $result->time() . " seconds.\n";
+		$str .= $result->failureCount() . " assertions failed.\n";
+		$str .= $result->errorCount() . " exceptions were thrown.\n";
+		echo nl2br($str);
+
 	}
 
 }

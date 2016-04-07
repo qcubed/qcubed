@@ -47,7 +47,7 @@ class QI18nTests extends QUnitTestCaseBase {
 	}
 	
 	private function verifyTranslation($original, $translation, $expectedTranslation) {
-		$this->assertEqual($translation, $expectedTranslation, "'" . $original . "' translates to '" . $translation . "'.");
+		$this->assertEquals($translation, $expectedTranslation, "'" . $original . "' translates to '" . $translation . "'.");
 	}
   
   public function tearDown() {

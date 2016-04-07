@@ -34,7 +34,6 @@ class QStringTest extends QUnitTestCaseBase {
 		$this->assertEquals(QString::EndsWith("This is a test", "is a"), false);
 		$this->assertEquals(QString::EndsWith("This is a test", "X"), false);
 		$this->assertEquals(QString::EndsWith("This is a test", ""), true);
-		$this->assertEquals('a', 'b', 'bad');
 	}
 
 	private function lcsCheckValueHelper($str1, $str2, $strExpectedResult) {
