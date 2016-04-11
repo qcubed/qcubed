@@ -506,9 +506,7 @@
 				if (isset($_POST['Qform__FormControl']) && isset($objClass->objControlArray[$_POST['Qform__FormControl']])) {
 					$objControl = $objClass->objControlArray[$_POST['Qform__FormControl']];
 					if ($objControl->CausesValidation) {
-						foreach ($objClass->objControlArray as $objControl) {
-							$objControl->ValidationReset();
-						}
+						$objClass->ResetValidationStates();
 					}
 				}
 
@@ -612,6 +610,22 @@
 			$objClass->Form_Exit();
 		}
 
+		/**
+		 * Reset all validation states.
+		 */
+		public function ResetValidationStates() {
+			foreach ($this->objControlArray as $objControl) {
+				$objControl->ValidationReset();
+			}
+		}
+
+		/**
+		 * Private function to respond to a designer click.
+		 *
+		 * @param $strFormId
+		 * @param $strControlId
+		 * @param $mixParam
+		 */
 		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
 			$objControl = $this->GetControl($strControlId);
 			$dlg = $this->GetControl ('qconnectoreditdlg');
@@ -900,7 +914,7 @@
 		 * @param string $strControlId
 		 */
 		public function RemoveControl($strControlId) {
-			if (array_key_exists($strControlId, $this->objControlArray)) {
+			if (isset($this->objControlArray[$strControlId])) {
 				// Get the Control in Question
 				$objControl = $this->objControlArray[$strControlId];
 
@@ -1106,23 +1120,33 @@
 
 		/**
 		 * Triggers an event handler method for a given control ID
-		 * NOTE: Parameters must be already validated.
+		 * NOTE: Parameters must be already validated and are guaranteed to exist.
 		 *
-		 * @param string $strControlId  Control ID for which the method has to be triggered
-		 * @param string $strMethodName Method name which has to be fired
+		 * @param string $strControlId  Control ID triggering the method
+		 * @param string $strMethodName Method name which has to be fired. Includes a control id if a control action.
+		 * @param QAction $objAction The action object which caused the event
 		 */
-		protected function TriggerMethod($strControlId, $strMethodName) {
-			$strParameter = $_POST['Qform__FormParameter'];
+		protected function TriggerMethod($strControlId, $strMethodName, QAction $objAction) {
+			$mixParameter = $_POST['Qform__FormParameter'];
+			$objSourceControl = $this->objControlArray[$strControlId];
+			$params = QControl::_ProcessActionParams($objSourceControl, $objAction, $mixParameter);
 
-			$intPosition = strpos($strMethodName, ':');
-			if ($intPosition !== false) {
-				$strControlName = substr($strMethodName, 0, $intPosition);
+			if (strpos($strMethodName, '::')) {
+				// Calling a static method in a class
+				$f = explode('::', $strMethodName);
+				if (is_callable($f)) {
+					$f($this->strFormId, $params['controlId'], $params['param'], $params);
+				}
+			}
+			elseif (($intPosition = strpos($strMethodName, ':')) !== false) {
+				$strDestControlId = substr($strMethodName, 0, $intPosition);
 				$strMethodName = substr($strMethodName, $intPosition + 1);
 
-				$objControl = $this->objControlArray[$strControlName];
-				QControl::CallActionMethod ($objControl, $strMethodName, $this->strFormId, $strControlId, $strParameter);
-			} else
-				$this->$strMethodName($this->strFormId, $strControlId, $strParameter);
+				$objDestControl = $this->objControlArray[$strDestControlId];
+				QControl::_CallActionMethod ($objDestControl, $strMethodName, $this->strFormId, $params);
+			} else {
+				$this->$strMethodName($this->strFormId, $params['controlId'], $params['param'], $params);
+			}
 		}
 
 		/**
@@ -1147,20 +1171,20 @@
 		protected function TriggerActions($strControlIdOverride = null) {
 			if (array_key_exists('Qform__FormControl', $_POST)) {
 				if ($strControlIdOverride) {
-					$strId = $strControlIdOverride;
+					$strControlId = $strControlIdOverride;
 				} else {
-					$strId = $_POST['Qform__FormControl'];
+					$strControlId = $_POST['Qform__FormControl'];
 				}
 
 				// Control ID determined
-				if ($strId != '') {
+				if ($strControlId != '') {
 					$strEvent = $_POST['Qform__FormEvent'];
 					$strAjaxActionId = NULL;
 
 					// Does this Control which performed the action exist?
-					if (array_key_exists($strId, $this->objControlArray)) {
+					if (array_key_exists($strControlId, $this->objControlArray)) {
 						// Get the ActionControl as well as the Actions to Perform
-						$objActionControl = $this->objControlArray[$strId];
+						$objActionControl = $this->objControlArray[$strControlId];
 
 						switch ($this->strCallType) {
 							case QCallType::Ajax:
@@ -1276,7 +1300,7 @@
 										|| ($objAction->Id == NULL) 		// or the QAjaxAction derived action has no id set
 										//(a possible way to add a callback that gets executed on every ajax call for this control)
 										|| ($strAjaxActionId == $objAction->Id)) //or the ajax action id passed from client side equals the id of the current ajax action
-										$this->TriggerMethod($strId, $strMethodName);
+										$this->TriggerMethod($strControlId, $strMethodName, $objAction);
 								}
 							}
 						}
@@ -1285,7 +1309,7 @@
 						}
 					} else {
 						// Nope -- Throw an exception
-						throw new Exception(sprintf('Control passed by Qform__FormControl does not exist: %s', $strId));
+						throw new Exception(sprintf('Control passed by Qform__FormControl does not exist: %s', $strControlId));
 					}
 				}
 				/* else {
@@ -1659,7 +1683,7 @@
 
 			/**** Render any controls that get automatically rendered ****/
 			foreach ($this->GetAllControls() as $objControl) {
-				if ($objControl instanceof QDialog &&
+				if ($objControl->AutoRender &&
 					!$objControl->Rendered) {
 					$strRenderMethod = $objControl->PreferredRenderMethod;
 					$strHtml .= $objControl->$strRenderMethod(false) . _nl();
@@ -1740,7 +1764,7 @@
 
 			// Register controls
 			if ($strControlIdToRegister) {
-				$strEndScript .= sprintf('qc.regCA(%s); ', JavaScriptHelper::toJsObject($strControlIdToRegister));
+				$strEndScript .= sprintf("qc.regCA(%s); \n", JavaScriptHelper::toJsObject($strControlIdToRegister));
 			}
 
 			// Add any application level js commands.

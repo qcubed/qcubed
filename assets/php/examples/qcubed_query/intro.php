@@ -15,7 +15,7 @@
 		<ul><li><p><strong>Ad Hoc Queries</strong>: Completely custom, ad hoc queries can be executed by accessing the
 		database adapter, itself.  The advantage of this is that you have complete, total free form control
 		over how you want the query to run.  Moreover, you can also run "NonQuery" commands like UPDATE and DELETE.
-		The disadvantage is that because the queries are completely free form, there is no structure, and the Qcodo
+		The disadvantage is that because the queries are completely free form, there is no structure, and the Qcubed
 		generated ORM cannot take advantage or use your query results at all.</p></li>
 
 		<li><p><strong>Custom Load Queries</strong>: These custom SQL SELECT statements do require a bit more structure, but by

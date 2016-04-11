@@ -12,8 +12,10 @@
  * In an effort to make sure that database ids are not exposed to the client (for security reasons), the value
  * attribute is encrypted.
  *
- * @property string  $Tag		Tag for main wrapping object
- * @property string  $ItemTag 	Tag for each item
+ * @property string  	$Tag			Tag for main wrapping object
+ * @property string  	$ItemTag 		Tag for each item
+ * @property bool  		$EncryptValues 	Whether to encrypt the values that are printed in the html. Useful if the values
+ * 										are something you want to publicly hide, like database ids. True by default.
  */
 
 
@@ -29,6 +31,8 @@ class QHListControl extends QControl {
 	protected $objItemStyle = null;
 	/** @var null|QCryptography the temporary cryptography object for encrypting database values sent to the client */
 	protected $objCrypt = null;
+	/** @var bool Whether to encrypt values */
+	protected $blnEncryptValues = true;
 
 	/**
 	 * Adds an item to the list.
@@ -111,10 +115,10 @@ class QHListControl extends QControl {
 	/**
 	 * Return the html to draw an item.
 	 *
-	 * @param QHListItem $objItem
+	 * @param mixed $objItem
 	 * @return string
 	 */
-	protected function GetItemHtml (QHListItem $objItem) {
+	protected function GetItemHtml ($objItem) {
 		$strHtml = $this->GetItemText($objItem);
 		$strHtml .= "\n";
 		if ($objItem->GetItemCount()) {
@@ -137,10 +141,10 @@ class QHListControl extends QControl {
 	/**
 	 * Return the text html of the item.
 	 *
-	 * @param QListItem $objItem
+	 * @param mixed $objItem
 	 * @return string
 	 */
-	protected function GetItemText (QHListItem $objItem) {
+	protected function GetItemText ($objItem) {
 		$strHtml = QApplication::HtmlEntities($objItem->Text);
 
 		if ($strAnchor = $objItem->Anchor) {
@@ -153,10 +157,10 @@ class QHListControl extends QControl {
 	 * Return the item styler for the given item. Combines the generic item styles found in this class with
 	 * any specific item styles found in the item.
 	 *
-	 * @param QListItem $objItem
+	 * @param mixed $objItem
 	 * @return QListItemStyle
 	 */
-	protected function GetItemStyler (QHListItem $objItem) {
+	protected function GetItemStyler ($objItem) {
 		if ($this->objItemStyle) {
 			$objStyler = clone $this->objItemStyle;
 		}
@@ -167,8 +171,12 @@ class QHListControl extends QControl {
 
 		// since we are going to embed the value in the tag, we are going to encrypt it in case its a database record id.
 		if ($objItem->Value) {
-			$strEncryptedValue = $this->EncryptValue($objItem);
-			$objStyler->SetDataAttribute('value', $strEncryptedValue);
+			if ($this->blnEncryptValues) {
+				$strValue = $this->EncryptValue($objItem->Value);
+			} else {
+				$strValue = $objItem->Value;
+			}
+			$objStyler->SetDataAttribute('value', $strValue);
 		}
 		if ($objStyle = $objItem->ItemStyle) {
 			$objStyler->Override($objStyle);
@@ -179,14 +187,14 @@ class QHListControl extends QControl {
 	/**
 	 * Return the encrypted value of the given object
 	 *
-	 * @param QHListItem $objItem
+	 * @param string $value
 	 * @return string
 	 */
-	protected function EncryptValue(QHListItem $objItem) {
+	protected function EncryptValue($value) {
 		if (!$this->objCrypt) {
 			$this->objCrypt = new QCryptography(null, true);
 		}
-		return $this->objCrypt->Encrypt($objItem->Value);
+		return $this->objCrypt->Encrypt($value);
 	}
 
 	/**
@@ -204,12 +212,13 @@ class QHListControl extends QControl {
 
 	/**
 	 * Return the attributes for the sub tag that wraps the item tags
-	 * @param QListItem $objItem
-	 * @return null|array|string
+	 * @param mixed $objItem
+	 * @return array|null|string
 	 */
-	protected function GetSubTagAttributes(QHListItem $objItem) {
+	protected function GetSubTagAttributes($objItem) {
 		return $objItem->GetSubTagStyler()->RenderHtmlAttributes();
 	}
+
 
 	/////////////////////////
 	// Public Properties: GET
@@ -226,6 +235,7 @@ class QHListControl extends QControl {
 			// APPEARANCE
 			case "Tag": return $this->strTag;
 			case "ItemTag": return $this->strItemTag;
+			case "EncryptValues": return $this->blnEncryptValues;
 			default:
 				try {
 					return parent::__get($strName);
@@ -266,6 +276,16 @@ class QHListControl extends QControl {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
+
+			case "EncryptValues":
+				try {
+					$this->blnEncryptValues = QType::Cast($mixValue, QType::Boolean);
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
 
 			default:
 				try {

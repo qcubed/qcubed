@@ -12,7 +12,7 @@
 	}
 
 	// Exception and Error Handling
-	function QcodoHandleException(Exception $__exc_objException) {
+	function QcubedHandleException(Exception $__exc_objException) {
 		if (class_exists('QApplicationBase'))
 			QApplicationBase::$ErrorFlag = true;
 
@@ -65,7 +65,7 @@
 		}
 	}
 
-	function QcodoHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, $__exc_errcontext) {
+	function QcubedHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, $__exc_errcontext) {
 		// If a command is called with "@", then we should return
 		if (error_reporting() == 0)
 			return true;
@@ -186,7 +186,7 @@
 			is_array ($error) &&
 			(!defined ('QCodeGen::DebugMode') || QCodeGen::DebugMode)) { // if we are codegenning, only error if we are in debug mode. Prevents chmod error.
 
-			QCodoHandleError (
+			QcubedHandleError (
 				$error['type'],
 				$error['message'],
 				$error['file'],

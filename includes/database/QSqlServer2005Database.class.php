@@ -17,14 +17,14 @@
 	 * Database Adapter for Microsoft SQL Server 2005/2008
 	 *
 	 *
-	 * LimitInfo and Query utilizes an interal SQL tag QCODO_OFFSET<#>, where # represents
-	 * the number of rows to offset for "Limit"-based queries.  The QCODO_OFFSET is added
+	 * LimitInfo and Query utilizes an interal SQL tag QCUBED_OFFSET<#>, where # represents
+	 * the number of rows to offset for "Limit"-based queries.  The QCUBED_OFFSET is added
 	 * internally by SqlLimitVariablePrefix(), and it is handled (and removed from the query)
-	 * by Query().  In error messages and DB profiling, the QCODO_OFFSET<#> tag *WILL* appear
+	 * by Query().  In error messages and DB profiling, the QCUBED_OFFSET<#> tag *WILL* appear
 	 * (if applicable).  The framework will handle this gracefully, but obviously, if you try
-	 * and cut and paste SQL code that contains QCODO_OFFSET<#> into QueryAnalyzer, the query
+	 * and cut and paste SQL code that contains QCUBED_OFFSET<#> into QueryAnalyzer, the query
 	 * will fail, so just be aware of that.  If you want to do something like test queries
-	 * with QueryAnalyzer, just remember to manually remove any QCODO_OFFSET<#> information.
+	 * with QueryAnalyzer, just remember to manually remove any QCUBED_OFFSET<#> information.
 	 *
 	 * ENHANCEMENTS over MSSQL based-driver:
 	 * - varchar limit of 254 characters no longer exists, uses full varchar(8000)
@@ -174,7 +174,7 @@
 
 		public function SqlLimitVariablePrefix($strLimitInfo) {
 			// Setup limit suffix (if applicable) via a TOP clause
-			// Add QCODO_OFFSET tag if applicable
+			// Add QCUBED_OFFSET tag if applicable
 
 			if (strlen($strLimitInfo)) {
 				if (strpos($strLimitInfo, ';') !== false)
@@ -188,7 +188,7 @@
 				if (count($strArray) == 2) {
 					// Yep -- there's an offset
 					return sprintf(
-						'TOP %s QCODO_OFFSET<%s>',
+						'TOP %s QCUBED_OFFSET<%s>',
 						($strArray[0] + $strArray[1]),
 						$strArray[0]);
 				} else if (count($strArray) == 1) {
@@ -282,13 +282,13 @@
 		}
 
 		protected function ExecuteQuery($strQuery) {
-			// First, check for QCODO_OFFSET<#> for LIMIT INFO Offseting
-			if ( ($intPosition = strpos($strQuery, 'QCODO_OFFSET<')) !== false) {
+			// First, check for QCUBED_OFFSET<#> for LIMIT INFO Offseting
+			if ( ($intPosition = strpos($strQuery, 'QCUBED_OFFSET<')) !== false) {
 				$intEndPosition = strpos($strQuery, '>', $intPosition);
 				if ($intEndPosition === false)
-					throw new QSqlServer2005DatabaseException('Invalid QCODO_OFFSET', 0, $strQuery);
+					throw new QSqlServer2005DatabaseException('Invalid QCUBED_OFFSET', 0, $strQuery);
 				$intOffset = QType::Cast(substr($strQuery,
-					$intPosition + 13 /* len of QCODO_OFFSET< */,
+					$intPosition + 13 /* len of QCUBED_OFFSET< */,
 					$intEndPosition - $intPosition - 13), QType::Integer);
 				$strQuery = substr($strQuery, 0, $intPosition) . substr($strQuery, $intEndPosition + 1);
 			} else

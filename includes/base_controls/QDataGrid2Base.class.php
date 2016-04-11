@@ -17,9 +17,18 @@ class QDataGrid2_SortEvent extends QEvent {
 
 
 /**
- * Class QDataGrid2
+ * Class QDataGrid2Base
  *
- * @property  QClause 	$ExpandAsArray True if this node should be array expanded.
+ * This class is designed primarily to work alongside the code generator, but it can be independent as well. It creates
+ * an html table that displays data from the database. The data can possibly be sorted by clicking on the header cell
+ * of the sort column.
+ *
+ * This grid also has close ties to the QDataGrid_CheckboxColumn to easily enable the addition of a column or columns
+ * of checkboxes.
+ *
+ * This class is NOT intended to support column filters, but a subclass could be created that could do so. Just don't
+ * do that here.
+ *
  * @property  string 	$SortColumnId The id of the currently sorted column. Does not change if columns are re-ordered.
  * @property  int 		$SortColumnIndex The index of the currently sorted column.
  * @property  int 		$SortDirection SortAscending or SortDescending.
@@ -34,13 +43,21 @@ class QDataGrid2Base extends QSimpleTable
 	/** @var int Couter to generate column ids for columns that do not have them. */
 	protected $intLastColumnId = 0;
 
-	/** @var  Keeps track of current sort column. We do it by id so that the table can add/hide/show or rearrange columns and maintain the sort column. */
+	/** @var  string Keeps track of current sort column. We do it by id so that the table can add/hide/show or rearrange columns and maintain the sort column. */
 	protected $strSortColumnId;
+
+	/** @var int The direction of the currently sorted column.  */
 	protected $intSortDirection = self::SortAscending;
+
+	/** @var string Default class */
 	protected $strCssClass = 'datagrid';
 
 
-
+	/**
+	 * QDataGrid2Base constructor.
+	 * @param QControl|QControlBase|QForm $objParentObject
+	 * @param string|null $strControlId
+	 */
 	public function __construct($objParentObject, $strControlId = null)	{
 		try {
 			parent::__construct($objParentObject, $strControlId);
@@ -54,62 +71,31 @@ class QDataGrid2Base extends QSimpleTable
 			throw $objExc;
 		}
 	}
-/*
-	protected function GetControlHtml() {
-		$strHtml = parent::GetControlHtml();
 
-		if ($this->objPaginator) {
-			$strHtml = $this->RenderPaginator($this->objPaginator) . $strHtml;
-		}
-
-		if ($this->objPaginatorAlternate) {
-			$strHtml .= $this->RenderPaginator($this->objPaginatorAlternate);
-		}
-
-		if ($this->objPaginator || $this->objPaginatorAlternate) {
-			$this->UseWrapper = true;	// must use a wrapper, since we are drawing multiple controls
-		}
-		return $strHtml;
-	}*/
-
+	/**
+	 * An override to add the paginator to the caption area.
+	 * @return string
+	 */
 	protected function RenderCaption() {
 		return $this->RenderPaginator();
 	}
 
+	/**
+	 * Renders the given paginator in a span in the caption. If a caption already exists, it will add the caption.
+	 * @return string
+	 * @throws QCallerException
+	 */
 	protected function RenderPaginator () {
 		$objPaginator = $this->objPaginator;
 		if (!$objPaginator) return '';
 
 		$strHtml = $objPaginator->Render(false);
 		$strHtml = QHtml::RenderTag('span', ['class'=>'paginator-control'], $strHtml);
-		$strHtml = QHtml::RenderTag('caption', null, $strHtml);
-
-		/*
-		$strToReturn = "  <span class=\"paginator-control\">";
-		$strToReturn .= $objPaginator->Render(false);
-		$strToReturn .= "</span>\r\n  <span class=\"paginator-results\">";
-		if ($this->TotalItemCount > 0) {
-			$intStart = (($this->PageNumber - 1) * $this->ItemsPerPage) + 1;
-			$intEnd = $intStart + count($this->DataSource) - 1;
-			$strToReturn .= sprintf($this->strLabelForPaginated,
-				$this->strNounPlural,
-				$intStart,
-				$intEnd,
-				$this->TotalItemCount);
-		} else {
-			$intCount = count($this->objDataSource);
-			if ($intCount == 0)
-				$strToReturn .= sprintf($this->strLabelForNoneFound, $this->strNounPlural);
-			else if ($intCount == 1)
-				$strToReturn .= sprintf($this->strLabelForOneFound, $this->strNoun);
-			else
-				$strToReturn .= sprintf($this->strLabelForMultipleFound, $intCount, $this->strNounPlural);
+		if ($this->strCaption) {
+			$strHtml = '<span>' . QApplication::HtmlEntities($this->strCaption) . '</span>' . $strHtml;
 		}
 
-		$strToReturn .= "</span>\r\n";
-
-		return $strToReturn;
-		*/
+		$strHtml = QHtml::RenderTag('caption', null, $strHtml);
 
 		return $strHtml;
 	}
@@ -125,6 +111,13 @@ class QDataGrid2Base extends QSimpleTable
 		$this->AddAction(new QDataGrid2_SortEvent(), new QAjaxControlAction ($this, 'SortClick'));
 	}
 
+	/**
+	 * An override to create an id for every column, since the id is what we use to track sorting.
+	 *
+	 * @param int $intColumnIndex
+	 * @param QAbstractSimpleTableColumn $objColumn
+	 * @throws QInvalidCastException
+	 */
 	public function AddColumnAt($intColumnIndex, QAbstractSimpleTableColumn $objColumn) {
 		parent::AddColumnAt($intColumnIndex, $objColumn);
 		// Make sure the column has an Id, since we use that to track sorting.
@@ -133,6 +126,13 @@ class QDataGrid2Base extends QSimpleTable
 		}
 	}
 
+	/**
+	 * Transfers clicks to any checkbox columns.
+	 *
+	 * @param $strFormId
+	 * @param $strControlId
+	 * @param $strParameter
+	 */
 	protected function CheckClick($strFormId, $strControlId, $strParameter) {
 		$intColumnIndex = $strParameter['col'];
 		$objColumn = $this->GetColumn ($intColumnIndex, true);
@@ -142,20 +142,55 @@ class QDataGrid2Base extends QSimpleTable
 		}
 	}
 
-	public function ClearCheckedItems() {
+	/**
+	 * Clears all checkboxes in checkbox columns. If you have multiple checkbox columns, you can specify which column
+	 * to clear. Otherwise, it will clear all of them.
+	 *
+	 * @param string|null $strColId
+	 */
+	public function ClearCheckedItems($strColId = null) {
 		foreach ($this->objColumnArray as $objColumn) {
 			if ($objColumn instanceof QDataGrid2_CheckboxColumn) {
-				$objColumn->ClearCheckedItems();
+				if (is_null($strColId) || $objColumn->Id === $strColId) {
+					$objColumn->ClearCheckedItems();
+				}
 			}
 		}
 	}
 
-	protected function SortClick($strFormId, $strControlId, $strParameter) {
+	/**
+	 * Returns the checked item ids if the data grid has a QDataGrid2_CheckboxColumn column. If there is more than
+	 * one column, you can specify which column to want to query. If no id is specified, it
+	 * will return the ids from the first column found. If no column was found, then null is returned.
+	 *
+	 * @param mixed $strColId
+	 * @return array|null
+	 */
+	public function GetCheckedItemIds($strColId = null) {
+		foreach ($this->objColumnArray as $objColumn) {
+			if ($objColumn instanceof QDataGrid2_CheckboxColumn) {
+				if (is_null($strColId) ||
+						$objColumn->Id === $strColId) {
+					return $objColumn->GetCheckedItemIds();
+				}
+			}
+		}
+		return null; // column not found
+	}
 
-		$intColumnIndex = QType::Cast($strParameter, QType::Integer);
+	/**
+	 * Processes clicks on a sortable column head.
+	 *
+	 * @param string $strFormId
+	 * @param string $strControlId
+	 * @param mixed $mixParameter
+	 * @throws QCallerException
+	 * @throws QInvalidCastException
+	 */
+	protected function SortClick($strFormId, $strControlId, $mixParameter) {
+
+		$intColumnIndex = QType::Cast($mixParameter, QType::Integer);
 		$objColumn = $this->GetColumn ($intColumnIndex, true);
-
-		//$objColumn = $this->GetColumnById ($strParameter);
 
 		if (!$objColumn) return;
 
@@ -202,6 +237,11 @@ class QDataGrid2Base extends QSimpleTable
 		}
 	}
 
+	/**
+	 * Override to return the header row to indicate when a column is sortable.
+	 *
+	 * @return string
+	 */
 	protected function GetHeaderRowHtml() {
 		$strToReturn = '';
 		for ($i = 0; $i < $this->intHeaderRowCount; $i++) {
@@ -230,6 +270,12 @@ class QDataGrid2Base extends QSimpleTable
 		return $strToReturn;
 	}
 
+	/**
+	 * Override to return sortable column info.
+	 *
+	 * @param $objColumn
+	 * @return string
+	 */
 	protected function GetHeaderCellContent($objColumn) {
 		$blnSortable = false;
 		$strCellValue = $objColumn->FetchHeaderCellValue();
@@ -260,7 +306,8 @@ class QDataGrid2Base extends QSimpleTable
 	}
 
 	/**
-	 * Return the javascript associated with the control.
+	 * Override to enable the datagrid2 javascript.
+	 *
 	 * @return string
 	 */
 	public function GetEndScript() {
@@ -307,10 +354,22 @@ class QDataGrid2Base extends QSimpleTable
 		}
 	}
 
+	/**
+	 * Override to return the code generator for the list functionality.
+	 *
+	 * @param string $strClass
+	 * @return QDataGrid2_CodeGenerator
+	 */
 	public static function GetCodeGenerator($strClass = 'QDataGrid2') {
 		return new QDataGrid2_CodeGenerator($strClass);
 	}
 
+	/**
+	 * Returns the index of the currently sorted column.
+	 * Returns false if nothing selected.
+	 *
+	 * @return bool|int
+	 */
 	public function GetSortColumnIndex() {
 		if ($this->objColumnArray && ($count = count($this->objColumnArray))) {
 			for($i = 0; $i < $count; $i++) {
@@ -354,6 +413,11 @@ class QDataGrid2Base extends QSimpleTable
 		}
 	}
 
+	/**
+	 * @param string $strName
+	 * @return bool|int|Keeps|mixed|null
+	 * @throws QCallerException
+	 */
 	public function __get($strName) {
 		switch ($strName) {
 			// MISC
@@ -374,6 +438,12 @@ class QDataGrid2Base extends QSimpleTable
 		}
 	}
 
+	/**
+	 * @param string $strName
+	 * @param string $mixValue
+	 * @throws QCallerException
+	 * @throws QInvalidCastException
+	 */
 	public function __set($strName, $mixValue) {
 		switch ($strName) {
 			case "SortColumnId":

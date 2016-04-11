@@ -387,7 +387,7 @@
 			}
 
 			return sprintf("qc.pA('%s', '%s', '%s#%s', %s, '%s');",
-				$objControl->Form->FormId, $objControl->ControlId, get_class($this->objEvent), $this->strId, $this->getActionParameter($objControl), $strWaitIconControlId);
+				$objControl->Form->FormId, $objControl->ControlId, addslashes(get_class($this->objEvent)), $this->strId, $this->getActionParameter($objControl), $strWaitIconControlId);
 		}
 	}
 

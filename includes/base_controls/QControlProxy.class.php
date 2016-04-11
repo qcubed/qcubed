@@ -17,6 +17,8 @@
 		protected $blnActionsMustTerminate = true;
 		/** @var bool Overriding parent class */
 		protected $blnScriptsOnly = true;
+		/** @var null Overriding parent class to turn off rendering of this control when auto-rendering */
+		protected $strPreferredRenderMethod = null;
 
 		/**
 		 * Constructor Method
@@ -70,14 +72,15 @@
 		 * @param string      $strLabel           Text to link to
 		 * @param string|null $strActionParameter Action parameter for this rendering of the control. Will be sent to the ActionParameter of the action.
 		 * @param array       $attributes         Array of attributes to add to the tag for the link.
+		 * @param bool        $blnHtmlEntities    False to turn off html entities.
 		 *
 		 * @return string
 		 */
-		public function RenderAsButton($strLabel, $strActionParameter = null, $attributes = []) {
+		public function RenderAsButton($strLabel, $strActionParameter = null, $attributes = [], $blnHtmlEntities = true) {
 			$defaults['onclick']='return false';
 			$defaults['type']='button';
 			$attributes = array_merge($defaults, $attributes); // will only apply defaults that are not in attributes
-			return $this->RenderAsLink($strLabel, $strActionParameter, $attributes, 'button');
+			return $this->RenderAsLink($strLabel, $strActionParameter, $attributes, 'button', $blnHtmlEntities);
 		}
 
 		/**
@@ -149,10 +152,7 @@
 				$this->strTargetControlId = $this->objForm->GenerateControlId();
 			
 			$this->mixActionParameter = $strActionParameter;
-			$objActions = $this->GetAllActions('QClickEvent');
-			$strToReturn = '';
-			foreach ($objActions as $objAction)
-				$strToReturn .= $objAction->RenderScript($this);
+			$strToReturn = $this->RenderAsScript('QClickEvent');
 			if ($strToReturn)
 				$strToReturn = 'javascript:' . $strToReturn;
 			else
@@ -171,6 +171,21 @@
 			else
 				return $strToReturn;
 		}
+
+		/**
+		 * Renders all the actions for a particular event as javascripts.
+		 * 
+		 * @param string $strEventType
+		 * @return string
+		 */
+		public function RenderAsScript($strEventType='QClickEvent') {
+			$objActions 	= $this->GetAllActions($strEventType);
+			$strToReturn 	= '';
+			foreach ($objActions as $objAction) {
+				$strToReturn .= $objAction->RenderScript($this);
+			}
+ 			return $strToReturn;
+ 		}
 
 		/**
 		 * Parses postback data

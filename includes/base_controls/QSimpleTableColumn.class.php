@@ -5,8 +5,9 @@
 	 * for each cells in a variety of ways
 	 *
 	 * @property string                 $Name           name of the column
-	 * @property string                 $CssClass       CSS class of the column
-	 * @property string                 $HeaderCssClass CSS class of the column when it's rendered in a table header
+	 * @property string                 $CssClass       CSS class of the column. This will be applied to every cell in the column. Use ColStyper
+	 * 													to set the class for the actual 'col' tag if using col tags.
+	 * @property string                 $HeaderCssClass CSS class of the column's cells when it's rendered in a table header
 	 * @property boolean                $HtmlEntities   if true, cell values will be converted using htmlentities()
 	 * @property boolean                $RenderAsHeader if true, all cells in the column will be rendered with a <<th>> tag instead of <<td>>
 	 * @property integer                $Id             HTML id attribute to put in the col tag
@@ -235,9 +236,6 @@
 			}
 			if ($this->strId) {
 				$aParams['id'] = $this->strId;
-			}
-			if ($this->strCssClass) {
-				$aParams['class'] = $this->strCssClass;
 			}
 
 			if ($this->objColStyler) {
@@ -1268,4 +1266,372 @@
 		public function __construct($intDelay = 0, $strCondition = null) {
 			parent::__construct($intDelay, $strCondition, 'input[type="checkbox"]');
 		}
+	}
+
+	/**
+	 * Class QSimpleTableLinkColumn
+	 *
+	 * A multi-purpose link column. This column lets you specify a column whose purpose is to show an anchor tag
+	 * with text, attributes and properties related to row item. It can handle row items that are objects or arrays,
+	 * and specify parameters or methods of objects, as well as offsets in arrays.
+	 *
+	 * You can specify the text of the link, the destination address, the html get variables, and the attributes
+	 * to the anchor tag in a variety of ways as follows:
+	 * - as a static string
+	 * - as a two member array callable, with the row item passed to the callable
+	 * - as an object property or string of properties (i.e. $item->prop1->prop2) by starting the string with "->" and
+	 *   separating each property with a "->". If the property ends with "()", then it will be a method call instead.
+	 *   The same can be accomplished by passing an array, with each item being a step in the property chain. This
+	 *   is provided the row item is an object.
+	 * - as an index into an array, or a multi-index array (i.e. $item['index1']['index2']) by passing a string of the
+	 *   form "[index1][index2]...". You can also pass an array that contains the indexes into the array. This is provided
+	 *   the row item is an array.
+	 *
+	 * Other options:
+	 * - Specify null for $mixDestination, and no link will be created, just text. This is helpful for turning off the
+	 *   link mode without having to create a completely different kind of column.
+	 * - Specify a QControlProxy for $mixDestination to draw it as a proxy control. In this case, $blnAsButton can be
+	 *   used to draw the proxy as a button rather than a link.
+	 *
+	 * Examples:
+	 *
+	 *  Create a column to edit a person, with "Edit" in the header, the name of the person as the label of each link, and give each
+	 *   anchor a class of "link".
+	 *  $objColumn = new QSimpleTableLinkColumn ("Edit", "->Name", "person_edit.php", ["intId"=>"->Id"], ["class"=>"link"]);
+	 *
+	 *
+	 *  Create a similar column, but use a proxy instead, with the person id as the action parameter to the proxy and
+	 *   drawing the proxy as a button.
+	 *  $objProxy = new QControlProxy($this);
+	 *  $objColumn = new QSimpleTableLinkColumn ("Edit", "Edit", $objProxy, "->Id", null, true);
+	 *
+	 *  Create a "zoom" column for a table that uses an array of arrays as its source. Pass the 'id' index from the item
+	 *   as the id to the destination link. Use the "title" index as the label for the link.
+	 *  $objColumn = new QSimpleTableLinkColumn ("Zoom", "[title]", "zoom.php", ["intId"=>"[id]"]);
+	 *
+	 *  Create a simple link column that just specifies a data attribute, and use an QOnEvent attached to the table to trap a click on the link.
+	 *   Return the id of the item clicked to the action as the action parameter.
+	 *  $objTable = new QSimpleTable ($this);
+	 *  $objTable->CreateLinkColumn("", "->Name", "#", null, ["data-id"=>"->Id"]);
+	 *  $objTable->AddAction(new QOnEvent("click", "a"), new QAjaxAction("myActionScript", null, null, '$j(this).data("id")'));
+	 *
+	 * @property bool $AsButton	Only used if this is drawing a QControlProxy. Will draw the proxy as a button.
+	 * @property-write null|string|array $Text The text to display as the label of the anchor, a callable callback to get the text,
+	 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same. Depends on
+	 *   what time of row item is passed.
+	 * @property-write null|string|array|QControlProxy $Destination The text representing the destination of the anchor, a callable callback to get the destination,
+	 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same,
+	 *   or a QControlProxy. Depends on what time of row item is passed.
+	 * @property-write null|string|array $GetVars An array of key=>value pairs to use as the GET variables in the link URL,
+	 *   or in the case of a QControlProxy, possibly a string to represent the action parameter. In either case, each item
+	 *   can be a property chain, an array index list, or a callable callback as specified above.
+	 * @property-write null|array $TagAttributes An array of key=>value pairs to use as additional attributes in the tag.
+	 *   For example, could be used to add a class or an id to each tag.
+	 */
+	class QSimpleTableLinkColumn extends QAbstractSimpleTableDataColumn {
+		/** @var bool  */
+		protected $blnHtmlEntities = false;	// we are rendering a link so turn off entities
+
+		/** @var  string|array */
+		protected $mixText;
+		/** @var  string|array|QControlProxy|null */
+		protected $mixDestination;
+		/** @var  array|string|null */
+		protected $getVars;
+		/** @var  array|null */
+		protected $tagAttributes;
+		/** @var bool  */
+		protected $blnAsButton;
+
+		/**
+		 * QSimpleTableLinkColumn constructor.
+		 *
+		 * @param string $strName Column name to be displayed in the table header.
+		 * @param null|string|array $mixText The text to display as the label of the anchor, a callable callback to get the text,
+		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same. Depends on
+		 *   what time of row item is passed.
+		 * @param null|string|array|QControlProxy $mixDestination The text representing the destination of the anchor, a callable callback to get the destination,
+		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same,
+		 *   or a QControlProxy. Depends on what time of row item is passed.
+		 * @param null|string|array $getVars An array of key=>value pairs to use as the GET variables in the link URL,
+		 *   or in the case of a QControlProxy, possibly a string to represent the action parameter. In either case, each item
+		 *   can be a property chain, an array index list, or a callable callback as specified above.
+		 * @param null|array $tagAttributes An array of key=>value pairs to use as additional attributes in the tag.
+		 *   For example, could be used to add a class or an id to each tag.
+		 * @param bool $blnAsButton Only used if this is drawing a QControlProxy. Will draw the proxy as a button.
+		 */
+		public function __construct($strName, $mixText, $mixDestination = null, $getVars = null, $tagAttributes = null, $blnAsButton = false) {
+			parent::__construct($strName);
+			$this->Text = $mixText;
+			$this->Destination = $mixDestination;
+			$this->GetVars = $getVars;
+			$this->TagAttributes = $tagAttributes;
+			$this->blnAsButton = $blnAsButton;
+		}
+
+		/**
+		 * Utility function to pre-process a value specifier. This will take a property list chain or an array index
+		 * chain and split it into an array representing the parts.
+		 *
+		 * @param mixed $mixSpec
+		 * @return mixed
+		 */
+		protected static function SplitSpec ($mixSpec)
+		{
+			if (is_array($mixSpec)) {
+				return $mixSpec; // already split
+			} elseif (is_string($mixSpec)) {
+				if (strpos($mixSpec, '->') === 0) {
+					// It is an object property list ($item->param1->param2)
+					$parts = explode('->', substr($mixSpec, 2));
+					return $parts;
+				} elseif ($mixSpec[0] == '[' && substr($mixSpec, -1) == ']') {
+					// It is a list of array dereferences
+					$parts = explode('][', $mixSpec, substr(1, strlen($mixSpec) - 2));
+					return $parts;
+				}
+				else {
+					return $mixSpec;
+				}
+			} else {
+				return $mixSpec;
+			}
+		}
+
+
+		/**
+		 * Utility function to post-process a value specifier. Will walk through an object property chain or an array
+		 * index chain and return the final value.
+		 *
+		 * @param mixed $mixSpec
+		 * @param mixed $item
+		 * @return string
+		 */
+		protected static function GetObjectValue ($mixSpec, $item) {
+			if (is_array($mixSpec)) {
+				if (is_object($mixSpec[0]) && is_callable($mixSpec)) {
+					// If its a callable array, then call it
+					return call_user_func($mixSpec, $item);
+				}
+				elseif (is_object($item)) {
+					// It is an object property list ($item->param1->param2 or $item->method()->method2()). Can mix these too.
+					$value = $item;
+					foreach ($mixSpec as $part) {
+						// Evaluate as a function, or a param
+						if (substr($part,-2) == '()') {
+							// call as a method
+							$value = $value->$part();
+						} else {
+							$value = $value->$part;
+						}
+					}
+					return $value;
+				}
+				elseif (is_array($item)) {
+					$value = $item;
+					foreach ($mixSpec as $part) {
+						$value = $value[$part];
+					}
+					return $value;
+				}
+				else {
+					return $item; // We have no idea what this is, so return the item for possible further processing
+				}
+			}
+			return $mixSpec; // In this case, we return a static value
+		}
+
+		/**
+		 * Returns the initial text that will be the label of the link. This text can be further processed by using
+		 * the inherited PostCallback function and similar properties.
+		 *
+		 * @param mixed $item
+		 * @return string
+		 */
+		public function FetchCellObject($item)
+		{
+			return static::GetObjectValue($this->mixText, $item);
+		}
+
+		/**
+		 * Returns the final string representing the content of the cell.
+		 *
+		 * @param mixed $item
+		 * @return string
+		 */
+		public function FetchCellValue($item) {
+			$strText = parent::FetchCellValue($item);	// allow post processing of cell label
+
+			$getVars = null;
+			if ($this->getVars) {
+				if (is_array($this->getVars)) {
+					foreach ($this->getVars as $key => $val) {
+						$getVars[$key] = static::GetObjectValue($val, $item);
+					}
+				} else {
+					$getVars = $this->getVars; // could be a simple action parameter.
+				}
+			}
+
+			$tagAttributes = null;
+			if ($this->tagAttributes && is_array($this->tagAttributes)) {
+				foreach ($this->tagAttributes as $key=>$val) {
+					$tagAttributes[$key] = static::GetObjectValue($val, $item);
+				}
+			}
+
+			if ($this->mixDestination === null) {
+				return QApplication::HtmlEntities($strText);
+			}
+			elseif ($this->mixDestination instanceof QControlProxy) {
+				if ($this->blnAsButton) {
+					return $this->mixDestination->RenderAsButton($strText, $getVars, $tagAttributes);
+				} else {
+					return $this->mixDestination->RenderAsLink($strText, $getVars, $tagAttributes);
+				}
+			}
+			else {
+				$strDestination = static::GetObjectValue($this->mixDestination, $item);
+				return QHtml::RenderLink(QHtml::MakeUrl($strDestination, $getVars), $strText, $tagAttributes);
+			}
+		}
+
+		/**
+		 * Fix up possible embedded references to the form.
+		 */
+		public function Sleep() {
+			$this->mixText = QControl::SleepHelper($this->mixText);
+			$this->mixDestination = QControl::SleepHelper($this->mixDestination);
+			$this->getVars = QControl::SleepHelper($this->getVars);
+			$this->tagAttributes = QControl::SleepHelper($this->tagAttributes);
+			parent::Sleep();
+		}
+
+		/**
+		 * Restore embedded objects.
+		 *
+		 * @param QForm $objForm
+		 */
+		public function Wakeup(QForm $objForm) {
+			parent::Wakeup($objForm);
+			$this->mixText = QControl::WakeupHelper($objForm, $this->mixText);
+			$this->mixDestination = QControl::WakeupHelper($objForm, $this->mixDestination);
+			$this->getVars = QControl::WakeupHelper($objForm, $this->getVars);
+			$this->tagAttributes = QControl::WakeupHelper($objForm, $this->tagAttributes);
+		}
+
+
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 *
+		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
+		public function __get($strName) {
+			switch ($strName) {
+				case 'AsButton':
+					return $this->blnAsButton;
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+
+		/**
+		 * PHP magic method
+		 *
+		 * @param string $strName
+		 * @param string $mixValue
+		 *
+		 * @return mixed|void
+		 * @throws Exception
+		 * @throws QCallerException
+		 * @throws QInvalidCastException
+		 */
+		public function __set($strName, $mixValue) {
+			switch ($strName) {
+				case "AsButton":
+					try {
+						$this->blnAsButton = QType::Cast($mixValue, QType::Boolean);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "Text":
+					$this->mixText = self::SplitSpec($mixValue);
+					break;
+
+				case "Destination":
+					if ($mixValue instanceof QControlProxy) {
+						$this->mixDestination = $mixValue;
+					} else {
+						$this->mixDestination = self::SplitSpec($mixValue);
+					}
+					break;
+
+				case "GetVars":
+					try {
+						if (is_null($mixValue)) {
+							$this->getVars = null;
+						}
+						elseif (is_string($mixValue)) {
+							$this->getVars = self::SplitSpec($mixValue); // a simple action parameter for a control proxy
+						}
+						elseif (is_array($mixValue)) {
+							$this->getVars = [];
+							foreach ($mixValue as $key=>$val) {
+								$this->getVars[$key] = self::SplitSpec($val);
+							}
+						}
+						else {
+							throw new Exception ("Invalid type");
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case "TagAttributes":
+					try {
+						if (is_null($mixValue)) {
+							$this->tagAttributes = null;
+						}
+						elseif (is_array($mixValue)) {
+							$this->tagAttributes = [];
+							foreach ($mixValue as $key=>$val) {
+								$this->tagAttributes[$key] = self::SplitSpec($val);
+							}
+						}
+						else {
+							throw new Exception ("Invalid type");
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				default:
+					try {
+						parent::__set($strName, $mixValue);
+						break;
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+			}
+		}
+
+
+
 	}

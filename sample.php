@@ -4,7 +4,7 @@
 	 * point to build any QForm page that you wish.
 	 */
 
-	// Include prepend.inc to load Qcodo
+	// Include prepend.inc to load Qcubed
 	require('includes/configuration/prepend.inc.php');
 
 	class SampleForm extends QForm {

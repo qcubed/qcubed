@@ -107,8 +107,8 @@
 		 * custom error handling script(s).
 		 */
 		if (array_key_exists('SERVER_PROTOCOL', $_SERVER)) {
-			set_error_handler('QcodoHandleError', error_reporting());
-			set_exception_handler('QcodoHandleException');
+			set_error_handler('QcubedHandleError', error_reporting());
+			set_exception_handler('QcubedHandleException');
 			register_shutdown_function('QCubedShutdown');
 		}
 

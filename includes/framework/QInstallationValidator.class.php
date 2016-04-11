@@ -230,21 +230,24 @@ abstract class QInstallationValidator {
 			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __IMAGE_CACHE__;
 			$result[] = $obj;
 		}
-		
-		if (!file_exists(__QCUBED_UPLOAD__)) {
-			// Did the user move the __INCLUDES__ directory out of the docroot?
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = 'Create the "' . __QCUBED_UPLOAD__ . '" directory.';
-			$obj->strCommandToFix = "mkdir " . __QCUBED_UPLOAD__;
-			$result[] = $obj;
+
+
+		if (defined("__QCUBED_UPLOAD__")) {
+			if (!file_exists(__QCUBED_UPLOAD__)) {
+				// Did the user move the __INCLUDES__ directory out of the docroot?
+				$obj = new QInstallationValidationResult();
+				$obj->strMessage = 'Create the "' . __QCUBED_UPLOAD__ . '" directory.';
+				$obj->strCommandToFix = "mkdir " . __QCUBED_UPLOAD__;
+				$result[] = $obj;
+			}
+			else if (!QFolder::isWritable(__QCUBED_UPLOAD__)) {
+				$obj = new QInstallationValidationResult();
+				$obj->strMessage = "Uploads directory (" . __QCUBED_UPLOAD__ . ") needs to be writable";
+				$obj->strCommandToFix = "chmod 777 " . __QCUBED_UPLOAD__;
+				$result[] = $obj;
+			}
 		}
-		else if (!QFolder::isWritable(__QCUBED_UPLOAD__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Uploads directory (" . __QCUBED_UPLOAD__ . ") needs to be writable";
-			$obj->strCommandToFix = "chmod 777 " . __QCUBED_UPLOAD__;
-			$result[] = $obj;
-		}
-		
+
 		if (!function_exists('zip_open')) {
 			$obj = new QInstallationValidationResult();
 			$obj->strMessage = "ZIP extension is not enabled on this installation of PHP. " .

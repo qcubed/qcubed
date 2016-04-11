@@ -92,6 +92,8 @@
 		/** @var  string state of the dialog for special display */
 		protected $strDialogState;
 
+		protected $blnAutoRender = true;
+
 		public function __construct($objParentObject, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
 			$this->blnDisplay = false;
@@ -350,10 +352,10 @@
 		 * the dialog after detecting a button.
 		 *
 		 * @param QForm $objForm	// The parent object, which should always be the form itself.
-		 * @param $strMessage		// The message
-		 * @param null $strButtons
-		 * @param null $strControlId
-		 * @return null|QControl|QDialog
+		 * @param string $strMessage		// The message
+		 * @param string|string[]|null $strButtons
+		 * @param string|null $strControlId
+		 * @return QDialog
 		 */
 		public static function Alert($strMessage, $strButtons = null, $strControlId = null) {
 			global $_FORM;
@@ -402,27 +404,18 @@
 
 		/**
 		 * Show the dialog.
-		 * 
-		 * @deprecated
 		 */
 		public function ShowDialogBox() {
-			if (!$this->blnVisible)
-				$this->Visible = true;
-			if (!$this->blnDisplay)
-				$this->Display = true;
+			$this->Visible = true;
+			$this->Display = true;
 			$this->Open();
-			$this->blnWrapperModified = false;
 		}
 
         /**
 		 * Hide the dialog
-		 * 
-		 * @deprecated
 		 */
 		public function HideDialogBox() {
-			$this->blnDisplay = false;
 			$this->Close();
-			$this->blnWrapperModified = false;
 		}
 
 		/**

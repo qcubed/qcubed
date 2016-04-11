@@ -102,7 +102,7 @@
 			if ($this->strFullAlias) {
 				return $this->strFullAlias;
 			} else {
-				assert ('!empty($this->strAlias)');	// Alias should always be set by default
+				assert (!empty($this->strAlias));	// Alias should always be set by default
 				if ($this->objParentNode) {
 					return $this->objParentNode->FullAlias() . '__' . $this->strAlias;
 				}
@@ -1474,7 +1474,7 @@
 		/////////////////////////
 
 		/**
-		 * @param string $strSql
+		 * @param string $strSql Sql string. Use {1}, {2}, etc. to represent nodes inside of the sql string.
 		 * @param null|QQNode[] $objParentQueryNodes	Array of nodes to specify replacement value in the sql.
 		 * @return QQSubQuerySqlNode
 		 */

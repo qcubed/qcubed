@@ -247,15 +247,16 @@ if (!defined('SERVER_INSTANCE')) {
 				'username' => '{db1_username}',
 				'password' => '{db1_password}',
 				'caching' => false,
-				'profiling' => false)));
+				'profiling' => false,
+				'encoding' => 'utf8')));
 			-->*/
 
 			// Additional Database Connection Strings can be defined here (e.g. for connection #2, #3, #4, #5, etc.)
-			//			define('DB_CONNECTION_2', serialize(array('adapter'=>'SqlServer', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-			//			define('DB_CONNECTION_3', serialize(array('adapter'=>'MySqli', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-			//			define('DB_CONNECTION_4', serialize(array('adapter'=>'MySql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-			//			define('DB_CONNECTION_5', serialize(array('adapter'=>'PostgreSql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false)));
-			//			define('DB_CONNECTION_6', serialize(array('adapter' => 'InformixPdo', 'host' => 'maxdata', 'server' => 'maxdata', 'service' => 9088, 'protocol' => 'onsoctcp', 'database' => 'qcubed', 'username' => 'root', 'password' => '', 'profiling' => false)));
+			//			define('DB_CONNECTION_2', serialize(array('adapter'=>'SqlServer', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false, 'encoding' => 'utf8')));
+			//			define('DB_CONNECTION_3', serialize(array('adapter'=>'MySqli', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false, 'encoding' => 'utf8')));
+			//			define('DB_CONNECTION_4', serialize(array('adapter'=>'MySql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false, 'encoding' => 'utf8')));
+			//			define('DB_CONNECTION_5', serialize(array('adapter'=>'PostgreSql', 'server'=>'localhost', 'port'=>null, 'database'=>'qcubed', 'username'=>'root', 'password'=>'', 'profiling'=>false, 'encoding' => 'utf8')));
+			//			define('DB_CONNECTION_6', serialize(array('adapter' => 'InformixPdo', 'host' => 'maxdata', 'server' => 'maxdata', 'service' => 9088, 'protocol' => 'onsoctcp', 'database' => 'qcubed', 'username' => 'root', 'password' => '', 'profiling' => false, 'encoding' => 'utf8')));
 
 			// Maximum index of the DB connections defined by DB_CONNECTION_# constants above
 			// When reading the DB_CONNECTION_# constants, it will only go up to (and including) the index defined here

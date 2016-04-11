@@ -418,14 +418,18 @@ TMPL;
 		switch (\$strName) {
 			case 'Condition':
 				try {
-					return (\$this->objCondition = QType::Cast(\$mixValue, 'QQCondition'));
+					\$this->objCondition = QType::Cast(\$mixValue, 'QQCondition');
+					\$this->MarkAsModified();
+					return;
 				} catch (QCallerException \$objExc) {
 					\$objExc->IncrementOffset();
 					throw \$objExc;
 				}
 			case 'Clauses':
 				try {
-					return (\$this->objClauses = QType::Cast(\$mixValue, QType::ArrayType));
+					\$this->objClauses = QType::Cast(\$mixValue, QType::ArrayType);
+					\$this->MarkAsModified();
+					return;
 				} catch (QCallerException \$objExc) {
 					\$objExc->IncrementOffset();
 					throw \$objExc;

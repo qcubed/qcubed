@@ -704,7 +704,26 @@ qcubed = {
             return qcubed.unpackArray(obj);
         }
         return obj; // no change
-    }
+    },
+    setCookie: function(name, val, expires, path, dom, secure) {
+            var cookie = name + "=" + encodeURIComponent(val) + "; ";
+
+            if (expires) {
+                cookie += "expires=" + expires.toUTCString() + "; ";
+            }
+
+            if (path) {
+                cookie += "path=" + path + "; ";
+            }
+            if (dom) {
+                cookie += "domain=" + dom + "; ";
+            }
+            if (secure) {
+                cookie += "secure;";
+            }
+
+            document.cookie = cookie;
+        }
 };
 
 ///////////////////////////////
@@ -922,21 +941,21 @@ qcubed.getWrapper = function(mixControl) {
 /////////////////////////////
 
 qcubed.controlModifications = {};
-qcubed.javascriptStyleToQcodo = {};
+qcubed.javascriptStyleToQcubed = {};
 qcubed.formObjsModified = {};
 qcubed.ajaxError = false;
-qcubed.javascriptStyleToQcodo.backgroundColor = "BackColor";
-qcubed.javascriptStyleToQcodo.borderColor = "BorderColor";
-qcubed.javascriptStyleToQcodo.borderStyle = "BorderStyle";
-qcubed.javascriptStyleToQcodo.border = "BorderWidth";
-qcubed.javascriptStyleToQcodo.height = "Height";
-qcubed.javascriptStyleToQcodo.width = "Width";
-qcubed.javascriptStyleToQcodo.text = "Text";
+qcubed.javascriptStyleToQcubed.backgroundColor = "BackColor";
+qcubed.javascriptStyleToQcubed.borderColor = "BorderColor";
+qcubed.javascriptStyleToQcubed.borderStyle = "BorderStyle";
+qcubed.javascriptStyleToQcubed.border = "BorderWidth";
+qcubed.javascriptStyleToQcubed.height = "Height";
+qcubed.javascriptStyleToQcubed.width = "Width";
+qcubed.javascriptStyleToQcubed.text = "Text";
 
-qcubed.javascriptWrapperStyleToQcodo = {};
-qcubed.javascriptWrapperStyleToQcodo.position = "Position";
-qcubed.javascriptWrapperStyleToQcodo.top = "Top";
-qcubed.javascriptWrapperStyleToQcodo.left = "Left";
+qcubed.javascriptWrapperStyleToQcubed = {};
+qcubed.javascriptWrapperStyleToQcubed.position = "Position";
+qcubed.javascriptWrapperStyleToQcubed.top = "Top";
+qcubed.javascriptWrapperStyleToQcubed.left = "Left";
 
 qcubed.registerControl = function(mixControl) {
     var objControl = qcubed.getControl(mixControl),
@@ -959,7 +978,7 @@ qcubed.registerControl = function(mixControl) {
         objWrapper.control = objControl;
         objControl.wrapper = objWrapper;
 
-        // Add the wrapper to the global qcodo wrappers array
+        // Add the wrapper to the global qcubed wrappers array
         qcubed.wrappers[objWrapper.id] = objWrapper;
     }
 
@@ -1032,8 +1051,8 @@ qcubed.registerControl = function(mixControl) {
             case "width":
             case "height":
                 objControl.style[strStyleName] = strNewValue;
-                if (qcubed.javascriptStyleToQcodo[strStyleName]) {
-                    qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcodo[strStyleName], strNewValue);
+                if (qcubed.javascriptStyleToQcubed[strStyleName]) {
+                    qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcubed[strStyleName], strNewValue);
                 }
                 if (this.handle) {
                     this.updateHandle();
@@ -1046,13 +1065,13 @@ qcubed.registerControl = function(mixControl) {
                 break;
 
             default:
-                if (qcubed.javascriptWrapperStyleToQcodo[strStyleName]) {
+                if (qcubed.javascriptWrapperStyleToQcubed[strStyleName]) {
                     this.style[strStyleName] = strNewValue;
-                    qcubed.recordControlModification(objControl.id, qcubed.javascriptWrapperStyleToQcodo[strStyleName], strNewValue);
+                    qcubed.recordControlModification(objControl.id, qcubed.javascriptWrapperStyleToQcubed[strStyleName], strNewValue);
                 } else {
                     objControl.style[strStyleName] = strNewValue;
-                    if (qcubed.javascriptStyleToQcodo[strStyleName]) {
-                        qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcodo[strStyleName], strNewValue);
+                    if (qcubed.javascriptStyleToQcubed[strStyleName]) {
+                        qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcubed[strStyleName], strNewValue);
                     }
                 }
                 break;

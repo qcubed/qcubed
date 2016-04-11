@@ -429,8 +429,10 @@ class QSqLite3PdoDatabaseField extends QDatabaseFieldBase {
 
 			// If the length is something like (7,2), then let's pull out just the "7"
 			$intCommaPosition = strpos($this->intMaxLength, ',');
-			if ($intCommaPosition !== false)
+			if ($intCommaPosition !== false) {
 				$this->intMaxLength = substr($this->intMaxLength, 0, $intCommaPosition);
+				$this->intMaxLength++; // make room for decimal point
+			}
 
 			if (!is_numeric($this->intMaxLength))
 				throw new Exception('Not a valid Column Length: ' . $mixFieldData->GetColumn('type'));

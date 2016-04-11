@@ -445,7 +445,13 @@
 			// for backward compatibility, don't use MAX_DB_CONNECTION_INDEX directly,
 			// but check if MAX_DB_CONNECTION_INDEX is defined
 			$intMaxIndex = defined('MAX_DB_CONNECTION_INDEX') ? constant('MAX_DB_CONNECTION_INDEX') : 9;
-			for ($intIndex = 0; $intIndex <= $intMaxIndex; $intIndex++) {
+
+			if (defined('DB_CONNECTION_0')) {
+				// This causes a conflict with how DbBackedSessionHandler works.
+				throw new Exception('Do not define DB_CONNECTION_0. Start at DB_CONNECTION_1');
+			}
+
+			for ($intIndex = 1; $intIndex <= $intMaxIndex; $intIndex++) {
 				$strConstantName = sprintf('DB_CONNECTION_%s', $intIndex);
 
 				if (defined($strConstantName)) {
@@ -536,7 +542,7 @@
 				throw new QCallerException('Error handler is already currently overridden.  Cannot override twice.  Call RestoreErrorHandler before calling SetErrorHandler again.');
 			if (!$strName) {
 				// No Error Handling is wanted -- simulate a "On Error, Resume" type of functionality
-				set_error_handler('QcodoHandleError', 0);
+				set_error_handler('QcubedHandleError', 0);
 				QApplicationBase::$intStoredErrorLevel = error_reporting(0);
 			} else {
 				set_error_handler($strName, $intLevel);
@@ -648,6 +654,40 @@
 
 				// End the Response Script
 				exit();
+			}
+		}
+
+		/**
+		 * Set a cookie. Allows setting of cookies in responses to ajax requests.
+		 *
+		 * @param string $strName
+		 * @param sring $strValue
+		 * @param QDatTime $dttTimeout
+		 * @param string $strPath
+		 * @param null|string $strDomain
+		 * @param bool $blnSecure
+		 */
+		public static function SetCookie($strName, $strValue, QDateTime $dttTimeout, $strPath = '/', $strDomain = null, $blnSecure = false) {
+			if (QApplication::$RequestMode == QRequestMode::Ajax) {
+				self::ExecuteJsFunction ('qcubed.setCookie', $strName, $strValue, $dttTimeout, $strPath, $strDomain, $blnSecure);
+			}
+			else {
+				setcookie($strName, $strValue, $dttTimeout->Timestamp, $strPath, $strDomain, $blnSecure);
+			}
+		}
+
+		/**
+		 * Delete's the given cookie IF its set. In other words, you cannot set a cookie and then delete a cookie right away before the
+		 * cookie gets sent to the browser.
+		 *
+		 * @param $strName
+		 */
+		public static function DeleteCookie($strName) {
+			if (isset($_COOKIE[$strName])) { // don't post a cookie if its not set
+				$dttTimeout = QDateTime::Now();
+				$dttTimeout->AddYears(-5);
+
+				self::SetCookie($strName, "", $dttTimeout);
 			}
 		}
 
