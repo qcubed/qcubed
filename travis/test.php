@@ -49,13 +49,8 @@ class QTestForm extends QForm {
 	
 	public function runTests() {
 		$cliOptions = [ 'phpunit'];	// first entry is the command
-		array_push($cliOptions, '-c', __QCUBED_CORE__ . '/tests');	// the config file is here
-		array_push($cliOptions, '--verbose');
-		//array_push($cliOptions, '--process-isolation', false);
-		array_push($cliOptions, '--bootstrap', __QCUBED_CORE__ . '/../vendor/autoload.php');
-		echo __QCUBED_CORE__ . '/../vendor/autoload.php';
-
-		//$cliOptions[] = __QCUBED_CORE__ . '/tests'; // last entry is the directory where the tests are
+		array_push($cliOptions, '-c', __QCUBED_CORE__ . '/tests/phpunit.xml');	// the config file is here
+//		array_push($cliOptions, '--bootstrap', __QCUBED_CORE__ . '/../vendor/autoload.php');
 
 		$tester = new PHPUnit_TextUI_Command();
 

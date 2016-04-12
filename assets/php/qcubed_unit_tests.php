@@ -161,7 +161,7 @@ class QTestForm extends QForm {
 	
 	public function runTests() {
 		$cliOptions = [ 'phpunit'];	// first entry is the command
-		array_push($cliOptions, '-c', __QCUBED_CORE__ . '/tests');	// the config file is here
+		array_push($cliOptions, '-c', __QCUBED_CORE__ . '/tests/phpunithtml.xml');	// the config file is here
 
 		//$cliOptions[] = __QCUBED_CORE__ . '/tests'; // last entry is the directory where the tests are
 
