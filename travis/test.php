@@ -39,53 +39,31 @@ restore_error_handler();
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QUnitTestCaseBase.php');
 require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/QTestControl.class.php');
 
-
-class QTravisReporter extends TextReporter {
-	// Do not print passed tests. For travis we want to see only failed tests
-	function paintPass($message) {
-		parent::paintPass($message);
-	}
-}
-
-/**
- * @var QTravisReporter 
- */
-$rptReporter = null;
-
 class QTestForm extends QForm {
 	public $ctlTest;
 
 	protected function Form_Create() {
 		$this->ctlTest = new QTestControl($this);
+		$this->runTests();
+	}
+	
+	public function runTests() {
+		$cliOptions = [ 'phpunit'];	// first entry is the command
+		array_push($cliOptions, '-c', __QCUBED_CORE__ . '/tests');	// the config file is here
+		array_push($cliOptions, '--verbose');
+		//array_push($cliOptions, '--process-isolation', false);
+		array_push($cliOptions, '--bootstrap', __QCUBED_CORE__ . '/../vendor/autoload.php');
+		echo __QCUBED_CORE__ . '/../vendor/autoload.php';
 
-		$filesToSkip = array(
-			"QUnitTestCaseBase.php"
-			, "QTestForm.tpl.php"
-			, "QTestControl.class.php"
-		);
+		//$cliOptions[] = __QCUBED_CORE__ . '/tests'; // last entry is the directory where the tests are
 
-		$arrFiles = QFolder::listFilesInFolder(__QCUBED_CORE__ . '/tests/qcubed-unit/');
-		$arrTests = array();
-		foreach ($arrFiles as $filename) {
-			if (!in_array($filename, $filesToSkip)) {
-				require_once(__QCUBED_CORE__ . '/tests/qcubed-unit/' . $filename);
-				$arrTests[] = str_replace(".php", "", $filename);
-			}
-		}
+		$tester = new PHPUnit_TextUI_Command();
 
-		$suite = new TestSuite('QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ' Unit Tests - SimpleTest ' . SimpleTest::getVersion());
-		foreach ($arrTests as $className) {
-			$suite->add(new $className($this));
-		}
-		global $rptReporter;
-		$rptReporter = new QTravisReporter();
-		$suite->run($rptReporter);
+		$tester->run($cliOptions);
 	}
 }
 
-QTestForm::Run('QTestForm', __DOCROOT__ . __SUBDIRECTORY__ . "/travis/QTestForm.tpl.php");
+QTestForm::Run('QTestForm', __QCUBED_CORE__ . "/tests/qcubed-unit/QTestForm.tpl.php");
 
-// Need to return value greater then zero in a case of an error.
-exit (intval($rptReporter->getFailCount() + $rptReporter->getExceptionCount()));
 
 ?>

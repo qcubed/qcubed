@@ -1,5 +1,6 @@
 <phpunit
-    printerClass="QHtmlReporter">
+	processIsolation="false"
+    printerClass="PHPUnit_TextUI_ResultPrinter">
     <testsuites>
         <testsuite name="QCubed Unit">
             <directory>qcubed-unit</directory>

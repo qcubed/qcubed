@@ -60,6 +60,10 @@
 			// TODO: Define any other custom global WebApplication functions (if any) here...
 		}
 
+		if (file_exists (__QCUBED_CORE__ . '/../vendor/autoload.php')) {
+			require __QCUBED_CORE__ . '/../vendor/autoload.php'; // Add the Composer autoloader if using Composer
+		}
+
 		// Register the autoloader
 		spl_autoload_register(array('QApplication', 'Autoload'));
 
@@ -132,5 +136,5 @@
 			// QI18n::Initialize();
 		}
 	}
-	ob_end_flush();
+	//ob_end_flush();
 ?>
