@@ -23,7 +23,7 @@
       "qcubed/composer": "dev-master"
   },
   "require-dev": {
-      "phpunit/phpunit": "5.3.*"
+      "phpunit/phpunit": "4.8.*"
   },
   "suggest": {
     "ezyang/htmlpurifier": "dev-master"
