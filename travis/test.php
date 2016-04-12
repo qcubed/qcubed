@@ -20,8 +20,8 @@ require( __WORKING_DIR__ . $subdir . '/travis/configuration.inc.php');
 define ('__CONFIGURATION__', __WORKING_DIR__ . $subdir . '/travis');
 
 
-require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/unit_tester.php');
-require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/reporter.php');
+//require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/unit_tester.php');
+//require_once(__EXTERNAL_LIBRARIES__ . '/lastcraft/simpletest/reporter.php');
 
 $__CONFIG_ONLY__ = false;
 require( __DOCROOT__ . __SUBDIRECTORY__ . '/travis/qcubed.inc.php');
