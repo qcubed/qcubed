@@ -34,31 +34,40 @@ if(!class_exists('Login')){
     require_once __INCLUDES__ .'/model/Login.class.php';
 }
 
-class ExpandAsArrayTests extends QUnitTestCaseBase {
+class CacheTests extends QUnitTestCaseBase {
+
+	public function setUp() {
+		QApplication::$blnLocalCache = true;
+	}
+
+	public function tearDown() {
+		QApplication::$blnLocalCache = false;
+	}
+
 
 	public function testMultiLevel() {
 		$arrPeople = Person::LoadAll(
 			self::getTestClauses()
 		);
 				
-		$this->assertEqual(sizeof($arrPeople), 12, "12 Person objects found");
+		$this->assertEquals(sizeof($arrPeople), 12, "12 Person objects found");
 		$targetPerson = $this->verifyObjectPropertyHelper($arrPeople, 'LastName', 'Wolfe');
 		
 		$this->helperVerifyKarenWolfe($targetPerson);
 		
 		$objProjectArray = $targetPerson->_ProjectAsManagerArray;
-		$this->assertEqual(sizeof($objProjectArray), 2, "2 projects found");
+		$this->assertEquals(sizeof($objProjectArray), 2, "2 projects found");
 		
 		foreach ($objProjectArray as $objProject) {
 			$objMilestoneArray = $objProject->_MilestoneArray;
 			
 			switch ($objProject->Id) {
 				case 1:
-					$this->assertEqual(sizeof($objMilestoneArray), 3, "3 milestones found");
+					$this->assertEquals(sizeof($objMilestoneArray), 3, "3 milestones found");
 					break;
 					
 				case 4:
-					$this->assertEqual(sizeof($objMilestoneArray), 4, "4 milestones found");
+					$this->assertEquals(sizeof($objMilestoneArray), 4, "4 milestones found");
 					break;
 					
 				default:
@@ -79,7 +88,7 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		);
 
 		// Karen Wolfe should duplicate, since she is managing two projects
-		$this->assertEqual(sizeof($arrPeople), 13, "13 Person objects found");
+		$this->assertEquals(sizeof($arrPeople), 13, "13 Person objects found");
 		$targetPerson = $this->verifyObjectPropertyHelper($arrPeople, 'LastName', 'Wolfe');
 
 		$objProjectArray = $targetPerson->_ProjectAsManagerArray;
@@ -92,17 +101,24 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		// since we didn't specify the order, not sure which one we will get, so check for either
 		switch ($objProject->Id) {
 			case 1:
-				$this->assertEqual(sizeof($objMilestoneArray), 3, "3 milestones found");
+				$this->assertEquals(sizeof($objMilestoneArray), 3, "3 milestones found");
 				break;
 				
 			case 4:
-				$this->assertEqual(sizeof($objMilestoneArray), 4, "4 milestones found");
+				$this->assertEquals(sizeof($objMilestoneArray), 4, "4 milestones found");
 				break;
 				
 			default:
 				$this->assertTrue(false, 'Unexpected project found, id: ' . $objProject->Id);
 				break;
 		}
+
+		// test that querying for expanded objects will return the cached version
+
+		$objProject2 = Project::Load ($objProject->Id, array (QQ::Select (QQN::Project()->Name)));
+		// even though we only selected a name, we still get the other items in the cached object
+		$this->assertNotNull($objProject2->ManagerPersonId, "ManagerPersonId found");
+
 	}
 	
 	public function testQuerySingle() {
@@ -112,7 +128,22 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		);
 		
 		$this->helperVerifyKarenWolfe($targetPerson);
-		
+
+		$targetPerson2 = Person::QuerySingle(
+			QQ::Equal(QQN::Person()->Id, 7),
+			array (QQ::Select(QQN::Person()->FirstName))
+		);
+
+		$this->assertNotNull($targetPerson2->LastName, "Used a cached object");
+
+		$targetPerson2->Save();
+
+		$targetPerson2 = Person::QuerySingle(
+			QQ::Equal(QQN::Person()->Id, 7),
+			array (QQ::Select(QQN::Person()->FirstName))
+		);
+		$this->assertNull($targetPerson2->LastName, "Saving an object deleted it from the cache");
+
 		$objTwoKey = TwoKey::QuerySingle(
 			QQ::AndCondition (
 				QQ::Equal(QQN::TwoKey()->Server, 'google.com'),
@@ -123,7 +154,7 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 			)
 		);
 		
-		$this->assertEqual (count($objTwoKey->Project->_PersonAsTeamMemberArray), 6, '6 team members found.');
+		$this->assertEquals (count($objTwoKey->Project->_PersonAsTeamMemberArray), 6, '6 team members found.');
 	}
 	
 	public function testEmptyArray() {
@@ -133,7 +164,7 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 			);
 			
 		$this->assertTrue(is_array($arrPeople->_ProjectAsManagerArray), "_ProjectAsManagerArray is an array");
-		$this->assertEqual(count($arrPeople->_ProjectAsManagerArray), 0, "_ProjectAsManagerArray has no Project objects");
+		$this->assertEquals(count($arrPeople->_ProjectAsManagerArray), 0, "_ProjectAsManagerArray has no Project objects");
 	}
 
 	public function testNullArray() {
@@ -156,7 +187,7 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 			);
 		
 		$intPersonTypeArray = $objPerson->_PersonTypeArray;
-		$this->assertEqual($intPersonTypeArray, array(
+		$this->assertEquals($intPersonTypeArray, array(
 			PersonType::Manager,
 			PersonType::CompanyCar)
 		, "PersonType expansion is correct");
@@ -171,14 +202,18 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 	}
 	
 	private function helperVerifyKarenWolfe(Person $targetPerson) {		
-		$this->assertEqual(sizeof($targetPerson->_ProjectAsManagerArray), 2, "2 projects found");
+		$this->assertEquals(sizeof($targetPerson->_ProjectAsManagerArray), 2, "2 projects found");
 		$targetProject = $this->verifyObjectPropertyHelper($targetPerson->_ProjectAsManagerArray, 'Name', 'ACME Payment System');
 		
-		$this->assertEqual(sizeof($targetProject->_MilestoneArray), 4, "4 milestones found");
+		$this->assertEquals(sizeof($targetProject->_MilestoneArray), 4, "4 milestones found");
 		$this->verifyObjectPropertyHelper($targetProject->_MilestoneArray, 'Name', 'Milestone H');
 	}
 
 	public function testSelectSubsetInExpand() {
+		Project::ClearCache();
+		Person::ClearCache();
+		Milestone::ClearCache();
+
 		$objPersonArray = Person::QueryArray(
 			QQ::OrCondition(
 				QQ::Like(QQN::Person()->ProjectAsManager->Name, '%ACME%'),
@@ -198,42 +233,42 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 			$this->assertNotNull($objPerson->_ProjectAsManager->Id, "ProjectAsManager->Id should not be null since id's are always added to the select list");
 			$this->assertNull($objPerson->_ProjectAsManager->Name, "ProjectAsManager->Name should be null since it was not selected");
 		}
-	}
 
-	public function testSelectSubsetInExpandAsArray() {
-		$objPersonArray = Person::LoadAll(
+		// generate full objects to load into cache
+		$objPersonArray = Person::QueryArray(
+			QQ::OrCondition(
+				QQ::Like(QQN::Person()->ProjectAsManager->Name, '%ACME%'),
+				QQ::Like(QQN::Person()->ProjectAsManager->Name, '%HR%')
+			),
+			// Let's expand on the Project, itself
 			QQ::Clause(
-				QQ::Select(QQN::Person()->FirstName),
-				QQ::ExpandAsArray(QQN::Person()->Address, QQ::Select(QQN::Person()->Address->Street, QQN::Person()->Address->City)),
-				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager, QQ::Select(QQN::Person()->ProjectAsManager->StartDate)),
-				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager->Milestone, QQ::Select(QQN::Person()->ProjectAsManager->Milestone->Name))
+				QQ::Expand(QQN::Person()->ProjectAsManager),
+				QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
+			)
+		);
+
+		$objPersonArray = Person::QueryArray(
+			QQ::OrCondition(
+				QQ::Like(QQN::Person()->ProjectAsManager->Name, '%ACME%'),
+				QQ::Like(QQN::Person()->ProjectAsManager->Name, '%HR%')
+			),
+			// Let's expand on the Project, itself
+			QQ::Clause(
+				QQ::Select(QQN::Person()->LastName),
+				QQ::Expand(QQN::Person()->ProjectAsManager, null, QQ::Select(QQN::Person()->ProjectAsManager->Spent)),
+				QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
 			)
 		);
 
 		foreach ($objPersonArray as $objPerson) {
-			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->assertNotNull($objPerson->FirstName, "FirstName should not be null, because it has been cached");
 			$this->assertNotNull($objPerson->Id, "Id should not be null since it's always added to the select list");
-			if (sizeof($objPerson->_AddressArray) > 0) {
-				foreach ($objPerson->_AddressArray as $objAddress) {
-					$this->assertNotNull($objAddress->Id, "Address->Id should not be null since it's always added to the select list");
-					$this->assertNull($objAddress->PersonId, "Address->PersonId should be null, since it was not selected");
-				}
-			}
-			if (sizeof($objPerson->_ProjectAsManagerArray) > 0) {
-				foreach($objPerson->_ProjectAsManagerArray as $objProject) {
-					$this->assertNotNull($objProject->Id, "Project->Id should not be null since it's always added to the select list");
-					$this->assertNull($objProject->Name, "Project->Name should be null, since it was not selected");
-					if (sizeof($objProject->_MilestoneArray) > 0) {
-						foreach ($objProject->_MilestoneArray as $objMilestone) {
-							$this->assertNotNull($objMilestone->Id, "Milestone->Id should not be null since it's always added to the select list");
-							$this->assertNull($objMilestone->ProjectId, "Milestone->ProjectId should be null, since it was not selected");
-						}
-					}
-				}
-			}
+			$this->assertNotNull($objPerson->_ProjectAsManager->Id, "ProjectAsManager->Id should not be null since id's are always added to the select list");
+			$this->assertNotNull($objPerson->_ProjectAsManager->Name, "ProjectAsManager->Name should not be null since it was cached");
 		}
+
 	}
-	
+
 	public function testMultiLeafExpansion() {
 		$objMilestone = Milestone::QuerySingle(
 			QQ::Equal (QQN::Milestone()->Id, 1),
@@ -247,10 +282,10 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		$objPeopleArray = $objMilestone->Project->_PersonAsTeamMemberArray;
 		
 		$this->assertTrue(is_array($objProjectArray), "_ProjectAsTeamMemberArray is an array");
-		$this->assertEqual(count($objProjectArray), 2, "_ProjectAsTeamMemberArray has 2 Project objects");
+		$this->assertEquals(count($objProjectArray), 2, "_ProjectAsTeamMemberArray has 2 Project objects");
 		
 		$this->assertTrue(is_array($objPeopleArray), "_PersonAsTeamMemberArray is an array");
-		$this->assertEqual(count($objPeopleArray), 5, "_PersonAsTeamMemberArray has 5 People objects");
+		$this->assertEquals(count($objPeopleArray), 5, "_PersonAsTeamMemberArray has 5 People objects");
 		
 		// try through a unique relationship
 		$objLogin = Login::QuerySingle(
@@ -264,12 +299,12 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		$objProjectArray = $objLogin->Person->_ProjectAsTeamMemberArray;
 		
 		$this->assertTrue(is_array($objProjectArray), "_ProjectAsTeamMemberArray is an array");
-		$this->assertEqual(count($objProjectArray), 2, "_ProjectAsTeamMemberArray has 2 Project objects");
+		$this->assertEquals(count($objProjectArray), 2, "_ProjectAsTeamMemberArray has 2 Project objects");
 		
 		$objProjectArray = $objLogin->Person->_ProjectAsManagerArray;
 		
 		$this->assertTrue(is_array($objProjectArray), "_ProjectAsManagerArray is an array");
-		$this->assertEqual(count($objProjectArray), 2, "_ProjectAsManagerArray has 2 Project objects");
+		$this->assertEquals(count($objProjectArray), 2, "_ProjectAsManagerArray has 2 Project objects");
 				
 	}
 
@@ -287,113 +322,17 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 		
 		$targetPerson = reset($targetPersonArray);
 		
-		$this->assertEqual ($targetPerson->Id, 1, "Person 1 found.");
+		$this->assertEquals ($targetPerson->Id, 1, "Person 1 found.");
 		$this->assertNotNull ($targetPerson->_ProjectAsManager, "Person 1 has a project.");
 
 		$targetPerson = end($targetPersonArray);
 		
-		$this->assertEqual ($targetPerson->Id, 12, "Person 12 found.");
+		$this->assertEquals ($targetPerson->Id, 12, "Person 12 found.");
 		$this->assertNull ($targetPerson->_ProjectAsManager, "Person 12 does not have a project.");
-
+				
+		//TODO: Conditional Array Expansion, requires API change
+		
 	}
 
-	public function testConditionalExpansion2() {
-		$clauses = QQ::Clause(
-			QQ::Expand(QQN::Login()->Person->ProjectAsManager, QQ::Equal (QQN::Login()->Person->ProjectAsManager->ProjectStatusTypeId, ProjectStatusType::Open)),
-			QQ::ExpandAsArray(QQN::Login()->Person->ProjectAsManager->Milestone),
-			QQ::ExpandAsArray(QQN::Login()->Person->Address),
-			QQ::OrderBy(QQN::Login()->Person->Id)
-		);
-
-		$cond = QQ::In (QQN::Login()->PersonId, [1,3,7]);
-		$targetLoginArray = Login::QueryArray (
-			$cond,
-			$clauses
-		);
-
-		$targetLogin = reset($targetLoginArray);
-		$this->assertEqual ($targetLogin->Person->Id, 1, "Person 1 found.");
-		$this->assertNotNull ($targetLogin->Person->_ProjectAsManager, "Person 1 has an open project.");
-
-		$targetLogin = next($targetLoginArray);
-		$this->assertEqual ($targetLogin->Person->Id, 3, "Person 3 found.");
-		$this->assertNull ($targetLogin->Person->_ProjectAsManager, "Person 3 does not have an open project.");
-
-		$targetLogin = next($targetLoginArray);
-		$this->assertEqual ($targetLogin->Person->Id, 7, "Person 7 found.");
-		$this->assertNull ($targetLogin->Person->_ProjectAsManager, "Person 7 does have an open project.");
-
-	}
-
-
-	public function testConditionalExpansion3() {
-
-		// A complex join with conditions. Find all team members of completed projects which have an open child project.
-		$clauses = QQ::Clause(
-			QQ::Expand(QQN::Person()->ProjectAsTeamMember->Project, QQ::Equal(QQN::Person()->ProjectAsTeamMember->Project->ProjectStatusTypeId, ProjectStatusType::Completed)),
-			QQ::Expand(QQN::Person()->ProjectAsTeamMember->Project->ProjectAsRelated->Project, QQ::Equal(QQN::Person()->ProjectAsTeamMember->Project->ProjectAsRelated->Project->ProjectStatusTypeId, ProjectStatusType::Open))
-		);
-
-		$cond = QQ::IsNotNull(QQN::Person()->ProjectAsTeamMember->Project->ProjectAsRelated->Project->Id); // Filter out unsuccessful joins
-
-		$targetPersonArray = Person::QueryArray (
-			$cond,
-			$clauses
-		);
-
-		$targetPerson = reset($targetPersonArray);
-
-		$this->assertEqual($targetPerson->ProjectAsTeamMember->ProjectStatusTypeId, ProjectStatusType::Completed, "Found completed parent project");
-		$this->assertEqual($targetPerson->ProjectAsTeamMember->ProjectAsRelated->ProjectStatusTypeId, ProjectStatusType::Open, "Found open child project");
-
-	}
-
-	public function testConditionalExpansionReverse() {
-		// Get all people, and projects they are managing if the projects are open.
-		$a = Person::QueryArray(
-			QQ::All(),
-			[
-				QQ::ExpandAsArray(QQN::Person()->ProjectAsManager, QQ::Equal(QQN::Person()->ProjectAsManager->ProjectStatusTypeId, ProjectStatusType::Open)),
-				QQ::OrderBy(QQN::Person()->Id)
-			]
-		);
-
-		$this->assertEqual($a[0]->_ProjectAsManagerArray[0]->Id, 3);
-	}
-
-	public function testConditionalExpansionAssociation() {
-		// Conditional expansion on association nodes really can only work with the PK of the join.
-
-		// Get all projects, and also expand on related projects if the id is 1
-		$a = Project::QueryArray(
-			QQ::All(),
-			[
-				QQ::ExpandAsArray(QQN::Project()->ParentProjectAsRelated, QQ::Equal(QQN::Project()->ParentProjectAsRelated->ProjectId, 1)),
-				QQ::ExpandAsArray(QQN::Project()->ProjectAsRelated, QQ::Equal(QQN::Project()->ProjectAsRelated->Project->Id, 1)),
-				QQ::OrderBy(QQN::Project()->Id)
-			]
-		);
-
-		$this->assertEqual($a[2]->_ParentProjectAsRelatedArray[0]->Id, 1);
-	}
-
-
-
-	public function testDataGridHtml() {
-		$objMilestone = Milestone::QuerySingle(
-			QQ::Equal (QQN::Milestone()->Id, 1),
-			QQ::Clause(
-				QQ::Expand(QQN::Milestone()->Project->ManagerPerson)
-			)
-		);
-
-		$_ITEM =$objMilestone;
-		$node = QQN::Milestone()->Project->ManagerPerson;
-
-		$html = $node->GetDataGridHtml();
-		$val = eval(sprintf('return %s;', $html));
-		$this->assertEqual ($val, "Person Object 7");
-	}
-	
 }
 ?>

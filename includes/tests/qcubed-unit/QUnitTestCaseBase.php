@@ -5,15 +5,7 @@
  * @package Tests
  */
 
-class QUnitTestCaseBase extends UnitTestCase {
-	
-	/**
-	 * Override this method if needed.
-	 * @param QForm|QControl $objForm The tests form object
-	 */
-	public function __construct($objForm) {
-		;
-	}
+class QUnitTestCaseBase extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * Given an array of objects $arrObj, verifies that

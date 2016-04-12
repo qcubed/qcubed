@@ -73,25 +73,15 @@ class QTypeTests extends QUnitTestCaseBase {
 			$value = (string)$case[1].'('.gettype($case[0]).')';
 			if($case[2] === _FAIL_)
 			{
-				try {  
-					QType::Cast($case[0], $case[3]);
-					$this->fail("Excepted exception was not thrown casting ".$value." to ".$case[3]);
-				} catch(QInvalidCastException $e) {
-					$this->pass("Casting ".$value." to ".$case[3]." caused a QInvalidCastException");
-					unset($e);  
-				}
+				$this->setExpectedException('QInvalidCastException');
+				QType::Cast($case[0], $case[3]);
+				$this->setExpectedException(null);
 			}
 			else
 			{
-				try {
-					$castValue = QType::Cast($case[0], $case[3]);
-					$newValue = $castValue.'('.gettype($castValue).')';
-					$this->assertIdentical($castValue, $case[2], "$value cast as a ".$case[3]." is $newValue");
-				}
-				catch(Exception $e)
-				{
-					$this->fail("Exception caused when casting $value to ".$case[3].": {$e->getMessage()}");
-				}
+				$castValue = QType::Cast($case[0], $case[3]);
+				$newValue = $castValue.'('.gettype($castValue).')';
+				$this->assertTrue($castValue === $case[2], "$value cast as a ".$case[3]." is $newValue");
 			}
 		}
 	}
@@ -102,16 +92,16 @@ class QTypeTests extends QUnitTestCaseBase {
 
 		$cond = QQ::Between(QQN::Project()->StartDate, $dt1, $dt2);
 		$a = Project::QueryArray($cond);
-		$this->assertEqual(count($a), 2, "Between 2 QDateTime types works");
+		$this->assertEquals(count($a), 2, "Between 2 QDateTime types works");
 
 
 		$cond = QQ::Between(QQN::Project()->Budget, 2000, 3000);
 		$a = Project::QueryArray($cond);
-		$this->assertEqual(count($a), 1, "Between 2 int types works");
+		$this->assertEquals(count($a), 1, "Between 2 int types works");
 
 		$cond = QQ::Between(QQN::Project()->Name, 'A', 'C');
 		$a = Project::QueryArray($cond);
-		$this->assertEqual(count($a), 3, "Between 2 string types works");
+		$this->assertEquals(count($a), 3, "Between 2 string types works");
 	}
 
 	// Testing creation of type tables
@@ -121,8 +111,8 @@ class QTypeTests extends QUnitTestCaseBase {
 		$this->assertNull($val, 'Generated a null value');
 
 		$val = ProjectStatusType::$IsActiveArray[1];
-		$this->assertEqual($val, true, 'Open project is active');
-		$this->assertEqual(is_bool($val), true, 'Type of variable is boolean.');
+		$this->assertEquals($val, true, 'Open project is active');
+		$this->assertEquals(is_bool($val), true, 'Type of variable is boolean.');
 
 	}
 }

@@ -39,7 +39,7 @@ class QTimerTests extends QUnitTestCaseBase {
 		$this->assertTrue($fltValue2 < $fltValue3);
 		
 		$objTimer = QTimer::GetTimer('timer2');
-		$this->assertEqual($objTimer->CountStarted, 3);
+		$this->assertEquals($objTimer->CountStarted, 3);
 	}
 	
 	public function testReset() {
@@ -61,31 +61,33 @@ class QTimerTests extends QUnitTestCaseBase {
 		$this->assertTrue($fltValue4 < $fltValue3); // because we've reset the timer
 		
 		$objTimer = QTimer::GetTimer('timerA');
-		$this->assertEqual($objTimer->CountStarted, 2);
+		$this->assertEquals($objTimer->CountStarted, 2);
 	}
 	
-	
+
 	public function testExceptions1() {
-		$this->expectException("QCallerException", "Should not be able to stop a non-started timer");
+		// requires v 5.3 of PHP UNIT
+		$this->setExpectedException("QCallerException");
 		QTimer::stop('timer4');
 	}
 	
 	public function testExceptions2() {		
-		$this->expectException("QCallerException", "Should not be able to get the time of a non-started timer");
+		$this->setExpectedException("QCallerException");
 		QTimer::getTime('timer5');
 	}
 	
 	public function testExceptions3() {		
 		QTimer::start('timer6');
-		$this->expectException("QCallerException", "Should not be able to start the timer twice");
+		$this->setExpectedException("QCallerException");
 		QTimer::start('timer6');
 	}
 	
 	public function testExceptions4() {
 		$objTimer = QTimer::GetTimer('timer7');
-		$this->assertEqual($objTimer, null, "Requests for non-existing timer objects should return null");
+		$this->assertEquals($objTimer, null, "Requests for non-existing timer objects should return null");
 	}
-		
+
+
 	private function longOperation() {
 		Person::LoadAll();
 	}

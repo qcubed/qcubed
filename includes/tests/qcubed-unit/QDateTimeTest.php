@@ -39,14 +39,14 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$timestamp = time() + 100;
 		$obj2 = QDateTime::FromTimestamp($timestamp);
 
-		$this->assertNotEqual($dtNow, $obj2);
+		$this->assertNotEquals($dtNow, $obj2);
 
 		$diff = $obj2->Difference($dtNow);
 
 		$this->assertTrue($diff->IsPositive());
 		$this->assertFalse($diff->IsNegative());
 		$this->assertFalse($diff->IsZero());
-		$this->assertEqual($diff->Minutes, 1);
+		$this->assertEquals($diff->Minutes, 1);
 
 		// being fuzzy here intentionally
 		$this->assertTrue($diff->Seconds > 95);
@@ -58,16 +58,16 @@ class QDateTimeTests extends QUnitTestCaseBase {
 
 		// test relative date format
 		$dt2 = new QDateTime('last Monday');
-		$this->assertEqual ($dt2->format('N'), 1);
+		$this->assertEquals ($dt2->format('N'), 1);
 
 		// test time only format
 		$dt2 = new QDateTime('0:00:00');
-		$this->assertEqual ($dt2->Hour, 0);
+		$this->assertEquals ($dt2->Hour, 0);
 		$this->assertFalse ($dt2->IsTimeNull());
 
 		// test timestamp constructor
 		$dt2 = new QDateTime ('@' . $dtNow->Timestamp);
-		$this->assertEqual($dt2->Hour, $dtNow->Hour);
+		$this->assertEquals($dt2->Hour, $dtNow->Hour);
 	}
 
 
@@ -131,25 +131,25 @@ class QDateTimeTests extends QUnitTestCaseBase {
 	public function testTimeZoneIssues() {
 		$tz = new DateTimeZone('America/Los_Angeles');
 		$dt1 = new QDateTime ('11/02/14', $tz); // dst boundary date
-		$this->assertEqual($dt1->getTimezone()->getName(), 'America/Los_Angeles');
+		$this->assertEquals($dt1->getTimezone()->getName(), 'America/Los_Angeles');
 
 		$dt2 = new QDateTime ($dt1, null, QDateTime::DateOnlyType);
-		$this->assertEqual($dt2->getTimezone()->getName(), 'America/Los_Angeles');
+		$this->assertEquals($dt2->getTimezone()->getName(), 'America/Los_Angeles');
 		$this->assertTrue($dt2->IsTimeNull());
 
 		$dt2->setTime(7,0,0);
-		$this->assertEqual($dt2->Hour, 7);
-		$this->assertEqual($dt2->getTimezone()->getName(), 'America/Los_Angeles');
+		$this->assertEquals($dt2->Hour, 7);
+		$this->assertEquals($dt2->getTimezone()->getName(), 'America/Los_Angeles');
 
 		// Test a specific PHP 'bug'. Not sure if it is a bug, or just a way things work.
 		$dt2 = new QDateTime ($dt1->format (DateTime::ISO8601), null, QDateTime::DateOnlyType);
 		$dt2->setTime(7,0,0);
-		$this->assertEqual($dt2->Hour, 7);
+		$this->assertEquals($dt2->Hour, 7);
 
 		$dt2 = new QDateTime('1/1/14', new DateTimeZone('America/Los_Angeles'));
 		$dt2->Timestamp = 1288486753;
-		$this->assertEqual($dt2->getTimezone()->getName(), 'America/Los_Angeles'); // make sure timezone isn't changed
-		$this->assertEqual($dt2->Timestamp, 1288486753); // this isn't always true. If this is a dst boundary, it will not be true. Just making sure it is true when its supposed to be
+		$this->assertEquals($dt2->getTimezone()->getName(), 'America/Los_Angeles'); // make sure timezone isn't changed
+		$this->assertEquals($dt2->Timestamp, 1288486753); // this isn't always true. If this is a dst boundary, it will not be true. Just making sure it is true when its supposed to be
 
 	}
 
@@ -160,7 +160,7 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$dt2 = new QDateTime ('7:00', $tz, QDateTime::TimeOnlyType);
 
 		$dt1->SetTime ($dt2);
-		$this->assertEqual($dt2->Hour, 7);
+		$this->assertEquals($dt2->Hour, 7);
 	}
 */
 
@@ -174,7 +174,7 @@ class QDateTimeTests extends QUnitTestCaseBase {
 
 		$diff = $obj2->Difference($obj1);
 		$this->assertTrue($diff->IsPositive());
-		$this->assertEqual($diff->Months, 15);
+		$this->assertEquals($diff->Months, 15);
 	}
 
 	public function testOperations2() {
@@ -186,7 +186,7 @@ class QDateTimeTests extends QUnitTestCaseBase {
 
 		$diff = $obj2->Difference($obj1);
 		$this->assertTrue($diff->IsNegative());
-		$this->assertEqual($diff->Years, -1);
+		$this->assertEquals($diff->Years, -1);
 	}
 
 	public function testRoundtrip() {
@@ -225,41 +225,41 @@ class QDateTimeTests extends QUnitTestCaseBase {
 	public function testFormat() {
 		$obj1 = new QDateTime("2002-3-5 13:15");
 
-		$this->assertEqual($obj1->qFormat("M/D/YY h:mm z"), "3/5/02 1:15 pm");
-		$this->assertEqual($obj1->qFormat("DDD MMM D YYYY"), "Tue Mar 5 2002");
-		$this->assertEqual($obj1->qFormat("One random DDDD in MMMM"), "One random Tuesday in March");
+		$this->assertEquals($obj1->qFormat("M/D/YY h:mm z"), "3/5/02 1:15 pm");
+		$this->assertEquals($obj1->qFormat("DDD MMM D YYYY"), "Tue Mar 5 2002");
+		$this->assertEquals($obj1->qFormat("One random DDDD in MMMM"), "One random Tuesday in March");
 
 		//  Back compat
-		$this->assertEqual($obj1->qFormat("M/D/YY h:mm z"), $obj1->qFormat("M/D/YY h:mm z"));
+		$this->assertEquals($obj1->qFormat("M/D/YY h:mm z"), $obj1->qFormat("M/D/YY h:mm z"));
 	}
 
 	public function testFirstOfMonth() {
 		$dt1 = new QDateTime("2/23/2009");
-		$this->assertEqual($dt1->FirstDayOfTheMonth, new QDateTime("2/1/2009"));
+		$this->assertEquals($dt1->FirstDayOfTheMonth, new QDateTime("2/1/2009"));
 
 		$dt2 = new QDateTime("12/2/2015");
-		$this->assertEqual($dt2->FirstDayOfTheMonth, new QDateTime("12/1/2015"));
+		$this->assertEquals($dt2->FirstDayOfTheMonth, new QDateTime("12/1/2015"));
 
 		// static function test
-		$this->assertEqual(QDateTime::FirstDayOfTheMonth(1,1923), new QDateTime("1/1/1923"));
+		$this->assertEquals(QDateTime::FirstDayOfTheMonth(1,1923), new QDateTime("1/1/1923"));
 	}
 
 	public function testLastOfMonth() {
 		$dt1 = new QDateTime("2/23/2009");
-		$this->assertEqual($dt1->LastDayOfTheMonth, new QDateTime("2/28/2009"));
+		$this->assertEquals($dt1->LastDayOfTheMonth, new QDateTime("2/28/2009"));
 
 		$dt2 = new QDateTime("1/1/1923");
-		$this->assertEqual($dt2->LastDayOfTheMonth, new QDateTime("1/31/1923"));
+		$this->assertEquals($dt2->LastDayOfTheMonth, new QDateTime("1/31/1923"));
 
 		// Leap year tests
 		$dt3 = new QDateTime("2/4/2000");
-		$this->assertEqual($dt3->LastDayOfTheMonth, new QDateTime("2/29/2000"));
+		$this->assertEquals($dt3->LastDayOfTheMonth, new QDateTime("2/29/2000"));
 
 		$dt4 = new QDateTime("2/4/2016");
-		$this->assertEqual($dt4->LastDayOfTheMonth, new QDateTime("2/29/2016"));
+		$this->assertEquals($dt4->LastDayOfTheMonth, new QDateTime("2/29/2016"));
 
 		// static function test
-		$this->assertEqual(QDateTime::LastDayOfTheMonth(12, 2015), new QDateTime("12/31/2015"));
+		$this->assertEquals(QDateTime::LastDayOfTheMonth(12, 2015), new QDateTime("12/31/2015"));
 	}
 
 	public function testSerialize() {
@@ -269,7 +269,7 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$dt2 = unserialize($str);
 
 		$this->assertTrue ($dt1->IsEqualTo($dt2));
-		$this->assertEqual ($dt1->getTimezone()->getName(), $dt2->getTimezone()->getName());
+		$this->assertEquals ($dt1->getTimezone()->getName(), $dt2->getTimezone()->getName());
 
 	}
 
