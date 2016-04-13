@@ -15,6 +15,15 @@ if ($blnHasUnique) {
 	foreach ($objTable->IndexArray as $objIndex) {
 		if ($objIndex->Unique && !$objIndex->PrimaryKey) {
 			$objColumnArray = $objCodeGen->GetColumnArray($objTable, $objIndex->ColumnNameArray);
+
+			$blnSkipIt = false;
+			foreach($objColumnArray as $intColumnIndex => $objColumn) {
+				if (isset($objColumn->Options['FormGen']) && ($objColumn->Options['FormGen'] == QFormGen::None || $objColumn->Options['FormGen'] == QFormGen::LabelOnly)) {
+					$blnSkipIt = true;
+					break;
+				}
+			}
+			if ($blnSkipIt) continue; // one ot the needed data items is not being edited
 ?>
 		if ((<?php
 			foreach($objColumnArray as $intColumnIndex => $objColumn) {
