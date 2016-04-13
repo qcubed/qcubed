@@ -23,7 +23,7 @@ if ($blnHasUnique) {
 					break;
 				}
 			}
-			if ($blnSkipIt) continue; // one ot the needed data items is not being edited
+			if ($blnSkipIt) continue; // one of the needed data items is not being edited
 ?>
 		if ((<?php
 			foreach($objColumnArray as $intColumnIndex => $objColumn) {
