@@ -1084,6 +1084,19 @@
 			}
 		}
 
+		public static function StartOutputBuffering() {
+			if (php_sapi_name() !== 'cli' &&	// Do not buffer the command line interface
+				!defined('__NO_OUTPUT_BUFFER__')) {
+
+				ob_start('QApplicationBase::EndOutputBuffering');
+			}
+		}
+
+		public static function EndOutputBuffering($strBuffer) {
+			return QApplication::OutputPage($strBuffer);
+		}
+
+
 		/**
 		 * Render scripts for injecting files into the html output. This is for server only, not ajax.
 		 * This list will appear ahead of the javascript commands rendered below.

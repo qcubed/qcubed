@@ -9,29 +9,27 @@ class QControlBaseTests extends QUnitTestCaseBase {
 	 *
 	 * @var QControl 
 	 */
-	protected $ctlTest;
+	protected static $ctlTest;
+
 	/**
-	 *
-	 * @var QForm 
+	 * @beforeClass
 	 */
-	protected $frmTest;
-	
-	public function __construct($objForm) {
-		parent::__construct($objForm);
-		$this->frmTest = $objForm;
-		$this->ctlTest = $objForm->ctlTest;
+	public static function setUpClass()
+	{
+		global $_FORM;
+		self::$ctlTest = $_FORM->ctlTest;
 	}
 
 	protected function helpTest($objTestDataArray, $objProperiesArray, $strGetStyleMethod = "GetWrapperStyleAttributes") {
 		foreach ($objProperiesArray as $strProperty => $strCssProperty) {
 			$strValue = $objTestDataArray["Value"];
 			if ($strProperty) {
-				$this->ctlTest->$strProperty = $strValue;
+				self::$ctlTest->$strProperty = $strValue;
 			} else {
-				$this->ctlTest->SetCssStyle ($strCssProperty, $strValue, true);
+				self::$ctlTest->SetCssStyle ($strCssProperty, $strValue, true);
 			}
 			
-			$strAttrs = $this->ctlTest->$strGetStyleMethod() . ';';
+			$strAttrs = self::$ctlTest->$strGetStyleMethod() . ';';
 			
 			$intResult = strpos($strAttrs, $strCssProperty . ':' . $objTestDataArray["Expected"]);
 			$strMessage =
@@ -129,8 +127,8 @@ class QControlBaseTests extends QUnitTestCaseBase {
 	
 	public function testAjaxChangeFormState() {
 		if (!QApplication::$CliMode) {
-			$this->assertTrue ($this->ctlTest->savedValue1 == 2, "Actions can change state for later queued actions.");
-			$this->assertTrue ($this->ctlTest->savedValue2 == 2, "Actions can change state for later queued actions.");
+			$this->assertTrue (self::$ctlTest->savedValue1 == 2, "Actions can change state for later queued actions.");
+			$this->assertTrue (self::$ctlTest->savedValue2 == 2, "Actions can change state for later queued actions.");
 		}
 	}
 	

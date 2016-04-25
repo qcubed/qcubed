@@ -22,7 +22,7 @@ class QQAliasTests extends QUnitTestCaseBase {
 			)
 		);
 		
-		$this->assertEqual(sizeof($objPersonArray), 3);
+		$this->assertEquals(sizeof($objPersonArray), 3);
 		$this->verifyObjectPropertyHelper($objPersonArray, 'FirstName', 'Kendall');
 		$this->verifyObjectPropertyHelper($objPersonArray, 'LastName', 'Wolfe');
 		$this->verifyObjectPropertyHelper($objPersonArray, 'LastName', 'Smith');
@@ -36,7 +36,7 @@ class QQAliasTests extends QUnitTestCaseBase {
 			)
 		);
 
-		$this->assertEqual(sizeof($objProjectArray), 1);
+		$this->assertEquals(sizeof($objProjectArray), 1);
 		$this->verifyObjectPropertyHelper($objProjectArray, 'Name', 'ACME Website Redesign');
 
 	}	
@@ -66,18 +66,18 @@ class QQAliasTests extends QUnitTestCaseBase {
 				)
 			)
 		);
-		$this->assertEqual(sizeof($objPersonArray), 3);
+		$this->assertEquals(sizeof($objPersonArray), 3);
 		$obj = $this->verifyObjectPropertyHelper($objPersonArray, 'LastName', 'Doe');
 		$this->assertNull($obj->GetVirtualAttribute('min_voyel'));
-		$this->assertEqual($obj->GetVirtualAttribute('min_conson'), 'Milestone F');
+		$this->assertEquals($obj->GetVirtualAttribute('min_conson'), 'Milestone F');
 
 		$obj = $this->verifyObjectPropertyHelper($objPersonArray, 'LastName', 'Ho');
-		$this->assertEqual($obj->GetVirtualAttribute('min_voyel'), 'Milestone E');
-		$this->assertEqual($obj->GetVirtualAttribute('min_conson'), 'Milestone D');
+		$this->assertEquals($obj->GetVirtualAttribute('min_voyel'), 'Milestone E');
+		$this->assertEquals($obj->GetVirtualAttribute('min_conson'), 'Milestone D');
 
 		$obj = $this->verifyObjectPropertyHelper($objPersonArray, 'LastName', 'Wolfe');
-		$this->assertEqual($obj->GetVirtualAttribute('min_voyel'), 'Milestone A');
-		$this->assertEqual($obj->GetVirtualAttribute('min_conson'), 'Milestone B');
+		$this->assertEquals($obj->GetVirtualAttribute('min_voyel'), 'Milestone A');
+		$this->assertEquals($obj->GetVirtualAttribute('min_conson'), 'Milestone B');
 	}
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-	$blnAutoInitialize = QCodeGen::LookupSetting($objCodeGen->objSettingsXml, 'createOptions', 'autoInitialize', QType::Boolean);
+	$blnAutoInitialize = $objCodeGen->AutoInitialize;
 	if ($blnAutoInitialize) {
 ?>
 

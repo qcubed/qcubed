@@ -70,6 +70,7 @@
 
 		protected $blnGenerateControlId;
 		protected $objModelConnectorOptions;
+		protected $blnAutoInitialize;
 
 		/**
 		 * @param $strTableName
@@ -242,7 +243,7 @@
 		public function __construct($objSettingsXml) {
 			parent::__construct($objSettingsXml);
 			// Make settings file accessible to templates
-			$this->objSettingsXml = $objSettingsXml;
+			//$this->objSettingsXml = $objSettingsXml;
 
 			// Setup Local Arrays
 			$this->strAssociationTableNameArray = array();
@@ -389,6 +390,8 @@
 			$this->blnGenerateControlId = QCodeGen::LookupSetting($objSettingsXml, 'generateControlId', 'support', QType::Boolean);
 			$this->objModelConnectorOptions = new QModelConnectorOptions();
 
+			$this->blnAutoInitialize = QCodeGen::LookupSetting($objSettingsXml, 'createOptions', 'autoInitialize', QType::Boolean);
+			
 			if ($this->strErrors)
 				return;
 
@@ -1373,6 +1376,10 @@
 					return $this->intDatabaseIndex;
 				case 'CommentConnectorLabelDelimiter':
 					return $this->strCommentConnectorLabelDelimiter;
+				case 'AutoInitialize':
+					return $this->blnAutoInitialize;
+				case 'objSettingsXml':
+					throw new QCallerException('The field objSettingsXml is deprecated');
 				default:
 					try {
 						return parent::__get($strName);
