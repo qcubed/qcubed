@@ -13,6 +13,8 @@
 	 * @property integer $Columns               is the "cols" html attribute (applicable for MultiLine textboxes)
 	 * @property string  $Format
 	 * @property string  $Text                  is the contents of the textbox, itself
+	 * @property string|null	 $Value			Returns the value of the text. If the text is empty, will return null.
+	 * 											Subclasses can use this to return a specific type of data.
 	 * @property string  $LabelForRequired
 	 * @property string  $LabelForRequiredUnnamed
 	 * @property string  $LabelForTooShort
