@@ -233,21 +233,29 @@
 		 * @throws QInvalidCastException|QCallerException
 		 */
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
 				// APPEARANCE
+
 				case "Text":
 					try {
-						$this->strText = QType::Cast($mixValue, QType::String);
-						break;
+						$val = QType::Cast($mixValue, QType::String);
+						if ($val !== $this->strText) {
+							$this->strText = $val;
+							$this->blnModified = true;
+						}
+						return $this->strText;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
 				case "TextAlign":
 					try {
-						$this->strTextAlign = QType::Cast($mixValue, QType::String);
+						$val = QType::Cast($mixValue, QType::String);
+						if ($val !== $this->strTextAlign) {
+							$this->strTextAlign = $val;
+							$this->blnModified = true;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -266,7 +274,11 @@
 				// MISC
 				case "Checked":
 					try {
-						$this->blnChecked = QType::Cast($mixValue, QType::Boolean);
+						$val = QType::Cast($mixValue, QType::Boolean);
+						if ($val != $this->blnChecked) {
+							$this->blnChecked = $val;
+							$this->AddAttributeScript('prop', 'checked', $val);
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -278,6 +290,7 @@
 					try {
 						parent::__set($strName, $mixValue);
 						$this->getCheckLabelStyler()->CssClass = $mixValue; // assign to both checkbox and label so they can be styled together using css
+						$this->blnModified = true;
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
