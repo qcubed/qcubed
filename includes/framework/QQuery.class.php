@@ -1615,6 +1615,71 @@
 		static public function NamedValue($strName) {
 			return new QQNamedValue($strName);
 		}
+
+		/**
+		 * Apply an arbitrary scalar function using the given parameters. See below for subclasses that let you apply
+		 * common SQL functions. The list below only includes sql operations that are generic to all supported versions
+		 * of SQL. However, you can call Func directly with any named function that works in your current SQL version,
+		 * knowing that it might not be cross platform compatible if you ever change SQL engines.
+		 *
+		 * @param $strName
+		 * @param $param1
+		 * @return QQFunctionNode
+		 */
+		static public function Func($strName, $param1 /** ... */) {
+			$args = func_get_args();
+			$strFunc = array_shift($args);
+			return new QQFunctionNode($strFunc, $args);
+		}
+
+		//////////////////////////////
+		// Various common functions
+		//////////////////////////////
+		static public function Abs($param) {	// Absolute value
+			return QQ::Func('ABS', $param);
+	    }
+		static public function Ceil($param) {	// Absolute value
+			return QQ::Func('CEIL', $param);
+		}
+		static public function Floor($param) {	// Absolute value
+			return QQ::Func('FLOOR', $param);
+		}
+		static public function Mod($dividend, $divider) {	// Absolute value
+			return QQ::Func('MOD', $dividend, $divider);
+		}
+		static public function Power($base, $exponent) {	// Absolute value
+			return QQ::Func('POWER', $base, $exponent);
+		}
+		static public function Sqrt($param) {	// Square root
+			return QQ::Func('SQRT', $param);
+		}
+
+		/**
+		 * Apply an arbitrary math operation to 2 or more operands. Operands can be scalar values, or column nodes.
+		 * 
+		 * @param $strOperation
+		 * @param $param1
+		 * @param $param2
+		 * @return QQMathNode
+		 */
+		static public function MathOp($strOperation, $op1, $op2 /** ... */) {
+			$args = func_get_args();
+			$strFunc = array_shift($args);
+			return new QQMathNode($strFunc, $args);
+		}
+
+		static public function Mul($op1, $op2 /** ... */) {
+			return QQ::MathOp('*', func_get_args());
+		}
+		static public function Div($op1, $op2 /** ... */) {
+			return QQ::MathOp('/', func_get_args());
+		}
+		static public function Sub($op1, $op2 /** ... */) {
+			return QQ::MathOp('-', func_get_args());
+		}
+		static public function Add($op1, $op2 /** ... */) {
+			return QQ::MathOp('+', func_get_args());
+		}
 	}
 
 	abstract class QQSubQueryNode extends QQColumnNode {
@@ -1691,6 +1756,83 @@
 			return $this->strName;
 		}
 	}
+
+	class QQFunctionNode extends QQColumnNode {
+		/** @var  string */
+		protected $strFunctionName;
+		/** @var  array Could be constants or column nodes */
+		protected $params;
+
+		/**
+		 * @param $strName
+		 * @param QQSubQueryNode|null $objSubQueryDefinition
+		 */
+		public function __construct($strFunctionName, $params) {
+			parent::__construct('', '', '');
+			$this->strFunctionName = $strFunctionName;
+			$this->params = $params;
+		}
+
+		/**
+		 * @param QQueryBuilder $objBuilder
+		 * @return string
+		 */
+		public function GetColumnAlias(QQueryBuilder $objBuilder) {
+			$strSql = $this->strFunctionName . '(';
+			foreach ($this->params as $param) {
+				if ($param instanceof QQColumnNode) {
+					$strSql .= $param->GetColumnAlias($objBuilder);
+				}
+				else {
+					// just a basic value
+					$strSql .= $param;
+				}
+				$strSql .= ',';
+			}
+			$strSql = substr($strSql, 0, -1);	// get rid of last comma
+			$strSql .= ')';
+			return $strSql;
+		}
+	}
+
+	class QQMathNode extends QQColumnNode {
+		/** @var  string */
+		protected $strOperation;
+		/** @var  array Could be constants or column nodes */
+		protected $params;
+
+		/**
+		 * @param $strName
+		 * @param QQSubQueryNode|null $objSubQueryDefinition
+		 */
+		public function __construct($strOperation, $params) {
+			parent::__construct('', '', '');
+			$this->strOperation = $strOperation;
+			$this->params = $params;
+		}
+
+		/**
+		 * @param QQueryBuilder $objBuilder
+		 * @return string
+		 */
+		public function GetColumnAlias(QQueryBuilder $objBuilder) {
+			$strSql = '(';
+			foreach ($this->params as $param) {
+				if ($param instanceof QQColumnNode) {
+					$strSql .= $param->GetColumnAlias($objBuilder);
+				}
+				else {
+					// just a basic value
+					$strSql .= $param;
+				}
+				$strSql .= ' ' . $this->strOperation . ' ';
+			}
+			$strSql = substr($strSql, 0, -3);	// get rid of last operation
+			$strSql .= ')';
+			return $strSql;
+		}
+	}
+
 
 	abstract class QQClause extends QBaseClass {
 		abstract public function UpdateQueryBuilder(QQueryBuilder $objBuilder);
