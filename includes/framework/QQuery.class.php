@@ -1620,14 +1620,14 @@
 		}
 
 		/**
-		 * Apply an arbitrary scalar function using the given parameters. See below for subclasses that let you apply
+		 * Apply an arbitrary scalar function using the given parameters. See below for functions that let you apply
 		 * common SQL functions. The list below only includes sql operations that are generic to all supported versions
 		 * of SQL. However, you can call Func directly with any named function that works in your current SQL version,
 		 * knowing that it might not be cross platform compatible if you ever change SQL engines.
 		 *
-		 * @param $strName
-		 * @param $param1
-		 * @return QQFunctionNode
+		 * @param $strName The function name, like ABS or POWER
+		 * @param QQNode|mixed $param1 The function parameter. Can be a qq node or a number.
+		 * @return QQFunctionNode The resulting wrapper node
 		 */
 		static public function Func($strName, $param1 /** ... */) {
 			$args = func_get_args();
@@ -1638,31 +1638,68 @@
 		//////////////////////////////
 		// Various common functions
 		//////////////////////////////
-		static public function Abs($param) {	// Absolute value
+
+		/**
+		 * Return the absolute value
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Abs($param) {
 			return QQ::Func('ABS', $param);
 	    }
-		static public function Ceil($param) {	// Absolute value
+		/**
+		 * Return the smallest integer value not less than the argument
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Ceil($param) {
 			return QQ::Func('CEIL', $param);
 		}
-		static public function Floor($param) {	// Absolute value
+		/**
+		 * Return the largest integer value not greater than the argument
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Floor($param) {
 			return QQ::Func('FLOOR', $param);
 		}
-		static public function Mod($dividend, $divider) {	// Absolute value
+		/**
+		 * Return the remainder
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Mod($dividend, $divider) {
 			return QQ::Func('MOD', $dividend, $divider);
 		}
-		static public function Power($base, $exponent) {	// Absolute value
+		/**
+		 * Return the argument raised to the specified power
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Power($base, $exponent) {
 			return QQ::Func('POWER', $base, $exponent);
 		}
-		static public function Sqrt($param) {	// Square root
+		/**
+		 * 	Return the square root of the argument
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Sqrt($param) {
 			return QQ::Func('SQRT', $param);
 		}
 
 		/**
 		 * Apply an arbitrary math operation to 2 or more operands. Operands can be scalar values, or column nodes.
 		 * 
-		 * @param $strOperation
-		 * @param $param1
-		 * @return QQMathNode
+		 * @param $strOperation The operation symbol, like + or *
+		 * @param QQNode|mixed $param1 The first parameter
+		 * @return \QQMathNode The resulting wrapper node
 		 */
 		static public function MathOp($strOperation, $param1 /** ... */) {
 			$args = func_get_args();
@@ -1670,15 +1707,43 @@
 			return new QQMathNode($strFunc, $args);
 		}
 
+		/**
+		 * The multiplication operation
+		 * 
+		 * @param QQNode|mixed $op1 The first operand
+		 * @param QQNode|mixed $op2 The second operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
 		static public function Mul($op1, $op2 /** ... */) {
 			return new QQMathNode('*', func_get_args());
 		}
+		/**
+		 * The division operation
+		 * 
+		 * @param QQNode|mixed $op1 The first operand
+		 * @param QQNode|mixed $op2 The second operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
 		static public function Div($op1, $op2 /** ... */) {
 			return new QQMathNode('/', func_get_args());
 		}
+		/**
+		 * The subtraction operation
+		 * 
+		 * @param QQNode|mixed $op1 The first operand
+		 * @param QQNode|mixed $op2 The second operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
 		static public function Sub($op1, $op2 /** ... */) {
 			return new QQMathNode('-', func_get_args());
 		}
+		/**
+		 * The addition operation
+		 * 
+		 * @param QQNode|mixed $op1 The first operand
+		 * @param QQNode|mixed $op2 The second operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
 		static public function Add($op1, $op2 /** ... */) {
 			return new QQMathNode('+', func_get_args());
 		}
