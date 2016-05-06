@@ -936,6 +936,22 @@ qcubed.getWrapper = function(mixControl) {
     return objControl; //a wrapper-less control, return the control itself
 };
 
+/**
+ * Radio buttons are a little tricky to set if they are part of a group
+ * @param strControlId
+ */
+qcubed.setRadioInGroup = function(strControlId) {
+    var $objControl = $j('#' + strControlId);
+    if ($objControl) {
+        var groupName = $objControl.prop('name');
+        if (groupName) {
+            var $radios = $objControl.closest('form').find('input[type=radio][name=' + groupName + ']');
+            $radios.val([strControlId]);  // jquery does the work here of setting just the one control
+            $radios.trigger('qformObjChanged'); // send the new values back to the form
+        }
+    }
+}
+
 /////////////////////////////
 // Register Control - General
 /////////////////////////////

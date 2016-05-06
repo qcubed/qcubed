@@ -141,6 +141,23 @@
 						throw $objExc;
 					}
 
+				case "Checked":
+					try {
+						$val = QType::Cast($mixValue, QType::Boolean);
+						if ($val != $this->blnChecked) {
+							$this->blnChecked = $val;
+							if ($this->GroupName && $val == true) {
+								QApplication::ExecuteJsFunction('qcubed.setRadioInGroup', $this->strControlId);
+							} else {
+								$this->AddAttributeScript('prop', 'checked', $val); // just set the one radio
+							}
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
 				default:
 					try {
 						parent::__set($strName, $mixValue);

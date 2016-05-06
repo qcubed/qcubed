@@ -124,6 +124,9 @@ class BasicForm extends QForm {
 		$this->lstSelect2->SelectedValues = [2,4];
 		$this->lstCheck2->SelectedValues = [1,3];
 		$this->lstRadio->SelectedIndex = 3;
+
+		$this->chkCheck->Checked = true;
+		$this->rdoRadio2->Checked = true;
 	}
 
 }
