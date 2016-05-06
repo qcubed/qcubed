@@ -936,6 +936,22 @@ qcubed.getWrapper = function(mixControl) {
     return objControl; //a wrapper-less control, return the control itself
 };
 
+/**
+ * Radio buttons are a little tricky to set if they are part of a group
+ * @param strControlId
+ */
+qcubed.setRadioInGroup = function(strControlId) {
+    var $objControl = $j('#' + strControlId);
+    if ($objControl) {
+        var groupName = $objControl.prop('name');
+        if (groupName) {
+            var $radios = $objControl.closest('form').find('input[type=radio][name=' + groupName + ']');
+            $radios.val([strControlId]);  // jquery does the work here of setting just the one control
+            $radios.trigger('qformObjChanged'); // send the new values back to the form
+        }
+    }
+}
+
 /////////////////////////////
 // Register Control - General
 /////////////////////////////
@@ -966,6 +982,10 @@ qcubed.registerControl = function(mixControl) {
     }
 
     // detect changes to objects before any changes trigger other events
+    if (objControl.type === 'checkbox' || objControl.type === 'radio') {
+        // clicks are equivalent to changes for checkboxes and radio buttons, but some browsers send change way after a click. We need to capture the click first.
+        $j(objControl).on ('click', this.formObjChanged);
+    }
     $j(objControl).on ('change input', this.formObjChanged);
     $j(objControl).on ('change input', 'input, select, textarea', this.formObjChanged);   // make sure we get to bubbled events before later attached handlers
 
