@@ -82,7 +82,7 @@
 			try {
 				// Changing the alias of the node. Must change pointers to the node too.
 				$strNewAlias = QType::Cast($strAlias, QType::String);
-				if ($this->objParentNode) {
+				if ($this->objParentNode && is_object($this->objParentNode)) {
 					unset($this->objParentNode->objChildNodeArray[$this->strAlias]);
 					$this->objParentNode->objChildNodeArray[$strNewAlias] = $this;
 				}
@@ -103,7 +103,7 @@
 				return $this->strFullAlias;
 			} else {
 				assert (!empty($this->strAlias));	// Alias should always be set by default
-				if ($this->objParentNode) {
+				if ($this->objParentNode && is_object($this->objParentNode)) {
 					return $this->objParentNode->FullAlias() . '__' . $this->strAlias;
 				}
 				else {
@@ -498,7 +498,10 @@
 		 * @return string
 		 */
 		public function GetTable() {
-			return $this->objParentNode->FullAlias();
+			if (is_object($this->objParentNode)) {
+				return $this->objParentNode->FullAlias();
+			}
+			return parent::GetTable();
 		}
 
 		/**
@@ -1659,26 +1662,25 @@
 		 * 
 		 * @param $strOperation
 		 * @param $param1
-		 * @param $param2
 		 * @return QQMathNode
 		 */
-		static public function MathOp($strOperation, $op1, $op2 /** ... */) {
+		static public function MathOp($strOperation, $param1 /** ... */) {
 			$args = func_get_args();
 			$strFunc = array_shift($args);
 			return new QQMathNode($strFunc, $args);
 		}
 
 		static public function Mul($op1, $op2 /** ... */) {
-			return QQ::MathOp('*', func_get_args());
+			return new QQMathNode('*', func_get_args());
 		}
 		static public function Div($op1, $op2 /** ... */) {
-			return QQ::MathOp('/', func_get_args());
+			return new QQMathNode('/', func_get_args());
 		}
 		static public function Sub($op1, $op2 /** ... */) {
-			return QQ::MathOp('-', func_get_args());
+			return new QQMathNode('-', func_get_args());
 		}
 		static public function Add($op1, $op2 /** ... */) {
-			return QQ::MathOp('+', func_get_args());
+			return new QQMathNode('+', func_get_args());
 		}
 	}
 
@@ -1729,6 +1731,7 @@
 			parent::__construct('', '', '');
 			$this->objParentNode = true;
 			$this->strName = trim(strtolower($strName));
+			$this->strAlias = $this->strName;
 			$this->objSubQueryDefinition = $objSubQueryDefinition;
 		}
 
@@ -1757,7 +1760,7 @@
 		}
 	}
 
-	class QQFunctionNode extends QQColumnNode {
+	class QQFunctionNode extends QQSubQueryNode {
 		/** @var  string */
 		protected $strFunctionName;
 		/** @var  array Could be constants or column nodes */
@@ -1795,7 +1798,7 @@
 		}
 	}
 
-	class QQMathNode extends QQColumnNode {
+	class QQMathNode extends QQSubQueryNode {
 		/** @var  string */
 		protected $strOperation;
 		/** @var  array Could be constants or column nodes */
