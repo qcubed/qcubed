@@ -82,7 +82,8 @@
 			try {
 				// Changing the alias of the node. Must change pointers to the node too.
 				$strNewAlias = QType::Cast($strAlias, QType::String);
-				if ($this->objParentNode && is_object($this->objParentNode)) {
+				if ($this->objParentNode) {
+					assert (is_object($this->objParentNode));
 					unset($this->objParentNode->objChildNodeArray[$this->strAlias]);
 					$this->objParentNode->objChildNodeArray[$strNewAlias] = $this;
 				}
@@ -103,7 +104,8 @@
 				return $this->strFullAlias;
 			} else {
 				assert (!empty($this->strAlias));	// Alias should always be set by default
-				if ($this->objParentNode && is_object($this->objParentNode)) {
+				if ($this->objParentNode) {
+					assert (is_object($this->objParentNode));
 					return $this->objParentNode->FullAlias() . '__' . $this->strAlias;
 				}
 				else {
@@ -498,10 +500,7 @@
 		 * @return string
 		 */
 		public function GetTable() {
-			if (is_object($this->objParentNode)) {
-				return $this->objParentNode->FullAlias();
-			}
-			return parent::GetTable();
+			return $this->objParentNode->FullAlias();
 		}
 
 		/**
@@ -1752,11 +1751,53 @@
 	abstract class QQSubQueryNode extends QQColumnNode {
 	}
 
+	abstract class QQNoParentNode extends QQSubQueryNode {
+		/**
+		 * @return string
+		 */
+		public function GetTable() {
+			return $this->FullAlias();
+		}
+		/**
+		 * Change the alias of the node, primarily for joining the same table more than once.
+		 *
+		 * @param $strAlias
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
+		public function SetAlias($strAlias) {
+			if ($this->strFullAlias) {
+				throw new Exception ("You cannot set an alias on a node after you have used it in a query. See the examples doc. You must set the alias while creating the node.");
+			}
+			try {
+				// Changing the alias of the node. Must change pointers to the node too.
+				$strNewAlias = QType::Cast($strAlias, QType::String);
+				$this->strAlias = $strNewAlias;
+			} catch (QCallerException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+		}
+		/**
+		 * Aid to generating full aliases. Recursively gets and sets the parent alias, eventually creating, caching and returning
+		 * an alias for itself.
+		 * @return string
+		 */
+		public function FullAlias() {
+			if ($this->strFullAlias) {
+				return $this->strFullAlias;
+			} else {
+				assert (!empty($this->strAlias));	// Alias should always be set by default
+				return $this->strAlias;
+			}
+		}
+	}
+
 	class QQSubQueryCountNode extends QQSubQueryNode {
 		protected $strFunctionName = 'COUNT';
 	}
 
-	class QQSubQuerySqlNode extends QQSubQueryNode {
+	class QQSubQuerySqlNode extends QQNoParentNode {
 		protected $strSql;
 		/** @var QQNode[] */
 		protected $objParentQueryNodes;
@@ -1785,7 +1826,7 @@
 		}
 	}
 
-	class QQVirtualNode extends QQColumnNode {
+	class QQVirtualNode extends QQNoParentNode {
 		protected $objSubQueryDefinition;
 
 		/**
