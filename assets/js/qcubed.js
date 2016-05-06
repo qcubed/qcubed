@@ -966,6 +966,10 @@ qcubed.registerControl = function(mixControl) {
     }
 
     // detect changes to objects before any changes trigger other events
+    if (objControl.type === 'checkbox' || objControl.type === 'radio') {
+        // clicks are equivalent to changes for checkboxes and radio buttons, but some browsers send change way after a click. We need to capture the click first.
+        $j(objControl).on ('click', this.formObjChanged);
+    }
     $j(objControl).on ('change input', this.formObjChanged);
     $j(objControl).on ('change input', 'input, select, textarea', this.formObjChanged);   // make sure we get to bubbled events before later attached handlers
 
