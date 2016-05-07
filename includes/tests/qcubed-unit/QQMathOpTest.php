@@ -29,6 +29,26 @@ class QQMathOpTests extends QUnitTestCaseBase {
 			}
 		}
 		
+		$objResArray = TypeTest::QueryArray(QQ::GreaterThan(QQ::MathOp('*', 2.0, QQN::TypeTest()->TestFloat), 3.0));
+		$this->assertEquals(1, count($objResArray));
+		if (count($objResArray) > 0) {
+			$objRes = $objResArray[0];
+			$this->assertNotNull($objRes);
+			if ($objRes) {
+				$this->assertEquals(2.0, $objRes->TestFloat);
+			}
+		}
+		
+		$objResArray = TypeTest::QueryArray(QQ::GreaterThan(QQ::MathOp('*', QQN::TypeTest()->TestFloat, QQN::TypeTest()->TestFloat), 3.0));
+		$this->assertEquals(1, count($objResArray));
+		if (count($objResArray) > 0) {
+			$objRes = $objResArray[0];
+			$this->assertNotNull($objRes);
+			if ($objRes) {
+				$this->assertEquals(2.0, $objRes->TestFloat);
+			}
+		}
+		
 		$objTest->Delete();
 		$objTest2->Delete();
 	}
