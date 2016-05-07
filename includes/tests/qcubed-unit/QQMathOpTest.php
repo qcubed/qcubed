@@ -256,5 +256,105 @@ class QQMathOpTests extends QUnitTestCaseBase {
 		$objTest->Delete();
 		$objTest2->Delete();
 	}
+	/**
+	 * Tests to ensure the example to work
+	 */
+	public function testExample() {
+		$objPersonArray = Person::QueryArray(
+			/* Only return the persons who have AT LEAST ONE overdue project */
+			QQ::GreaterThan(QQ::Sub(QQN::Person()->ProjectAsManager->Spent, QQN::Person()->ProjectAsManager->Budget), 20)
+		);
+		$this->assertGreaterThan(0, count($objPersonArray));
+
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNotNull($objPerson->FirstName);
+			$this->assertNotNull($objPerson->LastName);
+		}
+
+		$objPersonArray = Person::QueryArray(
+			/* Only return the persons who have AT LEAST ONE overdue project */
+			QQ::GreaterThan(
+				QQ::Virtual('diff', QQ::Sub(
+					QQN::Person()->ProjectAsManager->Spent
+					, QQN::Person()->ProjectAsManager->Budget
+				))
+				, 20
+			),
+			QQ::Clause(
+				/* The most overdue first */
+				QQ::OrderBy(QQ::Virtual('diff'), 'DESC')
+				/* Required to access this field with GetVirtualAttribute */
+				, QQ::Expand(QQ::Virtual('diff'))
+			)
+		);
+		$this->assertGreaterThan(0, count($objPersonArray));
+
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNotNull($objPerson->FirstName);
+			$this->assertNotNull($objPerson->LastName);
+			$this->assertNotNull($objPerson->GetVirtualAttribute('diff'));
+		}
+
+		$objPersonArray = Person::QueryArray(
+			/* Only return the persons who have AT LEAST ONE overdue project */
+			QQ::GreaterThan(
+				QQ::Virtual('diff', QQ::MathOp(
+					'-', // Note the minus operation sign here
+					QQN::Person()->ProjectAsManager->Spent
+					, QQN::Person()->ProjectAsManager->Budget
+				))
+				, 20
+			),
+			QQ::Clause(
+				/* The most overdue first */
+				QQ::OrderBy(QQ::Virtual('diff'), 'DESC')
+				/* Required to access this field with GetVirtualAttribute */
+				, QQ::Expand(QQ::Virtual('diff'))
+				, QQ::Select(array(
+					QQ::Virtual('diff')
+					, QQN::Person()->FirstName
+					, QQN::Person()->LastName
+				))
+			)
+		);
+		$this->assertGreaterThan(0, count($objPersonArray));
+
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNotNull($objPerson->FirstName);
+			$this->assertNotNull($objPerson->LastName);
+			$this->assertNotNull($objPerson->GetVirtualAttribute('diff'));
+		}
+
+		$objPersonArray = Person::QueryArray(
+			/* Only return the persons who have AT LEAST ONE overdue project */
+			QQ::GreaterThan(
+				QQ::Virtual('absdiff', QQ::Abs(
+					QQ::Sub(
+						QQN::Person()->ProjectAsManager->Spent
+						, QQN::Person()->ProjectAsManager->Budget
+					)
+				))
+				, 20
+			),
+			QQ::Clause(
+				/* The most overdue first */
+				QQ::OrderBy(QQ::Virtual('absdiff'), 'DESC')
+				/* Required to access this field with GetVirtualAttribute */
+				, QQ::Expand(QQ::Virtual('absdiff'))
+				, QQ::Select(array(
+					QQ::Virtual('absdiff')
+					, QQN::Person()->FirstName
+					, QQN::Person()->LastName
+				))
+			)
+		);
+		$this->assertGreaterThan(0, count($objPersonArray));
+
+		foreach ($objPersonArray as $objPerson) {
+			$this->assertNotNull($objPerson->FirstName);
+			$this->assertNotNull($objPerson->LastName);
+			$this->assertNotNull($objPerson->GetVirtualAttribute('absdiff'));
+		}
+	}
 }
 ?>
