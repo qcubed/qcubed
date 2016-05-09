@@ -216,8 +216,8 @@ class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 
 	/**
 	 * Override this to return an array of all the ids of the objects in the table, including ids that are not
-	 * currently visible on the page being shown. If you create your own CheckAll function, you do not need to
-	 * implement this.
+	 * currently visible on the page being shown. If you create your own CheckAll function, or if you are not showing
+	 * the CheckAll box in the header you do not need to implement this.
 	 *
 	 * @return array
 	 */
