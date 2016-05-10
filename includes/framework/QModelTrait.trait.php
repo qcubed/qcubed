@@ -165,6 +165,8 @@ trait QModelTrait {
 	/**
 	 * Static Qcubed Query method to query for a single <?php echo $objTable->ClassName  ?> object.
 	 * Uses BuildQueryStatment to perform most of the work.
+	 * Is called by QuerySincle function of each object so that the correct return type will be put in the comments.
+	 * 
 	 * @param QQCondition $objConditions any conditions on the query, itself
 	 * @param null $objOptionalClauses
 	 * @param mixed[] $mixParameterArray a array of name-value pairs to perform PrepareStatement with
@@ -172,7 +174,7 @@ trait QModelTrait {
 	 * @throws QCallerException
 	 * @return null|QModelBase the queried object
 	 */
-	public static function QuerySingle(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
+	protected static function _QuerySingle(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 		// Get the Query Statement
 		try {
 			$strQuery = static::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
@@ -218,6 +220,7 @@ trait QModelTrait {
 	/**
 	 * Static Qcubed Query method to query for an array of objects.
 	 * Uses BuildQueryStatment to perform most of the work.
+	 * Is called by QueryArray function of each object so that the correct return type will be put in the comments.
 	 *
 	 * @param QQCondition $objConditions any conditions on the query, itself
 	 * @param QQClause[]|null $objOptionalClauses additional optional QQClause objects for this query
@@ -226,7 +229,7 @@ trait QModelTrait {
 	 * @throws Exception
 	 * @throws QCallerException
 	 */
-	public static function QueryArray(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
+	protected static function _QueryArray(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {
 		// Get the Query Statement
 		try {
 			$strQuery = static::BuildQueryStatement($objQueryBuilder, $objConditions, $objOptionalClauses, $mixParameterArray, false);
