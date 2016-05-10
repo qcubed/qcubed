@@ -1489,6 +1489,21 @@
 			return new QQVirtualNode($strName, $objSubQueryDefinition);
 		}
 
+		/**
+		 * Converts a virtual attribute name to an alias used in the query. The name is converted to an identifier
+		 * that will work on any SQL database. In the query itself, the name
+		 * will have two underscores in front of the alias name to prevent conflicts with column names.
+		 *
+		 * @param $strName
+		 * @return mixed|string
+		 */
+		static public function GetVirtualAlias($strName) {
+			$strName = trim($strName);
+			$strName = str_replace(" ", "_", $strName);
+			$strName = strtolower($strName);
+			return $strName;
+		}
+
 		/////////////////////////
 		// QQClause Factories
 		/////////////////////////
@@ -1836,7 +1851,7 @@
 		public function __construct($strName, QQSubQueryNode $objSubQueryDefinition = null) {
 			parent::__construct('', '', '');
 			$this->objParentNode = true;
-			$this->strName = trim(strtolower($strName));
+			$this->strName = QQ::GetVirtualAlias($strName);
 			$this->strAlias = $this->strName;
 			$this->objSubQueryDefinition = $objSubQueryDefinition;
 		}
@@ -2211,7 +2226,7 @@
 		protected $strFunctionName;
 		public function __construct(QQColumnNode $objNode, $strAttributeName) {
 			$this->objNode = $objNode;
-			$this->strAttributeName = $strAttributeName;
+			$this->strAttributeName = QQ::GetVirtualAlias($strAttributeName); // virtual attributes are queried lower case
 		}
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			$objBuilder->AddSelectFunction($this->strFunctionName, $this->objNode->GetColumnAlias($objBuilder), $this->strAttributeName);
@@ -2716,7 +2731,7 @@
 		 * @param QQSubQueryNode $objNode
 		 */
 		public function SetVirtualNode($strName, QQSubQueryNode $objNode) {
-			$this->objVirtualNodeArray[trim(strtolower($strName))] = $objNode;
+			$this->objVirtualNodeArray[QQ::GetVirtualAlias($strName)] = $objNode;
 		}
 
 		/**
@@ -2725,9 +2740,10 @@
 		 * @throws QCallerException
 		 */
 		public function GetVirtualNode($strName) {
-			$strName = trim(strtolower($strName));
-			if (array_key_exists($strName, $this->objVirtualNodeArray))
+			$strName = QQ::GetVirtualAlias($strName);
+			if (isset($this->objVirtualNodeArray[$strName])) {
 				return $this->objVirtualNodeArray[$strName];
+			}
 			else throw new QCallerException('Undefined Virtual Node: ' . $strName);
 		}
 
