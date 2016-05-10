@@ -26,7 +26,7 @@
 		 * @param string[] $strColumnAliasArray Array of column aliases mapping names in the query to items in the object
 		 * @param boolean $blnCheckDuplicate Used by ExpandArray to indicate we should not create a new object if this is a duplicate of a previoius object
 		 * @param string $strParentExpansionKey If this is part of an expansion, indicates what the parent item is
-		 * @param boolean $objExpansionParent If this is part of an expansion, is the object corresponding to the key so that we can refer back to the parent object
+		 * @param mixed $objExpansionParent If this is part of an expansion, is the object corresponding to the key so that we can refer back to the parent object
 		 * @return mixed Either a <?= $objTable->ClassName ?>, or false to indicate the dbrow was used in an expansion, or null to indicate that this leaf is a duplicate.
 		*/
 		public static function InstantiateDbRow(
