@@ -1635,7 +1635,16 @@
 		 * @return string
 		 */
 		public function RenderComment($strType) {
-			return  QHtml::Comment( $strType . ' ' . get_class($this) . ' ' . $this->strName . ' id:' . $this->strControlId);
+			// We render the comment only if the debug mode is on
+			if (defined('__DEBUG_MODE__') && __DEBUG_MODE__ == true) {
+				if($this instanceof QBlockControl) {
+					return  QHtml::Comment( $strType . ' ' . get_class($this) . ' Template: ' . $this->Template . $this->strName . ' id:' . $this->strControlId);
+				} else {
+					return  QHtml::Comment( $strType . ' ' . get_class($this) . ' ' . $this->strName . ' id:' . $this->strControlId);
+				}
+			}
+			// If the debug mode was not on
+			return '';
 		}
 
 
