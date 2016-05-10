@@ -1003,7 +1003,7 @@
 									$objReverseReference->Options = $this->objModelConnectorOptions->GetOptions($objReference->VariableType, $objReverseReference->ObjectDescription);
 								}
 
-
+								$objReference->ReverseReference = $objReverseReference;	 // Let forward reference also see things from the other side looking back
 
 								// Add this ReverseReference to the referenced table's ReverseReferenceArray
 								$objArray = $objReferencedTable->ReverseReferenceArray;

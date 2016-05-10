@@ -290,6 +290,50 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			)
 		, "Long reach Milestone to Project Team Member expansion is correct");
 	}
+
+	/**
+	 * Make sure that expansions looking backwards are pointing to the same object looking forwards
+	 */
+	public function testExpandReverseReferences() {
+
+		// Test virtual binding of reverse relationships
+		$clauses = [QQ::Expand(QQN::Person()->ProjectAsManager)];
+		$objPerson = Person::QuerySingle(QQ::All(), $clauses);
+		$objPerson->FirstName = 'test';
+		$objProject = $objPerson->ProjectAsManager;
+		$objPerson2 = $objProject->ManagerPerson;
+
+		$this->assertEquals($objPerson2->FirstName, 'test');
+
+		
+		// Test forward reference looking back
+		$clauses = [QQ::Expand(QQN::Project()->ManagerPerson)];
+		$objProject = Project::QuerySingle(QQ::All(), $clauses);
+		$objProject->Name = 'test';
+		$objPerson = $objProject->ManagerPerson;
+		$objProject2 = $objPerson->ProjectAsManager;
+
+		$this->assertEquals($objProject2->Name, 'test');
+
+		// test unique reverse reference
+		$clauses = [QQ::Expand(QQN::Person()->Login)];
+		$objPerson = Person::QuerySingle(QQ::All(), $clauses);
+		$objPerson->FirstName = 'test';
+		$objLogin = $objPerson->Login;
+		$objPerson2 = $objLogin->Person;
+
+		$this->assertEquals($objPerson2->FirstName, 'test');
+
+		// test many-to-many expansion
+		$clauses = [QQ::ExpandAsArray(QQN::Project()->PersonAsTeamMember)];
+		$objProject = Project::QuerySingle(QQ::All(), $clauses);
+		$objProject->Name = 'test';
+		$objPersonArray = $objProject->_PersonAsTeamMemberArray;
+		$objProject2 = $objPersonArray[0]->_ProjectAsTeamMember;
+
+		$this->assertEquals($objProject2->Name, 'test');
+
+	}
 	
 	public function testHaving() {
 		$objItems = Project::QueryArray(
