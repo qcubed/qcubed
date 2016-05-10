@@ -2936,4 +2936,4 @@
 			return implode(' ', $this->strFromArray) . ' ' . implode(' ', $this->strJoinArray);
 		}
 	}
-?>
+
