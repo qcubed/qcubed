@@ -1868,7 +1868,8 @@
 				return $this->objSubQueryDefinition->GetColumnAlias($objBuilder);
 			} else {
 				try {
-					return $objBuilder->GetVirtualNode($this->strName)->GetColumnAlias($objBuilder);
+					$objNode = $objBuilder->GetVirtualNode($this->strName);
+					return $objNode->GetColumnAlias($objBuilder);
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					$objExc->IncrementOffset();
@@ -1878,6 +1879,10 @@
 		}
 		public function GetAttributeName() {
 			return $this->strName;
+		}
+
+		public function HasSubquery() {
+			return $this->objSubQueryDefinition != null;
 		}
 	}
 
@@ -1917,6 +1922,10 @@
 			$strSql .= ')';
 			return $strSql;
 		}
+
+		public function __toString() {
+			return 'QQFunctionNode ' . $this->strFunctionName;
+		}
 	}
 
 	class QQMathNode extends QQSubQueryNode {
@@ -1955,6 +1964,11 @@
 			$strSql .= ')';
 			return $strSql;
 		}
+
+		public function __toString() {
+			return 'QQMathNode ' . $this->strOperation;
+		}
+
 	}
 
 
@@ -2034,20 +2048,34 @@
 		}
 
 		/**
-		 * Updates the query builder according to this clause
+		 * Updates the query builder. We delay processing of orderby clauses until just before statement creation.
+		 *
+		 * @param QQueryBuilder $objBuilder
+		 */
+		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+			$objBuilder->SetOrderByClause($this);
+		}
+
+		/**
+		 * Updates the query builder according to this clause. This is called by the query builder only.
 		 *
 		 * @param QQueryBuilder $objBuilder
 		 *
 		 * @throws Exception|QCallerException
 		 */
-		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+		public function _UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			$intLength = count($this->objNodeArray);
 			for ($intIndex = 0; $intIndex < $intLength; $intIndex++) {
 				$objNode = $this->objNodeArray[$intIndex];
-				if ($objNode instanceof QQColumnNode) {
+				if ($objNode instanceof QQVirtualNode) {
+					if ($objNode->HasSubquery()) {
+						throw new QCallerException('You cannot define a virtual node in an order by clause. You must use an Expand clause to define it.');
+					}
+					$strOrderByCommand = '__' . $objNode->GetAttributeName();
+				} elseif ($objNode instanceof QQColumnNode) {
 					/** @var QQColumnNode $objNode */
 					$strOrderByCommand = $objNode->GetColumnAlias($objBuilder);
-				} else if ($objNode instanceof QQCondition) {
+				} elseif ($objNode instanceof QQCondition) {
 					/** @var QQCondition $objNode */
 					$strOrderByCommand = $objNode->GetWhereClause($objBuilder);
 				} else {
@@ -2068,6 +2096,8 @@
 				$objBuilder->AddOrderByItem($strOrderByCommand);
 			}
 		}
+
+
 
 		/**
 		 * This is used primarly by datagrids wanting to use the "old Beta 2" style of
@@ -2225,11 +2255,12 @@
 		protected $strAttributeName;
 		protected $strFunctionName;
 		public function __construct(QQColumnNode $objNode, $strAttributeName) {
-			$this->objNode = $objNode;
+			$this->objNode = QQ::Func($this->strFunctionName, $objNode);
 			$this->strAttributeName = QQ::GetVirtualAlias($strAttributeName); // virtual attributes are queried lower case
 		}
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
-			$objBuilder->AddSelectFunction($this->strFunctionName, $this->objNode->GetColumnAlias($objBuilder), $this->strAttributeName);
+			$objBuilder->SetVirtualNode($this->strAttributeName, $this->objNode);
+			$objBuilder->AddSelectFunction(null, $this->objNode->GetColumnAlias($objBuilder), $this->strAttributeName);
 		}
 	}
 	class QQCount extends QQAggregationClause {
@@ -2489,6 +2520,8 @@
 		protected $strEscapeIdentifierBegin;
 		/** @var string  */
 		protected $strEscapeIdentifierEnd;
+		/** @var  QQOrderBy */
+		protected $objOrderByClause;
 
 		/**
 		 * @param QDatabaseBase $objDatabase
@@ -2730,13 +2763,13 @@
 		 * @param string $strName
 		 * @param QQSubQueryNode $objNode
 		 */
-		public function SetVirtualNode($strName, QQSubQueryNode $objNode) {
+		public function SetVirtualNode($strName, QQColumnNode $objNode) {
 			$this->objVirtualNodeArray[QQ::GetVirtualAlias($strName)] = $objNode;
 		}
 
 		/**
 		 * @param string $strName
-		 * @return QQVirtualNode
+		 * @return QQColumnNode
 		 * @throws QCallerException
 		 */
 		public function GetVirtualNode($strName) {
@@ -2772,6 +2805,8 @@
 		 * @return string
 		 */
 		public function GetStatement() {
+			$this->ProcessClauses();
+
 			// SELECT Clause
 			if ($this->blnCountOnlyFlag) {
 				if ($this->blnDistinctFlag) {
@@ -2823,7 +2858,26 @@
 			return $strSql;
 		}
 
-
+		/**
+		 * Sets the one order by clause allowed in a query. Stores it for delayed processing.
+		 *
+		 * @param QQOrderBy $objOrderByClause
+		 */
+		public function SetOrderByClause(QQOrderBy $objOrderByClause) {
+			if ($this->objOrderByClause) {
+				throw new QCallerException('You can only have one OrderBy clause in a query.');
+			}
+			$this->objOrderByClause = $objOrderByClause;
+		}
+		/**
+		 * Final processing of delayed clauses. Clauses like OrderBy need to wait to be processed until the complete
+		 * set of aliases is known.
+		 */
+		protected function ProcessClauses() {
+			if ($this->objOrderByClause) {
+				$this->objOrderByClause->_UpdateQueryBuilder($this);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
