@@ -1349,10 +1349,10 @@
 		 * @param string $strName Column name to be displayed in the table header.
 		 * @param null|string|array $mixText The text to display as the label of the anchor, a callable callback to get the text,
 		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same. Depends on
-		 *   what time of row item is passed.
+		 *   what type of row item is passed.
 		 * @param null|string|array|QControlProxy $mixDestination The text representing the destination of the anchor, a callable callback to get the destination,
 		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same,
-		 *   or a QControlProxy. Depends on what time of row item is passed.
+		 *   or a QControlProxy. Depends on what type of row item is passed.
 		 * @param null|string|array $getVars An array of key=>value pairs to use as the GET variables in the link URL,
 		 *   or in the case of a QControlProxy, possibly a string to represent the action parameter. In either case, each item
 		 *   can be a property chain, an array index list, or a callable callback as specified above.
@@ -1465,15 +1465,22 @@
 			$getVars = null;
 			if ($this->getVars) {
 				if (is_array($this->getVars)) {
-					foreach ($this->getVars as $key => $val) {
-						$getVars[$key] = static::GetObjectValue($val, $item);
+					if (array_keys($this->getVars)[0] === 0) {
+						// assume this is not associative array. Likely we are here to extract a property list.
+						$getVars = static::GetObjectValue($this->getVars, $item);
+					}
+					else {
+						// associative array, so likely these are Get variables to be assigned individually
+						foreach ($this->getVars as $key => $val) {
+							$getVars[$key] = static::GetObjectValue($val, $item);
+						}
 					}
 				} else {
 					$getVars = $this->getVars; // could be a simple action parameter.
 				}
 			}
 
-			$tagAttributes = null;
+			$tagAttributes = [];
 			if ($this->tagAttributes && is_array($this->tagAttributes)) {
 				foreach ($this->tagAttributes as $key=>$val) {
 					$tagAttributes[$key] = static::GetObjectValue($val, $item);

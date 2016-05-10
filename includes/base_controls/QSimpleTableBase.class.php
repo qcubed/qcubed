@@ -167,7 +167,7 @@
 		 *   what time of row item is passed.
 		 * @param null|string|array|QControlProxy $mixDestination The text representing the destination of the anchor, a callable callback to get the destination,
 		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same,
-		 *   or a QControlProxy. Depends on what time of row item is passed.
+		 *   or a QControlProxy. Depends on what type of row item is passed.
 		 * @param null|string|array $getVars An array of key=>value pairs to use as the GET variables in the link URL,
 		 *   or in the case of a QControlProxy, possibly a string to represent the action parameter. In either case, each item
 		 *   can be a property chain, an array index list, or a callable callback as specified above.
