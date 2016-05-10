@@ -15,6 +15,7 @@
 		<li><strong>QQ::Sub</strong> for subtraction (-),</li>
 		<li><strong>QQ::Mul</strong> for multiplication (*),</li>
 		<li><strong>QQ::Div</strong> for division (/),</li>
+		<li><strong>QQ::Neg</strong> the unary negative (-),</li>
 	</ul>
 
 	<p>You can also use  <strong>QQ::MathOp</strong> to apply any math operator that your particular flavor of SQL might
@@ -82,17 +83,18 @@
 	<p><?php QApplication::$Database[1]->OutputProfiling(); ?></p>
 
 	<h2>The same as above and filter out most of the other fields by using a Select clause</h2>
-	<p>This also demonstrates how to use the QQ::MathOp function. </p>
+	<p>This also demonstrates how to use the QQ::MathOp and QQ::Neg functions. </p>
 <?php
 
 	QApplication::$Database[1]->EnableProfiling();
 	$objPersonArray = Person::QueryArray(
 		/* Only return the persons who have AT LEAST ONE overdue project */
+		/* Note below we are adding a negative. This is for demo purposes. We could have just used QQ:Sub as above. */
 		QQ::GreaterThan(
 			QQ::Virtual('diff', QQ::MathOp(
-				'-', // Note the minus operation sign here
+				'+', // Note the plus operation sign here
 				QQN::Person()->ProjectAsManager->Spent
-				, QQN::Person()->ProjectAsManager->Budget
+				, QQ::Neg(QQN::Person()->ProjectAsManager->Budget)
 			))
 			, 20
 		),
