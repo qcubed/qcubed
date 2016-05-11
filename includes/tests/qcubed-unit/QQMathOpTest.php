@@ -10,6 +10,12 @@ if(!class_exists('TypeTest')){
 
 class QQMathOpTests extends QUnitTestCaseBase {
 
+	protected function setUp()
+	{
+		TypeTest::DeleteAll(); // prepare for test in case a test was interrupted and objects did not get deleted
+	}
+
+
 	public function testMathOp() {
 		$objTest = new TypeTest();
 		$objTest->TestFloat = 1.0;
@@ -144,6 +150,31 @@ class QQMathOpTests extends QUnitTestCaseBase {
 		$objTest->Delete();
 		$objTest2->Delete();
 	}
+
+	public function testNeg() {
+		$objTest = new TypeTest();
+		$objTest->TestFloat = -1.0;
+		$objTest->Save();
+
+		$objTest2 = new TypeTest();
+		$objTest2->TestFloat = -2.0;
+		$objTest2->Save();
+
+		$objResArray = TypeTest::QueryArray(QQ::GreaterThan(QQ::Neg(QQN::TypeTest()->TestFloat), 1.0));
+		$this->assertEquals(1, count($objResArray));
+		if (count($objResArray) > 0) {
+			$objRes = $objResArray[0];
+			$this->assertNotNull($objRes);
+			if ($objRes) {
+				$this->assertEquals(-2.0, $objRes->TestFloat);
+			}
+		}
+
+		$objTest->Delete();
+		$objTest2->Delete();
+	}
+
+
 
 	public function testOrderBy() {
 		$objTest = new TypeTest();

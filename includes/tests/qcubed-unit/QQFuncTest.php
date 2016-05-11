@@ -9,6 +9,10 @@ if(!class_exists('TypeTest')){
 }
 
 class QQFuncTests extends QUnitTestCaseBase {
+	protected function setUp()
+	{
+		TypeTest::DeleteAll();
+	}
 
 	public function testFunc() {
 		$objTest = new TypeTest();

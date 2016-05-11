@@ -9,6 +9,11 @@ if(!class_exists('TypeTest')){
 }
 
 class QDateTimeTests extends QUnitTestCaseBase {
+	protected function setUp()
+	{
+		TypeTest::DeleteAll();
+	}
+
 	public function testNow() {
 		$obj1 = QDateTime::Now();
 		$this->assertFalse($obj1->IsNull());
