@@ -115,10 +115,7 @@ qcubed = {
         strForm = $j("#Qform__FormId").val();
         var $objForm = $j('#' + strForm);
 
-        if (mixParameter && (typeof mixParameter !== "string")) {
-            mixParameter = $j.param({Qform__FormParameter: mixParameter});
-            $objForm.append('<input type="hidden" name="Qform__FormParameterType" value="obj">');
-        }
+        mixParameter = $j.param({obj: mixParameter}); // serialize in case its not a string
 
         $j('#Qform__FormControl').val(strControl);
         $j('#Qform__FormEvent').val(strEvent);
@@ -137,15 +134,8 @@ qcubed = {
      * @return {string} The form's control modifications.
      */
     formUpdates: function() {
-        var strToReturn = "",
-            strControlId,
-            strProperty;
+        var strToReturn = $j.param(qcubed.controlModifications);
 
-        for (strControlId in qcubed.controlModifications) {
-            for (strProperty in qcubed.controlModifications[strControlId]) {
-                strToReturn += strControlId + " " + strProperty + " " + qcubed.controlModifications[strControlId][strProperty] + "\n";
-            }
-        }
         qcubed.controlModifications = {};
         return strToReturn;
     },
@@ -201,16 +191,11 @@ qcubed = {
     getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
         var objFormElements = $j('#' + strForm).find('input,select,textarea'),
             strPostData = '',
-            formParamSelector = "#Qform__FormParameter",
             nullArrays = {};
 
-        if (mixParameter && (typeof mixParameter !== "string")) {
-            strPostData = $j.param({Qform__FormParameter: mixParameter});
-            objFormElements = objFormElements.not(formParamSelector);
-        } else {
-            $j(formParamSelector).val(mixParameter);
-        }
+        mixParameter = $j.param({obj: mixParameter}); // param must take an object
 
+        $j("#Qform__FormParameter").val(mixParameter);
         $j('#Qform__FormControl').val(strControl);
         $j('#Qform__FormEvent').val(strEvent);
         $j('#Qform__FormCallType').val("Ajax");
@@ -784,8 +769,8 @@ qcubed.draggable = function (parentId, draggableId) {
         c.data ("originalPosition", c.position());
     }).on("dragstop", function () {
         var c = jQuery(this);
-        qcubed.recordControlModification(draggableId, "_DragData", c.data("originalPosition").left + "," + c.data("originalPosition").top + "," + c.position().left + "," + c.position().top);
-    })
+        qcubed.recordControlModification(draggableId, "_DragData", {originalPosition: {left: c.data("originalPosition").left, top: c.data("originalPosition").top}, position: {left: c.position().left, top: c.position().top}});
+    });
 }
 
 qcubed.droppable = function (parentId, droppableId) {
@@ -802,7 +787,7 @@ qcubed.resizable = function (parentId, resizeableId) {
     })
     .on("resizestop", function () {
         var c = jQuery(this);
-        qcubed.recordControlModification(resizeableId, "_ResizeData", c.data("oW") + "," + c.data("oH") + "," + c.width() + "," + c.height());
+        qcubed.recordControlModification(resizeableId, "_ResizeData", {originalSize: {width: c.data("oW"), height: c.data("oH")} , size:{width: c.width(), height: c.height()}});
     });
 }
 

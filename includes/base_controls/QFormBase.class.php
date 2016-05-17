@@ -390,33 +390,22 @@
 				$objClass->strCallType = $_POST['Qform__FormCallType'];
 				$objClass->intFormStatus = QFormBase::FormStatusUnrendered;
 
-				if ($objClass->strCallType == QCallType::Ajax)
+				if ($objClass->strCallType == QCallType::Ajax) {
 					QApplication::$RequestMode = QRequestMode::Ajax;
-				else if($objClass->strCallType == QCallType::Server && array_key_exists('Qform__FormParameterType', $_POST)) {
+				}
+
+				// Decode form parameter 
+				if (isset($_POST['Qform__FormParameter'])) {
 					$param = array();
-					parse_str(urldecode($_POST['Qform__FormParameter']), $param);
-					$_POST['Qform__FormParameter'] = $param['Qform__FormParameter'];
+					parse_str($_POST['Qform__FormParameter'], $param);
+					$_POST['Qform__FormParameter'] = $param['obj']; // deserialized item is here
 				}
 
 				// Iterate through all the control modifications
-				$strModificationArray = explode("\n", trim($_POST['Qform__FormUpdates']));
-				if ($strModificationArray) foreach ($strModificationArray as $strModification) {
-					$strModification = trim($strModification);
-
-					if ($strModification) {
-						$intPosition = strpos($strModification, ' ');
-						$strControlId = substr($strModification, 0, $intPosition);
-						$strModification = substr($strModification, $intPosition + 1);
-
-						$intPosition = strpos($strModification, ' ');
-						if ($intPosition !== false) {
-							$strProperty = substr($strModification, 0, $intPosition);
-							$strValue = substr($strModification, $intPosition + 1);
-						} else {
-							$strProperty = $strModification;
-							$strValue = null;
-						}
-
+				$strModificationArray = [];
+				parse_str($_POST['Qform__FormUpdates'], $strModificationArray);
+				if (!empty($strModificationArray)) foreach ($strModificationArray as $strControlId=>$params) {
+					foreach ($params as $strProperty=>$strValue) {
 						switch ($strProperty) {
 							case 'Parent':
 								if ($strValue) {
@@ -437,6 +426,7 @@
 								if (array_key_exists($strControlId, $objClass->objControlArray))
 									$objClass->objControlArray[$strControlId]->__set($strProperty, $strValue);
 								break;
+
 						}
 					}
 				}
