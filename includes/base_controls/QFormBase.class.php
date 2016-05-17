@@ -395,7 +395,7 @@
 				}
 
 				// Decode form parameter 
-				if (isset($_POST['Qform__FormParameter'])) {
+				if (!empty($_POST['Qform__FormParameter'])) {
 					$param = array();
 					parse_str($_POST['Qform__FormParameter'], $param);
 					$_POST['Qform__FormParameter'] = $param['obj']; // deserialized item is here
