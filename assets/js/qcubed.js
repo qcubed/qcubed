@@ -241,7 +241,6 @@ qcubed = {
                                 }
                             }
                         } else {
-                            // TODO: use value instead of is checked
                             strPostData += "&" + strControlName + "=" + $element.is(":checked");
                         }
                         break;
