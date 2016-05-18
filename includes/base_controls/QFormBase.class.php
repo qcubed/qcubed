@@ -39,7 +39,7 @@
 		protected $objGroupingArray;
 		/** @var bool Has the body tag already been rendered? */
 		protected $blnRenderedBodyTag = false;
-		protected $blnRenderedCheckableControlArray = array();
+		protected $checkableControlValues = array();
 		/** @var string The type of call made to the QForm (Ajax, Server or Fresh GET request) */
 		protected $strCallType;
 		/** @var null|QWaitIcon Default wait icon for the page/QForm  */
@@ -327,8 +327,16 @@
 		 * @return bool
 		 */
 		public function IsCheckableControlRendered($strControlId) {
-			return array_key_exists($strControlId, $this->blnRenderedCheckableControlArray);
+			return array_key_exists($strControlId, $this->checkableControlValues);
 		}
+
+		public function CheckableControlValue($strControlId) {
+			if (array_key_exists($strControlId, $this->checkableControlValues)) {
+				return $this->checkableControlValues[$strControlId];
+			}
+			return null;
+		}
+
 
 		/**
 		 * Helper function for below GetModifiedControls
@@ -431,14 +439,15 @@
 					}
 				}
 
-				// Clear the RenderedCheckableControlArray
+				// Set the RenderedCheckableControlArray
 				if (!empty($_POST['Qform__FormCheckableControls'])) {
-					$objClass->blnRenderedCheckableControlArray = array();
-					$strCheckableControlList = trim($_POST['Qform__FormCheckableControls']);
-					$strCheckableControlArray = explode(' ', $strCheckableControlList);
-					foreach ($strCheckableControlArray as $strCheckableControl) {
-						$objClass->blnRenderedCheckableControlArray[trim($strCheckableControl)] = true;
+					$vals = $_POST['Qform__FormCheckableControls'];
+					if (is_string($vals)) {
+						parse_str($vals, $vals);
 					}
+					$objClass->checkableControlValues = $vals;
+				} else {
+					$objClass->checkableControlValues = [];
 				}
 
 				// Iterate through all the controls
@@ -467,7 +476,9 @@
 				else {
 					// Ajax post. Only send data to controls specified in the post to save time.
 					$previouslyFoundArray = array();
-					foreach ($_POST as $key=>$val) {
+					$controls = $_POST;
+					$controls = array_merge($controls, $objClass->checkableControlValues);
+					foreach ($controls as $key=>$val) {
 						if ($key == 'Qform__FormControl') {
 							$strControlId = $val;
 						} elseif (substr($key, 0, 6) == 'Qform_') {
