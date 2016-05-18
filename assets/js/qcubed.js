@@ -246,7 +246,7 @@ qcubed = {
                 if (!qcubed.inputSupport || // if not oninput support, then post all the controls, rather than just the modified ones
                 qcubed.ajaxError || // Ajax error would mean that formObjsModified is invalid. We need to submit everything.
                 (objChangeIndex && qcubed.formObjsModified[objChangeIndex]) ||
-                blnQform) {  // all controls with Qform__ at the beginning of the id are always posted
+                blnQform) {  // all controls with Qform__ at the beginning of the id are always posted.
 
                 switch (strType) {
                     case "checkbox":
@@ -290,7 +290,7 @@ qcubed = {
             }
         });
 
-        // Set the Qform__ parameters explicitly here
+        // Update most of the Qform__ parameters explicitly here. Others, like the state and form id will have been handled above.
         postData.Qform__FormParameter = $j.param({obj: mixParameter}); // decoded in PHP
         postData.Qform__FormControl = strControl;
         postData.Qform__FormEvent = strEvent;
