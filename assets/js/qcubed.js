@@ -118,7 +118,7 @@ qcubed = {
         mixParameter = $j.param({obj: mixParameter}); // serialize in case its not a string
 
         var checkableControls = $j('#' + strForm).find('input[type="checkbox"], input[type="radio"]');
-        var values = this._checkableControlValues(strForm, $j.makeArray(checkableControls));
+        var checkableValues = this._checkableControlValues(strForm, $j.makeArray(checkableControls));
 
 
         $j('#Qform__FormControl').val(strControl);
@@ -126,7 +126,7 @@ qcubed = {
         $j('#Qform__FormParameter').val(mixParameter);
         $j('#Qform__FormCallType').val("Server");
         $j('#Qform__FormUpdates').val(this.formUpdates());
-        $j('#Qform__FormCheckableControls').val($j.param(values));
+        $j('#Qform__FormCheckableControls').val($j.param(checkableValues));
 
         // have $j trigger the submit event (so it can catch all submit events)
         $objForm.trigger("submit");
@@ -292,30 +292,23 @@ qcubed = {
 
                 default:
                     var strPostName;
-                    if (strControlName) {   // this is what gets posted on a server post
+                    if (strControlName) {
                         strPostName = strControlName;
                     } else {
                         strPostName = strControlId;
                     }
 
-                    // For Internationalization -- we must escape the element's value properly
-                    if (strPostValue) {
-                        strPostValue = strPostValue.replace(/\%/g, "%25");
-                        strPostValue = strPostValue.replace(/&/g, encodeURIComponent('&'));
-                        strPostValue = strPostValue.replace(/\+/g, "%2B");
-                    }
                     postData[strPostName] = strPostValue;
                     break;
             }
         });
 
-        var cd = qcubed._checkableControlValues(strForm, checkables);
-        postData.Qform__FormCheckableControls = cd;
+        postData.Qform__FormCheckableControls = qcubed._checkableControlValues(strForm, checkables);
 
         qcubed.ajaxError = false;
         qcubed.formObjsModified = {};
 
-        return $j.param(postData);
+        return postData;
     },
 
     /**
