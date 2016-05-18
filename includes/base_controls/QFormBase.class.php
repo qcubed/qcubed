@@ -410,39 +410,46 @@
 				}
 
 				// Iterate through all the control modifications
-				$strModificationArray = [];
-				parse_str($_POST['Qform__FormUpdates'], $strModificationArray);
-				if (!empty($strModificationArray)) foreach ($strModificationArray as $strControlId=>$params) {
-					foreach ($params as $strProperty=>$strValue) {
-						switch ($strProperty) {
-							case 'Parent':
-								if ($strValue) {
-									if ($strValue == $objClass->FormId) {
-										$objClass->objControlArray[$strControlId]->SetParentControl(null);
-									} else {
-										$objClass->objControlArray[$strControlId]->SetParentControl($objClass->objControlArray[$strValue]);
-									}
-								} else {
-									// Remove all parents
-									$objClass->objControlArray[$strControlId]->SetParentControl(null);
-									$objClass->objControlArray[$strControlId]->SetForm(null);
-									$objClass->objControlArray[$strControlId] = null;
-									unset($objClass->objControlArray[$strControlId]);
-								}
-								break;
-							default:
-								if (array_key_exists($strControlId, $objClass->objControlArray))
-									$objClass->objControlArray[$strControlId]->__set($strProperty, $strValue);
-								break;
+				if (!empty($_POST['Qform__FormUpdates'])) {
+					$controlUpdates = $_POST['Qform__FormUpdates'];
+					if (is_string($controlUpdates)) {    // Server post is encoded, ajax not encoded
+						parse_str($controlUpdates, $controlUpdates);
+					}
+					if (!empty($controlUpdates)) {
+						foreach ($controlUpdates as $strControlId=>$params) {
+							foreach ($params as $strProperty=>$strValue) {
+								switch ($strProperty) {
+									case 'Parent':
+										if ($strValue) {
+											if ($strValue == $objClass->FormId) {
+												$objClass->objControlArray[$strControlId]->SetParentControl(null);
+											} else {
+												$objClass->objControlArray[$strControlId]->SetParentControl($objClass->objControlArray[$strValue]);
+											}
+										} else {
+											// Remove all parents
+											$objClass->objControlArray[$strControlId]->SetParentControl(null);
+											$objClass->objControlArray[$strControlId]->SetForm(null);
+											$objClass->objControlArray[$strControlId] = null;
+											unset($objClass->objControlArray[$strControlId]);
+										}
+										break;
+									default:
+										if (array_key_exists($strControlId, $objClass->objControlArray))
+											$objClass->objControlArray[$strControlId]->__set($strProperty, $strValue);
+										break;
 
+								}
+							}
 						}
 					}
 				}
 
+
 				// Set the RenderedCheckableControlArray
 				if (!empty($_POST['Qform__FormCheckableControls'])) {
 					$vals = $_POST['Qform__FormCheckableControls'];
-					if (is_string($vals)) {
+					if (is_string($vals)) { // Server post is encoded, ajax not encoded
 						parse_str($vals, $vals);
 					}
 					$objClass->checkableControlValues = $vals;

@@ -115,7 +115,7 @@ qcubed = {
         strForm = $j("#Qform__FormId").val();
         var $objForm = $j('#' + strForm);
 
-        mixParameter = $j.param({obj: mixParameter}); // serialize in case its not a string
+        mixParameter = $j.param({obj: mixParameter}); // serialize in a way that can handle a string, array or object
 
         var checkableControls = $j('#' + strForm).find('input[type="checkbox"], input[type="radio"]');
         var checkableValues = this._checkableControlValues(strForm, $j.makeArray(checkableControls));
@@ -125,25 +125,12 @@ qcubed = {
         $j('#Qform__FormEvent').val(strEvent);
         $j('#Qform__FormParameter').val(mixParameter);
         $j('#Qform__FormCallType').val("Server");
-        $j('#Qform__FormUpdates').val(this.formUpdates());
+        $j('#Qform__FormUpdates').val($j.param(qcubed.controlModifications));
         $j('#Qform__FormCheckableControls').val($j.param(checkableValues));
 
         // have $j trigger the submit event (so it can catch all submit events)
         $objForm.trigger("submit");
     },
-
-    /**
-     * Return the updates to properties in form objects. Note that once you call this, you MUST post the data returned, as this
-     * code has the side effect of resetting the update cache.
-     * @return {string} The form's control modifications.
-     */
-    formUpdates: function() {
-        var strToReturn = $j.param(qcubed.controlModifications);
-
-        qcubed.controlModifications = {};
-        return strToReturn;
-    },
-
     /**
      * Checkable controls (checkboxes and radio buttons) can be problematic. We have the following issues to work around:
      * - On a submit, only the values of the checeked items are submitted. Non-checked items are not submitted.
@@ -231,14 +218,6 @@ qcubed = {
             controls = [],
             postData = {};
 
-        mixParameter = $j.param({obj: mixParameter}); // param must take an object
-
-        $j("#Qform__FormParameter").val(mixParameter);
-        $j('#Qform__FormControl').val(strControl);
-        $j('#Qform__FormEvent').val(strEvent);
-        $j('#Qform__FormCallType').val("Ajax");
-        $j('#Qform__FormUpdates').val(this.formUpdates());
-
         // Filter and separate controls into checkable and non-checkable controls
         // We ignore controls that have not changed.
 
@@ -303,10 +282,17 @@ qcubed = {
             }
         });
 
+        // Set the Qform__ parameters explicitly here
+        postData.Qform__FormParameter = $j.param({obj: mixParameter}); // decoded in PHP
+        postData.Qform__FormControl = strControl;
+        postData.Qform__FormEvent = strEvent;
+        postData.Qform__FormCallType = "Ajax";
+        postData.Qform__FormUpdates = qcubed.controlModifications;
         postData.Qform__FormCheckableControls = qcubed._checkableControlValues(strForm, checkables);
 
         qcubed.ajaxError = false;
         qcubed.formObjsModified = {};
+        qcubed.controlModifications = {};
 
         return postData;
     },
