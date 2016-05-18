@@ -284,13 +284,7 @@ qcubed = {
                     break;
 
                 default:
-                    var strPostName;
-                    if (strControlName) {
-                        strPostName = strControlName;
-                    } else {
-                        strPostName = strControlId;
-                    }
-
+                    var strPostName = (strControlName ? strControlName: strControlId);
                     postData[strPostName] = strPostValue;
                     break;
             }
