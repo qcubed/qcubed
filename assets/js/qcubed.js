@@ -57,7 +57,6 @@ qcubed = {
         var id = $j(ctl).attr('id');
         var strType = $j(ctl).prop("type");
         var name = $j(ctl).attr("name");
-        var ret;
 
         if (((strType === 'checkbox') || (strType === 'radio')) &&
            id && ((indexOffset = id.lastIndexOf('_')) >= 0)) { // a member of a control list
@@ -88,10 +87,12 @@ qcubed = {
         if (strType === 'radio' && name !== id) { // a radio button with a group name
             // since html does not submit a changed event on the deselected radio, we are going to invalidate all the controls in the group
             var group = $j('input[name=' + name + ']');
-            if (group) group.each(function () {
-                id = $j(this).attr('id');
-                qcubed.formObjsModified[id] = true;
-            });
+            if (group) {
+                group.each(function () {
+                    id = $j(this).attr('id');
+                    qcubed.formObjsModified[id] = true;
+                });
+            }
         }
         else if (id) {
             qcubed.formObjsModified[id] = true;
@@ -132,6 +133,8 @@ qcubed = {
         $objForm.trigger("submit");
     },
     /**
+     * This function resolves the state of checkable controls into postable values.
+     *
      * Checkable controls (checkboxes and radio buttons) can be problematic. We have the following issues to work around:
      * - On a submit, only the values of the checeked items are submitted. Non-checked items are not submitted.
      * - QCubed may have checkboxes that are part of the form object, but not visible on the html page. In particular,
@@ -142,8 +145,19 @@ qcubed = {
      *
      * To solve all of these issues, we post a value that has all the values of all visible checked items, either
      * true or false for individual items, or an array of values, single value, or null for groups. QCubed controls that
-     * deal with checkable controls must look for the special value to know how to update its internal state.
+     * deal with checkable controls must look for this special posted variable to know how to update their internal state.
      *
+     * Checkboxes that are part of a group will return an array of values, keyed by the group id.
+     * Radio buttons that are part of a group will return a single value keyed by group id.
+     * Checkboxes and radio buttons that are not part of a group will return a true or false keyed by the control id.
+     * Note that for radio buttons, a group is defined by a common identifier in the id. Radio buttons with the same
+     * name, but different ids, are not considered part of a group for purposes here, even though visually they will
+     * act like they are part of a group.
+     *
+     * @param {string} strForm   Form Id
+     * @param {array} controls  Array of checkable controls. These must be checkable controls, it will not validate this.
+     * @returns {object}  A hash of values keyed by control id
+     * @private
      */
     _checkableControlValues: function(strForm, controls) {
         var values = {};
@@ -156,7 +170,7 @@ qcubed = {
                 id = $element.attr("id"),
                 strType = $element.prop("type"),
                 index = -1,
-                offset = 0;
+                offset;
 
             if (id &&
                 (offset = id.lastIndexOf('_')) != -1) {
@@ -210,7 +224,7 @@ qcubed = {
      * @param {string} strEvent The Event
      * @param {mixed} mixParameter An array of parameters or a string value.
      * @param {string} strWaitIconControlId Not used, probably legacy code.
-     * @return {string} Post Data
+     * @return {object} Post Data
      */
     getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
         var objFormElements = $j('#' + strForm).find('input,select,textarea'),
