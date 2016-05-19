@@ -11,8 +11,10 @@
 	<ul>
 	  <li><strong>js</strong> - The location of your javascript files, including the javascript widget and any additional javascript files you need. Add these files to your output by using the <strong>AddPluginJavascriptFile</strong> method.</li>
 	  <li><strong>includes</strong> - The PHP files you want to make available to your project. Composer will use its autoloader to make these files available upon request, if you correctly set up the composer.json file (see below).</li>
-	  <li><strong>css </strong>- Any css files that go with your plugin. Include these by calling AddPluginCssFile from your constructor.</li>
-	  <li><strong>examples</strong> - Example files that demonstrate the use of the plugin. This is also a great way to document  your plugin.</li>
+	  <li><strong>css</strong>- Any css files that go with your plugin. Include these by calling AddPluginCssFile from your constructor.</li>
+		<li><strong>examples</strong> - Example files that demonstrate the use of the plugin. This is also a great way to document  your plugin.</li>
+		<li><strong>install</strong> - Stub files that will get moved to the <strong>/projects</strong> directory after installation. These files are user
+			modifiable, and do not get overwritten when the user does a composer update to get the latest version of your control.</li>
     </ul>
 	<p>If your control edits a basic data type, be sure to include a <strong>control_registry.inc.php</strong> file as described in the previous example page.</p>
 	<p>Include a <strong>composer.json</strong> file in the root directory of your control. Its probably easiest to copy one from a current plugin and edit it.</p>
