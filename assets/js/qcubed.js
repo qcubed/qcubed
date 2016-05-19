@@ -129,8 +129,30 @@ qcubed = {
         $j('#Qform__FormUpdates').val($j.param(qcubed.controlModifications));
         $j('#Qform__FormCheckableControls').val($j.param(checkableValues));
 
+        // Notify custom controls that we are about to post
+        $objForm.trigger("qposting", "Server");
+
+        // add hidden control for the values given
+        // Will be decoded and assigned to the $_POST var in PHP. In ajax, its not needed
+        if (qcubed.additionalPostVars && qcubed.additionalPostVars.length) {
+            var input = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "Qform__AdditionalPostVars").val($j.param(qcubed.additionalPostVars));
+            $objForm.append($(input));
+        }
+
         // have $j trigger the submit event (so it can catch all submit events)
         $objForm.trigger("submit");
+    },
+    /**
+     * Custom controls should call this in response to the qposting trigger on the form if they need to add some
+     * additional post variables. Multiple sets of the same value will overwrite previous value.
+     *
+     * @param {string} name Name to post. Should probably be the control id, but can be anything.
+     * @param {mixed} val  Any value you want to send to PHP. Can be a string, array or object.
+     */
+    setAdditionalPostVar: function (name, val) {
+        qcubed.additionalPostVars[name] = val;
     },
     /**
      * This function resolves the state of checkable controls into postable values.
@@ -227,7 +249,8 @@ qcubed = {
      * @return {object} Post Data
      */
     getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
-        var objFormElements = $j('#' + strForm).find('input,select,textarea'),
+        var $form = $j('#' + strForm),
+            $formElements = $form.find('input,select,textarea'),
             checkables = [],
             controls = [],
             postData = {};
@@ -235,7 +258,7 @@ qcubed = {
         // Filter and separate controls into checkable and non-checkable controls
         // We ignore controls that have not changed.
 
-        objFormElements.each(function() {
+        $formElements.each(function() {
             var $element = $j(this),
                 id = $element.attr("id"),
                 blnQform = (id && (id.substr(0, 7) === 'Qform__')),
@@ -297,6 +320,13 @@ qcubed = {
         postData.Qform__FormCallType = "Ajax";
         postData.Qform__FormUpdates = qcubed.controlModifications;
         postData.Qform__FormCheckableControls = qcubed._checkableControlValues(strForm, checkables);
+
+        // Notify controls we are about to post.
+        $form.trigger("qposting", "Ajax");
+        if (qcubed.additionalPostVars && qcubed.additionalPostVars.length) {
+            $j.extend(postData, qcubed.additionalPostVars);
+            qcubed.additionalPostVars = {};
+        }
 
         qcubed.ajaxError = false;
         qcubed.formObjsModified = {};
@@ -950,6 +980,7 @@ qcubed.setRadioInGroup = function(strControlId) {
 qcubed.controlModifications = {};
 qcubed.javascriptStyleToQcubed = {};
 qcubed.formObjsModified = {};
+qcubed.additionalPostVars = {};
 qcubed.ajaxError = false;
 qcubed.javascriptStyleToQcubed.backgroundColor = "BackColor";
 qcubed.javascriptStyleToQcubed.borderColor = "BorderColor";

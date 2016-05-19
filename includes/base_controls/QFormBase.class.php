@@ -404,9 +404,14 @@
 
 				// Decode form parameter 
 				if (!empty($_POST['Qform__FormParameter'])) {
-					$param = array();
 					parse_str($_POST['Qform__FormParameter'], $param);
 					$_POST['Qform__FormParameter'] = $param['obj']; // deserialized item is here
+				}
+
+				// Decode custom post variables from server calls
+				if (isset($_POST['Qform__AdditionalPostVars'])) {
+					parse_str($_POST['Qform__AdditionalPostVars'], $vars);
+					$_POST = array_merge($_POST, $vars);
 				}
 
 				// Iterate through all the control modifications
