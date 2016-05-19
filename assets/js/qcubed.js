@@ -255,9 +255,11 @@ qcubed = {
             controls = [],
             postData = {};
 
-        // Filter and separate controls into checkable and non-checkable controls
-        // We ignore controls that have not changed.
+        // Notify controls we are about to post.
+        $form.trigger("qposting", "Ajax");
 
+        // Filter and separate controls into checkable and non-checkable controls
+        // We ignore controls that have not changed to reduce the amount of data sent in an ajax post.
         $formElements.each(function() {
             var $element = $j(this),
                 id = $element.attr("id"),
@@ -321,8 +323,6 @@ qcubed = {
         postData.Qform__FormUpdates = qcubed.controlModifications;
         postData.Qform__FormCheckableControls = qcubed._checkableControlValues(strForm, checkables);
 
-        // Notify controls we are about to post.
-        $form.trigger("qposting", "Ajax");
         if (qcubed.additionalPostVars && qcubed.additionalPostVars.length) {
             $j.extend(postData, qcubed.additionalPostVars);
             qcubed.additionalPostVars = {};
