@@ -292,9 +292,8 @@
 					}
 
 				case '_active': // private method to synchronize with jQuery UI
-					$a = explode (',', $mixValue);
-					$this->mixActive = $a[0];
-					$this->strSelectedId = $a[1];
+					$this->mixActive = $mixValue[0];
+					$this->strSelectedId = $mixValue[1];
 					break;
 
 				default:

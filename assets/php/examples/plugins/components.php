@@ -55,25 +55,33 @@
 			parameter of your control object in PHP. </p>
 		<p>Make sure you include the javascript for the widget itself by calling <strong>AddPluginJavascriptFile</strong>
 			from your PHP constructor.</p>
-		<h3>Moving Data from PHP to Javascript</h3>
+	
+	<h3>Moving Data from PHP to Javascript</h3>
 		<p>Override the <strong>GetEndScript</strong> method to output the javascript that will connect the javascript
 			widget to the HTML you created. This is also the place where you would output any class member variables of
-			your PHP in such a way that the javascript will read it. Whenever your control is redrawn, all the HTML and
+			your PHP in such a way that the javascript will read it. Whenever your control is completely redrawn, all the HTML and
 			the javascript in <strong>GetEndScript</strong> will be drawn again, updating the control to the current
-			data in PHP. To cause a redraw, call the <strong>Refresh</strong> method, which it inherits from <strong>QControlBase</strong>.</p>
-		<p>You can also update an variable in the control by calling the <strong>QApplication::ExecuteJavascipt()</strong>
-			function. This will execute any javascript you output on the next form draw. For example, you could do this:</p>
-	<p><code>QApplication::ExecuteJavascipt(sprintf('$j(&quot;#%s&quot;).val(&quot;%s&quot;), $myControl-&gt;ControlId,
-			$strValue));</code></p>
+			data in PHP. To cause a redraw, call the <strong>Refresh</strong> method, which it inherits from <strong>QControlBase</strong>.
+			See examples of this is done in the various Gen classes in the qcubed/framework/includes/base_controls directory.</p>
+	
+	
+		<p>If you would like to update your control using javascript without completely redrawing the control, use
+			the <strong>AddAttributeScript</strong> method. This will execute a javascript function on your control that you would use to do
+			the update. It is also designed so that if the entire control is redrawn, the javascript will not execute, since
+			it will no longer be needed. For example, you could do this:</p>
+	<p><code>$this->AddAttributeScript('val', $strValue);</code></p>
 		<p>to set the <strong>value</strong> of your control to $strValue on the javascript side. Remember to also save
 			that data into your PHP control, because later your control might completely redraw, and it will need to
 			draw using the new value.</p>
-		<h3>Moving Data from  Javascript to PHP</h3>
+
+	<h3>Moving Data from  Javascript to PHP</h3>
 		<p>Data comes from the javascript via a variety of mechanisms.</p>
 		<p>The primary method is via Post variables. All input items, like textboxes and checkboxes are submitted this
-			way. Also select items like lists send there data this way. QCubed contains mechansisms that post these
-			variables via Ajax as well as via standard form posts. Javascript controls can take advantage of this in a
-			couple of ways:</p>
+			way. Also select items like lists send there data this way.</p>
+	    <p>To read post variables, create a subclass <strong>QControl</strong> in PHP and override the <strong>ParsePostData</strong>
+			method. Within that function, examine the <strong>$_POST</strong> superglobal and update your internal state accordingly.
+
+		<p>To have your javascript send POST variables, you can do one of the following:</p>
         <ul>
           <li>Atttach your control to a standard html form element, like a textbox or checkbox and on the PHP side, make
 			  your <strong>QControl</strong> a subclass of the corresponding <strong>QControl</strong> type. The data
@@ -84,10 +92,16 @@
 			  give them an id that is the same as the parent control, followed by an underscore and whatever text you
 			  need to uniquely identify it. This will associated the hidden control with the parent control. Implement the
 			  <strong>ParsePostData</strong> method within your control to read the data in the post variable and put
-			  it into your <strong>QControl</strong>.</li> See the <strong>QImageButton</strong> control source for an
-			  example of this method.
-        </ul>
-        <p>Another way to push data to PHP is to use the <strong>qc.recordControlModification</strong> function. Call
+			  it into your <strong>QControl</strong>.See the <strong>QImageButton</strong> control source for an
+			  example of this method.</li>
+		  <li>Whenever your control changes, call <strong>qcubed.setAdditionalPostVar(name, val)</strong>. This will add
+				the name adn value to the list of variables posted. <strong>val</strong> can be a string, array or object.  If you cannot detect a change for
+				some reason, you can add a listener on the <strong>qposting</strong> event on the form. That event is fired
+				right before any post variables are sent to PHP, which gives you a good opportunity to call
+				<strong>qcubed.setAdditionalPostVar</strong>.</li>
+		</ul>
+        <p>Another way to push data to PHP is to use the <strong>qc.recordControlModification</strong> function whenever
+			an aspect of your control changes. Call
 			<strong>qc.recordControlModification</strong> from your javascript control and pass it your control id, a
 			control property, and a new value for the property. The control property is a property in your PHP control
 			that you can set through the <strong>__set</strong> magic method. Calling <strong>recordControlModification</strong>

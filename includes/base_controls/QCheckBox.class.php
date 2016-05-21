@@ -54,20 +54,9 @@
 		 * according to the data submitted
 		 */
 		public function ParsePostData() {
-			if (QApplication::$RequestMode == QRequestMode::Ajax) {
-				if (isset($_POST[$this->strControlId])) {
-					$this->blnChecked = QType::Cast ($_POST[$this->strControlId], QType::Boolean);
-				}
-			}
-			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
-				if (array_key_exists($this->strControlId, $_POST)) {
-					if ($_POST[$this->strControlId])
-						$this->blnChecked = true;
-					else
-						$this->blnChecked = false;
-				} else {
-					$this->blnChecked = false;
-				}
+			$val = $this->objForm->CheckableControlValue($this->strControlId);
+			if ($val !== null) {
+				$this->blnChecked = QType::Cast($val, QType::Boolean);
 			}
 		}
 

@@ -56,13 +56,10 @@
 			switch ($strName) {
 				case '_DragData': // Internal only. Do not use. Used by JS above to keep track of user selection.
 					try {
-						$data = QType::Cast($mixValue, QType::String);
-						$a = explode (",", $data);
-						$this->aryOriginalPosition['left'] = $a[0];
-						$this->aryOriginalPosition['top'] = $a[1];
-						$this->aryNewPosition['left'] = $a[2];
-						$this->aryNewPosition['top'] = $a[3];
-						
+						$data = QType::Cast($mixValue, QType::ArrayType);
+						$this->aryOriginalPosition = $data['originalPosition'];
+						$this->aryNewPosition = $data['position'];
+
 						// update parent's coordinates
 						$this->objParentControl->getWrapperStyler()->Top = $this->aryNewPosition['top'];
 						$this->objParentControl->getWrapperStyler()->Left = $this->aryNewPosition['left'];
