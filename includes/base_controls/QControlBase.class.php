@@ -1784,8 +1784,18 @@
 				$this->objForm = $this->objForm->FormId;
 			if ($this->objParentControl)
 				$this->objParentControl = $this->objParentControl->ControlId;
-			if ($blnReturn)
+
+			// In order to make the control exportable, we can't have circular references or things that are not exportable.
+			// We use the sleep helper as an aid to deep exporting the object.
+
+			$vars = get_object_vars($this);
+			foreach ($vars as $key=>$val) {
+				$this->$key = self::SleepHelper($val);
+			}
+
+			if ($blnReturn) {
 				return var_export($this, true);
+			}
 		}
 
 		/**

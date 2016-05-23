@@ -116,10 +116,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 								}
 								$__exc_StrVarExport = htmlentities(var_export($__exc_ObjSessionVarArray, true));
 							} else if (($__exc_ObjVariableArray[$__exc_Key] instanceof QControl) || ($__exc_ObjVariableArray[$__exc_Key] instanceof QForm)) {
-								if (!defined('HHVM_VERSION')) {
-									// var_export crashes hhvm currently
-									$__exc_StrVarExport = htmlentities($__exc_ObjVariableArray[$__exc_Key]->VarExport());
-								}
+								$__exc_StrVarExport = htmlentities($__exc_ObjVariableArray[$__exc_Key]->VarExport());
 							} else {
 								$__exc_StrVarExport = htmlentities(var_export($__exc_ObjVariableArray[$__exc_Key], true));
 							}
