@@ -92,19 +92,7 @@
 
 		<?php include("property_set.tpl.php"); ?>
 
-
-		/**
-		 * Lookup a VirtualAttribute value (if applicable).  Returns NULL if none found.
-		 * @param string $strName
-		 * @return string
-		 */
-		public function GetVirtualAttribute($strName) {
-			if (array_key_exists($strName, $this->__strVirtualAttributeArray))
-				return $this->__strVirtualAttributeArray[$strName];
-			return null;
-		}
-
-
+		<?php include("virtual_attribute.tpl.php"); ?>
 
 		<?php include("associated_objects_methods.tpl.php"); ?>
 
