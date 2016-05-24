@@ -1,5 +1,6 @@
 <?php
 require_once('../qcubed.inc.php');
+QApplication::$EncodingType = 'ISO-8859-1';
 
 /**
  * Class MyControl
@@ -39,6 +40,7 @@ class MyControl extends QControl {
 
 class ParamsForm extends QForm {
 	protected $txtText;
+	protected $txt2;
 	protected $pnlTest;
 	protected $lstCheckables;
 
@@ -47,10 +49,13 @@ class ParamsForm extends QForm {
 
 	protected function Form_Create() {
 		$this->txtText = new MyControl($this);
-		$this->txtText->Name = "Text";
+		$this->txtText->Name = "Special Vals";
+
+		$this->txt2 = new QTextBox($this);
+		$this->txt2->Name = "Regular Val";
 
 		$this->pnlTest = new QPanel($this);
-		$this->pnlTest->HtmlEntities = true;
+		//$this->pnlTest->HtmlEntities = true;
 		$this->pnlTest->Name = 'Result';
 
 		$this->lstCheckables = new QCheckBoxList($this);
@@ -84,9 +89,10 @@ class ParamsForm extends QForm {
 		$strResult .= "\n" . var_export($checkables, true);
 		$checkables = $this->lstCheckables->SelectedNames;
 		$strResult .= "\n" . var_export($checkables, true);
+		$strResult .= "\n" . 'Ordinals: ' . ord($this->txtText->Name) . ',' . ord($strResult);
+		$strResult .= "\n" . 'Regular: ' . $this->txt2->Text;
 		
 		$this->pnlTest->Text = $strResult;
 	}
 }
-QApplication::$EncodingType = 'ISO-8859-1';
 ParamsForm::Run('ParamsForm');

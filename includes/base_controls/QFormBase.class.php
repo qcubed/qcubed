@@ -389,7 +389,7 @@
 					self::InvalidFormState();
 				}
 			}
-
+			
 			if ($objClass) {
 				// Globalize
 				global $_FORM;
@@ -400,6 +400,15 @@
 
 				if ($objClass->strCallType == QCallType::Ajax) {
 					QApplication::$RequestMode = QRequestMode::Ajax;
+				}
+
+				// Cleanup ajax post data if the encoding does not match, since ajax data is always utf-8
+				if ($objClass->strCallType == QCallType::Ajax && QApplication::$EncodingType != 'UTF-8') {
+					foreach ($_POST as $key=>$val) {
+						if (substr($key, 0, 6) != 'Qform_') {
+							$_POST[$key] = iconv('UTF-8', QApplication::$EncodingType, $val);
+						}
+					}
 				}
 
 				if (!empty($_POST['Qform__FormParameter'])) {
@@ -460,11 +469,6 @@
 					$objClass->checkableControlValues = [];
 				}
 
-				// Iterate through all the controls
-				
-				// TODO: some listener pattern should be used to update only those
-				// controls that needs it
-
 				// This is original code. In an effort to minimize changes,
 				// we aren't going to touch the server calls for now
 				if ($objClass->strCallType != QCallType::Ajax) {
@@ -485,6 +489,7 @@
 				}
 				else {
 					// Ajax post. Only send data to controls specified in the post to save time.
+
 					$previouslyFoundArray = array();
 					$controls = $_POST;
 					$controls = array_merge($controls, $objClass->checkableControlValues);
@@ -627,8 +632,13 @@
 		 * @return mixed|string
 		 */
 		protected static function UnpackPostVar($val) {
+			if (QApplication::$EncodingType != 'UTF-8' && QApplication::$RequestMode != QRequestMode::Ajax) {
+				// json_decode only accepts utf-8 encoded text. Ajax calls are already UTF-8 encoded.
+				$val = iconv(QApplication::$EncodingType, 'UTF-8', $val);
+			}
 			$val = json_decode($val, true);
 			if (QApplication::$EncodingType != 'UTF-8') {
+				// Must convert back from utf-8 to whatever our application encoding is
 				if (is_string($val)) {
 					$val = iconv('UTF-8', QApplication::$EncodingType, $val);
 				}
@@ -688,7 +698,7 @@
 
 				// Output it and update render state
 				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
-					$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
+					$strJSON = iconv(QApplication::$EncodingType, 'UTF-8', $strJSON); // json must be UTF-8 encoded
 				}
 				print ($strJSON);
 			} else {

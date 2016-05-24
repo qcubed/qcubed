@@ -1069,6 +1069,8 @@
 				} else {
 					// Update Cache-Control setting
 					header('Cache-Control: ' . QApplication::$CacheControl);
+					// make sure server does not override the character encoding value
+					header(sprintf('Content-Type: text/html; charset=%s', strtolower(QApplication::$EncodingType)));
 
 					/*
 					 * Normally, FormBase->RenderEnd will render the javascripts. In the unusual case
