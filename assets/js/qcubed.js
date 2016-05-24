@@ -104,6 +104,12 @@ qcubed = {
      */
     initForm: function (strFormId) {
         $j('#' + strFormId).on ('qformObjChanged', this.formObjChanged); // Allow any control, including hidden inputs, to trigger a change and post of its data.
+        $j('#' + strFormId).submit(function(event) {
+            if (!$j('#Qform__FormControl').val()) { // did postBack initiated the submit?
+                // if not, prevent implicit form submission. This can happen in the rare case we have a single field and no submit button.
+                event.preventDefault();
+            }
+        });
     },
 
     /**
@@ -116,29 +122,33 @@ qcubed = {
         strForm = $j("#Qform__FormId").val();
         var $objForm = $j('#' + strForm);
 
-        mixParameter = $j.param({obj: mixParameter}); // serialize in a way that can handle a string, array or object
-
         var checkableControls = $j('#' + strForm).find('input[type="checkbox"], input[type="radio"]');
         var checkableValues = this._checkableControlValues(strForm, $j.makeArray(checkableControls));
 
-
         $j('#Qform__FormControl').val(strControl);
         $j('#Qform__FormEvent').val(strEvent);
-        $j('#Qform__FormParameter').val(mixParameter);
         $j('#Qform__FormCallType').val("Server");
-        $j('#Qform__FormUpdates').val($j.param(qcubed.controlModifications));
-        $j('#Qform__FormCheckableControls').val($j.param(checkableValues));
 
         // Notify custom controls that we are about to post
         $objForm.trigger("qposting", "Server");
 
-        // add hidden control for the values given
-        // Will be decoded and assigned to the $_POST var in PHP. In ajax, its not needed
-        if (qcubed.additionalPostVars && qcubed.additionalPostVars.length) {
-            var input = $("<input>")
+        if (mixParameter !== undefined) {
+            $j('#Qform__FormParameter').val(JSON.stringify(mixParameter));
+        }
+        if (!$j.isEmptyObject(qcubed.controlModifications)) {
+            $j('#Qform__FormUpdates').val(JSON.stringify(qcubed.controlModifications));
+        }
+        if (!$j.isEmptyObject(checkableValues)) {
+            $j('#Qform__FormCheckableControls').val(JSON.stringify(checkableValues));
+        }
+
+        // add hidden control for additional values given
+        // Will be decoded and assigned to the $_POST var in PHP.
+        if (!$j.isEmptyObject(qcubed.additionalPostVars)) {
+            var input = $j("<input>")
                 .attr("type", "hidden")
-                .attr("name", "Qform__AdditionalPostVars").val($j.param(qcubed.additionalPostVars));
-            $objForm.append($(input));
+                .attr("name", "Qform__AdditionalPostVars").val(JSON.stringify(qcubed.additionalPostVars));
+            $objForm.append(input);
         }
 
         // have $j trigger the submit event (so it can catch all submit events)
@@ -149,7 +159,8 @@ qcubed = {
      * additional post variables. Multiple sets of the same value will overwrite previous value.
      *
      * @param {string} name Name to post. Should probably be the control id, but can be anything.
-     * @param {mixed} val  Any value you want to send to PHP. Can be a string, array or object.
+     * @param {mixed} val  Any value you want to send to PHP. Can be a string, array or simple object. Can also contain null
+     * values and these will become nulls in PHP.
      */
     setAdditionalPostVar: function (name, val) {
         qcubed.additionalPostVars[name] = val;
@@ -158,7 +169,7 @@ qcubed = {
      * This function resolves the state of checkable controls into postable values.
      *
      * Checkable controls (checkboxes and radio buttons) can be problematic. We have the following issues to work around:
-     * - On a submit, only the values of the checeked items are submitted. Non-checked items are not submitted.
+     * - On a submit, only the values of the checked items are submitted. Non-checked items are not submitted.
      * - QCubed may have checkboxes that are part of the form object, but not visible on the html page. In particular,
      *   this can happen when a grid is creating objects at render time, and then scrolls or pages so those objects
      *   are no longer "visible".
@@ -248,7 +259,7 @@ qcubed = {
      * @param {string} strWaitIconControlId Not used, probably legacy code.
      * @return {object} Post Data
      */
-    getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
+    getAjaxData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
         var $form = $j('#' + strForm),
             $formElements = $form.find('input,select,textarea'),
             checkables = [],
@@ -316,15 +327,20 @@ qcubed = {
         });
 
         // Update most of the Qform__ parameters explicitly here. Others, like the state and form id will have been handled above.
-        postData.Qform__FormParameter = $j.param({obj: mixParameter}); // decoded in PHP
+        if (mixParameter !== undefined) {
+            postData.Qform__FormParameter = JSON.stringify(mixParameter);
+        }
         postData.Qform__FormControl = strControl;
         postData.Qform__FormEvent = strEvent;
         postData.Qform__FormCallType = "Ajax";
-        postData.Qform__FormUpdates = qcubed.controlModifications;
+
+        if (!$j.isEmptyObject(qcubed.controlModifications)) {
+            postData.Qform__FormUpdates = JSON.stringify(qcubed.controlModifications);
+        }
         postData.Qform__FormCheckableControls = qcubed._checkableControlValues(strForm, checkables);
 
-        if (qcubed.additionalPostVars && qcubed.additionalPostVars.length) {
-            $j.extend(postData, qcubed.additionalPostVars);
+        if (!$j.isEmptyObject(qcubed.additionalPostVars)) {
+            postData.Qform__AdditionalPostVars = JSON.stringify(qcubed.additionalPostVars);
             qcubed.additionalPostVars = {};
         }
 
@@ -369,7 +385,7 @@ qcubed = {
             qFormParams: qFormParams,
             fnInit: function(o) {
                 // Get the data at the last possible instant in case the formstate changes between ajax calls
-                o.data = qcubed.getPostData(
+                o.data = qcubed.getAjaxData(
                     o.qFormParams.form,
                     o.qFormParams.control,
                     o.qFormParams.event,

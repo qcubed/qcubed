@@ -402,23 +402,21 @@
 					QApplication::$RequestMode = QRequestMode::Ajax;
 				}
 
-				// Decode form parameter 
 				if (!empty($_POST['Qform__FormParameter'])) {
-					parse_str($_POST['Qform__FormParameter'], $param);
-					$_POST['Qform__FormParameter'] = $param['obj']; // deserialized item is here
+					$_POST['Qform__FormParameter'] = self::UnpackPostVar($_POST['Qform__FormParameter']);
 				}
 
 				// Decode custom post variables from server calls
-				if (isset($_POST['Qform__AdditionalPostVars'])) {
-					parse_str($_POST['Qform__AdditionalPostVars'], $vars);
-					$_POST = array_merge($_POST, $vars);
+				if (!empty($_POST['Qform__AdditionalPostVars'])) {
+					$val = self::UnpackPostVar($_POST['Qform__AdditionalPostVars']);
+					$_POST = array_merge($_POST, $val);
 				}
 
 				// Iterate through all the control modifications
 				if (!empty($_POST['Qform__FormUpdates'])) {
 					$controlUpdates = $_POST['Qform__FormUpdates'];
 					if (is_string($controlUpdates)) {    // Server post is encoded, ajax not encoded
-						parse_str($controlUpdates, $controlUpdates);
+						$controlUpdates = self::UnpackPostVar($controlUpdates);
 					}
 					if (!empty($controlUpdates)) {
 						foreach ($controlUpdates as $strControlId=>$params) {
@@ -455,7 +453,7 @@
 				if (!empty($_POST['Qform__FormCheckableControls'])) {
 					$vals = $_POST['Qform__FormCheckableControls'];
 					if (is_string($vals)) { // Server post is encoded, ajax not encoded
-						parse_str($vals, $vals);
+						$vals = self::UnpackPostVar($vals);
 					}
 					$objClass->checkableControlValues = $vals;
 				} else {
@@ -507,7 +505,6 @@
 								($objControl->RenderMethod)) {
 								// Call each control's ParsePostData()
 								$objControl->ParsePostData();
-								$objControl->ResetFlags();  // this should NOT be needed, but just in case
 							}
 
 							$previouslyFoundArray[$strControlId] = true;
@@ -621,6 +618,32 @@
 
 			// Tigger Exit Event (if applicable)
 			$objClass->Form_Exit();
+		}
+
+		/**
+		 * Unpacks a post variable that has been encoded with JSON.stringify.
+		 *
+		 * @param $val
+		 * @return mixed|string
+		 */
+		protected static function UnpackPostVar($val) {
+			$val = json_decode($val, true);
+			if (QApplication::$EncodingType != 'UTF-8') {
+				if (is_string($val)) {
+					$val = iconv('UTF-8', QApplication::$EncodingType, $val);
+				}
+				elseif (is_array($val)) {
+					array_walk_recursive($val, function(&$v, $key) {
+						if (is_string($v)) {
+							$v = iconv('UTF-8', QApplication::$EncodingType, $v);
+						}
+					});
+				}
+				else {
+					throw new Exception ('Unknown Post Var Type');
+				}
+			}
+			return $val;
 		}
 
 		/**
