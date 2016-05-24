@@ -21,7 +21,7 @@ $j.fn.extend({
  * Queued Ajax requests.
  * A new Ajax request won't be started until the previous queued
  * request has finished.
- * @param object o Options.
+ * @param {object} o Options.
  */
 $j.ajaxQueue = function(o) {
     if (typeof $j.ajaxq === "undefined") {
@@ -40,7 +40,7 @@ qcubed = {
     /**
      * @param {string} strControlId
      * @param {string} strProperty
-     * @param {string} strNewValue
+     * @param {string|ARray|Object} strNewValue
      */
     recordControlModification: function(strControlId, strProperty, strNewValue) {
         if (!qcubed.controlModifications[strControlId]) {
@@ -116,7 +116,7 @@ qcubed = {
      * @param {string} strForm The QForm Id, gets overwritten.
      * @param {string} strControl The Control Id.
      * @param {string} strEvent The Event.
-     * @param {mixed} mixParameter
+     * @param {null|string|Array|Object} mixParameter
      */
     postBack: function(strForm, strControl, strEvent, mixParameter) {
         strForm = $j("#Qform__FormId").val();
@@ -159,7 +159,7 @@ qcubed = {
      * additional post variables. Multiple sets of the same value will overwrite previous value.
      *
      * @param {string} name Name to post. Should probably be the control id, but can be anything.
-     * @param {mixed} val  Any value you want to send to PHP. Can be a string, array or simple object. Can also contain null
+     * @param {null|number|string|Array|Object} val  Any value you want to send to PHP. Can be a string, array or simple object. Can also contain null
      * values and these will become nulls in PHP.
      */
     setAdditionalPostVar: function (name, val) {
@@ -198,7 +198,7 @@ qcubed = {
         if (!controls || controls.length == 0) {
             return {};
         }
-        $j.each(controls, function(i) {
+        $j.each(controls, function() {
             var $element = $j(this),
                 id = $element.attr("id"),
                 strType = $element.prop("type"),
@@ -255,7 +255,7 @@ qcubed = {
      * @param {string} strForm The Form Id
      * @param {string} strControl The Control Id
      * @param {string} strEvent The Event
-     * @param {mixed} mixParameter An array of parameters or a string value.
+     * @param {null|string|array|object} mixParameter An array of parameters or a string value.
      * @param {string} strWaitIconControlId Not used, probably legacy code.
      * @return {object} Post Data
      */
@@ -355,7 +355,7 @@ qcubed = {
      * @param {string} strForm The QForm Id
      * @param {string} strControl The Control Id
      * @param {string} strEvent
-     * @param {mixed} mixParameter
+     * @param {null|string|Object|Array} mixParameter
      * @param {string} strWaitIconControlId The id of the control's spinner.
      * @return {void}
      * @todo There is an eval() in here. We need to find a way around that.
@@ -372,7 +372,7 @@ qcubed = {
         qFormParams.waitIcon = strWaitIconControlId;
 
         if (strWaitIconControlId) {
-            this.objAjaxWaitIcon = this.getWrapper(strWaitIconControlId);
+            this.objAjaxWaitIcon = qcubed.getWrapper(strWaitIconControlId);
             if (this.objAjaxWaitIcon) {
                 this.objAjaxWaitIcon.style.display = 'inline';
             }
@@ -731,7 +731,7 @@ qcubed = {
             }
         }
         else if ($j.type(obj) == 'object') {
-            var newItem = {}
+            var newItem = {};
             $j.each (obj, function (key, obj2) {
                 newItem[key] = qcubed.unpackObj(obj2);
             });
@@ -808,7 +808,7 @@ qcubed.updateForm = function() {
         // delay to let multiple fast actions only trigger periodic refreshes
         qcubed.setTimeout ('qcubed.update', 'qcubed.updateForm', qcubed.minUpdateInterval);
     }
-}
+};
 
 /////////////////////////////////////
 // Drag and drop support
@@ -823,13 +823,13 @@ qcubed.draggable = function (parentId, draggableId) {
         var c = jQuery(this);
         qcubed.recordControlModification(draggableId, "_DragData", {originalPosition: {left: c.data("originalPosition").left, top: c.data("originalPosition").top}, position: {left: c.position().left, top: c.position().top}});
     });
-}
+};
 
 qcubed.droppable = function (parentId, droppableId) {
     jQuery('#' + parentId).on("drop", function (event, ui) {
         qcubed.recordControlModification(droppableId, "_DroppedId", ui.draggable.attr("id"));
     })
-}
+};
 
 qcubed.resizable = function (parentId, resizeableId) {
     $j('#' + parentId).on("resizestart", function () {
@@ -858,20 +858,20 @@ qcubed.dialog = function(controlId) {
             event.preventDefault();
         }
     });
-}
+};
 
 qcubed.accordion = function(controlId) {
     $j('#' + controlId).on("accordionactivate", function(event, ui) {
         qcubed.recordControlModification(controlId, "_SelectedIndex", $j(this).accordion("option", "active"));
         $j(this).trigger("change");
     });
-}
+};
 
 qcubed.progressbar = function(controlId) {
     $j('#' + controlId).on("progressbarchange", function (event, ui) {
         qcubed.recordControlModification(controlId, "_Value", $j(this).progressbar ("value"));
     });
-}
+};
 
 qcubed.selectable = function(controlId) {
     $j('#' + controlId).on("selectablestop", function (event, ui) {
@@ -888,7 +888,7 @@ qcubed.selectable = function(controlId) {
         qcubed.recordControlModification(controlId, "_SelectedItems", strItems);
 
     });
-}
+};
 
 qcubed.slider = function(controlId) {
     $j('#' + controlId).on("slidechange", function (event, ui) {
@@ -898,7 +898,7 @@ qcubed.slider = function(controlId) {
             qcubed.recordControlModification(controlId, "_Value", ui.value);
         }
     });
-}
+};
 
 qcubed.tabs = function(controlId) {
     $j('#' + controlId).on("tabsactivate", function(event, ui) {
@@ -906,44 +906,15 @@ qcubed.tabs = function(controlId) {
         var id = ui.newPanel ? ui.newPanel.attr("id") : null;
         qcubed.recordControlModification(controlId, "_active", [i,id]);
     });
-}
+};
 
 qcubed.datagrid2 = function(controlId) {
     $j('#' + controlId).on("click", "thead tr th a", function(event, ui) {
         var cellIndex = $j(this).parent()[0].cellIndex;
         $j(this).trigger('qdg2sort', cellIndex); // Triggers the QDataGrid2_SortEvent
     });
-}
-
-
-/////////////////////////////////////
-// Event Object-related functionality
-/////////////////////////////////////
-
-// You may still use this function but be advised
-// we no longer use it in core.  All event terminations
-// and event bubbling are handled through jQuery.
-// see http://trac.qcu.be/projects/qcubed/ticket/681
-/**
- * @deprecated
- */
-qcubed.terminateEvent = function(objEvent) {
-    objEvent = qcubed.handleEvent(objEvent);
-
-    if (objEvent) {
-        // Stop Propogation
-        if (objEvent.preventDefault) {
-            objEvent.preventDefault();
-        }
-        if (objEvent.stopPropagation) {
-            objEvent.stopPropagation();
-        }
-        objEvent.cancelBubble = true;
-        objEvent.returnValue = false;
-    }
-
-    return false;
 };
+
 
 /////////////////////////////////
 // Controls-related functionality
@@ -987,7 +958,7 @@ qcubed.setRadioInGroup = function(strControlId) {
             $radios.trigger('qformObjChanged'); // send the new values back to the form
         }
     }
-}
+};
 
 /////////////////////////////
 // Register Control - General
@@ -998,6 +969,7 @@ qcubed.javascriptStyleToQcubed = {};
 qcubed.formObjsModified = {};
 qcubed.additionalPostVars = {};
 qcubed.ajaxError = false;
+qcubed.inputSupport = true;
 qcubed.javascriptStyleToQcubed.backgroundColor = "BackColor";
 qcubed.javascriptStyleToQcubed.borderColor = "BorderColor";
 qcubed.javascriptStyleToQcubed.borderStyle = "BorderStyle";
@@ -1112,9 +1084,10 @@ qcubed.registerControl = function(mixControl) {
                 if (qcubed.javascriptStyleToQcubed[strStyleName]) {
                     qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcubed[strStyleName], strNewValue);
                 }
+                /* ???
                 if (this.handle) {
                     this.updateHandle();
-                }
+                }*/
                 break;
 
             case "text":
