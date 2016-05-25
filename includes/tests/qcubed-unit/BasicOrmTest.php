@@ -339,6 +339,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$objItems = Project::QueryArray(
 			QQ::All(),
 			QQ::Clause(
+				QQ::Select(QQN::Project()->Id, QQN::Project()->Name),	// Some databases require selecting specific fields when aggregating
 				QQ::GroupBy(QQN::Project()->Id),
 				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
 				QQ::Having(QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId)),
@@ -395,5 +396,20 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$this->assertEquals($objPersonArray[0]->Id, 7, "Found first project with manager");
 	}
 
+	public function testVirtualAttributeAliases() {
+		$clauses = [
+			QQ::GroupBy(QQN::Project()->ProjectStatusTypeId),
+			QQ::Sum(QQN::Project()->Budget, 'Budget Amount'),
+			QQ::Expand(QQ::Virtual('Balance', QQ::Func('SUM', QQ::Sub(QQN::Project()->Budget, QQN::Project()->Spent))))
+		];
+		$cond = QQ::Equal(QQN::Project()->ProjectStatusTypeId, ProjectStatusType::Open);
+
+		$objProject = Project::QuerySingle($cond, $clauses);
+
+		$amount1 = $objProject->GetVirtualAttribute('Budget Amount');
+		$this->assertEquals(83000, $amount1);
+		$amount2 = $objProject->GetVirtualAttribute('Balance');
+		$this->assertEquals(5599.50, $amount2);
+	}
 }
 ?>

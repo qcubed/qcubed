@@ -4,17 +4,23 @@
 <div id="instructions">
 	<h1>Picking database columns for QQuery</h1>
 	
-	<p>By default <strong>QQuery</strong> selects all the columns from the table and thus populates all the properties of
+	<p>Most of the time, <strong>QQuery</strong> selects all the columns from the table and thus populates all the properties of
 	the resulting objects.
 	Normally, this is the right thing to do - the most expensive part of a typical query is hitting the database and
-	performing the query;
-	once the query is performed, fetching as much data as possible is the most efficient behaviour.</p>
+	performing the query;</p>
 	
-	<p>However, when some tables have a large amount of columns, or some <em>LOB</em> columns, this may become expensive,
+	<p>However, when some tables have a large number of columns, or some columns that contain large objects (BLOB, TEXT, etc.), this may become expensive,
 	both in terms of the traffic generated between application and database, and in terms of the memory footprint of the
 	application.</p>
+
+	<p>Also, more and more databases are preventing you from creating SQL queries that might produce ambiguous results when
+		using aggregate clauses. For example, if you create a query that groups employees by last name, and counts how many
+		employees have each last name, but then also tries to select a first name, if there are mulitple employees with the same
+		last name, the database will be confused and won't know which first name to show. Most databases will error in this
+		situation. However, it would be perfectly fine to select a last name, because each group has the same last name.
+		You need a way to specify particular database fields to select.</p>
 	
-	<p><strong>QQ::Select</strong> solves this problem by allowing to pick only the desired subset of columns to fetch from
+	<p><strong>QQ::Select</strong> solves this problem by allowing you to pick particular columns to fetch from
 	the database.</p>
 	
 	<p>QQ::Select can be passed as a clause to any query method.
