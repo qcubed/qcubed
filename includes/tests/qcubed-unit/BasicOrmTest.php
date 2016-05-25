@@ -409,7 +409,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$amount1 = $objProject->GetVirtualAttribute('Budget Amount');
 		$this->assertEquals(83000, $amount1);
 		$amount2 = $objProject->GetVirtualAttribute('Balance');
-		$this->assertEquals(5599, $amount2);
+		$this->assertEquals(5599.50, $amount2);
 	}
 }
 ?>
