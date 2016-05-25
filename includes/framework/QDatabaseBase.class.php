@@ -626,7 +626,7 @@
 				case 'DateFormat':
 					return (is_null($this->objConfigArray[strtolower($strName)])) ? (QDateTime::FormatIso) : ($this->objConfigArray[strtolower($strName)]);
 				case 'OnlyFullGroupBy':
-					return $this->blnOnlyFullGroupBy;
+					return (!isset($this->objConfigArray[strtolower($strName)])) ? $this->blnOnlyFullGroupBy : $this->objConfigArray[strtolower($strName)];
 
 				default:
 					try {

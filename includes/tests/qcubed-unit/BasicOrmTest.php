@@ -339,6 +339,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$objItems = Project::QueryArray(
 			QQ::All(),
 			QQ::Clause(
+				QQ::Select(QQN::Project()->Id, QQN::Project()->Name),	// Some databases require selecting specific fields when aggregating
 				QQ::GroupBy(QQN::Project()->Id),
 				QQ::Count(QQN::Project()->PersonAsTeamMember->PersonId, 'team_member_count'),
 				QQ::Having(QQ::SubSql('COUNT({1}) > 5', QQN::Project()->PersonAsTeamMember->PersonId)),

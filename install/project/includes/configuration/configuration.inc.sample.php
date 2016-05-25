@@ -232,9 +232,13 @@ if (!defined('SERVER_INSTANCE')) {
 			 *		NOTE: Profiling should only be enabled when you are actively wanting to profile a
 			 *		specific PHP script or scripts.  Because of SIGNIFICANT performance degradation,
 			 *		it should otherwise always be OFF.
-			 * "ScriptPath": you can have CodeGen virtually add additional FKs, even though they are
-			 * 		not defined as a DB constraint in the database, by using a script to define what
-			 * 		those constraints are.  The path of the script can be defined here. - default is blank or none
+			 * "onlyfullgroupby": This controls whether your database can accept ambiguous select fields when doing
+			 *   aggregate clauses (see the QQ::Select example for more detail). You only need to set this if your
+			 *   database adapter doesn't have the right value. In some databases, this is configurable.
+			 *   In particular, MYSQL 5.7.5 changed the default of this value to true.  Our adapter has this set to false.
+			 *   You can see what your setting is by executing 'SELECT @@sql_mode' in mysql; If ONLY_FULL_GROUP_BY appears
+			 *   in the list, you should set this configuration value to true.
+			 *
 			 * Note: any option not used or set to blank will result in using the default value for that option
 			 */
 
@@ -248,7 +252,9 @@ if (!defined('SERVER_INSTANCE')) {
 				'password' => '{db1_password}',
 				'caching' => false,
 				'profiling' => false,
-				'encoding' => 'utf8')));
+				'encoding' => 'utf8',
+				'dateformat' => null,
+				'onlyfullgroupby' => defined by db adapter)));
 			-->*/
 
 			// Additional Database Connection Strings can be defined here (e.g. for connection #2, #3, #4, #5, etc.)

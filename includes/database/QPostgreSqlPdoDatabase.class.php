@@ -7,8 +7,10 @@
 class QPostgreSqlPdoDatabase extends QPdoDatabase {
 		const Adapter = 'PostgreSQL PDO Database Adapter';
 		const PDO_PGSQL_DSN_IDENTIFIER = 'pgsql';
+		protected $blnOnlyFullGroupBy = true;
 
-		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
+
+	public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
 			$strEscapedArray = $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
 			$strColumns = array_keys($strEscapedArray);
 			$strUpdateStatement = '';

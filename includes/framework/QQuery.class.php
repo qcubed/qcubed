@@ -1585,11 +1585,14 @@
 		}
 
 		/**
+		 * Searches for all the QQSelect clauses and merges them into one clause and returns that clause.
+		 * Returns null if none found.
+		 *
 		 * @param QQClause[]|QQClause|null $objClauses QQClause object or array of QQClause objects
 		 * @return QQSelect QQSelect clause containing all the nodes from all the QQSelect clauses from $objClauses,
 		 * or null if $objClauses contains no QQSelect clauses
 		 */
-		public static function extractSelectClause($objClauses) {
+		public static function ExtractSelectClause($objClauses) {
 			if ($objClauses instanceof QQSelect)
 				return $objClauses;
 
