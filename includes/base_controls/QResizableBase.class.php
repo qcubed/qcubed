@@ -51,13 +51,10 @@
 			switch ($strName) {
 				case '_ResizeData': // Internal only. Do not use. Called by qcubed.resizable to keep track of changes.
 					try {
-						$data = QType::Cast($mixValue, QType::String);
-						$a = explode (",", $data);
-						$this->aryOriginalSize['width'] = $a[0];
-						$this->aryOriginalSize['height'] = $a[1];
-						$this->aryNewSize['width'] = $a[2];
-						$this->aryNewSize['height'] = $a[3];
-						
+						$data = QType::Cast($mixValue, QType::ArrayType);
+						$this->aryOriginalSize = $data['originalSize'];
+						$this->aryNewSize = $data['size'];
+
 						// update dimensions
 						$this->Width = $this->aryNewSize['width'];
 						$this->Height = $this->aryNewSize['height'];

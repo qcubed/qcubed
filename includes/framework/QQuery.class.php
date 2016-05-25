@@ -1764,6 +1764,16 @@
 		static public function Add($op1, $op2 /** ... */) {
 			return new QQMathNode('+', func_get_args());
 		}
+		/**
+		 * The negation unary operation
+		 *
+		 * @param QQNode|mixed $op1 The first operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
+		static public function Neg($op1) {
+			return new QQMathNode('-', [$op1]);
+		}
+
 	}
 
 	abstract class QQSubQueryNode extends QQColumnNode {
@@ -1952,7 +1962,14 @@
 		 * @return string
 		 */
 		public function GetColumnAlias(QQueryBuilder $objBuilder) {
+			if (count($this->params) == 0) return '';
+
 			$strSql = '(';
+
+			if (count($this->params) == 1) {
+				// unary
+				$strSql .= $this->strOperation;
+			}
 			foreach ($this->params as $param) {
 				if ($param instanceof QQColumnNode) {
 					$strSql .= $param->GetColumnAlias($objBuilder);
@@ -1963,7 +1980,7 @@
 				}
 				$strSql .= ' ' . $this->strOperation . ' ';
 			}
-			$strSql = substr($strSql, 0, -3);	// get rid of last operation
+			$strSql = substr($strSql, 0, -(strlen($this->strOperation) + 2));	// get rid of last operation
 			$strSql .= ')';
 			return $strSql;
 		}
