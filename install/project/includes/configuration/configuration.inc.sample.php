@@ -246,7 +246,7 @@ if (!defined('SERVER_INSTANCE')) {
 	 *		NOTE: Profiling should only be enabled when you are actively wanting to profile a
 	 *		specific PHP script or scripts.  Because of SIGNIFICANT performance degradation,
 	 *		it should otherwise always be OFF.
-	 * "encoding": Only used for MYSQL. Specifies the encoding for traffic between the client and database.
+	 * "encoding": Only used for MYSQL. Specifies the encoding for traffic between the client and the database.
 	 * "onlyfullgroupby": This controls whether your database can accept ambiguous select fields when doing
 	 *   aggregate clauses (see the QQ::Select example for more detail). You only need to set this if your
 	 *   database adapter doesn't have the right value. In some databases, this is configurable.
