@@ -31,6 +31,7 @@ qcubed.autocomplete = function(controlId) {
                 // items might change even when no menu item is selected
                 qc.recCM(this.id, "SelectedId", ui.item.id);
             }
+            qc.formObjChanged(event); // to record the change to the text
         });
 }
 qcubed.acSourceFunction = function (request, response) {
