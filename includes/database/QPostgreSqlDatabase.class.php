@@ -36,7 +36,7 @@
 
 		protected $objPgSql;
 		protected $objMostRecentResult;
-		//protected $blnOnlyFullGroupBy = true;
+		protected $blnOnlyFullGroupBy = true;
 
 		public function SqlVariable($mixData, $blnIncludeEquality = false, $blnReverseEquality = false) {
 			// Are we SqlVariabling a BOOLEAN value?

@@ -48,8 +48,8 @@ CREATE TABLE project (
     description TEXT,
     start_date DATE,
     end_date DATE,
-    budget DECIMAL,
-    spent DECIMAL,
+    budget DECIMAL(12,2),
+    spent DECIMAL(12,2),
     CONSTRAINT PK_project PRIMARY KEY (id)
 );
 CREATE INDEX IDX_project_1 ON project (project_status_type_id);

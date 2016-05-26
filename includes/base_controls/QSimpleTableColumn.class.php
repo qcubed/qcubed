@@ -984,6 +984,10 @@
 			if ($strAttribute) {
 				$this->strAttribute = $strAttribute;
 			}
+
+			$this->OrderByClause = QQ::OrderBy(QQ::Virtual($strAttribute));
+			$this->ReverseOrderByClause = QQ::OrderBy(QQ::Virtual($strAttribute), false);
+
 		}
 		
 		public function FetchCellObject($item) {
