@@ -316,12 +316,12 @@
 				if (array_key_exists('QUERY_STRING', $_SERVER))
 					switch (strtolower($_SERVER['QUERY_STRING'])) {
 						case 'disco':
-							header('Content-Type: text/xml');
+							QApplication::$ContentType = 'text/xml';
 							_p('<?xml version="1.0" encoding="' . QApplication::$EncodingType . '"?>', false);
 							_p($objDiscoCache->GetData(), false);
 							return;
 						case 'wsdl':
-							header('Content-Type: text/xml');
+							QApplication::$ContentType = 'text/xml';
 							_p('<?xml version="1.0" encoding="' . QApplication::$EncodingType . '"?>', false);
 							_p($objWsdlCache->GetData(), false);
 							return;

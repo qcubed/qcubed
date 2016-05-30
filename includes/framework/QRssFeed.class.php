@@ -72,7 +72,8 @@
 
 		public function Run() {
 			ob_clean();
-			header('Content-type: text/xml');
+			QApplication::$ContentType = 'text/xml';
+
 			if (QApplication::$EncodingType)
 				printf("<?xml version=\"1.0\" encoding=\"%s\" ?>\r\n", QApplication::$EncodingType);
 			else
