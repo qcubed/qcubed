@@ -78,7 +78,11 @@
 		/**
 		 * Nothing to parse in current implementation
 		 */
-		public function ParsePostData() { }
+		public function ParsePostData() {
+			foreach($this->objColumnArray as $objColumn) {
+				$objColumn->ParsePostData();
+			}
+		}
 
 		/**
 		 * Add an Index column and return it.

@@ -174,7 +174,11 @@ qcubed = {
      * Checkboxes and radio buttons that are not part of a group will return a true or false keyed by the control id.
      * Note that for radio buttons, a group is defined by a common identifier in the id. Radio buttons with the same
      * name, but different ids, are not considered part of a group for purposes here, even though visually they will
-     * act like they are part of a group.
+     * act like they are part of a group. This allows you to create individual QRadioButton objects that each will
+     * be updated with a true or false, but the browser will automatically make sure only one is checked.
+     *
+     * Any time an id has an underscore in it, that control is considered part of a group. The value after the underscore
+     * will be the value returned, and before the last underscore will be id that will be used as the key for the value.
      *
      * @param {string} strForm   Form Id
      * @param {array} controls  Array of checkable controls. These must be checkable controls, it will not validate this.
@@ -191,7 +195,7 @@ qcubed = {
             var $element = $j(this),
                 id = $element.attr("id"),
                 strType = $element.prop("type"),
-                index = -1,
+                index = null,
                 offset;
 
             if (id &&
@@ -202,13 +206,13 @@ qcubed = {
             }
             switch (strType) {
                 case "checkbox":
-                    if (index >= 0) {   // this is a group of checkboxes
+                    if (index !== null) {   // this is a group of checkboxes
                         var a = values[id];
                         if ($element.is(":checked")) {
                             if (a) {
-                                a.push($element.val());
+                                a.push(index);
                             } else {
-                                a = [$element.val()];
+                                a = [index];
                             }
                             values[id] = a;
                         }
@@ -223,7 +227,7 @@ qcubed = {
                     break;
 
                 case "radio":
-                    if (index >= 0) {
+                    if (index !== null) {
                         if ($element.is(":checked")) {
                             values[id] = index;
                         }
