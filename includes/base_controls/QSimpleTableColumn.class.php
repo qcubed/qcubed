@@ -261,6 +261,12 @@
 		}
 
 		/**
+		 * Override to check for post data in your column if needed.
+		 */
+		public function ParsePostData() {
+		}
+
+		/**
 		 * PHP magic method
 		 *
 		 * @param string $strName
@@ -1054,8 +1060,15 @@
 	 * Prints checkboxes in a column, including the header. Override this class and implement whatever hooks you need. In
 	 * particular implement the CheckId hooks, and IsChecked hooks.
 	 *
-	 * This class does not detect and record changes in the checkbox list.
-	 * Use the QSimpleTableCheckBoxColumn_ClickEvent to detect a change to a checkbox. You will need to detect whether
+	 * To get the checkbox values to post values back to PHP, each checkbox must have an id of the form:
+	 *
+	 * QcontrolId_index
+	 *
+	 * This class does not detect and record changes in the checkbox list. You can detect changes from within
+	 * ParsePostData by calling $this->objForm->CheckableControlValue,
+	 * or use the QSimpleTableCheckBoxColumn_ClickEvent to detect a change to a checkbox.
+	 *
+	 * You will need to detect whether
 	 * the header check all box was clicked, or a regular box was clicked and respond accordingly. In response to a
 	 * click, you could store the array of ids of the checkboxes clicked in a session variable, the database, or
 	 * a cache variable. You would just give an id to each checkbox. This would cause internet traffic every time
@@ -1095,6 +1108,7 @@
 		 * Returns an array of parameters to attach to the checkbox tag. Includes whether the
 		 * checkbox should appear as checked. Will try the callback first, and if not present,
 		 * will try overridden functions.
+		 * 
 		 * @param mixed|null $item	Null to indicate that we want the params for the header cell.
 		 * @return array
 		 */
@@ -1110,17 +1124,16 @@
 			}
 
 			if ($strName = $this->GetCheckboxName ($item)) {
-				$aParams['name'] = $strName; // if no name is indicated, then the data for the checkboxes will not be submitted.
+				$aParams['name'] = $strName; // name is not used by QCubed
 			}
 
-			$aParams['value'] = $this->GetCheckboxValue ($item); // note that value is required for html checkboxes
+			$aParams['value'] = $this->GetCheckboxValue ($item); // note that value is required for html checkboxes, but is not used by QCubed
 
 			if ($this->checkParamCallback) {
 				$a = call_user_func($this->checkParamCallback, $item);
 				$aParams = array_merge ($aParams, $a);
 			}
-
-
+			
 			return $aParams;		
 		}
 
@@ -1147,7 +1160,10 @@
 		
 		/**
 		 * Returns the id for the checkbox itself. This is used together with the check action to send the item
-		 * id to the action.
+		 * id to the action. Your id should look like:
+		 *
+		 *
+		 *
 		 * @param mixed|null $item	Null to get the id for the header checkbox
 		 */
 		protected function GetCheckboxId ($item) {
