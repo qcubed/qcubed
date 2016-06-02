@@ -78,6 +78,9 @@
 		 * can be set/modified by QFormBase::EvaluateTemplate accordingly to
 		 * prevent OutputPage from executing.
 		 *
+		 * Also set this to false if you are outputting custom headers, especially
+		 * if you send your own "Content-Type" header.
+		 *
 		 * @var boolean ProcessOutput
 		 */
 		public static $ProcessOutput = true;
@@ -142,6 +145,14 @@
 		 * @var string EncodingType
 		 */
 		public static $EncodingType = "UTF-8";
+
+		/**
+		 * The content type to output.
+		 *
+		 * @var string ContentType
+		 */
+		public static $ContentType = "text/html";
+
 
 		/**
 		 * An array of Database objects, as initialized by QApplication::InitializeDatabaseConnections()
@@ -1069,6 +1080,9 @@
 				} else {
 					// Update Cache-Control setting
 					header('Cache-Control: ' . QApplication::$CacheControl);
+					// make sure the server does not override the character encoding value by explicitly sending it out as a header.
+					// some servers will use an internal default if not specified in the header, and that will override the "encoding" value sent in the text.
+					header(sprintf('Content-Type: %s; charset=%s', strtolower(QApplication::$ContentType), strtolower(QApplication::$EncodingType)));
 
 					/*
 					 * Normally, FormBase->RenderEnd will render the javascripts. In the unusual case

@@ -302,7 +302,8 @@
 			// Output the Image (if path isn't specified, output to buffer.  Otherwise, output to disk)
 			if (!$strPath) {
 				// TODO: Update Cache Parameters
-				QApplication::$CacheControl = 'cache';
+				QApplication::$ProcessOutput = false;
+				header('Cache-Control: cache');
 				header('Expires: Wed, 20 Mar 2019 05:00:00 GMT');
 				header('Pragma: cache');
 

@@ -1601,12 +1601,13 @@
 			}
 
 			if ($this->strInstructions){
-				$strInstructions = '<br/><span class="instructions">' . $this->strInstructions . '</span>';
+				$strInstructions = '<br/>' .
+				QHtml::RenderTag('span', ['class'=>"instructions"], QHtml::RenderString($this->strInstructions));
 			}else{
 				$strInstructions = '';
 			}
-			
-			$strToReturn = sprintf('<div class="%s"><label>%s</label>%s</div>', $strLabelClass, $this->strName, $strInstructions);
+			$strLabel = QHtml::RenderTag('label', null, QHtml::RenderString($this->strName));
+			$strToReturn = QHtml::RenderTag('div', ['class'=>$strLabelClass], $strLabel . $strInstructions);
 
 			// Render the Right side
 			$strMessage = '';

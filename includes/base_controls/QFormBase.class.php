@@ -389,7 +389,7 @@
 					self::InvalidFormState();
 				}
 			}
-
+			
 			if ($objClass) {
 				// Globalize
 				global $_FORM;
@@ -402,23 +402,30 @@
 					QApplication::$RequestMode = QRequestMode::Ajax;
 				}
 
-				// Decode form parameter 
+				// Cleanup ajax post data if the encoding does not match, since ajax data is always utf-8
+				if ($objClass->strCallType == QCallType::Ajax && QApplication::$EncodingType != 'UTF-8') {
+					foreach ($_POST as $key=>$val) {
+						if (substr($key, 0, 6) != 'Qform_') {
+							$_POST[$key] = iconv('UTF-8', QApplication::$EncodingType, $val);
+						}
+					}
+				}
+
 				if (!empty($_POST['Qform__FormParameter'])) {
-					parse_str($_POST['Qform__FormParameter'], $param);
-					$_POST['Qform__FormParameter'] = $param['obj']; // deserialized item is here
+					$_POST['Qform__FormParameter'] = self::UnpackPostVar($_POST['Qform__FormParameter']);
 				}
 
 				// Decode custom post variables from server calls
-				if (isset($_POST['Qform__AdditionalPostVars'])) {
-					parse_str($_POST['Qform__AdditionalPostVars'], $vars);
-					$_POST = array_merge($_POST, $vars);
+				if (!empty($_POST['Qform__AdditionalPostVars'])) {
+					$val = self::UnpackPostVar($_POST['Qform__AdditionalPostVars']);
+					$_POST = array_merge($_POST, $val);
 				}
 
 				// Iterate through all the control modifications
 				if (!empty($_POST['Qform__FormUpdates'])) {
 					$controlUpdates = $_POST['Qform__FormUpdates'];
 					if (is_string($controlUpdates)) {    // Server post is encoded, ajax not encoded
-						parse_str($controlUpdates, $controlUpdates);
+						$controlUpdates = self::UnpackPostVar($controlUpdates);
 					}
 					if (!empty($controlUpdates)) {
 						foreach ($controlUpdates as $strControlId=>$params) {
@@ -455,17 +462,12 @@
 				if (!empty($_POST['Qform__FormCheckableControls'])) {
 					$vals = $_POST['Qform__FormCheckableControls'];
 					if (is_string($vals)) { // Server post is encoded, ajax not encoded
-						parse_str($vals, $vals);
+						$vals = self::UnpackPostVar($vals);
 					}
 					$objClass->checkableControlValues = $vals;
 				} else {
 					$objClass->checkableControlValues = [];
 				}
-
-				// Iterate through all the controls
-				
-				// TODO: some listener pattern should be used to update only those
-				// controls that needs it
 
 				// This is original code. In an effort to minimize changes,
 				// we aren't going to touch the server calls for now
@@ -487,6 +489,7 @@
 				}
 				else {
 					// Ajax post. Only send data to controls specified in the post to save time.
+
 					$previouslyFoundArray = array();
 					$controls = $_POST;
 					$controls = array_merge($controls, $objClass->checkableControlValues);
@@ -507,7 +510,6 @@
 								($objControl->RenderMethod)) {
 								// Call each control's ParsePostData()
 								$objControl->ParsePostData();
-								$objControl->ResetFlags();  // this should NOT be needed, but just in case
 							}
 
 							$previouslyFoundArray[$strControlId] = true;
@@ -624,6 +626,37 @@
 		}
 
 		/**
+		 * Unpacks a post variable that has been encoded with JSON.stringify.
+		 *
+		 * @param $val
+		 * @return mixed|string
+		 */
+		protected static function UnpackPostVar($val) {
+			if (QApplication::$EncodingType != 'UTF-8' && QApplication::$RequestMode != QRequestMode::Ajax) {
+				// json_decode only accepts utf-8 encoded text. Ajax calls are already UTF-8 encoded.
+				$val = iconv(QApplication::$EncodingType, 'UTF-8', $val);
+			}
+			$val = json_decode($val, true);
+			if (QApplication::$EncodingType != 'UTF-8') {
+				// Must convert back from utf-8 to whatever our application encoding is
+				if (is_string($val)) {
+					$val = iconv('UTF-8', QApplication::$EncodingType, $val);
+				}
+				elseif (is_array($val)) {
+					array_walk_recursive($val, function(&$v, $key) {
+						if (is_string($v)) {
+							$v = iconv('UTF-8', QApplication::$EncodingType, $v);
+						}
+					});
+				}
+				else {
+					throw new Exception ('Unknown Post Var Type');
+				}
+			}
+			return $val;
+		}
+
+		/**
 		 * Reset all validation states.
 		 */
 		public function ResetValidationStates() {
@@ -665,7 +698,7 @@
 
 				// Output it and update render state
 				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
-					$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
+					$strJSON = iconv(QApplication::$EncodingType, 'UTF-8', $strJSON); // json must be UTF-8 encoded
 				}
 				print ($strJSON);
 			} else {
