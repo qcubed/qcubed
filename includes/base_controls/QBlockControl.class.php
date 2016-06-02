@@ -277,12 +277,14 @@
 					try {
 						$this->blnModified = true;
 						if ($mixValue) {
-							if (file_exists($mixValue))
+							if (file_exists($this->GetTemplatePath($mixValue))) {
 								$this->strTemplate = QType::Cast($mixValue, QType::String);
-							else
+							} else {
 								throw new QCallerException('Template file does not exist: ' . $mixValue);
-						} else
-							$this->strTemplate = null; 
+							}
+						} else {
+							$this->strTemplate = null;
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
