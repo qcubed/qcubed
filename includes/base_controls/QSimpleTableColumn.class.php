@@ -1367,15 +1367,16 @@
 		 * QSimpleTableLinkColumn constructor.
 		 *
 		 * @param string $strName Column name to be displayed in the table header.
-		 * @param null|string|array $mixText The text to display as the label of the anchor, a callable callback to get the text,
-		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same. Depends on
-		 *   what type of row item is passed.
+		 * @param null|string|array|QQNode $mixText The text to display as the label of the anchor, a callable callback to get the text,
+		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same, or a QQNode representing the property.
+		 *   Depends on what type of row item is passed.
 		 * @param null|string|array|QControlProxy $mixDestination The text representing the destination of the anchor, a callable callback to get the destination,
 		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same,
 		 *   or a QControlProxy. Depends on what type of row item is passed.
 		 * @param null|string|array $getVars An array of key=>value pairs to use as the GET variables in the link URL,
 		 *   or in the case of a QControlProxy, possibly a string to represent the action parameter. In either case, each item
-		 *   can be a property chain, an array index list, or a callable callback as specified above.
+		 *   can be a property chain, an array index list, a QQNode, or a callable callback as specified above. If the destination is a
+		 *   QControlProxy, this would be what to use as the action parameter.
 		 * @param null|array $tagAttributes An array of key=>value pairs to use as additional attributes in the tag.
 		 *   For example, could be used to add a class or an id to each tag.
 		 * @param bool $blnAsButton Only used if this is drawing a QControlProxy. Will draw the proxy as a button.
@@ -1458,6 +1459,30 @@
 					return $item; // We have no idea what this is, so return the item for possible further processing
 				}
 			}
+			elseif ($mixSpec instanceof QQNode) {
+				$properties = array($mixSpec->_PropertyName);
+				$objNode = $mixSpec;
+				while ($objNode = $objNode->_ParentNode) {
+					if (!($objNode instanceof QQNode))
+						throw new QCallerException('QQNode cannot go through any "To Many" association nodes.');
+					if (($objNode instanceof QQReverseReferenceNode) && !$objNode->IsUnique())
+						throw new QCallerException('QQNode cannot go through any "To Many" association nodes.');
+					if ($strPropName = $objNode->_PropertyName) {
+						$properties[] = $strPropName;
+					}
+				}
+				$properties = array_reverse($properties);
+				$value = $item;
+				foreach ($properties as $prop) {
+					$value = $value->$prop;
+				}
+				if (is_object($value)) {
+					return $value->__toString();
+				}
+				else {
+					return $value;
+				}
+			}
 			return $mixSpec; // In this case, we return a static value
 		}
 
@@ -1495,7 +1520,11 @@
 							$getVars[$key] = static::GetObjectValue($val, $item);
 						}
 					}
-				} else {
+				}
+				elseif ($this->getVars instanceof QQNode) {
+					$getVars = static::GetObjectValue($this->getVars, $item);
+				}
+				else {
 					$getVars = $this->getVars; // could be a simple action parameter.
 				}
 			}
@@ -1618,6 +1647,9 @@
 							foreach ($mixValue as $key=>$val) {
 								$this->getVars[$key] = self::SplitSpec($val);
 							}
+						}
+						elseif ($mixValue instanceof QQNode) {
+							$this->getVars = $mixValue;
 						}
 						else {
 							throw new Exception ("Invalid type");
