@@ -381,6 +381,22 @@
 
 
 		/**
+		 * A utility function to convert a template file name into a full path.
+		 *
+		 * @param $strTemplate
+		 */
+		public function GetTemplatePath($strTemplate) {
+			// If no path is specified, or a relative path, use the path of the child control's file as the starting point.
+			if (strpos($strTemplate, DIRECTORY_SEPARATOR) !== 0) {
+				$reflector = new ReflectionClass(get_class($this));
+				$strDir = dirname($reflector->getFileName());
+				$strTemplate = $strDir . DIRECTORY_SEPARATOR . $strTemplate;
+			}
+			return $strTemplate;
+		}
+
+
+		/**
 		 * This function evaluates a template and is used by a variety of controls. It is similar to the function found in the
 		 * QForm, but recreated here so that the "$this" in the template will be the control, instead of the form,
 		 * and the protected members of the control are available to draw directly.
@@ -404,13 +420,7 @@
 				// Evaluate the new template
 				ob_start('__QForm_EvaluateTemplate_ObHandler');
 
-				// If no path is specified, use the path of the child control's file.
-				if (strpos($strTemplate, DIRECTORY_SEPARATOR) === false) {
-					$reflector = new ReflectionClass(get_class($this));
-					$strDir = dirname($reflector->getFileName());
-					$strTemplate = $strDir . DIRECTORY_SEPARATOR . $strTemplate;
-				}
-
+				$strTemplate = $this->GetTemplatePath($strTemplate);
 				require($strTemplate);
 				$strTemplateEvaluated = ob_get_contents();
 				ob_end_clean();
