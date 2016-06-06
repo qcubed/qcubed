@@ -12,6 +12,6 @@ class NavPanel extends QPanel {
 
 	public function __construct ($objParent, $strControlId = null) {
 		parent::__construct($objParent, $strControlId);
-		$this->strTemplate = '/nav_panel.tpl.php';
+		$this->strTemplate = 'nav_panel.tpl.php';
 	}
 }
