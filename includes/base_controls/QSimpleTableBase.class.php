@@ -79,8 +79,10 @@
 		 * Nothing to parse in current implementation
 		 */
 		public function ParsePostData() {
-			foreach($this->objColumnArray as $objColumn) {
-				$objColumn->ParsePostData();
+			if ($this->objColumnArray) {
+				foreach($this->objColumnArray as $objColumn) {
+					$objColumn->ParsePostData();
+				}
 			}
 		}
 
