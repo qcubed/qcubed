@@ -483,8 +483,9 @@
 			if ($this->objPostCallback) {
 				$cellValue = call_user_func($this->objPostCallback, $cellValue);
 			}
-			if (!$cellValue)
+			if ($cellValue === null) {
 				return '';
+			}
 
 			if ($cellValue instanceof QDateTime) {
 				return $cellValue->qFormat($this->strFormat);
