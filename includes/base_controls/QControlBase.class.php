@@ -1462,6 +1462,11 @@
 		 * so we detect whether the parent is being rendered, and assume the parent is taking care of rendering for
 		 * us if so.
 		 *
+		 * Override if you want more control over ajax drawing, like it you detect parts of your control that have changed
+		 * and then want to draw only those parts. This will get called on every control on every ajax draw request.
+		 * It is up to you to test the blnRendered flag of the control to know whether the control was already rendered
+		 * by a parent control before drawing here.
+		 *
 		 * @return array[] array of control arrays to be interpreted by the response function in qcubed.js
 		 */
 		public function RenderAjax() {
@@ -1472,7 +1477,7 @@
 				if ((!$this->objParentControl) || ((!$this->objParentControl->Rendered) && (!$this->objParentControl->Rendering))) {
 					$strRenderMethod = $this->strRenderMethod;
 					if (!$strRenderMethod && $this->AutoRender) {
-						// This is an injected dialog that is not on the page, so go ahead and render it
+						// This is an auto-injected control (a dialog for instance) that is not on the page, so go ahead and render it
 						$strRenderMethod = $this->strPreferredRenderMethod;
 					}
 					if ($strRenderMethod) {

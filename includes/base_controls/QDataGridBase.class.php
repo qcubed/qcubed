@@ -342,6 +342,8 @@
 		protected $btnFilter = null;
 		/** @var array|QButton[] */
 		protected $btnFilterResetArray = array();
+		/** @var QControlProxy Proxy used for sorting QDataGrid by a particular column */
+		protected $prxDatagridSorting;
 
 		/**
 		 * Add an action on a row of this QDataGrid
@@ -369,6 +371,7 @@
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}
+			$this->prxDatagridSorting = new QControlProxy($this);
 			$this->objRowStyle = new QDataGridRowStyle();
 			$this->objAlternateRowStyle = new QDataGridRowStyle();
 			$this->objHeaderRowStyle = new QDataGridRowStyle();
