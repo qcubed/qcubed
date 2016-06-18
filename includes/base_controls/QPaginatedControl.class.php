@@ -42,8 +42,6 @@
 		// MISC
 		/** @var array DataSource from which the items are picked and rendered */
 		protected $objDataSource;
-		/** @var QControlProxy Proxy used for sorting QDataGrid by a particular column */
-		protected $prxDatagridSorting;
 
 		// SETUP
 		/** @var bool Is this paginator a block element? */
@@ -61,8 +59,6 @@
 
 			$this->strNoun = QApplication::Translate('item');
 			$this->strNounPlural = QApplication::Translate('items');
-			
-			$this->prxDatagridSorting = new QControlProxy($this);
 		}
 
 		// PaginatedControls should (in general) never have anything that ever needs to be validated -- so this always
