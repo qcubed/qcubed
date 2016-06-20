@@ -32,11 +32,11 @@
  *
  * @package <?= QCodeGen::$ApplicationName; ?>
 
-<?= $listCodegenerator->DataListSubclassComments($objCodeGen, $objTable); ?>
+<?= $listCodegenerator->DataListConnectorGenComments($objCodeGen, $objTable); ?>
  * @subpackage ModelConnector
  *
  */
 
 class <?= $objTable->ClassName ?>ListGen extends <?= $strClassName ?> {
-<?= $listCodegenerator->DataListSubclass($objCodeGen, $objTable); ?>
+<?= $listCodegenerator->DataListConnectorGen($objCodeGen, $objTable); ?>
 }

@@ -20,6 +20,12 @@
 	// Check codegen settings file to see if we want to use a dialog or a form to edit a record
 	$blnUseDialog = (isset($options['EditMode']) && $options['EditMode'] == 'dialog');
 
+	$blnUseFilter = !$listCodegenerator->DataListHasFilter();
+
+	if (isset($objTable->Options['CreateFilter'])) {
+		$blnUseFilter = $objTable->Options['CreateFilter'];
+	}
+
 ?>
 <?php print("<?php\n"); ?>
 
@@ -46,11 +52,11 @@ abstract class <?= $strPropertyName ?>ListPanelGen extends QPanel {
 <?php if ($blnUseDialog) { ?>
 		$this->dlgEdit = new <?= $strPropertyName ?>EditDlg($this);
 <?php } ?>
-<?php if (!isset($objTable->Options['CreateFilter']) || $objTable->Options['CreateFilter'] !== false) { ?>
+<?php if ($blnUseFilter) { ?>
 		$this->CreateFilterPanel();
 <?php } ?>
 <?= $listCodegenerator->DataListCreate($objCodeGen, $objTable); ?>
-<?php if (!isset($objTable->Options['CreateFilter']) || $objTable->Options['CreateFilter'] !== false) { ?>
+<?php if ($blnUseFilter) { ?>
 		$this-><?= $strListVarName ?>->SetDataBinder('BindData', $this);
 <?php } ?>
 		$this->CreateButtonPanel();
@@ -59,7 +65,7 @@ abstract class <?= $strPropertyName ?>ListPanelGen extends QPanel {
 <?= $listCodegenerator->DataListHelperMethods($objCodeGen, $objTable); ?>
 
 
-<?php if (!isset($objTable->Options['CreateFilter']) || $objTable->Options['CreateFilter'] !== false) { ?>
+<?php if ($blnUseFilter) { ?>
 <?php include("list_createFilter.tpl.php"); ?>
 <?php include("list_createDataBinder.tpl.php"); ?>
 <?php } ?>

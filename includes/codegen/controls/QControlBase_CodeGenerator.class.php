@@ -98,8 +98,7 @@ TMPL;
 
 		/**
 		 * Generate code that will be inserted into the ModelConnector to connect a database object with this control.
-		 * This is called during the codegen process. This is very similar to the QListControl code, but there are
-		 * some differences. In particular, this control does not support ManyToMany references.
+		 * This is called during the codegen process. 
 		 *
 		 * @param QCodeGenBase $objCodeGen
 		 * @param QTable $objTable

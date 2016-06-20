@@ -18,3 +18,4 @@ QApplicationBase::$ClassFile['qradiobuttonlist_codegenerator'] = __INCLUDES__ .'
 QApplicationBase::$ClassFile['qslider_codegenerator'] = __INCLUDES__ .'/codegen/controls/QSlider_CodeGenerator.class.php';
 QApplicationBase::$ClassFile['qtextbox_codegenerator'] = __INCLUDES__ .'/codegen/controls/QTextBox_CodeGenerator.class.php';
 QApplicationBase::$ClassFile['qdatagrid2_codegenerator'] = __INCLUDES__ .'/codegen/controls/QDataGrid2_CodeGenerator.class.php';
+QApplicationBase::$ClassFile['qsimpletable_codegenerator'] = __QCUBED_CORE__ .'/codegen/controls/QSimpleTable_CodeGenerator.class.php';

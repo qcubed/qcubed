@@ -22,6 +22,6 @@
 	}
 
 	protected function FilterChanged() {
-		$this-><?= $strListVarName ?>->Refresh();
+<?= $listCodegenerator->DataListRefresh($objCodeGen, $objTable); ?>
 	}
 

@@ -43,12 +43,16 @@ trait QDataBinder {
 	 */
 	public function CallDataBinder() {
 		if ($this->objDataBinder) {
-			if (is_array($this->objDataBinder) && $this->objDataBinder[0] instanceof QForm) {
-				$this->objDataBinder[0]->CallDataBinder($this->objDataBinder, $this);
+			if (is_array($this->objDataBinder)) {
+				if ($this->objDataBinder[0] instanceof QForm) {
+					$this->objDataBinder[0]->CallDataBinder($this->objDataBinder, $this); // Let form call the data binder, so that binder can be private to form
+				} else {
+					call_user_func($this->objDataBinder, $this); // assume data binder is in a qcontrol, or is public
+				}
 			}
 			else {
 				try {
-					call_user_func($this->objDataBinder, $this);
+					call_user_func($this->objDataBinder);	// calling databinder on self, so do not pass the control as param
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
