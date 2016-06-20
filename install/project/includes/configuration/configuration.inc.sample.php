@@ -207,9 +207,7 @@ if (!defined('SERVER_INSTANCE')) {
 	// define ('__JQUERY_EFFECTS__',   'jquery/jquery-ui.custom.js');
 
 	// The core qcubed javascript file to be used.
-	// In production or as a performance tweak, you may want to use the compressed "_qc_packed.js" library
 	define ('__QCUBED_JS_CORE__',  'qcubed.js');
-	//define ('__QCUBED_JS_CORE__',  '_qc_packed.js');
 
 	define ('__JQUERY_CSS__', 'jquery-ui-themes/ui-qcubed/jquery-ui.custom.css');
 
