@@ -323,7 +323,6 @@
 				else {
 					$strScript = strtolower(trim(file_get_contents($this->strRelationshipsScriptPath)));
 					switch (strtolower($this->strRelationshipsScriptFormat)) {
-						case 'qcodo':
 						case 'qcubed':
 							$strLines = explode("\n", $strScript);
 							if ($strLines) foreach ($strLines as $strLine) {
@@ -381,7 +380,7 @@
 							break;
 
 						default:
-							$this->strErrors .= sprintf("CodeGen Settings XML Fatal Error: relationshipsScript format \"%s\" is invalid (must be either \"qcubed\", \"qcodo\" or \"sql\")\r\n", $this->strRelationshipsScriptFormat);
+							$this->strErrors .= sprintf("CodeGen Settings XML Fatal Error: relationshipsScript format \"%s\" is invalid (must be either \"qcubed\" or \"sql\")\r\n", $this->strRelationshipsScriptFormat);
 							break;
 					}
 				}
