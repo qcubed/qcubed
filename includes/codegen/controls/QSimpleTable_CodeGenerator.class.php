@@ -671,6 +671,26 @@ TMPL;
 
 TMPL;
 
+		$strCode .= <<<TMPL
+		
+/*
+	 Uncomment this block to use an Edit column instead of clicking on a highlighted row in order to edit an item.
+
+		protected \$pxyEditRow;
+
+		protected function {$strVarName}_MakeEditable () {
+			\$pxyEditRow = new QControlProxy(\$this);
+			\$pxyEditRow->AddAction(new QClickEvent(), new QAjaxControlAction(\$this, '{$strVarName}_EditClick'));
+			\$this->{$strVarName}->CreateLinkColumn(QApplication::Translate('Edit'), QApplication::Translate('Edit'), \$pxyEditRow, QQN::{$objTable->ClassName}()->Id, null, false, 0);
+		}
+
+		protected function {$strVarName}_EditClick(\$strFormId, \$strControlId, \$param) {
+			\$this->EditItem(\$param);
+		}
+*/	
+
+TMPL;
+
 		return $strCode;
 	}
 
