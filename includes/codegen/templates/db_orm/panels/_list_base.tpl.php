@@ -55,7 +55,7 @@ abstract class <?= $strPropertyName ?>ListPanelGen extends QPanel {
 <?php if ($blnUseFilter) { ?>
 		$this->CreateFilterPanel();
 <?php } ?>
-<?= $listCodegenerator->DataListCreate($objCodeGen, $objTable); ?>
+<?= $listCodegenerator->DataListInstantiate($objCodeGen, $objTable); ?>
 <?php if ($blnUseFilter) { ?>
 		$this-><?= $strListVarName ?>->SetDataBinder('BindData', $this);
 <?php } ?>

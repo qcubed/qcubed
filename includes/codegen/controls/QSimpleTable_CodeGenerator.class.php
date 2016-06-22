@@ -5,7 +5,7 @@
  * and optionally allows the user to do CRUD operations on individual records.
  */
 
-abstract class QSimpleTable_CodeGenerator extends QControl_CodeGenerator {
+abstract class QSimpleTable_CodeGenerator extends QControl_CodeGenerator implements QDataList_CodeGenerator_Interface {
 
 	/**
 	 * dtg stands for "DataGrid", a QCubed historical name for tables displaying data. Override if you want something else.
@@ -17,7 +17,10 @@ abstract class QSimpleTable_CodeGenerator extends QControl_CodeGenerator {
 	}
 
 	
-	/**** CONNECTOR GEN *******/
+	/****
+	 * CONNECTOR GEN
+	 * The following functions generate the ListGen code that will go into the generated/connector_base directory
+	 *******/
 
 	/**
 	 * Generate the text to insert into the "ConnectorGen" class comments. This would typically be "property" PHPDoc
@@ -27,7 +30,7 @@ abstract class QSimpleTable_CodeGenerator extends QControl_CodeGenerator {
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	public function DataListConnectorGenComments(QCodeGenBase $objCodeGen, QTable $objTable) {
+	public function DataListConnectorComments(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
  * @property QQCondition 	\$Conditions Any condition to use during binding
  * @property QQClauses 		\$Clauses Any clauses to use during binding
@@ -44,14 +47,14 @@ TMPL;
 	 * @param QCodeGenBase $objCodeGen
 	 * @param QTable $objTable
 	 */
-	public function DataListConnectorGen(QCodeGenBase $objCodeGen, QTable $objTable) {
-		$strCode = $this->GenerateConnectorGenMembers($objCodeGen, $objTable);
-		$strCode .= $this->GenerateConnectorGenConstructor($objCodeGen, $objTable);
-		$strCode .= $this->GenerateConnectorGenCreatePaginator($objCodeGen, $objTable);
-		$strCode .= $this->GenerateConnectorGenCreateColumns($objCodeGen, $objTable);
-		$strCode .= $this->GenerateConnectorGenDataBinder($objCodeGen, $objTable);
-		$strCode .= $this->GenerateConnectorGenGet($objCodeGen, $objTable);
-		$strCode .= $this->GenerateConnectorGenSet($objCodeGen, $objTable);
+	public function DataListConnector(QCodeGenBase $objCodeGen, QTable $objTable) {
+		$strCode = $this->DataListMembers($objCodeGen, $objTable);
+		$strCode .= $this->DataListConstructor($objCodeGen, $objTable);
+		$strCode .= $this->DataListCreatePaginator($objCodeGen, $objTable);
+		$strCode .= $this->DataListCreateColumns($objCodeGen, $objTable);
+		$strCode .= $this->DataListDataBinder($objCodeGen, $objTable);
+		$strCode .= $this->DataListGet($objCodeGen, $objTable);
+		$strCode .= $this->DataListSet($objCodeGen, $objTable);
 
 		return $strCode;
 	}
@@ -63,7 +66,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	public function GenerateConnectorGenMembers(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListMembers(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
 	/**
 	 * @var null|QQCondition	Condition to use to filter the list.
@@ -79,7 +82,7 @@ TMPL;
 
 
 TMPL;
-		$strCode .= $this->GenerateColumnDeclarations($objCodeGen, $objTable);
+		$strCode .= $this->DataListColumnDeclarations($objCodeGen, $objTable);
 		return $strCode;
 	}
 
@@ -92,7 +95,7 @@ TMPL;
 	 * @return string
 	 * @throws Exception
 	 */
-	protected function GenerateColumnDeclarations(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListColumnDeclarations(QCodeGenBase $objCodeGen, QTable $objTable) {
 
 		$strCode = <<<TMPL
 	// Publicly accessible columns that allow parent controls to directly manipulate them after creation.
@@ -130,7 +133,7 @@ TMPL;
 	 * @param QCodeGenBase $objCodeGen
 	 * @param QTable $objTable
 	 */
-	public function GenerateConnectorGenConstructor(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListConstructor(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strClassName = $this->GetControlClass();
 
 		$strCode = <<<TMPL
@@ -159,7 +162,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	public function GenerateConnectorGenCreatePaginator(QCodeGenBase $objCodeGen, QTable $objTable)
+	public function DataListCreatePaginator(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strCode = <<<TMPL
 	/**
@@ -182,7 +185,7 @@ TMPL;
 	 * @return string
 	 * @throws Exception
 	 */
-	public function GenerateConnectorGenCreateColumns(QCodeGenBase $objCodeGen, QTable $objTable)
+	public function DataListCreateColumns(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
@@ -232,7 +235,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateConnectorGenDataBinder(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListDataBinder(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strObjectType = $objTable->ClassName;
 		$strCode = <<<TMPL
    /**
@@ -273,8 +276,8 @@ TMPL;
 
 TMPL;
 
-		$strCode .= $this->GenerateConnectorGenCondition($objCodeGen, $objTable);
-		$strCode .= $this->GenerateConnectorGenClauses($objCodeGen, $objTable);
+		$strCode .= $this->DataListGetCondition($objCodeGen, $objTable);
+		$strCode .= $this->DataListGetClauses($objCodeGen, $objTable);
 
 		return $strCode;
 	}
@@ -284,7 +287,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateConnectorGenCondition(QCodeGenBase $objCodeGen, QTable $objTable)
+	protected function DataListGetCondition(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strCode = <<<TMPL
 	/**
@@ -317,7 +320,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateConnectorGenClauses(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListGetClauses(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
 	/**
 	 * Returns the clauses to use when querying the data. Default is to return the clauses put in the local
@@ -348,7 +351,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateConnectorGenGet(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListGet(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
 	/**
 	 * This will get the value of \$strName
@@ -382,7 +385,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateConnectorGenSet(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListSet(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strCode = <<<TMPL
 	/**
 	 * This will set the property \$strName to be \$mixValue
@@ -429,7 +432,10 @@ TMPL;
 
 
 
-	/**** Parent Gen *****/
+	/****
+	 * Parent Gen
+	 * The following functions generate code that is to be used by the parent object to instantiate and initialize this object.
+	 *****/
 
 	/**
 	 * Return true if the data list has its own build-in filter. False will mean that a filter field will be created
@@ -448,7 +454,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return mixed
 	 */
-	public function DataListCreate(QCodeGenBase $objCodeGen, QTable $objTable)
+	public function DataListInstantiate(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
@@ -484,10 +490,10 @@ TMPL;
 	 * @return string
 	 */
 	public function DataListHelperMethods(QCodeGenBase $objCodeGen, QTable $objTable) {
-		$strCode = $this->GenerateDataListCreateFunction($objCodeGen, $objTable);
-		$strCode .= $this->GenerateDataListCreateColumns($objCodeGen, $objTable);
-		$strCode .= $this->GenerateDataListMakeEditable($objCodeGen, $objTable);
-		$strCode .= $this->GenerateDataListRowParamsCallback($objCodeGen, $objTable);
+		$strCode = $this->DataListParentCreate($objCodeGen, $objTable);
+		$strCode .= $this->DataListParentCreateColumns($objCodeGen, $objTable);
+		$strCode .= $this->DataListParentMakeEditable($objCodeGen, $objTable);
+		$strCode .= $this->DataListGetRowParams($objCodeGen, $objTable);
 
 		return $strCode;
 	}
@@ -500,7 +506,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateDataListCreateFunction (QCodeGenBase $objCodeGen, QTable $objTable)
+	protected function DataListParentCreate(QCodeGenBase $objCodeGen, QTable $objTable)
 	{
 		$strPropertyName = $objCodeGen->DataListPropertyName($objTable);
 		$strVarName = $objCodeGen->DataListVarName($objTable);
@@ -541,7 +547,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateDataListCreateColumns(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListParentCreateColumns(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
 		$strCode = <<<TMPL
@@ -566,7 +572,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateDataListMakeEditable(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListParentMakeEditable(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
 		$strCode = <<<TMPL
@@ -594,7 +600,7 @@ TMPL;
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	protected function GenerateDataListRowParamsCallback(QCodeGenBase $objCodeGen, QTable $objTable) {
+	protected function DataListGetRowParams(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strVarName = $objCodeGen->DataListVarName($objTable);
 
 		$strCode = <<<TMPL
@@ -610,21 +616,30 @@ TMPL;
 	}
 
 
-	/***  Parent Override class ****/
+	/***
+	 * Parent SUBCLASS
+	 * Generator code for the parent subclass. The subclass is a first-time generation only.
+	 ****/
 
 	
 	/**
-	 * Generates an alternative create columns function that could be used by the list panel to create the columns directly.
+	 * Generates an alternate create columns function that could be used by the list panel to create the columns directly.
 	 * This is designed to be added as commented out code in the list panel override class that the user can choose to use.
 	 *
 	 * @param QCodeGenBase $objCodeGen
 	 * @param QTable $objTable
 	 * @return string
 	 */
-	public function GenerateCreateColumnsOverride(QCodeGenBase $objCodeGen, QTable $objTable) {
+	public function DataListSubclassOverrides(QCodeGenBase $objCodeGen, QTable $objTable) {
 		$strVarName = $objCodeGen->DataListVarName($objTable);
+		$strPropertyName = QCodeGen::DataListPropertyName($objTable);
 
 		$strCode = <<<TMPL
+/*
+	 Uncomment this block to directly create the columns here, rather than creating them in the {$strPropertyName}List connector.
+	 You can then modify the column creation process by editing the function below. Or, you can instead call the parent function 
+	 and modify the columns after the {$strPropertyName}List creates the default columns.
+
 	protected function {$strVarName}_CreateColumns() {
 
 TMPL;
@@ -652,6 +667,7 @@ TMPL;
 		$strCode .= <<<TMPL
 	}
 
+*/	
 
 TMPL;
 
