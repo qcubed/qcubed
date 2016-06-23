@@ -689,18 +689,10 @@
 		 * Override if you want a different response.
 		 */
 		public static function InvalidFormState() {
-			ob_clean();
+			//ob_clean();
 			if (isset($_POST['Qform__FormCallType']) &&  $_POST['Qform__FormCallType'] == QCallType::Ajax) {
-				// AJAX-based Response
-				header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
-
-				$strJSON = JavaScriptHelper::toJsObject(['loc' => 'reload']);
-
-				// Output it and update render state
-				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
-					$strJSON = iconv(QApplication::$EncodingType, 'UTF-8', $strJSON); // json must be UTF-8 encoded
-				}
-				print ($strJSON);
+				QApplication::$ProcessOutput = false;
+				QApplication::SendAjaxResponse(['loc' => 'reload']);
 			} else {
 				header('Location: '. QApplication::$RequestUri);
 			}
