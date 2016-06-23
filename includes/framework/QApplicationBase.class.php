@@ -1314,6 +1314,9 @@
 		public static function SendAjaxResponse(array $strResponseArray) {
 			header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
 			$strJSON = JavascriptHelper::toJSON($strResponseArray);
+			if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
+				$strJSON = iconv(QApplication::$EncodingType, 'UTF-8', $strJSON); // json must be UTF-8 encoded
+			}
 			print ($strJSON);
 		}
 

@@ -402,7 +402,7 @@ qcubed = {
                     $dialog;
 
                 qcubed.ajaxError = true;
-                if (XMLHttpRequest.status !== 0 || result.length > 0) {
+                if (XMLHttpRequest.status !== 0 || (result && result.length > 0)) {
                     if (result.substr(0, 15) === '<!DOCTYPE html>') {
                         alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
                         objErrorWindow = window.open('about:blank', 'qcubed_error', 'menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
@@ -493,13 +493,11 @@ qcubed = {
 
         this.wrappers = [];
 
-        if ('localStorage' in window && window['localStorage'] !== null) {
-            $j(window).on ("storage", function (o) {
-                if (o.originalEvent.key == "qcubed.broadcast") {
-                    qcubed.updateForm();
-                }
-            });
-        }
+        $j(window).on ("storage", function (o) {
+            if (o.originalEvent.key == "qcubed.broadcast") {
+                qcubed.updateForm();
+            }
+        });
 
         this.inputSupport = 'oninput' in document;
 
