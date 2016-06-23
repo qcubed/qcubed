@@ -388,9 +388,32 @@
 		public function GetTemplatePath($strTemplate) {
 			// If no path is specified, or a relative path, use the path of the child control's file as the starting point.
 			if (strpos($strTemplate, DIRECTORY_SEPARATOR) !== 0) {
+				$strOriginalPath = $strTemplate;
+
+				// Try the control's subclass location
 				$reflector = new ReflectionClass(get_class($this));
 				$strDir = dirname($reflector->getFileName());
 				$strTemplate = $strDir . DIRECTORY_SEPARATOR . $strTemplate;
+
+				if (!file_exists($strTemplate)) {
+					// Try the control's parent
+					if ($this->objParentControl) {
+						$reflector = new ReflectionClass(get_class($this->objParentControl));
+						$strDir = dirname($reflector->getFileName());
+						$strTemplate = $strDir . DIRECTORY_SEPARATOR . $strTemplate;
+					}
+				}
+
+				if (!file_exists($strTemplate)) {
+					// Try the form's location
+					$reflector = new ReflectionClass(get_class($this->objForm));
+					$strDir = dirname($reflector->getFileName());
+					$strTemplate = $strDir . DIRECTORY_SEPARATOR . $strTemplate;
+
+					if (!file_exists($strTemplate)) {
+						$strTemplate = $strOriginalPath;    // not found, but return original name
+					}
+				}
 			}
 			return $strTemplate;
 		}
