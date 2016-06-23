@@ -493,13 +493,11 @@ qcubed = {
 
         this.wrappers = [];
 
-        //if ('localStorage' in window && window['localStorage'] !== null) {
-            $j(window).on ("storage", function (o) {
-                if (o.originalEvent.key == "qcubed.broadcast") {
-                    qcubed.updateForm();
-                }
-            });
-        //}
+        $j(window).on ("storage", function (o) {
+            if (o.originalEvent.key == "qcubed.broadcast") {
+                qcubed.updateForm();
+            }
+        });
 
         this.inputSupport = 'oninput' in document;
 
