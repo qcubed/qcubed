@@ -22,9 +22,11 @@ $j.fn.extend({
  * A new Ajax request won't be started until the previous queued
  * request has finished.
  * @param {object} o Options.
+ * @param {boolean} blnAsync true to launch right away.
  */
-$j.ajaxQueue = function(o) {
-    if (typeof $j.ajaxq === "undefined") {
+$j.ajaxQueue = function(o, blnAsync) {
+    if (typeof $j.ajaxq === "undefined" || blnAsync) {
+        if (o.fnInit) o.fnInit(o);
         $j.ajax(o);
     } else {
         // see http://code.google.com/p/jquery-ajaxq/ for details
@@ -361,10 +363,11 @@ qcubed = {
      * @param {string} strEvent
      * @param {null|string|Object|Array} mixParameter
      * @param {string} strWaitIconControlId The id of the control's spinner.
+     * @param {boolean} blnAsync Whether to queue the ajax requests and processes serially (default), or do them async
      * @return {void}
      * @todo There is an eval() in here. We need to find a way around that.
      */
-    postAjax: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
+    postAjax: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId, blnAsync) {
         var objForm = $j('#' + strForm),
             strFormAction = objForm.attr("action"),
             qFormParams = {};
@@ -448,7 +451,7 @@ qcubed = {
                     qcubed.processDeferredAjaxResponse(json);
                 }
             }
-        });
+        }, blnAsync);
 
     },
 

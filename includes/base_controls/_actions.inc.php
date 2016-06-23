@@ -278,6 +278,8 @@
 		protected $strMethodName;
 		/** @var QWaitIcon Wait Icon to be used for this particular action */
 		protected $objWaitIconControl;
+
+		protected $blnAsync = false;
 		/**
 		 * @var mixed what kind of validation over-ride is to be implemented
 		 *              (See the QCausesValidation class and QFormBase class to understand in greater depth)
@@ -297,12 +299,13 @@
 		 *                                                      client-side when the action occurs!
 		 */
 		public function __construct($strMethodName = null, $objWaitIconControl = 'default',
-		                            $mixCausesValidationOverride = null, $strJsReturnParam = "") {
+		                            $mixCausesValidationOverride = null, $strJsReturnParam = "", $blnAsync = false) {
 			$this->strId = null;
 			$this->strMethodName = $strMethodName;
 			$this->objWaitIconControl = $objWaitIconControl;
 			$this->mixCausesValidationOverride = $mixCausesValidationOverride;
 			$this->strJsReturnParam = $strJsReturnParam;
+			$this->blnAsync = $blnAsync;
 		}
 
 		public function __clone() {
@@ -386,8 +389,9 @@
 				}
 			}
 
-			return sprintf("qc.pA('%s', '%s', '%s#%s', %s, '%s');",
-				$objControl->Form->FormId, $objControl->ControlId, addslashes(get_class($this->objEvent)), $this->strId, $this->getActionParameter($objControl), $strWaitIconControlId);
+			return sprintf("qc.pA('%s', '%s', '%s#%s', %s, '%s', %s);",
+				$objControl->Form->FormId, $objControl->ControlId, addslashes(get_class($this->objEvent)), $this->strId,
+				$this->getActionParameter($objControl), $strWaitIconControlId, $this->blnAsync ? 'true' : 'false');
 		}
 	}
 
@@ -425,8 +429,8 @@
 		 * @param string   $strJsReturnParam            Override for ActionParameter
 		 */
 		public function __construct(QControl $objControl, $strMethodName, $objWaitIconControl = 'default',
-		                            $mixCausesValidationOverride = null, $strJsReturnParam = "") {
-			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride, $strJsReturnParam);
+		                            $mixCausesValidationOverride = null, $strJsReturnParam = "", $blnAsync = false) {
+			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride, $strJsReturnParam, $blnAsync);
 		}
 	}
 
@@ -1305,4 +1309,3 @@
 		}
 	}
 
-?>
