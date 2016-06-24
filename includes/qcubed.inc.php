@@ -232,8 +232,9 @@
 	QApplicationBase::$ClassFile['qdropzonegrouping'] = __QCUBED_CORE__ . '/base_controls/QDropZoneGrouping.class.php';
 	
 	QApplicationBase::$ClassFile['qsamplecontrol'] = __QCUBED__ . '/controls/QSampleControl.class.php';
-	
+
 	QApplicationBase::$ClassFile['qjsclosure'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
+	QApplicationBase::$ClassFile['qjsfunction'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['javascripthelper'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['qjsnoquotekey'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
 	QApplicationBase::$ClassFile['qjsvarname'] = __QCUBED_CORE__ . '/framework/JavaScriptHelper.class.php';
