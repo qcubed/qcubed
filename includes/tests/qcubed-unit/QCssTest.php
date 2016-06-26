@@ -14,7 +14,7 @@ class QCssTests extends QUnitTestCaseBase {
 			$objTestDataArray["Msg"] .
 			" Expected: '" . $objTestDataArray["Expected"] . "'" .
 			" Obtained: '" . $strAttrs . "'";
-		$this->assertEquals($strAttrs,  $objTestDataArray["Expected"], $strMessage);
+		$this->assertEquals($objTestDataArray["Expected"], $strAttrs, $strMessage);
 	}
 
 	public function testFormatLength() {
@@ -103,8 +103,8 @@ class QCssTests extends QUnitTestCaseBase {
 		$newValue = $objTestDataArray["NewValue"];
 		$blnChanged = QHtml::SetLength($strOldValue, $newValue);
 
-		$this->assertEquals($blnChanged,  $objTestDataArray["Changed"]);
-		$this->assertEquals($strOldValue,  $objTestDataArray["Expected"]);
+		$this->assertEquals($objTestDataArray["Changed"], $blnChanged);
+		$this->assertEquals($objTestDataArray["Expected"], $strOldValue);
 		// problem with sending a percent sign into message, so we just use default message.
 	}
 
@@ -149,8 +149,8 @@ class QCssTests extends QUnitTestCaseBase {
 		$newValue = $objTestDataArray["NewValue"];
 		$blnChanged = QHtml::AddClass($strOldValue, $newValue);
 
-		$this->assertEquals($blnChanged,  $objTestDataArray["Changed"]);
-		$this->assertEquals($strOldValue,  $objTestDataArray["Expected"]);
+		$this->assertEquals($objTestDataArray["Changed"], $blnChanged);
+		$this->assertEquals($objTestDataArray["Expected"], $strOldValue);
 		// problem with sending a percent sign into message, so we just use default message.
 	}
 
@@ -183,8 +183,8 @@ class QCssTests extends QUnitTestCaseBase {
 		$newValue = $objTestDataArray["NewValue"];
 		$blnChanged = QHtml::RemoveClass($strOldValue, $newValue);
 
-		$this->assertEquals($blnChanged,  $objTestDataArray["Changed"]);
-		$this->assertEquals($strOldValue,  $objTestDataArray["Expected"]);
+		$this->assertEquals($objTestDataArray["Changed"], $blnChanged);
+		$this->assertEquals($objTestDataArray["Expected"], $strOldValue);
 		// problem with sending a percent sign into message, so we just use default message.
 	}
 
@@ -230,7 +230,7 @@ class QCssTests extends QUnitTestCaseBase {
 
 		foreach($objCaseArray as $objCase) {
 			$newValue = JavaScriptHelper::dataNameFromCamelCase($objCase["Value"]);
-			$this->assertEquals($newValue,  $objCase["Expected"]);
+			$this->assertEquals($objCase["Expected"], $newValue);
 		}
 
 		$objCaseArray = array(
@@ -250,7 +250,7 @@ class QCssTests extends QUnitTestCaseBase {
 
 		foreach($objCaseArray as $objCase) {
 			$newValue = JavaScriptHelper::dataNameToCamelCase($objCase["Value"]);
-			$this->assertEquals($newValue,  $objCase["Expected"]);
+			$this->assertEquals($objCase["Expected"], $newValue);
 		}
 
 	}
