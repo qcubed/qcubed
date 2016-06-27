@@ -78,7 +78,7 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			Person::GetDatabase()->TransactionRollBack();
 			// temporary cache is throwed out. the empty application cache is restored.
 		}
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 0, "Object is not placed in a cache because of the transaction roll back.");
+		$this->assertEquals(0, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not placed in a cache because of the transaction roll back.");
 
 		// restore the actual cache object
 		QApplication::$objCacheProvider = $objCacheProvider;
@@ -116,9 +116,9 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			Person::GetDatabase()->TransactionRollBack();
 			// temporary cache is throwed out. the empty application cache is restored.
 		}
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 1, "Object is not dropped from a cache because of the transaction roll back.");
+		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not dropped from a cache because of the transaction roll back.");
 		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPerson) {
-			$this->assertEquals($objPerson->FirstName, $strPerson1_FirstName, "Object is not modified in a cache because of the transaction roll back.");
+			$this->assertEquals($strPerson1_FirstName, $objPerson->FirstName, "Object is not modified in a cache because of the transaction roll back.");
 		}
 
 		// restore the actual cache object
@@ -148,16 +148,16 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			Person::GetDatabase()->TransactionRollBack();
 		}
 		
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 0, "Object is not placed in a cache after save because of the transaction commit.");
+		$this->assertEquals(0, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not placed in a cache after save because of the transaction commit.");
 		
 		// imitate the load made by other client.
 		// It populates the cache with new value.
 		$objPerson1a = Person::Load(1);
 		// new person value is placed in the application cache
 		
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 1, "Object is added to a cache because of the transaction commit.");
+		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is added to a cache because of the transaction commit.");
 		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPerson) {
-			$this->assertEquals($objPerson->FirstName, "New value 1", "Object is modified in a cache because of the transaction commit.");
+			$this->assertEquals("New value 1", $objPerson->FirstName, "Object is modified in a cache because of the transaction commit.");
 		}
 		
 		// Restore the original value to not break other tests
@@ -194,16 +194,16 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			Person::GetDatabase()->TransactionRollBack();
 		}
 		
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 0, "Object is dropped from a cache because of the transaction commit.");
+		$this->assertEquals(0, count(QApplication::$objCacheProvider->arrLocalCache), "Object is dropped from a cache because of the transaction commit.");
 		
 		// imitate the load made by other client.
 		// It populates the cache with new value.
 		$objPerson1a = Person::Load(1);
 		// new person value is placed in the application cache
 		
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 1, "Object is not dropped from a cache because of the transaction commit.");
+		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not dropped from a cache because of the transaction commit.");
 		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPerson) {
-			$this->assertEquals($objPerson->FirstName, "New value 1", "Object is modified in a cache because of the transaction commit.");
+			$this->assertEquals("New value 1", $objPerson->FirstName, "Object is modified in a cache because of the transaction commit.");
 		}
 		
 		// Restore the original value to not break other tests
@@ -242,7 +242,7 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			Person::GetDatabase()->TransactionRollBack();
 		}
 		
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 0, "Object is not placed in a cache after delete because of the transaction commit.");
+		$this->assertEquals(0, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not placed in a cache after delete because of the transaction commit.");
 		
 		// restore the actual cache object
 		QApplication::$objCacheProvider = $objCacheProvider;
@@ -264,7 +264,7 @@ class QDatabaseTests extends QUnitTestCaseBase {
 		
 		Person::Load($objPerson1z->Id);
 		// the person object is placed in a cache
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 1, "Object is placed in a cache.");
+		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is placed in a cache.");
 		
 		try {
 			Person::GetDatabase()->TransactionBegin();
@@ -280,7 +280,7 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			Person::GetDatabase()->TransactionRollBack();
 		}
 		
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 0, "Object is removed from a cache after delete because of the transaction commit.");
+		$this->assertEquals(0, count(QApplication::$objCacheProvider->arrLocalCache), "Object is removed from a cache after delete because of the transaction commit.");
 		
 		// restore the actual cache object
 		QApplication::$objCacheProvider = $objCacheProvider;
@@ -316,7 +316,7 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			// actual cache leaved unchanged
 		}
 		
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 0, "Object is not placed in a cache after delete because of the transaction roll back.");
+		$this->assertEquals(0, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not placed in a cache after delete because of the transaction roll back.");
 		
 		// restore the actual cache object
 		QApplication::$objCacheProvider = $objCacheProvider;
@@ -343,7 +343,7 @@ class QDatabaseTests extends QUnitTestCaseBase {
 		
 		Person::Load($objPerson1z->Id);
 		// the person object is placed in a cache
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 1, "Object is placed in a cache.");
+		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is placed in a cache.");
 		
 		try {
 			Person::GetDatabase()->TransactionBegin();
@@ -361,7 +361,7 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			// actual cache leaved unchanged
 		}
 		
-		$this->assertEquals(count(QApplication::$objCacheProvider->arrLocalCache), 1, "Object is NOT removed from a cache after delete because of the transaction roll back.");
+		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is NOT removed from a cache after delete because of the transaction roll back.");
 		
 		// restore the actual cache object
 		QApplication::$objCacheProvider = $objCacheProvider;
