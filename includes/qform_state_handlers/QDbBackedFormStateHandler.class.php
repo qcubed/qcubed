@@ -5,12 +5,16 @@
 	 * is saved in its own row in the DB, and only the form state that is needed for loading will
 	 * be accessed (as opposed to with session, ALL the form states are loaded into memory
 	 * every time).
+	 * 
 	 * The downside is that because it doesn't utilize PHP's session management subsystem,
 	 * this class must take care of its own garbage collection/deleting of old/outdated
 	 * formstate files.
-	 * Because the index is randomy generated and MD5-hashed, there is no benefit from
+	 * 
+	 * Because the index is randomly generated and MD5-hashed, there is no benefit from
 	 * encrypting it -- therefore, the QForm encryption preferences are ignored when using
 	 * QFileFormStateHandler.
+	 * 
+	 * This handler can handle asynchronous calls.
 	 */
 	class QDbBackedFormStateHandler extends QBaseClass {
 
@@ -222,5 +226,3 @@
 			return $strSerializedForm;
 		}
 	}
-
-?>

@@ -1,8 +1,22 @@
 <?php
 	/**
-	 * This is the "standard" FormState handler, storing the base64 encoded session data
-	 * (and if requested by QForm, encrypted) as a hidden form variable on the page, itself.
+	 * Class QFormStateHandler
+	 * This is the default FormState handler, storing the base64 encoded session data
+	 * (and if requested by QForm, encrypted) as a hidden form variable on the page, itself. It is meant to be a "quick
+	 * and dirty" handler that works in limited situations.
+	 *
+	 * We recommend that you do NOT use this formstate handler in general. It sends the entire formstate back and forth
+	 * to the client browser on every server and ajax request, which is slow, and could potentially reach limits quickly. It
+	 * encrypts the data, but there are still potential security problems if the data is sensitive.
+	 *
+	 * To change the formstate handler, define the __FORM_STATE_HANDLER__ in your configuration.inc.php file. See that
+	 * file for more detail.
+	 *
+	 * This form state handler is NOT safe to use when making asynchronous AJAX calls. The reason is that since the entire
+	 * formstate is sent to the browser, each ajax call must wait for the return trip to get the new formstate, before
+	 * sending the formstate back to the server on the next ajax call.
 	 */
+
 	class QFormStateHandler extends QBaseClass {
 		public static function Save($strFormState, $blnBackButtonFlag) {
 			// Compress (if available)

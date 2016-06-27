@@ -363,7 +363,8 @@ qcubed = {
      * @param {string} strEvent
      * @param {null|string|Object|Array} mixParameter
      * @param {string} strWaitIconControlId The id of the control's spinner.
-     * @param {boolean} blnAsync Whether to queue the ajax requests and processes serially (default), or do them async
+     * @param {boolean} blnAsync Whether to queue the ajax requests and processes serially (default), or do them async.
+     *                  See QAjaxAction comments for more info
      * @return {void}
      * @todo There is an eval() in here. We need to find a way around that.
      */
