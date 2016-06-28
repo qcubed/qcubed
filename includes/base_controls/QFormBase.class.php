@@ -321,15 +321,12 @@
 		}
 
 		/**
-		 * Returns whether or not the checkable control with the given controlId has been rendered or not.
-		 * @param string $strControlId
-		 *
-		 * @return bool
+		 * Returns the value of a checkable control. Checkable controls are special, in that the browser only tells us
+		 * when a control is checked, not when it is unchecked. So, unless we keep track of them specially, we will
+		 * not know if they are unchecked, or just not there.
+		 * @param $strControlId
+		 * @return mixed|null
 		 */
-		public function IsCheckableControlRendered($strControlId) {
-			return array_key_exists($strControlId, $this->checkableControlValues);
-		}
-
 		public function CheckableControlValue($strControlId) {
 			if (array_key_exists($strControlId, $this->checkableControlValues)) {
 				return $this->checkableControlValues[$strControlId];
