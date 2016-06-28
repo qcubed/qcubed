@@ -6,3 +6,4 @@ nbproject
 .DS_Store?
 *.orig
 /vendor/
+composer.lock
