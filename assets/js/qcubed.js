@@ -21,10 +21,12 @@ $j.fn.extend({
  * Queued Ajax requests.
  * A new Ajax request won't be started until the previous queued
  * request has finished.
- * @param object o Options.
+ * @param {object} o Options.
+ * @param {boolean} blnAsync true to launch right away.
  */
-$j.ajaxQueue = function(o) {
-    if (typeof $j.ajaxq === "undefined") {
+$j.ajaxQueue = function(o, blnAsync) {
+    if (typeof $j.ajaxq === "undefined" || blnAsync) {
+        if (o.fnInit) o.fnInit(o);
         $j.ajax(o);
     } else {
         // see http://code.google.com/p/jquery-ajaxq/ for details
@@ -40,7 +42,7 @@ qcubed = {
     /**
      * @param {string} strControlId
      * @param {string} strProperty
-     * @param {string} strNewValue
+     * @param {string|ARray|Object} strNewValue
      */
     recordControlModification: function(strControlId, strProperty, strNewValue) {
         if (!qcubed.controlModifications[strControlId]) {
@@ -57,7 +59,6 @@ qcubed = {
         var id = $j(ctl).attr('id');
         var strType = $j(ctl).prop("type");
         var name = $j(ctl).attr("name");
-        var ret;
 
         if (((strType === 'checkbox') || (strType === 'radio')) &&
            id && ((indexOffset = id.lastIndexOf('_')) >= 0)) { // a member of a control list
@@ -88,10 +89,12 @@ qcubed = {
         if (strType === 'radio' && name !== id) { // a radio button with a group name
             // since html does not submit a changed event on the deselected radio, we are going to invalidate all the controls in the group
             var group = $j('input[name=' + name + ']');
-            if (group) group.each(function () {
-                id = $j(this).attr('id');
-                qcubed.formObjsModified[id] = true;
-            });
+            if (group) {
+                group.each(function () {
+                    id = $j(this).attr('id');
+                    qcubed.formObjsModified[id] = true;
+                });
+            }
         }
         else if (id) {
             qcubed.formObjsModified[id] = true;
@@ -103,88 +106,152 @@ qcubed = {
      */
     initForm: function (strFormId) {
         $j('#' + strFormId).on ('qformObjChanged', this.formObjChanged); // Allow any control, including hidden inputs, to trigger a change and post of its data.
+        $j('#' + strFormId).submit(function(event) {
+            if (!$j('#Qform__FormControl').val()) { // did postBack initiated the submit?
+                // if not, prevent implicit form submission. This can happen in the rare case we have a single field and no submit button.
+                event.preventDefault();
+            }
+        });
     },
 
     /**
      * @param {string} strForm The QForm Id, gets overwritten.
      * @param {string} strControl The Control Id.
      * @param {string} strEvent The Event.
-     * @param {mixed} mixParameter
+     * @param {null|string|Array|Object} mixParameter
      */
     postBack: function(strForm, strControl, strEvent, mixParameter) {
         strForm = $j("#Qform__FormId").val();
         var $objForm = $j('#' + strForm);
 
-        if (mixParameter && (typeof mixParameter !== "string")) {
-            mixParameter = $j.param({Qform__FormParameter: mixParameter});
-            $objForm.append('<input type="hidden" name="Qform__FormParameterType" value="obj">');
-        }
+        var checkableControls = $j('#' + strForm).find('input[type="checkbox"], input[type="radio"]');
+        var checkableValues = this._checkableControlValues(strForm, $j.makeArray(checkableControls));
 
         $j('#Qform__FormControl').val(strControl);
         $j('#Qform__FormEvent').val(strEvent);
-        $j('#Qform__FormParameter').val(mixParameter);
         $j('#Qform__FormCallType').val("Server");
-        $j('#Qform__FormUpdates').val(this.formUpdates());
-        $j('#Qform__FormCheckableControls').val(this.formCheckableControls(strForm, "Server"));
+
+        // Notify custom controls that we are about to post
+        $objForm.trigger("qposting", "Server");
+
+        if (mixParameter !== undefined) {
+            $j('#Qform__FormParameter').val(JSON.stringify(mixParameter));
+        }
+        if (!$j.isEmptyObject(qcubed.controlModifications)) {
+            $j('#Qform__FormUpdates').val(JSON.stringify(qcubed.controlModifications));
+        }
+        if (!$j.isEmptyObject(checkableValues)) {
+            $j('#Qform__FormCheckableControls').val(JSON.stringify(checkableValues));
+        }
+
+        // add hidden control for additional values given
+        // Will be decoded and assigned to the $_POST var in PHP.
+        if (!$j.isEmptyObject(qcubed.additionalPostVars)) {
+            var input = $j("<input>")
+                .attr("type", "hidden")
+                .attr("name", "Qform__AdditionalPostVars").val(JSON.stringify(qcubed.additionalPostVars));
+            $objForm.append(input);
+        }
 
         // have $j trigger the submit event (so it can catch all submit events)
         $objForm.trigger("submit");
     },
-
     /**
-     * Return the updates to properties in form objects. Note that once you call this, you MUST post the data returned, as this
-     * code has the side effect of resetting the update cache.
-     * @return {string} The form's control modifications.
+     * Custom controls should call this in response to the qposting trigger on the form if they need to add some
+     * additional post variables. Multiple sets of the same value will overwrite previous value.
+     *
+     * @param {string} name Name to post. Should probably be the control id, but can be anything.
+     * @param {null|number|string|Array|Object} val  Any value you want to send to PHP. Can be a string, array or simple object. Can also contain null
+     * values and these will become nulls in PHP.
      */
-    formUpdates: function() {
-        var strToReturn = "",
-            strControlId,
-            strProperty;
-
-        for (strControlId in qcubed.controlModifications) {
-            for (strProperty in qcubed.controlModifications[strControlId]) {
-                strToReturn += strControlId + " " + strProperty + " " + qcubed.controlModifications[strControlId][strProperty] + "\n";
-            }
-        }
-        qcubed.controlModifications = {};
-        return strToReturn;
+    setAdditionalPostVar: function (name, val) {
+        qcubed.additionalPostVars[name] = val;
     },
-
     /**
-     * @param {string} strForm The QForm Id
-     * @param {string} strCallType Server or Ajax
-     * @return {string}
+     * This function resolves the state of checkable controls into postable values.
+     *
+     * Checkable controls (checkboxes and radio buttons) can be problematic. We have the following issues to work around:
+     * - On a submit, only the values of the checked items are submitted. Non-checked items are not submitted.
+     * - QCubed may have checkboxes that are part of the form object, but not visible on the html page. In particular,
+     *   this can happen when a grid is creating objects at render time, and then scrolls or pages so those objects
+     *   are no longer "visible".
+     * - Controls can be part of a group, and the group gets the value of the checked control(s), rather than individual
+     *   items getting a true or false.
+     *
+     * To solve all of these issues, we post a value that has all the values of all visible checked items, either
+     * true or false for individual items, or an array of values, single value, or null for groups. QCubed controls that
+     * deal with checkable controls must look for this special posted variable to know how to update their internal state.
+     *
+     * Checkboxes that are part of a group will return an array of values, keyed by the group id.
+     * Radio buttons that are part of a group will return a single value keyed by group id.
+     * Checkboxes and radio buttons that are not part of a group will return a true or false keyed by the control id.
+     * Note that for radio buttons, a group is defined by a common identifier in the id. Radio buttons with the same
+     * name, but different ids, are not considered part of a group for purposes here, even though visually they will
+     * act like they are part of a group. This allows you to create individual QRadioButton objects that each will
+     * be updated with a true or false, but the browser will automatically make sure only one is checked.
+     *
+     * Any time an id has an underscore in it, that control is considered part of a group. The value after the underscore
+     * will be the value returned, and before the last underscore will be id that will be used as the key for the value.
+     *
+     * @param {string} strForm   Form Id
+     * @param {array} controls  Array of checkable controls. These must be checkable controls, it will not validate this.
+     * @returns {object}  A hash of values keyed by control id
+     * @private
      */
-    formCheckableControls: function(strForm, strCallType) {
-        // Select the QCubed Form
-        var objFormElements = $j('#' + strForm).find('input'),
-            strToReturn = "";
+    _checkableControlValues: function(strForm, controls) {
+        var values = {};
 
-        objFormElements.each(function(i) {
+        if (!controls || controls.length == 0) {
+            return {};
+        }
+        $j.each(controls, function() {
             var $element = $j(this),
+                id = $element.attr("id"),
                 strType = $element.prop("type"),
-                strControlId;
+                index = null,
+                offset;
 
-            if (((strType === "checkbox") || (strType === "radio")) &&
-                ((strCallType === "Ajax") || (!$element.prop("disabled")))) {
-
-                strControlId = $element.attr("id");
-
-                // RadioButtonList or CheckBoxList
-                if (strControlId) {
-                    if (strControlId.lastIndexOf('_') >= 0) {
-                        if (strControlId.lastIndexOf('_0') >= 0) {
-                            strToReturn += " " + strControlId.substring(0, strControlId.length - 2);
+            if (id &&
+                (offset = id.lastIndexOf('_')) != -1) {
+                // A control group
+                index = id.substr(offset + 1);
+                id = id.substr(0, offset);
+            }
+            switch (strType) {
+                case "checkbox":
+                    if (index !== null) {   // this is a group of checkboxes
+                        var a = values[id];
+                        if ($element.is(":checked")) {
+                            if (a) {
+                                a.push(index);
+                            } else {
+                                a = [index];
+                            }
+                            values[id] = a;
                         }
-                        // Standard Radio or Checkbox
+                        else {
+                            if (!a) {
+                                values[id] = []; // empty array to notify that the group has a null value, if nothing gets checked
+                            }
+                        }
                     } else {
-                        strToReturn += " " + strControlId;
+                        values[id] = $element.is(":checked");
                     }
-                }
+                    break;
+
+                case "radio":
+                    if (index !== null) {
+                        if ($element.is(":checked")) {
+                            values[id] = index;
+                        }
+                    } else {
+                        // control name MIGHT be a group name, which we don't want here, so we use control id instead
+                        values[id] = $element.is(":checked");
+                    }
+                    break;
             }
         });
-
-        return (strToReturn.length) ? strToReturn.substring(1) : '';
+        return values;
     },
 
     /**
@@ -194,136 +261,114 @@ qcubed = {
      * @param {string} strForm The Form Id
      * @param {string} strControl The Control Id
      * @param {string} strEvent The Event
-     * @param {mixed} mixParameter An array of parameters or a string value.
+     * @param {null|string|array|object} mixParameter An array of parameters or a string value.
      * @param {string} strWaitIconControlId Not used, probably legacy code.
-     * @return {string} Post Data
+     * @return {object} Post Data
      */
-    getPostData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
-        var objFormElements = $j('#' + strForm).find('input,select,textarea'),
-            strPostData = '',
-            formParamSelector = "#Qform__FormParameter",
-            nullArrays = {};
+    getAjaxData: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
+        var $form = $j('#' + strForm),
+            $formElements = $form.find('input,select,textarea'),
+            checkables = [],
+            controls = [],
+            postData = {};
 
-        if (mixParameter && (typeof mixParameter !== "string")) {
-            strPostData = $j.param({Qform__FormParameter: mixParameter});
-            objFormElements = objFormElements.not(formParamSelector);
-        } else {
-            $j(formParamSelector).val(mixParameter);
-        }
+        // Notify controls we are about to post.
+        $form.trigger("qposting", "Ajax");
 
-        $j('#Qform__FormControl').val(strControl);
-        $j('#Qform__FormEvent').val(strEvent);
-        $j('#Qform__FormCallType').val("Ajax");
-        $j('#Qform__FormUpdates').val(this.formUpdates());
-        //$j('#Qform__FormCheckableControls').val(this.formCheckableControls(strForm, "Ajax"));
-
-        objFormElements.each(function() {
+        // Filter and separate controls into checkable and non-checkable controls
+        // We ignore controls that have not changed to reduce the amount of data sent in an ajax post.
+        $formElements.each(function() {
             var $element = $j(this),
+                id = $element.attr("id"),
+                blnQform = (id && (id.substr(0, 7) === 'Qform__')),
                 strType = $element.prop("type"),
-                strControlId = $element.attr("id"),
-                strControlName = $element.attr("name"),
-                objChangeIndex = qc._formObjChangeIndex($element),
-                blnQform,
-                index = -1,
-                offset,
-                strPostValue = $element.val();
+                objChangeIndex = qc._formObjChangeIndex($element);
 
-            blnQform = (strControlId && (strControlId.substr(0, 7) == 'Qform__'));
 
-            if (strControlId &&
-                (strType === 'checkbox' || strType === 'radio') &&
-                (offset = strControlId.lastIndexOf('_')) != -1) {
-                // A control group
-                index = strControlId.substr (offset + 1);
-                strControlId = strControlId.substr (0, offset);
-            }
-
-            if (!qcubed.inputSupport || // if not oninput support, then post all the controls, rather than just the modified ones
+                if (!qcubed.inputSupport || // if not oninput support, then post all the controls, rather than just the modified ones
                 qcubed.ajaxError || // Ajax error would mean that formObjsModified is invalid. We need to submit everything.
                 (objChangeIndex && qcubed.formObjsModified[objChangeIndex]) ||
-                blnQform   // all controls with Qform__ at the beginning of the id are always posted
-            /* || strType == 'hidden'*/) {
+                blnQform) {  // all controls with Qform__ at the beginning of the id are always posted.
+
                 switch (strType) {
                     case "checkbox":
-                        if (index >= 0) {   // this is a group of checkboxes
-                            if ($element.is(":checked")) {
-                                strPostData += "&" + strControlName + "=" + $element.val();
-                                nullArrays[strControlId] = 0;
-                            }
-                            else {
-                                if (!nullArrays.hasOwnProperty(strControlId)) {
-                                    nullArrays[strControlId] = 1;
-                                }
-                            }
-                        } else {
-                            // TODO: use value instead of is checked
-                            strPostData += "&" + strControlName + "=" + $element.is(":checked");
-                        }
-                        break;
-
                     case "radio":
-                        if (index >= 0) {
-                            if ($element.is(":checked")) {
-                                strPostData += "&" + strControlName + "=" + index;
-                            }
-                        } else {
-                            // control name MIGHT be a group name, which we don't want here, so we use control id instead
-                            strPostData += "&" + strControlId + "=" + $element.is(":checked");
-                        }
-                        break;
-
-                    case "select-multiple":
-                        var items = $element.find(':selected');
-                        if (items.length) {
-                            items.each(function() {
-                                strPostData += "&" + strControlName + "=" + $j(this).val();
-                            });
-                        }
-                        else {
-                            strPostData += "&" + strControlName;    // mark it as set to nothing
-                        }
+                        checkables.push(this);
                         break;
 
                     default:
-                        if (strControlName) {   // this is what gets posted on a server post
-                            strPostData += "&" + strControlName + "=";
-                        } else {
-                            strPostData += "&" + strControlId + "=";
-                        }
-
-                        // For Internationalization -- we must escape the element's value properly
-                        if (strPostValue) {
-                            strPostValue = strPostValue.replace(/\%/g, "%25");
-                            strPostValue = strPostValue.replace(/&/g, encodeURIComponent('&'));
-                            strPostValue = strPostValue.replace(/\+/g, "%2B");
-                        }
-                        strPostData += strPostValue;
-                        break;
+                        controls.push(this);
                 }
             }
         });
 
-        $j.each(nullArrays, function(key, val) {
-            if (val) {
-                strPostData += "&" + key + '=';   // add a null value for the array
+
+        $j.each(controls, function() {
+            var $element = $j(this),
+                strType = $element.prop("type"),
+                strControlId = $element.attr("id"),
+                strControlName = $element.attr("name"),
+                strPostValue = $element.val();
+
+            switch (strType) {
+                case "select-multiple":
+                    var items = $element.find(':selected'),
+                        values = [];
+                    if (items.length) {
+                        values = $j.map($j.makeArray(items), function(item) {
+                            return $j(item).val();
+                        });
+                        postData[strControlId] = values;
+                    }
+                    else {
+                        postData[strControlId] = null;    // mark it as set to nothing
+                    }
+                    break;
+
+                default:
+                    var strPostName = (strControlName ? strControlName: strControlId);
+                    postData[strPostName] = strPostValue;
+                    break;
             }
         });
+
+        // Update most of the Qform__ parameters explicitly here. Others, like the state and form id will have been handled above.
+        if (mixParameter !== undefined) {
+            postData.Qform__FormParameter = JSON.stringify(mixParameter);
+        }
+        postData.Qform__FormControl = strControl;
+        postData.Qform__FormEvent = strEvent;
+        postData.Qform__FormCallType = "Ajax";
+
+        if (!$j.isEmptyObject(qcubed.controlModifications)) {
+            postData.Qform__FormUpdates = JSON.stringify(qcubed.controlModifications);
+        }
+        postData.Qform__FormCheckableControls = qcubed._checkableControlValues(strForm, checkables);
+
+        if (!$j.isEmptyObject(qcubed.additionalPostVars)) {
+            postData.Qform__AdditionalPostVars = JSON.stringify(qcubed.additionalPostVars);
+            qcubed.additionalPostVars = {};
+        }
+
         qcubed.ajaxError = false;
         qcubed.formObjsModified = {};
+        qcubed.controlModifications = {};
 
-        return strPostData;
+        return postData;
     },
 
     /**
      * @param {string} strForm The QForm Id
      * @param {string} strControl The Control Id
      * @param {string} strEvent
-     * @param {mixed} mixParameter
+     * @param {null|string|Object|Array} mixParameter
      * @param {string} strWaitIconControlId The id of the control's spinner.
+     * @param {boolean} blnAsync Whether to queue the ajax requests and processes serially (default), or do them async.
+     *                  See QAjaxAction comments for more info
      * @return {void}
      * @todo There is an eval() in here. We need to find a way around that.
      */
-    postAjax: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId) {
+    postAjax: function(strForm, strControl, strEvent, mixParameter, strWaitIconControlId, blnAsync) {
         var objForm = $j('#' + strForm),
             strFormAction = objForm.attr("action"),
             qFormParams = {};
@@ -335,7 +380,7 @@ qcubed = {
         qFormParams.waitIcon = strWaitIconControlId;
 
         if (strWaitIconControlId) {
-            this.objAjaxWaitIcon = this.getWrapper(strWaitIconControlId);
+            this.objAjaxWaitIcon = qcubed.getWrapper(strWaitIconControlId);
             if (this.objAjaxWaitIcon) {
                 this.objAjaxWaitIcon.style.display = 'inline';
             }
@@ -348,7 +393,7 @@ qcubed = {
             qFormParams: qFormParams,
             fnInit: function(o) {
                 // Get the data at the last possible instant in case the formstate changes between ajax calls
-                o.data = qcubed.getPostData(
+                o.data = qcubed.getAjaxData(
                     o.qFormParams.form,
                     o.qFormParams.control,
                     o.qFormParams.event,
@@ -361,7 +406,7 @@ qcubed = {
                     $dialog;
 
                 qcubed.ajaxError = true;
-                if (XMLHttpRequest.status !== 0 || result.length > 0) {
+                if (XMLHttpRequest.status !== 0 || (result && result.length > 0)) {
                     if (result.substr(0, 15) === '<!DOCTYPE html>') {
                         alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
                         objErrorWindow = window.open('about:blank', 'qcubed_error', 'menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
@@ -407,7 +452,7 @@ qcubed = {
                     qcubed.processDeferredAjaxResponse(json);
                 }
             }
-        });
+        }, blnAsync);
 
     },
 
@@ -452,13 +497,11 @@ qcubed = {
 
         this.wrappers = [];
 
-        if ('localStorage' in window && window['localStorage'] !== null) {
-            $j(window).on ("storage", function (o) {
-                if (o.originalEvent.key == "qcubed.broadcast") {
-                    qcubed.updateForm();
-                }
-            });
-        }
+        $j(window).on ("storage", function (o) {
+            if (o.originalEvent.key == "qcubed.broadcast") {
+                qcubed.updateForm();
+            }
+        });
 
         this.inputSupport = 'oninput' in document;
 
@@ -694,7 +737,7 @@ qcubed = {
             }
         }
         else if ($j.type(obj) == 'object') {
-            var newItem = {}
+            var newItem = {};
             $j.each (obj, function (key, obj2) {
                 newItem[key] = qcubed.unpackObj(obj2);
             });
@@ -771,7 +814,7 @@ qcubed.updateForm = function() {
         // delay to let multiple fast actions only trigger periodic refreshes
         qcubed.setTimeout ('qcubed.update', 'qcubed.updateForm', qcubed.minUpdateInterval);
     }
-}
+};
 
 /////////////////////////////////////
 // Drag and drop support
@@ -784,15 +827,15 @@ qcubed.draggable = function (parentId, draggableId) {
         c.data ("originalPosition", c.position());
     }).on("dragstop", function () {
         var c = jQuery(this);
-        qcubed.recordControlModification(draggableId, "_DragData", c.data("originalPosition").left + "," + c.data("originalPosition").top + "," + c.position().left + "," + c.position().top);
-    })
-}
+        qcubed.recordControlModification(draggableId, "_DragData", {originalPosition: {left: c.data("originalPosition").left, top: c.data("originalPosition").top}, position: {left: c.position().left, top: c.position().top}});
+    });
+};
 
 qcubed.droppable = function (parentId, droppableId) {
     jQuery('#' + parentId).on("drop", function (event, ui) {
         qcubed.recordControlModification(droppableId, "_DroppedId", ui.draggable.attr("id"));
     })
-}
+};
 
 qcubed.resizable = function (parentId, resizeableId) {
     $j('#' + parentId).on("resizestart", function () {
@@ -802,7 +845,7 @@ qcubed.resizable = function (parentId, resizeableId) {
     })
     .on("resizestop", function () {
         var c = jQuery(this);
-        qcubed.recordControlModification(resizeableId, "_ResizeData", c.data("oW") + "," + c.data("oH") + "," + c.width() + "," + c.height());
+        qcubed.recordControlModification(resizeableId, "_ResizeData", {originalSize: {width: c.data("oW"), height: c.data("oH")} , size:{width: c.width(), height: c.height()}});
     });
 }
 
@@ -821,20 +864,20 @@ qcubed.dialog = function(controlId) {
             event.preventDefault();
         }
     });
-}
+};
 
 qcubed.accordion = function(controlId) {
     $j('#' + controlId).on("accordionactivate", function(event, ui) {
         qcubed.recordControlModification(controlId, "_SelectedIndex", $j(this).accordion("option", "active"));
         $j(this).trigger("change");
     });
-}
+};
 
 qcubed.progressbar = function(controlId) {
     $j('#' + controlId).on("progressbarchange", function (event, ui) {
         qcubed.recordControlModification(controlId, "_Value", $j(this).progressbar ("value"));
     });
-}
+};
 
 qcubed.selectable = function(controlId) {
     $j('#' + controlId).on("selectablestop", function (event, ui) {
@@ -851,7 +894,7 @@ qcubed.selectable = function(controlId) {
         qcubed.recordControlModification(controlId, "_SelectedItems", strItems);
 
     });
-}
+};
 
 qcubed.slider = function(controlId) {
     $j('#' + controlId).on("slidechange", function (event, ui) {
@@ -861,7 +904,7 @@ qcubed.slider = function(controlId) {
             qcubed.recordControlModification(controlId, "_Value", ui.value);
         }
     });
-}
+};
 
 qcubed.tabs = function(controlId) {
     $j('#' + controlId).on("tabsactivate", function(event, ui) {
@@ -869,44 +912,15 @@ qcubed.tabs = function(controlId) {
         var id = ui.newPanel ? ui.newPanel.attr("id") : null;
         qcubed.recordControlModification(controlId, "_active", [i,id]);
     });
-}
+};
 
 qcubed.datagrid2 = function(controlId) {
     $j('#' + controlId).on("click", "thead tr th a", function(event, ui) {
         var cellIndex = $j(this).parent()[0].cellIndex;
         $j(this).trigger('qdg2sort', cellIndex); // Triggers the QDataGrid2_SortEvent
     });
-}
-
-
-/////////////////////////////////////
-// Event Object-related functionality
-/////////////////////////////////////
-
-// You may still use this function but be advised
-// we no longer use it in core.  All event terminations
-// and event bubbling are handled through jQuery.
-// see http://trac.qcu.be/projects/qcubed/ticket/681
-/**
- * @deprecated
- */
-qcubed.terminateEvent = function(objEvent) {
-    objEvent = qcubed.handleEvent(objEvent);
-
-    if (objEvent) {
-        // Stop Propogation
-        if (objEvent.preventDefault) {
-            objEvent.preventDefault();
-        }
-        if (objEvent.stopPropagation) {
-            objEvent.stopPropagation();
-        }
-        objEvent.cancelBubble = true;
-        objEvent.returnValue = false;
-    }
-
-    return false;
 };
+
 
 /////////////////////////////////
 // Controls-related functionality
@@ -950,7 +964,7 @@ qcubed.setRadioInGroup = function(strControlId) {
             $radios.trigger('qformObjChanged'); // send the new values back to the form
         }
     }
-}
+};
 
 /////////////////////////////
 // Register Control - General
@@ -959,7 +973,9 @@ qcubed.setRadioInGroup = function(strControlId) {
 qcubed.controlModifications = {};
 qcubed.javascriptStyleToQcubed = {};
 qcubed.formObjsModified = {};
+qcubed.additionalPostVars = {};
 qcubed.ajaxError = false;
+qcubed.inputSupport = true;
 qcubed.javascriptStyleToQcubed.backgroundColor = "BackColor";
 qcubed.javascriptStyleToQcubed.borderColor = "BorderColor";
 qcubed.javascriptStyleToQcubed.borderStyle = "BorderStyle";
@@ -1074,9 +1090,10 @@ qcubed.registerControl = function(mixControl) {
                 if (qcubed.javascriptStyleToQcubed[strStyleName]) {
                     qcubed.recordControlModification(objControl.id, qcubed.javascriptStyleToQcubed[strStyleName], strNewValue);
                 }
+                /* ???
                 if (this.handle) {
                     this.updateHandle();
-                }
+                }*/
                 break;
 
             case "text":

@@ -50,24 +50,24 @@ class CacheTests extends QUnitTestCaseBase {
 			self::getTestClauses()
 		);
 				
-		$this->assertEquals(sizeof($arrPeople), 12, "12 Person objects found");
+		$this->assertEquals(12, sizeof($arrPeople), "12 Person objects found");
 		$targetPerson = $this->verifyObjectPropertyHelper($arrPeople, 'LastName', 'Wolfe');
 		
 		$this->helperVerifyKarenWolfe($targetPerson);
 		
 		$objProjectArray = $targetPerson->_ProjectAsManagerArray;
-		$this->assertEquals(sizeof($objProjectArray), 2, "2 projects found");
+		$this->assertEquals(2, sizeof($objProjectArray), "2 projects found");
 		
 		foreach ($objProjectArray as $objProject) {
 			$objMilestoneArray = $objProject->_MilestoneArray;
 			
 			switch ($objProject->Id) {
 				case 1:
-					$this->assertEquals(sizeof($objMilestoneArray), 3, "3 milestones found");
+					$this->assertEquals(3, sizeof($objMilestoneArray), "3 milestones found");
 					break;
 					
 				case 4:
-					$this->assertEquals(sizeof($objMilestoneArray), 4, "4 milestones found");
+					$this->assertEquals(4, sizeof($objMilestoneArray), "4 milestones found");
 					break;
 					
 				default:
@@ -88,7 +88,7 @@ class CacheTests extends QUnitTestCaseBase {
 		);
 
 		// Karen Wolfe should duplicate, since she is managing two projects
-		$this->assertEquals(sizeof($arrPeople), 13, "13 Person objects found");
+		$this->assertEquals(13, sizeof($arrPeople), "13 Person objects found");
 		$targetPerson = $this->verifyObjectPropertyHelper($arrPeople, 'LastName', 'Wolfe');
 
 		$objProjectArray = $targetPerson->_ProjectAsManagerArray;
@@ -101,11 +101,11 @@ class CacheTests extends QUnitTestCaseBase {
 		// since we didn't specify the order, not sure which one we will get, so check for either
 		switch ($objProject->Id) {
 			case 1:
-				$this->assertEquals(sizeof($objMilestoneArray), 3, "3 milestones found");
+				$this->assertEquals(3, sizeof($objMilestoneArray), "3 milestones found");
 				break;
 				
 			case 4:
-				$this->assertEquals(sizeof($objMilestoneArray), 4, "4 milestones found");
+				$this->assertEquals(4, sizeof($objMilestoneArray), "4 milestones found");
 				break;
 				
 			default:
@@ -164,7 +164,7 @@ class CacheTests extends QUnitTestCaseBase {
 			);
 			
 		$this->assertTrue(is_array($arrPeople->_ProjectAsManagerArray), "_ProjectAsManagerArray is an array");
-		$this->assertEquals(count($arrPeople->_ProjectAsManagerArray), 0, "_ProjectAsManagerArray has no Project objects");
+		$this->assertEquals(0, count($arrPeople->_ProjectAsManagerArray), "_ProjectAsManagerArray has no Project objects");
 	}
 
 	public function testNullArray() {
@@ -187,10 +187,11 @@ class CacheTests extends QUnitTestCaseBase {
 			);
 		
 		$intPersonTypeArray = $objPerson->_PersonTypeArray;
-		$this->assertEquals($intPersonTypeArray, array(
+		$this->assertEquals(array(
 			PersonType::Manager,
 			PersonType::CompanyCar)
-		, "PersonType expansion is correct");
+			, $intPersonTypeArray
+			, "PersonType expansion is correct");
 	}
 
 	private static function getTestClauses() {
@@ -202,10 +203,10 @@ class CacheTests extends QUnitTestCaseBase {
 	}
 	
 	private function helperVerifyKarenWolfe(Person $targetPerson) {		
-		$this->assertEquals(sizeof($targetPerson->_ProjectAsManagerArray), 2, "2 projects found");
+		$this->assertEquals(2, sizeof($targetPerson->_ProjectAsManagerArray), "2 projects found");
 		$targetProject = $this->verifyObjectPropertyHelper($targetPerson->_ProjectAsManagerArray, 'Name', 'ACME Payment System');
 		
-		$this->assertEquals(sizeof($targetProject->_MilestoneArray), 4, "4 milestones found");
+		$this->assertEquals(4, sizeof($targetProject->_MilestoneArray), "4 milestones found");
 		$this->verifyObjectPropertyHelper($targetProject->_MilestoneArray, 'Name', 'Milestone H');
 	}
 
@@ -282,10 +283,10 @@ class CacheTests extends QUnitTestCaseBase {
 		$objPeopleArray = $objMilestone->Project->_PersonAsTeamMemberArray;
 		
 		$this->assertTrue(is_array($objProjectArray), "_ProjectAsTeamMemberArray is an array");
-		$this->assertEquals(count($objProjectArray), 2, "_ProjectAsTeamMemberArray has 2 Project objects");
+		$this->assertEquals(2, count($objProjectArray), "_ProjectAsTeamMemberArray has 2 Project objects");
 		
 		$this->assertTrue(is_array($objPeopleArray), "_PersonAsTeamMemberArray is an array");
-		$this->assertEquals(count($objPeopleArray), 5, "_PersonAsTeamMemberArray has 5 People objects");
+		$this->assertEquals(5, count($objPeopleArray), "_PersonAsTeamMemberArray has 5 People objects");
 		
 		// try through a unique relationship
 		$objLogin = Login::QuerySingle(
@@ -299,12 +300,12 @@ class CacheTests extends QUnitTestCaseBase {
 		$objProjectArray = $objLogin->Person->_ProjectAsTeamMemberArray;
 		
 		$this->assertTrue(is_array($objProjectArray), "_ProjectAsTeamMemberArray is an array");
-		$this->assertEquals(count($objProjectArray), 2, "_ProjectAsTeamMemberArray has 2 Project objects");
+		$this->assertEquals(2, count($objProjectArray), "_ProjectAsTeamMemberArray has 2 Project objects");
 		
 		$objProjectArray = $objLogin->Person->_ProjectAsManagerArray;
 		
 		$this->assertTrue(is_array($objProjectArray), "_ProjectAsManagerArray is an array");
-		$this->assertEquals(count($objProjectArray), 2, "_ProjectAsManagerArray has 2 Project objects");
+		$this->assertEquals(2, count($objProjectArray), "_ProjectAsManagerArray has 2 Project objects");
 				
 	}
 
@@ -335,4 +336,3 @@ class CacheTests extends QUnitTestCaseBase {
 	}
 
 }
-?>

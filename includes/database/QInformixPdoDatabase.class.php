@@ -55,7 +55,6 @@
  * 
  * Copyright (C) 2009
  * Josue Balbuena - Ajusco Technology Developers, S.C. <josue.balbuena@gmail.com>
- * This file is an update of the old IfxSqlDatabase.inc found @ qcodo.com
  *
  * Database Adapter for Informix SQL Server
  * Utilizes the Informix extension : ESQL/C is now part of the Informix Client SDK

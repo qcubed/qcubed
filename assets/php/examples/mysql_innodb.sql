@@ -34,8 +34,8 @@ CREATE TABLE project (
     description TEXT,
     start_date DATE,
     end_date DATE,
-    budget DECIMAL,
-    spent DECIMAL,
+    budget DECIMAL(12,2),
+    spent DECIMAL(12,2),
     CONSTRAINT PK_project PRIMARY KEY (id),
     KEY IDX_project_1(project_status_type_id),
     KEY IDX_project_2(manager_person_id)

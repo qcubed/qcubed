@@ -44,12 +44,8 @@ class <?= $strPropertyName ?>ListPanel extends <?= $strPropertyName ?>ListPanelG
 		//$this->Template =  __PANEL_GEN__ . '/<?= $strPropertyName ?>ListPanel.tpl.php';
 	}
 
-/*
-	Uncomment this block to directly create the columns here, rather than creating them from the <?= $strPropertyName ?>List connector.
-	You can then modify the column creation process by editing this function here.
-
-<?= $listCodegenerator->GenerateCreateColumnsOverride($objCodeGen, $objTable); ?>
+<?= $listCodegenerator->DataListSubclassOverrides($objCodeGen, $objTable); ?>
 
 
-*/
+
 }

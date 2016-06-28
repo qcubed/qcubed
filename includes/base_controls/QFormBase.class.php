@@ -39,7 +39,7 @@
 		protected $objGroupingArray;
 		/** @var bool Has the body tag already been rendered? */
 		protected $blnRenderedBodyTag = false;
-		protected $blnRenderedCheckableControlArray = array();
+		protected $checkableControlValues = array();
 		/** @var string The type of call made to the QForm (Ajax, Server or Fresh GET request) */
 		protected $strCallType;
 		/** @var null|QWaitIcon Default wait icon for the page/QForm  */
@@ -321,14 +321,19 @@
 		}
 
 		/**
-		 * Returns whether or not the checkable control with the given controlId has been rendered or not.
-		 * @param string $strControlId
-		 *
-		 * @return bool
+		 * Returns the value of a checkable control. Checkable controls are special, in that the browser only tells us
+		 * when a control is checked, not when it is unchecked. So, unless we keep track of them specially, we will
+		 * not know if they are unchecked, or just not there.
+		 * @param $strControlId
+		 * @return mixed|null
 		 */
-		public function IsCheckableControlRendered($strControlId) {
-			return array_key_exists($strControlId, $this->blnRenderedCheckableControlArray);
+		public function CheckableControlValue($strControlId) {
+			if (array_key_exists($strControlId, $this->checkableControlValues)) {
+				return $this->checkableControlValues[$strControlId];
+			}
+			return null;
 		}
+
 
 		/**
 		 * Helper function for below GetModifiedControls
@@ -381,7 +386,7 @@
 					self::InvalidFormState();
 				}
 			}
-
+			
 			if ($objClass) {
 				// Globalize
 				global $_FORM;
@@ -390,71 +395,76 @@
 				$objClass->strCallType = $_POST['Qform__FormCallType'];
 				$objClass->intFormStatus = QFormBase::FormStatusUnrendered;
 
-				if ($objClass->strCallType == QCallType::Ajax)
+				if ($objClass->strCallType == QCallType::Ajax) {
 					QApplication::$RequestMode = QRequestMode::Ajax;
-				else if($objClass->strCallType == QCallType::Server && array_key_exists('Qform__FormParameterType', $_POST)) {
-					$param = array();
-					parse_str(urldecode($_POST['Qform__FormParameter']), $param);
-					$_POST['Qform__FormParameter'] = $param['Qform__FormParameter'];
+				}
+
+				// Cleanup ajax post data if the encoding does not match, since ajax data is always utf-8
+				if ($objClass->strCallType == QCallType::Ajax && QApplication::$EncodingType != 'UTF-8') {
+					foreach ($_POST as $key=>$val) {
+						if (substr($key, 0, 6) != 'Qform_') {
+							$_POST[$key] = iconv('UTF-8', QApplication::$EncodingType, $val);
+						}
+					}
+				}
+
+				if (!empty($_POST['Qform__FormParameter'])) {
+					$_POST['Qform__FormParameter'] = self::UnpackPostVar($_POST['Qform__FormParameter']);
+				}
+
+				// Decode custom post variables from server calls
+				if (!empty($_POST['Qform__AdditionalPostVars'])) {
+					$val = self::UnpackPostVar($_POST['Qform__AdditionalPostVars']);
+					$_POST = array_merge($_POST, $val);
 				}
 
 				// Iterate through all the control modifications
-				$strModificationArray = explode("\n", trim($_POST['Qform__FormUpdates']));
-				if ($strModificationArray) foreach ($strModificationArray as $strModification) {
-					$strModification = trim($strModification);
+				if (!empty($_POST['Qform__FormUpdates'])) {
+					$controlUpdates = $_POST['Qform__FormUpdates'];
+					if (is_string($controlUpdates)) {    // Server post is encoded, ajax not encoded
+						$controlUpdates = self::UnpackPostVar($controlUpdates);
+					}
+					if (!empty($controlUpdates)) {
+						foreach ($controlUpdates as $strControlId=>$params) {
+							foreach ($params as $strProperty=>$strValue) {
+								switch ($strProperty) {
+									case 'Parent':
+										if ($strValue) {
+											if ($strValue == $objClass->FormId) {
+												$objClass->objControlArray[$strControlId]->SetParentControl(null);
+											} else {
+												$objClass->objControlArray[$strControlId]->SetParentControl($objClass->objControlArray[$strValue]);
+											}
+										} else {
+											// Remove all parents
+											$objClass->objControlArray[$strControlId]->SetParentControl(null);
+											$objClass->objControlArray[$strControlId]->SetForm(null);
+											$objClass->objControlArray[$strControlId] = null;
+											unset($objClass->objControlArray[$strControlId]);
+										}
+										break;
+									default:
+										if (array_key_exists($strControlId, $objClass->objControlArray))
+											$objClass->objControlArray[$strControlId]->__set($strProperty, $strValue);
+										break;
 
-					if ($strModification) {
-						$intPosition = strpos($strModification, ' ');
-						$strControlId = substr($strModification, 0, $intPosition);
-						$strModification = substr($strModification, $intPosition + 1);
-
-						$intPosition = strpos($strModification, ' ');
-						if ($intPosition !== false) {
-							$strProperty = substr($strModification, 0, $intPosition);
-							$strValue = substr($strModification, $intPosition + 1);
-						} else {
-							$strProperty = $strModification;
-							$strValue = null;
-						}
-
-						switch ($strProperty) {
-							case 'Parent':
-								if ($strValue) {
-									if ($strValue == $objClass->FormId) {
-										$objClass->objControlArray[$strControlId]->SetParentControl(null);
-									} else {
-										$objClass->objControlArray[$strControlId]->SetParentControl($objClass->objControlArray[$strValue]);
-									}
-								} else {
-									// Remove all parents
-									$objClass->objControlArray[$strControlId]->SetParentControl(null);
-									$objClass->objControlArray[$strControlId]->SetForm(null);
-									$objClass->objControlArray[$strControlId] = null;
-									unset($objClass->objControlArray[$strControlId]);
 								}
-								break;
-							default:
-								if (array_key_exists($strControlId, $objClass->objControlArray))
-									$objClass->objControlArray[$strControlId]->__set($strProperty, $strValue);
-								break;
+							}
 						}
 					}
 				}
 
-				// Clear the RenderedCheckableControlArray
-				if (!empty($_POST['Qform__FormCheckableControls'])) {
-					$objClass->blnRenderedCheckableControlArray = array();
-					$strCheckableControlList = trim($_POST['Qform__FormCheckableControls']);
-					$strCheckableControlArray = explode(' ', $strCheckableControlList);
-					foreach ($strCheckableControlArray as $strCheckableControl) {
-						$objClass->blnRenderedCheckableControlArray[trim($strCheckableControl)] = true;
-					}
-				}
 
-				// Iterate through all the controls
-				
-				// TODO: some listener pattern should be used to update only those
-				// controls that needs it
+				// Set the RenderedCheckableControlArray
+				if (!empty($_POST['Qform__FormCheckableControls'])) {
+					$vals = $_POST['Qform__FormCheckableControls'];
+					if (is_string($vals)) { // Server post is encoded, ajax not encoded
+						$vals = self::UnpackPostVar($vals);
+					}
+					$objClass->checkableControlValues = $vals;
+				} else {
+					$objClass->checkableControlValues = [];
+				}
 
 				// This is original code. In an effort to minimize changes,
 				// we aren't going to touch the server calls for now
@@ -476,8 +486,11 @@
 				}
 				else {
 					// Ajax post. Only send data to controls specified in the post to save time.
+
 					$previouslyFoundArray = array();
-					foreach ($_POST as $key=>$val) {
+					$controls = $_POST;
+					$controls = array_merge($controls, $objClass->checkableControlValues);
+					foreach ($controls as $key=>$val) {
 						if ($key == 'Qform__FormControl') {
 							$strControlId = $val;
 						} elseif (substr($key, 0, 6) == 'Qform_') {
@@ -494,7 +507,6 @@
 								($objControl->RenderMethod)) {
 								// Call each control's ParsePostData()
 								$objControl->ParsePostData();
-								$objControl->ResetFlags();  // this should NOT be needed, but just in case
 							}
 
 							$previouslyFoundArray[$strControlId] = true;
@@ -555,15 +567,12 @@
 				$objClass->Form_Initialize();
 
 				if (defined ('__DESIGN_MODE__')) {
+					global $designerAction;
+
 					$dlg = new QModelConnectorEditDlg ($objClass, 'qconnectoreditdlg');
-					$objControls = $objClass->GetAllControls();
-					foreach ($objControls as $objControl) {
-						if ($objControl->LinkedNode) {
-							$objControl->AddAction (new QContextMenuEvent(), new QAjaxAction ('ctlDesigner_Click'));
-							$objControl->AddAction (new QContextMenuEvent(), new QStopPropagationAction());
-							$objControl->AddAction (new QContextMenuEvent(), new QTerminateAction());
-						}
-					}
+
+					$designerAction = new QAjaxAction ('ctlDesigner_Click', null, null, '{id: event.target.id ? event.target.id : $j(event.target).parents("[id]").attr("id"), for: $j(event.target).attr("for")}');
+					$dlg->AddAction (new QContextMenuEvent(0, null, '[id]'), $designerAction);
 				}
 
 			}
@@ -611,6 +620,37 @@
 		}
 
 		/**
+		 * Unpacks a post variable that has been encoded with JSON.stringify.
+		 *
+		 * @param $val
+		 * @return mixed|string
+		 */
+		protected static function UnpackPostVar($val) {
+			if (QApplication::$EncodingType != 'UTF-8' && QApplication::$RequestMode != QRequestMode::Ajax) {
+				// json_decode only accepts utf-8 encoded text. Ajax calls are already UTF-8 encoded.
+				$val = iconv(QApplication::$EncodingType, 'UTF-8', $val);
+			}
+			$val = json_decode($val, true);
+			if (QApplication::$EncodingType != 'UTF-8') {
+				// Must convert back from utf-8 to whatever our application encoding is
+				if (is_string($val)) {
+					$val = iconv('UTF-8', QApplication::$EncodingType, $val);
+				}
+				elseif (is_array($val)) {
+					array_walk_recursive($val, function(&$v, $key) {
+						if (is_string($v)) {
+							$v = iconv('UTF-8', QApplication::$EncodingType, $v);
+						}
+					});
+				}
+				else {
+					throw new Exception ('Unknown Post Var Type');
+				}
+			}
+			return $val;
+		}
+
+		/**
 		 * Reset all validation states.
 		 */
 		public function ResetValidationStates() {
@@ -627,9 +667,22 @@
 		 * @param $mixParam
 		 */
 		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
-			$objControl = $this->GetControl($strControlId);
-			$dlg = $this->GetControl ('qconnectoreditdlg');
-			$dlg->EditControl ($objControl);
+			if (isset($mixParam['id'])) {
+				$controlId = $mixParam['id'];
+				if (strpos($controlId, '_')) {	// extra the real control id from a sub id
+					$controlId = substr($controlId, 0, strpos($controlId, '_'));
+				}
+			}
+			elseif (isset($mixParam['for'])) {
+				$controlId = $mixParam['for'];
+			}
+			if (!empty($controlId)) {
+				$objControl = $this->GetControl($controlId);
+				if ($objControl) {
+					$dlg = $this->GetControl ('qconnectoreditdlg');
+					$dlg->EditControl ($objControl);
+				}
+			}
 		}
 
 		/**
@@ -643,18 +696,10 @@
 		 * Override if you want a different response.
 		 */
 		public static function InvalidFormState() {
-			ob_clean();
+			//ob_clean();
 			if (isset($_POST['Qform__FormCallType']) &&  $_POST['Qform__FormCallType'] == QCallType::Ajax) {
-				// AJAX-based Response
-				header('Content-Type: text/json'); // not application/json, as IE reportedly blows up on that, but jQuery knows what to do.
-
-				$strJSON = JavaScriptHelper::toJsObject(['loc' => 'reload']);
-
-				// Output it and update render state
-				if (QApplication::$EncodingType && QApplication::$EncodingType != 'UTF-8') {
-					$strJSON = mb_convert_encoding($strJSON, 'UTF-8', QApplication::$EncodingType); // json must be UTF-8 encoded
-				}
-				print ($strJSON);
+				QApplication::$ProcessOutput = false;
+				QApplication::SendAjaxResponse(['loc' => 'reload']);
 			} else {
 				header('Location: '. QApplication::$RequestUri);
 			}
@@ -1765,6 +1810,15 @@
 			// Register controls
 			if ($strControlIdToRegister) {
 				$strEndScript .= sprintf("qc.regCA(%s); \n", JavaScriptHelper::toJsObject($strControlIdToRegister));
+			}
+
+			// Design mode event
+			if (defined('__DESIGN_MODE__') && __DESIGN_MODE__ == 1) {
+				global $designerAction;
+				// kludge to attach action to the form
+				$objControl = $this->GetControl('qconnectoreditdlg');
+				$strRendered = $designerAction->RenderScript($objControl);
+				$strEndScript .= sprintf('$j("#%s").on("contextmenu", function(event){' . "\n" . $strRendered . "\n" . ' return false;});', $this->FormId);
 			}
 
 			// Add any application level js commands.

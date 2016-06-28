@@ -11,6 +11,7 @@
 	 * @property string $VariableName
 	 * @property string $VariableType
 	 * @property boolean $IsType
+	 * @property QReverseReference ReverseReference
 	 */
 	class QReference extends QBaseClass {
 
@@ -65,6 +66,13 @@
 		 */
 		protected $blnIsType;
 
+		/**
+		 * The reverse reference pointing back to this reference.
+		 *
+		 * @var QReverseReference
+		 */
+		protected $objReverseReference;
+
 
 
 
@@ -97,6 +105,8 @@
 					return $this->strVariableType;
 				case 'IsType':
 					return $this->blnIsType;
+				case 'ReverseReference':
+					return $this->objReverseReference;
 				default:
 					try {
 						return parent::__get($strName);
@@ -134,6 +144,8 @@
 						return $this->strVariableType = QType::Cast($mixValue, QType::String);
 					case 'IsType':
 						return $this->blnIsType = QType::Cast($mixValue, QType::Boolean);
+					case 'ReverseReference':
+						return $this->objReverseReference = $mixValue;
 					default:
 						return parent::__set($strName, $mixValue);
 				}

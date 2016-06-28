@@ -4,14 +4,18 @@
  * A checkbox column that specifically is for inclusion in a QDataGrid2 object. The two work together to hand off
  * important events and functionality.
  *
- * You must subclass this column, and at a minimum implement GetAllIds() and GetItemId($item) functions. The default
+ * The default functionality of this class shows the name of the column in the header, and uses the primary key of
+ * a database object as the checkbox id. It also
  * stores the information on which boxes are checked in the session variable so that they can be easily recalled and do
  * not clutter the form state. You can override additional functions below if you would like to store the checkbox state
  * with the items themselves, or somewhere else.
  *
+ * If you turn on the CheckAll box in the header, you must subclass this column, and at a minimum implement the GetAllIds() function
+ * so that it knows the full set of ids to record as checked.
+ *
  * This column keeps track of what is checked and not checked in real time using ajax, rather than using POST methods.
  * The primary reason is that what is visible in the table will generally not be the complete set of data available from
- * the database, and
+ * the database if the datagrid is using a paginator.
  *
  * @package Controls
  */
@@ -19,6 +23,7 @@
 class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 	/** @var  bool Record the state of the AllChecked checkbox in the header. */
 	protected $blnAllChecked;
+	protected $blnShowCheckAll = false; // Default to false so that we have default functionality that does not require subclassing.
 
 	/**
 	 * Return the array of item ids that are checked. Default stores the ids in the session. Override if you are storing
@@ -211,8 +216,8 @@ class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 
 	/**
 	 * Override this to return an array of all the ids of the objects in the table, including ids that are not
-	 * currently visible on the page being shown. If you create your own CheckAll function, you do not need to
-	 * implement this.
+	 * currently visible on the page being shown. If you create your own CheckAll function, or if you are not showing
+	 * the CheckAll box in the header you do not need to implement this.
 	 *
 	 * @return array
 	 */

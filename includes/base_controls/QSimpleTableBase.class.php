@@ -78,7 +78,13 @@
 		/**
 		 * Nothing to parse in current implementation
 		 */
-		public function ParsePostData() { }
+		public function ParsePostData() {
+			if ($this->objColumnArray) {
+				foreach($this->objColumnArray as $objColumn) {
+					$objColumn->ParsePostData();
+				}
+			}
+		}
 
 		/**
 		 * Add an Index column and return it.
@@ -167,10 +173,11 @@
 		 *   what time of row item is passed.
 		 * @param null|string|array|QControlProxy $mixDestination The text representing the destination of the anchor, a callable callback to get the destination,
 		 *   a string that represents a property chain or a multi-dimensional array, or an array that represents the same,
-		 *   or a QControlProxy. Depends on what time of row item is passed.
+		 *   or a QControlProxy. Depends on what type of row item is passed.
 		 * @param null|string|array $getVars An array of key=>value pairs to use as the GET variables in the link URL,
 		 *   or in the case of a QControlProxy, possibly a string to represent the action parameter. In either case, each item
-		 *   can be a property chain, an array index list, or a callable callback as specified above.
+		 *   can be a property chain, an array index list, or a callable callback as specified above.  If the destination is a
+		 *   QControlProxy, this would be what to use as the action parameter.
 		 * @param null|array $tagAttributes An array of key=>value pairs to use as additional attributes in the tag.
 		 *   For example, could be used to add a class or an id to each tag.
 		 * @param bool $blnAsButton Only used if this is drawing a QControlProxy. Will draw the proxy as a button.

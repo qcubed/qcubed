@@ -39,7 +39,7 @@ class QTimerTests extends QUnitTestCaseBase {
 		$this->assertTrue($fltValue2 < $fltValue3);
 		
 		$objTimer = QTimer::GetTimer('timer2');
-		$this->assertEquals($objTimer->CountStarted, 3);
+		$this->assertEquals(3, $objTimer->CountStarted);
 	}
 	
 	public function testReset() {
@@ -61,7 +61,7 @@ class QTimerTests extends QUnitTestCaseBase {
 		$this->assertTrue($fltValue4 < $fltValue3); // because we've reset the timer
 		
 		$objTimer = QTimer::GetTimer('timerA');
-		$this->assertEquals($objTimer->CountStarted, 2);
+		$this->assertEquals(2, $objTimer->CountStarted);
 	}
 	
 
@@ -84,7 +84,7 @@ class QTimerTests extends QUnitTestCaseBase {
 	
 	public function testExceptions4() {
 		$objTimer = QTimer::GetTimer('timer7');
-		$this->assertEquals($objTimer, null, "Requests for non-existing timer objects should return null");
+		$this->assertEquals(null, $objTimer, "Requests for non-existing timer objects should return null");
 	}
 
 

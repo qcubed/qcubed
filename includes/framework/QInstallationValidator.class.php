@@ -247,16 +247,7 @@ abstract class QInstallationValidator {
 				$result[] = $obj;
 			}
 		}
-
-		if (!function_exists('zip_open')) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "ZIP extension is not enabled on this installation of PHP. " .
-				"This extension is required to be able to install plugins. " .
-				"To make it work on Linux/MacOS, recompile your installation of PHP with --enable-zip parameter. " .
-				"On Windows, enable extension=php_zip.dll in php.ini.";
-			$result[] = $obj;
-		}
-
+		
 		// Database connection string checks
 		for ($i = 1; $i < 1 + sizeof(QApplication::$Database); $i++) {
 			if (!isset(QApplication::$Database[$i]))

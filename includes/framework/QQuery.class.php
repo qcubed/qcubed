@@ -83,6 +83,7 @@
 				// Changing the alias of the node. Must change pointers to the node too.
 				$strNewAlias = QType::Cast($strAlias, QType::String);
 				if ($this->objParentNode) {
+					assert (is_object($this->objParentNode));
 					unset($this->objParentNode->objChildNodeArray[$this->strAlias]);
 					$this->objParentNode->objChildNodeArray[$strNewAlias] = $this;
 				}
@@ -104,6 +105,7 @@
 			} else {
 				assert (!empty($this->strAlias));	// Alias should always be set by default
 				if ($this->objParentNode) {
+					assert (is_object($this->objParentNode));
 					return $this->objParentNode->FullAlias() . '__' . $this->strAlias;
 				}
 				else {
@@ -1487,6 +1489,21 @@
 			return new QQVirtualNode($strName, $objSubQueryDefinition);
 		}
 
+		/**
+		 * Converts a virtual attribute name to an alias used in the query. The name is converted to an identifier
+		 * that will work on any SQL database. In the query itself, the name
+		 * will have two underscores in front of the alias name to prevent conflicts with column names.
+		 *
+		 * @param $strName
+		 * @return mixed|string
+		 */
+		static public function GetVirtualAlias($strName) {
+			$strName = trim($strName);
+			$strName = str_replace(" ", "_", $strName);
+			$strName = strtolower($strName);
+			return $strName;
+		}
+
 		/////////////////////////
 		// QQClause Factories
 		/////////////////////////
@@ -1568,11 +1585,14 @@
 		}
 
 		/**
+		 * Searches for all the QQSelect clauses and merges them into one clause and returns that clause.
+		 * Returns null if none found.
+		 *
 		 * @param QQClause[]|QQClause|null $objClauses QQClause object or array of QQClause objects
 		 * @return QQSelect QQSelect clause containing all the nodes from all the QQSelect clauses from $objClauses,
 		 * or null if $objClauses contains no QQSelect clauses
 		 */
-		public static function extractSelectClause($objClauses) {
+		public static function ExtractSelectClause($objClauses) {
 			if ($objClauses instanceof QQSelect)
 				return $objClauses;
 
@@ -1615,16 +1635,197 @@
 		static public function NamedValue($strName) {
 			return new QQNamedValue($strName);
 		}
+
+		/**
+		 * Apply an arbitrary scalar function using the given parameters. See below for functions that let you apply
+		 * common SQL functions. The list below only includes sql operations that are generic to all supported versions
+		 * of SQL. However, you can call Func directly with any named function that works in your current SQL version,
+		 * knowing that it might not be cross platform compatible if you ever change SQL engines.
+		 *
+		 * @param $strName The function name, like ABS or POWER
+		 * @param QQNode|mixed $param1 The function parameter. Can be a qq node or a number.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Func($strName, $param1 /** ... */) {
+			$args = func_get_args();
+			$strFunc = array_shift($args);
+			return new QQFunctionNode($strFunc, $args);
+		}
+
+		//////////////////////////////
+		// Various common functions
+		//////////////////////////////
+
+		/**
+		 * Return the absolute value
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Abs($param) {
+			return QQ::Func('ABS', $param);
+	    }
+		/**
+		 * Return the smallest integer value not less than the argument
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Ceil($param) {
+			return QQ::Func('CEIL', $param);
+		}
+		/**
+		 * Return the largest integer value not greater than the argument
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Floor($param) {
+			return QQ::Func('FLOOR', $param);
+		}
+		/**
+		 * Return the remainder
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Mod($dividend, $divider) {
+			return QQ::Func('MOD', $dividend, $divider);
+		}
+		/**
+		 * Return the argument raised to the specified power
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Power($base, $exponent) {
+			return QQ::Func('POWER', $base, $exponent);
+		}
+		/**
+		 * 	Return the square root of the argument
+		 * 
+		 * @param QQNode $param The qq node to apply the function to.
+		 * @return QQFunctionNode The resulting wrapper node
+		 */
+		static public function Sqrt($param) {
+			return QQ::Func('SQRT', $param);
+		}
+
+		/**
+		 * Apply an arbitrary math operation to 2 or more operands. Operands can be scalar values, or column nodes.
+		 * 
+		 * @param $strOperation The operation symbol, like + or *
+		 * @param QQNode|mixed $param1 The first parameter
+		 * @return \QQMathNode The resulting wrapper node
+		 */
+		static public function MathOp($strOperation, $param1 /** ... */) {
+			$args = func_get_args();
+			$strFunc = array_shift($args);
+			return new QQMathNode($strFunc, $args);
+		}
+
+		/**
+		 * The multiplication operation
+		 * 
+		 * @param QQNode|mixed $op1 The first operand
+		 * @param QQNode|mixed $op2 The second operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
+		static public function Mul($op1, $op2 /** ... */) {
+			return new QQMathNode('*', func_get_args());
+		}
+		/**
+		 * The division operation
+		 * 
+		 * @param QQNode|mixed $op1 The first operand
+		 * @param QQNode|mixed $op2 The second operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
+		static public function Div($op1, $op2 /** ... */) {
+			return new QQMathNode('/', func_get_args());
+		}
+		/**
+		 * The subtraction operation
+		 * 
+		 * @param QQNode|mixed $op1 The first operand
+		 * @param QQNode|mixed $op2 The second operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
+		static public function Sub($op1, $op2 /** ... */) {
+			return new QQMathNode('-', func_get_args());
+		}
+		/**
+		 * The addition operation
+		 * 
+		 * @param QQNode|mixed $op1 The first operand
+		 * @param QQNode|mixed $op2 The second operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
+		static public function Add($op1, $op2 /** ... */) {
+			return new QQMathNode('+', func_get_args());
+		}
+		/**
+		 * The negation unary operation
+		 *
+		 * @param QQNode|mixed $op1 The first operand
+		 * @return \QQMathNode The resulting wrapper node
+		 */
+		static public function Neg($op1) {
+			return new QQMathNode('-', [$op1]);
+		}
+
 	}
 
 	abstract class QQSubQueryNode extends QQColumnNode {
+	}
+
+	abstract class QQNoParentNode extends QQSubQueryNode {
+		/**
+		 * @return string
+		 */
+		public function GetTable() {
+			return $this->FullAlias();
+		}
+		/**
+		 * Change the alias of the node, primarily for joining the same table more than once.
+		 *
+		 * @param $strAlias
+		 * @throws Exception
+		 * @throws QCallerException
+		 */
+		public function SetAlias($strAlias) {
+			if ($this->strFullAlias) {
+				throw new Exception ("You cannot set an alias on a node after you have used it in a query. See the examples doc. You must set the alias while creating the node.");
+			}
+			try {
+				// Changing the alias of the node. Must change pointers to the node too.
+				$strNewAlias = QType::Cast($strAlias, QType::String);
+				$this->strAlias = $strNewAlias;
+			} catch (QCallerException $objExc) {
+				$objExc->IncrementOffset();
+				throw $objExc;
+			}
+		}
+		/**
+		 * Aid to generating full aliases. Recursively gets and sets the parent alias, eventually creating, caching and returning
+		 * an alias for itself.
+		 * @return string
+		 */
+		public function FullAlias() {
+			if ($this->strFullAlias) {
+				return $this->strFullAlias;
+			} else {
+				assert (!empty($this->strAlias));	// Alias should always be set by default
+				return $this->strAlias;
+			}
+		}
 	}
 
 	class QQSubQueryCountNode extends QQSubQueryNode {
 		protected $strFunctionName = 'COUNT';
 	}
 
-	class QQSubQuerySqlNode extends QQSubQueryNode {
+	class QQSubQuerySqlNode extends QQNoParentNode {
 		protected $strSql;
 		/** @var QQNode[] */
 		protected $objParentQueryNodes;
@@ -1653,7 +1854,7 @@
 		}
 	}
 
-	class QQVirtualNode extends QQColumnNode {
+	class QQVirtualNode extends QQNoParentNode {
 		protected $objSubQueryDefinition;
 
 		/**
@@ -1663,7 +1864,8 @@
 		public function __construct($strName, QQSubQueryNode $objSubQueryDefinition = null) {
 			parent::__construct('', '', '');
 			$this->objParentNode = true;
-			$this->strName = trim(strtolower($strName));
+			$this->strName = QQ::GetVirtualAlias($strName);
+			$this->strAlias = $this->strName;
 			$this->objSubQueryDefinition = $objSubQueryDefinition;
 		}
 
@@ -1679,7 +1881,8 @@
 				return $this->objSubQueryDefinition->GetColumnAlias($objBuilder);
 			} else {
 				try {
-					return $objBuilder->GetVirtualNode($this->strName)->GetColumnAlias($objBuilder);
+					$objNode = $objBuilder->GetVirtualNode($this->strName);
+					return $objNode->GetColumnAlias($objBuilder);
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					$objExc->IncrementOffset();
@@ -1690,7 +1893,104 @@
 		public function GetAttributeName() {
 			return $this->strName;
 		}
+
+		public function HasSubquery() {
+			return $this->objSubQueryDefinition != null;
+		}
 	}
+
+	class QQFunctionNode extends QQSubQueryNode {
+		/** @var  string */
+		protected $strFunctionName;
+		/** @var  array Could be constants or column nodes */
+		protected $params;
+
+		/**
+		 * @param $strName
+		 * @param QQSubQueryNode|null $objSubQueryDefinition
+		 */
+		public function __construct($strFunctionName, $params) {
+			parent::__construct('', '', '');
+			$this->strFunctionName = $strFunctionName;
+			$this->params = $params;
+		}
+
+		/**
+		 * @param QQueryBuilder $objBuilder
+		 * @return string
+		 */
+		public function GetColumnAlias(QQueryBuilder $objBuilder) {
+			$strSql = $this->strFunctionName . '(';
+			foreach ($this->params as $param) {
+				if ($param instanceof QQColumnNode) {
+					$strSql .= $param->GetColumnAlias($objBuilder);
+				}
+				else {
+					// just a basic value
+					$strSql .= $param;
+				}
+				$strSql .= ',';
+			}
+			$strSql = substr($strSql, 0, -1);	// get rid of last comma
+			$strSql .= ')';
+			return $strSql;
+		}
+
+		public function __toString() {
+			return 'QQFunctionNode ' . $this->strFunctionName;
+		}
+	}
+
+	class QQMathNode extends QQSubQueryNode {
+		/** @var  string */
+		protected $strOperation;
+		/** @var  array Could be constants or column nodes */
+		protected $params;
+
+		/**
+		 * @param $strName
+		 * @param QQSubQueryNode|null $objSubQueryDefinition
+		 */
+		public function __construct($strOperation, $params) {
+			parent::__construct('', '', '');
+			$this->strOperation = $strOperation;
+			$this->params = $params;
+		}
+
+		/**
+		 * @param QQueryBuilder $objBuilder
+		 * @return string
+		 */
+		public function GetColumnAlias(QQueryBuilder $objBuilder) {
+			if (count($this->params) == 0) return '';
+
+			$strSql = '(';
+
+			if (count($this->params) == 1) {
+				// unary
+				$strSql .= $this->strOperation;
+			}
+			foreach ($this->params as $param) {
+				if ($param instanceof QQColumnNode) {
+					$strSql .= $param->GetColumnAlias($objBuilder);
+				}
+				else {
+					// just a basic value
+					$strSql .= $param;
+				}
+				$strSql .= ' ' . $this->strOperation . ' ';
+			}
+			$strSql = substr($strSql, 0, -(strlen($this->strOperation) + 2));	// get rid of last operation
+			$strSql .= ')';
+			return $strSql;
+		}
+
+		public function __toString() {
+			return 'QQMathNode ' . $this->strOperation;
+		}
+
+	}
+
 
 	abstract class QQClause extends QBaseClass {
 		abstract public function UpdateQueryBuilder(QQueryBuilder $objBuilder);
@@ -1768,20 +2068,34 @@
 		}
 
 		/**
-		 * Updates the query builder according to this clause
+		 * Updates the query builder. We delay processing of orderby clauses until just before statement creation.
+		 *
+		 * @param QQueryBuilder $objBuilder
+		 */
+		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+			$objBuilder->SetOrderByClause($this);
+		}
+
+		/**
+		 * Updates the query builder according to this clause. This is called by the query builder only.
 		 *
 		 * @param QQueryBuilder $objBuilder
 		 *
 		 * @throws Exception|QCallerException
 		 */
-		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
+		public function _UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			$intLength = count($this->objNodeArray);
 			for ($intIndex = 0; $intIndex < $intLength; $intIndex++) {
 				$objNode = $this->objNodeArray[$intIndex];
-				if ($objNode instanceof QQColumnNode) {
+				if ($objNode instanceof QQVirtualNode) {
+					if ($objNode->HasSubquery()) {
+						throw new QCallerException('You cannot define a virtual node in an order by clause. You must use an Expand clause to define it.');
+					}
+					$strOrderByCommand = '__' . $objNode->GetAttributeName();
+				} elseif ($objNode instanceof QQColumnNode) {
 					/** @var QQColumnNode $objNode */
 					$strOrderByCommand = $objNode->GetColumnAlias($objBuilder);
-				} else if ($objNode instanceof QQCondition) {
+				} elseif ($objNode instanceof QQCondition) {
 					/** @var QQCondition $objNode */
 					$strOrderByCommand = $objNode->GetWhereClause($objBuilder);
 				} else {
@@ -1802,6 +2116,8 @@
 				$objBuilder->AddOrderByItem($strOrderByCommand);
 			}
 		}
+
+
 
 		/**
 		 * This is used primarly by datagrids wanting to use the "old Beta 2" style of
@@ -1959,11 +2275,12 @@
 		protected $strAttributeName;
 		protected $strFunctionName;
 		public function __construct(QQColumnNode $objNode, $strAttributeName) {
-			$this->objNode = $objNode;
-			$this->strAttributeName = $strAttributeName;
+			$this->objNode = QQ::Func($this->strFunctionName, $objNode);
+			$this->strAttributeName = QQ::GetVirtualAlias($strAttributeName); // virtual attributes are queried lower case
 		}
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
-			$objBuilder->AddSelectFunction($this->strFunctionName, $this->objNode->GetColumnAlias($objBuilder), $this->strAttributeName);
+			$objBuilder->SetVirtualNode($this->strAttributeName, $this->objNode);
+			$objBuilder->AddSelectFunction(null, $this->objNode->GetColumnAlias($objBuilder), $this->strAttributeName);
 		}
 	}
 	class QQCount extends QQAggregationClause {
@@ -2223,6 +2540,8 @@
 		protected $strEscapeIdentifierBegin;
 		/** @var string  */
 		protected $strEscapeIdentifierEnd;
+		/** @var  QQOrderBy */
+		protected $objOrderByClause;
 
 		/**
 		 * @param QDatabaseBase $objDatabase
@@ -2464,19 +2783,20 @@
 		 * @param string $strName
 		 * @param QQSubQueryNode $objNode
 		 */
-		public function SetVirtualNode($strName, QQSubQueryNode $objNode) {
-			$this->objVirtualNodeArray[trim(strtolower($strName))] = $objNode;
+		public function SetVirtualNode($strName, QQColumnNode $objNode) {
+			$this->objVirtualNodeArray[QQ::GetVirtualAlias($strName)] = $objNode;
 		}
 
 		/**
 		 * @param string $strName
-		 * @return QQVirtualNode
+		 * @return QQColumnNode
 		 * @throws QCallerException
 		 */
 		public function GetVirtualNode($strName) {
-			$strName = trim(strtolower($strName));
-			if (array_key_exists($strName, $this->objVirtualNodeArray))
+			$strName = QQ::GetVirtualAlias($strName);
+			if (isset($this->objVirtualNodeArray[$strName])) {
 				return $this->objVirtualNodeArray[$strName];
+			}
 			else throw new QCallerException('Undefined Virtual Node: ' . $strName);
 		}
 
@@ -2505,6 +2825,8 @@
 		 * @return string
 		 */
 		public function GetStatement() {
+			$this->ProcessClauses();
+
 			// SELECT Clause
 			if ($this->blnCountOnlyFlag) {
 				if ($this->blnDistinctFlag) {
@@ -2556,7 +2878,26 @@
 			return $strSql;
 		}
 
-
+		/**
+		 * Sets the one order by clause allowed in a query. Stores it for delayed processing.
+		 *
+		 * @param QQOrderBy $objOrderByClause
+		 */
+		public function SetOrderByClause(QQOrderBy $objOrderByClause) {
+			if ($this->objOrderByClause) {
+				throw new QCallerException('You can only have one OrderBy clause in a query.');
+			}
+			$this->objOrderByClause = $objOrderByClause;
+		}
+		/**
+		 * Final processing of delayed clauses. Clauses like OrderBy need to wait to be processed until the complete
+		 * set of aliases is known.
+		 */
+		protected function ProcessClauses() {
+			if ($this->objOrderByClause) {
+				$this->objOrderByClause->_UpdateQueryBuilder($this);
+			}
+		}
 
 		public function __get($strName) {
 			switch ($strName) {
@@ -2615,4 +2956,4 @@
 			return implode(' ', $this->strFromArray) . ' ' . implode(' ', $this->strJoinArray);
 		}
 	}
-?>
+

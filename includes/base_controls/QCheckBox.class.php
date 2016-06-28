@@ -54,20 +54,9 @@
 		 * according to the data submitted
 		 */
 		public function ParsePostData() {
-			if (QApplication::$RequestMode == QRequestMode::Ajax) {
-				if (isset($_POST[$this->strControlId])) {
-					$this->blnChecked = QType::Cast ($_POST[$this->strControlId], QType::Boolean);
-				}
-			}
-			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
-				if (array_key_exists($this->strControlId, $_POST)) {
-					if ($_POST[$this->strControlId])
-						$this->blnChecked = true;
-					else
-						$this->blnChecked = false;
-				} else {
-					$this->blnChecked = false;
-				}
+			$val = $this->objForm->CheckableControlValue($this->strControlId);
+			if ($val !== null) {
+				$this->blnChecked = QType::Cast($val, QType::Boolean);
 			}
 		}
 
@@ -307,5 +296,23 @@
 					}
 			}
 		}
+
+		/**
+		 * Returns an description of the options available to modify by the designer for the code generator.
+		 *
+		 * @return QModelConnectorParam[]
+		 */
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'Text', 'Label on checkbox', QType::String),
+				new QModelConnectorParam (get_called_class(), 'TextAlign', 'Left or right alignment of label', QModelConnectorParam::SelectionList,
+					array ('QTextAlign::Right'=>'QTextAlign::Right',
+						'QTextAlign::Left'=>'QTextAlign::Left'
+					)),
+				new QModelConnectorParam (get_called_class(), 'HtmlEntities', 'Whether to apply HTML entities on the label', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'CssClass', 'The css class(es) to apply to the checkbox and label together', QType::String)
+			));
+		}
+
 
 	}

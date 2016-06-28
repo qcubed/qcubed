@@ -10,8 +10,10 @@
 	 * 
 	 * If requested by QForm, the index will be encrypted.
 	 * 
-	 * This incorporates a system of garbage collection that will allow for at most
-	 * 
+	 * This incorporates a system of garbage collection that will allow for at most BackButtonMax
+	 * formstates to be saved in the session.
+	 *
+	 * This handler is compatible with asynchronous ajax calls.
 	 *
 	 */
 	class QSessionFormStateHandler extends QBaseClass {

@@ -218,11 +218,16 @@ class QDataRepeater extends QPaginatedControl {
 			// APPEARANCE
 			case "Template":
 				try {
-					if (file_exists($mixValue)) {
-						$this->blnModified = true;
-						$this->strTemplate = QType::Cast($mixValue, QType::String);
-					} else
-						throw new QCallerException('Template file does not exist: ' . $mixValue);
+					$this->blnModified = true;
+					if ($mixValue) {
+						if (file_exists($strPath = $this->GetTemplatePath($mixValue))) {
+							$this->strTemplate = QType::Cast($strPath, QType::String);
+						} else {
+							throw new QCallerException('Could not find template file: ' . $mixValue);
+						}
+					} else {
+						$this->strTemplate = null;
+					}
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();

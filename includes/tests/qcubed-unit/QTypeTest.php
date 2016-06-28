@@ -92,16 +92,16 @@ class QTypeTests extends QUnitTestCaseBase {
 
 		$cond = QQ::Between(QQN::Project()->StartDate, $dt1, $dt2);
 		$a = Project::QueryArray($cond);
-		$this->assertEquals(count($a), 2, "Between 2 QDateTime types works");
+		$this->assertEquals(2, count($a), "Between 2 QDateTime types works");
 
 
 		$cond = QQ::Between(QQN::Project()->Budget, 2000, 3000);
 		$a = Project::QueryArray($cond);
-		$this->assertEquals(count($a), 1, "Between 2 int types works");
+		$this->assertEquals(1, count($a), "Between 2 int types works");
 
 		$cond = QQ::Between(QQN::Project()->Name, 'A', 'C');
 		$a = Project::QueryArray($cond);
-		$this->assertEquals(count($a), 3, "Between 2 string types works");
+		$this->assertEquals(3, count($a), "Between 2 string types works");
 	}
 
 	// Testing creation of type tables
@@ -111,8 +111,8 @@ class QTypeTests extends QUnitTestCaseBase {
 		$this->assertNull($val, 'Generated a null value');
 
 		$val = ProjectStatusType::$IsActiveArray[1];
-		$this->assertEquals($val, true, 'Open project is active');
-		$this->assertEquals(is_bool($val), true, 'Type of variable is boolean.');
+		$this->assertTrue($val, 'Open project is active');
+		$this->assertTrue(is_bool($val), 'Type of variable is boolean.');
 
 	}
 }

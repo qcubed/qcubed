@@ -70,17 +70,11 @@
 		// Methods
 		//////////
 		public function ParsePostData() {
-			if (QApplication::$RequestMode == QRequestMode::Ajax) {
-				if (isset($_POST[$this->strControlId])) {
-					$this->SelectedIndex = $_POST[$this->strControlId];
-				}
-			}
-			elseif ($this->objForm->IsCheckableControlRendered($this->strControlId)) {
-				if (isset($_POST[$this->strControlId])) {
-					$this->SetSelectedItemsByIndex(array($_POST[$this->strControlId]), false);
-				} else {
-					$this->UnselectAllItems(false);
-				}
+			$val = $this->objForm->CheckableControlValue($this->strControlId);
+			if ($val === null) {
+				$this->UnselectAllItems(false);
+			} else {
+				$this->SelectedIndex = $val;
 			}
 		}
 

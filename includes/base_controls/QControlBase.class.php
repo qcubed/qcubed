@@ -381,6 +381,45 @@
 
 
 		/**
+		 * A utility function to convert a template file name into a full path.
+		 *
+		 * @param $strTemplate
+		 */
+		public function GetTemplatePath($strTemplate) {
+			// If no path is specified, or a relative path, use the path of the child control's file as the starting point.
+			if (strpos($strTemplate, DIRECTORY_SEPARATOR) !== 0) {
+				$strOriginalPath = $strTemplate;
+
+				// Try the control's subclass location
+				$reflector = new ReflectionClass(get_class($this));
+				$strDir = dirname($reflector->getFileName());
+				$strTemplate = $strDir . DIRECTORY_SEPARATOR . $strTemplate;
+
+				if (!file_exists($strTemplate)) {
+					// Try the control's parent
+					if ($this->objParentControl) {
+						$reflector = new ReflectionClass(get_class($this->objParentControl));
+						$strDir = dirname($reflector->getFileName());
+						$strTemplate = $strDir . DIRECTORY_SEPARATOR . $strTemplate;
+					}
+				}
+
+				if (!file_exists($strTemplate)) {
+					// Try the form's location
+					$reflector = new ReflectionClass(get_class($this->objForm));
+					$strDir = dirname($reflector->getFileName());
+					$strTemplate = $strDir . DIRECTORY_SEPARATOR . $strTemplate;
+
+					if (!file_exists($strTemplate)) {
+						$strTemplate = $strOriginalPath;    // not found, but return original name
+					}
+				}
+			}
+			return $strTemplate;
+		}
+
+
+		/**
 		 * This function evaluates a template and is used by a variety of controls. It is similar to the function found in the
 		 * QForm, but recreated here so that the "$this" in the template will be the control, instead of the form,
 		 * and the protected members of the control are available to draw directly.
@@ -403,6 +442,8 @@
 
 				// Evaluate the new template
 				ob_start('__QForm_EvaluateTemplate_ObHandler');
+
+				$strTemplate = $this->GetTemplatePath($strTemplate);
 				require($strTemplate);
 				$strTemplateEvaluated = ob_get_contents();
 				ob_end_clean();
@@ -1444,6 +1485,11 @@
 		 * so we detect whether the parent is being rendered, and assume the parent is taking care of rendering for
 		 * us if so.
 		 *
+		 * Override if you want more control over ajax drawing, like it you detect parts of your control that have changed
+		 * and then want to draw only those parts. This will get called on every control on every ajax draw request.
+		 * It is up to you to test the blnRendered flag of the control to know whether the control was already rendered
+		 * by a parent control before drawing here.
+		 *
 		 * @return array[] array of control arrays to be interpreted by the response function in qcubed.js
 		 */
 		public function RenderAjax() {
@@ -1454,7 +1500,7 @@
 				if ((!$this->objParentControl) || ((!$this->objParentControl->Rendered) && (!$this->objParentControl->Rendering))) {
 					$strRenderMethod = $this->strRenderMethod;
 					if (!$strRenderMethod && $this->AutoRender) {
-						// This is an injected dialog that is not on the page, so go ahead and render it
+						// This is an auto-injected control (a dialog for instance) that is not on the page, so go ahead and render it
 						$strRenderMethod = $this->strPreferredRenderMethod;
 					}
 					if ($strRenderMethod) {
@@ -1593,12 +1639,13 @@
 			}
 
 			if ($this->strInstructions){
-				$strInstructions = '<br/><span class="instructions">' . $this->strInstructions . '</span>';
+				$strInstructions = '<br/>' .
+				QHtml::RenderTag('span', ['class'=>"instructions"], QHtml::RenderString($this->strInstructions));
 			}else{
 				$strInstructions = '';
 			}
-			
-			$strToReturn = sprintf('<div class="%s"><label>%s</label>%s</div>', $strLabelClass, $this->strName, $strInstructions);
+			$strLabel = QHtml::RenderTag('label', null, QHtml::RenderString($this->strName));
+			$strToReturn = QHtml::RenderTag('div', ['class'=>$strLabelClass], $strLabel . $strInstructions);
 
 			// Render the Right side
 			$strMessage = '';
@@ -1784,8 +1831,18 @@
 				$this->objForm = $this->objForm->FormId;
 			if ($this->objParentControl)
 				$this->objParentControl = $this->objParentControl->ControlId;
-			if ($blnReturn)
+
+			// In order to make the control exportable, we can't have circular references or things that are not exportable.
+			// We use the sleep helper as an aid to deep exporting the object.
+
+			$vars = get_object_vars($this);
+			foreach ($vars as $key=>$val) {
+				$this->$key = self::SleepHelper($val);
+			}
+
+			if ($blnReturn) {
 				return var_export($this, true);
+			}
 		}
 
 		/**

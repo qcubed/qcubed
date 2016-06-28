@@ -29,6 +29,7 @@ class QDataGrid2_SortEvent extends QEvent {
  * This class is NOT intended to support column filters, but a subclass could be created that could do so. Just don't
  * do that here.
  *
+ * @property-read  QQClause $OrderByClause The sorting clause based on the selected headers.
  * @property  string 	$SortColumnId The id of the currently sorted column. Does not change if columns are re-ordered.
  * @property  int 		$SortColumnIndex The index of the currently sorted column.
  * @property  int 		$SortDirection SortAscending or SortDescending.

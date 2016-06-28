@@ -21,24 +21,24 @@ class QStringTest extends QUnitTestCaseBase {
 	}
 
 	public function testEndsWithStartsWith() {
-		$this->assertEquals(QString::StartsWith("This is a test", "This"), true);
-		$this->assertEquals(QString::StartsWith("This is a test", "this"), false);
-		$this->assertEquals(QString::StartsWith("This is a test", "Thi"), true);
-		$this->assertEquals(QString::StartsWith("This is a test", "is a"), false);
-		$this->assertEquals(QString::StartsWith("This is a test", "X"), false);
-		$this->assertEquals(QString::StartsWith("This is a test", ""), true);
+		$this->assertTrue(QString::StartsWith("This is a test", "This"));
+		$this->assertFalse(QString::StartsWith("This is a test", "this"));
+		$this->assertTrue(QString::StartsWith("This is a test", "Thi"));
+		$this->assertFalse(QString::StartsWith("This is a test", "is a"));
+		$this->assertFalse(QString::StartsWith("This is a test", "X"));
+		$this->assertTrue(QString::StartsWith("This is a test", ""));
 
-		$this->assertEquals(QString::EndsWith("This is a test", "test"), true);
-		$this->assertEquals(QString::EndsWith("This is a test", "Test"), false);
-		$this->assertEquals(QString::EndsWith("This is a test", "est"), true);
-		$this->assertEquals(QString::EndsWith("This is a test", "is a"), false);
-		$this->assertEquals(QString::EndsWith("This is a test", "X"), false);
-		$this->assertEquals(QString::EndsWith("This is a test", ""), true);
+		$this->assertTrue(QString::EndsWith("This is a test", "test"));
+		$this->assertFalse(QString::EndsWith("This is a test", "Test"));
+		$this->assertTrue(QString::EndsWith("This is a test", "est"));
+		$this->assertFalse(QString::EndsWith("This is a test", "is a"));
+		$this->assertFalse(QString::EndsWith("This is a test", "X"));
+		$this->assertTrue(QString::EndsWith("This is a test", ""));
 	}
 
 	private function lcsCheckValueHelper($str1, $str2, $strExpectedResult) {
 		$strResult = QString::LongestCommonSubsequence($str1, $str2); 
-		$this->assertEquals($strResult, $strExpectedResult, "Longest common subsequence of '" . $str1 . 
+		$this->assertEquals($strExpectedResult, $strResult, "Longest common subsequence of '" . $str1 .
 			"' and '" . $str2 . "' is '" . $strResult . "'");
 	}	
 }
