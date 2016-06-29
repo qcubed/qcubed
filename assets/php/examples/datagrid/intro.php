@@ -3,23 +3,22 @@ require_once('../qcubed.inc.php');
 
 class ExampleForm extends QForm {
 
-	// Declare the DataGrid
+	/** @var  QSimpleTable */
 	protected $dtgPersons;
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid($this);
-		$this->dtgPersons->CellSpacing = 0;
+		$this->dtgPersons = new QSimpleTable($this);
 
 		// Define Columns
-		// Note that for the HTML, you can specify the PHP interpreter to kick in to interpret objects, methods,
-		// call functions, etc.  Simply use "<?= =>" tags to specify what needs to be interpreted.  Note that
-		// the use of the <?= short tag is *NOT* a function of PHP short tag support, but more a standard
-		// delimeter that QCubed happens to use to specify when PHP interpretation should begin and end.
-		// Note that you can use Attribute Overriding here define styles for specific columns (e.g. the last name
-		// is always in bold)
-		$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', 'First Name is "<?= $_ITEM->FirstName ?>"', 'Width=200'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>', 'FontBold=true'));
+		// This first example uses a callback to draw the column, which is the most versatile way of drawing a column.
+		// In other examples, we will describe other column types that let you draw some standard column types.
+
+		$col = $this->dtgPersons->CreateCallableColumn('First Name', [$this, 'dtgPerson_FirstName_Render']);
+		$col->CellStyler->Width = 200;	// style for the 'td' tag of the column
+
+		$col = $this->dtgPersons->CreateCallableColumn('Last Name', [$this, 'dtgPerson_LastName_Render']);
+		$col->CellStyler->FontBold = true; // style for the 'td' tag of the column
 
 		// Specify the local Method which will actually bind the data source to the datagrid.
 		// In order to not over-bloat the form state, the datagrid will use the data source only when rendering itself,
@@ -34,22 +33,28 @@ class ExampleForm extends QForm {
 		// Note that styles are hierarchical and inherit from each other.  For example, the default RowStyle
 		// sets the FontSize as 12px, and because that attribute is not overridden in AlternateRowStyle
 		// or HeaderRowStyle, both those styles will use the 12px Font Size.
-		$objStyle = $this->dtgPersons->RowStyle;
-		$objStyle->BackColor = '#efefff';
-		$objStyle->FontSize = 12;
 
-		$objStyle = $this->dtgPersons->AlternateRowStyle;
-		$objStyle->BackColor = '#ffffff';
-
-		$objStyle = $this->dtgPersons->HeaderRowStyle;
-		$objStyle->ForeColor = '#780000';
-		$objStyle->BackColor = '#ffffff';
+		// While there are a variety of ways to style tables QCubed, the easiest and most versatile is to use css
+		// classes. These are defined at the top of the intro.tpl.php file in this example.
+		$this->dtgPersons->HeaderRowCssClass = 'header-row';
+		$this->dtgPersons->RowCssClass = 'row';
+		$this->dtgPersons->AlternateRowCssClass = 'alt-row';
 	}
 
 	protected function dtgPersons_Bind() {
 		// We load the data source, and set it to the datagrid's DataSource parameter
 		$this->dtgPersons->DataSource = Person::LoadAll();
 	}
+
+	// Callbacks must be defined public, since the datagrid is calling them
+	public function dtgPerson_FirstName_Render(Person $objPerson) {
+		return "First Name is {$objPerson->FirstName}";
+	}
+
+	public function dtgPerson_LastName_Render(Person $objPerson) {
+		return "Last Name {$objPerson->LastName}";
+	}
+
 }
 
 ExampleForm::Run('ExampleForm');
