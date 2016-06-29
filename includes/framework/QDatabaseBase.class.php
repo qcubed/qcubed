@@ -1299,5 +1299,7 @@
 		const Float = "Float";
 		/** Boolean */
 		const Bit = "Bit";
+		/** JSON (for Postgresql currently) */
+		const Json = "JSON";
 	}
 ?>

@@ -603,7 +603,8 @@
 				case QDatabaseFieldType::Char:
 				case QDatabaseFieldType::VarChar:
 					return QType::Cast($strColumnValue, QType::String);
-
+				case QDatabaseFieldType::Json:
+					return QType::Cast($strColumnValue, QType::Json);
 				case QDatabaseFieldType::Date:
 				case QDatabaseFieldType::DateTime:
 				case QDatabaseFieldType::Time:
@@ -789,6 +790,10 @@
 					//    However, you will not be able to support full typing control (e.g. you would
 					//    not be able to use a QFloatTextBox -- only a regular QTextBox)
 					$this->strType = QDatabaseFieldType::VarChar;
+					break;
+				case 'json':
+				case 'jsonb':
+					$this->strType = QDatabaseFieldType::Json;
 					break;
 				case 'tsvector':
 					// this is the TSVector data type in PostgreSQL used for full text search systems.
