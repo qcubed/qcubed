@@ -136,11 +136,24 @@ function paintMethodStart($test_name) {
 
 class QTestForm extends QForm {
 	public $ctlTest;
+	public $btnRunTests;
+	public $lblRunning;
 	public $pnlOutput;
 
 	protected function Form_Create() {
 		$this->ctlTest = new QTestControl($this);
 		$this->pnlOutput = new QPanel($this, 'outputPanel');
+		$this->btnRunTests = new QButton($this);
+		$this->btnRunTests->Text = "Run Tests";
+		$this->btnRunTests->AddAction(new QClickEvent(), new QAjaxAction('startTesting'));
+
+		$this->lblRunning = new QLabel($this);
+		$this->lblRunning->Text = "Running, please wait...";
+		$this->lblRunning->Visible = false;
+	}
+
+	protected function startTesting() {
+		$this->lblRunning->Visible = true;
 		
 		$t1 = new QJsTimer($this, 200, false, true, 'timer1');
 		$t1->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest'));
