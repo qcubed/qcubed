@@ -9,95 +9,95 @@ class ExampleForm extends QForm {
 	protected function Form_Create() {
 		// Define the DataGrid
 		$this->tblProjects = new QSimpleTable($this);
+
+		// This css class is used to style alternate rows and the header, all in css
 		$this->tblProjects->CssClass = 'simple_table';
-		$this->tblProjects->RowCssClass = 'odd_row';
-		$this->tblProjects->AlternateRowCssClass = 'even_row';
-		$this->tblProjects->HeaderRowCssClass = 'header_row';
 
 		// Define Columns
-		// This demonstrates how to first create a column, and then add it to the table
-		$objColumn = new QSimpleTableCallableColumn('Full Name', [$this, 'getFullName']);
-		$this->tblPersons->AddColumn($objColumn);
 
-		// The second column demonstrates using a property name for fetching the data
-		// This also demonstrates how to create a column and add it to the table all at once, using the CreatePropertyColumn shortcut
-		$this->tblPersons->CreatePropertyColumn('First Name', 'FirstName');
+		// Show the name of the project
+		$this->tblProjects->CreateNodeColumn('Project', QQN::Project()->Name);
 
-		// The second column demonstrates using a node column for fetching the data
-		$this->tblPersons->CreateNodeColumn('Last Name', QQN::Person()->LastName);
+		// Date column formatting. Uses the Format string to format the date object that is in the column.
+		$col = $this->tblProjects->CreateNodeColumn('Start Date', QQN::Project()->StartDate);
+		$col->Format = 'MM/DD/YY';
+		$col = $this->tblProjects->CreateNodeColumn('End Date', QQN::Project()->EndDate);
+		$col->Format = 'DDD, MMM D, YYYY';
 
-		// Specify the local Method which will actually bind the data source to the datagrid.
-		// In order to not over-bloat the form state, the datagrid will use the data source only when rendering itself,
-		// and then it will proceed to remove the data source from memory.  Because of this, you will need to define
-		// a "data binding" method which will set the datagrid's data source.  You specify the name of the method
-		// here.  The framework will be responsible for calling your data binding method whenever the datagrid wants
-		// to render itself.
-		$this->tblPersons->SetDataBinder('tblPersons_Bind');
+		// PersonAsTeamMemberArray is an array of names. Use a callback to format the array into a string.
+		$col = $this->tblProjects->CreatePropertyColumn('Members', 'PersonAsTeamMemberArray');
+		$col->PostCallback = 'ExampleForm::RenderTeamMemberArray';
 
-		$this->tblReport = new QSimpleTable($this);
-		$this->tblReport->CssClass = 'simple_table';
-		$this->tblReport->RowCssClass = 'odd_row';
-		$this->tblReport->AlternateRowCssClass = 'even_row';
-		$this->tblReport->HeaderRowCssClass = 'header_row';
+		//
+		$col = $this->tblProjects->CreateCallableColumn('Balance', [$this, 'dtgPerson_BalanceRender']);
+		$col->CellParamsCallback = [$this, 'dtgPerson_BalanceAttributes'];
 
-		// "named" index columns
-		$this->tblReport->CreateIndexedColumn("Year", 0);
-		$this->tblReport->CreateIndexedColumn("Model", 1);
-		// "unnamed" index columns
-		$this->tblReport->CreateIndexedColumn();
-		$this->tblReport->CreateIndexedColumn();
-		// index columns for associative arrays
-		$this->tblReport->CreateIndexedColumn("Count", "#count");
+		$this->tblProjects->SetDataBinder('tblProjects_Bind');
 
-		$this->tblReport->SetDataBinder('tblReport_Bind');
-
-		$this->tblComplex = new QSimpleTable($this);
-		$this->tblComplex->CssClass = 'simple_table';
-		$this->tblComplex->RowCssClass = 'odd_row';
-		$this->tblComplex->AlternateRowCssClass = 'even_row';
-		$this->tblComplex->HeaderRowCssClass = 'header_row';
-
-		// "named" index columns
-		$col = $this->tblComplex->AddColumn (new ComplexColumn("", "Name"));
-		$col->RenderAsHeader = true;
-		$this->tblComplex->AddColumn (new ComplexColumn("2000", 1));
-		$this->tblComplex->AddColumn (new ComplexColumn("2001", 2));
-		$this->tblComplex->AddColumn (new ComplexColumn("2002", 3));
-		$this->tblComplex->HeaderRowCount = 2;
-
-		$this->tblComplex->SetDataBinder('tblComplex_Bind');
 	}
 
-	protected function tblPersons_Bind() {
+	/**
+	 * Bind the Projects table to the html table.
+	 *
+	 * @throws QCallerException
+	 */
+	protected function tblProjects_Bind() {
+		// Expand the PersonAsTeamMember node as an array so that it will be included in each item sent to the columns.
+		$clauses = QQ::ExpandAsArray(QQN::Project()->PersonAsTeamMember);
+
 		// We load the data source, and set it to the datagrid's DataSource parameter
-		$this->tblPersons->DataSource = Person::LoadAll();
+		$this->tblProjects->DataSource = Project::LoadAll($clauses);
 	}
 
-	public function getFullName($item) {
-		return 'Full Name is "' . $item->FirstName . ' ' . $item->LastName . '"';
-	}
-
-	protected function tblReport_Bind() {
-		// build the entire datasource as an array of arrays.
-		$csv = '1997,Ford,E350,"ac, abs, moon",3000.00
-1999,Chevy,"Venture ""Extended Edition""","",4900.00
-1999,Chevy,"Venture ""Extended Edition, Very Large""","",5000.00
-1996,Jeep,Grand Cherokee,"MUST SELL!';
-		$data = str_getcsv($csv, "\n");
-		foreach ($data as &$row) {
-			$row = str_getcsv($row, ",");
-			$row["#count"] = count($row);
+	/**
+	 * Render the team member array as a string.
+	 *
+	 * @param array $a
+	 * @return string
+	 */
+	public static function RenderTeamMemberArray($a) {
+		if ($a) {
+			return implode(', ',
+				array_map(function($val) {return $val->FirstName . ' ' . $val->LastName; }, $a));
 		}
-		$this->tblReport->DataSource = $data;
-	}
-	protected function tblComplex_Bind() {
-		$a[] = array ('Name' => 'Income', 1=>1000, 2=>2000, 3=>1500);
-		$a[] = array ('Name' => 'Expense', 1=>500, 2=>700, 3=>2100);
-		$a[] = array ('Name' => 'Net', 1=>1000-500, 2=>2000-700, 3=>1500-2100);
-
-		$this->tblComplex->DataSource = $a;
+		else {
+			return '';
+		}
 	}
 
+	/**
+	 * Render the number in the column. If the number is negative, uses parentheses to show its negative.
+	 *
+	 * @param $item
+	 * @return string
+	 */
+	public function dtgPerson_BalanceRender($item) {
+		$val = $item->Budget - $item->Spent;
+		if ($val < 0) {
+			return '(' . number_format(-$val) . ')';
+		}
+		else {
+			return number_format($val);
+		}
+	}
+
+	/**
+	 * Style the number in the column. All number columns will use the amount class. If the number is negative, make
+	 * the cell red.
+	 *
+	 * @param $item
+	 * @return mixed
+	 */
+	public function dtgPerson_BalanceAttributes($item)
+	{
+		$ret['class'] ='amount';
+		$val = $item->Budget - $item->Spent;
+
+		if ($val < 0) {
+			$ret['style'] = 'color:red';
+		}
+		return $ret;
+	}
 }
 
 ExampleForm::Run('ExampleForm');
