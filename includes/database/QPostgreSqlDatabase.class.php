@@ -497,10 +497,18 @@
 	}
 
 	/**
+	 * Database exception class
 	 *
 	 * @package DatabaseAdapters
 	 */
 	class QPostgreSqlDatabaseException extends QDatabaseExceptionBase {
+		/**
+		 * QPostgreSqlDatabaseException constructor.
+		 *
+		 * @param string $strMessage
+		 * @param int    $intNumber
+		 * @param string $strQuery
+		 */
 		public function __construct($strMessage, $intNumber, $strQuery) {
 			parent::__construct(sprintf("PostgreSql Error: %s", $strMessage), 2);
 			$this->intErrorNumber = $intNumber;
@@ -516,39 +524,81 @@
 		protected $objPgSqlResult;
 		protected $objDb;
 
+		/**
+		 * QPostgreSqlDatabaseResult constructor.
+		 *
+		 * @param                     $objResult
+		 * @param QPostgreSqlDatabase $objDb
+		 */
 		public function __construct($objResult, QPostgreSqlDatabase $objDb) {
 			$this->objPgSqlResult = $objResult;
 			$this->objDb = $objDb;
 		}
 
+		/**
+		 * Fetch result (single result) as array
+		 *
+		 * @return array
+		 */
 		public function FetchArray() {
 			return pg_fetch_array($this->objPgSqlResult);
 		}
 
+		/**
+		 * Fetch fields (currently just null)
+		 *
+		 * @return null
+		 */
 		public function FetchFields() {
 			return null;  // Not implemented
 		}
 
+		/**
+		 * Fetch field (currently just null)
+		 *
+		 * @return null
+		 */
 		public function FetchField() {
 			return null;  // Not implemented
 		}
 
+		/**
+		 * Fetch row
+		 *
+		 * @return array
+		 */
 		public function FetchRow() {
 			return pg_fetch_row($this->objPgSqlResult);
 		}
-
+		
+		/**
+		 * Return number of rows in result
+		 * 
+		 * @return int
+		 */
 		public function CountRows() {
 			return pg_num_rows($this->objPgSqlResult);
 		}
-
+		
+		/**
+		 * Return number of fields in a result
+		 * 
+		 * @return int
+		 */
 		public function CountFields() {
 			return pg_num_fields($this->objPgSqlResult);
 		}
 
+		/**
+		 * Free the memory. Connection closes when script ends
+		 */
 		public function Close() {
 			pg_free_result($this->objPgSqlResult);
 		}
-		
+
+		/**
+		 * @return null|QPostgreSqlDatabaseRow
+		 */
 		public function GetNextRow() {
 			$strColumnArray = $this->FetchArray();
 			
@@ -558,6 +608,11 @@
 				return null;
 		}
 
+		/**
+		 * Returns all results in the result set as array
+		 * 
+		 * @return array
+		 */
 		public function GetRows() {
 			$objDbRowArray = array();
 			while ($objDbRow = $this->GetNextRow())
@@ -567,12 +622,19 @@
 	}
 
 	/**
-	 *
+	 * Class for handling a single row from PostgreSQL database result set
+	 * 
 	 * @package DatabaseAdapters
 	 */
 	class QPostgreSqlDatabaseRow extends QDatabaseRowBase {
+		/** @var string[] Column name value pairs for current result set */
 		protected $strColumnArray;
-
+		
+		/**
+		 * QPostgreSqlDatabaseRow constructor.
+		 *
+		 * @param string $strColumnArray
+		 */
 		public function __construct($strColumnArray) {
 			$this->strColumnArray = $strColumnArray;
 		}
@@ -602,7 +664,7 @@
 				case QDatabaseFieldType::Blob:
 				case QDatabaseFieldType::Char:
 				case QDatabaseFieldType::VarChar:
-				case QDatabaseFieldType::Json: // JSON is basically String
+				case QPostgreSqlDatabaseFieldType::Json: // JSON is basically String
 					return QType::Cast($strColumnValue, QType::String);
 				case QDatabaseFieldType::Date:
 				case QDatabaseFieldType::DateTime:
@@ -631,6 +693,9 @@
 			return array_key_exists($strColumnName, $this->strColumnArray);
 		}
 		
+		/**
+		 * @return string|string[]
+		 */
 		public function GetColumnNameArray() {
 			return $this->strColumnArray;
 		}
@@ -638,7 +703,7 @@
 		/**
 		 * Returns the boolean value corresponding to whatever a bit column returns. Postgres
 		 * returns a 't' or 'f' (or null).
-		 * @param $mixValue Value of the BIT column
+		 * @param bool|null $mixValue Value of the BIT column
 		 * @return bool
 		 */
 		public function ResolveBooleanValue ($mixValue) {
@@ -653,10 +718,24 @@
 	}
 
 	/**
+	 * Class QPostgreSqlDatabaseFieldType: PostgreSQL specific database field types
+	 */
+	abstract class QPostgreSqlDatabaseFieldType extends QDatabaseFieldType{
+		/** JSON */
+		const Json = "JSON";
+	}
+
+	/**
 	 *
 	 * @package DatabaseAdapters
 	 */
 	class QPostgreSqlDatabaseField extends QDatabaseFieldBase {
+		/**
+		 * QPostgreSqlDatabaseField constructor.
+		 *
+		 * @param      $mixFieldData
+		 * @param null $objDb
+		 */
 		public function __construct($mixFieldData, $objDb = null) {
 			$this->strName = $mixFieldData->GetColumn('column_name');
 			$this->strOriginalName = $this->strName;
@@ -792,7 +871,7 @@
 					break;
 				case 'json':
 				case 'jsonb':
-					$this->strType = QDatabaseFieldType::Json;
+					$this->strType = QPostgreSqlDatabaseFieldType::Json;
 					break;
 				case 'tsvector':
 					// this is the TSVector data type in PostgreSQL used for full text search systems.

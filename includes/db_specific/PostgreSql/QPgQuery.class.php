@@ -151,7 +151,6 @@
 					$this->mixOperand = QType::Cast($strValue, QType::String);
 				} catch (QCallerException $objExc) {
 					$objExc->IncrementOffset();
-					$objExc->IncrementOffset();
 					throw $objExc;
 				}
 			}
