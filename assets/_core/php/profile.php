@@ -20,6 +20,10 @@
 		if (substr_count($strOriginalQuery, "AUTOCOMMIT=1") > 0) {
 			return null; 
 		}
+		if (substr_count($strOriginalQuery, "UPDATE") > 0) {
+			return null; // can't explain update statements
+		}
+		
 		$result = "";
 		
 		$objDb = QApplication::$Database[$intDatabaseIndex];
