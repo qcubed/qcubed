@@ -21,7 +21,7 @@
 
 		/**
 		 * The table name which will handle the formstates. It must have the following columns:
-		 * 1. page_id: varchar(80)
+		 * 1. page_id: varchar(85)
 		 * 2. save_time: integer
 		 * 3. state_data: text
 		 * 4. session_id: varchar(32)
