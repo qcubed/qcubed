@@ -1193,7 +1193,9 @@
 		static public function Average($objNode, $strAttributeName) {
 			return new QQAverage($objNode, $strAttributeName);
 		}
-
+		static public function GroupConcat($objNode, $strAttributeName) {
+			return new QQGroupConcat($objNode, $strAttributeName);
+		}
 		static public function Expand($objNode, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
 //			if (gettype($objNode) == 'string')
 //				return new QQExpandVirtualNode(new QQVirtualNode($objNode));
@@ -1626,7 +1628,12 @@
 			return 'QQAverage Clause';
 		}
 	}
-
+	class QQGroupConcat extends QQAggregationClause {
+		protected $strFunctionName = 'GROUP_CONCAT';
+		public function __toString() {
+			return 'QQGroupConcat Clause';
+		}
+	}
 	class QQExpandAsArray extends QQClause {
 		/** @var QQNode|QQAssociationNode */
 		protected $objNode;
