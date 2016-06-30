@@ -183,7 +183,11 @@
 				switch ($strFileCreationStatus) {
 					case 'exists':
 					case 'creation_failed':
-						echo '<br/> <a href="' . $strVirtDir . $strSubDir . '/assets/_core/php/_devtools/config_checker.php">Launch the config checker</a>';
+						echo '<br/> <a href="';
+						if (!empty($strVirtDir) || !empty($strSubDir)) {
+							echo $strVirtDir . $strSubDir
+						};
+						echo '/assets/_core/php/_devtools/config_checker.php">Launch the config checker</a>';
 						break;
 					case 'created':
 						?>
