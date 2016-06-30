@@ -602,9 +602,8 @@
 				case QDatabaseFieldType::Blob:
 				case QDatabaseFieldType::Char:
 				case QDatabaseFieldType::VarChar:
+				case QDatabaseFieldType::Json: // JSON is basically String
 					return QType::Cast($strColumnValue, QType::String);
-				case QDatabaseFieldType::Json:
-					return QType::Cast($strColumnValue, QType::Json);
 				case QDatabaseFieldType::Date:
 				case QDatabaseFieldType::DateTime:
 				case QDatabaseFieldType::Time:

@@ -80,8 +80,6 @@
 		const Object = 'object';
 		/** Array Type */
 		const ArrayType = 'array';
-		/** JSON - String Type but valid JSON Text */
-		const Json = 'json';
 		/** QDateTime type */
 		const DateTime = 'QDateTime';
 		/** Resource Type */
@@ -126,13 +124,6 @@
 
 				if ($strType == QType::String) {
 					return (string) $objItem;	// invokes __toString() magic method
-				}
-
-				if($strType == QType::Json){
-					$strJson = json_encode($objItem);
-					if($strJson != null){
-						return $strJson;
-					}
 				}
 			} catch (Exception $objExc) {
 			}
@@ -249,7 +240,7 @@
 		}
 
 		/**
-		 * Can convert an array to JSON. Other type of casts not possible.
+		 * Converts an array to array (without modification) or throws exception
 		 *
 		 * @param array  $arrItem The array item to be converted
 		 * @param string $strType Type to which this array has to be converted
@@ -260,8 +251,6 @@
 		private static function CastArrayTo($arrItem, $strType) {
 			if ($strType == QType::ArrayType) {
 				return $arrItem;
-			} elseif ($strType == QType::Json) {
-				return json_encode($arrItem);
 			} else {
 				throw new QInvalidCastException(sprintf('Unable to cast Array to %s', $strType));
 			}
@@ -377,7 +366,6 @@
 				case QType::Float: return 'QType::Float';
 				case QType::Boolean: return 'QType::Boolean';
 				case QType::ArrayType: return 'QType::ArrayType';
-				case QType::Json: return 'QType::Json';
 				case QType::Resource: return 'QType::Resource';
 				case QType::DateTime: return 'QType::DateTime';
 
@@ -392,9 +380,6 @@
 				case 'string':
 				case 'str':
 					return QType::String;
-
-				case 'json':
-					return QType::Json;
 
 				case 'integer':
 				case 'int':
