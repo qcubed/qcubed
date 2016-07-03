@@ -15,22 +15,21 @@
 
 		protected function Form_Create() {
 			// Define the DataGrid
-			$this->dtgPersons = new QDataGrid($this);
-			$this->dtgPersons->CellSpacing = 0;
+			$this->dtgPersons = new QDataGrid2($this);
 
 			// Define Columns -- we will define render helper methods to help with the rendering
 			// of the HTML for most of these columns
-			$this->dtgPersons->AddColumn(new QDataGridColumn('Person ID', '<?= $_ITEM->Id ?>', 'Width=100',
-				array('OrderByClause' => QQ::OrderBy(QQN::Person()->Id), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->Id, false))));
-				
-			// Setup the First and Last name columns with HtmlEntities set to false (because they may be rendering textbox controls)
-			$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', '<?= $_FORM->FirstNameColumn_Render($_ITEM) ?>', 'Width=200', 'HtmlEntities=false',
-				array('OrderByClause' => QQ::OrderBy(QQN::Person()->FirstName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->FirstName, false))));
-			$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_FORM->LastNameColumn_Render($_ITEM) ?>', 'Width=200', 'HtmlEntities=false',
-				array('OrderByClause' => QQ::OrderBy(QQN::Person()->LastName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->LastName, false))));
-
-			// Again, we setup the "Edit" column and ensure that the column's HtmlEntities is set to false
-			$this->dtgPersons->AddColumn(new QDataGridColumn('Edit', '<?= $_FORM->EditColumn_Render($_ITEM) ?>', 'Width=120', 'HtmlEntities=false'));
+			$col = $this->dtgPersons->CreateNodeColumn('Person Id', QQN::Person()->Id);
+			$col->CellStyler->Width = 100;
+			$col = $this->dtgPersons->CreateCallableColumn('First Name', [$this, 'FirstNameColumn_Render']);
+			$col->CellStyler->Width = 200;
+			$col->HtmlEntities = false;
+			$col = $this->dtgPersons->CreateCallableColumn('Last Name', [$this, 'LastNameColumn_Render']);
+			$col->HtmlEntities = false;
+			$col->CellStyler->Width = 200;
+			$col = $this->dtgPersons->CreateCallableColumn('Edit', [$this, 'EditColumn_Render']);
+			$col->HtmlEntities = false;
+			$col->CellStyler->Width = 120;
 
 			// Let's pre-default the sorting by id (column index #0) and use AJAX
 			$this->dtgPersons->SortColumnIndex = 0;
@@ -38,13 +37,6 @@
 
 			// Specify the DataBinder method for the DataGrid
 			$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
-
-			// Make the DataGrid look nice
-			$objStyle = $this->dtgPersons->RowStyle;
-			$objStyle->FontSize = 12;
-
-			$objStyle = $this->dtgPersons->AlternateRowStyle;
-			$objStyle->BackColor = '#f6f6f6';
 
 			// Create the other textboxes and buttons -- make sure we specify
 			// the datagrid as the parent.  If they hit the escape key, let's perform a Cancel.

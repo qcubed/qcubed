@@ -8,8 +8,7 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid($this);
-		$this->dtgPersons->CellSpacing = 0;
+		$this->dtgPersons = new QDataGrid2($this);
 
 		// Using Ajax for Pagination
 		$this->dtgPersons->UseAjax = true;
@@ -26,36 +25,34 @@ class ExampleForm extends QForm {
 		$this->dtgPersons->ItemsPerPage = 5;
 
 		// Define Columns
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Person ID', '<?= $_ITEM->Id ?>', 'Width=100',
-						array('OrderByClause' => QQ::OrderBy(QQN::Person()->Id), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->Id, false))));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>', 'Width=200',
-						array('OrderByClause' => QQ::OrderBy(QQN::Person()->FirstName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->FirstName, false))));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>', 'Width=200',
-						array('OrderByClause' => QQ::OrderBy(QQN::Person()->LastName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->LastName, false))));
+		$col = $this->dtgPersons->CreateNodeColumn('Person ID', QQN::Person()->Id);
+		$col->CellStyler->Width = 100;
+		$col = $this->dtgPersons->CreateNodeColumn('First Name', [QQN::Person()->FirstName, QQN::Person()->LastName]);
+		$col->CellStyler->Width = 200;
+		$col = $this->dtgPersons->CreateNodeColumn('Last Name', [QQN::Person()->LastName, QQN::Person()->LastName]);
+		$col->CellStyler->Width = 200;
 
 		// Let's pre-default the sorting by last name (column index #2)
 		$this->dtgPersons->SortColumnIndex = 2;
 
 		// Specify the Datagrid's Data Binder method
 		$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
-
-		// Make the DataGrid look nice
-		$objStyle = $this->dtgPersons->RowStyle;
-		$objStyle->FontSize = 12;
-
-		$objStyle = $this->dtgPersons->AlternateRowStyle;
-		$objStyle->BackColor = '#f6f6f6';
 	}
 
 	protected function dtgPersons_Bind() {
 		// We must first let the datagrid know how many total items there are
+		// IMPORTANT: Do not pass a limit clause here to CountAll
 		$this->dtgPersons->TotalItemCount = Person::CountAll();
+
+		// Ask the datagrid for the sorting information for the currently active sort column
+		$clauses[] = $this->dtgPersons->OrderByClause;
+
+		// Ask the datagrid for the Limit clause that will limit what portion of the data we will get from the database
+		$clauses[] = $this->dtgPersons->LimitClause;
 
 		// Next, we must be sure to load the data source, passing in the datagrid's
 		// limit info into our loadall method.
-		$this->dtgPersons->DataSource = Person::LoadAll(QQ::Clause(
-								$this->dtgPersons->OrderByClause, $this->dtgPersons->LimitClause
-						));
+		$this->dtgPersons->DataSource = Person::LoadAll($clauses);
 	}
 
 }

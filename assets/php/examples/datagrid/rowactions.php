@@ -8,36 +8,23 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid($this, 'dtgPersons');
-		$this->dtgPersons->CellSpacing = 0;
+		$this->dtgPersons = new QDataGrid2($this, 'dtgPersons');
+
+		// Style this with a QCubed built-in style that will highlight the row hovered over.
+		$this->dtgPersons->AddCssClass('clickable-rows');
 
 		// Define Columns
-		// We will use $_ITEM, $_CONTROL and $_FORM to show how you can make calls to the Person object
-		// being itereated ($_ITEM), the QDataGrid itself ($_CONTROL), and the QForm itself ($_FORM).
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Row #', '<?= ($_CONTROL->CurrentRowIndex + 1) ?>'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>', 'Width=200'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>', 'Width=200'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Full Name', '<?= $_FORM->DisplayFullName($_ITEM) ?>', 'Width=300'));
-
+		$this->dtgPersons->CreateNodeColumn('First Name', QQN::Person()->FirstName);
+		$this->dtgPersons->CreateNodeColumn('Last Name', QQN::Person()->LastName);
+		
 		// Specify the Datagrid's Data Binder method
 		$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
 
-		// Make the DataGrid look nice
-		$objStyle = $this->dtgPersons->RowStyle;
-		$objStyle->FontSize = 12;
+		// Attach a callback to the table that will create an attribute in the row's tr tag that will be the id of data row in the database
+		$this->dtgPersons->RowParamsCallback = [$this, 'dtgPersons_GetRowParams'];
 
-		$objStyle = $this->dtgPersons->AlternateRowStyle;
-		$objStyle->BackColor = '#f6f6f6';
-
-		// Higlight the datagrid rows when mousing over them
-		$this->dtgPersons->AddRowAction(new QMouseOverEvent(), new QCssClassAction('selectedStyle'));
-		$this->dtgPersons->AddRowAction(new QMouseOutEvent(), new QCssClassAction());
-
-		// Add a click handler for the rows.
-		// We can use $_CONTROL->CurrentRowIndex to pass the row index to dtgPersonsRow_Click()
-		// or $_ITEM->Id to pass the object's id, or any other data grid variable
-		$this->dtgPersons->RowActionParameterHtml = '<?= $_ITEM->Id ?>';
-		$this->dtgPersons->AddRowAction(new QClickEvent(), new QAjaxAction('dtgPersonsRow_Click'));
+		// Add an action that will detect a click on the row, and return the html data value that was created by RowParamsCallback
+		$this->dtgPersons->AddAction(new QCellClickEvent(0, null, QCellClickEvent::RowDataValue('value')), new QAjaxAction('dtgPersonsRow_Click'));
 	}
 
 	// DisplayFullName will be called by the DataGrid on each row, whenever it tries to render
@@ -52,6 +39,13 @@ class ExampleForm extends QForm {
 		// We must be sure to load the data source
 		$this->dtgPersons->DataSource = Person::LoadAll();
 	}
+
+	public function dtgPersons_GetRowParams($objRowObject, $intRowIndex) {
+		$strKey = $objRowObject->PrimaryKey();
+		$params['data-value'] = $strKey;
+		return $params;
+	}
+
 
 	public function dtgPersonsRow_Click($strFormId, $strControlId, $strParameter) {
 		$intPersonId = intval($strParameter);

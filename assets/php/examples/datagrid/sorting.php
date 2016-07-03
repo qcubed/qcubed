@@ -8,42 +8,42 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid($this);
-		$this->dtgPersons->CellSpacing = 0;
+		$this->dtgPersons = new QDataGrid2($this);
 
 		// Define Columns
 		// Note how we add SortByCommand and ReverseSortByCommand properties to each column
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Person ID', '<?= $_ITEM->Id ?>', 'Width=100',
-						array('OrderByClause' => QQ::OrderBy(QQN::Person()->Id), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->Id, false))));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>', 'Width=200',
-						array('OrderByClause' => QQ::OrderBy(QQN::Person()->FirstName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->FirstName, false))));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>', 'Width=200',
-						array('OrderByClause' => QQ::OrderBy(QQN::Person()->LastName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->LastName, false))));
+		$col = $this->dtgPersons->CreatePropertyColumn('Person Id', 'Id');
+		$col->OrderByClause = QQ::OrderBy(QQN::Person()->Id);	// The clause to use when the column header is first clicked.
+		$col->ReverseOrderByClause = QQ::OrderBy(QQN::Person()->Id, false); // The clause to use the second time the column header is clicked.
+		// Note above the use of 'false' in the node list of the OrderBy clause. This tells OrderBy to go in descending order for the previous database column.
+
+
+		// Here we illustrate how you can sort on multiple columns by specifying multiple nodes in the OrderBy clause
+		$col = $this->dtgPersons->CreatePropertyColumn('First Name', 'FirstName');
+		$col->OrderByClause = QQ::OrderBy(QQN::Person()->FirstName, QQN::Person()->LastName);	// The clause to use when the column header is first clicked.
+		$col->ReverseOrderByClause = QQ::OrderBy(QQN::Person()->FirstName, false, QQN::Person()->LastName, false); // The clause to use the second time the column header is clicked.
+
+		// Here we save some typing by using a NodeColumn. Node columns use the nodes to both display the data, and sort on the data.
+		// Notice that we are passing an array of nodes here. The first node is used for display, and the entire list of nodes is
+		// used for sorting.
+		$this->dtgPersons->CreateNodeColumn('Last Name', [QQN::Person()->LastName, QQN::Person()->FirstName]);
+
 
 		// Let's pre-default the sorting by last name (column index #2)
 		$this->dtgPersons->SortColumnIndex = 2;
 
-		// Specify the Datagrid's Data Binder method
+		// Specify the Datagrid2's Data Binder method
 		$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
-
-		// Make the DataGrid look nice
-		$objStyle = $this->dtgPersons->RowStyle;
-		$objStyle->FontSize = 12;
-
-		$objStyle = $this->dtgPersons->AlternateRowStyle;
-		$objStyle->BackColor = '#f6f6f6';
-
-		// Because browsers will apply different styles/colors for LINKs
-		// We must explicitly define the ForeColor for the HeaderLink.
-		// The header row turns into links when the column can be sorted.
-		$objStyle = $this->dtgPersons->HeaderLinkStyle;
-		$objStyle->ForeColor = 'white';
 	}
 
 	protected function dtgPersons_Bind() {
 		// We must be sure to load the data source
-		// Make sure we pass in the DataGrid's OrderByClause to the LoadAll command
-		$this->dtgPersons->DataSource = Person::LoadAll(QQ::Clause($this->dtgPersons->OrderByClause));
+
+		// Ask the datagrid for the sorting clause that corresponds to the currently active sort column.
+		$clauses[] = $this->dtgPersons->OrderByClause;
+
+		// Give that clause to our sql query so it returns sorted data
+		$this->dtgPersons->DataSource = Person::LoadAll($clauses);
 	}
 }
 

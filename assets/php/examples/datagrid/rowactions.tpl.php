@@ -8,26 +8,23 @@
 <?php $this->RenderBegin(); ?>
 
 <div id="instructions">
-	<h1>The QDataGrid Row Actions</h1>
+	<h1>The QCellClick Event</h1>
 
-	<p>Adding actions to data grid row is very similar to adding actions
-		to any other <strong>QControl</strong>. In a <strong>QControl</strong>, we use the
-		<strong>AddAction()</strong> method for adding actions. For data grid rows
-		we'll use <strong>QDataGrid</strong>'s <strong>AddRowAction()</strong> method exactly
-		the same way. In a <strong>QControl</strong>, we use the <strong>ActionParameter</strong>
-		property to pass parameters to the action. For the data grid, we'll
-		use the <strong>QDataGrid</strong>'s <strong>RowActionParameterHtml</strong> property to
-		pass parameters to the row actions. In fact, the <strong>RowActionParameterHtml</strong>
-		uses the same technique and the same variables as seen in the
-		<a href="variables.php">QDataGrid variables example.</a></p>
+	<p>The <strong>QCellClickEvent</strong> class lets you detect clicks on cells and rows in <strong>QSimpleTable</strong> and
+	<strong>QDataGrid2</strong> tables. This class attaches a JavaScript event to the table which detects clicks that
+	bubble up to it. It accepts a parameter that lets you specify what information to send to the action that handles the
+	click event.</p>
 
-	<p>In the example below, we'll make the data grid rows respond to mouse
-		movements and to clicks anywhere in the row. To achieve it, we'll need
-		to add 3 actions to our data grid: one for mouse over, one for mouse out,
-		and one for click. We'll use the <strong>QCssClassAction</strong> action to add a
-		CSS class when the mouse is over a row or goes out of the row. We'll
-		use a standard <strong>QAjaxAction</strong> for the click handler to call our
-		QForm's method which will simply tell us which row we just clicked on.</p>
+	<p>The action parameter is a JavaScript code fragment whose 'this' variable is defined as the object clicked on.
+		<strong>QCellClickEvent</strong> also has some predefined constants that let you return the row index or
+		id that was clicked, the column index or id, or the cell id. It also has some helper functions &mdash;
+	<strong>RowDataValue</strong> and <strong>CellDataValue</strong> &mdash; that will return the value of a 'data-*' attribute
+		that is attached to the row or cell tags.</p>
+
+	<p>In the example, you can click on any of the rows, and the id of the row clicked on will be past to the action.
+		The action then looks up the person clicked on and displays the person's name in a dialog. If you examine the html
+		source generated, you will see that each row is given a 'data-value' attribute that is the id of the person being clicked on.
+		The <strong>QCellClickEvent</strong> reads that value and sends it to the action handler.</p>
 </div>
 
 <div id="demoZone">

@@ -406,10 +406,67 @@
 	 * will return the column index into the strParameter, instead of the default.
 	 */
 	class QCellClickEvent extends QClickEvent {
-		const JsReturnParam = '{"row": $j(this).parent()[0].rowIndex, "col": this.cellIndex}'; // row and column of the cell. Override if needed with your action parameter.
+		// Shortcuts to specify common return parameters
+		const RowIndex = '$j(this).parent()[0].rowIndex';
+		const ColumnIndex = 'this.cellIndex';
+		const CellId = 'this.id';
+		const RowId = '$j(this).parent().attr("id")';
+		const ColId = '$j(this).parent().closest("table").find("thead").find("th")[this.cellIndex].id';
 
-		public function __construct($intDelay = 0, $strCondition = null) {
+		protected $strReturnParam;
+
+		public function __construct($intDelay = 0, $strCondition = null, $mixReturnParams = null) {
 			parent::__construct($intDelay, $strCondition, 'th,td');
+
+			if (!$mixReturnParams) {
+				$this->strReturnParam = '{"row": $j(this).parent()[0].rowIndex, "col": this.cellIndex}'; // default returns the row and colum indexes of the cell clicked
+			}
+			else if (is_array($mixReturnParams)) {
+				$combined = array_map(function($key, $val) {
+					return '"' . $key . '":' . $val;
+				}, array_keys($mixReturnParams), array_values($mixReturnParams));
+
+				$this->strReturnParam = '{' . $combined . '}';
+			}
+			elseif (is_string($mixReturnParams)) {
+				$this->strReturnParam = $mixReturnParams;
+			}
+		}
+
+		/**
+		 * Returns the javascript that returns the row data value into a param
+		 * @param $strKey
+		 * @return string
+		 */
+		public static function RowDataValue($strKey) {
+			return 	'$j(this).parent().data("' . $strKey . '")';
+		}
+
+		/**
+		 * Same for the cell.
+		 *
+		 * @param $strKey
+		 * @return string
+		 */
+		public static function CellDataValue($strKey) {
+			return 	'$j(this).data("' . $strKey . '")';
+		}
+
+
+		public function __get($strName) {
+			switch($strName) {
+				case 'JsReturnParam':
+					return $this->strReturnParam;
+
+				default:
+					try {
+						return parent::__get($strName);
+					} catch (QCallerException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+			}
 		}
 	}
 

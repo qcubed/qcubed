@@ -2,11 +2,26 @@
 <?php $this->RenderBegin(); ?>
 
 <div id="instructions">
-	<h1>The QDataGrid Variables -- $_ITEM, $_COLUMN, $_CONTROL and $_FORM</h1>
+	<h1>The QDataGrid2 Class</h1>
 
-	<p>As you may have noticed in the first example, we make use of the $_ITEM variable when we render
-		each row's column.  There are in fact three special variables used by the QDataGrid:
-		<strong>$_ITEM</strong>, <strong>$_COLUMN</strong>, <strong>$_CONTROL</strong> and <strong>$_FORM</strong>.</p>
+	<p><strong>QSimpleTable</strong>, is great for drawing basic HTML tables, but can overload a web page
+	when trying to display a large amount of information.</p>
+
+	<p>The <strong>QDataGrid2</strong> class is a subclass of QSimpleTable that has features that allow the table
+		to be a view into a larger set of data that is stored in a database.
+
+		<h2>Sorting</h2>
+		<p><strong>QDataGrid2</strong> allows you to click on column headers to resort the data in the table. Sorting is provided
+		by SQL, and each click causes the database to be queried with a sort clause corresponding to the column that was clicked.
+		</p>
+		<h2>Pagination</h2>
+	<p>A <strong>QDataGrid2</strong> allows you to click on column headers to resort the data in the table. Sorting is provided
+		by SQL, and each click causes the database to be queried with a sort clause corresponding to the column that was clicked.
+	</p>
+
+
+	, , is great for drawing basic HTML tables, but can overload a web page
+		when trying to display a large amount of information.</p>
 
 	<p><strong>$_ITEM</strong> represents a specific row's instance of the array of items you are iterating through.
 		So in our example, the <strong>DataSource</strong> is an array of <strong>Person</strong> objects.  Therefore, <strong>$_ITEM</strong>
