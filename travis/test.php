@@ -32,6 +32,11 @@ require( __DOCROOT__ . __SUBDIRECTORY__ . '/travis/qcubed.inc.php');
 
 	// Include the rest of the OS-agnostic script
 	require( __DOCROOT__ . __SUBDIRECTORY__ . '/includes/_devtools/codegen.inc.php');
+	
+	// For DB tests, we should load the DB files
+	
+	// For PostgreSQL-Specific tests
+	require( __DOCROOT__ . __SUBDIRECTORY__ . '/includes/database/QPostgreSqlDatabase.class.php');
 
 // not using QCubed error handler for unit tests - using the SimpleTest one instead
 restore_error_handler();

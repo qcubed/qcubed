@@ -720,7 +720,7 @@
 	/**
 	 * Class QPostgreSqlDatabaseFieldType: PostgreSQL specific database field types
 	 */
-	abstract class QPostgreSqlDatabaseFieldType extends QDatabaseFieldType{
+	abstract class QPostgreSqlDatabaseFieldType extends QDatabaseFieldType {
 		/** JSON */
 		const Json = "JSON";
 	}
