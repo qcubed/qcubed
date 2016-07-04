@@ -22,7 +22,7 @@
 		you specify is given back to you when you call the <strong>OrderByClause</strong> property on the <strong>QDataGrid2</strong>
 		when you query the database in the data binder. You then pass this clause to your class's <strong>LoadAll</strong> or <strong>LoadArrayBy...</strong>
 		method as one of the optional <strong>QQ Clause</strong> parameters.  Note that all QCubed code generated <strong>LoadAll</strong> and <strong>LoadArrayBy...</strong>
-		methods take in an optional <strong>$objOptionalClauses</strong> parameter which conveniently uses the clause returned by the <strong>QDataGrid</strong>'s
+		methods take in an optional <strong>$objOptionalClauses</strong> parameter which conveniently uses the clause returned by the <strong>QDataGrid2</strong>'s
 		<strong>OrderByClause</strong> method.</p>
 
 	<p>Convenient how they end up working together, isn't it? =)</p>

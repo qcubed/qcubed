@@ -14,12 +14,11 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid($this);
-		$this->dtgPersons->CellSpacing = 0;
+		$this->dtgPersons = new QDataGrid2($this);
 
 		// Define Columns
-		$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>'));
+		$this->dtgPersons->CreateNodeColumn('First Name', QQN::Person()->FirstName);
+		$this->dtgPersons->CreateNodeColumn('Last Name', QQN::Person()->LastName);
 
 		// Specify the local Method which will actually bind the data source to the datagrid.
 		$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
@@ -36,18 +35,6 @@ class ExampleForm extends QForm {
 
 		$this->timer = new QJsTimer($this, 500, true);
 		$this->timer->AddAction(new QTimerExpiredEvent(), new QAjaxAction());
-
-		// Update the styles of all the rows, or for just specific rows
-		$objStyle = $this->dtgPersons->RowStyle;
-		$objStyle->BackColor = '#efefff';
-		$objStyle->FontSize = 12;
-
-		$objStyle = $this->dtgPersons->AlternateRowStyle;
-		$objStyle->BackColor = '#ffffff';
-
-		$objStyle = $this->dtgPersons->HeaderRowStyle;
-		$objStyle->ForeColor = '#780000';
-		$objStyle->BackColor = '#ffffff';
 
 		$this->txtFirstName = new QTextBox($this);
 		$this->txtLastName = new QTextBox($this);
