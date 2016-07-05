@@ -26,7 +26,8 @@
       "phpunit/phpunit": "4.8.*"
   },
   "suggest": {
-    "ezyang/htmlpurifier": "dev-master"
+    "ezyang/htmlpurifier": "dev-master",
+    "fortawesome/font-awesome": "^4.6"
   },
   "autoload": {
     "psr-4": {

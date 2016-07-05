@@ -451,4 +451,13 @@ if (!defined('SERVER_INSTANCE')) {
 
 	/** Uncomment if you are using QTimer to do performance testing. Will automatically output the results of your timers to the file. */
 	//define ('__TIMER_OUT_FILE__', __TMP__ . '/timers.txt');
+
+	// Some controls depend on FontAwesome, an open-source library of icons embedded in a font. This way of doing icons allows them to be easily scaled
+	// The default define grabs it from a public repository. However, if you need it even when not connected to the internet,
+	// you can also install it locally through composer.
+	define('__FONT_AWESOME__', 'https://opensource.keycdn.com/fontawesome/4.6.3/font-awesome.min.css');
+	// To instead install with composer:
+	// composer require fortawesome/font-awesome ^4.6
+	// and set your define to:
+	// define('__FONT_AWESOME__', __VENDOR_ASSETS__ . '/fortawesome/font-awesome/css/font-awesome.min.css');
 }

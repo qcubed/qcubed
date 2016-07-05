@@ -10,6 +10,10 @@
  */
 
 
+if (!defined('__FONT_AWESOME__')) {
+	define('__FONT_AWESOME__', 'https://opensource.keycdn.com/fontawesome/4.6.3/font-awesome.min.css');
+}
+
 class QDataGrid2_SortEvent extends QEvent {
 	const JsReturnParam = 'ui'; // returns the col id
 	const EventName = 'qdg2sort';
@@ -63,7 +67,7 @@ class QDataGrid2Base extends QSimpleTable
 		try {
 			parent::__construct($objParentObject, $strControlId);
 
-			$this->AddCssFile('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+			$this->AddCssFile(__FONT_AWESOME__);
 
 			$this->AddActions();
 
