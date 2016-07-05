@@ -155,13 +155,16 @@
 				$aParams['scope'] = 'row';
 			}
 
+			$strStyle = $this->GetCellStyle ($item);
+
 			if ($this->objCellStyler) {
-				$strStyle = $this->GetCellStyle ($item);
-				$aParams = $this->objCellStyler->GetHtmlAttributes($aParams, explode(';', $strStyle));
-			} else {
-				if ($strStyle = $this->GetCellStyle ($item)) {
-					$aParams['style'] = $strStyle;
+				$aStyles = null;
+				if ($strStyle) {
+					$aStyles = explode (';', $strStyle);
 				}
+				$aParams = $this->objCellStyler->GetHtmlAttributes($aParams, $aStyles);
+			} elseif ($strStyle) {
+				$aParams['style'] = $strStyle;
 			}
 
 			if ($this->cellParamsCallback) {

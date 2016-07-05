@@ -172,6 +172,8 @@ if (!defined('SERVER_INSTANCE')) {
 	define ('__CSS_ASSETS__', __QCUBED_ASSETS__ . '/css');
 	define ('__IMAGE_ASSETS__', __QCUBED_ASSETS__ . '/images');
 	define ('__PHP_ASSETS__', __QCUBED_ASSETS__ . '/php');
+
+	// For special situations that support viewing of uploaded files in the browser. You can remove this define for addeed security
 	define ('__QCUBED_UPLOAD__', __DOCROOT__ . __QCUBED_ASSETS__ . '/upload');
 
 

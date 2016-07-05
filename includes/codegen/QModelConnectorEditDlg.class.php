@@ -1,6 +1,8 @@
 <?php
 
 require(__QCUBED__ . '/codegen/QCodeGen.class.php');
+include (__QCUBED_CORE__ . '/codegen/controls/_class_paths.inc.php');
+
 
 /**
  * Class QModelConnectorEditDlg

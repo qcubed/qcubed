@@ -1,8 +1,8 @@
 *~
 .idea
 nbproject
-/includes/configuration/configuration.inc.php
 .DS_Store
 .DS_Store?
 *.orig
 /vendor/
+composer.lock

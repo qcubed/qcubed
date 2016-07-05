@@ -16,12 +16,8 @@
 	<p>Specifically for the <b>QJavaScriptAction</b>, we've defined a simple <b>SomeArbitraryJavaScript()</b>
 	javascript function on the page itself, so that the button has some javascript to perform.</p>
 	
-	<p>If you are interested in more advanced and flexible types of confirmation or prompts, take a look at the 
-		<?php if (file_exists('../../../../plugins/DialogBoxes/example/more_dialog_boxes.php')) { ?>
-		<a href="../../../../plugins/DialogBoxes/example/more_dialog_boxes.php">plugin that offers pre-built QDialogBox subclasses</a>.
-		<?php } else { ?>
-		<a href="https://github.com/qcubed/DialogBoxes/raw/master/releases/DialogBoxes_0.2.zip">plugin that offers pre-built QDialogBox subclasses</a>.
-		<?php } ?>
+	<p>If you are interested in more advanced and flexible types of confirmation or prompts, see the examples at
+		<a href="../advanced_ajax/dialog_box.php">Extending QPanels to Create Modal "Dialog Boxes"</a>.
 	</p>
 </div>
 

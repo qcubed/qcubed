@@ -13,6 +13,8 @@
 	 * Because the index is randomy generated and MD5-hashed, there is no benefit from
 	 * encrypting it -- therefore, the QForm encryption preferences are ignored when using
 	 * QFileFormStateHandler.
+	 *
+	 * This formstate handler is compatible with asynchronous ajax calls.
 	 */
 	class QFileFormStateHandler extends QBaseClass {
 		/**
@@ -114,8 +116,12 @@
 			// Figure Out Session Id (if applicable)
 			$strSessionId = session_id();
 
-			// Calculate a new unique Page Id
-			$strPageId = md5(microtime());
+			if (!empty($_POST['Qform__FormState']) && QApplication::$RequestMode == QRequestMode::Ajax) {
+				$strPageId = $_POST['Qform__FormState'];	// reuse old page id
+			} else {
+				// Calculate a new unique Page Id
+				$strPageId = md5(microtime());
+			}
 
 			// Figure Out FilePath
 			$strFilePath = sprintf('%s/%s%s_%s',
@@ -165,4 +171,3 @@
 				return null;
 		}
 	}
-?>

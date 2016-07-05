@@ -321,15 +321,12 @@
 		}
 
 		/**
-		 * Returns whether or not the checkable control with the given controlId has been rendered or not.
-		 * @param string $strControlId
-		 *
-		 * @return bool
+		 * Returns the value of a checkable control. Checkable controls are special, in that the browser only tells us
+		 * when a control is checked, not when it is unchecked. So, unless we keep track of them specially, we will
+		 * not know if they are unchecked, or just not there.
+		 * @param $strControlId
+		 * @return mixed|null
 		 */
-		public function IsCheckableControlRendered($strControlId) {
-			return array_key_exists($strControlId, $this->checkableControlValues);
-		}
-
 		public function CheckableControlValue($strControlId) {
 			if (array_key_exists($strControlId, $this->checkableControlValues)) {
 				return $this->checkableControlValues[$strControlId];
@@ -570,15 +567,12 @@
 				$objClass->Form_Initialize();
 
 				if (defined ('__DESIGN_MODE__')) {
+					global $designerAction;
+
 					$dlg = new QModelConnectorEditDlg ($objClass, 'qconnectoreditdlg');
-					$objControls = $objClass->GetAllControls();
-					foreach ($objControls as $objControl) {
-						if ($objControl->LinkedNode) {
-							$objControl->AddAction (new QContextMenuEvent(), new QAjaxAction ('ctlDesigner_Click'));
-							$objControl->AddAction (new QContextMenuEvent(), new QStopPropagationAction());
-							$objControl->AddAction (new QContextMenuEvent(), new QTerminateAction());
-						}
-					}
+
+					$designerAction = new QAjaxAction ('ctlDesigner_Click', null, null, '{id: event.target.id ? event.target.id : $j(event.target).parents("[id]").attr("id"), for: $j(event.target).attr("for")}');
+					$dlg->AddAction (new QContextMenuEvent(0, null, '[id]'), $designerAction);
 				}
 
 			}
@@ -673,9 +667,22 @@
 		 * @param $mixParam
 		 */
 		private function ctlDesigner_Click ($strFormId, $strControlId, $mixParam) {
-			$objControl = $this->GetControl($strControlId);
-			$dlg = $this->GetControl ('qconnectoreditdlg');
-			$dlg->EditControl ($objControl);
+			if (isset($mixParam['id'])) {
+				$controlId = $mixParam['id'];
+				if (strpos($controlId, '_')) {	// extra the real control id from a sub id
+					$controlId = substr($controlId, 0, strpos($controlId, '_'));
+				}
+			}
+			elseif (isset($mixParam['for'])) {
+				$controlId = $mixParam['for'];
+			}
+			if (!empty($controlId)) {
+				$objControl = $this->GetControl($controlId);
+				if ($objControl) {
+					$dlg = $this->GetControl ('qconnectoreditdlg');
+					$dlg->EditControl ($objControl);
+				}
+			}
 		}
 
 		/**
@@ -1803,6 +1810,15 @@
 			// Register controls
 			if ($strControlIdToRegister) {
 				$strEndScript .= sprintf("qc.regCA(%s); \n", JavaScriptHelper::toJsObject($strControlIdToRegister));
+			}
+
+			// Design mode event
+			if (defined('__DESIGN_MODE__') && __DESIGN_MODE__ == 1) {
+				global $designerAction;
+				// kludge to attach action to the form
+				$objControl = $this->GetControl('qconnectoreditdlg');
+				$strRendered = $designerAction->RenderScript($objControl);
+				$strEndScript .= sprintf('$j("#%s").on("contextmenu", function(event){' . "\n" . $strRendered . "\n" . ' return false;});', $this->FormId);
 			}
 
 			// Add any application level js commands.

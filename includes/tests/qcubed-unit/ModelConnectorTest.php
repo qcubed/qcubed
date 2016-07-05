@@ -40,11 +40,11 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 		$this->assertTrue ($dt->IsEqualTo (new QDateTime ('10/10/2010', null, QDateTime::DateOnlyType)), 'Date only type saved correctly through connector.');
 		$dt = $mctTypeTest2->DateTimeControl->DateTime;
 		$this->assertTrue ($dt->IsEqualTo (new QDateTime ('11/11/2011')), 'Date time type saved correctly through connector.');
-		$this->assertEquals($mctTypeTest2->TestIntControl->Value, 5, 'Integer control saved correctly.');
-		$this->assertEquals($mctTypeTest2->TestFloatControl->Value, 3.5, 'Float type saved correctly.');
-		$this->assertEquals($mctTypeTest2->TestVarcharControl->Text, 'abcde', 'Varchar control type saved correctly through connector.');
-		$this->assertEquals($mctTypeTest2->TestTextControl->Text, 'ABCDE', 'Text type saved correctly through connector.');
-		$this->assertEquals($mctTypeTest2->TestBitControl->Checked, true, 'Bit saved correctly through connector.');
+		$this->assertEquals(5, $mctTypeTest2->TestIntControl->Value, 'Integer control saved correctly.');
+		$this->assertEquals(3.5, $mctTypeTest2->TestFloatControl->Value, 'Float type saved correctly.');
+		$this->assertEquals('abcde', $mctTypeTest2->TestVarcharControl->Text, 'Varchar control type saved correctly through connector.');
+		$this->assertEquals('ABCDE', $mctTypeTest2->TestTextControl->Text, 'Text type saved correctly through connector.');
+		$this->assertEquals(true, $mctTypeTest2->TestBitControl->Checked, 'Bit saved correctly through connector.');
 
 		$mctTypeTest2->DeleteTypeTest();
 	}
@@ -60,13 +60,13 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 
 		$mctProject2 = ProjectConnector::Create (self::$frmTest, 1);
 		$objPerson = $mctProject2->Project->ManagerPerson;
-		$this->assertEquals($objPerson->Id, 6, "Forward reference saved correctly through connector.");
+		$this->assertEquals(6, $objPerson->Id, "Forward reference saved correctly through connector.");
 		$mctProject2->Project->ManagerPersonId = 7;
 		$mctProject2->Project->Save();	// restore value
 
 		// test refresh
 		$mctProject->Load (2);
-		$this->assertEquals($mctProject->ManagerPersonIdControl->SelectedValue, 4, "Reloaded forward reference connector");
+		$this->assertEquals(4, $mctProject->ManagerPersonIdControl->SelectedValue, "Reloaded forward reference connector");
 
 
 		// test through auto complete
@@ -80,12 +80,12 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 
 		$mctAddress2 = AddressConnector::Create (self::$frmTest, $id);
 		$objPerson = $mctAddress2->Address->Person;
-		$this->assertEquals($objPerson->FirstName, 'Kendall', "Forward reference saved correctly through connector.");
+		$this->assertEquals('Kendall', $objPerson->FirstName, "Forward reference saved correctly through connector.");
 		$mctAddress->DeleteAddress();
 
 		// test refresh
 		$mctAddress->Load (3);
-		$this->assertEquals($mctAddress->CityControl->Text, 'New York');
+		$this->assertEquals('New York', $mctAddress->CityControl->Text);
 	}
 
 	public function testReverseReference() {
@@ -133,13 +133,13 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 		$lstControl->SelectedValues = [2,4];
 		$mctPerson->SavePerson();
 		$a = Project::LoadArrayByPersonAsTeamMember(3);
-		$this->assertEquals($a[0]->Id, 2);
-		$this->assertEquals($a[1]->Id, 4);
+		$this->assertEquals(2, $a[0]->Id);
+		$this->assertEquals(4, $a[1]->Id);
 
 		$lstControl->SelectedValues = [4];
 		$mctPerson->SavePerson();
 		$a = Project::LoadArrayByPersonAsTeamMember(3);
-		$this->assertEquals($a[0]->Id, 4);
+		$this->assertEquals(4, $a[0]->Id);
 
 	}
 
@@ -149,12 +149,12 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 
 		$mctProject->ProjectStatusTypeIdControl->SelectedValue = ProjectStatusType::Cancelled;
 		$mctProject->SaveProject();
-		$this->assertEquals($mctProject->Project->ProjectStatusTypeId, ProjectStatusType::Cancelled);
+		$this->assertEquals(ProjectStatusType::Cancelled, $mctProject->Project->ProjectStatusTypeId);
 
 		// restore
 		$mctProject->ProjectStatusTypeIdControl->SelectedValue = ProjectStatusType::Open;
 		$mctProject->SaveProject();
-		$this->assertEquals($mctProject->Project->ProjectStatusTypeId, ProjectStatusType::Open);
+		$this->assertEquals(ProjectStatusType::Open, $mctProject->Project->ProjectStatusTypeId);
 
 		$mctProject->Load (1);
 		$this->assertEquals ($mctProject->ProjectStatusTypeIdControl->SelectedValue, 3);
@@ -164,7 +164,7 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 	public function testTypeMulti() {
 		$mctPerson = PersonConnector::Create (self::$frmTest, 3);
 		$values = $mctPerson->PersonTypeControl->SelectedValues;
-		$this->assertEquals(count ($values), 3);
+		$this->assertEquals(3, count ($values));
 
 		$values2 = $values;
 		$values2[] = 5;
@@ -172,11 +172,11 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 		$mctPerson->PersonTypeControl->SelectedValues = $values2;
 		$mctPerson->SavePerson();
 		$values3 = $mctPerson->Person->GetPersonTypeArray();
-		$this->assertEquals(count ($values3), 4);
+		$this->assertEquals(4, count ($values3));
 		$mctPerson->PersonTypeControl->SelectedValues = $values;
 		$mctPerson->SavePerson();
 		$values3 = $mctPerson->Person->GetPersonTypeArray();
-		$this->assertEquals(count ($values3), 3);
+		$this->assertEquals(3, count ($values3));
 	}
 
 	/**
@@ -195,12 +195,12 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 		}
 		$this->assertTrue($blnError, 'Street Label was removed by override.');
 
-		$this->assertEquals($mctAddress->CityControl->Width, '100px');
+		$this->assertEquals('100px', $mctAddress->CityControl->Width);
 
 		// Many-to-Many settings
 		$mctProject = ProjectConnector::Create (self::$frmTest);
-		$this->assertEquals($mctProject->PersonAsTeamMemberControl->RepeatColumns, 3);
-		$this->assertEquals($mctProject->PersonAsTeamMemberControl->Name, 'Team Members');
+		$this->assertEquals(3, $mctProject->PersonAsTeamMemberControl->RepeatColumns);
+		$this->assertEquals('Team Members', $mctProject->PersonAsTeamMemberControl->Name);
 
 		// Unique Reverse Reference
 		$mctPerson = PersonConnector::Create (self::$frmTest);
