@@ -1,5 +1,12 @@
 <?php
+define ('__IN_EXAMPLE__', true);
 require_once('../qcubed.inc.php');
+
+
+// The following code sets up a temporary watcher just for this example, since the examples are based on the default
+// installation of the code, and the default installation does not create a watcher class. Normally, to be able to
+// use watchers correctly, you must edit the QWatcher.class.php to specify the kind of watcher you want to use.
+
 
 class ExampleForm extends QForm {
 
@@ -32,9 +39,8 @@ class ExampleForm extends QForm {
 
 		// Create a timer to periodically check whether another user has changed the database. Depending on your
 		// application, you might not need to do this, as any activity the user does to a control will also check.
-
-		$this->timer = new QJsTimer($this, 500, true);
-		$this->timer->AddAction(new QTimerExpiredEvent(), new QAjaxAction());
+		//$this->timer = new QJsTimer($this, 500, true);
+		//$this->timer->AddAction(new QTimerExpiredEvent(), new QAjaxAction());
 
 		$this->txtFirstName = new QTextBox($this);
 		$this->txtLastName = new QTextBox($this);
