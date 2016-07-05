@@ -31,7 +31,7 @@
 			$this->objRandomProductsArray[3] = '3x Socks, 3x Shorts';
 
 			// Define the DataGrid
-			$this->dtgOrders = new QDataGrid($this);
+			$this->dtgOrders = new QDataGrid2($this);
 			$this->dtgOrders->UseAjax = true;
 
 			//button to simulate a server action
@@ -47,9 +47,10 @@
 			$this->ctlTimer = new QJsTimer($this,3000,true,true);
 
 
-			$this->dtgOrders->AddColumn(new QDataGridColumn('Order-Id', '<?= $_ITEM->Id ?>'));
-			$this->dtgOrders->AddColumn(new QDataGridColumn('Products', '<?= $_ITEM->Items ?>'));
-			$this->dtgOrders->AddColumn(new QDataGridColumn('Remove', '<?= $_FORM->renderRemoveButton($_ITEM->Id) ?>', 'HtmlEntities=false'));
+			$this->dtgOrders->CreatePropertyColumn('Order-Id', 'Id');
+			$this->dtgOrders->CreatePropertyColumn('Products', 'Items');
+			$col = $this->dtgOrders->CreateCallableColumn('Remove', [$this, 'renderRemoveButton']);
+			$col->HtmlEntities = false;
 			$this->dtgOrders->SetDataBinder('dtgOrders_Bind');
 
 			$this->btnServerAction->AddAction(new QClickEvent(),new QServerAction('OnServerAction'));
@@ -101,13 +102,13 @@
 			//ServerAction test
 		}
 			
-		public function renderRemoveButton($orderId) {
-			$objControlId = "removeButton" . $orderId;
+		public function renderRemoveButton($item) {
+			$objControlId = "removeButton" . $item->Id;
             $objControl = $this->GetControl($objControlId);
 			if (!$objControl) {
 				$objControl = new QJqButton($this->dtgOrders, $objControlId);
 				$objControl->Text = true;
-				$objControl->ActionParameter = $orderId;
+				$objControl->ActionParameter = $item->Id;
 				$objControl->AddAction(new QClickEvent(), new QAjaxAction("removeButton_Click"));
 			}
                         
