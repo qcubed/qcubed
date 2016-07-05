@@ -25,6 +25,7 @@
 	 * @property boolean        $RenderColumnTags     true to include col tags in the table output
 	 * @property boolean        $HideIfEmpty          true to completely hide the table if there is no data, vs. drawing the table with no rows.
 	 * @property-write Callable $RowParamsCallback    Set to a callback function to fetch custom attributes for row tags.
+	 * @property-read integer 	$CurrentRowIndex      The visual index of the row currently being drawn.
 	 * @throws QCallerException
 	 *
 	 */
@@ -53,6 +54,9 @@
 		protected $intHeaderRowCount = 1;
 		/** @var  integer Used during rendering to report which header row is being drawn in a multi-row header. */
 		protected $intCurrentHeaderRowIndex;
+
+		/** @var  integer Used during rendering to report which visible row is being drawn. */
+		protected $intCurrentRowIndex;
 
 		/** @var  callable */
 		protected $objRowParamsCallback;
@@ -698,11 +702,11 @@
 
 			// DataGrid Rows
 			$strRows = '';
-			$intCurrentRowIndex = 0;
+			$this->intCurrentRowIndex = 0;
 			if ($this->objDataSource) {
 				foreach ($this->objDataSource as $objObject) {
-					$strRows .= $this->GetDataGridRowHtml($objObject, $intCurrentRowIndex);
-					$intCurrentRowIndex++;
+					$strRows .= $this->GetDataGridRowHtml($objObject, $this->intCurrentRowIndex);
+					$this->intCurrentRowIndex++;
 				}
 			}
 			$strHtml .= QHtml::RenderTag('tbody', null, $strRows);
@@ -772,6 +776,8 @@
 					return $this->intCurrentHeaderRowIndex;
 				case 'HideIfEmpty':
 					return $this->blnHideIfEmpty;
+				case 'CurrentRowIndex':
+					return $this->intCurrentRowIndex;
 
 				default:
 					try {

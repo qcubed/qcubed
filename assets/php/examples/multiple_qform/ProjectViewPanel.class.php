@@ -67,14 +67,16 @@
 			$this->btnEditProject->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnEditProject_Click'));
 
 			// Now, let's set up this custom panel's child controls
-			// Also notice that our datagrid column render handler is called via a $_CONTROL->ParentControl
-			// This is because the render handler is defined in this ProjectViewPanel, which ends up
-			// being the datagrid's ("$_CONTROL") parent control object.
-			$this->dtgMembers = new QDataGrid($this);
-			$this->dtgMembers->AddColumn(new QDataGridColumn('ID', '<?= $_ITEM->Id ?>', 'Width=30', array('OrderByClause' => QQ::OrderBy(QQN::Person()->Id), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->Id, false))));
-			$this->dtgMembers->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>', 'Width=120', array('OrderByClause' => QQ::OrderBy(QQN::Person()->FirstName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->FirstName, false))));
-			$this->dtgMembers->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>', 'Width=120', array('OrderByClause' => QQ::OrderBy(QQN::Person()->LastName), 'ReverseOrderByClause' => QQ::OrderBy(QQN::Person()->LastName, false))));
-			$this->dtgMembers->AddColumn(new QDataGridColumn('Edit', '<?= $_CONTROL->ParentControl->EditColumn_Render($_ITEM) ?>', 'HtmlEntities=false'));
+			$this->dtgMembers = new QDataGrid2($this);
+			$col = $this->dtgMembers->CreateNodeColumn('ID', QQN::Person()->Id);
+			$col->CellStyler->Width = 30;
+			$col = $this->dtgMembers->CreateNodeColumn('First Name', QQN::Person()->FirstName);
+			$col->CellStyler->Width = 120;
+			$col = $this->dtgMembers->CreateNodeColumn('Last Name', QQN::Person()->LastName);
+			$col->CellStyler->Width = 120;
+			$col = $this->dtgMembers->CreateCallableColumn('Edit', [$this, 'EditColumn_Render']);
+			$col->HtmlEntities = false;
+
 
 			// Let's make sorting Ajax-ified
 			$this->dtgMembers->UseAjax = true;
