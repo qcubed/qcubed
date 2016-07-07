@@ -1,245 +1,101 @@
 <?php
 	require_once('../qcubed.inc.php');
 	
-	class Person {
-		public $Id;
-		public $FirstName;
-		public $LastName;
-		
-		public function __construct($id,$firstname,$lastname) {
-			$this->Id = $id;
-			$this->FirstName = $firstname;
-			$this->LastName = $lastname;
-		}
-		
-	}
-	
 	class ExampleForm extends QForm {
 		// Declare the DataGrid
 		protected $dtgPersons;
 		protected $dtgPersonsDelegated;
-		protected $pxyDelete;
-		
-		protected $arrPersons;
-		protected $arrPersonsDelegated;
-		
-		protected $intNewPersonIdCounter = 101;
-		
-		protected $btnAddNewPerson;
-		protected $btnAddNewPersonDelegated;
 
 		protected function Form_Create() {
 			// Define the DataGrid
-			$this->dtgPersons = new QDataGrid($this, 'dtgPersons');
-			$this->dtgPersons->CellSpacing = 0;
+			$this->dtgPersons = new QDataGrid2($this, 'dtgPersons');
 			$this->dtgPersons->Height = "560px";
 			
 			
 			// Define the DataGrid using event delegation
-			$this->dtgPersonsDelegated = new QDataGrid($this, 'dtgPersonsDelegated');
-			$this->dtgPersonsDelegated->CellSpacing = 0;
-			
+			$this->dtgPersonsDelegated = new QDataGrid2($this, 'dtgPersonsDelegated');
+
 			// Define Columns
-			// We will use $_ITEM, $_CONTROL and $_FORM to show how you can make calls to the Person object
-			// being itereated ($_ITEM), the QDataGrid itself ($_CONTROL), and the QForm itself ($_FORM).
-			$this->dtgPersons->AddColumn(new QDataGridColumn('Person Id', '<?= $_ITEM->Id ?>'));
-			$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>'));
-			$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>'));
-			$this->dtgPersons->AddColumn(new QDataGridColumn('Full Name', '<?= $_FORM->DisplayFullName($_ITEM) ?>'));
-			$this->dtgPersons->AddColumn(new QDataGridColumn('', '<?= $_FORM->RenderDeleteButton($_ITEM) ?>','HtmlEntities=false'));
-			
-			$this->dtgPersonsDelegated->AddColumn(new QDataGridColumn('Person Id', '<?= $_ITEM->Id ?>'));
-			$this->dtgPersonsDelegated->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>'));
-			$this->dtgPersonsDelegated->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>'));
-			$this->dtgPersonsDelegated->AddColumn(new QDataGridColumn('Full Name', '<?= $_FORM->DisplayFullName($_ITEM) ?>'));
-			//create the delete button row, with a special naming scheme for the button ids: "remove_" . $_ITEM->Id (where $_ITEM is a person object)
-			$this->dtgPersonsDelegated->AddColumn(new QDataGridColumn('', '<button id="delete_<?= $_ITEM->Id ?>">Delete</button>','HtmlEntities=false'));
+			$this->dtgPersons->CreateNodeColumn('Person Id', QQN::Person()->Id);
+			$this->dtgPersons->CreateNodeColumn('First Name', QQN::Person()->FirstName);
+			$this->dtgPersons->CreateNodeColumn('Last Name', QQN::Person()->LastName);
+			$col = $this->dtgPersons->CreateCallableColumn('', [$this, 'RenderDeleteButton']);
+			$col->HtmlEntities = false;
 
-			
+			$this->dtgPersonsDelegated->CreateNodeColumn('Person Id', QQN::Person()->Id);
+			$this->dtgPersonsDelegated->CreateNodeColumn('First Name', QQN::Person()->FirstName);
+			$this->dtgPersonsDelegated->CreateNodeColumn('Last Name', QQN::Person()->LastName);
+			$col = $this->dtgPersonsDelegated->CreateCallableColumn('', [$this, 'RenderDeleteButton2']);
+			$col->HtmlEntities = false;
 
-			//WITHOUT event delegation:
-			//--------------------------------------------------------------------------------------------------------
-			//a proxy button for deleting table entries (without event delegation)
-			$this->pxyDelete = new QControlProxy($this);
-			$this->pxyDelete->AddAction(new QClickEvent(), new QAjaxAction("DeletePerson_Click"));
-			
-			//stop event bubbling
-			$this->pxyDelete->AddAction(new QClickEvent(), new QTerminateAction());
-			$this->pxyDelete->AddAction(new QClickEvent(), new QStopPropagationAction());
-			
-			
-			//Highlight the datagrid rows when mousing over them using AddRowAction
-			// !!! this creates one line of JavaScript per row !!!
-			$this->dtgPersons->AddRowAction(new QMouseOverEvent(), new QCssClassAction('selectedStyle'));
-			$this->dtgPersons->AddRowAction(new QMouseOutEvent(), new QCssClassAction());
-			
-			// Add a click handler for the rows . 
-			// We can use $_CONTROL->CurrentRowIndex to pass the row index to dtgPersonsRow_Click()
-			// or $_ITEM->Id to pass the object's id, or any other data grid variable
-			//!!! This generates javscript for every row in the table !!!
-			$this->dtgPersons->RowActionParameterHtml = '<?= $_ITEM->Id ?>';
-			$this->dtgPersons->AddRowAction(new QClickEvent(), new QAjaxAction('dtgPersonsRow_Click'));
-			//--------------------------------------------------------------------------------------------------------
-			
-			
-			//WITH event delegation: 
-			//--------------------------------------------------------------------------------------------------------
-			//Highlight the datagrid rows when mousing over them using QOnEvent.
-			$this->dtgPersonsDelegated->AddAction(new QOnEvent("mouseover", "tr"), 
-					new QJavaScriptAction('$j(event.currentTarget).toggleClass("selectedStyle")'));
-			
-			//Standard QEvents have event delegation too, as the third item in the event parameter.
-			$this->dtgPersonsDelegated->AddAction(new QMouseOutEvent(0, null, "tr"), 
-					new QJavaScriptAction('$j(event.currentTarget).toggleClass("selectedStyle")'));
+			// Create the delegated event action. We bind the event to the data grid, even though the event is
+			// coming from buttons in the datagrid. These click events will bubble up to the table.
+			$this->dtgPersonsDelegated->AddAction(
+				// The 3rd parameter is the jQuery selector that controls which controls we are listening to. This is similar to a CSS selector.
+				// In our example, we are listening to buttons that have a 'data-id' attribute.
+				new QClickEvent(null, 0, 'button[data-id]'),
+				// Respond to click events with an ajax action. The fourth parameter is a JavaScript fragment that controls what
+				// the action paremeter will be. In this case, its the value of the data-id attribute. Note that the "event.target" member
+				// of the event is the button that was clicked on. Also, we are sending in the record id as the action parameter, so we can
+				// use the same dtgPersonsButton_Click for the delegated and non-delegated actions.
+				new QAjaxAction('dtgPersonsButton_Click', null, null, '$j(event.target).data("id")')
+			);
 
-				
-			//Add a click handler to the rows using event delegation,
-			//!!! This creates exactly ONE line of javascript !!!
-			//this line adds a QAjaxAction to the datagrid that gets triggered if a
-			//child tr elements receives a click
-			//
-			//the last parameter of the QAjaxAction ctor in this example defines the returned parameter
-			//in this case the content of the first child of event.currentTarget is returned
-			//where event.currentTarget is the tr element that was clicked.
-			//As a result the person id stored in the first collumn is returned
-			$this->dtgPersonsDelegated->AddAction(new QOnEvent("click","tr"), 
-					new QAjaxAction('dtgPersonsDelegatedRow_Click', 'default', null, '$j(event.currentTarget).children().first().text()'));
-			
-			//handle person removing with event delegation
-			//filter for buttons with ids that begin with "delete_" and returns the id 
-			//of the person to delete by splitting the button id on "_" and using the second string
-			// (remember: the button id consists of "delete_" . $personId 
-			$objOnEvent = new QOnEvent("click","button[id^='delete_']");
-			$this->dtgPersonsDelegated->AddAction($objOnEvent,
-					new QAjaxAction('DeletePerson_Click', 'default', null, '(event.currentTarget.id).split("_")[1]') );
-			
-			//do not submit
-			$this->dtgPersonsDelegated->AddAction($objOnEvent, new QTerminateAction());
-			//stop event bubbling
-			$this->dtgPersonsDelegated->AddAction($objOnEvent, new QStopPropagationAction());
-			//-------------------------------------------------------------------------------------------------------
-			
-			
-			//create the add person buttons
-			$this->btnAddNewPerson = new QButton($this);
-			$this->btnAddNewPerson->Text = "Add Person";
-			
-			$this->btnAddNewPersonDelegated = new QButton($this);
-			$this->btnAddNewPersonDelegated->Text = "Add Person";
-			
-			$this->btnAddNewPerson->AddAction(new QClickEvent(), new QAjaxAction("AddPerson_Click"));
-			$this->btnAddNewPersonDelegated->AddAction(new QClickEvent(), new QAjaxAction("AddPerson_Click"));
-			
-			
-			
 			// Specify the Datagrid's Data Binder method
+			// Notice we are using the same binder for two datagrids
 			$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
-			$this->dtgPersonsDelegated->SetDataBinder('dtgPersonsDelegated_Bind');
-
-			$objStyle = $this->dtgPersons->HeaderRowStyle;
-			$objStyle->ForeColor = 'white';
-			$objStyle->BackColor = '#000066';
-			$objStyle = $this->dtgPersonsDelegated->HeaderRowStyle;
-			$objStyle->ForeColor = 'white';
-			$objStyle->BackColor = '#000066';
-			$this->loadPersons();
-		}
-		
-		// DisplayFullName will be called by the DataGrid on each row, whenever it tries to render
-		// the Full Name column.  Note that we take in the $objPerson as a Person parameter.  Also
-		// note that DisplayFullName is a PUBLIC function -- because it will be called by the QDataGrid class.
-		public function DisplayFullName(Person $objPerson) {
-			$strToReturn = sprintf('%s, %s', $objPerson->LastName, $objPerson->FirstName);
-			return $strToReturn;
+			$this->dtgPersonsDelegated->SetDataBinder('dtgPersons_Bind');
 		}
 
-		protected function dtgPersons_Bind() {
-			// We must be sure to load the data source
-			$this->dtgPersons->DataSource = $this->arrPersons;
-		}
-		
-		protected function dtgPersonsDelegated_Bind() {
-			// We must be sure to load the data source
-			$this->dtgPersonsDelegated->DataSource = $this->arrPersonsDelegated;
-		}
 
-		public function dtgPersonsRow_Click($strFormId, $strControlId, $strParameter) {
-			$intPersonId = intval($strParameter);
-			
-			$objPerson = $this->arrPersons[$intPersonId];
-			QApplication::DisplayAlert("You clicked on a person with ID #{$intPersonId}: {$objPerson->FirstName} {$objPerson->LastName}");
-		}
-		
-		public function dtgPersonsDelegatedRow_Click($strFormId, $strControlId, $strParameter) {
-			$intPersonId = intval($strParameter);
-			
-			$objPerson = $this->arrPersonsDelegated[$intPersonId];
-			QApplication::DisplayAlert("You clicked on a person with ID #{$intPersonId}: {$objPerson->FirstName} {$objPerson->LastName}");
-		}
-		
 		/**
-		 * render the delete button for the $dtgPersons
+		 * Bind the data to the data source. Note that the first parameter is the control we are binding to. This allows
+		 * us to use the same data binder for multiple controls.
+		 */
+		protected function dtgPersons_Bind($objControl) {
+			// Use the control passed in to the data binder to know to which to send the data.
+			$objControl->DataSource = Person::LoadAll();
+		}
+
+		/**
+		 * Respond to the button click for the non-delegated events.
+		 */
+		public function dtgPersonsButton_Click($strFormId, $strControlId, $strParameter) {
+			$intPersonId = intval($strParameter);
+			
+			$objPerson = Person::Load($intPersonId);
+			QApplication::DisplayAlert("You clicked on a person with ID #{$intPersonId}: {$objPerson->FirstName} {$objPerson->LastName}");
+		}
+
+		/**
+		 * A non-delegated event version. Create a new button for each control and attach an action to it.
+		 *
 		 * @param Person $objPerson
 		 * @return String
 		 */
 		public function RenderDeleteButton($objPerson) {
-			return $this->pxyDelete->RenderAsButton('Delete', "delete_".$objPerson->Id);
+			$strControlId = 'btn' . $objPerson->Id;
+			$objControl = $this->GetControl($strControlId);
+			if (!$objControl) {
+				$objControl = new QButton($this);
+				$objControl->Text = 'Edit';
+				$objControl->ActionParameter = $objPerson->Id;
+				$objControl->AddAction(new QClickEvent(), new QAjaxAction('dtgPersonsButton_Click')); // This will generate a javascript call for every button created.
+			}
+			return $objControl->Render(false);
 		}
-		
+
 		/**
-		 * a helper method for creating dummy persons
-		 * In a real world application these would be loaded from
-		 * the database
+		 * The delegated button. We are directly creating the html for the button and assigning a data-id that corresponds to the action
+		 * parameter we will eventually send in to the action handler.
+		 * 
+		 * @param $objPerson
+		 * @return string
 		 */
-		public function loadPersons() {
-			$this->arrPersons = Array();
-			$this->arrPersonsDelegated;
-			for($ii = 1; $ii <= 100; $ii++) {
-				$this->arrPersons[$ii] = new Person($ii,"firstname" . $ii,"lastname" . $ii );
-				$this->arrPersonsDelegated[$ii] = $this->arrPersons[$ii];
-			}
-			
+		public function RenderDeleteButton2($objPerson) {
+			//create the delete button row, with a special naming scheme for the button ids: "delete_" . id (where id is a person id)
+			return '<button data-id="' . $objPerson->Id . '">Edit</button>';
 		}
-		
-		public function DeletePerson_Click($strFormId, $strControlId, $strParameter) {
-			$personId = intval($strParameter);
-			if($strControlId == $this->pxyDelete->ControlId) {
-				unset($this->arrPersons[$personId]);
-				$strControlId = $this->dtgPersons->ControlId;
-			}
-			else {
-				unset($this->arrPersonsDelegated[$personId]);
-			}
-			//find the delete button that ends with the person id, get its parent tr and remove it
-			QApplication::ExecuteJavaScript('$j("#' . $strControlId . '").find("button[id=\"delete_' . $personId . '\"]").parents("tr").remove()'); 
-		}
-		
-		public function AddPerson_Click($strFormId, $strControlId) {
-			$targetGrid = NULL;
-			$objNewPerson = new Person($this->intNewPersonIdCounter,
-					"firstname" . $this->intNewPersonIdCounter, 
-					"lastname" . $this->intNewPersonIdCounter);
-			$this->intNewPersonIdCounter++;
-			
-			if($strControlId == $this->btnAddNewPerson->ControlId) {
-				$targetGrid = $this->dtgPersons;
-				$this->arrPersons[$objNewPerson->Id] = $objNewPerson;
-			} 
-			else {
-				$targetGrid = $this->dtgPersonsDelegated;
-				$this->arrPersonsDelegated[$objNewPerson->Id] = $objNewPerson;
-			}
-			
-			//add a row to the target data grid and scroll to the bottom of the data grid
-			QApplication::ExecuteJavaScript('$j("#' . $targetGrid->ControlId . '").prepend(\'<tr class="newperson"><td>' 
-					. $objNewPerson->Id . '</td><td>' . $objNewPerson->FirstName . '</td><td>' . $objNewPerson->LastName . '</td><td>'
-					. $this->DisplayFullName($objNewPerson) 
-					. '</td><td><button id="delete_' . $objNewPerson->Id . '">Delete</button></td></tr>\')');
-			
-			
-		}
-		
-		
 	}
 	
 

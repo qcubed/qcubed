@@ -2,7 +2,7 @@
 <?php $this->RenderBegin(); ?>
 
 <div id="instructions">
-	<h1>Creating a QDataGrid with Inline Editing</h1>
+	<h1>Creating a QDataGrid2 with Inline Editing</h1>
 	
 	<p>Using the techniques for dynamically creating controls and utilizing the AJAX
 	features in QCubed, we update our <strong>Person</strong> datagrid to include functionality for

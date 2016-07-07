@@ -2,15 +2,16 @@
 <?php $this->RenderBegin(); ?>
 
 <div id="instructions">
-	<h1>Adding Pagination to Your QDataGrid</h1>
+	<h1>Adding Pagination to Your QDataGrid2</h1>
 
-	<p>Now, we will add pagination to our datagrid.</p>
+	<p>The <strong>QPaginator</strong> is a control that presents a list of page numbers, and a previous and next button,
+		to let the user "scroll" the data a page at a time. It gives a limited view into a potentially very large
+	data set.</p>
 
 	<p>In order to enable pagination, we need to define a <strong>QPaginator</strong> object and assign it to
-		the <strong>QDataGrid</strong>.  Because the <strong>QPaginator</strong> will be rendered by the <strong>QDataGrid</strong>
-		(instead of being rendered on the form via a <code>$this->objPaginator->Render()</code>
-		call), we will set the <strong>QDataGrid</strong> as the <strong>QPaginator</strong>'s parent in the
-		<strong>QPaginator</strong> constructor call.</p>
+		the <strong>QDataGrid2</strong>. The <strong>QDataGrid2</strong> will render the paginator inside a
+		caption tag in the table, and therefore, we will set the <strong>QDataGridw</strong> as the <strong>QPaginator</strong>'s
+		parent in the <strong>QPaginator</strong> constructor call.</p>
 
 	<p>In the locally defined <strong>dtgPersons_Bind</strong> method, in addition to setting the datagrid's <strong>DataSource</strong>,
 		we also give the datagrid the <strong>TotalItemCount</strong> (via a <strong>Person::CountAll</strong> call).

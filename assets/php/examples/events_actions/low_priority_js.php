@@ -9,7 +9,7 @@
 
 		protected function Form_Create() {
 			// Define the DataGrid
-			$this->dtgButtons = new QDataGrid($this);
+			$this->dtgButtons = new QDataGrid2($this);
 
                         $this->dtgButtons->UseAjax=true;
                         $this->intHitCnt=0;
@@ -18,9 +18,12 @@
                             $this->arRows[]="row" . $ii;
                         }
 
-			$this->dtgButtons->AddColumn(new QDataGridColumn('Name', '<?= $_FORM->renderName($_ITEM) ?>', 'HtmlEntities=false'));
-			$this->dtgButtons->AddColumn(new QDataGridColumn('start standard priority javascript', '<?= $_FORM->renderButton($_ITEM) ?>', 'HtmlEntities=false'));
-			$this->dtgButtons->AddColumn(new QDataGridColumn('start low priority javascript', '<?= $_FORM->renderLowPriorityButton($_ITEM) ?>', 'HtmlEntities=false'));
+			$col = $this->dtgButtons->CreateCallableColumn('Name', [$this, 'renderName']);
+			$col->HtmlEntities=false;
+			$col = $this->dtgButtons->CreateCallableColumn('Start standard priority javascript', [$this, 'renderButton']);
+			$col->HtmlEntities=false;
+			$col = $this->dtgButtons->CreateCallableColumn('Start low priority javascript', [$this, 'renderLowPriorityButton']);
+			$col->HtmlEntities=false;
 			$this->dtgButtons->SetDataBinder('dtgButtons_Bind');
 		}
 		
@@ -66,16 +69,23 @@
 			QApplication::ExecuteJsFunction('alert', 'alert 2: a standard priority script');
 			QApplication::ExecuteJsFunction('alert', 'alert 1: a standard priority script');
 			QApplication::ExecuteJsFunction('alert', 'Just updated the datagrid: the javascript for adding the css class to the buttons is not executed yet!');
-			QApplication::ExecuteSelectorFunction(".ui-button", 'addClass', "ui-state-highlight");
+			QApplication::ExecuteSelectorFunction(".ui-button", 'addClass', "ui-state-error");
 		}
 
         public function renderLowPriorityButton_Click($strFormId, $strControlId, $strParameter) {
 			$this->intHitCnt++;
 			$this->dtgButtons->MarkAsModified();
-			QApplication::ExecuteJavaScript("alert('alert 3: a low priority script')",  QJsPriority::Low);
+
+			QApplication::ExecuteJsFunction('alert', 'alert 2: a low priority script',  QJsPriority::Low);
+			QApplication::ExecuteJsFunction('alert', 'alert 1: a low priority script',  QJsPriority::Low);
+			QApplication::ExecuteJsFunction('alert', 'Just updated the datagrid: --> the javascript for adding the css class to the buttons is executed first!',  QJsPriority::Low);
+			QApplication::ExecuteSelectorFunction(".ui-button", 'addClass', "ui-state-error");
+
+/*			QApplication::ExecuteJavaScript("alert('alert 3: a low priority script')",  QJsPriority::Low);
 			QApplication::ExecuteJavaScript("alert('alert 1: a low priority script')", QJsPriority::Low);
 			QApplication::ExecuteJavaScript("alert('Just updated the datagrid: --> the javascript for adding the css class to the buttons is executed first!')",  QJsPriority::Low);
 			QApplication::ExecuteJavaScript('$j(".ui-button").addClass("ui-state-error")'); //change the button color: this is executed with standard priority
+*/
 		}
 
 		protected function dtgButtons_Bind() {

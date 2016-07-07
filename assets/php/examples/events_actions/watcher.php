@@ -1,5 +1,12 @@
 <?php
+define ('__IN_EXAMPLE__', true);
 require_once('../qcubed.inc.php');
+
+
+// The following code sets up a temporary watcher just for this example, since the examples are based on the default
+// installation of the code, and the default installation does not create a watcher class. Normally, to be able to
+// use watchers correctly, you must edit the QWatcher.class.php to specify the kind of watcher you want to use.
+
 
 class ExampleForm extends QForm {
 
@@ -14,12 +21,11 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid($this);
-		$this->dtgPersons->CellSpacing = 0;
+		$this->dtgPersons = new QDataGrid2($this);
 
 		// Define Columns
-		$this->dtgPersons->AddColumn(new QDataGridColumn('First Name', '<?= $_ITEM->FirstName ?>'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Last Name', '<?= $_ITEM->LastName ?>'));
+		$this->dtgPersons->CreateNodeColumn('First Name', QQN::Person()->FirstName);
+		$this->dtgPersons->CreateNodeColumn('Last Name', QQN::Person()->LastName);
 
 		// Specify the local Method which will actually bind the data source to the datagrid.
 		$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
@@ -33,21 +39,8 @@ class ExampleForm extends QForm {
 
 		// Create a timer to periodically check whether another user has changed the database. Depending on your
 		// application, you might not need to do this, as any activity the user does to a control will also check.
-
-		$this->timer = new QJsTimer($this, 500, true);
-		$this->timer->AddAction(new QTimerExpiredEvent(), new QAjaxAction());
-
-		// Update the styles of all the rows, or for just specific rows
-		$objStyle = $this->dtgPersons->RowStyle;
-		$objStyle->BackColor = '#efefff';
-		$objStyle->FontSize = 12;
-
-		$objStyle = $this->dtgPersons->AlternateRowStyle;
-		$objStyle->BackColor = '#ffffff';
-
-		$objStyle = $this->dtgPersons->HeaderRowStyle;
-		$objStyle->ForeColor = '#780000';
-		$objStyle->BackColor = '#ffffff';
+		//$this->timer = new QJsTimer($this, 500, true);
+		//$this->timer->AddAction(new QTimerExpiredEvent(), new QAjaxAction());
 
 		$this->txtFirstName = new QTextBox($this);
 		$this->txtLastName = new QTextBox($this);

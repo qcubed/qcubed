@@ -93,45 +93,43 @@
 			self::AddCoreExampleFile($intIndex, '/events_actions/event_delegation.php Event Delegation with QOnEvent');
 			self::AddCoreExampleFile($intIndex, '/events_actions/low_priority_js.php JavaScript priorities');
 			self::AddCoreExampleFile($intIndex, '/events_actions/watcher.php Automatic Refreshing of Controls');
+			self::AddCoreExampleFile($intIndex, '/events_actions/control_proxy.php Using QControlProxies to have Non-QControls Trigger Events');
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Paginated Controls';
-			Examples::$Categories[$intIndex]['description'] = 'The QDataGrid and QDataRepeater controls';
-			self::AddCoreExampleFile($intIndex, '/datagrid/intro.php * Basic QDataGrid');
-			self::AddCoreExampleFile($intIndex, '/datagrid/variables.php * The QDataGrid Variables');
-			self::AddCoreExampleFile($intIndex, '/datagrid/links_images.php * Adding Controls to QDataGrids');
-			self::AddCoreExampleFile($intIndex, '/datagrid/rowactions.php * Making entire QDataGrid rows clickable');
-			self::AddCoreExampleFile($intIndex, '/datagrid/sorting.php * QDataGrid Sorting');
-			self::AddCoreExampleFile($intIndex, '/datagrid/pagination.php * QDataGrid Pagination');
-			self::AddCoreExampleFile($intIndex, '/datagrid/filtering.php * QDataGrid Filtering');
-			self::AddCoreExampleFile($intIndex, '/datagrid/advanced_filtering.php * Advanced QDataGrid Filtering');
-			self::AddCoreExampleFile($intIndex, '/datagrid/ajax.php * Enabling AJAX on the QDataGrid');
-			self::AddCoreExampleFile($intIndex, '/master_detail/project_list.php * Nested QDataGrid');			
+			Examples::$Categories[$intIndex]['description'] = 'The QSimpleTable, QDataGrid2 and QDataRepeater controls';
+			self::AddCoreExampleFile($intIndex, '/datagrid/intro.php * QSimpleTable');
+			self::AddCoreExampleFile($intIndex, '/datagrid/columns.php * QSimpleTable Columns');
+			self::AddCoreExampleFile($intIndex, '/datagrid/column_values.php * QSimpleTable Formatting and Styling');
+			self::AddCoreExampleFile($intIndex, '/datagrid/link_column.php * QSimpleTable Link Column');
+			self::AddCoreExampleFile($intIndex, '/datagrid/links_images.php * Dynamically adding Controls to QSimpleTable');
+			self::AddCoreExampleFile($intIndex, '/datagrid/sorting.php * The QDataGrid2 Class and Sorting');
+			self::AddCoreExampleFile($intIndex, '/datagrid/pagination.php * QDataGrid2 Pagination');
+			self::AddCoreExampleFile($intIndex, '/datagrid/rowactions.php * Detecting Row and Cell Clicks');
+
+			self::AddCoreExampleFile($intIndex, '/datagrid/qcheckboxcolumn.php * The Easy Way to Add a Checkbox Column to a Datagrid');
+			self::AddCoreExampleFile($intIndex, '/dynamic/inline_editing.php * Datagrid with Inline Editing');
+
+			self::AddCoreExampleFile($intIndex, '/master_detail/project_list.php * Nested QDataGrid');
 			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/master_detail/project_list.php'] = array(
 				'records.summary.php',
 				'records.summary.tpl.php',
 				'styles.css');
 			self::AddCoreExampleFile($intIndex, '/datarepeater/ajax.php * Simple QDataRepeater using AJAX-triggered Pagination');
 			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/datarepeater/ajax.php'] = array('dtr_persons.tpl.php');
-			self::AddCoreExampleFile($intIndex, '/datagrid/extend.php * Creating Your Own Custom QDataGrid Subclass');			
-			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__  . '/datagrid/extend.php'] = array('QDataGrid.class.php');
-			self::AddCoreExampleFile($intIndex, '/datagrid/simple_table.php * Simple Table - an alternative to QDataGrid');
+
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Advanced Controls Manipulation';
 			Examples::$Categories[$intIndex]['description'] = 'Dynamically creating controls, Implementing custom controls';
-			self::AddCoreExampleFile($intIndex, '/dynamic/select.php * Dynamically Creating Controls in Datagrid Rows'); 
-			self::AddCoreExampleFile($intIndex, '/dynamic/qcheckboxcolumn.php * The Easy Way to Add a Checkbox Column to a Datagrid'); 
-			self::AddCoreExampleFile($intIndex, '/dynamic/inline_editing.php * Datagrid with Inline Editing');
 			self::AddCoreExampleFile($intIndex, '/dynamic/qpanel.php Introduction to QBlockControls');
 			self::AddCoreExampleFile($intIndex, '/dynamic/qpanel_2.php Dynamically Changing a Control\'s Parent');
 			self::AddCoreExampleFile($intIndex, '/other_controls/persist.php Persistent Controls: Performance for Reusable Components');
 			self::AddCoreExampleFile($intIndex, '/other_controls/sample.php Creating Your Own Control');
 			self::AddCoreExampleFile($intIndex, '/composite/intro.php Creating a Composite Control');
 			self::AddCoreExampleFile($intIndex, '/multiple_qform/intro.php "Multiple QForms" Functionality via Custom QPanels');
-			self::AddCoreExampleFile($intIndex, '/dynamic/control_proxy.php Using QControlProxies to have Non-QControls Trigger Events');
 			self::AddCoreReferencedFile('/dynamic/qpanel.php', 'pnl_panel.tpl.php');
 			self::AddCoreReferencedFile('/other_controls/sample.php', '__CORE_CONTROL__QSampleControl.class.php');
 			self::AddCoreReferencedFile('/composite/intro.php', 'SampleComposite.class.php');

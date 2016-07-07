@@ -23,6 +23,21 @@
 			return static::_QueryArray($objConditions, $objOptionalClauses, $mixParameterArray); 
 		}
 
+<?php if (count($objTable->PrimaryKeyColumnArray) == 1) { ?>
+		public static function QueryPrimaryKeys(QQCondition $objConditions = null) {
+			if ($objConditions === null) {
+				$objConditions = QQ::All();
+			}
+			$clauses[] = QQ::Select(QQN::<?= $objTable->ClassName ?>()-><?= $objTable->PrimaryKeyColumnArray[0]->PropertyName ?>);
+			$obj<?= $objTable->ClassNamePlural ?> = self::QueryArray($objConditions, $clauses);
+			$pks = [];
+			foreach ($obj<?= $objTable->ClassNamePlural ?> as $obj<?= $objTable->ClassName ?>) {
+				$pks[] = $obj<?= $objTable->ClassName ?>-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>;
+			}
+			return $pks;
+		}
+<?php } ?>
+
 		// See QModelTrait.trait.php for the following
 		// protected static function BuildQueryStatement(&$objQueryBuilder, QQCondition $objConditions, $objOptionalClauses, $mixParameterArray, $blnCountOnly) {
 		// public static function QueryCursor(QQCondition $objConditions, $objOptionalClauses = null, $mixParameterArray = null) {

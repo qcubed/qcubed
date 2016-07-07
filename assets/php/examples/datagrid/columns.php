@@ -56,11 +56,16 @@ class ExampleForm extends QForm {
 		$this->tblPersons->HeaderRowCssClass = 'header_row';
 
 		// Define Columns
-		$objColumn = new QSimpleTableCallableColumn('Full Name', 'ExampleForm::getFullName');
+		// This demonstrates how to first create a column, and then add it to the table
+		$objColumn = new QSimpleTableCallableColumn('Full Name', [$this, 'getFullName']);
 		$this->tblPersons->AddColumn($objColumn);
 
 		// The second column demonstrates using a property name for fetching the data
-		$this->tblPersons->CreatePropertyColumn('Last Name', 'LastName');
+		// This also demonstrates how to create a column and add it to the table all at once, using the CreatePropertyColumn shortcut
+		$this->tblPersons->CreatePropertyColumn('First Name', 'FirstName');
+
+		// The second column demonstrates using a node column for fetching the data
+		$this->tblPersons->CreateNodeColumn('Last Name', QQN::Person()->LastName);
 
 		// Specify the local Method which will actually bind the data source to the datagrid.
 		// In order to not over-bloat the form state, the datagrid will use the data source only when rendering itself,
@@ -109,7 +114,7 @@ class ExampleForm extends QForm {
 		$this->tblPersons->DataSource = Person::LoadAll();
 	}
 
-	public static function getFullName($item) {
+	public function getFullName($item) {
 		return 'Full Name is "' . $item->FirstName . ' ' . $item->LastName . '"';
 	}
 

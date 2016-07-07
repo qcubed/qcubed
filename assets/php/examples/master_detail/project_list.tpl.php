@@ -3,7 +3,7 @@
 
 <div id="instructions">
 	<h1>Nested QDataGrid - Drilling Into a Dataset</h1>
-	<p>In this example, we will demonstrate how to create a nested <b>QDataGrid</b>.</p>
+	<p>In this example, we will demonstrate how to create a nested <strong>QDataGrid2</strong>.</p>
 
 	<p>In a top-level grid, we will list projects; for each of the projects, and through an expand/collapse button,
 	we'll see the list of team members involved in the project. For each of those people, we'll be able to drill down to
@@ -14,8 +14,8 @@
 
 	<p>Some pieces to pay attention to:</p>
 	<ul>
-		<li>Master QDataGrid for Project should go on the FORM.</li>
-		<li>Children (Team Members and Addresses) must be wrapped in a QPanel, that in turn contains a QDataGrid.</li>
+		<li>Master QDataGrid2 for Project should go on the FORM.</li>
+		<li>Children (Team Members and Addresses) must be wrapped in a QPanel, that in turn contains a QDataGrid2.</li>
 	</ul>
 </div>
 

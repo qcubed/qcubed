@@ -8,11 +8,14 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid($this);
+		$this->dtgPersons = new QSimpleTable($this);
 
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Full Name', '<?= $_FORM->renderFullName($_ITEM) ?>', 'HtmlEntities=false'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('Picture', '<?= $_FORM->renderImage($_ITEM->Id) ?>', 'HtmlEntities=false'));
-		$this->dtgPersons->AddColumn(new QDataGridColumn('', '<?= $_FORM->renderButton($_ITEM) ?>', 'HtmlEntities=false'));
+		$col = $this->dtgPersons->CreateCallableColumn('Full Name', [$this, 'renderFullName']);
+		$col->HtmlEntities = false;
+		$col = $this->dtgPersons->CreateCallableColumn('Picture', [$this, 'renderImage']);
+		$col->HtmlEntities = false;
+		$col = $this->dtgPersons->CreateCallableColumn('', [$this, 'renderButton']);
+		$col->HtmlEntities = false;
 		$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
 	}
 
@@ -20,7 +23,8 @@ class ExampleForm extends QForm {
 		return "<em>" . $objPerson->FirstName . "</em> " . $objPerson->LastName;
 	}
 
-	public function renderImage($intPersonId) {
+	public function renderImage(Person $objPerson) {
+		$intPersonId = $objPerson->Id;
 		$objControlId = "personImage" . $intPersonId;
 
 		if (!$objControl = $this->GetControl($objControlId)) {

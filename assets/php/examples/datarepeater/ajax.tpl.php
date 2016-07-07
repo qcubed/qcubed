@@ -24,9 +24,9 @@
 		<strong>PaginatorAlternate</strong>.  This is to offer listing pages which have the paginator at the
 		top and at the bottom of the page.
 
-		<p>The same variables of <strong>$_FORM</strong>, <strong>$_CONTROL</strong> and <strong>$_ITEM</strong> that
-		you would have used with a <strong>QDataGrid</strong>
-		are also available to you in your <strong>QDataRepeater</strong> template file.</p>
+		<p>The variables <strong>$_FORM</strong>, <strong>$_CONTROL</strong> and <strong>$_ITEM</strong> are pre-defined
+		for your template, and are set to the current <strong>QForm</strong>, the <strong>QDataRepeater</strong> object, and the data source item currently
+			being drawn.</p>
 	</div>
 
 	<div id="demoZone">

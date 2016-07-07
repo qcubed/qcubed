@@ -145,6 +145,7 @@ class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 
 		if (!$item) {
 			// the check all box
+			// sets the currently visible checkboxes appropriately
 			$params['onclick'] = sprintf('$j("#%s input:checkbox[data-col=%s]").prop("checked", this.checked)', $this->ParentTable->ControlId, $this->strId);
 		}
 		return $params;
@@ -195,6 +196,10 @@ class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 	protected function CheckAll($blnChecked) {
 		$ids = $this->GetAllIds();
 
+		if ($ids === null) {
+			throw new Exception('You must create a subclass and implement GetAllIds() when showing the Check All box.');
+		}
+
 		if ($ids) foreach ($ids as $id) {
 			$this->SetItemCheckedState($id, $blnChecked);
 		}
@@ -219,9 +224,13 @@ class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 	 * currently visible on the page being shown. If you create your own CheckAll function, or if you are not showing
 	 * the CheckAll box in the header you do not need to implement this.
 	 *
-	 * @return array
+	 * If you want to return an empty set, return an empty array.
+	 *
+	 * @return array|null
 	 */
-	protected function GetAllIds() {return null;}
+	protected function GetAllIds() {
+		return null;
+	}
 
 	/**
 	 * Returns the unique id of the given item. This id will be used to generate the id in the tag
