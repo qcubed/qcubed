@@ -1333,11 +1333,11 @@
 	 *   as the id to the destination link. Use the "title" index as the label for the link.
 	 *  $objColumn = new QSimpleTableLinkColumn ("Zoom", "[title]", "zoom.php", ["intId"=>"[id]"]);
 	 *
-	 *  Create a simple link column that just specifies a data attribute, and use an QOnEvent attached to the table to trap a click on the link.
+	 *  Create a simple link column that just specifies a data attribute, and uses event delegation attached to the table to trap a click on the link.
 	 *   Return the id of the item clicked to the action as the action parameter.
 	 *  $objTable = new QSimpleTable ($this);
 	 *  $objTable->CreateLinkColumn("", "->Name", "#", null, ["data-id"=>"->Id"]);
-	 *  $objTable->AddAction(new QOnEvent("click", "a"), new QAjaxAction("myActionScript", null, null, '$j(this).data("id")'));
+	 *  $objTable->AddAction(new QClickEvent(0, null, "a"), new QAjaxAction("myActionScript", null, null, '$j(this).data("id")'));
 	 *
 	 * @property bool $AsButton	Only used if this is drawing a QControlProxy. Will draw the proxy as a button.
 	 * @property-write null|string|array $Text The text to display as the label of the anchor, a callable callback to get the text,

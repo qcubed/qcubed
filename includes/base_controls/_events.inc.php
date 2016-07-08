@@ -328,13 +328,13 @@
 		/**
 		 * Constructor
 		 * @param int  $strEventName
-		 * @param string $strSelector
 		 * @param string $strCondition
 		 * @param int  $intDelay
+		 * @param string $strSelector
 		 *
 		 * @throws Exception|QCallerException
 		 */
-		public function __construct($strEventName, $strSelector = null, $strCondition = null, $intDelay = 0) {
+		public function __construct($strEventName, $strCondition = null, $intDelay = 0, $strSelector = null) {
 			$this->strEventName=$strEventName;
 			if ($strSelector) {
 				$strSelector = addslashes($strSelector);
