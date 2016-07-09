@@ -45,7 +45,7 @@
 	 * when something in the database changes.
 	 *
 	 * QControls are the base objects for actions to be attached to events. When attaching actions to multiple objects
-	 * of the same type, considering attaching the event to a a parent object and using event delegation for your action,
+	 * of the same type, considering attaching the event to a parent object and using event delegation for your action,
 	 * as it can be more efficient in certain cases.
 	 *
 	 * QControls can trigger validation and are part of the validation system. QControls that are not Enabled or not
