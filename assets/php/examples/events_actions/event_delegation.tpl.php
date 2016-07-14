@@ -55,7 +55,7 @@ div.table, div.code {
 			form that is listening for bubbled events directed toward proxied controls.
 		</p>
 		<p>
-			The following code renders 2 QDataGrid2 tables that have an Edit button. The first data grid,
+			The following code renders 2 QDataGrid tables that have an Edit button. The first data grid,
 			called "dtgPersons", adds an edit button to every row, creating a new QButton object each time and attaching
 			a separate click event handler to each button. The second grid, called dtgPersonsDelegated, draws html for a
 			button on each row, with a "data-id" attribute that is the record id. It also has a single action handler that

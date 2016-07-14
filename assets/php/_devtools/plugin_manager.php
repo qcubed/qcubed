@@ -35,21 +35,11 @@
 			$this->dtgPlugins->SetDataBinder('dtgPlugins_Bind');
 
 			$this->dtgPlugins->CssClass = 'datagrid';
-			$this->dtgPlugins->AlternateRowStyle->CssClass = 'alternate';
-			
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Name',
-					'<?= $_ITEM["Name"] ?>'));
-					
-		/*  Get from composer's installed.json file some day
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Version',
-					'<?= $_ITEM->strVersion ?>')); */
 
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Description',
-				'<?= $_ITEM["Description"] ?>'));	
-			
-			$this->dtgPlugins->AddColumn(new QDataGridColumn('Examples',
-				'<?= $_FORM->RenderExampleLink($_ITEM) ?>', 'HtmlEntities=false'));	
-			
+			$this->dtgPlugins->CreateIndexedColumn('Name', 'Name');
+			$this->dtgPlugins->CreateIndexedColumn('Description', 'Description');
+			$col = $this->dtgPlugins->CreateCallableColumn('Examples', [$this, 'RenderExampleLink']);
+			$col->HtmlEntities = false;
 		}
 		
 		public function dtgPlugins_Bind() {

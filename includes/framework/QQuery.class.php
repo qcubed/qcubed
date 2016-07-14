@@ -398,7 +398,7 @@
 				return $this;
 		}
 
-		public function SetFilteredDataGridColumnFilter(QDataGridColumn $col)
+		public function SetFilteredDataGridColumnFilter(QDataGridLegacyColumn $col)
 		{
 			if ($this->_PrimaryKeyNode) {
 				$objNode = $this->_PrimaryKeyNode;

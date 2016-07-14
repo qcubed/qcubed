@@ -31,7 +31,7 @@
 			$this->objRandomProductsArray[3] = '3x Socks, 3x Shorts';
 
 			// Define the DataGrid
-			$this->dtgOrders = new QDataGrid2($this);
+			$this->dtgOrders = new QDataGrid($this);
 			$this->dtgOrders->UseAjax = true;
 
 			//button to simulate a server action

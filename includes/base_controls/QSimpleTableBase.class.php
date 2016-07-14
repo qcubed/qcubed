@@ -12,9 +12,6 @@
 	 * Using the QSimpleTableColumn's Accessor property, you can specify how the data for each cell should be
 	 * fetched from the datasource.</p>
 	 *
-	 * <p><i>NOTE</i>: Unlike QDataGrid, this class does not use eval() for evaluating the cell values. Instead, a variety of
-	 * methods can be used to fetch the data for cells, including callable objects.</p>
-	 *
 	 * @package Controls
 	 * @property string         $Caption          	  string to use as the caption of the table
 	 * @property string         $RowCssClass          class to be given to the row tag

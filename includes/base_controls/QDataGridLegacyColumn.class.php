@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * This file contains the QDataGridColumn and QFilterType class.
+	 * This file contains the QDataGridEgacyColumn and QFilterType class.
 	 *
 	 * @package Controls
 	 */
@@ -66,7 +66,7 @@
 	 * @property boolean              $HtmlEntities         Determines if the contents of this column have to be processed through HtmlEntities
 	 * @property boolean              $HasResetButton       If the concerned row is a filter row then this variable determines if it has a Reset Button on it
 	 */
-	class QDataGridColumn extends QBaseClass {
+	class QDataGridLegacyColumn extends QBaseClass {
 		// APPEARANCE
 		/**
 		 * @var null|string Background colour of an element of this column
@@ -860,4 +860,3 @@
 			}
 		}
 	}
-?>

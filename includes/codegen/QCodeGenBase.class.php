@@ -894,7 +894,7 @@
 			}
 
 			// Otherwise, return a default
-			return 'QDataGrid2';
+			return 'QDataGrid';
 		}
 
 		/**
@@ -987,7 +987,7 @@
 				return call_user_func($strControlClass.'::GetCodeGenerator');
 			}
 
-			return new QDataGrid2_CodeGenerator();
+			return new QDataGrid_CodeGenerator();
 		}
 
 

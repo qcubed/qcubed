@@ -11,7 +11,7 @@
 	<h1>The QCellClick Event</h1>
 
 	<p>The <strong>QCellClickEvent</strong> class lets you detect clicks on cells and rows in <strong>QSimpleTable</strong> and
-	<strong>QDataGrid2</strong> tables. This class attaches a JavaScript event to the table which detects clicks that
+	<strong>QDataGrid</strong> tables. This class attaches a JavaScript event to the table which detects clicks that
 	bubble up to it. It accepts a parameter that lets you specify what information to send to the action that handles the
 	click event.</p>
 

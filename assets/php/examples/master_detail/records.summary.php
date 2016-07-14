@@ -26,13 +26,13 @@ Here is the Child QDataGrid...
 				//  </td> <tr><td> render content of this child </td> </tr> <td> )
 				$this->Template = 'records.summary.tpl.php';
 				
-				// Setting local the MAster QDataGrid to refresh on
+				// Setting local the Msster QDataGrid to refresh on
 				// Saves on the Child DataGrid..
 				$this->objParentObject = $objParentObject;
 				$this->objProject = $objProject;
 				
 				// Create the child DataGrid as a normal QDataGrid 
-				$this->dtgRecordsSummary = new QDataGrid2($this);
+				$this->dtgRecordsSummary = new QDataGrid($this);
 				// pagination
 				$this->dtgRecordsSummary->Paginator = new QPaginator($this->dtgRecordsSummary);
 

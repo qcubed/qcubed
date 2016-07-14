@@ -2,7 +2,7 @@
     require_once('../qcubed.inc.php');
     
 	class PaginatorForm extends QForm {
-		/** @var  QDataGrid2 */
+		/** @var  QDataGrid */
 		protected $dtg;
 		/** @var  QIntegerTextBox */
 		protected $txtCount;
@@ -10,7 +10,7 @@
 		protected $txtPageSize;
 
 		protected function Form_Create() {
-			$this->dtg = new QDataGrid2($this);
+			$this->dtg = new QDataGrid($this);
 			$this->dtg->SetDataBinder("dtg_Bind");
 			$this->dtg->Paginator = new QPaginator($this->dtg);
 			$this->dtg->CreateIndexedColumn("Item", 0);

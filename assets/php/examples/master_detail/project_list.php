@@ -11,7 +11,7 @@
 					
 		protected function Form_Create() {
 			// Instantiate the DataGrid
-			$this->dtgProjects = new QDataGrid2($this);
+			$this->dtgProjects = new QDataGrid($this);
 
 			// Style the DataGrid
 			//$this->dtgProjects->CssClass = 'datagrid';

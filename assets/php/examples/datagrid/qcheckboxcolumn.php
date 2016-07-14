@@ -1,7 +1,7 @@
 <?php
 	require_once('../qcubed.inc.php');
 
-	class ExampleCheckColumn1 extends QDataGrid2_CheckBoxColumn {
+	class ExampleCheckColumn1 extends QDataGrid_CheckBoxColumn {
 		protected function GetAllIds()
 		{
 			return Person::QueryPrimaryKeys();
@@ -9,7 +9,7 @@
 	}
 
 
-	class ExampleCheckColumn2 extends QDataGrid2_CheckBoxColumn {
+	class ExampleCheckColumn2 extends QDataGrid_CheckBoxColumn {
 		protected function GetItemCheckedState ($item) {
 			if(null !== $item->GetVirtualAttribute('assn_item')) {
 				return true;
@@ -49,7 +49,7 @@ class ExampleForm extends QForm {
 		protected $dtgPersons;
 		protected $lblResponse;
 
-		/** @var  QDataGrid2_CheckBoxColumn */
+		/** @var  QDataGrid_CheckBoxColumn */
 		protected $colSelect;
 		
 		protected $dtgProjects;
@@ -70,7 +70,7 @@ class ExampleForm extends QForm {
 
 		protected function dtgPersons_Create() {
 			// Define the DataGrid
-			$this->dtgPersons = new QDataGrid2($this);
+			$this->dtgPersons = new QDataGrid($this);
 
 			// Specify Pagination with 10 items per page
 			$objPaginator = new QPaginator($this->dtgPersons);
@@ -85,7 +85,7 @@ class ExampleForm extends QForm {
 			$col = $this->dtgPersons->CreateNodeColumn('Last Name', [QQN::Person()->LastName, QQN::Person()->LastName]);
 			$col->CellStyler->Width = 200;
 
-			//Create the select column, a subclass of QDataGrid2_CheckBoxColumn
+			//Create the select column, a subclass of QDataGrid_CheckBoxColumn
 			$this->colSelect = new ExampleCheckColumn1('');
 			$this->colSelect->ShowCheckAll = true;
 			$this->colSelect->CellStyler->Width = 20;
@@ -154,7 +154,7 @@ class ExampleForm extends QForm {
 
 		protected function dtgProjects_Create() {
 			// Setup DataGrid
-			$this->dtgProjects = new QDataGrid2($this);
+			$this->dtgProjects = new QDataGrid($this);
 			$this->dtgProjects->CssClass = 'datagrid';
 
 			// Datagrid Paginator

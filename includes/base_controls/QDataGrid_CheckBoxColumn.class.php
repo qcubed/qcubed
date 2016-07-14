@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A checkbox column that specifically is for inclusion in a QDataGrid2 object. The two work together to hand off
+ * A checkbox column that specifically is for inclusion in a QDataGrid object. The two work together to hand off
  * important events and functionality.
  *
  * The default functionality of this class shows the name of the column in the header, and uses the primary key of
@@ -20,7 +20,7 @@
  * @package Controls
  */
 
-class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
+class QDataGrid_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 	/** @var  bool Record the state of the AllChecked checkbox in the header. */
 	protected $blnAllChecked;
 	protected $blnShowCheckAll = false; // Default to false so that we have default functionality that does not require subclassing.

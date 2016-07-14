@@ -98,14 +98,14 @@
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Paginated Controls';
-			Examples::$Categories[$intIndex]['description'] = 'The QSimpleTable, QDataGrid2 and QDataRepeater controls';
+			Examples::$Categories[$intIndex]['description'] = 'The QSimpleTable, QDataGrid and QDataRepeater controls';
 			self::AddCoreExampleFile($intIndex, '/datagrid/intro.php * QSimpleTable');
 			self::AddCoreExampleFile($intIndex, '/datagrid/columns.php * QSimpleTable Columns');
 			self::AddCoreExampleFile($intIndex, '/datagrid/column_values.php * QSimpleTable Formatting and Styling');
 			self::AddCoreExampleFile($intIndex, '/datagrid/link_column.php * QSimpleTable Link Column');
 			self::AddCoreExampleFile($intIndex, '/datagrid/links_images.php * Dynamically adding Controls to QSimpleTable');
-			self::AddCoreExampleFile($intIndex, '/datagrid/sorting.php * The QDataGrid2 Class and Sorting');
-			self::AddCoreExampleFile($intIndex, '/datagrid/pagination.php * QDataGrid2 Pagination');
+			self::AddCoreExampleFile($intIndex, '/datagrid/sorting.php * The QDataGrid Class and Sorting');
+			self::AddCoreExampleFile($intIndex, '/datagrid/pagination.php * QDataGrid Pagination');
 			self::AddCoreExampleFile($intIndex, '/datagrid/rowactions.php * Detecting Row and Cell Clicks');
 
 			self::AddCoreExampleFile($intIndex, '/datagrid/qcheckboxcolumn.php * The Easy Way to Add a Checkbox Column to a Datagrid');

@@ -67,7 +67,7 @@
 			$this->btnEditProject->AddAction(new QClickEvent(), new QAjaxControlAction($this, 'btnEditProject_Click'));
 
 			// Now, let's set up this custom panel's child controls
-			$this->dtgMembers = new QDataGrid2($this);
+			$this->dtgMembers = new QDataGrid($this);
 			$col = $this->dtgMembers->CreateNodeColumn('ID', QQN::Person()->Id);
 			$col->CellStyler->Width = 30;
 			$col = $this->dtgMembers->CreateNodeColumn('First Name', QQN::Person()->FirstName);
