@@ -1,20 +1,20 @@
 <?php
 	/**
-	 * Used by the QCubed Code Generator to describe a database Table
+	 * A helper class used by the QCubed Code Generator to describe a database Table
 	 * @package Codegen
 	 *
 	 * @property int $OwnerDbIndex
 	 * @property string $Name
 	 * @property string $ClassNamePlural
 	 * @property string $ClassName
-	 * @property QColumn[] $ColumnArray
-	 * @property QColumn[] $PrimaryKeyColumnArray
+	 * @property QSqlColumn[] $ColumnArray
+	 * @property QSqlColumn[] $PrimaryKeyColumnArray
 	 * @property QReverseReference[] $ReverseReferenceArray
 	 * @property QManyToManyReference[] $ManyToManyReferenceArray
 	 * @property QIndex[] $IndexArray
 	 * @property-read int $ReferenceCount
 	 */
-	class QTable extends QBaseClass {
+	class QSqlTable extends QBaseClass {
 
 		/////////////////////////////
 		// Protected Member Variables
@@ -45,7 +45,7 @@
 
 		/**
 		 * Array of Column objects (as indexed by Column name)
-		 * @var QColumn[] ColumnArray
+		 * @var QSqlColumn[] ColumnArray
 		 */
 		protected $objColumnArray;
 
@@ -93,9 +93,9 @@
 
 
 		/**
-		 * return the QColumn object related to that column name
+		 * return the QSqlColumn object related to that column name
 		 * @param string $strColumnName Name of the column
-		 * @return QColumn
+		 * @return QSqlColumn
 		 */
 		public function GetColumnByName($strColumnName) {
 			if ($this->objColumnArray) {
@@ -260,4 +260,3 @@
 			}
 		}
 	}
-?>

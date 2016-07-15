@@ -31,12 +31,12 @@
 		 * some differences. In particular, this control does not support ManyToMany references.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @throws Exception
 		 * @return string
 		 */
-		public function ConnectorCreate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorCreate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
 			$strControlType = 'QLabel';
 
@@ -104,7 +104,7 @@ TMPL;
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QColumn|QReverseReference| QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference| QManyToManyReference $objColumn
 		 * @throws Exception
 		 * @return string
 		 */
@@ -139,20 +139,20 @@ TMPL;
 		 * Returns code to refresh the control from the saved object.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference $objColumn
 		 * @param bool $blnInit
 		 * @throws Exception
 		 * @return string
 		 */
-		public function ConnectorRefresh(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public function ConnectorRefresh(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = $this->VarName($strPropName);
 
 			// Preamble with an if test if not initializing
 			$strRet = '';
-			if ($objColumn instanceof QColumn) {
+			if ($objColumn instanceof QSqlColumn) {
 				if ($objColumn->Identity ||
 					$objColumn->Timestamp
 				) {
@@ -198,11 +198,11 @@ TMPL;
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference $objColumn
 		 * @return string
 		 */
-		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			return '';
 		}
 	}

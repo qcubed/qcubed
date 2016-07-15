@@ -1,6 +1,6 @@
 
 <?php
-/** @var QTable $objTable */
+/** @var QSqlTable $objTable */
 /** @var QDatabaseCodeGen $objCodeGen */
 global $_TEMPLATE_SETTINGS;
 $_TEMPLATE_SETTINGS = array(

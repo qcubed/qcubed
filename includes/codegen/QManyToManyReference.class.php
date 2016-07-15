@@ -19,7 +19,7 @@
 	 * @property string $VariableType
 	 * @property string $ObjectDescription
 	 * @property string $ObjectDescriptionPlural
-	 * @property QColumn[] $ColumnArray
+	 * @property QSqlColumn[] $ColumnArray
 	 * @property boolean $IsTypeAssociation
 	 * @property array $Options
 	 */
@@ -136,7 +136,7 @@
 
 		/**
 		 * Array of non-FK Column objects (as indexed by Column name)
-		 * @var QColumn[] ColumnArray
+		 * @var QSqlColumn[] ColumnArray
 		 */
 		protected $objColumnArray;
 		/**

@@ -19,11 +19,11 @@
 		 * some differences. In particular, this control does not support ManyToMany references.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
-		public function ConnectorCreate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorCreate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
 			$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
@@ -92,12 +92,12 @@ TMPL;
 		 * Returns code to refresh the control from the saved object.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn $objColumn
 		 * @param bool $blnInit
 		 * @return string
 		 */
-		public function ConnectorRefresh(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public function ConnectorRefresh(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn, $blnInit = false) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = $this->VarName($strPropName);
@@ -112,11 +112,11 @@ TMPL;
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference $objColumn
 		 * @return string
 		 */
-		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 			$strControlVarName = $this->VarName($strPropName);

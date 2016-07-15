@@ -11,8 +11,8 @@
 	 * @property string[] $TokenArray
 	 * @property array $ExtraPropertyArray
 	 * @property string[] $ExtraFieldNamesArray
-	 * @property-read QColumn[] $PrimaryKeyColumnArray
-	 * @property-write QColumn $KeyColumn
+	 * @property-read QSqlColumn[] $PrimaryKeyColumnArray
+	 * @property-write QSqlColumn $KeyColumn
 	 * @property QManyToManyReference[] $ManyToManyReferenceArray
 	 */
 	class QTypeTable extends QBaseClass {
