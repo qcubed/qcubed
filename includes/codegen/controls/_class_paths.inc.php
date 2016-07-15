@@ -17,6 +17,6 @@ QApplicationBase::$ClassFile['qlistcontrol_codegenerator'] = __INCLUDES__ .'/cod
 QApplicationBase::$ClassFile['qradiobuttonlist_codegenerator'] = __INCLUDES__ .'/codegen/controls/QRadioButtonList_CodeGenerator.class.php';
 QApplicationBase::$ClassFile['qslider_codegenerator'] = __INCLUDES__ .'/codegen/controls/QSlider_CodeGenerator.class.php';
 QApplicationBase::$ClassFile['qtextbox_codegenerator'] = __INCLUDES__ .'/codegen/controls/QTextBox_CodeGenerator.class.php';
-QApplicationBase::$ClassFile['qdatagrid2_codegenerator'] = __INCLUDES__ .'/codegen/controls/QDataGrid_CodeGenerator.class.php';
+QApplicationBase::$ClassFile['qdatagrid_codegenerator'] = __INCLUDES__ .'/codegen/controls/QDataGrid_CodeGenerator.class.php';
 QApplicationBase::$ClassFile['qsimpletable_codegenerator'] = __QCUBED_CORE__ .'/codegen/controls/QSimpleTable_CodeGenerator.class.php';
 QApplicationBase::$ClassFile['qdatalist_codegenerator_interface'] = __QCUBED_CORE__ .'/codegen/controls/QDataList_CodeGen.int.php';
