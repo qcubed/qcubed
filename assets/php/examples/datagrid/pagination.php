@@ -8,7 +8,7 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid2($this);
+		$this->dtgPersons = new QDataGrid($this);
 
 		// Using Ajax for Pagination
 		$this->dtgPersons->UseAjax = true;

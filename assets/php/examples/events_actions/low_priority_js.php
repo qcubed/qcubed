@@ -9,7 +9,7 @@
 
 		protected function Form_Create() {
 			// Define the DataGrid
-			$this->dtgButtons = new QDataGrid2($this);
+			$this->dtgButtons = new QDataGrid($this);
 
                         $this->dtgButtons->UseAjax=true;
                         $this->intHitCnt=0;

@@ -4,7 +4,7 @@
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QColumn|QReverseReference| QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference| QManyToManyReference $objColumn
 		 * @return string
 		 */
 		public function ConnectorVariableDeclaration(QCodeGenBase $objCodeGen, $objColumn) {
@@ -27,12 +27,12 @@ TMPL;
 		/**
 		 * Reads the options from the special data file, and possibly the column
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param null|QColumn|QReverseReference|QManyToManyReference $objColumn	A null column means we want the table options
+		 * @param QSqlTable $objTable
+		 * @param null|QSqlColumn|QReverseReference|QManyToManyReference $objColumn	A null column means we want the table options
 		 * @param string $strControlVarName
 		 * @return string
 		 */
-		public function ConnectorCreateOptions(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
+		public function ConnectorCreateOptions(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn, $strControlVarName) {
 			$strRet = '';
 
 			if (!$objColumn) {
@@ -43,7 +43,7 @@ TMPL;
 				$options = $objTable->Options;
 			}
 			else {
-				if ($objColumn instanceof QColumn) {
+				if ($objColumn instanceof QSqlColumn) {
 					$strPropName = ($objColumn->Reference && !$objColumn->Reference->IsType) ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
 					$strClass = $objTable->ClassName;
 				} elseif ($objColumn instanceof QManyToManyReference ||
@@ -101,12 +101,12 @@ TMPL;
 		 * This is called during the codegen process. 
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @throws QCallerException
 		 * @return string
 		 */
-		public function ConnectorCreate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorCreate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			throw new QCallerException('ConnectorCreate() method not implemented');
 		}
 
@@ -114,24 +114,24 @@ TMPL;
 		 * Returns code to refresh the control from the saved object.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn $objColumn
 		 * @param bool $blnInit
 		 * @throws QCallerException
 		 * @return string
 		 */
-		public function ConnectorRefresh(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public function ConnectorRefresh(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn, $blnInit = false) {
 			throw new QCallerException('ConnectorRefresh() method not implemented');
 		}
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference $objColumn
 		 * @throws QCallerException
 		 * @return string
 		 */
-		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			throw new QCallerException('ConnectorUpdate() method not implemented');
 		}
 
@@ -139,13 +139,13 @@ TMPL;
 		 * Generate helper functions for the update process.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @throws QCallerException
 		 * @return string
 		 */
-		public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			throw new QCallerException('ConnectorUpdateMethod() method not implemented');
 		}
 
@@ -153,13 +153,13 @@ TMPL;
 		 * Generate extra set options for the connector.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @throws QCallerException
 		 * @return string
 		 */
-		public function ConnectorSet(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorSet(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			return "";
 		}
 
@@ -167,13 +167,13 @@ TMPL;
 		 * Generate extra set options for the connector.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @throws QCallerException
 		 * @return string
 		 */
-		public function ConnectorGet(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorGet(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			return "";
 		}
 
@@ -181,13 +181,13 @@ TMPL;
 		 * Generate extra property comments for the connector.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @throws QCallerException
 		 * @return string
 		 */
-		public function ConnectorPropertyComments(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorPropertyComments(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			return "";
 		}
 

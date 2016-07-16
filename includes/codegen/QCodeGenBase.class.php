@@ -634,10 +634,10 @@
 		 * Given a column, returns the name of the variable used to represent the column's value inside
 		 * the model object.
 		 *
-		 * @param QColumn $objColumn
+		 * @param QSqlColumn $objColumn
 		 * @return string
 		 */
-		protected function ModelColumnVariableName(QColumn $objColumn) {
+		protected function ModelColumnVariableName(QSqlColumn $objColumn) {
 			return QConvertNotation::PrefixFromType($objColumn->VariableType) .
 				QConvertNotation::CamelCaseFromUnderscore($objColumn->Name);
 		}
@@ -717,7 +717,7 @@
 			return QConvertNotation::CamelCaseFromUnderscore($strColumnName);
 		}
 
-		protected function ParameterCleanupFromColumn(QColumn $objColumn, $blnIncludeEquality = false) {
+		protected function ParameterCleanupFromColumn(QSqlColumn $objColumn, $blnIncludeEquality = false) {
 			if ($blnIncludeEquality)
 				return sprintf('$%s = $objDatabase->SqlVariable($%s, true);',
 					$objColumn->VariableName, $objColumn->VariableName);
@@ -760,7 +760,7 @@
 		/**
 		 * Returns the control label name as used in the ModelConnector corresponding to this column or table.
 		 *
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 */
@@ -774,13 +774,13 @@
 		/**
 		 * The property name used in the ModelConnector for the given column, virtual column or table
 		 *
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 * @throws Exception
 		 */
 		public static function ModelConnectorPropertyName ($objColumn) {
-			if ($objColumn instanceof QColumn) {
+			if ($objColumn instanceof QSqlColumn) {
 				if ($objColumn->Reference) {
 					return $objColumn->Reference->PropertyName;
 				} else {
@@ -806,7 +806,7 @@
 		/**
 		 * Return a variable name corresponding to the given column, including virtual columns like
 		 * QReverseReference and QManyToMany references.
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
 		public function ModelConnectorVariableName($objColumn) {
@@ -818,7 +818,7 @@
 		/**
 		 * Returns a variable name for the "label" version of a control, which would be the read-only version
 		 * of viewing the data in the column.
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
 		public function ModelConnectorLabelVariableName($objColumn) {
@@ -830,7 +830,7 @@
 		 * Returns the class for the control that will be created to edit the given column,
 		 * including the 'virtual' columns of reverse references (many to one) and many-to-many references.
 		 *
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string Class name of control which can handle this column's data
 		 * @throws Exception
@@ -848,7 +848,7 @@
 			}
 
 			// otherwise, return the default class based on the column
-			if ($objColumn instanceof QColumn) {
+			if ($objColumn instanceof QSqlColumn) {
 				if ($objColumn->Identity)
 					return 'QLabel';
 
@@ -885,7 +885,7 @@
 		}
 
 
-		public function DataListControlClass (QTable $objTable) {
+		public function DataListControlClass (QSqlTable $objTable) {
 			// Is the class specified by the developer?
 			if ($o = $objTable->Options) {
 				if (isset($o['ControlClass'])) {
@@ -894,17 +894,17 @@
 			}
 
 			// Otherwise, return a default
-			return 'QDataGrid2';
+			return 'QDataGrid';
 		}
 
 		/**
 		 * Returns the control label name as used in the data list panel corresponding to this column.
 		 *
-		 * @param QTable $objTable
+		 * @param QSqlTable $objTable
 		 *
 		 * @return string
 		 */
-		public static function DataListControlName (QTable $objTable) {
+		public static function DataListControlName (QSqlTable $objTable) {
 			if (($o = $objTable->Options) && isset ($o['Name'])) { // Did developer default?
 				return $o['Name'];
 			}
@@ -914,28 +914,28 @@
 		/**
 		 * Returns the name of an item in the data list as will be displayed in the edit panel.
 		 *
-		 * @param QTable $objTable
+		 * @param QSqlTable $objTable
 		 *
 		 * @return string
 		 */
-		public static function DataListItemName (QTable $objTable) {
+		public static function DataListItemName (QSqlTable $objTable) {
 			if (($o = $objTable->Options) && isset ($o['ItemName'])) { // Did developer override?
 				return $o['ItemName'];
 			}
 			return QConvertNotation::WordsFromCamelCase($objTable->ClassName);
 		}
 
-		public function DataListVarName (QTable $objTable) {
+		public function DataListVarName (QSqlTable $objTable) {
 			$strPropName = self::DataListPropertyNamePlural($objTable);
 			$objControlHelper = $this->GetDataListCodeGenerator($objTable);
 			return $objControlHelper->VarName($strPropName);
 		}
 
-		public static function DataListPropertyName (QTable $objTable) {
+		public static function DataListPropertyName (QSqlTable $objTable) {
 			return $objTable->ClassName;
 		}
 
-		public static function DataListPropertyNamePlural (QTable $objTable) {
+		public static function DataListPropertyNamePlural (QSqlTable $objTable) {
 			return $objTable->ClassNamePlural;
 		}
 
@@ -944,7 +944,7 @@
 		 * Returns the class for the control that will be created to edit the given column,
 		 * including the 'virtual' columns of reverse references (many to one) and many-to-many references.
 		 *
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return AbstractControl_CodeGenerator helper object
 		 * @throws Exception
@@ -987,7 +987,7 @@
 				return call_user_func($strControlClass.'::GetCodeGenerator');
 			}
 
-			return new QDataGrid2_CodeGenerator();
+			return new QDataGrid_CodeGenerator();
 		}
 
 

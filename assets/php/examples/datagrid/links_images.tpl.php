@@ -2,7 +2,7 @@
 <?php $this->RenderBegin(); ?>
 
 <div id="instructions">
-	<h1>Dynamically Adding QControls to QSimpleTable</h1>
+	<h1>Dynamically Adding QControls to QHtmlTable</h1>
 
 	<p>This example illustrates a technique for creating QControls and placing them in
 		a simple table dynamically, during the time each row is drawn. </p>

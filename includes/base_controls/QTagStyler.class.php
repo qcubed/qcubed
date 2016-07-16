@@ -30,7 +30,7 @@
 		}
 
 		/**
-		 * Returns HTML attributes for the QDataGrid row.
+		 * Returns HTML attributes for the QDataGridLegacy row.
 		 * Deprecated. Please use renderHtmlAttributes().
 		 *
 		 * @return string HTML attributes

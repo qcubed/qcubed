@@ -65,11 +65,11 @@ class QModelConnectorEditDlg extends QDialog {
 		$this->tabs->RemoveChildControls(true);
 		$this->categories = array();
 
-		$this->dtgGeneralOptions = new QSimpleTable($this->tabs, 'definitionTab');
+		$this->dtgGeneralOptions = new QHtmlTable($this->tabs, 'definitionTab');
 		$this->dtgGeneralOptions->ShowHeader = false;
 		$this->dtgGeneralOptions->Name = "General";
 		$this->dtgGeneralOptions->CreatePropertyColumn('Attribute', 'Name');
-		$col = $this->dtgGeneralOptions->AddColumn (new QSimpleTableCallableColumn('Attribute', array ($this, 'dtg_ValueRender'), $this->dtgGeneralOptions));
+		$col = $this->dtgGeneralOptions->AddColumn (new QHtmlTableCallableColumn('Attribute', array ($this, 'dtg_ValueRender'), $this->dtgGeneralOptions));
 		$col->HtmlEntities = false;
 		$this->dtgGeneralOptions->SetDataBinder('dtgGeneralOptions_Bind', $this);
 
@@ -156,10 +156,10 @@ class QModelConnectorEditDlg extends QDialog {
 			$panel->AutoRenderChildren = true;
 			$panel->Name = $tabName;
 
-			$dtg = new QSimpleTable($panel);
+			$dtg = new QHtmlTable($panel);
 			$dtg->ShowHeader = false;
 			$dtg->CreatePropertyColumn('Attribute', 'Name');
-			$col = $dtg->AddColumn (new QSimpleTableCallableColumn('Attribute', array ($this, 'dtg_ValueRender'), $dtg));
+			$col = $dtg->AddColumn (new QHtmlTableCallableColumn('Attribute', array ($this, 'dtg_ValueRender'), $dtg));
 			$col->HtmlEntities = false;
 			$dtg->SetDataBinder('dtgControlBind', $this);
 			$dtg->Name = $tabName; // holder for category

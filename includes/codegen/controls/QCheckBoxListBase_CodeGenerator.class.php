@@ -8,12 +8,12 @@
 		/**
 		 * Reads the options from the special data file, and possibly the column
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param string $strControlVarName
 		 * @return string
 		 */
-		public function ConnectorCreateOptions(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $strControlVarName) {
+		public function ConnectorCreateOptions(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn, $strControlVarName) {
 			$strRet = parent::ConnectorCreateOptions($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
 			if (!$objColumn instanceof QManyToManyReference) {
@@ -25,11 +25,11 @@
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference $objColumn
 		 * @return string
 		 */
-		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = $objColumn->ObjectDescription;
 			$strPropNames = $objColumn->ObjectDescriptionPlural;

@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * @var QTable $objTable
+	 * @var QSqlTable $objTable
 	 * @var QCodeGenBase $objCodeGen
 	 */
 

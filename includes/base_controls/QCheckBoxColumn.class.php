@@ -1,6 +1,6 @@
 <?php
 /*****
- * A QDataGridColumn that contains checkboxes
+ * A QDataGridLegacyColumn that contains checkboxes
  * Inspired by Hunter Jensen's work at <http://www.qcodo.com/forums/topic.php/3267>
  * 
  * @author Ryan Peters
@@ -9,7 +9,7 @@
  * @name QCheckBoxColumn
  */
 
-class QCheckBoxColumn extends QDataGridColumn
+class QCheckBoxLegacyColumn extends QDataGridLegacyColumn
 {
 	protected $objDataGrid;
 	protected $blnHtmlEntities = false;
@@ -26,7 +26,7 @@ class QCheckBoxColumn extends QDataGridColumn
 	 * @param QDataGrid $dataGrid              The parent DataGrid. This does not add the column to that datagrid
 	 * @param mixed     $objOverrideParameters Same as QDataGrid
 	 */
-	public function __construct($strName = '', QDataGrid $dataGrid, $objOverrideParameters = null)
+	public function __construct($strName = '', QDataGridLegacy $dataGrid, $objOverrideParameters = null)
 	{
 		$this->objDataGrid = $dataGrid;
 		

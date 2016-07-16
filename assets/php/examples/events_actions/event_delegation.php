@@ -8,12 +8,12 @@
 
 		protected function Form_Create() {
 			// Define the DataGrid
-			$this->dtgPersons = new QDataGrid2($this, 'dtgPersons');
+			$this->dtgPersons = new QDataGrid($this, 'dtgPersons');
 			$this->dtgPersons->Height = "560px";
 			
 			
 			// Define the DataGrid using event delegation
-			$this->dtgPersonsDelegated = new QDataGrid2($this, 'dtgPersonsDelegated');
+			$this->dtgPersonsDelegated = new QDataGrid($this, 'dtgPersonsDelegated');
 
 			// Define Columns
 			$this->dtgPersons->CreateNodeColumn('Person Id', QQN::Person()->Id);

@@ -3,12 +3,12 @@ require_once('../qcubed.inc.php');
 
 class ExampleForm extends QForm {
 
-	/** @var  QSimpleTable */
+	/** @var  QHtmlTable */
 	protected $dtgPersons;
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QSimpleTable($this);
+		$this->dtgPersons = new QHtmlTable($this);
 
 		// Define Columns
 		// This first example uses a callback to draw the column, which is the most versatile way of drawing a column.

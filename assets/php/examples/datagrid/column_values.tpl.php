@@ -29,10 +29,10 @@
 </style>
 
 <div id="instructions">
-	<h1>Styling and Formatting QSimpleTable Column Values</h1>
+	<h1>Styling and Formatting QHtmlTable Column Values</h1>
 	<h2>Post-processing Column Values</h2>
 	<p>Sometimes the value of the data for a particular column is not displayable, or you would like to further process
-	the value before displaying it. All QSimpleTableColumn types have the ability for you to specify the following:</p>
+	the value before displaying it. All QHtmlTableColumn types have the ability for you to specify the following:</p>
 	<ul>
 		<li><strong>Format</strong>: If the column returns a string, will apply the Format string as an
 			sprintf format string. If the column is a QDateTime type, it will apply it as a qFormat string.</li>
@@ -46,7 +46,7 @@
 		it will be converted to HTML and displayed correctly in a browser. However, if your column is already returning html,
 		you can turn off this processing by setting <strong>HtmlEntities</strong> to false.</p>
 	<h2>Styling</h2>
-	<p>There are a variety of ways to style a QSimpleTable:</p>
+	<p>There are a variety of ways to style a QHtmlTable:</p>
 	<ul>
 		<li>Use <strong>AddCssClass()</strong> to add a class to the control, and use css to style the html table. Modern
 			css can now do most things that used to be done using row classes and javascript, including alternating

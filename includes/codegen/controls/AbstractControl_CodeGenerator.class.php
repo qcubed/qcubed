@@ -23,15 +23,15 @@
 		 * some differences. In particular, this control does not support ManyToMany references.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
-		abstract public function ConnectorCreate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn);
+		abstract public function ConnectorCreate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn);
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QColumn|QReverseReference| QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference| QManyToManyReference $objColumn
 		 * @return string
 		 */
 		abstract public function ConnectorVariableDeclaration(QCodeGenBase $objCodeGen, $objColumn);
@@ -39,41 +39,41 @@
 		/**
 		 * Reads the options from the special data file, and possibly the column
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param string $strControlVarName
 		 * @return string
 		 */
-		abstract public function ConnectorCreateOptions(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $strControlVarName);
+		abstract public function ConnectorCreateOptions(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn, $strControlVarName);
 
 		/**
 		 * Returns code to refresh the control from the saved object.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @param bool $blnInit
 		 * @return string
 		 */
-		abstract public function ConnectorRefresh(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $blnInit = false);
+		abstract public function ConnectorRefresh(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn, $blnInit = false);
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
-		abstract public function ConnectorUpdate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn);
+		abstract public function ConnectorUpdate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn);
 
 		/**
 		 * Generate helper functions for the update process.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 */
-		abstract public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn);
+		abstract public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn);
 
 	}

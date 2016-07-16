@@ -1,7 +1,7 @@
 <?php
 require_once('../qcubed.inc.php');
 
-class ComplexColumn extends QSimpleTableIndexedColumn {
+class ComplexColumn extends QHtmlTableIndexedColumn {
 	public function RenderHeaderCell() {
 		if ($this->objParentTable->CurrentHeaderRowIndex == 0 &&
 				$this->Index > 1) {
@@ -38,18 +38,18 @@ class ComplexColumn extends QSimpleTableIndexedColumn {
 
 class ExampleForm extends QForm {
 
-	/** @var QSimpleTable */
+	/** @var QHtmlTable */
 	protected $tblPersons;
 
-	/** @var QSimpleTable */
+	/** @var QHtmlTable */
 	protected $tblReport;
 
-	/** @var QSimpleTable */
+	/** @var QHtmlTable */
 	protected $tblComplex;
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->tblPersons = new QSimpleTable($this);
+		$this->tblPersons = new QHtmlTable($this);
 		$this->tblPersons->CssClass = 'simple_table';
 		$this->tblPersons->RowCssClass = 'odd_row';
 		$this->tblPersons->AlternateRowCssClass = 'even_row';
@@ -57,7 +57,7 @@ class ExampleForm extends QForm {
 
 		// Define Columns
 		// This demonstrates how to first create a column, and then add it to the table
-		$objColumn = new QSimpleTableCallableColumn('Full Name', [$this, 'getFullName']);
+		$objColumn = new QHtmlTableCallableColumn('Full Name', [$this, 'getFullName']);
 		$this->tblPersons->AddColumn($objColumn);
 
 		// The second column demonstrates using a property name for fetching the data
@@ -75,7 +75,7 @@ class ExampleForm extends QForm {
 		// to render itself.
 		$this->tblPersons->SetDataBinder('tblPersons_Bind');
 
-		$this->tblReport = new QSimpleTable($this);
+		$this->tblReport = new QHtmlTable($this);
 		$this->tblReport->CssClass = 'simple_table';
 		$this->tblReport->RowCssClass = 'odd_row';
 		$this->tblReport->AlternateRowCssClass = 'even_row';
@@ -92,7 +92,7 @@ class ExampleForm extends QForm {
 
 		$this->tblReport->SetDataBinder('tblReport_Bind');
 
-		$this->tblComplex = new QSimpleTable($this);
+		$this->tblComplex = new QHtmlTable($this);
 		$this->tblComplex->CssClass = 'simple_table';
 		$this->tblComplex->RowCssClass = 'odd_row';
 		$this->tblComplex->AlternateRowCssClass = 'even_row';

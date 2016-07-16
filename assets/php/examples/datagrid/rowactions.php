@@ -8,7 +8,7 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QDataGrid2($this, 'dtgPersons');
+		$this->dtgPersons = new QDataGrid($this, 'dtgPersons');
 
 		// Style this with a QCubed built-in style that will highlight the row hovered over.
 		$this->dtgPersons->AddCssClass('clickable-rows');

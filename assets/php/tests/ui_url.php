@@ -2,12 +2,12 @@
 require_once('../qcubed.inc.php');
 
 class UrlForm extends QForm {
-	/** @var  QSimpleTable */
+	/** @var  QHtmlTable */
 	protected $dtg;
 	protected $lblVars;
 
 	protected function Form_Create() {
-		$this->dtg = new QSimpleTable($this);
+		$this->dtg = new QHtmlTable($this);
 		$this->dtg->SetDataBinder('BindData');
 
 		$col = $this->dtg->CreateCallableColumn('Link', [$this, 'dtg_LinkRender']);

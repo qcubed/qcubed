@@ -19,11 +19,11 @@
 		 * some differences. In particular, this control does not support ManyToMany references.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 * @return string
 		 */
-		public function ConnectorCreate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorCreate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
 			$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
@@ -33,7 +33,7 @@
 			$strControlType = $objCodeGen->GetControlCodeGenerator($objColumn)->GetControlClass();
 
 			// Create a control designed just for selecting from a type table
-			if (($objColumn instanceof QColumn && $objColumn->Reference->IsType) ||
+			if (($objColumn instanceof QSqlColumn && $objColumn->Reference->IsType) ||
 				($objColumn instanceof QManyToManyReference && $objColumn->IsTypeAssociation)
 			) {
 				$strRet = <<<TMPL
@@ -84,7 +84,7 @@ TMPL;
 
 TMPL;
 
-			if ($objColumn instanceof QColumn && $objColumn->NotNull) {
+			if ($objColumn instanceof QSqlColumn && $objColumn->NotNull) {
 				$strRet .= <<<TMPL
 			\$this->{$strControlVarName}->Required = true;
 
@@ -107,10 +107,10 @@ TMPL;
 
 TMPL;
 
-			if ($objColumn instanceof QColumn && $objColumn->Reference->IsType ||
+			if ($objColumn instanceof QSqlColumn && $objColumn->Reference->IsType ||
 				$objColumn instanceof QManyToManyReference && $objColumn->IsTypeAssociation
 			) {
-				if ($objColumn instanceof QColumn) {
+				if ($objColumn instanceof QSqlColumn) {
 					$strVarType = $objColumn->Reference->VariableType;
 				} else {
 					$strVarType = $objColumn->VariableType;
@@ -160,7 +160,7 @@ TMPL;
 
 TMPL;
 			} else {
-				if ($objColumn instanceof QColumn) {
+				if ($objColumn instanceof QSqlColumn) {
 					$strRefVarType = $objColumn->Reference->VariableType;
 					$strRefVarName = $objColumn->Reference->VariableName;
 					//$strRefPropName = $objColumn->Reference->PropertyName;
@@ -201,7 +201,7 @@ TMPL;
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QColumn|QReverseReference| QManyToManyReference $objColumn
+		 * @param QSqlColumn|QReverseReference| QManyToManyReference $objColumn
 		 * @return string
 		 */
 		public function ConnectorVariableDeclaration(QCodeGenBase $objCodeGen, $objColumn) {
@@ -225,7 +225,7 @@ TMPL;
 
 TMPL;
 
-			if (($objColumn instanceof QColumn && !$objColumn->Reference->IsType) ||
+			if (($objColumn instanceof QSqlColumn && !$objColumn->Reference->IsType) ||
 				($objColumn instanceof QManyToManyReference && !$objColumn->IsTypeAssociation) ||
 				($objColumn instanceof QReverseReference)
 			) {
@@ -251,12 +251,12 @@ TMPL;
 		 * Returns code to refresh the control from the saved object.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn $objColumn
 		 * @param bool $blnInit
 		 * @return string
 		 */
-		public function ConnectorRefresh(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn, $blnInit = false) {
+		public function ConnectorRefresh(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn, $blnInit = false) {
 			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = $this->VarName($strPropName);
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
@@ -289,7 +289,7 @@ TMPL;
 				$strRet .=  "\$this->{$strControlVarName}->AddItems(\$this->{$strControlVarName}_GetItems());\n";
 			}
 
-			if ($objColumn instanceof QColumn) {
+			if ($objColumn instanceof QSqlColumn) {
 				$strRet .= "\$this->{$strControlVarName}->SelectedValue = \$this->{$strObjectName}->{$objColumn->PropertyName};\n";
 			} elseif ($objColumn instanceof QReverseReference && $objColumn->Unique) {
 				$strRet .= "if (\$this->{$strObjectName}->{$objColumn->ObjectPropertyName})\n";
@@ -316,16 +316,16 @@ TMPL;
 
 		/**
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference $objColumn
 		 * @return string
 		 */
-		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorUpdate(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = $this->VarName($strPropName);
 			$strRet = '';
-			if ($objColumn instanceof QColumn) {
+			if ($objColumn instanceof QSqlColumn) {
 				$strRet = <<<TMPL
 				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->SelectedValue;
 
@@ -343,12 +343,12 @@ TMPL;
 		 * Generate helper functions for the update process.
 		 *
 		 * @param QCodeGenBase $objCodeGen
-		 * @param QTable $objTable
-		 * @param QColumn|QReverseReference|QManyToManyReference $objColumn
+		 * @param QSqlTable $objTable
+		 * @param QSqlColumn|QReverseReference|QManyToManyReference $objColumn
 		 *
 		 * @return string
 		 */
-		public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorUpdateMethod(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = $this->VarName($strPropName);
@@ -385,7 +385,7 @@ TMPL;
 			return $strRet;
 		}
 
-		public function ConnectorSet(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorSet(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = $this->VarName($strPropName);
@@ -398,7 +398,7 @@ TMPL;
 		}
 
 
-		public function ConnectorGet(QCodeGenBase $objCodeGen, QTable $objTable, $objColumn) {
+		public function ConnectorGet(QCodeGenBase $objCodeGen, QSqlTable $objTable, $objColumn) {
 			$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 			$strPropName = QCodeGen::ModelConnectorPropertyName($objColumn);
 			$strControlVarName = $this->VarName($strPropName);

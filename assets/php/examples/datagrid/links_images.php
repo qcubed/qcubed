@@ -8,7 +8,7 @@ class ExampleForm extends QForm {
 
 	protected function Form_Create() {
 		// Define the DataGrid
-		$this->dtgPersons = new QSimpleTable($this);
+		$this->dtgPersons = new QHtmlTable($this);
 
 		$col = $this->dtgPersons->CreateCallableColumn('Full Name', [$this, 'renderFullName']);
 		$col->HtmlEntities = false;

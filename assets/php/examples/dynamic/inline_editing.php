@@ -15,7 +15,7 @@
 
 		protected function Form_Create() {
 			// Define the DataGrid
-			$this->dtgPersons = new QDataGrid2($this);
+			$this->dtgPersons = new QDataGrid($this);
 
 			// Define Columns -- we will define render helper methods to help with the rendering
 			// of the HTML for most of these columns

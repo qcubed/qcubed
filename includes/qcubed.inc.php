@@ -201,29 +201,30 @@
 	QApplicationBase::$ClassFile['qpaginatorbase'] = __QCUBED_CORE__ . '/base_controls/QPaginatorBase.class.php';
 	QApplicationBase::$ClassFile['qpaginator'] = __QCUBED__ . '/controls/QPaginator.class.php';
 
-	QApplicationBase::$ClassFile['qdatagridbase'] = __QCUBED_CORE__ . '/base_controls/QDataGridBase.class.php';
-	QApplicationBase::$ClassFile['qdatagrid2base'] = __QCUBED_CORE__ . '/base_controls/QDataGrid2Base.class.php';
-	QApplicationBase::$ClassFile['qdatagridcolumn'] = __QCUBED_CORE__ . '/base_controls/QDataGridColumn.class.php';
-	QApplicationBase::$ClassFile['qcheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QCheckBoxColumn.class.php';
-	QApplicationBase::$ClassFile['qdatagrid2_checkboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QDataGrid2_CheckBoxColumn.class.php';
-
-	QApplicationBase::$ClassFile['qdatagridrowstyle'] = __QCUBED_CORE__ . '/base_controls/QDataGridRowStyle.class.php';
 	QApplicationBase::$ClassFile['qdatagrid'] = __QCUBED__ . '/controls/QDataGrid.class.php';
-	QApplicationBase::$ClassFile['qdatagrid2'] = __QCUBED__ . '/controls/QDataGrid2.class.php';
+	QApplicationBase::$ClassFile['qdatagridbase'] = __QCUBED_CORE__ . '/base_controls/QDataGridBase.class.php';
+	QApplicationBase::$ClassFile['qdatagrid_checkboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QDataGrid_CheckBoxColumn.class.php';
 
-	QApplicationBase::$ClassFile['qsimpletablebase'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableBase.class.php';
-	QApplicationBase::$ClassFile['qabstractsimpletablecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qabstractsimpletabledatacolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletablepropertycolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletablenodecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletableindexedcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletablecallablecolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletablecheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletablelinkcolumn'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
-	QApplicationBase::$ClassFile['qsimpletablecheckboxcolumn_clickevent'] = __QCUBED_CORE__ . '/base_controls/QSimpleTableColumn.class.php';
+	QApplicationBase::$ClassFile['qcheckboxlegacycolumn'] = __QCUBED_CORE__ . '/base_controls/QCheckBoxLegacyColumn.class.php';
+	QApplicationBase::$ClassFile['qdatagridlegacy'] = __QCUBED__ . '/controls/QDataGridLegacy.class.php';
+	QApplicationBase::$ClassFile['qdatagridlegacybase'] = __QCUBED_CORE__ . '/base_controls/QDataGridLegacyBase.class.php';
+	QApplicationBase::$ClassFile['qdatagridlegacycolumn'] = __QCUBED_CORE__ . '/base_controls/QDataGridLegacyColumn.class.php';
+	QApplicationBase::$ClassFile['qdatagridlegacyrowstyle'] = __QCUBED_CORE__ . '/base_controls/QDataGridLegacyRowStyle.class.php';
 
 
-	QApplicationBase::$ClassFile['qsimpletable'] = __QCUBED__ . '/controls/QSimpleTable.class.php';
+	QApplicationBase::$ClassFile['qhtmltablebase'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableBase.class.php';
+	QApplicationBase::$ClassFile['qabstracthtmltablecolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qabstracthtmltabledatacolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qhtmltablepropertycolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qhtmltablenodecolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qhtmltableindexedcolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qhtmltablecallablecolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qhtmltablecheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qhtmltablelinkcolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qhtmltablecheckboxcolumn_clickevent'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+
+
+	QApplicationBase::$ClassFile['qhtmltable'] = __QCUBED__ . '/controls/QHtmlTable.class.php';
 
 	QApplicationBase::$ClassFile['qdatarepeater'] = __QCUBED_CORE__ . '/base_controls/QDataRepeater.class.php';
 

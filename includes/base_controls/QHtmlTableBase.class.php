@@ -8,12 +8,9 @@
 	 * youself, but who's structure is based off of the CodeGen framework.</p>
 	 *
 	 * <p>For each item in a datasource's Array, a row (&lt;tr&gt;) will be generated.
-	 * You can define any number of QSimpleTableColumns which will result in a &lt;td&gt; for each row.
-	 * Using the QSimpleTableColumn's Accessor property, you can specify how the data for each cell should be
+	 * You can define any number of QHtmlTableColumns which will result in a &lt;td&gt; for each row.
+	 * Using the QHtmlTableColumn's Accessor property, you can specify how the data for each cell should be
 	 * fetched from the datasource.</p>
-	 *
-	 * <p><i>NOTE</i>: Unlike QDataGrid, this class does not use eval() for evaluating the cell values. Instead, a variety of
-	 * methods can be used to fetch the data for cells, including callable objects.</p>
 	 *
 	 * @package Controls
 	 * @property string         $Caption          	  string to use as the caption of the table
@@ -29,8 +26,8 @@
 	 * @throws QCallerException
 	 *
 	 */
-	abstract class QSimpleTableBase extends QPaginatedControl {
-		/** @var QAbstractSimpleTableColumn[] */
+	abstract class QHtmlTableBase extends QPaginatedControl {
+		/** @var QAbstractHtmlTableColumn[] */
 		protected $objColumnArray;
 
 		/** @var string|null CSS class to be applied to for even rows */
@@ -98,13 +95,13 @@
 		 * @param mixed   $mixIndex       the index to use to access the cell date. i.e. $item[$index]
 		 * @param integer $intColumnIndex column position
 		 *
-		 * @return QSimpleTableIndexedColumn
+		 * @return QHtmlTableIndexedColumn
 		 */
 		public function CreateIndexedColumn($strName = '', $mixIndex = null, $intColumnIndex = -1) {
 			if (is_null($mixIndex)) {
 				$mixIndex = count($this->objColumnArray);
 			}
-			$objColumn = new QSimpleTableIndexedColumn($strName, $mixIndex);
+			$objColumn = new QHtmlTableIndexedColumn($strName, $mixIndex);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
@@ -117,10 +114,10 @@
 		 * @param integer $intColumnIndex column position
 		 * @param object  $objBaseNode    a query node from which the property descends, if you are using the sorting capabilities
 		 *
-		 * @return QSimpleTablePropertyColumn
+		 * @return QHtmlTablePropertyColumn
 		 */
 		public function CreatePropertyColumn($strName, $strProperty, $intColumnIndex = -1, $objBaseNode = null) {
-			$objColumn = new QSimpleTablePropertyColumn($strName, $strProperty, $objBaseNode);
+			$objColumn = new QHtmlTablePropertyColumn($strName, $strProperty, $objBaseNode);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
@@ -129,12 +126,12 @@
 		 * @param string $strName
 		 * @param mixed $objNodes
 		 * @param int $intColumnIndex
-		 * @return QSimpleTableNodeColumn
+		 * @return QHtmlTableNodeColumn
 		 * @throws Exception
 		 * @throws QInvalidCastException
 		 */
 		public function CreateNodeColumn($strName, $objNodes, $intColumnIndex = -1) {
-			$objColumn = new QSimpleTableNodeColumn($strName, $objNodes);
+			$objColumn = new QHtmlTableNodeColumn($strName, $objNodes);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
@@ -146,10 +143,10 @@
 		 * @param callable|array $objCallable    a callable object. Note that this can be an array.
 		 * @param integer        $intColumnIndex column position
 		 *
-		 * @return QSimpleTableCallableColumn
+		 * @return QHtmlTableCallableColumn
 		 */
 		public function CreateCallableColumn($strName, $objCallable, $intColumnIndex = -1) {
-			$objColumn = new QSimpleTableCallableColumn($strName, $objCallable);
+			$objColumn = new QHtmlTableCallableColumn($strName, $objCallable);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
@@ -186,7 +183,7 @@
 		 *   For example, could be used to add a class or an id to each tag.
 		 * @param bool $blnAsButton Only used if this is drawing a QControlProxy. Will draw the proxy as a button.
 		 * @param int $intColumnIndex
-		 * @return QSimpleTableLinkColumn
+		 * @return QHtmlTableLinkColumn
 		 * @throws QInvalidCastException
 		 */
 		public function CreateLinkColumn ($strName,
@@ -196,7 +193,7 @@
 										  $tagAttributes = null,
 										  $blnAsButton = false,
 										  $intColumnIndex = -1) {
-			$objColumn = new QSimpleTableLinkColumn($strName,
+			$objColumn = new QHtmlTableLinkColumn($strName,
 				$mixText,
 				$mixDestination,
 				$getVars,
@@ -214,7 +211,7 @@
 		 * @param integer $intColumnIndex new position
 		 * @param string  $strNewName     new column name
 		 *
-		 * @return QAbstractSimpleTableColumn
+		 * @return QAbstractHtmlTableColumn
 		 */
 		public function MoveColumn($strName, $intColumnIndex = -1, $strNewName = null) {
 			$col = $this->RemoveColumnByName($strName);
@@ -231,7 +228,7 @@
 		 * @param string $strOldName
 		 * @param string $strNewName
 		 *
-		 * @return QAbstractSimpleTableColumn
+		 * @return QAbstractHtmlTableColumn
 		 */
 		public function RenameColumn($strOldName, $strNewName) {
 			$col = $this->GetColumnByName($strOldName);
@@ -242,11 +239,11 @@
 		/**
 		 * Add a column to the end of the column array.
 		 *
-		 * @param QAbstractSimpleTableColumn $objColumn
+		 * @param QAbstractHtmlTableColumn $objColumn
 		 *
-		 * @return QAbstractSimpleTableColumn
+		 * @return QAbstractHtmlTableColumn
 		 */
-		public function AddColumn(QAbstractSimpleTableColumn $objColumn) {
+		public function AddColumn(QAbstractHtmlTableColumn $objColumn) {
 			$this->AddColumnAt(-1, $objColumn);
 			return $objColumn;
 		}
@@ -257,11 +254,11 @@
 		 * Use AddColumn to add a column to the end.
 		 *
 		 * @param integer                    $intColumnIndex column position. -1 to add to the end.
-		 * @param QAbstractSimpleTableColumn $objColumn
+		 * @param QAbstractHtmlTableColumn $objColumn
 		 *
 		 * @throws QInvalidCastException
 		 */
-		public function AddColumnAt($intColumnIndex, QAbstractSimpleTableColumn $objColumn) {
+		public function AddColumnAt($intColumnIndex, QAbstractHtmlTableColumn $objColumn) {
 			try {
 				$intColumnIndex = QType::Cast($intColumnIndex, QType::Integer);
 			} catch (QInvalidCastException $objExc) {
@@ -287,7 +284,7 @@
 		 *
 		 * @param int $intColumnIndex 0-based index of the column to remove
 		 *
-		 * @return QAbstractSimpleTableColumn the removed column
+		 * @return QAbstractHtmlTableColumn the removed column
 		 * @throws QIndexOutOfRangeException|QInvalidCastException
 		 */
 		public function RemoveColumn($intColumnIndex) {
@@ -328,7 +325,7 @@
 		 *
 		 * @param string $strName name of the column to remove
 		 *
-		 * @return QAbstractSimpleTableColumn the removed column or null of no column with the given name was found
+		 * @return QAbstractHtmlTableColumn the removed column or null of no column with the given name was found
 		 */
 		public function RemoveColumnByName($strName) {
 			$this->blnModified = true;
@@ -347,7 +344,7 @@
 		 *
 		 * @param string $strName name of the columns to remove
 		 *
-		 * @return QAbstractSimpleTableColumn[] the array of columns removed
+		 * @return QAbstractHtmlTableColumn[] the array of columns removed
 		 */
 		public function RemoveColumnsByName($strName/*...*/) {
 			return $this->RemoveColumns(func_get_args());
@@ -358,7 +355,7 @@
 		 *
 		 * @param string[] $strNamesArray names of the columns to remove
 		 *
-		 * @return QAbstractSimpleTableColumn[] the array of columns removed
+		 * @return QAbstractHtmlTableColumn[] the array of columns removed
 		 */
 		public function RemoveColumns($strNamesArray) {
 			$this->blnModified = true;
@@ -409,7 +406,7 @@
 		/**
 		 * Returns all columns in the table
 		 *
-		 * @return QAbstractSimpleTableColumn[]
+		 * @return QAbstractHtmlTableColumn[]
 		 */
 		public function GetAllColumns() {
 			return $this->objColumnArray;
@@ -421,7 +418,7 @@
 		 * @param integer $intColumnIndex
 		 * @param boolean $blnVisible true to only count the visible columns
 		 *
-		 * @return QAbstractSimpleTableColumn
+		 * @return QAbstractHtmlTableColumn
 		 */
 		public function GetColumn($intColumnIndex, $blnVisible = false) {
 			if (!$blnVisible) {
@@ -447,7 +444,7 @@
 		 *
 		 * @param string $strName column name
 		 *
-		 * @return QAbstractSimpleTableColumn
+		 * @return QAbstractHtmlTableColumn
 		 */
 		public function GetColumnByName($strName) {
 			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn)
@@ -459,7 +456,7 @@
 		/**
 		 * @param $strId
 		 *
-		 * @return null|QAbstractSimpleTableColumn
+		 * @return null|QAbstractHtmlTableColumn
 		 */
 		public function GetColumnById($strId) {
 			if ($this->objColumnArray) foreach ($this->objColumnArray as $objColumn)
@@ -474,7 +471,7 @@
 		 *
 		 * @param string $strName column name
 		 *
-		 * @return QAbstractSimpleTableColumn
+		 * @return QAbstractHtmlTableColumn
 		 */
 		public function GetColumnIndex($strName) {
 			$intIndex = -1;
@@ -491,7 +488,7 @@
 		 *
 		 * @param string $strName column name
 		 *
-		 * @return QAbstractSimpleTableColumn[]
+		 * @return QAbstractHtmlTableColumn[]
 		 */
 		public function GetColumnsByName($strName) {
 			$objColumnArrayToReturn = array();

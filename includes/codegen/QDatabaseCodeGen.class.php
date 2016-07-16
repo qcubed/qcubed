@@ -1,10 +1,10 @@
 <?php
-	require(__QCUBED_CORE__ . '/codegen/QColumn.class.php');
+	require(__QCUBED_CORE__ . '/codegen/QSqlColumn.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QIndex.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QManyToManyReference.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QReference.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QReverseReference.class.php');
-	require(__QCUBED_CORE__ . '/codegen/QTable.class.php');
+	require(__QCUBED_CORE__ . '/codegen/QSqlTable.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QTypeTable.class.php');
 	require(__QCUBED_CORE__ . '/codegen/QModelConnectorOptions.class.php');
 
@@ -15,7 +15,7 @@
 		public $objSettingsXml;	// Make public so templates can use it directly.
 
 		// Objects
-		/** @var array|QTable[] Array of tables in the database */
+		/** @var array|QSqlTable[] Array of tables in the database */
 		protected $objTableArray;
 		protected $strExcludedTableArray;
 		protected $objTypeTableArray;
@@ -74,7 +74,7 @@
 
 		/**
 		 * @param $strTableName
-		 * @return QTable|QTypeTable
+		 * @return QSqlTable|QTypeTable
 		 * @throws QCallerException
 		 */
 		public function GetTable($strTableName) {
@@ -489,7 +489,7 @@
 
 						} else {
 							// Create a Regular Table and add it to the array
-							$objTable = new QTable($strTableName);
+							$objTable = new QSqlTable($strTableName);
 							$this->objTableArray[strtolower($strTableName)] = $objTable;
 //						_p("Table: $strTableName<br />", false);
 						}
@@ -530,7 +530,7 @@
 					}
 		}
 
-		protected function ListOfColumnsFromTable(QTable $objTable) {
+		protected function ListOfColumnsFromTable(QSqlTable $objTable) {
 			$strArray = array();
 			$objColumnArray = $objTable->ColumnArray;
 			if ($objColumnArray) foreach ($objColumnArray as $objColumn)
@@ -538,7 +538,7 @@
 			return implode(', ', $strArray);
 		}
 
-		protected function GetColumnArray(QTable $objTable, $strColumnNameArray) {
+		protected function GetColumnArray(QSqlTable $objTable, $strColumnNameArray) {
 			$objToReturn = array();
 
 			if ($strColumnNameArray) foreach ($strColumnNameArray as $strColumnName) {
@@ -548,7 +548,7 @@
 			return $objToReturn;
 		}
 
-		public function GenerateTable(QTable $objTable) {
+		public function GenerateTable(QSqlTable $objTable) {
 			// Create Argument Array
 			$mixArgumentArray = array('objTable' => $objTable);
 			return $this->GenerateFiles('db_orm', $mixArgumentArray);
@@ -764,7 +764,7 @@
 			$objTypeTable->KeyColumn = $this->AnalyzeTableColumn ($objFieldArray[0], $objTypeTable);
 		}
 
-		protected function AnalyzeTable(QTable $objTable) {
+		protected function AnalyzeTable(QSqlTable $objTable) {
 			// Setup the Table Object
 			$objTable->OwnerDbIndex = $this->intDatabaseIndex;
 			$strTableName = $objTable->Name;
@@ -1072,7 +1072,7 @@
 		}
 
 		protected function AnalyzeTableColumn(QDatabaseFieldBase $objField, $objTable) {
-			$objColumn = new QColumn();
+			$objColumn = new QSqlColumn();
 			$objColumn->Name = $objField->Name;
 			$objColumn->OwnerTable = $objTable;
 			if (substr_count($objField->Name, "-")) {
@@ -1319,11 +1319,11 @@
 		/**
 		 * Returns a string that will cast a variable coming from the database into a php type.
 		 * Doing this in the template saves significant amounts of time over using QType::Cast() or GetColumn.
-		 * @param QColumn $objColumn
+		 * @param QSqlColumn $objColumn
 		 * @return string
 		 * @throws Exception
 		 */
-		public function GetCastString (QColumn $objColumn) {
+		public function GetCastString (QSqlColumn $objColumn) {
 			switch ($objColumn->DbType) {
 				case QDatabaseFieldType::Bit:
 					return ('$mixVal = (bool)$mixVal;');

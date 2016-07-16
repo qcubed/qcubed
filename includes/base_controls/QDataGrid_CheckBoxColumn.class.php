@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A checkbox column that specifically is for inclusion in a QDataGrid2 object. The two work together to hand off
+ * A checkbox column that specifically is for inclusion in a QDataGrid object. The two work together to hand off
  * important events and functionality.
  *
  * The default functionality of this class shows the name of the column in the header, and uses the primary key of
@@ -20,7 +20,7 @@
  * @package Controls
  */
 
-class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
+class QDataGrid_CheckBoxColumn extends QHtmlTableCheckBoxColumn {
 	/** @var  bool Record the state of the AllChecked checkbox in the header. */
 	protected $blnAllChecked;
 	protected $blnShowCheckAll = false; // Default to false so that we have default functionality that does not require subclassing.
@@ -96,10 +96,10 @@ class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 
 
 
-	/** QSimpleTableCheckboxColumn Overrides */
+	/** QHtmlTableCheckboxColumn Overrides */
 
 	/**
-	 * The overrides below implement the needed functionality for the QSimpleTableCheckBoxColumn superclass.
+	 * The overrides below implement the needed functionality for the QHtmlTableCheckBoxColumn superclass.
 	 * You shouldn't need to change them. They eventually call into GetItemId, which you will need to override
 	 * to return the item id of the given line item.
 	 */
@@ -151,7 +151,7 @@ class QDataGrid2_CheckBoxColumn extends QSimpleTableCheckBoxColumn {
 		return $params;
 	}
 
-		/** End QSimpleTableCheckboxColumn Overrides */
+		/** End QHtmlTableCheckboxColumn Overrides */
 
 	/**
 	 * Returns the checked state of the item. Default stores the ids in the session. Override if you are storing

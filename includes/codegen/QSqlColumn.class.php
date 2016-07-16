@@ -1,10 +1,10 @@
 <?php
 
 	/**
-	 * Used by the QCubed Code Generator to describe a table's column
+	 * A helper class used by the QCubed Code Generator to describe a table's column
 	 *
 	 * @package Codegen
-	 * @property QTable|QTypeTable $OwnerTable             Table in which this column exists
+	 * @property QSqlTable|QTypeTable $OwnerTable             Table in which this column exists
 	 * @property boolean           $PrimaryKey             Is the column a (part of) primary key
 	 * @property string            $Name                   Column name
 	 * @property string            $PropertyName           Corresponding property name for the table
@@ -23,14 +23,14 @@
 	 * @property array             $Options                Options for codegen
 	 * @property string            $Comment                Comment on the column
 	 */
-	class QColumn extends QBaseClass {
+	class QSqlColumn extends QBaseClass {
 
 		/////////////////////////////
 		// Protected Member Variables
 		/////////////////////////////
 
 		/**
-		 * @var QTable The table in which this column exists.
+		 * @var QSqlTable The table in which this column exists.
 		 */
 		protected $objOwnerTable;
 
@@ -224,8 +224,8 @@
 			try {
 				switch ($strName) {
 					case 'OwnerTable':
-						//return $this->objOwnerTable = QType::cast($mixValue, 'QTable');
-						// $mixValue might be a QTable or a QTypeTable
+						//return $this->objOwnerTable = QType::cast($mixValue, 'QSqlTable');
+						// $mixValue might be a QSqlTable or a QTypeTable
 						return $this->objOwnerTable = $mixValue;
 					case 'PrimaryKey':
 						return $this->blnPrimaryKey = QType::Cast($mixValue, QType::Boolean);
@@ -279,4 +279,3 @@
 			}
 		}
 	}
-?>
