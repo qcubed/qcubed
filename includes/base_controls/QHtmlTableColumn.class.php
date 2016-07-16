@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Represents a column for a SimpleTable. Different subclasses (see below) allow accessing and fetching the data
+	 * Represents a column for a QHtmlTable. Different subclasses (see below) allow accessing and fetching the data
 	 * for each cells in a variety of ways
 	 *
 	 * @property string                 $Name           name of the column
@@ -12,15 +12,15 @@
 	 * @property boolean                $RenderAsHeader if true, all cells in the column will be rendered with a <<th>> tag instead of <<td>>
 	 * @property integer                $Id             HTML id attribute to put in the col tag
 	 * @property integer                $Span           HTML span attribute to put in the col tag
-	 * @property-read QSimpleTableBase  $ParentTable    parent table of the column
-	 * @property-write QSimpleTableBase $_ParentTable   Parent table of this column
+	 * @property-read QHtmlTableBase  $ParentTable    parent table of the column
+	 * @property-write QHtmlTableBase $_ParentTable   Parent table of this column
 	 * @property-write callable $CellParamsCallback A callback to set the html parameters of a generated cell
 	 * @property boolean                $Visible        Whether the column will be drawn. Defaults to true.
 	 * @property-read QTagStyler		$CellStyler		The tag styler for the cells in the column
 	 * @property-read QTagStyler		$HeaderCellStyler		The tag styler for the header cells in the column
 	 * @property-read QTagStyler		$ColStyler		The tag styler for the col tag in the column
 	 */
-	abstract class QAbstractSimpleTableColumn extends QBaseClass {
+	abstract class QAbstractHtmlTableColumn extends QBaseClass {
 		/** @var string */
 		protected $strName;
 		/** @var string */
@@ -31,7 +31,7 @@
 		protected $blnHtmlEntities = true;
 		/** @var boolean */
 		protected $blnRenderAsHeader = false;
-		/** @var QSimpleTableBase */
+		/** @var QHtmlTableBase */
 		protected $objParentTable = null;
 		/** @var integer */
 		protected $intSpan = 1;
@@ -274,7 +274,7 @@
 		 *
 		 * @param string $strName
 		 *
-		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @return bool|int|mixed|QHtmlTableBase|string
 		 * @throws Exception
 		 * @throws QCallerException
 		 */
@@ -419,7 +419,7 @@
 
 				case "_ParentTable":
 					try {
-						$this->objParentTable = QType::Cast($mixValue, 'QSimpleTableBase');
+						$this->objParentTable = QType::Cast($mixValue, 'QHtmlTableBase');
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -439,8 +439,8 @@
 	}
 	
 	/**
-	 * An abstract column designed to work with QDataTables and other tables that require more than basic columns.
-	 * Supports post processing of cell contents for further formatting, and orderby clauses.
+	 * An abstract column designed to work with QDataGrid and other tables that require more than basic columns.
+	 * Supports post processing of cell contents for further formatting, and OrderBy clauses.
 	 *
 	 * @property mixed          $OrderByClause        order by info for sorting the column in ascending order. Used by subclasses.
 	 *    Most often this is a QQ::Clause, but can be any data needed.
@@ -451,7 +451,7 @@
 	 * @property-write callback $PostCallback         after the cell object is retrieved, call this callback on the obtained object.
 	 *    If $PostMethod is also set, this will be called after that method call.
 	 */
-	abstract class QAbstractSimpleTableDataColumn extends QAbstractSimpleTableColumn {
+	abstract class QAbstractHtmlTableDataColumn extends QAbstractHtmlTableColumn {
 		/** @var mixed Order By information. Can be a QQ::Clause, or any kind of object depending on your need */
 		protected $objOrderByClause = null;
 		/** @var mixed */
@@ -532,7 +532,7 @@
 		 *
 		 * @param string $strName
 		 *
-		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @return bool|int|mixed|QHtmlTableBase|string
 		 * @throws Exception
 		 * @throws QCallerException
 		 */
@@ -630,7 +630,7 @@
 	 *  inside the Prop1 object, inside the current object.
 	 * @property boolean $NullSafe if true the value fetcher will check for nulls before accessing the properties
 	 */
-	class QSimpleTablePropertyColumn extends QAbstractSimpleTableDataColumn {
+	class QHtmlTablePropertyColumn extends QAbstractHtmlTableDataColumn {
 		protected $strProperty;
 		protected $strPropertiesArray;
 		protected $blnNullSafe = true;
@@ -671,7 +671,7 @@
 		 *
 		 * @param string $strName
 		 *
-		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @return bool|int|mixed|QHtmlTableBase|string
 		 * @throws Exception
 		 * @throws QCallerException
 		 */
@@ -736,13 +736,13 @@
 	}
 
 	/**
-	 * Class QSimpleTableNodeColumn
+	 * Class QHtmlTableNodeColumn
 	 *
 	 * A table column that displays the content of a database column represented by a QQNode object.
 	 * The $objNodes can be a single node, or an array of nodes. If an array of nodes, the first
 	 * node will be the display node, and the rest of the nodes will be used for sorting.
 	 */
-	class QSimpleTableNodeColumn extends QSimpleTablePropertyColumn {
+	class QHtmlTableNodeColumn extends QHtmlTablePropertyColumn {
 		public function __construct($strName, $objNodes) {
 			if ($objNodes instanceof QQNode) {
 				$objNodes = [$objNodes];
@@ -796,7 +796,7 @@
 	 * @property int|string $Index the index or key to use when accessing the arrays in the DataSource array
 	 *
 	 */
-	class QSimpleTableIndexedColumn extends QAbstractSimpleTableDataColumn {
+	class QHtmlTableIndexedColumn extends QAbstractHtmlTableDataColumn {
 		protected $mixIndex;
 
 		/**
@@ -821,7 +821,7 @@
 		 *
 		 * @param string $strName
 		 *
-		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @return bool|int|mixed|QHtmlTableBase|string
 		 * @throws Exception
 		 * @throws QCallerException
 		 */
@@ -874,7 +874,7 @@
 	 * @property int|string $Index the index or key to use when accessing the arrays in the DataSource array
 	 *
 	 */
-	class QSimpleTableCallableColumn extends QAbstractSimpleTableDataColumn {
+	class QHtmlTableCallableColumn extends QAbstractHtmlTableDataColumn {
 		/** @var callback */
 		protected $objCallable;
 		/** @var array extra parameters passed to closure */
@@ -930,7 +930,7 @@
 		 *
 		 * @param string $strName
 		 *
-		 * @return bool|callable|int|mixed|QSimpleTableBase|string
+		 * @return bool|callable|int|mixed|QHtmlTableBase|string
 		 * @throws Exception
 		 * @throws QCallerException
 		 */
@@ -986,7 +986,7 @@
 	 *
 	 * @property string $Attribute
 	 */
-	class QVirtualAttributeColumn extends QAbstractSimpleTableDataColumn {
+	class QVirtualAttributeColumn extends QAbstractHtmlTableDataColumn {
 		protected $strAttribute;
 		
 		public function __construct($strName, $strAttribute = null) {
@@ -1009,7 +1009,7 @@
 		 *
 		 * @param string $strName
 		 *
-		 * @return bool|int|mixed|null|QSimpleTableBase|string
+		 * @return bool|int|mixed|null|QHtmlTableBase|string
 		 * @throws Exception
 		 * @throws QCallerException
 		 */
@@ -1070,7 +1070,7 @@
 	 *
 	 * This class does not detect and record changes in the checkbox list. You can detect changes from within
 	 * ParsePostData by calling $this->objForm->CheckableControlValue,
-	 * or use the QSimpleTableCheckBoxColumn_ClickEvent to detect a change to a checkbox.
+	 * or use the QHtmlTableCheckBoxColumn_ClickEvent to detect a change to a checkbox.
 	 *
 	 * You will need to detect whether
 	 * the header check all box was clicked, or a regular box was clicked and respond accordingly. In response to a
@@ -1081,7 +1081,7 @@
 	 * @property bool $ShowCheckAll
 	 *
 	 */
-	class QSimpleTableCheckBoxColumn extends QAbstractSimpleTableDataColumn {
+	class QHtmlTableCheckBoxColumn extends QAbstractHtmlTableDataColumn {
 		protected $blnHtmlEntities = false;	// turn off html entities
 		protected $checkParamCallback = null;
 		protected $blnShowCheckAll = false;
@@ -1229,7 +1229,7 @@
 		 *
 		 * @param string $strName
 		 *
-		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @return bool|int|mixed|QHtmlTableBase|string
 		 * @throws Exception
 		 * @throws QCallerException
 		 */
@@ -1284,7 +1284,7 @@
 	}
 
 
-	class QSimpleTableCheckBoxColumn_ClickEvent extends QClickEvent {
+	class QHtmlTableCheckBoxColumn_ClickEvent extends QClickEvent {
 		const JsReturnParam = '{"row": $j(this).closest("tr")[0].rowIndex, "col": $j(this).parent()[0].cellIndex, "checked":this.checked, "id":this.id}'; // returns the array of cell info, and the new state of the checkbox
 
 		public function __construct($intDelay = 0, $strCondition = null) {
@@ -1293,7 +1293,7 @@
 	}
 
 	/**
-	 * Class QSimpleTableLinkColumn
+	 * Class QHtmlTableLinkColumn
 	 *
 	 * A multi-purpose link column. This column lets you specify a column whose purpose is to show an anchor tag
 	 * with text, attributes and properties related to row item. It can handle row items that are objects or arrays,
@@ -1321,21 +1321,21 @@
 	 *
 	 *  Create a column to edit a person, with "Edit" in the header, the name of the person as the label of each link, and give each
 	 *   anchor a class of "link".
-	 *  $objColumn = new QSimpleTableLinkColumn ("Edit", "->Name", "person_edit.php", ["intId"=>"->Id"], ["class"=>"link"]);
+	 *  $objColumn = new QHtmlTableLinkColumn ("Edit", "->Name", "person_edit.php", ["intId"=>"->Id"], ["class"=>"link"]);
 	 *
 	 *
 	 *  Create a similar column, but use a proxy instead, with the person id as the action parameter to the proxy and
 	 *   drawing the proxy as a button.
 	 *  $objProxy = new QControlProxy($this);
-	 *  $objColumn = new QSimpleTableLinkColumn ("Edit", "Edit", $objProxy, "->Id", null, true);
+	 *  $objColumn = new QHtmlTableLinkColumn ("Edit", "Edit", $objProxy, "->Id", null, true);
 	 *
 	 *  Create a "zoom" column for a table that uses an array of arrays as its source. Pass the 'id' index from the item
 	 *   as the id to the destination link. Use the "title" index as the label for the link.
-	 *  $objColumn = new QSimpleTableLinkColumn ("Zoom", "[title]", "zoom.php", ["intId"=>"[id]"]);
+	 *  $objColumn = new QHtmlTableLinkColumn ("Zoom", "[title]", "zoom.php", ["intId"=>"[id]"]);
 	 *
 	 *  Create a simple link column that just specifies a data attribute, and uses event delegation attached to the table to trap a click on the link.
 	 *   Return the id of the item clicked to the action as the action parameter.
-	 *  $objTable = new QSimpleTable ($this);
+	 *  $objTable = new QHtmlTable ($this);
 	 *  $objTable->CreateLinkColumn("", "->Name", "#", null, ["data-id"=>"->Id"]);
 	 *  $objTable->AddAction(new QClickEvent(0, null, "a"), new QAjaxAction("myActionScript", null, null, '$j(this).data("id")'));
 	 *
@@ -1352,7 +1352,7 @@
 	 * @property-write null|array $TagAttributes An array of key=>value pairs to use as additional attributes in the tag.
 	 *   For example, could be used to add a class or an id to each tag.
 	 */
-	class QSimpleTableLinkColumn extends QAbstractSimpleTableDataColumn {
+	class QHtmlTableLinkColumn extends QAbstractHtmlTableDataColumn {
 		/** @var bool  */
 		protected $blnHtmlEntities = false;	// we are rendering a link so turn off entities
 
@@ -1368,7 +1368,7 @@
 		protected $blnAsButton;
 
 		/**
-		 * QSimpleTableLinkColumn constructor.
+		 * QHtmlTableLinkColumn constructor.
 		 *
 		 * @param string $strName Column name to be displayed in the table header.
 		 * @param null|string|array|QQNode $mixText The text to display as the label of the anchor, a callable callback to get the text,
@@ -1586,7 +1586,7 @@
 		 *
 		 * @param string $strName
 		 *
-		 * @return bool|int|mixed|QSimpleTableBase|string
+		 * @return bool|int|mixed|QHtmlTableBase|string
 		 * @throws Exception
 		 * @throws QCallerException
 		 */

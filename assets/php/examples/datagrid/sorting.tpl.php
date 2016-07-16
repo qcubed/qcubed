@@ -4,10 +4,10 @@
 <div id="instructions">
 	<h1>The QDataGrid Class and Sorting by Columns</h1>
 
-	<p><strong>QSimpleTable</strong>, is great for drawing basic HTML tables, but can overload a web page
+	<p><strong>QHtmlTable</strong>, is great for drawing basic HTML tables, but can overload a web page
 		when trying to display a large amount of information.</p>
 
-	<p>The <strong>QDataGrid</strong> class is a subclass of QSimpleTable and has features that allow the table
+	<p>The <strong>QDataGrid</strong> class is a subclass of QHtmlTable and has features that allow the table
 		to be a view into a larger set of data that is stored in a database, without rendering all the data. The effect
 		gives the user fast access to large amounts of data.</p>
 

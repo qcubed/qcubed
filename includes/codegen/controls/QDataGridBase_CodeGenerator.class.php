@@ -3,7 +3,7 @@
  * Code generator for the DataGrid2 object.
  */
 
-class QDataGridBase_CodeGenerator extends QSimpleTable_CodeGenerator {
+class QDataGridBase_CodeGenerator extends QHtmlTable_CodeGenerator {
 	/** @var  string */
 	protected $strControlClassName;
 

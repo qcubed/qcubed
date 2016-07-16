@@ -1,11 +1,11 @@
 <?php
 /**
- * This is a base class to support classes that are derived from QSimpleTable. The methods here support the use
- * of QSimpleTable derived classes as a list connector, something that displays a list of records from a database,
+ * This is a base class to support classes that are derived from QHtmlTable. The methods here support the use
+ * of QHtmlTable derived classes as a list connector, something that displays a list of records from a database,
  * and optionally allows the user to do CRUD operations on individual records.
  */
 
-abstract class QSimpleTable_CodeGenerator extends QControl_CodeGenerator implements QDataList_CodeGenerator_Interface {
+abstract class QHtmlTable_CodeGenerator extends QControl_CodeGenerator implements QDataList_CodeGenerator_Interface {
 
 	/**
 	 * dtg stands for "DataGrid", a QCubed historical name for tables displaying data. Override if you want something else.
@@ -106,7 +106,7 @@ TMPL;
 			if (isset($objColumn->Options['NoColumn']) && $objColumn->Options['NoColumn']) continue;
 			$strColVarName = 'col' . $objCodeGen->ModelConnectorPropertyName($objColumn);
 			$strCode .= <<<TMPL
-	/** @var QSimpleTableNodeColumn */
+	/** @var QHtmlTableNodeColumn */
 	public \${$strColVarName};
 
 TMPL;
@@ -117,7 +117,7 @@ TMPL;
 
 			if ($objReverseReference->Unique) {
 				$strCode .= <<<TMPL
-	/** @var QSimpleTableNodeColumn {$strColVarName} */
+	/** @var QHtmlTableNodeColumn {$strColVarName} */
 	public \${$strColVarName};
 
 TMPL;

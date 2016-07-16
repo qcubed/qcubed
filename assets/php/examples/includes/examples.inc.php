@@ -98,12 +98,12 @@
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Paginated Controls';
-			Examples::$Categories[$intIndex]['description'] = 'The QSimpleTable, QDataGrid and QDataRepeater controls';
-			self::AddCoreExampleFile($intIndex, '/datagrid/intro.php * QSimpleTable');
-			self::AddCoreExampleFile($intIndex, '/datagrid/columns.php * QSimpleTable Columns');
-			self::AddCoreExampleFile($intIndex, '/datagrid/column_values.php * QSimpleTable Formatting and Styling');
-			self::AddCoreExampleFile($intIndex, '/datagrid/link_column.php * QSimpleTable Link Column');
-			self::AddCoreExampleFile($intIndex, '/datagrid/links_images.php * Dynamically adding Controls to QSimpleTable');
+			Examples::$Categories[$intIndex]['description'] = 'The QHtmlTable, QDataGrid and QDataRepeater controls';
+			self::AddCoreExampleFile($intIndex, '/datagrid/intro.php * QHtmlTable');
+			self::AddCoreExampleFile($intIndex, '/datagrid/columns.php * QHtmlTable Columns');
+			self::AddCoreExampleFile($intIndex, '/datagrid/column_values.php * QHtmlTable Formatting and Styling');
+			self::AddCoreExampleFile($intIndex, '/datagrid/link_column.php * QHtmlTable Link Column');
+			self::AddCoreExampleFile($intIndex, '/datagrid/links_images.php * Dynamically adding Controls to QHtmlTable');
 			self::AddCoreExampleFile($intIndex, '/datagrid/sorting.php * The QDataGrid Class and Sorting');
 			self::AddCoreExampleFile($intIndex, '/datagrid/pagination.php * QDataGrid Pagination');
 			self::AddCoreExampleFile($intIndex, '/datagrid/rowactions.php * Detecting Row and Cell Clicks');

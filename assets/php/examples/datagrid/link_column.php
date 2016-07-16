@@ -3,7 +3,7 @@ require_once('../qcubed.inc.php');
 
 class ExampleForm extends QForm {
 
-	/** @var QSimpleTable */
+	/** @var QHtmlTable */
 	protected $tblProjects;
 	protected $pnlClick;
 	protected $pxyLink;
@@ -14,7 +14,7 @@ class ExampleForm extends QForm {
 		$this->pxyLink->AddAction(new QMouseOverEvent(), new QAjaxAction('mouseOver'));
 
 		// Define the DataGrid
-		$this->tblProjects = new QSimpleTable($this);
+		$this->tblProjects = new QHtmlTable($this);
 
 		// This css class is used to style alternate rows and the header, all in css
 		$this->tblProjects->CssClass = 'simple_table';

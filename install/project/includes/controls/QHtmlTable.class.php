@@ -3,7 +3,7 @@
 	/**
 	 * @package Controls
 	 */
-	class QSimpleTable extends QSimpleTableBase
+	class QHtmlTable extends QHtmlTableBase
 	{
 	}
 

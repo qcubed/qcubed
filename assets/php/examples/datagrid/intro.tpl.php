@@ -18,20 +18,20 @@
 <?php $this->RenderBegin(); ?>
 
 <div id="instructions">
-	<h1>An Introduction to the QSimpleTable Class</h1>
+	<h1>An Introduction to the QHtmlTable Class</h1>
 
-	<p>The <strong>QSimpleTable</strong> control is used to present a collection of objects or data in a grid-based
-		(e.g. &lt;table&gt;) format.  All <strong>QSimpleTable</strong> objects take in a <strong>DataSource</strong>, which can be an array
+	<p>The <strong>QHtmlTable</strong> control is used to present a collection of objects or data in a grid-based
+		(e.g. &lt;table&gt;) format.  All <strong>QHtmlTable</strong> objects take in a <strong>DataSource</strong>, which can be an array
 		of anything (or in our example, an array of Person objects).</p>
 
-	<p>When creating a <strong>QSimpleTable</strong>, you must create a <strong>QSimpleTableColumn</strong> for each column in your table.
-		For each <strong>QSimpleTableColumn</strong> you specify its name and how it should be rendered.
-		In our example below, we create a <strong>QSimpleTableCallableColumn</strong> column, which takes a
+	<p>When creating a <strong>QHtmlTable</strong>, you must create a <strong>QHtmlTableColumn</strong> for each column in your table.
+		For each <strong>QHtmlTableColumn</strong> you specify its name and how it should be rendered.
+		In our example below, we create a <strong>QHtmlTableCallableColumn</strong> column, which takes a
 		PHP callable type, and lets you define a callback that will return the text of each cell in the column. The
 		callback will be called repeatedly for each row in the table, and each time will be passed the data for the row
 		it is to draw.
 
-	<p>Finally, the <strong>QSimpleTable</strong>'s style is fully customizable, at both the column level and the row level.
+	<p>Finally, the <strong>QHtmlTable</strong>'s style is fully customizable, at both the column level and the row level.
 		You can style the whole table with css, or specify classes for individual parts of the table. You can even specify
 		how individual cells are drawn.</p>
 </div>

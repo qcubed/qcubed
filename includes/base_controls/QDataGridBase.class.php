@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A SimpleTable that is connected to data. Detects and responds to sort clicks.
+ * A HtmlTable that is connected to data. Detects and responds to sort clicks.
  *
  * Uses FontAwesome for sort indicators - a font based icon library. Using this allows the icons to be colored
  * and styled, and will size along with the rest of the text.
@@ -39,7 +39,7 @@ class QDataGrid_SortEvent extends QEvent {
  * @property  int 		$SortDirection SortAscending or SortDescending.
  *
  */
-class QDataGridBase extends QSimpleTable
+class QDataGridBase extends QHtmlTable
 {
 	/** Numbers than can be used to multiply against the results of comparison functions to reverse the order. */
 	const SortAscending = 1;
@@ -110,8 +110,8 @@ class QDataGridBase extends QSimpleTable
 	 * that need to cancel the default action, put those in front of this function.
 	 */
 	public function AddActions() {
-		$this->AddAction(new QSimpleTableCheckBoxColumn_ClickEvent(), new QAjaxControlAction ($this, 'CheckClick'));
-		$this->AddAction(new QSimpleTableCheckBoxColumn_ClickEvent(), new QStopPropagationAction()); // prevent check click from bubbling as a row click.
+		$this->AddAction(new QHtmlTableCheckBoxColumn_ClickEvent(), new QAjaxControlAction ($this, 'CheckClick'));
+		$this->AddAction(new QHtmlTableCheckBoxColumn_ClickEvent(), new QStopPropagationAction()); // prevent check click from bubbling as a row click.
 
 		$this->AddAction(new QDataGrid_SortEvent(), new QAjaxControlAction ($this, 'SortClick'));
 	}
@@ -120,10 +120,10 @@ class QDataGridBase extends QSimpleTable
 	 * An override to create an id for every column, since the id is what we use to track sorting.
 	 *
 	 * @param int $intColumnIndex
-	 * @param QAbstractSimpleTableColumn $objColumn
+	 * @param QAbstractHtmlTableColumn $objColumn
 	 * @throws QInvalidCastException
 	 */
-	public function AddColumnAt($intColumnIndex, QAbstractSimpleTableColumn $objColumn) {
+	public function AddColumnAt($intColumnIndex, QAbstractHtmlTableColumn $objColumn) {
 		parent::AddColumnAt($intColumnIndex, $objColumn);
 		// Make sure the column has an Id, since we use that to track sorting.
 		if (!$objColumn->Id) {

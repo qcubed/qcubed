@@ -2,7 +2,7 @@
 
 /**
  * This interface describes the minimum functions to implement in order to create a code generator for a data list.
- * See QSimpleTable_CodeGenerator for an example
+ * See QHtmlTable_CodeGenerator for an example
  *
  * Interface QListConnector_CodeGenerator
  */

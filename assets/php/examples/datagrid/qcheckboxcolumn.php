@@ -98,7 +98,7 @@ class ExampleForm extends QForm {
 			// Specify the DataBinder method for the DataGrid
 			$this->dtgPersons->SetDataBinder('dtgPersons_Bind');
 
-			$this->dtgPersons->AddAction(new QSimpleTableCheckBoxColumn_ClickEvent(), new QAjaxAction ('chkSelected_Click'));
+			$this->dtgPersons->AddAction(new QHtmlTableCheckBoxColumn_ClickEvent(), new QAjaxAction ('chkSelected_Click'));
 
 			// Make sure changes to the database by other users are reflected in the datagrid on the next event
 			$this->dtgPersons->Watch(QQN::Person());

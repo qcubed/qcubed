@@ -29,8 +29,8 @@
 </style>
 
 <div id="instructions">
-	<h1>The QSimpleTableLinkColumn Class</h1>
-	<p>The QSimpleTableLinkColumn is a versatile column class that offers a variety of ways to create a column that has a link or button in it.
+	<h1>The QHtmlTableLinkColumn Class</h1>
+	<p>The QHtmlTableLinkColumn is a versatile column class that offers a variety of ways to create a column that has a link or button in it.
 	  Such links are typically used for navigation, but can be used to popup dialogs or take other actions.</p>
 
 	<p>To create a link column, call CreateLinkColumn like so:</p>
