@@ -78,7 +78,7 @@
 	<p><?php $this->btnButton3->Render(); ?></p>
 	<p>&nbsp;<?php $this->lblLabel3->Render() ?></p>
 
-	<p><strong>Textbox protected with <code>QCrossScripting::HTMLPurifier</code> with a set of tags that's allowed (ex.&lt;b&gt;, &lt;i&gt;)</strong></p>
+	<p><strong>Textbox protected with <code>QCrossScripting::HTMLPurifier</code> with a set of tags that's allowed (ex.&lt;b&gt;, &lt;i&gt;). Note that you should make any change to the text in this input, in order it to be correctly processed. This is because of optimization made in the qcubed 3.0 version: HTML Purifier is designed to filter text coming from the browser, not from the PHP side.</strong></p>
 	<p><?php $this->txtTextbox4->Render() ?></p>
 	<p><?php $this->btnButton4->Render(); ?></p>
 	<p>&nbsp;<?php $this->lblLabel4->Render() ?></p>
