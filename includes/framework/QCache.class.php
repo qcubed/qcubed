@@ -1,6 +1,6 @@
 <?php
 	class QCache extends QBaseClass {
-		public static $CachePath = __CACHE__;
+		public static $CachePath = __FILE_CACHE__;
 
 		protected $strNamespace;
 		protected $strKey;
