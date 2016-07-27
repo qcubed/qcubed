@@ -15,7 +15,7 @@
 	class QTagStyler extends QHtmlAttributeManager {
 
 		/**
-		 * Allows the row style to be overriden with an already existing QDataGridRowStyle
+		 * Allows the row style to be overriden with an already existing QDataGridLegacyRowStyle
 		 *
 		 * @param QTagStyler $objOverrideStyle
 		 *
