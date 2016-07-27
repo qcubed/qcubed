@@ -218,10 +218,12 @@ class QModelConnectorEditDlg extends QDialog {
 
 		$this->Title = $objControl->Name . ' Edit';
 
-		$this->ReadParams();
-		$this->SetupTabs();
-		$this->Open();
-		$this->tabs->Refresh();
+		$blnEditable = $this->ReadParams();
+		if ($blnEditable) {
+			$this->SetupTabs();
+			$this->Open();
+			$this->tabs->Refresh();
+		}
 	}
 
 	/**
@@ -308,6 +310,8 @@ class QModelConnectorEditDlg extends QDialog {
 
 	/**
 	 * Read the params from the settings file.
+	 * Returns false if there were no params to be read, meaning this control is not attached to a database object.
+	 * @return bool
 	 */
 	protected function ReadParams() {
 		$node = $this->objCurrentControl->LinkedNode;
@@ -320,7 +324,9 @@ class QModelConnectorEditDlg extends QDialog {
 				// Table options
 				$this->params = $this->objModelConnectorOptions->GetOptions ($node->_ClassName, QModelConnectorOptions::TableOptionsFieldName);
 			}
+			return true;
 		}
+		return false;
 	}
 
 	/**
