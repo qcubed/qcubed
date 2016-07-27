@@ -566,13 +566,15 @@
 
 				$objClass->Form_Initialize();
 
-				if (defined ('__DESIGN_MODE__')) {
-					global $designerAction;
+				if (defined ('__DESIGN_MODE__') && __DESIGN_MODE__ == 1) {
+					// Attach custom event to dialog to handle right click menu items sent by form
 
 					$dlg = new QModelConnectorEditDlg ($objClass, 'qconnectoreditdlg');
 
-					$designerAction = new QAjaxAction ('ctlDesigner_Click', null, null, '{id: event.target.id ? event.target.id : $j(event.target).parents("[id]").attr("id"), for: $j(event.target).attr("for")}');
-					$dlg->AddAction (new QContextMenuEvent(0, null, '[id]'), $designerAction);
+					$dlg->AddAction (
+						new QOnEvent('qdesignerclick'),
+						new QAjaxAction ('ctlDesigner_Click', null, null, 'ui')
+					);
 				}
 
 			}
@@ -1814,11 +1816,16 @@
 
 			// Design mode event
 			if (defined('__DESIGN_MODE__') && __DESIGN_MODE__ == 1) {
-				global $designerAction;
-				// kludge to attach action to the form
-				$objControl = $this->GetControl('qconnectoreditdlg');
-				$strRendered = $designerAction->RenderScript($objControl);
-				$strEndScript .= sprintf('$j("#%s").on("contextmenu", function(event){' . "\n" . $strRendered . "\n" . ' return false;});', $this->FormId);
+				// attach an event listener to the form to send context menu selections to the designer dialog for processing
+				$strEndScript .= sprintf(
+					'$j("#%s").on("contextmenu", "[id]", 
+						function(event) {
+							$j("#qconnectoreditdlg").trigger("qdesignerclick", 
+								[{id: event.target.id ? event.target.id : $j(event.target).parents("[id]").attr("id"), for: $j(event.target).attr("for")}]
+							);
+							return false;
+						}
+					);', $this->FormId);
 			}
 
 			// Add any application level js commands.
