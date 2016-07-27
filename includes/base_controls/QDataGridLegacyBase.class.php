@@ -41,7 +41,7 @@
 	/**
 	 * @package Controls
 	 *
-	 * @property-write QDataGridRowStyle $Style
+	 * @property-write QDataGridLegacyRowStyle $Style
 	 */
 	class QDataGridLegacyRow extends QControl {
 		/**
@@ -80,8 +80,8 @@
 			switch ($strName) {
 				case "Style":
 					try {
-						/** @var QDataGridRowStyle $objStyle */
-						$objStyle = QType::Cast($mixValue, "QDataGridRowStyle");
+						/** @var QDataGridLegacyRowStyle $objStyle */
+						$objStyle = QType::Cast($mixValue, "QDataGridLegacyRowStyle");
 						$this->Override ($objStyle);
 						break;
 					} catch (QInvalidCastException $objExc) {
@@ -201,11 +201,11 @@
 	 *     $objRowStyle->BackColor = "blue";
 	 *
 	 * @package Controls
-	 * @property QDataGridRowStyle    $AlternateRowStyle	 is the DataGridRowStyle object that defines how "alternating rows" should be displayed
-	 * @property QDataGridRowStyle    $HeaderRowStyle   	 is the DataGridRowStyle object that defines how the "header row" should be displayed (attributes that get rendred in the header row's <tr>)
-	 * @property QDataGridRowStyle    $FilterRowStyle   	 The row style for the filter row at the top
-	 * @property QDataGridRowStyle    $HeaderLinkStyle  	 is the DataGridRowStyle object that defines how links, specifically, in the header row should be displayed.  Basically, anything defined here will show up as html attributes and css styles within the '<a href="">' tag of the link, itself, in the header.  Links in the header ONLY GET DISPLAYED when a column is sortable
-	 * @property QDataGridRowStyle    $RowStyle         	 is the main or "default" DataGridRowStyle for the entire table.  Any overriding row style (see "OverrideRowStyle(int, DataGridRowStyle)" below) or any appearance properties set in AlternateRowStyle or HeaderRowStyle will be applied in those specific situations. Any appearance properties NOT set in ovverrides, alternate, or header will simply default to what RowStyle has defined.
+	 * @property QDataGridLegacyRowStyle    $AlternateRowStyle	 is the DataGridRowStyle object that defines how "alternating rows" should be displayed
+	 * @property QDataGridLegacyRowStyle    $HeaderRowStyle   	 is the DataGridRowStyle object that defines how the "header row" should be displayed (attributes that get rendred in the header row's <tr>)
+	 * @property QDataGridLegacyRowStyle    $FilterRowStyle   	 The row style for the filter row at the top
+	 * @property QDataGridLegacyRowStyle    $HeaderLinkStyle  	 is the DataGridRowStyle object that defines how links, specifically, in the header row should be displayed.  Basically, anything defined here will show up as html attributes and css styles within the '<a href="">' tag of the link, itself, in the header.  Links in the header ONLY GET DISPLAYED when a column is sortable
+	 * @property QDataGridLegacyRowStyle    $RowStyle         	 is the main or "default" DataGridRowStyle for the entire table.  Any overriding row style (see "OverrideRowStyle(int, DataGridRowStyle)" below) or any appearance properties set in AlternateRowStyle or HeaderRowStyle will be applied in those specific situations. Any appearance properties NOT set in ovverrides, alternate, or header will simply default to what RowStyle has defined.
 	 * @property integer 			  $CellPadding 			 refers the the HTML CellPadding attribute of the <table>. Not supported in HTML 5.
 	 * @property integer 		      $CellSpacing 			 refers the the HTML CellSpacing attribute of the <table>  Not supported in HTML 5.
 	 * @property string               $GridLines        	 refers the the HTML rules attribute of the <table>. Not supported in HTML 5.
@@ -235,20 +235,20 @@
 	 */
 	abstract class QDataGridLegacyBase extends QPaginatedControl {
 		// APPEARANCE
-		/** @var null|QDataGridRowStyle Row style for alternate rows */
+		/** @var null|QDataGridLegacyRowStyle Row style for alternate rows */
 		protected $objAlternateRowStyle = null;
-		/** @var null|QDataGridRowStyle Style for the top row (not the filter row) */
+		/** @var null|QDataGridLegacyRowStyle Style for the top row (not the filter row) */
 		protected $objHeaderRowStyle = null;
-		/** @var null|QDataGridRowStyle Style for the filter row (not the top row) */
+		/** @var null|QDataGridLegacyRowStyle Style for the filter row (not the top row) */
 		protected $objFilterRowStyle = null;
 		/**
-		 * @var null|QDataGridRowStyle[] List of styles for corresponding rows
+		 * @var null|QDataGridLegacyRowStyle[] List of styles for corresponding rows
 		 *                               (in intRowNumber => objStyleObject style)
 		 */
 		protected $objOverrideRowStyleArray = null;
-		/** @var null|QDataGridRowStyle Style object for the links header */
+		/** @var null|QDataGridLegacyRowStyle Style object for the links header */
 		protected $objHeaderLinkStyle = null;
-		/** @var null|QDataGridRowStyle Row style for rown in the datagrid */
+		/** @var null|QDataGridLegacyRowStyle Row style for rown in the datagrid */
 		protected $objRowStyle = null;
 		/** @var string|QWaitIcon Wait icon for Ajax Actions */
 		protected $objWaitIcon = 'default';
@@ -370,11 +370,11 @@
 				throw $objExc;
 			}
 			$this->prxDatagridSorting = new QControlProxy($this);
-			$this->objRowStyle = new QDataGridRowStyle();
-			$this->objAlternateRowStyle = new QDataGridRowStyle();
-			$this->objHeaderRowStyle = new QDataGridRowStyle();
-			$this->objHeaderLinkStyle = new QDataGridRowStyle();
-			$this->objFilterRowStyle = new QDataGridRowStyle();
+			$this->objRowStyle = new QDataGridLegacyRowStyle();
+			$this->objAlternateRowStyle = new QDataGridLegacyRowStyle();
+			$this->objHeaderRowStyle = new QDataGridLegacyRowStyle();
+			$this->objHeaderLinkStyle = new QDataGridLegacyRowStyle();
+			$this->objFilterRowStyle = new QDataGridLegacyRowStyle();
 
 			// Labels
 			$this->strLabelForNoneFound = QApplication::Translate('<b>Results:</b> No %s found.');
@@ -567,13 +567,13 @@
 		 * the RowIndex and the DataGridRowStyle with which to override
 		 *
 		 * @param int               $intRowIndex Index of the row
-		 * @param QDataGridRowStyle $objStyle    Style object to be applied to the row
+		 * @param QDataGridLegacyRowStyle $objStyle    Style object to be applied to the row
 		 *
 		 * @throws Exception|QCallerException|QInvalidCastException
 		 */
 		public function OverrideRowStyle($intRowIndex, $objStyle) {
 			try {
-				$objStyle = QType::Cast($objStyle, "QDataGridRowStyle");
+				$objStyle = QType::Cast($objStyle, "QDataGridLegacyRowStyle");
 			} catch (QInvalidCastException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -1546,7 +1546,7 @@
 				// APPEARANCE
 				case "AlternateRowStyle":
 					try {
-						$this->objAlternateRowStyle = QType::Cast($mixValue, "QDataGridRowStyle");
+						$this->objAlternateRowStyle = QType::Cast($mixValue, "QDataGridLegacyRowStyle");
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1554,7 +1554,7 @@
 					}
 				case "HeaderRowStyle":
 					try {
-						$this->objHeaderRowStyle = QType::Cast($mixValue, "QDataGridRowStyle");
+						$this->objHeaderRowStyle = QType::Cast($mixValue, "QDataGridLegacyRowStyle");
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1562,7 +1562,7 @@
 					}
 				case "HeaderLinkStyle":
 					try {
-						$this->objHeaderLinkStyle = QType::Cast($mixValue, "QDataGridRowStyle");
+						$this->objHeaderLinkStyle = QType::Cast($mixValue, "QDataGridLegacyRowStyle");
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1570,7 +1570,7 @@
 					}
 				case "FilterRowStyle":
 					try {
-						$this->objFilterRowStyle = QType::Cast($mixValue, "QDataGridRowStyle");
+						$this->objFilterRowStyle = QType::Cast($mixValue, "QDataGridLegacyRowStyle");
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -1578,7 +1578,7 @@
 					}
 				case "RowStyle":
 					try {
-						$this->objRowStyle = QType::Cast($mixValue, "QDataGridRowStyle");
+						$this->objRowStyle = QType::Cast($mixValue, "QDataGridLegacyRowStyle");
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
