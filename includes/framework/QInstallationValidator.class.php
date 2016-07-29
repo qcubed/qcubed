@@ -161,6 +161,34 @@ abstract class QInstallationValidator {
 			$result[] = $obj;
 		}
 
+		if (!file_exists(__IMAGE_CACHE__)) {
+			// Did the user move the __INCLUDES__ directory out of the docroot?
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = 'Create the "' . __IMAGE_CACHE__ . '" directory.';
+			$obj->strCommandToFix = "mkdir " . __IMAGE_CACHE__;
+			$result[] = $obj;
+		}
+		else if (!QFolder::isWritable(__IMAGE_CACHE__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Images cache directory (" . __IMAGE_CACHE__ . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __IMAGE_CACHE__;
+			$result[] = $obj;
+		}
+
+		if (!QFolder::isWritable(__FILE_CACHE__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Cache directory (" . __FILE_CACHE__ . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __FILE_CACHE__;
+			$result[] = $obj;
+		}
+
+		if (!QFolder::isWritable(__PURIFIER_CACHE__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Cache directory (" . __PURIFIER_CACHE__ . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __PURIFIER_CACHE__;
+			$result[] = $obj;
+		}
+
 		if (!file_exists(__CONFIGURATION__ . '/codegen_options.json')) {
 			// Did the user move the __INCLUDES__ directory out of the docroot?
 			$obj = new QInstallationValidationResult();
@@ -217,20 +245,42 @@ abstract class QInstallationValidator {
 			$result[] = $obj;
 		}
 		
-		if (!file_exists(__DOCROOT__ . __IMAGE_CACHE__)) {
-			// Did the user move the __INCLUDES__ directory out of the docroot?
+		if (!QFolder::isWritable(__APP_CACHE__)) {
 			$obj = new QInstallationValidationResult();
-			$obj->strMessage = 'Create the "' . __DOCROOT__ . __IMAGE_CACHE__ . '" directory.';
-			$obj->strCommandToFix = "mkdir " . __DOCROOT__ . __IMAGE_CACHE__;
-			$result[] = $obj;
-		}
-		else if (!QFolder::isWritable(__DOCROOT__ . __IMAGE_CACHE__)) {
-			$obj = new QInstallationValidationResult();
-			$obj->strMessage = "Images cache directory (" . __DOCROOT__ . __IMAGE_CACHE__ . ") needs to be writable";
-			$obj->strCommandToFix = "chmod 777 " . __DOCROOT__ . __IMAGE_CACHE__;
+			$obj->strMessage = "Cache directory (" . __APP_CACHE__ . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __APP_CACHE__;
 			$result[] = $obj;
 		}
 
+		if (!file_exists(__APP_IMAGE_CACHE__)) {
+			// Did the user move the __INCLUDES__ directory out of the docroot?
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = 'Create the "' . __APP_IMAGE_CACHE__ . '" directory.';
+			$obj->strCommandToFix = "mkdir " . __APP_IMAGE_CACHE__;
+			$result[] = $obj;
+		}
+		else if (!QFolder::isWritable(__APP_IMAGE_CACHE__)) {
+			$obj = new QInstallationValidationResult();
+			$obj->strMessage = "Images cache directory (" . __APP_IMAGE_CACHE__ . ") needs to be writable";
+			$obj->strCommandToFix = "chmod 777 " . __APP_IMAGE_CACHE__;
+			$result[] = $obj;
+		}
+		
+		if (defined("__APP_UPLOAD__")) {
+			if (!file_exists(__APP_UPLOAD__)) {
+				// Did the user move the __INCLUDES__ directory out of the docroot?
+				$obj = new QInstallationValidationResult();
+				$obj->strMessage = 'Create the "' . __APP_UPLOAD__ . '" directory.';
+				$obj->strCommandToFix = "mkdir " . __APP_UPLOAD__;
+				$result[] = $obj;
+			}
+			else if (!QFolder::isWritable(__APP_UPLOAD__)) {
+				$obj = new QInstallationValidationResult();
+				$obj->strMessage = "Uploads directory (" . __APP_UPLOAD__ . ") needs to be writable";
+				$obj->strCommandToFix = "chmod 777 " . __APP_UPLOAD__;
+				$result[] = $obj;
+			}
+		}
 
 		if (defined("__QCUBED_UPLOAD__")) {
 			if (!file_exists(__QCUBED_UPLOAD__)) {

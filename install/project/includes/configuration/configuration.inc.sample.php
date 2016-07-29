@@ -125,7 +125,7 @@ if (!defined('SERVER_INSTANCE')) {
 	define ('__PLUGINS__', __DOCROOT__ . __SUBDIRECTORY__ . '/vendor/qcubed/plugin');
 
 	define ('__TMP__', __PROJECT__  . '/tmp');
-	define ('__CACHE__', __TMP__ . '/cache');
+	define ('__FILE_CACHE__', __TMP__ . '/cache');
 	define ('__PLUGIN_TMP__', __TMP__ . '/plugin.tmp/');
 
 	// The QCubed Core
@@ -167,14 +167,23 @@ if (!defined('SERVER_INSTANCE')) {
 	define ('__PROJECT_ASSETS__', __SUBDIRECTORY__ . '/project/assets');
 	define ('__VENDOR_ASSETS__', __SUBDIRECTORY__ . '/vendor');
 	define ('__QCUBED_ASSETS__', __VENDOR_ASSETS__ . '/qcubed/framework/assets');
+	define ('__PLUGIN_ASSETS__',  __VENDOR_ASSETS__ . '/qcubed/plugin');
 
 	define ('__JS_ASSETS__', __QCUBED_ASSETS__ . '/js');
 	define ('__CSS_ASSETS__', __QCUBED_ASSETS__ . '/css');
 	define ('__IMAGE_ASSETS__', __QCUBED_ASSETS__ . '/images');
 	define ('__PHP_ASSETS__', __QCUBED_ASSETS__ . '/php');
 
+	define ('__CACHE_ASSETS__', __QCUBED_ASSETS__ . '/cache');
+	define ('__CACHE__', __DOCROOT__ . __CACHE_ASSETS__);
+
+	define ('__IMAGE_CACHE_ASSETS__', __CACHE_ASSETS__ . '/images');
+	define ('__IMAGE_CACHE__', __DOCROOT__ . __IMAGE_CACHE_ASSETS__);
+
+
 	// For special situations that support viewing of uploaded files in the browser. You can remove this define for addeed security
-	define ('__QCUBED_UPLOAD__', __DOCROOT__ . __QCUBED_ASSETS__ . '/upload');
+	define ('__QCUBED_UPLOAD_ASSETS__', __QCUBED_ASSETS__ . '/upload');
+	define ('__QCUBED_UPLOAD__', __DOCROOT__ . __QCUBED_UPLOAD_ASSETS__);
 
 
 	// Location of asset files for your application
@@ -182,11 +191,15 @@ if (!defined('SERVER_INSTANCE')) {
 	define ('__APP_CSS_ASSETS__', __PROJECT_ASSETS__ . '/css');
 	define ('__APP_IMAGE_ASSETS__', __PROJECT_ASSETS__ . '/images');
 	define ('__APP_PHP_ASSETS__', __PROJECT_ASSETS__ . '/php');
-	define ('__APP_IMAGE_CACHE__', __APP_IMAGE_ASSETS__ . '/cache');
-	define ('__APP_UPLOAD__', __DOCROOT__ . __PROJECT_ASSETS__ . '/upload');
 
-	define ('__PLUGIN_ASSETS__',  __SUBDIRECTORY__ . '/vendor/qcubed/plugin');
-	define ('__IMAGE_CACHE__', __IMAGE_ASSETS__ . '/cache');
+	define ('__APP_CACHE_ASSETS__', __PROJECT_ASSETS__ . '/cache');
+	define ('__APP_CACHE__', __DOCROOT__ . __APP_CACHE_ASSETS__);
+
+	define ('__APP_IMAGE_CACHE_ASSETS__', __APP_CACHE_ASSETS__ . '/images');
+	define ('__APP_IMAGE_CACHE__', __DOCROOT__ . __APP_IMAGE_CACHE_ASSETS__);
+
+	define ('__APP_UPLOAD_ASSETS__', __PROJECT_ASSETS__ . '/upload');
+	define ('__APP_UPLOAD__', __DOCROOT__ . __APP_UPLOAD_ASSETS__);
 
 	// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
 	// the jQuery library is awesome! It's the default option below) - or by using the jQuery
@@ -447,7 +460,7 @@ if (!defined('SERVER_INSTANCE')) {
 	//			define('ERROR_FRIENDLY_AJAX_MESSAGE', 'Oops!  An error has occurred.\r\n\r\nThe error was logged, and we will take a look into this right away.');
 
 	// If using HTML Purifier, the location of the writeable cache directory.
-	define ('__PURIFIER_CACHE__', __CACHE__ . '/purifier');
+	define ('__PURIFIER_CACHE__', __FILE_CACHE__ . '/purifier');
 
 	/** Uncomment if you are using QTimer to do performance testing. Will automatically output the results of your timers to the file. */
 	//define ('__TIMER_OUT_FILE__', __TMP__ . '/timers.txt');

@@ -217,7 +217,7 @@
 			
 				// And finally, let's specify a CacheFolder so that the images are cached
 				// Notice that this CacheFolder path is a complete web-accessible relative-to-docroot path
-				$img->CacheFolder = __IMAGE_CACHE__;
+				$img->CacheFolder = __IMAGE_CACHE_ASSETS__;
 				
 				$img->AddAction(new QClickEvent(), new QAjaxControlAction($objImageBrowser, "imgThm_Click"));
 			}
@@ -272,7 +272,7 @@
 			
 			// And finally, let's specify a CacheFolder so that the images are cached
 			// Notice that this CacheFolder path is a complete web-accessible relative-to-docroot path
-			$this->imgMainImage->CacheFolder = __IMAGE_CACHE__;
+			$this->imgMainImage->CacheFolder = __IMAGE_CACHE_ASSETS__;
 			
 			// caption
 			$this->txtCaption = new QTextBox($this);
