@@ -664,7 +664,7 @@
 				case QDatabaseFieldType::Blob:
 				case QDatabaseFieldType::Char:
 				case QDatabaseFieldType::VarChar:
-				case QPostgreSqlDatabaseFieldType::Json: // JSON is basically String
+				case QDatabaseFieldType::Json: // JSON is basically String
 					return QType::Cast($strColumnValue, QType::String);
 				case QDatabaseFieldType::Date:
 				case QDatabaseFieldType::DateTime:
@@ -715,14 +715,6 @@
 			else
 				return null;
 		}
-	}
-
-	/**
-	 * Class QPostgreSqlDatabaseFieldType: PostgreSQL specific database field types
-	 */
-	abstract class QPostgreSqlDatabaseFieldType extends QDatabaseFieldType {
-		/** JSON */
-		const Json = "JSON";
 	}
 
 	/**
@@ -871,7 +863,7 @@
 					break;
 				case 'json':
 				case 'jsonb':
-					$this->strType = QPostgreSqlDatabaseFieldType::Json;
+					$this->strType = QDatabaseFieldType::Json;
 					break;
 				case 'tsvector':
 					// this is the TSVector data type in PostgreSQL used for full text search systems.
@@ -906,4 +898,3 @@
 			$this->strComment = $mixFieldData->GetColumn('comment');
 		}
 	}
-?>

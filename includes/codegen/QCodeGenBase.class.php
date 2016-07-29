@@ -1191,7 +1191,7 @@
 					return QType::DateTime;
 				case QDatabaseFieldType::VarChar:
 					return QType::String;
-				case QPostgreSqlDatabaseFieldType::Json:
+				case QDatabaseFieldType::Json:
 					return QType::String;
 				default:
 					throw new Exception("Invalid Db Type to Convert: $strDbType");
