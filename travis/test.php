@@ -25,11 +25,6 @@ define ('__CONFIGURATION__', __WORKING_DIR__ . $subdir . '/travis');
 
 $__CONFIG_ONLY__ = false;
 require( __DOCROOT__ . __SUBDIRECTORY__ . '/travis/qcubed.inc.php');
-	
-	// For DB tests, we should load the DB files
-	
-	// For PostgreSQL-Specific tests
-	require( __DOCROOT__ . __SUBDIRECTORY__ . '/includes/database/QPostgreSqlDatabase.class.php');
 
 // Codegen for testing
 // Running as a Non-Windows Command Name
