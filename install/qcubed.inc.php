@@ -9,4 +9,3 @@ if (!defined ('__PREPEND_INCLUDED__')) {	// not already included some other way 
 		require_once($configPath . '/prepend.inc.php');
 	}
 }
-?>
