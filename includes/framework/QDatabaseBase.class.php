@@ -1299,5 +1299,7 @@
 		const Float = "Float";
 		/** Boolean */
 		const Bit = "Bit";
+		/** New JSON type */
+		const Json = "Json";
 	}
 ?>

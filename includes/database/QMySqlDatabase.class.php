@@ -246,10 +246,12 @@
 				case 'char':
 					$this->strType = QDatabaseFieldType::Char;
 					break;
+				case 'json':	// >= MySQL v5.7
+					$this->strType = QDatabaseFieldType::Json;
+					break;
 				default:
 					throw new Exception("Unable to determine MySqli Database Field Type: " . $mixFieldData->type);
 					break;
 			}
 		}
 	}
-?>

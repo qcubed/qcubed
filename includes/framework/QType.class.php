@@ -68,13 +68,21 @@
 			throw new QCallerException('Type should never be instantiated.  All methods and variables are publically statically accessible.');
 		}
 
+		/** String Type */
 		const String = 'string';
+		/** Integer Type */
 		const Integer = 'integer';
+		/** Float Type */
 		const Float = 'double';
+		/** Boolean Type */
 		const Boolean = 'boolean';
+		/** Object Type */
 		const Object = 'object';
+		/** Array Type */
 		const ArrayType = 'array';
+		/** QDateTime type */
 		const DateTime = 'QDateTime';
+		/** Resource Type */
 		const Resource = 'resource';
 
 		// Virtual types
@@ -230,12 +238,22 @@
 					throw new QInvalidCastException(sprintf('Unable to cast %s value to unknown type %s', $strOriginalType, $strNewType));
 			}
 		}
-		
+
+		/**
+		 * Converts an array to array (without modification) or throws exception
+		 *
+		 * @param array  $arrItem The array item to be converted
+		 * @param string $strType Type to which this array has to be converted
+		 *
+		 * @return string
+		 * @throws QInvalidCastException
+		 */
 		private static function CastArrayTo($arrItem, $strType) {
-			if ($strType == QType::ArrayType)
+			if ($strType == QType::ArrayType) {
 				return $arrItem;
-			else
+			} else {
 				throw new QInvalidCastException(sprintf('Unable to cast Array to %s', $strType));
+			}
 		}
 
 		/**

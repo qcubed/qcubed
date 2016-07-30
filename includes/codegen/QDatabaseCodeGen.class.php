@@ -1331,6 +1331,7 @@
 				case QDatabaseFieldType::Blob:
 				case QDatabaseFieldType::Char:
 				case QDatabaseFieldType::VarChar:
+				case QDatabaseFieldType::Json:
 					return ''; // no need to cast, since its already a string or a null
 
 				case QDatabaseFieldType::Date:

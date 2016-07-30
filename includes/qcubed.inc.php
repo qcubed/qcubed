@@ -109,6 +109,11 @@
 	QApplicationBase::$ClassFile['qregex'] = __QCUBED_CORE__ . '/framework/QRegex.class.php';
 	QApplicationBase::$ClassFile['qtimer'] = __QCUBED_CORE__ . '/framework/QTimer.class.php';
 
+	// DB Specific support
+	QApplicationBase::$ClassFile['qpgq'] = __QCUBED_CORE__ . '/db_ext/PostgreSql/QPgQuery.class.php';
+	QApplicationBase::$ClassFile['qpgconditionilike'] = __QCUBED_CORE__ . '/db_ext/PostgreSql/QPgQuery.class.php';
+	QApplicationBase::$ClassFile['qpgconditionjsoncontains'] = __QCUBED_CORE__ . '/db_ext/PostgreSql/QPgQuery.class.php';
+
 	QApplicationBase::$ClassFile['qinstallationvalidator'] = __QCUBED_CORE__ . '/framework/QInstallationValidator.class.php';
 	
 	QApplicationBase::$ClassFile['qplugin'] = __QCUBED_CORE__ . '/framework/QPluginInterface.class.php';
