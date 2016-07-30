@@ -695,6 +695,13 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 		}
 
 		protected function SetFieldType($intMySqlFieldType) {
+
+			if (version_compare(PHP_VERSION, '5.6.15') >= 0) {
+				if ($intMySqlFieldType == MYSQLI_TYPE_JSON) {
+					$this->strType = QDatabaseFieldType::Json;
+					return;
+				}
+			}
 			switch ($intMySqlFieldType) {
 				case MYSQLI_TYPE_TINY:
 					if ($this->intMaxLength == 1)
