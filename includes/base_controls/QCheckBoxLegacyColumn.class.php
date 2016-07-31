@@ -20,11 +20,11 @@ class QCheckBoxLegacyColumn extends QDataGridLegacyColumn
 	protected $strPrimaryKey = 'Id';
 
 	/**
-	 * Creates a QDataGridColumn of checkboxes
+	 * Creates a QDataGridLegacyColumn of checkboxes
 	 *
 	 * @param string    $strName               The header to give the column, shown as the label for the Select All checkbox
-	 * @param QDataGrid $dataGrid              The parent DataGrid. This does not add the column to that datagrid
-	 * @param mixed     $objOverrideParameters Same as QDataGrid
+	 * @param QDataGridLegacy $dataGrid              The parent DataGrid. This does not add the column to that datagrid
+	 * @param mixed     $objOverrideParameters Same as QDataGridLegacy
 	 */
 	public function __construct($strName = '', QDataGridLegacy $dataGrid, $objOverrideParameters = null)
 	{
@@ -32,10 +32,10 @@ class QCheckBoxLegacyColumn extends QDataGridLegacyColumn
 		
 		$arrParentArgs = func_get_args();
 		
-		//change the QDataGrid argument we get, and pass the parent constructor the HTML parameter it expects
+		//change the QDataGridLegacy argument we get, and pass the parent constructor the HTML parameter it expects
 		$arrParentArgs[1] = '<?=$_COLUMN->chkSelected_Render($_ITEM) ?>';
 		if (version_compare(PHP_VERSION, '5.1.6', '>=')) 
-			return call_user_func_array(array($this, 'QDataGridColumn::__construct'), $arrParentArgs);
+			return call_user_func_array(array($this, 'QDataGridLegacyColumn::__construct'), $arrParentArgs);
 		else
 		{
 			$parent_class=get_parent_class($this);
@@ -95,7 +95,7 @@ class QCheckBoxLegacyColumn extends QDataGridLegacyColumn
 			$strControlIdStart = 'chkSelect' . $colIndex.$this->objDataGrid->ControlId.'n';
 			$strControlIdStartLen = strlen($strControlIdStart);
 			
-			//Since a QDataGridColumn isn't a control, we can't include external js files, or have EndScripts
+			//Since a QDataGridLegacyColumn isn't a control, we can't include external js files, or have EndScripts
 			//so we'll just have to include all the code in the onclick itself
 			//hopefully this won't result in much duplication, since there shouldn't be too many
 			//of these on a single form

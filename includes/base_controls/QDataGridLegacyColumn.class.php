@@ -6,10 +6,10 @@
 	 */
 
 	/**
-	 * Class QFilterType: Type of filter which can be implemented on a QDataGrid's Column
+	 * Class QFilterType: Type of filter which can be implemented on a QDataGridLegacy's Column
 	 *
 	 * A constant from this class determines the type of filter which is to be applied to the UI
-	 * in a QDataGrid and hence determines the type of query to be sent to the database for filtering
+	 * in a QDataGridLegacy and hence determines the type of query to be sent to the database for filtering
 	 * results based on input
 	 */
 	abstract class QFilterType {

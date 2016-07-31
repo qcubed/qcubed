@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * contains the QDataGrid class
+	 * contains the QDataGridLegacy class
 	 *
 	 * @package Controls
 	 * @filesource
@@ -20,10 +20,10 @@
 		// DataGrid Preferences
 		///////////////////////////
 
-		// Feel free to specify global display preferences/defaults for all QDataGrid controls
+		// Feel free to specify global display preferences/defaults for all QDataGridLegacy controls
 
 		/**
-		 * QDataGrid::__construct()
+		 * QDataGridLegacy::__construct()
 		 *
 		 * @param mixed  $objParentObject The Datagrid's parent
 		 * @param string $strControlId    Control ID
