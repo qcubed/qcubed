@@ -321,11 +321,9 @@
 		 * @var string String which evaluates as the ActionParameter for row of the result.
 		 *             This one is used for passing a string as an action parameter for the entire row
 		 *             and can be used inside an event handler which handles click on an entire row of the
-		 *             QDataGrid. The event handler will recieve the value determined by the evaluation of
+		 *             QDataGridLegacy. The event handler will recieve the value determined by the evaluation of
 		 *             this string.
 		 *
-		 *             Please see the "Making entire QDataGrid rows clickable" example on examples site
-		 *             to understand the usage.
 		 */
 		protected $strRowActionParameterHtml;
 		/** @var QEvent[] List of events for which actions have to be taken*/
@@ -333,18 +331,18 @@
 		/** @var QAction[] List of actions to be taken (elements will correspond to the row event array) */
 		protected $objRowActionArray = array();
 
-		/** @var null Owner table of this QDataGrid (not being used right now) */
+		/** @var null Owner table of this QDataGridLegacy (not being used right now) */
 		protected $objOwner = null;
 
 		/** @var null|QButton Button for filtering results (is rendered on the filter row on top) */
 		protected $btnFilter = null;
 		/** @var array|QButton[] */
 		protected $btnFilterResetArray = array();
-		/** @var QControlProxy Proxy used for sorting QDataGrid by a particular column */
+		/** @var QControlProxy Proxy used for sorting QDataGridLegacy by a particular column */
 		protected $prxDatagridSorting;
 
 		/**
-		 * Add an action on a row of this QDataGrid
+		 * Add an action on a row of this QDataGridLegacy
 		 *
 		 * @param QEvent  $objEvent  Event object
 		 * @param QAction $objAction Action object
@@ -400,7 +398,7 @@
 
 		// Used to add a DataGridColumn to this DataGrid
 		/**
-		 * Add a column to the QDataGrid
+		 * Add a column to the QDataGridLegacy
 		 *
 		 * @param QDataGridLegacyColumn $objColumn The column to be added
 		 */
@@ -492,7 +490,7 @@
 		}
 
 		/**
-		 * Remove all columns from the QDataGrid
+		 * Remove all columns from the QDataGridLegacy
 		 */
 		public function RemoveAllColumns() {
 			$this->blnModified = true;
@@ -500,7 +498,7 @@
 		}
 
 		/**
-		 * Returns the array of all columns in the QDataGrid
+		 * Returns the array of all columns in the QDataGridLegacy
 		 *
 		 * @return array|QDataGridLegacyColumn[]
 		 */
@@ -509,7 +507,7 @@
 		}
 
 		/**
-		 * Returns a column from the QDataGrid given its index
+		 * Returns a column from the QDataGridLegacy given its index
 		 *
 		 * @param int $intColumnIndex Index of the column
 		 *
@@ -524,7 +522,7 @@
 		}
 
 		/**
-		 * Returns a column from the QDataGrid given its name
+		 * Returns a column from the QDataGridLegacy given its name
 		 *
 		 * @param string $strName Name of the column
 		 *
@@ -542,7 +540,7 @@
 		}
 
 		/**
-		 * Returns an array of columns of same name from the QDataGrid
+		 * Returns an array of columns of same name from the QDataGridLegacy
 		 *
 		 * @param string $strName Name of the column
 		 *
@@ -561,7 +559,7 @@
 		}
 
 		/**
-		 * Overrides the style of a QDataGrid row given a style object
+		 * Overrides the style of a QDataGridLegacy row given a style object
 		 *
 		 * If you want to override a SPECIFIC row's style, you can specify
 		 * the RowIndex and the DataGridRowStyle with which to override
@@ -599,7 +597,7 @@
 		 * Used upon rendering to find backticks and perform PHP eval's
 		 *
 		 * @param string                  $strHtml    Expression to be evaluated and converted into the final HTML
-		 * @param QDataGridLegacyBase|QDataGrid $objControl This object (the QDataGrid)
+		 * @param QDataGridLegacyBase|QDataGridLegacy $objControl This object (the QDataGridLegacy)
 		 * @param QDataGridLegacyColumn         $objColumn  Column which is to be parsed
 		 * @param mixed                   $objObject  An element from DataSource which is interpreted as '$_ITEM' in template
 		 *
@@ -611,7 +609,7 @@
 
 			/** @var mixed $_ITEM */
 			$_ITEM = $objObject;
-			/** @var QDataGridLegacyBase|QDataGrid $_CONTROL */
+			/** @var QDataGridLegacyBase|QDataGridLegacy $_CONTROL */
 			$_CONTROL = $objControl;
 			/** @var QDataGridLegacyColumn $_COLUMN */
 			$_COLUMN = $objColumn;
@@ -726,7 +724,7 @@
 		}
 
 		/**
-		 * Get the HTML for the paginator associated with this QDataGrid
+		 * Get the HTML for the paginator associated with this QDataGridLegacy
 		 *
 		 * @param QPaginator $objPaginator
 		 *
@@ -890,9 +888,9 @@
 		protected function GetFooterRowHtml() {}
 
 		/**
-		 * Returns the HTML for creating the QDataGrid on user's browser
+		 * Returns the HTML for creating the QDataGridLegacy on user's browser
 		 *
-		 * @return string The HTML for the QDataGrid
+		 * @return string The HTML for the QDataGridLegacy
 		 * @throws Exception|QCallerException
 		 */
 		protected function GetControlHtml() {
@@ -1024,7 +1022,7 @@
 		}
 
 		/**
-		 * Returns filter control for a given QDataGridColumn
+		 * Returns filter control for a given QDataGridLegacyColumn
 		 *
 		 * @param QDataGridLegacyColumn $objColumn The column whose filter control is needed
 		 *
@@ -1040,7 +1038,7 @@
 		}
 
 		/**
-		 * Returns the reset button for the QDataGrid which will be used in the filter row
+		 * Returns the reset button for the QDataGridLegacy which will be used in the filter row
 		 * (filter row is the row at the top for filtering data)
 		 *
 		 * @param QDataGridLegacyColumn $objColumn
@@ -1065,7 +1063,7 @@
 		 * NOTE: this function, btnReset_Click and GetControlValue are the functions to override/change if you want to add new types
 		 *
 		 * @param string          $strControlId id based on the column that the control is contained
-		 * @param QDataGridLegacyColumn $objColumn    the QDataGridColumn that contains the filter data.
+		 * @param QDataGridLegacyColumn $objColumn    the QDataGridLegacyColumn that contains the filter data.
 		 *
 		 * @return QControl $control the input control used for filtering
 		 */
