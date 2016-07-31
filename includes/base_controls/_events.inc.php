@@ -410,6 +410,7 @@
 		const ColumnIndex = 'this.cellIndex';
 		const CellId = 'this.id';
 		const RowId = '$j(this).parent().attr("id")';
+		const RowValue = '$j(this).parent().data("value")';
 		const ColId = '$j(this).parent().closest("table").find("thead").find("th")[this.cellIndex].id';
 
 		protected $strReturnParam;
@@ -425,7 +426,7 @@
 					return '"' . $key . '":' . $val;
 				}, array_keys($mixReturnParams), array_values($mixReturnParams));
 
-				$this->strReturnParam = '{' . $combined . '}';
+				$this->strReturnParam = '{' . implode(',', $combined) . '}';
 			}
 			elseif (is_string($mixReturnParams)) {
 				$this->strReturnParam = $mixReturnParams;
