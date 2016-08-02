@@ -231,7 +231,7 @@ qcubed = {
                         }
                         else {
                             if (!a) {
-                                values[id] = []; // empty array to notify that the group has a null value, if nothing gets checked
+                                values[id] = null; // empty array to notify that the group has a null value, if nothing gets checked
                             }
                         }
                     } else {
