@@ -69,7 +69,7 @@
 		 */
 		public function ParsePostData() {
 			$val = $this->objForm->CheckableControlValue($this->strControlId);
-			if ($val === null) {
+			if (empty($val)) {
 				$this->UnselectAllItems(false);
 			}
 			else {
