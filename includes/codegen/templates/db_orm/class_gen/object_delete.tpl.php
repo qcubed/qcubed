@@ -60,6 +60,17 @@
 
 		}
 
+        /**
+ 	     * Delete this <?php echo $objTable->ClassName ?> ONLY from the cache
+ 		 * @return void
+		 */
+		public function DeleteCache() {
+			if (QApplication::$objCacheProvider && QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Caching) {
+				$strCacheKey = QApplication::$objCacheProvider->CreateKey(QApplication::$Database[<?php echo $objCodeGen->DatabaseIndex; ?>]->Database, '<?php echo $objTable->ClassName ?>', <?php echo $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray); ?>);
+				QApplication::$objCacheProvider->Delete($strCacheKey);
+			}
+		}
+
 		/**
 		 * Delete all <?= $objTable->ClassNamePlural ?>
 
