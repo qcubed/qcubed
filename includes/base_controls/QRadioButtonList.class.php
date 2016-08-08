@@ -74,7 +74,7 @@
 			if ($val === null) {
 				$this->UnselectAllItems(false);
 			} else {
-				$this->SelectedIndex = $val;
+				$this->SetSelectedItemsByIndex(array($val), false);
 			}
 		}
 
