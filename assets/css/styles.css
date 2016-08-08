@@ -143,3 +143,15 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
 .clickable-rows tr:hover {
     background-color:#f0f0f0;
 }
+
+/** Error notice styling */
+#Qcubed_AJAX_Error {
+    position:fixed;
+    background-color: white;
+    border: 2px solid black;
+    left: 20px;
+    right: 20px;
+    top: 20px;
+    z-index: 10000;
+    padding: 20px;
+}

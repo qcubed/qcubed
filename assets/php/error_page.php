@@ -14,6 +14,17 @@
 		@chmod($strFileName, 0666);
 	}
 
+	if (defined('ERROR_EMAIL')) {
+		$objEmail = new QEmailMessage();
+		$objEmail->From = ERROR_EMAIL_FROM;
+		$objEmail->Subject = ERROR_EMAIL_SUBJECT;
+		$objEmail->To = ERROR_EMAIL;
+		$strContents = ob_get_contents();
+		$objEmail->HtmlBody = $strContents;
+
+		QEmailServer::Send($objEmail);
+	}
+
 	if (QApplication::$RequestMode == QRequestMode::Ajax) {
 		if (defined('ERROR_FRIENDLY_AJAX_MESSAGE') && ERROR_FRIENDLY_AJAX_MESSAGE) {
 			// Reset the Buffer
@@ -31,4 +42,3 @@
 			require(__DOCROOT__ . ERROR_FRIENDLY_PAGE_PATH);
 		}
 	}
-?>
