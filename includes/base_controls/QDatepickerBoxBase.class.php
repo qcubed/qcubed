@@ -20,6 +20,8 @@
 	 * @property mixed     $Minimum                Alias for MinDate
 	 * @property mixed     $Maximum                Alias for MaxDate
 	 * @property string    $Text                   Textual date to set it to
+	 * @property-write string    $MinDateErrorMsg  Message to display if we are before the minimum date
+	 * @property-write string    $MaxDateErrorMsg  Message to display if we are after the maximum date
 	 * @link    http://jqueryui.com/datepicker/#inline
 	 * @package Controls\Base
 	 */
@@ -28,6 +30,10 @@
 		protected $strDateTimeFormat = "MM/DD/YYYY"; // matches default of JQuery UI control
 		/** @var QDateTime variable to store the picked value */
 		protected $dttDateTime;
+		/** @var  string */
+		protected $strMinDateErrorMsg;
+		/** @var  string */
+		protected $strMaxDateErrorMsg;
 
 		public function ParsePostData() {
 			// Check to see if this Control's Value was passed in via the POST data
@@ -57,14 +63,22 @@
 				}
 				if (!is_null($this->Minimum)) {
 					if ($dttDateTime->IsEarlierThan($this->Minimum)) {
-						$this->ValidationError = QApplication::Translate("Date is earlier than minimum allowed");
+						if ($this->strMinDateErrorMsg) {
+							$this->ValidationError = $this->strMinDateErrorMsg;
+						} else {
+							$this->ValidationError = QApplication::Translate("Date is earlier than minimum allowed");
+						}
 						return false;
 					}
 				}
 
 				if (!is_null($this->Maximum)) {
 					if ($dttDateTime->IsLaterThan($this->Maximum)) {
-						$this->ValidationError = QApplication::Translate("Date is later than maximum allowed");
+						if ($this->strMaxDateErrorMsg) {
+							$this->ValidationError = $this->strMaxDateErrorMsg;
+						} else {
+							$this->ValidationError = QApplication::Translate("Date is later than maximum allowed");
+						}
 						return false;
 					}
 				}
@@ -193,10 +207,18 @@
 						throw $objExc;
 					}
 					break;
-					
+
 				case 'Text':
 					parent::__set($strName, $mixValue);
 					$this->dttDateTime = new QDateTime($this->strText, null, QDateTime::DateOnlyType);
+					break;
+
+				case 'MinDateErrorMsg':
+					$this->strMinDateErrorMsg = QType::Cast($mixValue, QType::String);
+					break;
+
+				case 'MaxDateErrorMsg':
+					$this->strMaxDateErrorMsg = QType::Cast($mixValue, QType::String);
 					break;
 
 				default:
