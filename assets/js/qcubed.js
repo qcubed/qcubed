@@ -408,28 +408,19 @@ qcubed = {
                 qcubed.ajaxError = true;
                 if (XMLHttpRequest.status !== 0 || (result && result.length > 0)) {
                     if (result.substr(0, 15) === '<!DOCTYPE html>') {
-                        alert("An error occurred during AJAX Response parsing.\r\n\r\nThe error response will appear in a new popup.");
+                        alert("An error occurred.\r\n\r\nThe error response will appear in a new popup.");
                         objErrorWindow = window.open('about:blank', 'qcubed_error', 'menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
                         objErrorWindow.focus();
                         objErrorWindow.document.write(result);
                         return false;
                     } else {
-                        var resultText = $j('<div>').text(result);
+                        var resultText = $j('<div>').html(result);
                         $dialog = $j('<div id="Qcubed_AJAX_Error" />')
-                            .append('<h1>' + textStatus + '</h1>')
+                            .append('<h1 style="text-transform:capitalize">' + textStatus + '</h1>')
                             .append('<p>' + errorThrown + '</p>')
                             .append(resultText)
-                            .dialog({
-                                modal: true,
-                                width: 'auto',
-                                autoOpen: true,
-                                title: 'An Error Occurred',
-                                buttons: {
-                                    Ok: function() {
-                                        $dialog.dialog("close");
-                                    }
-                                }
-                            });
+                            .append('<button onclick="$j(this).parent().hide()">OK</button>')
+                            .appendTo('form');
                         return false;
                     }
                 }

@@ -443,21 +443,11 @@ if (!defined('SERVER_INSTANCE')) {
 	// The table name to be used for session data storage (must meet the requirements laid out above)
 	define("DB_BACKED_SESSION_HANDLER_TABLE_NAME", "qc_session");
 
-	// Define the Filepath for the error page (path MUST be relative from the DOCROOT)
-	define('ERROR_PAGE_PATH', __PHP_ASSETS__ . '/error_page.php');
-
-	// Define the Filepath for any logged errors
-	define('ERROR_LOG_PATH', __TMP__ . '/error_log');
-
 	// Name of session variable used to save the state of form objects.
 	define('__SESSION_SAVED_STATE__', 'QSavedState');
 
 	// To Log ALL errors that have occurred, set flag to true
 	//			define('ERROR_LOG_FLAG', true);
-
-	// To enable the display of "Friendly" error pages and messages, define them here (path MUST be relative from the DOCROOT)
-	//			define('ERROR_FRIENDLY_PAGE_PATH', __PHP_ASSETS__ . '/friendly_error_page.php');
-	//			define('ERROR_FRIENDLY_AJAX_MESSAGE', 'Oops!  An error has occurred.\r\n\r\nThe error was logged, and we will take a look into this right away.');
 
 	// If using HTML Purifier, the location of the writeable cache directory.
 	define ('__PURIFIER_CACHE__', __FILE_CACHE__ . '/purifier');
@@ -473,4 +463,27 @@ if (!defined('SERVER_INSTANCE')) {
 	// composer require fortawesome/font-awesome ^4.6
 	// and set your define to:
 	// define('__FONT_AWESOME__', __VENDOR_ASSETS__ . '/fortawesome/font-awesome/css/font-awesome.min.css');
+
+
+	/***** Error Handling *****/
+
+	// Define the Filepath for the error page (path MUST be relative from the DOCROOT). Should not normally need to change.
+	define('ERROR_PAGE_PATH', __PHP_ASSETS__ . '/error_page.php');
+
+	// Define the Filepath for any logged errors. Comment this out if you do not want to log errors.
+	define('ERROR_LOG_PATH', __TMP__ . '/error_log');
+
+	switch (SERVER_INSTANCE) {
+		case 'prod':
+			// To enable the display of "Friendly" error pages and messages, define them here (path MUST be relative from the DOCROOT)
+			//			define('ERROR_FRIENDLY_PAGE_PATH', __PHP_ASSETS__ . '/friendly_error_page.php');
+			//			define('ERROR_FRIENDLY_AJAX_MESSAGE', 'Oops!  An error has occurred.\r\n\r\nThe error was logged, and we will take a look into this right away.');
+
+			// To enable emails when errors occur, define ALL the variables below:
+			// define('ERROR_EMAIL', 'me@email.com');
+			// define('ERROR_EMAIL_FROM', 'server@email.com');
+			// define('ERROR_EMAIL_SUBJECT', 'Server Error');
+
+	}
+
 }

@@ -71,13 +71,19 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 			}
 ?></code></pre>
 <?php
+			if (defined('ERROR_EMAIL')) {
+				$style = '';
+			} else {
+				$style = 'display: none;';
+			}
+
 			if (isset($__exc_objErrorAttributeArray)) {
 				foreach ($__exc_objErrorAttributeArray as $__exc_objErrorAttribute) {
 					printf("<p><strong>%s:</strong>&nbsp;&nbsp;", $__exc_objErrorAttribute->Label);
 					$__exc_strJavascriptLabel = str_replace(" ", "", $__exc_objErrorAttribute->Label);
 					if ($__exc_objErrorAttribute->MultiLine) {
 						printf("\n<a href=\"#\" onclick=\"ToggleHidden('%s'); return false;\">Show/Hide</a></p>", $__exc_strJavascriptLabel);
-						printf('<pre><code id="%s" style="display: none;">%s</code></pre>', $__exc_strJavascriptLabel, htmlentities($__exc_objErrorAttribute->Contents));
+						printf('<pre><code id="%s" %s >%s</code></pre>', $__exc_strJavascriptLabel, $style, htmlentities($__exc_objErrorAttribute->Contents));
 					} else {
 						printf("%s</p>\n", htmlentities($__exc_objErrorAttribute->Contents));
 					}
@@ -89,7 +95,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 			<pre><code><?php _p($__exc_strStackTrace); ?></code></pre>
 
 			<p><strong>Variable Dump:</strong> <a href="#" onclick="ToggleHidden('VariableDump'); return false;">Show/Hide</a></p>
-			<pre><code id="VariableDump" style="display: none;"><?php
+			<pre><code id="VariableDump" <?php if (!defined('ERROR_EMAIL')) { ?> style="display: none;" <?php } ?> ><?php
 				// Dump All Variables
 				foreach ($GLOBALS as $__exc_Key => $__exc_Value) {
 					// TODO: Figure out why this is so strange
@@ -122,7 +128,8 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 							}
 
 							$__exc_StrToDisplay .= sprintf("<a style='display:block' href='#%s' onclick='javascript:ToggleHidden(\"%s\"); return false;'>%s</a>", $varCounter, $varCounter, $__exc_Key);
-							$__exc_StrToDisplay .= sprintf("<span id=\"%s\" style='display:none'>%s</span>", $varCounter, $__exc_StrVarExport);
+
+							$__exc_StrToDisplay .= sprintf("<span id=\"%s\" %s >%s</span>", $varCounter, $style, $__exc_StrVarExport);
 							$varCounter++;
 						} catch (Exception $__exc_objExcOnVarDump) {
 							$__exc_StrToDisplay .= sprintf("Fatal error:  Nesting level too deep - recursive dependency?\n", $__exc_objExcOnVarDump->getMessage());
