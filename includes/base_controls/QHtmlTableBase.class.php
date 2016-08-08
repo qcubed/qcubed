@@ -28,7 +28,7 @@
 	 */
 	abstract class QHtmlTableBase extends QPaginatedControl {
 		/** @var QAbstractHtmlTableColumn[] */
-		protected $objColumnArray;
+		protected $objColumnArray = [];
 
 		/** @var string|null CSS class to be applied to for even rows */
 		protected $strRowCssClass = null;
