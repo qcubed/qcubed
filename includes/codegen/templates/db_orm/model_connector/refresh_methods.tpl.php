@@ -62,13 +62,16 @@
 		}
 ?>
 		/**
-		 * Load this ModelConnector with a new <?= $objTable->ClassName ?> object.
+		 * Load this ModelConnector with a <?= $objTable->ClassName ?> object. Returns the object found, or null if not
+		 * successful. The primary reason for failure would be that the key given does not exist in the database. This
+		 * might happen due to a programming error, or in a multi-user environment, if the record was recently deleted.
 <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
 		 * @param null|<?= $objColumn->VariableType ?> $<?= $objColumn->VariableName ?>
 <?php } ?>
 
 		 * @param $objClauses
-		 * @return void
+		 * @return null|<?= $objCodeGen->ModelClassName($objTable->Name); ?>
+
 		 */
 		 public function Load(<?= implode (',', $aStrs) ?>, $objClauses = null) {
 			if (<?php
@@ -87,6 +90,9 @@ foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {
 				$this->strTitleVerb = QApplication::Translate('Create');
 				$this->blnEditMode = false;
 			}
-			$this->Refresh ();
+			if ($this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>) {
+				$this->Refresh ();
+			}
+			return $this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>;
 		}
 		 
