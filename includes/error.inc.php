@@ -12,7 +12,7 @@
 	}
 
 	// Exception and Error Handling
-	function QcubedHandleException(Exception $__exc_objException) {
+	function QcubedHandleException($__exc_objException) {
 		if (class_exists('QApplicationBase'))
 			QApplicationBase::$ErrorFlag = true;
 
