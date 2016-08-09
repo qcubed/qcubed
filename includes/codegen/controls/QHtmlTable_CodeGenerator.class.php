@@ -32,7 +32,7 @@ abstract class QHtmlTable_CodeGenerator extends QControl_CodeGenerator implement
 	 */
 	public function DataListConnectorComments(QCodeGenBase $objCodeGen, QSqlTable $objTable) {
 		$strCode = <<<TMPL
- * @property QQCondition 	\$Conditions Any condition to use during binding
+ * @property QQCondition 	\$Condition Any condition to use during binding
  * @property QQClauses 		\$Clauses Any clauses to use during binding
 
 TMPL;
