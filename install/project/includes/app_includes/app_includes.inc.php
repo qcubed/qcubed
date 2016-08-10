@@ -65,6 +65,6 @@
 	 *      by doing a "require_once 'my_includes.inc.php';". This will make sure that an overwrite upgrade does
 	 *      cause much trouble (all you would need to do is to add one line).
 	 * ================ [END] ================
-         */
-
-QApplicationBase::$ClassFile['navpanel'] = __INCLUDES__ .'/app_includes/nav_panel.class.php';
+     */
+	
+	QApplicationBase::$ClassFile['navpanel'] = __INCLUDES__ . '/app_includes/nav_panel.class.php';

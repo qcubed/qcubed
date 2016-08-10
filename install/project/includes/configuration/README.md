@@ -1,9 +1,11 @@
+# About `configuration` directory
+
 This is the central location for all included configuration files.  Feel free to include
 any new classes or include files in this directory.
 
+## Files in the configuration directory:
 
-
-**** configuration.inc.php ****
+### configuration.inc.php
 
 This contains server-level configuration information (e.g. database connection
 information, docroot paths (including subfoldering and virtual directories),
@@ -15,7 +17,7 @@ See the inline documentation in configuration.sample.inc.php for more informatio
 
 
 
-**** prepend.inc.php ****
+### prepend.inc.php 
 
 This is the top-level include file for any and all PHP scripts which use
 Qcubed.  Global, application-wide loaders, settings, etc. are in this file.
@@ -28,19 +30,19 @@ needed.
 See the inline documentation in prepend.inc.php for more information.
 
 
-**** codegen_settings.xml ****
+### codegen_settings.xml
 
 This file controls overall settings for parts of the code generation. Feel free
 to change these as needed.
 
 
-**** codegen_options.json ****
+### codegen_options.json
 
 This file is created and maintained by the ModelConnectorEditor. It has options for
 the individual controls that correspond to fields in your database. There may be times
 that you need to directly edit this file, and you should feel free to do so.
 
-**** Codegen Notes ****
+## Codegen Notes
 
 QCubed is set up to generate a default set of objects and forms to get you started with your application.
 This is called “codegen”. The notes below will help you understand the process and how to customize it to your needs.
@@ -57,7 +59,7 @@ may include other template files. This combination will eventually generate the 
 interface classes that you will base your application on.
 
 
-Model Connectors
+## Model Connectors
 Model Connectors are helper classes that have methods which connect form controls to columns in SQLn data tables. Each column
 in the data table corresponds to a control that is generated in a model connector class. Your form object calls methods
 in the model connector to get copies of the controls and then to place them in the form.
@@ -71,7 +73,7 @@ To customize the generated controls, you have the following choices:
 - Override the generated code by editing the model connectors in your project/includes/connector directory.
 
 
-Version 3
+### Version 3
 
 QCubed Version 3 introduces the concept of having the controls themselves create the code to interact with the database
 for the ModelConnector, rather than the templates. Coupled with this is the ModelConnectorEditDlg dialog, which lets you
@@ -85,7 +87,7 @@ These new features give the developer the ability to do the following:
 - Allow subclasses of standard controls to override the code generation methods to generate different code.
 - Specify additional overrides to control many aspects of control creation in the generated model connector.
 
-Notes for Upgrading from version 2
+## Notes for Upgrading from version 2
 
 Many of the problems that caused programmers to create their own templates are now solvable through the new Options
 feature available through Comments. However, you are still free to override the templates as needed. In fact, this new
