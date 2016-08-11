@@ -17,6 +17,6 @@ subdirectories.  And any additional other js, css, etc. assets for your
 application could be placed here, as well.
 
 Finally, note that within EACH asset type (e.g. css, images, js and php),
-files in the _core subdirectory are intended to be part of Qcubed Core,
+files in the _core subdirectory are intended to be part of QCubed Core,
 and rules concerning the upgrading/modification for these files follows
-the same rules for Qcubed Core files everywhere else.
+the same rules for QCubed Core files everywhere else.
