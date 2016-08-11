@@ -1,4 +1,6 @@
-This directory is managed by the composer plugin installation process. 
+# About `plugins` directory
+
+This directory is managed by the composer plugin installation process.
 
 The files in this directory are override files for the plugin controls that you have
 installed. When you install a plugin, the composer will create a file in
@@ -14,4 +16,4 @@ plugin author has some way of notifying you that such a change has been made, wh
 might mean you will need to merge the change manually.
 
 The directory structure here should correspond to the the namespace of the plugin,
-with QCubed\Plugin\ being the root. 
+with `QCubed\Plugin\` being the root.

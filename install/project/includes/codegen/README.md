@@ -1,5 +1,7 @@
+# About `codegen` directory
+
 The two codegen-related classes in this directory are customizations
-to the associated QCodeGenBase and QConvertNotationBase classes that are part
+to the associated `QCodeGenBase` and `QConvertNotationBase` classes that are part
 of the QCubed codegen framework.
 
 It allows you to override the functionality in these classes, as well as
@@ -9,4 +11,4 @@ notation converter.
 Feel free to make any changes to these customizations as you wish.
 
 NOTE: the templates subdirectory is available for you to place customizations to the templates
-and subtemplates themselves.  Read the _README.txt file in templates/ to find out more.
+and subtemplates themselves.  Read the README.md file in templates/ to find out more.

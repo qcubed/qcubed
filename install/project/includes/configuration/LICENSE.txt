@@ -26,8 +26,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ========== THIRD PARTY LIBRARIES ==========
-The HTMLPurifier Library is an external (third party) library included in the
-QCubed framework and is licensed under the LGPL license. Usage of HTMLPurifier
-with QCubed is thus limited by LGPL license. Please read the
-includes/external_libraries/htmlpurifier/LICENSE file for more on licensing of
-HTMLPurifier library.
+
+Third party libraries are installed by composer tool.
+
+QCubed does not control third party libraries.
+
+You are responsible for ensuring you are not violating anyone's rights.
+
+The HTMLPurifier Library is an external (third party) library that QCubed needs.
+HTMLPurifier is licensed under the LGPL license. Usage of HTMLPurifier
+with QCubed is thus limited by LGPL license. Please read the license file of
+HTMLPurifier for more on licensing of HTMLPurifier library.
