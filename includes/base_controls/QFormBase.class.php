@@ -531,8 +531,6 @@
 				// Trigger a triggered control's Server- or Ajax- action (e.g. PHP method) here (if applicable)
 				$objClass->TriggerActions();
 
-				// Once all the controls have been set up, remember them.
-				$objClass->SaveControlState();
 			} else {
 				// We have no form state -- Create Brand New One
 				$objClass = new $strFormClass();
@@ -616,6 +614,9 @@
 				default:
 					throw new QCallerException('FormStatus is in an unknown status');
 			}
+
+			// Once all the controls have been set up, and initialized, remember them.
+			$objClass->SaveControlState();
 
 			// Tigger Exit Event (if applicable)
 			$objClass->Form_Exit();
