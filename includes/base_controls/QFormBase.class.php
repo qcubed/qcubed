@@ -19,6 +19,10 @@
 		///////////////////////////
 		// Static Members
 		///////////////////////////
+
+        /** @var Object $container */
+        protected static $container;
+
 		/** @var bool True when css scripts get rendered on page. Lets user call RenderStyles in header. */
 		protected static $blnStylesRendered = false;
 
@@ -202,6 +206,14 @@
 		 */
 		protected $intNextControlId = 1;
 
+		/**
+		 * @return Object
+		 */
+        public function getContainer()
+        {
+            return self::$container;
+        }
+
 		/////////////////////////
 		// Helpers for AjaxActionId Generation
 		/////////////////////////
@@ -368,7 +380,9 @@
 		 * @throws QInvalidFormStateException
 		 * @throws Exception
 		 */
-		public static function Run($strFormClass, $strAlternateHtmlFile = null, $strFormId = null) {
+		public static function Run($container, $strFormClass, $strAlternateHtmlFile = null, $strFormId = null) {
+            self::$container = $container;
+
 			// See if we can get a Form Class out of PostData
 			$objClass = null;
 			if ($strFormId === null) {
@@ -386,7 +400,7 @@
 					self::InvalidFormState();
 				}
 			}
-			
+
 			if ($objClass) {
 				// Globalize
 				global $_FORM;
@@ -470,7 +484,7 @@
 				// we aren't going to touch the server calls for now
 				if ($objClass->strCallType != QCallType::Ajax) {
 					foreach ($objClass->objControlArray as $objControl) {
-						// If they were rendered last time and are visible 
+						// If they were rendered last time and are visible
 						// (and if ServerAction, enabled), then Parse its post data
 						if (($objControl->Visible) &&
 							($objControl->Enabled) &&
@@ -688,13 +702,13 @@
 		}
 
 		/**
-		 * An invalid form state was found. 
+		 * An invalid form state was found.
 		 * We were handed a formstate, but the formstate could not be interpreted. This could be for
 		 * a variety of reasons, and is dependent on the formstate handler. Most likely, the user hit
 		 * the back button past the back button limit of what we remember, or the user lost the session.
 		 * Or, you simply have not set up the form state handler correctly.
-		 * In the past, we threw an exception, but that was not a very user friendly response. 
-		 * The response below resubmits the url without a formstate so that a new one will be created. 
+		 * In the past, we threw an exception, but that was not a very user friendly response.
+		 * The response below resubmits the url without a formstate so that a new one will be created.
 		 * Override if you want a different response.
 		 */
 		public static function InvalidFormState() {
@@ -707,7 +721,7 @@
 			}
 
 			// End the Response Script
-			exit();	
+			exit();
 		}
 
 		/**
@@ -1521,7 +1535,7 @@
 			// Setup Rendered HTML
 			$strToReturn .= sprintf('<form method="post" id="%s" action="%s"%s>', $this->strFormId, htmlentities(QApplication::$RequestUri), $strFormAttributes);
 			$strToReturn .= "\r\n";
-			
+
 			if (!self::$blnStylesRendered) {
 				$strToReturn .= $this->RenderStyles(false, false);
 			}
@@ -1818,9 +1832,9 @@
 			if (defined('__DESIGN_MODE__') && __DESIGN_MODE__ == 1) {
 				// attach an event listener to the form to send context menu selections to the designer dialog for processing
 				$strEndScript .= sprintf(
-					'$j("#%s").on("contextmenu", "[id]", 
+					'$j("#%s").on("contextmenu", "[id]",
 						function(event) {
-							$j("#qconnectoreditdlg").trigger("qdesignerclick", 
+							$j("#qconnectoreditdlg").trigger("qdesignerclick",
 								[{id: event.target.id ? event.target.id : $j(event.target).parents("[id]").attr("id"), for: $j(event.target).attr("for")}]
 							);
 							return false;
