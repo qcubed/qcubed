@@ -334,8 +334,11 @@
 		 * Should normally be called only by FormBase code. See GetState and PutState for the control side implementation.
 		 */
 		public function _WriteState() {
+			global $_FORM;
+
+			assert ($_FORM !== null);
 			if (defined ('__SESSION_SAVED_STATE__') && $this->blnSaveState) {
-				$formName = get_class($this->objForm);
+				$formName = get_class($_FORM);	// must use global $_FORM here instead of $this->objForm, since serialization will have nulled the objForm.
 				$_SESSION[__SESSION_SAVED_STATE__][$formName][$this->ControlId] = $this->GetState();
 			}
 		}
