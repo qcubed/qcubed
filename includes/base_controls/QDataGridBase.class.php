@@ -304,7 +304,7 @@ class QDataGridBase extends QHtmlTable
 		if ($blnSortable) {
 			// Wrap header cell in an html5 block-link to help with assistive technologies.
 			$strCellValue = QHtml::RenderTag('div', null, $strCellValue);
-			$strCellValue = QHtml::RenderTag('a', ['href'=>'#'], $strCellValue); // action will be handled by qcubed.js click handler in qcubed.datagrid2()
+			$strCellValue = QHtml::RenderTag('a', ['href'=>'javascript:;'], $strCellValue); // action will be handled by qcubed.js click handler in qcubed.datagrid2()
 		}
 
 		return $strCellValue;
