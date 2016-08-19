@@ -39,4 +39,4 @@
 		protected $blnDirty<?= $objReverseReference->ObjectPropertyName ?>;
 
 <?php } ?>
-<?php } ?>
+<?php }

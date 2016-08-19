@@ -30,4 +30,3 @@
 	 */
 	class <?= $objTable->ClassName ?>List extends <?= $objTable->ClassName ?>ListGen {
 	}
-?>

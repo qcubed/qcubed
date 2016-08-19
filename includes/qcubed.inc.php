@@ -273,5 +273,3 @@
 			@include(__MODEL_GEN__ . '/_type_class_paths.inc.php');
 		}
 	}
-	
-?>

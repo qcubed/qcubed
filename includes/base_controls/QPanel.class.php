@@ -17,4 +17,3 @@
 		/** @var bool Use htmlentities for the control? */
 		protected $blnHtmlEntities = false;
 	}
-?>

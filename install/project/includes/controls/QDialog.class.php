@@ -15,5 +15,3 @@
 	 */
 	class QDialog extends QDialogBase {
 	}
-
-?>

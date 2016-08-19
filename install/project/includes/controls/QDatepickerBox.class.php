@@ -28,4 +28,3 @@
 	class QDatepickerBox extends QDatepickerBoxBase
 	{
 	}
-?>

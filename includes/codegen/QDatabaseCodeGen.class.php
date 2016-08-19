@@ -1405,4 +1405,3 @@
 	function array_trim(&$strValue) {
 		$strValue = trim($strValue);
 	}
-?>

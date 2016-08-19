@@ -100,4 +100,4 @@
 <?php if ($objColumn->Reference && (!$objColumn->Reference->IsType)) { ?>
 		const Expand<?= $objColumn->Reference->PropertyName ?> = '<?= $objColumn->Name ?>';
 <?php } ?>
-<?php } ?>
+<?php }

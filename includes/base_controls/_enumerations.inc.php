@@ -471,6 +471,3 @@
 		const Square = 'square';
 		const None = 'none';
 	}
-
-
-?>

@@ -663,6 +663,3 @@ class QPostgreSqlPdoDatabaseField extends QDatabaseFieldBase {
 class QPostgreSqlPdoDatabaseException extends QPdoDatabaseException {
 
 }
-
-
-?>

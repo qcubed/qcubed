@@ -159,4 +159,3 @@
 		}
 		require(__APP_INCLUDES__ . '/app_includes.inc.php');
 	}
-?>

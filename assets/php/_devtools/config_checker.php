@@ -40,4 +40,3 @@
 <?php
 		require(__CONFIGURATION__ . '/footer.inc.php');
 	}
-?>

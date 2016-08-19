@@ -157,5 +157,3 @@ QApplicationBase::$ClassFile['qselectmenubase'] = __QCUBED_CORE__ . '/base_contr
 QApplicationBase::$ClassFile['qselectmenu'] = __INCLUDES__ . '/controls/QSelectMenu.class.php';
 QApplicationBase::$ClassFile['qautocompletelistitem'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
 QApplicationBase::$ClassFile['jqicon'] = __QCUBED_CORE__ . '/base_controls/_jq_ui.inc.php';
-
-?>

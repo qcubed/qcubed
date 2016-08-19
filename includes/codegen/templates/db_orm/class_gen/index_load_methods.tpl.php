@@ -21,5 +21,4 @@
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
 	<?php include("index_load_array_manytomany.tpl.php"); ?>
 
-<?php } ?>
-
+<?php }

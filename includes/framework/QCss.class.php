@@ -32,4 +32,3 @@
 			return QHtml::FormatLength($strValue);
 		}
 	}
-?>

@@ -9,4 +9,3 @@
 	class QMenu extends QMenuBase
 	{
 	}
-?>

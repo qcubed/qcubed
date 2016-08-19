@@ -6,4 +6,4 @@
 	if ($strClassName == 'QLabel' || !isset($objColumn->Options['FormGen']) || $objColumn->Options['FormGen'] != QFormGen::ControlOnly) { ?>
 					case '<?= $strPropertyName ?>Label':
 						return ($this-><?= $strLabelVarName ?> = QType::Cast($mixValue, 'QLabel'));
-<?php } ?>
+<?php }

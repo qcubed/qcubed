@@ -186,6 +186,3 @@
 	<input type="button" class="button" name="Done" value="DONE" onclick="done()" /> &nbsp; 
 	<input type="button" class="button" name="Cancel" value="CANCEL" onclick="cancel()" />
 </center></form></body></html>
-<?php
-	//printf("Month Starts On: %s<br>Month Days: %s<br>Prev Month Days: %s", $intMonthStartsOn, $intMonthDays, $intPreviousMonthDays);
-?>

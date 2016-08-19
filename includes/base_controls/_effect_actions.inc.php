@@ -263,4 +263,3 @@ class QJQTransferAction extends QJQAction {
 		return sprintf('$j("#%s").effect("transfer", {to: "#%s_ctl" %s}, %s);', $this->strControlId, $this->strTargetControlId, $this->strOptions, $this->strSpeed);
 	}
 }
-?>

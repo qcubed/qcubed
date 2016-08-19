@@ -27,4 +27,3 @@
 	 */
 	abstract class QConvertNotation extends QConvertNotationBase {		
 	}
-?>

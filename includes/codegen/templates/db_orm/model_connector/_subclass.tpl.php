@@ -34,4 +34,3 @@
 	class <?= $objTable->ClassName ?>Connector extends <?= $objTable->ClassName ?>ConnectorGen {
 		<?php include("example_initialization.tpl.php"); ?>
 	}
-?>

@@ -133,4 +133,3 @@ class QControlBaseTests extends QUnitTestCaseBase {
 	}
 	
 }
-?>

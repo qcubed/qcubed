@@ -24,5 +24,3 @@
 			$this->strTextMode = QTextMode::Url;
 		}
 	}
-
-?>

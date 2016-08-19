@@ -51,4 +51,3 @@
 
 		<?php include("example_initialization.tpl.php"); ?>
 	}
-?>

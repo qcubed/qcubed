@@ -203,4 +203,3 @@ class PluginEditForm extends QForm {
 }
 
 PluginEditForm::Run('PluginEditForm');
-?>

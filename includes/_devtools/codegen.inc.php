@@ -63,4 +63,3 @@ For more information, please go to http://qcu.be
 	foreach (QCodeGen::GenerateAggregate() as $strMessage) {
 		printf("%s\r\n\r\n", $strMessage);
 	}
-?>

@@ -308,4 +308,3 @@
 			parent::AddAction($objEvent, $objAction);
 		}
 	}
-?>
