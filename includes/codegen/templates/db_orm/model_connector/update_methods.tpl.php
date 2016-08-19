@@ -9,4 +9,3 @@
 		$objControlCodeGenerator = $objCodeGen->GetControlCodeGenerator($objManyToManyReference);
 		echo $objControlCodeGenerator->ConnectorUpdateMethod($objCodeGen, $objTable, $objManyToManyReference);
 	}
-?>

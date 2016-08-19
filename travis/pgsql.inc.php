@@ -12,4 +12,3 @@
 		'password' => '',
 		'caching' => false,
 		'profiling' => false)));
-?>

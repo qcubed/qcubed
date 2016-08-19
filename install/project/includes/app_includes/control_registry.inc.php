@@ -18,5 +18,3 @@
 //$controls[QDatabaseFieldType::Time][] = '';
 //$controls[QType::ArrayType][] = ''; // Many-to-one. Includes forward and unique reverse references.
 //$controls[QType::Association][] = ''; // Many-to-many.
-
-?>

@@ -17,5 +17,3 @@ $controls[QControlCategoryType::Time] 			= ['QDateTimePicker', 'QDateTimeTextBox
 $controls[QControlCategoryType::SingleSelect] 	= ['QListBox', 'QRadioButtonList', 'QAutocomplete']; // Select one item from a list of items
 $controls[QControlCategoryType::MultiSelect] 	= ['QCheckBoxList', 'QListBox']; // Many-to-many. QListBox works when in Multiselect mode
 $controls[QControlCategoryType::Table] 			= ['QDataGrid'];
-
-?>

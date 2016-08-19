@@ -35,6 +35,3 @@ function jq_anytime_gen() {
 }
 
 jq_anytime_gen();
-
-?>
- 

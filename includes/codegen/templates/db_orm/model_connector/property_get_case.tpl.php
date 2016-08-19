@@ -8,4 +8,4 @@
 				case '<?= $strPropertyName ?>Label':
 					if (!$this-><?= $strLabelVarName ?>) return $this-><?= $strLabelVarName ?>_Create();
 					return $this-><?= $strLabelVarName ?>;
-<?php } ?>
+<?php }

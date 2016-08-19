@@ -39,4 +39,3 @@
 			$this->DialogBoxHtml = '<p>' . QApplication::Translate('Please select a file to upload.') . '</p>';
 		}
 	}
-?>

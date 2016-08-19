@@ -50,4 +50,3 @@
 			$this->strRegex = QRegex::RegexBookend . implode("|",$this->objPatterns) . QRegex::RegexBookend . "msSi";
 		}
 	}
-?>

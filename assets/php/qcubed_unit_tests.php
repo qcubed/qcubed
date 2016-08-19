@@ -185,5 +185,3 @@ class QTestForm extends QForm {
 }
 
 QTestForm::Run('QTestForm', __QCUBED_CORE__ . "/tests/qcubed-unit/QTestForm.tpl.php");
-
-?>

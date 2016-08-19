@@ -84,4 +84,3 @@
 		<?php include("property_set.tpl.php"); ?>
 
 	}
-?>

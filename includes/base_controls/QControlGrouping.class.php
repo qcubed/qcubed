@@ -72,4 +72,3 @@
 
 		abstract public function Render();
 	}
-?>

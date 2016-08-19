@@ -352,4 +352,3 @@ class JqControlGen extends QCodeGenBase {
 		echo "Generated class: " . $objJqDoc->strQcClass . "<br>";
 	}
 }
-?>

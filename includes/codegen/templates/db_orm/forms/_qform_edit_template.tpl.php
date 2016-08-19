@@ -42,4 +42,4 @@ $_TEMPLATE_SETTINGS = array(
 
 <?php print("<?php"); ?> $this->RenderEnd() ?>
 
-<?php print("<?php"); ?> require(__CONFIGURATION__ .'/footer.inc.php'); ?>
+<?php print("<?php"); ?> require(__CONFIGURATION__ .'/footer.inc.php');

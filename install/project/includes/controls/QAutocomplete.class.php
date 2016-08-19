@@ -15,4 +15,3 @@
 	 */
 	class QAutocomplete extends QAutocompleteBase {
 	}
-?>

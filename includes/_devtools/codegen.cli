@@ -16,4 +16,3 @@
 
 	// Include the rest of the OS-agnostic script
 	require('codegen.inc.php');
-?>

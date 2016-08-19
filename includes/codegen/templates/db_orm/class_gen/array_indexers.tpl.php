@@ -23,4 +23,3 @@ foreach ($objTable->ColumnArray as $objColumn) {
 <?php
 	}
 }
-?>

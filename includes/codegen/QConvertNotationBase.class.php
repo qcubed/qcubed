@@ -175,4 +175,3 @@
 			return strtolower(substr($strToReturn, 0, 1)) . substr($strToReturn, 1);
 		}
 	}
-?>

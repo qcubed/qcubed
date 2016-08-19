@@ -21,4 +21,3 @@
 	class QJqButton extends QJqButtonBase
 	{
 	}
-?>

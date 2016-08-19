@@ -178,4 +178,3 @@ abstract class JqIcon {
 	const GripsmallDiagonalSe = 'ui-icon-gripsmall-diagonal-se';
 	const GripDiagonalSe = 'ui-icon-grip-diagonal-se';
 }
-?>

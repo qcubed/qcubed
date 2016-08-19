@@ -6,4 +6,3 @@ if (isset($__CONFIG_ONLY__) && $__CONFIG_ONLY__ == true) {
 } else {
 	require_once('prepend.inc.php');
 }
-?>

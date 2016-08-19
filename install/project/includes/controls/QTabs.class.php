@@ -13,4 +13,3 @@
 	class QTabs extends QTabsBase
 	{
 	}
-?>

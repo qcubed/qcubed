@@ -21,4 +21,3 @@
 	class QDraggable extends QDraggableBase
 	{
 	}
-?>

@@ -27,4 +27,3 @@
 	class QSpinnerBase extends QSpinnerGen
 	{
 	}
-?>

@@ -723,4 +723,3 @@
 				$strControlId . "\"\r\nTo allow any input on this TextBox control, set CrossScripting to QCrossScripting::Allow. Also consider QCrossScripting::HTMLPurifier.", 2);
 		}
 	}
-?>

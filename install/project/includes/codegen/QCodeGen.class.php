@@ -70,4 +70,3 @@
 	}
 
 	require(__QCUBED_CORE__ . '/codegen/library.inc.php');
-?>

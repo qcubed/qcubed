@@ -13,4 +13,3 @@
 	 */
 	class QDataGridLegacyRowStyle extends QTagStyler {
 	}
-?>

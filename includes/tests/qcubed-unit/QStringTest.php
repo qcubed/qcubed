@@ -42,4 +42,3 @@ class QStringTest extends QUnitTestCaseBase {
 			"' and '" . $str2 . "' is '" . $strResult . "'");
 	}	
 }
-?>

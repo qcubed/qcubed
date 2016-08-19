@@ -72,4 +72,4 @@
 	}
 ?>
 		protected $str<?= $objManyToManyReference->ObjectDescription; ?>Glue = ', ';
-<?php } ?>
+<?php }

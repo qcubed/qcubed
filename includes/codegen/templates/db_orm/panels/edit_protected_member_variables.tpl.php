@@ -34,4 +34,4 @@
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
 	/**  @var <?= $objCodeGen->ModelConnectorControlClass($objManyToManyReference) ?>  */
 	protected $<?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference);  ?>;
-<?php } ?>
+<?php }
