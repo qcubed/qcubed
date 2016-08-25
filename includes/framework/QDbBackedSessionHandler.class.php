@@ -30,6 +30,12 @@
 		 */
 		protected static $strSessionName = '';
 
+		/** @var bool Whether to encrypt the session data. Highly recommended whenever sessions can authenticate a user. */
+		public static $blnEncrypt = true;
+
+		/** @var bool Whether to compress the session data. */
+		public static $blnCompress = true;
+
 
 		/**
 		 * @static
@@ -113,25 +119,27 @@
 
 			$result_row = $result->FetchArray();
 
-			// either the data was empty or the row was not found
-			if (!$result_row)
+
+			if (!$result_row) // either the data was empty or the row was not found
 				return '';
 			$strData = $result_row['data'];
 			if (!$strData)
 				return '';
+
 			// The session exists and was accessed. Return the data.
-
-
-
-			try {
-				$crypt = new QCryptography();
-				$strData = $crypt->Decrypt($strData);
+			if (self::$blnEncrypt) {
+				try {
+					$crypt = new QCryptography();
+					$strData = $crypt->Decrypt($strData);
+				}
+				catch(Exception $e) {
+					// if mcyrpt not installed, skip this step
+				}
 			}
-			catch(Exception $e) {
-				// if mcyrpt not installed, skip this step
-			}
 
-			$strData = gzuncompress($strData);
+			if (self::$blnCompress) {
+				$strData = gzuncompress($strData);
+			}
 
 			return $strData;
 		}
@@ -169,24 +177,21 @@
 		 * @return bool
 		 */
 		public static function SessionWrite($id, $strSessionData) {
-			// We save base 64 encoded data in the database and there are reasons for it:
-			// If you are having anything in session data which does not go well with the UTF-8 (default for most databases)
-			// encoding, the database will start nagging and sessions will break. You may have blank pages as well.
-			// Also, if you are using the QSessionFormStateHandler, compression of FormState converts the data to binary format
-			// thus making it unfit to be saved to the database.
-			// Base 64 encoding ensures that the data can be safely saved into the database as text.
-
-			$strEncoded = gzcompress($strSessionData);
-
-			try {
-				$crypt = new QCryptography();
-				$strEncoded = $crypt->Encrypt($strEncoded);
-			}
-			catch(Exception $e) {
-				// if mcyrpt not installed, skip this step
+			if (self::$blnCompress) {
+				$strEncoded = gzcompress($strSessionData);
 			}
 
-			assert (!empty($strEncoded));	// looking for a bug
+			if (self::$blnEncrypt) {
+				try {
+					$crypt = new QCryptography();
+					$strEncoded = $crypt->Encrypt($strEncoded);
+				}
+				catch(Exception $e) {
+					// if mcyrpt not installed, skip this step
+				}
+			}
+
+			assert (!empty($strEncoded));
 
 			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
