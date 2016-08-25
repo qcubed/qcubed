@@ -5,6 +5,12 @@
 	 *
 	 * This file contains the QDbBackedSessionHandler class.
 	 *
+	 * Relies on a SQL database table with the following columns:
+	 * 	id - STRING primary key
+	 *  last_access_time - INT
+	 *  data - BLOB or BINARY or VARBINARY. Must be a binary safe column, and capable of holding the maximum size of
+	 * 		session data for your app, which depends on what you are putting in the $_SESSION variable.
+	 *
 	 * @package Sessions
 	 */
 	class QDbBackedSessionHandler extends QBaseClass {
@@ -114,8 +120,20 @@
 			if (!$strData)
 				return '';
 			// The session exists and was accessed. Return the data.
-			// We do base64_decode because the write method had encoded it!
-			return base64_decode($strData);
+
+
+
+			try {
+				$crypt = new QCryptography();
+				$strData = $crypt->Decrypt($strData);
+			}
+			catch(Exception $e) {
+				// if mcyrpt not installed, skip this step
+			}
+
+			$strData = gzuncompress($strData);
+
+			return $strData;
 		}
 
 		/**
@@ -157,12 +175,25 @@
 			// Also, if you are using the QSessionFormStateHandler, compression of FormState converts the data to binary format
 			// thus making it unfit to be saved to the database.
 			// Base 64 encoding ensures that the data can be safely saved into the database as text.
+
+			$strEncoded = gzcompress($strSessionData);
+
+			try {
+				$crypt = new QCryptography();
+				$strEncoded = $crypt->Encrypt($strEncoded);
+			}
+			catch(Exception $e) {
+				// if mcyrpt not installed, skip this step
+			}
+
+			assert (!empty($strEncoded));	// looking for a bug
+
 			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			$objDatabase->InsertOrUpdate(
 				self::$strTableName,
 				array(
-					'data' => base64_encode($strSessionData),
+					'data' => $strEncoded,
 					'last_access_time' => time(),
 					'id' => $id
 				),
