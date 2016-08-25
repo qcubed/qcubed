@@ -598,17 +598,17 @@
 					// Use Standard Rendering
 					$objClass->Render();
 
-				// Ensure that RenderEnd() was called during the Render process
-				switch ($objClass->intFormStatus) {
-					case QFormBase::FormStatusUnrendered:
-						throw new QCallerException('$this->RenderBegin() is never called in the HTML Include file');
-					case QFormBase::FormStatusRenderBegun:
-						throw new QCallerException('$this->RenderEnd() is never called in the HTML Include file');
-					case QFormBase::FormStatusRenderEnded:
-						break;
-					default:
-						throw new QCallerException('FormStatus is in an unknown status');
-				}
+					// Ensure that RenderEnd() was called during the Render process
+					switch ($objClass->intFormStatus) {
+						case QFormBase::FormStatusUnrendered:
+							throw new QCallerException('$this->RenderBegin() is never called in the HTML Include file');
+						case QFormBase::FormStatusRenderBegun:
+							throw new QCallerException('$this->RenderEnd() is never called in the HTML Include file');
+						case QFormBase::FormStatusRenderEnded:
+							break;
+						default:
+							throw new QCallerException('FormStatus is in an unknown status');
+					}
 				break;
 
 				default:
