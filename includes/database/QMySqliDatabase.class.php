@@ -784,4 +784,3 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 			}
 		}
 	}
-?>

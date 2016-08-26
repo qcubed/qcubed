@@ -80,4 +80,3 @@ class QQAliasTests extends QUnitTestCaseBase {
 		$this->assertEquals('Milestone B', $obj->GetVirtualAttribute('min_conson'));
 	}
 }
-?>

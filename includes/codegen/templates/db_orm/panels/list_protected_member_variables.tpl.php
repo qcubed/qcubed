@@ -18,5 +18,4 @@
 <?php if ($blnUseDialog) { ?>
 	/** @var <?= $objTable->ClassName ?>EditDlg **/
 	protected $dlgEdit;
-<?php } ?>
-
+<?php }

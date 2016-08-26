@@ -14,4 +14,3 @@
 //		protected $strFontSize = '12px';
 //		protected $strWidth = '250px';
 	}
-?>

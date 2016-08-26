@@ -30,4 +30,3 @@
 	 */
 	abstract class <?= $objTypeTable->ClassName ?> extends <?= $objTypeTable->ClassName ?>Gen {
 	}
-?>

@@ -27,4 +27,3 @@
 
 	// Finally, turn off output buffering
 	ob_end_flush();
-?>

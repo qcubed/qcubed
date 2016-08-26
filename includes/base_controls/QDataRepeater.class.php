@@ -292,4 +292,3 @@ class QDataRepeater extends QPaginatedControl {
 		}
 	}
 }
-?>

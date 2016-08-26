@@ -21,4 +21,3 @@
 	class QDroppable extends QDroppableBase
 	{
 	}
-?>

@@ -546,4 +546,3 @@ class QSqLite3PdoDatabaseField extends QDatabaseFieldBase {
 class QSqLite3PdoDatabaseException extends QPdoDatabaseException {
 
 }
-?>

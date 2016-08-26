@@ -67,4 +67,4 @@
 		protected static function GetRowPrimaryKey($objDbRow, $strAliasPrefix, $strColumnAliasArray) {
 			return null;
 		}
-<?php } ?>
+<?php }

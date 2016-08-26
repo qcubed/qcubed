@@ -6,4 +6,3 @@ if (!defined ('__PREPEND_INCLUDED__')) {	// not already included some other way 
 	// expect this file to be in the vendor/qcubed/framework directory
 	include(dirname(__FILE__).'/../../../qcubed.inc.php');
 }
-?>

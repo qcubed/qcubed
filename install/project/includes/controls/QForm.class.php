@@ -73,4 +73,3 @@
 		protected $strIgnoreStyleSheetFileArray = array();
 		// protected $strIgnoreStyleSheetFileArray = array('datagrid.css', 'calendar.css', 'textbox.css', 'listbox.css');
 	}
-?>

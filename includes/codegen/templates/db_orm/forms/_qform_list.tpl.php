@@ -48,4 +48,3 @@
 	// Go ahead and run this form object to generate the page and event handlers, implicitly using
 	// <?= QConvertNotation::UnderscoreFromCamelCase($objTable->ClassName) ?>_list.tpl.php as the included HTML template file
 	<?= $objTable->ClassName ?>ListForm::Run('<?= $objTable->ClassName ?>ListForm');
-?>

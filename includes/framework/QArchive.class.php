@@ -122,5 +122,3 @@ class QArchive {
 			return 'Zip File Function error: unknown';
         }
 }
-
-?>

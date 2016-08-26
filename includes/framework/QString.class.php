@@ -198,4 +198,3 @@
 				return ''; //no matches
 		}
 	}
-?>

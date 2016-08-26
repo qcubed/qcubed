@@ -8,5 +8,3 @@
 
 	class QJsTimer extends QJsTimerBase {
 	}
-
-?>

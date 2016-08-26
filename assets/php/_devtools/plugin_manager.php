@@ -135,4 +135,3 @@
 	}	
 
 	PluginManagerForm::Run('PluginManagerForm');
-?>

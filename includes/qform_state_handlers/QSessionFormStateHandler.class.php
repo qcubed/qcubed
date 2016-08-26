@@ -113,4 +113,3 @@
 			return $strSerializedForm;
 		}
 	}
-?>

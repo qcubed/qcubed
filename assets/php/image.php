@@ -7,4 +7,3 @@ $ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time()) . " GMT";
 header($ExpStr);
 
 QImageControl::Run();
-?>

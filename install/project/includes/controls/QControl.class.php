@@ -27,5 +27,3 @@
 		 */
 		//protected $blnUseWrapper = false;
 	}
-
-?>

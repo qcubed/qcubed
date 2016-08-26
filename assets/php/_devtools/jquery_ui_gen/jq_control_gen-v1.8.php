@@ -207,5 +207,3 @@ $strResult = "<?php\n" . $strResult . "\n?>";
 $strOutFileName = __QCUBED_CORE__ . '/'. '_jq_paths.inc.php';
 
 file_put_contents($strOutFileName, $strResult);	
-
-?>

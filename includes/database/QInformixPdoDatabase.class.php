@@ -1003,6 +1003,3 @@ class QInformixPdoDatabaseField extends QDatabaseFieldBase {
 class QInformixPdoDatabaseException extends QPdoDatabaseException {
 
 }
-
-
-?>

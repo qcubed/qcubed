@@ -2,4 +2,3 @@
 	class QSelectMenuBase extends QSelectMenuGen
 	{
 	}
-?>

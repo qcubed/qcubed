@@ -356,6 +356,3 @@ class QInstallationValidationResult {
 		return $this->strMessage;
 	}
 }
-
-
-?>

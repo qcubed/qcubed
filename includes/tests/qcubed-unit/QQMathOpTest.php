@@ -388,4 +388,3 @@ class QQMathOpTests extends QUnitTestCaseBase {
 		}
 	}
 }
-?>

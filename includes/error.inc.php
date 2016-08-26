@@ -198,5 +198,3 @@
 		//error_log("Flushed");
 
 	}
-
-?>

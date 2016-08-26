@@ -92,4 +92,3 @@ class QTimerTests extends QUnitTestCaseBase {
 		Person::LoadAll();
 	}
 }
-?>

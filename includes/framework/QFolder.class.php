@@ -165,5 +165,3 @@
 			return $result;
 		}
 	}
-
-?>

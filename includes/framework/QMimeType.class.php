@@ -183,4 +183,3 @@
 			return $strToReturn;
 		}
 	}
-?>
