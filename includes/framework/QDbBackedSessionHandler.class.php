@@ -123,6 +123,15 @@
 			if (!$result_row) // either the data was empty or the row was not found
 				return '';
 			$strData = $result_row['data'];
+
+			if(strstr($objDatabase->Adapter, 'PostgreSql')) {
+				if(function_exists('pg_unescape_bytea')) {
+					$strData = pg_unescape_bytea($strData);
+				} else {
+					throw new QCallerException('pg_unescape_bytea method needed for DbBackedSessionHandler to operate on a PostgreSQL database. Please install the "pgsql" PHP extension.');
+				}
+			}
+
 			if (!$strData)
 				return '';
 
