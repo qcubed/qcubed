@@ -11,7 +11,7 @@
 		require(__CONFIGURATION__ . '/header.inc.php');
 ?>
 	<h1>Welcome to QCubed!</h1>
-	<h2>PHP5 Model-View-Controller framework</h2>
+	<h2>PHP5 - PHP7 Model-View-Controller framework</h2>
 	<p>
 		This simple wizard will help you configure QCubed for first use.
 		It'll take you just a couple minutes. If you have any questions along the way, feel free to ping us on the 

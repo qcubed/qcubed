@@ -11,7 +11,7 @@ Older releases are available from the [downloads archive](https://github.com/qcu
 
 ## What is QCubed?
 
-QCubed (pronounced 'Q' - cubed) is a PHP5 Model-View-Controller framework. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun. QCubed excels in situations where you have a large database structure that you quickly want to make available to users.
+QCubed (pronounced 'Q' - cubed) is a PHP Model-View-Controller framework with support for PHP5 (5.4 and above) and PHP7. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun. QCubed excels in situations where you have a large database structure that you quickly want to make available to users.
 
 ## Stateful architecture
 
