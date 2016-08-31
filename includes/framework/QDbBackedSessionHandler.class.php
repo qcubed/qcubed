@@ -31,10 +31,10 @@
 		protected static $strSessionName = '';
 
 		/** @var bool Whether to encrypt the session data. Highly recommended whenever sessions can authenticate a user. */
-		public static $blnEncrypt = false;
+		public static $blnEncrypt = true;
 
 		/** @var bool Whether to compress the session data. */
-		public static $blnCompress = false;
+		public static $blnCompress = true;
 
 
 		/**
