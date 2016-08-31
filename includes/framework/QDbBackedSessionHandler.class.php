@@ -31,10 +31,10 @@
 		protected static $strSessionName = '';
 
 		/** @var bool Whether to encrypt the session data. Highly recommended whenever sessions can authenticate a user. */
-		public static $blnEncrypt = true;
+		public static $blnEncrypt = false;
 
 		/** @var bool Whether to compress the session data. */
-		public static $blnCompress = true;
+		public static $blnCompress = false;
 
 
 		/**
@@ -103,6 +103,7 @@
 		 * @param string $id
 		 *
 		 * @return string the session data, base64 decoded
+		 * @throws QCallerException
 		 */
 		public static function SessionRead($id) {
 			$id = self::$strSessionName . '.' . $id;
@@ -117,12 +118,12 @@
 
 			$result = $objDatabase->Query($query);
 
-			$result_row = $result->FetchArray();
+			$result_row = $result->FetchRow();
 
 
 			if (!$result_row) // either the data was empty or the row was not found
 				return '';
-			$strData = $result_row['data'];
+			$strData = $result_row[0];
 
 			if(strstr($objDatabase->Adapter, 'PostgreSql')) {
 				if(function_exists('pg_unescape_bytea')) {
@@ -150,6 +151,7 @@
 				$strData = gzuncompress($strData);
 			}
 
+			
 			return $strData;
 		}
 
@@ -186,6 +188,12 @@
 		 * @return bool
 		 */
 		public static function SessionWrite($id, $strSessionData) {
+			if (empty($strSessionData)) {
+				return true;
+			}
+
+			$strEncoded = $strSessionData;
+
 			if (self::$blnCompress) {
 				$strEncoded = gzcompress($strSessionData);
 			}
