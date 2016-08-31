@@ -189,6 +189,7 @@
 		 */
 		public static function SessionWrite($id, $strSessionData) {
 			if (empty($strSessionData)) {
+				static::SessionDestroy($id);
 				return true;
 			}
 
