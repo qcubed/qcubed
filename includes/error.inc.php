@@ -65,6 +65,54 @@
 		}
 	}
 
+	/**
+	 * Returns a stringified version of a backtrace.
+	 * Set $blnShowArgs if you want to see a representation of the arguments. Note that if you are sending
+	 * in objects, this will unpack the entire structure and display its contents.
+	 * $intSkipTraces is how many back traces you want to skip. Set this to at least one to skip the
+	 * calling of this function itself.
+	 *
+	 * @param bool $blnShowArgs
+	 * @param int $intSkipTraces
+	 * @return string
+	 */
+	function QcubedGetBacktrace($blnShowArgs = false, $intSkipTraces = 1) {
+		if (!$blnShowArgs) {
+			$b = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		} else {
+			$b = debug_backtrace(false);
+		}
+		$strRet = "";
+		for ($i = $intSkipTraces; $i < count($b); $i++) {
+			$item = $b[$i];
+
+			$strFile = (array_key_exists("file", $item)) ? $item["file"] : "";
+			$strLine = (array_key_exists("line", $item)) ? $item["line"] : "";
+			$strClass = (array_key_exists("class", $item)) ? $item["class"] : "";
+			$strType = (array_key_exists("type", $item)) ? $item["type"] : "";
+			$strFunction = (array_key_exists("function", $item)) ? $item["function"] : "";
+
+			$vals = [];
+			if (!empty($item["args"])) {
+				foreach ($item["args"] as $val) {
+					$vals[] = JavaScriptHelper::toJsObject($val);
+				}
+			}
+			$strArgs = implode(", ", $vals);
+
+			$strRet .= sprintf("#%s %s(%s): %s%s%s(%s)\n",
+				$i,
+				$strFile,
+				$strLine,
+				$strClass,
+				$strType,
+				$strFunction,
+				$strArgs);
+		}
+
+		return $strRet;
+	}
+
 	function QcubedHandleError($__exc_errno, $__exc_errstr, $__exc_errfile, $__exc_errline, $__exc_errcontext) {
 		// If a command is called with "@", then we should return
 		if (error_reporting() == 0)
@@ -133,25 +181,8 @@
 
 		$__exc_strFilename = $__exc_errfile;
 		$__exc_intLineNumber = $__exc_errline;
-		$__exc_strStackTrace = "";
-		$__exc_objBacktrace = debug_backtrace();
-		for ($__exc_intIndex = 0; $__exc_intIndex < count($__exc_objBacktrace); $__exc_intIndex++) {
-			$__exc_objItem = $__exc_objBacktrace[$__exc_intIndex];
-			
-			$__exc_strKeyFile = (array_key_exists("file", $__exc_objItem)) ? $__exc_objItem["file"] : "";
-			$__exc_strKeyLine = (array_key_exists("line", $__exc_objItem)) ? $__exc_objItem["line"] : "";
-			$__exc_strKeyClass = (array_key_exists("class", $__exc_objItem)) ? $__exc_objItem["class"] : "";
-			$__exc_strKeyType = (array_key_exists("type", $__exc_objItem)) ? $__exc_objItem["type"] : "";
-			$__exc_strKeyFunction = (array_key_exists("function", $__exc_objItem)) ? $__exc_objItem["function"] : "";
-			
-			$__exc_strStackTrace .= sprintf("#%s %s(%s): %s%s%s()\n",
-				$__exc_intIndex,
-				$__exc_strKeyFile,
-				$__exc_strKeyLine,
-				$__exc_strKeyClass,
-				$__exc_strKeyType,
-				$__exc_strKeyFunction);
-		}
+
+		$__exc_strStackTrace =  QcubedGetBacktrace();
 
 		if (ob_get_length()) {
 			$__exc_strRenderedPage = ob_get_contents();
