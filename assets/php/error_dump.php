@@ -148,7 +148,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 		<footer>
 			<strong>PHP Version:</strong> <?php _p(PHP_VERSION); ?>;&nbsp;<strong>Zend Engine Version:</strong> <?php _p(zend_version()); ?>;&nbsp;<strong>QCubed Version:</strong> <?php _p(QCUBED_VERSION); ?><br />
 			<?php if (array_key_exists('OS', $_SERVER)) printf('<strong>Operating System:</strong> %s;&nbsp;&nbsp;', $_SERVER['OS']); ?><strong>Application:</strong> <?php _p($_SERVER['SERVER_SOFTWARE']); ?>;&nbsp;<strong>Server Name:</strong> <?php _p($_SERVER['SERVER_NAME']); ?><br />
-			<strong>HTTP User Agent:</strong> <?php _p($_SERVER['HTTP_USER_AGENT']); ?>
+			<strong>HTTP User Agent:</strong> <?php _p(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'N/A'); ?>
 		</footer>
 	<?php printf('<script type="text/javascript">%s</script>', $__exc_StrToScript); ?>
 	<script type="text/javascript">
