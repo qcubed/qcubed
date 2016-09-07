@@ -7,6 +7,8 @@ This directory contains the web-based drivers for Qcubed's development tools:
   activities in a nicely formatted HTML page.  It uses the codegen_settings.xml
   file as the "settings" to use for codegenning.
 
+* codegen_cli.php - the Qcubed CodeGen cli based driver.
+
 * (future tools tba)
 
 Feel free to alter the settings, inputs and/or outputs of any of the drivers
