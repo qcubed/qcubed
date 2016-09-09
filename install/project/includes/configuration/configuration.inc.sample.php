@@ -346,7 +346,7 @@ if (!defined('SERVER_INSTANCE')) {
 	 * QCryptography module can help in encrypting or decrypting
 	 * It utilizes the openssl library functions built into PHP
 	 *
-	 * NOTE: Only Symmetric algorithms are supported within the framework
+	 * NOTE: QCryptography uses only symmetric algorithms
 	 *
 	 * AES 256-bit is strong enough for most usecases and is recommended by US Government for secret documents.
 	 *
@@ -358,7 +358,7 @@ if (!defined('SERVER_INSTANCE')) {
 	/*
 	 * If you plan to use QCryptography in your application, we highly recommend changing the default key and IV below.
 	 * If you are unsure about what you should use for IV and key, we recommend you to
-	 *  - Keep them both 16 characters long
+	 *  - Keep them both 16 characters long (remember that if you use an algorithm which does not use an IV of 16 characters, you will have to update the length of the IV)
 	 *  - Use a random mix of capital and small letters with some digits and special characters in between
 	 */
 
