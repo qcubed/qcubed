@@ -340,6 +340,41 @@ if (!defined('SERVER_INSTANCE')) {
 		)
 	) );
 
+	/**
+	 * This is the default algorithm to be used
+	 *
+	 * QCryptography module can help in encrypting or decrypting
+	 * It utilizes the openssl library functions built into PHP
+	 *
+	 * NOTE: Only Symmetric algorithms are supported within the framework
+	 *
+	 * AES 256-bit is strong enough for most usecases and is recommended by US Government for secret documents.
+	 *
+	 * CBC or Cipher Block Chaining is considered considerably safer than ECB (Electronic CodeBook) methods.
+	 * For more background: https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation
+	 */
+	define('QCRYPTOGRAPHY_DEFAULT_CIPHER', 'AES-256-CBC');
+
+	/*
+	 * If you plan to use QCryptography in your application, we highly recommend changing the default key and IV below.
+	 * If you are unsure about what you should use for IV and key, we recommend you to
+	 *  - Keep them both 16 characters long
+	 *  - Use a random mix of capital and small letters with some digits and special characters in between
+	 */
+
+	/**
+	 * Default IV for the encryption method
+	 * NOTE: IVs are not used in ECB algorithms
+	 * AES-256-CBC needs a 16 character IV
+	 * If you are changing the default algorithm, do not forget to update the IV
+	 * and set it to a length required by the selected algorithm.
+	 */
+	define('QCRYPTOGRAPHY_DEFAULT_IV', 'qCub3D!d3F@lT.!V');
+	/**
+	 * Default KEY (used as a password) for AES-256-CBC
+	 */
+	define('QCRYPTOGRAPHY_DEFAULT_KEY', 'qc0Do!d3F@lT.k3Y');
+
 	/*
 	 * Support for Watchers and automated updating of objects that display the results of table queries.
 	 *
