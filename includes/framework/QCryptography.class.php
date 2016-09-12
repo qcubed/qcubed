@@ -9,30 +9,31 @@
 
 	/**
 	 * Class QCryptography: Helps in encrypting and decrypting data
-	 * It depends on the mcrypt module.
-	 *
-	 * While this module IS serializeable, the information it contains in serialized form is not secure and can be used
-	 * to decrypt encrypted items. So, make sure you either encrypt the serialized results, or store the results in a
-	 * secure location. That means, if you are using this in a form object, you must make sure your formstates are
-	 * not visible to the public, or they are encrypted, since the serialized version of this object will be in the formstate.
-	 *
-	 * Refer: http://php.net/manual/en/book.mcrypt.php
+	 * Uses the openssl_* methods
 	 */
 	class QCryptography extends QBaseClass {
-		/** @var resource Mcrypt algorithm module resource */
-		protected $objMcryptModule;
+		/**
+		 * Constant to indicate that Random IV is to be automatically generated.
+		 * To generate a valid random IV, pass it in the class constuctor at the place of IV
+		 *
+		 * We use a single digit because no cipher algorithm requires an IV of length 1.
+		 */
+		const IV_RANDOM = 'R';
+
 		/** @var bool Are we going to use Base 64 encoding? */
 		protected $blnBase64;
 		/** @var string Key to be used for encryption/decryption - used for mycrypt_generic_init */
 		protected $strKey;
-		/** @var string Initialization vector for the algorithm */
-		protected $strIv; // Note that this is NOT used in ECB, the default mode.
+		/**
+		 * @var string Initialization vector for the algorithm
+		 *
+		 *             Note that this is NOT used in ECB modes
+		 */
+		protected $strIv = '';
 		/** @var  string Cipher to use when creating the encryption object */
 		protected $strCipher;
 		/** @var  string Mode to use when creating the encryption object */
 		protected $strMode;
-		/** @var  string Random source to use when creating IVs */
-		protected $strRandomSource;
 
 
 		/**
@@ -47,13 +48,6 @@
 		public static $Base64 = true;
 
 		/**
-		 * Default Key for any new QCryptography instances that get constructed
-		 *
-		 * @var string Key
-		 */
-		public static $Key = "qc0Do!d3F@lT.k3Y";
-
-		/**
 		 * The Random Number Generator the library uses to generate the IV:
 		 *  - MCRYPT_DEV_RANDOM = /dev/random (only on *nix systems)
 		 *  - MCRYPT_DEV_URANDOM = /dev/urandom (only on *nix systems)
@@ -63,25 +57,21 @@
 		 * environment (using Fedora Core 3 with PHP 5.0.4 and LibMcrypt 2.5.7).  Because of this,
 		 * we are using MCRYPT_RAND be default.  Feel free to change to to /dev/*random at your own risk.
 		 *
-		 * @param null|string $strKey          Encryption key
-		 * @param null|bool   $blnBase64       Are we going to use Base 64 encoded data?
-		 * @param null|string $strCipher       Cipher to be used (default is MCRYPT_TRIPLEDES)
-		 * @param null|string $strMode         Mode (default is MCRYPT_MODE_ECB)
-		 * @param null|string $strRandomSource Random source (default is MCRYPT_RAND)
+		 * @param null|string $strKey    Encryption key
+		 * @param null|bool   $blnBase64 Are we going to use Base 64 encoded data?
+		 * @param null|string $strCipher Cipher to be used (default is AES-256-CBC)
+		 * @param null|string $strIv     Initialization Vector
 		 *
-		 * @throws Exception
 		 * @throws QCallerException
 		 * @throws QCryptographyException
 		 */
-		public function __construct($strKey = null, $blnBase64 = null, $strCipher = null, $strMode = null,
-		                            $strRandomSource = null) {
-			if (!function_exists('mcrypt_module_open')) {
-				throw new QCryptographyException("PHP cryptography components (libmcrypt module) are not installed");
-			}
+		public function __construct($strKey = null, $blnBase64 = null, $strCipher = null, $strIv = null) {
 
 			// Get the Key
 			if (is_null($strKey)) {
-				$strKey = self::$Key;
+				$this->strKey = QCRYPTOGRAPHY_DEFAULT_KEY;
+			} else {
+				$this->strKey = $strKey;
 			}
 
 			// Get the Base64 Flag
@@ -98,60 +88,41 @@
 
 			// Get the Cipher
 			if (is_null($strCipher)) {
-				$this->strCipher = MCRYPT_TRIPLEDES;
+				$this->strCipher = 'AES-256-CBC';
 			} else {
-				$this->strCipher = $strCipher;
-			}
+				// User has supplied a cipher-name
+				// We make sure that the Cipher name was correct/exists
+				try {
+					// Set the cipher
+					$this->strCipher = $strCipher;
 
-			// Get the Mode
-			if (is_null($strMode)) {
-				$this->strMode = MCRYPT_MODE_ECB;
-			} else {
-				$this->strMode = $strMode;
-			}
-
-			if (is_null($strRandomSource)) {
-				$this->strRandomSource = MCRYPT_RAND;
-			} else {
-				$this->strRandomSource = $strRandomSource;
-			}
-
-			$this->objMcryptModule = mcrypt_module_open($this->strCipher, null, $this->strMode, null);
-			if (!$this->objMcryptModule) {
-				throw new QCryptographyException('Unable to open LibMcrypt Module');
-			}
-
-			// Determine IV Size
-			$intIvSize = mcrypt_enc_get_iv_size($this->objMcryptModule);
-
-			// Create the IV
-			if ($intIvSize) {
-				if ($this->strRandomSource != MCRYPT_RAND) {
-					// Ignore All Warnings
-					set_error_handler('QcubedHandleError', 0);
-					$intCurrentLevel = error_reporting();
-					error_reporting(0);
-					$strIv = mcrypt_create_iv($intIvSize, $this->strRandomSource);
-					error_reporting($intCurrentLevel);
-					restore_error_handler();
-
-					// If the RandomNumGenerator didn't work, we revert back to using MCRYPT_RAND
-					if (strlen($strIv) != $intIvSize) {
-						srand();
-						$strIv = mcrypt_create_iv($intIvSize, MCRYPT_RAND);
-					}
-				} else {
-					srand();
-					$strIv = mcrypt_create_iv($intIvSize, MCRYPT_RAND);
+					// The following method will automatically test for availability of the supplied cipher name
+					$strIvLength = openssl_cipher_iv_length($strCipher);
+				} catch (Exception $e) {
+					throw new QCallerException('No Cipher with name ' . $strCipher . ' could be found in openssl library');
 				}
+			}
+
+			// Set the correct IV
+			$strIvLength = openssl_cipher_iv_length($this->strCipher);
+			if($strIvLength == 0) {
+				// IV is not needed for the selected algorithm (it could be a ECB algorithm)
+				$this->strIv = null;
+			} elseif(!$strIv) {
+				// If the IV was not supplied, we will use the default
+				$this->strIv = QCRYPTOGRAPHY_DEFAULT_IV;
+			} elseif($strIv == self::IV_RANDOM) {
+				// If Random IV was requested
+				$this->strIv = openssl_random_pseudo_bytes($strIvLength);
+			} else {
+				// set whatever was supplied
 				$this->strIv = $strIv;
 			}
 
-			// Determine KeySize length
-			$intKeySize = mcrypt_enc_get_key_size($this->objMcryptModule);
-
-			// Create the Key Based on Key Passed In
-			$this->strKey = substr(md5($strKey), 0, $intKeySize);
+			// Finally test that the selected IV length suits the supplied IV
+			if(strlen($this->strIv) != openssl_cipher_iv_length($this->strCipher)) {
+				throw new QCallerException($this->strCipher . ' needs a cipher of ' . $strIvLength . ' characters. IV of ' . strlen($this->strIv) . ' suppled.');
+			}
 		}
 
 		/**
@@ -162,26 +133,13 @@
 		 * @throws QCryptographyException
 		 */
 		public function Encrypt($strData) {
-			// Initialize Encryption
-			$intReturnValue = mcrypt_generic_init($this->objMcryptModule, $this->strKey, $this->strIv);
-			if (($intReturnValue === false) || ($intReturnValue < 0)) {
-				throw new QCryptographyException('Incorrect Parameters used in LibMcrypt Initialization');
-			}
-			// Add Length to strData
-			$strData = strlen($strData) . '/' . $strData;
+			$strEncryptedData = openssl_encrypt($strData, $this->strCipher, $this->strKey, 0, $this->strIv);
 
-			$strEncryptedData = mcrypt_generic($this->objMcryptModule, $strData);
 			if ($this->blnBase64) {
 				$strEncryptedData = base64_encode($strEncryptedData);
 				$strEncryptedData = str_replace('+', '-', $strEncryptedData);
 				$strEncryptedData = str_replace('/', '_', $strEncryptedData);
 				$strEncryptedData = str_replace('=', '', $strEncryptedData);
-			}
-
-
-			// Deinitialize Encryption
-			if (!mcrypt_generic_deinit($this->objMcryptModule)) {
-				throw new QCryptographyException('Unable to deinitialize encryption buffer');
 			}
 
 			return $strEncryptedData;
@@ -195,33 +153,12 @@
 		 * @throws QCryptographyException
 		 */
 		public function Decrypt($strEncryptedData) {
-			// Initialize Encryption
-			$intReturnValue = mcrypt_generic_init($this->objMcryptModule, $this->strKey, $this->strIv);
-			if (($intReturnValue === false) || ($intReturnValue < 0)) {
-				throw new QCryptographyException('Incorrect Parameters used in LibMcrypt Initialization');
-			}
-
 			if ($this->blnBase64) {
 				$strEncryptedData = str_replace('_', '/', $strEncryptedData);
 				$strEncryptedData = str_replace('-', '+', $strEncryptedData);
 				$strEncryptedData = base64_decode($strEncryptedData);
 			}
-			$intBlockSize = mcrypt_enc_get_block_size($this->objMcryptModule);
-			$strDecryptedData = mdecrypt_generic($this->objMcryptModule, $strEncryptedData);
-
-			// Figure Out Length and Truncate
-			$intPosition = strpos($strDecryptedData, '/');
-			if (!$intPosition) {
-				throw new QCryptographyException('Invalid Length Header in Decrypted Data');
-			}
-			$intLength = substr($strDecryptedData, 0, $intPosition);
-			$strDecryptedData = substr($strDecryptedData, $intPosition + 1);
-			$strDecryptedData = substr($strDecryptedData, 0, $intLength);
-
-			// Deinitialize Encryption
-			if (!mcrypt_generic_deinit($this->objMcryptModule)) {
-				throw new QCryptographyException('Unable to deinitialize encryption buffer');
-			}
+			$strDecryptedData = openssl_decrypt($strEncryptedData, $this->strCipher, $this->strKey, 0, $this->strIv);
 
 			return $strDecryptedData;
 		}
@@ -267,23 +204,6 @@
 		 * (Some methods just want to watch the world burn!)
 		 */
 		public function __destruct() {
-			if ($this->objMcryptModule) {
-				// Ignore All Warnings
-				set_error_handler('QcubedHandleError', 0);
-				$intCurrentLevel = error_reporting();
-				error_reporting(0);
-				mcrypt_module_close($this->objMcryptModule);
-				error_reporting($intCurrentLevel);
-				restore_error_handler();
-			}
-		}
 
-		public function __sleep() {
-			return array_diff(array_keys(get_object_vars($this)), array('objMcryptModule')); // can't serialize the module, must recreate
 		}
-
-		public function __wakeup() {
-			$this->objMcryptModule = mcrypt_module_open($this->strCipher, null, $this->strMode, null);
-		}
-
 	}
