@@ -171,8 +171,8 @@ ALTER TABLE `person_persontype_assn` ADD CONSTRAINT person_persontype_assn_2 FOR
 #========================================================================== #
 
 INSERT INTO project_status_type (name, description, guidelines, is_active) VALUES ('Open', 'The project is currently active', 'All projects that we are working on should be in this state', 1);
-INSERT INTO project_status_type (name, description, guidelines) VALUES ('Cancelled', 'The project has been canned', null);
-INSERT INTO project_status_type (name, description, guidelines) VALUES ('Completed', 'The project has been completed successfully', 'Celebrate successes!');
+INSERT INTO project_status_type (name, description, guidelines, is_active) VALUES ('Cancelled', 'The project has been canned', null, 1);
+INSERT INTO project_status_type (name, description, guidelines, is_active) VALUES ('Completed', 'The project has been completed successfully', 'Celebrate successes!', 1);
 
 INSERT INTO person_type VALUES(1, 'Contractor');
 INSERT INTO person_type VALUES(2, 'Manager');
