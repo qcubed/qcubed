@@ -20,8 +20,6 @@
 		 */
 		const IV_RANDOM = 'R';
 
-		/** @var resource Mcrypt algorithm module resource */
-		protected $objMcryptModule;
 		/** @var bool Are we going to use Base 64 encoding? */
 		protected $blnBase64;
 		/** @var string Key to be used for encryption/decryption - used for mycrypt_generic_init */
