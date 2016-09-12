@@ -208,13 +208,4 @@
 		public function __destruct() {
 
 		}
-
-		public function __sleep() {
-			return array_diff(array_keys(get_object_vars($this)), array('objMcryptModule')); // can't serialize the module, must recreate
-		}
-
-		public function __wakeup() {
-			$this->objMcryptModule = mcrypt_module_open($this->strCipher, null, $this->strMode, null);
-		}
-
 	}
