@@ -14,5 +14,4 @@
 		/** @var bool Should htmlentities be run on the contents of this control? */
 		protected $blnHtmlEntities = true;
 
-}
-?>
+        }

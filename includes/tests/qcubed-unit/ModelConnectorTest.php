@@ -212,4 +212,3 @@ class ModelConnectorTests extends QUnitTestCaseBase {
 	}
 
 }
-?>

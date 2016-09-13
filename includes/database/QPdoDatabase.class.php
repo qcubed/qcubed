@@ -124,5 +124,3 @@ class QPdoDatabaseException extends QDatabaseExceptionBase {
 				$this->strQuery = $strQuery;
 		}
 }
-
-?>

@@ -36,4 +36,3 @@
 		/** Courier Family */
 		const Courier = 'Courier, monospaced';
 	}
-?>

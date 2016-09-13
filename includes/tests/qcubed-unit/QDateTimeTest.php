@@ -319,4 +319,3 @@ class QDateTimeTests extends QUnitTestCaseBase {
 		$objTest2->Delete();
 	}
 }
-?>

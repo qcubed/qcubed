@@ -25,7 +25,7 @@
 	 * @property-read QDateTime $LastDayOfTheMonth  A new QDateTime representing the last day of this date's month.
 	 * @property-read QDateTime $FirstDayOfTheMonth A new QDateTime representing the first day of this date's month.
 	 */
-	class QDateTime extends DateTime implements JsonSerializable {
+	class QDateTime extends DateTime implements JsonSerializable, Serializable {
 		/** Used to specify the time right now (used when creating new instances of this class) */
 		const Now = 'now';
 		/** Date and time in ISO format */
@@ -281,31 +281,37 @@
 		/**
 		 * The following code is a workaround for a PHP bug in 5.2 and greater (at least to 5.4).
 		 */
-		protected $strSerializedData;
-		protected $strSerializedTZ;
-		public function __sleep() {
+		//protected $strSerializedData;
+		//protected $strSerializedTZ;
+		public function serialize() {
 			$tz = $this->getTimezone();
 			if ($tz && in_array ($tz->getName(), timezone_identifiers_list())) {
-				// valid relative timezone name found
-				$this->strSerializedData = parent::format('Y-m-d H:i:s');
-				$this->strSerializedTZ = $tz->getName();
-				return array('blnDateNull', 'blnTimeNull', 'strSerializedData', 'strSerializedTZ');
+				$strTz = $tz->getName();
+				$strDate = parent::format('Y-m-d H:i:s');
 			} else {
-				// absolute timezone, which can't be sent into the constructor of DateTimeZone
-				$this->strSerializedData = parent::format (DateTime::ISO8601);
-				return array('blnDateNull', 'blnTimeNull', 'strSerializedData');
+				$strTz = null;
+				$strDate = parent::format (DateTime::ISO8601);
 			}
+			return serialize([
+				1, // version number of serialized data, in case format changes
+				$this->blnDateNull,
+				$this->blnTimeNull,
+				$strDate,
+				$strTz
+			]);
 		}
-		public function __wakeup() {
-			$tz = null;
-			if ($this->strSerializedTZ) {
-				$tz = new DateTimeZone($this->strSerializedTZ);
+		public function unserialize($s) {
+			$a = unserialize($s);
+			$this->blnDateNull = $a[1];
+			$this->blnTimeNull = $a[2];
+			$tz = $a[4];
+			if ($tz) {
+				$tz = new DateTimeZone($tz);
+			} else {
+				$tz = null;
 			}
-			parent::__construct($this->strSerializedData, $tz);
-			$this->strSerializedData = null;
-			$this->strSerializedTZ = null;
+			parent::__construct($a[3], $tz);
 		}
-
 
 		/**
 		 * Outputs the date as a string given the format strFormat.  Will use
@@ -1164,4 +1170,3 @@
 		print ('Minute: ' . $dtt->Minute . '<br/>');
 		print ('Second: ' . $dtt->Second . '<br/>');
 	}*/
-?>

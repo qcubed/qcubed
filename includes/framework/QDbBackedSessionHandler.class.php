@@ -5,6 +5,12 @@
 	 *
 	 * This file contains the QDbBackedSessionHandler class.
 	 *
+	 * Relies on a SQL database table with the following columns:
+	 * 	id - STRING primary key
+	 *  last_access_time - INT
+	 *  data - BLOB or BINARY or VARBINARY. Must be a binary safe column, and capable of holding the maximum size of
+	 * 		session data for your app, which depends on what you are putting in the $_SESSION variable.
+	 *
 	 * @package Sessions
 	 */
 	class QDbBackedSessionHandler extends QBaseClass {
@@ -23,6 +29,12 @@
 		 * @var string The session name to be used for saving sessions.
 		 */
 		protected static $strSessionName = '';
+
+		/** @var bool Whether to encrypt the session data. Highly recommended whenever sessions can authenticate a user. */
+		public static $blnEncrypt = true;
+
+		/** @var bool Whether to compress the session data. */
+		public static $blnCompress = true;
 
 
 		/**
@@ -91,6 +103,7 @@
 		 * @param string $id
 		 *
 		 * @return string the session data, base64 decoded
+		 * @throws QCallerException
 		 */
 		public static function SessionRead($id) {
 			$id = self::$strSessionName . '.' . $id;
@@ -105,17 +118,41 @@
 
 			$result = $objDatabase->Query($query);
 
-			$result_row = $result->FetchArray();
+			$result_row = $result->FetchRow();
 
-			// either the data was empty or the row was not found
-			if (!$result_row)
+
+			if (!$result_row) // either the data was empty or the row was not found
 				return '';
-			$strData = $result_row['data'];
+			$strData = $result_row[0];
+
+			if(strstr($objDatabase->Adapter, 'PostgreSql')) {
+				if(function_exists('pg_unescape_bytea')) {
+					$strData = pg_unescape_bytea($strData);
+				} else {
+					throw new QCallerException('pg_unescape_bytea method needed for DbBackedSessionHandler to operate on a PostgreSQL database. Please install the "pgsql" PHP extension.');
+				}
+			}
+
 			if (!$strData)
 				return '';
+
 			// The session exists and was accessed. Return the data.
-			// We do base64_decode because the write method had encoded it!
-			return base64_decode($strData);
+			if (self::$blnEncrypt) {
+				try {
+					$crypt = new QCryptography();
+					$strData = $crypt->Decrypt($strData);
+				}
+				catch(Exception $e) {
+					// if mcyrpt not installed, skip this step
+				}
+			}
+
+			if (self::$blnCompress) {
+				$strData = gzuncompress($strData);
+			}
+
+			
+			return $strData;
 		}
 
 		/**
@@ -151,18 +188,35 @@
 		 * @return bool
 		 */
 		public static function SessionWrite($id, $strSessionData) {
-			// We save base 64 encoded data in the database and there are reasons for it:
-			// If you are having anything in session data which does not go well with the UTF-8 (default for most databases)
-			// encoding, the database will start nagging and sessions will break. You may have blank pages as well.
-			// Also, if you are using the QSessionFormStateHandler, compression of FormState converts the data to binary format
-			// thus making it unfit to be saved to the database.
-			// Base 64 encoding ensures that the data can be safely saved into the database as text.
+			if (empty($strSessionData)) {
+				static::SessionDestroy($id);
+				return true;
+			}
+
+			$strEncoded = $strSessionData;
+
+			if (self::$blnCompress) {
+				$strEncoded = gzcompress($strSessionData);
+			}
+
+			if (self::$blnEncrypt) {
+				try {
+					$crypt = new QCryptography();
+					$strEncoded = $crypt->Encrypt($strEncoded);
+				}
+				catch(Exception $e) {
+					// if mcyrpt not installed, skip this step
+				}
+			}
+
+			assert (!empty($strEncoded));
+
 			$id = self::$strSessionName . '.' . $id;
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
 			$objDatabase->InsertOrUpdate(
 				self::$strTableName,
 				array(
-					'data' => base64_encode($strSessionData),
+					'data' => $strEncoded,
 					'last_access_time' => time(),
 					'id' => $id
 				),
@@ -211,5 +265,3 @@
 			return true;
 		}
 	}
-
-?>

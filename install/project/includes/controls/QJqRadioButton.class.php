@@ -18,4 +18,3 @@
 
 	class QJqRadioButton extends QJqRadioButtonBase	{
 	}
-?>

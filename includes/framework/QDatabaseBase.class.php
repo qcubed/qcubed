@@ -1302,4 +1302,3 @@
 		/** New JSON type */
 		const Json = "Json";
 	}
-?>

@@ -297,4 +297,3 @@ class QQFuncTests extends QUnitTestCaseBase {
 		$objTest2->Delete();
 	}
 }
-?>

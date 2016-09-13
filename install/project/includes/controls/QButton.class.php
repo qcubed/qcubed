@@ -25,5 +25,3 @@
 //		protected $strFontSize = '10px';
 //		protected $blnFontBold = true;
 	}
-
-?>

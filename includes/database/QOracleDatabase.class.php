@@ -795,4 +795,3 @@ class QOracleDatabaseField extends QDatabaseFieldBase {
 		}
 	}
 }
-?>

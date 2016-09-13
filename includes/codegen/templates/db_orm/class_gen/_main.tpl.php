@@ -119,6 +119,3 @@
 
 
 	<?php include("qcubed_query_classes.tpl.php"); ?>
-
-
-?>

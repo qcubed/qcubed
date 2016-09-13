@@ -14,5 +14,4 @@ foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) {
     } else {
     	include("associated_object_manytomany.tpl.php");
     }
-} 
-?>
+}

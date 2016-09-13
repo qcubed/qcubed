@@ -20,5 +20,3 @@
 			$this->strTextMode = QTextMode::Email;
 		}
 	}
-
-?>

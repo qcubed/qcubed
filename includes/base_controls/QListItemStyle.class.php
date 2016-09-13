@@ -13,4 +13,3 @@
 	class QListItemStyle extends QTagStyler {
 
 	}
-?>

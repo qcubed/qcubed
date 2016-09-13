@@ -6,5 +6,3 @@
 	class QHtmlTable extends QHtmlTableBase
 	{
 	}
-
-?>

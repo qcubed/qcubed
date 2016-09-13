@@ -138,4 +138,3 @@
 			return sprintf('%s/%s', QCache::$CachePath, $this->strNamespace);
 		}
 	}
-?>

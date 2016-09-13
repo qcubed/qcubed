@@ -491,4 +491,3 @@
 					QType::SoapType($strType));
 		}*/
 	}
-?>

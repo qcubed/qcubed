@@ -873,6 +873,7 @@
 					$this->strType = QDatabaseFieldType::VarChar;
 					break;
 				case 'text':
+				case 'bytea':
 					$this->strType = QDatabaseFieldType::Blob;
 					break;
 				case 'timestamp':

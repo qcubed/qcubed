@@ -18,4 +18,3 @@
 	class QAccordion extends QAccordionBase
 	{
 	}
-?>

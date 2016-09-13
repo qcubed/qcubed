@@ -8,5 +8,3 @@ if (isset($_SESSION['RenderedPageForError'])) {
 } else {
 	echo "The rendered page could not be displayed";
 }
-
-?>

@@ -116,4 +116,3 @@ class QTypeTests extends QUnitTestCaseBase {
 
 	}
 }
-?>

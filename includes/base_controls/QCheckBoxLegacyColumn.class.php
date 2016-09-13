@@ -327,5 +327,3 @@ class QCheckBoxLegacyColumn extends QDataGridLegacyColumn
 	}
 
 }
-
-?>

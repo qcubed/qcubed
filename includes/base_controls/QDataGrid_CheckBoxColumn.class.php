@@ -176,7 +176,7 @@ class QDataGrid_CheckBoxColumn extends QHtmlTableCheckBoxColumn {
 	 * @param $itemId
 	 * @param $blnChecked
 	 */
-	protected function SetItemCheckedState ($itemId, $blnChecked) {
+	public function SetItemCheckedState ($itemId, $blnChecked) {
 		$strFormId = $this->ParentTable->Form->FormId;
 		$strTableId = $this->ParentTable->ControlId;
 		if ($blnChecked) {

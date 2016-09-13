@@ -17,4 +17,3 @@
 	 */
 	class QJqCheckBox extends QJqCheckBoxBase {
 	}
-?>

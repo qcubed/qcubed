@@ -372,4 +372,3 @@ class QDatabaseTests extends QUnitTestCaseBase {
 		$objPerson1->Delete();
 	}
 }
-?>

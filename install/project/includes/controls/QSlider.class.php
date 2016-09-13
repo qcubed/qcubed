@@ -22,4 +22,3 @@
 	class QSlider extends QSliderBase
 	{
 	}
-?>

@@ -597,22 +597,22 @@
 
 					// Use Standard Rendering
 					$objClass->Render();
-					break;
+
+					// Ensure that RenderEnd() was called during the Render process
+					switch ($objClass->intFormStatus) {
+						case QFormBase::FormStatusUnrendered:
+							throw new QCallerException('$this->RenderBegin() is never called in the HTML Include file');
+						case QFormBase::FormStatusRenderBegun:
+							throw new QCallerException('$this->RenderEnd() is never called in the HTML Include file');
+						case QFormBase::FormStatusRenderEnded:
+							break;
+						default:
+							throw new QCallerException('FormStatus is in an unknown status');
+					}
+				break;
 
 				default:
 					throw new Exception('Unknown Form CallType: ' . $objClass->strCallType);
-			}
-
-			// Ensure that RenderEnd() was called during the Render process
-			switch ($objClass->intFormStatus) {
-				case QFormBase::FormStatusUnrendered:
-					throw new QCallerException('$this->RenderBegin() is never called in the HTML Include file');
-				case QFormBase::FormStatusRenderBegun:
-					throw new QCallerException('$this->RenderEnd() is never called in the HTML Include file');
-				case QFormBase::FormStatusRenderEnded:
-					break;
-				default:
-					throw new QCallerException('FormStatus is in an unknown status');
 			}
 
 			// Once all the controls have been set up, and initialized, remember them.
@@ -764,7 +764,7 @@
 				$aResponse[QAjaxResponse::Controls][] = [QAjaxResponse::Id=>"Qform__FormState", QAjaxResponse::Value=>$strFormState];	// bring it back next time
 				ob_clean();
 				QApplication::SendAjaxResponse($aResponse);
-				exit();
+				return;
 			}
 
 			// Update the Status
@@ -855,7 +855,6 @@
 
 			// Update Render State
 			$this->intFormStatus = QFormBase::FormStatusRenderEnded;
-			exit;
 		}
 
 		/**
