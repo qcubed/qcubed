@@ -40,7 +40,7 @@ if (stristr($__exc_strMessage, "Invalid Form State Data") !== false) {
 <html>
 	<head>
 		<title>PHP <?php _p($__exc_strType); ?> - <?php _p($__exc_strMessage); ?></title>
-		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__, false); ?>/styles.css");</style>
+		<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/styles.css");</style>
 	</head>
 	<body>
 		<header>

@@ -95,7 +95,7 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
 
 /* SQL Profiling */
 .qDbProfile {
-    /*position: absolute;*/
+    position: absolute;
     background-color: white;
     padding: 5px;
     top: 0;

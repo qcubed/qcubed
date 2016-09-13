@@ -59,7 +59,7 @@
 <html>
 <head>
 	<title>QCubed Development Framework - Database Profiling Tool</title>
-	<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__, false); ?>/corepage.css");</style>
+	<style type="text/css">@import url("<?php _p(__VIRTUAL_DIRECTORY__ . __CSS_ASSETS__); ?>/corepage.css");</style>
 <?php
 	foreach ($strJsFileArray as $strJsFile) {
 		if (false !== strpos($strJsFile, "http")) {
