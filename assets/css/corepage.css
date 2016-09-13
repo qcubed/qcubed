@@ -1,0 +1,144 @@
+/**
+ * Borrowed css from qcodo
+ * Modified according to the need for a qcubed:
+ * profiling
+ * error page
+ */
+
+	body { 
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 14px;
+		margin: 0;
+	}
+	a { color: #009721;}
+	a:link, a:visited { text-decoration: none; }
+	a:hover { text-decoration: underline; }
+	form { margin: 0; }
+	
+	#container { }
+	#content { padding: 15px 20px 0 20px; margin-bottom: 20px; }
+	
+	#headerContainer {
+		overflow: hidden;
+		padding-bottom: 5px;
+		line-height: 18px;
+		width: 100%;
+	}
+	#headerBorder { }
+	#header {
+		background-color: #333;
+		color: #ffffff;
+		font-size: 16px;
+		overflow: hidden;
+		height: 100%;
+	}
+		#header a { color: #fff; }
+	
+	/* diffrent header do error page */
+	.headerError {
+		background-color: #a00 !important;
+		border-top: 1px solid #e00 !important;
+		border-bottom: 1px solid #e00 !important;
+	}
+	.headerErrorBorder {
+		border-bottom: 1px solid #900 !important;
+	}
+	#header #hleft {
+		float: left;
+		padding: 10px 0px 10px 20px;
+		line-height: 24px;
+	}
+	#header .hbig {	
+		font-size: 21px;
+		font-weight: bold;
+		text-shadow: 1px 1px 2px rgba(0, 50, 11, 0.7);
+	}
+	#header .hsmall { font-size: 14px; }
+	#header #hright {
+		float: right;
+		font-size: 13px;
+		padding: 10px 10px 10px 0;
+		text-align: right;
+	}
+	
+	.title {
+		font-size: 18px;
+		font-weight: bold;
+	}
+	.code_title { 
+		font-size: 16px; 
+		font-weight: bold; 
+	}
+	
+	pre { 
+		font-family: 'Lucida Console', 'Courier New', Courier, monospaced;
+		font-size: 14px;
+		line-height: 16px;
+		margin: 10px 0;
+	}	
+	pre code {
+		font-size: 12px;
+		margin: 0;
+		padding: 10px;
+		display: block;
+
+		background: #f6f6f6 none repeat scroll 0 0;
+		border: 1px solid #dedede;
+		border-radius: 3px;
+		white-space: pre-wrap;
+	}
+		
+	.function { 
+		font-weight: bold;
+		line-height: 21px;
+	}
+	.function_details {
+		color: #444;
+		font-size: 14px;
+		line-height: 21px;
+	}
+
+	a.smallbutton {
+		border: 1px solid #aaa;
+		background-color: #f6f6f6;
+		color: #000;
+		padding: 0px 4px;
+		-moz-border-radius: 2px;
+		-webkit-border-radius: 2px;
+		border-radius: 2px;
+		font-size: 14px;
+	}
+		a.smallbutton:hover { background-color: #c1e2ac; border-color: #69ca32; outline: 0; text-decoration: none; }
+	
+	p.buttons { padding: 5px 0; margin: 10px 0; }
+		p.buttons a {
+			font-family: inherit;
+			font-size: inherit;
+			border: 1px solid #aaa;
+			background-color: #f6f6f6;
+			color: #000;
+
+			font-weight: bold;
+			padding: 4px 8px;
+			-moz-border-radius: 2px;
+			-webkit-border-radius: 2px;
+			border-radius: 2px;
+		}
+			p.buttons a:hover { background-color: #c1e2ac; border-color: #69ca32; outline: 0; text-decoration: none; }
+
+	.time { font-size: 14px; }
+	.slow, .error { color: #F00; }
+	.clear {
+		clear: both;
+		font-size: 0pt;
+	}
+	
+	#footer {
+		border-top: 1px solid #d8d8d8;
+		color: #444;
+		font-size: 12px;
+		text-align: center;
+		padding-top: 20px;
+		margin: 0 20px;
+		clear: both;
+	}
