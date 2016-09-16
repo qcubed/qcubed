@@ -1,209 +1,271 @@
 <?php
-	// Requires libmcrypt v2.4.x or higher
+
+/**
+ * Class QCryptographyException: If an exception occurs in the QCryptography class, we use this one to handle
+ */
+class QCryptographyException extends QCallerException {
+}
+
+/**
+ * Class QCryptography: Helps in encrypting and decrypting data using block ciphers.
+ *
+ * Uses the openssl_* methods
+ *
+ * Can use a variety of encryption methods, but the default method, AES-256-CBC, is recommended.
+ *
+ * When using a CBC method, an initialization vector("IV") must be generated and saved. Note that this should NOT use a static value,
+ * as it will defeat the purpose of the IV. It must be random. This class will automatically generate a random IV
+ * for you, but you must be aware of how this IV is saved. There are two ways to do it:
+ *
+ * 1) Serialize the instance of this class and save it after you initialize it. You must be sure to save it in a safe place since it
+ * 	  contains your encryption key. For example, you can make it a form variable, or a session variable,
+ * 	  making sure your form or session data is secure and
+ *    cannot be seen by a user, then when the instance gets unserialized, the IV will be restored automatically.
+ * 	  Storing the instance in a QApplication or global variable will not work, since these things are reinitialized every
+ *    time PHP starts up, and you will get a different IV at that time. If you do not correctly
+ * 	  restore the IV that was used to Encrypt, that you will not be able to Decrypt.
+ *
+ * 2) Pass a value to $strIvHashKey in the constructor, and the initialization vector will be appended to the resulting encrypted data.
+ *    This hash key SHOULD be a static value that is part of your app and must be passed to the constructor of any instance of
+ * 	  QCryptography that will be used to decrypt the data. This gives you the ability to decrypt the value without needing to save
+ * 	  the IV or rely on serialized instance of this class.
+ * 	  Note that appending the IV to the encrypted data does not compromise the encrypted data at all, but it will make the data
+ * 	  larger. If you are doing block-level ciphering and you want the resulting encryption to be the same size as the given data,
+ * 	  you must be aware of that.
+ */
+
+class QCryptography extends QBaseClass {
+	/**
+	 * Constant to indicate that Random IV is to be automatically generated.
+	 * To generate a valid random IV, pass it in the class constuctor at the place of IV
+	 *
+	 * We use a single digit because no cipher algorithm requires an IV of length 1.
+	 */
+	const IV_RANDOM = 'R';
+
+	/** @var bool Are we going to use Base 64 encoding? */
+	protected $blnBase64;
+	/** @var string Key to be used for encryption/decryption */
+	protected $strKey;
+	/**
+	 * @var string Initialization vector for the algorithm
+	 *
+	 *             Note that this is NOT used in ECB modes
+	 */
+	protected $strIv = '';
+	/** @var  string Cipher to use when creating the encryption object */
+	protected $strCipher;
+
+	/** @var  string The hash key to use when protecting the embedded IV, if requested. */
+	protected $strIvHashKey;
 
 	/**
-	 * Class QCryptographyException: If an exception occurs in the QCryptography class, we use this one to handle
+	 * Default Base64 mode for any new QCryptography instances that get constructed.
+	 * This is similar to MIME-based Base64 encoding/decoding, but is safe to use
+	 * in URLs, POST/GET data, and any other text-based stream.
+	 * Note that by setting Base64 to true, it will result in an encrypted data string
+	 * that is 33% larger.
+	 *
+	 * @var string Base64
 	 */
-	class QCryptographyException extends QCallerException {
-	}
+	public static $Base64 = true;
 
-	/**
-	 * Class QCryptography: Helps in encrypting and decrypting data
-	 * Uses the openssl_* methods
+	/*
+	 * @param null|string $strKey    Encryption key
+	 * @param null|bool   $blnBase64 Are we going to Base 64 the encoded data?
+	 * @param null|string $strCipher Cipher to be used (default is AES-256-CBC)
+	 * @param null|string $strIvHash  A hash key to use. If given, will cause the IV to be added to the end of encrypted values so its
+	 * 								  possible to decrypt the value if the IV is lost. See above discussion.
+	 *
+	 * @throws QCallerException
+	 * @throws QCryptographyException
 	 */
-	class QCryptography extends QBaseClass {
-		/**
-		 * Constant to indicate that Random IV is to be automatically generated.
-		 * To generate a valid random IV, pass it in the class constuctor at the place of IV
-		 *
-		 * We use a single digit because no cipher algorithm requires an IV of length 1.
-		 */
-		const IV_RANDOM = 'R';
+	public function __construct($strKey = null, $blnBase64 = null, $strCipher = null, $strIvHashKey = null) {
 
-		/** @var bool Are we going to use Base 64 encoding? */
-		protected $blnBase64;
-		/** @var string Key to be used for encryption/decryption - used for mycrypt_generic_init */
-		protected $strKey;
-		/**
-		 * @var string Initialization vector for the algorithm
-		 *
-		 *             Note that this is NOT used in ECB modes
-		 */
-		protected $strIv = '';
-		/** @var  string Cipher to use when creating the encryption object */
-		protected $strCipher;
-		/** @var  string Mode to use when creating the encryption object */
-		protected $strMode;
+		$this->strIvHashKey = $strIvHashKey;
 
+		// Get the Key
+		if (is_null($strKey)) {
+			if (!defined('QCRYPTOGRAPHY_DEFAULT_KEY')) {
+				throw new Exception('To use QCryptography, either pass in a key, or define QCRYPTOGRAPHY_DEFAULT_KEY in your config file');
+			}
+			$this->strKey = QCRYPTOGRAPHY_DEFAULT_KEY;
+		} else {
+			$this->strKey = $strKey;
+		}
 
-		/**
-		 * Default Base64 mode for any new QCryptography instances that get constructed.
-		 * This is similar to MIME-based Base64 encoding/decoding, but is safe to use
-		 * in URLs, POST/GET data, and any other text-based stream.
-		 * Note that by setting Base64 to true, it will result in an encrypted data string
-		 * that is 33% larger.
-		 *
-		 * @var string Base64
-		 */
-		public static $Base64 = true;
-
-		/**
-		 * The Random Number Generator the library uses to generate the IV:
-		 *  - MCRYPT_DEV_RANDOM = /dev/random (only on *nix systems)
-		 *  - MCRYPT_DEV_URANDOM = /dev/urandom (only on *nix systems)
-		 *  - MCRYPT_RAND = the internal PHP srand() mechanism
-		 * (on Windows, you *must* use MCRYPT_RAND, b/c /dev/random and /dev/urandom doesn't exist)
-		 * TODO: there appears to be some /dev/random locking issues on the QCubed development
-		 * environment (using Fedora Core 3 with PHP 5.0.4 and LibMcrypt 2.5.7).  Because of this,
-		 * we are using MCRYPT_RAND be default.  Feel free to change to to /dev/*random at your own risk.
-		 *
-		 * @param null|string $strKey    Encryption key
-		 * @param null|bool   $blnBase64 Are we going to use Base 64 encoded data?
-		 * @param null|string $strCipher Cipher to be used (default is AES-256-CBC)
-		 * @param null|string $strIv     Initialization Vector
-		 *
-		 * @throws QCallerException
-		 * @throws QCryptographyException
-		 */
-		public function __construct($strKey = null, $blnBase64 = null, $strCipher = null, $strIv = null) {
-
-			// Get the Key
-			if (is_null($strKey)) {
-				$this->strKey = QCRYPTOGRAPHY_DEFAULT_KEY;
+		// Get the Base64 Flag
+		try {
+			if (is_null($blnBase64)) {
+				$this->blnBase64 = QType::Cast(self::$Base64, QType::Boolean);
 			} else {
-				$this->strKey = $strKey;
+				$this->blnBase64 = QType::Cast($blnBase64, QType::Boolean);
 			}
+		} catch (QCallerException $objExc) {
+			$objExc->IncrementOffset();
+			throw $objExc;
+		}
 
-			// Get the Base64 Flag
-			try {
-				if (is_null($blnBase64)) {
-					$this->blnBase64 = QType::Cast(self::$Base64, QType::Boolean);
-				} else {
-					$this->blnBase64 = QType::Cast($blnBase64, QType::Boolean);
-				}
-			} catch (QCallerException $objExc) {
-				$objExc->IncrementOffset();
-				throw $objExc;
-			}
-
-			// Get the Cipher
-			if (is_null($strCipher)) {
-				$this->strCipher = 'AES-256-CBC';
-			} else {
-				// User has supplied a cipher-name
-				// We make sure that the Cipher name was correct/exists
-				try {
-					// Set the cipher
-					$this->strCipher = $strCipher;
-
-					// The following method will automatically test for availability of the supplied cipher name
-					$strIvLength = openssl_cipher_iv_length($strCipher);
-				} catch (Exception $e) {
-					throw new QCallerException('No Cipher with name ' . $strCipher . ' could be found in openssl library');
-				}
-			}
-
-			// Set the correct IV
+		// Get the Cipher
+		if (defined('QCRYPTOGRAPHY_DEFAULT_CIPHER')) {
+			$this->strCipher = QCRYPTOGRAPHY_DEFAULT_CIPHER;
+		} elseif ($strCipher) {
+			$this->strCipher = $strCipher;
+		} else {
+			$this->strCipher = 'AES-256-CBC';
+		}
+		// User has supplied a cipher-name
+		// We make sure that the Cipher name was correct/exists
+		try {
+			// The following method will automatically test for availability of the supplied cipher name
 			$strIvLength = openssl_cipher_iv_length($this->strCipher);
-			if($strIvLength == 0) {
-				// IV is not needed for the selected algorithm (it could be a ECB algorithm)
-				$this->strIv = null;
-			} elseif(!$strIv) {
-				// If the IV was not supplied, we will use the default
-				$this->strIv = QCRYPTOGRAPHY_DEFAULT_IV;
-			} elseif($strIv == self::IV_RANDOM) {
-				// If Random IV was requested
-				$this->strIv = openssl_random_pseudo_bytes($strIvLength);
-			} else {
-				// set whatever was supplied
-				$this->strIv = $strIv;
-			}
-
-			// Finally test that the selected IV length suits the supplied IV
-			if(strlen($this->strIv) != openssl_cipher_iv_length($this->strCipher)) {
-				throw new QCallerException($this->strCipher . ' needs a cipher of ' . $strIvLength . ' characters. IV of ' . strlen($this->strIv) . ' suppled.');
-			}
+		} catch (Exception $e) {
+			throw new QCallerException('No Cipher with name ' . $this->strCipher . ' could be found in openssl library');
 		}
 
-		/**
-		 * Encrypt the data (depends on the value of class members)
-		 * @param string $strData
-		 *
-		 * @return mixed|string
-		 * @throws QCryptographyException
-		 */
-		public function Encrypt($strData) {
-			$strEncryptedData = openssl_encrypt($strData, $this->strCipher, $this->strKey, 0, $this->strIv);
-
-			if ($this->blnBase64) {
-				$strEncryptedData = base64_encode($strEncryptedData);
-				$strEncryptedData = str_replace('+', '-', $strEncryptedData);
-				$strEncryptedData = str_replace('/', '_', $strEncryptedData);
-				$strEncryptedData = str_replace('=', '', $strEncryptedData);
-			}
-
-			return $strEncryptedData;
-		}
-
-		/**
-		 * Decrypt the data (depends on the value of class memebers)
-		 * @param string $strEncryptedData
-		 *
-		 * @return string
-		 * @throws QCryptographyException
-		 */
-		public function Decrypt($strEncryptedData) {
-			if ($this->blnBase64) {
-				$strEncryptedData = str_replace('_', '/', $strEncryptedData);
-				$strEncryptedData = str_replace('-', '+', $strEncryptedData);
-				$strEncryptedData = base64_decode($strEncryptedData);
-			}
-			$strDecryptedData = openssl_decrypt($strEncryptedData, $this->strCipher, $this->strKey, 0, $this->strIv);
-
-			return $strDecryptedData;
-		}
-
-		/**
-		 * Encrypt a file (depends on the value of class memebers)
-		 *
-		 * @param string $strFile Path of the file to be encrypted
-		 *
-		 * @return mixed|string
-		 * @throws QCallerException|QCryptographyException
-		 */
-		public function EncryptFile($strFile) {
-			if (file_exists($strFile)) {
-				$strData = file_get_contents($strFile);
-
-				return $this->Encrypt($strData);
-			} else {
-				throw new QCallerException('File does not exist: ' . $strFile);
-			}
-		}
-
-		/**
-		 * Decrypt a file (depends on the value of class memebers)
-		 *
-		 * @param string $strFile File to be decrypted
-		 *
-		 * @return string
-		 * @throws QCallerException|QCryptographyException
-		 */
-		public function DecryptFile($strFile) {
-			if (file_exists($strFile)) {
-				$strEncryptedData = file_get_contents($strFile);
-
-				return $this->Decrypt($strEncryptedData);
-			} else {
-				throw new QCallerException('File does not exist: ' . $strFile);
-			}
-		}
-
-		/**
-		 * Closes the mcrypt module
-		 * (Some methods just want to watch the world burn!)
-		 */
-		public function __destruct() {
-
+		if($strIvLength == 0) {
+			// IV is not needed for the selected algorithm (it could be a ECB algorithm)
+			$this->strIv = null;
+		} else {
+			// Generate random IV
+			$this->strIv = openssl_random_pseudo_bytes($strIvLength);
 		}
 	}
+
+	/**
+	 * Encrypt the data (depends on the value of class members)
+	 * @param string $strData
+	 *
+	 * @return mixed|string
+	 * @throws QCryptographyException
+	 */
+	public function Encrypt($strData) {
+		$strEncryptedData = openssl_encrypt($strData, $this->strCipher, $this->strKey, 0, $this->strIv);
+
+		if ($this->strIvHashKey) {
+			// User has asked to include the IV with the encrypted string so that we do not have to store the IV somewhere else.
+			/**
+			 * Based on http://pastebin.com/sN6buivY
+			 * True will append the initialization vector and a hash value to the end of the cryptography so that:
+			 * a) The crypto can be unencrypted without having to save the IV
+			 * b) The crypto can be tested for tampering using the hash.
+			 *
+			 * Will increase the size of the resulting value by the size of the IV + about 50%. The other option is to serialize the class or in
+			 * some other way save the IV and restore it later.
+			 */
+			$strEncryptedData .= '=' . bin2hex($this->strIv);
+			$strEncryptedData .= '=' . hash_hmac('sha256', $strEncryptedData, $this->strIvHashKey);
+		}
+
+		if ($this->blnBase64) {
+			$strEncryptedData = static::Base64Encode($strEncryptedData);
+		}
+
+		return $strEncryptedData;
+	}
+
+	/**
+	 * Decrypt the data
+	 *
+	 * @param string $strEncryptedData
+	 *
+	 * @return string
+	 * @throws QCryptographyException
+	 */
+	public function Decrypt($strEncryptedData) {
+		if ($this->blnBase64) {
+			$strEncryptedData = self::Base64Decode($strEncryptedData);
+		}
+		$strIv = $this->strIv;
+		if ($this->strIvHashKey) {
+			$offset = strrpos($strEncryptedData, "=");
+			if ($offset === null) {
+				throw new QCryptographyException("Hash value not found.");
+			}
+			$hash1 = substr($strEncryptedData, $offset + 1);
+			$strEncryptedData = substr($strEncryptedData, 0, $offset);
+
+			// check for tampering
+			$hash2 = hash_hmac('sha256', $strEncryptedData, $this->strIvHashKey);
+			if ($hash1 != $hash2) {
+				throw new QCryptographyException("Encryption tampering detected");
+			}
+
+			$offset2 = strrpos($strEncryptedData, "=");
+
+			if ($offset2 === null) {
+				throw new QCryptographyException("IV not found.");
+			}
+			$strIv = substr($strEncryptedData, $offset2 + 1);
+			$strIv = hex2bin($strIv);	// undo our serialization encoding
+			$strEncryptedData = substr($strEncryptedData, 0, $offset2);
+		}
+		$strDecryptedData = openssl_decrypt($strEncryptedData, $this->strCipher, $this->strKey, 0, $strIv);
+
+		return $strDecryptedData;
+	}
+
+	/**
+	 * Encrypt a file (depends on the value of class memebers)
+	 *
+	 * @param string $strFile Path of the file to be encrypted
+	 *
+	 * @return mixed|string
+	 * @throws QCallerException|QCryptographyException
+	 */
+	public function EncryptFile($strFile) {
+		if (file_exists($strFile)) {
+			$strData = file_get_contents($strFile);
+
+			return $this->Encrypt($strData);
+		} else {
+			throw new QCallerException('File does not exist: ' . $strFile);
+		}
+	}
+
+	/**
+	 * Decrypt a file (depends on the value of class memebers)
+	 *
+	 * @param string $strFile File to be decrypted
+	 *
+	 * @return string
+	 * @throws QCallerException|QCryptographyException
+	 */
+	public function DecryptFile($strFile) {
+		if (file_exists($strFile)) {
+			$strEncryptedData = file_get_contents($strFile);
+
+			return $this->Decrypt($strEncryptedData);
+		} else {
+			throw new QCallerException('File does not exist: ' . $strFile);
+		}
+	}
+
+
+	/**
+	 * Base64 encode in a way that the result can be passed through HTML forms and URLs.
+	 * @param $s
+	 * @return mixed
+	 */
+	protected static function Base64Encode($s) {
+		$s = base64_encode($s);
+		$s = str_replace('+', '-', $s);
+		$s = str_replace('/', '_', $s);
+		$s = str_replace('=', '', $s);
+		return ($s);
+	}
+
+	/**
+	 * Base64 Decode in a way that the result can be passed through HTML forms and URLs.
+	 *
+	 * @param $s
+	 * @return mixed
+	 */
+	protected static function Base64Decode($s) {
+		$s = str_replace('_', '/', $s);
+		$s = str_replace('-', '+', $s);
+		$s = base64_decode($s);
+		return ($s);
+	}
+
+}
