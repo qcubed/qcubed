@@ -86,7 +86,7 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 
 			// Set NAMES (if applicable)
 			if (array_key_exists('encoding', $this->objConfigArray))
-				$this->NonQuery('SET NAMES ' . $this->objConfigArray['encoding'] . ';');
+				$this->NonQuery('SET NAMES ' . $this->objConfigArray['set_charset'] . ';');
 		}
 
 		public function __get($strName) {
