@@ -8,7 +8,8 @@
 	 * Relies on a SQL database table with the following columns:
 	 * 	id - STRING primary key
 	 *  last_access_time - INT
-	 *  data - BLOB or BINARY or VARBINARY. Must be a binary safe column, and capable of holding the maximum size of
+	 *  data - can be a BLOB or BINARY or VARBINARY or a TEXT. If TEXT, be sure to leave $blnBase64 on. If you are using
+	 * 		a binary field, you can turn that off to save space. Make sure your column is capable of holding the maximum size of
 	 * 		session data for your app, which depends on what you are putting in the $_SESSION variable.
 	 *
 	 * @package Sessions
@@ -29,9 +30,9 @@
 		 * @var string The session name to be used for saving sessions.
 		 */
 		protected static $strSessionName = '';
-
-		/** @var bool Whether to encrypt the session data. Highly recommended whenever sessions can authenticate a user. */
-		public static $blnEncrypt = true;
+		
+		/** @var bool Whether to base64 the session data. Required when storing data in a TEXT field. */
+		public static $blnBase64 = true;
 
 		/** @var bool Whether to compress the session data. */
 		public static $blnCompress = true;
@@ -125,7 +126,8 @@
 				return '';
 			$strData = $result_row[0];
 
-			if(strstr($objDatabase->Adapter, 'PostgreSql')) {
+			/** A kludge to fix a particular problem. Would require a complete rewrite of our database adapters to do this right. */
+			if(!static::$blnBase64 && strstr($objDatabase->Adapter, 'PostgreSql')) {
 				if(function_exists('pg_unescape_bytea')) {
 					$strData = pg_unescape_bytea($strData);
 				} else {
@@ -136,14 +138,21 @@
 			if (!$strData)
 				return '';
 
+			if (self::$blnBase64) {
+				$strData = base64_decode($strData);
+
+				if ($strData === false) {
+					throw new Exception("Failed decoding formstate " . $strData);
+				}
+			}
+
 			// The session exists and was accessed. Return the data.
-			if (self::$blnEncrypt) {
+			if (defined('DB_BACKED_SESSION_HANDLER_ENCRYPTION_KEY')) {
 				try {
-					$crypt = new QCryptography();
+					$crypt = new QCryptography(DB_BACKED_SESSION_HANDLER_ENCRYPTION_KEY, false, null, DB_BACKED_SESSION_HANDLER_HASH_KEY);
 					$strData = $crypt->Decrypt($strData);
 				}
 				catch(Exception $e) {
-					// if mcyrpt not installed, skip this step
 				}
 			}
 
@@ -199,13 +208,22 @@
 				$strEncoded = gzcompress($strSessionData);
 			}
 
-			if (self::$blnEncrypt) {
+			if (defined('DB_BACKED_SESSION_HANDLER_ENCRYPTION_KEY')) {
 				try {
-					$crypt = new QCryptography();
+					$crypt = new QCryptography(DB_BACKED_SESSION_HANDLER_ENCRYPTION_KEY, false, null, DB_BACKED_SESSION_HANDLER_HASH_KEY);
 					$strEncoded = $crypt->Encrypt($strEncoded);
 				}
 				catch(Exception $e) {
-					// if mcyrpt not installed, skip this step
+				}
+			}
+
+			if (self::$blnBase64) {
+				$encoded = base64_encode($strEncoded);
+				if ($strEncoded && !$encoded) {
+					throw new Exception ("Base64 Encoding Failed on " . $strSessionData);
+				}
+				else {
+					$strEncoded = $encoded;
 				}
 			}
 

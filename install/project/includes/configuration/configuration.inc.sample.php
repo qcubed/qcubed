@@ -438,6 +438,10 @@ if (!defined('SERVER_INSTANCE')) {
 	// If using QDbBackedSessionHandler, specify the table name which would hold the formstates (must meet the requirements laid out above)
 	define('__DB_BACKED_FORM_STATE_HANDLER_TABLE_NAME__', 'qc_formstate');
 
+	// Uncomment the following and provide your own random keys if you want the form state to be encrypted before it is inserted into your database.
+	// You will need both keys.
+	//define('__DB_BACKED_FORM_STATE_HANDLER_ENCRYPTION_KEY__', 'a243$5@13');
+	//define('__DB_BACKED_FORM_STATE_HANDLER_HASH_KEY__', '0293()aih');
 
 	/*
 	 * QCubed allows you to save / read / write your user PHP sessions in a database.
@@ -480,6 +484,11 @@ if (!defined('SERVER_INSTANCE')) {
 
 	// Name of session variable used to save the state of form objects.
 	define('__SESSION_SAVED_STATE__', 'QSavedState');
+
+	// Uncomment the following and fill in your own random keys to encrypt the data that goes into the database
+	//define("DB_BACKED_SESSION_HANDLER_ENCRYPTION_KEY", 'adkhjf&^ads');
+	//define("DB_BACKED_SESSION_HANDLER_HASH_KEY", 'advargt434g');
+
 
 	// To Log ALL errors that have occurred, set flag to true
 	//			define('ERROR_LOG_FLAG', true);
