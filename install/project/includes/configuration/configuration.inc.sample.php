@@ -280,7 +280,7 @@ if (!defined('SERVER_INSTANCE')) {
 		'password' => '{db1_password}',
 		'caching' => false,
 		'profiling' => false,
-		'set_charset' => 'utf8',
+		'encoding' => 'utf8',
 		'dateformat' => null,
 		'onlyfullgroupby' => defined by db adapter)));
 	-->*/
