@@ -50,6 +50,13 @@
 		 */
 		public static $intGarbageCollectDaysOld = 2;
 
+		/** @var bool Whether to compress the formstate data. */
+		public static $blnCompress = true;
+
+		/** @var bool Whether to base64 encode the formstate data. Encoding is required if storing in a TEXT field. */
+		public static $blnBase64 = false;
+
+
 		private static function Initialize() {
 			self::$intDbIndex = QType::Cast(self::$intDbIndex, QType::Integer);
 			self::$strTableName = QType::Cast(self::$strTableName, QType::String);
@@ -116,10 +123,30 @@
 		 */
 		public static function Save($strFormState, $blnBackButtonFlag) {
 			$objDatabase = QApplication::$Database[self::$intDbIndex];
+			$strOriginal = $strFormState;
 
 			// compress (if available)
-			if (function_exists('gzcompress')) {
+			if (function_exists('gzcompress') && self::$blnCompress) {
 				$strFormState = gzcompress($strFormState, 9);
+			}
+
+			if (defined('__DB_BACKED_FORM_STATE_HANDLER_ENCRYPTION_KEY__')) {
+				try {
+					$crypt = new QCryptography(__DB_BACKED_FORM_STATE_HANDLER_ENCRYPTION_KEY__, false, null, __DB_BACKED_FORM_STATE_HANDLER_HASH_KEY__);
+					$strFormState = $crypt->Encrypt($strFormState);
+				}
+				catch(Exception $e) {
+				}
+			}
+
+			if (self::$blnBase64) {
+				$encoded = base64_encode($strFormState);
+				if ($strFormState && !$encoded) {
+					throw new Exception ("Base64 Encoding Failed on " . $strOriginal);
+				}
+				else {
+					$strFormState = $encoded;
+				}
 			}
 
 			if (!empty($_POST['Qform__FormState']) && QApplication::$RequestMode == QRequestMode::Ajax) {
@@ -131,7 +158,7 @@
                                         ' . $objDatabase->EscapeIdentifier(self::$strTableName) . '
                                 SET
                                         ' . $objDatabase->EscapeIdentifier('save_time') . ' = ' . $objDatabase->SqlVariable(time()) . ',
-                                        ' . $objDatabase->EscapeIdentifier('state_data') . ' = ' . $objDatabase->SqlVariable(base64_encode($strFormState)) . '
+                                        ' . $objDatabase->EscapeIdentifier('state_data') . ' = ' . $objDatabase->SqlVariable($strFormState) . '
                                 WHERE
                                         ' . $objDatabase->EscapeIdentifier('page_id') . ' = ' . $objDatabase->SqlVariable($strPageId);
 
@@ -176,7 +203,7 @@
                                         ' . $objDatabase->SqlVariable($strPageId) . ',
                                         ' . $objDatabase->SqlVariable($strSessionId) . ',
                                         ' . $objDatabase->SqlVariable(time()) . ',
-                                        ' . $objDatabase->SqlVariable(base64_encode($strFormState)) . '
+                                        ' . $objDatabase->SqlVariable($strFormState) . '
                                 )';
 
 			$result = $objDatabase->NonQuery($strQuery);
@@ -209,18 +236,39 @@
 			// Perform the Query
 			$objDbResult = $objDatabase->Query($strQuery);
 
-			$strFormStateRow = $objDbResult->FetchArray();
+			$strFormStateRow = $objDbResult->FetchRow()[0];
 
 			if (empty($strFormStateRow)) {
 				// The formstate with that page ID was not found, or session expired.
 				return null;
 			}
-			$strSerializedForm = $strFormStateRow['state_data'];
-			$strSerializedForm = base64_decode($strSerializedForm);
+			$strSerializedForm = $strFormStateRow;
 
-			if (function_exists('gzcompress')) {
 
-				$strSerializedForm = gzuncompress($strSerializedForm);
+			if (self::$blnBase64) {
+				$strSerializedForm = base64_decode($strSerializedForm);
+
+				if ($strSerializedForm === false) {
+					throw new Exception("Failed decoding formstate " . $strSerializedForm);
+				}
+			}
+
+			if (defined('__DB_BACKED_FORM_STATE_HANDLER_ENCRYPTION_KEY__')) {
+				try {
+					$crypt = new QCryptography(__DB_BACKED_FORM_STATE_HANDLER_ENCRYPTION_KEY__, false, null, __DB_BACKED_FORM_STATE_HANDLER_HASH_KEY__);
+					$strSerializedForm = $crypt->Decrypt($strSerializedForm);
+				}
+				catch(Exception $e) {
+				}
+			}
+
+			if (function_exists('gzcompress') && self::$blnCompress) {
+				try {
+					$strSerializedForm = gzuncompress($strSerializedForm);
+				} catch (Exception $e) {
+					print ("Error on uncompress of page id " . $strPageId);
+					throw $e;
+				}
 			}
 
 			return $strSerializedForm;
