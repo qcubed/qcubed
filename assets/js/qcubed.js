@@ -849,7 +849,7 @@ qcubed.dialog = function(controlId) {
         // makes sure a return key fires the default button if there is one
         if (event.which == 13) {
             var b = $j(this).closest("[role=\'dialog\']").find("button[type=\'submit\']");
-            if (b) {
+            if (b && b[0]) {
                 b[0].click();
             }
             event.preventDefault();
