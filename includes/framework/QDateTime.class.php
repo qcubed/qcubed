@@ -217,7 +217,14 @@
 			else {
 				// string relative date or time
 				if ($intTime = strtotime($mixValue)) {
-					if ($intTime < 0) {
+					// The documentation states that:
+					// The valid range of a timestamp is typically from 
+					// Fri, 13 Dec 1901 20:45:54 GMT to Tue, 19 Jan 2038 03:14:07 GMT. 
+					// (These are the dates that correspond to the minimum and maximum values 
+					// for a 32-bit signed integer).
+					// 
+					// But experimentally, 0000-01-01 00:00:00 is the least date displayed correctly
+					if ($intTime < -62167241486) {
 						// Set to "null date"
 						// And Do Nothing Else -- Default Values are already set to Nulled out
 						parent::__construct('2000-01-01 00:00:00', $objTimeZone);
