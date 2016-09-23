@@ -217,9 +217,15 @@
 			else {
 				// string relative date or time
 				if ($intTime = strtotime($mixValue)) {
-					parent::__construct(date('Y-m-d H:i:s', $intTime), $objTimeZone);
-					$this->blnDateNull = false;
-					$this->blnTimeNull = false;
+					if ($intTime < 0) {
+						// Set to "null date"
+						// And Do Nothing Else -- Default Values are already set to Nulled out
+						parent::__construct('2000-01-01 00:00:00', $objTimeZone);
+					} else {
+						parent::__construct(date('Y-m-d H:i:s', $intTime), $objTimeZone);
+						$this->blnDateNull = false;
+						$this->blnTimeNull = false;
+					}
 				} else { // error
 					parent::__construct();
 					$this->blnDateNull = true;
