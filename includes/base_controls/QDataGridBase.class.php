@@ -37,6 +37,7 @@ class QDataGrid_SortEvent extends QEvent {
  * @property  string 	$SortColumnId The id of the currently sorted column. Does not change if columns are re-ordered.
  * @property  int 		$SortColumnIndex The index of the currently sorted column.
  * @property  int 		$SortDirection SortAscending or SortDescending.
+ * @property  array 	$SortInfo An array containing the sort data, so you can save and restore it later if needed.
  *
  */
 class QDataGridBase extends QHtmlTable
@@ -433,6 +434,8 @@ class QDataGridBase extends QHtmlTable
 
 			case "SortColumnIndex": return $this->GetSortColumnIndex();
 
+			case "SortInfo": return ['id'=>$this->strSortColumnId, 'dir'=>$this->intSortDirection];
+
 			default:
 				try {
 					return parent::__get($strName);
@@ -488,6 +491,18 @@ class QDataGridBase extends QHtmlTable
 					$this->intSortDirection = QType::Cast($mixValue, QType::Integer);
 					if ($this->intSortDirection != self::SortDescending) {
 						$this->intSortDirection = self::SortAscending;	// make sure its only one of two values
+					}
+					break;
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+
+			case "SortInfo":	// restore the SortInfo obtained from the getter
+				try {
+					if (isset($mixValue['id']) && isset($mixValue['dir'])) {
+						$this->intSortDirection = QType::Cast($mixValue['dir'], QType::Integer);
+						$this->strSortColumnId = QType::Cast($mixValue['id'], QType::String);
 					}
 					break;
 				} catch (QInvalidCastException $objExc) {
