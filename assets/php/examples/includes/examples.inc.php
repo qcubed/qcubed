@@ -65,13 +65,14 @@
 			self::AddCoreExampleFile($intIndex, '/basic_qform/intro.php Hello World Example');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/state.php QForms: Stateful, Event-Driven Objects');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/process_flow.php Understanding Process Flow');
+			self::AddCoreExampleFile($intIndex, '/basic_qform/dependency_injection_container.php Dependency Injection Container');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/calculator.php Calculator Example');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/calculator_2.php Calculator Example with Validation');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/calculator_3.php Calculator Example with &quot;Design&quot;');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/listbox.php * Introduction to QListControl');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/hlist.php * Generating Html Lists');
 			self::AddCoreExampleFile($intIndex, '/basic_qform/textbox.php * Introduction to QTextBoxControls');
-			
+
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
 			Examples::$Categories[$intIndex]['name'] = 'Basic AJAX in QForms';
@@ -91,8 +92,7 @@
 			self::AddCoreExampleFile($intIndex, '/events_actions/other_actions.php Other Client-Side QActions');
 			self::AddCoreExampleFile($intIndex, '/events_actions/event_propagation.php Controlling Event Bubbling');
 			self::AddCoreExampleFile($intIndex, '/events_actions/event_delegation.php Event Delegation');
-			self::AddCoreExampleFile($intIndex, '/events_actions/synchronizing.php Blocking Unwanted Events');
-			self::AddCoreExampleFile($intIndex, '/events_actions/low_priority_js.php JavaScript Priorities');
+			self::AddCoreExampleFile($intIndex, '/events_actions/low_priority_js.php JavaScript priorities');
 			self::AddCoreExampleFile($intIndex, '/events_actions/watcher.php Automatic Refreshing of Controls');
 			self::AddCoreExampleFile($intIndex, '/events_actions/control_proxy.php Using QControlProxies to have Non-QControls Trigger Events');
 
@@ -154,7 +154,7 @@
 			self::AddCoreExampleFile($intIndex, '/other_controls/jq_example.php * Server-side wrappers for all jQuery UI Controls');
 			self::AddCoreExampleFile($intIndex, '/other_controls/js_return_param_example.php Post data back to the server from jQuery UI controls');
 			self::AddCoreExampleFile($intIndex, '/advanced_ajax/jquery_effects.php JQuery Effects');
-			
+
 			Examples::$AdditionalCode[__VIRTUAL_DIRECTORY__ . __EXAMPLES__ . '/advanced_ajax/dialog_box.php'] = array('CalculatorWidget.class.php','CalculatorWidget.tpl.php');
 
 			$intIndex++;
@@ -198,7 +198,7 @@
 			self::AddCoreReferencedFile('/communication/soap.php', 'example_service.php');
 			self::AddCoreReferencedFile('/other/parsing.php', 'bb_parser.php');
 			self::AddCoreReferencedFile('/communication/advanced_intl.php', 'sample_translator.class.php');
-			
+
 
 			$intIndex++;
 			Examples::$Categories[$intIndex] = array();
@@ -267,7 +267,7 @@
 		private static function AddCoreExampleFile($intIndex, $strExampleFileName) {
 			array_push(Examples::$Categories[$intIndex], __VIRTUAL_DIRECTORY__ . __EXAMPLES__ . $strExampleFileName);
 		}
-		
+
 		private static function AddCoreReferencedFile($strExampleFileName, $mixReferencedFile) {
 			if (!is_array($mixReferencedFile)) {
 				$mixReferencedFile = array($mixReferencedFile);
@@ -280,7 +280,7 @@
 			$categories = Examples::$Categories;
 			for ($intCategoryIndex = 0; $intCategoryIndex < count(Examples::$Categories); $intCategoryIndex++) {
 				$objExampleCategory = Examples::$Categories[$intCategoryIndex];
-				
+
 				for ($intExampleIndex = 0; $intExampleIndex < count($objExampleCategory); $intExampleIndex++) {
 					if (array_key_exists($intExampleIndex, $objExampleCategory)) {
 						$strExample = $objExampleCategory[$intExampleIndex];
@@ -306,19 +306,19 @@
 		public static function GetExampleId() {
 			for ($intCategoryIndex = 0; $intCategoryIndex < count(Examples::$Categories); $intCategoryIndex++) {
 				$objExampleCategory = Examples::$Categories[$intCategoryIndex];
-				
+
 				for ($intExampleIndex = 0; $intExampleIndex < count($objExampleCategory); $intExampleIndex++) {
 					if (array_key_exists($intExampleIndex, $objExampleCategory)) {
 						$strExample = $objExampleCategory[$intExampleIndex];
 						$intPosition = strpos($strExample, ' ');
 						$strScriptPath = strtolower(substr($strExample, 0, $intPosition));
 						$strName = substr($strExample, $intPosition + 1);
-						
+
 						$scriptName = QApplicationBase::$ScriptName;
 						$portionOfScriptName = strtolower(substr($scriptName, strlen(QApplicationBase::$ScriptName) - strlen($strScriptPath)));
 
 						if ($portionOfScriptName == $strScriptPath) {
-							return $intExampleIndex;					
+							return $intExampleIndex;
 						}
 					}
 				}
@@ -370,7 +370,7 @@
 			$strName = substr($strExample, $intPosition + 1);
 			return $strName;
 		}
-		
+
 		public static function GetExampleScriptPath($mixCategoryId, $mixExampleId, $mixSubId = null) {
 			if ($mixCategoryId == 'plugin') {
 				$strScriptPath =  __PLUGIN_ASSETS__ . "/{$mixExampleId}/examples/{$mixSubId}";
@@ -399,7 +399,7 @@
 
 			return 'Main Page';
 		}
-		
+
 		public static function PageLinkName($strReference = null) {
 			if (is_null($strReference))
 				$strReference = QApplication::$ScriptName;
@@ -415,7 +415,7 @@
 							return($strScriptName);
 					}
 		}
-		
+
 		public static function CodeLinks($strCategoryId, $strExampleId, $strSubId, $strCurrentScript) {
 			$blnIsScript = false;
 
@@ -436,7 +436,7 @@
 			} else {
 				$strToReturn .= sprintf('<a href="%s/../footer.inc.php" class="headerLink">footer.inc.php</a>', QApplication::$RequestUri);
 			}
-			
+
 			$strToReturn .= ' &nbsp; | &nbsp; ';
 			if ($strCurrentScript == 'examples.css') {
 				$strToReturn .= '<span class="headerGray">examples.css</span>';
@@ -467,7 +467,7 @@
 				} else {
 					$strToReturn .= sprintf('<a href="%s/../%s" class="headerLink">%s</a>', QApplication::$RequestUri, $strScriptname, $strScriptname);
 				}
-				
+
 				$intCount++;
 			}
 
@@ -498,7 +498,7 @@
 					$intCount++;
 				}
 			}
-				
+
 			if ($blnIsScript) {
 				return $strToReturn;
 			}
@@ -550,9 +550,9 @@
 					}
 				}
 			}
-			
+
 			$strToReturn = '';
-			
+
 			if ($strPrevious)
 				$strToReturn = $strPrevious;
 			else
@@ -576,10 +576,10 @@
 			else
 				$strToReturn .= '<span class="headerGray">Next &gt;&gt;</span>';
 
-			return $strToReturn;				
+			return $strToReturn;
 		}
 	}
-	
+
 	//require_once(__PLUGINS__ . "/plugin_examples.php");
 
 	Examples::Init();
