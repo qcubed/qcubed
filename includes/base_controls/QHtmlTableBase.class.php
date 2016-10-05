@@ -142,11 +142,12 @@
 		 * @param string         $strName        column name
 		 * @param callable|array $objCallable    a callable object. Note that this can be an array.
 		 * @param integer        $intColumnIndex column position
+		 * @param mixed $mixParams extra parameters to pass to the closure callback.
 		 *
 		 * @return QHtmlTableCallableColumn
 		 */
-		public function CreateCallableColumn($strName, $objCallable, $intColumnIndex = -1) {
-			$objColumn = new QHtmlTableCallableColumn($strName, $objCallable);
+		public function CreateCallableColumn($strName, $objCallable, $intColumnIndex = -1, $mixParams = null) {
+			$objColumn = new QHtmlTableCallableColumn($strName, $objCallable, $mixParams);
 			$this->AddColumnAt($intColumnIndex, $objColumn);
 			return $objColumn;
 		}
