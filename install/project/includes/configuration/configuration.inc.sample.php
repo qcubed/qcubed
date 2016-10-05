@@ -187,19 +187,29 @@ if (!defined('SERVER_INSTANCE')) {
 
 
 	// Location of asset files for your application
-	define ('__APP_JS_ASSETS__', __PROJECT_ASSETS__ . '/js');
-	define ('__APP_CSS_ASSETS__', __PROJECT_ASSETS__ . '/css');
-	define ('__APP_IMAGE_ASSETS__', __PROJECT_ASSETS__ . '/images');
-	define ('__APP_PHP_ASSETS__', __PROJECT_ASSETS__ . '/php');
+	/** The path prefix for your publicly accessible javascript files to be used in URI generation */
+	//define ('__APP_JS_ASSETS__', __PROJECT_ASSETS__ . '/js');
+	/** The path prefix for your publicly accessible CSS files to be used in URI generation */
+	//define ('__APP_CSS_ASSETS__', __PROJECT_ASSETS__ . '/css');
+	/** The path prefix for your publicly accessible image files to be used in URI generation */
+	//define ('__APP_IMAGE_ASSETS__', __PROJECT_ASSETS__ . '/images');
+	/** The path prefix for your publicly accessible php files to be used in URI generation */
+	//define ('__APP_PHP_ASSETS__', __PROJECT_ASSETS__ . '/php');
 
-	define ('__APP_CACHE_ASSETS__', __PROJECT_ASSETS__ . '/cache');
-	define ('__APP_CACHE__', __DOCROOT__ . __APP_CACHE_ASSETS__);
+	/** The path prefix for your publicly accessible cache files to be used in URI generation */
+	//define ('__APP_CACHE_ASSETS__', __PROJECT_ASSETS__ . '/cache');
+	/** The path prefix for your cache files to be used in the filesystem path generation */
+	//define ('__APP_CACHE__', __DOCROOT__ . __APP_CACHE_ASSETS__);
 
-	define ('__APP_IMAGE_CACHE_ASSETS__', __APP_CACHE_ASSETS__ . '/images');
-	define ('__APP_IMAGE_CACHE__', __DOCROOT__ . __APP_IMAGE_CACHE_ASSETS__);
+	/** The path prefix for your publicly accessible image cache files to be used in URI generation */
+	//define ('__APP_IMAGE_CACHE_ASSETS__', __APP_CACHE_ASSETS__ . '/images');
+	/** The path prefix for your image cache files to be used in the filesystem path generation */
+	//define ('__APP_IMAGE_CACHE__', __DOCROOT__ . __APP_IMAGE_CACHE_ASSETS__);
 
-	define ('__APP_UPLOAD_ASSETS__', __PROJECT_ASSETS__ . '/upload');
-	define ('__APP_UPLOAD__', __DOCROOT__ . __APP_UPLOAD_ASSETS__);
+	/** The path prefix for your publicly accessible upload directory to be used in URI generation */
+	//define ('__APP_UPLOAD_ASSETS__', __PROJECT_ASSETS__ . '/upload');
+	/** The path prefix for your publicly accessible upload directory to be used in the filesystem path generation */
+	//define ('__APP_UPLOAD__', __DOCROOT__ . __APP_UPLOAD_ASSETS__);
 
 	// There are two ways to add jQuery JS files to QCubed. Either by absolute paths (Google CDN of
 	// the jQuery library is awesome! It's the default option below) - or by using the jQuery
