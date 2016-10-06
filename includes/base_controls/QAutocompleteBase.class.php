@@ -295,5 +295,15 @@
 			}
 		}
 
+		/**
+		 * If this control is attachable to a codegenerated control in a ModelConnector, this function will be
+		 * used by the ModelConnector designer dialog to display a list of options for the control.
+		 * @return QModelConnectorParam[]
+		 **/
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (QModelConnectorParam::GeneralCategory, 'NoAutoLoad', 'Prevent automatically populating a list type control. Set this if you are doing more complex list loading.', QType::Boolean)
+			));
+		}
 
 	}
