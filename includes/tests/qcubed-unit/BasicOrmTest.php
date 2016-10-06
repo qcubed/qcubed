@@ -415,5 +415,16 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$amount2 = $objProject->GetVirtualAttribute('Balance');
 		$this->assertEquals(5599.50, $amount2);
 	}
+
+	public function testSubSql() {
+		$objProject = Project::QuerySingle(
+			QQ::All(),
+			QQ::Clause(
+				QQ::Count(QQ::SubSql('DISTINCT {1}', QQN::Project()->ManagerPersonId), "manager_count")
+			)
+		);
+
+		$this->assertEquals(3, $objProject->GetVirtualAttribute("manager_count"), "Project manager count is 3");
+	}
 }
 

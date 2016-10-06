@@ -1850,7 +1850,11 @@
 				if (!is_null($this->objParentQueryNodes[$intIndex]))
 					$strSql = str_replace('{' . $intIndex . '}', $this->objParentQueryNodes[$intIndex]->GetColumnAlias($objBuilder), $strSql);
 			}
-			return '(' . $strSql . ')';
+			if(stripos($strSql, 'SELECT')===0) {
+				return '(' . $strSql . ')';
+			} else {
+				return $strSql;
+			}
 		}
 	}
 
