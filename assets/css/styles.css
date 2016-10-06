@@ -50,8 +50,16 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
 .datagrid th.sortable :hover {
     opacity: 0.95;
 }
-
-
+.datagrid th.sortable div span {
+    display: table-cell;
+    vertical-align: bottom;
+    padding-right:4px;
+}
+.datagrid th.sortable div i.fa {
+    display: table-cell;
+    vertical-align: bottom;
+    padding-bottom:2px;
+}
 
 .datagrid caption { overflow: hidden; padding: 5px; position: relative; }
 .datagrid .paginator-control { float: right; }

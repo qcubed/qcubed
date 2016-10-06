@@ -288,6 +288,7 @@ class QDataGridBase extends QHtmlTable
 		if ($objColumn->HtmlEntities) {
 			$strCellValue = QApplication::HtmlEntities($strCellValue);
 		}
+		$strCellValue = QHtml::RenderTag('span', null, $strCellValue);	// wrap in a span for positioning
 
 		if ($this->strSortColumnId === $objColumn->Id) {
 			if ($this->intSortDirection == self::SortAscending) {
