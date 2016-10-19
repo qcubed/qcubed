@@ -227,6 +227,7 @@
 	QApplicationBase::$ClassFile['qhtmltablecheckboxcolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
 	QApplicationBase::$ClassFile['qhtmltablelinkcolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
 	QApplicationBase::$ClassFile['qhtmltablecheckboxcolumn_clickevent'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
+	QApplicationBase::$ClassFile['qvirtualattributecolumn'] = __QCUBED_CORE__ . '/base_controls/QHtmlTableColumn.class.php';
 
 
 	QApplicationBase::$ClassFile['qhtmltable'] = __QCUBED__ . '/controls/QHtmlTable.class.php';
