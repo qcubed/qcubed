@@ -140,7 +140,9 @@
 		public static $ServerAddress;
 
 		/**
-		 * The encoding type for the application (e.g. UTF-8, ISO-8859-1, etc.)
+		 * The encoding type for the application (e.g. UTF-8, ISO-8859-1, etc.). This is the encoding that will be
+		 * used for internal variables, for web pages, and what will get stored in the database. This also affects
+		 * how code generation is done, so if you change this, be sure to code generate again.
 		 *
 		 * @var string EncodingType
 		 */
