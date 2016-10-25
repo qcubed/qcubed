@@ -17,12 +17,17 @@
 		public function Initialize()
 		{
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-			$this-><?= $objColumn->VariableName ?> = <?php
+<?php 	if ($objColumn->Identity ||
+				$objColumn->Timestamp) {
+			// do nothing
+	 	} else { ?>
+			$this->set<?= $objColumn->PropertyName ?>(<?php
 	$defaultVarName = $objTable->ClassName . '::' . $objColumn->PropertyName . 'Default';
 	if ($objColumn->VariableType != QType::DateTime)
 		print ($defaultVarName);
 	else
 		print "(" . $defaultVarName . " === null)?null:new QDateTime(" . $defaultVarName . ")";
-	?>;
+	?>);
+<?php 	} ?>
 <?php } ?>
 		}

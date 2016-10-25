@@ -7,6 +7,13 @@
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {
+			// Use setter if it exists
+			$strMethod = 'set' . $strName;
+			if (method_exists($this, $strMethod)) {
+				$this->$strMethod($mixValue);
+				return;
+			}
+
 			switch ($strName) {
 				///////////////////
 				// Member Variables

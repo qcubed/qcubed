@@ -1,8 +1,11 @@
 ///////////////////////////////////////////////////////////////////////
-		// PROTECTED MEMBER VARIABLES and TEXT FIELD MAXLENGTHS (if applicable)
+		// PROTECTED AND PRIVATE MEMBER VARIABLES and CONSTS
 		///////////////////////////////////////////////////////////////////////
 
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
+<?php
+	$strConstName = strtoupper($objColumn->Name);	// Produce an uppercase name in the PHP const style
+?>
 		/**
 		 * Protected member variable that maps to the database <?php if ($objColumn->PrimaryKey) print 'PK '; ?><?php if ($objColumn->Identity) print 'Identity '; ?>column <?= $objTable->Name ?>.<?= $objColumn->Name ?>
 
@@ -11,7 +14,7 @@
 		 * @var <?= $objColumn->VariableType ?> <?= $objColumn->VariableName ?>
 
 		 */
-		protected $<?= $objColumn->VariableName ?>;
+		private $<?= $objColumn->VariableName ?>;
 <?php if (($objColumn->VariableType == QType::String) && (is_numeric($objColumn->Length))) { ?>
 		const <?= $objColumn->PropertyName ?>MaxLength = <?= $objColumn->Length ?>;
 <?php } ?>
@@ -27,6 +30,7 @@
 		print "'" . addslashes($objColumn->Default) . "'";
 	}
 ?>;
+		const <?= $strConstName ?>_FIELD = '<?= addslashes($objColumn->Name) ?>';
 
 <?php if ((!$objColumn->Identity) && ($objColumn->PrimaryKey)) { ?>
 
@@ -110,3 +114,17 @@
 		 * @var bool __blnRestored;
 		 */
 		protected $__blnRestored;
+
+		/**
+		 * Protected internal array that records which fields are dirty.
+		 * Used by Save() to optimize the Update or Insert function.
+		 * @var bool[] __blnDirty;
+		 */
+		private $__blnDirty;
+
+		/**
+		 * Protected internal array that records which fields are valid.
+		 * Used by getters to prevent accidentally reading data that was not taken from the database.
+		 * @var bool[] __blnDirty;
+		 */
+		private $__blnValid;

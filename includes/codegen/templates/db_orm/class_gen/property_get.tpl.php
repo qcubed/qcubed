@@ -6,22 +6,13 @@
 		 * @return mixed
 		 */
 		public function __get($strName) {
+			// Use getter if it exists
+			$strMethod = 'get' . $strName;
+			if (method_exists($this, $strMethod)) {
+				return $this->$strMethod();
+			}
+
 			switch ($strName) {
-				///////////////////
-				// Member Variables
-				///////////////////
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-				case '<?= $objColumn->PropertyName ?>':
-					/**
-					 * Gets the value for <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Timestamp) print '(Read-Only Timestamp)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
-
-					 * @return <?= $objColumn->VariableType ?>
-
-					 */
-					return $this-><?= $objColumn->VariableName ?>;
-
-<?php } ?>
-
 				///////////////////
 				// Member Objects
 				///////////////////

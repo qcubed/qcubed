@@ -1,3 +1,7 @@
+<?php
+	// NOTE for template develoepers: SQL and most other databases are either latin characters only, or Unicode for their
+	// identifiers, so you don't need to worry about encoding issues for identifiers.
+?>
 ////////////////////////////////////////
 		// METHODS for JSON Object Translation
 		////////////////////////////////////////
@@ -29,7 +33,7 @@
 		 * label 	= [optional] If defined, is what is displayed in the menu
 		 * id 		= Primary key of object.
 		 *
-		 * @return an array that specifies how to display the object
+		 * @return string
 		 */
 		public function toJsObject () {
 			return JavaScriptHelper::toJsObject(array('value' => $this->__toString(), 'id' => <?php if ( count($objTable->PrimaryKeyColumnArray) == 1 ) { ?> $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?> <?php } ?><?php if ( count($objTable->PrimaryKeyColumnArray) > 1 ) { ?> array(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?> $this-><?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>) <?php } ?>));
@@ -37,16 +41,55 @@
 
 		/**
 		 * Default "jsonSerialize" handler
-		 * Specifies how the object should be serialized using json_encode. This is primarily for the purpose of selection in a list.
-		 * Override if you need something more.
+		 * Specifies how the object should be serialized using json_encode.
+         * Control the values that are output by using QQ::Select to control which
+		 * fields are valid, and QQ::Expand to control embedded objects.
 		 *
-		 * value 	= The short form of what to display in the list and selection.
-		 * label 	= [optional] If defined, is what is displayed in the menu
-		 * id 		= Primary key of object.
-		 *
-		 * @return an array that specifies how to display the object
+		 * @return array An array that is json serializable
 		 */
 		public function jsonSerialize () {
-			return array('value' => $this->__toString(), 'id' => <?php if ( count($objTable->PrimaryKeyColumnArray) == 1 ) { ?> $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?> <?php } ?><?php if ( count($objTable->PrimaryKeyColumnArray) > 1 ) { ?> array(<?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?> $this-><?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>) <?php } ?>);
+			$a = [];
+<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
+<?php 	if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
+			if (isset($this-><?= $objColumn->Reference->VariableName ?>)) {
+				$a['<?= $objColumn->Reference->Name ?>'] = $this-><?= $objColumn->Reference->VariableName ?>;
+			} elseif (isset($this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
+				$a['<?= $objColumn->Name ?>'] = $this-><?= $objColumn->VariableName ?>;
+			}
+<?php 	} else { ?>
+			if (isset($this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
+<?php		if ($objColumn->VariableType == QType::String && QApplication::$EncodingType != 'UTF-8') { ?>
+				$a['<?= $objColumn->Name ?>'] = JavsScriptHeler::MakeJsonEncodable($this-><?= $objColumn->VariableName ?>);
+<?php 		} else {?>
+				$a['<?= $objColumn->Name ?>'] = $this-><?= $objColumn->VariableName ?>;
+<?php 		} ?>
+			}
+<?php 	} ?>
+<?php } ?>
+<?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
+<?php 	if ($objReverseReference->Unique) { ?>
+			if (isset($this-><?= $objReverseReference->ObjectMemberVariable ?>)) {
+				$a['<?= QConvertNotation::UnderscoreFromCamelCase($objReverseReference->ObjectDescription) ?>'] = $this-><?= $objReverseReference->ObjectMemberVariable ?>;
+			}
+<?php 	} else { ?>
+			if (isset($this->_obj<?= $objReverseReference->ObjectDescription ?>)) {
+				$a['<?= QConvertNotation::UnderscoreFromCamelCase($objReverseReference->ObjectDescription) ?>'] = $this->_obj<?= $objReverseReference->ObjectDescription ?>;
+			} elseif (isset($this->_obj<?= $objReverseReference->ObjectDescription ?>Array)) {
+				$a['<?= QConvertNotation::UnderscoreFromCamelCase($objReverseReference->ObjectDescription) ?>'] = $this->_obj<?= $objReverseReference->ObjectDescription ?>Array;
+			}
+<?php 	} ?>
+<?php } ?>
+<?php foreach ($objTable->ManyToManyReferenceArray as $objReference) { ?>
+<?php
+		$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
+		$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
+?>
+			if (isset($this-><?= $varPrefix . $objReference->ObjectDescription ?>)) {
+				$a['<?= QConvertNotation::UnderscoreFromCamelCase($objReference->ObjectDescription) ?>'] = $this-><?= $varPrefix . $objReference->ObjectDescription ?>;
+			} elseif (isset($this-><?= $varPrefix . $objReference->ObjectDescription ?>Array)) {
+				$a['<?= QConvertNotation::UnderscoreFromCamelCase($objReference->ObjectDescription) ?>'] = $this-><?= $varPrefix . $objReference->ObjectDescription ?>Array;
+			}
+<?php } ?>
+			return $a;
 		}
 

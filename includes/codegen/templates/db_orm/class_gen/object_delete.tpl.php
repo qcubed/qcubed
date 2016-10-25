@@ -54,10 +54,7 @@
 <?php } ?><?php GO_BACK(5); ?>');
 
 			$this->DeleteFromCache();
-			if (static::$blnWatchChanges) {
-				QWatcher::MarkTableModified (static::GetDatabase()->Database, '<?= $objTable->Name ?>');
-			}
-
+			static::BroadcastDelete($this->PrimaryKey());
 		}
 
 		/**
@@ -75,10 +72,7 @@
 					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>');
 
 			static::ClearCache();
-
-			if (static::$blnWatchChanges) {
-				QWatcher::MarkTableModified (static::GetDatabase()->Database, '<?= $objTable->Name ?>');
-			}
+			static::BroadcastDeleteAll();
 		}
 
 		/**
@@ -94,4 +88,5 @@
 				TRUNCATE <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>');
 
 			static::ClearCache();
+			static::BroadcastDeleteAll();
 		}
