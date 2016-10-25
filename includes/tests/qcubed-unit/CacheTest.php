@@ -229,10 +229,16 @@ class CacheTests extends QUnitTestCaseBase {
 		);
 
 		foreach ($objPersonArray as $objPerson) {
-			$this->assertNull($objPerson->FirstName, "FirstName should be null, since it was not selected");
+			$this->setExpectedException('QCallerException');
+			$objPerson->FirstName;
+			$this->setExpectedException(null);
+
 			$this->assertNotNull($objPerson->Id, "Id should not be null since it's always added to the select list");
 			$this->assertNotNull($objPerson->_ProjectAsManager->Id, "ProjectAsManager->Id should not be null since id's are always added to the select list");
-			$this->assertNull($objPerson->_ProjectAsManager->Name, "ProjectAsManager->Name should be null since it was not selected");
+
+			$this->setExpectedException('QCallerException');
+			$objPerson->_ProjectAsManager->Name; // not selected
+			$this->setExpectedException(null);
 		}
 
 		// generate full objects to load into cache
