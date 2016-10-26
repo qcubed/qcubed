@@ -18,13 +18,30 @@
 <?php if (($objColumn->VariableType == QType::String) && (is_numeric($objColumn->Length))) { ?>
 		const <?= $objColumn->PropertyName ?>MaxLength = <?= $objColumn->Length ?>;
 <?php } ?>
+
 		const <?= $objColumn->PropertyName ?>Default = <?php
-	if (is_null($objColumn->Default))
+	if (is_null($objColumn->Default)) {
 		print 'null';
-	elseif (is_numeric($objColumn->Default))
-		print $objColumn->Default;
+	}
 	elseif ($objColumn->Default == 'CURRENT_TIMESTAMP') {
 		print 'QDateTime::Now';
+	}
+	elseif (strtoupper($objColumn->Default) == 'TRUE' || (
+			is_numeric($objColumn->Default) &&
+			$objColumn->Default == 1 &&
+			$objColumn->DbType == QDatabaseFieldType::Bit)
+		) {
+		print 'true';
+	}
+	elseif (strtoupper($objColumn->Default) == 'FALSE' || (
+			is_numeric($objColumn->Default) &&
+			$objColumn->Default == 0 &&
+			$objColumn->DbType == QDatabaseFieldType::Bit)
+	) {
+		print 'false';
+	}
+	elseif (is_numeric($objColumn->Default)) {
+		print $objColumn->Default;
 	}
 	else {
 		print "'" . addslashes($objColumn->Default) . "'";

@@ -142,7 +142,10 @@ class CacheTests extends QUnitTestCaseBase {
 			QQ::Equal(QQN::Person()->Id, 7),
 			array (QQ::Select(QQN::Person()->FirstName))
 		);
-		$this->assertNull($targetPerson2->LastName, "Saving an object deleted it from the cache");
+
+		$this->setExpectedException('QCallerException');
+		$targetPerson2->LastName;
+		$this->setExpectedException(null);
 
 		$objTwoKey = TwoKey::QuerySingle(
 			QQ::AndCondition (

@@ -38,7 +38,7 @@
 			<stripFromTableName prefix=""/>
 
             <!-- Whether to automatically initialize new objects with default values from database definition -->
-            <createOptions autoInitialize="false" />
+            <createOptions autoInitialize="true" />
 
 			<!-- Specific Tables to Exclude or Include in the CodeGen process -->
 			<!--

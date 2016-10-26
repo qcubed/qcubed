@@ -37,7 +37,7 @@
 		 * @return string a nicely formatted string representation of this object
 		 */
 		public function __toString() {
-			return sprintf('<?= $objTable->ClassName ?> Object <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>%s - <?php } ?><?php GO_BACK(3); ?>', <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?> $this-><?= $objColumn->VariableName ?>, <?php } ?><?php GO_BACK(2); ?>);
+			return '<?= $objTable->ClassName ?> Object ' . $this->PrimaryKey();
 		}
 
 

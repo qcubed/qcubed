@@ -19,8 +19,9 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php 	if ($objColumn->Identity ||
 				$objColumn->Timestamp) {
-			// do nothing
-	 	} else { ?>
+			// do not initialize with a default value
+	 	}
+	 	else { ?>
 			$this->set<?= $objColumn->PropertyName ?>(<?php
 	$defaultVarName = $objTable->ClassName . '::' . $objColumn->PropertyName . 'Default';
 	if ($objColumn->VariableType != QType::DateTime)

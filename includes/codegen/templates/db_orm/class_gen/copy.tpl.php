@@ -1,8 +1,8 @@
-   /**
-    * Cloning an object creates a copy of the object with all external references nulled and null primary keys in
+/**
+    * Copying an object creates a copy of the object with all external references nulled and null primary keys in
     * preparation for saving or further processing.
    	*/
-   	public function __clone() {
+   	public function Copy() {
    		$this->__blnRestored = false;
    		// Nullify primary keys
 <?php foreach ($objTable->PrimaryKeyColumnArray as $objPkColumn) { ?>

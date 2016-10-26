@@ -44,6 +44,9 @@
 		 * Specifies how the object should be serialized using json_encode.
          * Control the values that are output by using QQ::Select to control which
 		 * fields are valid, and QQ::Expand to control embedded objects.
+		 * WARNING: If an object is found in short-term cache, it will be used instead of the queried object and may
+		 * contain data fields that were fetched earlier. To really control what fields exist in this object, preceed
+		 * any query calls (like Load or QueryArray), with a call to <?= $objTable->ClassName ?>::ClearCache()
 		 *
 		 * @return array An array that is json serializable
 		 */

@@ -434,5 +434,30 @@ class BasicOrmTests extends QUnitTestCaseBase {
 
 		$this->assertEquals(3, $objProject->GetVirtualAttribute("manager_count"), "Project manager count is 3");
 	}
+
+	public function testGettersSetters() {
+		$objProject = Project::QuerySingle(QQ::Equal(QQN::Project()->Id, 1));
+
+		$this->assertEquals(1, $objProject->getId());
+		$this->assertEquals(7, $objProject->getManagerPersonId());
+
+		$objProject2 = new Project();
+
+		try {
+			$objProject2->setId(2);	// can't set a pk that is an identity
+			$blnPassed = true;
+		}
+		catch(QCallerException $e) {
+			$blnPassed = false;
+		}
+		$this->assertEquals(false, $blnPassed, 'Exception sould be called when trying to set a pk on an identity column');
+
+
+		$objProject2->setName('Test');
+		$strName = $objProject2->getName();	
+		$this->assertEquals('Test', $strName);
+
+
+	}
 }
 
