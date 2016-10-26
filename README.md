@@ -71,10 +71,6 @@ QCubed was branched out of QCodo, a project by Michael Ho. QCubed relies on JQue
 
 * * *
 
-## Changelog
-
-The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/master/CHANGELOG.md "Changelog").
-
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/qcubed/framework/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
