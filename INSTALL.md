@@ -13,7 +13,7 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 Once installed, you should install the qcubed/app-starter project by executing the following at the command line:
 
 ~~~
-php composer.phar create-project qcubed/app-starter your_dir_name -sdev
+php composer.phar create-project qcubed/app-starter your_dir_name
 ~~~
 
 Substitute whatever directory name you would like for "your_dir_name" above. 
