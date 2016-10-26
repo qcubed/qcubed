@@ -5,7 +5,7 @@
 ## Releases
 **Newest stable release: [version 3.0.6, released on Oct. 25, 2016].
 
-Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads).
+The most recent stable version of version 2 can be found in the v2 branch.
 
 ## What is QCubed?
 
