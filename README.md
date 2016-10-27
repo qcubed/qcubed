@@ -5,15 +5,13 @@
 [![Issue Count](https://codeclimate.com/github/qcubed/framework/badges/issue_count.svg)](https://codeclimate.com/github/qcubed/framework)
 
 ## Releases
-**Newest stable release: [version 2.2.3, released on Nov. 26, 2013](https://github.com/qcubed/framework/archive/2.2.3.zip)**.
+**Newest stable release: [version 3.0.6, released on Oct. 25, 2016].
 
-**beta-3.0 is available via composer and github**
-
-Older releases are available from the [downloads archive](https://github.com/qcubed/framework/downloads).
+The most recent stable version of version 2 can be found in the v2 branch.
 
 ## What is QCubed?
 
-QCubed (pronounced 'Q' - cubed) is a PHP Model-View-Controller framework with support for PHP5 (5.4 and above) and PHP7. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun. QCubed excels in situations where you have a large database structure that you quickly want to make available to users.
+QCubed (pronounced 'Q' - cubed) is a PHP Model-View-Controller Rapid Application Development framework with support for PHP5 (5.4 and above) and PHP7. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun. QCubed excels in situations where you have a large database structure that you quickly want to make available to users.
 
 ## Stateful architecture
 
@@ -50,24 +48,18 @@ The easiest way to learn QCubed is to see the examples tutorial at <http://examp
 
 ### Plugins
 
-Through its plugin system, QCubed makes it easy to package and deliver enhancements and additions to the core codebase. The plugin project is located at <https://github.com/qcubed/plugins> and contains an exhaustive list of contributed plugins.
-
-## Learn more
-Interested? Check out [QCubed video screencasts](http://qcu.be/content/video-screencasts) or [text-based QCubed tutorials](http://trac.qcu.be/projects/qcubed/wiki/Tutorials).
-
-The [github wiki](https://github.com/qcubed/framework/wiki) will eventually supersede these.
-
-* * *
+Through its plugin system, QCubed makes it easy to package and deliver enhancements and additions to the core codebase. Plugins for the currently active version of QCubed live in repositories that begin with _plugin_. 
 
 ## System Requirements
 * A development computer that you can set up so that the browser can write to a directory in your file system.
-* As of v3.0.0 alpha, PHP 5.0 and above are supported. However, v3.0 eventually will require PHP 5.4 or above. To do a composer install, you will need PHP 5.3.2.
-* As of v3.0.0 alpha, QCubed will generally produce XHTML 1.0 compliant code. However, v3.0 will eventually produce XHTML5 compliant code only.
+* v3.0.x, requires PHP 5.4 and above. PHP 7 and HHVM are supported as well.
+* All html code is html5 compliant.
+* QCubed relies on jQuery for some of its ajax interactions. Also, many of the built-in controls beyond basic html controls require JQuery UI.
 * A SQL database engine. MySQL, SqlServer, Postgres, Oracle, PDO, SqlLite, Informix adapters are included. Creating another adapter is not hard if you have a different SQL.
 
 ## Installation
 
-The installation procedure is described in a detail here: [Installation instructions](https://github.com/qcubed/framework/blob/beta-3.0/INSTALL.md "Installation instructions").
+The installation procedure is described in detail here: [Installation instructions](https://github.com/qcubed/framework/INSTALL.md "Installation instructions").
 
 * * *
 
@@ -77,13 +69,9 @@ A list of the latest changes is available at https://github.com/qcubed/framework
 
 ## Credits
 
-QCubed was born out of QCodo, and uses jQuery UI libraries.
+QCubed was branched out of QCodo, a project by Michael Ho. QCubed relies on JQuery and uses jQuery UI libraries for some of its core controls.
 
 * * *
-
-## Changelog
-
-The full changelog can be examined here: [Changelog](https://github.com/qcubed/framework/blob/master/CHANGELOG.md "Changelog").
 
 
 

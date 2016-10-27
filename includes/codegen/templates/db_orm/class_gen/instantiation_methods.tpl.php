@@ -101,6 +101,7 @@
 <?php if (($objColumn->PrimaryKey) && (!$objColumn->Identity)) { ?>
 					$objToReturn->__<?= $objColumn->VariableName ?> = $mixVal;
 <?php } ?>
+					$objToReturn->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD] = true;
 				}
 				else {
 					$blnNoCache = true;
