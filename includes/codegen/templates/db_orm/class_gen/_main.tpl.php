@@ -81,6 +81,9 @@
 		////////////////////
 		<?php include("array_indexers.tpl.php"); ?>
 
+		<?php include("property_getters_setters.tpl.php"); ?>
+		<?php include("copy.tpl.php"); ?>
+		<?php include("broadcast_changes.tpl.php"); ?>
 
 
 		////////////////////

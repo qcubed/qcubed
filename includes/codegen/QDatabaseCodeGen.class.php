@@ -957,6 +957,7 @@
 							// Setup PropertyName and VariableName
 							$objReference->PropertyName = $this->ModelReferencePropertyName($objColumn->Name);
 							$objReference->VariableName = $this->ModelReferenceVariableName($objColumn->Name);
+							$objReference->Name = $this->ModelReferenceColumnName($objColumn->Name);
 
 							// Add this reference to the column
 							$objColumn->Reference = $objReference;
