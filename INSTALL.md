@@ -1,7 +1,5 @@
 # Getting started with QCubed
 
-*Join us on Slack on [qcubed.slack.com](http://qcubed.slack.com). Get you invite [here](https://docs.google.com/forms/d/e/1FAIpQLSe0YTPSbTIFdwyVMS1VqxPK6CnfOlOVJ6Q4OfO-im2IIem5NA/viewform)*. 
-
 INSTALLATION
 ------------
 
