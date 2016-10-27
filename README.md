@@ -9,7 +9,7 @@ The most recent stable version of version 2 can be found in the v2 branch.
 
 ## Community
 
-*Join us on Slack on [qcubed.slack.com](http://qcubed.slack.com). Get you invite [here](https://docs.google.com/forms/d/e/1FAIpQLSe0YTPSbTIFdwyVMS1VqxPK6CnfOlOVJ6Q4OfO-im2IIem5NA/viewform)*. 
+*Join us on Slack on [qcubed.slack.com](http://qcubed.slack.com). Get your invite [here](https://docs.google.com/forms/d/e/1FAIpQLSe0YTPSbTIFdwyVMS1VqxPK6CnfOlOVJ6Q4OfO-im2IIem5NA/viewform)*. 
 
 ## What is QCubed?
 
