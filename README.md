@@ -7,6 +7,10 @@
 
 The most recent stable version of version 2 can be found in the v2 branch.
 
+## Community
+
+*Join us on Slack on [qcubed.slack.com](http://qcubed.slack.com). Get your invite [here](https://docs.google.com/forms/d/e/1FAIpQLSe0YTPSbTIFdwyVMS1VqxPK6CnfOlOVJ6Q4OfO-im2IIem5NA/viewform)*. 
+
 ## What is QCubed?
 
 QCubed (pronounced 'Q' - cubed) is a PHP Model-View-Controller Rapid Application Development framework with support for PHP5 (5.4 and above) and PHP7. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun. QCubed excels in situations where you have a large database structure that you quickly want to make available to users.
