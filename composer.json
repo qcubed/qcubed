@@ -1,10 +1,4 @@
 {
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/qcubed/composer"
-    }
-  ],
   "name": "qcubed/qcubed",
   "description": "QCubed is a PHP framework for rapid web development. Building on top of jQuery, with OOP at its core, QCubed provides a powerful solution for building database-driven Web 2.0 applications.",
   "keywords": ["php", "framework", "jquery"],
