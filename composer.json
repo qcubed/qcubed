@@ -5,17 +5,17 @@
       "url": "https://github.com/qcubed/composer"
     }
   ],
-  "name": "qcubed/framework",
+  "name": "qcubed/qcubed",
   "description": "QCubed is a PHP framework for rapid web development. Building on top of jQuery, with OOP at its core, QCubed provides a powerful solution for building database-driven Web 2.0 applications.",
   "keywords": ["php", "framework", "jquery"],
   "homepage": "http://qcu.be/",
   "type": "qcubed-framework",
   "license": "MIT",
   "support": {
-      "issues": "https://github.com/qcubed/framework/issues",
+      "issues": "https://github.com/qcubed/qcubed/issues",
       "forum": "http://qcu.be/forum",
-      "wiki": "https://github.com/qcubed/framework/wiki",
-      "source": "https://github.com/qcubed/framework",
+      "wiki": "https://github.com/qcubed/qcubed/wiki",
+      "source": "https://github.com/qcubed/qcubed",
       "irc": "irc://irc.freenode.net/qcubed"
   },
   "require": {
