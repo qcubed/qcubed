@@ -1,6 +1,6 @@
 # Getting started with QCubed
 
-[![Build Status](https://travis-ci.org/qcubed/framework.png?branch=master)](https://travis-ci.org/qcubed/framework)
+[![Build Status](https://travis-ci.org/qcubed/qcubed.png?branch=master)](https://travis-ci.org/qcubed/qcubed)
 
 ## Releases
 **Newest stable release: [version 3.0.6, released on Oct. 25, 2016].
@@ -61,21 +61,14 @@ Through its plugin system, QCubed makes it easy to package and deliver enhanceme
 
 ## Installation
 
-The installation procedure is described in detail here: [Installation instructions](https://github.com/qcubed/framework/INSTALL.md "Installation instructions").
+The installation procedure is described in detail here: [Installation instructions](https://github.com/qcubed/qcubed/INSTALL.md "Installation instructions").
 
 * * *
 
 ## Latest commits
 
-A list of the latest changes is available at https://github.com/qcubed/framework/commits/master
+A list of the latest changes is available at https://github.com/qcubed/qcubed/commits/master
 
 ## Credits
 
 QCubed was branched out of QCodo, a project by Michael Ho. QCubed relies on JQuery and uses jQuery UI libraries for some of its core controls.
-
-* * *
-
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/qcubed/framework/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
