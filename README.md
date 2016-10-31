@@ -61,7 +61,7 @@ Through its plugin system, QCubed makes it easy to package and deliver enhanceme
 
 ## Installation
 
-The installation procedure is described in detail here: [Installation instructions](https://github.com/qcubed/qcubed/INSTALL.md "Installation instructions").
+The installation procedure is described in detail here: [Installation instructions](https://github.com/qcubed/qcubed/blob/master/INSTALL.md "Installation instructions").
 
 * * *
 
