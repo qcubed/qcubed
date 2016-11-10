@@ -64,7 +64,7 @@ CREATE TABLE related_project_assn (
 );
 
 CREATE TABLE milestone (
-    id INT NOT NULL IDENTITY,
+    id INT NOT NULL,
     project_id INT,
     name VARCHAR(100),
     CONSTRAINT PK_milestone PRIMARY KEY (id)

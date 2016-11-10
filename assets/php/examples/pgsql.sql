@@ -90,7 +90,7 @@ CREATE TABLE related_project_assn (
 CREATE INDEX IDX_relatedprojectassn_2 ON related_project_assn (child_project_id);
 
 CREATE TABLE milestone (
-  id SERIAL,
+  id BIGINT,
   project_id BIGINT NOT NULL,
   name VARCHAR(50) NOT NULL,
     CONSTRAINT PK_milestone PRIMARY KEY (id)
