@@ -53,7 +53,7 @@
 
 		/**
 		 * Protected internal member variable that stores the original version of the PK column value (if restored)
-		 * Used by Save() to update a PK column during UPDATE and Restore() to reload the PK.
+		 * Used by Save() to update a PK column during UPDATE and Reload() to reload the PK.
 		 * @var <?= $objColumn->VariableType ?> __<?= $objColumn->VariableName ?>;
 		 */
 		protected $__<?= $objColumn->VariableName ?>;
