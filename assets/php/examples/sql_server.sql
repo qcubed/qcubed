@@ -225,16 +225,16 @@ INSERT INTO address (person_id, street, city) VALUES(5, '22 Elm St', 'Palo Alto'
 INSERT INTO address (person_id, street, city) VALUES(7, '1 Pine St', 'San Jose');
 INSERT INTO address (person_id, street, city) VALUES(7, '421 Central Expw', 'Mountain View');
 
-INSERT INTO milestone (project_id, name) VALUES (1, 'Milestone A');
-INSERT INTO milestone (project_id, name) VALUES (1, 'Milestone B');
-INSERT INTO milestone (project_id, name) VALUES (1, 'Milestone C');
-INSERT INTO milestone (project_id, name) VALUES (2, 'Milestone D');
-INSERT INTO milestone (project_id, name) VALUES (2, 'Milestone E');
-INSERT INTO milestone (project_id, name) VALUES (3, 'Milestone F');
-INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone G');
-INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone H');
-INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone I');
-INSERT INTO milestone (project_id, name) VALUES (4, 'Milestone J');
+INSERT INTO milestone (id, project_id, name) VALUES (1, 1, 'Milestone A');
+INSERT INTO milestone (id, project_id, name) VALUES (2, 1, 'Milestone B');
+INSERT INTO milestone (id, project_id, name) VALUES (3, 1, 'Milestone C');
+INSERT INTO milestone (id, project_id, name) VALUES (4, 2, 'Milestone D');
+INSERT INTO milestone (id, project_id, name) VALUES (5, 2, 'Milestone E');
+INSERT INTO milestone (id, project_id, name) VALUES (6, 3, 'Milestone F');
+INSERT INTO milestone (id, project_id, name) VALUES (7, 4, 'Milestone G');
+INSERT INTO milestone (id, project_id, name) VALUES (8, 4, 'Milestone H');
+INSERT INTO milestone (id, project_id, name) VALUES (9, 4, 'Milestone I');
+INSERT INTO milestone (id, project_id, name) VALUES (10, 4, 'Milestone J');
 
 INSERT INTO person_type (name) VALUES ('Contractor');
 INSERT INTO person_type (name) VALUES ('Manager');
