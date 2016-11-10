@@ -22,6 +22,8 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php 	if ($objColumn->Identity) { ?>
 		$this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD] = true;
+<?php 	} elseif ($objColumn->PrimaryKey) { ?>
+		$this->__<?= $objColumn->VariableName ?> = $this-><?= $objColumn->VariableName ?>;
 <?php 	} elseif ($objColumn->Reference) { ?>
 		if (isset($objReloaded->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
 <?php 	 	if ($objColumn->Reference->IsType) { ?>
@@ -32,9 +34,11 @@
 <?php 		}?>
 			$this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD] = true;
 		}
-<?php 	}?>
-<?php 	if ($objColumn->PrimaryKey) { ?>
-		$this->__<?= $objColumn->VariableName ?> = $this-><?= $objColumn->VariableName ?>;
+<?php 	}  else { ?>
+		if (isset($objReloaded->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
+			$this-><?= $objColumn->VariableName ?> = $objReloaded-><?= $objColumn->VariableName ?>;
+			$this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD] = true;
+		}
 <?php 	} ?>
 <?php } ?>
 	}
