@@ -1285,7 +1285,7 @@
 
 
 	class QHtmlTableCheckBoxColumn_ClickEvent extends QClickEvent {
-		const JsReturnParam = '{"row": $j(this).closest("tr")[0].rowIndex, "col": $j(this).parent()[0].cellIndex, "checked":this.checked, "id":this.id}'; // returns the array of cell info, and the new state of the checkbox
+		const JsReturnParam = '{"row": $j(this).closest("tr")[0].rowIndex, "col": $j(this).closest("th,td")[0].cellIndex, "checked":this.checked, "id":this.id}'; // returns the array of cell info, and the new state of the checkbox
 
 		public function __construct($intDelay = 0, $strCondition = null) {
 			parent::__construct($intDelay, $strCondition, 'input[type="checkbox"]');
