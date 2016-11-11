@@ -23,17 +23,17 @@
 	if (is_null($objColumn->Default)) {
 		print 'null';
 	}
-	elseif ($objColumn->Default == 'CURRENT_TIMESTAMP') {
+	elseif ($objColumn->Default === 'CURRENT_TIMESTAMP') {
 		print 'QDateTime::Now';
 	}
-	elseif (strtoupper($objColumn->Default) == 'TRUE' || (
+	elseif (strtoupper($objColumn->Default) === 'TRUE' || (
 			is_numeric($objColumn->Default) &&
 			$objColumn->Default == 1 &&
 			$objColumn->DbType == QDatabaseFieldType::Bit)
 		) {
 		print 'true';
 	}
-	elseif (strtoupper($objColumn->Default) == 'FALSE' || (
+	elseif (strtoupper($objColumn->Default) === 'FALSE' || (
 			is_numeric($objColumn->Default) &&
 			$objColumn->Default == 0 &&
 			$objColumn->DbType == QDatabaseFieldType::Bit)
@@ -53,7 +53,7 @@
 
 		/**
 		 * Protected internal member variable that stores the original version of the PK column value (if restored)
-		 * Used by Save() to update a PK column during UPDATE
+		 * Used by Save() to update a PK column during UPDATE and Reload() to reload the PK.
 		 * @var <?= $objColumn->VariableType ?> __<?= $objColumn->VariableName ?>;
 		 */
 		protected $__<?= $objColumn->VariableName ?>;

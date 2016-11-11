@@ -459,5 +459,20 @@ class BasicOrmTests extends QUnitTestCaseBase {
 
 
 	}
+
+	public function testReload() {
+		$objProject = Project::QuerySingle(QQ::Equal(QQN::Project()->Id, 1));
+		$objProject->Reload();
+
+		$this->assertEquals(1, $objProject->getId());
+		$this->assertEquals(7, $objProject->getManagerPersonId());
+		$this->assertEquals("ACME Website Redesign", $objProject->Name);
+
+		// Test non-identity set and reload
+		$objMilestone = Milestone::Load(1);
+		$objMilestone->Id = 5;	// Should be legal for non-identity PKs
+		$objMilestone->Reload();
+		$this->assertEquals(1, $objMilestone->Id, "Identity should reset to original value after a reload");
+	}
 }
 
