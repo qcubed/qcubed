@@ -23,17 +23,17 @@
 	if (is_null($objColumn->Default)) {
 		print 'null';
 	}
-	elseif ($objColumn->Default == 'CURRENT_TIMESTAMP') {
+	elseif ($objColumn->Default === 'CURRENT_TIMESTAMP') {
 		print 'QDateTime::Now';
 	}
-	elseif (strtoupper($objColumn->Default) == 'TRUE' || (
+	elseif (strtoupper($objColumn->Default) === 'TRUE' || (
 			is_numeric($objColumn->Default) &&
 			$objColumn->Default == 1 &&
 			$objColumn->DbType == QDatabaseFieldType::Bit)
 		) {
 		print 'true';
 	}
-	elseif (strtoupper($objColumn->Default) == 'FALSE' || (
+	elseif (strtoupper($objColumn->Default) === 'FALSE' || (
 			is_numeric($objColumn->Default) &&
 			$objColumn->Default == 0 &&
 			$objColumn->DbType == QDatabaseFieldType::Bit)

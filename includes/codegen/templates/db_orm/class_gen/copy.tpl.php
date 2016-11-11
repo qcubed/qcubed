@@ -3,17 +3,24 @@
     * preparation for saving or further processing.
    	*/
    	public function Copy() {
-   		$this->__blnRestored = false;
-   		// Nullify primary keys
+		$objCopy = clone $this;
+		$objCopy->__blnRestored = false;
+
+		// Make sure all valid data is dirty so it will be saved
+		foreach ($this->__blnValid as $key=>$val) {
+			$objCopy->__blnDirty[$key] = $val;
+		}
+
+   		// Nullify primary keys so they will be saved as a different object
 <?php foreach ($objTable->PrimaryKeyColumnArray as $objPkColumn) { ?>
-		$this-><?= $objPkColumn->VariableName ?> = null;
+		$objCopy-><?= $objPkColumn->VariableName ?> = null;
 <?php } ?>
 
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
 <?php 	if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
 <?php 		if ($objColumn->Unique) { ?>
-		$this-><?= $objColumn->VariableName ?> = self::<?= $objColumn->PropertyName ?>Default;
-		$this-><?= $objColumn->Reference->VariableName ?> = null;
+		$objCopy-><?= $objColumn->VariableName ?> = self::<?= $objColumn->PropertyName ?>Default;
+		$objCopy-><?= $objColumn->Reference->VariableName ?> = null;
 <?php 		} 	// NOTE HERE: Non-unique forward references can persist here. ?>
 <?php 	} ?>
 <?php } ?>
@@ -23,11 +30,11 @@
    		// Reverse references
 <?php 	foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
 <?php 		if ($objReverseReference->Unique) { ?>
-		$this-><?= $objReverseReference->ObjectMemberVariable ?> = null;
-   		$this->blnDirty<?= $objReverseReference->ObjectPropertyName ?> = false;
+		$objCopy-><?= $objReverseReference->ObjectMemberVariable ?> = null;
+		$objCopy->blnDirty<?= $objReverseReference->ObjectPropertyName ?> = false;
 <?php 		} else { ?>
-		$this->_obj<?= $objReverseReference->ObjectDescription ?> = null;
-		$this->_obj<?= $objReverseReference->ObjectDescription ?>Array = null;
+		$objCopy->_obj<?= $objReverseReference->ObjectDescription ?> = null;
+		$objCopy->_obj<?= $objReverseReference->ObjectDescription ?>Array = null;
 <?php 		} ?>
 <?php 	} ?>
 <?php } ?>
@@ -39,9 +46,10 @@
 		$objAssociatedTable = $objCodeGen->GetTable($objReference->AssociatedTable);
 		$varPrefix = (is_a($objAssociatedTable, 'QTypeTable') ? '_int' : '_obj');
 ?>
-		$this-><?= $varPrefix . $objReference->ObjectDescription ?> = null;
-		$this-><?= $varPrefix . $objReference->ObjectDescription ?>Array = null;
+		$objCopy-><?= $varPrefix . $objReference->ObjectDescription ?> = null;
+		$objCopy-><?= $varPrefix . $objReference->ObjectDescription ?>Array = null;
 <?php 	} ?>
 <?php } ?>
+		return $objCopy;
 	}
 
