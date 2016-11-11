@@ -9,6 +9,10 @@
 
 The most recent stable version of version 2 can be found in the v2 branch.
 
+## Community
+
+*Join us on Slack on [qcubed.slack.com](http://qcubed.slack.com). Get your invite [here](https://docs.google.com/forms/d/e/1FAIpQLSe0YTPSbTIFdwyVMS1VqxPK6CnfOlOVJ6Q4OfO-im2IIem5NA/viewform)*. 
+
 ## What is QCubed?
 
 QCubed (pronounced 'Q' - cubed) is a PHP Model-View-Controller Rapid Application Development framework with support for PHP5 (5.4 and above) and PHP7. The goal of the framework is to save development time around mundane, repetitive tasks - allowing you to concentrate on things that are useful AND fun. QCubed excels in situations where you have a large database structure that you quickly want to make available to users.
@@ -59,21 +63,14 @@ Through its plugin system, QCubed makes it easy to package and deliver enhanceme
 
 ## Installation
 
-The installation procedure is described in detail here: [Installation instructions](https://github.com/qcubed/framework/INSTALL.md "Installation instructions").
+The installation procedure is described in detail here: [Installation instructions](https://github.com/qcubed/qcubed/blob/master/INSTALL.md "Installation instructions").
 
 * * *
 
 ## Latest commits
 
-A list of the latest changes is available at https://github.com/qcubed/framework/commits/master
+A list of the latest changes is available at https://github.com/qcubed/qcubed/commits/master
 
 ## Credits
 
 QCubed was branched out of QCodo, a project by Michael Ho. QCubed relies on JQuery and uses jQuery UI libraries for some of its core controls.
-
-* * *
-
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/qcubed/framework/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
