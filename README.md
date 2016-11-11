@@ -1,6 +1,8 @@
 # Getting started with QCubed
 
 [![Build Status](https://travis-ci.org/qcubed/framework.png?branch=master)](https://travis-ci.org/qcubed/framework)
+[![Test Coverage](https://codeclimate.com/github/qcubed/framework/badges/coverage.svg)](https://codeclimate.com/github/qcubed/framework/coverage)
+[![Issue Count](https://codeclimate.com/github/qcubed/framework/badges/issue_count.svg)](https://codeclimate.com/github/qcubed/framework)
 
 ## Releases
 **Newest stable release: [version 3.0.6, released on Oct. 25, 2016].

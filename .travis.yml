@@ -26,6 +26,15 @@ before_script:
 
 script: travis/test.php
 
+# code coverage
+addons:
+    code_climate:
+        repo_token: 814dfe2ee0ae6198e43e566e32ab85f40379b5abe06cd52b1f6a24e92b5de883
+
+# code coverage
+after_script:
+    - vendor/bin/test-reporter
+
 sudo: false
 
 matrix:
