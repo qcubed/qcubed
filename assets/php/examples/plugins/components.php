@@ -62,7 +62,7 @@
 			your PHP in such a way that the javascript will read it. Whenever your control is completely redrawn, all the HTML and
 			the javascript in <strong>GetEndScript</strong> will be drawn again, updating the control to the current
 			data in PHP. To cause a redraw, call the <strong>Refresh</strong> method, which it inherits from <strong>QControlBase</strong>.
-			See examples of this is done in the various Gen classes in the qcubed/framework/includes/base_controls directory.</p>
+			See examples of this is done in the various Gen classes in the qcubed/qcubed/includes/base_controls directory.</p>
 	
 	
 		<p>If you would like to update your control using javascript without completely redrawing the control, use
