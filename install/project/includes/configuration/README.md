@@ -67,7 +67,7 @@ in the model connector to get copies of the controls and then to place them in t
 To customize the generated controls, you have the following choices:
 - Use the ModelConnectorEditor (see the example on this), to set specific options on each control.
 - Create your own code generating templates and place them in your project/includes/codegen/templates directory. Its best
-  to do this by copying the corresponding file in the qcubed/framework/includes/codegen/templates directory and then
+  to do this by copying the corresponding file in the qcubed/qcubed/includes/codegen/templates directory and then
   editing the file and placing it in the corresponding location in the above project directory. The project directory
   files will override the files in the vendor directory.
 - Override the generated code by editing the model connectors in your project/includes/connector directory.

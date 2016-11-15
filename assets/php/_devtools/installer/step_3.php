@@ -84,16 +84,16 @@
 		$strCurrentInstallationDir = substr($strCurrentInstallationDir, 0, (strlen($strCurrentInstallationDir) - 1));
 	}
 	
-	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/framework/assets/css/styles.css');
-	$strExamplesStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/framework/assets/php/examples/includes/examples.css');
+	$strStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/qcubed/assets/css/styles.css');
+	$strExamplesStylePath = $strCurrentInstallationDir . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/qcubed/qcubed/assets/php/examples/includes/examples.css');
 	
 	$strCurrentInstallationUrl = substr($strCurrentInstallationDir, strlen(rtrim($_SERVER['DOCUMENT_ROOT'])));
         if (DIRECTORY_SEPARATOR != substr($strCurrentInstallationUrl, 0, 1)) {
                 $strCurrentInstallationUrl = DIRECTORY_SEPARATOR . $strCurrentInstallationUrl;
         }
-	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/css/styles.css');
-	$strExamplesStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/php/examples/includes/examples.css');
-	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/framework/assets/images');
+	$strStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/qcubed/assets/css/styles.css');
+	$strExamplesStyleUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/qcubed/assets/php/examples/includes/examples.css');
+	$strImagesUrl = str_replace('/', DIRECTORY_SEPARATOR, $strCurrentInstallationUrl . '/vendor/qcubed/qcubed/assets/images');
 	
 	// We will start the HTML output now.
 ?>
@@ -187,7 +187,7 @@
 				switch ($strFileCreationStatus) {
 					case 'exists':
 					case 'creation_failed':
-						echo '<br/> <a href="' . $strVirtDir . $strSubDir . '/vendor/qcubed/framework/assets/php/_devtools/config_checker.php">Launch the config checker</a>';
+						echo '<br/> <a href="' . $strVirtDir . $strSubDir . '/vendor/qcubed/qcubed/assets/php/_devtools/config_checker.php">Launch the config checker</a>';
 						break;
 					case 'created':
 						?>
@@ -198,7 +198,7 @@
 					<code>chmod 775 <?= $strDocroot . $strSubDir . DIRECTORY_SEPARATOR . 'project/includes' . DIRECTORY_SEPARATOR . 'configuration' ; ?></code></p>
 				</div>
 				<?php
-						echo '<a href="' . $strVirtDir . $strSubDir . '/vendor/qcubed/framework/assets/php/_devtools/config_checker.php">Launch the config checker</a> to make sure everything went fine.';
+						echo '<a href="' . $strVirtDir . $strSubDir . '/vendor/qcubed/qcubed/assets/php/_devtools/config_checker.php">Launch the config checker</a> to make sure everything went fine.';
 						break;
 					default:
 						// do nothing
