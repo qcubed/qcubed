@@ -506,7 +506,7 @@
 		 * @param int|null $intSecond
 		 * @return QDateTime
 		 */
-		public function setTime($mixValue, $intMinute = null, $intSecond = null) {
+		public function setTime($mixValue, $intMinute = null, $intSecond = null, $intMicroSeconds = null) {
 			if ($mixValue instanceof QDateTime) {
 				if ($mixValue->IsTimeNull()) {
 					$this->blnTimeNull = true;
@@ -527,7 +527,11 @@
 			}
 			// If HOUR or MINUTE is NULL...
 			if (is_null($intHour) || is_null($intMinute)) {
-				parent::setTime($intHour, $intMinute, $intSecond);
+				if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
+					parent::setTime($intHour, $intMinute, $intSecond, $intMicroSeconds);
+				} else {
+					parent::setTime($intHour, $intMinute, $intSecond);
+				}
 				$this->blnTimeNull = true;
 				$this->ReinforceNullProperties();
 				return $this;
@@ -548,7 +552,11 @@
 				// will continue and set again to make sure, because boundary crossing will change the time
 			}*/
 
-			parent::setTime($intHour, $intMinute, $intSecond);
+			if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
+				parent::setTime($intHour, $intMinute, $intSecond, $intMicroSeconds);
+			} else {
+				parent::setTime($intHour, $intMinute, $intSecond);
+			}
 
 			return $this;
 		}
