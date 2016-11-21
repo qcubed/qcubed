@@ -664,7 +664,8 @@
 
 		/**
 		 * Given the name of a column that is a foreign key to another table, returns a kind of
-		 * virtual column name that would refer to the object pointed to. This new name is not actually used, but derivatives
+		 * virtual column name that would refer to the object pointed to. This new name is used to refer to the object
+		 * version of the column by json and other encodings, and derivatives
 		 * of this name are used to represent a variable and property name that refers to this object that will get stored
 		 * in the model.
 		 *
@@ -684,7 +685,7 @@
 				// from the variable that was mapped from the physical database
 				// E.g., if it's a numeric FK, and the column is defined as "person INT",
 				// there will end up being two variables, one for the Person id integer, and
-				// one for the Person object itself.  We'll add Object t o the name of the Person object
+				// one for the Person object itself.  We'll add Object to the name of the Person object
 				// to make this deliniation.
 				$strColumnName = sprintf("%s_object", $strColumnName);
 			}

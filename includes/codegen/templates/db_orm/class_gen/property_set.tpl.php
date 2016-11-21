@@ -7,33 +7,14 @@
 		 * @return mixed
 		 */
 		public function __set($strName, $mixValue) {
+			// Use setter if it exists
+			$strMethod = 'set' . $strName;
+			if (method_exists($this, $strMethod)) {
+				$this->$strMethod($mixValue);
+				return;
+			}
+
 			switch ($strName) {
-				///////////////////
-				// Member Variables
-				///////////////////
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) { ?>
-				case '<?= $objColumn->PropertyName ?>':
-					/**
-					 * Sets the value for <?= $objColumn->VariableName ?> <?php if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
-
-					 * @param <?= $objColumn->VariableType ?> $mixValue
-					 * @return <?= $objColumn->VariableType ?>
-
-					 */
-					try {
-<?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
-						$this-><?= $objColumn->Reference->VariableName ?> = null;
-<?php } ?>
-						return ($this-><?= $objColumn->VariableName ?> = QType::Cast($mixValue, <?= $objColumn->VariableTypeAsConstant ?>));
-					} catch (QCallerException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-<?php } ?>
-<?php } ?>
-
 				///////////////////
 				// Member Objects
 				///////////////////

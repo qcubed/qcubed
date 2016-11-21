@@ -196,7 +196,13 @@ class BasicOrmTests extends QUnitTestCaseBase {
 	public function testQuerySelectSubset() {
 		$objPersonArray = Person::LoadAll(QQ::Select(QQN::Person()->FirstName));
 		foreach ($objPersonArray as $objPerson) {
-			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->setExpectedException('QCallerException', 'LastName has not been set nor was selected in the most recent query and is not valid.');
+			$objPerson->LastName;
+			$this->setExpectedException(null);
+
+			// If we now set the last name, we should be able to get it
+			$objPerson->LastName = "Test";
+			$this->assertEquals("Test", $objPerson->LastName); // use the getter
 			$this->assertNotNull($objPerson->Id, "Id should not be null since it's always added to the select list");
 		}
 	}
@@ -214,7 +220,9 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$objSelect->SetSkipPrimaryKey(true);
 		$objPersonArray = Person::LoadAll($objSelect);
 		foreach ($objPersonArray as $objPerson) {
-			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->setExpectedException('QCallerException', 'LastName has not been set nor was selected in the most recent query and is not valid.');
+			$objPerson->LastName;
+			$this->setExpectedException(null);
 			$this->assertNull($objPerson->Id, "Id should be null since SkipPrimaryKey is set on the Select object");
 		}
 	}
@@ -425,6 +433,46 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		);
 
 		$this->assertEquals(3, $objProject->GetVirtualAttribute("manager_count"), "Project manager count is 3");
+	}
+
+	public function testGettersSetters() {
+		$objProject = Project::QuerySingle(QQ::Equal(QQN::Project()->Id, 1));
+
+		$this->assertEquals(1, $objProject->getId());
+		$this->assertEquals(7, $objProject->getManagerPersonId());
+
+		$objProject2 = new Project();
+
+		try {
+			$objProject2->setId(2);	// can't set a pk that is an identity
+			$blnPassed = true;
+		}
+		catch(QCallerException $e) {
+			$blnPassed = false;
+		}
+		$this->assertEquals(false, $blnPassed, 'Exception sould be called when trying to set a pk on an identity column');
+
+
+		$objProject2->setName('Test');
+		$strName = $objProject2->getName();	
+		$this->assertEquals('Test', $strName);
+
+
+	}
+
+	public function testReload() {
+		$objProject = Project::QuerySingle(QQ::Equal(QQN::Project()->Id, 1));
+		$objProject->Reload();
+
+		$this->assertEquals(1, $objProject->getId());
+		$this->assertEquals(7, $objProject->getManagerPersonId());
+		$this->assertEquals("ACME Website Redesign", $objProject->Name);
+
+		// Test non-identity set and reload
+		$objMilestone = Milestone::Load(1);
+		$objMilestone->Id = 5;	// Should be legal for non-identity PKs
+		$objMilestone->Reload();
+		$this->assertEquals(1, $objMilestone->Id, "Identity should reset to original value after a reload");
 	}
 }
 

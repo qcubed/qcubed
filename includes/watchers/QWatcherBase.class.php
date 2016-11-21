@@ -76,7 +76,7 @@
 				$this->strWatchedKeys[$key] =  true;
 			}
 		}
-		
+
 		/**
 		 * Controls should call this function just after rendering. Updates strWatchedTables
 		 * to the current state of the database.
@@ -90,7 +90,7 @@
 		 * @return bool
 		 */
 		abstract public function IsCurrent();
-		
+
 		/**
 		 * Model Save() calls this to indicate that a table has changed.
 		 * 
