@@ -32,7 +32,7 @@
 
 	// Versioning Information
 	define('QCUBED_VERSION_NUMBER_ONLY', '3.0.0');
-	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Beta Release (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
+	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Final Release');
 	
 	define('__JQUERY_CORE_VERSION__', '1.9.1');
 	define('__JQUERY_UI_VERSION__', '1.9.2');

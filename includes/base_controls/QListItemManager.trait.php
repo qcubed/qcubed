@@ -28,7 +28,11 @@
 		 */
 		public function AddListItem(QListItemBase $objListItem) {
 			if ($strControlId = $this->GetId()) {
-				$objListItem->SetId($strControlId . '_' . count($this->objListItemArray));	// auto assign the id based on parent id
+				$num = 0;
+				if ($this->objListItemArray) {
+					$num = count($this->objListItemArray);
+				}
+				$objListItem->SetId($strControlId . '_' . $num);	// auto assign the id based on parent id
 				$objListItem->Reindex();
 			}
 			$this->objListItemArray[] = $objListItem;

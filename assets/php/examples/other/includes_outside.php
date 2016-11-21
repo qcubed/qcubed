@@ -25,7 +25,7 @@
 		If that's the case, just follow the instructions above; you'll need to carefully juggle the
 		database configuration settings and such, but if you're sharing the install for a few apps, you
 		probably know what you're doing :-). If you have any questions along the way,
-		<a href="http://qcu.be/forums/qcubed-framework/help">QCubed Forums</a> are there to help.</p>
+		<a href="https://github.com/qcubed/qcubed/issues">QCubed Forums</a> are there to help.</p>
 </div>
 
 <style>#viewSource { display: none; }</style>

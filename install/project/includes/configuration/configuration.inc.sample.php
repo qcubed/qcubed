@@ -129,7 +129,7 @@ if (!defined('SERVER_INSTANCE')) {
 	define ('__PLUGIN_TMP__', __TMP__ . '/plugin.tmp/');
 
 	// The QCubed Core
-	define ('__QCUBED_CORE__', __DOCROOT__ . __SUBDIRECTORY__ . '/vendor/qcubed/framework/includes');
+	define ('__QCUBED_CORE__', __DOCROOT__ . __SUBDIRECTORY__ . '/vendor/qcubed/qcubed/includes');
 
 	// Destination for Code Generated class files
 	define ('__MODEL__', __INCLUDES__ . '/model' );
@@ -166,7 +166,7 @@ if (!defined('SERVER_INSTANCE')) {
 	// Note: These locations are for use by the framework only. You should put your own files in __APP*_ASSETS__ directories defined below
 	define ('__PROJECT_ASSETS__', __SUBDIRECTORY__ . '/project/assets');
 	define ('__VENDOR_ASSETS__', __SUBDIRECTORY__ . '/vendor');
-	define ('__QCUBED_ASSETS__', __VENDOR_ASSETS__ . '/qcubed/framework/assets');
+	define ('__QCUBED_ASSETS__', __VENDOR_ASSETS__ . '/qcubed/qcubed/assets');
 	define ('__PLUGIN_ASSETS__',  __VENDOR_ASSETS__ . '/qcubed/plugin');
 
 	define ('__JS_ASSETS__', __QCUBED_ASSETS__ . '/js');

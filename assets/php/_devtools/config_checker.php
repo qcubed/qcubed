@@ -15,7 +15,7 @@
 	<p>
 		This simple wizard will help you configure QCubed for first use.
 		It'll take you just a couple minutes. If you have any questions along the way, feel free to ping us on the 
-		<a target='_blank' href='http://qcu.be/forums/qcubed-framework/help'> support forums</a>, a vibrant community
+		<a target='_blank' href='https://github.com/qcubed/qcubed/issues'> support forums</a>, a vibrant community
 		is there to help you all the time. There's also a <a target='_blank' href='http://qcu.be/chat'>chat room</a>
 		where you can get help right away.
 	</p>

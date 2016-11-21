@@ -48,7 +48,7 @@ Some QControls include:
 - QTabs
 - QAccordion
 
-The easiest way to learn QCubed is to see the examples tutorial at <http://examples.qcu.be/>
+The easiest way to learn QCubed is to see the examples tutorial at <http://qcu.be/examples/>
 
 ### Plugins
 

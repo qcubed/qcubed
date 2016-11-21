@@ -19,7 +19,7 @@
 	<p>If your control edits a basic data type, be sure to include a <strong>control_registry.inc.php</strong> file as described in the previous example page.</p>
 	<p>Include a <strong>composer.json</strong> file in the root directory of your control. Its probably easiest to copy one from a current plugin and edit it.</p>
 	<p>Create a new repository in your own GitHub account, and upload your directory to the repository. Point to your repository from your main qcubed <strong>composer.json</strong> file, and try a Composer Install command to see if your control will install. It should appear in the <strong>vendor/qcubed/plugin</strong> directory if all goes well. Try it out in your project and see if you can use it.</p>
-	<p>Once you are ready to give it to the community, post an issue in the <a href="https://github.com/qcubed/framework">QCubed Github website</a>. One of the core developers will take a look, and add it as a qcubed repository if everything looks good.</p>
+	<p>Once you are ready to give it to the community, post an issue in the <a href="https://github.com/qcubed/qcubed">QCubed Github website</a>. One of the core developers will take a look, and add it as a qcubed repository if everything looks good.</p>
 </div>
 
 <style>#viewSource { display: none; }</style>
