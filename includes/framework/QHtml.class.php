@@ -403,13 +403,22 @@
 		/**
 		 * Returns a MailTo url.
 		 *
-		 * @param $strUser
-		 * @param $strServer
-		 * @param null $queryParams
-		 * @return string
+		 * @param string $strUser
+		 * @param string| null $strServer optional server. If missing, will assume server and "@" are already in strUser
+		 * @param array|null $queryParams
+		 * @param string|null $strName Optional name to associate with the email address. Some email clients will show this instead of the address.
+		 * @return string	The mailto url.
 		 */
-		public static function MailToUrl ($strUser, $strServer, $queryParams = null) {
-			$strUrl = 'mailto:' . rawurlencode($strUser) . '@' . rawurlencode($strServer);
+		public static function MailToUrl ($strUser, $strServer = null, $queryParams = null, $strName = null) {
+			if ($strServer) {
+				$strUrl = $strUser . '@' . $strServer;
+			} else {
+				$strUrl = $strUser;
+			}
+			if ($strName) {
+				$strUrl = '"' . $strName . '"' . '<' . $strUrl . '>';
+			}
+			$strUrl = rawurlencode($strUrl);
 			if ($queryParams) {
 				$strUrl .= '?' . http_build_query($queryParams, null, null, PHP_QUERY_RFC3986);
 			}
