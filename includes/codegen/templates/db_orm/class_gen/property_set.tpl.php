@@ -29,8 +29,7 @@
 
 					 */
 					if (is_null($mixValue)) {
-						$this-><?= $objColumn->VariableName ?> = null;
-						$this-><?= $objColumn->Reference->VariableName ?> = null;
+						$this->set<?= $objColumn->PropertyName ?>(null);
 						return null;
 					} else {
 						// Make sure $mixValue actually is a <?= $objColumn->Reference->VariableType ?> object
@@ -46,8 +45,8 @@
 							throw new QCallerException('Unable to set an unsaved <?= $objColumn->Reference->PropertyName ?> for this <?= $objTable->ClassName ?>');
 
 						// Update Local Member Variables
+						$this->set<?= $objColumn->PropertyName ?>($mixValue-><?= $objCodeGen->TableArray[strtolower($objColumn->Reference->Table)]->ColumnArray[strtolower($objColumn->Reference->Column)]->PropertyName ?>);
 						$this-><?= $objColumn->Reference->VariableName ?> = $mixValue;
-						$this-><?= $objColumn->VariableName ?> = $mixValue-><?= $objCodeGen->TableArray[strtolower($objColumn->Reference->Table)]->ColumnArray[strtolower($objColumn->Reference->Column)]->PropertyName ?>;
 
 						// Return $mixValue
 						return $mixValue;
