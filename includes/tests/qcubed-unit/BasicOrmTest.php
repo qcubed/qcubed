@@ -474,5 +474,23 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$objMilestone->Reload();
 		$this->assertEquals(1, $objMilestone->Id, "Identity should reset to original value after a reload");
 	}
+
+	public function testSetReference() {
+		$milestone1 = Milestone::Load(1);
+		$intProjectId = $milestone1->ProjectId;
+
+		$project4 = Project::Load(4);
+
+		$milestone1->Project = $project4;
+		$milestone1->Save();
+
+		$milestone1 = Milestone::Load(1);
+		$this->assertEquals(4, $milestone1->Project->Id);
+
+		// Restore state of database
+		$milestone1->ProjectId = $intProjectId;
+		$milestone1->Save();
+		$this->assertEquals($intProjectId, $milestone1->Project->Id);
+	}
 }
 
