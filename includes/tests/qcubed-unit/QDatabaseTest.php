@@ -202,8 +202,8 @@ class QDatabaseTests extends QUnitTestCaseBase {
 		// new person value is placed in the application cache
 		
 		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not dropped from a cache because of the transaction commit.");
-		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPerson) {
-			$this->assertEquals("New value 1", $objPerson->FirstName, "Object is modified in a cache because of the transaction commit.");
+		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPersonCacheArray) {
+			$this->assertEquals("New value 1", $objPersonCacheArray['value']->FirstName, "Object is modified in a cache because of the transaction commit.");
 		}
 		
 		// Restore the original value to not break other tests
