@@ -27,7 +27,7 @@
 		 *
 		 * @return void
 		 */
-		public function Set($strKey, $objValue, $intExpireAfterSeconds) {
+		public function Set($strKey, $objValue, $intExpireAfterSeconds = null) {
 			// do nothing
 		}
 

@@ -154,7 +154,7 @@
 			return false;
 		}
 
-		public function Set($strKey, $objValue, $intExpirationTime) {
+		public function Set($strKey, $objValue, $intExpirationTime = null) {
 			$this->arrLocalCacheAdditions[$strKey] = $objValue;
 			if (isset($this->arrLocalCacheRemovals[$strKey])) {
 				unset($this->arrLocalCacheRemovals[$strKey]);
