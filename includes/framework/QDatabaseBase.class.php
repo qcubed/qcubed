@@ -27,14 +27,21 @@
 		protected $objValue;
 
 		/**
+		 * @var null|int Time after which the object is to be invalidated/expired
+		 */
+		protected $intExpirationTime = null;
+
+		/**
 		 * Construct the new QCacheSetAction object.
 		 *
-		 * @param string $strKey   the key to use for the object
-		 * @param object $objValue the object to put in the cache
+		 * @param string   $strKey            the key to use for the object
+		 * @param object   $objValue          the object to put in the cache
+		 * @param null|int $intExpirationTime Number of seconds after which the value has to expire
 		 */
-		public function __construct($strKey, $objValue) {
+		public function __construct($strKey, $objValue, $intExpirationTime = null) {
 			$this->strKey = $strKey;
 			$this->objValue = $objValue;
+			$this->intExpirationTime = (int)$intExpirationTime;
 		}
 
 		/**
@@ -42,7 +49,7 @@
 		 * @param QAbstractCacheProvider $objCache The cache object to apply this action to.
 		 */
 		public function Execute(QAbstractCacheProvider $objCache) {
-			$objCache->Set($this->strKey, $this->objValue);
+			$objCache->Set($this->strKey, $this->objValue, $this->intExpirationTime);
 		}
 	}
 	/**
@@ -147,12 +154,12 @@
 			return false;
 		}
 
-		public function Set($strKey, $objValue) {
+		public function Set($strKey, $objValue, $intExpirationTime) {
 			$this->arrLocalCacheAdditions[$strKey] = $objValue;
 			if (isset($this->arrLocalCacheRemovals[$strKey])) {
 				unset($this->arrLocalCacheRemovals[$strKey]);
 			}
-			$this->objCacheActionQueue[] = new QCacheSetAction($strKey, $objValue);
+			$this->objCacheActionQueue[] = new QCacheSetAction($strKey, $objValue, $intExpirationTime);
 		}
 
 		public function Delete($strKey) {

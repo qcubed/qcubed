@@ -16,7 +16,7 @@
 		 *
 		 * @param string  $strKey        the key to use for the object
 		 * @param object  $objValue      the object to put in the cache
-		 * @param integer $intExpiration Duration for which the cache has to live
+		 * @param integer $intExpiration Number of seconds after which the value has to expire
 		 *
 		 * @return void
 		 */
