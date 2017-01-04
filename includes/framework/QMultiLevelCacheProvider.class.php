@@ -51,13 +51,16 @@
 
 		/**
 		 * Set the object into the cache with the given key
-		 * @param string $strKey the key to use for the object
+		 *
+		 * @param string $strKey   the key to use for the object
 		 * @param object $objValue the object to put in the cache
+		 * @param int    $intExpireAfterSeconds Number of seconds after which the value will expire
+		 *
 		 * @return void
 		 */
-		public function Set($strKey, $objValue) {
+		public function Set($strKey, $objValue, $intExpireAfterSeconds) {
 			foreach ($this->arrCacheProviders as $objCacheProvider) {
-				$objCacheProvider->Set($strKey, $objValue);
+				$objCacheProvider->Set($strKey, $objValue, $intExpireAfterSeconds);
 			}
 		}
 

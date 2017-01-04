@@ -21,13 +21,19 @@
 
 		/**
 		 * Set the object into the cache with the given key
-		 * @param string $strKey the key to use for the object
-		 * @param object $objValue the object to put in the cache
+		 *
+		 * @param string $strKey                the key to use for the object
+		 * @param object $objValue              the object to put in the cache
+		 * @param int    $intExpireAfterSeconds Number of seconds after which the object has to expire
+		 *
 		 * @return void
 		 */
-		public function Set($strKey, $objValue) {
-			apc_store ($strKey, $objValue, static::$ttl);
-
+		public function Set($strKey, $objValue, $intExpireAfterSeconds = null) {
+			if($intExpireAfterSeconds) {
+				apc_store ($strKey, $objValue, (int)$intExpireAfterSeconds);
+			} else {
+				apc_store($strKey, $objValue, static::$ttl);
+			}
 		}
 
 		/**

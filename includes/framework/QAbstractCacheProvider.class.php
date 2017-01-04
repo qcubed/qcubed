@@ -13,11 +13,14 @@
 
 		/**
 		 * Set the object into the cache with the given key
-		 * @param string $strKey the key to use for the object
-		 * @param object $objValue the object to put in the cache
+		 *
+		 * @param string  $strKey        the key to use for the object
+		 * @param object  $objValue      the object to put in the cache
+		 * @param integer $intExpiration Duration for which the cache has to live
+		 *
 		 * @return void
 		 */
-		abstract public function Set($strKey, $objValue);
+		abstract public function Set($strKey, $objValue, $intExpiration);
 
 		/**
 		 * Delete the object that has the given key from the cache

@@ -39,12 +39,15 @@
 
 		/**
 		 * Set the object into the cache with the given key
-		 * @param string $strKey the key to use for the object
-		 * @param object $objValue the object to put in the cache
+		 *
+		 * @param string $strKey                the key to use for the object
+		 * @param object $objValue              the object to put in the cache
+		 * @param null   $intExpireAfterSeconds Number of seconds after which the key will be expired
+		 *
 		 * @return void
 		 */
-		public function Set($strKey, $objValue) {
-			$this->objMemcache->set($strKey, $objValue);
+		public function Set($strKey, $objValue, $intExpireAfterSeconds = null) {
+			$this->objMemcache->set($strKey, $objValue, (int)$intExpireAfterSeconds);
 		}
 
 		/**
