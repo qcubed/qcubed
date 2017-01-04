@@ -20,7 +20,7 @@
 		 *
 		 * @return void
 		 */
-		abstract public function Set($strKey, $objValue, $intExpiration);
+		abstract public function Set($strKey, $objValue, $intExpiration = null);
 
 		/**
 		 * Delete the object that has the given key from the cache
