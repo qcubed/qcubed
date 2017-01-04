@@ -45,7 +45,7 @@
 				}
 
 				if (isset($objToReturn['value']) && is_object($objToReturn['value'])) {
-					$objToReturn = clone $objToReturn;
+					$objToReturn['value'] = clone $objToReturn['value'];
 				}
 
 				return $objToReturn['value'];
