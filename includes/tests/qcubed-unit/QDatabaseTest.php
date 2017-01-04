@@ -117,8 +117,8 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			// temporary cache is throwed out. the empty application cache is restored.
 		}
 		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not dropped from a cache because of the transaction roll back.");
-		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPerson) {
-			$this->assertEquals($strPerson1_FirstName, $objPerson->FirstName, "Object is not modified in a cache because of the transaction roll back.");
+		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPersonCacheArray) {
+			$this->assertEquals($strPerson1_FirstName, $objPersonCacheArray['value']->FirstName, "Object is not modified in a cache because of the transaction roll back.");
 		}
 
 		// restore the actual cache object
