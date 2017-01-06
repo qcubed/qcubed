@@ -29,7 +29,7 @@
 		 * @return void
 		 */
 		public function Set($strKey, $objValue, $intExpireAfterSeconds = null) {
-			if($intExpireAfterSeconds) {
+			if(!is_null($intExpireAfterSeconds)) {
 				apc_store ($strKey, $objValue, (int)$intExpireAfterSeconds);
 			} else {
 				apc_store($strKey, $objValue, static::$ttl);
