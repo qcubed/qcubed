@@ -335,4 +335,25 @@ class CacheTests extends QUnitTestCaseBase {
 		
 	}
 
+	// Test Expiry of cache after fixed time (test for auto-expiration of cache)
+	public function testTransactionWithCacheSaveCommit() {
+		// establish a cache object we can work with
+		$objCacheProvider = QApplication::$objCacheProvider;
+		QApplication::$objCacheProvider = new QCacheProviderLocalMemoryTest(array());
+		// cache is empty now
+
+		// Set something in the cache to expire after 5 seconds
+		QApplication::$objCacheProvider->Set('testString', 'cached string abcd', 5);
+
+		// Fetching immediately
+		$this->assertEquals('cached string abcd', QApplication::$objCacheProvider->Get('testString'), "Value fetched from cache does not match the value set into the cache.");
+
+		// Wait for 6 to ensure that the object has expired
+		sleep(6);
+
+		$this->assertEquals(false, QApplication::$objCacheProvider->Get('testString'), "Value set into cache for automatic expiration did not expire after specified time");
+
+		// restore the actual cache object
+		QApplication::$objCacheProvider = $objCacheProvider;
+	}
 }
