@@ -332,7 +332,6 @@ class CacheTests extends QUnitTestCaseBase {
 		$this->assertNull ($targetPerson->_ProjectAsManager, "Person 12 does not have a project.");
 				
 		//TODO: Conditional Array Expansion, requires API change
-		
 	}
 
 	// Test Expiry of cache after fixed time (test for auto-expiration of cache)
