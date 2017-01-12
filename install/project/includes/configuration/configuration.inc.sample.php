@@ -321,7 +321,7 @@ if (!defined('SERVER_INSTANCE')) {
 	 * Setting it to null will disable caching. Current implentations are
 	 *
 	 * "QCacheProviderMemcache": this will use Memcache as the caching provider.
-	 *   You must have the 'php5-memcache' extensions installed for this provider to work.
+	 *   You must have the 'php5-memcache' extension installed for this provider to work.
 	 *
 	 * "QCacheProviderRedis": this will use a Redis server instance as the caching provider.
 	 *   You must have the 'predis/predis' library installed for this provider to work.
