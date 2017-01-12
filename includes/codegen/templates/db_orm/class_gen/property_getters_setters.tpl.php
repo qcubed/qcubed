@@ -37,12 +37,17 @@
 	* Sets the value for <?= $objColumn->VariableName ?> <?php if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
 	* Returns $this to allow chaining of setters.
-	* @param <?= $objColumn->VariableType ?> $<?= $objColumn->VariableName ?>
+	* @param <?= $objColumn->VariableType ?><?= $objColumn->NotNull ? '' : '|null' ?> $<?= $objColumn->VariableName ?>
 
 	* @return <?= $objTable->ClassName ?>
 
 	*/
 	public function set<?= $objColumn->PropertyName ?>($<?= $objColumn->VariableName ?>) {
+<?php if ($objColumn->NotNull) { ?>
+        if ($<?= $objColumn->VariableName ?> === null) {
+            throw new QCallerException('Cannot set <?= $objColumn->PropertyName ?> to null');
+        }
+<?php } ?>
 		$<?= $objColumn->VariableName ?> = QType::Cast($<?= $objColumn->VariableName ?>, <?= $objColumn->VariableTypeAsConstant ?>);
 
 		if ($this-><?= $objColumn->VariableName ?> !== $<?= $objColumn->VariableName ?>) {
