@@ -351,6 +351,22 @@ if (!defined('SERVER_INSTANCE')) {
 	) );
 
 	/**
+	 * For Redis caching (using Predis Library)
+	 * Please see https://github.com/nrk/predis/blob/v1.1/README.md for understanding the usage
+	 * of parameters and options
+	 * Leaving them empty here enables default configuration:
+	 *      tcp://127.0.0.1:6379
+	 */
+	/*/
+	define ('CACHE_PROVIDER_OPTIONS', serialize(
+		array(
+			'parameters' => array(),
+			'options' => array()
+		)
+	));
+	//*/
+
+	/**
 	 * This is the default algorithm to be used
 	 *
 	 * QCryptography module can help in encrypting or decrypting
