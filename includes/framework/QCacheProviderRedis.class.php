@@ -52,7 +52,15 @@
 		 * @return void
 		 */
 		public function Set($strKey, $objValue, $intExpireAfterSeconds = null) {
-			$this->objPredisClient->set($strKey, serialize($objValue), 'ex', (int)$intExpireAfterSeconds);
+			if ($intExpireAfterSeconds !== null) {
+				$this->objPredisClient->set($strKey, serialize($objValue), 'ex', (int)$intExpireAfterSeconds);
+			} else {
+				if(defined('_REDIS_CACHE_PROVIDER_DEFAULT_TTL_') && _REDIS_CACHE_PROVIDER_DEFAULT_TTL_ > 0) {
+					$this->objPredisClient->set($strKey, serialize($objValue), 'ex', (int)_REDIS_CACHE_PROVIDER_DEFAULT_TTL_);
+				} else {
+					$this->objPredisClient->set($strKey, serialize($objValue));
+				}
+			}
 		}
 
 		/**

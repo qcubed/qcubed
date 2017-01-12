@@ -321,7 +321,11 @@ if (!defined('SERVER_INSTANCE')) {
 	 * Setting it to null will disable caching. Current implentations are
 	 *
 	 * "QCacheProviderMemcache": this will use Memcache as the caching provider.
-	 *   You must have the 'php5-memcache' package installed for this provider to work.
+	 *   You must have the 'php5-memcache' extensions installed for this provider to work.
+	 *
+	 * "QCacheProviderRedis": this will use a Redis server instance as the caching provider.
+	 *   You must have the 'predis/predis' library installed for this provider to work.
+	 *   See https://github.com/nrk/predis for more info.
 	 *
 	 * "QCacheProviderLocalMemory": a local memory cache provider with a lifespan of the request
 	 *   or session (if KeepInSession is configured).
@@ -365,6 +369,15 @@ if (!defined('SERVER_INSTANCE')) {
 		)
 	));
 	//*/
+
+	/**
+	 * If you want to enable a default TTL for all elements using QCacheProviderRedis,
+	 * set the value below to greater than 0.
+	 * Setting it to 0 or below will disable the TTL functionality.
+	 *
+	 * The value specified here is in seconds.
+	 */
+	define('_REDIS_CACHE_PROVIDER_DEFAULT_TTL_', 10);
 
 	/**
 	 * This is the default algorithm to be used
