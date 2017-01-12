@@ -373,11 +373,12 @@ if (!defined('SERVER_INSTANCE')) {
 	/**
 	 * If you want to enable a default TTL for all elements using QCacheProviderRedis,
 	 * set the value below to greater than 0.
+	 *
 	 * Setting it to 0 or below will disable the TTL functionality.
 	 *
 	 * The value specified here is in seconds.
 	 */
-	define('_REDIS_CACHE_PROVIDER_DEFAULT_TTL_', 10);
+	define('_REDIS_CACHE_PROVIDER_DEFAULT_TTL_', 3600);
 
 	/**
 	 * This is the default algorithm to be used
