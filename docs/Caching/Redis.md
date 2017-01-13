@@ -5,7 +5,7 @@ Redis is a key-value style data-structures store. The key length as well as the 
  Performance of Redis depends on whether it is running in persistent mode (saving data to disk) or in-memory mode (all contents are within the specified memory limits). Default configurations run in persistent mode. However, depending on use-case (data structures stored, amount of data stored etc.), performance of Redis can be between "a little slower" to "just a little faster" than memcached. However, implementation of Redis is way more powerful because of the data-structures implementation.
  
  ## Usage of Predis library
- [Predis](https://github.com/nrk/predis) is the most powerful and popular client library for Redis written in PHP. QCubed uses Predis for using Redis as cache. QCubed's cache system cannot use Redis unless you install Predis. It is also a suggested package in our `composer.json`.
+ [Predis](https://github.com/nrk/predis) is a popular (and widely regarded one of the most powerful) library for Redis written in PHP. QCubed uses Predis for using Redis as cache. QCubed's cache system cannot use Redis unless you install Predis. It is also a suggested package in our `composer.json`.
  
  You can simply use `composer require "predis/predis":"^1"` to install. Please see the [project page](https://github.com/nrk/predis) for installation instructions.
  
