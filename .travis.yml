@@ -14,6 +14,11 @@ install:
     - composer install
     - composer require "predis/predis:^1.1"
 
+addons:
+  apt:
+    packages:
+      - redis-server
+
 env:
     - DB=mysql
     - DB=pgsql POSTGRESQL_VERSION=9.1
