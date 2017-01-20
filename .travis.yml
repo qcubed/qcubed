@@ -19,6 +19,9 @@ addons:
     packages:
       - redis-server
 
+services:
+  - redis-server
+
 env:
     - DB=mysql
     - DB=pgsql POSTGRESQL_VERSION=9.1
