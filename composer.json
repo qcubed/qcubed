@@ -22,7 +22,7 @@
   "suggest": {
     "ezyang/htmlpurifier": "dev-master",
     "fortawesome/font-awesome": "^4.6",
-    "predis/predis": "^1"
+    "predis/predis": "^1.1"
   },
   "autoload": {
     "psr-4": {
