@@ -43,11 +43,16 @@
 		}
 
 		/**
-		 * Set the object into the cache with the given key
+		 * Set the object into the cache with the given key and (optional) expire duration
+		 *
+		 * Refer documentation (in docs/Caching/Redis.md) to learn about expiration for redis.
 		 *
 		 * @param string $strKey                the key to use for the object
 		 * @param string $objValue              the object to put in the cache
 		 * @param null   $intExpireAfterSeconds Number of seconds after which the key will be expired
+		 *                                      If this value is numeric, key will expire in that many seconds
+		 *                                      If the value is null and _REDIS_CACHE_PROVIDER_DEFAULT_TTL_ is not set or is negative, then the key will not expire
+		 *                                      If _REDIS_CACHE_PROVIDER_DEFAULT_TTL_ is set and is positive, then key will expire in that many seconds.
 		 *
 		 * @return void
 		 */
