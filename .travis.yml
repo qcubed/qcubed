@@ -12,6 +12,7 @@ php:
 
 install:
     - composer install
+    - composer require "predis/predis:^1.1"
 
 env:
     - DB=mysql
