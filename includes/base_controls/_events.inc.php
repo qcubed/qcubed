@@ -311,7 +311,7 @@
 
 
 	/**
-	 *
+	 * DEPRECATED
 	 * a custom event with event delegation
 	 * With this event you can delegate any jquery event of child controls or any html element
 	 * to a parent. By using the selector you can limit the event sources this event
@@ -324,7 +324,6 @@
 	 *
 	 * @param string $strEventName the name of the event i.e.: "click"
 	 * @param string $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()...
-	 * @param boolean $blnBlockOtherEvents True to "debounce" the event by throwing away other events until a response is received by the browser.
 	 * @deprectated QEvent now has the strSelector at the end of its constructor
 	 *
 	 */
@@ -340,7 +339,7 @@
 		 * @param string $strSelector
 		 * @throws Exception|QCallerException
 		 */
-		public function __construct($strEventName, $intDelay = 0, $strCondition = null, $strSelector = null, $blnBlockOtherEvents = false) {
+		public function __construct($strEventName, $intDelay = 0, $strCondition = null, $strSelector = null) {
 			$this->strEventName=$strEventName;
 			if ($strSelector) {
 				$strSelector = addslashes($strSelector);
@@ -348,7 +347,7 @@
 			}
 
 			try {
-				parent::__construct($intDelay,$strCondition, $strSelector, $blnBlockOtherEvents);
+				parent::__construct($intDelay,$strCondition, $strSelector);
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
