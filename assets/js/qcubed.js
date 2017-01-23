@@ -119,6 +119,8 @@ qcubed = {
      * @param {null|string|Array|Object} mixParameter
      */
     postBack: function(strForm, strControl, strEvent, mixParameter) {
+        if (qc.blockEvents) return;   // We are waiting for a response from the server
+
         strForm = $j("#Qform__FormId").val();
         var $objForm = $j('#' + strForm);
 
@@ -371,6 +373,8 @@ qcubed = {
             strFormAction = objForm.attr("action"),
             qFormParams = {};
 
+        if (qc.blockEvents) return;
+
         qFormParams.form = strForm;
         qFormParams.control = strControl;
         qFormParams.event = strEvent;
@@ -404,6 +408,7 @@ qcubed = {
                         $dialog;
 
                     qcubed.ajaxError = true;
+                    qcubed.blockEvents = false;
                     if (XMLHttpRequest.status !== 0 || (result && result.length > 0)) {
                         if (result.substr(0, 15) === '<!DOCTYPE html>') {
                             alert("An error occurred.\r\n\r\nThe error response will appear in a new popup.");
@@ -435,14 +440,17 @@ qcubed = {
                         $j.when.apply($j, deferreds).then(
                             function () {
                                 qcubed.processDeferredAjaxResponse(json);
+                                qcubed.blockEvents = false;
                             }, // success
                             function () {
                                 console.log('Failed to load a file');
+                                qcubed.blockEvents = false;
                             } // failed to load a file. What to do?
                         );
                     } else {
                         qcubed.processImmediateAjaxResponse(json, qFormParams);
                         qcubed.processDeferredAjaxResponse(json);
+                        qcubed.blockEvents = false;
                     }
                 }
             };
@@ -981,6 +989,8 @@ qcubed.javascriptWrapperStyleToQcubed = {};
 qcubed.javascriptWrapperStyleToQcubed.position = "Position";
 qcubed.javascriptWrapperStyleToQcubed.top = "Top";
 qcubed.javascriptWrapperStyleToQcubed.left = "Left";
+
+qcubed.blockEvents = false;
 
 qcubed.registerControl = function(mixControl) {
     var objControl = qcubed.getControl(mixControl),

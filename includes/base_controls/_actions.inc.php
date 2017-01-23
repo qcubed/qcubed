@@ -71,9 +71,14 @@
 					$strToReturn .= $strCode;
 				}
 			}
-			$strToReturn = _nl() . _indent($strToReturn);
 
 			if (strlen($strToReturn)) {
+				if ($objAction->objEvent->Block) {
+					$strToReturn .= 'qc.blockEvents = true;';
+				}
+				$strToReturn = _nl() . _indent($strToReturn);
+
+
 				if ($strJqUiProperty) {
 					$strOut = sprintf('$j("#%s").%s("option", {%s: function(event, ui){%s}});',
 						$objControl->getJqControlId(),
