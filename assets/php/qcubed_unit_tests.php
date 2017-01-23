@@ -158,19 +158,25 @@ class QTestForm extends QForm {
 		$t1 = new QJsTimer($this, 50, false, true, 'timer1');
 		$t1->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest'));
 		$t2 = new QJsTimer($this, 51, false, true, 'timer2');
-		$t2->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest2'));
-		$t3 = new QJsTimer($this, 600, false, true, 'timer3');
-		$t3->AddAction(new QTimerExpiredEvent(), new QServerAction ('runTests'));
+		$t2->AddAction(new QTimerExpiredEvent(0,null,null,true), new QAjaxAction ('preTest2'));
+		$t3 = new QJsTimer($this, 52, false, true, 'timer3');
+		$t3->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest3'));
+		$t4 = new QJsTimer($this, 600, false, true, 'timer4');
+		$t4->AddAction(new QTimerExpiredEvent(), new QServerAction ('runTests'));
 	}
 	
 	public function preTest() {
 		$this->ctlTest->savedValue1 = 2;	// for test in QControlBaseTests
 	}
-	
+
 	public function preTest2() {
 		$this->ctlTest->savedValue2 = $this->ctlTest->savedValue1;	// for test in QControlBaseTests
 	}
-	
+
+	public function preTest3() {
+		$this->ctlTest->savedValue3 = 1;	// This should NOT happen, since previous event should block it.
+	}
+
 	
 	public function runTests() {
 		$cliOptions = [ 'phpunit'];	// first entry is the command
