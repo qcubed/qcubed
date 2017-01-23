@@ -155,11 +155,11 @@ class QTestForm extends QForm {
 	protected function startTesting() {
 		$this->lblRunning->Visible = true;
 		
-		$t1 = new QJsTimer($this, 200, false, true, 'timer1');
+		$t1 = new QJsTimer($this, 50, false, true, 'timer1');
 		$t1->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest'));
-		$t2 = new QJsTimer($this, 201, false, true, 'timer2');
+		$t2 = new QJsTimer($this, 51, false, true, 'timer2');
 		$t2->AddAction(new QTimerExpiredEvent(), new QAjaxAction ('preTest2'));
-		$t3 = new QJsTimer($this, 400, false, true, 'timer3');
+		$t3 = new QJsTimer($this, 600, false, true, 'timer3');
 		$t3->AddAction(new QTimerExpiredEvent(), new QServerAction ('runTests'));
 	}
 	

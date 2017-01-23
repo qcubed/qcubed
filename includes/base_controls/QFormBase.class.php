@@ -1700,7 +1700,7 @@
 		protected function GetFormJavaScripts() {
 			return array (__JQUERY_BASE__,
 				__JQUERY_EFFECTS__,
-				'jquery/jquery.ajaxq-0.0.1.js',
+				'ajaxq/ajaxq.js',
 				__QCUBED_JS_CORE__);
 		}
 
