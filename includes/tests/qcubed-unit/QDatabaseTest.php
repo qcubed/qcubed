@@ -117,8 +117,8 @@ class QDatabaseTests extends QUnitTestCaseBase {
 			// temporary cache is throwed out. the empty application cache is restored.
 		}
 		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not dropped from a cache because of the transaction roll back.");
-		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPerson) {
-			$this->assertEquals($strPerson1_FirstName, $objPerson->FirstName, "Object is not modified in a cache because of the transaction roll back.");
+		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPersonCacheArray) {
+			$this->assertEquals($strPerson1_FirstName, $objPersonCacheArray['value']->FirstName, "Object is not modified in a cache because of the transaction roll back.");
 		}
 
 		// restore the actual cache object
@@ -156,8 +156,8 @@ class QDatabaseTests extends QUnitTestCaseBase {
 		// new person value is placed in the application cache
 		
 		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is added to a cache because of the transaction commit.");
-		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPerson) {
-			$this->assertEquals("New value 1", $objPerson->FirstName, "Object is modified in a cache because of the transaction commit.");
+		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPersonCacheArray) {
+			$this->assertEquals("New value 1", $objPersonCacheArray['value']->FirstName, "Object is modified in a cache because of the transaction commit.");
 		}
 		
 		// Restore the original value to not break other tests
@@ -202,8 +202,8 @@ class QDatabaseTests extends QUnitTestCaseBase {
 		// new person value is placed in the application cache
 		
 		$this->assertEquals(1, count(QApplication::$objCacheProvider->arrLocalCache), "Object is not dropped from a cache because of the transaction commit.");
-		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPerson) {
-			$this->assertEquals("New value 1", $objPerson->FirstName, "Object is modified in a cache because of the transaction commit.");
+		foreach (QApplication::$objCacheProvider->arrLocalCache as $objPersonCacheArray) {
+			$this->assertEquals("New value 1", $objPersonCacheArray['value']->FirstName, "Object is modified in a cache because of the transaction commit.");
 		}
 		
 		// Restore the original value to not break other tests
