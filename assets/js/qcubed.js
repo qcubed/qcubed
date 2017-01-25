@@ -21,15 +21,13 @@ $j.fn.extend({
  * Queued Ajax requests.
  * A new Ajax request won't be started until the previous queued
  * request has finished.
- * @param {object} o Options.
+ * @param {function} a function that returns ajax options.
  * @param {boolean} blnAsync true to launch right away.
  */
 $j.ajaxQueue = function(o, blnAsync) {
     if (typeof $j.ajaxq === "undefined" || blnAsync) {
-        if (o.fnInit) o.fnInit(o);
-        $j.ajax(o);
+        $j.ajax(o());
     } else {
-        // see http://code.google.com/p/jquery-ajaxq/ for details
         $j.ajaxq("qcu.be", o);
     }
 };
@@ -121,6 +119,8 @@ qcubed = {
      * @param {null|string|Array|Object} mixParameter
      */
     postBack: function(strForm, strControl, strEvent, mixParameter) {
+        if (qc.blockEvents) return;   // We are waiting for a response from the server
+
         strForm = $j("#Qform__FormId").val();
         var $objForm = $j('#' + strForm);
 
@@ -373,6 +373,8 @@ qcubed = {
             strFormAction = objForm.attr("action"),
             qFormParams = {};
 
+        if (qc.blockEvents) return;
+
         qFormParams.form = strForm;
         qFormParams.control = strControl;
         qFormParams.event = strEvent;
@@ -387,64 +389,72 @@ qcubed = {
         }
 
         // Use a modified ajax queue so ajax requests happen synchronously
-        $j.ajaxQueue({
-            url: strFormAction,
-            type: "POST",
-            qFormParams: qFormParams,
-            fnInit: function(o) {
-                // Get the data at the last possible instant in case the formstate changes between ajax calls
-                o.data = qcubed.getAjaxData(
-                    o.qFormParams.form,
-                    o.qFormParams.control,
-                    o.qFormParams.event,
-                    o.qFormParams.param,
-                    o.qFormParams.waitIcon);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                var result = XMLHttpRequest.responseText,
-                    objErrorWindow,
-                    $dialog;
+        $j.ajaxQueue(function() {
+            var data = qcubed.getAjaxData(
+                qFormParams.form,
+                qFormParams.control,
+                qFormParams.event,
+                qFormParams.param,
+                qFormParams.waitIcon);
 
-                qcubed.ajaxError = true;
-                if (XMLHttpRequest.status !== 0 || (result && result.length > 0)) {
-                    if (result.substr(0, 15) === '<!DOCTYPE html>') {
-                        alert("An error occurred.\r\n\r\nThe error response will appear in a new popup.");
-                        objErrorWindow = window.open('about:blank', 'qcubed_error', 'menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
-                        objErrorWindow.focus();
-                        objErrorWindow.document.write(result);
-                        return false;
+            return {
+                url: strFormAction,
+                type: "POST",
+                qFormParams: qFormParams,
+                data: data,
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    var result = XMLHttpRequest.responseText,
+                        objErrorWindow,
+                        $dialog;
+
+                    qcubed.ajaxError = true;
+                    qcubed.blockEvents = false;
+                    if (XMLHttpRequest.status !== 0 || (result && result.length > 0)) {
+                        if (result.substr(0, 15) === '<!DOCTYPE html>') {
+                            alert("An error occurred.\r\n\r\nThe error response will appear in a new popup.");
+                            objErrorWindow = window.open('about:blank', 'qcubed_error', 'menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes,width=1000,height=700,left=50,top=50');
+                            objErrorWindow.focus();
+                            objErrorWindow.document.write(result);
+                            return false;
+                        } else {
+                            var resultText = $j('<div>').html(result);
+                            $dialog = $j('<div id="Qcubed_AJAX_Error" />')
+                                .append('<h1 style="text-transform:capitalize">' + textStatus + '</h1>')
+                                .append('<p>' + errorThrown + '</p>')
+                                .append(resultText)
+                                .append('<button onclick="$j(this).parent().hide()">OK</button>')
+                                .appendTo('form');
+                            return false;
+                        }
+                    }
+                },
+                success: function (json) {
+                    qcubed._prevUpdateTime = new Date().getTime();
+                    if (json.js) {
+                        var deferreds = [];
+                        // Load all javascript files before attempting to process the rest of the response, in case some things depend on the injected files
+                        $j.each(json.js, function (i, v) {
+                            deferreds.push(qcubed.loadJavaScriptFile(v));
+                        });
+                        qcubed.processImmediateAjaxResponse(json, qFormParams); // go ahead and begin processing things that will not depend on the javascript files to allow parallel processing
+                        $j.when.apply($j, deferreds).then(
+                            function () {
+                                qcubed.processDeferredAjaxResponse(json);
+                                qcubed.blockEvents = false;
+                            }, // success
+                            function () {
+                                console.log('Failed to load a file');
+                                qcubed.blockEvents = false;
+                            } // failed to load a file. What to do?
+                        );
                     } else {
-                        var resultText = $j('<div>').html(result);
-                        $dialog = $j('<div id="Qcubed_AJAX_Error" />')
-                            .append('<h1 style="text-transform:capitalize">' + textStatus + '</h1>')
-                            .append('<p>' + errorThrown + '</p>')
-                            .append(resultText)
-                            .append('<button onclick="$j(this).parent().hide()">OK</button>')
-                            .appendTo('form');
-                        return false;
+                        qcubed.processImmediateAjaxResponse(json, qFormParams);
+                        qcubed.processDeferredAjaxResponse(json);
+                        qcubed.blockEvents = false;
                     }
                 }
-            },
-            success: function(json) {
-                qcubed._prevUpdateTime = new Date().getTime();
-                if (json.js) {
-                    var deferreds = [];
-                    // Load all javascript files before attempting to process the rest of the response, in case some things depend on the injected files
-                    $j.each(json.js, function(i,v) {
-                        deferreds.push(qcubed.loadJavaScriptFile(v));
-                    });
-                    qcubed.processImmediateAjaxResponse(json, qFormParams); // go ahead and begin processing things that will not depend on the javascript files to allow parallel processing
-                    $j.when.apply($j, deferreds).then(
-                        function () {qcubed.processDeferredAjaxResponse(json);}, // success
-                        function () {console.log('Failed to load a file');} // failed to load a file. What to do?
-                    );
-                } else {
-                    qcubed.processImmediateAjaxResponse(json, qFormParams);
-                    qcubed.processDeferredAjaxResponse(json);
-                }
-            }
+            };
         }, blnAsync);
-
     },
 
     /**
@@ -979,6 +989,8 @@ qcubed.javascriptWrapperStyleToQcubed = {};
 qcubed.javascriptWrapperStyleToQcubed.position = "Position";
 qcubed.javascriptWrapperStyleToQcubed.top = "Top";
 qcubed.javascriptWrapperStyleToQcubed.left = "Left";
+
+qcubed.blockEvents = false;
 
 qcubed.registerControl = function(mixControl) {
     var objControl = qcubed.getControl(mixControl),

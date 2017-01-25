@@ -9,7 +9,8 @@
 class QTestControl extends QControl {
 	public $savedValue1 = 1;
 	public $savedValue2 = 0;
-	
+	public $savedValue3 = 0;
+
 	protected function GetControlHtml() {
 		return "";
 	}

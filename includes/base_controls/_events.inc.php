@@ -16,8 +16,7 @@
 	 * @property-read integer $Delay ms delay before action is fired
 	 * @property-read string $JsReturnParam the javascript used to create the strParameter that gets sent to the event handler registered with the event.
 	 * @property-read string $Selector a jquery selector, causes the event to apply to child items matching the selector, and then get sent up the chain to this object
-	 *
-	 *
+	 * @property-read boolean $Block indicates that other events after this event will be thrown away until the browser receives a response from this event.
 	 */
 	abstract class QEvent extends QBaseClass {
 		/** @var string|null The JS condition in which an event would fire  */
@@ -25,15 +24,19 @@
 		/** @var int|mixed The number of second after which the event has to be fired */
 		protected $intDelay = 0;
 		protected $strSelector = null;
+		/** @var  boolean True to block all other events until a response is received. */
+		protected $blnBlock;
 
 		/**
 		 * Create an event.
 		 * @param integer $intDelay ms delay to wait before action is fired
 		 * @param string $strCondition javascript condition to check before firing the action
 		 * @param string $strSelector jquery selector to cause event to be attached to child items instead of this item
+		 * @param boolean $blnBlockOtherEvents True to "debounce" the event by throwing away all other events until the browser receives a response from this event.
+		 * 							Only use this on Server and Ajax events. Do not use on Javascript events, or the browser will stop responding to Ajax and Server events.
 		 * @throws Exception|QCallerException
 		 */
-		public function __construct($intDelay = 0, $strCondition = null, $strSelector = null) {
+		public function __construct($intDelay = 0, $strCondition = null, $strSelector = null, $blnBlockOtherEvents = false) {
 			try {
 				if ($intDelay)
 					$this->intDelay = QType::Cast($intDelay, QType::Integer);
@@ -46,6 +49,7 @@
 				if ($strSelector) {
 					$this->strSelector = $strSelector;
 				}
+				$this->blnBlock = $blnBlockOtherEvents;
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -76,6 +80,8 @@
 					return defined($strConst) ? constant($strConst) : '';
 				case 'Selector':
 					return $this->strSelector;
+				case 'Block':
+					return $this->blnBlock;
 
 				default:
 					try {
@@ -305,7 +311,7 @@
 
 
 	/**
-	 *
+	 * DEPRECATED
 	 * a custom event with event delegation
 	 * With this event you can delegate any jquery event of child controls or any html element
 	 * to a parent. By using the selector you can limit the event sources this event
@@ -415,8 +421,8 @@
 
 		protected $strReturnParam;
 
-		public function __construct($intDelay = 0, $strCondition = null, $mixReturnParams = null) {
-			parent::__construct($intDelay, $strCondition, 'th,td');
+		public function __construct($intDelay = 0, $strCondition = null, $mixReturnParams = null, $blnBlockOtherEvents = false) {
+			parent::__construct($intDelay, $strCondition, 'th,td', $blnBlockOtherEvents);
 
 			if (!$mixReturnParams) {
 				$this->strReturnParam = '{"row": $j(this).parent()[0].rowIndex, "col": this.cellIndex}'; // default returns the row and colum indexes of the cell clicked

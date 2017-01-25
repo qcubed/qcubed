@@ -129,6 +129,7 @@ class QControlBaseTests extends QUnitTestCaseBase {
 		if (!QApplication::$CliMode) {
 			$this->assertTrue (self::$ctlTest->savedValue1 == 2, "Actions can change state for later queued actions.");
 			$this->assertTrue (self::$ctlTest->savedValue2 == 2, "Actions can change state for later queued actions.");
+			$this->assertTrue (self::$ctlTest->savedValue3 != 1, "Events can block later events until a response is received.");
 		}
 	}
 	

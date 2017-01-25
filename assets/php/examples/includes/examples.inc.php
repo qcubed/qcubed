@@ -91,7 +91,8 @@
 			self::AddCoreExampleFile($intIndex, '/events_actions/other_actions.php Other Client-Side QActions');
 			self::AddCoreExampleFile($intIndex, '/events_actions/event_propagation.php Controlling Event Bubbling');
 			self::AddCoreExampleFile($intIndex, '/events_actions/event_delegation.php Event Delegation');
-			self::AddCoreExampleFile($intIndex, '/events_actions/low_priority_js.php JavaScript priorities');
+			self::AddCoreExampleFile($intIndex, '/events_actions/synchronizing.php Blocking Unwanted Events');
+			self::AddCoreExampleFile($intIndex, '/events_actions/low_priority_js.php JavaScript Priorities');
 			self::AddCoreExampleFile($intIndex, '/events_actions/watcher.php Automatic Refreshing of Controls');
 			self::AddCoreExampleFile($intIndex, '/events_actions/control_proxy.php Using QControlProxies to have Non-QControls Trigger Events');
 
