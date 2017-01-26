@@ -32,8 +32,6 @@
 		 * Allows pages to _p()/echo()/print() this object, and to define the default
 		 * way this object would be outputted.
 		 *
-		 * Can also be called directly via $obj<?= $objTable->ClassName ?>->__toString().
-		 *
 		 * @return string a nicely formatted string representation of this object
 		 */
 		public function __toString() {
