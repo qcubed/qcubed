@@ -206,7 +206,7 @@ class QCryptography extends QBaseClass {
 	}
 
 	/**
-	 * Encrypt a file (depends on the value of class memebers)
+	 * Encrypt a file (depends on the value of class members)
 	 *
 	 * @param string $strFile Path of the file to be encrypted
 	 *
@@ -224,7 +224,7 @@ class QCryptography extends QBaseClass {
 	}
 
 	/**
-	 * Decrypt a file (depends on the value of class memebers)
+	 * Decrypt a file (depends on the value of class members)
 	 *
 	 * @param string $strFile File to be decrypted
 	 *
