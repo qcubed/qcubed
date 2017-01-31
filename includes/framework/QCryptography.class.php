@@ -204,4 +204,40 @@ class QCryptography extends QBaseClass {
 
 		return $strDecryptedData;
 	}
+
+	/**
+	 * Encrypt a file (depends on the value of class memebers)
+	 *
+	 * @param string $strFile Path of the file to be encrypted
+	 *
+	 * @return mixed|string
+	 * @throws QCallerException|QCryptographyException
+	 */
+	public function EncryptFile($strFile) {
+		if (file_exists($strFile)) {
+			$strData = file_get_contents($strFile);
+
+			return $this->Encrypt($strData);
+		} else {
+			throw new QCallerException('File does not exist: ' . $strFile);
+		}
+	}
+
+	/**
+	 * Decrypt a file (depends on the value of class memebers)
+	 *
+	 * @param string $strFile File to be decrypted
+	 *
+	 * @return string
+	 * @throws QCallerException|QCryptographyException
+	 */
+	public function DecryptFile($strFile) {
+		if (file_exists($strFile)) {
+			$strEncryptedData = file_get_contents($strFile);
+
+			return $this->Decrypt($strEncryptedData);
+		} else {
+			throw new QCallerException('File does not exist: ' . $strFile);
+		}
+	}
 }
