@@ -14,14 +14,15 @@
   },
   "require": {
       "php": ">=5.4.0",
-      "qcubed/composer": "dev-master"
+      "qcubed/composer": "^1.0.5"
   },
   "require-dev": {
       "phpunit/phpunit": "4.8.*"
   },
   "suggest": {
     "ezyang/htmlpurifier": "dev-master",
-    "fortawesome/font-awesome": "^4.6"
+    "fortawesome/font-awesome": "^4.6",
+    "predis/predis": "^1.1"
   },
   "autoload": {
     "psr-4": {

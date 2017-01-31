@@ -12,6 +12,15 @@ php:
 
 install:
     - composer install
+    - composer require "predis/predis:^1.1"
+
+addons:
+  apt:
+    packages:
+      - redis-server
+
+services:
+  - redis-server
 
 env:
     - DB=mysql
