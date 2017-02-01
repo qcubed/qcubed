@@ -240,4 +240,28 @@ class QCryptography extends QBaseClass {
 			throw new QCallerException('File does not exist: ' . $strFile);
 		}
 	}
+
+	/**
+	 * Base64 encode in a way that the result can be passed through HTML forms and URLs.
+	 *
+	 * @param $s
+	 * @deprecated See QString::Base64UrlSafeEncode
+	 *
+	 * @return mixed
+	 */
+	protected static function Base64Encode($s) {
+		return QString::Base64UrlSafeEncode($s);
+	}
+
+	/**
+	 * Base64 Decode in a way that the result can be passed through HTML forms and URLs.
+	 *
+	 * @param $s
+	 * @deprecated See QString::Base64UrlSafeDecode
+	 *
+	 * @return mixed
+	 */
+	protected static function Base64Decode($s) {
+		return QString::Base64UrlSafeDecode($s);
+	}
 }
