@@ -148,6 +148,13 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
     display: table-cell;
 }
 
+.clickable-rows tr td,th {
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}
+
 .clickable-rows tr:hover {
     background-color:#f0f0f0;
 }
