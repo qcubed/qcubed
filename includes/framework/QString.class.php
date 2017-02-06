@@ -197,4 +197,30 @@
 			else
 				return ''; //no matches
 		}
-	}
+
+        /**
+         * Base64 encode in a way that the result can be passed through HTML forms and URLs.
+         * @param $s
+         * @return mixed
+         */
+        public static function Base64UrlSafeEncode($s) {
+            $s = base64_encode($s);
+            $s = str_replace('+', '-', $s);
+            $s = str_replace('/', '_', $s);
+            $s = str_replace('=', '', $s);
+            return ($s);
+        }
+
+        /**
+         * Base64 Decode in a way that the result can be passed through HTML forms and URLs.
+         *
+         * @param $s
+         * @return mixed
+         */
+        public static function Base64UrlSafeDecode($s) {
+            $s = str_replace('_', '/', $s);
+            $s = str_replace('-', '+', $s);
+            $s = base64_decode($s);
+            return ($s);
+        }
+    }
