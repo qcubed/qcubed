@@ -158,7 +158,7 @@ class QCryptography extends QBaseClass {
 		}
 
 		if ($this->blnBase64) {
-			$strEncryptedData = static::Base64Encode($strEncryptedData);
+			$strEncryptedData = QString::Base64UrlSafeEncode($strEncryptedData);
 		}
 
 		return $strEncryptedData;
@@ -174,7 +174,7 @@ class QCryptography extends QBaseClass {
 	 */
 	public function Decrypt($strEncryptedData) {
 		if ($this->blnBase64) {
-			$strEncryptedData = self::Base64Decode($strEncryptedData);
+			$strEncryptedData = QString::Base64UrlSafeDecode($strEncryptedData);
 		}
 		$strIv = $this->strIv;
 		if ($this->strIvHashKey) {
@@ -206,7 +206,7 @@ class QCryptography extends QBaseClass {
 	}
 
 	/**
-	 * Encrypt a file (depends on the value of class memebers)
+	 * Encrypt a file (depends on the value of class members)
 	 *
 	 * @param string $strFile Path of the file to be encrypted
 	 *
@@ -224,7 +224,7 @@ class QCryptography extends QBaseClass {
 	}
 
 	/**
-	 * Decrypt a file (depends on the value of class memebers)
+	 * Decrypt a file (depends on the value of class members)
 	 *
 	 * @param string $strFile File to be decrypted
 	 *
@@ -241,31 +241,27 @@ class QCryptography extends QBaseClass {
 		}
 	}
 
-
 	/**
 	 * Base64 encode in a way that the result can be passed through HTML forms and URLs.
+	 *
 	 * @param $s
+	 * @deprecated See QString::Base64UrlSafeEncode
+	 *
 	 * @return mixed
 	 */
 	protected static function Base64Encode($s) {
-		$s = base64_encode($s);
-		$s = str_replace('+', '-', $s);
-		$s = str_replace('/', '_', $s);
-		$s = str_replace('=', '', $s);
-		return ($s);
+		return QString::Base64UrlSafeEncode($s);
 	}
 
 	/**
 	 * Base64 Decode in a way that the result can be passed through HTML forms and URLs.
 	 *
 	 * @param $s
+	 * @deprecated See QString::Base64UrlSafeDecode
+	 *
 	 * @return mixed
 	 */
 	protected static function Base64Decode($s) {
-		$s = str_replace('_', '/', $s);
-		$s = str_replace('-', '+', $s);
-		$s = base64_decode($s);
-		return ($s);
+		return QString::Base64UrlSafeDecode($s);
 	}
-
 }
