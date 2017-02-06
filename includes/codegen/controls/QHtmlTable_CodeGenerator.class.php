@@ -578,7 +578,7 @@ TMPL;
 		$strCode = <<<TMPL
 
 	protected function {$strVarName}_MakeEditable() {
-		\$this->{$strVarName}->AddAction(new QCellClickEvent(), new QAjaxControlAction(\$this, '{$strVarName}_CellClick', null, null, '\$j(this).parent().data("value")'));
+		\$this->{$strVarName}->AddAction(new QCellClickEvent(0, null, null, true), new QAjaxControlAction(\$this, '{$strVarName}_CellClick', null, null, QCellClickEvent::RowValue));
 		\$this->{$strVarName}->AddCssClass('clickable-rows');
 	}
 
