@@ -108,7 +108,7 @@
 <?php } ?>
 <?php if ($objTable->PrimaryKeyColumnArray)  { ?>
 
-				assert ('$key === null || $objToReturn->PrimaryKey() == $key');
+				assert ($key === null || $objToReturn->PrimaryKey() == $key);
 
 				if (!$blnNoCache) {
 					$objToReturn->WriteToCache();
