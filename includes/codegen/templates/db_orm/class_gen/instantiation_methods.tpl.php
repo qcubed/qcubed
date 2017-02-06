@@ -78,7 +78,7 @@
 			if (empty($objToReturn)) {
 <?php } ?>
 				// Create a new instance of the <?= $objTable->ClassName ?> object
-				$objToReturn = new <?= $objTable->ClassName ?>();
+				$objToReturn = new <?= $objTable->ClassName ?>(false);
 				$objToReturn->__blnRestored = true;
 				$blnNoCache = false;
 
