@@ -27,7 +27,7 @@
 	* @return string
 	*/
 	public function get<?= $objColumn->Reference->PropertyName ?>() {
-		return <?= $objColumn->Reference->PropertyName ?>::toString($this-><?= $objColumn->VariableName ?>);
+		return <?= $objColumn->Reference->VariableType ?>::toString($this->get<?= $objColumn->PropertyName ?>());
 	}
 <?php } ?>
 
