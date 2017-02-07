@@ -6,8 +6,10 @@
 		/**
 		 * Construct a new <?= $objTable->ClassName ?> object.
 		 */
-		public function __construct() {
-			$this->Initialize();
+		public function __construct($blnInitialize = true) {
+            if ($blnInitialize) {
+                $this->Initialize();
+            }
 		}
 <?php } ?>
 
