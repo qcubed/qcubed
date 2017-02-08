@@ -9,13 +9,10 @@
 	 * every time). This is very similar to how DbBackedFormStateHandler works, only this one uses
 	 * Redis for storing the FormStates
 	 *
-	 * The downside is that because it doesn't utilize PHP's session management subsystem,
-	 * this class must take care of its own garbage collection/deleting of old/outdated
-	 * formstate files.
-	 *
-	 * Because the index is randomly generated and MD5-hashed, there is no benefit from
-	 * encrypting it -- therefore, the QForm encryption preferences are ignored when using
-	 * QFileFormStateHandler.
+	 * Garbage collection is handled by Redis automatically because we set the FormState keys with
+	 * an expiration time. The expiration time is determined by self::$intExpireFormstatesAfterDays
+	 * variable which is the number of days after which the FormState is automatically deleted by
+	 * Redis. As such, the minimum value should be 1.
 	 *
 	 * This handler can handle asynchronous calls.
 	 */
@@ -64,12 +61,15 @@
 		}
 
 		/**
+		 * Save the formstate into the data store
+		 *
 		 * @static
 		 *
-		 * @param $strFormState
-		 * @param $blnBackButtonFlag
+		 * @param string $strFormState Serialized Formstate
+		 * @param bool $blnBackButtonFlag Back button
 		 *
 		 * @return string
+		 * @throws Exception
 		 */
 		public static function Save($strFormState, $blnBackButtonFlag) {
 			$objClient = self::GetClient();
@@ -116,12 +116,24 @@
 				$strPageId = sprintf('%s_%s', $strSessionId, $strPageId);
 			}
 
-			$objClient->set('qc_formstate:' . $strPageId, $strFormState, 'ex', (self::$intExpireFormstatesAfterDays * 86400) );
+			if(self::$intExpireFormstatesAfterDays < 1 || self::$intExpireFormstatesAfterDays > 365) {
+				self::$intExpireFormstatesAfterDays = 7;
+			}
+
+			$objClient->set('qc_formstate:' . $strPageId, $strFormState, 'ex', (self::$intExpireFormstatesAfterDays * 86400));
 
 			// Return the Page Id
 			return $strPageId;
 		}
 
+		/**
+		 * Load the formstate from data store
+		 *
+		 * @param $strPostDataState
+		 *
+		 * @return null|string
+		 * @throws Exception
+		 */
 		public static function Load($strPostDataState) {
 			$objClient = self::GetClient();
 
@@ -164,6 +176,7 @@
 
 		/**
 		 * @static
+		 *
 		 * If PHP SESSION is enabled, then this method will delete all formstate files specifically
 		 * for this SESSION user (and no one else). This can be used in lieu of or in addition to the
 		 * standard interval-based garbage collection mechanism.
