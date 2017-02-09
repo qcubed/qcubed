@@ -237,20 +237,10 @@
 			$intLength = QType::Cast($intLength, QType::Integer);
 			$strCharacterSet = QType::Cast($strCharacterSet, QType::String);
 
-			// Get Characters into array
-			$strCharacterArray = str_split($strCharacterSet);
-			// Get Unique characters
-			$strCharacterArray = array_unique($strCharacterArray);
-
-			// String to return
-			$strToReturn = '';
-
-			// Build the string
-			$intCharacterCount = count($strCharacterArray);
-			for($i=0; $i<$intLength; $i++) {
-				$strToReturn .= $strCharacterSet[rand(0, ($intCharacterCount-1))];
-			}
-
-			return $strToReturn;
+			return substr(
+				str_shuffle(
+					str_repeat($strCharacterSet, ceil($intLength / strlen($strCharacterSet)))
+				)
+				, 0, $intLength);
 		}
     }
