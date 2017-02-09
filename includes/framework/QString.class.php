@@ -223,4 +223,34 @@
             $s = base64_decode($s);
             return ($s);
         }
+
+		/**
+		 * Get a random string of a given length
+		 *
+		 * @param int $intLength       Length of the string which is to be produced
+		 * @param int $strCharacterSet Character Set to be used
+		 *
+		 * @return string The generated Random string
+		 */
+		public static function GetRandomString($intLength, $strCharacterSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
+			// Cast in case there were something else
+			$intLength = QType::Cast($intLength, QType::Integer);
+			$strCharacterSet = QType::Cast($strCharacterSet, QType::String);
+
+			// Get Characters into array
+			$strCharacterArray = str_split($strCharacterSet);
+			// Get Unique characters
+			$strCharacterArray = array_unique($strCharacterArray);
+
+			// String to return
+			$strToReturn = '';
+
+			// Build the string
+			$intCharacterCount = count($strCharacterArray);
+			for($i=0; $i<$intLength; $i++) {
+				$strToReturn .= $strCharacterSet[rand(0, ($intCharacterCount-1))];
+			}
+
+			return $strToReturn;
+		}
     }
