@@ -223,4 +223,33 @@
             $s = base64_decode($s);
             return ($s);
         }
+
+		/**
+		 * Get a random string of a given length
+		 *
+		 * @param int        $intLength       Length of the string which is to be produced
+		 * @param int|string $strCharacterSet Character Set to be used
+		 *
+		 * @return string The generated Random string
+		 * @throws QCallerException
+		 */
+		public static function GetRandomString($intLength, $strCharacterSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
+			// Cast in case there were something else
+			$intLength = QType::Cast($intLength, QType::Integer);
+			$strCharacterSet = QType::Cast($strCharacterSet, QType::String);
+
+			if($intLength < 1) {
+				throw new QCallerException('Cannot generate a random string of zero length');
+			}
+
+			if(strlen(trim($strCharacterSet)) == 0) {
+				throw new QCallerException('Character set must contain at least 1 printable character.');
+			}
+
+			return substr(
+				str_shuffle(
+					str_repeat($strCharacterSet, ceil($intLength / strlen($strCharacterSet)))
+				)
+				, 0, $intLength);
+		}
     }
