@@ -263,13 +263,13 @@ class QDataRepeater extends QPaginatedControl {
 				$this->itemHtmlCallback = $mixValue;
 				break;
 
-			case 'ItemAttributeCallback':	// callback should return an array of key/value items
+			case 'ItemAttributesCallback':	// callback should return an array of key/value items
 				$this->blnModified = true;
 				if (is_array($mixValue) && reset($mixValue) === $this->objForm) {
 					// Do not pass [$objForm, 'methodName']. Rather, just set to 'methodName', and the form will be searched for that method.
 					throw new QCallerException ('Do not pass the form object in a callable array. Instead, just pass the method name.');
 				}
-				$this->itemAttributeCallback = $mixValue;
+				$this->itemAttributesCallback = $mixValue;
 				break;
 
 			case 'ItemInnerHtmlCallback':
