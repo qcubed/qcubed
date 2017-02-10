@@ -71,6 +71,7 @@
 		protected $blnGenerateControlId;
 		protected $objModelConnectorOptions;
 		protected $blnAutoInitialize;
+		protected $blnPrivateColumnVars;
 
 		/**
 		 * @param $strTableName
@@ -390,7 +391,8 @@
 			$this->objModelConnectorOptions = new QModelConnectorOptions();
 
 			$this->blnAutoInitialize = QCodeGen::LookupSetting($objSettingsXml, 'createOptions', 'autoInitialize', QType::Boolean);
-			
+			$this->blnPrivateColumnVars = QCodeGen::LookupSetting($objSettingsXml, 'createOptions', 'privateColumnVars', QType::Boolean);
+
 			if ($this->strErrors)
 				return;
 
@@ -1414,6 +1416,8 @@
 					return $this->strCommentConnectorLabelDelimiter;
 				case 'AutoInitialize':
 					return $this->blnAutoInitialize;
+				case 'PrivateColumnVars':
+					return $this->blnPrivateColumnVars;
 				case 'objSettingsXml':
 					throw new QCallerException('The field objSettingsXml is deprecated');
 				default:
