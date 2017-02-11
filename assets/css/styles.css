@@ -153,6 +153,7 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
     -moz-user-select: none; /* mozilla browsers */
     -khtml-user-select: none; /* webkit (konqueror) browsers */
     -ms-user-select: none; /* IE10+ */
+    cursor: default;
 }
 
 .clickable-rows tr:hover {
