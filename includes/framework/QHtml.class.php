@@ -454,18 +454,29 @@
 		 * A quick way to render an HTML table from an array of data. For more control, or to automatically render
 		 * data that may change, see QHtmlTable and its subclasses.
 		 *
-		 * @param []mixed	$data					An array of objects, or an array of arrays
-		 * @param []string 	$strFields				An array of fields to display from the data. If the data contains objects,
-		 * 											the fields will be accessed using $obj->$strFieldName. If an array of arrays,
-		 * 											it will be accessed using $obj[$strFieldName].
-		 * @param array|null $attributes			Optional array of attributes for the table tag.
-		 * @param []string|null $strHeaderTitles	Optional array of titles to be added as a header.
-		 * @param int $intHeaderColumnCount			Optional count of the number of columns on the left that will be
-		 * 											rendered using a 'th' tag instead of a 'td' tag.
-		 * @param bool $blnHtmlEntities				True (default) to run all titles and text through the HTMLEntities renderer.
+		 * Example:
+		 * $data = [
+		 * 				['name'=>'apple', 'type'=>'fruit'],
+		 * 				['name'=>'carrot', 'type'=>'vegetable']
+		 * 	];
+		 *
+		 * 	print(QHtml::RenderTable($data, ['name','type'], ['class'=>'mytable'], ['Name', 'Type']);
+		 *
+		 *
+		 * @param []mixed			$data				An array of objects, or an array of arrays
+		 * @param []string|null 	$strFields			An array of fields to display from the data. If the data contains objects,
+		 * 												the fields will be accessed using $obj->$strFieldName. If an array of arrays,
+		 * 												it will be accessed using $obj[$strFieldName]. If no fields specified, it will
+		 * 												treat the data as an array of arrays and just create cells for whatever it finds.
+		 * @param array|null 		$attributes			Optional array of attributes to be inserted into the table tag (like a class or id).
+		 * @param []string|null 	$strHeaderTitles	Optional array of titles to be added as a header row.
+		 * @param int 				$intHeaderColumnCount	Optional count of the number of columns on the left that will be
+		 * 													rendered using a 'th' tag instead of a 'td' tag.
+		 * @param bool 				$blnHtmlEntities	True (default) to run all titles and text through the HTMLEntities renderer. Set this to
+		 * 												false if you are trying to display raw html.
 		 * @return string
 		 */
-		public static function RenderTable(array $data, $strFields, $attributes = null, $strHeaderTitles = null, $intHeaderColumnCount = 0, $blnHtmlEntities = true) {
+		public static function RenderTable(array $data, $strFields = null, $attributes = null, $strHeaderTitles = null, $intHeaderColumnCount = 0, $blnHtmlEntities = true) {
 			if (!$data) {
 				return '';
 			}
@@ -484,21 +495,35 @@
 			foreach ($data as $row) {
 				$intFieldNum = 0;
 				$strRow = '';
-				foreach ($strFields as $strField) {
-					$intFieldNum ++;
-					$strItem = '';
-					if (is_object($row)) {
-						$strItem = $row->$strField;
-					} elseif (isset($row[$strField])) {
-						$strItem = $row[$strField];
+				if ($strFields) {
+					foreach ($strFields as $strField) {
+						$intFieldNum ++;
+						$strItem = '';
+						if (is_object($row)) {
+							$strItem = $row->$strField;
+						} elseif (isset($row[$strField])) {
+							$strItem = $row[$strField];
+						}
+						if ($blnHtmlEntities) {
+							$strItem = QApplication::HtmlEntities($strItem);
+						}
+						if ($intFieldNum <= $intHeaderColumnCount) {
+							$strRow .= '<th>' . $strItem . '</th>';
+						} else {
+							$strRow .= '<td>' . $strItem . '</td>';
+						}
 					}
-					if ($blnHtmlEntities) {
-						$strItem = QApplication::HtmlEntities($strItem);
-					}
-					if ($intFieldNum <= $intHeaderColumnCount) {
-						$strRow .= '<th>' . $strItem . '</th>';
-					} else {
-						$strRow .= '<td>' . $strItem . '</td>';
+				} else {
+					foreach ($row as $strItem) {
+						$intFieldNum ++;
+						if ($blnHtmlEntities) {
+							$strItem = QApplication::HtmlEntities($strItem);
+						}
+						if ($intFieldNum <= $intHeaderColumnCount) {
+							$strRow .= '<th>' . $strItem . '</th>';
+						} else {
+							$strRow .= '<td>' . $strItem . '</td>';
+						}
 					}
 				}
 				$strRow = '<tr>' . $strRow . '</tr>';
