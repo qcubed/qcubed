@@ -50,6 +50,7 @@
 
 				// Finally, update any ManyToManyReferences (if any)
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
+<?php	if (isset ($objManyToManyReference->Options['FormGen']) && ($objManyToManyReference->Options['FormGen'] == 'none' || $objManyToManyReference->Options['FormGen'] == 'meta')) continue; ?>
 				$this-><?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference); ?>_Update();
 <?php } ?>
 			} catch (QCallerException $objExc) {

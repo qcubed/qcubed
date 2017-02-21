@@ -13,6 +13,7 @@
 <?php } ?>
 <?php } ?>
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
+<?php	if (isset ($objManyToManyReference->Options['FormGen']) && ($objManyToManyReference->Options['FormGen'] == 'none' || $objManyToManyReference->Options['FormGen'] == 'meta')) continue; ?>
 		$this-><?php echo $objCodeGen->ModelConnectorVariableName($objManyToManyReference);  ?> = $this->mct<?= $strPropertyName ?>-><?php echo $objCodeGen->ModelConnectorVariableName($objManyToManyReference);  ?>_Create();
 <?php } ?>
 	}
