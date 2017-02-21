@@ -21,7 +21,7 @@
 <?php if (!$objColumn->Reference->IsType) { ?>
 				case '<?= $objColumn->Reference->PropertyName ?>':
 					/**
-					 * Gets the value for the <?= $objColumn->Reference->VariableType ?> object referenced by <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+					 * Gets the value of the <?= $objColumn->Reference->VariableType ?> object referenced by <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
 					 * @return <?= $objColumn->Reference->VariableType ?>
 
@@ -34,18 +34,6 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-<?php } else { // type ?>
-				case '<?= $objColumn->Reference->PropertyName ?>':
-					/**
-					 * Gets the value for the <?= $objColumn->Reference->VariableType ?> type referenced by <?= $objColumn->VariableName ?>
-					 * @return string
-					 */
-					if ($this-><?= $objColumn->VariableName ?>) {
-						return <?= $objColumn->Reference->VariableType ?>::ToString($this-><?= $objColumn->VariableName ?>);
-					} else {
-						return '';
-					}
-
 <?php } ?>
 <?php } ?>
 <?php } ?>
@@ -55,7 +43,7 @@
 <?php $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
 				case '<?= $objReverseReference->ObjectPropertyName ?>':
 					/**
-					 * Gets the value for the <?= $objReverseReference->VariableType ?> object that uniquely references this <?= $objTable->ClassName ?>
+					 * Gets the value of the <?= $objReverseReference->VariableType ?> object that uniquely references this <?= $objTable->ClassName ?>
 
 					 * by <?= $objReverseReference->ObjectMemberVariable ?> (Unique)
 					 * @return <?= $objReverseReference->VariableType ?>
@@ -91,7 +79,7 @@
 				case '<?= $objReference->ObjectDescription ?>':
 				case '_<?= $objReference->ObjectDescription ?>': // for backwards compatibility
 					/**
-					 * Gets the value for the protected <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
+					 * Gets the value of the protected <?= $varPrefix . $objReference->ObjectDescription ?> (Read-Only)
 					 * if set due to an expansion on the <?= $objReference->Table ?> association table
 					 * @return <?= $varType ?>
 
@@ -101,7 +89,7 @@
 				case '<?= $objReference->ObjectDescription ?>Array':
 				case '_<?= $objReference->ObjectDescription ?>Array': // for backwards compatibility
 					/**
-					 * Gets the value for the protected <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
+					 * Gets the value of the protected <?= $varPrefix . $objReference->ObjectDescription ?>Array (Read-Only)
 					 * if set due to an ExpandAsArray on the <?= $objReference->Table ?> association table
 					 * @return <?= $varType ?>[]
 					 */
@@ -112,7 +100,7 @@
 				case '<?= $objReference->ObjectDescription ?>':
 				case '_<?= $objReference->ObjectDescription ?>':
 					/**
-					 * Gets the value for the protected _obj<?= $objReference->ObjectDescription ?> (Read-Only)
+					 * Gets the value of the protected _obj<?= $objReference->ObjectDescription ?> (Read-Only)
 					 * if set due to an expansion on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
 					 * @return <?= $objReference->VariableType ?>
 
@@ -122,7 +110,7 @@
 				case '<?= $objReference->ObjectDescription ?>Array':
 				case '_<?= $objReference->ObjectDescription ?>Array':
 					/**
-					 * Gets the value for the protected _obj<?= $objReference->ObjectDescription ?>Array (Read-Only)
+					 * Gets the value of the protected _obj<?= $objReference->ObjectDescription ?>Array (Read-Only)
 					 * if set due to an ExpandAsArray on the <?= $objReference->Table ?>.<?= $objReference->Column ?> reverse relationship
 					 * @return <?= $objReference->VariableType ?>[]
 					 */

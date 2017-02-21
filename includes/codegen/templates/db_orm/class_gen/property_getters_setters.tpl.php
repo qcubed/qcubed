@@ -6,7 +6,7 @@
 
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
    /**
-	* Gets the value for <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Timestamp) print '(Read-Only Timestamp)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+	* Gets the value of <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Timestamp) print '(Read-Only Timestamp)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
 	* @throws QCallerException
 	* @return <?= $objColumn->VariableType ?>
@@ -23,7 +23,7 @@
 <?php if ($objColumn->Reference && $objColumn->Reference->IsType) { ?>
 
    /**
-	* Gets the value for <?= $objColumn->VariableName ?> as a type name.
+	* Gets the value of <?= $objColumn->VariableName ?> as a type name.
 	* @return string
 	*/
 	public function get<?= $objColumn->Reference->PropertyName ?>() {
@@ -34,7 +34,7 @@
 <?php 	if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) { ?>
 
    /**
-	* Sets the value for <?= $objColumn->VariableName ?> <?php if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+	* Sets the value of <?= $objColumn->VariableName ?> <?php if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
 	* Returns $this to allow chaining of setters.
 	* @param <?= $objColumn->VariableType ?><?= $objColumn->NotNull ? '' : '|null' ?> $<?= $objColumn->VariableName ?>
