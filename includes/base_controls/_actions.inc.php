@@ -456,6 +456,7 @@
 		 */
 		public function __construct(QControl $objControl, $strMethodName, $objWaitIconControl = 'default',
 		                            $mixCausesValidationOverride = null, $strJsReturnParam = "", $blnAsync = false) {
+			assert($objControl->ControlId != '');	// Are you adding an action before adding the control to the form?
 			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride, $strJsReturnParam, $blnAsync);
 		}
 	}
