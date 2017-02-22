@@ -152,11 +152,11 @@
 
 			if($str1Len == 0 || $str2Len == 0)
 				return '';
-			
+
 			$CSL = array(); //Common Sequence Length array
 			$intLargestSize = 0;
 			$ret = array();
-			
+
 			//initialize the CSL array to assume there are no similarities
 			for($i=0; $i<$str1Len; $i++){
 				$CSL[$i] = array();
@@ -164,7 +164,7 @@
 					$CSL[$i][$j] = 0;
 				}
 			}
-			
+
 			for($i=0; $i<$str1Len; $i++){
 				for($j=0; $j<$str2Len; $j++){
 					//check every combination of characters
@@ -172,14 +172,14 @@
 						//these are the same in both strings
 						if($i == 0 || $j == 0)
 							//it's the first character, so it's clearly only 1 character long
-							$CSL[$i][$j] = 1; 
+							$CSL[$i][$j] = 1;
 						else
 							//it's one character longer than the string from the previous character
-							$CSL[$i][$j] = $CSL[$i-1][$j-1] + 1; 
+							$CSL[$i][$j] = $CSL[$i-1][$j-1] + 1;
 
 						if( $CSL[$i][$j] > $intLargestSize ){
 							//remember this as the largest
-							$intLargestSize = $CSL[$i][$j]; 
+							$intLargestSize = $CSL[$i][$j];
 							//wipe any previous results
 							$ret = array();
 							//and then fall through to remember this new value
@@ -198,31 +198,31 @@
 				return ''; //no matches
 		}
 
-        /**
-         * Base64 encode in a way that the result can be passed through HTML forms and URLs.
-         * @param $s
-         * @return mixed
-         */
-        public static function Base64UrlSafeEncode($s) {
-            $s = base64_encode($s);
-            $s = str_replace('+', '-', $s);
-            $s = str_replace('/', '_', $s);
-            $s = str_replace('=', '', $s);
-            return ($s);
-        }
+		/**
+		 * Base64 encode in a way that the result can be passed through HTML forms and URLs.
+		 * @param $s
+		 * @return mixed
+		 */
+		public static function Base64UrlSafeEncode($s) {
+			$s = base64_encode($s);
+			$s = str_replace('+', '-', $s);
+			$s = str_replace('/', '_', $s);
+			$s = str_replace('=', '', $s);
+			return ($s);
+		}
 
-        /**
-         * Base64 Decode in a way that the result can be passed through HTML forms and URLs.
-         *
-         * @param $s
-         * @return mixed
-         */
-        public static function Base64UrlSafeDecode($s) {
-            $s = str_replace('_', '/', $s);
-            $s = str_replace('-', '+', $s);
-            $s = base64_decode($s);
-            return ($s);
-        }
+		/**
+		 * Base64 Decode in a way that the result can be passed through HTML forms and URLs.
+		 *
+		 * @param $s
+		 * @return mixed
+		 */
+		public static function Base64UrlSafeDecode($s) {
+			$s = str_replace('_', '/', $s);
+			$s = str_replace('-', '+', $s);
+			$s = base64_decode($s);
+			return ($s);
+		}
 
 		/**
 		 * Generate Slug, this function is use for generate slug
@@ -258,7 +258,7 @@
 
 				$strString = mb_substr($strString, 0, $intMaxLength, __QAPPLICATION_ENCODING_TYPE__);
 				return rtrim($strString, '-'); // When the end of the text remains the hyphen, it is removed.
-                                              //This rtrim() starts implementing at the $intMaxLength.
+				//This rtrim() starts implementing at the $intMaxLength.
 			} else  {
 				return $strString;
 			}
@@ -407,14 +407,14 @@
 		public static function Is_utf8($strString) {
 			return preg_match('%^(?:
 
-			[\x09\x0A\x0D\x20-\x7E]             # ASCII
-			| [\xC2-\xDF][\x80-\xBF]            # non-overlong 2-byte
-			|  \xE0[\xA0-\xBF][\x80-\xBF]       # excluding overlongs
-			| [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2} # straight 3-byte
-			|  \xED[\x80-\x9F][\x80-\xBF]       # excluding surrogates
-			|  \xF0[\x90-\xBF][\x80-\xBF]{2}    # planes 1-3
-			| [\xF1-\xF3][\x80-\xBF]{3}         # planes 4-15
-			|  \xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
-			)*$%xs', $strString);
+				[\x09\x0A\x0D\x20-\x7E]             # ASCII
+				| [\xC2-\xDF][\x80-\xBF]            # non-overlong 2-byte
+				|  \xE0[\xA0-\xBF][\x80-\xBF]       # excluding overlongs
+				| [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2} # straight 3-byte
+				|  \xED[\x80-\x9F][\x80-\xBF]       # excluding surrogates
+				|  \xF0[\x90-\xBF][\x80-\xBF]{2}    # planes 1-3
+				| [\xF1-\xF3][\x80-\xBF]{3}         # planes 4-15
+				|  \xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
+				)*$%xs', $strString);
 		}
 	}
