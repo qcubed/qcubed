@@ -14,7 +14,11 @@
 		 * @var <?= $objColumn->VariableType ?> <?= $objColumn->VariableName ?>
 
 		 */
+<?php if ($objCodeGen->PrivateColumnVars) { ?>
 		private $<?= $objColumn->VariableName ?>;
+<?php } else { ?>
+        protected $<?= $objColumn->VariableName ?>;
+<?php   } ?>
 <?php if (($objColumn->VariableType == QType::String) && (is_numeric($objColumn->Length))) { ?>
 		const <?= $objColumn->PropertyName ?>MaxLength = <?= $objColumn->Length ?>;
 <?php } ?>
