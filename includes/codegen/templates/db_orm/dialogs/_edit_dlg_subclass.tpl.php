@@ -40,7 +40,7 @@ class <?= $strPropertyName ?>EditDlg extends <?= $strPropertyName ?>EditDlgGen {
 	 * @throws Exception
 	 * @throws QCallerException
 	 */
-	public function __construct($objParent, $strControlId = null) {
+	public function __construct($objParent = null, $strControlId = null) {
 		parent::__construct($objParent, $strControlId);
 
 		/**

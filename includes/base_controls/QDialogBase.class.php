@@ -58,7 +58,7 @@
 	 * 	Can be set when initializing the dialog. Also enables or disables the ability to close the box by pressing the ESC key.
 	 * @property-read integer $ClickedButton Returns the id of the button most recently clicked. (read-only)
 	 * @property-write string $DialogState Set whether this dialog is in an error or highlight (info) state. Choose on of QDialog::StateNone, QDialogState::StateError, QDialogState::StateHighlight (write-only)
-	 * 
+	 *
 	 * @link http://jqueryui.com/dialog/
 	 * @package Controls\Base
 	 */
@@ -87,17 +87,39 @@
         protected $blnIsOpen = false;
 		/** @var array whether a button causes validation */
 		protected $blnValidationArray = array();
-
+		/** @var bool */
 		protected $blnUseWrapper = true;
 		/** @var  string state of the dialog for special display */
 		protected $strDialogState;
-
+		/** @var bool  */
 		protected $blnAutoRender = true;
+		/** @var bool Whether to show the dialog as a modal dialog. Most dialogs are modal, so this defaults to true. */
+		protected $blnModal = true;
+		/** @var bool Whether to automatically remove the dialog from the form when it closes. */
+		protected $blnAutoRemove = false;
 
-		public function __construct($objParentObject, $strControlId = null) {
+
+		public function __construct($objParentObject = null, $strControlId = null) {
+			// Detect which mode we are going to display in, whether to show right away, or wait for later.
+			if ($objParentObject === null) {
+				// The dialog will be shown right away, and then when closed, removed from the form.
+				global $_FORM;
+				$objParentObject = $_FORM;	// The parent object should be the form. Prevents spurious redrawing.
+				$this->blnDisplay = true;
+				$this->blnAutoOpen = true;
+				$this->blnAutoRemove = true;
+			}
+			else {
+				$this->blnDisplay = false;
+			}
 			parent::__construct($objParentObject, $strControlId);
-			$this->blnDisplay = false;
 			$this->mixCausesValidation = $this;
+			if ($this->blnAutoRemove) {
+				// We need to immediately detect a close so we can remove it from the form
+				// Delay in an attempt to make sure this is the very last thing processed for the dialog.
+				// If you want to do something just before closing, trap the QDialog_BeforeCloseEvent
+				$this->AddAction(new QDialog_CloseEvent(10), new QAjaxControlAction($this, 'dialog_Close'));
+			}
 		}
 
 		/**
@@ -126,10 +148,7 @@
 		 * @return string
 		 */
 		public function getJqControlId() {
-			if ($this->blnUseWrapper) {
-				return $this->ControlId . '_ctl';
-			}
-			return $this->ControlId;
+			return $this->GetWrapperId();
 		}
 
 		/**
@@ -330,7 +349,7 @@
 
 		/**
 		 * Adds a close button that just closes the dialog without firing the QDialogButton event. You can
-		 * trap this by adding an action to the QDialog_CloseEvent.
+		 * detect this by adding an action to the QDialog_BeforeCloseEvent.
 		 *
 		 * @param $strButtonName
 		 */
@@ -360,12 +379,10 @@
 		public static function Alert($strMessage, $strButtons = null, $strControlId = null) {
 			global $_FORM;
 
-			$objForm = $_FORM;
-			$dlg = new QDialog($objForm, $strControlId);
+			$dlg = new QDialog(null, $strControlId);
 			$dlg->Modal = true;
 			$dlg->Resizable = false;
 			$dlg->Text = $strMessage;
-			$dlg->AddAction (new QDialog_CloseEvent(), new QAjaxControlAction($dlg, 'alert_Close'));
 			if ($strButtons) {
 				$dlg->blnHasCloseButton = false;
 				if (is_string($strButtons)) {
@@ -391,23 +408,21 @@
 		}
 
 		/**
-		 * An alert is closing, so we remove the dialog from the dom.
+		 * A dialog is closing that is autoRemoved, so we remove the dialog from the form and the dom.
 		 *
 		 * @param $strFormId
 		 * @param $strControlId
 		 * @param $strParameter
 		 */
-		protected function alert_Close($strFormId, $strControlId, $strParameter) {
+		public function dialog_Close($strFormId, $strControlId, $strParameter) {
 			$this->Form->RemoveControl($this->ControlId);
-			QApplication::ExecuteControlCommand($this->getJqControlId(), 'remove');
 		}
 
 		/**
 		 * Show the dialog.
+		 * @deprecated
 		 */
 		public function ShowDialogBox() {
-			$this->Visible = true;
-			$this->Display = true;
 			$this->Open();
 		}
 
@@ -416,6 +431,20 @@
 		 */
 		public function HideDialogBox() {
 			$this->Close();
+		}
+
+		public function Open() {
+			$this->Visible = true;
+			$this->Display = true;
+			parent::Open();
+		}
+
+		/**
+		 * Closes the dialog. To detect the close, use the QDialog_BeforeCloseEvent.
+		 *
+		 */
+		public function Close() {
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close", QJsPriority::Final);
 		}
 
 		/**
