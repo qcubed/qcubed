@@ -534,7 +534,7 @@
 		 * in the serialized stream differently than the default. If a QControl, make sure this isn't the only
 		 * instance of the control in the stream, or have some other way to serialize the control.
 		 *
-		 * @param QForm|QControl|array|Callable $obj
+		 * @param QForm|QControl|array|callable $obj
 		 * @return mixed
 		 */
 		public static function SleepHelper($obj) {

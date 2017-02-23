@@ -21,7 +21,7 @@
 	 * @property boolean        $ShowFooter           true to show the footer row
 	 * @property boolean        $RenderColumnTags     true to include col tags in the table output
 	 * @property boolean        $HideIfEmpty          true to completely hide the table if there is no data, vs. drawing the table with no rows.
-	 * @property-write Callable $RowParamsCallback    Set to a callback function to fetch custom attributes for row tags.
+	 * @property-write callable $RowParamsCallback    Set to a callback function to fetch custom attributes for row tags.
 	 * @property-read integer 	$CurrentRowIndex      The visual index of the row currently being drawn.
 	 * @throws QCallerException
 	 *
@@ -55,8 +55,8 @@
 		/** @var  integer Used during rendering to report which visible row is being drawn. */
 		protected $intCurrentRowIndex;
 
-		/** @var  callable */
-		protected $objRowParamsCallback;
+		/** @var callable */
+		protected $rowParamsCallback;
 
 		/**
 		 * Constructor method
@@ -569,8 +569,8 @@
 		 */
 		protected function GetRowParams ($objObject, $intCurrentRowIndex) {
 			$strParamArray = array();
-			if ($this->objRowParamsCallback) {
-				$strParamArray = call_user_func($this->objRowParamsCallback, $objObject, $intCurrentRowIndex);
+			if ($this->rowParamsCallback) {
+				$strParamArray = call_user_func($this->rowParamsCallback, $objObject, $intCurrentRowIndex);
 			}
 			if ($strClass = $this->GetRowClass ($objObject, $intCurrentRowIndex)) {
 				$strParamArray['class'] = $strClass;
@@ -724,7 +724,7 @@
 					$objColumn->Sleep();
 				}
 			}
-			$this->objRowParamsCallback = QControl::SleepHelper($this->objRowParamsCallback);
+			$this->rowParamsCallback = QControl::SleepHelper($this->rowParamsCallback);
 			parent::Sleep();
 		}
 
@@ -735,7 +735,7 @@
 		 */
 		public function Wakeup(QForm $objForm) {
 			parent::Wakeup($objForm);
-			$this->objRowParamsCallback = QControl::WakeupHelper($objForm, $this->objRowParamsCallback);
+			$this->rowParamsCallback = QControl::WakeupHelper($objForm, $this->rowParamsCallback);
 			if ($this->objColumnArray) {
 				foreach ($this->objColumnArray as $objColumn) {
 					$objColumn->Wakeup($objForm);
@@ -883,8 +883,7 @@
 
 				case "RowParamsCallback":
 					try {
-						assert (is_callable($mixValue));
-						$this->objRowParamsCallback = $mixValue;
+						$this->rowParamsCallback = QType::Cast($mixValue, QType::CallableType);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

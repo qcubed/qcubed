@@ -84,8 +84,8 @@
 		const DateTime = 'QDateTime';
 		/** Resource Type */
 		const Resource = 'resource';
-		/** Callable Type  - Note: For QCubed, QType::Callables CANNOT be Closures (because they cannot be serialized into the form state) */
-		const Callable = 'callable';
+		/** Callable Type  - Note: For QCubed, QType::CallableTypes CANNOT be Closures (because they cannot be serialized into the form state) */
+		const CallableType = 'callable';
 
 		// Virtual types
 		const Association = 'association';
@@ -122,7 +122,7 @@
 					}
 				}
 				elseif ($strObjName == 'Closure') {
-					if ($strType == QType::Callable) {
+					if ($strType == QType::CallableType) {
 						throw new Exception("Can't use a closure here"); // will get rethrown below, but this will error to
 																		// prevent you from accidentally sending a Closure to a callable in a form object.
 																		// that cannot be done, because Closures are not serializable. Some other forms of
@@ -245,7 +245,7 @@
 					
 					return $strItem;
 
-				case QType::Callable:
+				case QType::CallableType:
 					if (is_callable($mixItem)) {
 						return $mixItem;
 					} else {
@@ -270,7 +270,7 @@
 			if ($strType == QType::ArrayType) {
 				return $arrItem;
 			}
-			elseif ($strType == QType::Callable && is_callable($arrItem)) {
+			elseif ($strType == QType::CallableType && is_callable($arrItem)) {
 				return $arrItem;
 			}
 			else {
@@ -427,7 +427,7 @@
 					return QType::DateTime;
 
 				case 'callable':
-					return QType::Callable;
+					return QType::CallableType;
 
 				case 'null':
 				case 'void':
