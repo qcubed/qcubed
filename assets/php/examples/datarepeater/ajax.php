@@ -34,7 +34,7 @@ class DataRepeaterExample extends QForm {
 		$this->dtrBig->SetDataBinder('dtrBig_Bind');
 		$this->dtrBig->TagName = 'ul';
 		$this->dtrBig->ItemTagName = 'li';
-		$this->dtrBig->ItemInnerHtmlCallback = 'BigItem_Render';
+		$this->dtrBig->ItemInnerHtmlCallback = [$this, 'BigItem_Render'];
 	}
 
 	protected function dtrPersons_Bind() {
@@ -63,4 +63,3 @@ class DataRepeaterExample extends QForm {
 }
 
 DataRepeaterExample::Run('DataRepeaterExample');
-?>
