@@ -127,8 +127,37 @@ class QCryptography extends QBaseClass {
 			// IV is not needed for the selected algorithm (it could be a ECB algorithm)
 			$this->strIv = null;
 		} else {
-			// Generate random IV
-			$this->strIv = openssl_random_pseudo_bytes($strIvLength);
+			if($strIvHashKey == null) {
+				/*
+				 * IV hash is acceptable but no hash was supplied!
+				 *
+				 * If the default IV hash key's length matches with the length of IV length
+				 * then we will use the default IV
+				 *
+				 * If the length does not match then we throw an exception
+				 */
+				if (strlen(QCRYPTOGRAPHY_DEFAULT_IV) == $strIvLength) {
+					$this->strIv = QCRYPTOGRAPHY_DEFAULT_IV;
+				} else {
+					throw new QCallerException('IV Hash key supplied does not match length required. Required length = ' . $strIvLength . ' Algorithm selected = ' . $this->strCipher);
+				}
+			} else {
+				/*
+				 * IV Hash is acceptable and a hash was supplied!
+				 */
+				if($strIvHashKey == self::IV_RANDOM) {
+					// Random IV was requested
+					// Generate random IV
+					$this->strIv = openssl_random_pseudo_bytes($strIvLength);
+				} else {
+					// We will, once again check if the Hash is of correct length
+					if (strlen($strIvHashKey) == $strIvLength) {
+						$this->strIv = $strIvHashKey;
+					} else {
+						throw new QCallerException('IV Hash key supplied does not match length required. Required length = ' . $strIvLength . ' Algorithm selected = ' . $this->strCipher);
+					}
+				}
+			}
 		}
 	}
 
