@@ -2156,8 +2156,13 @@
 					}
 				case "Warning":
 					try {
-						$this->strWarning = QType::Cast($mixValue, QType::String);
-						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
+						if (is_string($mixValue) && trim($mixValue) === '') { // treat empty strings as nulls to prevent unnecessary drawing
+							$mixValue = null;
+						}
+						if ($this->strWarning !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->strWarning = $mixValue;
+							$this->MarkAsModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2166,8 +2171,13 @@
 
 				case "ValidationError":
 					try {
-						$this->strValidationError = QType::Cast($mixValue, QType::String);
-						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
+						if (is_string($mixValue) && trim($mixValue) === '') { // treat empty strings as nulls to prevent unnecessary drawing
+							$mixValue = null;
+						}
+						if ($this->strValidationError !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->strValidationError = $mixValue;
+							$this->MarkAsModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
