@@ -188,7 +188,6 @@
 				}
 			}
 
-			$this->ValidationError = null;
 			return true;
 		}
 

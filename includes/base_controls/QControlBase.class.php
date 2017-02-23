@@ -281,8 +281,9 @@
 
 			try {
 				$this->objForm->AddControl($this);
-				if ($this->objParentControl)
+				if ($this->objParentControl) {
 					$this->objParentControl->AddChildControl($this);
+				}
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
