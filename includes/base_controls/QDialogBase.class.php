@@ -444,7 +444,7 @@
 		 *
 		 */
 		public function Close() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close", QJsPriority::Final);
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close", QJsPriority::Last);
 		}
 
 		/**

@@ -991,7 +991,7 @@
 				QApplication::$JavascriptExclusiveCommand = ['selector'=>$mixSelector, 'func'=>$strFunctionName, 'params'=>$args];
 				return;
 			}
-			elseif ($args && end($args) === QJsPriority::Final) {
+			elseif ($args && end($args) === QJsPriority::Last) {
 				array_pop($args);
 				QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsFinal][] = ['selector'=>$mixSelector, 'func'=>$strFunctionName, 'params'=>$args, 'final'=>true];
 				return;
@@ -1422,9 +1422,7 @@
 		/** Execute ONLY this command and exclude all others */
 		const Exclusive = '*jsExclusive*';
 		/** Execute this command after all ajax commands have been completely flushed */
-		const Final = '*jsFinal*';
-
-
+		const Last = '*jsFinal*';
 	}
 
 	/**
