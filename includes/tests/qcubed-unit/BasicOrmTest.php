@@ -492,5 +492,15 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$milestone1->Save();
 		$this->assertEquals($intProjectId, $milestone1->Project->Id);
 	}
+
+	public function testTypes() {
+		$objProject =
+			Project::QuerySingle(
+				QQ::Equal (QQN::Project()->Id, 1)
+			);
+
+		$this->assertEquals(3, $objProject->getProjectStatusTypeId());
+		$this->assertEquals("Completed", $objProject->getProjectStatusType());
+	}
 }
 
