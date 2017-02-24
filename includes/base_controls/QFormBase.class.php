@@ -45,8 +45,6 @@
 		/** @var null|QWaitIcon Default wait icon for the page/QForm  */
 		protected $objDefaultWaitIcon = null;
 
-		protected $strFormAttributeArray = array();
-
 		/** @var array List of included JavaScript files for this QForm */
 		protected $strIncludedJavaScriptFileArray = array();
 		/** @var array List of ignored JavaScript files for this QForm */
@@ -797,16 +795,13 @@
 					QApplication::AddStyleSheets(array_keys($strScriptArray));
 				}
 
-				// Form Attributes?
-				if ($objControl->FormAttributes) {
-					QApplication::ExecuteControlCommand($this->strFormId, 'attr', $objControl->FormAttributes);
-					foreach ($objControl->FormAttributes as $strKey=>$strValue) {
-						if (!array_key_exists($strKey, $this->strFormAttributeArray)) {
-							$this->strFormAttributeArray[$strKey] = $strValue;
-						} else if ($this->strFormAttributeArray[$strKey] != $strValue) {
-							$this->strFormAttributeArray[$strKey] = $strValue;
-						}
-					}
+				// Form Attributes
+				$attributes = $objControl->_GetFormAttributes();
+				if ($attributes) {
+					// Make sure the form has attributes that the control requires.
+					// Note that current implementation does not handle removing attributes that are no longer needed
+					// if such a control gets removed from a form during an ajax call, but that is a very unlikely scenario.
+					QApplication::ExecuteControlCommand($this->strFormId, 'attr', $attributes);
 				}
 			}
 
@@ -1442,7 +1437,7 @@
 				} else {
 					$strToReturn  .= '<style type="text/css" media="all">@import "' . $this->GetCssFileUri($strScript) . '"</style>';
 				}
-				$strToReturn .= "\r\n";
+				$strToReturn .= "\n";
 			}
 
 			self::$blnStylesRendered = true;
@@ -1498,30 +1493,26 @@
 
 
 			// Iterate through the form's ControlArray to Define FormAttributes and additional JavaScriptIncludes
-			$this->strFormAttributeArray = array();
+			$strFormAttributeArray = array();
 			foreach ($this->GetAllControls() as $objControl) {
 				// Form Attributes?
-				if ($objControl->FormAttributes) {
-					$this->strFormAttributeArray = array_merge($this->strFormAttributeArray, $objControl->FormAttributes);
+				if ($attributes = $objControl->_GetFormAttributes()) {
+					$strFormAttributeArray = array_merge($strFormAttributeArray, $attributes);
 				}
 			}
 
-			if (is_array($this->strCustomAttributeArray))
-				$this->strFormAttributeArray = array_merge($this->strFormAttributeArray, $this->strCustomAttributeArray);
-
-			// Create $strFormAttributes
-			$strFormAttributes = '';
-			foreach ($this->strFormAttributeArray as $strKey=>$strValue) {
-				$strFormAttributes .= sprintf(' %s="%s"', $strKey, $strValue);
+			if (is_array($this->strCustomAttributeArray)) {
+				$strFormAttributeArray = array_merge($strFormAttributeArray, $this->strCustomAttributeArray);
 			}
 
-			if ($this->strCssClass)
-				$strFormAttributes .= ' class="' . $this->strCssClass . '"';
+			if ($this->strCssClass) {
+				$strFormAttributeArray['class'] = $this->strCssClass;
+			}
+			$strFormAttributes['method'] = 'post';
+			$strFormAttributeArray['id'] = $this->strFormId;
+			$strFormAttributeArray['action'] = QApplication::$RequestUri;
+			$strToReturn .= '<form ' . QHtml::RenderHtmlAttributes($strFormAttributeArray) . ">\n";
 
-			// Setup Rendered HTML
-			$strToReturn .= sprintf('<form method="post" id="%s" action="%s"%s>', $this->strFormId, htmlentities(QApplication::$RequestUri), $strFormAttributes);
-			$strToReturn .= "\r\n";
-			
 			if (!self::$blnStylesRendered) {
 				$strToReturn .= $this->RenderStyles(false, false);
 			}
@@ -1780,18 +1771,6 @@
 				// comma-delimited list of stylesheet files to include (if applicable)
 				if ($strScriptArray = $this->ProcessStyleSheetList($objControl->StyleSheets)) {
 					QApplication::AddStyleSheets(array_keys($strScriptArray));
-				}
-
-				// Form Attributes?
-				if ($objControl->FormAttributes) {
-					QApplication::ExecuteControlCommand($this->strFormId, 'attr', $objControl->FormAttributes);
-					foreach ($objControl->FormAttributes as $strKey=>$strValue) {
-						if (!array_key_exists($strKey, $this->strFormAttributeArray)) {
-							$this->strFormAttributeArray[$strKey] = $strValue;
-						} else if ($this->strFormAttributeArray[$strKey] != $strValue) {
-							$this->strFormAttributeArray[$strKey] = $strValue;
-						}
-					}
 				}
 			}
 

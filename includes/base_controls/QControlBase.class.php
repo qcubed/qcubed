@@ -2010,7 +2010,6 @@
 				// SETTINGS
 				case "JavaScripts": return $this->strJavaScripts;
 				case "StyleSheets": return $this->strStyleSheets;
-				case "FormAttributes": return (array) $this->strFormAttributes;
 
 				case "Modified": return $this->IsModified();
 				case "LinkedNode": return $this->objLinkedNode;
@@ -2330,6 +2329,29 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+			}
+		}
+
+		/**
+		 * Called by the form rendering code to add special attributes to the html form tag. If you need a spcial
+		 * attribute in your form (e.g. a multipart attribute), add it to the strFormAttributes array.
+		 *
+		 * This function is not for general consumption.
+		 *
+		 * @ignore
+		 * @return null|string
+		 */
+		public function _GetFormAttributes() {
+			if (QApplication::$RequestMode == QRequestMode::Ajax) {
+				if ($this->IsModified()) {
+					return $this->strFormAttributes;
+				}
+				else {
+					return null;
+				}
+			}
+			else {
+				return $this->strFormAttributes;
 			}
 		}
 
