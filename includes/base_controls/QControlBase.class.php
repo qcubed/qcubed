@@ -281,8 +281,9 @@
 
 			try {
 				$this->objForm->AddControl($this);
-				if ($this->objParentControl)
+				if ($this->objParentControl) {
 					$this->objParentControl->AddChildControl($this);
+				}
 			} catch (QCallerException $objExc) {
 				$objExc->IncrementOffset();
 				throw $objExc;
@@ -638,7 +639,9 @@
 		 * @param boolean $blnRemoveFromForm should the control be removed from the form, too?
 		 */
 		public function RemoveChildControl($strControlId, $blnRemoveFromForm) {
-			$this->blnModified = true;
+			$this->blnModified = true;	// TODO: Find a way to remove control in javascript so we don't have to redraw the entire control
+										// Its a bit tricky because of the recursive nature of this function
+
 			if (isset($this->objChildControlArray[$strControlId])) {
 				$objChildControl = $this->objChildControlArray[$strControlId];
 				$objChildControl->objParentControl = null;
@@ -1065,7 +1068,7 @@
 			}
 
 			// TODO: do this in javascript
-			// QApplication::ExecuteControlCommand($this->WrapperId, 'removeClass', $this->strValidationState);
+			// QApplication::ExecuteControlCommand($this->GetWrapperId(), 'removeClass', $this->strValidationState);
 
 		}
 
@@ -1137,7 +1140,7 @@
 		 */
 		protected function RenderWrappedOutput($strOutput, $blnForceAsBlockElement = false) {
 			$strTag = ($this->blnIsBlockElement || $blnForceAsBlockElement) ? 'div' : 'span';
-			$overrides = ['id'=>$this->strControlId . '_ctl'];
+			$overrides = ['id'=>$this->GetWrapperId()];
 			$attributes = $this->GetWrapperAttributes($overrides);
 
 			return QHtml::RenderTag($strTag, $attributes, $strOutput);
@@ -1522,7 +1525,7 @@
 				if (!isset($wrapperAttributes['style'])) {
 					$wrapperAttributes['style'] = '';	// must specifically turn off styles if none were drawn, in case the previous state had a style and it had changed
 				}
-				$controls[] = [QAjaxResponse::Id=>$this->strControlId . '_ctl', QAjaxResponse::Attributes=>$wrapperAttributes];
+				$controls[] = [QAjaxResponse::Id=>$this->GetWrapperId(), QAjaxResponse::Attributes=>$wrapperAttributes];
 			}
 			return $controls;
 		}
@@ -1852,7 +1855,7 @@
 		 * Used by jQuery UI wrapper controls to find the element on which to apply the jQuery  function
 		 *
 		 * NOTE: Some controls that use jQuery will get wrapped with extra divs by the jQuery library.
-		 * If such a control then gets replaced by Ajax, the jQuery effects will be deleted. To solve this,
+		 * If such a control then gets replaced by Ajax during a redraw, the jQuery effects will be deleted. To solve this,
 		 * the corresponding QCubed control should set UseWrapper to true, attach the jQuery effect to
 		 * the wrapper, and override this function to return the id of the wrapper. See QDialogBase.class.php for
 		 * an example.
@@ -1861,6 +1864,19 @@
 		 */
 		public function GetJqControlId() {
 			return $this->ControlId;
+		}
+
+		/**
+		 * Returns the top level control id, which is the wrapper id of a wrapper is being used.
+		 *
+		 * @return string
+		 */
+		public function GetWrapperId() {
+			if ($this->blnUseWrapper) {
+				return $this->ControlId . '_ctl';
+			} else {
+				return $this->ControlId;
+			}
 		}
 
 		/**
@@ -1991,7 +2007,6 @@
 
 				// MISC
 				case "ControlId": return $this->strControlId;
-				case "WrapperId": return $this->strControlId . '_ctl';
 				case "Form": return $this->objForm;
 				case "ParentControl": return $this->objParentControl;
 
@@ -2140,8 +2155,13 @@
 					}
 				case "Warning":
 					try {
-						$this->strWarning = QType::Cast($mixValue, QType::String);
-						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
+						if (is_string($mixValue) && trim($mixValue) === '') { // treat empty strings as nulls to prevent unnecessary drawing
+							$mixValue = null;
+						}
+						if ($this->strWarning !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->strWarning = $mixValue;
+							$this->MarkAsModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -2150,8 +2170,13 @@
 
 				case "ValidationError":
 					try {
-						$this->strValidationError = QType::Cast($mixValue, QType::String);
-						$this->MarkAsModified(); // always modify, since it will get reset on subsequent drawing
+						if (is_string($mixValue) && trim($mixValue) === '') { // treat empty strings as nulls to prevent unnecessary drawing
+							$mixValue = null;
+						}
+						if ($this->strValidationError !== ($mixValue = QType::Cast($mixValue, QType::String))) {
+							$this->strValidationError = $mixValue;
+							$this->MarkAsModified();
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();

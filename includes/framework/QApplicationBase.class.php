@@ -990,7 +990,13 @@
 				array_pop($args);
 				QApplication::$JavascriptExclusiveCommand = ['selector'=>$mixSelector, 'func'=>$strFunctionName, 'params'=>$args];
 				return;
-			} else {
+			}
+			elseif ($args && end($args) === QJsPriority::Last) {
+				array_pop($args);
+				QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsFinal][] = ['selector'=>$mixSelector, 'func'=>$strFunctionName, 'params'=>$args, 'final'=>true];
+				return;
+			}
+			else {
 				$code = QAjaxResponse::CommandsMedium;
 			}
 			if (empty($args)) {
@@ -1258,6 +1264,10 @@
 				$scripts = array_merge ($scripts, QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow]);
 				unset (QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsLow]);
 			}
+			if (!empty(QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsFinal])) {
+				$scripts = array_merge ($scripts, QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsFinal]);
+				unset (QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsFinal]);
+			}
 			if ($scripts) {
 				QApplication::$JavascriptCommandArray[QAjaxResponse::CommandsMedium] = $scripts;
 			}
@@ -1411,7 +1421,8 @@
 		const Low = '*jsLow*';
 		/** Execute ONLY this command and exclude all others */
 		const Exclusive = '*jsExclusive*';
-
+		/** Execute this command after all ajax commands have been completely flushed */
+		const Last = '*jsFinal*';
 	}
 
 	/**

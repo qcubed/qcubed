@@ -964,8 +964,12 @@
 				$objControl->RemoveChildControls(true);
 
 				// Remove this control from the parent
-				if ($objControl->ParentControl)
-					$objControl->ParentControl->RemoveChildControl($strControlId, false);
+				if ($objControl->ParentControl) {
+					$objControl->ParentControl->RemoveChildControl($strControlId, false);	// will redraw the ParentControl
+				} else {
+					// if the parent is the form, then remove it from the dom through javascript, since the form won't be redrawn
+					QApplication::ExecuteSelectorFunction('#' . $objControl->GetWrapperId(), 'remove');
+				}
 
 				// Remove this control
 				unset($this->objControlArray[$strControlId]);
