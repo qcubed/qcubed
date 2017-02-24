@@ -1508,7 +1508,7 @@
 			if ($this->strCssClass) {
 				$strFormAttributeArray['class'] = $this->strCssClass;
 			}
-			$strFormAttributes['method'] = 'post';
+			$strFormAttributeArray['method'] = 'post';
 			$strFormAttributeArray['id'] = $this->strFormId;
 			$strFormAttributeArray['action'] = QApplication::$RequestUri;
 			$strToReturn .= '<form ' . QHtml::RenderHtmlAttributes($strFormAttributeArray) . ">\n";
