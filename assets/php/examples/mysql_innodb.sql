@@ -65,7 +65,7 @@ CREATE TABLE person_with_lock (
     id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    sys_timestamp TIMESTAMP,
+    sys_timestamp TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT PK_person_with_lock PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
