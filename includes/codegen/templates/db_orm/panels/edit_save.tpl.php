@@ -1,3 +1,3 @@
-	public function Save() {
-		$this->mct<?= $strPropertyName ?>->Save<?= $strPropertyName ?>();
+	public function Save($blnForceUpdate = false) {
+		$this->mct<?= $strPropertyName ?>->Save<?= $strPropertyName ?>($blnForceUpdate);
 	}
