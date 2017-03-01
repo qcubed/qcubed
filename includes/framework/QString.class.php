@@ -225,15 +225,12 @@
 		}
 
 		/**
-		 * Generate Slug, this function is use for generate slug
+		 * Generates a string usable in a URL from any Utf8 encoded string, commonly called a slug.
 		 *
-		 * Slug-generated string to a given length (if needed).
+		 * @param string $strString Input string in utf8
+		 * @param integer $intMaxLength the maximum possible length of the string to return. The result will be truncated to this lenghth.
 		 *
-		 * @param string $strString string for generate slug
-		 * @param integer $intMaxLength the maximum possible length of the string to return
-		 *        (if needed, is automatically removed the text from the end of the remaining hyphen)
-		 *
-		 * @return string the full slug-generated string or the truncated string
+		 * @return string the slug-generated string
 		 */
 		public static function SanitizeForUrl($strString = '', $intMaxLength = null) {
 			if (mb_strlen($strString, __QAPPLICATION_ENCODING_TYPE__) > $intMaxLength ||
@@ -244,7 +241,7 @@
 				$strString = str_replace('%', '', $strString); // Remove percent signs that are not part of an octet
 				$strString = preg_replace('/--([a-fA-F0-9][a-fA-F0-9])--/', '%$1', $strString);  // Restore octets
 
-				$strString = QString::Remove_accents($strString);
+				$strString = QString::RemoveAccents($strString);
 
 				$strString = mb_convert_case($strString, MB_CASE_LOWER, "UTF-8");
 				$strString = preg_replace('/&.+?;/', '', $strString); // Kill entities
@@ -265,16 +262,16 @@
 		}
 
 		/**
-		 * Remove accents from string
+		 * Remove accents from a string
 		 *
 		 * @param string $strString string
 		 * @return string
 		 */
-		public static function Remove_accents($strString) {
+		public static function RemoveAccents($strString) {
 			if (!preg_match('/[\x80-\xff]/', $strString))
 				return $strString;
 
-			if (QString::Is_utf8($strString)) {
+			if (self::IsUtf8($strString)) {
 				$chars = array(
 					// Decompositions for Latin-1 Supplement
 					chr(195) . chr(128) => 'A', chr(195) . chr(129) => 'A',
@@ -399,12 +396,12 @@
 		}
 
 		/**
-		 * Check string is utf 8 or not
+		 * Check whether a string is utf 8 or not
 		 *
 		 * @param string $strString string
 		 * @return string
 		 */
-		public static function Is_utf8($strString) {
+		public static function IsUtf8($strString) {
 			return preg_match('%^(?:
 
 					[\x09\x0A\x0D\x20-\x7E]             # ASCII
