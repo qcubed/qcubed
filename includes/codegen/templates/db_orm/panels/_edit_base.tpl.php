@@ -34,6 +34,8 @@ class <?= $strPropertyName ?>EditPanelGen extends QPanel {
 
 <?php include("edit_load.tpl.php"); ?>
 
+<?php include("edit_refresh.tpl.php"); ?>
+
 <?php include("edit_save.tpl.php"); ?>
 
 <?php include("edit_delete.tpl.php"); ?>

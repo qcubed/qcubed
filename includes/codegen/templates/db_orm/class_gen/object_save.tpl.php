@@ -20,6 +20,14 @@ foreach ($objTable->ColumnArray as $objColumn) {
 		$identityColumn = $objColumn;
 	}
 }
+
+$blnHasUniqueReverseReference = false;
+foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
+    if ($objReverseReference->Unique) {
+        $blnHasUniqueReverseReference = true;
+        break;
+	}
+}
 ?>
 
 
@@ -41,7 +49,8 @@ foreach ($objTable->ColumnArray as $objColumn) {
 	$strValues = '';
 	$strColUpdates = '';
 	foreach ($objTable->ColumnArray as $objColumn) {
-		if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) {
+		if ((!$objColumn->Identity) &&
+                !($objColumn->Timestamp && !$objColumn->AutoUpdate)) { // If the timestamp column is updated by the sql database, then don't do an insert on that column (AutoUpdate here actually means we manually update it in PHP)
 			if ($strCols) $strCols .= ",\n";
 			if ($strValues) $strValues .= ",\n";
 			if ($strColUpdates) $strColUpdates .= ",\n";
@@ -50,16 +59,6 @@ foreach ($objTable->ColumnArray as $objColumn) {
 			$strValue = '\' . $objDatabase->SqlVariable($this->'.$objColumn->VariableName.') . \'';
 			$strValues .= '							' . $strValue;
 			$strColUpdates .= $strCol .' = '.$strValue;
-		} elseif ($objColumn->Timestamp && $objColumn->AutoUpdate) {
-			if ($strCols) $strCols .= ",\n";
-			if ($strValues) $strValues .= ",\n";
-			if ($strColUpdates) $strColUpdates .= ",\n";
-			$strCol = '							' . $strEscapeIdentifierBegin.$objColumn->Name.$strEscapeIdentifierEnd;
-			$strCols .= $strCol;
-			$strValue = '\' . $objDatabase->SqlVariable(QDateTime::NowToString(QDateTime::FormatIso)) . \'';
-			$strValues .= '							' . $strValue;
-			$strColUpdates .= $strCol .' = '.$strValue;
-
 		}
 	}
 	if ($strValues) {
@@ -98,24 +97,6 @@ foreach ($objTable->ColumnArray as $objColumn) {
 <?php } ?>
 <?php } ?>
 
-<?php if (isset($timestampColumn)) { ?>
-			// Update Local Timestamp
-			$objResult = $objDatabase->Query('
-				SELECT
-					<?= $strEscapeIdentifierBegin ?><?= $timestampColumn->Name ?><?= $strEscapeIdentifierEnd ?>
-
-				FROM
-					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
-
-				WHERE
-<?= $strIds; ?>
-
-			);
-
-			$objRow = $objResult->FetchArray();
-			$this-><?= $timestampColumn->VariableName ?> = $objRow[0];
-<?php } ?>
-
 			$this->DeleteFromCache();
 
 			$this->__blnDirty = null; // reset dirty values
@@ -131,6 +112,11 @@ foreach ($objTable->ColumnArray as $objColumn) {
 	protected function Insert() {
 		$mixToReturn = null;
 		$objDatabase = <?= $objTable->ClassName ?>::GetDatabase();
+<?php if (isset($timestampColumn) && $timestampColumn->AutoUpdate) { // We are manually updating a timestamp column here ?>
+        $this-><?= $timestampColumn->VariableName ?> = QDateTime::NowToString(QDateTime::FormatIso);
+        $this->__blnValid[self::<?= strtoupper($timestampColumn->Name) ?>_FIELD] = true;
+<?php } ?>
+
 		$objDatabase->NonQuery('
 			INSERT INTO <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?><?= $strCols; echo $strValues; ?>
 		');
@@ -138,6 +124,26 @@ foreach ($objTable->ColumnArray as $objColumn) {
 		// Update Identity column and return its value
 		$mixToReturn = $this-><?= $identityColumn->VariableName ?> = $objDatabase->InsertId('<?= $objTable->Name ?>', '<?= $identityColumn->Name ?>');
 		$this->__blnValid[self::<?= strtoupper($identityColumn->Name) ?>_FIELD] = true;
+<?php } ?>
+
+<?php if (isset($timestampColumn) && !$timestampColumn->AutoUpdate) {?>
+        // Update Timestamp value that was set by database
+        $objResult = $objDatabase->Query('
+            SELECT
+                <?= $strEscapeIdentifierBegin ?><?= $timestampColumn->Name ?><?= $strEscapeIdentifierEnd ?>
+
+            FROM
+                <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
+
+            WHERE
+<?= _indent($strIds, 4); ?>
+
+        );
+
+        $objRow = $objResult->FetchArray();
+        $this-><?= $timestampColumn->VariableName ?> = $objRow[0];
+        $this->__blnValid[self::<?= strtoupper($timestampColumn->Name) ?>_FIELD] = true;
+
 <?php } ?>
 
 		static::BroadcastInsert($this->PrimaryKey());
@@ -151,56 +157,98 @@ foreach ($objTable->ColumnArray as $objColumn) {
 	*/
 	protected function Update($blnForceUpdate = false) {
 		$objDatabase = static::GetDatabase();
+
 		if (empty($this->__blnDirty)) {
 			return; // nothing has changed
 		}
 
-<?php if (isset($timestampColumn)) { ?>
-		if (!$blnForceUpdate) {
-			$this->OptimisticLockingCheck();
-		}
-<?php } ?>
-
 		$strValues = $this->GetValueClause();
 
 		$strSql = '
-UPDATE
-	<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
+            UPDATE
+                <?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
 
-SET
-	' . $strValues . '
+            SET
+                ' . $strValues . '
 
-WHERE
-<?= $strIds ?>;
+            WHERE
+<?= _indent($strIds, 4) ?>;
+<?php
+    $blnNeedsTransaction = false;
+    if ($blnHasUniqueReverseReference || isset($timestampColumn)) {
+        $blnNeedsTransaction = true;
+    }
+    if (!$blnNeedsTransaction) { ?>
+        $objDatabase->NonQuery($strSql);
+<?php } else { ?>
+        $objDatabase->TransactionBegin();
+        try {
+<?php if (isset($timestampColumn)) { ?>
+            if (!$blnForceUpdate) {
+                $this->OptimisticLockingCheck();
+            }
+<?php   if ($timestampColumn->AutoUpdate) { // manually udpate the timestamp value before saving ?>
+            $this-><?= $timestampColumn->VariableName ?> = QDateTime::NowToString(QDateTime::FormatIso);
+            $this->__blnValid[self::<?= strtoupper($timestampColumn->Name) ?>_FIELD] = true;
+<?php   } ?>
+<?php } ?>
 
-		$objDatabase->NonQuery($strSql);
+		    $objDatabase->NonQuery($strSql);
+
 <?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
-<?php if ($objReverseReference->Unique) { ?>
-<?php $objReverseReferenceTable = $objCodeGen->TableArray[strtolower($objReverseReference->Table)]; ?>
-<?php $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
+<?php   if ($objReverseReference->Unique) { ?>
+<?php       $objReverseReferenceTable = $objCodeGen->TableArray[strtolower($objReverseReference->Table)]; ?>
+<?php       $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
 
 
-		// Update the foreign key in the <?= $objReverseReference->ObjectDescription ?> object (if applicable)
-		if ($this->blnDirty<?= $objReverseReference->ObjectPropertyName ?>) {
-			// Unassociate the old one (if applicable)
-			if ($objAssociated = <?= $objReverseReference->VariableType ?>::LoadBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)) {
-				// TODO: Select and update only the foreign key rather than the whole record
-				$objAssociated-><?= $objReverseReferenceColumn->PropertyName ?> = null;
-				$objAssociated->Save();
-			}
+            // Update the foreign key in the <?= $objReverseReference->ObjectDescription ?> object (if applicable)
+            if ($this->blnDirty<?= $objReverseReference->ObjectPropertyName ?>) {
+                // Unassociate the old one (if applicable)
+                if ($objAssociated = <?= $objReverseReference->VariableType ?>::LoadBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)) {
+                    // TODO: Select and update only the foreign key rather than the whole record
+                    $objAssociated-><?= $objReverseReferenceColumn->PropertyName ?> = null;
+                    $objAssociated->Save();
+                }
 
-			// Associate the new one (if applicable)
-			if ($this-><?= $objReverseReference->ObjectMemberVariable ?>) {
-				$this-><?= $objReverseReference->ObjectMemberVariable ?>-><?= $objReverseReferenceColumn->PropertyName ?> = $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>;
-				$this-><?= $objReverseReference->ObjectMemberVariable ?>->Save();
-			}
+                // Associate the new one (if applicable)
+                if ($this-><?= $objReverseReference->ObjectMemberVariable ?>) {
+                    $this-><?= $objReverseReference->ObjectMemberVariable ?>-><?= $objReverseReferenceColumn->PropertyName ?> = $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>;
+                    $this-><?= $objReverseReference->ObjectMemberVariable ?>->Save();
+                }
 
-			// Reset the "Dirty" flag
-			$this->blnDirty<?= $objReverseReference->ObjectPropertyName ?> = false;
-		}
+                // Reset the "Dirty" flag
+                $this->blnDirty<?= $objReverseReference->ObjectPropertyName ?> = false;
+            }
+<?php   } ?>
 <?php } ?>
+
+<?php if (isset($timestampColumn) && !($timestampColumn->AutoUpdate)) { ?>
+			// Update Local Timestamp
+			$objResult = $objDatabase->Query('
+				SELECT
+					<?= $strEscapeIdentifierBegin ?><?= $timestampColumn->Name ?><?= $strEscapeIdentifierEnd ?>
+
+				FROM
+					<?= $strEscapeIdentifierBegin ?><?= $objTable->Name ?><?= $strEscapeIdentifierEnd ?>
+
+				WHERE
+<?= _indent($strIds, 5); ?>
+
+			);
+
+			$objRow = $objResult->FetchArray();
+			$this-><?= $timestampColumn->VariableName ?> = $objRow[0];
+            $this->__blnValid[self::<?= strtoupper($timestampColumn->Name) ?>_FIELD] = true;
+
 <?php } ?>
 
+            $objDatabase->TransactionCommit();
+        }
+        catch (Exception $e) {
+            $objDatabase->TransactionRollback();
+            throw($e);
+        }
+<?php } ?>
 		static::BroadcastUpdate($this->PrimaryKey(), array_keys($this->__blnDirty));
 	}
 
@@ -215,19 +263,13 @@ WHERE
 
 <?php
 foreach ($objTable->ColumnArray as $objColumn) {
-	if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) {
+	if ((!$objColumn->Identity) && !($objColumn->Timestamp && !$objColumn->AutoUpdate)) {
 ?>
 		if (isset($this->__blnDirty[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
 			$strCol = '<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?>';
 			$strValue = $objDatabase->SqlVariable($this-><?= $objColumn->VariableName ?>);
 			$values[] = $strCol . ' = ' . $strValue;
 		}
-<?php
-	} elseif ($objColumn->Timestamp && $objColumn->AutoUpdate) {	// Must update timestamp from PHP side
-?>
-		$strCol = '<?= $strEscapeIdentifierBegin ?><?= $objColumn->Name ?><?= $strEscapeIdentifierEnd ?>';
-		$strValue = $objDatabase->SqlVariable(QDateTime::NowToString(QDateTime::FormatIso));
-		$values[] = $strCol . ' = ' . $strValue;
 <?php
 	}
 }
@@ -243,7 +285,11 @@ foreach ($objTable->ColumnArray as $objColumn) {
 
 <?php if (isset($timestampColumn)) { ?>
 	protected function OptimisticLockingCheck() {
-		$objDatabase = static::GetDatabase();
+        if (empty($this->__blnValid[self::<?= strtoupper($timestampColumn->Name) ?>_FIELD])) {
+            throw new QCallerException("To be able to update table '<?= $objTable->Name ?>' you must have previously selected the <?= $timestampColumn->Name ?> column because its used to detect optimistic locking collisions.");
+        }
+
+        $objDatabase = static::GetDatabase();
 		$objResult = $objDatabase->Query('
 SELECT
 	<?= $strEscapeIdentifierBegin ?><?= $timestampColumn->Name ?><?= $strEscapeIdentifierEnd ?>

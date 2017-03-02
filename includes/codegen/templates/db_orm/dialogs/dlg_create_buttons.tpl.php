@@ -9,5 +9,5 @@
 			sprintf(QApplication::Translate('Are you SURE you want to DELETE this %s?'),  QApplication::Translate('<?= $strPropertyName ?>')),
 			array('class'=>'ui-button-left')
 		);
-		$this->AddAction(new QDialog_ButtonEvent(), new QAjaxControlAction($this, 'ButtonClick'));
+		$this->AddAction(new QDialog_ButtonEvent(0, null, null, true), new QAjaxControlAction($this, 'ButtonClick'));
 	}
