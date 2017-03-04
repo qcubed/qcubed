@@ -110,7 +110,7 @@
 				$this->blnAutoRemove = true;
 			}
 			else {
-				$this->blnVisible = false;
+				$this->blnDisplay = false;
 			}
 			parent::__construct($objParentObject, $strControlId);
 			$this->mixCausesValidation = $this;
