@@ -7,7 +7,6 @@
 -->
 	<!-- General CodeGen Settings -->
 	<name application="My QCubed Application"/>
-	<templateEscape begin="&lt;%" end="%&gt;"/>
 
 	<!--
     createMethod: specify either queryString or pathInfo.
