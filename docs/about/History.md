@@ -15,5 +15,5 @@ Version 3.1 is under development as of this date, and is primarily focused on pe
 
 In a matter of a few years, we have had HTML5, CSS3, Ruby and Rails and Node.js. A few more years brought HHVM, PHP7, ReactJS, Angular, Bootstrap and lots more. Now we are seeing Polymer emerge, Typescript and ES6, NoSQL databases, Amazon and Google App Services, and the list goes on. Design patterns have radically changed too, and include dependency injection, microservices, REST apis, containers, single-page web apps, and middleware.
 
-As the Web world changes, one nice thing is that we still need to connect user interface components with data in databases. The underlying structure of QCubed lets us do that, and appears to be flexible enough to allow a variety of design approaches and JavaScript frameworks to work with it.
+As the Web world changes, one nice thing is that we still need to connect user interface components with data in databases. The underlying structure of QCubed lets us do that, and is flexible enough to allow a variety of design approaches and JavaScript frameworks to work with it.
 
