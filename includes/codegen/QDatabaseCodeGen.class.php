@@ -84,7 +84,7 @@
 				return $this->objTableArray[$strTableName];
 			if (array_key_exists($strTableName, $this->objTypeTableArray)) 
 				return $this->objTypeTableArray[$strTableName];;	// deal with table special
-			throw new QCallerException(sprintf('Table does not exist or does not have a defined Primary Key: %s', $strTableName));
+			throw new QCallerException(sprintf('Table does not exist or could not be processed: %s. %s', $strTableName, $this->strErrors));
 		}
 
 		public function GetColumn($strTableName, $strColumnName) {
