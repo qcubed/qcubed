@@ -13,9 +13,9 @@
 * [Tutorial and Examples](http://qcu.be/examples/index.php)
 
 ##Using QCubed
-* Designing the Database
-* Code Generation
-* Models, Nodes and the QQuery
+* [Designing the Database](using/Database.md)
+* [Code Generation](using/Codegen.md)
+* Models, Nodes and QQuery
 * Model Connector and the Model Connector Editor
 * Forms and Dialogs
 * Panels
@@ -25,3 +25,4 @@
 ##Other Links
 * Wiki
 * SourceForge
+[]()
