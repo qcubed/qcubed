@@ -649,11 +649,11 @@ qcubed = {
                 }
             });
         }
-        else if (this.func) {
-            var params = qc.unpackArray(this.params);
+        else if (command.func) {
+            var params = qc.unpackArray(command.params);
 
             // Find the function by name. Walk an object list in the process.
-            var objs = this.func.split(".");
+            var objs = command.func.split(".");
             var obj = window;
             var ctx = null;
 
