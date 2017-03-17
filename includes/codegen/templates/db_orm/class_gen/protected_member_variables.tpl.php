@@ -1,8 +1,11 @@
 ///////////////////////////////////////////////////////////////////////
-		// PROTECTED MEMBER VARIABLES and TEXT FIELD MAXLENGTHS (if applicable)
+		// PROTECTED AND PRIVATE MEMBER VARIABLES and CONSTS
 		///////////////////////////////////////////////////////////////////////
 
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
+<?php
+	$strConstName = strtoupper($objColumn->Name);	// Produce an uppercase name in the PHP const style
+?>
 		/**
 		 * Protected member variable that maps to the database <?php if ($objColumn->PrimaryKey) print 'PK '; ?><?php if ($objColumn->Identity) print 'Identity '; ?>column <?= $objTable->Name ?>.<?= $objColumn->Name ?>
 
@@ -11,28 +14,50 @@
 		 * @var <?= $objColumn->VariableType ?> <?= $objColumn->VariableName ?>
 
 		 */
-		protected $<?= $objColumn->VariableName ?>;
+<?php if ($objCodeGen->PrivateColumnVars) { ?>
+		private $<?= $objColumn->VariableName ?>;
+<?php } else { ?>
+        protected $<?= $objColumn->VariableName ?>;
+<?php   } ?>
 <?php if (($objColumn->VariableType == QType::String) && (is_numeric($objColumn->Length))) { ?>
 		const <?= $objColumn->PropertyName ?>MaxLength = <?= $objColumn->Length ?>;
 <?php } ?>
+
 		const <?= $objColumn->PropertyName ?>Default = <?php
-	if (is_null($objColumn->Default))
+	if (is_null($objColumn->Default)) {
 		print 'null';
-	elseif (is_numeric($objColumn->Default))
-		print $objColumn->Default;
-	elseif ($objColumn->Default == 'CURRENT_TIMESTAMP') {
+	}
+	elseif ($objColumn->Default === 'CURRENT_TIMESTAMP') {
 		print 'QDateTime::Now';
+	}
+	elseif (strtoupper($objColumn->Default) === 'TRUE' || (
+			is_numeric($objColumn->Default) &&
+			$objColumn->Default == 1 &&
+			$objColumn->DbType == QDatabaseFieldType::Bit)
+		) {
+		print 'true';
+	}
+	elseif (strtoupper($objColumn->Default) === 'FALSE' || (
+			is_numeric($objColumn->Default) &&
+			$objColumn->Default == 0 &&
+			$objColumn->DbType == QDatabaseFieldType::Bit)
+	) {
+		print 'false';
+	}
+	elseif (is_numeric($objColumn->Default)) {
+		print $objColumn->Default;
 	}
 	else {
 		print "'" . addslashes($objColumn->Default) . "'";
 	}
 ?>;
+		const <?= $strConstName ?>_FIELD = '<?= addslashes($objColumn->Name) ?>';
 
 <?php if ((!$objColumn->Identity) && ($objColumn->PrimaryKey)) { ?>
 
 		/**
 		 * Protected internal member variable that stores the original version of the PK column value (if restored)
-		 * Used by Save() to update a PK column during UPDATE
+		 * Used by Save() to update a PK column during UPDATE and Reload() to reload the PK.
 		 * @var <?= $objColumn->VariableType ?> __<?= $objColumn->VariableName ?>;
 		 */
 		protected $__<?= $objColumn->VariableName ?>;
@@ -110,3 +135,17 @@
 		 * @var bool __blnRestored;
 		 */
 		protected $__blnRestored;
+
+		/**
+		 * Protected internal array that records which fields are dirty.
+		 * Used by Save() to optimize the Update or Insert function.
+		 * @var bool[] __blnDirty;
+		 */
+		private $__blnDirty;
+
+		/**
+		 * Protected internal array that records which fields are valid.
+		 * Used by getters to prevent accidentally reading data that was not taken from the database.
+		 * @var bool[] __blnDirty;
+		 */
+		private $__blnValid;

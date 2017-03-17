@@ -84,7 +84,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$intItemCount = Milestone::QueryCount(
 			QQ::GreaterThan(QQN::Milestone()->Project->StartDate, $someDate),
 			// test for single QQClause object
-			// the subject of the https://github.com/qcubed/framework/issues/100 issue #100
+			// the subject of the https://github.com/qcubed/qcubed/issues/100 issue #100
 			QQ::Distinct()
 		);
 		
@@ -94,7 +94,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 			QQ::GreaterThan(QQN::Milestone()->Project->StartDate, $someDate),
 			// test for an array of QQClause objects
 			QQ::Clause(
-				// The QQ::Distinct is used because of the https://github.com/qcubed/framework/issues/231 issue #231
+				// The QQ::Distinct is used because of the https://github.com/qcubed/qcubed/issues/231 issue #231
 				QQ::Distinct()
 				, QQ::Distinct()
 			)
@@ -196,7 +196,13 @@ class BasicOrmTests extends QUnitTestCaseBase {
 	public function testQuerySelectSubset() {
 		$objPersonArray = Person::LoadAll(QQ::Select(QQN::Person()->FirstName));
 		foreach ($objPersonArray as $objPerson) {
-			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->setExpectedException('QCallerException', 'LastName has not been set nor was selected in the most recent query and is not valid.');
+			$objPerson->LastName;
+			$this->setExpectedException(null);
+
+			// If we now set the last name, we should be able to get it
+			$objPerson->LastName = "Test";
+			$this->assertEquals("Test", $objPerson->LastName); // use the getter
 			$this->assertNotNull($objPerson->Id, "Id should not be null since it's always added to the select list");
 		}
 	}
@@ -214,7 +220,9 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$objSelect->SetSkipPrimaryKey(true);
 		$objPersonArray = Person::LoadAll($objSelect);
 		foreach ($objPersonArray as $objPerson) {
-			$this->assertNull($objPerson->LastName, "LastName should be null, since it was not selected");
+			$this->setExpectedException('QCallerException', 'LastName has not been set nor was selected in the most recent query and is not valid.');
+			$objPerson->LastName;
+			$this->setExpectedException(null);
 			$this->assertNull($objPerson->Id, "Id should be null since SkipPrimaryKey is set on the Select object");
 		}
 	}
@@ -425,6 +433,64 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		);
 
 		$this->assertEquals(3, $objProject->GetVirtualAttribute("manager_count"), "Project manager count is 3");
+	}
+
+	public function testGettersSetters() {
+		$objProject = Project::QuerySingle(QQ::Equal(QQN::Project()->Id, 1));
+
+		$this->assertEquals(1, $objProject->getId());
+		$this->assertEquals(7, $objProject->getManagerPersonId());
+
+		$objProject2 = new Project();
+
+		try {
+			$objProject2->setId(2);	// can't set a pk that is an identity
+			$blnPassed = true;
+		}
+		catch(QCallerException $e) {
+			$blnPassed = false;
+		}
+		$this->assertEquals(false, $blnPassed, 'Exception sould be called when trying to set a pk on an identity column');
+
+
+		$objProject2->setName('Test');
+		$strName = $objProject2->getName();	
+		$this->assertEquals('Test', $strName);
+
+
+	}
+
+	public function testReload() {
+		$objProject = Project::QuerySingle(QQ::Equal(QQN::Project()->Id, 1));
+		$objProject->Reload();
+
+		$this->assertEquals(1, $objProject->getId());
+		$this->assertEquals(7, $objProject->getManagerPersonId());
+		$this->assertEquals("ACME Website Redesign", $objProject->Name);
+
+		// Test non-identity set and reload
+		$objMilestone = Milestone::Load(1);
+		$objMilestone->Id = 5;	// Should be legal for non-identity PKs
+		$objMilestone->Reload();
+		$this->assertEquals(1, $objMilestone->Id, "Identity should reset to original value after a reload");
+	}
+
+	public function testSetReference() {
+		$milestone1 = Milestone::Load(1);
+		$intProjectId = $milestone1->ProjectId;
+
+		$project4 = Project::Load(4);
+
+		$milestone1->Project = $project4;
+		$milestone1->Save();
+
+		$milestone1 = Milestone::Load(1);
+		$this->assertEquals(4, $milestone1->Project->Id);
+
+		// Restore state of database
+		$milestone1->ProjectId = $intProjectId;
+		$milestone1->Save();
+		$this->assertEquals($intProjectId, $milestone1->Project->Id);
 	}
 }
 

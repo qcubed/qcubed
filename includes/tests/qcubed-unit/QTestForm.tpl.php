@@ -13,8 +13,8 @@
 		do the following:
 
 		<ol>
-		<li>Install the Examples SQL database found at vendor/qcubed/framework/assets/php/examples/ for your database,</li>
-		<li>Copy the codegen_options.json file found at vendor/qcubed/framework/travis and put it in your project/includes/configuration directory,</li>
+		<li>Install the Examples SQL database found at vendor/qcubed/qcubed/assets/php/examples/ for your database,</li>
+		<li>Copy the codegen_options.json file found at vendor/qcubed/qcubed/travis and put it in your project/includes/configuration directory,</li>
 		<li>Generate the code by clicking on the Code Generator link from the QCubed startup page,</li>
 		<li>Come back to this page, and click the Run Tests button below.</li>
 		</ol>

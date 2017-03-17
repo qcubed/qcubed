@@ -32,7 +32,7 @@
 
 	// Versioning Information
 	define('QCUBED_VERSION_NUMBER_ONLY', '3.0.0');
-	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Beta Release (QCubed ' . QCUBED_VERSION_NUMBER_ONLY . ')');
+	define('QCUBED_VERSION', QCUBED_VERSION_NUMBER_ONLY . ' Final Release');
 	
 	define('__JQUERY_CORE_VERSION__', '1.9.1');
 	define('__JQUERY_UI_VERSION__', '1.9.2');
@@ -131,6 +131,7 @@
 	QApplicationBase::$ClassFile['qcacheprovidermemcache'] = __QCUBED_CORE__ . '/framework/QCacheProviderMemcache.class.php';
 	QApplicationBase::$ClassFile['qcacheproviderlocalmemory'] = __QCUBED_CORE__ . '/framework/QCacheProviderLocalMemory.class.php';
 	QApplicationBase::$ClassFile['qcacheprovidernocache'] = __QCUBED_CORE__ . '/framework/QCacheProviderNoCache.class.php';
+	QApplicationBase::$ClassFile['qcacheproviderredis'] = __QCUBED_CORE__ . '/framework/QCacheProviderRedis.class.php';
 	QApplicationBase::$ClassFile['qcacheproviderapc'] = __QCUBED_CORE__ . '/framework/QCacheProviderAPC.class.php';
 	QApplicationBase::$ClassFile['qmultilevelcacheprovider'] = __QCUBED_CORE__ . '/framework/QMultiLevelCacheProvider.class.php';
 	QApplicationBase::$ClassFile['qdbbackedsessionhandler'] = __QCUBED_CORE__ . '/framework/QDbBackedSessionHandler.class.php';

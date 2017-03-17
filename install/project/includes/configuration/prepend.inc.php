@@ -23,7 +23,7 @@
 			define ('__INCLUDES__', dirname(__FILE__) . '/..');
 			define ('__QCUBED__', __INCLUDES__); // needs to be reconfigured
 			define ('__PLUGINS__', __PROJECT__ . '/generated/plugins');
-			define ('__QCUBED_CORE__', __DOCROOT__ . '/vendor/qcubed/framework/includes');
+			define ('__QCUBED_CORE__', __DOCROOT__ . '/vendor/qcubed/qcubed/includes');
 			define ('__APP_INCLUDES__', __INCLUDES__ . '/app_includes');
 			define ('__MODEL__', __INCLUDES__ . '/model' );
 			define ('__MODEL_CONNECTOR__', __INCLUDES__ . '/meta_controls');

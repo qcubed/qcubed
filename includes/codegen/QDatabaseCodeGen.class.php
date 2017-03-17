@@ -71,6 +71,7 @@
 		protected $blnGenerateControlId;
 		protected $objModelConnectorOptions;
 		protected $blnAutoInitialize;
+		protected $blnPrivateColumnVars;
 
 		/**
 		 * @param $strTableName
@@ -390,7 +391,8 @@
 			$this->objModelConnectorOptions = new QModelConnectorOptions();
 
 			$this->blnAutoInitialize = QCodeGen::LookupSetting($objSettingsXml, 'createOptions', 'autoInitialize', QType::Boolean);
-			
+			$this->blnPrivateColumnVars = QCodeGen::LookupSetting($objSettingsXml, 'createOptions', 'privateColumnVars', QType::Boolean);
+
 			if ($this->strErrors)
 				return;
 
@@ -672,6 +674,23 @@
 					}
 				}
 			}
+
+			// Make sure lone primary key columns are marked as unique
+			$objKeyColumn = null;
+			foreach ($objColumnArray as $objColumn) {
+				if ($objColumn->PrimaryKey) {
+					if ($objKeyColumn === null) {
+						$objKeyColumn = $objColumn;
+					}
+					else {
+						$objKeyColumn = false; // multiple key columns
+					}
+				}
+			}
+			if ($objKeyColumn) {
+				$objKeyColumn->Unique = true;
+			}
+
 			$objManyToManyReferenceArray[0]->ColumnArray = $objColumnArray;
 			$objManyToManyReferenceArray[1]->ColumnArray = $objColumnArray;
 
@@ -761,7 +780,9 @@
 			$objTypeTable->TokenArray = $strTokenArray;
 			$objTypeTable->ExtraFieldNamesArray = $strExtraFields;
 			$objTypeTable->ExtraPropertyArray = $strExtraPropertyArray;
-			$objTypeTable->KeyColumn = $this->AnalyzeTableColumn ($objFieldArray[0], $objTypeTable);
+			$objColumn = $this->AnalyzeTableColumn ($objFieldArray[0], $objTypeTable);
+			$objColumn->Unique = true;
+			$objTypeTable->KeyColumn = $objColumn;
 		}
 
 		protected function AnalyzeTable(QSqlTable $objTable) {
@@ -785,6 +806,22 @@
 				}
 			}
 			$objTable->ColumnArray = $objColumnArray;
+
+			// Make sure lone primary key columns are marked as unique
+			$objKeyColumn = null;
+			foreach ($objColumnArray as $objColumn) {
+				if ($objColumn->PrimaryKey) {
+					if ($objKeyColumn === null) {
+						$objKeyColumn = $objColumn;
+					}
+					else {
+						$objKeyColumn = false; // multiple key columns
+					}
+				}
+			}
+			if ($objKeyColumn) {
+				$objKeyColumn->Unique = true;
+			}
 
 
 
@@ -957,6 +994,7 @@
 							// Setup PropertyName and VariableName
 							$objReference->PropertyName = $this->ModelReferencePropertyName($objColumn->Name);
 							$objReference->VariableName = $this->ModelReferenceVariableName($objColumn->Name);
+							$objReference->Name = $this->ModelReferenceColumnName($objColumn->Name);
 
 							// Add this reference to the column
 							$objColumn->Reference = $objReference;
@@ -1093,8 +1131,8 @@
 			$objColumn->NotNull = $objField->NotNull;
 			$objColumn->Identity = $objField->Identity;
 			$objColumn->Unique = $objField->Unique;
-			if (($objField->PrimaryKey) && $objTable && (count($objTable->PrimaryKeyColumnArray) == 1))
-				$objColumn->Unique = true;
+
+
 			$objColumn->Timestamp = $objField->Timestamp;
 
 			$objColumn->VariableName = $this->ModelColumnVariableName($objColumn);
@@ -1378,6 +1416,8 @@
 					return $this->strCommentConnectorLabelDelimiter;
 				case 'AutoInitialize':
 					return $this->blnAutoInitialize;
+				case 'PrivateColumnVars':
+					return $this->blnPrivateColumnVars;
 				case 'objSettingsXml':
 					throw new QCallerException('The field objSettingsXml is deprecated');
 				default:

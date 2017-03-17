@@ -52,6 +52,12 @@
 		 * @return string
 		 */
 		public function RenderAsLink($strLabel, $strActionParameter = null, $attributes = [], $strTag = 'a', $blnHtmlEntities = true) {
+			if (!$attributes) {
+				$attributes = [];
+			}
+			if (!$strTag) {
+				$strTag = 'a';
+			}
 			$defaults['href'] = 'javascript:;';
 			$defaults['data-qpxy'] = $this->strControlId;
 			if ($strActionParameter) {

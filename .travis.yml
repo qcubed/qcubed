@@ -12,6 +12,15 @@ php:
 
 install:
     - composer install
+    - composer require "predis/predis:^1.1"
+
+addons:
+  apt:
+    packages:
+      - redis-server
+
+services:
+  - redis-server
 
 env:
     - DB=mysql
@@ -25,6 +34,15 @@ before_script:
     - sh -c "if [ '$DB' = 'pgsql' ]; then createdb qcubed -U postgres; psql -d qcubed -f assets/php/examples/pgsql.sql -U postgres; fi"
 
 script: travis/test.php
+
+# code coverage
+addons:
+    code_climate:
+        repo_token: 814dfe2ee0ae6198e43e566e32ab85f40379b5abe06cd52b1f6a24e92b5de883
+
+# code coverage
+after_script:
+    - vendor/bin/test-reporter
 
 sudo: false
 

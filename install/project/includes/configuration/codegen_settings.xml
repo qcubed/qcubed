@@ -37,6 +37,21 @@
 			<!-- Other -->
 			<stripFromTableName prefix=""/>
 
+            <!--
+            autoInitialize: Whether to automatically initialize new objects with default values from database definition
+            privateLocals: Whether to make the local variables that correspond to table columns private or
+                            protected. This is primarily a compatibility feature when migrating from pre-3.1.
+                            Set to false for compatibility. Setting to true will prevent you from directly accessing the
+                            variables generated in the ModelGen classes from the Model classes. The new way to access those
+                            variables is through the public get.. and set.. functions that are generated. These functions
+                            add additional checks to make sure the data from the column is valid when reading, and also will
+                            generate code that only updates the columns that have changed.
+            -->
+            <createOptions
+                    autoInitialize="true"
+                    privateColumnVars="true"
+            />
+
 			<!-- Specific Tables to Exclude or Include in the CodeGen process -->
 			<!--
 					* "include" is used to override any "exclude" patterns or lists

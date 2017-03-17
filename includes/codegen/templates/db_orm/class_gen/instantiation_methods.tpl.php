@@ -78,7 +78,7 @@
 			if (empty($objToReturn)) {
 <?php } ?>
 				// Create a new instance of the <?= $objTable->ClassName ?> object
-				$objToReturn = new <?= $objTable->ClassName ?>();
+				$objToReturn = new <?= $objTable->ClassName ?>(false);
 				$objToReturn->__blnRestored = true;
 				$blnNoCache = false;
 
@@ -101,6 +101,7 @@
 <?php if (($objColumn->PrimaryKey) && (!$objColumn->Identity)) { ?>
 					$objToReturn->__<?= $objColumn->VariableName ?> = $mixVal;
 <?php } ?>
+					$objToReturn->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD] = true;
 				}
 				else {
 					$blnNoCache = true;
@@ -108,7 +109,7 @@
 <?php } ?>
 <?php if ($objTable->PrimaryKeyColumnArray)  { ?>
 
-				assert ('$key === null || $objToReturn->PrimaryKey() == $key');
+				assert ($key === null || $objToReturn->PrimaryKey() == $key);
 
 				if (!$blnNoCache) {
 					$objToReturn->WriteToCache();
