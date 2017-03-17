@@ -36,24 +36,39 @@
 			}
 		}
 
+<?php
+    $blnNeedsTransaction = false;
+    foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) {
+	    if (isset ($objManyToManyReference->Options['FormGen']) && ($objManyToManyReference->Options['FormGen'] == 'none' || $objManyToManyReference->Options['FormGen'] == 'meta')) continue;
+        $blnNeedsTransaction = true;
+        break;
+    }
+?>
 
 		/**
 		 * This will save this object's <?= $objTable->ClassName; ?> instance,
 		 * updating only the fields which have had a control created for it.
 		 */
-		public function Save<?= $objTable->ClassName; ?>() {
+		public function Save<?= $objTable->ClassName; ?>($blnForceUpdate = false) {
 			try {
 				$this->Update<?= $objTable->ClassName; ?>();
+<?php if ($blnNeedsTransaction) { // no transaction needed ?>
+                $objDatabase = <?= $objTable->ClassName; ?>::GetDatabase();
+                $objDatabase->TransactionBegin();
+<?php } ?>
+                $id = $this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>->Save(false, $blnForceUpdate);
 
-				// Save the <?= $objTable->ClassName; ?> object
-				$id = $this-><?= $objCodeGen->ModelVariableName($objTable->Name); ?>->Save();
-
-				// Finally, update any ManyToManyReferences (if any)
 <?php foreach ($objTable->ManyToManyReferenceArray as $objManyToManyReference) { ?>
 <?php	if (isset ($objManyToManyReference->Options['FormGen']) && ($objManyToManyReference->Options['FormGen'] == 'none' || $objManyToManyReference->Options['FormGen'] == 'meta')) continue; ?>
 				$this-><?= $objCodeGen->ModelConnectorVariableName($objManyToManyReference); ?>_Update();
 <?php } ?>
+<?php if ($blnNeedsTransaction) { ?>
+                $objDatabase->TransactionCommit();
+<?php } ?>
 			} catch (QCallerException $objExc) {
+<?php if ($blnNeedsTransaction) { ?>
+                $objDatabase->TransactionRollback();
+<?php } ?>
 				$objExc->IncrementOffset();
 				throw $objExc;
 			}

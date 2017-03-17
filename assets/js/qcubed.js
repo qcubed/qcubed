@@ -26,11 +26,17 @@ $j.fn.extend({
  */
 $j.ajaxQueue = function(o, blnAsync) {
     if (typeof $j.ajaxq === "undefined" || blnAsync) {
-        $j.ajax(o());
+        $j.ajax(o()); // fallback in case ajaxq is not here
     } else {
-        $j.ajaxq("qcu.be", o);
+        var p = $j.ajaxq("qcu.be", o);
     }
 };
+$j.ajaxQueueIsRunning = function() {
+    if ($j.ajaxq) {
+        return $j.ajaxq.isRunning("qcu.be");
+    }
+    return false;
+}
 
 
 /**
@@ -40,7 +46,7 @@ qcubed = {
     /**
      * @param {string} strControlId
      * @param {string} strProperty
-     * @param {string|ARray|Object} strNewValue
+     * @param {string|Array|Object} strNewValue
      */
     recordControlModification: function(strControlId, strProperty, strNewValue) {
         if (!qcubed.controlModifications[strControlId]) {
@@ -518,6 +524,13 @@ qcubed = {
             }
         }
 
+        $j( document ).ajaxComplete(function( event, request, settings ) {
+            if (!$j.ajaxQueueIsRunning()) {
+                qcubed.processFinalCommands();
+            }
+        });
+
+
         return this;
     },
     processImmediateAjaxResponse: function(json, qFormParams) {
@@ -589,42 +602,12 @@ qcubed = {
     processDeferredAjaxResponse: function(json) {
         if (json.commands) { // commands
             $j.each(json.commands, function (index, command) {
-                if (command.script) {
-                    /** @todo eval is evil, do no evil */
-                    eval (command.script);
-                }
-                else if (command.selector) {
-                    var params = qc.unpackArray(command.params);
-                    var objs;
+                if (command.final &&
+                    $j.ajaxQueueIsRunning()) {
 
-                    if (typeof command.selector === 'string') {
-                        objs = $j(command.selector);
-                    } else {
-                        objs = $j(command.selector[0], command.selector[1]);
-                    }
-
-                    // apply the function on each jQuery object found, using the found jQuery object as the context.
-                    objs.each (function () {
-                        var $item = $j(this);
-                        if ($item[command.func]) {
-                            $item[command.func].apply($j(this), params);
-                        }
-                    });
-                }
-                else if (this.func) {
-                    var params = qc.unpackArray(this.params);
-
-                    // Find the function by name. Walk an object list in the process.
-                    var objs = this.func.split(".");
-                    var obj = window;
-                    var ctx = null;
-
-                    $j.each (objs, function (i, v) {
-                        ctx = obj;
-                        obj = obj[v];
-                    });
-                    // obj is now a function object, and ctx is the parent of the function object
-                    obj.apply(ctx, params);
+                    qcubed.enqueueFinalCommand(command);
+                } else {
+                    qcubed.processCommand(command);
                 }
             });
         }
@@ -642,7 +625,55 @@ qcubed = {
         if (qcubed.objAjaxWaitIcon) {
             $j(qcubed.objAjaxWaitIcon).hide();
         }
+    },
+    processCommand: function(command) {
+        if (command.script) {
+            /** @todo eval is evil, do no evil */
+            eval (command.script);
+        }
+        else if (command.selector) {
+            var params = qc.unpackArray(command.params);
+            var objs;
 
+            if (typeof command.selector === 'string') {
+                objs = $j(command.selector);
+            } else {
+                objs = $j(command.selector[0], command.selector[1]);
+            }
+
+            // apply the function on each jQuery object found, using the found jQuery object as the context.
+            objs.each (function () {
+                var $item = $j(this);
+                if ($item[command.func]) {
+                    $item[command.func].apply($j(this), params);
+                }
+            });
+        }
+        else if (command.func) {
+            var params = qc.unpackArray(command.params);
+
+            // Find the function by name. Walk an object list in the process.
+            var objs = command.func.split(".");
+            var obj = window;
+            var ctx = null;
+
+            $j.each (objs, function (i, v) {
+                ctx = obj;
+                obj = obj[v];
+            });
+            // obj is now a function object, and ctx is the parent of the function object
+            obj.apply(ctx, params);
+        }
+
+    },
+    enqueueFinalCommand: function(command) {
+        qcubed.finalCommands.push(command);
+    },
+    processFinalCommands: function() {
+        while(qcubed.finalCommands.length) {
+            var command = qcubed.finalCommands.pop();
+            qcubed.processCommand(command);
+        }
     },
     /**
      * Convert from JSON return value to an actual jQuery object. Certain structures don't work in JSON, like closures,
@@ -922,6 +953,13 @@ qcubed.datagrid2 = function(controlId) {
     });
 };
 
+qcubed.dialog = function(controlId) {
+    $j('#' + controlId).on("tabsactivate", function(event, ui) {
+        var i = $j(this).tabs( "option", "active" );
+        var id = ui.newPanel ? ui.newPanel.attr("id") : null;
+        qcubed.recordControlModification(controlId, "_active", [i,id]);
+    });
+}
 
 /////////////////////////////////
 // Controls-related functionality
@@ -991,6 +1029,7 @@ qcubed.javascriptWrapperStyleToQcubed.top = "Top";
 qcubed.javascriptWrapperStyleToQcubed.left = "Left";
 
 qcubed.blockEvents = false;
+qcubed.finalCommands = [];
 
 qcubed.registerControl = function(mixControl) {
     var objControl = qcubed.getControl(mixControl),

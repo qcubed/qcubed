@@ -12,11 +12,10 @@
 	<p><strong>Optimistic Locking</strong> is the loosest form of row- or object-level locking that, in general,
 	works best for database-driven web-based applications.  In short, everyone is always
 	allowed to read any row/object.  However, on save, you are only allowed to save if your
-	object is considered "fresh".  Once your object is "stale", then you locked out from being
+	object is considered "fresh".  Once your object is "stale", then you are locked out from being
 	able to save that stale object. (Note that this is sometimes also called a
-	"mid-air collision".)</p>
-
-	<p>Programatically, this is done via TIMESTAMP columns that are set up to update whenever they are saved.</p>
+	"mid-air collision".) Objects might go stale if two browsers are editing the same object in the database,
+    or in certain situations if the user presses the back button on the browser to re-edit a record already edited.</p>
 
 	<p>So whenever you <strong>Load</strong> an object, you also get the latest TIMESTAMP information.  On
 	<strong>Save</strong>, the TIMESTAMP in your object will be checked against the TIMESTAMP in the database.
@@ -24,18 +23,20 @@
 	If they do not match, then it is safe to say that the data in the object is now stale, and QCubed
 	will throw an <strong>Optimistic Locking Exception</strong>.</p>
 
-	<p>Note that the <strong>Optimistic Locking</strong> constraint can be overridden at any time by simply
-	passing in the optional <strong>$blnForceUpdate</strong> as true when calling <strong>Save</strong>.</p>
+	<p>The <strong>Optimistic Locking</strong> constraint can be overridden at any time by simply
+	passing in the optional <strong>$blnForceUpdate</strong> as true when calling <strong>Save</strong>.
+    However, if you override it, or you do not provide a TIMESTAMP column for a table, then you are allowing
+    the user to overwrite data that someone else changed, but the user did not get a chance to see.</p>
 
 	<p>How you create your TIMESTAMP column will depend on the database you are using. MySQL TIMESTAMP columns by
 	default will have the current time inserted into them, and be automatically updated, provided there are no other
 	timestamp columns in that table. QCubed will automatically detect a column set up this way.</p>
 
 	<p>However, other databases, like PostgresSQL, require you to set up a trigger to auto-update a TIMESTAMP
-	column, which QCubed cannot detect. You can work around these limitations by specifying in a comment on the
+	column, which QCubed cannot detect. You can work around this limitation by specifying in a comment on the
 	column in the database that you would like a column to be considered a Timestamp for purposes of
 	<strong>Optimistic Locking</strong>. You can also tell QCubed to automatically update such a column with
-	the current timestamp. To do this, you enter a JSON expression into the comments field that sets the Timestamp, and/or
+	the current timestamp. To do this, you enter a JSON expression into the comments field that sets the Timestampand
 	the AutoUpdate values to 1. You can find an example of how to do this in the <strong>pgsql.sql</strong> file for the
 	examples database. Essentially, you want your comment to contain this:
 	<code>
@@ -67,16 +68,17 @@
 	// level constraints instead of systematic ones, this delay is inherit with the web
 	// application paradigm.  The following delay is just to simulate that paradigm.
 	$dttNow = new QDateTime(QDateTime::Now);
-	while ($objPerson1->SysTimestamp == $dttNow->qFormat(QDateTime::FormatIso))
+	while ($objPerson1->SysTimestamp == $dttNow->qFormat(QDateTime::FormatIso)) {
 		$dttNow = new QDateTime(QDateTime::Now);
+	}
 
 	// Make Changes to the Object so that the Save Will Update Something
 	if ($objPerson1->FirstName == 'Al') {
 		$objPerson1->FirstName = 'Alfred';
-		$objPerson2->FirstName = 'Al';		
+		$objPerson2->FirstName = 'Fred';
 	} else {
-		$objPerson1->FirstName = 'Al';
-		$objPerson2->FirstName = 'Alfred';
+		$objPerson1->FirstName = 'Fred';
+		$objPerson2->FirstName = 'Bob';
 	}
 
 	switch (true) {

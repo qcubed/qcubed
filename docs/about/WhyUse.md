@@ -1,0 +1,22 @@
+#Why Use QCubed?
+The nature of web design is rapidly changing. JavaScript frameworks calling microservice REST apis and using NoSQL databases seem to be the current trend. Why would you want to use a monolithic PHP framework that primarily uses SQL databases to create a modern website?
+
+In a phrase -- rapid application development and easy maintenance. 
+
+While JavaScript frameworks and NoSQL databases might produce beautiful, scalable websites, you usually need to know exactly what you are trying to accomplish from both a user-interface and a database perspective to be able to get what you want in any usable timeframe. Usually, that is not what you are presented with when you start a project. Usually you have sort of an idea, and as you go through the building process, things change. The data model changes, the user interface requirements change, the tools change, the languages change, even HTML and CSS change. And most importantly, your customers change.
+
+QCubed is designed from the ground up to be change friendly. It may sacrifice some performance (measured in milliseconds), but the time and headaches you save more than make up for it, allowing you to deliver maintainable solutions to your customers as quickly as possible.
+
+Specific ways it does this are:
+
+* **Data model centric design**. As you think through what you want to accomplish, you build your data model first. As requirements change, you decide if your data model needs to change, and again, you take care of the data and its integrity first. The database is the source of truth for QCubed.
+* **Code generation**. QCubed solves the problem of bolilerplate code by using a code generator to generate the object relational model (ORM), model connectors that connect user interface components with the ORM, and initial forms, dialogs and panes to contain the generated UI components. Both the ORM and the web components are layered so that you can make customizations in files that override the generated files. This lets you incrementally make changes, while maintaining the ability to continually regenerate the boilerplate while you make changes to the data model. The entire code generator is pluggable, so you can customize it at any level, and theoretically generate code in any language, and compatible with any javascript or widget framework. The PHP code that is generated includes PHP doc comments, so that popular PHP editors can easily do code completion to help you write your code.
+* **Model Connector Editor**. The generated model connectors can be somewhat customized by using a popup dialog that is available to the developer during the design phase. This gives you quick access to changning things like the label of a widget, its size, its CSS class, and lots more.
+* **Stateful forms and PHP reflection of javascript state**. Working with QCubed feels very much like programming a Java or C++ desktop application. However the user changes the state of widgets in the browser, that state is mirrored automatically to similar PHP objects in your application. You do not have to worry about Puts and Gets, or how to move data from javascript to your javascript data model, to a Rest API, and then to a database. That is all handled automatically. For the most part, you just worry about your user interface, and your business logic. Information routing is handled automatically.
+* **QQuery SQL generator**. You can write raw SQL if you want, but you don't have to. The QQuery SQL generator can generate SQL for most common situations, and can easily handle some fairly complex queries, including conditional joins involving one-to-many and many-to-many relationships. This makes your application transportable to other databases, and easier to maintain as your data model changes.
+
+If you are worried about scalability, here are some things to consider:
+
+* Are you sure you need to scale now? QCubed can work well while you grow, and as a prototyping tool, it can help you define what it is you want your application to look like when you are really ready to go big.
+* Can you design your app to scale by just adding servers, or by using Amazon or Google infrastructure?
+* Is your application likely to grow its data model significantly? If so, you might need to worry about speed of development rather than scale for now.

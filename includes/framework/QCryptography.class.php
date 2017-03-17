@@ -153,8 +153,8 @@ class QCryptography extends QBaseClass {
 			 * Will increase the size of the resulting value by the size of the IV + about 50%. The other option is to serialize the class or in
 			 * some other way save the IV and restore it later.
 			 */
-			$strEncryptedData .= '=' . bin2hex($this->strIv);
-			$strEncryptedData .= '=' . hash_hmac('sha256', $strEncryptedData, $this->strIvHashKey);
+			$strEncryptedData .= ':' . bin2hex($this->strIv);
+			$strEncryptedData .= ':' . hash_hmac('sha256', $strEncryptedData, $this->strIvHashKey);
 		}
 
 		if ($this->blnBase64) {
@@ -178,7 +178,7 @@ class QCryptography extends QBaseClass {
 		}
 		$strIv = $this->strIv;
 		if ($this->strIvHashKey) {
-			$offset = strrpos($strEncryptedData, "=");
+			$offset = strrpos($strEncryptedData, ":");
 			if ($offset === null) {
 				throw new QCryptographyException("Hash value not found.");
 			}
@@ -191,7 +191,7 @@ class QCryptography extends QBaseClass {
 				throw new QCryptographyException("Encryption tampering detected");
 			}
 
-			$offset2 = strrpos($strEncryptedData, "=");
+			$offset2 = strrpos($strEncryptedData, ":");
 
 			if ($offset2 === null) {
 				throw new QCryptographyException("IV not found.");

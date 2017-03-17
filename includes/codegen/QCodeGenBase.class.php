@@ -138,23 +138,6 @@
 		 */
 		public static $DefaultButtonClass;
 
-
-		/**
-		 * Template Escape Begin (from CodeGen Settings)
-		 *
-		 * @var string $TemplateEscapeBegin
-		 */
-		protected static $TemplateEscapeBegin;
-		protected static $TemplateEscapeBeginLength;
-
-		/**
-		 * Template Escape End (from CodeGen Settings)
-		 *
-		 * @var string $TemplateEscapeEnd
-		 */
-		protected static $TemplateEscapeEnd;
-		protected static $TemplateEscapeEndLength;
-
 		public static $RootErrors = '';
 
 		/**
@@ -172,7 +155,6 @@
 
 			$strToReturn = sprintf('<codegen>%s', $strCrLf);
 			$strToReturn .= sprintf('	<name application="%s"/>%s', QCodeGen::$ApplicationName, $strCrLf);
-			$strToReturn .= sprintf('	<templateEscape begin="%s" end="%s"/>%s', QCodeGen::$TemplateEscapeBegin, QCodeGen::$TemplateEscapeEnd, $strCrLf);
 			$strToReturn .= sprintf('	<render preferredRenderMethod="%s"/>%s', QCodeGen::$PreferredRenderMethod, $strCrLf);
 			$strToReturn .= sprintf('	<dataSources>%s', $strCrLf);
 			foreach (QCodeGen::$CodeGenArray as $objCodeGen)
@@ -212,17 +194,6 @@
 				QCodeGen::$RootErrors .= 'FATAL ERROR: Unable to parse CodeGenSettings XML File: ' . $strSettingsXmlFilePath;
 				QCodeGen::$RootErrors .= "\r\n";
 				QCodeGen::$RootErrors .= $objExc->getMessage();
-				return;
-			}
-
-			// Set the Template Escaping
-			QCodeGen::$TemplateEscapeBegin = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'templateEscape', 'begin');
-			QCodeGen::$TemplateEscapeEnd = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'templateEscape', 'end');
-			QCodeGen::$TemplateEscapeBeginLength = strlen(QCodeGen::$TemplateEscapeBegin);
-			QCodeGen::$TemplateEscapeEndLength = strlen(QCodeGen::$TemplateEscapeEnd);
-
-			if ((!QCodeGen::$TemplateEscapeBeginLength) || (!QCodeGen::$TemplateEscapeEndLength)) {
-				QCodeGen::$RootErrors .= "CodeGen Settings XML Fatal Error: templateEscape begin and/or end was not defined\r\n";
 				return;
 			}
 

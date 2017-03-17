@@ -22,7 +22,7 @@
 <?php if (($objColumn->Reference) && (!$objColumn->Reference->IsType)) { ?>
 				case '<?= $objColumn->Reference->PropertyName ?>':
 					/**
-					 * Sets the value for the <?= $objColumn->Reference->VariableType ?> object referenced by <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+					 * Sets the value of the <?= $objColumn->Reference->VariableType ?> object referenced by <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
 					 * @param <?= $objColumn->Reference->VariableType ?> $mixValue
 					 * @return <?= $objColumn->Reference->VariableType ?>
@@ -59,7 +59,7 @@
 <?php if ($objReverseReference->Unique) { ?>
 				case '<?= $objReverseReference->ObjectPropertyName ?>':
 					/**
-					 * Sets the value for the <?= $objReverseReference->VariableType ?> object referenced by <?= $objReverseReference->ObjectMemberVariable ?> (Unique)
+					 * Sets the value of the <?= $objReverseReference->VariableType ?> object referenced by <?= $objReverseReference->ObjectMemberVariable ?> (Unique)
 					 * @param <?= $objReverseReference->VariableType ?> $mixValue
 					 * @return <?= $objReverseReference->VariableType ?>
 

@@ -80,6 +80,7 @@
 	QApplicationBase::$ClassFile['qsessionformstatehandler'] = __QCUBED_CORE__ . '/qform_state_handlers/QSessionFormStateHandler.class.php';
 	QApplicationBase::$ClassFile['qfileformstatehandler'] = __QCUBED_CORE__ . '/qform_state_handlers/QFileFormStateHandler.class.php';
 	QApplicationBase::$ClassFile['qdbbackedformstatehandler'] = __QCUBED_CORE__ . '/qform_state_handlers/QDbBackedFormStateHandler.class.php';
+	QApplicationBase::$ClassFile['qredisbackedformstatehandler'] = __QCUBED_CORE__ . '/qform_state_handlers/QRedisBackedFormStateHandler.class.php';
 
 	// Define ClassFile Locations for Framework Classes
 	QApplicationBase::$ClassFile['qrssfeed'] = __QCUBED_CORE__ . '/framework/QRssFeed.class.php';
@@ -95,6 +96,7 @@
 	QApplicationBase::$ClassFile['qhtml'] = __QCUBED_CORE__ . '/framework/QHtml.class.php';
 	QApplicationBase::$ClassFile['qstack'] = __QCUBED_CORE__ . '/framework/QStack.class.php';
 	QApplicationBase::$ClassFile['qcryptography'] = __QCUBED_CORE__ . '/framework/QCryptography.class.php';
+	QApplicationBase::$ClassFile['qcryptographylegacy'] = __QCUBED_CORE__ . '/framework/QCryptography.legacy.class.php';
 	QApplicationBase::$ClassFile['qsoapservice'] = __QCUBED_CORE__ . '/framework/QSoapService.class.php';
 	QApplicationBase::$ClassFile['qi18n'] = __QCUBED_CORE__ . '/framework/QI18n.class.php';
 	QApplicationBase::$ClassFile['qtranslationbase'] = __QCUBED_CORE__ . '/framework/QTranslationBase.class.php';

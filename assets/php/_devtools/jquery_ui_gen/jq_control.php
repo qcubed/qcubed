@@ -319,13 +319,6 @@ class JqDoc {
 class JqControlGen extends QCodeGenBase {
 	protected $intDatabaseIndex = 1;
 
-	public function __construct() {
-		QCodeGen::$TemplateEscapeBegin = '<%';
-		QCodeGen::$TemplateEscapeEnd = '%>';
-		QCodeGen::$TemplateEscapeBeginLength = strlen(QCodeGen::$TemplateEscapeBegin);
-		QCodeGen::$TemplateEscapeEndLength = strlen(QCodeGen::$TemplateEscapeEnd);
-	}
-
 	/**
 	 * Main entry point to generate the files for a particular control.
 	 *
