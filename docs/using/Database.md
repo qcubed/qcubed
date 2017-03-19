@@ -59,7 +59,7 @@ You can refer directly to a value in the type table by simply creating a foreign
 You can also use an [association table](#association_tables) to create the ability to associate multiple type value with a record (this is similary to a MySQL SET). The code generator by default will create a list of checkboxes that will allow the user to select multiple values.
 
 ##Association Tables
-Association tables are a QCubed mechanism to make many-to-many relationships easier to manage. The code generator creates PHP that allows you to easily query through the relationship to create arrays of results, and creates user interface elements to allow your user to select multiple items to link to. 
+Association tables are a QCubed mechanism to make many-to-many relationships easier to manage. The code generator creates PHP that allows you to easily query through the relationship to create arrays of results, and creates user interface elements to allow your user to select multiple items to link to. Association tables do not result in any Model classes though. They are just used to define relationships.
 
 An association table has two, and only two columns in it. Both columns must be foreign keys to the respective tables you are linking together, and both together must be the primary key for the table. 
 
@@ -83,10 +83,10 @@ FLOAT and DECIMAL types are treated as floating point numbers in PHP. Floating-p
 
 DATE, TIME, and DATETIME are treated as QDateTime types in PHP. 
 
-TIMESTAMP types become PHP strings. If a TIMESTAMP is set up in the database to automatically update every time it changes, then no user interface code is created for that column. If your database does not support auto-updating TIMESTAMP columns, or if it limits the number of TIMESTAMP fields, you can have QCubed update the value of this field for you from PHP by entering the following in the comment field:
+TIMESTAMP types become PHP strings. If a TIMESTAMP is set up in the database to automatically update every time it changes, then no user interface code is created for that column. If your database does not support auto-updating TIMESTAMP columns, or if it limits the number of TIMESTAMP fields, you can have QCubed update the value of this field for you from PHP by entering the following in the comment field (Note: labels are case-sensitive):
 
-```{"timestamp":true,"autoupdate":true}```
+```{"Timestamp":true,"AutoUpdate":true}```
 
-If you specify that a column should not allowed to be NULL, the code generator will create code requiring the user to enter a value. 
+If you specify that a column should not be allowed to be NULL, the code generator will create code requiring the user to enter a value. 
 
 If you specify a default value in the database, QCubed will use that default value to initialize the corresponding member variable in the consructor of the related PHP object.

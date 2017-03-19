@@ -1,6 +1,7 @@
 #QCubed Documentation
 ##About
 * [Why Use QCubed?](about/WhyUse.md)
+* [Features](about/Features.md)
 * [History](about/History.md)
 * [Principles](about/Principles.md)
 * Collaborators
@@ -13,16 +14,15 @@
 * [Tutorial and Examples](http://qcu.be/examples/index.php)
 
 ##Using QCubed
+* [How to QCubed](using/How.md)
 * [Designing the Database](using/Database.md)
 * [Code Generation](using/Codegen.md)
-* Models, Nodes and QQuery
-* Model Connector and the Model Connector Editor
-* Forms and Dialogs
-* Panels
-* Controls
-* Plugins
+* [Models, Nodes and QQuery](using/Models.md)
+* [Model Connector and the Model Connector Editor](using/ModelConnector.md)
+* [Forms, Dialogs and Panels](using/Forms.md)
+* [Controls](using/Controls.md)
+* [Plugins](using/Plugins.md)
 
 ##Other Links
 * Wiki
-* SourceForge
-[]()
+* [StackOverflow Q&A](http://stackoverflow.com/questions/tagged/qcubed)
