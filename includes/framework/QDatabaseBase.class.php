@@ -1043,9 +1043,8 @@
 	 * @property QQueryBuilder $QueryBuilder
 	 */
 	abstract class QDatabaseResultBase extends QBaseClass {
-		// Allow to attach a QQueryBuilder object to use the result object as cursor resource for cursor queries.
-		/** @var QQueryBuilder Query builder object */
-		protected $objQueryBuilder;
+		/** @var array The column alias array. This is needed for instantiating cursors. */
+		protected $strColumnAliasArray;
 
 		/**
 		 * Fetches one row as indexed (column=>value style) array from the result set
@@ -1081,8 +1080,8 @@
 		 */
 		public function __get($strName) {
 			switch ($strName) {
-				case 'QueryBuilder':
-					return $this->objQueryBuilder;
+				case 'ColumnAliasArray':
+					return $this->strColumnAliasArray;
 				default:
 					try {
 						return parent::__get($strName);
@@ -1095,9 +1094,9 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case 'QueryBuilder':
+				case 'ColumnAliasArray':
 					try {
-						return ($this->objQueryBuilder = QType::Cast($mixValue, 'QQueryBuilder'));
+						return ($this->strColumnAliasArray = QType::Cast($mixValue, QType::ArrayType));
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
