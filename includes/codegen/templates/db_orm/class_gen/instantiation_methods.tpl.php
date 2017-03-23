@@ -289,14 +289,8 @@
 			if (!$objDbRow) return null;
 
 			// We need the Column Aliases
-			$strColumnAliasArray = $objDbResult->QueryBuilder->ColumnAliasArray;
+			$strColumnAliasArray = $objDbResult->ColumnAliasArray;
 			if (!$strColumnAliasArray) $strColumnAliasArray = array();
-
-			// Pull Expansions
-			$objExpandAsArrayNode = $objDbResult->QueryBuilder->ExpandAsArrayNode;
-			if (!empty ($objExpandAsArrayNode)) {
-				throw new QCallerException ("Cannot use InstantiateCursor with ExpandAsArray");
-			}
 
 			// Load up the return result with a row and return it
 			return <?= $objTable->ClassName ?>::InstantiateDbRow($objDbRow, null, null, null, $strColumnAliasArray);
