@@ -1288,7 +1288,7 @@
 	 * @package DatabaseAdapters
 	 */
 	abstract class QDatabaseFieldType {
-		/** Binary Data (Binary Large OBjects/BLOBs) */
+		/** Binary Data */
 		const Blob = "Blob";
 		/** Character sequence - variable length */
 		const VarChar = "VarChar";
