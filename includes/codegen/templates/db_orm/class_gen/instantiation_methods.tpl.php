@@ -19,10 +19,10 @@
 		 * Takes in an optional strAliasPrefix, used in case another Object::InstantiateDbRow
 		 * is calling this <?= $objTable->ClassName ?>::InstantiateDbRow in order to perform
 		 * early binding on referenced objects.
-		 * @param DatabaseRowBase $objDbRow
+		 * @param QDatabaseRowBase $objDbRow
 		 * @param string $strAliasPrefix
 		 * @param QQNode $objExpandAsArrayNode
-		 * @param QBaseClass $objPreviousItemArray Used by expansion code to aid in expanding arrays
+		 * @param $objPreviousItemArray Used by expansion code to aid in expanding arrays
 		 * @param string[] $strColumnAliasArray Array of column aliases mapping names in the query to items in the object
 		 * @param boolean $blnCheckDuplicate Used by ExpandArray to indicate we should not create a new object if this is a duplicate of a previoius object
 		 * @param string $strParentExpansionKey If this is part of an expansion, indicates what the parent item is
@@ -30,9 +30,9 @@
 		 * @return mixed Either a <?= $objTable->ClassName ?>, or false to indicate the dbrow was used in an expansion, or null to indicate that this leaf is a duplicate.
 		*/
 		public static function InstantiateDbRow(
-				$objDbRow,
+                QDatabaseRowBase $objDbRow,
 				$strAliasPrefix = null,
-				$objExpandAsArrayNode = null,
+                QQNode $objExpandAsArrayNode = null,
 				$objPreviousItemArray = null,
 				$strColumnAliasArray = array(),
 				$blnCheckDuplicate = false,

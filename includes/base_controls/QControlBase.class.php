@@ -639,16 +639,16 @@
 		 * @param boolean $blnRemoveFromForm should the control be removed from the form, too?
 		 */
 		public function RemoveChildControl($strControlId, $blnRemoveFromForm) {
-			$this->blnModified = true;	// TODO: Find a way to remove control in javascript so we don't have to redraw the entire control
-										// Its a bit tricky because of the recursive nature of this function
+			$this->blnModified = true;
+			if ($blnRemoveFromForm) {
+				$this->objForm->RemoveControl($strControlId); // will call back to here with $blnRemoveFromForm = false
+			} else {
+				if (isset($this->objChildControlArray[$strControlId])) {
+					$objChildControl = $this->objChildControlArray[$strControlId];
+					$objChildControl->objParentControl = null;
+					unset($this->objChildControlArray[$strControlId]);
+				}
 
-			if (isset($this->objChildControlArray[$strControlId])) {
-				$objChildControl = $this->objChildControlArray[$strControlId];
-				$objChildControl->objParentControl = null;
-				unset($this->objChildControlArray[$strControlId]);
-
-				if ($blnRemoveFromForm)
-					$this->objForm->RemoveControl($objChildControl->ControlId);
 			}
 		}
 

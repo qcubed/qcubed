@@ -19,7 +19,7 @@
 			}
 		}
 
-		protected function SetItemCheckedState($itemId, $blnChecked) {
+		public function SetItemCheckedState($itemId, $blnChecked) {
 			$objProject = Project::Load($itemId);
 			if($blnChecked)
 			{

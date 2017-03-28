@@ -6,64 +6,7 @@
 		 * @return mixed
 		 */
 		public function __get($strName) {
-			// Use getter if it exists
-			$strMethod = 'get' . $strName;
-			if (method_exists($this, $strMethod)) {
-				return $this->$strMethod();
-			}
-
 			switch ($strName) {
-				///////////////////
-				// Member Objects
-				///////////////////
-<?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-<?php if ($objColumn->Reference) { ?>
-<?php if (!$objColumn->Reference->IsType) { ?>
-				case '<?= $objColumn->Reference->PropertyName ?>':
-					/**
-					 * Gets the value of the <?= $objColumn->Reference->VariableType ?> object referenced by <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
-
-					 * @return <?= $objColumn->Reference->VariableType ?>
-
-					 */
-					try {
-						if ((!$this-><?= $objColumn->Reference->VariableName ?>) && (!is_null($this-><?= $objColumn->VariableName ?>)))
-							$this-><?= $objColumn->Reference->VariableName ?> = <?= $objColumn->Reference->VariableType ?>::Load($this-><?= $objColumn->VariableName ?>);
-						return $this-><?= $objColumn->Reference->VariableName ?>;
-					} catch (QCallerException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-<?php } ?>
-<?php } ?>
-<?php } ?>
-<?php foreach ($objTable->ReverseReferenceArray as $objReverseReference) { ?>
-<?php if ($objReverseReference->Unique) { ?>
-<?php $objReverseReferenceTable = $objCodeGen->TableArray[strtolower($objReverseReference->Table)]; ?>
-<?php $objReverseReferenceColumn = $objReverseReferenceTable->ColumnArray[strtolower($objReverseReference->Column)]; ?>
-				case '<?= $objReverseReference->ObjectPropertyName ?>':
-					/**
-					 * Gets the value of the <?= $objReverseReference->VariableType ?> object that uniquely references this <?= $objTable->ClassName ?>
-
-					 * by <?= $objReverseReference->ObjectMemberVariable ?> (Unique)
-					 * @return <?= $objReverseReference->VariableType ?>
-
-					 */
-					try {
-						if (!$this->__blnRestored ||
-								$this-><?= $objReverseReference->ObjectMemberVariable ?> === false)
-							// Either this is a new object, or we've attempted early binding -- and the reverse reference object does not exist
-							return null;
-						if (!$this-><?= $objReverseReference->ObjectMemberVariable ?>)
-							$this-><?= $objReverseReference->ObjectMemberVariable ?> = <?= $objReverseReference->VariableType ?>::LoadBy<?= $objReverseReferenceColumn->PropertyName ?>(<?= $objCodeGen->ImplodeObjectArray(', ', '$this->', '', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>);
-						return $this-><?= $objReverseReference->ObjectMemberVariable ?>;
-					} catch (QCallerException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-
-<?php } ?>
-<?php } ?>
 
 				////////////////////////////
 				// Virtual Object References (Many to Many and Reverse References)
@@ -123,6 +66,12 @@
 
 				default:
 					try {
+        			    // Use getter if it exists
+                        $strMethod = 'get' . $strName;
+                        if (method_exists($this, $strMethod)) {
+                            return $this->$strMethod();
+                        }
+
 						return parent::__get($strName);
 					} catch (QCallerException $objExc) {
 						$objExc->IncrementOffset();

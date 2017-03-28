@@ -39,13 +39,13 @@
 
 		/**
 		* Returns the primary key directly from a database row.
-		* @param DatabaseRowBase $objDbRow
+		* @param QDatabaseRowBase $objDbRow
 		* @param string $strAliasPrefix
 		* @param string[] $strColumnAliasArray
 		* @return <?= $pkType ?>
 
 		**/
-		protected static function GetRowPrimaryKey($objDbRow, $strAliasPrefix, $strColumnAliasArray) {
+		protected static function GetRowPrimaryKey(QDatabaseRowBase $objDbRow, $strAliasPrefix, $strColumnAliasArray) {
 <?php 	if (count ($objTable->PrimaryKeyColumnArray) == 1) { ?>
 			$strAlias = $strAliasPrefix . '<?= $objTable->PrimaryKeyColumnArray[0]->Name ?>';
 			$strAliasName = !empty($strColumnAliasArray[$strAlias]) ? $strColumnAliasArray[$strAlias] : $strAlias;

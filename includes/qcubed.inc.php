@@ -135,6 +135,7 @@
 	QApplicationBase::$ClassFile['qcacheprovidernocache'] = __QCUBED_CORE__ . '/framework/QCacheProviderNoCache.class.php';
 	QApplicationBase::$ClassFile['qcacheproviderredis'] = __QCUBED_CORE__ . '/framework/QCacheProviderRedis.class.php';
 	QApplicationBase::$ClassFile['qcacheproviderapc'] = __QCUBED_CORE__ . '/framework/QCacheProviderAPC.class.php';
+	QApplicationBase::$ClassFile['qcacheproviderapcu'] = __QCUBED_CORE__ . '/framework/QCacheProviderAPCu.class.php';
 	QApplicationBase::$ClassFile['qmultilevelcacheprovider'] = __QCUBED_CORE__ . '/framework/QMultiLevelCacheProvider.class.php';
 	QApplicationBase::$ClassFile['qdbbackedsessionhandler'] = __QCUBED_CORE__ . '/framework/QDbBackedSessionHandler.class.php';
 
