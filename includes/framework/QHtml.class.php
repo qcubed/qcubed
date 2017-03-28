@@ -357,19 +357,61 @@
 		 * Generate a URL from components. This URL can be used in the QApplication::Redirect function, or applied to
 		 * an anchor tag by setting the href attribute.
 		 *
-		 * @param string $strLocation			absolute or relative path to resource, depending on your protocol. If not needed, enter an empty string.
+		 * You can also use this to modify a URL by passing a complete URL in the location. The URL will be modified by the parameters given.
+		 *
+		 * @param string $strLocation			absolute or relative path to resource, depending on your protocol. If not needed, enter an empty string. Can be a complete URL.
 		 * @param array|null $queryParams		key->value array of query parameters to add to the location.
 		 * @param string|null $strAnchor		anchor to add to the url
-		 * @param string|null $strProtocol		protocol if specifying a resource outside of the current server
-		 * @param string|null $strServer				server that the resource is on. Required if specifying a protocol.
-		 * @param string|null $strUser					user name if needed. Some protocols like mailto and ftp need this
-		 * @param string|null $strPassword				password if needed. Note that password is sent in the clear.
-		 * @param string|null $intPort					port if different from default
+		 * @param string|null $strScheme		protocol if specifying a resource outside of the current server (i.e. http)
+		 * @param string|null $strHost			server that the resource is on. Required if specifying a scheme.
+		 * @param string|null $strUser			user name if needed. Some protocols like mailto and ftp need this
+		 * @param string|null $strPassword		password if needed. Note that password is sent in the clear.
+		 * @param string|null $intPort			port if different from default
 		 * @return string
 		 */
-		public static function MakeUrl ($strLocation, $queryParams = null, $strAnchor = null, $strProtocol = null, $strServer = null, $strUser = null, $strPassword = null, $intPort = null) {
-			// Basic URLs that are pointing to our own server
-			$strUrl = $strLocation; // can be relative or absolute
+		public static function MakeUrl ($strLocation, $queryParams = null, $strAnchor = null, $strScheme = null, $strHost = null, $strUser = null, $strPassword = null, $intPort = null) {
+			// Decompose
+			if ($strLocation) {
+				$params = parse_url($strLocation);
+			}
+
+			if (!empty($strLocation) && isset($params['path'])) {
+				$strUrl = $params['path'];
+			} else {
+				$strUrl = '';
+			}
+
+			if (isset($params['query'])) {
+				parse_str($params['query'], $queryParams2);
+				if ($queryParams) {
+					$queryParams = array_merge($queryParams2, $queryParams);
+				} else {
+					$queryParams = $queryParams2;
+				}
+			}
+
+			if (empty($strAnchor) && isset($params['fragment'])) {
+				$strAnchor = $params['fragment'];
+			}
+
+			if (empty($strScheme) && isset($params['scheme'])) {
+				$strScheme = $params['scheme'];
+			}
+
+			if (empty($strHost) && isset($params['host'])) {
+				$strHost = $params['host'];
+			}
+
+			if (empty($strUser) && isset($params['user'])) {
+				$strUser = $params['user'];
+			}
+			if (empty($strPassword) && isset($params['pass'])) {
+				$strPassword = $params['pass'];
+			}
+			if (empty($intPort) && isset($params['port'])) {
+				$intPort = $params['port'];
+			}
+
 			if ($queryParams)  {
 				$strUrl .= '?' . http_build_query($queryParams);
 			}
@@ -378,24 +420,24 @@
 			}
 
 			// More complex URLs. Once you specify protocol, you will need to specify the server too.
-			if ($strProtocol) {
-				assert('!empty($strServer)');
+			if ($strScheme) {
+				assert(!empty($strHost));
 
 				// We do not do any checking at this point since URLs can be complex. It is up to you to build a correct URL.
 				// If you use a protocol that expects an absolute path, you must start with a slash (http), or a relative path (mailto), leave the slash off.
 
 				// Build server portion.
 				if ($intPort) {
-					$strServer .= ':' . $intPort;
+					$strHost .= ':' . $intPort;
 				}
 				if ($strUser) {
 					$strUser = rawurlencode($strUser);
 					if ($strPassword) {
 						$strUser = $strUser . ':' . rawurlencode($strPassword);
 					}
-					$strServer = $strUser . '@' . $strServer;
+					$strHost = $strUser . '@' . $strHost;
 				}
-				$strUrl = $strProtocol . $strServer . $strUrl;
+				$strUrl = $strScheme . $strHost . $strUrl;
 			}
 			return $strUrl;
 		}
