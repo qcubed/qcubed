@@ -1,5 +1,5 @@
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-	 * @property<?php if ($objColumn->Identity || $objColumn->Timestamp) print '-read'; ?> <?= $objColumn->VariableType ?> $<?= $objColumn->PropertyName ?> <?php if ($objColumn->Comment) print $objColumn->Comment; else print 'the value of the ' . $objColumn->Name . ' column'; ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Timestamp) print '(Read-Only Timestamp)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+	 * @property<?php if ($objColumn->Identity) print '-read'; ?> <?= $objColumn->VariableType ?> $<?= $objColumn->PropertyName ?> <?php if ($objColumn->Comment) print $objColumn->Comment; else print 'the value of the ' . $objColumn->Name . ' column'; ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
 <?php   if (($objColumn->Reference) && ($objColumn->Reference->IsType)) { ?>
      * @property-read string $<?= $objColumn->Reference->PropertyName ?> the value of the <?= $objColumn->Name ?> column as a type name

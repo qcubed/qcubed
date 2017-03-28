@@ -6,7 +6,7 @@
 
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
    /**
-	* Gets the value of <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Timestamp) print '(Read-Only Timestamp)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+	* Gets the value of <?= $objColumn->VariableName ?> <?php if ($objColumn->Identity) print '(Read-Only PK)'; else if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
 
 	* @throws QCallerException
 	* @return <?= $objColumn->VariableType ?>
@@ -31,19 +31,20 @@
 	}
 <?php } ?>
 
-<?php 	if ((!$objColumn->Identity) && (!$objColumn->Timestamp)) { ?>
+<?php 	if (!$objColumn->Identity) { ?>
 
    /**
-	* Sets the value of <?= $objColumn->VariableName ?> <?php if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull) print '(Not Null)'; ?>
+	* Sets the value of <?= $objColumn->VariableName ?> <?php if ($objColumn->PrimaryKey) print '(PK)'; else if ($objColumn->Unique) print '(Unique)'; else if ($objColumn->NotNull && !($objColumn->Timestamp)) print '(Not Null)'; ?>
 
 	* Returns $this to allow chaining of setters.
-	* @param <?= $objColumn->VariableType ?><?= $objColumn->NotNull ? '' : '|null' ?> $<?= $objColumn->VariableName ?>
+	* @param <?= $objColumn->VariableType ?><?= ($objColumn->NotNull && !($objColumn->Timestamp)) ? '' : '|null' ?> $<?= $objColumn->VariableName ?>
 
 	* @return <?= $objTable->ClassName ?>
 
 	*/
 	public function set<?= $objColumn->PropertyName ?>($<?= $objColumn->VariableName ?>) {
-<?php if ($objColumn->NotNull) { ?>
+<?php if ($objColumn->NotNull &&
+            !$objColumn->Timestamp) { // Timestamp columns can be set to null to reset the timestamp?>
         if ($<?= $objColumn->VariableName ?> === null) {
             throw new QCallerException('Cannot set <?= $objColumn->PropertyName ?> to null');
         }
