@@ -154,6 +154,7 @@ foreach ($objTable->ReverseReferenceArray as $objReverseReference) {
    /**
 	* Update this <?= $objTable->ClassName ?>
 
+    * @param bool $blnForceUpdate
 	*/
 	protected function Update($blnForceUpdate = false) {
 		$objDatabase = static::GetDatabase();

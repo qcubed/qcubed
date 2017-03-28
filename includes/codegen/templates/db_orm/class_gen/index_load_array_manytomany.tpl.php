@@ -5,6 +5,7 @@
 		 * @param <?= $objManyToManyReference->OppositeVariableType ?> $<?= $objManyToManyReference->OppositeVariableName ?>
 
 		 * @param QQClause[] $objOptionalClauses additional optional QQClause objects for this query
+         * @throws QCallerException
 		 * @return <?= $objTable->ClassName ?>[]
 		*/
 		public static function LoadArrayBy<?= $objManyToManyReference->ObjectDescription ?>($<?= $objManyToManyReference->OppositeVariableName ?>, $objClauses = null) {
