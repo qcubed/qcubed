@@ -16,8 +16,8 @@
 	*/
 	public function get<?= $objColumn->PropertyName ?>() {
 <?php if (!$objColumn->Identity) { ?>
-		if (empty($this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
-			throw new QCallerException("<?= $objColumn->PropertyName ?> has not been set nor was selected in the most recent query and is not valid.");
+		if ($this->__blnRestored && empty($this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
+			throw new QCallerException("<?= $objColumn->PropertyName ?> was not selected in the most recent query and is not valid.");
 		}
 <?php } ?>
 		return $this-><?= $objColumn->VariableName ?>;
@@ -26,6 +26,7 @@
 
    /**
 	* Gets the value of <?= $objColumn->VariableName ?> as a type name.
+    * @throws QCallerException
 	* @return string
 	*/
 	public function get<?= $objColumn->Reference->PropertyName ?>() {
@@ -44,8 +45,8 @@
 
      */
      public function get<?= $objColumn->Reference->PropertyName ?>() {
- 		if (empty($this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
-			throw new QCallerException("<?= $objColumn->PropertyName ?> has not been set nor was selected in the most recent query and is not valid.");
+ 		if ($this->__blnRestored && empty($this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
+			throw new QCallerException("<?= $objColumn->PropertyName ?> was not selected in the most recent query and is not valid.");
 		}
         if ((!$this-><?= $objColumn->Reference->VariableName ?>) && (!is_null($this-><?= $objColumn->VariableName ?>))) {
             $this-><?= $objColumn->Reference->VariableName ?> = <?= $objColumn->Reference->VariableType ?>::Load($this-><?= $objColumn->VariableName ?>);
@@ -71,10 +72,13 @@
 <?php if ($objColumn->NotNull) { ?>
         if ($<?= $objColumn->VariableName ?> === null) {
 <?php if (is_null($objColumn->Default)) { ?>
-            throw new QCallerException('Cannot set <?= $objColumn->PropertyName ?> to null');
+             // invalidate
+             $<?= $objColumn->VariableName ?> = null;
+             $this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD] = false;
 <?php } else { ?>
              $<?= $objColumn->VariableName ?> = static::<?= $objColumn->PropertyName ?>Default;
 <?php } ?>
+            return $this; // allows chaining
         }
 <?php } ?>
 		$<?= $objColumn->VariableName ?> = QType::Cast($<?= $objColumn->VariableName ?>, <?= $objColumn->VariableTypeAsConstant ?>);
