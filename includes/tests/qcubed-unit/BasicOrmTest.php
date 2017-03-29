@@ -208,7 +208,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 	public function testQuerySelectSubset() {
 		$objPersonArray = Person::LoadAll(QQ::Select(QQN::Person()->FirstName));
 		foreach ($objPersonArray as $objPerson) {
-			$this->setExpectedException('QCallerException', 'LastName has not been set nor was selected in the most recent query and is not valid.');
+			$this->setExpectedExceptionRegExp('QCallerException', '/LastName .* is not valid./');
 			$objPerson->LastName;
 			$this->setExpectedException(null);
 
@@ -232,7 +232,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		$objSelect->SetSkipPrimaryKey(true);
 		$objPersonArray = Person::LoadAll($objSelect);
 		foreach ($objPersonArray as $objPerson) {
-			$this->setExpectedException('QCallerException', 'LastName has not been set nor was selected in the most recent query and is not valid.');
+			$this->setExpectedExceptionRegExp('QCallerException', '/LastName .* is not valid./');
 			$objPerson->LastName;
 			$this->setExpectedException(null);
 			$this->assertNull($objPerson->Id, "Id should be null since SkipPrimaryKey is set on the Select object");
