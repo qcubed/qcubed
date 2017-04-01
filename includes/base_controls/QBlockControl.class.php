@@ -42,6 +42,8 @@
 		protected $strTagName = null;
 		/** @var bool Should htmlentities be used on the contents of this control? */
 		protected $blnHtmlEntities = true;
+		/** @var bool Should the wrapper to turn off, for example, to use custom theme? */
+		protected $blnShowWrapper = true;
 
 		// BEHAVIOR
 		/** @var bool Is it a drop target? */
@@ -146,8 +148,9 @@
 		 * @return string The HTML string
 		 */
 		protected function GetControlHtml() {
+			if ($this->blnShowWrapper) {
 
-			$strToReturn = $this->RenderTag($this->strTagName,
+				$strToReturn = $this->RenderTag($this->strTagName,
 				null,
 				null,
 				$this->GetInnerHtml());
@@ -155,7 +158,12 @@
 //			if ($this->blnDropTarget)
 //				$strToReturn .= sprintf('<span id="%s_ctldzmask" style="position:absolute;"><span style="font-size: 1px">&nbsp;</span></span>', $this->strControlId);
 
-			return $strToReturn;
+				return $strToReturn;
+
+			} else {
+
+				return $this->GetInnerHtml();
+			}
 		}
 
 		/**
