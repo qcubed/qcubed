@@ -224,21 +224,6 @@
 		public static $Minimize = false;
 
 		////////////////////////
-		// Public Overrides
-		////////////////////////
-		/**
-		 * This faux constructor method throws a caller exception.
-		 * The Application object should never be instantiated, and this constructor
-		 * override simply guarantees it.
-		 *
-		 * @throws QCallerException
-		 */
-		public final function __construct() {
-			throw new QCallerException('Application should never be instantiated.  All methods and variables are publically statically accessible.');
-		}
-
-
-		////////////////////////
 		// Public Static Methods
 		////////////////////////
 
