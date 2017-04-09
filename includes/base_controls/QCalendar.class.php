@@ -301,7 +301,7 @@
 		 *
 		 * @throws QCallerException
 		 */
-		public function AddAction($objEvent, $objAction) {
+		public function AddAction(QEvent $objEvent, QAction $objAction) {
 			if ($objEvent instanceof QClickEvent) {
 				throw new QCallerException('QCalendar does not support click events');
 			}
