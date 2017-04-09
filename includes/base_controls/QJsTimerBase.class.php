@@ -159,7 +159,7 @@
 		 * @throws QCallerException
 		 * @return void
 		 */
-		public function AddAction($objEvent, $objAction) {
+		public function AddAction(QEvent $objEvent, QAction $objAction) {
 			if (!($objEvent instanceof QTimerExpiredEvent)) {
 				throw new QCallerException('First parameter of QJsTimer::AddAction is expecting an object of type QTimerExpiredEvent');
 			}
