@@ -59,7 +59,7 @@
 		protected static $strSessionName	= ''; //PHPSESSID on a default PHP installation
 		
 		/** @var bool Whether to base64 the session data. Required when storing data in a TEXT field. */
-		public static $blnBase64			= false;
+		public static $blnBase64			= true;
 
 		/** @var bool Whether to compress the session data. */
 		public static $blnCompress			= true;
