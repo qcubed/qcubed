@@ -1,7 +1,7 @@
 <?php
 /**
  * Interface to the ModelConnector options that let you specify various options per field to be placed in the codegened
-ModelConnectorrolGen classes.
+ModelConnectorGen classes.
  *
  * Note that this ties table and field names in the database to options iModelConnectorontrol. If the table or field name
  * changes in the database, the options will be lost. We can try to guess as to whether changes were made based upon
