@@ -48,12 +48,14 @@ class ExampleForm extends QForm {
 
 
 	public function dtgPersonsRow_Click($strFormId, $strControlId, $strParameter) {
-		$intPersonId = intval($strParameter);
+		if ($strParameter) {    // No parameter means the table header was clicked on
+            $intPersonId = intval($strParameter);
 
-		$objPerson = Person::Load($intPersonId);
+            $objPerson = Person::Load($intPersonId);
 
-		QApplication::DisplayAlert("You clicked on a person with ID #" . $intPersonId .
-				": " . $objPerson->FirstName . " " . $objPerson->LastName);
+            QApplication::DisplayAlert("You clicked on a person with ID #" . $intPersonId .
+                ": " . $objPerson->FirstName . " " . $objPerson->LastName);
+        }
 	}
 }
 
