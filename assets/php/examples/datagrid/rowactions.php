@@ -3,7 +3,7 @@ require_once('../qcubed.inc.php');
 
 class ExampleForm extends QForm {
 
-	// Declare the DataGrid
+    /** @var  QDataGrid */
 	protected $dtgPersons;
 
 	protected function Form_Create() {
@@ -36,8 +36,12 @@ class ExampleForm extends QForm {
 	}
 
 	protected function dtgPersons_Bind() {
+	    $clauses = [];
+	    if ($clause = $this->dtgPersons->OrderByClause) {
+            $clauses[] = $this->dtgPersons->OrderByClause;
+        }
 		// We must be sure to load the data source
-		$this->dtgPersons->DataSource = Person::LoadAll();
+		$this->dtgPersons->DataSource = Person::LoadAll($clauses);
 	}
 
 	public function dtgPersons_GetRowParams($objRowObject, $intRowIndex) {
