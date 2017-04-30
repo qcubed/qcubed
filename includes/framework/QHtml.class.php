@@ -572,7 +572,7 @@
 				$strBody .= $strRow;
 			}
 			$strBody = '<tbody>' . $strBody . '</tbody>';
-			$strTable = self::RenderTag('table', $attributes , $strBody);
+            $strTable = self::renderTag('table', $attributes , $strHeader . $strBody);
 			return $strTable;
 		}
 
