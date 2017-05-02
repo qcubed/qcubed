@@ -399,20 +399,4 @@ class ExpandAsArrayTests extends QUnitTestCaseBase {
 
 
 
-	public function testDataGridHtml() {
-		$objMilestone = Milestone::QuerySingle(
-			QQ::Equal (QQN::Milestone()->Id, 1),
-			QQ::Clause(
-				QQ::Expand(QQN::Milestone()->Project->ManagerPerson)
-			)
-		);
-
-		$_ITEM =$objMilestone;
-		$node = QQN::Milestone()->Project->ManagerPerson;
-
-		$html = $node->GetDataGridHtml();
-		$val = eval(sprintf('return %s;', $html));
-		$this->assertEquals ($val, "Person Object 7");
-	}
-	
 }
