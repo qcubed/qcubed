@@ -216,7 +216,7 @@ if (!defined('SERVER_INSTANCE')) {
 	// installation that's local to QCubed (in that case, paths must be relative to __JS_ASSETS__
 
 	define ('__JQUERY_BASE__', ' http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js');
-	define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js');
+	define ('__JQUERY_EFFECTS__', ' http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js');
 
 	// The original, non-minified jQuery for debugging purposes.
 	//define ('__JQUERY_BASE__', ' http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js');
