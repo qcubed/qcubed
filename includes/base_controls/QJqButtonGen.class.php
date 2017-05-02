@@ -6,7 +6,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QJqButton_CreateEvent extends QJqUiEvent {
 		const EventName = 'buttoncreate';
 	}
@@ -24,19 +25,34 @@
 	 * 
 	 * @see QJqButtonBase
 	 * @package Controls\Base
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
+	 *
 	 * @property boolean $Disabled
 	 * Disables the button if set to true.
 	 *
-	 * @property mixed $Icons
-	 * Icons to display, with or without text (see text option). By default,
-	 * the primary icon is displayed on the left of the label text and the
-	 * secondary is displayed on the right. The positioning can be controlled
-	 * via CSS. 
+	 * @property string $Icon
+	 * Icon to display, with or without text (see showLabel option). By
+	 * default, the icon is displayed on the left of the label text. The
+	 * positioning can be controlled using the iconPosition option.
 	 * 
-	 * The value for the primary and secondary properties must match an icon
-	 * class name, e.g., "ui-icon-gear". For using only one icon: icons: {
-	 * primary: "ui-icon-locked" }. For using two icons: icons: { primary:
-	 * "ui-icon-gear", secondary: "ui-icon-triangle-1-s" }.
+	 * The value for this option must match an icon class name, e.g.,
+	 * "ui-icon-gear".
+	 * 
+	 * When using an input of type button, submit or reset, icons are not
+	 * supported.
+
+	 *
+	 * @property string $IconPosition
+	 * Where to display the icon: Valid values are "beginning", "end", "top"
+	 * and "bottom". In a left-to-right (LTR) display, "beginning" refers to
+	 * the left, in a right-to-left (RTL, e.g. in Hebrew or Arabic), it
+	 * refers to the right.
+
 	 *
 	 * @property string $Label
 	 * Text to show in the button. When not specified (null), the elements
@@ -44,10 +60,14 @@
 	 * input element of type submit or reset, or the HTML content of the
 	 * associated label element if the element is an input of type radio or
 	 * checkbox.
+	 * 
+	 * When using an input of type button, submit or reset, support is
+	 * limited to plain text labels.
+
 	 *
-	 * @property boolean $JqText
+	 * @property boolean $ShowLabel
 	 * Whether to show the label. When set to false no text will be
-	 * displayed, but the icons option must be enabled, otherwise the text
+	 * displayed, but the icon option must be used, otherwise the showLabel
 	 * option will be ignored.
 	 *
 	 */
@@ -55,14 +75,18 @@
 	class QJqButtonGen extends QButton	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var boolean */
 		protected $blnDisabled = null;
-		/** @var mixed */
-		protected $mixIcons = null;
+		/** @var string */
+		protected $strIcon = null;
+		/** @var string */
+		protected $strIconPosition = null;
 		/** @var string */
 		protected $strLabel = null;
 		/** @var boolean */
-		protected $blnJqText = null;
+		protected $blnShowLabel = null;
 
 		/**
 		 * Builds the option array to be sent to the widget constructor.
@@ -71,10 +95,12 @@
 		 */
 		protected function MakeJqOptions() {
 			$jqOptions = null;
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
-			if (!is_null($val = $this->Icons)) {$jqOptions['icons'] = $val;}
+			if (!is_null($val = $this->Icon)) {$jqOptions['icon'] = $val;}
+			if (!is_null($val = $this->IconPosition)) {$jqOptions['iconPosition'] = $val;}
 			if (!is_null($val = $this->Label)) {$jqOptions['label'] = $val;}
-			if (!is_null($val = $this->JqText)) {$jqOptions['text'] = $val;}
+			if (!is_null($val = $this->ShowLabel)) {$jqOptions['showLabel'] = $val;}
 			return $jqOptions;
 		}
 
@@ -140,7 +166,7 @@
 		}
 		/**
 		 * Retrieves the buttons instance object. If the element does not have an
-		 * associated instance, undefined is returned. 
+		 * associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the button plugin has loaded.
@@ -151,7 +177,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -174,7 +200,7 @@
 		}
 		/**
 		 * Sets the value of the button option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -200,7 +226,7 @@
 		}
 		/**
 		 * Refreshes the visual state of the button. Useful for updating button
-		 * state after the native elements checked or disabled state is changed
+		 * state after the native elements disabled state is changed
 		 * programmatically.
 		 * 
 		 * 	* This method does not accept any arguments.
@@ -212,10 +238,12 @@
 
 		public function __get($strName) {
 			switch ($strName) {
+				case 'Classes': return $this->mixClasses;
 				case 'Disabled': return $this->blnDisabled;
-				case 'Icons': return $this->mixIcons;
+				case 'Icon': return $this->strIcon;
+				case 'IconPosition': return $this->strIconPosition;
 				case 'Label': return $this->strLabel;
-				case 'JqText': return $this->blnJqText;
+				case 'ShowLabel': return $this->blnShowLabel;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -228,6 +256,11 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
+					break;
+
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
@@ -238,10 +271,25 @@
 						throw $objExc;
 					}
 
-				case 'Icons':
-					$this->mixIcons = $mixValue;
-					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'icons', $mixValue);
-					break;
+				case 'Icon':
+					try {
+						$this->strIcon = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'icon', $this->strIcon);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+
+				case 'IconPosition':
+					try {
+						$this->strIconPosition = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'iconPosition', $this->strIconPosition);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				case 'Label':
 					try {
@@ -253,10 +301,10 @@
 						throw $objExc;
 					}
 
-				case 'JqText':
+				case 'ShowLabel':
 					try {
-						$this->blnJqText = QType::Cast($mixValue, QType::Boolean);
-						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'text', $this->blnJqText);
+						$this->blnShowLabel = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showLabel', $this->blnShowLabel);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -288,8 +336,10 @@
 		public static function GetModelConnectorParams() {
 			return array_merge(parent::GetModelConnectorParams(), array(
 				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the button if set to true.', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'Label', 'Text to show in the button. When not specified (null), the elementsHTML content is used, or its value attribute if the element is aninput element of type submit or reset, or the HTML content of theassociated label element if the element is an input of type radio orcheckbox.', QType::String),
-				new QModelConnectorParam (get_called_class(), 'JqText', 'Whether to show the label. When set to false no text will bedisplayed, but the icons option must be enabled, otherwise the textoption will be ignored.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Icon', 'Icon to display, with or without text (see showLabel option). Bydefault, the icon is displayed on the left of the label text. Thepositioning can be controlled using the iconPosition option.The value for this option must match an icon class name, e.g.,\"ui-icon-gear\".When using an input of type button, submit or reset, icons are notsupported.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'IconPosition', 'Where to display the icon: Valid values are \"beginning\", \"end\", \"top\"and \"bottom\". In a left-to-right (LTR) display, \"beginning\" refers tothe left, in a right-to-left (RTL, e.g. in Hebrew or Arabic), itrefers to the right.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Label', 'Text to show in the button. When not specified (null), the elementsHTML content is used, or its value attribute if the element is aninput element of type submit or reset, or the HTML content of theassociated label element if the element is an input of type radio orcheckbox.When using an input of type button, submit or reset, support islimited to plain text labels.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ShowLabel', 'Whether to show the label. When set to false no text will bedisplayed, but the icon option must be used, otherwise the showLabeloption will be ignored.', QType::Boolean),
 			));
 		}
 	}

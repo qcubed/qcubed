@@ -77,6 +77,10 @@ QApplicationBase::$ClassFile['qjqradiobutton_createevent'] = __QCUBED_CORE__ . '
 QApplicationBase::$ClassFile['qjqradiobuttongen'] = __QCUBED_CORE__ . '/base_controls/QJqRadioButtonGen.class.php';
 QApplicationBase::$ClassFile['qjqradiobuttonbase'] = __QCUBED_CORE__ . '/base_controls/QJqRadioButtonBase.class.php';
 QApplicationBase::$ClassFile['qjqradiobutton'] = __INCLUDES__ . '/controls/QJqRadioButton.class.php';
+QApplicationBase::$ClassFile['qcontrolgroup_createevent'] = __QCUBED_CORE__ . '/base_controls/QControlgroupGen.class.php';
+QApplicationBase::$ClassFile['qcontrolgroupgen'] = __QCUBED_CORE__ . '/base_controls/QControlgroupGen.class.php';
+QApplicationBase::$ClassFile['qcontrolgroupbase'] = __QCUBED_CORE__ . '/base_controls/QControlgroupBase.class.php';
+QApplicationBase::$ClassFile['qcontrolgroup'] = __INCLUDES__ . '/controls/QControlgroup.class.php';
 QApplicationBase::$ClassFile['qdatepicker_beforeshowevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerGen.class.php';
 QApplicationBase::$ClassFile['qdatepicker_beforeshowdayevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerGen.class.php';
 QApplicationBase::$ClassFile['qdatepicker_calculateweekevent'] = __QCUBED_CORE__ . '/base_controls/QDatepickerGen.class.php';
@@ -157,3 +161,5 @@ QApplicationBase::$ClassFile['qselectmenubase'] = __QCUBED_CORE__ . '/base_contr
 QApplicationBase::$ClassFile['qselectmenu'] = __INCLUDES__ . '/controls/QSelectMenu.class.php';
 QApplicationBase::$ClassFile['qautocompletelistitem'] = __QCUBED_CORE__ . '/base_controls/QAutocompleteBase.class.php';
 QApplicationBase::$ClassFile['jqicon'] = __QCUBED_CORE__ . '/base_controls/_jq_ui.inc.php';
+
+?>

@@ -87,7 +87,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSortable_CreateEvent extends QJqUiEvent {
 		const EventName = 'sortcreate';
 	}
@@ -120,7 +121,7 @@
 	}
 	/**
 	 * This event is triggered when a sortable item is moved away from a
-	 * sortable list. 
+	 * sortable list.
 	 * 
 	 * _Note: This event is also triggered when a sortable item is dropped._
 	 * 
@@ -367,6 +368,13 @@
 	 * @property mixed $Cancel
 	 * Prevents sorting if you start on elements matching the selector.
 	 *
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
+	 *
 	 * @property mixed $ConnectWith
 	 * A selector of other sortable elements that the items from this list
 	 * should be connected to. This is a one-way relationship, if you want
@@ -375,14 +383,14 @@
 	 *
 	 * @property mixed $Containment
 	 * Defines a bounding box that the sortable items are constrained to
-	 * while dragging. 
+	 * while dragging.
 	 * 
 	 * Note: The element specified for containment must have a calculated
 	 * width and height (though it need not be explicit). For example, if you
 	 * have float: left sortable children and specify containment: "parent"
 	 * be sure to have float: left on the sortable/parent container as well
-	 * or it will have height: 0, causing undefined behavior.Multiple types
-	 * supported:
+	 * or it will have height: 0, causing undefined behavior.
+	 * Multiple types supported:
 	 * 
 	 * 	* Element: An element to use as the container.
 	 * 	* Selector: A selector specifying an element to use as the
@@ -402,7 +410,8 @@
 	 *
 	 * @property integer $Delay
 	 * Time in milliseconds to define when the sorting should start. Adding a
-	 * delay helps preventing unwanted drags when clicking on an element.
+	 * delay helps preventing unwanted drags when clicking on an
+	 * element.(version deprecated: 1.12)
 	 *
 	 * @property boolean $Disabled
 	 * Disables the sortable if set to true.
@@ -410,7 +419,8 @@
 	 * @property integer $Distance
 	 * Tolerance, in pixels, for when sorting should start. If specified,
 	 * sorting will not start until after mouse is dragged beyond distance.
-	 * Can be used to allow for clicks on elements within a handle.
+	 * Can be used to allow for clicks on elements within a handle.(version
+	 * deprecated: 1.12)
 	 *
 	 * @property boolean $DropOnEmpty
 	 * If false, items from this sortable cant be dropped on an empty connect
@@ -494,6 +504,8 @@
 		/** @var mixed */
 		protected $mixCancel = null;
 		/** @var mixed */
+		protected $mixClasses = null;
+		/** @var mixed */
 		protected $mixConnectWith = null;
 		/** @var mixed */
 		protected $mixContainment = null;
@@ -548,6 +560,7 @@
 			if (!is_null($val = $this->AppendTo)) {$jqOptions['appendTo'] = $val;}
 			if (!is_null($val = $this->Axis)) {$jqOptions['axis'] = $val;}
 			if (!is_null($val = $this->Cancel)) {$jqOptions['cancel'] = $val;}
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->ConnectWith)) {$jqOptions['connectWith'] = $val;}
 			if (!is_null($val = $this->Containment)) {$jqOptions['containment'] = $val;}
 			if (!is_null($val = $this->Cursor)) {$jqOptions['cursor'] = $val;}
@@ -645,7 +658,7 @@
 		}
 		/**
 		 * Retrieves the sortables instance object. If the element does not have
-		 * an associated instance, undefined is returned. 
+		 * an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the sortable plugin has loaded.
@@ -656,7 +669,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -679,7 +692,7 @@
 		}
 		/**
 		 * Sets the value of the sortable option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -724,11 +737,11 @@
 		/**
 		 * Serializes the sortables item ids into a form/ajax submittable string.
 		 * Calling this method produces a hash that can be appended to any url to
-		 * easily submit a new item order back to the server. 
+		 * easily submit a new item order back to the server.
 		 * 
 		 * It works by default by looking at the id of each item in the format
 		 * "setname_number", and it spits out a hash like
-		 * "setname[]=number&setname[]=number". 
+		 * "setname[]=number&setname[]=number".
 		 * 
 		 * _Note: If serialize returns an empty string, make sure the id
 		 * attributes include an underscore. They must be in the form:
@@ -770,6 +783,7 @@
 				case 'AppendTo': return $this->mixAppendTo;
 				case 'Axis': return $this->strAxis;
 				case 'Cancel': return $this->mixCancel;
+				case 'Classes': return $this->mixClasses;
 				case 'ConnectWith': return $this->mixConnectWith;
 				case 'Containment': return $this->mixContainment;
 				case 'Cursor': return $this->strCursor;
@@ -822,6 +836,11 @@
 				case 'Cancel':
 					$this->mixCancel = $mixValue;
 					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'cancel', $mixValue);
+					break;
+
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
 					break;
 
 				case 'ConnectWith':
@@ -1035,9 +1054,9 @@
 			return array_merge(parent::GetModelConnectorParams(), array(
 				new QModelConnectorParam (get_called_class(), 'Axis', 'If defined, the items can be dragged only horizontally or vertically.Possible values: \"x\", \"y\".', QType::String),
 				new QModelConnectorParam (get_called_class(), 'Cursor', 'Defines the cursor that is being shown while sorting.', QType::String),
-				new QModelConnectorParam (get_called_class(), 'Delay', 'Time in milliseconds to define when the sorting should start. Adding adelay helps preventing unwanted drags when clicking on an element.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Delay', 'Time in milliseconds to define when the sorting should start. Adding adelay helps preventing unwanted drags when clicking on anelement.(version deprecated: 1.12)', QType::Integer),
 				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the sortable if set to true.', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when sorting should start. If specified,sorting will not start until after mouse is dragged beyond distance.Can be used to allow for clicks on elements within a handle.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when sorting should start. If specified,sorting will not start until after mouse is dragged beyond distance.Can be used to allow for clicks on elements within a handle.(versiondeprecated: 1.12)', QType::Integer),
 				new QModelConnectorParam (get_called_class(), 'DropOnEmpty', 'If false, items from this sortable cant be dropped on an empty connectsortable (see the connectWith option.', QType::Boolean),
 				new QModelConnectorParam (get_called_class(), 'ForceHelperSize', 'If true, forces the helper to have a size.', QType::Boolean),
 				new QModelConnectorParam (get_called_class(), 'ForcePlaceholderSize', 'If true, forces the placeholder to have a size.', QType::Boolean),

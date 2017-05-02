@@ -19,7 +19,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QMenu_CreateEvent extends QJqUiEvent {
 		const EventName = 'menucreate';
 	}
@@ -63,26 +64,30 @@
 	 * 
 	 * @see QMenuBase
 	 * @package Controls\Base
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
+	 *
 	 * @property boolean $Disabled
 	 * Disables the menu if set to true.
 	 *
 	 * @property mixed $Icons
 	 * Icons to use for submenus, matching an icon provided by the jQuery UI
-	 * CSS Framework. 
-	 * 
-	 * 	* submenu (string, default: "ui-icon-carat-1-e")
-	 * 
-
+	 * CSS Framework.
 	 *
 	 * @property string $Items
-	 * Selector for the elements that serve as the menu items. Note: The
-	 * items option should not be changed after initialization. (version
-	 * added: 1.11.0)
+	 * Selector for the elements that serve as the menu items.
+	 * Note: The items option should not be changed after initialization.
+	 * (version added: 1.11.0)
 	 *
 	 * @property string $Menus
 	 * Selector for the elements that serve as the menu container, including
-	 * sub-menus. Note: The menus option should not be changed after
-	 * initialization. Existing submenus will not be updated.
+	 * sub-menus.
+	 * Note: The menus option should not be changed after initialization.
+	 * Existing submenus will not be updated.
 	 *
 	 * @property mixed $Position
 	 * Identifies the position of submenus in relation to the associated
@@ -96,15 +101,17 @@
 	 * uses "menuitem" for items. Setting the role option to "listbox" will
 	 * use "option" for items. If set to null, no roles will be set, which is
 	 * useful if the menu is being controlled by another element that is
-	 * maintaining focus. Note: The role option should not be changed after
-	 * initialization. Existing (sub)menus and menu items will not be
-	 * updated.
+	 * maintaining focus.
+	 * Note: The role option should not be changed after initialization.
+	 * Existing (sub)menus and menu items will not be updated.
 	 *
 	 */
 
 	class QMenuGen extends QPanel	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var mixed */
@@ -125,6 +132,7 @@
 		 */
 		protected function MakeJqOptions() {
 			$jqOptions = null;
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->Icons)) {$jqOptions['icons'] = $val;}
 			if (!is_null($val = $this->Items)) {$jqOptions['items'] = $val;}
@@ -236,8 +244,8 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "expand", $event, QJsPriority::Low);
 		}
 		/**
-		 * Activates a particular menu item, begins opening any sub-menu if
-		 * present and triggers the menus focus event.
+		 * Activates the given menu item and triggers the menus focus event.
+		 * Opens the menu items sub-menu, if one exists.
 		 * 
 		 * 	* event Type: Event What triggered the menu item to gain focus.
 		 * 	* item Type: jQuery The menu item to focus/activate.
@@ -249,7 +257,7 @@
 		}
 		/**
 		 * Retrieves the menus instance object. If the element does not have an
-		 * associated instance, undefined is returned. 
+		 * associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the menu plugin has loaded.
@@ -297,7 +305,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "nextPage", $event, QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -320,7 +328,7 @@
 		}
 		/**
 		 * Sets the value of the menu option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -388,6 +396,7 @@
 
 		public function __get($strName) {
 			switch ($strName) {
+				case 'Classes': return $this->mixClasses;
 				case 'Disabled': return $this->blnDisabled;
 				case 'Icons': return $this->mixIcons;
 				case 'Items': return $this->strItems;
@@ -406,6 +415,11 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
+					break;
+
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
@@ -481,9 +495,9 @@
 		public static function GetModelConnectorParams() {
 			return array_merge(parent::GetModelConnectorParams(), array(
 				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the menu if set to true.', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'Items', 'Selector for the elements that serve as the menu items. Note: Theitems option should not be changed after initialization. (versionadded: 1.11.0)', QType::String),
-				new QModelConnectorParam (get_called_class(), 'Menus', 'Selector for the elements that serve as the menu container, includingsub-menus. Note: The menus option should not be changed afterinitialization. Existing submenus will not be updated.', QType::String),
-				new QModelConnectorParam (get_called_class(), 'Role', 'Customize the ARIA roles used for the menu and menu items. The defaultuses \"menuitem\" for items. Setting the role option to \"listbox\" willuse \"option\" for items. If set to null, no roles will be set, which isuseful if the menu is being controlled by another element that ismaintaining focus. Note: The role option should not be changed afterinitialization. Existing (sub)menus and menu items will not beupdated.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Items', 'Selector for the elements that serve as the menu items.Note: The items option should not be changed after initialization.(version added: 1.11.0)', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Menus', 'Selector for the elements that serve as the menu container, includingsub-menus.Note: The menus option should not be changed after initialization.Existing submenus will not be updated.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Role', 'Customize the ARIA roles used for the menu and menu items. The defaultuses \"menuitem\" for items. Setting the role option to \"listbox\" willuse \"option\" for items. If set to null, no roles will be set, which isuseful if the menu is being controlled by another element that ismaintaining focus.Note: The role option should not be changed after initialization.Existing (sub)menus and menu items will not be updated.', QType::String),
 			));
 		}
 	}

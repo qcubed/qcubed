@@ -6,7 +6,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSelectable_CreateEvent extends QJqUiEvent {
 		const EventName = 'selectablecreate';
 	}
@@ -45,7 +46,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSelectable_StartEvent extends QJqUiEvent {
 		const EventName = 'selectablestart';
 	}
@@ -56,7 +58,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSelectable_StopEvent extends QJqUiEvent {
 		const EventName = 'selectablestop';
 	}
@@ -116,9 +119,17 @@
 	 * @property mixed $Cancel
 	 * Prevents selecting if you start on elements matching the selector.
 	 *
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
+	 *
 	 * @property integer $Delay
 	 * Time in milliseconds to define when the selecting should start. This
-	 * helps prevent unwanted selections when clicking on an element.
+	 * helps prevent unwanted selections when clicking on an element.(version
+	 * deprecated: 1.12)
 	 *
 	 * @property boolean $Disabled
 	 * Disables the selectable if set to true.
@@ -126,7 +137,7 @@
 	 * @property integer $Distance
 	 * Tolerance, in pixels, for when selecting should start. If specified,
 	 * selecting will not start until the mouse has been dragged beyond the
-	 * specified distance.
+	 * specified distance.(version deprecated: 1.12)
 	 *
 	 * @property mixed $Filter
 	 * The matching child elements will be made selectees (able to be
@@ -152,6 +163,8 @@
 		protected $blnAutoRefresh = null;
 		/** @var mixed */
 		protected $mixCancel = null;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var integer */
 		protected $intDelay;
 		/** @var boolean */
@@ -173,6 +186,7 @@
 			if (!is_null($val = $this->AppendTo)) {$jqOptions['appendTo'] = $val;}
 			if (!is_null($val = $this->AutoRefresh)) {$jqOptions['autoRefresh'] = $val;}
 			if (!is_null($val = $this->Cancel)) {$jqOptions['cancel'] = $val;}
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Delay)) {$jqOptions['delay'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->Distance)) {$jqOptions['distance'] = $val;}
@@ -243,7 +257,7 @@
 		}
 		/**
 		 * Retrieves the selectables instance object. If the element does not
-		 * have an associated instance, undefined is returned. 
+		 * have an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the selectable plugin has loaded.
@@ -254,7 +268,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -277,7 +291,7 @@
 		}
 		/**
 		 * Sets the value of the selectable option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -318,6 +332,7 @@
 				case 'AppendTo': return $this->mixAppendTo;
 				case 'AutoRefresh': return $this->blnAutoRefresh;
 				case 'Cancel': return $this->mixCancel;
+				case 'Classes': return $this->mixClasses;
 				case 'Delay': return $this->intDelay;
 				case 'Disabled': return $this->blnDisabled;
 				case 'Distance': return $this->intDistance;
@@ -353,6 +368,11 @@
 				case 'Cancel':
 					$this->mixCancel = $mixValue;
 					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'cancel', $mixValue);
+					break;
+
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
 					break;
 
 				case 'Delay':
@@ -425,9 +445,9 @@
 		public static function GetModelConnectorParams() {
 			return array_merge(parent::GetModelConnectorParams(), array(
 				new QModelConnectorParam (get_called_class(), 'AutoRefresh', 'This determines whether to refresh (recalculate) the position and sizeof each selectee at the beginning of each select operation. If youhave many items, you may want to set this to false and call therefresh() method manually.', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'Delay', 'Time in milliseconds to define when the selecting should start. Thishelps prevent unwanted selections when clicking on an element.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Delay', 'Time in milliseconds to define when the selecting should start. Thishelps prevent unwanted selections when clicking on an element.(versiondeprecated: 1.12)', QType::Integer),
 				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the selectable if set to true.', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when selecting should start. If specified,selecting will not start until the mouse has been dragged beyond thespecified distance.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'Distance', 'Tolerance, in pixels, for when selecting should start. If specified,selecting will not start until the mouse has been dragged beyond thespecified distance.(version deprecated: 1.12)', QType::Integer),
 				new QModelConnectorParam (get_called_class(), 'Tolerance', 'Specifies which mode to use for testing whether the lasso shouldselect an item. Possible values: 	* \"fit\": Lasso overlaps the item entirely.	* \"touch\": Lasso overlaps the item by any amount.', QType::String),
 			));
 		}
