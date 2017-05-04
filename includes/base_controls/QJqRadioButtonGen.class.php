@@ -1,14 +1,15 @@
 <?php	
 	/**
-	 * Triggered when the button is created.
+	 * Triggered when the checkboxradio is created.
 	 * 
 	 * 	* event Type: Event 
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QJqRadioButton_CreateEvent extends QJqUiEvent {
-		const EventName = 'buttoncreate';
+		const EventName = 'checkboxradiocreate';
 	}
 
 	/* Custom "property" event classes for this control */
@@ -24,45 +25,37 @@
 	 * 
 	 * @see QJqRadioButtonBase
 	 * @package Controls\Base
-	 * @property boolean $Disabled
-	 * Disables the button if set to true.
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
 	 *
-	 * @property mixed $Icons
-	 * Icons to display, with or without text (see text option). By default,
-	 * the primary icon is displayed on the left of the label text and the
-	 * secondary is displayed on the right. The positioning can be controlled
-	 * via CSS. 
-	 * 
-	 * The value for the primary and secondary properties must match an icon
-	 * class name, e.g., "ui-icon-gear". For using only one icon: icons: {
-	 * primary: "ui-icon-locked" }. For using two icons: icons: { primary:
-	 * "ui-icon-gear", secondary: "ui-icon-triangle-1-s" }.
+	 * @property boolean $Disabled
+	 * Disables the checkboxradio if set to true.
+	 *
+	 * @property boolean $Icon
+	 * Whether to show the checkbox or radio icon, depending on the inputs
+	 * type.
 	 *
 	 * @property string $Label
-	 * Text to show in the button. When not specified (null), the elements
-	 * HTML content is used, or its value attribute if the element is an
-	 * input element of type submit or reset, or the HTML content of the
-	 * associated label element if the element is an input of type radio or
-	 * checkbox.
-	 *
-	 * @property boolean $JqText
-	 * Whether to show the label. When set to false no text will be
-	 * displayed, but the icons option must be enabled, otherwise the text
-	 * option will be ignored.
+	 * Text to show in the button. When not specified (null), the HTML
+	 * content of the associated <label> element is used.
 	 *
 	 */
 
 	class QJqRadioButtonGen extends QRadioButton	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var boolean */
 		protected $blnDisabled = null;
-		/** @var mixed */
-		protected $mixIcons = null;
+		/** @var boolean */
+		protected $blnIcon = null;
 		/** @var string */
 		protected $strLabel = null;
-		/** @var boolean */
-		protected $blnJqText = null;
 
 		/**
 		 * Builds the option array to be sent to the widget constructor.
@@ -71,10 +64,10 @@
 		 */
 		protected function MakeJqOptions() {
 			$jqOptions = null;
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
-			if (!is_null($val = $this->Icons)) {$jqOptions['icons'] = $val;}
+			if (!is_null($val = $this->Icon)) {$jqOptions['icon'] = $val;}
 			if (!is_null($val = $this->Label)) {$jqOptions['label'] = $val;}
-			if (!is_null($val = $this->JqText)) {$jqOptions['text'] = $val;}
 			return $jqOptions;
 		}
 
@@ -84,7 +77,7 @@
 		 * @return string
 		 */
 		public function GetJqSetupFunction() {
-			return 'button';
+			return 'checkboxradio';
 		}
 
 		/**
@@ -114,8 +107,8 @@
 		}
 
 		/**
-		 * Removes the button functionality completely. This will return the
-		 * element back to its pre-init state.
+		 * Removes the checkboxradio functionality completely. This will return
+		 * the element back to its pre-init state.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
@@ -123,7 +116,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
-		 * Disables the button.
+		 * Disables the checkboxradio.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
@@ -131,7 +124,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
-		 * Enables the button.
+		 * Enables the checkboxradio.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
@@ -139,11 +132,11 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
 		/**
-		 * Retrieves the buttons instance object. If the element does not have an
-		 * associated instance, undefined is returned. 
+		 * Retrieves the checkboxradios instance object. If the element does not
+		 * have an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
-		 * after the button plugin has loaded.
+		 * after the checkboxradio plugin has loaded.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
@@ -151,7 +144,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -165,7 +158,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * button options hash.
+		 * checkboxradio options hash.
 		 * 
 		 * 	* This signature does not accept any arguments.
 		 */
@@ -173,8 +166,8 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
 		/**
-		 * Sets the value of the button option associated with the specified
-		 * optionName. 
+		 * Sets the value of the checkboxradio option associated with the
+		 * specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -190,7 +183,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
-		 * Sets one or more options for the button.
+		 * Sets one or more options for the checkboxradio.
 		 * 
 		 * 	* options Type: Object A map of option-value pairs to set.
 		 * @param $options
@@ -199,8 +192,8 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 		/**
-		 * Refreshes the visual state of the button. Useful for updating button
-		 * state after the native elements checked or disabled state is changed
+		 * Refreshes the visual state of the widget. Useful for updating after
+		 * the native elements checked or disabled state is changed
 		 * programmatically.
 		 * 
 		 * 	* This method does not accept any arguments.
@@ -212,10 +205,10 @@
 
 		public function __get($strName) {
 			switch ($strName) {
+				case 'Classes': return $this->mixClasses;
 				case 'Disabled': return $this->blnDisabled;
-				case 'Icons': return $this->mixIcons;
+				case 'Icon': return $this->blnIcon;
 				case 'Label': return $this->strLabel;
-				case 'JqText': return $this->blnJqText;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -228,6 +221,11 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
+					break;
+
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
@@ -238,25 +236,20 @@
 						throw $objExc;
 					}
 
-				case 'Icons':
-					$this->mixIcons = $mixValue;
-					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'icons', $mixValue);
-					break;
-
-				case 'Label':
+				case 'Icon':
 					try {
-						$this->strLabel = QType::Cast($mixValue, QType::String);
-						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'label', $this->strLabel);
+						$this->blnIcon = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'icon', $this->blnIcon);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
 
-				case 'JqText':
+				case 'Label':
 					try {
-						$this->blnJqText = QType::Cast($mixValue, QType::Boolean);
-						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'text', $this->blnJqText);
+						$this->strLabel = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'label', $this->strLabel);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -287,9 +280,9 @@
 		**/
 		public static function GetModelConnectorParams() {
 			return array_merge(parent::GetModelConnectorParams(), array(
-				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the button if set to true.', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'Label', 'Text to show in the button. When not specified (null), the elementsHTML content is used, or its value attribute if the element is aninput element of type submit or reset, or the HTML content of theassociated label element if the element is an input of type radio orcheckbox.', QType::String),
-				new QModelConnectorParam (get_called_class(), 'JqText', 'Whether to show the label. When set to false no text will bedisplayed, but the icons option must be enabled, otherwise the textoption will be ignored.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the checkboxradio if set to true.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Icon', 'Whether to show the checkbox or radio icon, depending on the inputstype.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Label', 'Text to show in the button. When not specified (null), the HTMLcontent of the associated <label> element is used.', QType::String),
 			));
 		}
 	}

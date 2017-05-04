@@ -1,31 +1,6 @@
 <?php	
 	/**
-	 * Triggered when the selected item has changed. Not every select event
-	 * will fire a change event.
-	 * 
-	 * 	* event Type: Event 
-	 * 
-	 * 	* ui Type: Object 
-	 * 
-	 * 	* item Type: jQuery The active item.
-	 * 
-	 */
-	class QSelectMenu_ChangeEvent extends QJqUiEvent {
-		const EventName = 'selectmenuchange';
-	}
-	/**
-	 * Triggered when the menu is hidden.
-	 * 
-	 * 	* event Type: Event 
-	 * 
-	 * _Note: The ui object is empty but included for consistency with other
-	 * events._
-	 */
-	class QSelectMenu_CloseEvent extends QJqUiEvent {
-		const EventName = 'selectmenuclose';
-	}
-	/**
-	 * Triggered when the selectmenu is created.
+	 * Triggered when the controlgroup is created.
 	 * 
 	 * 	* event Type: Event 
 	 * 	* ui Type: Object 
@@ -33,67 +8,23 @@
 	 * _Note: The ui object is empty but included for consistency with other
 	 * events._
 	 */
-	class QSelectMenu_CreateEvent extends QJqUiEvent {
-		const EventName = 'selectmenucreate';
-	}
-	/**
-	 * Triggered when an items gains focus.
-	 * 
-	 * 	* event Type: Event 
-	 * 
-	 * 	* ui Type: Object 
-	 * 
-	 * 	* item Type: jQuery The focused item.
-	 * 
-	 */
-	class QSelectMenu_FocusEvent extends QJqUiEvent {
-		const EventName = 'selectmenufocus';
-	}
-	/**
-	 * Triggered when the menu is opened.
-	 * 
-	 * 	* event Type: Event 
-	 * 
-	 * _Note: The ui object is empty but included for consistency with other
-	 * events._
-	 */
-	class QSelectMenu_OpenEvent extends QJqUiEvent {
-		const EventName = 'selectmenuopen';
-	}
-	/**
-	 * Triggered when a menu item is selected.
-	 * 
-	 * 	* event Type: Event 
-	 * 
-	 * 	* ui Type: Object 
-	 * 
-	 * 	* item Type: jQuery The selected item.
-	 * 
-	 */
-	class QSelectMenu_SelectEvent extends QJqUiEvent {
-		const EventName = 'selectmenuselect';
+	class QControlgroup_CreateEvent extends QJqUiEvent {
+		const EventName = 'controlgroupcreate';
 	}
 
 	/* Custom "property" event classes for this control */
 
 	/**
-	 * Generated QSelectMenuGen class.
+	 * Generated QControlgroupGen class.
 	 * 
-	 * This is the QSelectMenuGen class which is automatically generated
+	 * This is the QControlgroupGen class which is automatically generated
 	 * by scraping the JQuery UI documentation website. As such, it includes all the options
 	 * as listed by the JQuery UI website, which may or may not be appropriate for QCubed. See
-	 * the QSelectMenuBase class for any glue code to make this class more
+	 * the QControlgroupBase class for any glue code to make this class more
 	 * usable in QCubed.
 	 * 
-	 * @see QSelectMenuBase
+	 * @see QControlgroupBase
 	 * @package Controls\Base
-	 * @property mixed $AppendTo
-	 * Which element to append the menu to. When the value is null, the
-	 * parents of the <select> are checked for a class name of ui-front. If
-	 * an element with the ui-front class name is found, the menu is appended
-	 * to that element. Regardless of the value, if no element is found, the
-	 * menu is appended to the body.
-	 *
 	 * @property mixed $Classes
 	 * Specify additional classes to add to the widgets elements. Any of
 	 * classes specified in the Theming section can be used as keys to
@@ -101,45 +32,53 @@
 	 * learn article about the classes option.
 
 	 *
-	 * @property boolean $Disabled
-	 * Disables the selectmenu if set to true.
+	 * @property string $Direction
+	 * By default, controlgroup displays its controls in a horizontal layout.
+	 * Use this option to use a vertical layout instead.
+
 	 *
-	 * @property mixed $Icons
-	 * Icons to use for the button, matching an icon defined by the jQuery UI
-	 * CSS Framework. 
+	 * @property boolean $Disabled
+	 * Disables the controlgroup if set to true.
+	 *
+	 * @property mixed $Items
+	 * Which descendant elements to initialize as their respective widgets.
+	 * Two elements have special behavior: 
 	 * 
-	 * 	* button (string, default: "ui-icon-triangle-1-s")
+	 * 	* controlgroupLabel: Any elements matching the selector for this will
+	 * be wrapped in a span with the ui-controlgroup-label-contents class.
+	 * 	* spinner: This uses a class selector as the value. Requires either
+	 * adding the class manually or initializing the spinner manually. Can be
+	 * overridden to use input[type=number], but that also requires custom
+	 * CSS to remove the native number controls.
 	 * 
 
 	 *
-	 * @property mixed $Position
-	 * Identifies the position of the menu in relation to the associated
-	 * button element. You can refer to the jQuery UI Position utility for
-	 * more details about the various options.
-	 *
-	 * @property mixed $Width
-	 * The width of the menu, in pixels. When the value is null, the width of
-	 * the native select is used. When the value is false, no inline style
-	 * will be set for the width, allowing the width to be set in a
-	 * stylesheet.
+	 * @property boolean $OnlyVisible
+	 * Sets whether to exclude invisible children in the assignment of
+	 * rounded corners. When set to false, all children of a controlgroup are
+	 * taken into account when assigning rounded corners, including hidden
+	 * children. Thus, if, for example, the controlgroups first child is
+	 * hidden and the default horizontal layout is applied, the controlgroup
+	 * will, in effect, not have rounded corners on the left edge. Likewise,
+	 * if the controlgroup has a vertical layout and its first child is
+	 * hidden, the controlgroup will not have rounded corners on the top
+	 * edge.
 	 *
 	 */
 
-	class QSelectMenuGen extends QListBox	{
+	class QControlgroupGen extends QPanel	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
 		/** @var mixed */
-		protected $mixAppendTo = null;
-		/** @var mixed */
 		protected $mixClasses = null;
+		/** @var string */
+		protected $strDirection = null;
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var mixed */
-		protected $mixIcons = null;
-		/** @var mixed */
-		protected $mixPosition = null;
-		/** @var mixed */
-		protected $mixWidth = null;
+		protected $mixItems = null;
+		/** @var boolean */
+		protected $blnOnlyVisible = null;
 
 		/**
 		 * Builds the option array to be sent to the widget constructor.
@@ -148,12 +87,11 @@
 		 */
 		protected function MakeJqOptions() {
 			$jqOptions = null;
-			if (!is_null($val = $this->AppendTo)) {$jqOptions['appendTo'] = $val;}
 			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
+			if (!is_null($val = $this->Direction)) {$jqOptions['direction'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
-			if (!is_null($val = $this->Icons)) {$jqOptions['icons'] = $val;}
-			if (!is_null($val = $this->Position)) {$jqOptions['position'] = $val;}
-			if (!is_null($val = $this->Width)) {$jqOptions['width'] = $val;}
+			if (!is_null($val = $this->Items)) {$jqOptions['items'] = $val;}
+			if (!is_null($val = $this->OnlyVisible)) {$jqOptions['onlyVisible'] = $val;}
 			return $jqOptions;
 		}
 
@@ -163,7 +101,7 @@
 		 * @return string
 		 */
 		public function GetJqSetupFunction() {
-			return 'selectmenu';
+			return 'controlgroup';
 		}
 
 		/**
@@ -193,16 +131,8 @@
 		}
 
 		/**
-		 * Closes the menu.
-		 * 
-		 * 	* This method does not accept any arguments.
-		 */
-		public function Close() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "close", QJsPriority::Low);
-		}
-		/**
-		 * Removes the selectmenu functionality completely. This will return the
-		 * element back to its pre-init state.
+		 * Removes the controlgroup functionality completely. This will return
+		 * the element back to its pre-init state.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
@@ -210,7 +140,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 		/**
-		 * Disables the selectmenu.
+		 * Disables the controlgroup.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
@@ -218,7 +148,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 		/**
-		 * Enables the selectmenu.
+		 * Enables the controlgroup.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
@@ -226,32 +156,16 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
 		/**
-		 * Retrieves the selectmenus instance object. If the element does not
+		 * Retrieves the controlgroups instance object. If the element does not
 		 * have an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
-		 * after the selectmenu plugin has loaded.
+		 * after the controlgroup plugin has loaded.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
 		public function Instance() {
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
-		}
-		/**
-		 * Returns a jQuery object containing the menu element.
-		 * 
-		 * 	* This method does not accept any arguments.
-		 */
-		public function MenuWidget() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "menuWidget", QJsPriority::Low);
-		}
-		/**
-		 * Opens the menu.
-		 * 
-		 * 	* This method does not accept any arguments.
-		 */
-		public function Open() {
-			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "open", QJsPriority::Low);
 		}
 		/**
 		 * Gets the value currently associated with the specified optionName.
@@ -268,7 +182,7 @@
 		}
 		/**
 		 * Gets an object containing key/value pairs representing the current
-		 * selectmenu options hash.
+		 * controlgroup options hash.
 		 * 
 		 * 	* This signature does not accept any arguments.
 		 */
@@ -276,8 +190,8 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", QJsPriority::Low);
 		}
 		/**
-		 * Sets the value of the selectmenu option associated with the specified
-		 * optionName.
+		 * Sets the value of the controlgroup option associated with the
+		 * specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -293,7 +207,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 		/**
-		 * Sets one or more options for the selectmenu.
+		 * Sets one or more options for the controlgroup.
 		 * 
 		 * 	* options Type: Object A map of option-value pairs to set.
 		 * @param $options
@@ -302,8 +216,8 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 		/**
-		 * Parses the original element and re-renders the menu. Processes any
-		 * <option> or <optgroup> elements that were added, removed or disabled.
+		 * Process any widgets that were added or removed directly in the DOM.
+		 * Results depend on the items option.
 		 * 
 		 * 	* This method does not accept any arguments.
 		 */
@@ -314,12 +228,11 @@
 
 		public function __get($strName) {
 			switch ($strName) {
-				case 'AppendTo': return $this->mixAppendTo;
 				case 'Classes': return $this->mixClasses;
+				case 'Direction': return $this->strDirection;
 				case 'Disabled': return $this->blnDisabled;
-				case 'Icons': return $this->mixIcons;
-				case 'Position': return $this->mixPosition;
-				case 'Width': return $this->mixWidth;
+				case 'Items': return $this->mixItems;
+				case 'OnlyVisible': return $this->blnOnlyVisible;
 				default: 
 					try { 
 						return parent::__get($strName); 
@@ -332,15 +245,20 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
-				case 'AppendTo':
-					$this->mixAppendTo = $mixValue;
-					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'appendTo', $mixValue);
-					break;
-
 				case 'Classes':
 					$this->mixClasses = $mixValue;
 					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
 					break;
+
+				case 'Direction':
+					try {
+						$this->strDirection = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'direction', $this->strDirection);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 				case 'Disabled':
 					try {
@@ -352,20 +270,20 @@
 						throw $objExc;
 					}
 
-				case 'Icons':
-					$this->mixIcons = $mixValue;
-					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'icons', $mixValue);
+				case 'Items':
+					$this->mixItems = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'items', $mixValue);
 					break;
 
-				case 'Position':
-					$this->mixPosition = $mixValue;
-					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'position', $mixValue);
-					break;
-
-				case 'Width':
-					$this->mixWidth = $mixValue;
-					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'width', $mixValue);
-					break;
+				case 'OnlyVisible':
+					try {
+						$this->blnOnlyVisible = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'onlyVisible', $this->blnOnlyVisible);
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
 
 
 				case 'Enabled':
@@ -391,7 +309,9 @@
 		**/
 		public static function GetModelConnectorParams() {
 			return array_merge(parent::GetModelConnectorParams(), array(
-				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the selectmenu if set to true.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'Direction', 'By default, controlgroup displays its controls in a horizontal layout.Use this option to use a vertical layout instead.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the controlgroup if set to true.', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'OnlyVisible', 'Sets whether to exclude invisible children in the assignment ofrounded corners. When set to false, all children of a controlgroup aretaken into account when assigning rounded corners, including hiddenchildren. Thus, if, for example, the controlgroups first child ishidden and the default horizontal layout is applied, the controlgroupwill, in effect, not have rounded corners on the left edge. Likewise,if the controlgroup has a vertical layout and its first child ishidden, the controlgroup will not have rounded corners on the topedge.', QType::Boolean),
 			));
 		}
 	}

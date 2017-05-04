@@ -21,7 +21,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QAutocomplete_CloseEvent extends QJqUiEvent {
 		const EventName = 'autocompleteclose';
 	}
@@ -32,7 +33,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QAutocomplete_CreateEvent extends QJqUiEvent {
 		const EventName = 'autocompletecreate';
 	}
@@ -40,8 +42,7 @@
 	 * Triggered when focus is moved to an item (not selecting). The default
 	 * action is to replace the text fields value with the value of the
 	 * focused item, though only if the event was triggered by a keyboard
-	 * interaction. 
-	 * 
+	 * interaction.
 	 * Canceling this event prevents the value from being updated, but does
 	 * not prevent the menu item from being focused.
 	 * 
@@ -62,7 +63,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QAutocomplete_OpenEvent extends QJqUiEvent {
 		const EventName = 'autocompleteopen';
 	}
@@ -95,15 +97,15 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QAutocomplete_SearchEvent extends QJqUiEvent {
 		const EventName = 'autocompletesearch';
 	}
 	/**
 	 * Triggered when an item is selected from the menu. The default action
 	 * is to replace the text fields value with the value of the selected
-	 * item. 
-	 * 
+	 * item.
 	 * Canceling this event prevents the value from being updated, but does
 	 * not prevent the menu from closing.
 	 * 
@@ -137,13 +139,20 @@
 	 * the parents of the input field will be checked for a class of
 	 * ui-front. If an element with the ui-front class is found, the menu
 	 * will be appended to that element. Regardless of the value, if no
-	 * element is found, the menu will be appended to the body. Note: The
-	 * appendTo option should not be changed while the suggestions menu is
-	 * open.
+	 * element is found, the menu will be appended to the body.
+	 * Note: The appendTo option should not be changed while the suggestions
+	 * menu is open.
 	 *
 	 * @property boolean $AutoFocus
 	 * If set to true the first item will automatically be focused when the
 	 * menu is shown.
+	 *
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
 	 *
 	 * @property integer $Delay
 	 * The delay in milliseconds between when a keystroke occurs and when a
@@ -168,13 +177,13 @@
 	 * options.
 	 *
 	 * @property mixed $Source
-	 * Defines the data to use, must be specified. 
-	 * 
+	 * Defines the data to use, must be specified.
 	 * Independent of the variant you use, the label is always treated as
 	 * text. If you want the label to be treated as html you can use Scott
 	 * González html extension. The demos all focus on different variations
 	 * of the source option - look for one that matches your use case, and
-	 * check out the code.Multiple types supported:
+	 * check out the code.
+	 * Multiple types supported:
 	 * 
 	 * 	* Array: An array can be used for local data. There are two supported
 	 * formats: 
@@ -228,6 +237,8 @@
 		protected $mixAppendTo = null;
 		/** @var boolean */
 		protected $blnAutoFocus = null;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var integer */
 		protected $intDelay = null;
 		/** @var boolean */
@@ -248,6 +259,7 @@
 			$jqOptions = null;
 			if (!is_null($val = $this->AppendTo)) {$jqOptions['appendTo'] = $val;}
 			if (!is_null($val = $this->AutoFocus)) {$jqOptions['autoFocus'] = $val;}
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Delay)) {$jqOptions['delay'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->MinLength)) {$jqOptions['minLength'] = $val;}
@@ -327,7 +339,7 @@
 		}
 		/**
 		 * Retrieves the autocompletes instance object. If the element does not
-		 * have an associated instance, undefined is returned. 
+		 * have an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the autocomplete plugin has loaded.
@@ -338,7 +350,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -361,7 +373,7 @@
 		}
 		/**
 		 * Sets the value of the autocomplete option associated with the
-		 * specified optionName. 
+		 * specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -404,6 +416,7 @@
 			switch ($strName) {
 				case 'AppendTo': return $this->mixAppendTo;
 				case 'AutoFocus': return $this->blnAutoFocus;
+				case 'Classes': return $this->mixClasses;
 				case 'Delay': return $this->intDelay;
 				case 'Disabled': return $this->blnDisabled;
 				case 'MinLength': return $this->intMinLength;
@@ -435,6 +448,11 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
+					break;
 
 				case 'Delay':
 					try {

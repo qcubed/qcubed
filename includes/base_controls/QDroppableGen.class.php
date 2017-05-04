@@ -28,7 +28,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QDroppable_CreateEvent extends QJqUiEvent {
 		const EventName = 'dropcreate';
 	}
@@ -81,7 +82,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QDroppable_OutEvent extends QJqUiEvent {
 		const EventName = 'dropout';
 	}
@@ -135,11 +137,22 @@
 	 * @property string $ActiveClass
 	 * If specified, the class will be added to the droppable while an
 	 * acceptable draggable is being dragged.
+	 * 
+	 * The activeClass option has been deprecated in favor of the classes
+	 * option, using the ui-droppable-active property.
+	 * (version deprecated: 1.12)
 	 *
 	 * @property boolean $AddClasses
 	 * If set to false, will prevent the ui-droppable class from being added.
 	 * This may be desired as a performance optimization when calling
 	 * .droppable() init on hundreds of elements.
+	 *
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
 	 *
 	 * @property boolean $Disabled
 	 * Disables the droppable if set to true.
@@ -154,6 +167,10 @@
 	 * @property string $HoverClass
 	 * If specified, the class will be added to the droppable while an
 	 * acceptable draggable is being hovered over the droppable.
+	 * 
+	 * The hoverClass option has been deprecated in favor of the classes
+	 * option, using the ui-droppable-hover property.
+	 * (version deprecated: 1.12)
 	 *
 	 * @property string $Scope
 	 * Used to group sets of draggable and droppable items, in addition to
@@ -183,6 +200,8 @@
 		protected $strActiveClass = null;
 		/** @var boolean */
 		protected $blnAddClasses = null;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var boolean */
@@ -204,6 +223,7 @@
 			if (!is_null($val = $this->Accept)) {$jqOptions['accept'] = $val;}
 			if (!is_null($val = $this->ActiveClass)) {$jqOptions['activeClass'] = $val;}
 			if (!is_null($val = $this->AddClasses)) {$jqOptions['addClasses'] = $val;}
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->Greedy)) {$jqOptions['greedy'] = $val;}
 			if (!is_null($val = $this->HoverClass)) {$jqOptions['hoverClass'] = $val;}
@@ -274,7 +294,7 @@
 		}
 		/**
 		 * Retrieves the droppables instance object. If the element does not have
-		 * an associated instance, undefined is returned. 
+		 * an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the droppable plugin has loaded.
@@ -285,7 +305,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -308,7 +328,7 @@
 		}
 		/**
 		 * Sets the value of the droppable option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -339,6 +359,7 @@
 				case 'Accept': return $this->mixAccept;
 				case 'ActiveClass': return $this->strActiveClass;
 				case 'AddClasses': return $this->blnAddClasses;
+				case 'Classes': return $this->mixClasses;
 				case 'Disabled': return $this->blnDisabled;
 				case 'Greedy': return $this->blnGreedy;
 				case 'HoverClass': return $this->strHoverClass;
@@ -380,6 +401,11 @@
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
+
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
+					break;
 
 				case 'Disabled':
 					try {
@@ -455,11 +481,11 @@
 		**/
 		public static function GetModelConnectorParams() {
 			return array_merge(parent::GetModelConnectorParams(), array(
-				new QModelConnectorParam (get_called_class(), 'ActiveClass', 'If specified, the class will be added to the droppable while anacceptable draggable is being dragged.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ActiveClass', 'If specified, the class will be added to the droppable while anacceptable draggable is being dragged.The activeClass option has been deprecated in favor of the classesoption, using the ui-droppable-active property.(version deprecated: 1.12)', QType::String),
 				new QModelConnectorParam (get_called_class(), 'AddClasses', 'If set to false, will prevent the ui-droppable class from being added.This may be desired as a performance optimization when calling.droppable() init on hundreds of elements.', QType::Boolean),
 				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the droppable if set to true.', QType::Boolean),
 				new QModelConnectorParam (get_called_class(), 'Greedy', 'By default, when an element is dropped on nested droppables, eachdroppable will receive the element. However, by setting this option totrue, any parent droppables will not receive the element. The dropevent will still bubble normally, but the event.target can be checkedto see which droppable received the draggable element.', QType::Boolean),
-				new QModelConnectorParam (get_called_class(), 'HoverClass', 'If specified, the class will be added to the droppable while anacceptable draggable is being hovered over the droppable.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'HoverClass', 'If specified, the class will be added to the droppable while anacceptable draggable is being hovered over the droppable.The hoverClass option has been deprecated in favor of the classesoption, using the ui-droppable-hover property.(version deprecated: 1.12)', QType::String),
 				new QModelConnectorParam (get_called_class(), 'Scope', 'Used to group sets of draggable and droppable items, in addition tothe accept option. A draggable with the same scope value as adroppable will be accepted.', QType::String),
 				new QModelConnectorParam (get_called_class(), 'Tolerance', 'Specifies which mode to use for testing whether a draggable ishovering over a droppable. Possible values: 	* \"fit\": Draggable overlaps the droppable entirely.	* \"intersect\": Draggable overlaps the droppable at least 50% in bothdirections.	* \"pointer\": Mouse pointer overlaps the droppable.	* \"touch\": Draggable overlaps the droppable any amount.', QType::String),
 			));
