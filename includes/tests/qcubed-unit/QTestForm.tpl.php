@@ -8,7 +8,7 @@
 	<h1>QCubed Unit Tests</h1>
 	<p>
 		Welcome to the QCubed Unit Tests. The tests are designed to be run in a particular environment, using the
-		examples SQL data, and certain options in the codegen_options.json file. These tests and are run
+		examples SQL data, and certain options in the codegen_options.json file. These tests are run
 		automatically on GitHub whenever code is checked in to repository there. To run the tests locally,
 		do the following:
 
