@@ -89,6 +89,7 @@
 	 * @property boolean $Visible specifies whether or not the control should be rendered in the page.  This is in contrast to Display, which will just hide the control via CSS styling.
 	 * @property string $Warning is warning text that will be shown next to the control's name label {@link QControl::RenderWithName}
 	 * @property boolean $UseWrapper defaults to true
+	 * @property boolean $ShowWrapper defaults to true
 	 * @property QQNode $LinkedNode A database node that this control is directly editing
 	 * @property-read boolean $WrapperModified
 	 * @property string $WrapperCssClass
@@ -185,6 +186,8 @@
 		//protected $strWrapperCssClass = null; -- See objWrapperStyler now
 		/** @var bool Should the wrapper be used when rendering?  */
 		protected $blnUseWrapper = true;
+		/** @var bool Should the wrapper to turn off, for example, to use custom theme? */
+		protected $blnShowWrapper = true;
         /** @var string  One time scripts associated with the control. */
         protected $strAttributeScripts = null;
 		/** @var string The INITIAL class for the object. Only subclasses should set this before calling the parent constructor. */
@@ -1139,11 +1142,17 @@
 		 * @return string
 		 */
 		protected function RenderWrappedOutput($strOutput, $blnForceAsBlockElement = false) {
-			$strTag = ($this->blnIsBlockElement || $blnForceAsBlockElement) ? 'div' : 'span';
-			$overrides = ['id'=>$this->GetWrapperId()];
-			$attributes = $this->GetWrapperAttributes($overrides);
+			if ($this->blnShowWrapper) {
+				$strTag = ($this->blnIsBlockElement || $blnForceAsBlockElement) ? 'div' : 'span';
+				$overrides = ['id' => $this->GetWrapperId()];
+				$attributes = $this->GetWrapperAttributes($overrides);
 
-			return QHtml::RenderTag($strTag, $attributes, $strOutput);
+				return QHtml::RenderTag($strTag, $attributes, $strOutput);
+
+			} else {
+
+				return $strOutput;
+			}
 		}
 
 		/**
@@ -2021,6 +2030,7 @@
 				case "ScriptsOnly": return $this->blnScriptsOnly;
 				case "WrapperCssClass": return $this->GetWrapperStyler()->CssClass;
 				case "UseWrapper": return $this->blnUseWrapper;
+				case "ShowWrapper": return $this->blnShowWrapper;
 
 				// SETTINGS
 				case "JavaScripts": return $this->strJavaScripts;
@@ -2297,6 +2307,17 @@
 							if ($this->ParentControl) {
 								$this->ParentControl->MarkAsModified();
 							}
+						}
+						break;
+					} catch (QInvalidCastException $objExc) {
+						$objExc->IncrementOffset();
+						throw $objExc;
+					}
+				case "ShowWrapper":
+					try {
+						if ($this->blnShowWrapper !== ($mixValue = QType::Cast($mixValue, QType::Boolean))) {
+							$this->MarkAsModified();
+							$this->blnShowWrapper = $mixValue;
 						}
 						break;
 					} catch (QInvalidCastException $objExc) {
