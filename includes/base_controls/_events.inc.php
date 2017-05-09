@@ -415,8 +415,8 @@
 
 		protected $strReturnParam;
 
-		public function __construct($intDelay = 0, $strCondition = null, $mixReturnParams = null) {
-			parent::__construct($intDelay, $strCondition, 'th,td');
+		public function __construct($intDelay = 0, $strCondition = null, $mixReturnParams = null, $strSelector='td') {
+			parent::__construct($intDelay, $strCondition, $strSelector);
 
 			if (!$mixReturnParams) {
 				$this->strReturnParam = '{"row": $j(this).parent()[0].rowIndex, "col": this.cellIndex}'; // default returns the row and colum indexes of the cell clicked
