@@ -51,13 +51,18 @@
 						$strJqUiProperty = $objAction->objEvent->JqProperty;
 					}
 
-					if ($objAction->objEvent->Delay > 0) {
+                    $strCode = ' ' . $objAction->RenderScript($objControl);
+
+                    if ($objAction->objEvent->Block) {
+                        $strCode .= _nl() . 'qc.blockEvents = true;';
+                    }
+
+
+                    if ($objAction->objEvent->Delay > 0) {
 						$strCode = sprintf(" qcubed.setTimeout('%s', \$j.proxy(function(){%s},this), %s);",
 							$objControl->ControlId,
-						    _nl() . _indent(trim($objAction->RenderScript($objControl))) . _nl(),
+						    _nl() . _indent(trim($strCode)) . _nl(),
 							$objAction->objEvent->Delay);
-					} else {
-						$strCode = ' ' . $objAction->RenderScript($objControl);
 					}
 
 					// Add Condition (if applicable)
@@ -73,9 +78,6 @@
 			}
 
 			if (strlen($strToReturn)) {
-				if ($objAction->objEvent->Block) {
-					$strToReturn .= 'qc.blockEvents = true;';
-				}
 				$strToReturn = _nl() . _indent($strToReturn);
 
 
