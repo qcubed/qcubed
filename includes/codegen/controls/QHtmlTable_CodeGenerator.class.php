@@ -679,9 +679,10 @@ TMPL;
 		protected \$pxyEditRow;
 
 		protected function {$strVarName}_MakeEditable () {
-			\$pxyEditRow = new QControlProxy(\$this);
-			\$pxyEditRow->AddAction(new QClickEvent(), new QAjaxControlAction(\$this, '{$strVarName}_EditClick'));
-			\$this->{$strVarName}->CreateLinkColumn(QApplication::Translate('Edit'), QApplication::Translate('Edit'), \$pxyEditRow, QQN::{$objTable->ClassName}()->Id, null, false, 0);
+			\$this->>pxyEditRow = new QControlProxy(\$this);
+			\$this->>pxyEditRow->AddAction(new QClickEvent(), new QAjaxControlAction(\$this, '{$strVarName}_EditClick'));
+			\$this->{$strVarName}->CreateLinkColumn(QApplication::Translate('Edit'), QApplication::Translate('Edit'), \$this->>pxyEditRow, QQN::{$objTable->ClassName}()->Id, null, false, 0);
+			\$this->{$strVarName}->RemoveCssClass('clickable-rows');
 		}
 
 		protected function {$strVarName}_EditClick(\$strFormId, \$strControlId, \$param) {

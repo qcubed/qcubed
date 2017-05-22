@@ -311,20 +311,13 @@
 
 
 	/**
-	 * DEPRECATED
-	 * a custom event with event delegation
-	 * With this event you can delegate any jquery event of child controls or any html element
-	 * to a parent. By using the selector you can limit the event sources this event
-	 * gets triggered from. You can use a css class (or any jquery selector) for
-	 * $strSelector. Example ( new QJsDelegateEvent("click",".remove",new QAjaxControlAction( ... )); )
+	 * Respond to any custom javascript event.
 	 *
-	 * This event can help you reduce the produced javascript to a minimum.
-	 * One positive side effect is that this event will also work for html child elements added
-	 * in the future (after the event was created).
+	 * Note, at one time, this event was required to react to bubbled events, but now every event
+	 * has a $strSelector to trigger on bubbled events.
 	 *
 	 * @param string $strEventName the name of the event i.e.: "click"
 	 * @param string $strSelector i.e.: "#myselector" ==> results in: $('#myControl').on("myevent","#myselector",function()...
-	 * @deprectated QEvent now has the strSelector at the end of its constructor
 	 *
 	 */
 	class QOnEvent extends QEvent{
