@@ -31,6 +31,8 @@
 		protected $intFormStatus;
 		/** @var QControl[] Array of QControls with this form as the parent */
 		protected $objControlArray;
+		/** @var Container|null */
+		protected $container;
 		/**
 		 * @var QControlGrouping List of Groupings in the form (for old drag and drop)
 		 * Use of this is deprecated in favor of jQueryUI drag and drop, but code remains in case we need it again.
@@ -93,6 +95,18 @@
 		 *              try to take care of the situation.
 		 */
 		public static $FormStateHandler = 'QFormStateHandler';
+
+		/**
+		 * @return Container
+		 */
+		public function getContainer()
+		{
+			if (!$this->container) {
+				throw new Exception('The container is not set');
+			}
+
+			return $this->container;
+		}
 
 		/////////////////////////
 		// Public Properties: GET
@@ -361,12 +375,13 @@
 		 * @param string $strFormClass The class of the form to create when creating a new form.
 		 * @param string|null $strAlternateHtmlFile location of the alternate HTML template file.
 		 * @param string|null $strFormId The html id to use for the form. If null, $strFormClass will be used.
+		 * @param Container|null $container
 		 *
 		 * @throws QCallerException
 		 * @throws QInvalidFormStateException
 		 * @throws Exception
 		 */
-		public static function Run($strFormClass, $strAlternateHtmlFile = null, $strFormId = null) {
+		public static function Run($strFormClass, $strAlternateHtmlFile = null, $strFormId = null, $container = null) {
 			// See if we can get a Form Class out of PostData
 			$objClass = null;
 			if ($strFormId === null) {
@@ -531,7 +546,7 @@
 
 			} else {
 				// We have no form state -- Create Brand New One
-				$objClass = new $strFormClass();
+				$objClass = new $strFormClass($container);
 
 				// Globalize
 				global $_FORM;
@@ -1400,7 +1415,10 @@
 		/**
 		 * This exists to prevent inadverant "New"
 		 */
-		protected function __construct() {}
+		protected function __construct($container = null)
+		{
+			$this->container = $container;
+		}
 
 		/**
 		 * Renders the tags to include the css style sheets. Call this in your head tag if you want to
