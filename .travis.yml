@@ -47,6 +47,21 @@ after_script:
 sudo: false
 
 matrix:
+  include:
+    # test against the latest HHVM version by using trusty
+    - php: hhvm
+      env: DB=mysql
+      sudo: true
+      dist: trusty
+      addons:
+        apt:
+          packages:
+            - mysql-server-5.6
+            - mysql-client-core-5.6
+            - mysql-client-5.6
+      services:
+        - mysql
+
   exclude:
     - php: hhvm
       env: DB=pgsql POSTGRESQL_VERSION=9.1 # driver currently unsupported by HHVM
