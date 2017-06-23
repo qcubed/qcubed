@@ -17,11 +17,6 @@ $_TEMPLATE_SETTINGS = array(
 <?php print("<?php\n"); ?>
 	// This is the HTML template include file (.tpl.php) for the <?= QConvertNotation::UnderscoreFromCamelCase($strPropertyName) ?>_edit.php
 	// Feel free to edit this as needed.
-	global $gObjectName;
-	global $gObjectNamePlural;
-
-	$gObjectName =  QApplication::Translate('<?= $strPropertyName ?>');
-	$gObjectNamePlural =  QApplication::Translate('<?= $strPropertyNamePlural ?>');
 
 	$strPageTitle = QApplication::Translate('<?= $strPropertyName ?>');
 	require(__CONFIGURATION__ . '/header.inc.php');
