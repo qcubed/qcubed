@@ -60,6 +60,9 @@ matrix:
             - mysql-client-5.6
       services:
         - mysql
+      install:
+          - composer install
+          # No predis test here
 
   exclude:
     - php: hhvm
