@@ -5,7 +5,7 @@
 [![Issue Count](https://codeclimate.com/github/qcubed/framework/badges/issue_count.svg)](https://codeclimate.com/github/qcubed/framework)
 
 ## Releases
-**Newest stable release: [version 3.0.6, released on Oct. 25, 2016].
+**Newest stable release: [version 3.1.0, released on July 6, 2017].
 
 The most recent stable version of version 2 can be found in the v2 branch.
 
@@ -66,14 +66,17 @@ Through its plugin system, QCubed makes it easy to package and deliver enhanceme
 The installation procedure is described in detail here: [Installation instructions](https://github.com/qcubed/qcubed/blob/master/INSTALL.md "Installation instructions").
 
 ## Upgrading
-###2.x -> 3.0
+### 2.x -> 3.0
 3.0 was a major architectural change from 2.x. You should essentially start over by creating a new project, 
 generating your models, using the ModelConnectorEditor to refine what is generated in the connectors(used to be called MetaControls),
 and then copying code from your old version to the new version. You will find that many of the things you had to do
 by hand are now done in generated code, so it might not take as long as you think. Lets hop :-)
 
-###3.0 -> 3.1
-To help with the transition, the new private variable feature is turned off by default. You will
+### 3.0 -> 3.1
+v3.1 Now has change tracking in the models. Instead of pushing an entire object to the database
+every time you save an object, it only pushes the data that has changed. To do this, it makes the member variables
+in the generated model superclass private instead of protected, which may require you to change code in your
+model subclass. To help with the transition, the new private variable feature is turned off by default. You will
 need to turn it on by editing the codegen_settings.xml file and adding a 'privateColumnVars="true"' parameter to the createOptions tag.
 See the codegen_settings.xml file in the qcubed/install/project/configuration directory for an example.
 
@@ -107,10 +110,19 @@ or
 $this->Name = $strName;
 ```
 
-The benefits of the new method include better performance, reduced OptimisticLocking exceptions, and preventing you from accidentally
+The benefits of the new feature include better performance, reduced OptimisticLocking exceptions, and preventing you from accidentally
 accessing a value that was not loaded due to a QSelect clause. Also, QSelect can
 now be used to control what is generated when you convert an object to other
 formats like JSON.
+
+### 3.1 -> 4.0
+v4.0 is another major architectural change, designed to support the PSR-1, PSR-2 and PSR-4 standards. v4 adds 
+namespaces to all the core and library files. Gone are is the letter 'Q' in front of all the core classes, since
+that was essentially our way of doing namespacing before namespaces were available in PHP. 
+
+It includes tools to help automate changing your code from v3.x code to v4.0. See the Readme file there for
+more info.
+
 
 ## Latest commits
 
