@@ -52,20 +52,23 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 			return null;
 		}
 
-		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
-			$strEscapedArray = $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
+		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKName = 'id') {
+			$strEscapedArray	= $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
 			$strUpdateStatement = '';
 			foreach ($strEscapedArray as $strColumn => $strValue) {
-				if ($strUpdateStatement) $strUpdateStatement .= ', ';
+				if ($strUpdateStatement) {
+					$strUpdateStatement .= ', ';
+				}
 				$strUpdateStatement .= $strColumn . ' = ' . $strValue;
 			}
-			$strSql = sprintf('INSERT INTO %s%s%s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s',
-				$this->EscapeIdentifierBegin, $strTable, $this->EscapeIdentifierEnd,
-				implode(', ', array_keys($strEscapedArray)),
-				implode(', ', array_values($strEscapedArray)),
-				$strUpdateStatement
-			);
-			$this->ExecuteNonQuery($strSql);
+			
+			$strSql = "INSERT INTO $this->EscapeIdentifierBegin$strTable$this->EscapeIdentifierEnd "
+					. "SET $strUpdateStatement "
+					. "ON DUPLICATE KEY UPDATE $strPKName=LAST_INSERT_ID($strPKName), $strUpdateStatement";
+			
+			$this->NonQuery($strSql);
+			
+			return $this->InsertId($strTable, $strPKName);			
 		}
 
 		public function Connect() {
