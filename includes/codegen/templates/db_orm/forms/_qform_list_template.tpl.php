@@ -25,13 +25,7 @@
 	// Be sure to move this file out of this directory before modifying to ensure that subsequent
 	// code re-generations do not overwrite your changes.
 
-	global $gObjectName;
-	global $gObjectNamePlural;
-
-	$gObjectName =  QApplication::Translate('<?= $strPropertyName ?>');
-	$gObjectNamePlural =  QApplication::Translate('<?= $strPropertyNamePlural ?>');
-
-	$strPageTitle = $gObjectName . ' ' . QApplication::Translate('List');
+	$strPageTitle = $this->ObjectName . ' ' . QApplication::Translate('List');
 	require(__CONFIGURATION__ . '/header.inc.php');
 ?>
 

@@ -73,6 +73,12 @@
 		 */
 		protected $objReverseReference;
 
+		/**
+		 * The name of the object, used by json and other encodings.
+		 *
+		 * @var string
+		 */
+		protected $strName;
 
 
 
@@ -107,6 +113,8 @@
 					return $this->blnIsType;
 				case 'ReverseReference':
 					return $this->objReverseReference;
+				case 'Name':
+					return $this->strName;
 				default:
 					try {
 						return parent::__get($strName);
@@ -146,6 +154,8 @@
 						return $this->blnIsType = QType::Cast($mixValue, QType::Boolean);
 					case 'ReverseReference':
 						return $this->objReverseReference = $mixValue;
+					case 'Name':
+						return $this->strName = QType::Cast($mixValue, QType::String);
 					default:
 						return parent::__set($strName, $mixValue);
 				}

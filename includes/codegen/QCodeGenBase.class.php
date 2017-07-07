@@ -138,23 +138,6 @@
 		 */
 		public static $DefaultButtonClass;
 
-
-		/**
-		 * Template Escape Begin (from CodeGen Settings)
-		 *
-		 * @var string $TemplateEscapeBegin
-		 */
-		protected static $TemplateEscapeBegin;
-		protected static $TemplateEscapeBeginLength;
-
-		/**
-		 * Template Escape End (from CodeGen Settings)
-		 *
-		 * @var string $TemplateEscapeEnd
-		 */
-		protected static $TemplateEscapeEnd;
-		protected static $TemplateEscapeEndLength;
-
 		public static $RootErrors = '';
 
 		/**
@@ -172,7 +155,6 @@
 
 			$strToReturn = sprintf('<codegen>%s', $strCrLf);
 			$strToReturn .= sprintf('	<name application="%s"/>%s', QCodeGen::$ApplicationName, $strCrLf);
-			$strToReturn .= sprintf('	<templateEscape begin="%s" end="%s"/>%s', QCodeGen::$TemplateEscapeBegin, QCodeGen::$TemplateEscapeEnd, $strCrLf);
 			$strToReturn .= sprintf('	<render preferredRenderMethod="%s"/>%s', QCodeGen::$PreferredRenderMethod, $strCrLf);
 			$strToReturn .= sprintf('	<dataSources>%s', $strCrLf);
 			foreach (QCodeGen::$CodeGenArray as $objCodeGen)
@@ -212,17 +194,6 @@
 				QCodeGen::$RootErrors .= 'FATAL ERROR: Unable to parse CodeGenSettings XML File: ' . $strSettingsXmlFilePath;
 				QCodeGen::$RootErrors .= "\r\n";
 				QCodeGen::$RootErrors .= $objExc->getMessage();
-				return;
-			}
-
-			// Set the Template Escaping
-			QCodeGen::$TemplateEscapeBegin = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'templateEscape', 'begin');
-			QCodeGen::$TemplateEscapeEnd = QCodeGen::LookupSetting(QCodeGen::$SettingsXml, 'templateEscape', 'end');
-			QCodeGen::$TemplateEscapeBeginLength = strlen(QCodeGen::$TemplateEscapeBegin);
-			QCodeGen::$TemplateEscapeEndLength = strlen(QCodeGen::$TemplateEscapeEnd);
-
-			if ((!QCodeGen::$TemplateEscapeBeginLength) || (!QCodeGen::$TemplateEscapeEndLength)) {
-				QCodeGen::$RootErrors .= "CodeGen Settings XML Fatal Error: templateEscape begin and/or end was not defined\r\n";
 				return;
 			}
 
@@ -664,7 +635,8 @@
 
 		/**
 		 * Given the name of a column that is a foreign key to another table, returns a kind of
-		 * virtual column name that would refer to the object pointed to. This new name is not actually used, but derivatives
+		 * virtual column name that would refer to the object pointed to. This new name is used to refer to the object
+		 * version of the column by json and other encodings, and derivatives
 		 * of this name are used to represent a variable and property name that refers to this object that will get stored
 		 * in the model.
 		 *
@@ -684,7 +656,7 @@
 				// from the variable that was mapped from the physical database
 				// E.g., if it's a numeric FK, and the column is defined as "person INT",
 				// there will end up being two variables, one for the Person id integer, and
-				// one for the Person object itself.  We'll add Object t o the name of the Person object
+				// one for the Person object itself.  We'll add Object to the name of the Person object
 				// to make this deliniation.
 				$strColumnName = sprintf("%s_object", $strColumnName);
 			}

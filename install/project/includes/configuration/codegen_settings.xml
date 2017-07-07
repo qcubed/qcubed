@@ -7,12 +7,18 @@
 -->
 	<!-- General CodeGen Settings -->
 	<name application="My QCubed Application"/>
-	<templateEscape begin="&lt;%" end="%&gt;"/>
 
 	<!--
-    createMethod: specify either queryString or pathInfo.
-    buttonClass: The default class to use for generated buttons.
-    preferredRenderMethod: The default render method to use for objects in the model connector.
+    createMethod: specify either queryString or pathInfo. This impacts how an edit button click calls the edit form. If queryString,
+        CreateFromQueryString will be generated, and a GET html variable will be used to specify the record to edit. If pathInfo, it
+        will call CreateFromPathInfo and use a route path to specify the edit record.
+    buttonClass: The default class to use for generated buttons. QButton is a standard button, QJqButton is a JQuery UI button.
+        The bootstrap plugin lets you easily specify a bootstrap button.
+    preferredRenderMethod: The default render method to use for objects in the model connector. RenderWithName renders both a
+        form object and associated label, as well as an edit string if something goes wrong. You can change the name or override this
+        in your project/includes/controls/QControl.php file and implement your own generic form object renderer. You can also set this
+        on per control level by using the ModelConnectorEditor to do this during codegen, or programmatically by setting the
+        ->PreferredRenderMethod parameter on the control.
     -->
 	<formgen
 			createMethod="queryString"
@@ -22,7 +28,10 @@
 
 	<!-- Define Data Sources (e.g. Databases, Services, etc.) -->
 	<dataSources>
-		<database index="1">
+        <!-- Each database index here specifies options specific to that database for generating code. Each index corresponds to
+         the adapter you set up in project/includes/configuration/configuration.inc.php-->
+
+        <database index="1">
 			<!-- Append Prefixes/Suffixes to the Following Code Generated Items -->
 			<className prefix="" suffix=""/>
 			<associatedObjectName prefix="" suffix=""/>
@@ -36,6 +45,22 @@
 
 			<!-- Other -->
 			<stripFromTableName prefix=""/>
+
+            <!--
+            autoInitialize: Whether to automatically initialize new objects with default values from the defaults specified by the database.
+                If set to false, an Initialize function will be created, but not called in the constructor.
+            privateLocals: Whether to make the local variables that correspond to table columns private or
+                            protected. This is primarily a compatibility feature when migrating from pre-3.1.
+                            Set to false for compatibility. Setting to true will prevent you from directly accessing the
+                            variables generated in the ModelGen classes from the Model classes. The new way to access those
+                            variables is through the public get.. and set.. functions that are generated. These functions
+                            add additional checks to make sure the data from the column is valid when reading, and also will
+                            generate code that only updates the columns that have changed.
+            -->
+            <createOptions
+                    autoInitialize="true"
+                    privateColumnVars="true"
+            />
 
 			<!-- Specific Tables to Exclude or Include in the CodeGen process -->
 			<!--

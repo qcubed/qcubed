@@ -14,6 +14,9 @@ $_TEMPLATE_SETTINGS = array(
 $strPropertyName = QCodeGen::DataListPropertyName($objTable);
 ?>
 <?php print("<?php\n"); ?>
+
+require (__MODEL_CONNECTOR__ . '/<?= $strPropertyName ?>Connector.class.php');
+
 /**
  * This is the base class for the the <?php echo $objTable->ClassName  ?>EditPanel class.  It uses the code-generated
  * <?php echo $objTable->ClassName  ?>ModelConnector class, which has methods to help with
@@ -33,6 +36,8 @@ class <?= $strPropertyName ?>EditPanelGen extends QPanel {
 <?php include("edit_create_objects.tpl.php"); ?>
 
 <?php include("edit_load.tpl.php"); ?>
+
+<?php include("edit_refresh.tpl.php"); ?>
 
 <?php include("edit_save.tpl.php"); ?>
 

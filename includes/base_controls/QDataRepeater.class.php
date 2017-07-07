@@ -7,7 +7,7 @@
  * corresponding callbacks for those methods.
  *
  * The callbacks below can be specified as either a string, or an array. If a string, it should be the name of a
- * public method in the parent form. If an array, it should be a PHP Callable array. If your callback is a method in
+ * public method in the parent form. If an array, it should be a PHP callable array. If your callback is a method in
  * a form, do NOT pass the form object in to the array, but rather just pass the name of the method as a string.
  * (This is due to a problem PHP has with serializing recursive objects.) If its a method in a control, pass an array
  * with the control and method name, i.e. [$objControl, 'RenderMethod']
@@ -20,17 +20,17 @@
  * @property 		string 	$Template			A php template file that will be evaluated for each item. The template will have
  * 												$_ITEM as the item in the DataSource array, $_CONTROL as this control, and $_FORM as
  * 												the form object. If you provide a template, the callbacks will not be used.
- * @property-write 	string $ItemHtmlCallback	A Callable which will be called to get the html for each item.
+ * @property-write 	callable $ItemHtmlCallback	A PHP callable which will be called to get the html for each item.
  * 												Parameters passed are the item from the DataSource array, and the index of the
  * 												item being drawn. The callback should return the entire html for the item. If
  * 												you provide this callback, the ItemAttributesCallback and ItemInnerHtmlCallback
  * 												will not be used.
- * @property-write 	string $ItemAttributesCallback	A Callable which will be called to get the attributes for each item.
+ * @property-write 	callable $ItemAttributesCallback	A PHP callable which will be called to get the attributes for each item.
  * 												Use this with the ItemInnerHtmlCallback and the ItemTagName. The callback
  * 												will be passed the item and the index of the item. It should return key/value
  * 												pairs which will be used as the attributes for the item's tag. Use only
  * 												if you are not using a Template or the ItemHtmlCallback.
- * @property-write 	string $ItemInnerHtmlCallback	A Callable which will be called to get the inner html for each item.
+ * @property-write 	callable $ItemInnerHtmlCallback	A PHP callable which will be called to get the inner html for each item.
  * 												Use this with the ItemAttributesCallback and the ItemTagName. The callback
  * 												will be passed the item and the index of the item. It should return the complete
  * 												text to appear inside the open and close tags for the item.	 *
@@ -51,11 +51,11 @@ class QDataRepeater extends QPaginatedControl {
 	/** @var string  */
 	protected $strItemTagName = 'div';
 
-	/** @var  Callable | string */
+	/** @var  callable */
 	protected $itemHtmlCallback;
-	/** @var  Callable | string */
+	/** @var  callable */
 	protected $itemAttributesCallback;
-	/** @var  Callable | string */
+	/** @var  callable */
 	protected $itemInnerHtmlCallback;
 
 
@@ -80,12 +80,7 @@ class QDataRepeater extends QPaginatedControl {
 		if ($this->strTemplate) {
 			return $this->EvaluateTemplate($this->strTemplate);
 		} elseif ($this->itemHtmlCallback) {
-			if (is_string($this->itemHtmlCallback)) {
-				$strMethod = $this->itemHtmlCallback;
-				return $this->objForm->$strMethod($objItem, $this->intCurrentItemIndex);
-			} else {
-				return call_user_func($this->itemHtmlCallback, $objItem, $this->intCurrentItemIndex);
-			}
+			return call_user_func($this->itemHtmlCallback, $objItem, $this->intCurrentItemIndex);
 		}
 
 		if (!$this->strItemTagName) {
@@ -106,12 +101,7 @@ class QDataRepeater extends QPaginatedControl {
 	 */
 	protected function GetItemAttributes ($objItem) {
 		if ($this->itemAttributesCallback) {
-			if (is_string($this->itemAttributesCallback)) {
-				$strMethod = $this->itemAttributesCallback;
-				return $this->objForm->$strMethod($objItem, $this->intCurrentItemIndex);
-			} else {
-				return call_user_func($this->itemAttributesCallback, $objItem, $this->intCurrentItemIndex);
-			}
+			return call_user_func($this->itemAttributesCallback, $objItem, $this->intCurrentItemIndex);
 		}
 		return null;
 	}
@@ -125,12 +115,7 @@ class QDataRepeater extends QPaginatedControl {
 	 */
 	protected function GetItemInnerHtml($objItem) {
 		if ($this->itemInnerHtmlCallback) {
-			if (is_string($this->itemInnerHtmlCallback)) {
-				$strMethod = $this->itemInnerHtmlCallback;
-				return $this->objForm->$strMethod($objItem, $this->intCurrentItemIndex);
-			} else {
-				return call_user_func($this->itemInnerHtmlCallback, $objItem, $this->intCurrentItemIndex);
-			}
+			return call_user_func($this->itemInnerHtmlCallback, $objItem, $this->intCurrentItemIndex);
 		}
 		return $objItem->__toString();	// default to rendering a database object
 	}
@@ -170,6 +155,27 @@ class QDataRepeater extends QPaginatedControl {
 
 		$this->objDataSource = null;
 		return $strToReturn;
+	}
+
+	/**
+	 * Fix up possible embedded reference to the form.
+	 */
+	public function Sleep() {
+		$this->itemHtmlCallback = QControl::SleepHelper($this->itemHtmlCallback);
+		$this->itemAttributesCallback = QControl::SleepHelper($this->itemAttributesCallback);
+		$this->itemInnerHtmlCallback = QControl::SleepHelper($this->itemInnerHtmlCallback);
+		parent::Sleep();
+	}
+
+	/**
+	 * Restore serialized references.
+	 * @param QForm $objForm
+	 */
+	public function Wakeup(QForm $objForm) {
+		parent::Wakeup($objForm);
+		$this->itemHtmlCallback = QControl::WakeupHelper($objForm, $this->itemHtmlCallback);
+		$this->itemAttributesCallback = QControl::WakeupHelper($objForm, $this->itemAttributesCallback);
+		$this->itemInnerHtmlCallback = QControl::WakeupHelper($objForm, $this->itemInnerHtmlCallback);
 	}
 
 	/////////////////////////
@@ -255,30 +261,23 @@ class QDataRepeater extends QPaginatedControl {
 				}
 
 			case 'ItemHtmlCallback':
-				$this->blnModified = true;
-				if (is_array($mixValue) && reset($mixValue) === $this->objForm) {
-					// Do not pass [$objForm, 'methodName']. Rather, just set to 'methodName', and the form will be searched for that method.
-					throw new QCallerException ('Do not pass the form object in a callable array. Instead, just pass the method name.');
+				try {
+					$this->blnModified = true;
+					$this->itemHtmlCallback = QType::Cast($mixValue, QType::CallableType);
+				} catch (QInvalidCastException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
 				}
-				$this->itemHtmlCallback = $mixValue;
 				break;
 
-			case 'ItemAttributeCallback':	// callback should return an array of key/value items
+			case 'ItemAttributesCallback':	// callback should return an array of key/value items
 				$this->blnModified = true;
-				if (is_array($mixValue) && reset($mixValue) === $this->objForm) {
-					// Do not pass [$objForm, 'methodName']. Rather, just set to 'methodName', and the form will be searched for that method.
-					throw new QCallerException ('Do not pass the form object in a callable array. Instead, just pass the method name.');
-				}
-				$this->itemAttributeCallback = $mixValue;
+				$this->itemAttributesCallback = QType::Cast($mixValue, QType::CallableType);;
 				break;
 
 			case 'ItemInnerHtmlCallback':
 				$this->blnModified = true;
-				if (is_array($mixValue) && reset($mixValue) === $this->objForm) {
-					// Do not pass [$objForm, 'methodName']. Rather, just set to 'methodName', and the form will be searched for that method.
-					throw new QCallerException ('Do not pass the form object in a callable array. Instead, just pass the method name.');
-				}
-				$this->itemInnerHtmlCallback = $mixValue;
+				$this->itemInnerHtmlCallback = QType::Cast($mixValue, QType::CallableType);;
 				break;
 
 			default:

@@ -43,12 +43,16 @@ class QModelConnectorEditDlg extends QDialog {
 		parent::__construct ($objParentObject, $strControlId);
 
 		$this->AutoRenderChildren = true;
-		$this->Width = 700;
+		$this->Width = 750;
 
 		$this->objModelConnectorOptions = new QModelConnectorOptions();
 
-		$this->tabs = new QTabs ($this);
-		$this->tabs->HeightStyle = "auto";
+		$objPanel = new QPanel($this);	// This is a kind of bug fix, to fix a unique problem when putting tabs in a dialog
+		$objPanel->Height = 400;	// We need an intermediate object to force the height
+		$objPanel->AutoRenderChildren = true;
+
+		$this->tabs = new QTabs ($objPanel, 'qconnectoreditTabs');
+		$this->tabs->HeightStyle = "content";
 
 		$this->AddButton ('Save', 'save');
 		$this->AddButton ('Save, Regenerate and Reload', 'saveRefresh');
@@ -65,7 +69,7 @@ class QModelConnectorEditDlg extends QDialog {
 		$this->tabs->RemoveChildControls(true);
 		$this->categories = array();
 
-		$this->dtgGeneralOptions = new QHtmlTable($this->tabs, 'definitionTab');
+		$this->dtgGeneralOptions = new QHtmlTable($this->tabs);
 		$this->dtgGeneralOptions->ShowHeader = false;
 		$this->dtgGeneralOptions->Name = "General";
 		$this->dtgGeneralOptions->CreatePropertyColumn('Attribute', 'Name');
@@ -150,14 +154,15 @@ class QModelConnectorEditDlg extends QDialog {
 		}
 
 		foreach ($this->categories as $tabName=>$params) {
-			$panel = new QPanel ($this->tabs);
-			$panel->SetCustomStyle('overflow-y', 'scroll');
-			$panel->SetCustomStyle('max-height', '200');
-			$panel->AutoRenderChildren = true;
-			$panel->Name = $tabName;
+			//$panel = new QPanel ($this->tabs);
+			//$panel->SetCssStyle('overflow-y', 'scroll');
+			//$panel->SetCssStyle('max-height', '200');
+			//$panel->AutoRenderChildren = true;
+			//$panel->Name = $tabName;
 
-			$dtg = new QHtmlTable($panel);
+			$dtg = new QHtmlTable($this->tabs);
 			$dtg->ShowHeader = false;
+			$dtg->Name = $tabName;
 			$dtg->CreatePropertyColumn('Attribute', 'Name');
 			$col = $dtg->AddColumn (new QHtmlTableCallableColumn('Attribute', array ($this, 'dtg_ValueRender'), $dtg));
 			$col->HtmlEntities = false;

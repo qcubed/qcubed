@@ -71,6 +71,7 @@
 		protected $blnGenerateControlId;
 		protected $objModelConnectorOptions;
 		protected $blnAutoInitialize;
+		protected $blnPrivateColumnVars;
 
 		/**
 		 * @param $strTableName
@@ -83,7 +84,7 @@
 				return $this->objTableArray[$strTableName];
 			if (array_key_exists($strTableName, $this->objTypeTableArray)) 
 				return $this->objTypeTableArray[$strTableName];;	// deal with table special
-			throw new QCallerException(sprintf('Table does not exist or does not have a defined Primary Key: %s', $strTableName));
+			throw new QCallerException(sprintf('Table does not exist or could not be processed: %s. %s', $strTableName, $this->strErrors));
 		}
 
 		public function GetColumn($strTableName, $strColumnName) {
@@ -390,7 +391,8 @@
 			$this->objModelConnectorOptions = new QModelConnectorOptions();
 
 			$this->blnAutoInitialize = QCodeGen::LookupSetting($objSettingsXml, 'createOptions', 'autoInitialize', QType::Boolean);
-			
+			$this->blnPrivateColumnVars = QCodeGen::LookupSetting($objSettingsXml, 'createOptions', 'privateColumnVars', QType::Boolean);
+
 			if ($this->strErrors)
 				return;
 
@@ -992,6 +994,7 @@
 							// Setup PropertyName and VariableName
 							$objReference->PropertyName = $this->ModelReferencePropertyName($objColumn->Name);
 							$objReference->VariableName = $this->ModelReferenceVariableName($objColumn->Name);
+							$objReference->Name = $this->ModelReferenceColumnName($objColumn->Name);
 
 							// Add this reference to the column
 							$objColumn->Reference = $objReference;
@@ -1413,6 +1416,8 @@
 					return $this->strCommentConnectorLabelDelimiter;
 				case 'AutoInitialize':
 					return $this->blnAutoInitialize;
+				case 'PrivateColumnVars':
+					return $this->blnPrivateColumnVars;
 				case 'objSettingsXml':
 					throw new QCallerException('The field objSettingsXml is deprecated');
 				default:

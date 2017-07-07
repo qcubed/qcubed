@@ -15,3 +15,4 @@
 			QApplication::DisplayAlert(QApplication::Translate('Could not load the record. Perhaps it was deleted? Try again.'));
 		}
 	}
+

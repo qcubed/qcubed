@@ -13,7 +13,6 @@
 		protected $txtValue;
 		protected $btnCalculator;
 
-		protected $dlgYesNo;
 		protected $pnlAnswer;
 		protected $btnDisplayYesNo;
 
@@ -44,7 +43,7 @@
 
 			// The First "Display Simple Message" button will utilize an AJAX call to Show the Dialog Box
 			$this->btnDisplaySimpleMessage = new QButton($this);
-			$this->btnDisplaySimpleMessage->Text = 'Display Simple Message QDialog';
+			$this->btnDisplaySimpleMessage->Text = QApplication::Translate('Display Simple Message QDialog');
 			$this->btnDisplaySimpleMessage->AddAction(new QClickEvent(), new QAjaxAction('btnDisplaySimpleMessage_Click'));
 
 			// The Second "Display Simple Message" button will utilize Client Side-only JavaScripts to Show the Dialog Box
@@ -53,25 +52,12 @@
 			$this->btnDisplaySimpleMessageJsOnly->Text = 'Display Simple Message QDialog (ClientSide Only)';
 			$this->btnDisplaySimpleMessageJsOnly->AddAction(new QClickEvent(), new QShowDialog($this->dlgSimpleMessage));
 
-
-			// Define a Yes/No modal dialog box
-			$this->dlgYesNo = new QDialog($this);
-			$this->dlgYesNo->Text = "Do you like QCubed?";
-			$this->dlgYesNo->AddButton ('Yes');
-			$this->dlgYesNo->AddButton ('No');
-			$this->dlgYesNo->AddAction (new QDialog_ButtonEvent(), new QHideDialog ($this->dlgYesNo));
-			$this->dlgYesNo->AddAction (new QDialog_ButtonEvent(), new QAjaxAction ('dlgYesNo_Button'));
-			$this->dlgYesNo->AutoOpen = false;
-			$this->dlgYesNo->Modal = true;
-			$this->dlgYesNo->Resizable = false;
-			$this->dlgYesNo->HasCloseButton = false;
-
 			$this->pnlAnswer = new QPanel($this);
 			$this->pnlAnswer->Text = 'Hmmm';
 			
 			$this->btnDisplayYesNo = new QButton($this);
-			$this->btnDisplayYesNo->Text = 'Do you love me.';
-			$this->btnDisplayYesNo->AddAction(new QClickEvent(), new QShowDialog($this->dlgYesNo));
+			$this->btnDisplayYesNo->Text = QApplication::Translate('Do you love me?');
+			$this->btnDisplayYesNo->AddAction(new QClickEvent(), new QAjaxAction('showYesNoClick'));
 			
 			
 			// Define the CalculatorWidget example. passing in the Method Callback for whenever the Calculator is Closed
@@ -80,6 +66,7 @@
 			$this->dlgCalculatorWidget->Title = "Calculator Widget";
 			$this->dlgCalculatorWidget->AutoOpen = false;
 			$this->dlgCalculatorWidget->Resizable = false;
+			$this->dlgCalculatorWidget->Modal = false;
 
 			// Setup the Value Textbox and Button for this example
 			$this->txtValue = new QTextBox($this);
@@ -126,23 +113,13 @@
 			// "Show" the Dialog Box using the Open() method
 			$this->dlgSimpleMessage->Open();
 		}
-		
-		protected function dlgYesNo_Button($strFormId, $strControlId, $strParameter) {
-			if ($strParameter == 'Yes') {
-				$this->pnlAnswer->Text = 'They love me.';
-			} else {
-				$this->pnlAnswer->Text = 'They love me not.';
-			}
-		}
-		
-		
+
 		protected function btnCalculator_Click($strFormId, $strControlId, $strParameter) {
 			// Setup the Calculator Widget's Value
 			$this->dlgCalculatorWidget->Value = trim($this->txtValue->Text);
 
 			// And Show it
 			$this->dlgCalculatorWidget->Open();
-			//$this->dlgCalculatorWidget->ShowDialogBox();
 		}
 
 		public function dlgValidate_Click($strFormId, $strControlId, $strParameter) {
@@ -206,6 +183,31 @@
 			QDialog::Alert($strParameter . ' was clicked.', ['OK']);
 		}
 
+		/**
+		 * This example shows how you can create an advanced dialog without creating a new control in the
+		 * form object. You will need to specify some way of closing the dialog.
+		 */
+		protected function showYesNoClick() {
+
+			$dlgYesNo = new QDialog();	// Note here there is no "$this" as the first parameter. By leaving this off, you
+										// are telling QCubed to manage the dialog.
+			$dlgYesNo->Text = QApplication::Translate("Do you like QCubed?");
+			$dlgYesNo->AddButton ('Yes');
+			$dlgYesNo->AddButton ('No');
+			$dlgYesNo->AddAction (new QDialog_ButtonEvent(), new QAjaxAction ('dlgYesNo_Button'));
+			$dlgYesNo->Resizable = false;
+			$dlgYesNo->HasCloseButton = false;
+		}
+
+		protected function dlgYesNo_Button($strFormId, $strControlId, $strParameter) {
+			$dlg = $this->GetControl($strControlId);	// get the dialog object from the form.
+			if ($strParameter == 'Yes') {
+				$this->pnlAnswer->Text = QApplication::Translate('They love me');
+			} else {
+				$this->pnlAnswer->Text = QApplication::Translate('They love me not');
+			}
+			$dlg->Close();
+		}
 
 	}
 

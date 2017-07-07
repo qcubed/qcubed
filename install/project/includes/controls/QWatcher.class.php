@@ -5,42 +5,39 @@
  *
  * To select the type of cache used, change the class that QWatcher extends from.
  * QWatcherDB is based on a standard SQL database. See QWatcherDB.class.php for details on setup.
- * QWatcherAPC is uses the php APC or APCu cache, which requires a PECL installation.
+ * QWatcherCache uses one of the QCacheProvider subclasses, which allow you to use Redis, APC or MemCache for example.
  *
  * Once you configure the QWatcher subclass, to use the QWatcher system, do the following:
- * 1) At the top of each model file that you want to watch, (project/includes/model/*) set $blnWatchChanges to true.
- * 2) During the creation of a control that needs to watch a database table, call $ctl->Watch($dbNode), where
+ * During the creation of a control that needs to watch a database table, call $ctl->Watch($dbNode), where
  *    $dbNode is the node that represents the table you want to watch. For example, to have a datagrid watch the
- *    people table, call:
+ *    People table for changes, call:
  *   $dtg->Watch (QQN::People());
  *
  * That's it. From then on, when the system detects a change in the watched tables, the watching controls will automatically
- * redraw. Even controls in other windows will automatically redraw.
+ * redraw. Even controls in other windows or other browsers will automatically redraw.
  *
- * Note that a control can watch multiple tables by calling Watch multiple times, and if given a node chain
+ * A control can watch multiple tables by calling Watch multiple times, and if given a node chain
  * (like QQN::Project()->ProjectAsManager->etc.), it will watch all the tables in the chain.
  *
  * Detection currently happens on any ajax call. You can use QJsTimer to force periodic ajax calls if needed, or
  * just let the user's activity generate periodic ajax calls. A more advanced system would be to use a WebSocket server,
- * Socket.IO or something similar, but these things require server configurations that are currently beyond the scope
- * of QCubed.
+ * Socket.IO, a messaging server like PubNub or Google Messages or something similar, but these things require
+ * configurations that are currently beyond the scope of QCubed.
  */
 
 
-// To make the Watcher example code work, we need to create a kind of hack version of a watcher for the QCubed website.
-// Feel free to remove the example code.
-if (defined("__IN_EXAMPLE__")) {
-	class QWatcher extends QWatcherCache
+// This default watcher allows the user's browser to watch events, but not other browsers.
+// You SHOULD change this to get the full power of the watcher system. Either subclass the QWatcherDB class,
+// or use one of the persistent memory caches.
+class QWatcher extends QWatcherCache
+{
+	static protected function initCache()
 	{
-		static protected function initCache()
-		{
-			// Overrides the default version to create our own cache provider just for watchers. If you don't want to
-			// use the QApplication's $objCacheProvider, you can do this in your own code too.
-			static::$objCache = new QCacheProviderLocalMemory(['KeepInSession' => true]);
-		}
+		static::$objCache = new QCacheProviderLocalMemory(['KeepInSession' => true]);
+		//or, static::$objCache = new QCacheProviderAPC();
+		//or, static::$objCache = new QCacheProviderMemCache(['host'=>'myhost', ...]);
+		//or, static::$objCache = new QCacheProviderRedis(['parameters'=>[params...], 'options'=>[opts...]]);
 	}
-} else {
-	//class QWatcher extends QWatcherCache {}
-	//class QWatcher extends QWatcherDB {}
-	class QWatcher extends QWatcherNone {}
 }
+
+//or, class QWatcher extends QWatcherDB {}

@@ -244,7 +244,7 @@
 					case 'Length':
 						return $this->intLength = QType::Cast($mixValue, QType::Integer);
 					case 'Default':
-						if ($mixValue === null || (($mixValue == '' || $mixValue == '0000-00-00 00:00:00' || $mixValue == '0000-00-00') && !$this->blnNotNull))
+						if ($mixValue === null || (($mixValue === '' || $mixValue === '0000-00-00 00:00:00' || $mixValue === '0000-00-00') && !$this->blnNotNull))
 							return $this->mixDefault = null;
 						else if (is_int($mixValue))
 							return $this->mixDefault = QType::Cast($mixValue, QType::Integer);
