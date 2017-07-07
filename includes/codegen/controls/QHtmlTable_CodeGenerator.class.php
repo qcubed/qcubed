@@ -578,7 +578,7 @@ TMPL;
 		$strCode = <<<TMPL
 
 	protected function {$strVarName}_MakeEditable() {
-		\$this->{$strVarName}->AddAction(new QCellClickEvent(), new QAjaxControlAction(\$this, '{$strVarName}_CellClick', null, null, '\$j(this).parent().data("value")'));
+		\$this->{$strVarName}->AddAction(new QCellClickEvent(0, null, null, true), new QAjaxControlAction(\$this, '{$strVarName}_CellClick', null, null, QCellClickEvent::RowValue));
 		\$this->{$strVarName}->AddCssClass('clickable-rows');
 	}
 
@@ -679,9 +679,10 @@ TMPL;
 		protected \$pxyEditRow;
 
 		protected function {$strVarName}_MakeEditable () {
-			\$pxyEditRow = new QControlProxy(\$this);
-			\$pxyEditRow->AddAction(new QClickEvent(), new QAjaxControlAction(\$this, '{$strVarName}_EditClick'));
-			\$this->{$strVarName}->CreateLinkColumn(QApplication::Translate('Edit'), QApplication::Translate('Edit'), \$pxyEditRow, QQN::{$objTable->ClassName}()->Id, null, false, 0);
+			\$this->>pxyEditRow = new QControlProxy(\$this);
+			\$this->>pxyEditRow->AddAction(new QClickEvent(), new QAjaxControlAction(\$this, '{$strVarName}_EditClick'));
+			\$this->{$strVarName}->CreateLinkColumn(QApplication::Translate('Edit'), QApplication::Translate('Edit'), \$this->>pxyEditRow, QQN::{$objTable->ClassName}()->Id, null, false, 0);
+			\$this->{$strVarName}->RemoveCssClass('clickable-rows');
 		}
 
 		protected function {$strVarName}_EditClick(\$strFormId, \$strControlId, \$param) {

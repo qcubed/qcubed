@@ -15,6 +15,15 @@
 	 * QFileFormStateHandler.
 	 * 
 	 * This handler can handle asynchronous calls.
+	 *
+	 * The table used should have the following fields:
+	 * 1. page_id: varchar(MAX_PAGE_SIZE) - Substitute the maximum size, which depends on your session_id algorithm (MAX_SESSION_SIZE + 33 is safe, see below).
+	 * 2. save_time: integer
+	 * 3. state_data: text
+	 * 4. session_id: varchar(MAX_SESSION_SIZE) - Substitute the maximum session id size, which depends on session id algorithm.
+	 *    PHP gives you some control over the how you create session ids, so be aware of the maximum size it might generate here.
+	 * 	  45 is probably safe for now, but if you add a prefix to your session_ids, then use a bigger number.
+
 	 */
 	class QDbBackedFormStateHandler extends QBaseClass {
 
@@ -25,10 +34,6 @@
 
 		/**
 		 * The table name which will handle the formstates. It must have the following columns:
-		 * 1. page_id: varchar(80)
-		 * 2. save_time: integer
-		 * 3. state_data: text
-		 * 4. session_id: varchar(32)
 		 */
 		public static $strTableName = __DB_BACKED_FORM_STATE_HANDLER_TABLE_NAME__;
 		/**

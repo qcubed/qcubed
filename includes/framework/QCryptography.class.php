@@ -23,7 +23,7 @@ class QCryptographyException extends QCallerException {
  *    cannot be seen by a user, then when the instance gets unserialized, the IV will be restored automatically.
  * 	  Storing the instance in a QApplication or global variable will not work, since these things are reinitialized every
  *    time PHP starts up, and you will get a different IV at that time. If you do not correctly
- * 	  restore the IV that was used to Encrypt, that you will not be able to Decrypt.
+ * 	  restore the IV that was used to Encrypt, then you will not be able to Decrypt.
  *
  * 2) Pass a value to $strIvHashKey in the constructor, and the initialization vector will be appended to the resulting encrypted data.
  *    This hash key SHOULD be a static value that is part of your app and must be passed to the constructor of any instance of

@@ -357,19 +357,61 @@
 		 * Generate a URL from components. This URL can be used in the QApplication::Redirect function, or applied to
 		 * an anchor tag by setting the href attribute.
 		 *
-		 * @param string $strLocation			absolute or relative path to resource, depending on your protocol. If not needed, enter an empty string.
+		 * You can also use this to modify a URL by passing a complete URL in the location. The URL will be modified by the parameters given.
+		 *
+		 * @param string $strLocation			absolute or relative path to resource, depending on your protocol. If not needed, enter an empty string. Can be a complete URL.
 		 * @param array|null $queryParams		key->value array of query parameters to add to the location.
 		 * @param string|null $strAnchor		anchor to add to the url
-		 * @param string|null $strProtocol		protocol if specifying a resource outside of the current server
-		 * @param string|null $strServer				server that the resource is on. Required if specifying a protocol.
-		 * @param string|null $strUser					user name if needed. Some protocols like mailto and ftp need this
-		 * @param string|null $strPassword				password if needed. Note that password is sent in the clear.
-		 * @param string|null $intPort					port if different from default
+		 * @param string|null $strScheme		protocol if specifying a resource outside of the current server (i.e. http)
+		 * @param string|null $strHost			server that the resource is on. Required if specifying a scheme.
+		 * @param string|null $strUser			user name if needed. Some protocols like mailto and ftp need this
+		 * @param string|null $strPassword		password if needed. Note that password is sent in the clear.
+		 * @param string|null $intPort			port if different from default
 		 * @return string
 		 */
-		public static function MakeUrl ($strLocation, $queryParams = null, $strAnchor = null, $strProtocol = null, $strServer = null, $strUser = null, $strPassword = null, $intPort = null) {
-			// Basic URLs that are pointing to our own server
-			$strUrl = $strLocation; // can be relative or absolute
+		public static function MakeUrl ($strLocation, $queryParams = null, $strAnchor = null, $strScheme = null, $strHost = null, $strUser = null, $strPassword = null, $intPort = null) {
+			// Decompose
+			if ($strLocation) {
+				$params = parse_url($strLocation);
+			}
+
+			if (!empty($strLocation) && isset($params['path'])) {
+				$strUrl = $params['path'];
+			} else {
+				$strUrl = '';
+			}
+
+			if (isset($params['query'])) {
+				parse_str($params['query'], $queryParams2);
+				if ($queryParams) {
+					$queryParams = array_merge($queryParams2, $queryParams);
+				} else {
+					$queryParams = $queryParams2;
+				}
+			}
+
+			if (empty($strAnchor) && isset($params['fragment'])) {
+				$strAnchor = $params['fragment'];
+			}
+
+			if (empty($strScheme) && isset($params['scheme'])) {
+				$strScheme = $params['scheme'];
+			}
+
+			if (empty($strHost) && isset($params['host'])) {
+				$strHost = $params['host'];
+			}
+
+			if (empty($strUser) && isset($params['user'])) {
+				$strUser = $params['user'];
+			}
+			if (empty($strPassword) && isset($params['pass'])) {
+				$strPassword = $params['pass'];
+			}
+			if (empty($intPort) && isset($params['port'])) {
+				$intPort = $params['port'];
+			}
+
 			if ($queryParams)  {
 				$strUrl .= '?' . http_build_query($queryParams);
 			}
@@ -378,24 +420,24 @@
 			}
 
 			// More complex URLs. Once you specify protocol, you will need to specify the server too.
-			if ($strProtocol) {
-				assert('!empty($strServer)');
+			if ($strScheme) {
+				assert(!empty($strHost));
 
 				// We do not do any checking at this point since URLs can be complex. It is up to you to build a correct URL.
 				// If you use a protocol that expects an absolute path, you must start with a slash (http), or a relative path (mailto), leave the slash off.
 
 				// Build server portion.
 				if ($intPort) {
-					$strServer .= ':' . $intPort;
+					$strHost .= ':' . $intPort;
 				}
 				if ($strUser) {
 					$strUser = rawurlencode($strUser);
 					if ($strPassword) {
 						$strUser = $strUser . ':' . rawurlencode($strPassword);
 					}
-					$strServer = $strUser . '@' . $strServer;
+					$strHost = $strUser . '@' . $strHost;
 				}
-				$strUrl = $strProtocol . $strServer . $strUrl;
+				$strUrl = $strScheme . $strHost . $strUrl;
 			}
 			return $strUrl;
 		}
@@ -403,13 +445,22 @@
 		/**
 		 * Returns a MailTo url.
 		 *
-		 * @param $strUser
-		 * @param $strServer
-		 * @param null $queryParams
-		 * @return string
+		 * @param string $strUser
+		 * @param string| null $strServer optional server. If missing, will assume server and "@" are already in strUser
+		 * @param array|null $queryParams
+		 * @param string|null $strName Optional name to associate with the email address. Some email clients will show this instead of the address.
+		 * @return string	The mailto url.
 		 */
-		public static function MailToUrl ($strUser, $strServer, $queryParams = null) {
-			$strUrl = 'mailto:' . rawurlencode($strUser) . '@' . rawurlencode($strServer);
+		public static function MailToUrl ($strUser, $strServer = null, $queryParams = null, $strName = null) {
+			if ($strServer) {
+				$strUrl = $strUser . '@' . $strServer;
+			} else {
+				$strUrl = $strUser;
+			}
+			if ($strName) {
+				$strUrl = '"' . $strName . '"' . '<' . $strUrl . '>';
+			}
+			$strUrl = rawurlencode($strUrl);
 			if ($queryParams) {
 				$strUrl .= '?' . http_build_query($queryParams, null, null, PHP_QUERY_RFC3986);
 			}
@@ -439,6 +490,90 @@
 		 */
 		public static function RenderString($strText) {
 			return nl2br(htmlspecialchars($strText, ENT_COMPAT | ENT_HTML5, QApplication::$EncodingType));
+		}
+
+		/**
+		 * A quick way to render an HTML table from an array of data. For more control, or to automatically render
+		 * data that may change, see QHtmlTable and its subclasses.
+		 *
+		 * Example:
+		 * $data = [
+		 * 				['name'=>'apple', 'type'=>'fruit'],
+		 * 				['name'=>'carrot', 'type'=>'vegetable']
+		 * 	];
+		 *
+		 * 	print(QHtml::RenderTable($data, ['name','type'], ['class'=>'mytable'], ['Name', 'Type']);
+		 *
+		 *
+		 * @param []mixed			$data				An array of objects, or an array of arrays
+		 * @param []string|null 	$strFields			An array of fields to display from the data. If the data contains objects,
+		 * 												the fields will be accessed using $obj->$strFieldName. If an array of arrays,
+		 * 												it will be accessed using $obj[$strFieldName]. If no fields specified, it will
+		 * 												treat the data as an array of arrays and just create cells for whatever it finds.
+		 * @param array|null 		$attributes			Optional array of attributes to be inserted into the table tag (like a class or id).
+		 * @param []string|null 	$strHeaderTitles	Optional array of titles to be added as a header row.
+		 * @param int 				$intHeaderColumnCount	Optional count of the number of columns on the left that will be
+		 * 													rendered using a 'th' tag instead of a 'td' tag.
+		 * @param bool 				$blnHtmlEntities	True (default) to run all titles and text through the HTMLEntities renderer. Set this to
+		 * 												false if you are trying to display raw html.
+		 * @return string
+		 */
+		public static function RenderTable(array $data, $strFields = null, $attributes = null, $strHeaderTitles = null, $intHeaderColumnCount = 0, $blnHtmlEntities = true) {
+			if (!$data) {
+				return '';
+			}
+
+			$strHeader = '';
+			if ($strHeaderTitles) {
+				foreach ($strHeaderTitles as $strHeaderTitle) {
+					if ($blnHtmlEntities) {
+						$strHeaderTitle = QApplication::HtmlEntities($strHeaderTitle);
+					}
+					$strHeader .= '<th>' . $strHeaderTitle . '</th>';
+				}
+				$strHeader = '<thead><tr>' . $strHeader . '</tr></thead>';
+			}
+			$strBody = '';
+			foreach ($data as $row) {
+				$intFieldNum = 0;
+				$strRow = '';
+				if ($strFields) {
+					foreach ($strFields as $strField) {
+						$intFieldNum ++;
+						$strItem = '';
+						if (is_object($row)) {
+							$strItem = $row->$strField;
+						} elseif (isset($row[$strField])) {
+							$strItem = $row[$strField];
+						}
+						if ($blnHtmlEntities) {
+							$strItem = QApplication::HtmlEntities($strItem);
+						}
+						if ($intFieldNum <= $intHeaderColumnCount) {
+							$strRow .= '<th>' . $strItem . '</th>';
+						} else {
+							$strRow .= '<td>' . $strItem . '</td>';
+						}
+					}
+				} else {
+					foreach ($row as $strItem) {
+						$intFieldNum ++;
+						if ($blnHtmlEntities) {
+							$strItem = QApplication::HtmlEntities($strItem);
+						}
+						if ($intFieldNum <= $intHeaderColumnCount) {
+							$strRow .= '<th>' . $strItem . '</th>';
+						} else {
+							$strRow .= '<td>' . $strItem . '</td>';
+						}
+					}
+				}
+				$strRow = '<tr>' . $strRow . '</tr>';
+				$strBody .= $strRow;
+			}
+			$strBody = '<tbody>' . $strBody . '</tbody>';
+            $strTable = self::RenderTag('table', $attributes , $strHeader . $strBody);
+			return $strTable;
 		}
 
 	}

@@ -8,16 +8,16 @@
 	public function ButtonClick($strFormId, $strControlId, $strParameter) {
 		switch ($strParameter) {
 			case 'save':
-				$this->pnl<?= $strPropertyName ?>->Save();
+				$this->Save();
 				break;
 
 			case 'delete':
 				$this->pnl<?= $strPropertyName ?>->Delete();
+                $this->Close();
 				break;
 
 			case 'cancel':
-				// do nothing
-				break;
+                $this->Close();
+                break;
 		}
-		$this->Close();
 	}

@@ -84,6 +84,8 @@
 		const DateTime = 'QDateTime';
 		/** Resource Type */
 		const Resource = 'resource';
+		/** Callable Type  - Note: For QCubed, QType::CallableTypes CANNOT be Closures (because they cannot be serialized into the form state) */
+		const CallableType = 'callable';
 
 		// Virtual types
 		const Association = 'association';
@@ -98,7 +100,8 @@
 		private static function CastObjectTo($objItem, $strType) {
 			try {
 				$objReflection = new ReflectionClass($objItem);
-				if ($objReflection->getName() == 'SimpleXMLElement') {
+				$strObjName = $objReflection->getName();
+				if ($strObjName == 'SimpleXMLElement') {
 					switch ($strType) {
 						case QType::String:
 							return (string) $objItem;
@@ -116,6 +119,14 @@
 								return false;
 							else
 								return true;
+					}
+				}
+				elseif ($strObjName == 'Closure') {
+					if ($strType == QType::CallableType) {
+						throw new Exception("Can't use a closure here"); // will get rethrown below, but this will error to
+																		// prevent you from accidentally sending a Closure to a callable in a form object.
+																		// that cannot be done, because Closures are not serializable. Some other forms of
+																		// callables ARE serializable though, so use that instaed.
 					}
 				}
 
@@ -234,6 +245,13 @@
 					
 					return $strItem;
 
+				case QType::CallableType:
+					if (is_callable($mixItem)) {
+						return $mixItem;
+					} else {
+						throw new QInvalidCastException(sprintf('Unable to cast %s value to callable', $strOriginalType));
+					}
+
 				default:
 					throw new QInvalidCastException(sprintf('Unable to cast %s value to unknown type %s', $strOriginalType, $strNewType));
 			}
@@ -245,13 +263,17 @@
 		 * @param array  $arrItem The array item to be converted
 		 * @param string $strType Type to which this array has to be converted
 		 *
-		 * @return string
+		 * @return array
 		 * @throws QInvalidCastException
 		 */
 		private static function CastArrayTo($arrItem, $strType) {
 			if ($strType == QType::ArrayType) {
 				return $arrItem;
-			} else {
+			}
+			elseif ($strType == QType::CallableType && is_callable($arrItem)) {
+				return $arrItem;
+			}
+			else {
 				throw new QInvalidCastException(sprintf('Unable to cast Array to %s', $strType));
 			}
 		}
@@ -403,6 +425,9 @@
 				case 'time':
 				case 'qdatetime':
 					return QType::DateTime;
+
+				case 'callable':
+					return QType::CallableType;
 
 				case 'null':
 				case 'void':

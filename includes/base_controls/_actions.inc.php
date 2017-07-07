@@ -51,13 +51,18 @@
 						$strJqUiProperty = $objAction->objEvent->JqProperty;
 					}
 
-					if ($objAction->objEvent->Delay > 0) {
+                    $strCode = ' ' . $objAction->RenderScript($objControl);
+
+                    if ($objAction->objEvent->Block) {
+                        $strCode .= _nl() . 'qc.blockEvents = true;';
+                    }
+
+
+                    if ($objAction->objEvent->Delay > 0) {
 						$strCode = sprintf(" qcubed.setTimeout('%s', \$j.proxy(function(){%s},this), %s);",
 							$objControl->ControlId,
-						    _nl() . _indent(trim($objAction->RenderScript($objControl))) . _nl(),
+						    _nl() . _indent(trim($strCode)) . _nl(),
 							$objAction->objEvent->Delay);
-					} else {
-						$strCode = ' ' . $objAction->RenderScript($objControl);
 					}
 
 					// Add Condition (if applicable)
@@ -71,9 +76,11 @@
 					$strToReturn .= $strCode;
 				}
 			}
-			$strToReturn = _nl() . _indent($strToReturn);
 
 			if (strlen($strToReturn)) {
+				$strToReturn = _nl() . _indent($strToReturn);
+
+
 				if ($strJqUiProperty) {
 					$strOut = sprintf('$j("#%s").%s("option", {%s: function(event, ui){%s}});',
 						$objControl->getJqControlId(),
@@ -451,6 +458,7 @@
 		 */
 		public function __construct(QControl $objControl, $strMethodName, $objWaitIconControl = 'default',
 		                            $mixCausesValidationOverride = null, $strJsReturnParam = "", $blnAsync = false) {
+			assert($objControl->ControlId != '');	// Are you adding an action before adding the control to the form?
 			parent::__construct($objControl->ControlId . ':' . $strMethodName, $objWaitIconControl, $mixCausesValidationOverride, $strJsReturnParam, $blnAsync);
 		}
 	}

@@ -39,7 +39,7 @@
 		protected $strId = null;
 		/** @var bool Easy way to hide a column without removing the column. */
 		protected $blnVisible = true;
-		/** @var Callable Callback to modify the html attributes of the generated cell. */
+		/** @var callable Callback to modify the html attributes of the generated cell. */
 		protected $cellParamsCallback = null;
 		/** @var QTagStyler Styles for each cell. Usually this should be done in css for efficient code generation. */
 		protected $objCellStyler;
@@ -414,7 +414,7 @@
 					}
 
 				case "CellParamsCallback":
-					$this->cellParamsCallback = $mixValue;
+					$this->cellParamsCallback = QType::Cast($mixValue, QType::CallableType);
 					break;
 
 				case "_ParentTable":
@@ -876,7 +876,7 @@
 	 */
 	class QHtmlTableCallableColumn extends QAbstractHtmlTableDataColumn {
 		/** @var callback */
-		protected $objCallable;
+		protected $callback;
 		/** @var array extra parameters passed to closure */
 		protected $mixParams;
 
@@ -896,15 +896,15 @@
 			if ($objCallable instanceof Closure) {
 				throw new InvalidArgumentException('Cannot be a Closure.');
 			}
-			$this->objCallable = $objCallable;
+			$this->callback = $objCallable;
 			$this->mixParams = $mixParams;
 		}
 
 		public function FetchCellObject($item) {
 			if ($this->mixParams) {
-				return call_user_func($this->objCallable, $item, $this->mixParams);
+				return call_user_func($this->callback, $item, $this->mixParams);
 			} else {
-				return call_user_func($this->objCallable, $item);
+				return call_user_func($this->callback, $item);
 			}
 		}
 
@@ -912,7 +912,7 @@
 		 * Fix up possible embedded reference to the form.
 		 */
 		public function Sleep() {
-			$this->objCallable = QControl::SleepHelper($this->objCallable);
+			$this->callback = QControl::SleepHelper($this->callback);
 			parent::Sleep();
 		}
 
@@ -922,7 +922,7 @@
 		 */
 		public function Wakeup(QForm $objForm) {
 			parent::Wakeup($objForm);
-			$this->objCallable = QControl::WakeupHelper($objForm, $this->objCallable);
+			$this->callback = QControl::WakeupHelper($objForm, $this->callback);
 		}
 
 		/**
@@ -937,7 +937,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Callable':
-					return $this->objCallable;
+					return $this->callback;
 				default:
 					try {
 						return parent::__get($strName);
@@ -962,10 +962,7 @@
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
 				case "Callable":
-					if (!is_callable($mixValue)) {
-						throw new QInvalidCastException("Callable must be a callable object");
-					}
-					$this->objCallable = $mixValue;
+					$this->callback = QType::Cast($mixValue, QType::CallableType);
 					break;
 
 				default:

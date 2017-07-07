@@ -1,7 +1,10 @@
 	protected function Form_Create() {
 		parent::Form_Create();
 
-		$this->pnl<?= $strPropertyName ?> = new <?= $strPropertyName ?>EditPanel($this);
+        $this->strObjectName = QApplication::Translate('<?= $strPropertyName ?>');
+        $this->strObjectNamePlural = QApplication::Translate('<?= $strPropertyNamePlural ?>');
+
+        $this->pnl<?= $strPropertyName ?> = new <?= $strPropertyName ?>EditPanel($this);
 <?php
 	$_INDEX = 0;
 	foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {

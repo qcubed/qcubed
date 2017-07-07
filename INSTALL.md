@@ -24,6 +24,8 @@ Note that if you have taken the composer installation step to rename "composer.p
 composer create-project qcubed/app-starter your_dir_name
 ~~~
 
+If you wish to be a contributor to QCubed and you would like to submit enhancements or bug fixes, you should add the "-sDev" flag to the end of the command line above. This will cause Composer to include a git repository with your checkout that will track the changes you make to the core of QCubed, and make it easier for you to enter pull requests on GitHub.
+
 Assuming you installed into the document root of your local web server, enter the following to begin the 
 configuration process.
 

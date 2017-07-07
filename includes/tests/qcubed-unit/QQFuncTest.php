@@ -282,13 +282,19 @@ class QQFuncTests extends QUnitTestCaseBase {
 			$objRes = $objResArray[0];
 			$this->assertNotNull($objRes);
 			if ($objRes) {
-				$this->assertNull($objRes->TestFloat);
+				$blnError = false;
+				try {
+					$objRes->TestFloat;
+				}
+				catch (Exception $e) {
+					$blnError = true;
+				}
+				$this->assertTrue($blnError, 'Accessing table column that was not loaded throws exception.');
 				$this->assertEquals(4.0, $objRes->GetVirtualAttribute('power2'));
 			}
 			$objRes = $objResArray[1];
 			$this->assertNotNull($objRes);
 			if ($objRes) {
-				$this->assertNull($objRes->TestFloat);
 				$this->assertEquals(9.0, $objRes->GetVirtualAttribute('power2'));
 			}
 		}

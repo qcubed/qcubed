@@ -235,6 +235,7 @@
 		const CommandsHigh = 'commandsHigh';
 		const CommandsMedium = 'commands';
 		const CommandsLow = 'commandsLow';
+		const CommandsFinal = 'commandsFinal';	// execute after all ajax commands, and resultant ajax commands have executed
 		const RegC = 'regc'; // register control list
 		const Html = 'html';
 		const Value = 'value';

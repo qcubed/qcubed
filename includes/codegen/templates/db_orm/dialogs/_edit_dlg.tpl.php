@@ -41,4 +41,6 @@ class <?= $strPropertyName ?>EditDlgGen extends QDialog {
 
 <?php include ('dlg_button_click.tpl.php'); ?>
 
+<?php include ('dlg_save.tpl.php'); ?>
+
 }
