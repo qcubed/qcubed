@@ -120,8 +120,8 @@ v4.0 is another major architectural change, designed to support the PSR-1, PSR-2
 namespaces to all the core and library files. Gone are is the letter 'Q' in front of all the core classes, since
 that was essentially our way of doing namespacing before namespaces were available in PHP. 
 
-It includes tools to help automate changing your code from v3.x code to v4.0. See the Readme file there for
-more info.
+It includes tools to help automate changing your code from v3.x code to v4.0. See the Readme file in the 
+qcubed/application repository for more information.
 
 
 ## Latest commits
