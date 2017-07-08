@@ -34,9 +34,13 @@
 
 	 */
 	class <?= $objTable->ClassName ?>ListForm extends QForm {
+        /** @var NavPanel */
 		protected $pnlNav;
+        /** @var <?= $objTable->ClassName ?>ListPanel */
 		protected $pnl<?= $objTable->ClassName ?>List;
+        /** @var string */
         protected $strObjectName;
+        /** @var string */
         protected $strObjectNamePlural;
 
 		// Override Form Event Handlers as Needed
