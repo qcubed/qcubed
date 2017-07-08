@@ -7,3 +7,9 @@
 	protected $btnCancel;
 	/** @var <?= QCodeGen::$DefaultButtonClass ?>  */
 	protected $btnDelete;
+
+    /** @var string */
+    protected $strObjectName;
+    /** @var string */
+    protected $strObjectNamePlural;
+
