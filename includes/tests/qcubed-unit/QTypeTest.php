@@ -107,10 +107,10 @@ class QTypeTests extends QUnitTestCaseBase {
 	// Testing creation of type tables
 
 	public function testTypeTableTypes() {
-		$val = ProjectStatusType::$GuidelinesArray[2];
+		$val = ProjectStatusType::GuidelinesArray()[2];
 		$this->assertNull($val, 'Generated a null value');
 
-		$val = ProjectStatusType::$IsActiveArray[1];
+		$val = ProjectStatusType::IsActiveArray()[1];
 		$this->assertTrue($val, 'Open project is active');
 		$this->assertTrue(is_bool($val), 'Type of variable is boolean.');
 
