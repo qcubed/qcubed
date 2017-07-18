@@ -57,27 +57,31 @@
 
 		);
 
-		public static $ExtraColumnValuesArray = array(
+		public static function ExtraColumnValuesArray() {
+            return  array(
 <?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
-			<?= $intKey ?> => array (
+			    <?= $intKey ?> => array (
 <?php 	foreach ($arrColumns as $strColName=>$mixColValue) { ?>
-				'<?= $strColName ?>' => <?= QTypeTable::Literal($mixColValue) ?>,
+				    '<?= $strColName ?>' => <?= QTypeTable::Literal($mixColValue) ?>,
 <?php 	} ?><?php GO_BACK(2); ?>
 
-			),
+			    ),
 <?php } ?><?php GO_BACK(2); ?>
 
-		);
+		    );
+        }
 
 
 <?php if (count($objTypeTable->ExtraFieldNamesArray)) { ?>
 <?php foreach ($objTypeTable->ExtraFieldNamesArray as $strColName) { ?>
-		public static $<?= $strColName ?>Array = array(
+		public static function <?= $strColName ?>Array() {
+            return array(
 <?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
-			'<?= $intKey ?>' => <?= QTypeTable::Literal($arrColumns[$strColName]) ?>,
+			    '<?= $intKey ?>' => <?= QTypeTable::Literal($arrColumns[$strColName]) ?>,
 <?php } ?><?php GO_BACK(2); ?>
 
-		);
+		    );
+        }
 
 <?php } ?>
 <?php } ?>
@@ -87,7 +91,7 @@
 		public static function ToString($int<?= $objTypeTable->ClassName ?>Id) {
 			switch ($int<?= $objTypeTable->ClassName ?>Id) {
 <?php foreach ($objTypeTable->NameArray as $intKey=>$strValue) { ?>
-				case <?= $intKey ?>: return '<?= $strValue ?>';
+				case <?= $intKey ?>: return QApplication::Translate('<?= $strValue ?>');
 <?php } ?>
 				default:
 					throw new QCallerException(sprintf('Invalid int<?= $objTypeTable->ClassName ?>Id: %s', $int<?= $objTypeTable->ClassName ?>Id));
