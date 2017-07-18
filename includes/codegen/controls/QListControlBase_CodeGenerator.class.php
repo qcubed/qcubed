@@ -267,10 +267,10 @@ TMPL;
 				$strRet .= <<<TMPL
 if (!\$this->str{$strPropName}NullLabel) {
 	if (!\$this->{$strControlVarName}->Required) {
-		\$this->str{$strPropName}NullLabel = '- None -';
+		\$this->str{$strPropName}NullLabel = QApplication::Translate('- None -');
 	}
 	elseif (!\$this->blnEditMode) {
-		\$this->str{$strPropName}NullLabel = '- Select One -';
+		\$this->str{$strPropName}NullLabel = QApplication::Translate('- Select One -');
 	}
 }
 
