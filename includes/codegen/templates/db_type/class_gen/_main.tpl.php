@@ -37,6 +37,9 @@
 
 		const MaxId = <?= $intKey ?>;
 
+        /**
+        * @deprecated. Use NameArray() since its translatable
+        */
 		public static $NameArray = array(<?php if (count($objTypeTable->NameArray)) { ?>
 
 <?php foreach ($objTypeTable->NameArray as $intKey=>$strValue) { ?>
@@ -56,6 +59,17 @@
 <?php } ?><?php GO_BACK(2); ?>
 
 		);
+
+        public static function NameArray() {
+            return [
+<?php if (count($objTypeTable->NameArray)) { ?>
+<?php   foreach ($objTypeTable->NameArray as $intKey=>$strValue) { ?>
+                <?= $intKey ?> => QApplication::Translate('<?= $strValue ?>'),
+<?php   } ?><?php GO_BACK(2); ?>
+<?php }?>
+
+            ];
+        }
 
 		public static function ExtraColumnValuesArray() {
             return  array(

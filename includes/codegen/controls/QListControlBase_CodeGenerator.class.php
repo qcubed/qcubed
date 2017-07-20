@@ -122,7 +122,7 @@ TMPL;
 		 *	Create item list for use by {$strControlVarName}
 		 */
 		public function {$strControlVarName}_GetItems() {
-			return {$strVarType}::\$NameArray;
+			return {$strVarType}::NameArray();
 		}
 
 
