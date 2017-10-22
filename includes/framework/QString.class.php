@@ -443,4 +443,26 @@
 				)
 				, 0, $intLength);
 		}
+
+		/**
+		 * Convert file size in bytes to human readable
+		 *
+		 * @param  integer  $intSize
+		 * @param  integer $intPrecision
+		 * @return  integer
+		 */
+		public static function DisplayByteSize($intSize, $intPrecision = null) {
+			if (is_null($intSize)) return 'n/a';
+			if ($intSize == 0) return '0 KB';
+			if ($intSize < 0) return '-';
+
+			if ($intSize > 0) {
+				$intSize = (int) $intSize;
+				$base = log($intSize) / log(1024);
+				$suffixes = array(' bytes', ' KB', ' MB', ' GB', ' TB');
+				return round(pow(1024, $base - floor($base)), $intPrecision) . $suffixes[floor($base)];
+			} else {
+				return $intSize;
+			}
+		}
   }
