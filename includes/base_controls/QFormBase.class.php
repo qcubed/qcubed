@@ -94,6 +94,10 @@
 		 */
 		public static $FormStateHandler = 'QFormStateHandler';
 
+		
+		public function __toString() {
+			return (string) $this->strFormId;
+		}
 		/////////////////////////
 		// Public Properties: GET
 		/////////////////////////
@@ -1181,7 +1185,7 @@
 				// Calling a static method in a class
 				$f = explode('::', $strMethodName);
 				if (is_callable($f)) {
-					$f($this->strFormId, $params['controlId'], $params['param'], $params);
+					$f($this, $params['controlId'], $params['param'], $params);
 				}
 			}
 			elseif (($intPosition = strpos($strMethodName, ':')) !== false) {
@@ -1191,7 +1195,7 @@
 				$objDestControl = $this->objControlArray[$strDestControlId];
 				QControl::_CallActionMethod ($objDestControl, $strMethodName, $this->strFormId, $params);
 			} else {
-				$this->$strMethodName($this->strFormId, $params['controlId'], $params['param'], $params);
+				$this->$strMethodName($this, $params['controlId'], $params['param'], $params);
 			}
 		}
 
