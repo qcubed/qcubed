@@ -179,9 +179,9 @@
 					}
 				}
 
-				// Show the contents of the file and disable editing
+				// Show the contents of the file and disable editing if creation succeeded
 				?>
-				<textarea name="final_config" id="final_config" disabled="disabled" rows="20" cols="100"><?php _p($strConfigText_Final) ?></textarea>
+				<textarea name="final_config" id="final_config" <?php echo ($strFileCreationStatus=='created' ? 'disabled="disabled"' :'');?> rows="20" cols="100"><?php _p($strConfigText_Final) ?></textarea>
 				<?php
 				// depending on the file creation status, show the message at the bottom.
 				switch ($strFileCreationStatus) {
