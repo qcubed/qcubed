@@ -1,5 +1,17 @@
 <?php
 
+	function getFullGroupByDefaultSetting($strAdapter) {
+		switch($strAdapter) {
+			case "PostgreSql":
+			case "SqlServer":
+			case "Oracle":
+				return 'true';
+			default: 
+			case "MySqli5":
+				return 'false';
+			
+		}
+	}
 	// The final stage of setting the configuration.inc.php to its place. First of all, let us get the variables
 
 	require_once('../../qcubed.inc.php');
@@ -12,10 +24,10 @@
 	if(!isset($_POST['docroot'])) {
 		$strError = 'This file can be accessed only while you follow the configuration wizard step by step. Please go back to <a href="step_1.php">Step 1</a> to start over.';
 	}
-	$strDocroot = $_POST['docroot'];
-	$strVirtDir = $_POST['virtdir'];
-	$strSubDir = $_POST['subdir'];
-	$strConfigSubPath =  DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'configuration';
+	$strDocroot			= $_POST['docroot'];
+	$strVirtDir			= $_POST['virtdir'];
+	$strSubDir			= $_POST['subdir'];
+	$strConfigSubPath	=  DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'configuration';
 
 	// let us see if there already is a configuration.inc.php file or not.
 	$blnConfigFileExists = false;
@@ -23,15 +35,8 @@
 		$blnConfigFileExists = true;
 	}
 
-	// Database values
-	$strDB_Adapter = $_POST['db_server_adapter'];
-	$strDB_ServerAddress = $_POST['db_server_address'];
-	$strDB_Port = $_POST['db_server_port'];
-	$strDB_DbName = $_POST['db_server_dbname'];
-	$strDB_Username = $_POST['db_server_username'];
-	$strDB_Password = $_POST['db_server_password'];
 	// Now read the text from the configuration.inc.php.sample file
-	$strConfigSampleText = file_get_contents($strDocroot . $strVirtDir . $strSubDir . '/project' . $strConfigSubPath . '/configuration.inc.sample.php');
+	$strConfigSampleText	= file_get_contents($strDocroot . $strVirtDir . $strSubDir . '/project' . $strConfigSubPath . '/configuration.inc.sample.php');
 
 	if($strConfigSampleText === false) {
 		if($strError == null) {
@@ -39,29 +44,26 @@
 		}
 	}
 
+	
 	// We now have the sample config file. Time to replace the strings.
-	$strConfigText = $strConfigSampleText;
-	$strConfigText = str_replace('{docroot}', $strDocroot, $strConfigText);
-	$strConfigText = str_replace('{vd}', $strVirtDir, $strConfigText);
-	$strConfigText = str_replace('{subdir}', $strSubDir, $strConfigText);
-	$strConfigText = str_replace('{db1_adapter}', $strDB_Adapter, $strConfigText);
-	$strConfigText = str_replace('{db1_serverAddress}', $strDB_ServerAddress, $strConfigText);
-	// if the port was left blank, then we replace it with null
-	if(trim($strDB_Port) == '') {
-		// blank value.set as null
-		$strDB_Port = 'null';
-	}
-	$strConfigText = str_replace("'{db1_serverport}'", $strDB_Port, $strConfigText);
-	$strConfigText = str_replace('{db1_dbname}', $strDB_DbName, $strConfigText);
-	$strConfigText = str_replace('{db1_username}', $strDB_Username, $strConfigText);
-	$strConfigText = str_replace('{db1_password}', $strDB_Password, $strConfigText);
-
-	$strConfigText = str_replace('/*<--', '', $strConfigText);
-	$strConfigText = str_replace('-->*/', '', $strConfigText);
-
-
-	$strConfigText_Final = $strConfigText;
-
+	$arrReplacements= array(
+						'{docroot}'				=> $strDocroot,
+						'{vd}'					=> $strVirtDir,
+						'{subdir}'				=> $strSubDir,
+						'{db1_adapter}'			=> $_POST['db_server_adapter'],
+						'{db1_serverAddress}'	=> $_POST['db_server_address'],
+						'{db1_serverport}'		=> (trim($_POST['db_server_port']) == '' ? 'null' : $_POST['db_server_port']), // if the port was left blank, then we replace it with null
+						'{db1_dbname}'			=> $_POST['db_server_dbname'],
+						'{db1_username}'		=> $_POST['db_server_username'],
+						'{db1_password}'		=> $_POST['db_server_password'],
+						'{db1_onlyfullgroupby}'	=> getFullGroupByDefaultSetting($_POST['db_server_adapter']),
+						'{default_timezone}'	=> $_POST['default_timezone'],
+						'/*<--'					=>'',
+						'-->*/'					=>'',
+	);
+	
+	$strConfigText_Final	= str_replace(array_keys($arrReplacements), array_values($arrReplacements),$strConfigSampleText);
+	
 	// Now the final text should be ready.
 	// Display the final text
 //	echo '<html><body><textarea cols="160" rows="30"> '. $strConfigText . ' </textarea></body>';
