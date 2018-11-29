@@ -87,7 +87,7 @@
 			$objDirectory = dir(self::$StatePath);
 			while (($strFile = $objDirectory->read()) !== false) {
 				if (($strFile==".")||($strFile=="..")) continue;
-				if (!$FileNamePrefix)
+				if (!$self::FileNamePrefix)
 					$intPosition = 0;
 				else
 					$intPosition = strpos($strFile, self::$FileNamePrefix);
