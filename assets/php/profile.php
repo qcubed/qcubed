@@ -3,7 +3,7 @@
 
 	//Exit gracefully if called directly or profiling data is missing.
 	if ( !isset($_POST['intDatabaseIndex']) && !isset($_POST['strProfileData']) && !isset($_POST['strReferrer']) ) {
-		exit('Nothing to profile. No Database Profiling data recived.');
+		exit('Nothing to profile. No Database Profiling data received.');
 	}
 	if ( !isset($_POST['intDatabaseIndex']) || !isset($_POST['strProfileData']) || !isset($_POST['strReferrer']) ) {
 		throw new Exception('Database Profiling data appears to have been corrupted.');
