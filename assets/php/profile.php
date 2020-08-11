@@ -2,27 +2,34 @@
 	require_once('./qcubed.inc.php');
 
 	//Exit gracefully if called directly or profiling data is missing.
-	if ( !isset($_POST['intDatabaseIndex']) && !isset($_POST['strProfileData']) && !isset($_POST['strReferrer']) )
-		exit('Nothing to profile. No Database Profiling data recived.');
-
-	if ( !isset($_POST['intDatabaseIndex']) || !isset($_POST['strProfileData']) || !isset($_POST['strReferrer']) )
+	if ( !isset($_POST['intDatabaseIndex']) && !isset($_POST['strProfileData']) && !isset($_POST['strReferrer']) ) {
+		exit('Nothing to profile. No Database Profiling data received.');
+	}
+	if ( !isset($_POST['intDatabaseIndex']) || !isset($_POST['strProfileData']) || !isset($_POST['strReferrer']) ) {
 		throw new Exception('Database Profiling data appears to have been corrupted.');
-
+	}
+	
 	$intDatabaseIndex = intval($_POST['intDatabaseIndex']);
+	$objDb = QApplication::$Database[$intDatabaseIndex];
+
+	if (! $objDb->EnableProfiling ) {
+		throw new Exception('Database Profiling has not been turned on. You can turn it on by setting "profiling" to true (but never do this in production since this opens up security holes).');
+		
+	}
+	
 	$strReferrer = QApplication::HtmlEntities($_POST['strReferrer']);
 
 	$objProfileArray = unserialize(base64_decode($_POST['strProfileData']));
 	$objProfileArray = QType::Cast($objProfileArray, QType::ArrayType);
 	$intCount = count($objProfileArray);
 	
-	function PrintExplainStatement($strOriginalQuery) {
-		global $intDatabaseIndex;
+	function PrintExplainStatement($objDb, $strOriginalQuery) {
 		if (substr_count($strOriginalQuery, "AUTOCOMMIT=1") > 0) {
 			return null; 
 		}
 		$result = "";
 		
-		$objDb = QApplication::$Database[$intDatabaseIndex];
+		
 		$objDbResult = $objDb->ExplainStatement($strOriginalQuery);
 		if (!$objDbResult) {
 			return "";
@@ -141,9 +148,9 @@
 					</div>
 					<div id="hright">
 						<b>Database Index:</b> <?php _p($intDatabaseIndex); ?>&nbsp;&nbsp;
-						<b>Database Type:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Adapter); ?><br/>
-						<b>Database Server:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Server); ?>&nbsp;&nbsp;
-						<b>Database Name:</b> <?php _p(QApplication::$Database[$intDatabaseIndex]->Database); ?><br/>
+						<b>Database Type:</b> <?php _p($objDb->Adapter); ?><br/>
+						<b>Database Server:</b> <?php _p($objDb->Server); ?>&nbsp;&nbsp;
+						<b>Database Name:</b> <?php _p($objDb->Database); ?><br/>
 						<b>Profile Generated From:</b> <?php _p($strReferrer, false); ?>
 					</div>
 					<div class="clear"></div>
@@ -197,7 +204,7 @@
 				echo'<div class="time">';
 			printf("Query took %.1f ms", $dblTimeInfo * 1000);
 ?>
-			<?php $explainStatement = PrintExplainStatement($strQuery); ?>
+			<?php $explainStatement = PrintExplainStatement($objDb, $strQuery); ?>
 			<a href="#" onClick="return Toggle('query<?php _p($intIndex); ?>')" id="buttonquery<?php _p($intIndex); ?>" class="queryButton smallbutton">
 				Show SQL
 			</a>
