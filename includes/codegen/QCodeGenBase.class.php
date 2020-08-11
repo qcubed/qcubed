@@ -475,7 +475,7 @@
 					$this->setGeneratedFilePermissions($strFilePath);
 					return ($intBytesSaved == strlen($strTemplate));
 				} else
-					// Becuase we are not supposed to overwrite, we should return "true" by default
+					// Because we are not supposed to overwrite, we should return "true" by default
 					return true;
 			}
 
