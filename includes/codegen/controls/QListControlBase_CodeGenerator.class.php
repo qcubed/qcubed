@@ -122,7 +122,7 @@ TMPL;
 		 *	Create item list for use by {$strControlVarName}
 		 */
 		public function {$strControlVarName}_GetItems() {
-			return {$strVarType}::\$NameArray;
+			return {$strVarType}::NameArray();
 		}
 
 
@@ -280,7 +280,7 @@ TMPL;
 				$strRet .= "\$this->{$strControlVarName}->RemoveAllItems();\n";
 			}
 			$strRet .= <<<TMPL
-\$this->{$strControlVarName}->AddItem(QApplication::Translate(\$this->str{$strPropName}NullLabel), null);
+\$this->{$strControlVarName}->AddItem(\$this->str{$strPropName}NullLabel, null);
 
 TMPL;
 
