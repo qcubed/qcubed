@@ -86,7 +86,8 @@
 			// Go through all the files
 			$objDirectory = dir(self::$StatePath);
 			while (($strFile = $objDirectory->read()) !== false) {
-				if (!count(self::$FileNamePrefix))
+				if (($strFile==".")||($strFile=="..")) continue;
+				if (!$self::FileNamePrefix)
 					$intPosition = 0;
 				else
 					$intPosition = strpos($strFile, self::$FileNamePrefix);

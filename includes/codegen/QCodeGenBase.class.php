@@ -475,7 +475,7 @@
 					$this->setGeneratedFilePermissions($strFilePath);
 					return ($intBytesSaved == strlen($strTemplate));
 				} else
-					// Becuase we are not supposed to overwrite, we should return "true" by default
+					// Because we are not supposed to overwrite, we should return "true" by default
 					return true;
 			}
 
@@ -647,7 +647,7 @@
 			$intNameLength = strlen($strColumnName);
 
 			// Does the column name for this reference column end in "_id"?
-			if (($intNameLength > 3) && (substr($strColumnName, $intNameLength - 3) == "_id")) {
+			if (($intNameLength > 3) && (strtolower(substr($strColumnName, $intNameLength - 3)) == "_id")) {
 				// It ends in "_id" but we don't want to include the "Id" suffix
 				// in the Variable Name.  So remove it.
 				$strColumnName = substr($strColumnName, 0, $intNameLength - 3);

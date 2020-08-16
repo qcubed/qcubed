@@ -1413,24 +1413,24 @@
 			return new QQHavingClause($objNode);
 		}
 
-		static public function Count(QQColumnNode $objNode, $strAttributeName) {
-			return new QQCount($objNode, $strAttributeName);
+		static public function Count(QQColumnNode $objNode, $strAttributeName, $blnDistinct=false) {
+			return new QQCount($objNode, $strAttributeName, $blnDistinct);
 		}
 
-		static public function Sum(QQColumnNode $objNode, $strAttributeName) {
-			return new QQSum($objNode, $strAttributeName);
+		static public function Sum(QQColumnNode $objNode, $strAttributeName, $blnDistinct=false) {
+			return new QQSum($objNode, $strAttributeName, $blnDistinct);
 		}
 
-		static public function Minimum(QQColumnNode $objNode, $strAttributeName) {
-			return new QQMinimum($objNode, $strAttributeName);
+		static public function Minimum(QQColumnNode $objNode, $strAttributeName, $blnDistinct=false) {
+			return new QQMinimum($objNode, $strAttributeName, $blnDistinct);
 		}
 
-		static public function Maximum(QQColumnNode $objNode, $strAttributeName) {
-			return new QQMaximum($objNode, $strAttributeName);
+		static public function Maximum(QQColumnNode $objNode, $strAttributeName, $blnDistinct=false) {
+			return new QQMaximum($objNode, $strAttributeName, $blnDistinct);
 		}
 
-		static public function Average(QQColumnNode $objNode, $strAttributeName) {
-			return new QQAverage($objNode, $strAttributeName);
+		static public function Average(QQColumnNode $objNode, $strAttributeName, $blnDistinct=false) {
+			return new QQAverage($objNode, $strAttributeName, $blnDistinct);
 		}
 
 		static public function Expand(QQNode $objNode, QQCondition $objJoinCondition = null, QQSelect $objSelect = null) {
@@ -2157,13 +2157,15 @@
 		protected $objNode;
 		protected $strAttributeName;
 		protected $strFunctionName;
-		public function __construct(QQColumnNode $objNode, $strAttributeName) {
+		protected $blnDistinct=false;
+		public function __construct(QQColumnNode $objNode, $strAttributeName, $blnDistinct=false) {
+			$this->blnDistinct = $blnDistinct;
 			$this->objNode = QQ::Func($this->strFunctionName, $objNode);
 			$this->strAttributeName = QQ::GetVirtualAlias($strAttributeName); // virtual attributes are queried lower case
 		}
 		public function UpdateQueryBuilder(QQueryBuilder $objBuilder) {
 			$objBuilder->SetVirtualNode($this->strAttributeName, $this->objNode);
-			$objBuilder->AddSelectFunction(null, $this->objNode->GetColumnAlias($objBuilder), $this->strAttributeName);
+			$objBuilder->AddSelectFunction(null, ($this->blnDistinct ? 'DISTINCT ': ''). $this->objNode->GetColumnAlias($objBuilder), $this->strAttributeName);
 		}
 	}
 	class QQCount extends QQAggregationClause {
