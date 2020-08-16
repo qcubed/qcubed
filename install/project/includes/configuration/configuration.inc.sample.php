@@ -284,7 +284,7 @@ if (!defined('SERVER_INSTANCE')) {
 	define('DB_CONNECTION_1', serialize(array(
 		'adapter' => '{db1_adapter}',
 		'server' => '{db1_serverAddress}',
-		'port' => '{db1_serverport}',
+		'port' => {db1_serverport},
 		'database' => '{db1_dbname}',
 		'username' => '{db1_username}',
 		'password' => '{db1_password}',
@@ -292,7 +292,7 @@ if (!defined('SERVER_INSTANCE')) {
 		'profiling' => false,
 		'encoding' => 'utf8',
 		'dateformat' => null,
-		'onlyfullgroupby' => defined by db adapter)));
+		'onlyfullgroupby' => {db1_onlyfullgroupby})));
 	-->*/
 
 	// Additional Database Connection Strings can be defined here (e.g. for connection #2, #3, #4, #5, etc.)
@@ -311,8 +311,9 @@ if (!defined('SERVER_INSTANCE')) {
 	define('__QAPPLICATION_ENCODING_TYPE__', 'UTF-8');
 
 	// (For PHP > v5.1) Setup the default timezone (if not already specified in php.ini)
-	if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone')))
-		date_default_timezone_set('America/Los_Angeles');
+	if ((function_exists('date_default_timezone_set')) && (!ini_get('date.timezone'))) {
+		date_default_timezone_set('{default_timezone}');
+	}
 
 
 	/*

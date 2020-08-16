@@ -92,7 +92,26 @@
 					}
 			}
 		}
+		
+		/**
+		 * Use an option array to create a new event e.g.:
+		 *  
+		 * QKeyUpEvent(['Delay'=>100,'Condition'=>'event.keyCode == 13']);
+		 * is equivalent to
+		 * new QKeyUpEvent(100,'event.keyCode == 13')  
+		 *  
+		 * @param array $objOptions
+		 * @return QEvent
+		 */
+		public static function CreateWithOptions($objOptions=null) {
+			$objEvent = new static();
+			foreach($objOptions as $option=>$value) {
+				$objEvent->$option = $value;
+			}
+			return $objEvent;			
+		}
 	}
+	
 
 	/**
 	 * Blur event: keyboard focus moving away from the control.

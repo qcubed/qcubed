@@ -653,6 +653,59 @@
 		}
 
 		/**
+		 * 
+		 * @param QAction $objAction
+		 * @param array $arrEventOptions
+		 */
+		public function OnBlur(QAction $objAction, $arrEventOptions=null) {
+			$this->AddAction(QBlurEvent::CreateWithOptions($arrEventOptions), $objAction);
+		}
+		
+		/**
+		 * 
+		 * @param QAction $objAction
+		 * @param array $arrEventOptions
+		 */
+		public function OnClick(QAction $objAction, $arrEventOptions=null) {
+			$this->AddAction(QClickEvent::CreateWithOptions($arrEventOptions), $objAction);
+		}
+		
+		/**
+		 * 
+		 * @param QAction $objAction
+		 * @param array $arrEventOptions
+		 */
+		public function OnDoubleClick(QAction $objAction, $arrEventOptions=null) {
+			$this->AddAction(QClickEvent::CreateWithOptions($arrEventOptions), $objAction);
+		}
+		
+		/**
+		 * 
+		 * @param QAction $objAction
+		 * @param array $arrEventOptions
+		 */
+		public function OnChange(QAction $objAction, $arrEventOptions=null) {
+			$this->AddAction(QChangeEvent::CreateWithOptions($arrEventOptions), $objAction);
+		}
+		
+		/**
+		 * 
+		 * @param QAction $objAction
+		 * @param array $arrEventOptions
+		 */
+		public function OnKeyUp(QAction $objAction, $arrEventOptions=null) {
+			$this->AddAction(QKeyUpEvent::CreateWithOptions($arrEventOptions), $objAction);
+		}
+		
+		/**
+		 * 
+		 * @param QAction $objAction
+		 * @param array $arrEventOptions
+		 */
+		public function OnFocus(QAction $objAction, $arrEventOptions=null) {
+			$this->AddAction(QFocusEvent::CreateWithOptions($arrEventOptions), $objAction);
+		}
+		/**
 		 * Adds an action to the control
 		 *
 		 * @param QEvent  $objEvent

@@ -172,18 +172,18 @@
 		?>
 	</head>
 	<body>
-		<section id="content">
+		<section id="content" class='installsteps'>
 			<h1 class="page-title">QCubed Installation Wizard</h1>
 
 			<h2>Step 2: Set the variables and database information</h2>
 
-			<div id="instructions" class="full">
+			<div class="instructions full">
 				<p>Make sure that the configuration directory is writable:<br/>
 				<code>chmod 777 <?= $strServerDocumentRoot . $strSubDirectory . DIRECTORY_SEPARATOR . 'project' . DIRECTORY_SEPARATOR . 'includes/configuration' ; ?></code></p>
 			</div>
 
             <form action="step_3.php" method="post">
-                <div id="instructions" class="full">
+                <div class="instructions full">
                     <p>This value should be the same as your server (e.g. Apache) DocumentRoot value.</p>
                     <p>For example, if your example web application where <code>http://my.domain.com/index.php</code>
                     points to <code>/home/web/htdocs/index.php</code>, then you must specify:
@@ -192,12 +192,12 @@
                     then: <code>__DOCROOT__</code> is defined as <code>c:/webroot/files</code> (again, note the leading c:/ and no ending slash)</p>
                 </div>
 
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="docroot">__DOCROOT__</label>
 					<input type="text" id="docroot" name="docroot" value="<?= $strServerDocumentRoot; ?>"/>
 				</div>
 
-                <div id="instructions" class="full">
+                <div class="instructions full">
                     <p>Next, if you are using Virtual Directories, where
                     <code>http://not.my.domain.com/~my_user/index.php</code>
                     (for example) points to <code>/home/my_user/public_html/index.php</code>, then:
@@ -205,12 +205,12 @@
                     <code>__VIRTUAL_DIRECTORY__</code> is defined as <code>/~my_user</code></p>
                 </div>
 
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="virtdir">__VIRTUAL_DIRECTORY__</label>
 					<input type="text" id="virtdir" name="virtdir" value=""/>
 				</div>
 
-                <div id="instructions" class="full">
+                <div class="instructions full">
                     <p>If you have installed QCubed within a SubDirectory of the Document Root, so for example
                     the QCubed "index.php" page is accessible at
                     <code>http://my.domain.com/frameworks/qcubed/index.php</code>, then:
@@ -218,78 +218,102 @@
                     (again, note the leading and no ending slash)</p>
                 </div>
 
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="subdir">__SUBDIRECTORY__</label>
 					<input type="text" id="subdir" name="subdir" value="<?= $strSubDirectory; ?>"/>
 				</div>
 
-                <div id="instructions" class="full">
+				<div class="instructions full">
+					<h2>Timezone configuration</h2>
+                    <p>Please select your server's timezone.</p>
+                </div>
+				<div class="full">
+					<label for="default_timezone">Default timezone</label>
+					<select id="default_timezone" name="default_timezone">
+<?php
+	$tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+	foreach($tzlist as $strTimezone) {
+?>
+						<option <?php if(ini_get('date.timezone')) { echo 'selected';}?> value="<?php _p($strTimezone, false) ?>"><?php _p($strTimezone) ?></option>
+<?php
+	}
+?>
+					</select>
+				</div>
+				
+				
+				
+				
+                <div class="instructions full">
 					<h2>First Database configuration</h2>
                     <p>The database type you are about to use.</p>
                 </div>
 				
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="db_server_adapter">Database Adapter</label>
 					<select id="db_server_adapter" name="db_server_adapter">
 <?php
 	foreach($arrDatabaseAdapters as $strAdapter) {
 ?>
-						<option value="<?php _p($strAdapter, false) ?>"><?php _p($strAdapter) ?></option>
+						<option value="<?php _p($strAdapter, false) ?>" ><?php _p($strAdapter) ?></option>
 <?php
 	}
 ?>
 					</select>
 				</div>
 
-                <div id="instructions" class="full">
+				
+				
+				
+                <div class="instructions full">
                     <p>The IP address/hostname where database server is located.</p>
                 </div>
 
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="db_server_address">Database Server Address</label>
 					<input type="text" name="db_server_address" id="db_server_address" value="localhost"/>
 				</div>
 
-                <div id="instructions" class="full">
+                <div class="instructions full">
                     <p>Leaving this field blank will automatically select the default port for the selected database. (e.g.
                     3306 for MySQL)</p>
                 </div>
 
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="db_server_port">Database Server Port</label>
 					<input type="text" name="db_server_port" id="db_server_port" value=""/>
 				</div>
 
-                <div id="instructions" class="full">
+                <div class="instructions full">
                     <p>Name of the database you want to use in your application.</p>
                 </div>
 
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="db_server_dbname">Database Name</label>
 					<input type="text" name="db_server_dbname" id="db_server_dbname" value="qcubed"/>
 				</div>
 
-                <div id="instructions" class="full">
+                <div class="instructions full">
                     <p>The database user should typically have the write permissions on the database you chose.</p>
                 </div>
 
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="db_server_username">Database Server Username</label>
 					<input type="text" name="db_server_username" id="db_server_username" value="root"/>
 				</div>
 
-                <div id="instructions" class="full">
+                <div class="instructions full">
                     <p><strong>NOTE:</strong> This field will accept the password for the database user you supply in the
                     <em>Database Server Username</em> field but is a normal textbox (not the password one). This is to help you
                     write the password correctly.</p>
                 </div>
 
-				<div id="demoZone" class="full">
+				<div  class="full">
 					<label for="db_server_password">Database Server Password</label>
 					<input type="text" name="db_server_password" id="db_server_password" value=""/>
 				</div>
 
-				<div id="instructions" class="full">
+				<div class="instructions full instructions">
 					<p><strong><em>NOTE:</em></strong> Caching and profiling will be disabled by default on the database. If
 					you want to enable them, please change settings by hand in <code>configuration.inc.php</code> after this
 					setup wizard completes.</p>
