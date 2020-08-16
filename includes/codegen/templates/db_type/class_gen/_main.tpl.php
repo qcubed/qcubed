@@ -37,6 +37,9 @@
 
 		const MaxId = <?= $intKey ?>;
 
+        /**
+        * @deprecated. Use NameArray() since its translatable
+        */
 		public static $NameArray = array(<?php if (count($objTypeTable->NameArray)) { ?>
 
 <?php foreach ($objTypeTable->NameArray as $intKey=>$strValue) { ?>
@@ -88,7 +91,24 @@
 
 
 <?php }?>
+
+        public static function NameArray() {
+            return [
+<?php if (count($objTypeTable->NameArray)) { ?>
+<?php   foreach ($objTypeTable->NameArray as $intKey=>$strValue) { ?>
+                <?= $intKey ?> => QApplication::Translate('<?= $strValue ?>'),
+<?php   } ?><?php GO_BACK(2); ?>
+<?php }?>
+
+            ];
+        }
+
+
+
 		public static function ToString($int<?= $objTypeTable->ClassName ?>Id) {
+			if (is_null($int<?= $objTypeTable->ClassName ?>Id)) {
+				return null;
+			}
 			switch ($int<?= $objTypeTable->ClassName ?>Id) {
 <?php foreach ($objTypeTable->NameArray as $intKey=>$strValue) { ?>
 				case <?= $intKey ?>: return QApplication::Translate('<?= $strValue ?>');
@@ -99,6 +119,9 @@
 		}
 
 		public static function ToToken($int<?= $objTypeTable->ClassName ?>Id) {
+			if (is_null($int<?= $objTypeTable->ClassName ?>Id)) {
+				return null;
+			}
 			switch ($int<?= $objTypeTable->ClassName ?>Id) {
 <?php foreach ($objTypeTable->TokenArray as $intKey=>$strValue) { ?>
 				case <?= $intKey ?>: return '<?= $strValue ?>';
@@ -110,6 +133,9 @@
 
 <?php foreach ($objTypeTable->ExtraFieldNamesArray as $strColName) { ?>
 		public static function To<?php echo $strColName  ?>($int<?php echo $objTypeTable->ClassName  ?>Id) {
+			if (is_null($int<?= $objTypeTable->ClassName ?>Id)) {
+				return null;
+			}
 			switch ($int<?php echo $objTypeTable->ClassName  ?>Id) {
 <?php foreach ($objTypeTable->ExtraPropertyArray as $intKey=>$arrColumns) { ?>
 				case <?php echo $intKey  ?>: return <?= QTypeTable::Literal($arrColumns[$strColName]) ?>;
