@@ -171,3 +171,14 @@ pre code { background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; d
     z-index: 10000;
     padding: 20px;
 }
+
+.installsteps .instructions {
+	background: #f6f6f6; border: 1px solid #dedede; border-radius: 3px; margin:10px auto; padding: 1%;
+}
+.installsteps .full label {
+	width: 250px;
+	display: inline-block;
+}
+.installsteps .full input, .full select {
+	width: 400px;
+}
