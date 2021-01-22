@@ -27,7 +27,7 @@ The Code Generator automatically creates object classes with matching forms and 
 
 Codegen can take advantage of foreign key relationships and field constraints to generate ready-to-use data models complete with validation routines and powerful CRUD methods, allowing you to manipulate objects instead of constantly issuing SQL queries.
 
-More info as well as examples are available online at <http://examples.qcu.be/>
+More info as well as examples are available online at <https://qcubed.eu/>
 
 ### Object-oriented querying
 
