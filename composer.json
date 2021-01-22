@@ -14,7 +14,7 @@
   },
   "require": {
       "php": ">=5.4.0",
-      "qcubed/composer": "^1.0.5"
+      "qcubed/composer": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "4.8.*",
