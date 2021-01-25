@@ -9,17 +9,19 @@
 		// this function is required for objects that implement the
 		// IteratorAggregate interface
 		public function getIterator() {
-			///////////////////
-			// Member Variables
-			///////////////////
+			$iArray = array();
+
 <?php foreach ($objTable->ColumnArray as $objColumn) { ?>
-			$iArray['<?= $objColumn->PropertyName ?>'] = $this-><?= $objColumn->VariableName ?>;
+            if (isset($this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
+			    $iArray['<?= $objColumn->PropertyName ?>'] = $this-><?= $objColumn->VariableName ?>;
+            }
 <?php } ?>
 			return new ArrayIterator($iArray);
 		}
 
-		// this function returns a Json formatted string using the
-		// IteratorAggregate interface
+		/**
+         *   @deprecated. Just call json_encode on the object. See the jsonSerialize function for the result.
+		/*/
 		public function getJson() {
 			return json_encode($this->getIterator());
 		}
@@ -61,9 +63,13 @@
 			}
 <?php 	} else { ?>
 			if (isset($this->__blnValid[self::<?= strtoupper($objColumn->Name) ?>_FIELD])) {
-<?php		if ($objColumn->VariableType == QType::String && QApplication::$EncodingType != 'UTF-8') { ?>
-				$a['<?= $objColumn->Name ?>'] = JavsScriptHeler::MakeJsonEncodable($this-><?= $objColumn->VariableName ?>);
-<?php 		} else {?>
+<?php		if ($objColumn->DbType == QDatabaseFieldType::Blob) { // binary value ?>
+                $a['<?= $objColumn->Name ?>'] = base64_encode($this-><?= $objColumn->VariableName ?>);
+<?php       }
+            elseif ($objColumn->VariableType == QType::String && QApplication::$EncodingType != 'UTF-8') { ?>
+				$a['<?= $objColumn->Name ?>'] = JavsScriptHelper::MakeJsonEncodable($this-><?= $objColumn->VariableName ?>);
+<?php 		}
+            else {?>
 				$a['<?= $objColumn->Name ?>'] = $this-><?= $objColumn->VariableName ?>;
 <?php 		} ?>
 			}

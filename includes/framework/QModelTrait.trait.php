@@ -268,11 +268,17 @@ trait QModelTrait {
 			throw $objExc;
 		}
 
+		// Pull Expansions
+		$objExpandAsArrayNode = $objQueryBuilder->ExpandAsArrayNode;
+		if (!empty ($objExpandAsArrayNode)) {
+			throw new QCallerException ("Cannot use QueryCursor with ExpandAsArray");
+		}
+
 		// Perform the query
 		$objDbResult = $objQueryBuilder->Database->Query($strQuery);
 
-		// Return the results cursor
-		$objDbResult->QueryBuilder = $objQueryBuilder;
+		// Get the alias array so we know how to instantiate a row from the result
+		$objDbResult->ColumnAliasArray = $objQueryBuilder->ColumnAliasArray;
 		return $objDbResult;
 	}
 

@@ -96,6 +96,13 @@
 	 * 
 
 	 *
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
+	 *
 	 * @property boolean $Collapsible
 	 * Whether all the sections can be closed at once. Allows collapsing the
 	 * active section.
@@ -112,9 +119,10 @@
 	 * Selector for the header element, applied via .find() on the main
 	 * accordion element. Content panels must be the sibling immediately
 	 * after their associated headers.
+
 	 *
 	 * @property string $HeightStyle
-	 * Controls the height of the accordion and each panel. Possible values: 
+	 * Controls the height of the accordion and each panel. Possible values:
 	 * 
 	 * 	* "auto": All panels will be set to the height of the tallest panel.
 	 * 	* "fill": Expand to the available height based on the accordions
@@ -125,7 +133,7 @@
 	 *
 	 * @property mixed $Icons
 	 * Icons to use for headers, matching an icon provided by the jQuery UI
-	 * CSS Framework. Set to false to have no icons displayed. 
+	 * CSS Framework. Set to false to have no icons displayed.
 	 * 
 	 * 	* header (string, default: "ui-icon-triangle-1-e")
 	 * 	* activeHeader (string, default: "ui-icon-triangle-1-s")
@@ -141,6 +149,8 @@
 		protected $mixActive;
 		/** @var mixed */
 		protected $mixAnimate = null;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var boolean */
 		protected $blnCollapsible = null;
 		/** @var boolean */
@@ -163,6 +173,7 @@
 			$jqOptions = null;
 			if (!is_null($val = $this->Active)) {$jqOptions['active'] = $val;}
 			if (!is_null($val = $this->Animate)) {$jqOptions['animate'] = $val;}
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Collapsible)) {$jqOptions['collapsible'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->Event)) {$jqOptions['event'] = $val;}
@@ -234,7 +245,7 @@
 		}
 		/**
 		 * Retrieves the accordions instance object. If the element does not have
-		 * an associated instance, undefined is returned. 
+		 * an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the accordion plugin has loaded.
@@ -245,7 +256,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -268,7 +279,7 @@
 		}
 		/**
 		 * Sets the value of the accordion option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -308,6 +319,7 @@
 			switch ($strName) {
 				case 'Active': return $this->mixActive;
 				case 'Animate': return $this->mixAnimate;
+				case 'Classes': return $this->mixClasses;
 				case 'Collapsible': return $this->blnCollapsible;
 				case 'Disabled': return $this->blnDisabled;
 				case 'Event': return $this->strEvent;
@@ -334,6 +346,11 @@
 				case 'Animate':
 					$this->mixAnimate = $mixValue;
 					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'animate', $mixValue);
+					break;
+
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
 					break;
 
 				case 'Collapsible':
@@ -413,7 +430,7 @@
 				new QModelConnectorParam (get_called_class(), 'Collapsible', 'Whether all the sections can be closed at once. Allows collapsing theactive section.', QType::Boolean),
 				new QModelConnectorParam (get_called_class(), 'Disabled', 'Disables the accordion if set to true.', QType::Boolean),
 				new QModelConnectorParam (get_called_class(), 'Event', 'The event that accordion headers will react to in order to activatethe associated panel. Multiple events can be specified, separated by aspace.', QType::String),
-				new QModelConnectorParam (get_called_class(), 'HeightStyle', 'Controls the height of the accordion and each panel. Possible values: 	* \"auto\": All panels will be set to the height of the tallest panel.	* \"fill\": Expand to the available height based on the accordionsparent height.	* \"content\": Each panel will be only as tall as its content.', QType::String),
+				new QModelConnectorParam (get_called_class(), 'HeightStyle', 'Controls the height of the accordion and each panel. Possible values:	* \"auto\": All panels will be set to the height of the tallest panel.	* \"fill\": Expand to the available height based on the accordionsparent height.	* \"content\": Each panel will be only as tall as its content.', QType::String),
 			));
 		}
 	}

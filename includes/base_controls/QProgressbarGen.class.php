@@ -6,7 +6,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QProgressbar_ChangeEvent extends QJqUiEvent {
 		const EventName = 'progressbarchange';
 	}
@@ -17,7 +18,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QProgressbar_CompleteEvent extends QJqUiEvent {
 		const EventName = 'progressbarcomplete';
 	}
@@ -28,7 +30,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QProgressbar_CreateEvent extends QJqUiEvent {
 		const EventName = 'progressbarcreate';
 	}
@@ -46,6 +49,13 @@
 	 * 
 	 * @see QProgressbarBase
 	 * @package Controls\Base
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
+	 *
 	 * @property boolean $Disabled
 	 * Disables the progressbar if set to true.
 	 *
@@ -66,6 +76,8 @@
 	class QProgressbarGen extends QPanel	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var integer */
@@ -80,6 +92,7 @@
 		 */
 		protected function MakeJqOptions() {
 			$jqOptions = null;
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->Max)) {$jqOptions['max'] = $val;}
 			if (!is_null($val = $this->Value)) {$jqOptions['value'] = $val;}
@@ -148,7 +161,7 @@
 		}
 		/**
 		 * Retrieves the progressbars instance object. If the element does not
-		 * have an associated instance, undefined is returned. 
+		 * have an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the progressbar plugin has loaded.
@@ -159,7 +172,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -182,7 +195,7 @@
 		}
 		/**
 		 * Sets the value of the progressbar option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -228,6 +241,7 @@
 
 		public function __get($strName) {
 			switch ($strName) {
+				case 'Classes': return $this->mixClasses;
 				case 'Disabled': return $this->blnDisabled;
 				case 'Max': return $this->intMax;
 				case 'Value': return $this->mixValue;
@@ -243,6 +257,11 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
+					break;
+
 				case 'Disabled':
 					try {
 						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);

@@ -68,7 +68,7 @@ class QTimer {
 
 	/**
 	 * Resets timer
-	 * @return flat Timer's time before reset
+	 * @return float Timer's time before reset
 	 */
 	public function ResetTimer() {
 		$fltTime = $this->StopTimer();
@@ -199,7 +199,7 @@ class QTimer {
 	/**
 	 * Dumps all the timers and their info
 	 * @param boolean[optional] $blnDisplayOutput If true (default), dump will be printed. If false, dump will be returned
-	 * @return string|void
+	 * @return string
 	 */
 	public static function VarDump($blnDisplayOutput = true) {
 		$strToReturn = '';
@@ -208,6 +208,7 @@ class QTimer {
 		}
 		if ($blnDisplayOutput) {
 			echo nl2br($strToReturn);
+			return '';
 		} else {
 			return $strToReturn;
 		}

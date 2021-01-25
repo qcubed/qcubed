@@ -2,7 +2,7 @@
 
 /**
  * This script generates the Jq*Gen classes by scraping the JQueryUI documentation web site.
- * Current version: JQueryUI 1.12
+ * Current version: JQueryUI 1.11
  */
 
 require('jq_control.php');
@@ -251,10 +251,9 @@ jq_control_gen($baseUrl."/Sortable");
 
 jq_control_gen($baseUrl."/Accordion");
 jq_control_gen($baseUrl."/Autocomplete", null, 'QTextBox');
-jq_control_gen($baseUrl."/button", 'QJqButton', 'QButton');
-jq_control_gen($baseUrl."/checkboxradio", 'QJqCheckBox', 'QCheckBox');
-jq_control_gen($baseUrl."/checkboxradio", 'QJqRadioButton', 'QRadioButton');
-jq_control_gen($baseUrl."/controlgroup");
+jq_control_gen($baseUrl."/Button", 'QJqButton', 'QButton');
+jq_control_gen($baseUrl."/Button", 'QJqCheckBox', 'QCheckBox');
+jq_control_gen($baseUrl."/Button", 'QJqRadioButton', 'QRadioButton');
 jq_control_gen($baseUrl."/Datepicker");
 jq_control_gen($baseUrl."/Datepicker", 'QDatepickerBox', 'QTextBox');
 jq_control_gen($baseUrl."/Dialog");

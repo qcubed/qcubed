@@ -102,6 +102,18 @@ class BasicOrmTests extends QUnitTestCaseBase {
 		
 		$this->assertEquals(3, $intItemCount2);
 	}
+
+	public function testQueryCursor() {
+		$objResult = Person::QueryCursor(
+			QQ::All(),
+			[QQ::OrderBy(QQN::Person()->FirstName)]
+		);
+
+		$objPerson = Person::InstantiateCursor($objResult);
+		$this->assertEquals("Alex", $objPerson->FirstName);
+		$objPerson = Person::InstantiateCursor($objResult);
+		$this->assertEquals("Ben", $objPerson->FirstName);
+	}
 	
 	public function testOrderByCondition() {
 		$objItems = Person::QueryArray(
@@ -146,7 +158,7 @@ class BasicOrmTests extends QUnitTestCaseBase {
 				QQ::OrderBy(QQN::Person()->LastName, QQN::Person()->FirstName)
 			)
 		);
-		
+
 		$arrNamesOnly = array();
 		foreach ($objPersonArray as $item) {
 			$arrNamesOnly[] = $item->FirstName . " " . $item->LastName;

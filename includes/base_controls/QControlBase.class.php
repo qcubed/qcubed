@@ -713,15 +713,7 @@
 		 *
 		 * @throws QCallerException
 		 */
-		public function AddAction($objEvent, $objAction) {
-			if (!($objEvent instanceof QEvent)) {
-				throw new QCallerException('First parameter of AddAction is expecting an object of type QEvent');
-			}
-
-			if (!($objAction instanceof QAction)) {
-				throw new QCallerException('Second parameter of AddAction is expecting an object of type QAction');
-			}
-
+		public function AddAction(QEvent $objEvent, QAction $objAction) {
 			// Modified
 			$this->blnModified = true;
 
@@ -748,15 +740,23 @@
 		 *
 		 * @throws QCallerException
 		 */
-		public function AddActionArray($objEvent, $objActionArray) {
-			if (!($objEvent instanceof QEvent)) {
-				throw new QCallerException('First parameter of AddAction is expecting on object of type QEvent');
-			}
+		public function AddActionArray(QEvent $objEvent, $objActionArray) {
 
 			foreach ($objActionArray as $objAction) {
 				$objAction = clone($objAction);
 				$this->AddAction($objEvent, $objAction);
 			}
+		}
+
+		/**
+		 * Shortcut for adding a debounced click action with a tiny delay. This is effective for most situations like submit
+		 * buttons and things that need to popup things after other actions, and then wait for a response before proceeding.
+		 *
+		 * @param QAction $objAction
+		 */
+		public function OnClick(QAction $objAction) {
+			// TODO: For some reason true for removing events is not working
+			$this->AddAction (new QClickEvent(5, null, null, false), $objAction);
 		}
 
 		/**

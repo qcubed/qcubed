@@ -82,6 +82,27 @@
 		}
 
 		/**
+		 * Checks to see if an association exists with a specific <?= $objManyToManyReference->ObjectDescription ?> by key
+
+		 * @param <?= $objTable->PrimaryKeyColumnArray[0]->VariableType ?> $key
+
+		 * @return bool
+		*/
+		public function Is<?= $objManyToManyReference->ObjectDescription ?>AssociatedByKey($key) {
+			if (<?= $objCodeGen->ImplodeObjectArray(' || ', '(is_null($this->', '))', 'VariableName', $objTable->PrimaryKeyColumnArray) ?>)
+				throw new QUndefinedPrimaryKeyException('Unable to call Is<?= $objManyToManyReference->ObjectDescription ?>AssociatedByKey on this unsaved <?= $objTable->ClassName ?>.');
+
+			$intRowCount = <?= $objTable->ClassName ?>::QueryCount(
+				QQ::AndCondition(
+					QQ::Equal(QQN::<?= $objTable->ClassName ?>()-><?= $objTable->PrimaryKeyColumnArray[0]->PropertyName ?>, $this-><?= $objTable->PrimaryKeyColumnArray[0]->VariableName ?>),
+					QQ::Equal(QQN::<?= $objTable->ClassName ?>()-><?= $objManyToManyReference->ObjectDescription ?>-><?= $objManyToManyReference->OppositePropertyName ?>, $key)
+				)
+			);
+
+			return ($intRowCount > 0);
+		}
+
+		/**
 		 * Associates a <?= $objManyToManyReference->ObjectDescription ?>
 
 		 * @param <?= $objManyToManyReference->VariableType ?> $<?= $objManyToManyReference->VariableName ?>

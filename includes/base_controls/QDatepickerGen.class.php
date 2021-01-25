@@ -622,7 +622,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "isDisabled", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -645,7 +645,7 @@
 		}
 		/**
 		 * Sets the value of the datepicker option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For

@@ -4,16 +4,16 @@
 // JQuery UI icon names scraped from the themeroller website.
 
 abstract class JqIcon {
-	const Carat1N = 'ui-icon-carat-1-n';
-	const Carat1Ne = 'ui-icon-carat-1-ne';
-	const Carat1E = 'ui-icon-carat-1-e';
-	const Carat1Se = 'ui-icon-carat-1-se';
-	const Carat1S = 'ui-icon-carat-1-s';
-	const Carat1Sw = 'ui-icon-carat-1-sw';
-	const Carat1W = 'ui-icon-carat-1-w';
-	const Carat1Nw = 'ui-icon-carat-1-nw';
-	const Carat2NS = 'ui-icon-carat-2-n-s';
-	const Carat2EW = 'ui-icon-carat-2-e-w';
+	const Caret1N = 'ui-icon-caret-1-n';
+	const Caret1Ne = 'ui-icon-caret-1-ne';
+	const Caret1E = 'ui-icon-caret-1-e';
+	const Caret1Se = 'ui-icon-caret-1-se';
+	const Caret1S = 'ui-icon-caret-1-s';
+	const Caret1Sw = 'ui-icon-caret-1-sw';
+	const Caret1W = 'ui-icon-caret-1-w';
+	const Caret1Nw = 'ui-icon-caret-1-nw';
+	const Caret2NS = 'ui-icon-caret-2-n-s';
+	const Caret2EW = 'ui-icon-caret-2-e-w';
 	const Triangle1N = 'ui-icon-triangle-1-n';
 	const Triangle1Ne = 'ui-icon-triangle-1-ne';
 	const Triangle1E = 'ui-icon-triangle-1-e';
@@ -178,3 +178,4 @@ abstract class JqIcon {
 	const GripsmallDiagonalSe = 'ui-icon-gripsmall-diagonal-se';
 	const GripDiagonalSe = 'ui-icon-grip-diagonal-se';
 }
+?>

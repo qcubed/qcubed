@@ -1338,3 +1338,26 @@
 		}
 	}
 
+/**
+ * A wrapper class for generating an ajax action with no script. This is helpful in situations where data
+ * will be returned to the javascript object later.
+ *
+ * Class QNoScriptAjaxAction
+ */
+class QNoScriptAjaxAction extends QAjaxAction {
+	private $objTargetAction;
+
+	function __construct(QAction $objTargetAction) {
+		$this->objTargetAction = $objTargetAction;
+	}
+
+	public function __get($strName) {
+		if ($strName == 'Event')
+			return parent::__get($strName);
+		return $this->objTargetAction->__get($strName);
+	}
+
+	public function RenderScript(QControl $objControl) {
+		return '';
+	}
+}

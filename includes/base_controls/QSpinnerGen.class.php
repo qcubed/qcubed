@@ -7,7 +7,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSpinner_ChangeEvent extends QJqUiEvent {
 		const EventName = 'spinchange';
 	}
@@ -18,14 +19,14 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSpinner_CreateEvent extends QJqUiEvent {
 		const EventName = 'spincreate';
 	}
 	/**
 	 * Triggered during increment/decrement (to determine direction of spin
-	 * compare current value with ui.value). 
-	 * 
+	 * compare current value with ui.value).
 	 * Can be canceled, preventing the value from being updated.
 	 * 
 	 * 	* event Type: Event 
@@ -47,7 +48,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSpinner_StartEvent extends QJqUiEvent {
 		const EventName = 'spinstart';
 	}
@@ -58,7 +60,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSpinner_StopEvent extends QJqUiEvent {
 		const EventName = 'spinstop';
 	}
@@ -76,6 +79,13 @@
 	 * 
 	 * @see QSpinnerBase
 	 * @package Controls\Base
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
+
+	 *
 	 * @property string $Culture
 	 * Sets the culture to use for parsing and formatting the value. If null,
 	 * the currently set culture in Globalize is used, see Globalize docs for
@@ -159,6 +169,8 @@
 	class QSpinnerGen extends QTextBox	{
 		protected $strJavaScripts = __JQUERY_EFFECTS__;
 		protected $strStyleSheets = __JQUERY_CSS__;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var string */
 		protected $strCulture = null;
 		/** @var boolean */
@@ -185,6 +197,7 @@
 		 */
 		protected function MakeJqOptions() {
 			$jqOptions = null;
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Culture)) {$jqOptions['culture'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->Icons)) {$jqOptions['icons'] = $val;}
@@ -259,7 +272,7 @@
 		}
 		/**
 		 * Retrieves the spinners instance object. If the element does not have
-		 * an associated instance, undefined is returned. 
+		 * an associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the spinner plugin has loaded.
@@ -279,7 +292,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "isValid", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -302,7 +315,7 @@
 		}
 		/**
 		 * Sets the value of the spinner option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -328,11 +341,11 @@
 		}
 		/**
 		 * Decrements the value by the specified number of pages, as defined by
-		 * the page option. Without the parameter, a single page is decremented. 
+		 * the page option. Without the parameter, a single page is decremented.
 		 * 
 		 * If the resulting value is above the max, below the min, or results in
 		 * a step mismatch, the value will be adjusted to the closest valid
-		 * value. 
+		 * value.
 		 * 
 		 * Invoking pageDown() will cause start, spin, and stop events to be
 		 * triggered.
@@ -345,11 +358,11 @@
 		}
 		/**
 		 * Increments the value by the specified number of pages, as defined by
-		 * the page option. Without the parameter, a single page is incremented. 
+		 * the page option. Without the parameter, a single page is incremented.
 		 * 
 		 * If the resulting value is above the max, below the min, or results in
 		 * a step mismatch, the value will be adjusted to the closest valid
-		 * value. 
+		 * value.
 		 * 
 		 * Invoking pageUp() will cause start, spin, and stop events to be
 		 * triggered.
@@ -362,11 +375,11 @@
 		}
 		/**
 		 * Decrements the value by the specified number of steps. Without the
-		 * parameter, a single step is decremented. 
+		 * parameter, a single step is decremented.
 		 * 
 		 * If the resulting value is above the max, below the min, or results in
 		 * a step mismatch, the value will be adjusted to the closest valid
-		 * value. 
+		 * value.
 		 * 
 		 * Invoking stepDown() will cause start, spin, and stop events to be
 		 * triggered.
@@ -379,11 +392,11 @@
 		}
 		/**
 		 * Increments the value by the specified number of steps. Without the
-		 * parameter, a single step is incremented. 
+		 * parameter, a single step is incremented.
 		 * 
 		 * If the resulting value is above the max, below the min, or results in
 		 * a step mismatch, the value will be adjusted to the closest valid
-		 * value. 
+		 * value.
 		 * 
 		 * Invoking stepUp() will cause start, spin, and stop events to be
 		 * triggered.
@@ -416,6 +429,7 @@
 
 		public function __get($strName) {
 			switch ($strName) {
+				case 'Classes': return $this->mixClasses;
 				case 'Culture': return $this->strCulture;
 				case 'Disabled': return $this->blnDisabled;
 				case 'Icons': return $this->mixIcons;
@@ -437,6 +451,11 @@
 
 		public function __set($strName, $mixValue) {
 			switch ($strName) {
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
+					break;
+
 				case 'Culture':
 					try {
 						$this->strCulture = QType::Cast($mixValue, QType::String);

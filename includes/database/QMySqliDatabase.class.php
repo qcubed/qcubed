@@ -52,20 +52,23 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 			return null;
 		}
 
-		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKNames = null) {
-			$strEscapedArray = $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
+		public function InsertOrUpdate($strTable, $mixColumnsAndValuesArray, $strPKName = 'id') {
+			$strEscapedArray	= $this->EscapeIdentifiersAndValues($mixColumnsAndValuesArray);
 			$strUpdateStatement = '';
 			foreach ($strEscapedArray as $strColumn => $strValue) {
-				if ($strUpdateStatement) $strUpdateStatement .= ', ';
+				if ($strUpdateStatement) {
+					$strUpdateStatement .= ', ';
+				}
 				$strUpdateStatement .= $strColumn . ' = ' . $strValue;
 			}
-			$strSql = sprintf('INSERT INTO %s%s%s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s',
-				$this->EscapeIdentifierBegin, $strTable, $this->EscapeIdentifierEnd,
-				implode(', ', array_keys($strEscapedArray)),
-				implode(', ', array_values($strEscapedArray)),
-				$strUpdateStatement
-			);
-			$this->ExecuteNonQuery($strSql);
+			
+			$strSql = "INSERT INTO $this->EscapeIdentifierBegin$strTable$this->EscapeIdentifierEnd "
+					. "SET $strUpdateStatement "
+					. "ON DUPLICATE KEY UPDATE $strPKName=LAST_INSERT_ID($strPKName), $strUpdateStatement";
+			
+			$this->NonQuery($strSql);
+			
+			return $this->InsertId($strTable, $strPKName);			
 		}
 
 		public function Connect() {
@@ -684,17 +687,10 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 			$this->blnPrimaryKey = ($mixFieldData->flags & MYSQLI_PRI_KEY_FLAG) ? true : false;
 			$this->blnUnique = ($mixFieldData->flags & MYSQLI_UNIQUE_KEY_FLAG) ? true : false;
 			
-			$this->SetFieldType($mixFieldData->type);
-
-			// Special situation that we take advantage of to automatically implement optimistic locking
-			if ($mixFieldData->type == MYSQLI_TYPE_TIMESTAMP &&
-					$mixFieldData->flags & MYSQLI_ON_UPDATE_NOW_FLAG) {
-				$this->strType = QDatabaseFieldType::VarChar;
-				$this->blnTimestamp = true;
-			}
+			$this->SetFieldType($mixFieldData->type, $mixFieldData->flags);
 		}
 
-		protected function SetFieldType($intMySqlFieldType) {
+		protected function SetFieldType($intMySqlFieldType, $intFlags) {
 
 			if (version_compare(PHP_VERSION, '5.6.15') >= 0) {
 				if (defined("MYSQLI_TYPE_JSON") && $intMySqlFieldType == MYSQLI_TYPE_JSON) {
@@ -741,6 +737,14 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 					$this->strType = QDatabaseFieldType::Time;
 					break;
 				case MYSQLI_TYPE_TIMESTAMP:
+					// Special situation that we take advantage of to automatically implement optimistic locking
+					if ($intFlags & MYSQLI_ON_UPDATE_NOW_FLAG) {
+						$this->strType = QDatabaseFieldType::VarChar;
+						$this->blnTimestamp = true;
+					} else {
+						$this->strType = QDatabaseFieldType::DateTime;
+					}
+					break;
 				case MYSQLI_TYPE_DATETIME:
 					$this->strType = QDatabaseFieldType::DateTime;
 					break;
@@ -748,11 +752,13 @@ if (!defined('MYSQLI_ON_UPDATE_NOW_FLAG')) {
 				case MYSQLI_TYPE_MEDIUM_BLOB:
 				case MYSQLI_TYPE_LONG_BLOB:
 				case MYSQLI_TYPE_BLOB:
-					$this->strType = QDatabaseFieldType::Blob;
-					break;
 				case MYSQLI_TYPE_STRING:
 				case MYSQLI_TYPE_VAR_STRING:
-					$this->strType = QDatabaseFieldType::VarChar;
+					if ($intFlags & MYSQLI_BINARY_FLAG) {
+						$this->strType = QDatabaseFieldType::Blob;
+					} else {
+						$this->strType = QDatabaseFieldType::VarChar;
+					}
 					break;
 				case MYSQLI_TYPE_CHAR:
 					$this->strType = QDatabaseFieldType::Char;

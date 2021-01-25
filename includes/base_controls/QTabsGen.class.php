@@ -3,10 +3,10 @@
 	 * Triggered after a tab has been activated (after animation completes).
 	 * If the tabs were previously collapsed, ui.oldTab and ui.oldPanel will
 	 * be empty jQuery objects. If the tabs are collapsing, ui.newTab and
-	 * ui.newPanel will be empty jQuery objects. Note: Since the activate
-	 * event is only fired on tab activation, it is not fired for the initial
-	 * tab when the tabs widget is created. If you need a hook for widget
-	 * creation use the create event.
+	 * ui.newPanel will be empty jQuery objects.
+	 * Note: Since the activate event is only fired on tab activation, it is
+	 * not fired for the initial tab when the tabs widget is created. If you
+	 * need a hook for widget creation use the create event.
 	 * 
 	 * 	* event Type: Event 
 	 * 
@@ -46,7 +46,7 @@
 	 * beforeActivate event. Can be canceled to prevent the tab panel from
 	 * loading content; though the panel will still be activated. This event
 	 * is triggered just before the Ajax request is made, so modifications
-	 * can be made to ui.jqXHR and ui.ajaxSettings. 
+	 * can be made to ui.jqXHR and ui.ajaxSettings.
 	 * 
 	 * _Note: Although ui.ajaxSettings is provided and can be modified, some
 	 * of these properties have already been processed by jQuery. For
@@ -122,6 +122,13 @@
 	 * 	* Integer: The zero-based index of the panel that is active (open).
 	 * A negative value selects panels going backward from the last panel.
 	 * 
+
+	 *
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
 
 	 *
 	 * @property boolean $Collapsible
@@ -211,6 +218,8 @@
 		protected $strStyleSheets = __JQUERY_CSS__;
 		/** @var mixed */
 		protected $mixActive;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var boolean */
 		protected $blnCollapsible = null;
 		/** @var mixed */
@@ -232,6 +241,7 @@
 		protected function MakeJqOptions() {
 			$jqOptions = null;
 			if (!is_null($val = $this->Active)) {$jqOptions['active'] = $val;}
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Collapsible)) {$jqOptions['collapsible'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->Event)) {$jqOptions['event'] = $val;}
@@ -342,7 +352,7 @@
 		}
 		/**
 		 * Retrieves the tabss instance object. If the element does not have an
-		 * associated instance, undefined is returned. 
+		 * associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the tabs plugin has loaded.
@@ -371,7 +381,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "load", $href, QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -394,7 +404,7 @@
 		}
 		/**
 		 * Sets the value of the tabs option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -433,6 +443,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Active': return $this->mixActive;
+				case 'Classes': return $this->mixClasses;
 				case 'Collapsible': return $this->blnCollapsible;
 				case 'Disabled': return $this->mixDisabled;
 				case 'Event': return $this->strEvent;
@@ -454,6 +465,11 @@
 				case 'Active':
 					$this->mixActive = $mixValue;
 					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'active', $mixValue);
+					break;
+
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
 					break;
 
 				case 'Collapsible':

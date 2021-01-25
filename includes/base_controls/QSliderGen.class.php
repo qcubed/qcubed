@@ -9,6 +9,8 @@
 	 * 
 	 * 	* handle Type: jQuery The jQuery object representing the handle that
 	 * was changed.
+	 * 	* handleIndex Type: Number The numeric index of the handle that was
+	 * moved.
 	 * 	* value Type: Number The current value of the slider.
 	 * 
 	 */
@@ -22,7 +24,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * _Note: The ui object is empty but included for consistency with other
-	 * events._	 */
+	 * events._
+	 */
 	class QSlider_CreateEvent extends QJqUiEvent {
 		const EventName = 'slidecreate';
 	}
@@ -38,6 +41,8 @@
 	 * 	* ui Type: Object 
 	 * 
 	 * 	* handle Type: jQuery The jQuery object representing the handle being
+	 * moved.
+	 * 	* handleIndex Type: Number The numeric index of the handle being
 	 * moved.
 	 * 	* value Type: Number The value that the handle will move to if the
 	 * event is not canceled.
@@ -57,6 +62,8 @@
 	 * 
 	 * 	* handle Type: jQuery The jQuery object representing the handle being
 	 * moved.
+	 * 	* handleIndex Type: Number The numeric index of the handle being
+	 * moved.
 	 * 	* value Type: Number The current value of the slider.
 	 * 
 	 */
@@ -72,6 +79,8 @@
 	 * 
 	 * 	* handle Type: jQuery The jQuery object representing the handle that
 	 * was moved.
+	 * 	* handleIndex Type: Number The numeric index of the handle that was
+	 * moved.
 	 * 	* value Type: Number The current value of the slider.
 	 * 
 	 */
@@ -102,6 +111,13 @@
 	 * 	* String: The name of a speed, such as "fast" or "slow".
 	 * 	* Number: The duration of the animation, in milliseconds.
 	 * 
+
+	 *
+	 * @property mixed $Classes
+	 * Specify additional classes to add to the widgets elements. Any of
+	 * classes specified in the Theming section can be used as keys to
+	 * override their value. To learn more about this option, check out the
+	 * learn article about the classes option.
 
 	 *
 	 * @property boolean $Disabled
@@ -149,6 +165,8 @@
 		protected $strStyleSheets = __JQUERY_CSS__;
 		/** @var mixed */
 		protected $mixAnimate = null;
+		/** @var mixed */
+		protected $mixClasses = null;
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var integer */
@@ -174,6 +192,7 @@
 		protected function MakeJqOptions() {
 			$jqOptions = null;
 			if (!is_null($val = $this->Animate)) {$jqOptions['animate'] = $val;}
+			if (!is_null($val = $this->Classes)) {$jqOptions['classes'] = $val;}
 			if (!is_null($val = $this->Disabled)) {$jqOptions['disabled'] = $val;}
 			if (!is_null($val = $this->Max)) {$jqOptions['max'] = $val;}
 			if (!is_null($val = $this->Min)) {$jqOptions['min'] = $val;}
@@ -247,7 +266,7 @@
 		}
 		/**
 		 * Retrieves the sliders instance object. If the element does not have an
-		 * associated instance, undefined is returned. 
+		 * associated instance, undefined is returned.
 		 * 
 		 * Unlike other widget methods, instance() is safe to call on any element
 		 * after the slider plugin has loaded.
@@ -258,7 +277,7 @@
 			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "instance", QJsPriority::Low);
 		}
 		/**
-		 * Gets the value currently associated with the specified optionName. 
+		 * Gets the value currently associated with the specified optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can get the
 		 * value of a specific key by using dot notation. For example, "foo.bar"
@@ -281,7 +300,7 @@
 		}
 		/**
 		 * Sets the value of the slider option associated with the specified
-		 * optionName. 
+		 * optionName.
 		 * 
 		 * Note: For options that have objects as their value, you can set the
 		 * value of just one property by using dot notation for optionName. For
@@ -364,6 +383,7 @@
 		public function __get($strName) {
 			switch ($strName) {
 				case 'Animate': return $this->mixAnimate;
+				case 'Classes': return $this->mixClasses;
 				case 'Disabled': return $this->blnDisabled;
 				case 'Max': return $this->intMax;
 				case 'Min': return $this->intMin;
@@ -387,6 +407,11 @@
 				case 'Animate':
 					$this->mixAnimate = $mixValue;
 					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'animate', $mixValue);
+					break;
+
+				case 'Classes':
+					$this->mixClasses = $mixValue;
+					$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'classes', $mixValue);
 					break;
 
 				case 'Disabled':

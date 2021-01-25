@@ -127,7 +127,7 @@
 	 * @package DatabaseAdapters
 	 */
 	class QMySqli5DatabaseField extends QMySqliDatabaseField {
-		protected function SetFieldType($intMySqlFieldType) {
+		protected function SetFieldType($intMySqlFieldType, $intFlags) {
 			switch ($intMySqlFieldType) {
 				case MYSQLI_TYPE_NEWDECIMAL:
 					$this->strType = QDatabaseFieldType::VarChar;
@@ -138,7 +138,7 @@
 					break;
 
 				default:
-					parent::SetFieldType($intMySqlFieldType);
+					parent::SetFieldType($intMySqlFieldType, $intFlags);
 			}
 		}
 	}
